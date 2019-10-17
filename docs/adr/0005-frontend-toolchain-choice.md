@@ -1,5 +1,9 @@
 # *How should bootstrap the frontend application?*
 
+* Status: Proposed [Proposed, Accepted, Rejected, Deprecated, Superseded, etc.]
+* Deciders: Mikena, Eady, Chris
+* Date: 2019-10-17
+
 Which React toolchain should we use to bootstrap CMS EASi?
 
 ## Considered Alternatives
