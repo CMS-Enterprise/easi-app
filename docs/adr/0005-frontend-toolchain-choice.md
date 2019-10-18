@@ -9,6 +9,8 @@ Which React toolchain should we use to bootstrap CMS EASi?
 ## Considered Alternatives
 
 * [Create React App](https://github.com/facebook/create-react-app) (CRA)
+* Create React App w/Truss USWDS
+* Truss' Create React App fork
 * Roll up a new application from scratch
 
 ## Decision Outcome
@@ -22,11 +24,25 @@ command to gain full control of the build tool and configuration choices
 * `+` Very well known toolchain that has a lot of tools to support it
 (e.g. [craco](https://github.com/gsoft-inc/craco) and [rescripts](https://github.com/harrysolovay/rescripts)
 * `-` Do no have full control over configuration files in case we need
-customization (e.g. USWDS)
+customization
 * `-` Ejecting is a one-way operation. Once you eject, you can't go back!
-* `-`
 
 ## Pros and Cons of the Alternatives
+
+Create React App w/Truss React USWDS Library
+
+* `+` Can leverage component library that Truss uses on other projects
+before it goes open source
+* `-` The library is still in its early stages; not mature yet
+* `-` Because of its infancy, library and/or EASi can be a roadblock
+Note: This Truss React USWDS Library is a NPM package that we can
+import in the future. The decision here is that we will build out React
+components on our own rather than leverage an NPM package.
+
+Truss' Create React App fork
+
+* `+` Truss toolchain with tools/libraries that we are comfortable using
+* `-` Somethings are still being worked out and not quite ready
 
 Roll up a new application from scratch
 
