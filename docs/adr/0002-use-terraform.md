@@ -1,14 +1,15 @@
-<!-- Source: https://raw.githubusercontent.com/adr/madr/master/template/template.md -->
-
 # Define and manage infrastructure with Terraform
 
-We should define pieces of infrastructure in code so that changes can be reviewed, audited, and tracked over time. We prefer a declarative format that can be run idempotently so that it's easer to understand the current state of infrastructure.
+We should define pieces of infrastructure in code so that changes can be
+reviewed, audited, and tracked over time. We prefer a declarative format that
+can be run idempotently so that it's easer to understand the current state of
+infrastructure.
 
 We're assuming we'll be using AWS services.
 
 ## Decision Drivers
 
-* Unless warranted by extenuating circumstances, should be a standard tool that has a community to support it.
+* Is a standard tool that has a community to support it.
 * General experience with the tool.
 * Must work on AWS services.
 
@@ -36,5 +37,4 @@ Terraform
 * Good, because it is declarative.
 * Bad, because the tooling isn't in our wheelhouse of experience.
 * Bad because community support would be poor.
-* Bad because even though it's provided by AWS they have lagging support for their service features.
-
+* Bad because it has lagging support to their service features.
