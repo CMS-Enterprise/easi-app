@@ -1,14 +1,6 @@
 <!-- Source: https://raw.githubusercontent.com/adr/madr/master/template/template.md -->
 
-# [Should infrastructure code be in a separate repository?]
-
-* Status: Proposed [Proposed, Accepted, Rejected, Deprecated, Superseded, etc.]
-* Deciders: Mikena, Eady, Chris
-* Date: 2019-10-17
-
-Technical Story: [Map Out Repository Structure| https://jiraent.cms.gov/projects/EASI/issues/EASI-5] 
-
-## Context and Problem Statement
+# Keep Infrastructure Code in a Separate Repo
 
 Should our infrastructure code be colocated with the application code it is supporting or in a separate repository?
 
@@ -28,7 +20,7 @@ Ideally the infra should be transparent to the application developers. They shou
 
 ## Decision Outcome
 
-Separate repo for Infrastructure.
+* *Separate repo for Infrastructure.*
 
 Decoupling the infrastructure and application deployments allows iteration to happen on both of those aspects of the project at separate speeds without hindering one another. We have experience in making this repo separation work and can easily configure CI and deployment tooling to allow for proper orchestration to bring these two pieces together.
 
@@ -36,7 +28,7 @@ Please see the full good/bad list below.
 
 ## Pros and Cons of the Options
 
-### [Keep everything in the same repository]
+### Keep everything in the same repository
 
 Put all code application, infrastructure configuration, and any supporting tooling in the same repository.
 
@@ -46,7 +38,7 @@ Put all code application, infrastructure configuration, and any supporting tooli
 * Bad, because it will take effort to get standard CI tools (such as CircleCI) to perform the right build actions on the right subdirectories.
 * Bad, if we want to open source this repository, CMS might object to keeping the infrastructure code with it.
 
-### [Separate repo for Infrastructure]
+### Separate repo for Infrastructure
 
 Keep application code and supporting tooling in a repository together and create a second repository for infrastructure configuration.
 

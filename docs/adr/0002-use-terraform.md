@@ -1,12 +1,6 @@
 <!-- Source: https://raw.githubusercontent.com/adr/madr/master/template/template.md -->
 
-# [How should we define and mange infrastructure?]
-
-* Status: Proposed [Proposed, Accepted, Rejected, Deprecated, Superseded, etc.] 
-* Deciders: Eady, Mikena, Chris
-* Date: 2019-10-17
-
-## Context and Problem Statement
+# Define and manage infrastructure with Terraform
 
 We should define pieces of infrastructure in code so that changes can be reviewed, audited, and tracked over time. We prefer a declarative format that can be run idempotently so that it's easer to understand the current state of infrastructure.
 
@@ -29,14 +23,14 @@ Terraform
 
 ## Pros and Cons of the Options
 
-### [Terraform]
+### Terraform
 
 * Good, because it is declarative and idempotent.
 * Good, because we have deep experience with this tooling internal at Truss.
 * Good, because there is a large community that uses and supports this tool.
 * Bad, because state management. (Mitigated by experience using the tool.)
 
-### [Cloudformation]
+### Cloudformation
 
 * Good, because it supports and is deeply integrated in AWS.
 * Good, because it is declarative.
