@@ -9,6 +9,12 @@ allows for the free sharing and modification of code
 and provides a number of benefits to the EASi team
 and outside community.
 
+Note that for the purpose of this ADR,
+we're referring to *just* the application code.
+This does not refer to the infrastructure code
+that is used to manage production environments
+and cloud services.
+
 ## Considered Alternatives
 
 * Open source application code
