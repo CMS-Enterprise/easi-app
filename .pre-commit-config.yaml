@@ -8,3 +8,11 @@
     rev: 1.0.5
     hooks:
       - id: shell-lint
+
+  - repo: local
+    hooks:
+      - id: mdspell
+        name: mdspell
+        entry: scripts/pre-commit-spellcheck
+        language: script
+        files: \.md$
