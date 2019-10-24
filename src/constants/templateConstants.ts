@@ -1,0 +1,2 @@
+export const SEND_TEMPLATE = 'SEND_TEMPLATE';
+export const UPDATE_TEMPLATE = 'UPDATE_TEMPLATE';

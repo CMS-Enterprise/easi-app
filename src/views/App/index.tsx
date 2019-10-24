@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const Main: React.FC = () => {
   return <div>Hello World</div>;
