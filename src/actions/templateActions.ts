@@ -6,7 +6,7 @@ interface Message {}
 
 interface SendMessageAction {}
 
-export function sendTemplate(message: Message): SendMessageAction {
+export default function sendTemplate(message: Message): SendMessageAction {
   return {
     tyoe: SEND_TEMPLATE,
     action: message
