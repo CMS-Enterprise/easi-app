@@ -1,4 +1,10 @@
 # npm/js ignores
 node_modules
 package-lock.json
+
+# Various temp files
 tmp
+
+
+# Binaries
+/bin/
