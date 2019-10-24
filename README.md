@@ -146,6 +146,18 @@ You will then find the code at `~/Projects/easi-app`.
 You can check the code out anywhere EXCEPT inside your `$GOPATH`.
 So this is customization that is up to you.
 
+### Setup: EASi Command Line
+
+The EASi application
+and command line utilities
+are powered by Go.
+To install them,
+run `go build -o bin/easi cmd/main.go`.
+
+You can then access the tool with the `easi` command.
+
+TODO: Need direnv setup
+
 ### Setup: Yarn (temporary)
 
 Run `brew install yarn` to install yarn.
