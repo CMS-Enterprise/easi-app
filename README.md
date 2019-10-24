@@ -5,6 +5,14 @@ for the CMS EASi (Easy Access to System Information).
 
 ## Application Setup
 
+### Setup: Yarn (temporary)
+
+Run `brew install yarn` to install yarn.
+Run `yarn install` to install dependencies.
+
+This is temporary for setting up pre-commit package,
+until we decide how to structure our CLI tools.
+
 ### Setup: Pre-Commit
 
 Run `pre-commit install`
