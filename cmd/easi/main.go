@@ -12,9 +12,6 @@ var rootCmd = &cobra.Command{
 	Short: "EASi is an application for managing the CMS IT project workflow",
 	Long: `EASi (Easy Access to System Information)
 			is an application for managing the CMS IT project workflow`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Print("Hello")
-	},
 }
 
 func Execute() {
@@ -26,6 +23,7 @@ func Execute() {
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
+	rootCmd.AddCommand(testCmd)
 }
 
 func main() {
