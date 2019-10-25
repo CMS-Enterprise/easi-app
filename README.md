@@ -177,3 +177,8 @@ so that the hook will check files
 you are about to commit to the repository.
 Next install the pre-commit hook libraries
 with `pre-commit install-hooks`.
+
+## Testing
+
+Once your developer environment is setup,
+you can run tests with the `easi test` command.
