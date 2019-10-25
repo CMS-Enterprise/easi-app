@@ -67,6 +67,14 @@ You can learn more in the [Create React App documentation](https://facebook.gith
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
+### Setup: Yarn (temporary)
+
+Run `brew install yarn` to install yarn.
+Run `yarn install` to install dependencies.
+
+This is temporary for setting up pre-commit package,
+until we decide how to structure our CLI tools.
+
 ### Setup: Pre-Commit
 
 Run `pre-commit install` to install a pre-commit hook into
