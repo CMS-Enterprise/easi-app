@@ -152,7 +152,7 @@ The EASi application
 and command line utilities
 are powered by Go.
 To install them,
-run `go build -o bin/easi cmd/main.go`.
+run `go build -o bin/easi ./cmd/easi`.
 
 You can then access the tool with the `easi` command.
 
