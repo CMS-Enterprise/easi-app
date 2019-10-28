@@ -14,7 +14,12 @@ toolset
 Homebrew
 zsh
 config
-repo
 Golang
 executables
 direnv
+repo
+repos
+onboarding
+searchable
+versioning
+submodules
