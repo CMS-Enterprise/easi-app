@@ -1,4 +1,5 @@
-import { SEND_TEMPLATE } from 'constants/templateConstants';
+import { SEND_TEMPLATE, UPDATE_DEMO_NAME } from 'constants/templateConstants';
+import { DemoNameAction } from 'types/demoName';
 
 // TODO: These interfaces may need to be exported into a separate file
 
@@ -6,9 +7,16 @@ interface Message {}
 
 interface SendMessageAction {}
 
-export default function sendTemplate(message: Message): SendMessageAction {
+export function sendTemplate(message: Message): SendMessageAction {
   return {
     tyoe: SEND_TEMPLATE,
-    action: message
+    payload: message
+  };
+}
+
+export function updateDemoName(name: string): DemoNameAction {
+  return {
+    type: UPDATE_DEMO_NAME,
+    payload: name
   };
 }
