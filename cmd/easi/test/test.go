@@ -6,6 +6,11 @@ import (
 	"os/exec"
 )
 
+func All() {
+	Pretest()
+	Server()
+}
+
 func Server() {
 	// I poked around with this for a bit
 	// and didn't find a way to execute without shelling out
@@ -24,6 +29,20 @@ func Server() {
 	}
 }
 
-func All() {
-	Server()
+func Pretest() {
+	golangCILint()
+}
+
+func golangCILint() {
+	c := exec.Command(
+		"golangci-lint",
+		"run",
+		"./pkg/...")
+	// Replace with some sort of configured writer
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	err := c.Run()
+	if err != nil {
+		log.Fatalf("Failed to execute golangci-lint: %v", err)
+	}
 }

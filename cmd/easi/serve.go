@@ -14,4 +14,3 @@ var serveCmd = &cobra.Command{
 		server.Serve()
 	},
 }
-
