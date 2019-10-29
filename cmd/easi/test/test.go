@@ -1,3 +1,4 @@
+// Package test is for test CLI tool execution logic
 package test
 
 import (
@@ -6,11 +7,13 @@ import (
 	"os/exec"
 )
 
+// All runs the full test suite
 func All() {
 	Pretest()
 	Server()
 }
 
+// Server runs only server tests (Go)
 func Server() {
 	// I poked around with this for a bit
 	// and didn't find a way to execute without shelling out
@@ -29,6 +32,8 @@ func Server() {
 	}
 }
 
+// Pretest runs tests that analyze code,
+// like linters
 func Pretest() {
 	golangCILint()
 }

@@ -11,11 +11,11 @@ var testCmd = &cobra.Command{
 	Short: "Test the EASi application",
 	Long:  `Test the EASi application`,
 	Run: func(cmd *cobra.Command, args []string) {
-		if All {
+		if all {
 			test.All()
-		} else if Pretest {
+		} else if pretest {
 			test.Pretest()
-		} else if Server {
+		} else if server {
 			test.Server()
 		} else {
 			test.All()
@@ -23,12 +23,12 @@ var testCmd = &cobra.Command{
 	},
 }
 
-var All bool
-var Pretest bool
-var Server bool
+var all bool
+var pretest bool
+var server bool
 
 func init() {
-	testCmd.Flags().BoolVarP(&All, "all", "a", false, "Run all tests")
-	testCmd.Flags().BoolVarP(&Pretest, "pretest", "p", false, "Run pretests (such as linters)")
-	testCmd.Flags().BoolVarP(&Server, "server", "s", false, "Run server tests")
+	testCmd.Flags().BoolVarP(&all, "all", "a", false, "Run all tests")
+	testCmd.Flags().BoolVarP(&pretest, "pretest", "p", false, "Run pretests (such as linters)")
+	testCmd.Flags().BoolVarP(&server, "server", "s", false, "Run server tests")
 }
