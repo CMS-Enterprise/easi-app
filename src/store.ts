@@ -4,14 +4,11 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import rootReducer from 'reducers/rootReducer';
 import rootSaga from 'sagas/rootSaga';
 
-// TODO: Redux Dev Tools should only be available in dev environments
-// NOT allowed on production environments.
-
 const sagaMiddleware = createSagaMiddleware();
 
 function configureStore() {
   const middleware = [sagaMiddleware];
-  console.log('env', process.env.NODE_ENV);
+
   switch (process.env.NODE_ENV) {
     case 'development':
       return createStore(

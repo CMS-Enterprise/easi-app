@@ -7,6 +7,12 @@ import store from './store';
 import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
+if (process.env.NODE_ENV === 'development') {
+  import('react-axe').then(axe => {
+    axe.default(React, ReactDOM, 1000);
+  });
+}
+
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
