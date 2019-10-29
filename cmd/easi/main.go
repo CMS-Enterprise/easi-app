@@ -1,3 +1,4 @@
+// Package main is the entrypoint for command line execution of the easi tool
 package main
 
 import (
@@ -14,7 +15,7 @@ var rootCmd = &cobra.Command{
 			is an application for managing the CMS IT project workflow`,
 }
 
-func Execute() {
+func execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -27,5 +28,5 @@ func init() {
 }
 
 func main() {
-	Execute()
+	execute()
 }
