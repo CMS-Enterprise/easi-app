@@ -1,6 +1,5 @@
 # Frontend Documentation
 
-
 ## File Structure
 
 All of the frontend React code lives in the `src` directory.
