@@ -8,10 +8,24 @@ import rootSaga from 'sagas/rootSaga';
 // NOT allowed on production environments.
 
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(sagaMiddleware))
-);
+
+function configureStore() {
+  const middleware = [sagaMiddleware];
+
+  switch (process.env.NODE_ENV) {
+    case 'development':
+      return createStore(
+        rootReducer,
+        composeWithDevTools(applyMiddleware(...middleware))
+      );
+    case 'production':
+      return createStore(rootReducer, applyMiddleware(...middleware));
+    default:
+      return createStore(rootReducer, applyMiddleware(...middleware));
+  }
+}
+
+const store = configureStore();
 
 sagaMiddleware.run(rootSaga);
 
