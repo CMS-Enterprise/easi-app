@@ -1,6 +1,6 @@
 /*
 This is some throwaway server code to setup testing
- */
+*/
 
 package server
 
