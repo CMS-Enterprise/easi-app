@@ -12,13 +12,15 @@ const Main: React.FC = () => {
   return (
     <div>
       <h1>Hello World</h1>
-      <label htmlFor="demoName">Demo Name Field</label>
-      <input
-        type="text"
-        name="demoName"
-        value={demoName.name}
-        onChange={updateName}
-      />
+      <label htmlFor="demoName">
+        Demo Name Field
+        <input
+          type="text"
+          name="demoName"
+          value={demoName.name}
+          onChange={updateName}
+        />
+      </label>
 
       <p>{`My Name is ${demoName.name}`}</p>
     </div>

@@ -27,7 +27,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint '**/*.{ts,tsx}'",
-    "lint:fix": "eslint --fix '**/*.{ts,tsx}'"
+    "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,6 +46,7 @@
     ]
   },
   "devDependencies": {
+    "cypress": "^3.5.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.5.0",
