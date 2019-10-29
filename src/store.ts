@@ -11,9 +11,14 @@ const sagaMiddleware = createSagaMiddleware();
 
 function configureStore() {
   const middleware = [sagaMiddleware];
-
+  console.log('env', process.env.NODE_ENV);
   switch (process.env.NODE_ENV) {
     case 'development':
+      return createStore(
+        rootReducer,
+        composeWithDevTools(applyMiddleware(...middleware))
+      );
+    case 'test':
       return createStore(
         rootReducer,
         composeWithDevTools(applyMiddleware(...middleware))
