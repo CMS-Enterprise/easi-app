@@ -139,7 +139,7 @@ Please check out the code in a directory like
   ```bash
   mkdir -p ~/Projects
   git clone git@github.com:cmsgov/easi-app.git
-  cd eas-app
+  cd easi-app
   ```
 
 You will then find the code at `~/Projects/easi-app`.
