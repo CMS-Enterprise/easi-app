@@ -1,6 +1,6 @@
 # Keep Infrastructure Code in a Separate Repo
 
-Should our infrastructure code be colocated with the application code it is
+Should our infrastructure code be collocated with the application code it is
 supporting or in a separate repository?
 
 Ideally the infra should be transparent to the application developers. They
@@ -58,7 +58,7 @@ create a second repository for infrastructure configuration.
 
 Note that you may need to pull out tools into their own projects and manage
 those separately. (Historically at Truss an example of this would be
-setup-new-aws-user.)
+`setup-new-aws-user`.)
 
 * Good, because this separates concerns of the code. Application developers  
 should be focused on the application first without caring about the  
