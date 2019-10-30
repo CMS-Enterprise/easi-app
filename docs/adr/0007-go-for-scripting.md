@@ -44,6 +44,8 @@ We're electing to add the Cobra library
 because it offers substantial value
 in its command line flag
 and configuration packages.
+The maintainability of Cobra style code
+should outweighs the complexity of setting up a third party package.
 
 We can mitigate some of the downsides of Go
 by building out command execution helpers,
@@ -66,6 +68,7 @@ and using Go packages as opposed to executing to shell.
 * `+` In the same language as the server application
 * `+` Support for packaging/easier organization
 * `+` More robust flag/config support than standard lib
+* `+` Subcommand and flag syntax lend towards more sustainable code
 * `-` Verbose for scripting
 * `-` Requires a package to run other command line tools
 * `-` Requires additional setup
