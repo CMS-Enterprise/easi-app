@@ -154,6 +154,9 @@ are powered by Go.
 To install them,
 run `go build -o bin/easi ./cmd/easi`.
 
+Next, follow the steps for [setting up yarn](#yarn).
+This is temporary until dependency setup is automated.
+
 You can then access the tool with the `easi` command.
 
 TODO: Need direnv setup
