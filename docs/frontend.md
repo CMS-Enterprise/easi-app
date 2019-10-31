@@ -20,7 +20,8 @@ You will also see any lint errors in the console.
 
 Launches the test runner in the interactive watch mode.
 
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) or more information.
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
+or more information.
 
 ### `yarn build`
 
@@ -33,7 +34,8 @@ The build is minified and the filenames include the hashes.
 
 Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment)
+for more information.
 
 ### `yarn eject`
 
@@ -73,17 +75,51 @@ All of the frontend React code lives in the `src` directory.
 │   ├── reducers                  # Redux reducers
 │   ├── sagas                     # Redux sagas
 │   ├── services                  # Async actions or API calls
-│   ├── types                     # Typescript interfaces and alias types
+│   ├── types                     # TypeScript interfaces and alias types
 │   └── views                     # Page or layout components
 │   ├── index.scss                # Entry point for all SCSS files
 │   ├── index.tsx                 # Entry point to inject React into HTML
 │   ├── store.ts                  # Initialization for Redux store
 ```
 
+## TypeScript
+
+Here are a few helpful resources that might be helpful to getting onboarded to
+using TypeScript with React.
+
+[Learn TypeScript in 50 Minutes - Tutorial for Beginners](https://www.youtube.com/watch?v=WBPrJSw7yQA)
+This is video goes over some of the basics of TypeScript. It’s great for those
+who enjoy learning by watching videos/tutorials. You might be able to get by at
+watching at 1.5 times speed.
+
+[TypeScript and React](https://fettblog.eu/typescript-react/)
+This is a primer on using TypeScript with React.
+
+[Redux - Usage with TypeScript](https://redux.js.org/recipes/usage-with-typescript)
+This is a link to the official Redux docs. It provides great info on how to
+incorporate type checking with Redux.
+
+[TypeScript Patterns](https://medium.com/@martin_hotell/10-typescript-pro-tips-patterns-with-or-without-react-5799488d6680)
+This blog post goes over some TypeScript patterns or “best practices” way of
+doing things. It touches on plain TypeScript patterns as well as React Specific
+patterns.
+
+[Type aliases vs. interfaces in TypeScript-based React apps](https://medium.com/@koss_lebedev/type-aliases-vs-interfaces-in-typescript-based-react-apps-e77c9a1d5fd0)
+This link might be helpful in de-mystifying the differences between Type
+aliases and interfaces.
+
+[React + TypeScript Cheat sheet](https://github.com/typescript-cheatsheets/react-typescript-cheatsheet)
+This repository contains a lot of examples of TypeScript syntax in different
+scenarios with React.
+
+[Composing React Components with TypeScript](https://www.pluralsight.com/guides/composing-react-components-with-typescript)
+This link has a basic step-by-step example of TypeScript with React. It also
+touches upon React patterns such as HOC and render props.
+
 ## Testing
 
 ### End-to-End Testing (Cypress)
 
-Currently, Cypress tests are written in Javascript. The benefit in writing these
-tests in Typescript isn't immediately apparent. If the project gravitates toward
-writing these tests in Typescript, there is documation in supporting that [here](https://www.cypress.io/blog/2019/05/13/code-create-react-app-v3-and-its-cypress-tests-using-typescript/).
+Currently, Cypress tests are written in JavaScript. The benefit in writing these
+tests in TypeScript isn't immediately apparent. If the project gravitates toward
+writing these tests in TypeScript, there is documentation in supporting that [here](https://www.cypress.io/blog/2019/05/13/code-create-react-app-v3-and-its-cypress-tests-using-typescript/).
