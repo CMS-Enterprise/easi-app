@@ -1,6 +1,7 @@
+// EXAMPLE - TO BE DELETED
+
 import { UPDATE_DEMO_NAME } from 'constants/templateConstants';
 import { DemoNameInterface } from 'types/demoName';
-// TODO: We may want to store interfaces/type aliases in a separate file
 
 const initialState: DemoNameInterface = {
   name: ''
