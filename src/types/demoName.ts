@@ -1,8 +1,8 @@
-export interface DemoNameAction {
+export type DemoNameAction = {
   type: string;
   payload: string;
-}
+};
 
-export interface DemoNameInterface {
+export type DemoNameInterface = {
   name: string;
-}
+};

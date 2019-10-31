@@ -1,7 +1,6 @@
+// EXAMPLE - TO BE DELETED
 import { SEND_TEMPLATE, UPDATE_DEMO_NAME } from 'constants/templateConstants';
 import { DemoNameAction } from 'types/demoName';
-
-// TODO: These interfaces may need to be exported into a separate file
 
 interface Message {}
 
