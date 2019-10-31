@@ -7,7 +7,7 @@
 Which React toolchain should we use to bootstrap CMS EASi?
 
 Bootstrapping a project is usually a tedious and time consuming task. It
-involves setting up a module bundler, configuring a Javascript compiler as
+involves setting up a module bundler, configuring a JavaScript compiler as
 well as wrangling all the dependencies to begin application development.
 Setting up an application from scratch or using an existing toolchain both
 have their pros and cons and these are points we want to explore.
@@ -53,5 +53,5 @@ Truss' Create React App fork
 Roll up a new application from scratch
 
 * `+` Complete control over configuration
-* `-` Lots of initial work and maintanence over time
+* `-` Lots of initial work and maintenance over time
 * `-` Lots of additional decisions to make on build tools and versions

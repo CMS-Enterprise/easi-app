@@ -16,6 +16,6 @@ node_modules/.bin/mdspell --ignore-numbers --ignore-acronyms --en-us -r "$@"
 
 exitCode=$?
 if [ ! ${exitCode} -eq 0 ]; then
-  echo -e "Oh no! There's a spelling error. Run ${GREEN}scripts/spellchecki${NC} to interactively handle these spelling errors."
+  echo -e "Oh no! There's a spelling error. Run ${GREEN}node_modules/.bin/mdspell --ignore-numbers --ignore-acronyms --en-us --no-suggestions${NC} to interactively handle these spelling errors."
 fi
 exit ${exitCode}
