@@ -1,7 +1,0 @@
-#! /usr/bin/env bash
-
-node_modules/.bin/mdspell --ignore-numbers --ignore-acronyms --en-us --no-suggestions \
-		"$(find . -type f -name "*.md" \
-			-not -path "./node_modules/*" \
-			-not -path "./vendor/*" \
-      -not -path "./docs/adr/index.md" | sort)"

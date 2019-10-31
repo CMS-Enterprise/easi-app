@@ -23,4 +23,12 @@ tmp
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+node_modules
 package-lock.json
+
+# Various temp files
+tmp
+
+
+# Binaries
+/bin/

@@ -2,7 +2,7 @@
 
 We should define pieces of infrastructure in code so that changes can be
 reviewed, audited, and tracked over time. We prefer a declarative format that
-can be run idempotently so that it's easer to understand the current state of
+can be run idempotently so that it's easier to understand the current state of
 infrastructure.
 
 We're assuming we'll be using AWS services.
@@ -16,7 +16,7 @@ We're assuming we'll be using AWS services.
 ## Considered Options
 
 * Terraform
-* Cloudformation
+* CloudFormation
 
 ## Decision Outcome
 
@@ -31,7 +31,7 @@ Terraform
 * Good, because there is a large community that uses and supports this tool.
 * Bad, because state management. (Mitigated by experience using the tool.)
 
-### Cloudformation
+### CloudFormation
 
 * Good, because it supports and is deeply integrated in AWS.
 * Good, because it is declarative.
