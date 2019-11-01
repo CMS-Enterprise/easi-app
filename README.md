@@ -1,7 +1,7 @@
 # CMS EASi Application
 
-This repository contains the application code for the CMS EASi (Easy Access to
-System Information).
+This repository contains the application code
+for the CMS EASi (Easy Access to System Information).
 
 ## Application Setup
 
