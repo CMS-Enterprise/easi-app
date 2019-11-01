@@ -1,3 +1,4 @@
+// Package main is the entrypoint for command line execution of the easi tool
 package main
 
 import (
@@ -15,7 +16,7 @@ var testCmd = &cobra.Command{
 			test.All()
 		} else if pretest {
 			test.Pretest()
-		} else if server {
+		} else if testServer {
 			test.Server()
 		} else {
 			test.All()
@@ -25,10 +26,10 @@ var testCmd = &cobra.Command{
 
 var all bool
 var pretest bool
-var server bool
+var testServer bool
 
 func init() {
 	testCmd.Flags().BoolVarP(&all, "all", "a", false, "Run all tests")
 	testCmd.Flags().BoolVarP(&pretest, "pretest", "p", false, "Run pretests (such as linters)")
-	testCmd.Flags().BoolVarP(&server, "server", "s", false, "Run server tests")
+	testCmd.Flags().BoolVarP(&testServer, "server", "s", false, "Run server tests")
 }

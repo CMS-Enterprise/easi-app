@@ -1,3 +1,4 @@
+// Package main is the entrypoint for command line execution of the easi tool
 package main
 
 import (
