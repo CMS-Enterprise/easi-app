@@ -9,6 +9,7 @@
   "plugins": ["jsx-a11y", "prettier"],
   "rules": {
     "semi": 0,
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "react/jsx-filename-extension": [1, { "extensions": ["ts", "tsx"] }],
     "prettier/prettier": [
       "error",
