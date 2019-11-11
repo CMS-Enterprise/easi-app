@@ -47,6 +47,12 @@ and run this project.
     and changing the `PATH`.
     Then source your profile with `source ~/.bashrc` or `~/.bash_profile`
     to ensure that your terminal has it.
+* **Note**:
+    If you have previously used yarn or Golang, please make sure none
+    of them are pinned to an old version by running `brew list --pinned`.
+    If they are pinned, please run `brew unpin <formula>`.
+    You can upgrade these formulas instead of installing by running
+    `brew upgrade <formula`.
 
 ### Setup: Git
 
