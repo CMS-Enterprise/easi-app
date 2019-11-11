@@ -1,13 +1,6 @@
 // Vendor Styles
 @import '~@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
 
-// Colors
-@import 'src/stylesheets/_colors.scss';
-
-// Component Styles
-@import 'src/views/App/index.scss';
-@import 'src/components/shared/NavBar/index.scss';
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

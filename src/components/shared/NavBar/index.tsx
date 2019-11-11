@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './index.scss';
 
 type NavBarProps = {
   isAuthenticated: boolean | null;
