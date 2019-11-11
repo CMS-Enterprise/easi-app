@@ -4,6 +4,7 @@ import { Security, SecureRoute, ImplicitCallback } from '@okta/okta-react';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import SuperSecret from 'views/SuperSecret';
+import './index.scss';
 
 // This can do anything. It doesn't have to redirect
 // It can be a pop up modal, alert message, etc.
