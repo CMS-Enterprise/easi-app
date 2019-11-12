@@ -38,3 +38,4 @@ bundler
 craco
 Postgres
 subcommand
+golangci-lint
