@@ -34,6 +34,11 @@ linters:
     - staticcheck # 30+files need to be patched
 issues:
   exclude-use-default: false
+  exclude-rules:
+    - path: cmd/easi/(serve|test)\.go
+      text: "should have a package comment, unless it's in another file for this package"
+      linters:
+        - golint
 run:
   # timeout for analysis, e.g. 30s, 5m, default is 1m
   deadline: 8m
