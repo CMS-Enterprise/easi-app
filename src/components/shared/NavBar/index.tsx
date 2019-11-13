@@ -1,20 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { withAuth } from '@okta/okta-react';
+import useAuth from 'hooks/useAuth';
 import './index.scss';
 
 type NavBarProps = {
-  isAuthenticated: boolean | null;
-  handleLogout: () => void | null;
+  auth: any;
 };
 
-const NavBar = ({ isAuthenticated, handleLogout }: NavBarProps) => {
+const NavBar = ({ auth }: NavBarProps) => {
+  const [isAuthenticated] = useAuth(auth);
+  const handleLogout = () => {
+    console.log(auth);
+    try {
+      auth.logout('/');
+    } catch {
+      window.location.href = '/';
+    }
+  };
+
   return (
     <nav className="navbar">
-      <img
-        alt="Logo"
-        className="navbar__logo"
-        src="https://pngimage.net/wp-content/uploads/2018/05/demo-logo-png.png"
-      />
+      <Link to="/">
+        <img
+          alt="Logo"
+          className="navbar__logo"
+          src="https://pngimage.net/wp-content/uploads/2018/05/demo-logo-png.png"
+        />
+      </Link>
       <div className="navbar__link-container">
         <Link className="navbar__nav-link" to="/">
           Home
@@ -38,8 +51,7 @@ const NavBar = ({ isAuthenticated, handleLogout }: NavBarProps) => {
 };
 
 NavBar.defaultProps = {
-  isAuthenticated: false,
-  handleLogout: () => {}
+  auth: {}
 };
 
-export default NavBar;
+export default withAuth(NavBar);

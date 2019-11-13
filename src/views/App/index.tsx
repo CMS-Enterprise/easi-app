@@ -4,6 +4,7 @@ import { Security, SecureRoute, ImplicitCallback } from '@okta/okta-react';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import SuperSecret from 'views/SuperSecret';
+import NavBar from 'components/shared/NavBar';
 import './index.scss';
 
 // This can do anything. It doesn't have to redirect
@@ -24,6 +25,7 @@ const App: React.FC = () => {
           responseType={['code']}
           pkce
         >
+          <NavBar />
           <Route path="/" exact component={Home} />
           <Route path="/login" exact component={Login} />
           <SecureRoute path="/protected" exact component={SuperSecret} />
