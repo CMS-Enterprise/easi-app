@@ -11,6 +11,10 @@ Django
 frontend
 APIs
 toolset
+http
+filenames
+Webpack
+ESLint
 Homebrew
 zsh
 config
@@ -38,4 +42,5 @@ bundler
 craco
 Postgres
 subcommand
+onboarded
 golangci-lint
