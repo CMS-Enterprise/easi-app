@@ -3,20 +3,25 @@ repos:
     rev: v0.19.0
     hooks:
       - id: markdownlint
-        entry: markdownlint --ignore .github/*.md
+        entry: markdownlint --ignore docs/adr/index.md
 
   - repo: git://github.com/detailyang/pre-commit-shell
     rev: 1.0.5
     hooks:
       - id: shell-lint
 
-  - repo: local
+  - repo: git://github.com/trussworks/pre-commit-hooks
+    rev: v0.0.2
     hooks:
+      - id: gen-docs
+        args: ["docs/adr"]
       - id: mdspell
-        name: mdspell
-        entry: scripts/pre-commit-spellcheck
-        language: script
-        files: \.md$
+        exclude: >
+          (?x)^(
+            node_modules/|
+            vendor/|
+            docs/adr/index.md
+          )$
 
   - repo: git://github.com/golangci/golangci-lint
     rev: v1.21.0
