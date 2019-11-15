@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateDemoName } from 'actions/templateActions';
+import Header from './Header';
 
 const Main: React.FC = () => {
   const demoName = useSelector((state: any) => state.demoName);
@@ -11,6 +12,7 @@ const Main: React.FC = () => {
 
   return (
     <div>
+      <Header />
       <h1>Hello World</h1>
       <label htmlFor="demoName">
         Demo Name Field
