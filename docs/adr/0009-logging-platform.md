@@ -43,7 +43,7 @@ and using Cloudwatch and Athena... Athena makes it pretty easy to/
 
 ### *Honeycomb*
 
-* `+` CMS did sign a contract with Honeycomb
+* `+` CMS has some kind of contract with Honeycomb
 * `+` Cool log exploration tool
 * `+` Easy to send what you find to each other
 * `-` AWS West has not implemented this tooling
