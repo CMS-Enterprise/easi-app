@@ -1,5 +1,7 @@
-// Component Styles
-@import 'src/views/App/index.scss';
+@import './stylesheets/settings.scss';
+
+// Vendor Styles
+@import 'uswds';
 
 body {
   margin: 0;
