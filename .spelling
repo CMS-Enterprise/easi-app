@@ -44,3 +44,7 @@ Postgres
 subcommand
 onboarded
 golangci-lint
+Hashicorp
+NewRelic
+Kibana
+Cloudwatch
