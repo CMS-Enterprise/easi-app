@@ -1,9 +1,9 @@
 # Use AWS logging tools
 
-To better debug and monitor the EASi application
-we need some kind of logging solution that allows
-us easy access to log information, to send and index
-logs and information,
+We would like a set of tooling to aid in debugging and monitoring
+the EASi application. We would like this solution to be easy to
+send logs into, easy to integrate infrastructure tooling into,
+and manageable alongside our infrastructure configuration if possible.
 
 ## Considered Alternatives
 
@@ -16,22 +16,23 @@ logs and information,
 
 Chosen Alternative: *AWS built-in tooling*
 
-**Why do this?**
+AWS provides common tooling for logging of infrastructure services.
+Cloudwatch and S3 are common endpoints to send both metrics and logs into.
+We can use Cloudwatch to create dashboards and we can use Athena
+we would be able to create dashboards and explore the data.
+Additionally we can manage the configuration of these tools in Terraform
+alongside the configuration for the infrastructure we define in Terraform.
 
 ## Pros and Cons of the Alternatives
 
 ### *AWS built-in tooling*
-
-AWS provides common configurations for logging of infrastructure services.
-Cloudwatch and S3 are common endpoints to send both metrics and logs into
-and using Cloudwatch and Athena... Athena makes it pretty easy to/
 
 * `+` Configuration is built into the infrastructure platform
 * `+` Truss has internal experience with these tools
 * `+` Can be configured in Terraform
 * `+` Can easily be adapted for application logs
 * `-` Minor latency in logs being indexed
-* `-` Thing
+* `-` Cloudwatch configuration can be a bit limited
 
 ### *ELK stack*
 
@@ -39,7 +40,7 @@ and using Cloudwatch and Athena... Athena makes it pretty easy to/
 * `+` Required by AWS West
 * `-` Kibana has a steep learning curve
 * `-` Latency in the logs being indexed
-* `-` It's behind a VPN
+* `-` It's behind a VPN and less accessible
 
 ### *Honeycomb*
 
@@ -55,4 +56,5 @@ and using Cloudwatch and Athena... Athena makes it pretty easy to/
 * `+` CMS does have a NewRelic contract
 * `+` Can also do metrics
 * `-` Not entirely sure CMS uses the logging feature set
-* `-` Is New Relic
+* `-` Logging isn't NewRelic's main product
+* `-` Requires installing their agent
