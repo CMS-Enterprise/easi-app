@@ -48,3 +48,6 @@ Hashicorp
 NewRelic
 Kibana
 Cloudwatch
+Cloudtrail
+Fargate
+auditable
