@@ -13,6 +13,15 @@ const Header: React.FC = () => {
             </em>
           </div>
         </div>
+        <nav className="usa-nav" aria-label="Primary navigation">
+          <ul className="usa-nav__primary usa-accordion">
+            <li className="usa-nav__primary-item">
+              <a className="usa-nav__link" href="/">
+                Welcome, Agent 007
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </header>
   );
