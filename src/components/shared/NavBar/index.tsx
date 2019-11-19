@@ -10,12 +10,13 @@ type NavBarProps = {
 
 const NavBar = ({ auth }: NavBarProps) => {
   const [isAuthenticated] = useAuth(auth);
-  const handleLogout = () => {
-    console.log(auth);
-    try {
+
+  const handleLogout = async () => {
+    const authenticated = await auth.isAuthenticated();
+    if (authenticated) {
       auth.logout('/');
-    } catch {
-      window.location.href = '/';
+    } else {
+      document.location.href = '/';
     }
   };
 
@@ -48,10 +49,6 @@ const NavBar = ({ auth }: NavBarProps) => {
       </div>
     </nav>
   );
-};
-
-NavBar.defaultProps = {
-  auth: {}
 };
 
 export default withAuth(NavBar);

@@ -1,15 +1,7 @@
 import React from 'react';
-import { withAuth } from '@okta/okta-react';
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
-import useAuth from 'hooks/useAuth';
 
-type LoginProps = {
-  auth: any;
-};
-const Login: React.FC<LoginProps> = ({ auth }: LoginProps) => {
-  const [isAuthenticated, user] = useAuth(auth);
-  console.log('isAuthenticated', isAuthenticated);
-  console.log('user', user);
+const Login = () => {
   return (
     <div>
       <OktaSignInWidget
@@ -22,4 +14,4 @@ const Login: React.FC<LoginProps> = ({ auth }: LoginProps) => {
   );
 };
 
-export default withAuth(Login);
+export default Login;
