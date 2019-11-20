@@ -15,7 +15,8 @@ const (
 	draft status = "DRAFT"
 )
 
-type profile struct {
+// Profile is a simple struct for testing the API
+type Profile struct {
 	Name         string
 	SystemOwners []string
 	CreatedAt    time.Time
@@ -25,7 +26,7 @@ type profile struct {
 
 // HandleLanding is the handler for the root path
 func HandleLanding(w http.ResponseWriter, r *http.Request) {
-	sampleProfile := profile{
+	sampleProfile := Profile{
 		Name:         "My Favorite Project",
 		SystemOwners: []string{"admin@example.com", "operations@example.com"},
 		CreatedAt:    time.Now(),

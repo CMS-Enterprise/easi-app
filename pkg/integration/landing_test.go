@@ -1,6 +1,7 @@
 package integration
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -24,7 +25,9 @@ func TestHandleLanding(t *testing.T) {
 		t.Errorf("handler returned %v, wanted %v", s, http.StatusOK)
 	}
 
-	if s := rr.Body.String(); s != "The EASi web app!" {
+	var profile server.Profile
+	err = json.Unmarshal(rr.Body.Bytes(), &profile)
+	if profile.Name != "My Favorite Project" || err != nil {
 		t.Errorf("Incorrect response body. Got %v", rr.Body.String())
 	}
 }
