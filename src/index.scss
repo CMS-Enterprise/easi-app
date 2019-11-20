@@ -1,5 +1,8 @@
+@import './stylesheets/settings.scss';
+
 // Vendor Styles
 @import '~@okta/okta-signin-widget/dist/css/okta-sign-in.min.css';
+@import 'uswds';
 
 body {
   margin: 0;
