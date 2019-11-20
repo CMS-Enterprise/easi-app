@@ -15,7 +15,7 @@ var testCmd = &cobra.Command{
 			test.All()
 		} else if pretest {
 			test.Pretest()
-		} else if server {
+		} else if serverTest {
 			test.Server()
 		} else {
 			test.All()
@@ -25,10 +25,10 @@ var testCmd = &cobra.Command{
 
 var all bool
 var pretest bool
-var server bool
+var serverTest bool
 
 func init() {
 	testCmd.Flags().BoolVarP(&all, "all", "a", false, "Run all tests")
 	testCmd.Flags().BoolVarP(&pretest, "pretest", "p", false, "Run pretests (such as linters)")
-	testCmd.Flags().BoolVarP(&server, "server", "s", false, "Run server tests")
+	testCmd.Flags().BoolVarP(&serverTest, "server", "s", false, "Run server tests")
 }

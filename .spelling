@@ -43,3 +43,4 @@ craco
 Postgres
 subcommand
 onboarded
+golangci-lint

@@ -69,8 +69,8 @@ All of the frontend React code lives in the `src` directory.
 ```javascript
 ├── src
 │   ├── actions                   # Redux action creators
-│   ├── components                # Common "EASi specific" React components used throughout the application
-│   │   └── shared                # Common utility components (e.g. buttons, tables, loading spinner, etc.)
+│   ├── components                # Common "EASi specific" React components
+│   │   └── shared                # Utility components (e.g. button, spinner)
 │   ├── constants                 # Application constants (e.g. Redux action types)
 │   ├── reducers                  # Redux reducers
 │   ├── sagas                     # Redux sagas
