@@ -44,3 +44,5 @@ Postgres
 subcommand
 onboarded
 golangci-lint
+cli
+filesystem
