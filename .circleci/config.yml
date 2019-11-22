@@ -12,11 +12,15 @@ jobs:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - run:
+          name: Update pre-commit deps
+          command: pre-commit autoupdate
+      - run:
           name: Install dependencies for pre-commit in yarn (temporary?)
           command: yarn install
       - run:
           name: Run pre-commit checks
           command: pre-commit run --all-files
+          command: pre-commit run --all-files --show-diff-on-failure
       - run:
           name: Run Frontend Tests
           command: yarn test
