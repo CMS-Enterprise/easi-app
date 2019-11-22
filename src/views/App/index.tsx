@@ -1,32 +1,39 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { updateDemoName } from 'actions/templateActions';
-import Header from './Header';
+import Header from 'components/Header';
 
-const Main: React.FC = () => {
-  const demoName = useSelector((state: any) => state.demoName);
-  const dispatch = useDispatch();
-  const updateName = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    dispatch(updateDemoName(event.target.value));
-  };
-
-  return (
-    <div>
-      <Header />
-      <h1>Hello World</h1>
-      <label htmlFor="demoName">
-        Demo Name Field
-        <input
-          type="text"
-          name="demoName"
-          value={demoName.name}
-          onChange={updateName}
-        />
-      </label>
-
-      <p>{`My Name is ${demoName.name}`}</p>
-    </div>
-  );
+type MainState = {
+  name: string;
 };
+
+type MainProps = {};
+
+class Main extends React.Component<MainProps, MainState> {
+  constructor(props: MainProps) {
+    super(props);
+    this.state = {
+      name: 'Isaac'
+    };
+  }
+
+  componentDidMount(): void {
+    fetch('http://localhost:8080')
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ name: data.SystemOwners[0] });
+      })
+      // eslint-disable-next-line no-console
+      .catch(console.log);
+  }
+
+  render() {
+    const { name } = this.state;
+    return (
+      <div>
+        <Header />
+        <h1>{name}</h1>
+      </div>
+    );
+  }
+}
 
 export default Main;
