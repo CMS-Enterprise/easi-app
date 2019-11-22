@@ -14,5 +14,7 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0007](0007-go-for-scripting.md) - Use Go as CLI/Scripting Language
 - [ADR-0008](0008-ssm-for-configsecrets.md) - Use AWS SSM Parameter Store for Config/Secrets management
 - [ADR-0009](0009-logging-platform.md) - Use AWS logging tools
+- [ADR-0010](0010-build-and-deploy-go-backend.md) - Build and deploy EASi backend to AWS Fargate
+- [ADR-0011](0011-build-and-deploy-react.md) - Build frontend static files and deploy to AWS s3
 
 <!-- adrlogstop -->
