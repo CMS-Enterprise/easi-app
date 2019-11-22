@@ -12,5 +12,7 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0005](0005-frontend-toolchain-choice.md) - *Use Create React App for frontend bootstrapping*
 - [ADR-0006](0006-frontend-server-repo.md) - Keep Server and Frontend in Same Repository
 - [ADR-0007](0007-go-for-scripting.md) - Use Go as CLI/Scripting Language
+- [ADR-0008](0008-ssm-for-configsecrets.md) - Use AWS SSM Parameter Store for Config/Secrets management
+- [ADR-0009](0009-logging-platform.md) - Use AWS logging tools
 
 <!-- adrlogstop -->
