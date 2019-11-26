@@ -46,3 +46,10 @@ onboarded
 golangci-lint
 cli
 filesystem
+Hashicorp
+NewRelic
+Kibana
+Cloudwatch
+Cloudtrail
+Fargate
+auditable
