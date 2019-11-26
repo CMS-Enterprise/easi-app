@@ -7,3 +7,5 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 WORKDIR /easi/
 COPY --from=builder /easi/bin/easi .
+RUN adduser -D -H easi
+USER easi
