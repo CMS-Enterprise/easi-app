@@ -205,8 +205,8 @@ You can then access the tool with the `easi` command.
 To build the application and run in Docker:
 
 ```sh
-docker build --no-cache -t easi:latest .
-docker run -p 8080:8080 -t --rm easi:latest /easi/easi serve
+docker build --no-cache --tag easi:latest .
+docker run --read-only --tmpfs /tmp --publish 8080:8080 --rm easi:latest /easi/easi serve
 ```
 
 ## Testing
