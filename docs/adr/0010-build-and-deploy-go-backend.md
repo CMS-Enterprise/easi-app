@@ -3,9 +3,7 @@
 The EASi application backend is a server written in golang.
 
 We want to be able to manage the infrastructure
-configuration in code preferably Terraform.
-We want to manage the service definition alongside other
-infrastructure dependencies.
+configuration and service definition together in code.
 We want a deployment platform that is low effort to
 maintain and has rollback capabilities.
 
@@ -33,7 +31,7 @@ What is life...
 
 `*` There is a new type of autoscaling group that can help manage
 instance lifecycle based on uptime of instance but it was _just_
-announced at re:Invent.
+announced. I don't know if or how it works yet.
 
 ### *Build Docker containers and deploy services to ECS*
 
