@@ -1,4 +1,5 @@
 import React from 'react';
+import Header from 'components/Header';
 
 type MainState = {
   name: string;
@@ -28,6 +29,7 @@ class Main extends React.Component<MainProps, MainState> {
     const { name } = this.state;
     return (
       <div>
+        <Header />
         <h1>{name}</h1>
       </div>
     );
