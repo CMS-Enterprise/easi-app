@@ -7,20 +7,32 @@ them into s3
 
 ## Considered Alternatives
 
-* *Option 1*
+* *Build static files and put them in Docker image with backend*
+* *Build frontend files and put it in Docker image by itself*
+* *Build static files and serve them from S3*
 
 ## Decision Outcome
 
-Chosen Alternative: *Option*
+Chosen Alternative: *Build static files and serve them from S3*
+
+This does mean we'll need to configure the web server in a
+way that allows the end user to directly refer to the static
+files in s3.
 
 ## Pros and Cons of the Alternatives
 
-### *Option 1*
+### *Build static files and put them in Docker image with backend*
+
+* `+` Positive
+* `+/-` Tightly couples the frontend with the backend
+* `-` Negative
+
+### *Build frontend files and put it in Docker image by itself*
 
 * `+` Positive
 * `-` Negative
 
-### *Option 2*
+### *Build static files and serve them from S3*
 
 * `+` Positive
 * `-` Negative
