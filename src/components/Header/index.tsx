@@ -20,8 +20,14 @@ export const Header = ({ auth }: HeaderProps) => {
               </Link>
             </em>
           </div>
+          <button type="button" className="usa-menu-btn">
+            <span className="fa fa-bars" />
+          </button>
         </div>
         <nav className="usa-nav" aria-label="Primary navigation">
+          <button type="button" className="usa-nav__close">
+            <span className="fa fa-close" />
+          </button>
           <ul className="usa-nav__primary usa-accordion">
             {isAuthenticated && (
               <li className="usa-nav__primary-item">
