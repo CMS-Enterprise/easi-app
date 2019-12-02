@@ -7,9 +7,8 @@ type HeaderProps = {
   auth: any;
 };
 
-const Header = ({ auth }: HeaderProps) => {
+export const Header = ({ auth }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
-
   return (
     <header className="usa-header usa-header--basic" role="banner">
       <div className="usa-nav-container header-widescreen">
