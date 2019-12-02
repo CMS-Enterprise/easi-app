@@ -3,8 +3,12 @@ module github.com/cmsgov/easi-app
 go 1.13
 
 require (
+	github.com/graph-gophers/graphql-go v0.0.0-20191115155744-f33e81362277 // indirect
+	github.com/lestrrat-go/jwx v0.9.0 // indirect
 	github.com/magiconair/properties v1.8.1 // indirect
+	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
+	github.com/pkg/errors v0.8.1 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
