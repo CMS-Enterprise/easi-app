@@ -1,9 +1,13 @@
 # Build frontend static files and deploy to AWS s3
 
 The EASi frontend is built in React.
+It is common practice to build the static assets for the
+React app and host them somewhere highly available.
 
-We will be building the static files in CI and pushing
-them into s3
+We'll want them to be easily accessible and easy to integrate
+into our architecture.
+Preferably we would manage the CDN or file server in
+Terraform along with our other infrastructure configuration.
 
 ## Considered Alternatives
 
@@ -23,19 +27,23 @@ files in s3.
 
 ### *Build static files and put them in Docker image with backend*
 
-* `+` Positive
+* `+` Everything can be built and tracked in one container
+* `+` Simpler deployment/CI workflows
 * `+/-` Tightly couples the frontend with the backend
-* `-` Negative
+* `-` Docker container could get bloated
 
 ### *Build frontend files and put it in Docker image by itself*
 
-* `+` Positive
-* `-` Negative
+* `-` Will be annoying to serve from the backend
+* `-` Why build a container just to ship files around?
 
 ### *Build static files and serve them from S3*
 
-* `+` Positive
-* `-` Negative
+* `+` S3 can be managed in Terraform
+* `+` Truss knows how to configure this
+* `+` Truss knows how to configure s3 for this
+* `+` If this doesn't scale well, we could put Cloudfront in front of it
+* `-` We'll have to do some work to make sure thee backend can serve it
 
 ## References
 
