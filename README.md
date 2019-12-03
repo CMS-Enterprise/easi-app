@@ -31,7 +31,7 @@ and run this project.
   * Install it with Homebrew:
     `brew install bash`
   * Update list of shells that users can choose from:
-  
+
     ```bash
         [[ $(cat /etc/shells | grep /usr/local/bin/bash) ]] \
         || echo "/usr/local/bin/bash" | sudo tee -a /etc/shells
@@ -152,18 +152,7 @@ You will then find the code at `~/Projects/easi-app`.
 You can check the code out anywhere EXCEPT inside your `$GOPATH`.
 So this is customization that is up to you.
 
-### Setup: EASi Command Line
-
-The EASi application
-and command line utilities
-are powered by Go.
-To install them,
-run `go build -o bin/easi ./cmd/easi`.
-
-Next, follow the steps for [setting up yarn](#yarn).
-This is temporary until dependency setup is automated.
-
-You can then access the tool with the `easi` command.
+### Setup: direnv
 
 TODO: Need direnv setup
 
@@ -186,6 +175,39 @@ so that the hook will check files
 you are about to commit to the repository.
 Next install the pre-commit hook libraries
 with `pre-commit install-hooks`.
+
+### Setup: Docker
+
+To set up docker on your local machine:
+
+```sh
+brew cask install docker
+brew install docker-completion
+```
+
+Now you will need to start the Docker service: run Spotlight and type in
+'docker'.
+
+## Build
+
+### Golang cli app
+
+To build the cli application in your local filesystem:
+
+```sh
+go build -a -o bin/easi ./cmd/easi
+```
+
+You can then access the tool with the `easi` command.
+
+### Docker
+
+To build the application and run in Docker:
+
+```sh
+docker build --no-cache --tag easi:latest .
+docker run --read-only --tmpfs /tmp --publish 8080:8080 --rm easi:latest /easi/easi serve
+```
 
 ## Testing
 
