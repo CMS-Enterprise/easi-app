@@ -17,7 +17,10 @@ maintain and has rollback capabilities.
 
 Chosen Alternative: *Build Docker containers and deploy services to ECS: Fargate*
 
-What is life...
+It may take a bit more effort to trail blaze the patterns of
+container management at CMS and we might need to do more
+TRB consults or Security consults but AWS will do most of the
+heavy lifting for scalability and maintenance.
 
 ## Pros and Cons of the Alternatives
 
@@ -38,9 +41,13 @@ announced. I don't know if or how it works yet.
 * `+` Docker containers can be immutable artifacts
 * `+` Docker containers are a known pattern for Truss
 * `-` Docker containers are a new pattern at CMS
+* `-` Managing the security of the underlying ECS servers
 * `-` You have to manage instance lifecycle
 
 ### *Build Docker containers and deploy services to ECS: Fargate*
 
-* `+` Automated instance lifecycle management
-* `-` Negative
+* `+` Docker containers can be immutable artifacts
+* `+` Docker containers are a known pattern for Truss
+* `+` AWS manages the security of the underlying servers
+* `+` AWS manages the underlying server lifecycle
+* `-` Docker containers are a new pattern at CMS

@@ -58,3 +58,5 @@ lifecycle
 uptime
 autoscaling
 s3
+trailblaze
+Cloudfront
