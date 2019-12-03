@@ -19,7 +19,6 @@ jobs:
           command: yarn install
       - run:
           name: Run pre-commit checks
-          command: pre-commit run --all-files
           command: pre-commit run --all-files --show-diff-on-failure
       - run:
           name: Run Frontend Tests
