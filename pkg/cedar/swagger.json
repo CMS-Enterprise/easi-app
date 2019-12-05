@@ -1,0 +1,140 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This resource provides access to Application information in the CMS Enterprise Data Analytics Repository.",
+    "version" : "1.1",
+    "title" : "Cedar Applications"
+  },
+  "host" : "webmethods-apigw.cedarimpl.cms.gov",
+  "basePath" : "/gateway/Cedar Applications/1.1",
+  "tags" : [ {
+    "name" : "backend_is"
+  } ],
+  "schemes" : [ "https" ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "security" : [ {
+    "apiKey" : [ ]
+  } ],
+  "paths" : {
+    "/list" : {
+      "get" : {
+        "tags" : [ "backend_is" ],
+        "description" : "",
+        "operationId" : "list_GET_2",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Limit",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "Offset",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/list_GET_response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied"
+          }
+        }
+      }
+    },
+    "/getDetails" : {
+      "get" : {
+        "tags" : [ "backend_is" ],
+        "description" : "",
+        "operationId" : "getDetails_GET_1",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "EmptyValues",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "Refs",
+          "in" : "query",
+          "description" : "",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/getDetails_GET_response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "apiKey" : {
+      "type" : "apiKey",
+      "name" : "x-Gateway-APIKey",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "list_GET_response" : {
+      "type" : "object",
+      "required" : [ "errors", "result" ],
+      "properties" : {
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/errors_1"
+          }
+        },
+        "result" : {
+          "$ref" : "#/definitions/result_1"
+        }
+      }
+    },
+    "result" : {
+      "type" : "object"
+    },
+    "result_1" : {
+      "type" : "object"
+    },
+    "errors_1" : {
+      "type" : "object"
+    },
+    "getDetails_GET_response" : {
+      "type" : "object",
+      "required" : [ "errors", "result" ],
+      "properties" : {
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/errors"
+          }
+        },
+        "result" : {
+          "$ref" : "#/definitions/result"
+        }
+      }
+    },
+    "errors" : {
+      "type" : "object"
+    }
+  }
+}
