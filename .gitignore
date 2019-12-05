@@ -34,3 +34,6 @@ tmp
 
 # Binaries
 /bin/
+
+# Go ignores
+gen
