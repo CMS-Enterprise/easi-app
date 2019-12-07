@@ -1,6 +1,7 @@
+---
 version: 2
 jobs:
-  validate:
+  pre_test:
     docker:
       - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
     steps:
@@ -11,9 +12,6 @@ jobs:
       - restore_cache:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
-      - run:
-          name: Update pre-commit deps
-          command: pre-commit autoupdate
       - run:
           name: Install dependencies for pre-commit in yarn (temporary?)
           command: yarn install
@@ -31,9 +29,39 @@ jobs:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - app_tests:
+          name: Run golang app tests
+          command: true  # TODO
+
+  build_tag_push:
+    docker:
+      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+    steps:
+      - run:
+          name: Build the thing in docker, tag, and push to ECR
+          command: |
+            docker build --no-cache --tag "easi:$CIRCLE_SHA1" .
+            bash -c "$(aws ecr get-login --no-include-email --region "$AWS_DEFAULT_REGION")"
+            docker tag <AWS_ACCOUNT_ID>dkr.ecr.us-west-2.amazonaws.com:git-"$CIRCLE_SHA1"  # TODO
+            docker push <AWS_ACCOUNT_ID>dkr.ecr.us-west-2.amazonaws.com:git-"$CIRCLE_SHA1"  # TODO
+
+  test:
+    docker:
+      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+    steps:
+      - run:
+          name: Test the built thing in docker
+          command: |
+            docker pull <AWS_ACCOUNT_ID>dkr.ecr.us-west-2.amazonaws.com:git-"$CIRCLE_SHA1"  # TODO
+            # TODO run_tests_on_container
 
 workflows:
   version: 2
-  validate:
+  compile:
     jobs:
-      - validate
+      - pre_test
+      - build_tag_push
+      - test:
+          requires:
+            - pre_test
+            - build_tag_push
