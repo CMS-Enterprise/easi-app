@@ -8,9 +8,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
-func verify(token string) bool {
+func verify(authHeader string) bool {
+	tokenParts := strings.Split(authHeader, "Bearer ")
+	fmt.Println(tokenParts)
+	bearerToken := tokenParts[1]
+
 	toValidate := map[string]string{}
 	toValidate["cid"] = os.Getenv("OKTA_CLIENT_ID")
 	toValidate["aud"] = "api://default"
@@ -22,7 +27,7 @@ func verify(token string) bool {
 
 	verifier := jwtVerifierSetup.New()
 
-	jwt, err := verifier.VerifyAccessToken(token)
+	jwt, err := verifier.VerifyAccessToken(bearerToken)
 
 	fmt.Println(jwt)
 	fmt.Println(err)
@@ -34,7 +39,9 @@ func verify(token string) bool {
 
 func authorizeHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		verify(r.Header.Get("accessToken"))
+		authHeader := r.Header.Get("Authorization")
+		fmt.Println(authHeader)
+		verify(authHeader)
 		next.ServeHTTP(w, r)
 	})
 }

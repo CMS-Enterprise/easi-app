@@ -11,33 +11,13 @@ import SystemProfiles from 'views/SystemProfiles';
 
 import './index.scss';
 
-type MainState = {
-  name: string;
-};
+type MainState = {};
 
 type MainProps = {};
 
+// eslint-disable-next-line react/prefer-stateless-function
 class App extends React.Component<MainProps, MainState> {
-  constructor(props: MainProps) {
-    super(props);
-    this.state = {
-      name: 'Isaac'
-    };
-  }
-
-  componentDidMount(): void {
-    fetch('http://localhost:8080')
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ name: data.SystemOwners[0] });
-      })
-      // eslint-disable-next-line no-console
-      .catch(console.log);
-  }
-
   render() {
-    const { name } = this.state;
-    console.log(name);
     return (
       <div>
         <div className="usa-overlay" />
