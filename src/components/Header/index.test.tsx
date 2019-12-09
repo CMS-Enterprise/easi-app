@@ -38,9 +38,9 @@ describe('The Header component', () => {
         })
     };
 
-    it('displays a login button', done => {
+    it('displays a login button', async done => {
       let component;
-      act(() => {
+      await act(async () => {
         component = mount(
           <BrowserRouter>
             <Header auth={auth} />
@@ -56,12 +56,16 @@ describe('The Header component', () => {
       });
     });
 
-    it('displays the users email', done => {
-      const component = mount(
-        <BrowserRouter>
-          <Header auth={auth} />
-        </BrowserRouter>
-      );
+    it('displays the users email', async done => {
+      let component;
+
+      await act(async () => {
+        component = mount(
+          <BrowserRouter>
+            <Header auth={auth} />
+          </BrowserRouter>
+        );
+      });
 
       setImmediate(() => {
         component.update();
