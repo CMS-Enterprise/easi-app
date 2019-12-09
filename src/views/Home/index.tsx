@@ -27,14 +27,15 @@ class Home extends React.Component<HomeProps, HomeState> {
   async getEmailAddress() {
     const { auth } = this.props;
     const accessToken = await auth.getAccessToken();
-    /* eslint-disable no-console */
-    console.log(accessToken);
     const response = await fetch('http://localhost:8080', {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        console.log(res.headers);
+        return res.json();
+      })
       .then(data => {
         this.setState({ name: data.SystemOwners[0] });
       })

@@ -13,8 +13,9 @@ import (
 
 func verify(authHeader string) bool {
 	tokenParts := strings.Split(authHeader, "Bearer ")
-	fmt.Println(tokenParts)
 	bearerToken := tokenParts[1]
+	fmt.Println("Here is the bearer token:")
+	fmt.Println(bearerToken)
 
 	toValidate := map[string]string{}
 	toValidate["cid"] = os.Getenv("OKTA_CLIENT_ID")
@@ -39,9 +40,12 @@ func verify(authHeader string) bool {
 
 func authorizeHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		//authHeader := r.Header.Get("Authorization")
-		fmt.Println(r.Header)
-		//verify(authHeader)
+		if r.Method == "OPTIONS" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		fmt.Println(r.Header.Get("Authorization"))
+		verify(r.Header.Get("Authorization"))
 		next.ServeHTTP(w, r)
 	})
 }
