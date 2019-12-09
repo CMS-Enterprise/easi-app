@@ -28,10 +28,13 @@ class Home extends React.Component<HomeProps, HomeState> {
     const { auth } = this.props;
     const accessToken = await auth.getAccessToken();
     /* eslint-disable no-console */
+    console.log(accessToken);
     const response = await fetch('http://localhost:8080', {
+      mode: 'cors',
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${accessToken}`
+        authorization: `Bearer ${accessToken}`,
+        'X-fake-header': 'fake'
       }
     })
       .then(res => res.json())
