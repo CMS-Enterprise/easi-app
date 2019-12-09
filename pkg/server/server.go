@@ -39,9 +39,9 @@ func verify(authHeader string) bool {
 
 func authorizeHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authHeader := r.Header.Get("Authorization")
-		fmt.Println(authHeader)
-		verify(authHeader)
+		//authHeader := r.Header.Get("Authorization")
+		fmt.Println(r.Header)
+		//verify(authHeader)
 		next.ServeHTTP(w, r)
 	})
 }
