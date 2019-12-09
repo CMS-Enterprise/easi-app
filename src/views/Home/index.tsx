@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { withAuth } from '@okta/okta-react';
 
 import useAuth from 'hooks/useAuth';
@@ -8,26 +8,13 @@ type HomeProps = {
   auth: any;
 };
 
-type HomeState = {
-  name: string;
-};
-
-class Home extends React.Component<HomeProps, HomeState> {
-  constructor(props: HomeProps) {
-    super(props);
-    this.state = {
-      name: 'Isaac'
-    };
-  }
-
-  componentDidMount(): void {
-    this.getEmailAddress();
-  }
-
-  async getEmailAddress() {
-    const { auth } = this.props;
+const Home = ({ auth }: HomeProps) => {
+  const [isAuthenticated] = useAuth(auth);
+  const [name, setName] = useState('');
+  const getEmailAddress = async (): Promise<void> => {
     const accessToken = await auth.getAccessToken();
-    const response = await fetch('http://localhost:8080', {
+
+    await fetch('http://localhost:8080', {
       headers: {
         Authorization: `Bearer ${accessToken}`
       }
@@ -37,26 +24,30 @@ class Home extends React.Component<HomeProps, HomeState> {
         return res.json();
       })
       .then(data => {
-        this.setState({ name: data.SystemOwners[0] });
+        setName(data.SystemOwners[0]);
       })
-      // eslint-disable-next-line no-console
-      .catch(console.log);
-    console.log(response);
-  }
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.log(error);
+      });
+  };
 
-  render() {
-    const { auth } = this.props;
-    const { name } = this.state;
-    const authenticated = auth.isAuthenticated();
-    return (
-      <div>
-        <h1>Home</h1>
-        <h3>{`A user is ${authenticated ? '' : 'NOT'} authenticated`}</h3>
-        <h3>Here is an email address fetched from the server</h3>
-        <h3>{name}</h3>
-      </div>
-    );
-  }
-}
+  // Notably, we need deps to be nil if we'd like to use this hook to
+  // effectively be ComponentDidMount
+
+  useEffect(() => {
+    getEmailAddress();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div>
+      <Header />
+      <h1>Home</h1>
+      <h3>{`A user is ${isAuthenticated ? '' : 'NOT'} authenticated`}</h3>
+      <h3>Here is an email address fetched from the server</h3>
+      <h3>{name}</h3>
+    </div>
+  );
+};
 
 export default withAuth(Home);
