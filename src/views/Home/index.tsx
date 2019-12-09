@@ -30,11 +30,8 @@ class Home extends React.Component<HomeProps, HomeState> {
     /* eslint-disable no-console */
     console.log(accessToken);
     const response = await fetch('http://localhost:8080', {
-      mode: 'cors',
-      method: 'GET',
       headers: {
-        authorization: `Bearer ${accessToken}`,
-        'X-fake-header': 'fake'
+        Authorization: `Bearer ${accessToken}`
       }
     })
       .then(res => res.json())
