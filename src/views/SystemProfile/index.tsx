@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import Header from 'components/Header';
 
 const mockSystems: any[] = [
+  { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
   { id: '1', name: 'System1', slug: 'system1', link: '/system/system1' },
   { id: '2', name: 'System2', slug: 'system2', link: '/system/system2' },
   { id: '3', name: 'System3', slug: 'system3', link: '/system/system3' },
@@ -18,7 +19,7 @@ const SystemProfile = ({ match }: SystemProfileProps) => {
   return (
     <div className="system-profile">
       <Header
-        secondaryNavList={mockSystems}
+        secondaryNavList={mockSystems.slice(0, 10)}
         activeNavListItem={match.params.profileId}
       />
       <h1>System Profile</h1>
