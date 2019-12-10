@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
+import UsGovBanner from 'components/UsGovBanner';
 import Header from 'components/Header';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -37,6 +38,7 @@ class App extends React.Component<MainProps, MainState> {
     console.log(name);
     return (
       <div>
+        <UsGovBanner />
         <BrowserRouter>
           <AuthenticationWrapper>
             <Header />
