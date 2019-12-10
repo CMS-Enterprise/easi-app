@@ -6,8 +6,8 @@ import './index.scss';
 
 type HeaderProps = {
   auth: any;
-  secondaryNavList: any[];
-  activeNavListItem: string;
+  secondaryNavList?: any[];
+  activeNavListItem?: string;
 };
 
 export const Header = ({
@@ -60,9 +60,11 @@ export const Header = ({
               <ul className="usa-nav__primary usa-accordion">
                 {secondaryNavList.map(item => (
                   <li
+                    key={item.id}
                     className={`usa-nav__primary-item ${
                       activeNavListItem === item.slug ? 'usa-current' : ''
                     }`.trim()}
+                    data-testid="header-nav-item"
                   >
                     <Link className="usa-nav__link" to={item.link}>
                       <span>{item.name}</span>
@@ -85,7 +87,7 @@ export const Header = ({
           {secondaryNavList.length > 0 && (
             <ul className="usa-nav__primary usa-accordion">
               {secondaryNavList.map(item => (
-                <li className="usa-nav__primary-item">
+                <li key={item.id} className="usa-nav__primary-item">
                   <Link to={item.slug}>
                     <span>{item.name}</span>
                   </Link>
