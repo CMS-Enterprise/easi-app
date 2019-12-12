@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { withAuth } from '@okta/okta-react';
+import axios from 'axios';
 
 import useAuth from 'hooks/useAuth';
 import Header from 'components/Header';
@@ -13,16 +14,13 @@ const Home = ({ auth }: HomeProps) => {
   const [name, setName] = useState('');
   const getEmailAddress = async (): Promise<void> => {
     const accessToken = await auth.getAccessToken();
-
-    await fetch('http://localhost:8080', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    })
-      .then(res => {
-        console.log(res.headers);
-        return res.json();
+    await axios
+      .get('http://localhost:8080', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
       })
+      .then(res => res.data.json())
       .then(data => {
         setName(data.SystemOwners[0]);
       })

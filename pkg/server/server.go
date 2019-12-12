@@ -45,7 +45,10 @@ func authorizeHandler(next http.Handler) http.Handler {
 			return
 		}
 		fmt.Println(r.Header.Get("Authorization"))
-		verify(r.Header.Get("Authorization"))
+		if !verify(r.Header.Get("Authorization")) {
+			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			return
+		}
 		next.ServeHTTP(w, r)
 	})
 }
