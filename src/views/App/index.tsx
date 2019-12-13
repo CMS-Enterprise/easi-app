@@ -1,12 +1,14 @@
 import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import UsGovBanner from 'components/UsGovBanner';
-import Header from 'components/Header';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import SuperSecret from 'views/SuperSecret';
+import SystemProfile from 'views/SystemProfile';
+import SystemProfiles from 'views/SystemProfiles';
+
 import './index.scss';
 
 type MainState = {
@@ -38,14 +40,25 @@ class App extends React.Component<MainProps, MainState> {
     console.log(name);
     return (
       <div>
+        <div className="usa-overlay" />
         <UsGovBanner />
         <BrowserRouter>
           <AuthenticationWrapper>
-            <Header />
-            <Route path="/" exact component={Home} />
-            <Route path="/login" exact component={Login} />
-            <SecureRoute path="/protected" exact component={SuperSecret} />
-            <Route path="/implicit/callback" component={ImplicitCallback} />
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <Route path="/login" exact component={Login} />
+              <SecureRoute path="/protected" exact component={SuperSecret} />
+              <SecureRoute
+                path="/system/all"
+                exact
+                component={SystemProfiles}
+              />
+              <SecureRoute
+                path="/system/:profileId"
+                component={SystemProfile}
+              />
+              <Route path="/implicit/callback" component={ImplicitCallback} />
+            </Switch>
           </AuthenticationWrapper>
         </BrowserRouter>
       </div>
