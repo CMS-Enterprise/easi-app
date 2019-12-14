@@ -11,7 +11,7 @@ repos:
       - id: shell-lint
 
   - repo: git://github.com/trussworks/pre-commit-hooks
-    rev: v0.0.2
+    rev: v0.0.3
     hooks:
       - id: gen-docs
         args: ['docs/adr']

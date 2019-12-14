@@ -18,6 +18,7 @@
 .env.test.local
 .env.production.local
 .idea
+.envrc.local
 
 # npm/js ignores
 tmp
