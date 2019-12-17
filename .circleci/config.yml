@@ -35,6 +35,7 @@ jobs:
       - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build the thing in docker, tag, and push to ECR
           command: |
