@@ -40,7 +40,7 @@ jobs:
           name: Build the thing in docker, tag, and push to ECR
           command: |
             bash -x -c 'docker build --no-cache --tag "easi:$CIRCLE_SHA1" .'
-            bash -x -c "$(aws ecr get-login --no-include-email --region "us-west-2")"
+            bash -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")"
             bash -x -c 'docker tag "easi:$CIRCLE_SHA1" "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:$CIRCLE_SHA1"'
             bash -x -c 'docker push "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:$CIRCLE_SHA1"'
 
