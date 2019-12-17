@@ -1,0 +1,68 @@
+.easi-header {
+  .navbar--container {
+    display: none;
+  }
+
+  .easi-navbar-link {
+    display: block;
+    padding: 1rem;
+    border: none;
+    color: #565c65;
+    line-height: 0.9;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .usa-current {
+    position: relative;
+
+    &:after {
+      background-color: #005ea2;
+      border-radius: 0;
+      content: '';
+      display: block;
+      position: absolute;
+      height: 0.25rem;
+      left: 1rem;
+      right: 1rem;
+      bottom: 0;
+    }
+  }
+  .easi-secondary-nav {
+    display: none;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  }
+
+  @media (min-width: $desktop) {
+    .site-header-navbar {
+      height: 5rem;
+      width: 100%;
+      display: block;
+    }
+
+    .site-logo {
+      display: initial;
+      float: left;
+      margin-bottom: 0;
+    }
+
+    .navbar--container {
+      display: flex;
+      align-items: center;
+      float: right;
+      height: 5rem;
+    }
+
+    .sidenav-mobile {
+      display: none;
+    }
+
+    .easi-secondary-nav {
+      display: block;
+    }
+  }
+}
