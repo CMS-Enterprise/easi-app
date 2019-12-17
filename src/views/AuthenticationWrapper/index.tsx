@@ -8,7 +8,7 @@ function onAuthRequired({ history }: any): void {
 }
 
 type AuthenticationWrapperProps = {
-  children: React.ReactNodeArray;
+  children: React.ReactNode;
 };
 
 const AuthenticationWrapper = ({ children }: AuthenticationWrapperProps) => {
