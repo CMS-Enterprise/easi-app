@@ -48,10 +48,10 @@ jobs:
     docker:
       - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
     steps:
+      - setup_remote_docker
       - run:
           name: Test the built thing in docker
           command: |
-            - setup_remote_docker
             bash -x -c 'docker pull "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:$CIRCLE_SHA1"'
             # TODO run_tests_on_container
 
