@@ -61,8 +61,8 @@ workflows:
   compile:
     jobs:
       - pre_test
-      - build_tag_push
-      - test:
+      - test
+      - build_tag_push:
           requires:
             - pre_test
-            - build_tag_push
+            - test
