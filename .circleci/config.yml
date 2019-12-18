@@ -51,6 +51,7 @@ jobs:
       - run:
           name: Test the built thing in docker
           command: |
+            - setup_remote_docker
             bash -x -c 'docker pull "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:$CIRCLE_SHA1"'
             # TODO run_tests_on_container
 
