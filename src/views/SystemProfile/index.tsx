@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Header from 'components/Header';
+import './index.scss';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -22,7 +23,24 @@ const SystemProfile = ({ match }: SystemProfileProps) => {
         secondaryNavList={mockSystems.slice(0, 10)}
         activeNavListItem={match.params.profileId}
       />
-      <h1>System Profile</h1>
+      <div className="grid-container">
+        <div className="grid-col-8">
+          <h1 className="system-profile__acronym">CATQ</h1>
+          <h2 className="system-profile__name">
+            Center for Automation Technology Quality
+          </h2>
+          <h3 className="system-profile__heading">Description</h3>
+          <hr />
+          <div className="grid-col-8">
+            <p className="system-profile__text">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+              enim ad minim veniam, quis nostrud exercitation ullamco laboris
+              nisi ut aliquip ex ea commodo consequat.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

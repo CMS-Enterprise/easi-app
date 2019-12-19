@@ -12,8 +12,10 @@ const Home = ({ auth }: HomeProps) => {
   return (
     <div>
       <Header />
-      <h1>Home</h1>
-      <h3>{`A user is ${isAuthenticated ? '' : 'NOT'} authenticated`}</h3>
+      <div className="grid-container">
+        <h1>Home</h1>
+        <h3>{`A user is ${isAuthenticated ? '' : 'NOT'} authenticated`}</h3>
+      </div>
     </div>
   );
 };
