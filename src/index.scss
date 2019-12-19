@@ -1,4 +1,27 @@
-@import './stylesheets/settings.scss';
+// .scss settings
+@import './stylesheets/_settings.scss';
+
+// TODO: The commented lines are attempts to require Public Sans
+// through USWDS instead of using Google Fronts. Work in progress
+// @import '~uswds/src/stylesheets/settings/_settings-color.scss';
+// @import '~uswds/src/stylesheets/settings/_settings-components.scss';
+// @import '~uswds/src/stylesheets/settings/_settings-general.scss';
+// @import '~uswds/src/stylesheets/settings/_settings-spacing.scss';
+// @import '~uswds/src/stylesheets/settings/_settings-typography.scss';
+// @import '~uswds/src/stylesheets/settings/_settings-utilities.scss';
+
+// @import '~uswds/src/stylesheets/core/_functions.scss';
+// @import '~uswds/src/stylesheets/core/_system-tokens.scss';
+// @import '~uswds/src/stylesheets/core/_variables.scss';
+// @import '~uswds/src/stylesheets/core/_properties.scss';
+// @import '~uswds/src/stylesheets/core/mixins/_all.scss';
+
+// @import '~uswds/src/stylesheets/global/_font-face.scss';
+// @import '~uswds/src/stylesheets/lib/_normalize.scss';
+
+// @import '~uswds/src/stylesheets/utilities/palettes/_all.scss';
+// @import '~uswds/src/stylesheets/utilities/rules/_all.scss';
+// @import '~uswds/src/stylesheets/utilities/rules/_package.scss';
 
 // Vendor Styles
 @import '~font-awesome/css/font-awesome.min.css';
@@ -7,9 +30,9 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
