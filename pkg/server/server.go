@@ -20,7 +20,7 @@ func isAuthenticated(authHeader string) bool {
 
 	toValidate := map[string]string{}
 	toValidate["cid"] = os.Getenv("OKTA_CLIENT_ID")
-	toValidate["aud"] = "api://default"
+	toValidate["aud"] = "EASi"
 
 	jwtVerifierSetup := jwtverifier.JwtVerifier{
 		Issuer:           os.Getenv("OKTA_ISSUER"),
@@ -31,7 +31,6 @@ func isAuthenticated(authHeader string) bool {
 
 	_, err := verifier.VerifyAccessToken(bearerToken)
 
-	fmt.Println(err)
 	if err != nil {
 		return false
 	}

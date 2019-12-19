@@ -30,7 +30,7 @@ export const Header = ({
           <span className="fa fa-bars" />
         </button>
         <div className="navbar--container">
-          {user && user.email && (
+          {user && user.name && (
             <span className="easi-navbar-link">{user.email}</span>
           )}
           {isAuthenticated ? (
