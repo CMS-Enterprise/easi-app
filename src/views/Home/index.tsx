@@ -20,7 +20,9 @@ const Home = ({ auth }: HomeProps) => {
           Authorization: `Bearer ${accessToken}`
         }
       })
-      .then(res => res.data.json())
+      .then(res => {
+        return res.data.json();
+      })
       .then(data => {
         setName(data.SystemOwners[0]);
       })
