@@ -21,7 +21,7 @@ const Home = ({ auth }: HomeProps) => {
         }
       })
       .then(res => {
-        return res.data.json();
+        return res.data;
       })
       .then(data => {
         setName(data.SystemOwners[0]);
