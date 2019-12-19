@@ -17,7 +17,7 @@ export default class OktaSignInWidget extends Component<
   componentDidMount() {
     const { onSuccess, onError } = this.props;
     this.widget = new OktaSignIn({
-      baseUrl: process.env.REACT_APP_OKTA_ISSUER,
+      baseUrl: process.env.REACT_APP_OKTA_DOMAIN,
       clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
       redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
       authParams: {
