@@ -38,9 +38,9 @@ describe('The Header component', () => {
         })
     };
 
-    it('displays a login button', done => {
+    it('displays a login button', async done => {
       let component;
-      act(() => {
+      await act(async () => {
         component = mount(
           <BrowserRouter>
             <Header auth={auth} />
@@ -56,18 +56,53 @@ describe('The Header component', () => {
       });
     });
 
-    it('displays the users email', done => {
-      const component = mount(
-        <BrowserRouter>
-          <Header auth={auth} />
-        </BrowserRouter>
-      );
+    it('displays the users email', async done => {
+      let component;
+
+      await act(async () => {
+        component = mount(
+          <BrowserRouter>
+            <Header auth={auth} />
+          </BrowserRouter>
+        );
+      });
 
       setImmediate(() => {
         component.update();
         expect(component.text().includes('test@test.com')).toBe(true);
         done();
       });
+    });
+  });
+
+  describe('When contains a secondary navigation list', () => {
+    const auth = {
+      isAuthenticated: () => Promise.resolve(true),
+      user: {
+        email: ''
+      }
+    };
+
+    const mockSystems: any[] = [
+      { id: '1', name: 'System1', slug: 'system1', link: '/system/system1' },
+      { id: '2', name: 'System2', slug: 'system2', link: '/system/system2' },
+      { id: '3', name: 'System3', slug: 'system3', link: '/system/system3' },
+      { id: '4', name: 'System4', slug: 'system4', link: '/system/system4' },
+      { id: '5', name: 'System5', slug: 'system5', link: '/system/system5' }
+    ];
+
+    it('displays secondary navigation links in desktop', () => {
+      const component = shallow(
+        <Header
+          auth={auth}
+          secondaryNavList={mockSystems}
+          activeNavListItem="system1"
+        />
+      );
+
+      expect(component.find('[data-testid="header-nav-item"]').length).toEqual(
+        mockSystems.length
+      );
     });
   });
 });
