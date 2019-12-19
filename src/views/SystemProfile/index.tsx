@@ -16,7 +16,7 @@ type SystemProfileProps = {
   match: any;
 };
 
-const SystemProfile = ({ match }: SystemProfileProps) => {
+export const SystemProfile = ({ match }: SystemProfileProps) => {
   return (
     <div className="system-profile">
       <Header
