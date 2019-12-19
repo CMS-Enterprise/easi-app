@@ -1,4 +1,23 @@
 .system-profile {
+  &__acronym {
+    font-size: 40px;
+  }
+
+  &__name {
+    font-size: 22px;
+    font-style: normal;
+  }
+
+  &__heading {
+    font-size: 32px;
+    margin-bottom: 0;
+  }
+
+  &__text {
+    font-size: 16px;
+    line-height: 26px;
+  }
+
   &__system-list {
     background-color: #f2f2f2;
   }
