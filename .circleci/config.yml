@@ -53,7 +53,7 @@ jobs:
           name: Run easi app tests
           command: |
             go build -a -o bin/easi ./cmd/easi
-            ./cmd/easi test
+            ./bin/easi test
 
 workflows:
   version: 2
