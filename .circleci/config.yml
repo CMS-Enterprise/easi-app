@@ -1,6 +1,7 @@
+---
 version: 2
 jobs:
-  validate:
+  pre_test:
     docker:
       - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
     steps:
@@ -11,9 +12,6 @@ jobs:
       - restore_cache:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
-      - run:
-          name: Update pre-commit deps
-          command: pre-commit autoupdate
       - run:
           name: Install dependencies for pre-commit in yarn (temporary?)
           command: yarn install
@@ -32,8 +30,38 @@ jobs:
           paths:
             - ~/.cache/yarn
 
+  build_tag_push:
+    docker:
+      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build the thing in docker, tag, and push to ECR
+          command: |
+            bash -x -c 'docker build --no-cache --tag "easi:$CIRCLE_BRANCH-$CIRCLE_SHA1" .'
+            bash -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")"
+            bash -x -c 'docker tag "easi:$CIRCLE_BRANCH-$CIRCLE_SHA1" "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:$CIRCLE_BRANCH-$CIRCLE_SHA1"'
+            bash -x -c 'docker push "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:$CIRCLE_BRANCH-$CIRCLE_SHA1"'
+
+  test:
+    docker:
+      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+    steps:
+      - checkout
+      - run:
+          name: Run easi app tests
+          command: |
+            go build -a -o bin/easi ./cmd/easi
+            ./bin/easi test
+
 workflows:
   version: 2
-  validate:
+  compile:
     jobs:
-      - validate
+      - pre_test
+      - test
+      - build_tag_push:
+          requires:
+            - pre_test
+            - test
