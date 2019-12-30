@@ -176,6 +176,12 @@ you are about to commit to the repository.
 Next install the pre-commit hook libraries
 with `pre-commit install-hooks`.
 
+### Setup: CircleCI (optional)
+
+If you want to make changes to the CircleCI configuration, you will need to
+install the `circleci` cli tool so that the changes can be validated by
+pre-commit: `brew install circleci`
+
 ### Setup: Docker
 
 To set up docker on your local machine:
