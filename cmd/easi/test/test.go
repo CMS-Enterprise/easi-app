@@ -8,7 +8,6 @@ import (
 )
 
 func All() {
-	Pretest()
 	Server()
 }
 
@@ -28,25 +27,5 @@ func Server() {
 	err := c.Run()
 	if err != nil {
 		log.Fatalf("Fail %v", err)
-	}
-}
-
-// Pretest runs tests that analyze code,
-// like linters
-func Pretest() {
-	golangCILint()
-}
-
-func golangCILint() {
-	c := exec.Command(
-		"golangci-lint",
-		"run",
-		"./pkg/...")
-	// Replace with some sort of configured writer
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
-	err := c.Run()
-	if err != nil {
-		log.Fatalf("Failed to execute golangci-lint: %v", err)
 	}
 }
