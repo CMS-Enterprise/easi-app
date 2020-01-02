@@ -105,7 +105,7 @@ export const Header = ({
               Logout
             </button>
           ) : (
-            <a className="easi-navbar-link" href="/download/">
+            <a className="easi-navbar-link" href="/login">
               Login
             </a>
           )}
