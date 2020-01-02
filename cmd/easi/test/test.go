@@ -7,6 +7,7 @@ import (
 	"os/exec"
 )
 
+// All runs the full test suite
 func All() {
 	Server()
 }
