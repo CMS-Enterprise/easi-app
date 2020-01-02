@@ -39,7 +39,7 @@ class App extends React.Component<MainProps, MainState> {
     const { name } = this.state;
     console.log(name);
     return (
-      <div>
+      <div className="easi-app">
         <div className="usa-overlay" />
         <UsGovBanner />
         <BrowserRouter>

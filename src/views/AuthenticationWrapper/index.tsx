@@ -1,5 +1,6 @@
 import React from 'react';
 import { Security } from '@okta/okta-react';
+import './index.scss';
 
 // This can do anything. It doesn't have to redirect
 // It can be a pop up modal, alert message, etc.
@@ -14,6 +15,7 @@ type AuthenticationWrapperProps = {
 const AuthenticationWrapper = ({ children }: AuthenticationWrapperProps) => {
   return (
     <Security
+      className="authentication-wrapper"
       issuer={`${process.env.REACT_APP_OKTA_ISSUER}/oauth2/default`}
       clientId={process.env.REACT_APP_OKTA_CLIENT_ID}
       redirectUri={process.env.REACT_APP_OKTA_REDIRECT_URI}

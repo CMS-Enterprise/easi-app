@@ -1,4 +1,8 @@
 .system-profile {
+  &__body {
+    flex: 1;
+  }
+
   &__acronym {
     margin-bottom: 0;
     font-size: 40px;
