@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import './index.scss';
 
 type PageLayoutProps = {
-  className: string;
-  children: React.ReactNode;
+  className?: string;
+  children?: React.ReactNode;
 };
 
 const PageLayout = ({ className, children }: PageLayoutProps) => {
