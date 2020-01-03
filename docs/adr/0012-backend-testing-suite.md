@@ -28,7 +28,8 @@ to alleviate some of those concerns in the EASI Go codebase.
 
 * `+` No package imports or dependency locking
 * `-` The impetus of this decision is that it's not featured enough.
-  Would require lots of in-house code or redundancy.
+      Building out those features would require lots of in-house code
+      or redundancy.
 
 ### *Write Our Own Test Suite Package*
 
