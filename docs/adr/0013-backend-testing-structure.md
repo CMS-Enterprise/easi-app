@@ -23,7 +23,7 @@ It's important to understand the application layer patterns
 described in the [Truss Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/blob/master/web/server/go.md#application-layers),
 as it is a driver for this decision.
 
-For the purpose ADR,
+For the purpose of this ADR,
 we'll focus on breaking out "unit" and "integration" tests,
 but won't try to define their contents in detail.
 Integration tests will likely happen at the route/handler level
