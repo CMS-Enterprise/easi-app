@@ -29,7 +29,6 @@ golang as described in
 * `+` Eng team is already familiar with it
 * `+` Allows us to follow well-known golang practices
 * `+` Been tested on other projects
-* `-` We'll have to make other application decisions
 * `-` Requires importing a package
 
 ### [gin-gonic/gin](https://github.com/gin-gonic/gin)
@@ -43,7 +42,7 @@ golang as described in
 ### Use the Standard Library Only
 
 * `+` No package imports or dependency locking
-* `-` It's not featured enough
+* `-` It doesn't have enough features
 
 ### Write our own routing
 
