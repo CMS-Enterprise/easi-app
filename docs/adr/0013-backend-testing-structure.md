@@ -26,7 +26,7 @@ as it is a driver for this decision.
 For the purpose of this ADR,
 we'll focus on breaking out "unit" and "integration" tests,
 but won't try to define their contents in detail.
-Integration tests will likely happen at the route/handler level
+Integration tests will likely happen at the endpoint/handler level
 and run as if it were a production case.
 Unit tests will happen across the codebase,
 mock outside packages,
@@ -111,6 +111,8 @@ with wiring up our server with dependencies.
       Tests can also be run per directory.
 * `+` Dependency structure mirrors production.
 * `+` Easier to write unit tests with wider test surface.
+* `+` Can optimize performance of testing suite by type
+      and can benchmark easily which testing suite is slow.
 * `-` Requires developer awareness.
       This might be moot,
       as our current instructions for testing with services ignore integration tests.
