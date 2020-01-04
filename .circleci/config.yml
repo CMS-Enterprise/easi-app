@@ -52,8 +52,8 @@ jobs:
       - run:
           name: Run easi app tests
           command: |
-            go build -a -o bin/easi ./cmd/easi
-            ./bin/easi test
+            ./scripts/build
+            ./scripts/testsuite
 
 workflows:
   version: 2

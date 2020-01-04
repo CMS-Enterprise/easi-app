@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+# run `easi` app tests
+#
+
+builddir="$(git rev-parse --show-toplevel)"
+
+( set -x ; exec "$builddir"/bin/easi test )
