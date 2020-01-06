@@ -3,6 +3,6 @@
 # build the `easi` app
 #
 
-builddir="$(git rev-parse --show-toplevel)" || exit
+builddir="$(git rev-parse --show-toplevel)"
 
-( set -x ; go build -a -o "$builddir"/bin/easi "$builddir"/cmd/easi )
+( set -x -u ; go build -a -o "$builddir"/bin/easi "$builddir"/cmd/easi )
