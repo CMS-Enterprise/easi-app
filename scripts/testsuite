@@ -5,4 +5,4 @@
 
 builddir="$(git rev-parse --show-toplevel)"
 
-( set -x ; exec "$builddir"/bin/easi test )
+( set -x -u ; exec "$builddir"/bin/easi test )
