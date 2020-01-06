@@ -5,4 +5,4 @@
 
 builddir="$(git rev-parse --show-toplevel)" || exit
 
-go build -a -o "$builddir"/bin/easi "$builddir"/cmd/easi
+( set -x ; go build -a -o "$builddir"/bin/easi "$builddir"/cmd/easi )
