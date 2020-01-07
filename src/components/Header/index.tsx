@@ -8,17 +8,19 @@ type HeaderProps = {
   auth: any;
   secondaryNavList?: any[];
   activeNavListItem?: string;
+  onSearch?: () => void;
 };
 
 export const Header = ({
   auth,
   secondaryNavList = [],
-  activeNavListItem
+  activeNavListItem,
+  onSearch
 }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
   return (
     <header className="usa-header site-header easi-header" role="banner">
-      <div className="usa-nav-container usa-navbar site-header-navbar">
+      <div className="usa-navbar site-header-navbar easi-header__wrapper">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">
             <Link to="/" title="Home" aria-label="EASi home">
@@ -49,10 +51,13 @@ export const Header = ({
         </div>
       </div>
 
-      {/* Secondary Nav */}
-      {secondaryNavList.length > 0 && (
-        <nav aria-label="Primary navigation" className="easi-secondary-nav">
-          <div className="usa-nav-container">
+      <div className="easi-header__secondary-wrapper easi-header__wrapper">
+        {/* Secondary Nav */}
+        {secondaryNavList.length > 0 && (
+          <nav
+            aria-label="Primary navigation"
+            className="easi-header__secondary-nav"
+          >
             <div className="usa-nav__inner">
               <button type="button" className="usa-nav__close">
                 <span className="fa fa-close" />
@@ -66,23 +71,56 @@ export const Header = ({
                     }`.trim()}
                     data-testid="header-nav-item"
                   >
-                    <Link className="usa-nav__link" to={item.link}>
+                    <Link
+                      className="easi-header__secondary-nav-link"
+                      to={item.link}
+                    >
                       <span>{item.name}</span>
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
-        </nav>
-      )}
+          </nav>
+        )}
+
+        {onSearch && (
+          <form className="usa-search usa-search--small">
+            <div role="search">
+              <input
+                className="usa-input"
+                id="basic-search-field-small"
+                type="search"
+                name="system-search"
+              />
+              <button className="usa-button" type="submit">
+                <span className="usa-sr-only">Search</span>
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
 
       {/* Mobile Display */}
       <nav role="navigation" className="usa-nav site-nav sidenav-mobile">
         <button type="button" className="usa-nav__close">
           <span className="fa fa-close" />
         </button>
-
+        {onSearch && (
+          <form className="usa-search usa-search--small">
+            <div role="search">
+              <input
+                className="usa-input"
+                id="basic-search-field-small"
+                type="search"
+                name="system-search"
+              />
+              <button className="usa-button" type="submit">
+                <span className="usa-sr-only">Search</span>
+              </button>
+            </div>
+          </form>
+        )}
         <div className="usa-nav__inner">
           {secondaryNavList.length > 0 && (
             <ul className="usa-nav__primary usa-accordion">
