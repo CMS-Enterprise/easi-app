@@ -1,4 +1,11 @@
 .easi-header {
+  // height: 5rem;
+
+  &__wrapper {
+    display: block;
+    width: 100%;
+  }
+
   .navbar--container {
     display: none;
   }
@@ -32,18 +39,17 @@
       bottom: 0;
     }
   }
-  .easi-secondary-nav {
+
+  &__secondary-wrapper {
     display: none;
     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
 
-  @media (min-width: $desktop) {
-    .site-header-navbar {
-      height: 5rem;
-      width: 100%;
-      display: block;
-    }
+  &__secondary-nav {
+    flex: 1;
+  }
 
+  @media (min-width: $desktop) {
     .site-logo {
       display: initial;
       float: left;
@@ -61,8 +67,15 @@
       display: none;
     }
 
-    .easi-secondary-nav {
-      display: block;
+    .easi-header {
+      &__wrapper {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+
+      &__secondary-wrapper {
+        display: flex;
+      }
     }
   }
 }
