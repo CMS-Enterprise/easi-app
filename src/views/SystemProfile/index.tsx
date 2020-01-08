@@ -22,6 +22,7 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
       <Header
         secondaryNavList={mockSystems.slice(0, 10)}
         activeNavListItem={match.params.profileId}
+        onSearch={() => {}}
       />
       <div className="grid-container">
         <div className="grid-col-8">

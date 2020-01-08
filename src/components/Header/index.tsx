@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 import useAuth from 'hooks/useAuth';
+import SearchBar from 'components/shared/SearchBar';
 import './index.scss';
 
 type HeaderProps = {
@@ -19,8 +20,8 @@ export const Header = ({
 }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
   return (
-    <header className="usa-header site-header easi-header" role="banner">
-      <div className="usa-navbar site-header-navbar easi-header__wrapper">
+    <header className="usa-header easi-header" role="banner">
+      <div className="usa-navbar easi-header__wrapper">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">
             <Link to="/" title="Home" aria-label="EASi home">
@@ -33,25 +34,25 @@ export const Header = ({
         </button>
         <div className="navbar--container">
           {user && user.email && (
-            <span className="easi-navbar-link">{user.email}</span>
+            <span className="easi-header__nav-link">{user.email}</span>
           )}
           {isAuthenticated ? (
             <button
               type="button"
-              className="easi-navbar-link"
+              className="easi-header__nav-link"
               onClick={handleLogout}
             >
               Logout
             </button>
           ) : (
-            <Link className="easi-navbar-link" to="/login">
+            <Link className="easi-header__nav-link" to="/login">
               Login
             </Link>
           )}
         </div>
       </div>
 
-      <div className="easi-header__secondary-wrapper easi-header__wrapper">
+      <div className="easi-header__wrapper easi-header__secondary-wrapper">
         {/* Secondary Nav */}
         {secondaryNavList.length > 0 && (
           <nav
@@ -84,43 +85,15 @@ export const Header = ({
           </nav>
         )}
 
-        {onSearch && (
-          <form className="usa-search usa-search--small">
-            <div role="search">
-              <input
-                className="usa-input"
-                id="basic-search-field-small"
-                type="search"
-                name="system-search"
-              />
-              <button className="usa-button" type="submit">
-                <span className="usa-sr-only">Search</span>
-              </button>
-            </div>
-          </form>
-        )}
+        {onSearch && <SearchBar name="system-search" onSearch={onSearch} />}
       </div>
 
       {/* Mobile Display */}
-      <nav role="navigation" className="usa-nav site-nav sidenav-mobile">
+      <div className="usa-nav sidenav-mobile">
         <button type="button" className="usa-nav__close">
           <span className="fa fa-close" />
         </button>
-        {onSearch && (
-          <form className="usa-search usa-search--small">
-            <div role="search">
-              <input
-                className="usa-input"
-                id="basic-search-field-small"
-                type="search"
-                name="system-search"
-              />
-              <button className="usa-button" type="submit">
-                <span className="usa-sr-only">Search</span>
-              </button>
-            </div>
-          </form>
-        )}
+        {onSearch && <SearchBar name="system-search" onSearch={onSearch} />}
         <div className="usa-nav__inner">
           {secondaryNavList.length > 0 && (
             <ul className="usa-nav__primary usa-accordion">
@@ -137,18 +110,18 @@ export const Header = ({
           {isAuthenticated ? (
             <button
               type="button"
-              className="easi-navbar-link"
+              className="easi-header__nav-link"
               onClick={handleLogout}
             >
               Logout
             </button>
           ) : (
-            <a className="easi-navbar-link" href="/login">
+            <a className="easi-header__nav-link" href="/login">
               Login
             </a>
           )}
         </div>
-      </nav>
+      </div>
     </header>
   );
 };
