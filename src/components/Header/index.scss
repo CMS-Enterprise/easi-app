@@ -10,20 +10,6 @@
     display: none;
   }
 
-  &__nav-link {
-    display: block;
-    padding: 1rem;
-    border: none;
-    color: #565c65;
-    line-height: 0.9;
-    font-weight: bold;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
   .usa-current {
     position: relative;
 
@@ -45,8 +31,18 @@
     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
   }
 
-  &__secondary-nav {
-    flex: 1;
+  &__nav-link {
+    display: block;
+    padding: 1rem;
+    border: none;
+    color: #565c65;
+    line-height: 0.9;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
   @media (min-width: $desktop) {

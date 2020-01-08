@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 import useAuth from 'hooks/useAuth';
 import SearchBar from 'components/shared/SearchBar';
+import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
 
 type HeaderProps = {
@@ -53,36 +54,11 @@ export const Header = ({
       </div>
 
       <div className="easi-header__wrapper easi-header__secondary-wrapper">
-        {/* Secondary Nav */}
         {secondaryNavList.length > 0 && (
-          <nav
-            aria-label="Primary navigation"
-            className="easi-header__secondary-nav"
-          >
-            <div className="usa-nav__inner">
-              <button type="button" className="usa-nav__close">
-                <span className="fa fa-close" />
-              </button>
-              <ul className="usa-nav__primary usa-accordion">
-                {secondaryNavList.map(item => (
-                  <li
-                    key={item.id}
-                    className={`usa-nav__primary-item ${
-                      activeNavListItem === item.slug ? 'usa-current' : ''
-                    }`.trim()}
-                    data-testid="header-nav-item"
-                  >
-                    <Link
-                      className="easi-header__secondary-nav-link"
-                      to={item.link}
-                    >
-                      <span>{item.name}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </nav>
+          <SecondaryNav
+            secondaryNavList={secondaryNavList}
+            activeNavItem={activeNavListItem}
+          />
         )}
 
         {onSearch && <SearchBar name="system-search" onSearch={onSearch} />}
@@ -93,18 +69,13 @@ export const Header = ({
         <button type="button" className="usa-nav__close">
           <span className="fa fa-close" />
         </button>
-        {onSearch && <SearchBar name="system-search" onSearch={onSearch} />}
         <div className="usa-nav__inner">
+          {onSearch && <SearchBar name="system-search" onSearch={onSearch} />}
           {secondaryNavList.length > 0 && (
-            <ul className="usa-nav__primary usa-accordion">
-              {secondaryNavList.map(item => (
-                <li key={item.id} className="usa-nav__primary-item">
-                  <Link to={item.slug}>
-                    <span>{item.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <SecondaryNav
+              secondaryNavList={secondaryNavList}
+              activeNavItem={activeNavListItem}
+            />
           )}
 
           {isAuthenticated ? (

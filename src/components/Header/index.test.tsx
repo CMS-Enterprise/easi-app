@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+import SecondaryNav from 'components/shared/SecondaryNav';
+import SearchBar from 'components/shared/SearchBar';
+
 import { Header } from './index';
 
 describe('The Header component', () => {
@@ -75,6 +78,19 @@ describe('The Header component', () => {
     });
   });
 
+  it('displays the search bar', () => {
+    const auth = {
+      isAuthenticated: () => Promise.resolve(true),
+      user: {
+        email: ''
+      }
+    };
+
+    const component = shallow(<Header auth={auth} onSearch={() => {}} />);
+
+    expect(component.find(SearchBar).exists()).toBe(true);
+  });
+
   describe('When contains a secondary navigation list', () => {
     const auth = {
       isAuthenticated: () => Promise.resolve(true),
@@ -91,7 +107,7 @@ describe('The Header component', () => {
       { id: '5', name: 'System5', slug: 'system5', link: '/system/system5' }
     ];
 
-    it('displays secondary navigation links in desktop', () => {
+    it('displays SecondaryNav component', () => {
       const component = shallow(
         <Header
           auth={auth}
@@ -100,9 +116,7 @@ describe('The Header component', () => {
         />
       );
 
-      expect(component.find('[data-testid="header-nav-item"]').length).toEqual(
-        mockSystems.length
-      );
+      expect(component.find(SecondaryNav).exists()).toBe(true);
     });
   });
 });
