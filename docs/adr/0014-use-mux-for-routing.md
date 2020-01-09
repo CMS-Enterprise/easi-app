@@ -1,7 +1,10 @@
 # Use gorilla/mux for Routing
 
 We need a way to serve routes so that we can create an application with functionality
-that is useful for the front end.
+that is useful for the front end. A router is helpful for handling multiple dynamic
+endpoints, each in their own unique way and mass handling endpoints. This is helpful
+for developers to iteratively add new API endpoints, and ultimately ensures faster
+delivery to our end users.
 
 ## Considered Alternatives
 
@@ -16,7 +19,7 @@ that is useful for the front end.
 * We've decided that gorilla/mux is the right solution
 as it is maintained by [Gorilla Tool Kit](https://www.gorillatoolkit.org/).
 It handles routing in a way that conforms to golang best
-practices and is familiar to Truss and the application developers on this team.
+practices. Truss has used other Gorilla tools before.
 * This also lets us follow more common API patterns in
 golang as described in
 [this blog post
@@ -26,9 +29,10 @@ golang as described in
 
 ### [gorilla/mux](https://github.com/gorilla/mux)
 
-* `+` Eng team is already familiar with it
+* `+` Truss has used gorilla tools before
 * `+` Allows us to follow well-known golang practices
 * `+` Been tested on other projects
+* `+` Allows for a complex with lots of route matching
 * `-` Requires importing a package
 
 ### [gin-gonic/gin](https://github.com/gin-gonic/gin)
@@ -36,13 +40,14 @@ golang as described in
 * `+` Has a lot of structure for many aspects of building out a golang application
 * `-` Doesn’t use go standard lib patterns like `HandlerFunc`
 * `-` Doesn't follow a lot of well-known golang practices
-* `-` Has more features than we need
+* `-` Has more features than we need (including logging, validation,
+rendering, middleware, let's encrypt support and more)
 * `-` Requires importing a package
 
 ### Use the Standard Library Only
 
 * `+` No package imports or dependency locking
-* `-` It doesn't have enough features
+* `-` It only allows for static routes.
 
 ### Write our own routing
 
