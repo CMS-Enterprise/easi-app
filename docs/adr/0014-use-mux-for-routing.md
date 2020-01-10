@@ -32,7 +32,7 @@ golang as described in
 * `+` Truss has used gorilla tools before
 * `+` Allows us to follow well-known golang practices
 * `+` Been tested on other projects
-* `+` Allows for a complex with lots of route matching
+* `+` Allows for a complex pattern matching on routes
 * `-` Requires importing a package
 
 ### [gin-gonic/gin](https://github.com/gin-gonic/gin)
@@ -54,5 +54,5 @@ rendering, middleware, let's encrypt support and more)
 * `+` We get exactly what we want and need
 * `+` No package imports or dependency locking
 * `-` We have to maintain and handle any
-security implications (especially since this repo is now public)
+security implications
 * `-` Requires upfront work to build out features we want
