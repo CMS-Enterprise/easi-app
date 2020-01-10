@@ -42,10 +42,12 @@ const Home = ({ auth }: HomeProps) => {
   return (
     <div>
       <Header />
-      <h1>Home</h1>
+      <div className="grid-container">
+        <h1>Home</h1>
       <h3>{`A user is ${isAuthenticated ? '' : 'NOT'} authenticated`}</h3>
       <h3>Here is an email address fetched from the server</h3>
       <h3>{name}</h3>
+      </div>
     </div>
   );
 };

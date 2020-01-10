@@ -62,3 +62,6 @@ autoscaling
 s3
 trailblaze
 Cloudfront
+Jira
+codebase
+teardown
