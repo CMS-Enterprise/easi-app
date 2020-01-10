@@ -53,6 +53,10 @@ export const Header = ({
         </div>
       </div>
 
+      <div className="easi-header__wrapper easi-header__search-bar">
+        {onSearch && <SearchBar name="system-search" onSearch={onSearch} />}
+      </div>
+
       <div className="easi-header__wrapper easi-header__secondary-wrapper">
         {secondaryNavList.length > 0 && (
           <SecondaryNav
@@ -60,8 +64,6 @@ export const Header = ({
             activeNavItem={activeNavListItem}
           />
         )}
-
-        {onSearch && <SearchBar name="system-search" onSearch={onSearch} />}
       </div>
 
       {/* Mobile Display */}
