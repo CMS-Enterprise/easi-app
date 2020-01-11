@@ -4,6 +4,10 @@
     width: 100%;
   }
 
+  &--desktop {
+    display: none;
+  }
+
   .navbar--container {
     display: none;
   }
@@ -22,15 +26,6 @@
       right: 1rem;
       bottom: 0;
     }
-  }
-
-  &__secondary-wrapper {
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-  }
-
-  &__search-bar,
-  &__secondary-wrapper {
-    display: none;
   }
 
   &__nav-link {
@@ -71,8 +66,7 @@
         padding-right: 2rem;
       }
 
-      &__secondary-wrapper,
-      &__search-bar {
+      &--desktop {
         display: block;
       }
     }
