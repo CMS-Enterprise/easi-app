@@ -2,8 +2,6 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
-import SecondaryNav from 'components/shared/SecondaryNav';
-import SearchBar from 'components/shared/SearchBar';
 
 import { Header } from './index';
 
@@ -78,7 +76,7 @@ describe('The Header component', () => {
     });
   });
 
-  it('displays the search bar', () => {
+  it('displays children', () => {
     const auth = {
       isAuthenticated: () => Promise.resolve(true),
       user: {
@@ -86,37 +84,12 @@ describe('The Header component', () => {
       }
     };
 
-    const component = shallow(<Header auth={auth} onSearch={() => {}} />);
+    const component = shallow(
+      <Header auth={auth}>
+        <div className="test-class-name" />
+      </Header>
+    );
 
-    expect(component.find(SearchBar).exists()).toBe(true);
-  });
-
-  describe('When contains a secondary navigation list', () => {
-    const auth = {
-      isAuthenticated: () => Promise.resolve(true),
-      user: {
-        email: ''
-      }
-    };
-
-    const mockSystems: any[] = [
-      { id: '1', name: 'System1', slug: 'system1', link: '/system/system1' },
-      { id: '2', name: 'System2', slug: 'system2', link: '/system/system2' },
-      { id: '3', name: 'System3', slug: 'system3', link: '/system/system3' },
-      { id: '4', name: 'System4', slug: 'system4', link: '/system/system4' },
-      { id: '5', name: 'System5', slug: 'system5', link: '/system/system5' }
-    ];
-
-    it('displays SecondaryNav component', () => {
-      const component = shallow(
-        <Header
-          auth={auth}
-          secondaryNavList={mockSystems}
-          activeNavListItem="system1"
-        />
-      );
-
-      expect(component.find(SecondaryNav).exists()).toBe(true);
-    });
+    expect(component.find('.test-class-name').exists()).toBe(true);
   });
 });
