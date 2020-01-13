@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+
 import { Header } from './index';
 
 describe('The Header component', () => {
@@ -75,7 +76,7 @@ describe('The Header component', () => {
     });
   });
 
-  describe('When contains a secondary navigation list', () => {
+  it('displays children', () => {
     const auth = {
       isAuthenticated: () => Promise.resolve(true),
       user: {
@@ -83,26 +84,12 @@ describe('The Header component', () => {
       }
     };
 
-    const mockSystems: any[] = [
-      { id: '1', name: 'System1', slug: 'system1', link: '/system/system1' },
-      { id: '2', name: 'System2', slug: 'system2', link: '/system/system2' },
-      { id: '3', name: 'System3', slug: 'system3', link: '/system/system3' },
-      { id: '4', name: 'System4', slug: 'system4', link: '/system/system4' },
-      { id: '5', name: 'System5', slug: 'system5', link: '/system/system5' }
-    ];
+    const component = shallow(
+      <Header auth={auth}>
+        <div className="test-class-name" />
+      </Header>
+    );
 
-    it('displays secondary navigation links in desktop', () => {
-      const component = shallow(
-        <Header
-          auth={auth}
-          secondaryNavList={mockSystems}
-          activeNavListItem="system1"
-        />
-      );
-
-      expect(component.find('[data-testid="header-nav-item"]').length).toEqual(
-        mockSystems.length
-      );
-    });
+    expect(component.find('.test-class-name').exists()).toBe(true);
   });
 });
