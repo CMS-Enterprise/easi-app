@@ -18,5 +18,6 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0011](0011-build-and-deploy-react.md) - Build frontend static files and deploy to AWS s3
 - [ADR-0012](0012-backend-testing-suite.md) - Use Testify for Go Testing
 - [ADR-0013](0013-backend-testing-structure.md) - Use Separate Integration Package for Go Integration Tests
+- [ADR-0014](0014-use-mux-for-routing.md) - Use gorilla/mux for Routing
 
 <!-- adrlogstop -->

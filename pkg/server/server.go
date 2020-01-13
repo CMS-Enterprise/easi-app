@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/mux"
 )
 
 type status string
@@ -54,7 +56,8 @@ func enableCors(w *http.ResponseWriter) {
 
 // Serve serves all the handlers
 func Serve() {
+	r := mux.NewRouter()
 	fmt.Print("Serving application on localhost:8080")
-	http.HandleFunc("/", HandleLanding)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	r.HandleFunc("/", HandleLanding)
+	log.Fatal(http.ListenAndServe(":8080", r))
 }

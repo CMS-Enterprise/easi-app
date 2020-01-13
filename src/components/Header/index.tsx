@@ -2,27 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 import useAuth from 'hooks/useAuth';
-import SearchBar from 'components/shared/SearchBar';
-import SecondaryNav from 'components/shared/SecondaryNav';
+import HeaderWrapper from 'components/Header/HeaderWrapper';
 import './index.scss';
 
 type HeaderProps = {
   auth: any;
-  secondaryNavList?: any[];
-  activeNavListItem?: string;
-  onSearch?: () => void;
+  children: React.ReactNode | React.ReactNodeArray;
 };
 
-export const Header = ({
-  auth,
-  secondaryNavList = [],
-  activeNavListItem,
-  onSearch
-}: HeaderProps) => {
+export const Header = ({ auth, children }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
   return (
     <header className="usa-header easi-header" role="banner">
-      <div className="usa-navbar easi-header__wrapper">
+      <HeaderWrapper className="usa-navbar">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">
             <Link to="/" title="Home" aria-label="EASi home">
@@ -51,20 +43,9 @@ export const Header = ({
             </Link>
           )}
         </div>
-      </div>
+      </HeaderWrapper>
 
-      <div className="easi-header__wrapper easi-header__search-bar">
-        {onSearch && <SearchBar name="system-search" onSearch={onSearch} />}
-      </div>
-
-      <div className="easi-header__wrapper easi-header__secondary-wrapper">
-        {secondaryNavList.length > 0 && (
-          <SecondaryNav
-            secondaryNavList={secondaryNavList}
-            activeNavItem={activeNavListItem}
-          />
-        )}
-      </div>
+      <div className="easi-header--desktop">{children}</div>
 
       {/* Mobile Display */}
       <div className="usa-nav sidenav-mobile">
@@ -72,14 +53,7 @@ export const Header = ({
           <span className="fa fa-close" />
         </button>
         <div className="usa-nav__inner">
-          {onSearch && <SearchBar name="system-search" onSearch={onSearch} />}
-          {secondaryNavList.length > 0 && (
-            <SecondaryNav
-              secondaryNavList={secondaryNavList}
-              activeNavItem={activeNavListItem}
-            />
-          )}
-
+          {children}
           {isAuthenticated ? (
             <button
               type="button"
