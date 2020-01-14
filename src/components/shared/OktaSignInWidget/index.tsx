@@ -15,16 +15,19 @@ export default class OktaSignInWidget extends Component<
   widget: any;
 
   componentDidMount() {
-    const { onSuccess, onError } = this.props;
     this.widget = new OktaSignIn({
-      baseUrl: process.env.REACT_APP_OKTA_ISSUER,
-      clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
-      redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
+      baseUrl: process.env.REACT_APP_OKTA_DOMAIN,
       authParams: {
         pkce: true
-      }
+      },
+      el: '#sign-in-widget'
     });
-    this.widget.renderEl({ el: '#sign-in-widget' }, onSuccess, onError);
+    this.widget.showSignInToGetTokens({
+      authorizationServerId: process.env.REACT_APP_OKTA_SERVER_ID,
+      clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
+      redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
+      scope: 'openid profile email'
+    });
   }
 
   componentWillUnmount() {
