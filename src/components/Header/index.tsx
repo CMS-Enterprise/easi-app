@@ -2,23 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 import useAuth from 'hooks/useAuth';
+import HeaderWrapper from 'components/Header/HeaderWrapper';
 import './index.scss';
 
 type HeaderProps = {
   auth: any;
-  secondaryNavList?: any[];
-  activeNavListItem?: string;
+  children: React.ReactNode | React.ReactNodeArray;
 };
 
-export const Header = ({
-  auth,
-  secondaryNavList = [],
-  activeNavListItem
-}: HeaderProps) => {
+export const Header = ({ auth, children }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
   return (
-    <header className="usa-header site-header easi-header" role="banner">
-      <div className="usa-nav-container usa-navbar site-header-navbar">
+    <header className="usa-header easi-header" role="banner">
+      <HeaderWrapper className="usa-navbar">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">
             <Link to="/" title="Home" aria-label="EASi home">
@@ -30,87 +26,49 @@ export const Header = ({
           <span className="fa fa-bars" />
         </button>
         <div className="navbar--container">
-          {user && user.name && (
-            <span className="easi-navbar-link">{user.email}</span>
+          {user && user.email && (
+            <span className="easi-header__nav-link">{user.email}</span>
           )}
           {isAuthenticated ? (
             <button
               type="button"
-              className="easi-navbar-link"
+              className="easi-header__nav-link"
               onClick={handleLogout}
             >
               Logout
             </button>
           ) : (
-            <Link className="easi-navbar-link" to="/login">
+            <Link className="easi-header__nav-link" to="/login">
               Login
             </Link>
           )}
         </div>
-      </div>
+      </HeaderWrapper>
 
-      {/* Secondary Nav */}
-      {secondaryNavList.length > 0 && (
-        <nav aria-label="Primary navigation" className="easi-secondary-nav">
-          <div className="usa-nav-container">
-            <div className="usa-nav__inner">
-              <button type="button" className="usa-nav__close">
-                <span className="fa fa-close" />
-              </button>
-              <ul className="usa-nav__primary usa-accordion">
-                {secondaryNavList.map(item => (
-                  <li
-                    key={item.id}
-                    className={`usa-nav__primary-item ${
-                      activeNavListItem === item.slug ? 'usa-current' : ''
-                    }`.trim()}
-                    data-testid="header-nav-item"
-                  >
-                    <Link className="usa-nav__link" to={item.link}>
-                      <span>{item.name}</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </nav>
-      )}
+      <div className="easi-header--desktop">{children}</div>
 
       {/* Mobile Display */}
-      <nav role="navigation" className="usa-nav site-nav sidenav-mobile">
+      <div className="usa-nav sidenav-mobile">
         <button type="button" className="usa-nav__close">
           <span className="fa fa-close" />
         </button>
-
         <div className="usa-nav__inner">
-          {secondaryNavList.length > 0 && (
-            <ul className="usa-nav__primary usa-accordion">
-              {secondaryNavList.map(item => (
-                <li key={item.id} className="usa-nav__primary-item">
-                  <Link to={item.slug}>
-                    <span>{item.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-
+          {children}
           {isAuthenticated ? (
             <button
               type="button"
-              className="easi-navbar-link"
+              className="easi-header__nav-link"
               onClick={handleLogout}
             >
               Logout
             </button>
           ) : (
-            <a className="easi-navbar-link" href="/login">
+            <a className="easi-header__nav-link" href="/login">
               Login
             </a>
           )}
         </div>
-      </nav>
+      </div>
     </header>
   );
 };
