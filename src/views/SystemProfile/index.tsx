@@ -1,6 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Header from 'components/Header';
+import HeaderWrapper from 'components/Header/HeaderWrapper';
+import SearchBar from 'components/shared/SearchBar';
+import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
 
 const mockSystems: any[] = [
@@ -17,12 +20,27 @@ type SystemProfileProps = {
 };
 
 export const SystemProfile = ({ match }: SystemProfileProps) => {
+  const onSearch = () => {};
   return (
     <div className="system-profile">
       <Header
         secondaryNavList={mockSystems.slice(0, 10)}
         activeNavListItem={match.params.profileId}
-      />
+        onSearch={() => {}}
+      >
+        <HeaderWrapper className="system-profile__search-bar">
+          <SearchBar name="system-search" onSearch={onSearch} />
+        </HeaderWrapper>
+
+        {mockSystems.length > 0 && (
+          <HeaderWrapper className="system-profile__secondary-nav-wrapper">
+            <SecondaryNav
+              secondaryNavList={mockSystems}
+              activeNavItem="system1"
+            />
+          </HeaderWrapper>
+        )}
+      </Header>
       <div className="grid-container">
         <div className="grid-col-8">
           <div className="grid-col-8">

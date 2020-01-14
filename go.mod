@@ -10,6 +10,7 @@ require (
 	github.com/go-openapi/validate v0.19.5
 	github.com/graph-gophers/graphql-go v0.0.0-20191115155744-f33e81362277 // indirect
 	github.com/lestrrat-go/jwx v0.9.0 // indirect
+	github.com/gorilla/mux v1.7.3
 	github.com/magiconair/properties v1.8.1 // indirect
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/pelletier/go-toml v1.6.0 // indirect
