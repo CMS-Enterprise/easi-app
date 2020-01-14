@@ -1,8 +1,7 @@
-package integration
+package handlers
 
 import (
 	"encoding/json"
-	"github.com/cmsgov/easi-app/pkg/handlers"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -16,7 +15,7 @@ func TestHandleLanding(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 
-	handler := handlers.LandingHandler{}
+	handler := LandingHandler{}
 
 	handler.ServeHTTP(rr, req)
 
@@ -24,7 +23,7 @@ func TestHandleLanding(t *testing.T) {
 		t.Errorf("handler returned %v, wanted %v", s, http.StatusOK)
 	}
 
-	var profile handlers.Profile
+	var profile Profile
 	err = json.Unmarshal(rr.Body.Bytes(), &profile)
 	if profile.Name != "My Favorite Project" || err != nil {
 		t.Errorf("Incorrect response body. Got %v", rr.Body.String())

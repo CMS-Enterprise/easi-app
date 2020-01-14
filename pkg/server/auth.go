@@ -1,10 +1,12 @@
+// Package server is for setting up the server
 package server
 
 import (
-	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
 	"net/http"
-	"os"
 	"strings"
+
+	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
+	"github.com/spf13/viper"
 )
 
 func isAuthenticated(authHeader string, verifier jwtverifier.JwtVerifier) bool {
@@ -22,13 +24,13 @@ func isAuthenticated(authHeader string, verifier jwtverifier.JwtVerifier) bool {
 	return true
 }
 
-func newJwtVerifier() *jwtverifier.JwtVerifier {
+func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	toValidate := map[string]string{}
-	toValidate["cid"] = os.Getenv("OKTA_CLIENT_ID")
+	toValidate["cid"] = clientID
 	toValidate["aud"] = "EASi"
 
 	jwtVerifierSetup := jwtverifier.JwtVerifier{
-		Issuer:           os.Getenv("OKTA_ISSUER"),
+		Issuer:           issuer,
 		ClaimsToValidate: toValidate,
 	}
 
@@ -37,7 +39,7 @@ func newJwtVerifier() *jwtverifier.JwtVerifier {
 
 func authorizeHandler(next http.Handler) http.Handler {
 
-	verifier := newJwtVerifier()
+	verifier := newJwtVerifier(viper.GetString("OKTA_CLIENT_ID"), viper.GetString("OKTA_ISSUER"))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
 			return

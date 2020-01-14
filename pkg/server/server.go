@@ -3,15 +3,18 @@ package server
 
 import (
 	"fmt"
-	"github.com/cmsgov/easi-app/pkg/handlers"
 	"log"
 	"net/http"
+
+	"github.com/spf13/viper"
+
+	"github.com/cmsgov/easi-app/pkg/handlers"
 )
 
 func corsHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Origin", viper.GetString("CLIENT_ADDRESS"))
 		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization")
 
 		next.ServeHTTP(w, r)
