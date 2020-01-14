@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/gorilla/mux"
-)
 
 	"github.com/spf13/viper"
 
@@ -29,6 +27,6 @@ func corsHandler(next http.Handler) http.Handler {
 func Serve() {
 	r := mux.NewRouter()
 	fmt.Print("Serving application on localhost:8080")
-	r.HandleFunc("/", corsHandler(authorizeHandler(handlers.LandingHandler{})))
+	r.Handle("/", corsHandler(authorizeHandler(handlers.LandingHandler{})))
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
