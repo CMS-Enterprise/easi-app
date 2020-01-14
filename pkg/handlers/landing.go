@@ -1,3 +1,4 @@
+// Package handlers is for route handlers
 package handlers
 
 import (
@@ -6,6 +7,7 @@ import (
 	"time"
 )
 
+// LandingHandler is handler for landing page
 type LandingHandler struct {
 }
 
