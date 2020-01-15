@@ -20,7 +20,7 @@ const SearchBar = ({
   const [searchValue, setSearchValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const inputProps = {
-    className: 'use-input easi-search-bar__input',
+    className: 'usa-input easi-search-bar__input',
     id: 'basic-search-field-small',
     type: 'search',
     name,
@@ -73,14 +73,18 @@ const SearchBar = ({
           />
         ) : (
           <input
-            className="use-input easi-search-bar__input"
+            className="usa-input easi-search-bar__input"
             id="basic-search-field-small"
             type="search"
             name={name}
             onChange={onSearch}
           />
         )}
-        <button className="usa-button" type="submit">
+        <button
+          className="usa-button"
+          type="submit"
+          data-testid="search-bar-search-btn"
+        >
           <span className="usa-sr-only">Search</span>
         </button>
       </div>
