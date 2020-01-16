@@ -37,11 +37,13 @@ const SearchBar = ({
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
 
-    return inputLength === 0
-      ? []
-      : results.filter(
-          lang => lang.name.toLowerCase().slice(0, inputLength) === inputValue
-        );
+    // Only give suggestions if the user types 2 or more charcters
+    if (inputLength >= 2) {
+      return results.filter(
+        lang => lang.name.toLowerCase().indexOf(inputValue) > -1
+      );
+    }
+    return [];
   };
 
   const onSuggestionsFetchRequested = ({ value }: any) => {
