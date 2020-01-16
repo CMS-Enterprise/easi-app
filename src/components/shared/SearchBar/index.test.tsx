@@ -60,10 +60,44 @@ describe('The Search Bar component', () => {
       expect(component.find(Autosuggest).exists()).toBe(true);
     });
 
+    it('displays suggestions after the second character is entered', () => {
+      const getSuggestionValue = (obj: any): string => obj.name;
+      const renderSuggestion = (obj: any): string => obj.name;
+      const results = [
+        { name: 'Apple' },
+        { name: 'Orange' },
+        { name: 'Pear' },
+        { name: 'Peach' }
+      ];
+
+      const wrapper = mount(
+        <SearchBar
+          name="test-name-attr"
+          onSearch={jest.fn()}
+          results={results}
+          getSuggestionValue={getSuggestionValue}
+          renderSuggestion={renderSuggestion}
+        />
+      );
+
+      const inputField = wrapper.find('input.easi-search-bar__input');
+      inputField.simulate('change', { target: { value: 'o' } });
+      inputField.simulate('focus');
+      expect(wrapper.find('li.react-autosuggest__suggestion').length).toEqual(
+        0
+      );
+
+      inputField.simulate('change', { target: { value: 'or' } });
+      inputField.simulate('focus');
+      expect(wrapper.find('li.react-autosuggest__suggestion').length).toEqual(
+        1
+      );
+    });
+
     it('displays suggestions that match the input value', () => {
       const event = {
         target: {
-          value: 'o'
+          value: 'or'
         }
       };
 
@@ -97,17 +131,17 @@ describe('The Search Bar component', () => {
     it('clears out suggestions when a suggestion is selected', () => {
       const event = {
         target: {
-          value: 'a'
+          value: 'ea'
         }
       };
 
       const getSuggestionValue = (obj: any): string => obj.name;
       const renderSuggestion = (obj: any): string => obj.name;
       const results = [
-        { name: 'Apple' },
-        { name: 'Orange' },
-        { name: 'Pear' },
-        { name: 'Peach' }
+        { name: 'ApPlE' },
+        { name: 'oRaNgE' },
+        { name: 'PeAr' },
+        { name: 'pEaCh' }
       ];
 
       const wrapper = mount(
@@ -123,7 +157,14 @@ describe('The Search Bar component', () => {
       const inputField = wrapper.find('input.easi-search-bar__input');
       inputField.simulate('change', event);
       inputField.simulate('focus');
-      wrapper.find('li.react-autosuggest__suggestion').simulate('click');
+      wrapper
+        .find('li.react-autosuggest__suggestion')
+        .first()
+        .simulate('click');
+
+      // TODO: Figure how to avoid this instance() Typescript error
+      const inputFieldInstance = inputField.instance() as any;
+      expect(inputFieldInstance.value).toEqual('PeAr');
       expect(wrapper.find('li.react-autosuggest__suggestion').length).toEqual(
         0
       );
