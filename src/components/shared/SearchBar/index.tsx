@@ -39,9 +39,9 @@ const SearchBar = ({
 
     // Only give suggestions if the user types 2 or more charcters
     if (inputLength >= 2) {
-      return results.filter(
-        lang => lang.name.toLowerCase().indexOf(inputValue) > -1
-      );
+      return results
+        .filter(lang => lang.name.toLowerCase().indexOf(inputValue) > -1)
+        .slice(0, 10);
     }
     return [];
   };
