@@ -1,4 +1,4 @@
-package handlers
+package server
 
 import (
 	"encoding/json"
@@ -15,9 +15,8 @@ func TestHandleLanding(t *testing.T) {
 
 	rr := httptest.NewRecorder()
 
-	handler := LandingHandler{}
-
-	handler.ServeHTTP(rr, req)
+	srv := server{}
+	srv.handleLanding()(rr, req)
 
 	if s := rr.Code; s != http.StatusOK {
 		t.Errorf("handler returned %v, wanted %v", s, http.StatusOK)

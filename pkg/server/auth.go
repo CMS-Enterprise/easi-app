@@ -1,4 +1,4 @@
-// Package server is for setting up the server
+// Package server is for setting up the server.
 package server
 
 import (
@@ -37,10 +37,10 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	return jwtVerifierSetup.New()
 }
 
-func authorizeHandler(next http.Handler) http.Handler {
+func (s *server) authorizeHandler(next http.HandlerFunc) http.HandlerFunc {
 
 	verifier := newJwtVerifier(viper.GetString("OKTA_CLIENT_ID"), viper.GetString("OKTA_ISSUER"))
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
 			return
 		}
@@ -49,5 +49,5 @@ func authorizeHandler(next http.Handler) http.Handler {
 			return
 		}
 		next.ServeHTTP(w, r)
-	})
+	}
 }
