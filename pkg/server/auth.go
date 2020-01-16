@@ -1,4 +1,3 @@
-// Package server is for setting up the server.
 package server
 
 import (
