@@ -49,7 +49,7 @@ export const Header = ({ auth, children }: HeaderProps) => {
 
       {/* Mobile Display */}
       <div className="usa-nav sidenav-mobile">
-        <button type="button" className="usa-nav__close">
+        <button type="button" className="usa-nav__close" aria-label="Close">
           <span className="fa fa-close" />
         </button>
         <div className="usa-nav__inner">

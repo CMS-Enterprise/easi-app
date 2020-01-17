@@ -20,7 +20,7 @@ const SearchBar = ({
   const [searchValue, setSearchValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const inputProps = {
-    className: 'usa-input easi-search-bar__input',
+    className: 'usa-input easi-search-bar__autocomplete-input',
     id: 'basic-search-field-small',
     type: 'search',
     name,
@@ -58,38 +58,35 @@ const SearchBar = ({
     console.log(searchValue);
     event.preventDefault();
   };
+
   return (
-    <form
-      className="usa-search usa-search--small easi-search-bar"
-      onSubmit={handleSubmit}
-    >
-      <div role="search">
-        {results && getSuggestionValue && renderSuggestion ? (
-          <Autosuggest
-            suggestions={suggestions}
-            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={onSuggestionsClearRequested}
-            getSuggestionValue={getSuggestionValue}
-            renderSuggestion={renderSuggestion}
-            inputProps={inputProps}
-          />
-        ) : (
-          <input
-            className="usa-input easi-search-bar__input"
-            id="basic-search-field-small"
-            type="search"
-            name={name}
-            onChange={onSearch}
-          />
-        )}
-        <button
-          className="usa-button"
-          type="submit"
-          data-testid="search-bar-search-btn"
-        >
-          <span className="usa-sr-only">Search</span>
-        </button>
-      </div>
+    <form className="easi-search-bar" onSubmit={handleSubmit}>
+      {results && getSuggestionValue && renderSuggestion ? (
+        <Autosuggest
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={onSuggestionsClearRequested}
+          getSuggestionValue={getSuggestionValue}
+          renderSuggestion={renderSuggestion}
+          inputProps={inputProps}
+        />
+      ) : (
+        <input
+          className="usa-input easi-search-bar__input"
+          id="basic-search-field-small"
+          type="search"
+          name={name}
+          onChange={onSearch}
+        />
+      )}
+      <button
+        className="usa-button"
+        type="submit"
+        data-testid="search-bar-search-btn"
+      >
+        <span className="fa fa-search" />
+        <span className="usa-sr-only">Search</span>
+      </button>
     </form>
   );
 };
