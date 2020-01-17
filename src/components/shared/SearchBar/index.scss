@@ -1,47 +1,68 @@
 .easi-search-bar {
-  // border for react-autosuggest
+  display: flex;
+  justify-content: flex-end;
+
   &__input {
     padding: 10px 15px;
     border: 1px solid #565c65;
+
+    &.usa-input[type='search'] {
+      height: auto;
+      width: auto;
+    }
   }
 
-  // [type='search'],
-  // &.usa-search [type='submit'] {
-  //   height: 2.5rem;
-  // }
-}
-
-// react-autosuggest custom styles
-.react-autosuggest {
-  &__container {
-    position: relative;
+  &__autocomplete-input[type='search'] {
+    height: 100%;
   }
 
-  &__suggestions-container {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+  // react-autosuggest custom styles
+  .react-autosuggest {
+    &__container {
+      position: relative;
+      width: 100%;
+    }
+
+    &__suggestions-container {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    &__suggestions-list {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: 0;
+      top: 0;
+      list-style-type: none;
+      padding: 0;
+      background-color: #fff;
+      border: 1px solid #565c65;
+      z-index: 1;
+    }
+
+    &__suggestion {
+      padding-left: 10px;
+      &--highlighted {
+        background-color: #005ea2;
+        color: #fff;
+      }
+    }
   }
 
-  &__suggestions-list {
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: 0;
-    top: 0;
-    list-style-type: none;
-    padding: 0;
-    background-color: #fff;
-    border: 1px solid #565c65;
-    z-index: 1;
-  }
+  @media (min-width: $desktop) {
+    &__input {
+      &.usa-input[type='search'] {
+        width: 25%;
+      }
+    }
 
-  &__suggestion {
-    padding-left: 10px;
-    &--highlighted {
-      background-color: #005ea2;
-      color: #fff;
+    .react-autosuggest {
+      &__container {
+        width: 25%;
+      }
     }
   }
 }
