@@ -43,16 +43,16 @@ func makeDummySystem(acronym string, name string) system {
 		ID:      uuid.New(),
 		Acronym: acronym,
 		Name:    name,
-		Description: name + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+		Description: name + " Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
 			"sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad " +
 			"minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea " +
 			"commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit " +
 			"esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non " +
 			"proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-		Datapoint1: name + "datapoint 1",
-		Datapoint2: name + "datapoint 2",
-		Datapoint3: name + "datapoint 3",
-		Datapoint4: name + "datapoint 4",
+		Datapoint1: name + " datapoint 1",
+		Datapoint2: name + " datapoint 2",
+		Datapoint3: name + " datapoint 3",
+		Datapoint4: name + " datapoint 4",
 	}
 }
 
