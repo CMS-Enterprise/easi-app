@@ -1,0 +1,42 @@
+openapi: 3.0.2
+servers:
+  - url: 'https://{application}.cms.gov'
+    variables:
+      application:
+        description: 'The Data Set API is accessible via https and http'
+        enum:
+          - 'dev.easi'
+          - 'staging.easi'
+          - 'easi'
+        default: 'dev.easi'
+info:
+  description: >-
+    This is a compilation of data from CMS sources that includes
+    information for system owners, stakeholders and system users
+    about the TLC status of the various systems.
+  version: 1.0.0
+  title: EASi API
+  contact:
+    name: EASi
+    url: 'https://easi.cms.gov'
+    email: someone@email.com
+paths:
+  /:
+    get:
+      summary: Landing
+      operationId: listFakeData
+      tags:
+        - fake
+      responses:
+        '200':
+          description: An object of a fake system
+          content:
+            application/json:
+              schema:
+                $ref: "system.yaml#/System"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "errors.yaml#/UnexpectedError"

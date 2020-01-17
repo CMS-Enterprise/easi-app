@@ -1,9 +1,11 @@
 # Use schema for API and frontend collaboration
 
 We need a way to agree upon and collaborate on features
-that require changes in the front and back end. Using an
-API schema will allow us to collaborate more quickly
-without breaking things that are working.
+that require changes in the frontend and backend. Using an
+API schema will allow developers to collaborate more quickly
+without breaking things that are working. This also may
+frontend to contribute to the schema while backend
+engineers are working on other things.
 
 ## Considered Alternatives
 
@@ -11,6 +13,7 @@ without breaking things that are working.
 * Document with OpenAPI 3.0
 * JSON Schema
 * RAML
+* Do nothing
 
 ## Decision Outcome
 
@@ -21,7 +24,7 @@ lightweight to initialize and easy to organize into human-readable
 ways (like putting all errors in one yaml file).
 We can still use SwaggerUI or other OpenAPI 3.0 online validators.
 
-## Pros and Cons of the Alternatives <!-- optional -->
+## Pros and Cons of the Alternatives
 
 ### Use go-swagger with OpenAPI 2.0
 
@@ -62,3 +65,9 @@ We can still use SwaggerUI or other OpenAPI 3.0 online validators.
 * `-` Not very flexible
 * `-` Doesn't handle nullable types well
 * `-` No code generation for this
+
+### Do nothing
+
+* `+` Requires no work
+* `-` Can require more communication between frontend and backend engineers
+* `neutral` Code is source of truth for API
