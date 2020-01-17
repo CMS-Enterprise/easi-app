@@ -11,6 +11,13 @@
       width: auto;
     }
   }
+  &__no-results {
+    position: absolute;
+    width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #565c65;
+  }
 
   &__autocomplete-input[type='search'] {
     height: 100%;
@@ -50,6 +57,10 @@
         color: #fff;
       }
     }
+  }
+
+  .usa-button {
+    border-radius: 0 0.25rem 0.25rem 0;
   }
 
   @media (min-width: $desktop) {

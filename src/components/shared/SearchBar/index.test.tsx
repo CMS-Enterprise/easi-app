@@ -47,11 +47,15 @@ describe('The Search Bar component', () => {
   });
 
   describe('The Search Bar with autocomplete', () => {
+    const onSearch = jest.fn();
+    const getSuggestionValue = (obj: any): string => obj.name;
+    const renderSuggestion = (obj: any): string => obj.name;
+
     it('renders react-autocomplete', () => {
       const component = shallow(
         <SearchBar
           name="test-name-attr"
-          onSearch={jest.fn()}
+          onSearch={onSearch}
           results={[]}
           getSuggestionValue={jest.fn()}
           renderSuggestion={jest.fn()}
@@ -61,8 +65,6 @@ describe('The Search Bar component', () => {
     });
 
     it('displays suggestions after the second character is entered', () => {
-      const getSuggestionValue = (obj: any): string => obj.name;
-      const renderSuggestion = (obj: any): string => obj.name;
       const results = [
         { name: 'Apple' },
         { name: 'Orange' },
@@ -73,14 +75,17 @@ describe('The Search Bar component', () => {
       const wrapper = mount(
         <SearchBar
           name="test-name-attr"
-          onSearch={jest.fn()}
+          onSearch={onSearch}
           results={results}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
         />
       );
 
-      const inputField = wrapper.find('input.easi-search-bar__input');
+      const inputField = wrapper.find(
+        'input.easi-search-bar__autocomplete-input'
+      );
+
       inputField.simulate('change', { target: { value: 'o' } });
       inputField.simulate('focus');
       expect(wrapper.find('li.react-autosuggest__suggestion').length).toEqual(
@@ -101,8 +106,6 @@ describe('The Search Bar component', () => {
         }
       };
 
-      const getSuggestionValue = (obj: any): string => obj.name;
-      const renderSuggestion = (obj: any): string => obj.name;
       const results = [
         { name: 'Apple' },
         { name: 'Orange' },
@@ -113,14 +116,16 @@ describe('The Search Bar component', () => {
       const wrapper = mount(
         <SearchBar
           name="test-name-attr"
-          onSearch={jest.fn()}
+          onSearch={onSearch}
           results={results}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
         />
       );
 
-      const inputField = wrapper.find('input.easi-search-bar__input');
+      const inputField = wrapper.find(
+        'input.easi-search-bar__autocomplete-input'
+      );
       inputField.simulate('change', event);
       inputField.simulate('focus');
       expect(wrapper.find('li.react-autosuggest__suggestion').length).toEqual(
@@ -135,8 +140,6 @@ describe('The Search Bar component', () => {
         }
       };
 
-      const getSuggestionValue = (obj: any): string => obj.name;
-      const renderSuggestion = (obj: any): string => obj.name;
       const results = [
         { name: 'ApPlE' },
         { name: 'oRaNgE' },
@@ -147,14 +150,16 @@ describe('The Search Bar component', () => {
       const wrapper = mount(
         <SearchBar
           name="test-name-attr"
-          onSearch={jest.fn()}
+          onSearch={onSearch}
           results={results}
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
         />
       );
 
-      const inputField = wrapper.find('input.easi-search-bar__input');
+      const inputField = wrapper.find(
+        'input.easi-search-bar__autocomplete-input'
+      );
       inputField.simulate('change', event);
       inputField.simulate('focus');
       wrapper
@@ -168,6 +173,34 @@ describe('The Search Bar component', () => {
       expect(wrapper.find('li.react-autosuggest__suggestion').length).toEqual(
         0
       );
+    });
+
+    it('displays no matching reseults when there are no suggestions', () => {
+      const results = [{ name: 'Josh' }, { name: 'John' }];
+      const wrapper = mount(
+        <SearchBar
+          name="test-name-attr"
+          onSearch={onSearch}
+          results={results}
+          getSuggestionValue={getSuggestionValue}
+          renderSuggestion={renderSuggestion}
+        />
+      );
+
+      const event = {
+        target: {
+          value: 'joz'
+        }
+      };
+
+      const inputField = wrapper.find(
+        'input.easi-search-bar__autocomplete-input'
+      );
+      expect(wrapper.find('.easi-search-bar__no-results').length).toEqual(0);
+      inputField.simulate('change', event);
+      inputField.simulate('focus');
+
+      expect(wrapper.find('.easi-search-bar__no-results').length).toEqual(1);
     });
   });
 });
