@@ -46,6 +46,20 @@ const SearchBar = ({
     return [];
   };
 
+  const renderSuggestionsContainer = ({ containerProps, children }: any) => {
+    return (
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      <div {...containerProps}>
+        {children}
+        {searchValue.trim().length >= 2 && suggestions.length === 0 && (
+          <div className="easi-search-bar__no-results">
+            No matching results were found
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const onSuggestionsFetchRequested = ({ value }: any) => {
     setSuggestions(getSuggestions(value));
   };
@@ -69,6 +83,7 @@ const SearchBar = ({
           getSuggestionValue={getSuggestionValue}
           renderSuggestion={renderSuggestion}
           inputProps={inputProps}
+          renderSuggestionsContainer={renderSuggestionsContainer}
         />
       ) : (
         <input
