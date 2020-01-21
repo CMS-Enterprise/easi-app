@@ -23,6 +23,7 @@ const SearchBar = ({
     className: 'usa-input easi-search-bar__autocomplete-input',
     id: 'basic-search-field-small',
     type: 'search',
+    'aria-label': 'Search',
     name,
     value: searchValue,
     onChange: (
@@ -90,6 +91,7 @@ const SearchBar = ({
           className="usa-input easi-search-bar__input"
           id="basic-search-field-small"
           type="search"
+          aria-label="Search"
           name={name}
           onChange={onSearch}
         />
