@@ -19,6 +19,7 @@ const SearchBar = ({
 }: SearchBarProps) => {
   const [searchValue, setSearchValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const inputProps = {
     className: 'usa-input easi-search-bar__autocomplete-input',
     id: 'basic-search-field-small',
@@ -52,21 +53,25 @@ const SearchBar = ({
       // eslint-disable-next-line react/jsx-props-no-spreading
       <div {...containerProps}>
         {children}
-        {searchValue.trim().length >= 2 && suggestions.length === 0 && (
-          <div className="easi-search-bar__no-results">
-            No matching results were found
-          </div>
-        )}
+        {searchValue.trim().length >= 2 &&
+          suggestions.length <= 0 &&
+          isInputFocused && (
+            <div className="easi-search-bar__no-results">
+              No matching results were found
+            </div>
+          )}
       </div>
     );
   };
 
   const onSuggestionsFetchRequested = ({ value }: any) => {
     setSuggestions(getSuggestions(value));
+    setIsInputFocused(true);
   };
 
   const onSuggestionsClearRequested = () => {
     setSuggestions([]);
+    setIsInputFocused(false);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

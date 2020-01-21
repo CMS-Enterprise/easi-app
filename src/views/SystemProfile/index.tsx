@@ -45,6 +45,23 @@ const mockSystems: any[] = [
   }
 ];
 
+const mockSystemSearch: any[] = [
+  { name: 'Apple', acronym: 'APPL' },
+  { name: 'Avocado', acronym: 'AVO' },
+  { name: 'Banana', acronym: 'BNNA' },
+  { name: 'Cherries', acronym: 'CHRS' },
+  { name: 'Cranberries', acronym: 'CRNBRY' },
+  { name: 'Blackberries', acronym: 'BLKBRY' },
+  { name: 'Blueberries', acronym: 'BLUBRY' },
+  { name: 'Guava', acronym: 'GUVA' },
+  { name: 'Lemon', acronym: 'LEMN' },
+  { name: 'Lime', acronym: 'LIME' },
+  { name: 'Kiwi', acronym: 'KIWI' },
+  { name: 'Watermelon', acronym: 'WTRMLN' },
+  { name: 'Papaya', acronym: 'PAPY' },
+  { name: 'Pear', acronym: 'Pear' }
+];
+
 type SystemProfileProps = {
   match: any;
 };
@@ -63,7 +80,7 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
             onSearch={onSearch}
             getSuggestionValue={getSuggestionValue}
             renderSuggestion={renderSuggestion}
-            results={mockSystems}
+            results={mockSystemSearch}
           />
         </HeaderWrapper>
 
