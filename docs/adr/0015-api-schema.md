@@ -70,4 +70,4 @@ We can still use SwaggerUI or other OpenAPI 3.0 online validators.
 
 * `+` Requires no work
 * `-` Can require more communication between frontend and backend engineers
-* `neutral` Code is source of truth for API
+* `=` Code is source of truth for API
