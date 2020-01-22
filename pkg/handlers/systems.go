@@ -5,20 +5,9 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
-
-type system struct {
-	ID          uuid.UUID
-	Acronym     string
-	Name        string
-	Description string
-	Datapoint1  string
-	Datapoint2  string
-	Datapoint3  string
-	Datapoint4  string
-}
-
-type systems []system
 
 // SystemsListHandler is the handler for listing systems
 type SystemsListHandler struct {
@@ -43,8 +32,8 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 	}
 }
 
-func makeDummySystem(acronym string, name string) system {
-	return system{
+func makeDummySystem(acronym string, name string) models.System {
+	return models.System{
 		ID:      uuid.New(),
 		Acronym: acronym,
 		Name:    name,
@@ -61,8 +50,8 @@ func makeDummySystem(acronym string, name string) system {
 	}
 }
 
-func makeDummySystems() systems {
-	return systems{
+func makeDummySystems() models.Systems {
+	return models.Systems{
 		makeDummySystem("GRPE", "Grape"),
 		makeDummySystem("APPL", "Apple"),
 		makeDummySystem("ORNG", "Orange"),
