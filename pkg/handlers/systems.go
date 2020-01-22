@@ -1,4 +1,4 @@
-package server
+package handlers
 
 import (
 	"encoding/json"
@@ -20,7 +20,12 @@ type system struct {
 
 type systems []system
 
-func (s *server) handleSystemsList() http.HandlerFunc {
+// SystemsListHandler is the handler for listing systems
+type SystemsListHandler struct {
+}
+
+// Handle creates dummy systems and writes them
+func (h SystemsListHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		js, err := json.Marshal(makeDummySystems())
 		if err != nil {
