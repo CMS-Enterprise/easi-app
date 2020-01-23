@@ -8,7 +8,6 @@
 
     &.usa-input[type='search'] {
       height: auto;
-      width: auto;
     }
   }
   &__no-results {
@@ -67,12 +66,14 @@
     &__input {
       &.usa-input[type='search'] {
         width: 25%;
+        max-width: 30rem;
       }
     }
 
     .react-autosuggest {
       &__container {
         width: 25%;
+        max-width: 30rem;
       }
     }
   }
