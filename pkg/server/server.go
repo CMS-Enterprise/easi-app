@@ -13,13 +13,17 @@ type server struct {
 	router *mux.Router
 }
 
+func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.router.ServeHTTP(w, r)
+}
+
 // Serve serves all the handlers
 func Serve() {
 	r := mux.NewRouter()
-	s := server{
+	s := &server{
 		router: r,
 	}
 	fmt.Print("Serving application on localhost:8080")
 	s.routes()
-	log.Fatal(http.ListenAndServe(":8080", s.router))
+	log.Fatal(http.ListenAndServe(":8080", s))
 }
