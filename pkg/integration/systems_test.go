@@ -7,6 +7,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (s *IntegrationTestSuite) TestSystemsRoute() {
@@ -14,7 +15,7 @@ func (s *IntegrationTestSuite) TestSystemsRoute() {
 	s.NoError(err)
 	rr := httptest.NewRecorder()
 
-	handlers.SystemsListHandler{}.Handle()(rr, req)
+	handlers.SystemsListHandler{FetchSystems: services.NewFetchFakeSystems()}.Handle()(rr, req)
 
 	s.Equal(http.StatusOK, rr.Code)
 
