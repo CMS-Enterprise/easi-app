@@ -22,7 +22,6 @@ const SearchBar = ({
   const [isInputFocused, setIsInputFocused] = useState(false);
   const inputProps = {
     className: 'usa-input easi-search-bar__autocomplete-input',
-    id: 'basic-search-field-small',
     type: 'search',
     'aria-label': 'Search',
     name,
@@ -94,7 +93,6 @@ const SearchBar = ({
       ) : (
         <input
           className="usa-input easi-search-bar__input"
-          id="basic-search-field-small"
           type="search"
           aria-label="Search"
           name={name}
