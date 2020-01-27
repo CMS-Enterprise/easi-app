@@ -76,7 +76,7 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
       <Header>
         <HeaderWrapper className="system-profile__search-bar">
           <SearchBar
-            name="system-search"
+            name="System search"
             onSearch={onSearch}
             getSuggestionValue={getSuggestionValue}
             renderSuggestion={renderSuggestion}
