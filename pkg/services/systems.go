@@ -6,39 +6,29 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func makeDummySystem(acronym string, name string) models.System {
-	return models.System{
+func makeDummySystemShort(acronym string, name string) models.SystemShort {
+	return models.SystemShort{
 		ID:      uuid.New(),
 		Acronym: acronym,
 		Name:    name,
-		Description: name + " Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
-			"sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad " +
-			"minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea " +
-			"commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit " +
-			"esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non " +
-			"proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-		Datapoint1: name + " datapoint 1",
-		Datapoint2: name + " datapoint 2",
-		Datapoint3: name + " datapoint 3",
-		Datapoint4: name + " datapoint 4",
 	}
 }
 
 // NewFetchFakeSystems creates some fake systems TODO: deprecate in favor of CEDAR
-func NewFetchFakeSystems() func() (models.Systems, error) {
-	systems := models.Systems{
-		makeDummySystem("GRPE", "Grape"),
-		makeDummySystem("APPL", "Apple"),
-		makeDummySystem("ORNG", "Orange"),
-		makeDummySystem("BNNA", "Banana"),
-		makeDummySystem("DRGN", "Dragonfruit"),
-		makeDummySystem("RMBT", "Rambutan"),
-		makeDummySystem("DURN", "Durian"),
-		makeDummySystem("LEMN", "Lemon"),
-		makeDummySystem("MNGO", "Mango"),
-		makeDummySystem("MGST", "Mangosteen"),
+func NewFetchFakeSystems() func() (models.SystemShorts, error) {
+	systems := models.SystemShorts{
+		makeDummySystemShort("GRPE", "Grape"),
+		makeDummySystemShort("APPL", "Apple"),
+		makeDummySystemShort("ORNG", "Orange"),
+		makeDummySystemShort("BNNA", "Banana"),
+		makeDummySystemShort("DRGN", "Dragonfruit"),
+		makeDummySystemShort("RMBT", "Rambutan"),
+		makeDummySystemShort("DURN", "Durian"),
+		makeDummySystemShort("LEMN", "Lemon"),
+		makeDummySystemShort("MNGO", "Mango"),
+		makeDummySystemShort("MGST", "Mangosteen"),
 	}
-	return func() (models.Systems, error) {
+	return func() (models.SystemShorts, error) {
 		return systems, nil
 	}
 }

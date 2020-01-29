@@ -1,5 +1,9 @@
 package integration
 
+// integration is a package for testing application routes
+// it should attempt to mock as few dependencies as possible
+// and simulate production application use
+
 import (
 	"testing"
 
@@ -10,6 +14,6 @@ type IntegrationTestSuite struct {
 	suite.Suite
 }
 
-func TestSuite(t *testing.T) {
+func TestIntegrationTestSuite(t *testing.T) {
 	suite.Run(t, new(IntegrationTestSuite))
 }
