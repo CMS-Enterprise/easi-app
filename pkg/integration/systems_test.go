@@ -19,7 +19,7 @@ func (s *IntegrationTestSuite) TestSystemsRoute() {
 
 	s.Equal(http.StatusOK, rr.Code)
 
-	var systems models.Systems
+	var systems models.SystemShorts
 	err = json.Unmarshal(rr.Body.Bytes(), &systems)
 
 	s.NoError(err)

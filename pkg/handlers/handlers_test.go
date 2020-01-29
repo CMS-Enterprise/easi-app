@@ -10,6 +10,6 @@ type HandlerTestSuite struct {
 	suite.Suite
 }
 
-func TestSuite(t *testing.T) {
+func TestHandlerTestSuite(t *testing.T) {
 	suite.Run(t, new(HandlerTestSuite))
 }

@@ -2,11 +2,16 @@ package models
 
 import "github.com/google/uuid"
 
-// System is the model for a system
+// SystemShort has the basic information of a system, to be used in listing systems
+type SystemShort struct {
+	ID      uuid.UUID
+	Acronym string
+	Name    string
+}
+
+// System is the descriptive model for a system
 type System struct {
-	ID          uuid.UUID
-	Acronym     string
-	Name        string
+	SystemShort SystemShort
 	Description string
 	Datapoint1  string
 	Datapoint2  string
@@ -14,5 +19,5 @@ type System struct {
 	Datapoint4  string
 }
 
-// Systems is a list of systems
-type Systems []System
+// SystemShorts is a list of systemShorts
+type SystemShorts []SystemShort

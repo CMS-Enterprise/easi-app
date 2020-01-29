@@ -11,11 +11,11 @@ import (
 func (s HandlerTestSuite) TestSystemsHandler() {
 	rr := httptest.NewRecorder()
 
-	SystemsListHandler{FetchSystems: makeFakeSystems}.Handle()(rr, nil)
+	SystemsListHandler{FetchSystems: makeFakeSystemShorts}.Handle()(rr, nil)
 
 	s.Equal(http.StatusOK, rr.Code)
 
-	var systems models.Systems
+	var systems models.SystemShorts
 	err := json.Unmarshal(rr.Body.Bytes(), &systems)
 
 	s.NoError(err)
@@ -23,10 +23,10 @@ func (s HandlerTestSuite) TestSystemsHandler() {
 	s.Equal("CHSE", systems[0].Acronym)
 }
 
-func makeFakeSystems() (models.Systems, error) {
-	system1 := models.System{Acronym: "CHSE", Name: "Cheese"}
-	system2 := models.System{Acronym: "PPRN", Name: "Pepperoni"}
-	system3 := models.System{Acronym: "MTLV", Name: "Meat Lovers"}
+func makeFakeSystemShorts() (models.SystemShorts, error) {
+	system1 := models.SystemShort{Acronym: "CHSE", Name: "Cheese"}
+	system2 := models.SystemShort{Acronym: "PPRN", Name: "Pepperoni"}
+	system3 := models.SystemShort{Acronym: "MTLV", Name: "Meat Lovers"}
 
-	return models.Systems{system1, system2, system3}, nil
+	return models.SystemShorts{system1, system2, system3}, nil
 }

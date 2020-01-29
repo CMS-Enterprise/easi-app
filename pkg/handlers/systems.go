@@ -7,14 +7,14 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchSystems func() (models.Systems, error)
+type fetchSystems func() (models.SystemShorts, error)
 
 // SystemsListHandler is the handler for listing systems
 type SystemsListHandler struct {
 	FetchSystems fetchSystems
 }
 
-// Handle creates dummy systems and writes them
+// Handle handles a web request and returns a list of systems
 func (h SystemsListHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		systems, err := h.FetchSystems()
@@ -25,7 +25,8 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 
 		js, err := json.Marshal(systems)
 		if err != nil {
-
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
