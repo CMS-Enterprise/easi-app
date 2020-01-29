@@ -18,4 +18,5 @@ if [[ -z "$(aws s3 ls "$static_assets_bucket" 2>&1)" ]] ; then
   )
 else
   echo "Could not read the S3 bucket. Are you authenticated?" 1>&2
+  exit 1
 fi
