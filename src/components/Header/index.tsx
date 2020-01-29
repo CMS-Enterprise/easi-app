@@ -68,9 +68,7 @@ export const Header = ({ auth, children }: HeaderProps) => {
               />
               {displayDropdown && (
                 <UserActionList>
-                  <UserAction link="/add-new-system-mock">
-                    Add New System
-                  </UserAction>
+                  <UserAction link="/system/new">Add New System</UserAction>
                   <UserAction onClick={handleLogout}>Log Out</UserAction>
                 </UserActionList>
               )}
