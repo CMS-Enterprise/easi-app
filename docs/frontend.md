@@ -66,7 +66,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 All of the frontend React code lives in the `src` directory.
 
-```javascript
+```text
 ├── src
 │   ├── actions                   # Redux action creators
 │   ├── components                # Common "EASi specific" React components
