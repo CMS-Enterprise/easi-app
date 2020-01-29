@@ -2,7 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import './index.scss';
 
-type UserActionsListProps = {
+type UserActionListProps = {
   className?: string;
   children: React.ReactNodeArray;
 };
@@ -16,14 +16,13 @@ type UserActionProps = {
 export const UserActionList = ({
   className,
   children
-}: UserActionsListProps) => {
+}: UserActionListProps) => {
   const classNames = classnames('user-actions-dropdown', className);
   return <ul className={classNames}>{children}</ul>;
 };
 
 export const UserAction = ({ onClick, link, children }: UserActionProps) => {
   const handleClick = () => {
-    console.log('clickedddd');
     if (onClick) {
       onClick();
     }
