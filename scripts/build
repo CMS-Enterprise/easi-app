@@ -8,7 +8,7 @@ static_assets_bucket="aws-cms-oit-iusg-spe-easi-dev-easi-dev-static-assets"
 
 # Check if we have any access to the s3 bucket
 # Since `s3 ls` returns zero even if the command failed, we assume failure if this command prints anything to stderr
-s3_err="$(aws s3 ls "$static_assets_bucket" 2>&1)"
+s3_err="$(aws s3 ls "$static_assets_bucket" 1>/dev/null 2>&1)"
 if [[ -z "$s3_err" ]] ; then
   ( set -x -u ; go build -a -o "$builddir"/bin/easi "$builddir"/cmd/easi ) || exit
 
