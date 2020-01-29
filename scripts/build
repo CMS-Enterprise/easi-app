@@ -12,7 +12,7 @@ if bash +x -u -c "$(aws s3 ls "$static_assets_bucket" 1>/dev/null)" ; then
   ( set -x -u ;
     yarn install
     yarn run build || exit
-    aws s3 sync --no-progress build/ "$static_assets_bucket"
+    aws s3 sync --no-progress build/ s3://"$static_assets_bucket"/
   )
 else
   echo "Could not read the S3 bucket. Are you authenticated?" 1>&2
