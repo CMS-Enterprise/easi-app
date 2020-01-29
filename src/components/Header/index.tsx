@@ -22,10 +22,10 @@ const intakeLogo = <span aria-label="EASi home">CMS System Intake</span>;
 export const Header = ({ auth, children, name }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
   let logo;
-  if (name === 'EASI') {
-    logo = easiLogo;
-  } else if (name === 'INTAKE') {
+  if (name === 'INTAKE') {
     logo = intakeLogo;
+  } else {
+    logo = easiLogo;
   }
   return (
     <header
@@ -35,6 +35,11 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
       <HeaderWrapper className="usa-navbar">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">{logo}</em>
+          {name === 'INTAKE' && (
+            <button type="button" className="usa-button">
+              <span>Save & Exit</span>
+            </button>
+          )}
         </div>
         <button type="button" className="usa-menu-btn">
           <span className="fa fa-bars" />

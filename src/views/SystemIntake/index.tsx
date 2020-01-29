@@ -10,7 +10,7 @@ type SystemProfileProps = {
 export const SystemIntake = ({ match }: SystemProfileProps) => {
   return (
     <div className="system-profile">
-      <Header activeNavListItem={match.params.profileId} name="EASI" />
+      <Header activeNavListItem={match.params.profileId} name="INTAKE" />
     </div>
   );
 };
