@@ -8,7 +8,8 @@ static_assets_bucket="aws-cms-oit-iusg-spe-easi-dev-easi-dev-static-assets"
 
 # Check if we have any access to the s3 bucket
 # Since `s3 ls` returns zero even if the command failed, we assume failure if this command prints anything to stderr
-if [[ -z "$(aws s3 ls "$static_assets_bucket" 2>&1)" ]] ; then
+s3_err="$(aws s3 ls "$static_assets_bucket" 2>&1)"
+if [[ -z "$s3_err" ]] ; then
   ( set -x -u ; go build -a -o "$builddir"/bin/easi "$builddir"/cmd/easi ) || exit
 
   ( set -x -u ;
@@ -17,6 +18,9 @@ if [[ -z "$(aws s3 ls "$static_assets_bucket" 2>&1)" ]] ; then
     aws s3 sync --no-progress build/ s3://"$static_assets_bucket"/
   )
 else
-  echo "Could not read the S3 bucket. Are you authenticated?" 1>&2
+  echo "+ aws s3 ls $static_assets_bucket"
+  echo "$s3_err"
+  echo "--"
+  echo "Error reading the S3 bucket. Are you authenticated?" 1>&2
   exit 1
 fi
