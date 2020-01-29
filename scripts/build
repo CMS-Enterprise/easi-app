@@ -6,11 +6,11 @@
 builddir="$(git rev-parse --show-toplevel)"
 static_assets_bucket="aws-cms-oit-iusg-spe-easi-dev-easi-dev-static-assets"
 
-( set -x -u ; go build -a -o "$builddir"/bin/easi "$builddir"/cmd/easi ) || exit
-
 # Check if we have any access to the s3 bucket
 # Since `s3 ls` returns zero even if the command failed, we assume failure if this command prints anything to stderr
 if [[ -z "$(aws s3 ls "$static_assets_bucket" 2>&1)" ]] ; then
+  ( set -x -u ; go build -a -o "$builddir"/bin/easi "$builddir"/cmd/easi ) || exit
+
   ( set -x -u ;
     yarn install
     yarn run build || exit
