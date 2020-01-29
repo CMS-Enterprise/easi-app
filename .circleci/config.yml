@@ -37,9 +37,9 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build the app in docker, tag, and push to ECR
+          name: Build the app and release to ECR & s3
           command: |
-            ./scripts/release
+            ./scripts/release_ecr && ./scripts/release_static
 
   test:
     docker:
