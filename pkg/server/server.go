@@ -20,11 +20,11 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // Serve serves all the handlers
-func Serve() {
+func Serve(config *viper.Viper) {
 	r := mux.NewRouter()
 	s := &server{
 		router: r,
-		Config: viper.New(),
+		Config: config,
 	}
 	fmt.Print("Serving application on localhost:8080")
 	s.routes()
