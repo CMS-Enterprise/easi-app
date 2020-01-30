@@ -5,6 +5,7 @@ import axios from 'axios';
 import useAuth from 'hooks/useAuth';
 import Header from 'components/Header';
 import TextField from 'components/shared/TextField';
+import TextareaField from 'components/shared/TextareaField';
 
 type HomeProps = {
   auth: any;
@@ -14,6 +15,7 @@ const Home = ({ auth }: HomeProps) => {
   const [isAuthenticated] = useAuth(auth);
   const [name, setName] = useState('');
   const [demoInput, setDemoInput] = useState('');
+  const [textarea, setTextarea] = useState('');
   const getEmailAddress = async (): Promise<void> => {
     const accessToken = await auth.getAccessToken();
     await axios
@@ -60,6 +62,18 @@ const Home = ({ auth }: HomeProps) => {
             console.log('Blurred');
           }}
           value={demoInput}
+        />
+        <TextareaField
+          id="DemoTextarea"
+          name="Demo Textarea"
+          label="Demo Textarea"
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+            setTextarea(e.target.value);
+          }}
+          onBlur={() => {
+            console.log('Blurred');
+          }}
+          value={textarea}
         />
       </div>
     </div>
