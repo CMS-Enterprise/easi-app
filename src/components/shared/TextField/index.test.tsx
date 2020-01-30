@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { shallow } from 'enzyme';
-import TextField from 'components/shared/TextField';
+import TextField from './index';
 
 describe('The Text Field component', () => {
   const requiredProps = {
