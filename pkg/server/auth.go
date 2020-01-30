@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
-	"github.com/spf13/viper"
 )
 
 func isAuthenticated(authHeader string, verifier jwtverifier.JwtVerifier) bool {
@@ -38,7 +37,7 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 
 func (s *server) authorizeHandler(next http.HandlerFunc) http.HandlerFunc {
 
-	verifier := newJwtVerifier(viper.GetString("OKTA_CLIENT_ID"), viper.GetString("OKTA_ISSUER"))
+	verifier := newJwtVerifier(s.Config.GetString("OKTA_CLIENT_ID"), s.Config.GetString("OKTA_ISSUER"))
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
 			return
