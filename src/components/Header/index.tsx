@@ -36,7 +36,11 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">{logo}</em>
           {name === 'INTAKE' && (
-            <button type="button" className="usa-button">
+            <button
+              type="button"
+              className="easi-header__save-button usa-button"
+              id="save-button"
+            >
               <span>Save & Exit</span>
             </button>
           )}
