@@ -7,10 +7,12 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/spf13/viper"
 )
 
 type server struct {
 	router *mux.Router
+	Config *viper.Viper
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -22,6 +24,7 @@ func Serve() {
 	r := mux.NewRouter()
 	s := &server{
 		router: r,
+		Config: viper.New(),
 	}
 	fmt.Print("Serving application on localhost:8080")
 	s.routes()
