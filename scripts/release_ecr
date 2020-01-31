@@ -7,12 +7,13 @@
 if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")" ; then
   # build & tag the docker image, then push to ECR
   sha="${CIRCLE_SHA1:-"$(git rev-parse HEAD)"}"
-  tag="easi:${sha}"
+  target="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend"
+
   builddir="$(git rev-parse --show-toplevel)"
   ( set -x -u ; \
-    docker build --no-cache --tag "$tag" "$builddir" && \
-    docker tag "$tag" "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${sha}" && \
-    docker push "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${sha}"
+    docker build --no-cache --tag "easi:${sha}" "$builddir" && \
+    docker tag "easi:${sha}" "${target}:${sha}" && \
+    docker push "${target}:${sha}"
   )
 else
   status=$?
