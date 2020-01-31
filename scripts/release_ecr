@@ -14,6 +14,7 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   if docker build --no-cache --tag "easi:${sha}" "$builddir" ; then
     ( set -x -u
       docker tag "easi:${sha}" "${target}:${sha}" && docker push "${target}:${sha}" || exit
+      docker tag "easi:${sha}" "${target}:latest" && docker push "${target}:latest" || exit
     )
   else
     exit
