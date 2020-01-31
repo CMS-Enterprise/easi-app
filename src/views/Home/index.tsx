@@ -7,6 +7,7 @@ import Header from 'components/Header';
 import TextField from 'components/shared/TextField';
 import TextareaField from 'components/shared/TextareaField';
 import CheckboxField from 'components/shared/CheckboxField';
+import RadioField from 'components/shared/RadioField';
 
 type HomeProps = {
   auth: any;
@@ -99,6 +100,38 @@ const Home = ({ auth }: HomeProps) => {
           onBlur={() => {}}
           onChange={() => {}}
           value="Pear"
+        />
+        <RadioField
+          id="Radio-A"
+          label="A"
+          name="RadioTest"
+          onBlur={() => {}}
+          onChange={() => {}}
+          value="A"
+        />
+        <RadioField
+          id="Radio-B"
+          label="B"
+          name="RadioTest"
+          onBlur={() => {}}
+          onChange={() => {}}
+          value="B"
+        />
+        <RadioField
+          id="Radio-C"
+          label="C"
+          name="RadioTest"
+          onBlur={() => {}}
+          onChange={() => {}}
+          value="C"
+        />
+        <RadioField
+          id="Radio-D"
+          label="D"
+          name="RadioTest"
+          onBlur={() => {}}
+          onChange={() => {}}
+          value="D"
         />
       </div>
     </div>
