@@ -11,10 +11,10 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
 
   builddir="$(git rev-parse --show-toplevel)"
 
-  if docker build --no-cache --tag "easi:${sha}" "$builddir" ; then
+  if docker build --no-cache --tag "easi" "$builddir" ; then
     ( set -x -u
       docker tag "easi:${sha}" "${target}:${sha}" && docker push "${target}:${sha}" || exit
-      docker tag "easi:${sha}" "${target}:latest" && docker push "${target}:latest" || exit
+      docker tag "easi:latest" "${target}:latest" && docker push "${target}:latest" || exit
     )
   else
     exit
