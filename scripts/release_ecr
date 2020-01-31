@@ -10,11 +10,14 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   target="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend"
 
   builddir="$(git rev-parse --show-toplevel)"
-  ( set -x -u ; \
-    docker build --no-cache --tag "easi:${sha}" "$builddir" && \
-    docker tag "easi:${sha}" "${target}:${sha}" && \
-    docker push "${target}:${sha}"
-  )
+
+  if docker build --no-cache --tag "easi:${sha}" "$builddir" ; then
+    ( set -x -u
+      docker tag "easi:${sha}" "${target}:${sha}" && docker push "${target}:${sha}"
+    )
+  else
+    exit
+  fi
 else
   status=$?
   echo "FATAL: ECR login failed" 1>&2
