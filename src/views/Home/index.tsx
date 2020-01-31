@@ -6,6 +6,7 @@ import useAuth from 'hooks/useAuth';
 import Header from 'components/Header';
 import TextField from 'components/shared/TextField';
 import TextareaField from 'components/shared/TextareaField';
+import CheckboxField from 'components/shared/CheckboxField';
 
 type HomeProps = {
   auth: any;
@@ -74,6 +75,30 @@ const Home = ({ auth }: HomeProps) => {
             console.log('Blurred');
           }}
           value={textarea}
+        />
+        <CheckboxField
+          id="SystemFruit-Apple"
+          label="Apple"
+          name="SystemFruit"
+          onBlur={() => {}}
+          onChange={() => {}}
+          value="Apple"
+        />
+        <CheckboxField
+          id="SystemFruit-Banana"
+          label="Banana"
+          name="SystemFruit"
+          onBlur={() => {}}
+          onChange={() => {}}
+          value="Banana"
+        />
+        <CheckboxField
+          id="SystemFruit-Pear"
+          label="Pear"
+          name="SystemFruit"
+          onBlur={() => {}}
+          onChange={() => {}}
+          value="Pear"
         />
       </div>
     </div>
