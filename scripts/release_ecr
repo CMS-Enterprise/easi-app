@@ -11,8 +11,8 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   builddir="$(git rev-parse --show-toplevel)"
   ( set -x -u ; \
     docker build --no-cache --tag "$tag" "$builddir" && \
-    docker tag "easi:$CIRCLE_SHA1" "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:$CIRCLE_SHA1" && \
-    docker push "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:$CIRCLE_SHA1"
+    docker tag "$tag" "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${sha}" && \
+    docker push "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${sha}"
   )
 else
   status=$?
