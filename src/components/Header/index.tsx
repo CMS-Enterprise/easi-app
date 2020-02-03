@@ -37,9 +37,14 @@ export const Header = ({ auth, children }: HeaderProps) => {
     };
   }, []);
 
-  const arrowClassname = classnames('fa', 'fa-angle-up', 'easi-header__caret', {
-    'easi-header__caret--rotate': displayDropdown
-  });
+  const arrowClassname = classnames(
+    'fa',
+    'fa-angle-down',
+    'easi-header__caret',
+    {
+      'easi-header__caret--rotate': displayDropdown
+    }
+  );
   return (
     <header className="usa-header easi-header" role="banner">
       <HeaderWrapper className="usa-navbar">
