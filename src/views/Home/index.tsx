@@ -8,6 +8,7 @@ import TextField from 'components/shared/TextField';
 import TextareaField from 'components/shared/TextareaField';
 import CheckboxField from 'components/shared/CheckboxField';
 import RadioField from 'components/shared/RadioField';
+import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 
 type HomeProps = {
   auth: any;
@@ -133,6 +134,12 @@ const Home = ({ auth }: HomeProps) => {
           onChange={() => {}}
           value="D"
         />
+        <DropdownField id="TestDropdown" label="Favorite Fruit">
+          <DropdownItem value="1">Apple</DropdownItem>
+          <DropdownItem value="1">Orange</DropdownItem>
+          <DropdownItem value="1">Pear</DropdownItem>
+          <DropdownItem value="1">Mango</DropdownItem>
+        </DropdownField>
       </div>
     </div>
   );
