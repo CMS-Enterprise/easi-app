@@ -37,7 +37,7 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
-          name: Build the app and release to ECR
+          name: Build the app and release to ECS
           command: |
             ./scripts/release_ecs
       - run:
