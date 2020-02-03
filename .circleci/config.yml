@@ -39,7 +39,7 @@ jobs:
       - run:
           name: Build the app and release to ECR
           command: |
-            ./scripts/release_ecr
+            ./scripts/release_ecs
       - run:
           name: Build static assets and release to S3
           command: |
