@@ -12,7 +12,8 @@ var serveCmd = &cobra.Command{
 	Short: "Serve the EASi application",
 	Long:  `Serve the EASi application`,
 	Run: func(cmd *cobra.Command, args []string) {
-		viper.AutomaticEnv()
-		server.Serve()
+		config := viper.New()
+		config.AutomaticEnv()
+		server.Serve(config)
 	},
 }
