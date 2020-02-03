@@ -33,6 +33,8 @@ jobs:
   build_tag_push:
     docker:
       - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
     steps:
       - checkout
       - setup_remote_docker
