@@ -4,11 +4,6 @@ import axios from 'axios';
 
 import useAuth from 'hooks/useAuth';
 import Header from 'components/Header';
-import TextField from 'components/shared/TextField';
-import TextareaField from 'components/shared/TextareaField';
-import CheckboxField from 'components/shared/CheckboxField';
-import RadioField from 'components/shared/RadioField';
-import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 
 type HomeProps = {
   auth: any;
@@ -17,8 +12,7 @@ type HomeProps = {
 const Home = ({ auth }: HomeProps) => {
   const [isAuthenticated] = useAuth(auth);
   const [name, setName] = useState('');
-  const [demoInput, setDemoInput] = useState('');
-  const [textarea, setTextarea] = useState('');
+
   const getEmailAddress = async (): Promise<void> => {
     const accessToken = await auth.getAccessToken();
     await axios
@@ -54,92 +48,6 @@ const Home = ({ auth }: HomeProps) => {
         <h3>{`A user is ${isAuthenticated ? '' : 'NOT'} authenticated`}</h3>
         <h3>Here is an email address fetched from the server</h3>
         <h3>{name}</h3>
-        <TextField
-          id="DemoField"
-          name="Demo Input"
-          label="Demo Input"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setDemoInput(e.target.value);
-          }}
-          onBlur={() => {
-            console.log('Blurred');
-          }}
-          value={demoInput}
-        />
-        <TextareaField
-          id="DemoTextarea"
-          name="Demo Textarea"
-          label="Demo Textarea"
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-            setTextarea(e.target.value);
-          }}
-          onBlur={() => {
-            console.log('Blurred');
-          }}
-          value={textarea}
-        />
-        <CheckboxField
-          id="SystemFruit-Apple"
-          label="Apple"
-          name="SystemFruit"
-          onBlur={() => {}}
-          onChange={() => {}}
-          value="Apple"
-        />
-        <CheckboxField
-          id="SystemFruit-Banana"
-          label="Banana"
-          name="SystemFruit"
-          onBlur={() => {}}
-          onChange={() => {}}
-          value="Banana"
-        />
-        <CheckboxField
-          id="SystemFruit-Pear"
-          label="Pear"
-          name="SystemFruit"
-          onBlur={() => {}}
-          onChange={() => {}}
-          value="Pear"
-        />
-        <RadioField
-          id="Radio-A"
-          label="A"
-          name="RadioTest"
-          onBlur={() => {}}
-          onChange={() => {}}
-          value="A"
-        />
-        <RadioField
-          id="Radio-B"
-          label="B"
-          name="RadioTest"
-          onBlur={() => {}}
-          onChange={() => {}}
-          value="B"
-        />
-        <RadioField
-          id="Radio-C"
-          label="C"
-          name="RadioTest"
-          onBlur={() => {}}
-          onChange={() => {}}
-          value="C"
-        />
-        <RadioField
-          id="Radio-D"
-          label="D"
-          name="RadioTest"
-          onBlur={() => {}}
-          onChange={() => {}}
-          value="D"
-        />
-        <DropdownField id="TestDropdown" label="Favorite Fruit">
-          <DropdownItem value="1">Apple</DropdownItem>
-          <DropdownItem value="1">Orange</DropdownItem>
-          <DropdownItem value="1">Pear</DropdownItem>
-          <DropdownItem value="1">Mango</DropdownItem>
-        </DropdownField>
       </div>
     </div>
   );

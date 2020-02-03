@@ -8,6 +8,7 @@ import Login from 'views/Login';
 import SuperSecret from 'views/SuperSecret';
 import SystemProfile from 'views/SystemProfile';
 import SystemProfiles from 'views/SystemProfiles';
+import Sandbox from 'views/Sandbox';
 
 import './index.scss';
 
@@ -27,6 +28,7 @@ class App extends React.Component<MainProps, MainState> {
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/login" exact component={Login} />
+              <Route path="/sandbox" exact component={Sandbox} />
               <SecureRoute path="/protected" exact component={SuperSecret} />
               <SecureRoute
                 path="/system/all"
