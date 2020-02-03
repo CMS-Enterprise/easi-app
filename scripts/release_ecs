@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# build `easi` in docker and release to ECR
+# build `easi` in docker and release to ECS
 #
 
 # log in to ECR
@@ -19,6 +19,11 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   else
     exit
   fi
+
+  # restart the ECS service
+  cluster_name="dev-easi-app"
+  service_name="easi-app"
+  ( set -x ; aws ecs update-service --cluster "$cluster_name" --service "$service_name" --force-new-deployment )
 else
   status=$?
   echo "FATAL: ECR login failed" 1>&2
