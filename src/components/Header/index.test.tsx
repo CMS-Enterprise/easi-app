@@ -10,7 +10,7 @@ describe('The Header component', () => {
     const auth = {
       isAuthenticated: () => Promise.resolve(true),
       user: {
-        email: ' '
+        name: ' '
       }
     };
     shallow(<Header auth={auth} />);
@@ -20,7 +20,7 @@ describe('The Header component', () => {
     const auth = {
       isAuthenticated: () => Promise.resolve(false),
       user: {
-        email: ''
+        name: ''
       }
     };
     it('displays a login button', () => {
@@ -35,7 +35,7 @@ describe('The Header component', () => {
       isAuthenticated: () => Promise.resolve(true),
       getUser: () =>
         Promise.resolve({
-          email: 'test@test.com'
+          name: 'John Doe'
         })
     };
 
@@ -57,7 +57,7 @@ describe('The Header component', () => {
       });
     });
 
-    it('displays the users email', async done => {
+    it('displays the users name', async done => {
       let component;
 
       await act(async () => {
@@ -70,7 +70,27 @@ describe('The Header component', () => {
 
       setImmediate(() => {
         component.update();
-        expect(component.text().includes('test@test.com')).toBe(true);
+        expect(component.text().includes('John Doe')).toBe(true);
+        done();
+      });
+    });
+
+    it('displays dropdown when caret is clicked', async done => {
+      let component;
+
+      await act(async () => {
+        component = mount(
+          <BrowserRouter>
+            <Header auth={auth} />
+          </BrowserRouter>
+        );
+      });
+
+      setImmediate(() => {
+        component.update();
+        expect(component.find('.user-actions-dropdown').exists()).toBe(false);
+        component.find('.easi-header__caret').simulate('click');
+        expect(component.find('.user-actions-dropdown').exists()).toBe(true);
         done();
       });
     });
@@ -80,7 +100,7 @@ describe('The Header component', () => {
     const auth = {
       isAuthenticated: () => Promise.resolve(true),
       user: {
-        email: ''
+        name: ''
       }
     };
 
