@@ -65,6 +65,10 @@ workflows:
       - pre_test
       - test
       - build_tag_push:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - pre_test
             - test
