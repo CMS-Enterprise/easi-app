@@ -23,7 +23,7 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   # restart the ECS service
   cluster_name="dev-easi-app"
   service_name="easi-app"
-  ( set -x ; aws ecs update-service --cluster "$cluster_name" --service "$service_name" --force-new-deployment )
+  ( set -x ; aws ecs update-service --cluster "$cluster_name" --service "$service_name" --force-new-deployment ) || exit
 else
   status=$?
   echo "FATAL: ECR login failed" 1>&2
