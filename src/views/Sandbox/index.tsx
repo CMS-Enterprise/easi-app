@@ -9,7 +9,8 @@ import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 
 // This view can be deleted whenever we're ready
 // This is just a sandbox page for us to test things out
-const Home = () => {
+
+const Sandbox = () => {
   const [demoInput, setDemoInput] = useState('');
   const [textarea, setTextarea] = useState('');
 
@@ -134,4 +135,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Sandbox;
