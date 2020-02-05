@@ -11,7 +11,6 @@ type HeaderProps = {
   auth: any;
   children: React.ReactNode | React.ReactNodeArray;
   name: string;
-  headerButton: React.ReactNode | null;
 };
 
 const easiLogo = (
@@ -22,7 +21,7 @@ const easiLogo = (
 
 const intakeLogo = <span aria-label="EASi home">CMS System Intake</span>;
 
-export const Header = ({ auth, children, name, headerButton }: HeaderProps) => {
+export const Header = ({ auth, children, name }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const dropdownNode = useRef<any>();
@@ -33,7 +32,7 @@ export const Header = ({ auth, children, name, headerButton }: HeaderProps) => {
   } else {
     logo = easiLogo;
   }
-  
+
   const handleClick = (e: Event) => {
     if (
       dropdownNode &&
@@ -70,7 +69,6 @@ export const Header = ({ auth, children, name, headerButton }: HeaderProps) => {
       <HeaderWrapper className="usa-navbar">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">{logo}</em>
-          {headerButton}
         </div>
         <button type="button" className="usa-menu-btn">
           <span className="fa fa-bars" />
