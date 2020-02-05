@@ -34,11 +34,11 @@ class App extends React.Component<MainProps, MainState> {
                 exact
                 component={SystemProfiles}
               />
+              <SecureRoute path="/system/new/" component={SystemIntake} />
               <SecureRoute
                 path="/system/:profileId"
                 component={SystemProfile}
               />
-              <SecureRoute path="/new" component={SystemIntake} />
               <Route path="/implicit/callback" component={ImplicitCallback} />
             </Switch>
           </AuthenticationWrapper>
