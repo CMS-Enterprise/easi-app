@@ -1,11 +1,11 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import TextboxField from './index';
+import CheckboxField from './index';
 
-describe('The Textbox Field component', () => {
+describe('The Checkbox Field component', () => {
   it('renders without crashing', () => {
     shallow(
-      <TextboxField
+      <CheckboxField
         id="TestTextbox"
         label="Test Textbox"
         name="Test"

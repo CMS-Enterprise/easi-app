@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import Header from 'components/Header';
 import TextField from 'components/shared/TextField';
-import TextareaField from 'components/shared/TextareaField';
+import TextAreaField from 'components/shared/TextAreaField';
 import CheckboxField from 'components/shared/CheckboxField';
 import RadioField from 'components/shared/RadioField';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
@@ -19,9 +19,9 @@ const Home = () => {
       <div className="grid-container">
         <h1>Sandbox</h1>
         <TextField
-          id="DemoField"
-          name="Demo Input"
-          label="Demo Input"
+          id="IntakeForm-ProjectName"
+          name="Project Name"
+          label="Project Name"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setDemoInput(e.target.value);
           }}
@@ -30,7 +30,19 @@ const Home = () => {
           }}
           value={demoInput}
         />
-        <TextareaField
+        <TextField
+          id="IntakeForm-ProjectAcronym"
+          name="Project Acronym"
+          label="Project Acronym"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setDemoInput(e.target.value);
+          }}
+          onBlur={() => {
+            console.log('Blurred');
+          }}
+          value={demoInput}
+        />
+        <TextAreaField
           id="DemoTextarea"
           name="Demo Textarea"
           label="Demo Textarea"
@@ -112,10 +124,10 @@ const Home = () => {
           />
         </div>
         <DropdownField id="TestDropdown" label="Favorite Fruit">
-          <DropdownItem value="1">Apple</DropdownItem>
-          <DropdownItem value="1">Orange</DropdownItem>
-          <DropdownItem value="1">Pear</DropdownItem>
-          <DropdownItem value="1">Mango</DropdownItem>
+          <DropdownItem name="Apple" value="1" />
+          <DropdownItem name="Orange" value="2" />
+          <DropdownItem name="Pear" value="3" />
+          <DropdownItem name="Mango" value="4" />
         </DropdownField>
       </div>
     </div>

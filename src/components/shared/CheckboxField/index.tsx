@@ -1,6 +1,6 @@
 import React from 'react';
 
-type TextboxFieldProps = {
+type CheckboxFieldProps = {
   id: string;
   label: string;
   name: string;
@@ -9,14 +9,14 @@ type TextboxFieldProps = {
   value: string;
 };
 
-const TextboxField = ({
+const CheckboxField = ({
   id,
   label,
   name,
   onChange,
   onBlur,
   value
-}: TextboxFieldProps) => (
+}: CheckboxFieldProps) => (
   <div className="usa-checkbox">
     <input
       className="usa-checkbox__input"
@@ -33,4 +33,4 @@ const TextboxField = ({
   </div>
 );
 
-export default TextboxField;
+export default CheckboxField;
