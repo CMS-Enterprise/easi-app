@@ -1,6 +1,6 @@
 import React from 'react';
 
-type TextareaFieldProps = {
+type TextAreaFieldProps = {
   id: string;
   name: string;
   label?: string;
@@ -10,7 +10,7 @@ type TextareaFieldProps = {
   value: string;
 };
 
-const TextareaField = ({
+const TextAreaField = ({
   id,
   name,
   label,
@@ -18,7 +18,7 @@ const TextareaField = ({
   onChange,
   onBlur,
   value
-}: TextareaFieldProps) => {
+}: TextAreaFieldProps) => {
   return (
     <>
       {label && (
@@ -39,4 +39,4 @@ const TextareaField = ({
   );
 };
 
-export default TextareaField;
+export default TextAreaField;

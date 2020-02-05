@@ -19,10 +19,10 @@ export const DropdownField = ({ id, label, children }: DropdownFieldProps) => (
 );
 
 type DropdownItemProps = {
-  children: React.ReactNode;
+  name: string;
   value: string;
 };
 
-export const DropdownItem = ({ children, value }: DropdownItemProps) => (
-  <option value={value}>{children}</option>
+export const DropdownItem = ({ name, value }: DropdownItemProps) => (
+  <option value={value}>{name}</option>
 );

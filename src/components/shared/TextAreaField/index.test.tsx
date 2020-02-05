@@ -1,25 +1,25 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import { shallow } from 'enzyme';
-import TextareaField from './index';
+import TextAreaField from './index';
 
 describe('The Text Area Field component', () => {
   const requiredProps = {
     id: 'DemoTest',
-    name: 'Demo Textarea',
+    name: 'Demo TextArea',
     onChange: () => {},
     onBlur: () => {},
     value: ''
   };
 
   it('renders without crashing', () => {
-    shallow(<TextareaField {...requiredProps} />);
+    shallow(<TextAreaField {...requiredProps} />);
   });
 
   it('renders a label when provided', () => {
     const fixture = 'Demo Label';
     const component = shallow(
-      <TextareaField {...requiredProps} label={fixture} />
+      <TextAreaField {...requiredProps} label={fixture} />
     );
 
     expect(component.find('label').text()).toEqual(fixture);
