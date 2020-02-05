@@ -6,6 +6,10 @@
     width: 100%;
   }
 
+  &__dropdown-wrapper {
+    position: relative;
+  }
+
   &--desktop {
     display: none;
   }
@@ -46,6 +50,14 @@
 
   #save-button {
     background-color: #E37714;
+
+  &__caret {
+    border: none;
+    transform: rotate(0deg);
+
+    &--rotate {
+      transform: rotate(180deg);
+    }
   }
 
   @media (min-width: $desktop) {
