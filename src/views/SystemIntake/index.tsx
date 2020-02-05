@@ -8,9 +8,23 @@ type SystemProfileProps = {
 };
 
 export const SystemIntake = ({ match }: SystemProfileProps) => {
+  const saveButton = (
+    <button
+      type="button"
+      className="easi-header__save-button usa-button"
+      id="save-button"
+    >
+      <span>Save & Exit</span>
+    </button>
+  );
+
   return (
     <div className="system-profile">
-      <Header activeNavListItem={match.params.profileId} name="INTAKE" />
+      <Header
+        activeNavListItem={match.params.profileId}
+        name="INTAKE"
+        headerButton={saveButton}
+      />
       <div className="grid-container">
         <p className="system-profile__text">
           The EASi System Intake process can guide you through all stages of

@@ -9,6 +9,7 @@ type HeaderProps = {
   auth: any;
   children: React.ReactNode | React.ReactNodeArray;
   name: string;
+  headerButton: React.ReactNode | null;
 };
 
 const easiLogo = (
@@ -19,7 +20,7 @@ const easiLogo = (
 
 const intakeLogo = <span aria-label="EASi home">CMS System Intake</span>;
 
-export const Header = ({ auth, children, name }: HeaderProps) => {
+export const Header = ({ auth, children, name, headerButton }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
   let logo;
   if (name === 'INTAKE') {
@@ -35,15 +36,7 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
       <HeaderWrapper className="usa-navbar">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">{logo}</em>
-          {name === 'INTAKE' && (
-            <button
-              type="button"
-              className="easi-header__save-button usa-button"
-              id="save-button"
-            >
-              <span>Save & Exit</span>
-            </button>
-          )}
+          {headerButton}
         </div>
         <button type="button" className="usa-menu-btn">
           <span className="fa fa-bars" />
