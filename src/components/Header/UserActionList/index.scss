@@ -1,0 +1,31 @@
+.user-actions-dropdown {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  width: 8em;
+  padding: 0;
+  z-index: 2;
+  list-style-type: none;
+  border: 1px solid #807d7d;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+  &__item {
+    background-color: #fff;
+    font-size: 14px;
+    line-height: 14px;
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: transparent;
+      border: none;
+      text-align: left;
+    }
+
+    &:hover {
+      background-color: #005ea2;
+      color: #fff;
+      cursor: pointer;
+    }
+  }
+}
