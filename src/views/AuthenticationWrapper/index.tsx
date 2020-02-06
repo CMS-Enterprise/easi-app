@@ -8,13 +8,13 @@ function onAuthRequired({ history }: any): void {
 }
 
 type AuthenticationWrapperProps = {
-  children: React.ReactNodeArray;
+  children: React.ReactNode;
 };
 
 const AuthenticationWrapper = ({ children }: AuthenticationWrapperProps) => {
   return (
     <Security
-      issuer={`${process.env.REACT_APP_OKTA_ISSUER}/oauth2/default`}
+      issuer={process.env.REACT_APP_OKTA_ISSUER}
       clientId={process.env.REACT_APP_OKTA_CLIENT_ID}
       redirectUri={process.env.REACT_APP_OKTA_REDIRECT_URI}
       onAuthRequired={onAuthRequired}

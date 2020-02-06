@@ -3,7 +3,7 @@ WORKDIR /easi/
 COPY . .
 RUN  CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
 
-FROM alpine:latest
+FROM alpine:3
 RUN apk --no-cache add ca-certificates
 WORKDIR /easi/
 COPY --from=builder /easi/bin/easi .

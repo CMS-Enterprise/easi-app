@@ -1,6 +1,7 @@
+---
 version: 2
 jobs:
-  validate:
+  pre_test:
     docker:
       - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
     steps:
@@ -11,9 +12,6 @@ jobs:
       - restore_cache:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
-      - run:
-          name: Update pre-commit deps
-          command: pre-commit autoupdate
       - run:
           name: Install dependencies for pre-commit in yarn (temporary?)
           command: yarn install
@@ -32,8 +30,48 @@ jobs:
           paths:
             - ~/.cache/yarn
 
+  build_tag_push:
+    docker:
+      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+          OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_REDIRECT_URI: https://easi-dev.west.cms.gov/implicit/callback
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build the app and release to ECS
+          command: |
+            ./scripts/release_ecs
+      - run:
+          name: Build static assets and release to S3
+          command: |
+            ./scripts/release_static
+
+  test:
+    docker:
+      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+    steps:
+      - checkout
+      - run:
+          name: Run easi app tests
+          command: |
+            ./scripts/build
+            ./scripts/testsuite
+
 workflows:
   version: 2
-  validate:
+  compile:
     jobs:
-      - validate
+      - pre_test
+      - test
+      - build_tag_push:
+          requires:
+            - pre_test
+            - test
