@@ -10,12 +10,28 @@ import './index.scss';
 type HeaderProps = {
   auth: any;
   children: React.ReactNode | React.ReactNodeArray;
+  name: string;
 };
 
-export const Header = ({ auth, children }: HeaderProps) => {
+const easiLogo = (
+  <Link to="/" title="Home" aria-label="EASi home">
+    EASi
+  </Link>
+);
+
+const intakeLogo = <span aria-label="EASi home">CMS System Intake</span>;
+
+export const Header = ({ auth, children, name }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const dropdownNode = useRef<any>();
+
+  let logo;
+  if (name === 'INTAKE') {
+    logo = intakeLogo;
+  } else {
+    logo = easiLogo;
+  }
 
   const handleClick = (e: Event) => {
     if (
@@ -46,14 +62,13 @@ export const Header = ({ auth, children }: HeaderProps) => {
     }
   );
   return (
-    <header className="usa-header easi-header" role="banner">
+    <header
+      className="usa-header usa-header--extended easi-header"
+      role="banner"
+    >
       <HeaderWrapper className="usa-navbar">
         <div className="usa-logo site-logo" id="logo">
-          <em className="usa-logo__text">
-            <Link to="/" title="Home" aria-label="EASi home">
-              EASi
-            </Link>
-          </em>
+          <em className="usa-logo__text">{logo}</em>
         </div>
         <button type="button" className="usa-menu-btn">
           <span className="fa fa-bars" />

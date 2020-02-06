@@ -1,4 +1,6 @@
 .easi-header {
+  border-bottom: 1px solid #979797;
+
   &__wrapper {
     display: block;
     width: 100%;
@@ -44,6 +46,10 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  #save-button {
+    background-color: #E37714;
   }
 
   &__caret {
