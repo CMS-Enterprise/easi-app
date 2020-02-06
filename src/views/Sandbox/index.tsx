@@ -124,7 +124,13 @@ const Sandbox = () => {
             value="D"
           />
         </div>
-        <DropdownField id="TestDropdown" label="Favorite Fruit">
+        <DropdownField
+          id="TestDropdown"
+          label="Favorite Fruit"
+          onBlur={() => {}}
+          onChange={() => {}}
+          name="fruit"
+        >
           <DropdownItem name="Apple" value="1" />
           <DropdownItem name="Orange" value="2" />
           <DropdownItem name="Pear" value="3" />
