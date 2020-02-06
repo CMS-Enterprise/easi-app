@@ -15,7 +15,6 @@ import (
 func TestClient(t *testing.T) {
 	// create the transport
 	transport := httptransport.New(apiclient.DefaultHost, apiclient.DefaultBasePath, nil)
-	transport.
 
 	// create the API client, with the transport
 	client := apiclient.New(transport, strfmt.Default)
@@ -24,7 +23,7 @@ func TestClient(t *testing.T) {
 	apiKeyHeaderAuth := httptransport.APIKeyAuth("x-Gateway-APIKey", "header", os.Getenv("CEDAR_API_KEY"))
 
 	// make the request to get all items
-	resp, err := client.BackendIs.ListGET2(nil, apiKeyHeaderAuth)
+	resp, err := client.Operations.SystemsGET1(nil, apiKeyHeaderAuth)
 	if err != nil {
 		log.Fatal(err)
 	}
