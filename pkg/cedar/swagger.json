@@ -1,49 +1,34 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "This resource provides access to Application information in the CMS Enterprise Data Analytics Repository.",
-    "version" : "1.1",
-    "title" : "Cedar Applications"
+    "description" : "This resource provides endpoints for consumption by the Easy Access to System information (EASi) application\n",
+    "version" : "1.0",
+    "title" : "EASi Core API"
   },
   "host" : "webmethods-apigw.cedarimpl.cms.gov",
-  "basePath" : "/gateway/Cedar Applications/1.1",
-  "tags" : [ {
-    "name" : "backend_is"
-  } ],
-  "schemes" : [ "https" ],
+  "basePath" : "/gateway/EASi Core API/1.0",
+  "schemes" : [ "http" ],
   "consumes" : [ "application/json" ],
   "produces" : [ "application/json" ],
   "security" : [ {
     "apiKey" : [ ]
   } ],
   "paths" : {
-    "/list" : {
+    "/system/{id}" : {
       "get" : {
-        "tags" : [ "backend_is" ],
-        "description" : "",
-        "operationId" : "list_GET_2",
-        "consumes" : [ ],
+        "operationId" : "systemid_GET_2",
         "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "Limit",
-          "in" : "query",
-          "description" : "",
-          "required" : false,
-          "type" : "integer",
-          "format" : "int64"
-        }, {
-          "name" : "Offset",
-          "in" : "query",
-          "description" : "",
-          "required" : false,
-          "type" : "integer",
-          "format" : "int64"
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
         } ],
         "responses" : {
           "200" : {
             "description" : "OK",
             "schema" : {
-              "$ref" : "#/definitions/list_GET_response"
+              "$ref" : "#/definitions/systemid_GET_response"
             }
           },
           "401" : {
@@ -52,31 +37,16 @@
         }
       }
     },
-    "/getDetails" : {
+    "/systems" : {
       "get" : {
-        "tags" : [ "backend_is" ],
-        "description" : "",
-        "operationId" : "getDetails_GET_1",
-        "consumes" : [ ],
+        "operationId" : "systems_GET_1",
         "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "name" : "EmptyValues",
-          "in" : "query",
-          "description" : "",
-          "required" : false,
-          "type" : "boolean"
-        }, {
-          "name" : "Refs",
-          "in" : "query",
-          "description" : "",
-          "required" : true,
-          "type" : "string"
-        } ],
+        "parameters" : [ ],
         "responses" : {
           "200" : {
             "description" : "OK",
             "schema" : {
-              "$ref" : "#/definitions/getDetails_GET_response"
+              "$ref" : "#/definitions/systems_GET_response"
             }
           },
           "401" : {
@@ -94,47 +64,178 @@
     }
   },
   "definitions" : {
-    "list_GET_response" : {
+    "systems_GET_response" : {
       "type" : "object",
-      "required" : [ "errors", "result" ],
+      "required" : [ "Systems" ],
       "properties" : {
-        "errors" : {
+        "Systems" : {
           "type" : "array",
           "items" : {
-            "$ref" : "#/definitions/errors_1"
+            "$ref" : "#/definitions/System"
           }
-        },
-        "result" : {
-          "$ref" : "#/definitions/result_1"
         }
       }
     },
-    "result" : {
-      "type" : "object"
-    },
-    "result_1" : {
-      "type" : "object"
-    },
-    "errors_1" : {
-      "type" : "object"
-    },
-    "getDetails_GET_response" : {
+    "software" : {
       "type" : "object",
-      "required" : [ "errors", "result" ],
       "properties" : {
-        "errors" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/errors"
-          }
+        "software_product_name" : {
+          "type" : "string"
         },
-        "result" : {
-          "$ref" : "#/definitions/result"
+        "software_manufacture" : {
+          "type" : "string"
+        },
+        "software_product_type" : {
+          "type" : "string"
+        },
+        "software_product_version" : {
+          "type" : "string"
         }
       }
     },
-    "errors" : {
-      "type" : "object"
+    "mission_essential_function" : {
+      "type" : "object",
+      "required" : [ "mission_essential_function_level", "mission_essential_function_name" ],
+      "properties" : {
+        "mission_essential_function_level" : {
+          "type" : "string"
+        },
+        "mission_essential_function_name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "systemid_GET_response" : {
+      "type" : "object",
+      "required" : [ "SystemDetail" ],
+      "properties" : {
+        "SystemDetail" : {
+          "$ref" : "#/definitions/SystemDetail"
+        }
+      }
+    },
+    "SystemDetail" : {
+      "type" : "object",
+      "required" : [ "id", "mission_essential_function", "software", "system_acronym", "system_name" ],
+      "properties" : {
+        "business_function_alignment" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "supported_user_count" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "business_owner" : {
+          "type" : "string"
+        },
+        "business_owner_org" : {
+          "type" : "string"
+        },
+        "data_categories" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "mission_essential_functions" : {
+          "type" : "string"
+        },
+        "csp_hosted" : {
+          "type" : "boolean"
+        },
+        "software" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/software"
+          }
+        },
+        "product_owner" : {
+          "type" : "string"
+        },
+        "contractor_ftes" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "gpr_changes_next_release" : {
+          "type" : "boolean"
+        },
+        "system_maintainer_org" : {
+          "type" : "string"
+        },
+        "csp_service_model_type" : {
+          "type" : "string"
+        },
+        "next_major_project_date" : {
+          "type" : "string"
+        },
+        "system_owner" : {
+          "type" : "string"
+        },
+        "tlc_profile_reviewer" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "system_acronym" : {
+          "type" : "string"
+        },
+        "mission_essential_function" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/mission_essential_function"
+          }
+        },
+        "next_planned_prod_release_date" : {
+          "type" : "string"
+        },
+        "system_name" : {
+          "type" : "string"
+        },
+        "federal_ftes" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "isso" : {
+          "type" : "string"
+        },
+        "csp_names" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data_center_names" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "major_program_alignment" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "System" : {
+      "type" : "object",
+      "required" : [ "id", "system_acronym", "system_name" ],
+      "properties" : {
+        "system_acronym" : {
+          "type" : "string"
+        },
+        "system_name" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        }
+      }
     }
   }
 }
