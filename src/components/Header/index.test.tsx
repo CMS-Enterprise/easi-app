@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+
 import { Header } from './index';
 
 describe('The Header component', () => {
@@ -9,7 +10,7 @@ describe('The Header component', () => {
     const auth = {
       isAuthenticated: () => Promise.resolve(true),
       user: {
-        email: ' '
+        name: ' '
       }
     };
     shallow(<Header auth={auth} />);
@@ -19,7 +20,7 @@ describe('The Header component', () => {
     const auth = {
       isAuthenticated: () => Promise.resolve(false),
       user: {
-        email: ''
+        name: ''
       }
     };
     it('displays a login button', () => {
@@ -34,13 +35,13 @@ describe('The Header component', () => {
       isAuthenticated: () => Promise.resolve(true),
       getUser: () =>
         Promise.resolve({
-          email: 'test@test.com'
+          name: 'John Doe'
         })
     };
 
-    it('displays a login button', done => {
+    it('displays a login button', async done => {
       let component;
-      act(() => {
+      await act(async () => {
         component = mount(
           <BrowserRouter>
             <Header auth={auth} />
@@ -56,18 +57,59 @@ describe('The Header component', () => {
       });
     });
 
-    it('displays the users email', done => {
-      const component = mount(
-        <BrowserRouter>
-          <Header auth={auth} />
-        </BrowserRouter>
-      );
+    it('displays the users name', async done => {
+      let component;
+
+      await act(async () => {
+        component = mount(
+          <BrowserRouter>
+            <Header auth={auth} />
+          </BrowserRouter>
+        );
+      });
 
       setImmediate(() => {
         component.update();
-        expect(component.text().includes('test@test.com')).toBe(true);
+        expect(component.text().includes('John Doe')).toBe(true);
         done();
       });
     });
+
+    it('displays dropdown when caret is clicked', async done => {
+      let component;
+
+      await act(async () => {
+        component = mount(
+          <BrowserRouter>
+            <Header auth={auth} />
+          </BrowserRouter>
+        );
+      });
+
+      setImmediate(() => {
+        component.update();
+        expect(component.find('.user-actions-dropdown').exists()).toBe(false);
+        component.find('.easi-header__caret').simulate('click');
+        expect(component.find('.user-actions-dropdown').exists()).toBe(true);
+        done();
+      });
+    });
+  });
+
+  it('displays children', () => {
+    const auth = {
+      isAuthenticated: () => Promise.resolve(true),
+      user: {
+        name: ''
+      }
+    };
+
+    const component = shallow(
+      <Header auth={auth}>
+        <div className="test-class-name" />
+      </Header>
+    );
+
+    expect(component.find('.test-class-name').exists()).toBe(true);
   });
 });

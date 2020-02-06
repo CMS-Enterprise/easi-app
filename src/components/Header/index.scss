@@ -1,0 +1,93 @@
+.easi-header {
+  border-bottom: 1px solid #979797;
+
+  &__wrapper {
+    display: block;
+    width: 100%;
+  }
+
+  &__dropdown-wrapper {
+    position: relative;
+  }
+
+  &--desktop {
+    display: none;
+  }
+
+  .navbar--container {
+    display: none;
+  }
+
+  .usa-current {
+    position: relative;
+
+    &:after {
+      background-color: #005ea2;
+      border-radius: 0;
+      content: '';
+      display: block;
+      position: absolute;
+      height: 0.25rem;
+      left: 1rem;
+      right: 1rem;
+      bottom: 0;
+    }
+  }
+
+  &__nav-link {
+    display: block;
+    padding: 1rem;
+    border: none;
+    color: #565c65;
+    line-height: 0.9;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  #save-button {
+    background-color: #E37714;
+  }
+
+  &__caret {
+    border: none;
+    transform: rotate(0deg);
+
+    &--rotate {
+      transform: rotate(180deg);
+    }
+  }
+
+  @media (min-width: $desktop) {
+    .site-logo {
+      display: initial;
+      float: left;
+      margin-bottom: 0;
+    }
+
+    .navbar--container {
+      display: flex;
+      align-items: center;
+      float: right;
+      height: 5rem;
+    }
+
+    .sidenav-mobile {
+      display: none;
+    }
+
+    .easi-header {
+      &__wrapper {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+
+      &--desktop {
+        display: block;
+      }
+    }
+  }
+}
