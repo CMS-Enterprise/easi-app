@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import { withRouter } from 'react-router-dom';
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
+import { getAllSystemShorts } from '../../actions/searchActions';
+import searchReducer from '../../reducers/searchReducer';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -70,6 +72,8 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
   const onSearch = () => {};
   const getSuggestionValue = (suggestion: any): string => suggestion.name;
   const renderSuggestion = (suggestion: any): string => suggestion.name;
+  // eslint-disable-next-line no-unused-vars
+  const [state, dispatch] = useReducer(searchReducer, {});
 
   return (
     <div className="system-profile">
@@ -93,6 +97,9 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
           </HeaderWrapper>
         )}
       </Header>
+      <button type="button" onClick={() => dispatch(getAllSystemShorts())}>
+        button
+      </button>
       <div className="grid-container">
         <div className="grid-col-8">
           <div className="grid-col-8">
