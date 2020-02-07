@@ -1,6 +1,7 @@
 import React from 'react';
 
 type CheckboxFieldProps = {
+  checked?: boolean;
   id: string;
   label: string;
   name: string;
@@ -10,6 +11,7 @@ type CheckboxFieldProps = {
 };
 
 const CheckboxField = ({
+  checked,
   id,
   label,
   name,
@@ -19,6 +21,7 @@ const CheckboxField = ({
 }: CheckboxFieldProps) => (
   <div className="usa-checkbox">
     <input
+      checked={checked}
       className="usa-checkbox__input"
       id={id}
       name={name}
