@@ -196,6 +196,16 @@ Now you will need to start the Docker service: run Spotlight and type in
 
 ## Build
 
+### Swagger Generation
+
+The EASi server uses Swagger generation
+to access the CEDAR (data source) API.
+To generate run:
+
+```go
+swagger generate client -f $CEDAR_SWAGGER_FILE -c $CEDAR_DIRECTORY/gen/client -m $CEDAR_DIRECTORY/gen/models
+```
+
 ### Golang cli app
 
 To build the cli application in your local filesystem:
