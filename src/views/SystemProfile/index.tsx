@@ -8,11 +8,58 @@ import './index.scss';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
-  { id: '1', name: 'System1', slug: 'system1', link: '/system/system1' },
-  { id: '2', name: 'System2', slug: 'system2', link: '/system/system2' },
-  { id: '3', name: 'System3', slug: 'system3', link: '/system/system3' },
-  { id: '4', name: 'System4', slug: 'system4', link: '/system/system4' },
-  { id: '5', name: 'System5', slug: 'system5', link: '/system/system5' }
+  {
+    id: '1',
+    name: 'System1',
+    acronym: 'SYS1',
+    slug: 'system1',
+    link: '/system/system1'
+  },
+  {
+    id: '2',
+    name: 'System2',
+    acronym: 'SYS2',
+    slug: 'system2',
+    link: '/system/system2'
+  },
+  {
+    id: '3',
+    name: 'System3',
+    acronym: 'SYS3',
+    slug: 'system3',
+    link: '/system/system3'
+  },
+  {
+    id: '4',
+    name: 'System4',
+    acronym: 'SYS4',
+    slug: 'system4',
+    link: '/system/system4'
+  },
+  {
+    id: '5',
+    name: 'System5',
+    acronym: 'SYS5',
+    slug: 'system5',
+    link: '/system/system5'
+  }
+];
+
+const mockSystemSearch: any[] = [
+  { name: 'Apple', acronym: 'APPL' },
+  { name: 'Avocado', acronym: 'AVO' },
+  { name: 'Banana', acronym: 'BNNA' },
+  { name: 'Cherries', acronym: 'CHRS' },
+  { name: 'Cranberries', acronym: 'CRNBRY' },
+  { name: 'Blackberries', acronym: 'BLKBRY' },
+  { name: 'Blueberries', acronym: 'BLUBRY' },
+  { name: 'Guava', acronym: 'GUVA' },
+  { name: 'Lemon', acronym: 'LEMN' },
+  { name: 'Lime', acronym: 'LIME' },
+  { name: 'Kiwi', acronym: 'KIWI' },
+  { name: 'Watermelon', acronym: 'WTRMLN' },
+  { name: 'Papaya', acronym: 'PAPY' },
+  { name: 'Pear', acronym: 'Pear' }
 ];
 
 type SystemProfileProps = {
@@ -21,22 +68,27 @@ type SystemProfileProps = {
 
 export const SystemProfile = ({ match }: SystemProfileProps) => {
   const onSearch = () => {};
+  const getSuggestionValue = (suggestion: any): string => suggestion.name;
+  const renderSuggestion = (suggestion: any): string => suggestion.name;
+
   return (
     <div className="system-profile">
-      <Header
-        secondaryNavList={mockSystems.slice(0, 10)}
-        activeNavListItem={match.params.profileId}
-        onSearch={() => {}}
-      >
+      <Header>
         <HeaderWrapper className="system-profile__search-bar">
-          <SearchBar name="system-search" onSearch={onSearch} />
+          <SearchBar
+            name="System search"
+            onSearch={onSearch}
+            getSuggestionValue={getSuggestionValue}
+            renderSuggestion={renderSuggestion}
+            results={mockSystemSearch}
+          />
         </HeaderWrapper>
 
         {mockSystems.length > 0 && (
           <HeaderWrapper className="system-profile__secondary-nav-wrapper">
             <SecondaryNav
-              secondaryNavList={mockSystems}
-              activeNavItem="system1"
+              secondaryNavList={mockSystems.slice(0, 10)}
+              activeNavItem={match.params.profileId}
             />
           </HeaderWrapper>
         )}

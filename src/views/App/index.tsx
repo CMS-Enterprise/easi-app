@@ -8,6 +8,7 @@ import Login from 'views/Login';
 import SuperSecret from 'views/SuperSecret';
 import SystemProfile from 'views/SystemProfile';
 import SystemProfiles from 'views/SystemProfiles';
+import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
 
 import './index.scss';
@@ -35,6 +36,7 @@ class App extends React.Component<MainProps, MainState> {
                 exact
                 component={SystemProfiles}
               />
+              <SecureRoute path="/system/new/" component={SystemIntake} />
               <SecureRoute
                 path="/system/:profileId"
                 component={SystemProfile}
