@@ -1,10 +1,12 @@
 package server
 
 import (
+	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
-	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (s *server) routes() {
-	s.router.HandleFunc("/systems/", s.corsMiddleware(s.authorizeHandler(handlers.SystemsListHandler{FetchSystems: services.NewFetchFakeSystems()}.Handle())))
+	cedarClient := cedar.NewTranslatedClient(s.Config.GetString("CEDAR_API_KEY"))
+	systemHandler := handlers.SystemsListHandler{FetchSystems: cedarClient.FetchSystems}
+	s.router.HandleFunc("/systems/", s.corsMiddleware(s.authorizeHandler(systemHandler.Handle())))
 }
