@@ -15,5 +15,7 @@ type IntegrationTestSuite struct {
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
-	suite.Run(t, new(IntegrationTestSuite))
+	if !testing.Short() {
+		suite.Run(t, new(IntegrationTestSuite))
+	}
 }
