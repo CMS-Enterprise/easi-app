@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { withAuth } from '@okta/okta-react';
 import axios from 'axios';
 
