@@ -15,4 +15,19 @@ describe('The Checkbox Field component', () => {
       />
     );
   });
+
+  it('has the correct value', () => {
+    const fixture = 'Test';
+    const component = shallow(
+      <CheckboxField
+        id="TestTextbox"
+        label="Test Textbox"
+        name="Test"
+        onChange={() => {}}
+        onBlur={() => {}}
+        value={fixture}
+      />
+    );
+    expect(component.find('input').props().value).toEqual(fixture);
+  });
 });

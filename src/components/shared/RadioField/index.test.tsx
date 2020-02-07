@@ -15,4 +15,20 @@ describe('The Radio Field', () => {
       />
     );
   });
+
+  it('has the correct value', () => {
+    const fixture = 'A';
+    const component = shallow(
+      <RadioField
+        id="TestRadio"
+        label="A"
+        name="Question1"
+        onBlur={() => {}}
+        onChange={() => {}}
+        value={fixture}
+      />
+    );
+
+    expect(component.find('input').props().value).toEqual(fixture);
+  });
 });

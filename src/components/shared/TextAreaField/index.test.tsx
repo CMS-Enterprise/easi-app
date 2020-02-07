@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import TextAreaField from './index';
 
 describe('The Text Area Field component', () => {
@@ -23,5 +23,20 @@ describe('The Text Area Field component', () => {
     );
 
     expect(component.find('label').text()).toEqual(fixture);
+  });
+
+  it('triggers onChange', () => {
+    const event = {
+      target: {
+        value: 'Hello'
+      }
+    };
+    const mock = jest.fn();
+    const component = mount(
+      <TextAreaField {...requiredProps} onChange={mock} />
+    );
+
+    component.simulate('change', event);
+    expect(mock).toHaveBeenCalled();
   });
 });
