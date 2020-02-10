@@ -1,38 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Formik, Form, Field, FieldArray, useField } from 'formik';
+import { Formik, Form } from 'formik';
 
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
-import TextField from 'components/shared/TextField';
-import CheckboxField from 'components/shared/CheckboxField';
-import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
+import BackNextButtons from 'components/shared/BackNextButtons';
+import Page1 from './Page1';
 import './index.scss';
 
 type SystemProfileProps = {
   match: any;
 };
 
-const CustomCheckboxField = (props: any) => {
-  const [field, meta, helpers] = useField(props);
-  const { setValue } = helpers;
-
-  return (
-    <CheckboxField
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      {...props}
-      onChange={e => {
-        if (e.target.checked) {
-          setValue([]);
-        }
-      }}
-    />
-  );
-};
-
 export const SystemIntake = ({ match }: SystemProfileProps) => {
+  const TOTAL_PAGES = 3;
+  const [page, setPage] = useState(1);
   const initialData: any = {
     name: '',
     acronym: '',
@@ -49,6 +31,16 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
     hasContract: null,
     isBusinessOwnerSameAsRequestor: null
   };
+
+  const renderPage = (pageNum: number, values: any) => {
+    switch (pageNum) {
+      case 1:
+        return <Page1 values={values} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="system-profile">
       <Header activeNavListItem={match.params.profileId} name="INTAKE">
@@ -80,128 +72,18 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
           }}
         >
           {({ values }) => (
-            <Form>
-              <pre>{JSON.stringify(values, null, 2)}</pre>
-              <Field
-                as={TextField}
-                id="IntakeForm-Name"
-                label="Name"
-                name="name"
+            <>
+              <Form>
+                <pre>{JSON.stringify(values, null, 2)}</pre>
+                {renderPage(page, values)}
+              </Form>
+              <BackNextButtons
+                pageNum={page}
+                totalPages={TOTAL_PAGES}
+                setPage={setPage}
+                onSubmit={values}
               />
-              <Field
-                as={TextField}
-                id="IntakeForm-Acronym"
-                label="Acronym"
-                name="acronym"
-              />
-              <Field
-                as={TextField}
-                id="IntakeForm-Requestor"
-                label="Requestor"
-                name="requestor"
-              />
-
-              <Field
-                as={DropdownField}
-                id="IntakeForm-RequestorComponent"
-                label="Requestor Component"
-                name="requestorComponent"
-              >
-                <Field as={DropdownItem} name="Select an option" value="" />
-                {cmsDivisionsAndOffices.map(office => (
-                  <Field
-                    as={DropdownItem}
-                    key={`RequestorComponent-${office.acronym}`}
-                    name={office.name}
-                    value={office.name}
-                  />
-                ))}
-              </Field>
-
-              {/* Using span because label is associated with control elements */}
-              <span className="usa-label">
-                CMS Business/Product Owner&apos;s Name
-              </span>
-              <Field
-                as={CheckboxField}
-                id="IntakeForm-IsBusinessOwnerSameAsRequestor"
-                label="Same as Requestor"
-                name="isBusinessOwnerSameAsRequestor"
-              />
-              <Field
-                as={TextField}
-                id="IntakeForm-BusinessOwner"
-                name="businessOwner"
-              />
-              <Field
-                as={DropdownField}
-                id="IntakeForm-BusinessOwnerComponent"
-                label="Business Owner Component"
-                name="businessOwnerComponent"
-              >
-                <Field as={DropdownItem} name="Select an option" value="" />
-                {cmsDivisionsAndOffices.map(office => (
-                  <Field
-                    as={DropdownItem}
-                    key={`BusinessOwnerComponent-${office.acronym}`}
-                    name={office.name}
-                    value={office.name}
-                  />
-                ))}
-              </Field>
-              <Field
-                as={DropdownField}
-                id="IntakeForm-ProductManagerComponent"
-                label="Product Manager Component"
-                name="productManagerComponent"
-              >
-                <Field as={DropdownItem} name="Select an option" value="" />
-                {cmsDivisionsAndOffices.map(office => (
-                  <Field
-                    as={DropdownItem}
-                    key={`ProductManagerComponent-${office.acronym}`}
-                    name={office.name}
-                    value={office.name}
-                  />
-                ))}
-              </Field>
-
-              <FieldArray name="governanceTeams">
-                {arrayHelpers => (
-                  <>
-                    {cmsGovernanceTeams.map(team => {
-                      const kebabValue = team.value.split(' ').join('-');
-                      return (
-                        <CheckboxField
-                          checked={values.governanceTeams.includes(team.value)}
-                          id={`governanceTeam-${kebabValue}`}
-                          label={team.name}
-                          name="governanceTeam"
-                          onBlur={() => {}}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              arrayHelpers.push(e.target.value);
-                            } else {
-                              const index = values.governanceTeams.indexOf(
-                                team.value
-                              );
-                              arrayHelpers.remove(index);
-                            }
-                          }}
-                          value={team.value}
-                        />
-                      );
-                    })}
-                    <CustomCheckboxField
-                      id="governanceTeam-None"
-                      label="None"
-                      name="governanceTeams"
-                      value=""
-                    />
-                  </>
-                )}
-              </FieldArray>
-            </Form>
+            </>
           )}
         </Formik>
       </div>
