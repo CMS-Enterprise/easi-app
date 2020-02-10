@@ -30,12 +30,14 @@ type Page1Props = {
 const Page1 = ({ values }: Page1Props) => (
   <>
     <Field as={TextField} id="IntakeForm-Name" label="Name" name="name" />
-    <Field
-      as={TextField}
-      id="IntakeForm-Acronym"
-      label="Acronym"
-      name="acronym"
-    />
+    <div className="width-card">
+      <Field
+        as={TextField}
+        id="IntakeForm-Acronym"
+        label="Acronym"
+        name="acronym"
+      />
+    </div>
     <Field
       as={TextField}
       id="IntakeForm-Requestor"
@@ -50,7 +52,7 @@ const Page1 = ({ values }: Page1Props) => (
       name="requestorComponent"
     >
       <Field as={DropdownItem} name="Select an option" value="" />
-      {cmsDivisionsAndOffices.map(office => (
+      {cmsDivisionsAndOffices.map((office: any) => (
         <Field
           as={DropdownItem}
           key={`RequestorComponent-${office.acronym}`}
@@ -60,13 +62,18 @@ const Page1 = ({ values }: Page1Props) => (
       ))}
     </Field>
 
-    {/* Using span because label is associated with control elements */}
-    <span className="usa-label">CMS Business/Product Owner&apos;s Name</span>
+    <label
+      className="usa-label margin-bottom-1"
+      htmlFor="IntakeForm-BusinessOwner"
+    >
+      CMS Business/Product Owner&apos;s Name
+    </label>
     <Field
       as={CheckboxField}
       id="IntakeForm-IsBusinessOwnerSameAsRequestor"
       label="Same as Requestor"
       name="isBusinessOwnerSameAsRequestor"
+      value=""
     />
     <Field as={TextField} id="IntakeForm-BusinessOwner" name="businessOwner" />
     <Field
@@ -102,39 +109,46 @@ const Page1 = ({ values }: Page1Props) => (
       ))}
     </Field>
 
-    <FieldArray name="governanceTeams">
-      {arrayHelpers => (
-        <>
-          {cmsGovernanceTeams.map(team => {
-            const kebabValue = team.value.split(' ').join('-');
-            return (
-              <CheckboxField
-                checked={values.governanceTeams.includes(team.value)}
-                id={`governanceTeam-${kebabValue}`}
-                label={team.name}
-                name="governanceTeam"
-                onBlur={() => {}}
-                onChange={e => {
-                  if (e.target.checked) {
-                    arrayHelpers.push(e.target.value);
-                  } else {
-                    const index = values.governanceTeams.indexOf(team.value);
-                    arrayHelpers.remove(index);
-                  }
-                }}
-                value={team.value}
-              />
-            );
-          })}
-          <CustomCheckboxField
-            id="governanceTeam-None"
-            label="None"
-            name="governanceTeams"
-            value=""
-          />
-        </>
-      )}
-    </FieldArray>
+    <fieldset className="usa-fieldset margin-top-3">
+      <legend className="usa-label margin-bottom-1">
+        Is your project team currently collaborating/consulting with anyone of
+        the following?
+      </legend>
+      <FieldArray name="governanceTeams">
+        {arrayHelpers => (
+          <>
+            {cmsGovernanceTeams.map(team => {
+              const kebabValue = team.value.split(' ').join('-');
+              return (
+                <CheckboxField
+                  key={team.value}
+                  checked={values.governanceTeams.includes(team.value)}
+                  id={`governanceTeam-${kebabValue}`}
+                  label={team.name}
+                  name="governanceTeam"
+                  onBlur={() => {}}
+                  onChange={e => {
+                    if (e.target.checked) {
+                      arrayHelpers.push(e.target.value);
+                    } else {
+                      const index = values.governanceTeams.indexOf(team.value);
+                      arrayHelpers.remove(index);
+                    }
+                  }}
+                  value={team.value}
+                />
+              );
+            })}
+            <CustomCheckboxField
+              id="governanceTeam-None"
+              label="None"
+              name="governanceTeams"
+              value=""
+            />
+          </>
+        )}
+      </FieldArray>
+    </fieldset>
   </>
 );
 
