@@ -73,8 +73,7 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
         >
           {({ values }) => (
             <>
-              <Form>
-                <pre>{JSON.stringify(values, null, 2)}</pre>
+              <Form className="margin-bottom-7">
                 {renderPage(page, values)}
               </Form>
               <BackNextButtons
