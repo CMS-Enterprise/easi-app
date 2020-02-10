@@ -16,11 +16,12 @@ const BackNextButtons = ({
   <>
     {pageNum > 1 && (
       <button
-        type="button"
-        className="usa-button"
+        aria-label="Back"
+        className="usa-button usa-button--outline"
         onClick={() => {
           setPage((page: number) => page - 1);
         }}
+        type="button"
       >
         Back
       </button>
@@ -28,8 +29,9 @@ const BackNextButtons = ({
 
     {pageNum < totalPages && (
       <button
-        type="button"
+        aria-label="Next"
         className="usa-button"
+        type="button"
         onClick={() => {
           setPage((page: number) => page + 1);
         }}
@@ -40,11 +42,12 @@ const BackNextButtons = ({
 
     {pageNum === totalPages && (
       <button
-        type="button"
+        aria-label="Review and Send"
         className="usa-button"
         onClick={() => {
           onSubmit('Hello');
         }}
+        type="button"
       >
         Review & Send
       </button>
