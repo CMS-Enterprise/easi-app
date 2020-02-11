@@ -44,9 +44,7 @@ const BackNextButtons = ({
       <button
         aria-label="Review and Send"
         className="usa-button"
-        onClick={() => {
-          onSubmit('Hello');
-        }}
+        onClick={onSubmit}
         type="button"
       >
         Review & Send
