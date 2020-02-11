@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { Formik, Form } from 'formik';
+import { Formik, Form, FormikProps } from 'formik';
 
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import BackNextButtons from 'components/shared/BackNextButtons';
+import { SystemIntakeForm } from 'types/systemIntake';
 import Page1 from './Page1';
+import Page2 from './Page2';
+import Review from './Review';
 import './index.scss';
 
 type SystemProfileProps = {
@@ -15,7 +18,7 @@ type SystemProfileProps = {
 export const SystemIntake = ({ match }: SystemProfileProps) => {
   const TOTAL_PAGES = 3;
   const [page, setPage] = useState(1);
-  const initialData: any = {
+  const initialData: SystemIntakeForm = {
     name: '',
     acronym: '',
     requestor: '',
@@ -28,17 +31,31 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
     description: '',
     currentStage: '',
     needsEaSupport: null,
-    hasContract: null,
-    isBusinessOwnerSameAsRequestor: null
+    hasContract: '',
+    isBusinessOwnerSameAsRequestor: false
   };
 
-  const renderPage = (pageNum: number, values: any) => {
-    switch (pageNum) {
-      case 1:
-        return <Page1 values={values} />;
-      default:
-        return null;
+  const renderPage = (
+    pageNum: number,
+    formikProps: FormikProps<SystemIntakeForm>
+  ) => {
+    const Component = ((formPage: number) => {
+      switch (formPage) {
+        case 1:
+          return Page1;
+        case 2:
+          return Page2;
+        case 3:
+          return Review;
+        default:
+          return null;
+      }
+    })(pageNum);
+
+    if (Component) {
+      return <Component formikProps={formikProps} />;
     }
+    return null;
   };
 
   return (
@@ -67,20 +84,22 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
 
         <Formik
           initialValues={initialData}
-          onSubmit={(data: any) => {
+          onSubmit={(data: SystemIntakeForm) => {
             console.log('Submitted Data: ', data);
           }}
         >
-          {({ values }) => (
+          {formikProps => (
             <>
               <Form className="margin-bottom-7">
-                {renderPage(page, values)}
+                {renderPage(page, formikProps)}
               </Form>
               <BackNextButtons
                 pageNum={page}
                 totalPages={TOTAL_PAGES}
                 setPage={setPage}
-                onSubmit={values}
+                onSubmit={() => {
+                  console.log('Submitted: ', formikProps.values);
+                }}
               />
             </>
           )}
