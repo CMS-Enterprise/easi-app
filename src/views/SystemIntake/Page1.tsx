@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Field, FieldArray, FormikProps } from 'formik';
 import TextField from 'components/shared/TextField';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -12,6 +12,7 @@ type Page1Props = {
 };
 
 const Page1 = ({ formikProps }: Page1Props) => {
+  const [isReqAndBusOwnerSame, setSameness] = useState(false);
   return (
     <>
       <Field
@@ -36,6 +37,12 @@ const Page1 = ({ formikProps }: Page1Props) => {
         label="Requestor"
         maxLength={50}
         name="requestor"
+        onChange={(e: any) => {
+          if (isReqAndBusOwnerSame) {
+            formikProps.setFieldValue('businessOwner', e.target.value);
+          }
+          formikProps.setFieldValue('requestor', e.target.value);
+        }}
       />
 
       <Field
@@ -43,6 +50,12 @@ const Page1 = ({ formikProps }: Page1Props) => {
         id="IntakeForm-RequestorComponent"
         label="Requestor Component"
         name="requestorComponent"
+        onChange={(e: any) => {
+          if (isReqAndBusOwnerSame) {
+            formikProps.setFieldValue('businessOwnerComponent', e.target.value);
+          }
+          formikProps.setFieldValue('requestorComponent', e.target.value);
+        }}
       >
         <Field as={DropdownItem} name="Select an option" value="" />
         {cmsDivisionsAndOffices.map((office: any) => (
@@ -66,18 +79,33 @@ const Page1 = ({ formikProps }: Page1Props) => {
         id="IntakeForm-IsBusinessOwnerSameAsRequestor"
         label="Same as Requestor"
         name="isBusinessOwnerSameAsRequestor"
+        onChange={(e: any) => {
+          if (e.target.checked) {
+            setSameness(true);
+            formikProps.setFieldValue(
+              'businessOwner',
+              formikProps.values.requestor
+            );
+            formikProps.setFieldValue(
+              'businessOwnerComponent',
+              formikProps.values.requestorComponent
+            );
+          } else {
+            setSameness(false);
+          }
+        }}
         value=""
       />
       <Field
         as={TextField}
-        disabled={formikProps.values.isBusinessOwnerSameAsRequestor}
+        disabled={isReqAndBusOwnerSame}
         id="IntakeForm-BusinessOwner"
         maxLength={50}
         name="businessOwner"
       />
       <Field
         as={DropdownField}
-        disabled={formikProps.values.isBusinessOwnerSameAsRequestor}
+        disabled={isReqAndBusOwnerSame}
         id="IntakeForm-BusinessOwnerComponent"
         label="Business Owner Component"
         name="businessOwnerComponent"
