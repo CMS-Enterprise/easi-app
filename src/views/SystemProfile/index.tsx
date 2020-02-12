@@ -1,5 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import { withAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import SearchBar from 'components/shared/SearchBar';
@@ -66,14 +67,19 @@ const mockSystemSearch: any[] = [
 
 type SystemProfileProps = {
   match: any;
+  auth: any;
 };
 
-export const SystemProfile = ({ match }: SystemProfileProps) => {
+export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
   const onSearch = () => {};
   const getSuggestionValue = (suggestion: any): string => suggestion.name;
   const renderSuggestion = (suggestion: any): string => suggestion.name;
   // eslint-disable-next-line no-unused-vars
   const dispatch = useDispatch();
+  const getAccessToken = async (): Promise<string> => {
+    const accessToken: string = await auth.getAccessToken();
+    return accessToken;
+  };
 
   return (
     <div className="system-profile">
@@ -97,7 +103,12 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
           </HeaderWrapper>
         )}
       </Header>
-      <button type="button" onClick={() => dispatch(getAllSystemShorts())}>
+      <button
+        type="button"
+        onClick={async () =>
+          dispatch(getAllSystemShorts(await getAccessToken()))
+        }
+      >
         button
       </button>
       <div className="grid-container">
@@ -146,4 +157,4 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
   );
 };
 
-export default withRouter(SystemProfile);
+export default withRouter(withAuth(SystemProfile));
