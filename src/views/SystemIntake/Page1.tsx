@@ -70,12 +70,14 @@ const Page1 = ({ formikProps }: Page1Props) => {
       />
       <Field
         as={TextField}
+        disabled={formikProps.values.isBusinessOwnerSameAsRequestor}
         id="IntakeForm-BusinessOwner"
         maxLength={50}
         name="businessOwner"
       />
       <Field
         as={DropdownField}
+        disabled={formikProps.values.isBusinessOwnerSameAsRequestor}
         id="IntakeForm-BusinessOwnerComponent"
         label="Business Owner Component"
         name="businessOwnerComponent"
