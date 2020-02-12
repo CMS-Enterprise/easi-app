@@ -204,9 +204,18 @@ Swagger specs can be downloaded from webMethods:
 
 * [IMPL](webmethods-apigw.cedarimpl.cms.gov)
 
-Put this file in 👷‍♂️`$CEDAR_DIRECTORY`
+Put this file in ️`$CEDAR_DIRECTORY`
 and name it `swagger-<env>.yaml` respectively.
-To generate client run:
+
+If you haven't run go-swagger before,
+you'll need to install it.
+Run:
+
+```go
+go get github.com/go-swagger/go-swagger
+```
+
+Then, to generate the client run:
 
 ```go
 swagger generate client -f $CEDAR_SWAGGER_FILE -c $CEDAR_DIRECTORY/gen/client -m $CEDAR_DIRECTORY/gen/models
