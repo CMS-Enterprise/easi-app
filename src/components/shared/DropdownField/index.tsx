@@ -10,6 +10,7 @@ type DropdownFieldProps = {
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onBlur: () => void;
   children: React.ReactNodeArray;
+  value: any;
 };
 export const DropdownField = ({
   id,
@@ -18,7 +19,8 @@ export const DropdownField = ({
   name,
   onBlur,
   onChange,
-  children
+  children,
+  value
 }: DropdownFieldProps) => {
   const dropdownClassNames = classnames('usa-select', {
     'easi-dropdown--disabled': disabled
@@ -37,6 +39,7 @@ export const DropdownField = ({
         onChange={onChange}
         onBlur={onBlur}
         id={id}
+        value={value}
       >
         {children}
       </select>

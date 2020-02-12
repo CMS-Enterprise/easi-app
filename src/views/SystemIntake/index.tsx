@@ -31,8 +31,7 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
     description: '',
     currentStage: '',
     needsEaSupport: null,
-    hasContract: '',
-    isBusinessOwnerSameAsRequestor: false
+    hasContract: ''
   };
 
   const renderPage = (
