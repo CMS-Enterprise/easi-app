@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
+import { connect, useDispatch } from 'react-redux';
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
-import { useDispatch } from 'react-redux';
 import { getAllSystemShorts } from '../../actions/searchActions';
 
 const mockSystems: any[] = [
@@ -48,38 +48,46 @@ const mockSystems: any[] = [
   }
 ];
 
-const mockSystemSearch: any[] = [
-  { name: 'Apple', acronym: 'APPL' },
-  { name: 'Avocado', acronym: 'AVO' },
-  { name: 'Banana', acronym: 'BNNA' },
-  { name: 'Cherries', acronym: 'CHRS' },
-  { name: 'Cranberries', acronym: 'CRNBRY' },
-  { name: 'Blackberries', acronym: 'BLKBRY' },
-  { name: 'Blueberries', acronym: 'BLUBRY' },
-  { name: 'Guava', acronym: 'GUVA' },
-  { name: 'Lemon', acronym: 'LEMN' },
-  { name: 'Lime', acronym: 'LIME' },
-  { name: 'Kiwi', acronym: 'KIWI' },
-  { name: 'Watermelon', acronym: 'WTRMLN' },
-  { name: 'Papaya', acronym: 'PAPY' },
-  { name: 'Pear', acronym: 'Pear' }
-];
+// const mockSystemSearch: any[] = [
+//   { name: 'Apple', acronym: 'APPL' },
+//   { name: 'Avocado', acronym: 'AVO' },
+//   { name: 'Banana', acronym: 'BNNA' },
+//   { name: 'Cherries', acronym: 'CHRS' },
+//   { name: 'Cranberries', acronym: 'CRNBRY' },
+//   { name: 'Blackberries', acronym: 'BLKBRY' },
+//   { name: 'Blueberries', acronym: 'BLUBRY' },
+//   { name: 'Guava', acronym: 'GUVA' },
+//   { name: 'Lemon', acronym: 'LEMN' },
+//   { name: 'Lime', acronym: 'LIME' },
+//   { name: 'Kiwi', acronym: 'KIWI' },
+//   { name: 'Watermelon', acronym: 'WTRMLN' },
+//   { name: 'Papaya', acronym: 'PAPY' },
+//   { name: 'Pear', acronym: 'Pear' }
+// ];
 
+// TODO: fix these types.
 type SystemProfileProps = {
   match: any;
   auth: any;
+  searchResults: any;
 };
 
-export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
+export const SystemProfile = ({
+  match,
+  auth,
+  searchResults
+}: SystemProfileProps) => {
   const onSearch = () => {};
-  const getSuggestionValue = (suggestion: any): string => suggestion.name;
-  const renderSuggestion = (suggestion: any): string => suggestion.name;
-  // eslint-disable-next-line no-unused-vars
+  const getSuggestionValue = (suggestion: any): string => suggestion.Name;
+  const renderSuggestion = (suggestion: any): string => suggestion.Name;
   const dispatch = useDispatch();
-  const getAccessToken = async (): Promise<string> => {
-    const accessToken: string = await auth.getAccessToken();
-    return accessToken;
-  };
+
+  useEffect(() => {
+    const fetchSystemShorts = async (): Promise<void> => {
+      dispatch(getAllSystemShorts(await auth.getAccessToken()));
+    };
+    fetchSystemShorts();
+  }, [auth, dispatch]);
 
   return (
     <div className="system-profile">
@@ -90,7 +98,7 @@ export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
             onSearch={onSearch}
             getSuggestionValue={getSuggestionValue}
             renderSuggestion={renderSuggestion}
-            results={mockSystemSearch}
+            results={searchResults}
           />
         </HeaderWrapper>
 
@@ -103,14 +111,6 @@ export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
           </HeaderWrapper>
         )}
       </Header>
-      <button
-        type="button"
-        onClick={async () =>
-          dispatch(getAllSystemShorts(await getAccessToken()))
-        }
-      >
-        button
-      </button>
       <div className="grid-container">
         <div className="grid-col-8">
           <div className="grid-col-8">
@@ -157,4 +157,11 @@ export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
   );
 };
 
-export default withRouter(withAuth(SystemProfile));
+const mapStateToProps = (state: any) => {
+  console.log(state.searchReducer.systemSearch);
+  return {
+    searchResults: state.searchReducer.systemSearch
+  };
+};
+
+export default withRouter(withAuth(connect(mapStateToProps)(SystemProfile)));
