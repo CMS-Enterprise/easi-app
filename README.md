@@ -212,7 +212,7 @@ you'll need to install it.
 Run:
 
 ```go
-go get github.com/go-swagger/go-swagger
+go build -o bin/swagger github.com/go-swagger/go-swagger/cmd/swagger
 ```
 
 Then, to generate the client run:
