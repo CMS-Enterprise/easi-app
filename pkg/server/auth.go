@@ -9,6 +9,9 @@ import (
 
 func isAuthenticated(authHeader string, verifier jwtverifier.JwtVerifier) bool {
 	tokenParts := strings.Split(authHeader, "Bearer ")
+	if len(tokenParts) < 2 {
+		return false
+	}
 	bearerToken := tokenParts[1]
 	if bearerToken == "" {
 		return false
@@ -42,7 +45,8 @@ func (s *server) authorizeHandler(next http.HandlerFunc) http.HandlerFunc {
 		if r.Method == "OPTIONS" {
 			return
 		}
-		if !isAuthenticated(r.Header.Get("Authorization"), *verifier) {
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" || !isAuthenticated(authHeader, *verifier) {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 			return
 		}
