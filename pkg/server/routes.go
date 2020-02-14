@@ -6,7 +6,9 @@ import (
 )
 
 func (s *server) routes() {
+	api := s.router.PathPrefix("/api/v1").Subrouter()
 	cedarClient := cedar.NewTranslatedClient(s.Config.GetString("CEDAR_API_KEY"))
 	systemHandler := handlers.SystemsListHandler{FetchSystems: cedarClient.FetchSystems}
-	s.router.HandleFunc("/systems/", s.corsMiddleware(s.authorizeHandler(systemHandler.Handle())))
+	api.HandleFunc("/systems", s.corsMiddleware(s.authorizeHandler(systemHandler.Handle())))
+	api.HandleFunc("/healthcheck", handlers.HealthCheckHandler{}.Handle())
 }
