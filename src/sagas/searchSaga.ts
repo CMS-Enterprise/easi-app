@@ -13,9 +13,6 @@ function requestSystemShorts(accessToken: string) {
 
 export function* fetchAllSystemShorts(action: any) {
   const obj = yield call(requestSystemShorts, action.payload);
-  // eslint-disable-next-line no-console
-  console.log(obj);
-
   yield put(putSystemShorts(obj));
 }
 

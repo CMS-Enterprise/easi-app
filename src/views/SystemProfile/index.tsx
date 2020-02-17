@@ -48,23 +48,6 @@ const mockSystems: any[] = [
   }
 ];
 
-// const mockSystemSearch: any[] = [
-//   { name: 'Apple', acronym: 'APPL' },
-//   { name: 'Avocado', acronym: 'AVO' },
-//   { name: 'Banana', acronym: 'BNNA' },
-//   { name: 'Cherries', acronym: 'CHRS' },
-//   { name: 'Cranberries', acronym: 'CRNBRY' },
-//   { name: 'Blackberries', acronym: 'BLKBRY' },
-//   { name: 'Blueberries', acronym: 'BLUBRY' },
-//   { name: 'Guava', acronym: 'GUVA' },
-//   { name: 'Lemon', acronym: 'LEMN' },
-//   { name: 'Lime', acronym: 'LIME' },
-//   { name: 'Kiwi', acronym: 'KIWI' },
-//   { name: 'Watermelon', acronym: 'WTRMLN' },
-//   { name: 'Papaya', acronym: 'PAPY' },
-//   { name: 'Pear', acronym: 'Pear' }
-// ];
-
 // TODO: fix these types.
 type SystemProfileProps = {
   match: any;
@@ -158,7 +141,6 @@ export const SystemProfile = ({
 };
 
 const mapStateToProps = (state: any) => {
-  console.log(state.searchReducer.systemSearch);
   return {
     searchResults: state.searchReducer.systemSearch
   };
