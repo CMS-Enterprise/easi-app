@@ -160,7 +160,7 @@ TODO: Need direnv setup
 
 * To run on "local" mode
   (ex. remove auth from APIs),
-  add `export ENVIRONMENT=lcoal`
+  add `export ENVIRONMENT=local`
   to your `.envrc.local`
 
 ### Setup: Yarn (temporary)
