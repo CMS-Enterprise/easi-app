@@ -6,5 +6,7 @@ import (
 )
 
 func (s *server) routes() {
-	s.router.HandleFunc("/systems/", s.corsMiddleware(s.authorizeHandler(handlers.SystemsListHandler{FetchSystems: services.NewFetchFakeSystems()}.Handle())))
+	api := s.router.PathPrefix("/api/v1").Subrouter()
+	api.HandleFunc("/systems/", s.corsMiddleware(s.authorizeHandler(handlers.SystemsListHandler{FetchSystems: services.NewFetchFakeSystems()}.Handle())))
+	api.HandleFunc("/healthcheck", handlers.HealthCheckHandler{}.Handle())
 }
