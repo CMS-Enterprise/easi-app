@@ -38,11 +38,8 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	return jwtVerifierSetup.New()
 }
 
-// AuthorizeHandler is a type definition to make returns cleaner
-type AuthorizeHandler func(next http.HandlerFunc) http.HandlerFunc
-
 // NewOktaAuthorizeWrapper returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthorizeWrapper(clientID string, issuer string) AuthorizeHandler {
+func NewOktaAuthorizeWrapper(clientID string, issuer string) func(http.HandlerFunc) (handlerFunc http.HandlerFunc) {
 	verifier := newJwtVerifier(clientID, issuer)
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
