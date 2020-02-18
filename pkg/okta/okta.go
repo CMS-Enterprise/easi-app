@@ -1,4 +1,4 @@
-package server
+package okta
 
 import (
 	"net/http"
@@ -38,18 +38,23 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	return jwtVerifierSetup.New()
 }
 
-func (s *server) authorizeHandler(next http.HandlerFunc) http.HandlerFunc {
+// AuthorizeHandler is a type definition to make returns cleaner
+type AuthorizeHandler func(next http.HandlerFunc) http.HandlerFunc
 
-	verifier := newJwtVerifier(s.Config.GetString("OKTA_CLIENT_ID"), s.Config.GetString("OKTA_ISSUER"))
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "OPTIONS" {
-			return
+// NewOktaAuthorizeWrapper returns a wrapper for HandlerFunc to authorize with Okta
+func NewOktaAuthorizeWrapper(clientID string, issuer string) AuthorizeHandler {
+	verifier := newJwtVerifier(clientID, issuer)
+	return func(next http.HandlerFunc) http.HandlerFunc {
+		return func(w http.ResponseWriter, r *http.Request) {
+			if r.Method == "OPTIONS" {
+				return
+			}
+			authHeader := r.Header.Get("Authorization")
+			if authHeader == "" || !isAuthenticated(authHeader, *verifier) {
+				http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+				return
+			}
+			next.ServeHTTP(w, r)
 		}
-		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" || !isAuthenticated(authHeader, *verifier) {
-			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
-			return
-		}
-		next.ServeHTTP(w, r)
 	}
 }
