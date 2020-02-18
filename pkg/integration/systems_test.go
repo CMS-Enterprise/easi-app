@@ -17,7 +17,10 @@ func (s *IntegrationTestSuite) TestSystemsRoute() {
 	s.NoError(err)
 	rr := httptest.NewRecorder()
 
-	handlers.SystemsListHandler{FetchSystems: services.NewFetchFakeSystems()}.Handle()(rr, req)
+	handlers.SystemsListHandler{
+		FetchSystems: services.NewFetchFakeSystems(),
+		Marshal:      json.Marshal,
+	}.Handle()(rr, req)
 
 	s.Equal(http.StatusOK, rr.Code)
 
