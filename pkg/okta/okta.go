@@ -39,6 +39,8 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 }
 
 // NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
+// TODO: we can probably remove an indentation and make this more testable
+// Might require multiple sets of function params in signature
 func NewOktaAuthorizeMiddleware(clientID string, issuer string) func(http.HandlerFunc) (handlerFunc http.HandlerFunc) {
 	verifier := newJwtVerifier(clientID, issuer)
 	return func(next http.HandlerFunc) http.HandlerFunc {
