@@ -38,8 +38,8 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	return jwtVerifierSetup.New()
 }
 
-// NewOktaAuthorizeWrapper returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthorizeWrapper(clientID string, issuer string) func(http.HandlerFunc) (handlerFunc http.HandlerFunc) {
+// NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
+func NewOktaAuthorizeMiddleware(clientID string, issuer string) func(http.HandlerFunc) (handlerFunc http.HandlerFunc) {
 	verifier := newJwtVerifier(clientID, issuer)
 	return func(next http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
