@@ -17,6 +17,11 @@ import (
 // is set up.
 // Other tests should mock the API
 func (s *IntegrationTestSuite) TestCEDARConnection() {
+	if s.environment != "local" {
+		// TODO: When logger gets added, put in test also and print skips
+		return
+	}
+
 	req, err := http.NewRequest("GET", "/systems/", nil)
 	s.NoError(err)
 	rr := httptest.NewRecorder()
