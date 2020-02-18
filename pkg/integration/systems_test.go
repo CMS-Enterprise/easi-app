@@ -10,6 +10,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/services"
 )
 
+// TODO: We need to sub this out with a test that hooks up Okta
+// Likely also run with `server.Serve()`
 func (s *IntegrationTestSuite) TestSystemsRoute() {
 	req, err := http.NewRequest("GET", "/systems/", nil)
 	s.NoError(err)
