@@ -2,12 +2,15 @@ package server
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 )
 
-func (s *server) routes() {
+type authorizeWrapper func(http.HandlerFunc) http.HandlerFunc
+
+func (s *server) routes(authorizeWrapper authorizeWrapper) {
 	// set to standard library marshaller
 	marshalFunc := json.Marshal
 
@@ -22,7 +25,7 @@ func (s *server) routes() {
 		FetchSystems: cedarClient.FetchSystems,
 		Marshal:      marshalFunc,
 	}
-	api.HandleFunc("/systems", systemHandler.Handle())
+	api.HandleFunc("/systems", s.corsMiddleware(authorizeWrapper(systemHandler.Handle())))
 
 	// health check endpoint
 	api.HandleFunc("/healthcheck", handlers.HealthCheckHandler{}.Handle())

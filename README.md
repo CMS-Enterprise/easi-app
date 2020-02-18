@@ -156,6 +156,13 @@ So this is customization that is up to you.
 
 TODO: Need direnv setup
 
+#### Local Variables
+
+* To run on "local" mode
+  (ex. remove auth from APIs),
+  add `export ENVIRONMENT=lcoal`
+  to your `.envrc.local`
+
 ### Setup: Yarn (temporary)
 
 Run `brew install yarn` to install yarn.
