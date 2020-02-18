@@ -28,7 +28,10 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 
 	cedarClient := cedar.NewTranslatedClient(os.Getenv("CEDAR_API_KEY"))
 
-	handlers.SystemsListHandler{FetchSystems: cedarClient.FetchSystems}.Handle()(rr, req)
+	handlers.SystemsListHandler{
+		FetchSystems: cedarClient.FetchSystems,
+		Marshal:      json.Marshal,
+	}.Handle()(rr, req)
 
 	s.Equal(http.StatusOK, rr.Code)
 
