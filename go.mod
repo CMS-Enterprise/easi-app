@@ -13,11 +13,13 @@ require (
 	github.com/gorilla/mux v1.7.4
 	github.com/graph-gophers/graphql-go v0.0.0-20191115155744-f33e81362277 // indirect
 	github.com/lestrrat-go/jwx v0.9.0 // indirect
+	github.com/mailru/easyjson v0.7.1 // indirect
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
+	github.com/prometheus/common v0.4.0
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.6.2
 	github.com/stretchr/testify v1.4.0
 	go.mongodb.org/mongo-driver v1.3.0 // indirect
 	golang.org/x/net v0.0.0-20200202094626-16171245cfb2 // indirect
-	golang.org/x/sys v0.0.0-20200212091648-12a6c2dcc1e4 // indirect
+	golang.org/x/sys v0.0.0-20200217220822-9197077df867 // indirect
 )
