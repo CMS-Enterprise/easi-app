@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
-import { connect, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
 import { getAllSystemShorts } from '../../actions/searchActions';
+import { AppState } from '../../reducers/rootReducer';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -48,22 +49,23 @@ const mockSystems: any[] = [
   }
 ];
 
-// TODO: fix these types.
-type SystemProfileProps = {
-  match: any;
+type SystemProfileRouterProps = {
+  profileId: string;
+};
+
+type SystemProfileProps = RouteComponentProps<SystemProfileRouterProps> & {
   auth: any;
   searchResults: any;
 };
 
-export const SystemProfile = ({
-  match,
-  auth,
-  searchResults
-}: SystemProfileProps) => {
+export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
   const onSearch = () => {};
   const getSuggestionValue = (suggestion: any): string => suggestion.Name;
   const renderSuggestion = (suggestion: any): string => suggestion.Name;
   const dispatch = useDispatch();
+  const searchResults = useSelector(
+    (state: AppState) => state.search.allSystemShorts
+  );
 
   useEffect(() => {
     const fetchSystemShorts = async (): Promise<void> => {
@@ -140,10 +142,4 @@ export const SystemProfile = ({
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    searchResults: state.searchReducer.systemSearch
-  };
-};
-
-export default withRouter(withAuth(connect(mapStateToProps)(SystemProfile)));
+export default withRouter(withAuth(SystemProfile));

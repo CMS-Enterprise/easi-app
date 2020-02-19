@@ -1,21 +1,31 @@
-import { GET_ALL_SYSTEM_SHORTS, PUT_SYSTEM_SHORTS } from '../constants/search';
+import {
+  GET_ALL_SYSTEM_SHORTS,
+  UPDATE_SYSTEM_SHORTS
+} from '../constants/system';
+import { ShortSystem } from '../types/system';
 
-// TODO: rename this. Should this have these types?
-interface SendMessageAction {
+type GetAllSystemShortsAction = {
   type: string;
-  payload?: any;
-}
+  accessToken: string;
+};
 
-export function getAllSystemShorts(accessToken: string): SendMessageAction {
+export function getAllSystemShorts(
+  accessToken: string
+): GetAllSystemShortsAction {
   return {
     type: GET_ALL_SYSTEM_SHORTS,
-    payload: accessToken
+    accessToken
   };
 }
 
-export function putSystemShorts(shorts: any): SendMessageAction {
+type PutSystemShortsAction = {
+  type: string;
+  shorts: ShortSystem[];
+};
+
+export function putSystemShorts(shorts: ShortSystem[]): PutSystemShortsAction {
   return {
-    type: PUT_SYSTEM_SHORTS,
-    payload: shorts
+    type: UPDATE_SYSTEM_SHORTS,
+    shorts
   };
 }

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { GET_ALL_SYSTEM_SHORTS } from '../constants/search';
+import { GET_ALL_SYSTEM_SHORTS } from '../constants/system';
 import { putSystemShorts } from '../actions/searchActions';
 
 function requestSystemShorts(accessToken: string) {
@@ -12,8 +12,8 @@ function requestSystemShorts(accessToken: string) {
 }
 
 export function* fetchAllSystemShorts(action: any) {
-  const obj = yield call(requestSystemShorts, action.payload);
-  yield put(putSystemShorts(obj));
+  const obj = yield call(requestSystemShorts, action.accessToken);
+  yield put(putSystemShorts(obj.data));
 }
 
 export function* searchSaga() {
