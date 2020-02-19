@@ -10,7 +10,7 @@ import (
 
 type authorizeMiddleware func(http.HandlerFunc) http.HandlerFunc
 
-func (s *server) routes(authorizeMiddleware authorizeMiddleware) {
+func (s *server) routes(authMiddleware authorizeMiddleware) {
 	// set to standard library marshaller
 	marshalFunc := json.Marshal
 
@@ -25,7 +25,7 @@ func (s *server) routes(authorizeMiddleware authorizeMiddleware) {
 		FetchSystems: cedarClient.FetchSystems,
 		Marshal:      marshalFunc,
 	}
-	api.HandleFunc("/systems", s.corsMiddleware(authorizeMiddleware(systemHandler.Handle())))
+	api.HandleFunc("/systems", s.corsMiddleware(authMiddleware(systemHandler.Handle())))
 
 	// health check endpoint
 	api.HandleFunc("/healthcheck", handlers.HealthCheckHandler{}.Handle())
