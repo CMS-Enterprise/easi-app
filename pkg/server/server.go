@@ -28,10 +28,10 @@ func Serve(config *viper.Viper) {
 
 	// TODO: We should add some sort of config verifier to make sure these configs exist
 	// They may live in /cmd, but should fail quick on startup
-	var authMiddleware func(http.HandlerFunc) http.HandlerFunc
+	var authMiddleware func(http.Handler) http.Handler
 	// set an empty auth handle for local development
 	if config.GetString("ENVIRONMENT") == "local" {
-		authMiddleware = func(next http.HandlerFunc) http.HandlerFunc {
+		authMiddleware = func(next http.Handler) http.Handler {
 			return next
 		}
 	} else {
