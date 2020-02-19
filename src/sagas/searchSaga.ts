@@ -4,7 +4,7 @@ import { GET_ALL_SYSTEM_SHORTS } from '../constants/system';
 import { putSystemShorts } from '../actions/searchActions';
 
 function requestSystemShorts(accessToken: string) {
-  return axios.get('http://localhost:8080/systems', {
+  return axios.get('http://localhost:8080/api/v1/systems', {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }

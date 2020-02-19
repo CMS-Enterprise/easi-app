@@ -49,7 +49,7 @@ const mockSystems: any[] = [
   }
 ];
 
-type SystemProfileRouterProps = {
+export type SystemProfileRouterProps = {
   profileId: string;
 };
 
