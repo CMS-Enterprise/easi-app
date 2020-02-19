@@ -8,7 +8,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/handlers"
 )
 
-type authorizeMiddleware func(http.HandlerFunc) http.HandlerFunc
+type authorizeMiddleware func(http.Handler) http.Handler
 
 func (s *server) routes(authMiddleware authorizeMiddleware) {
 	// set to standard library marshaller
@@ -25,7 +25,7 @@ func (s *server) routes(authMiddleware authorizeMiddleware) {
 		FetchSystems: cedarClient.FetchSystems,
 		Marshal:      marshalFunc,
 	}
-	api.HandleFunc("/systems", s.corsMiddleware(authMiddleware(systemHandler.Handle())))
+	api.Handle("/systems", s.corsMiddleware(authMiddleware(systemHandler.Handle())))
 
 	// health check endpoint
 	api.HandleFunc("/healthcheck", handlers.HealthCheckHandler{}.Handle())
