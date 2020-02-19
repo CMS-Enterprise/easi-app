@@ -60,8 +60,8 @@ type SystemProfileProps = RouteComponentProps<SystemProfileRouterProps> & {
 
 export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
   const onSearch = () => {};
-  const getSuggestionValue = (suggestion: any): string => suggestion.Name;
-  const renderSuggestion = (suggestion: any): string => suggestion.Name;
+  const getSuggestionValue = (suggestion: any): string => suggestion.name;
+  const renderSuggestion = (suggestion: any): string => suggestion.name;
   const dispatch = useDispatch();
   const searchResults = useSelector(
     (state: AppState) => state.search.allSystemShorts
