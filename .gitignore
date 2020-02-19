@@ -19,6 +19,7 @@
 .env.production.local
 .idea
 .envrc.local
+cypress.env.json
 
 # npm/js ignores
 tmp
