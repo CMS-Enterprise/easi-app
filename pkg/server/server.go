@@ -41,11 +41,14 @@ func Serve(config *viper.Viper) {
 		)
 	}
 
+	clientAddress := config.GetString("CLIENT_ADDRESS")
+
 	s := &server{
 		router: r,
 		Config: config,
 	}
+
 	fmt.Print("Serving application on localhost:8080")
-	s.routes(authMiddleware)
+	s.routes(authMiddleware, newCORSMiddleware(clientAddress))
 	log.Fatal(http.ListenAndServe(":8080", s))
 }
