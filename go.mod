@@ -20,6 +20,6 @@ require (
 	github.com/spf13/viper v1.6.2
 	github.com/stretchr/testify v1.4.0
 	go.mongodb.org/mongo-driver v1.3.0 // indirect
-	golang.org/x/net v0.0.0-20200202094626-16171245cfb2 // indirect
-	golang.org/x/sys v0.0.0-20200217220822-9197077df867 // indirect
+	golang.org/x/net v0.0.0-20200219183655-46282727080f // indirect
+	golang.org/x/sys v0.0.0-20200219091948-cb0a6d8edb6c // indirect
 )
