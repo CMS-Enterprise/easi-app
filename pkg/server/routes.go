@@ -24,9 +24,11 @@ func (s *server) routes(authorizeMiddleware authorizeMiddleware) {
 	systemHandler := handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
 		Marshal:      marshalFunc,
+		Logger:       s.logger,
 	}
 	api.HandleFunc("/systems", s.corsMiddleware(authorizeMiddleware(systemHandler.Handle())))
 
 	// health check endpoint
-	api.HandleFunc("/healthcheck", handlers.HealthCheckHandler{}.Handle())
+	healthCheckHandler := handlers.HealthCheckHandler{Logger: s.logger}
+	api.HandleFunc("/healthcheck", healthCheckHandler.Handle())
 }
