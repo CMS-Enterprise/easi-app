@@ -38,7 +38,7 @@ const SearchBar = ({
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
 
-    // Only give suggestions if the user types 2 or more charcters
+    // Only give suggestions if the user types 2 or more characters
     if (inputLength >= 2) {
       return results
         .filter(lang => lang.name.toLowerCase().indexOf(inputValue) > -1)
