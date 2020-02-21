@@ -5,18 +5,32 @@ import { Formik, Form, FormikProps } from 'formik';
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import BackNextButtons from 'components/shared/BackNextButtons';
+import PageNumber from 'components/PageNumber';
 import { SystemIntakeForm } from 'types/systemIntake';
 import Page1 from './Page1';
 import Page2 from './Page2';
 import Review from './Review';
 import './index.scss';
 
-type SystemProfileProps = {
+type SystemIntakeProps = {
   match: any;
 };
 
-export const SystemIntake = ({ match }: SystemProfileProps) => {
-  const TOTAL_PAGES = 3;
+export const SystemIntake = ({ match }: SystemIntakeProps) => {
+  const pages = [
+    {
+      type: 'FORM',
+      view: Page1
+    },
+    {
+      type: 'FORM',
+      view: Page2
+    },
+    {
+      type: 'REVIEW',
+      view: Review
+    }
+  ];
   const [page, setPage] = useState(1);
   const initialData: SystemIntakeForm = {
     name: '',
@@ -38,18 +52,7 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
     pageNum: number,
     formikProps: FormikProps<SystemIntakeForm>
   ) => {
-    const Component = ((formPage: number) => {
-      switch (formPage) {
-        case 1:
-          return Page1;
-        case 2:
-          return Page2;
-        case 3:
-          return Review;
-        default:
-          return null;
-      }
-    })(pageNum);
+    const Component = pages[pageNum - 1].view;
 
     if (Component) {
       return <Component formikProps={formikProps} />;
@@ -58,20 +61,22 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
   };
 
   return (
-    <div className="system-profile">
+    <div className="system-intake">
       <Header activeNavListItem={match.params.profileId} name="INTAKE">
         <HeaderWrapper className="grid-container margin-bottom-3">
-          <button
-            type="button"
-            className="easi-header__save-button usa-button"
-            id="save-button"
-          >
-            <span>Save & Exit</span>
-          </button>
+          {pages[page - 1].type === 'FORM' && (
+            <button
+              type="button"
+              className="easi-header__save-button usa-button"
+              id="save-button"
+            >
+              <span>Save & Exit</span>
+            </button>
+          )}
         </HeaderWrapper>
       </Header>
       <div className="grid-container">
-        <p className="system-profile__text">
+        <p className="line-height-body-6">
           The EASi System Intake process can guide you through all stages of
           your project, connecting you with the resources, people and services
           that you need. Please complete and submit this CMS IT Intake form to
@@ -80,21 +85,20 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
           receive an email promptly from the IT_Governance mailbox, and an IT
           Governance Team member will reach out regarding next steps.
         </p>
-
         <Formik
           initialValues={initialData}
           onSubmit={(data: SystemIntakeForm) => {
             console.log('Submitted Data: ', data);
           }}
         >
-          {formikProps => (
+          {(formikProps: FormikProps<SystemIntakeForm>) => (
             <>
               <Form className="margin-bottom-7">
                 {renderPage(page, formikProps)}
               </Form>
               <BackNextButtons
                 pageNum={page}
-                totalPages={TOTAL_PAGES}
+                totalPages={pages.length}
                 setPage={setPage}
                 onSubmit={() => {
                   console.log('Submitted: ', formikProps.values);
@@ -103,6 +107,12 @@ export const SystemIntake = ({ match }: SystemProfileProps) => {
             </>
           )}
         </Formik>
+        {pages[page - 1].type === 'FORM' && (
+          <PageNumber
+            currentPage={page}
+            totalPages={pages.filter(p => p.type === 'FORM').length}
+          />
+        )}
       </div>
     </div>
   );
