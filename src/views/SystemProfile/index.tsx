@@ -1,10 +1,14 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withAuth } from '@okta/okta-react';
+import { useDispatch, useSelector } from 'react-redux';
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
+import { getAllSystemShorts } from '../../actions/searchActions';
+import { AppState } from '../../reducers/rootReducer';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -45,31 +49,30 @@ const mockSystems: any[] = [
   }
 ];
 
-const mockSystemSearch: any[] = [
-  { name: 'Apple', acronym: 'APPL' },
-  { name: 'Avocado', acronym: 'AVO' },
-  { name: 'Banana', acronym: 'BNNA' },
-  { name: 'Cherries', acronym: 'CHRS' },
-  { name: 'Cranberries', acronym: 'CRNBRY' },
-  { name: 'Blackberries', acronym: 'BLKBRY' },
-  { name: 'Blueberries', acronym: 'BLUBRY' },
-  { name: 'Guava', acronym: 'GUVA' },
-  { name: 'Lemon', acronym: 'LEMN' },
-  { name: 'Lime', acronym: 'LIME' },
-  { name: 'Kiwi', acronym: 'KIWI' },
-  { name: 'Watermelon', acronym: 'WTRMLN' },
-  { name: 'Papaya', acronym: 'PAPY' },
-  { name: 'Pear', acronym: 'Pear' }
-];
-
-type SystemProfileProps = {
-  match: any;
+export type SystemProfileRouterProps = {
+  profileId: string;
 };
 
-export const SystemProfile = ({ match }: SystemProfileProps) => {
+type SystemProfileProps = RouteComponentProps<SystemProfileRouterProps> & {
+  auth: any;
+  searchResults: any;
+};
+
+export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
   const onSearch = () => {};
   const getSuggestionValue = (suggestion: any): string => suggestion.name;
   const renderSuggestion = (suggestion: any): string => suggestion.name;
+  const dispatch = useDispatch();
+  const searchResults = useSelector(
+    (state: AppState) => state.search.allSystemShorts
+  );
+
+  useEffect(() => {
+    const fetchSystemShorts = async (): Promise<void> => {
+      dispatch(getAllSystemShorts(await auth.getAccessToken()));
+    };
+    fetchSystemShorts();
+  }, [auth, dispatch]);
 
   return (
     <div className="system-profile">
@@ -80,7 +83,7 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
             onSearch={onSearch}
             getSuggestionValue={getSuggestionValue}
             renderSuggestion={renderSuggestion}
-            results={mockSystemSearch}
+            results={searchResults}
           />
         </HeaderWrapper>
 
@@ -139,4 +142,4 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
   );
 };
 
-export default withRouter(SystemProfile);
+export default withRouter(withAuth(SystemProfile));

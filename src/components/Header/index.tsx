@@ -62,10 +62,7 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
     }
   );
   return (
-    <header
-      className="usa-header usa-header--extended easi-header"
-      role="banner"
-    >
+    <header className="usa-header easi-header" role="banner">
       <HeaderWrapper className="usa-navbar">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">{logo}</em>

@@ -1,0 +1,241 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This resource provides endpoints for consumption by the Easy Access to System information (EASi) application\n",
+    "version" : "1.0",
+    "title" : "EASi Core API"
+  },
+  "host" : "webmethods-apigw.cedarimpl.cms.gov",
+  "basePath" : "/gateway/EASi Core API/1.0",
+  "schemes" : [ "http" ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "security" : [ {
+    "apiKey" : [ ]
+  } ],
+  "paths" : {
+    "/system/{id}" : {
+      "get" : {
+        "operationId" : "systemid_GET_2",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/systemid_GET_response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied"
+          }
+        }
+      }
+    },
+    "/systems" : {
+      "get" : {
+        "operationId" : "systems_GET_1",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/systems_GET_response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "apiKey" : {
+      "type" : "apiKey",
+      "name" : "x-Gateway-APIKey",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "systems_GET_response" : {
+      "type" : "object",
+      "required" : [ "Systems" ],
+      "properties" : {
+        "Systems" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/System"
+          }
+        }
+      }
+    },
+    "software" : {
+      "type" : "object",
+      "properties" : {
+        "software_product_name" : {
+          "type" : "string"
+        },
+        "software_manufacture" : {
+          "type" : "string"
+        },
+        "software_product_type" : {
+          "type" : "string"
+        },
+        "software_product_version" : {
+          "type" : "string"
+        }
+      }
+    },
+    "mission_essential_function" : {
+      "type" : "object",
+      "required" : [ "mission_essential_function_level", "mission_essential_function_name" ],
+      "properties" : {
+        "mission_essential_function_level" : {
+          "type" : "string"
+        },
+        "mission_essential_function_name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "systemid_GET_response" : {
+      "type" : "object",
+      "required" : [ "SystemDetail" ],
+      "properties" : {
+        "SystemDetail" : {
+          "$ref" : "#/definitions/SystemDetail"
+        }
+      }
+    },
+    "SystemDetail" : {
+      "type" : "object",
+      "required" : [ "id", "mission_essential_function", "software", "system_acronym", "system_name" ],
+      "properties" : {
+        "business_function_alignment" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "supported_user_count" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "business_owner" : {
+          "type" : "string"
+        },
+        "business_owner_org" : {
+          "type" : "string"
+        },
+        "data_categories" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "mission_essential_functions" : {
+          "type" : "string"
+        },
+        "csp_hosted" : {
+          "type" : "boolean"
+        },
+        "software" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/software"
+          }
+        },
+        "product_owner" : {
+          "type" : "string"
+        },
+        "contractor_ftes" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "gpr_changes_next_release" : {
+          "type" : "boolean"
+        },
+        "system_maintainer_org" : {
+          "type" : "string"
+        },
+        "csp_service_model_type" : {
+          "type" : "string"
+        },
+        "next_major_project_date" : {
+          "type" : "string"
+        },
+        "system_owner" : {
+          "type" : "string"
+        },
+        "tlc_profile_reviewer" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "system_acronym" : {
+          "type" : "string"
+        },
+        "mission_essential_function" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/mission_essential_function"
+          }
+        },
+        "next_planned_prod_release_date" : {
+          "type" : "string"
+        },
+        "system_name" : {
+          "type" : "string"
+        },
+        "federal_ftes" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "isso" : {
+          "type" : "string"
+        },
+        "csp_names" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data_center_names" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "major_program_alignment" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "System" : {
+      "type" : "object",
+      "required" : [ "id", "system_acronym", "system_name" ],
+      "properties" : {
+        "system_acronym" : {
+          "type" : "string"
+        },
+        "system_name" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
