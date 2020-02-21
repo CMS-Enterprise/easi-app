@@ -35,6 +35,7 @@ const TextField = ({
       )}
       <input
         className={textFieldClassNames}
+        disabled={disabled}
         id={id}
         name={name}
         onChange={onChange}
