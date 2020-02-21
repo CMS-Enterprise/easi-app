@@ -1,12 +1,10 @@
 package models
 
-import "github.com/google/uuid"
-
 // SystemShort has the basic information of a system, to be used in listing systems
 type SystemShort struct {
-	ID      uuid.UUID
-	Acronym string
-	Name    string
+	ID      string `json:"id"`
+	Acronym string `json:"acronym"`
+	Name    string `json:"name"`
 }
 
 // System is the descriptive model for a system
