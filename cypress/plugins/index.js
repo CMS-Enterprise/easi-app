@@ -17,4 +17,5 @@ module.exports = (on, config) => {
   on('task', {
     generateOTP: require('cypress-otp')
   });
+  on('task', require('@cypress/code-coverage/task'));
 };
