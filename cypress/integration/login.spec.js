@@ -1,8 +1,6 @@
 describe('Logging in', () => {
   it('logs in', () => {
-    cy.visit('/');
-    cy.contains('Login').click();
-
+    cy.visit('/login');
     cy.get('#okta-signin-username').type(Cypress.env('username'));
     cy.get('#okta-signin-password').type(Cypress.env('password'));
     cy.get('#okta-signin-submit').click();
