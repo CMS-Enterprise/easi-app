@@ -1,9 +1,12 @@
 ---
 version: 2
+
+references:
+  circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
 jobs:
   pre_test:
     docker:
-      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+      - image: *circleci_docker_primary
     steps:
       - checkout
       - restore_cache:
@@ -32,7 +35,7 @@ jobs:
 
   build_tag_push:
     docker:
-      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+      - image: *circleci_docker_primary
         environment:
           AWS_DEFAULT_REGION: us-west-2
     steps:
@@ -45,7 +48,7 @@ jobs:
 
   deploy_dev:
     docker:
-      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+      - image: *circleci_docker_primary
         environment:
           AWS_DEFAULT_REGION: us-west-2
           APP_ENV: dev
@@ -69,7 +72,7 @@ jobs:
 
   deploy_impl:
     docker:
-      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+      - image: *circleci_docker_primary
         environment:
           AWS_DEFAULT_REGION: us-west-2
           APP_ENV: impl
@@ -102,7 +105,7 @@ jobs:
 
   test:
     docker:
-      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+      - image: *circleci_docker_primary
     steps:
       - checkout
       - run:
