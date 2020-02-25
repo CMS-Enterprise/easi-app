@@ -69,7 +69,9 @@ jobs:
             echo "export AWS_SECRET_ACCESS_KEY=$(echo $temp_role | jq .Credentials.SecretAccessKey | xargs)" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(echo $temp_role | jq .Credentials.SessionToken | xargs)" >> $BASH_ENV
       - run:
-            aws s3 ls
+          name: Build static assets and release to S3
+          command: |
+            ./scripts/release_static $STATIC_S3_BUCKET_IMPL
 
   test:
     docker:
