@@ -124,6 +124,6 @@ workflows:
       - deploy_dev:
           requires:
             - build_tag_push
-      - deploy_impl
+      - deploy_impl:
           requires:
             - deploy_dev
