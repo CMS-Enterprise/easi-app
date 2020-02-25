@@ -76,9 +76,9 @@ jobs:
           OKTA_CLIENT_ID: 0oa2sjdaxkwy3TrW1297
           REACT_APP_OKTA_CLIENT_ID: 0oa2sjdaxkwy3TrW1297
           REACT_APP_OKTA_DOMAIN: https://impl.idp.idm.cms.gov
-          # REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
-          # REACT_APP_OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/
-          # OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/
+          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297 # confirm
+          REACT_APP_OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/
+          OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/
           REACT_APP_OKTA_REDIRECT_URI: https://impl.easi.cms.gov/implicit/callback
     steps:
       - checkout
