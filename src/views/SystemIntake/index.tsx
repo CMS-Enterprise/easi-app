@@ -98,6 +98,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
         >
           {(formikProps: FormikProps<SystemIntakeForm>) => (
             <>
+              <pre>{JSON.stringify(formikProps.values, null, 2)}</pre>
               <Form>{renderPage(page, formikProps)}</Form>
               <BackNextButtons
                 pageNum={page}

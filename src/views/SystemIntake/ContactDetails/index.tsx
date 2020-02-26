@@ -1,13 +1,13 @@
-import React, { Fragment, useState } from 'react';
-import { Field, FieldArray, FormikProps } from 'formik';
+import React, { useState } from 'react';
+import { Field, FormikProps } from 'formik';
 import TextField from 'components/shared/TextField';
 import CheckboxField from 'components/shared/CheckboxField';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntakeForm } from 'types/systemIntake';
+import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
@@ -207,74 +207,10 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             value={true}
           />
           <div className="margin-left-3">
-            <FieldArray name="governanceTeams.teams">
-              {arrayHelpers => (
-                <>
-                  {cmsGovernanceTeams.map(team => {
-                    const kebabValue = team.value.split(' ').join('-');
-                    return (
-                      <Fragment key={kebabValue}>
-                        <CheckboxField
-                          checked={
-                            values.governanceTeams.teams
-                              .map(t => t.name)
-                              .indexOf(team.value) > -1
-                          }
-                          disabled={values.governanceTeams.isPresent === false}
-                          id={`governanceTeam-${kebabValue}`}
-                          label={team.name}
-                          name={team.name}
-                          onBlur={() => {}}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              arrayHelpers.push({
-                                name: e.target.value,
-                                collaborator: ''
-                              });
-
-                              // Check parent radio if it's not already checked
-                              if (!values.governanceTeams.isPresent) {
-                                setFieldValue(
-                                  'governanceTeams.isPresent',
-                                  true
-                                );
-                              }
-                            } else {
-                              const index = values.governanceTeams.teams
-                                .map(t => t.name)
-                                .indexOf(e.target.value);
-
-                              arrayHelpers.remove(index);
-                            }
-                          }}
-                          value={team.value}
-                        />
-                        {values.governanceTeams.teams.map((t, index) => {
-                          if (team.value === t.name) {
-                            const id = t.name.split(' ').join('-');
-                            return (
-                              <div
-                                key={`${id}-Collaborator`}
-                                className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
-                              >
-                                <Field
-                                  as={TextField}
-                                  id={`IntakeForm-${id}-Collaborator`}
-                                  label="Collaborator Name"
-                                  maxLength={50}
-                                  name={`governanceTeams.teams[${index}].collaborator`}
-                                />
-                              </div>
-                            );
-                          }
-                          return null;
-                        })}
-                      </Fragment>
-                    );
-                  })}
-                </>
-              )}
-            </FieldArray>
+            <GovernanceTeamOptions
+              values={values}
+              setFieldValue={setFieldValue}
+            />
           </div>
           <Field
             as={RadioField}
