@@ -1,3 +1,8 @@
+export type GovernanceCollaborationTeam = {
+  collaborator: string;
+  name: string;
+};
+
 /**
  * Type for SystemIntakeForm
  *
@@ -23,7 +28,7 @@ export type SystemIntakeForm = {
   };
   governanceTeams: {
     isPresent: boolean | null;
-    teams: string[];
+    teams: GovernanceCollaborationTeam[];
   };
   description: string;
   currentStage: string;

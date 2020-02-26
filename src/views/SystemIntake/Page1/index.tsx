@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Field, FieldArray, FormikProps } from 'formik';
 import TextField from 'components/shared/TextField';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -218,38 +218,70 @@ const Page1 = ({ formikProps }: Page1Props) => {
                   {cmsGovernanceTeams.map(team => {
                     const kebabValue = team.value.split(' ').join('-');
                     return (
-                      <CheckboxField
-                        key={team.value}
-                        checked={formikProps.values.governanceTeams.teams.includes(
-                          team.value
-                        )}
-                        disabled={
-                          formikProps.values.governanceTeams.isPresent === false
-                        }
-                        id={`governanceTeam-${kebabValue}`}
-                        label={team.name}
-                        name={team.name}
-                        onBlur={() => {}}
-                        onChange={e => {
-                          if (e.target.checked) {
-                            arrayHelpers.push(e.target.value);
+                      <Fragment key={kebabValue}>
+                        <CheckboxField
+                          checked={
+                            formikProps.values.governanceTeams.teams
+                              .map(t => t.name)
+                              .indexOf(team.value) > -1
+                          }
+                          disabled={
+                            formikProps.values.governanceTeams.isPresent ===
+                            false
+                          }
+                          id={`governanceTeam-${kebabValue}`}
+                          label={team.name}
+                          name={team.name}
+                          onBlur={() => {}}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              arrayHelpers.push({
+                                name: e.target.value,
+                                collaborator: ''
+                              });
 
-                            // Check parent radio if it's not already checked
-                            if (!formikProps.values.governanceTeams.isPresent) {
-                              formikProps.setFieldValue(
-                                'governanceTeams.isPresent',
-                                true
+                              // Check parent radio if it's not already checked
+                              if (
+                                !formikProps.values.governanceTeams.isPresent
+                              ) {
+                                formikProps.setFieldValue(
+                                  'governanceTeams.isPresent',
+                                  true
+                                );
+                              }
+                            } else {
+                              const index = formikProps.values.governanceTeams.teams
+                                .map(t => t.name)
+                                .indexOf(e.target.value);
+
+                              arrayHelpers.remove(index);
+                            }
+                          }}
+                          value={team.value}
+                        />
+                        {formikProps.values.governanceTeams.teams.map(
+                          (t, index) => {
+                            if (team.value === t.name) {
+                              const id = t.name.split(' ').join('-');
+                              return (
+                                <div
+                                  key={`${id}-Collaborator`}
+                                  className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
+                                >
+                                  <Field
+                                    as={TextField}
+                                    id={`IntakeForm-${id}-Collaborator`}
+                                    label="Collaborator Name"
+                                    maxLength={50}
+                                    name={`governanceTeams.teams[${index}].collaborator`}
+                                  />
+                                </div>
                               );
                             }
-                          } else {
-                            const index = formikProps.values.governanceTeams.teams.indexOf(
-                              team.value
-                            );
-                            arrayHelpers.remove(index);
+                            return null;
                           }
-                        }}
-                        value={team.value}
-                      />
+                        )}
+                      </Fragment>
                     );
                   })}
                 </>
