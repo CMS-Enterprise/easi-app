@@ -1,7 +1,9 @@
 import React from 'react';
+import classnames from 'classnames';
 
 type CheckboxFieldProps = {
   checked?: boolean;
+  disabled?: boolean;
   id: string;
   label: string;
   name: string;
@@ -12,28 +14,35 @@ type CheckboxFieldProps = {
 
 const CheckboxField = ({
   checked,
+  disabled,
   id,
   label,
   name,
   onChange,
   onBlur,
   value
-}: CheckboxFieldProps) => (
-  <div className="usa-checkbox">
-    <input
-      checked={checked}
-      className="usa-checkbox__input"
-      id={id}
-      name={name}
-      onChange={onChange}
-      onBlur={onBlur}
-      type="checkbox"
-      value={value}
-    />
-    <label className="usa-checkbox__label" htmlFor={id}>
-      {label}
-    </label>
-  </div>
-);
+}: CheckboxFieldProps) => {
+  const checkboxClassNames = classnames('easi-checkbox', 'usa-checkbox', {
+    'easy-checkbox--disabled': disabled
+  });
+  return (
+    <div className={checkboxClassNames}>
+      <input
+        checked={checked}
+        className="usa-checkbox__input"
+        disabled={disabled}
+        id={id}
+        name={name}
+        onChange={onChange}
+        onBlur={onBlur}
+        type="checkbox"
+        value={value}
+      />
+      <label className="usa-checkbox__label" htmlFor={id}>
+        {label}
+      </label>
+    </div>
+  );
+};
 
 export default CheckboxField;
