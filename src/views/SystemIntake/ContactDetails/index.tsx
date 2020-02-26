@@ -9,11 +9,11 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntakeForm } from 'types/systemIntake';
 
-type Page1Props = {
+type ContactDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
 };
 
-const Page1 = ({ formikProps }: Page1Props) => {
+const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
   const [isReqAndBusOwnerSame, setSameness] = useState(false);
   return (
     <>
@@ -306,4 +306,4 @@ const Page1 = ({ formikProps }: Page1Props) => {
   );
 };
 
-export default Page1;
+export default ContactDetails;
