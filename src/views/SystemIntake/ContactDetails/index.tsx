@@ -14,7 +14,7 @@ type ContactDetailsProps = {
 };
 
 const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
-  const [isReqAndBusOwnerSame, setSameness] = useState(false);
+  const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
   return (
     <>
       <p className="line-height-body-6">
@@ -84,7 +84,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           name="isBusinessOwnerSameAsRequestor"
           onChange={(e: any) => {
             if (e.target.checked) {
-              setSameness(true);
+              setReqAndBusOwnerSame(true);
               formikProps.setFieldValue(
                 'businessOwner.name',
                 formikProps.values.requestor.name
@@ -94,7 +94,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
                 formikProps.values.requestor.component
               );
             } else {
-              setSameness(false);
+              setReqAndBusOwnerSame(false);
             }
           }}
           value=""

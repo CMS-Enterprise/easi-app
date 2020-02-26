@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
 
 import Header from 'components/Header';
@@ -12,9 +12,10 @@ import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
 
-type SystemIntakeProps = {
-  match: any;
+export type SystemIntakeRouterProps = {
+  profileId: string;
 };
+type SystemIntakeProps = RouteComponentProps<SystemIntakeRouterProps> & {};
 
 export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const pages = [
