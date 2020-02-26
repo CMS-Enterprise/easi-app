@@ -14,6 +14,7 @@ type ContactDetailsProps = {
 };
 
 const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
+  const { values, setFieldValue } = formikProps;
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
   return (
     <>
@@ -39,9 +40,9 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           name="requestor.name"
           onChange={(e: any) => {
             if (isReqAndBusOwnerSame) {
-              formikProps.setFieldValue('businessOwner.name', e.target.value);
+              setFieldValue('businessOwner.name', e.target.value);
             }
-            formikProps.setFieldValue('requestor.name', e.target.value);
+            setFieldValue('requestor.name', e.target.value);
           }}
         />
 
@@ -52,12 +53,9 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           name="requestor.component"
           onChange={(e: any) => {
             if (isReqAndBusOwnerSame) {
-              formikProps.setFieldValue(
-                'businessOwner.component',
-                e.target.value
-              );
+              setFieldValue('businessOwner.component', e.target.value);
             }
-            formikProps.setFieldValue('requestor.component', e.target.value);
+            setFieldValue('requestor.component', e.target.value);
           }}
         >
           <Field as={DropdownItem} name="Select an option" value="" />
@@ -85,13 +83,10 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           onChange={(e: any) => {
             if (e.target.checked) {
               setReqAndBusOwnerSame(true);
-              formikProps.setFieldValue(
-                'businessOwner.name',
-                formikProps.values.requestor.name
-              );
-              formikProps.setFieldValue(
+              setFieldValue('businessOwner.name', values.requestor.name);
+              setFieldValue(
                 'businessOwner.component',
-                formikProps.values.requestor.component
+                values.requestor.component
               );
             } else {
               setReqAndBusOwnerSame(false);
@@ -158,16 +153,16 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
 
           <Field
             as={RadioField}
-            checked={formikProps.values.isso.isPresent === true}
+            checked={values.isso.isPresent === true}
             id="IntakeForm-HasIssoYes"
             name="isso.isPresent"
             label="Yes"
             onChange={() => {
-              formikProps.setFieldValue('isso.isPresent', true);
+              setFieldValue('isso.isPresent', true);
             }}
             value={true}
           />
-          {formikProps.values.isso.isPresent && (
+          {values.isso.isPresent && (
             <div className="width-card margin-top-neg-2 margin-left-3 margin-bottom-1">
               <Field
                 as={TextField}
@@ -180,13 +175,13 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           )}
           <Field
             as={RadioField}
-            checked={formikProps.values.isso.isPresent === false}
+            checked={values.isso.isPresent === false}
             id="IntakeForm-HasIssoNo"
             name="isso.isPresent"
             label="No"
             onChange={() => {
-              formikProps.setFieldValue('isso.isPresent', false);
-              formikProps.setFieldValue('isso.name', '');
+              setFieldValue('isso.isPresent', false);
+              setFieldValue('isso.name', '');
             }}
             value={false}
           />
@@ -202,12 +197,12 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </HelpText>
           <Field
             as={RadioField}
-            checked={formikProps.values.governanceTeams.isPresent === true}
+            checked={values.governanceTeams.isPresent === true}
             id="IntakeForm-NoGovernanceTeams"
             name="governanceTeams.isPresent"
             label="1 or more of the following in OIT (select all that apply)"
             onChange={() => {
-              formikProps.setFieldValue('governanceTeams.isPresent', true);
+              setFieldValue('governanceTeams.isPresent', true);
             }}
             value={true}
           />
@@ -221,14 +216,11 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
                       <Fragment key={kebabValue}>
                         <CheckboxField
                           checked={
-                            formikProps.values.governanceTeams.teams
+                            values.governanceTeams.teams
                               .map(t => t.name)
                               .indexOf(team.value) > -1
                           }
-                          disabled={
-                            formikProps.values.governanceTeams.isPresent ===
-                            false
-                          }
+                          disabled={values.governanceTeams.isPresent === false}
                           id={`governanceTeam-${kebabValue}`}
                           label={team.name}
                           name={team.name}
@@ -241,16 +233,14 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
                               });
 
                               // Check parent radio if it's not already checked
-                              if (
-                                !formikProps.values.governanceTeams.isPresent
-                              ) {
-                                formikProps.setFieldValue(
+                              if (!values.governanceTeams.isPresent) {
+                                setFieldValue(
                                   'governanceTeams.isPresent',
                                   true
                                 );
                               }
                             } else {
-                              const index = formikProps.values.governanceTeams.teams
+                              const index = values.governanceTeams.teams
                                 .map(t => t.name)
                                 .indexOf(e.target.value);
 
@@ -259,28 +249,26 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
                           }}
                           value={team.value}
                         />
-                        {formikProps.values.governanceTeams.teams.map(
-                          (t, index) => {
-                            if (team.value === t.name) {
-                              const id = t.name.split(' ').join('-');
-                              return (
-                                <div
-                                  key={`${id}-Collaborator`}
-                                  className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
-                                >
-                                  <Field
-                                    as={TextField}
-                                    id={`IntakeForm-${id}-Collaborator`}
-                                    label="Collaborator Name"
-                                    maxLength={50}
-                                    name={`governanceTeams.teams[${index}].collaborator`}
-                                  />
-                                </div>
-                              );
-                            }
-                            return null;
+                        {values.governanceTeams.teams.map((t, index) => {
+                          if (team.value === t.name) {
+                            const id = t.name.split(' ').join('-');
+                            return (
+                              <div
+                                key={`${id}-Collaborator`}
+                                className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
+                              >
+                                <Field
+                                  as={TextField}
+                                  id={`IntakeForm-${id}-Collaborator`}
+                                  label="Collaborator Name"
+                                  maxLength={50}
+                                  name={`governanceTeams.teams[${index}].collaborator`}
+                                />
+                              </div>
+                            );
                           }
-                        )}
+                          return null;
+                        })}
                       </Fragment>
                     );
                   })}
@@ -290,13 +278,13 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </div>
           <Field
             as={RadioField}
-            checked={formikProps.values.governanceTeams.isPresent === false}
+            checked={values.governanceTeams.isPresent === false}
             id="IntakeForm-YesGovernanceTeam"
             name="governanceTeams.isPresent"
             label="None of the above"
             onChange={() => {
-              formikProps.setFieldValue('governanceTeams.isPresent', false);
-              formikProps.setFieldValue('governanceTeams.teams', []);
+              setFieldValue('governanceTeams.isPresent', false);
+              setFieldValue('governanceTeams.teams', []);
             }}
             value={false}
           />
