@@ -7,8 +7,8 @@ import HeaderWrapper from 'components/Header/HeaderWrapper';
 import BackNextButtons from 'components/shared/BackNextButtons';
 import PageNumber from 'components/PageNumber';
 import { SystemIntakeForm } from 'types/systemIntake';
-import Page1 from './Page1';
-import Page2 from './Page2';
+import ContactDetails from './ContactDetails';
+import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
 
@@ -20,11 +20,11 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const pages = [
     {
       type: 'FORM',
-      view: Page1
+      view: ContactDetails
     },
     {
       type: 'FORM',
-      view: Page2
+      view: RequestDetails
     },
     {
       type: 'REVIEW',
