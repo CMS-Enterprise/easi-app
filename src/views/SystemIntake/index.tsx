@@ -34,7 +34,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   ];
   const [page, setPage] = useState(1);
   const initialData: SystemIntakeForm = {
-    name: '',
+    projectName: '',
     acronym: '',
     requestor: {
       name: '',
@@ -56,7 +56,12 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
       isPresent: null,
       teams: []
     },
-    description: '',
+    fundingSource: {
+      isFunded: null,
+      fundingNumber: ''
+    },
+    businessNeed: '',
+    businessSolution: '',
     currentStage: '',
     needsEaSupport: null,
     hasContract: ''

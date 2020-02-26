@@ -8,7 +8,7 @@ export type GovernanceCollaborationTeam = {
  *
  */
 export type SystemIntakeForm = {
-  name: string;
+  projectName: string;
   acronym: string;
   requestor: {
     name: string;
@@ -30,7 +30,12 @@ export type SystemIntakeForm = {
     isPresent: boolean | null;
     teams: GovernanceCollaborationTeam[];
   };
-  description: string;
+  fundingSource: {
+    isFunded: boolean | null;
+    fundingNumber: string;
+  };
+  businessNeed: string;
+  businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
   hasContract: string;
