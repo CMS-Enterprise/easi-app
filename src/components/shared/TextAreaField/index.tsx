@@ -39,6 +39,7 @@ const TextAreaField = ({
         value={value}
         maxLength={maxLength}
       />
+      <HelpText>{`${2000 - value.length} characters left`}</HelpText>
     </>
   );
 };
