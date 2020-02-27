@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
+import HelpText from '../HelpText';
 
 type TextAreaFieldProps = {
   id: string;
   name: string;
   label?: string;
+  helpText?: ReactNode;
   maxLength?: number;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onBlur: () => void;
@@ -17,7 +19,8 @@ const TextAreaField = ({
   maxLength,
   onChange,
   onBlur,
-  value
+  value,
+  helpText
 }: TextAreaFieldProps) => {
   return (
     <>
@@ -26,6 +29,7 @@ const TextAreaField = ({
           {label}
         </label>
       )}
+      {helpText && <HelpText>{helpText}</HelpText>}
       <textarea
         className="usa-textarea"
         id={id}
