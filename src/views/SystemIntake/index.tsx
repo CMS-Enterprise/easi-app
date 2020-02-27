@@ -1,37 +1,127 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { useState } from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { Formik, Form, FormikProps } from 'formik';
+
 import Header from 'components/Header';
+import HeaderWrapper from 'components/Header/HeaderWrapper';
+import BackNextButtons from 'components/shared/BackNextButtons';
+import PageNumber from 'components/PageNumber';
+import { SystemIntakeForm } from 'types/systemIntake';
+import ContactDetails from './ContactDetails';
+import RequestDetails from './RequestDetails';
+import Review from './Review';
 import './index.scss';
-import HeaderWrapper from '../../components/Header/HeaderWrapper';
 
-type SystemProfileProps = {
-  match: any;
+export type SystemIntakeRouterProps = {
+  profileId: string;
 };
+type SystemIntakeProps = RouteComponentProps<SystemIntakeRouterProps> & {};
 
-export const SystemIntake = ({ match }: SystemProfileProps) => {
+export const SystemIntake = ({ match }: SystemIntakeProps) => {
+  const pages = [
+    {
+      type: 'FORM',
+      view: ContactDetails
+    },
+    {
+      type: 'FORM',
+      view: RequestDetails
+    },
+    {
+      type: 'REVIEW',
+      view: Review
+    }
+  ];
+  const [page, setPage] = useState(1);
+  const initialData: SystemIntakeForm = {
+    projectName: '',
+    acronym: '',
+    requestor: {
+      name: '',
+      component: ''
+    },
+    businessOwner: {
+      name: '',
+      component: ''
+    },
+    productManager: {
+      name: '',
+      component: ''
+    },
+    isso: {
+      isPresent: null,
+      name: ''
+    },
+    governanceTeams: {
+      isPresent: null,
+      teams: []
+    },
+    fundingSource: {
+      isFunded: null,
+      fundingNumber: ''
+    },
+    businessNeed: '',
+    businessSolution: '',
+    currentStage: '',
+    needsEaSupport: null,
+    hasContract: ''
+  };
+
+  const renderPage = (
+    pageNum: number,
+    formikProps: FormikProps<SystemIntakeForm>
+  ) => {
+    const Component = pages[pageNum - 1].view;
+
+    if (Component) {
+      return <Component formikProps={formikProps} />;
+    }
+    return null;
+  };
+
   return (
-    <div className="system-profile">
+    <div className="system-intake">
       <Header activeNavListItem={match.params.profileId} name="INTAKE">
         <HeaderWrapper className="grid-container margin-bottom-3">
-          <button
-            type="button"
-            className="easi-header__save-button usa-button"
-            id="save-button"
-          >
-            <span>Save & Exit</span>
-          </button>
+          {pages[page - 1].type === 'FORM' && (
+            <button
+              type="button"
+              className="easi-header__save-button usa-button"
+              id="save-button"
+            >
+              <span>Save & Exit</span>
+            </button>
+          )}
         </HeaderWrapper>
       </Header>
       <div className="grid-container">
-        <p className="system-profile__text">
-          The EASi System Intake process can guide you through all stages of
-          your project, connecting you with the resources, people and services
-          that you need. Please complete and submit this CMS IT Intake form to
-          engage with the CMS IT Governance review process. This is the first
-          step to receive a CMS IT LifeCycle ID. Upon submission, you will
-          receive an email promptly from the IT_Governance mailbox, and an IT
-          Governance Team member will reach out regarding next steps.
-        </p>
+        <Formik
+          initialValues={initialData}
+          onSubmit={(data: SystemIntakeForm) => {
+            console.log('Submitted Data: ', data);
+          }}
+        >
+          {(formikProps: FormikProps<SystemIntakeForm>) => (
+            <>
+              <pre>{JSON.stringify(formikProps.values, null, 2)}</pre>
+              <Form>{renderPage(page, formikProps)}</Form>
+              <BackNextButtons
+                pageNum={page}
+                totalPages={pages.length}
+                setPage={setPage}
+                onSubmit={() => {
+                  console.log('Submitted: ', formikProps.values);
+                }}
+              />
+            </>
+          )}
+        </Formik>
+        {pages[page - 1].type === 'FORM' && (
+          <PageNumber
+            currentPage={page}
+            totalPages={pages.filter(p => p.type === 'FORM').length}
+          />
+        )}
       </div>
     </div>
   );
