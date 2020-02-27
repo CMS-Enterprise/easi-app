@@ -1,6 +1,9 @@
 import React from 'react';
+import classnames from 'classnames';
+import './index.scss';
 
 type TextFieldProps = {
+  disabled?: boolean;
   id: string;
   name: string;
   label?: string;
@@ -11,6 +14,7 @@ type TextFieldProps = {
 };
 
 const TextField = ({
+  disabled,
   id,
   name,
   label,
@@ -19,6 +23,9 @@ const TextField = ({
   onBlur,
   value
 }: TextFieldProps) => {
+  const textFieldClassNames = classnames('usa-input', {
+    'easi-textfield--disabled': disabled
+  });
   return (
     <>
       {label && (
@@ -27,7 +34,8 @@ const TextField = ({
         </label>
       )}
       <input
-        className="usa-input"
+        className={textFieldClassNames}
+        disabled={disabled}
         id={id}
         name={name}
         onChange={onChange}
