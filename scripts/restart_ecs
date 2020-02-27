@@ -5,4 +5,4 @@
 
 cluster_name="${APP_ENV}-easi-app"
 service_name="easi-app"
-( set -x ; aws ecs update-service --cluster "$cluster_name" --service "$service_name" --force-new-deployment ) || exit
+( set -x ; aws ecs update-service --cluster "$cluster_name" --service "$service_name" --force-new-deployment )
