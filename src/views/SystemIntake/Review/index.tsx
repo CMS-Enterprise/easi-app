@@ -2,11 +2,12 @@ import React from 'react';
 import { FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 import {
-  DefinitionList,
-  DefinitionTerm,
-  DefinitionDescription
-} from 'components/shared/DefinitionGroup';
+  DescriptionList,
+  DescriptionTerm,
+  DescriptionDefinition
+} from 'components/shared/DescriptionGroup';
 import { SystemIntakeForm } from 'types/systemIntake';
+import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
 type ReviewProps = {
   formikProps: FormikProps<SystemIntakeForm>;
@@ -14,121 +15,139 @@ type ReviewProps = {
 
 const Review = ({ formikProps }: ReviewProps) => {
   const { values } = formikProps;
+  const fundingDefinition = () => {
+    const isFunded = convertBoolToYesNo(values.fundingSource.isFunded);
+    if (values.fundingSource.isFunded) {
+      return `${isFunded}, ${values.fundingSource.fundingNumber}`;
+    }
+    return isFunded;
+  };
   return (
     <div className="margin-bottom-7">
       <h2 className="font-heading-xl">Check your answers before sending</h2>
 
-      <DefinitionList title="System Request">
+      <DescriptionList title="System Request">
         <div className="grid-row flex-row">
           <div className="grid-col">
-            <DefinitionTerm term="Submission Date" />
-            <DefinitionDescription
-              description={DateTime.local().toLocaleString(DateTime.DATE_MED)}
+            <DescriptionTerm term="Submission Date" />
+            <DescriptionDefinition
+              definition={DateTime.local().toLocaleString(DateTime.DATE_MED)}
             />
           </div>
           <div className="grid-col">
-            <DefinitionTerm term="Request for" />
-            <DefinitionDescription description="A new idea or system" />
+            <DescriptionTerm term="Request for" />
+            <DescriptionDefinition definition={values.currentStage} />
           </div>
         </div>
-      </DefinitionList>
+      </DescriptionList>
 
-      {/* hr */}
+      <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contact Details</h2>
 
-      <DefinitionList title="System Request">
-        <div className="grid-row flex-row">
+      <DescriptionList title="System Request">
+        <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
-            <DefinitionTerm term="Requestor" />
-            <DefinitionDescription description="Ryan Coleman" />
+            <DescriptionTerm term="Requestor" />
+            <DescriptionDefinition definition={values.requestor.name} />
           </div>
           <div className="grid-col">
-            <DefinitionTerm term="Requestor Component" />
-            <DefinitionDescription description="OIT" />
-          </div>
-        </div>
-        <div className="grid-row flex-row">
-          <div className="grid-col">
-            <DefinitionTerm term="CMS Business/Product Owner's Name" />
-            <DefinitionDescription description="Ryan Coleman" />
-          </div>
-          <div className="grid-col">
-            <DefinitionTerm term="Business Owner Component" />
-            <DefinitionDescription description="OIT" />
+            <DescriptionTerm term="Requestor Component" />
+            <DescriptionDefinition definition={values.requestor.component} />
           </div>
         </div>
-        <div className="grid-row flex-row">
+        <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
-            <DefinitionTerm term="CMS Project/Product Manager or lead" />
-            <DefinitionDescription description="Jeff Barnes" />
+            <DescriptionTerm term="CMS Business/Product Owner's Name" />
+            <DescriptionDefinition definition={values.businessOwner.name} />
           </div>
           <div className="grid-col">
-            <DefinitionTerm term="Product Manager Component" />
-            <DefinitionDescription description="OIT" />
-          </div>
-        </div>
-        <div className="grid-row flex-row">
-          <div className="grid-col">
-            <DefinitionTerm term="Currently collaborating with" />
-            <DefinitionDescription description="TBD" />
-            <DefinitionDescription description="TBD" />
-            <DefinitionDescription description="TBD" />
-            <DefinitionDescription description="TBD" />
+            <DescriptionTerm term="Business Owner Component" />
+            <DescriptionDefinition
+              definition={values.businessOwner.component}
+            />
           </div>
         </div>
-      </DefinitionList>
+        <div className="grid-row flex-row margin-bottom-205">
+          <div className="grid-col">
+            <DescriptionTerm term="CMS Project/Product Manager or lead" />
+            <DescriptionDefinition definition={values.productManager.name} />
+          </div>
+          <div className="grid-col">
+            <DescriptionTerm term="Product Manager Component" />
+            <DescriptionDefinition
+              definition={values.productManager.component}
+            />
+          </div>
+        </div>
+        <div className="grid-row flex-row margin-bottom-205">
+          <div className="grid-col">
+            <DescriptionTerm term="Currently collaborating with" />
+            {values.governanceTeams.isPresent ? (
+              values.governanceTeams.teams.map(team => (
+                <DescriptionDefinition
+                  definition={`${team.name}, ${team.collaborator}`}
+                />
+              ))
+            ) : (
+              <DescriptionDefinition definition="N/A" />
+            )}
+          </div>
+        </div>
+      </DescriptionList>
 
-      {/* hr */}
+      <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contact Details</h2>
 
-      <DefinitionList title="Request Details">
-        <div className="grid-row flex-row">
+      <DescriptionList title="Request Details">
+        <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
-            <DefinitionTerm term="Project Name" />
-            <DefinitionDescription description="Easy Access to System Information" />
+            <DescriptionTerm term="Project Name" />
+            <DescriptionDefinition definition={values.projectName} />
           </div>
           <div className="grid-col">
-            <DefinitionTerm term="Does the project have funding" />
-            <DefinitionDescription description="Yes, 112211" />
-          </div>
-        </div>
-        <div className="grid-row flex-row">
-          <div className="grid-col">
-            <DefinitionTerm term="What is your business need?" />
-            <DefinitionDescription description="Litttttttttttttttttttt" />
+            <DescriptionTerm term="Does the project have funding" />
+            <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </div>
-        <div className="grid-row flex-row">
+        <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
-            <DefinitionTerm term="How are you thinking of solving it?" />
-            <DefinitionDescription description="Litttttttttttttttttttt" />
+            <DescriptionTerm term="What is your business need?" />
+            <DescriptionDefinition definition={values.businessNeed} />
           </div>
         </div>
-        <div className="grid-row flex-row">
+        <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
-            <DefinitionTerm term="Where are you in the process?" />
-            <DefinitionDescription description="Just an idea" />
-          </div>
-          <div className="grid-col">
-            <DefinitionTerm term="Do you currently have a contract in place?" />
-            <DefinitionDescription description="No" />
+            <DescriptionTerm term="How are you thinking of solving it?" />
+            <DescriptionDefinition definition={values.businessSolution} />
           </div>
         </div>
-        <div className="grid-row flex-row">
+        <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
-            <DefinitionTerm term="Do you need EA support?" />
-            <DefinitionDescription description="Yes" />
+            <DescriptionTerm term="Where are you in the process?" />
+            <DescriptionDefinition definition={values.currentStage} />
+          </div>
+          <div className="grid-col">
+            <DescriptionTerm term="Do you currently have a contract in place?" />
+            <DescriptionDefinition definition={values.hasContract} />
           </div>
         </div>
-      </DefinitionList>
+        <div className="grid-row flex-row margin-bottom-205">
+          <div className="grid-col">
+            <DescriptionTerm term="Do you need EA support?" />
+            <DescriptionDefinition
+              definition={convertBoolToYesNo(values.needsEaSupport)}
+            />
+          </div>
+        </div>
+      </DescriptionList>
 
-      {/* hr */}
+      <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">What happens next?</h2>
       <p>
         The Governance Review Team will review and get back to you with{' '}
         <strong>one of these</strong> outcomes:
       </p>
-      <ul>
+      <ul className="usa-list">
         <li>direct you to go through the Goverannce Review process</li>
         <li>or direct you to an existing project</li>
         <li>
