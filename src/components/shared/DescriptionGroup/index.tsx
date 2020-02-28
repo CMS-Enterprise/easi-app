@@ -1,17 +1,5 @@
 import React, { ReactNode, ReactNodeArray } from 'react';
 
-// type DescriptionGroupProps = {
-//   term: string;
-//   description: string;
-// };
-
-// const DescriptionGroup = ({ term, description }: DescriptionGroupProps) => (
-//   <>
-//     <dt className="text-bold margin-bottom-05">{term}</dt>
-//     <dd className="margin-0 font-ui-md">{description}</dd>
-//   </>
-// );
-
 type DescriptionListProps = {
   className?: string;
   title: string;
