@@ -1,7 +1,7 @@
 // src/OktaSignInWidget.js
 
 import React, { Component } from 'react';
-import OktaSignIn from '@okta/okta-signin-widget';
+import OktaSignIn from '@okta/okta-signin-widget/dist/js/okta-sign-in.min';
 
 type OktaSignInWidgetProps = {
   onSuccess: (auth: any) => any;
