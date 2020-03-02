@@ -194,6 +194,32 @@ brew install docker-completion
 Now you will need to start the Docker service: run Spotlight and type in
 'docker'.
 
+### Setup: PostgreSQL
+
+To run postgres in Docker, first you will need the image:
+
+```console
+docker pull postgres:11.6
+```
+
+Now, you can run postgres locally:
+
+```console
+$ docker run --detach --publish 5432:5432
+8a6196a9ae85286e3598bc49a1a59954a3762b633059829389af333964041215
+$ psql --username postgres --host localhost
+psql (12.2, server 11.6 (Debian 11.6-1.pgdg90+1))
+Type "help" for help.
+
+postgres=# SHOW server_version;
+        server_version
+-------------------------------
+ 11.6 (Debian 11.6-1.pgdg90+1)
+(1 row)
+
+postgres=#
+```
+
 ## Build
 
 ### Swagger Generation
