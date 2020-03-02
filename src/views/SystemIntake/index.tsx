@@ -7,6 +7,7 @@ import HeaderWrapper from 'components/Header/HeaderWrapper';
 import BackNextButtons from 'components/shared/BackNextButtons';
 import PageNumber from 'components/PageNumber';
 import { SystemIntakeForm } from 'types/systemIntake';
+import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -100,9 +101,14 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
           onSubmit={(data: SystemIntakeForm) => {
             console.log('Submitted Data: ', data);
           }}
+          validationSchema={SystemIntakeValidationSchema[page]}
+          validateOnBlur={false}
+          validateOnChange={false}
+          validateOnMount={false}
         >
           {(formikProps: FormikProps<SystemIntakeForm>) => (
             <>
+              <pre>{JSON.stringify(formikProps.errors, null, 2)}</pre>
               <Form>{renderPage(page, formikProps)}</Form>
               <BackNextButtons
                 pageNum={page}
@@ -112,6 +118,16 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                   console.log('Submitted: ', formikProps.values);
                 }}
               />
+              <button
+                onClick={() => {
+                  formikProps.validateForm().then(() => {
+                    console.log('Form validated');
+                  });
+                }}
+                type="button"
+              >
+                Validate
+              </button>
             </>
           )}
         </Formik>
