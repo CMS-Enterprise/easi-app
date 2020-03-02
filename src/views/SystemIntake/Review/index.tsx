@@ -22,6 +22,14 @@ const Review = ({ formikProps }: ReviewProps) => {
     }
     return isFunded;
   };
+  const issoDefinition = () => {
+    const hasIsso = convertBoolToYesNo(values.isso.isPresent);
+    if (values.isso.isPresent) {
+      return `${hasIsso}, ${values.isso.name}`;
+    }
+    return hasIsso;
+  };
+
   return (
     <div className="margin-bottom-7">
       <h2 className="font-heading-xl">Check your answers before sending</h2>
@@ -80,6 +88,10 @@ const Review = ({ formikProps }: ReviewProps) => {
           </div>
         </div>
         <div className="grid-row flex-row margin-bottom-205">
+          <div className="grid-col">
+            <DescriptionTerm term="Does your project have an ISSO" />
+            <DescriptionDefinition definition={issoDefinition()} />
+          </div>
           <div className="grid-col">
             <DescriptionTerm term="Currently collaborating with" />
             {values.governanceTeams.isPresent ? (
