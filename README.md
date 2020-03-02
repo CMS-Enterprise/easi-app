@@ -205,7 +205,7 @@ docker pull postgres:11.6
 Now, you can run postgres locally:
 
 ```console
-$ docker run --detach --publish 5432:5432
+$ docker run --detach --publish 5432:5432 postgres:11.6
 8a6196a9ae85286e3598bc49a1a59954a3762b633059829389af333964041215
 $ psql --username postgres --host localhost
 psql (12.2, server 11.6 (Debian 11.6-1.pgdg90+1))
