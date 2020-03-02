@@ -1,0 +1,2 @@
+export const GET_ALL_SYSTEM_SHORTS: string = 'GET_ALL_SYSTEM_SHORTS';
+export const UPDATE_SYSTEM_SHORTS: string = 'UPDATE_SYSTEM_SHORTS';

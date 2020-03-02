@@ -1,7 +1,13 @@
 .easi-header {
+  border-bottom: 1px solid #979797;
+
   &__wrapper {
     display: block;
     width: 100%;
+  }
+
+  &__dropdown-wrapper {
+    position: relative;
   }
 
   &--desktop {
@@ -39,6 +45,19 @@
 
     &:hover {
       text-decoration: underline;
+    }
+  }
+
+  #save-button {
+    background-color: #E37714;
+  }
+
+  &__caret {
+    border: none;
+    transform: rotate(0deg);
+
+    &--rotate {
+      transform: rotate(180deg);
     }
   }
 

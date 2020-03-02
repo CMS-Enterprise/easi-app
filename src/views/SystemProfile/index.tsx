@@ -1,42 +1,97 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withAuth } from '@okta/okta-react';
+import { useDispatch, useSelector } from 'react-redux';
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
+import { getAllSystemShorts } from '../../actions/searchActions';
+import { AppState } from '../../reducers/rootReducer';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
-  { id: '1', name: 'System1', slug: 'system1', link: '/system/system1' },
-  { id: '2', name: 'System2', slug: 'system2', link: '/system/system2' },
-  { id: '3', name: 'System3', slug: 'system3', link: '/system/system3' },
-  { id: '4', name: 'System4', slug: 'system4', link: '/system/system4' },
-  { id: '5', name: 'System5', slug: 'system5', link: '/system/system5' }
+  {
+    id: '1',
+    name: 'System1',
+    acronym: 'SYS1',
+    slug: 'system1',
+    link: '/system/system1'
+  },
+  {
+    id: '2',
+    name: 'System2',
+    acronym: 'SYS2',
+    slug: 'system2',
+    link: '/system/system2'
+  },
+  {
+    id: '3',
+    name: 'System3',
+    acronym: 'SYS3',
+    slug: 'system3',
+    link: '/system/system3'
+  },
+  {
+    id: '4',
+    name: 'System4',
+    acronym: 'SYS4',
+    slug: 'system4',
+    link: '/system/system4'
+  },
+  {
+    id: '5',
+    name: 'System5',
+    acronym: 'SYS5',
+    slug: 'system5',
+    link: '/system/system5'
+  }
 ];
 
-type SystemProfileProps = {
-  match: any;
+export type SystemProfileRouterProps = {
+  profileId: string;
 };
 
-export const SystemProfile = ({ match }: SystemProfileProps) => {
+type SystemProfileProps = RouteComponentProps<SystemProfileRouterProps> & {
+  auth: any;
+  searchResults: any;
+};
+
+export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
   const onSearch = () => {};
+  const getSuggestionValue = (suggestion: any): string => suggestion.name;
+  const renderSuggestion = (suggestion: any): string => suggestion.name;
+  const dispatch = useDispatch();
+  const searchResults = useSelector(
+    (state: AppState) => state.search.allSystemShorts
+  );
+
+  useEffect(() => {
+    const fetchSystemShorts = async (): Promise<void> => {
+      dispatch(getAllSystemShorts(await auth.getAccessToken()));
+    };
+    fetchSystemShorts();
+  }, [auth, dispatch]);
+
   return (
     <div className="system-profile">
-      <Header
-        secondaryNavList={mockSystems.slice(0, 10)}
-        activeNavListItem={match.params.profileId}
-        onSearch={() => {}}
-      >
+      <Header>
         <HeaderWrapper className="system-profile__search-bar">
-          <SearchBar name="system-search" onSearch={onSearch} />
+          <SearchBar
+            name="System search"
+            onSearch={onSearch}
+            getSuggestionValue={getSuggestionValue}
+            renderSuggestion={renderSuggestion}
+            results={searchResults}
+          />
         </HeaderWrapper>
 
         {mockSystems.length > 0 && (
           <HeaderWrapper className="system-profile__secondary-nav-wrapper">
             <SecondaryNav
-              secondaryNavList={mockSystems}
-              activeNavItem="system1"
+              secondaryNavList={mockSystems.slice(0, 10)}
+              activeNavItem={match.params.profileId}
             />
           </HeaderWrapper>
         )}
@@ -87,4 +142,4 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
   );
 };
 
-export default withRouter(SystemProfile);
+export default withRouter(withAuth(SystemProfile));

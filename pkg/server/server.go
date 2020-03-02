@@ -1,4 +1,4 @@
-// Package server is some throwaway server code to setup testing
+// Package server is for setting up the server.
 package server
 
 import (
@@ -7,26 +7,48 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-
 	"github.com/spf13/viper"
 
-	"github.com/cmsgov/easi-app/pkg/handlers"
+	"github.com/cmsgov/easi-app/pkg/okta"
 )
 
-func corsHandler(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		w.Header().Set("Access-Control-Allow-Origin", viper.GetString("CLIENT_ADDRESS"))
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, Authorization")
-
-		next.ServeHTTP(w, r)
-	})
+type server struct {
+	router *mux.Router
+	Config *viper.Viper
 }
 
-// Serve serves all the handlers
-func Serve() {
+func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	s.router.ServeHTTP(w, r)
+}
+
+// Serve sets up the dependencies for a server and serves all the handlers
+func Serve(config *viper.Viper) {
+	// Set the router
 	r := mux.NewRouter()
+
+	// TODO: We should add some sort of config verifier to make sure these configs exist
+	// They may live in /cmd, but should fail quick on startup
+	var authMiddleware func(http.Handler) http.Handler
+	// set an empty auth handle for local development
+	if config.GetString("ENVIRONMENT") == "local" {
+		authMiddleware = func(next http.Handler) http.Handler {
+			return next
+		}
+	} else {
+		authMiddleware = okta.NewOktaAuthorizeMiddleware(
+			config.GetString("OKTA_CLIENT_ID"),
+			config.GetString("OKTA_ISSUER"),
+		)
+	}
+
+	clientAddress := config.GetString("CLIENT_ADDRESS")
+
+	s := &server{
+		router: r,
+		Config: config,
+	}
+
 	fmt.Print("Serving application on localhost:8080")
-	r.Handle("/", corsHandler(authorizeHandler(handlers.LandingHandler{})))
-	log.Fatal(http.ListenAndServe(":8080", r))
+	s.routes(authMiddleware, newCORSMiddleware(clientAddress))
+	log.Fatal(http.ListenAndServe(":8080", s))
 }
