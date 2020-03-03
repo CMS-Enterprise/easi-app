@@ -153,7 +153,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
 
           <Field
             as={RadioField}
-            checked={values.isso.isPresent}
+            checked={values.isso.isPresent === true}
             id="IntakeForm-HasIssoYes"
             name="isso.isPresent"
             label="Yes"
@@ -197,7 +197,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </HelpText>
           <Field
             as={RadioField}
-            checked={values.governanceTeams.isPresent}
+            checked={values.governanceTeams.isPresent === true}
             id="IntakeForm-NoGovernanceTeams"
             name="governanceTeams.isPresent"
             label="1 or more of the following in OIT (select all that apply)"

@@ -10,6 +10,7 @@ import {
 } from '../../../components/shared/DropdownField';
 import processStages from '../../../constants/enums/processStages';
 import { RadioField } from '../../../components/shared/RadioField';
+import AccordionLink from '../../../components/shared/AccordionLink';
 
 type RequestDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
@@ -174,6 +175,8 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             }}
             value={false}
           />
+
+          <AccordionLink label="test">Test</AccordionLink>
         </fieldset>
 
         <Field
