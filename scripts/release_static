@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 #
 
+STATIC_S3_BUCKET=$1
+
 # Check if we have any access to the s3 bucket
 # Since `s3 ls` returns zero even if the command failed, we assume failure if this command prints anything to stderr
 s3_err="$(aws s3 ls "$STATIC_S3_BUCKET" 1>/dev/null 2>&1)"
