@@ -1,15 +1,13 @@
 import React from 'react';
 import { Field, FormikProps } from 'formik';
-import { SystemIntakeForm } from '../../../types/systemIntake';
+import { SystemIntakeForm } from 'types/systemIntake';
+import { RadioField } from 'components/shared/RadioField';
+import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
+import Label from 'components/shared/Label';
 import TextField from '../../../components/shared/TextField';
 import HelpText from '../../../components/shared/HelpText';
 import TextAreaField from '../../../components/shared/TextAreaField';
-import {
-  DropdownField,
-  DropdownItem
-} from '../../../components/shared/DropdownField';
 import processStages from '../../../constants/enums/processStages';
-import { RadioField } from '../../../components/shared/RadioField';
 import CollapsableLink from '../../../components/shared/CollapsableLink';
 
 type RequestDetailsProps = {
@@ -85,47 +83,57 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           />
         </fieldset>
 
+        <Label htmlFor="IntakeForm-BusinessNeed">
+          What is your business need?
+        </Label>
+        <HelpText>
+          <p>
+            Include:
+            <br />
+            <ul>
+              <li>
+                a detailed explanation of the business need/issue/problem that
+                the project will address
+              </li>
+              <li>
+                any legislative mandates or regulations that needs to be met
+              </li>
+              <li>
+                any expected benefits from the investment of organizational
+                resources into the project
+              </li>
+              <li>
+                relevant deadlines (e.g., statutory deadlines that CMS must
+                meet)
+              </li>
+              <li>
+                and the benefits of developing an IT solution for this need
+              </li>
+            </ul>
+          </p>
+        </HelpText>
         <Field
           as={TextAreaField}
           id="IntakeForm-BusinessNeed"
           maxLength={2000}
-          label="What is your business need?"
-          helpText={
-            <p>
-              Include:
-              <br />
-              <ul>
-                <li>
-                  a detailed explanation of the business need/issue/problem that
-                  the project will address
-                </li>
-                <li>
-                  any legislative mandates or regulations that needs to be met
-                </li>
-                <li>
-                  any expected benefits from the investment of organizational
-                  resources into the project
-                </li>
-                <li>
-                  relevant deadlines (e.g., statutory deadlines that CMS must
-                  meet)
-                </li>
-                <li>
-                  and the benefits of developing an IT solution for this need
-                </li>
-              </ul>
-            </p>
-          }
           name="businessNeed"
         />
+        <HelpText>{`${2000 -
+          values.businessNeed.length} characters left`}</HelpText>
+
+        <Label htmlFor="IntakeForm-BusinessSolution">
+          How are you thinking of solving it?
+        </Label>
+        <HelpText>Let us know if you have a solution in mind</HelpText>
         <Field
           as={TextAreaField}
           id="IntakeForm-BusinessSolution"
           maxLength={2000}
-          label="How are you thinking of solving it?"
-          helpText="Let us know if you have a solution in mind"
           name="businessSolution"
         />
+        <HelpText>{`${2000 -
+          values.businessSolution.length} characters left`}</HelpText>
+
         <Field
           as={DropdownField}
           id="IntakeForm-CurrentStage"
