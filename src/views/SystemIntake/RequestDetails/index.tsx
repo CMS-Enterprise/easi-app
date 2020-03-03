@@ -87,7 +87,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           What is your business need?
         </Label>
         <HelpText>
-          <p>
+          <span>
             Include:
             <br />
             <ul>
@@ -110,7 +110,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
                 and the benefits of developing an IT solution for this need
               </li>
             </ul>
-          </p>
+          </span>
         </HelpText>
         <Field
           as={TextAreaField}
