@@ -211,10 +211,14 @@ $ docker run --detach --publish 5432:5432 postgres:11.6
 
 To test the database from your shell, `pgcli` is recommended:
 
+```sh
+brew install pgcli
+```
+
+Thanks to variables set in the `.envrc`, connecting is simple:
+
 ```console
-$ brew install pgcli
-...
-$ pgcli --username postgres --host localhost
+$ pgcli
 Server: PostgreSQL 11.6 (Debian 11.6-1.pgdg90+1)
 Version: 2.2.0
 Chat: https://gitter.im/dbcli/pgcli
