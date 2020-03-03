@@ -1,9 +1,12 @@
 ---
 version: 2
+
+references:
+  circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
 jobs:
   pre_test:
     docker:
-      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+      - image: *circleci_docker_primary
     steps:
       - checkout
       - restore_cache:
@@ -32,9 +35,23 @@ jobs:
 
   build_tag_push:
     docker:
-      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+      - image: *circleci_docker_primary
         environment:
           AWS_DEFAULT_REGION: us-west-2
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build the app and push to ECR
+          command: |
+            ./scripts/build_docker_image
+
+  deploy_dev:
+    docker:
+      - image: *circleci_docker_primary
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+          APP_ENV: dev
           OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
           REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
           REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
@@ -44,19 +61,51 @@ jobs:
           REACT_APP_OKTA_REDIRECT_URI: https://dev.easi.cms.gov/implicit/callback
     steps:
       - checkout
-      - setup_remote_docker
       - run:
-          name: Build the app and release to ECS
+          name: Restart ECS service
           command: |
-            ./scripts/release_ecs
+            ./scripts/restart_ecs
       - run:
           name: Build static assets and release to S3
           command: |
-            ./scripts/release_static
+            ./scripts/release_static $STATIC_S3_BUCKET_DEV
+
+  deploy_impl:
+    docker:
+      - image: *circleci_docker_primary
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+          APP_ENV: impl
+          OKTA_CLIENT_ID: 0oa2sjdaxkwy3TrW1297
+          REACT_APP_OKTA_CLIENT_ID: 0oa2sjdaxkwy3TrW1297
+          REACT_APP_OKTA_DOMAIN: https://impl.idp.idm.cms.gov
+          REACT_APP_OKTA_SERVER_ID: aus2sjf5g6mzGsnSZ297
+          REACT_APP_OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/aus2sjf5g6mzGsnSZ297
+          OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/aus2sjf5g6mzGsnSZ297
+          REACT_APP_OKTA_REDIRECT_URI: https://impl.easi.cms.gov/implicit/callback
+    steps:
+      - checkout
+      - run:
+          name: Setup custom environment variables
+          command: |
+            temp_role=$(aws sts assume-role \
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/circleci \
+                    --role-session-name circleci)
+            echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
+      - run:
+          name: Restart ECS service
+          command: |
+            ./scripts/restart_ecs
+      - run:
+          name: Build static assets and release to S3
+          command: |
+            ./scripts/release_static "$STATIC_S3_BUCKET_IMPL"
 
   test:
     docker:
-      - image: trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+      - image: *circleci_docker_primary
     steps:
       - checkout
       - run:
@@ -75,3 +124,9 @@ workflows:
           requires:
             - pre_test
             - test
+      - deploy_dev:
+          requires:
+            - build_tag_push
+      # - deploy_impl:
+      #     requires:
+      #       - deploy_dev
