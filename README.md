@@ -198,7 +198,7 @@ Now you will need to start the Docker service: run Spotlight and type in
 
 To run postgres in Docker, first you will need the image:
 
-```console
+```sh
 docker pull postgres:11.6
 ```
 
