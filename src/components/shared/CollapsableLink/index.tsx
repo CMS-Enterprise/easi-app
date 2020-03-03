@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import classnames from 'classnames';
 import './index.scss';
 
-type AccordionLinkProps = {
+type CollapsableLinkProps = {
   children: React.ReactNode | React.ReactNodeArray;
   label: string;
 };
 
-// TODO: rename this class
-const AccordionLink = ({ children, label }: AccordionLinkProps) => {
+const CollapsableLink = ({ children, label }: CollapsableLinkProps) => {
+  // TODO: should this state instead be held in the parent and passed in as prop?
+  // Followup: if the state should remain here, how do we test the component when it's open?
+  // That is, how do we initialize this component and set isOpen to true?
   const [isOpen, setOpen] = useState(false);
   const arrowClassNames = classnames(
     'fa',
@@ -25,14 +27,9 @@ const AccordionLink = ({ children, label }: AccordionLinkProps) => {
         <span className={arrowClassNames} />
         {label}
       </button>
-      {isOpen && (
-        <div className="easi-accordion-link__content">
-          <div className="easi-accordion-link__bar" />
-          {children}
-        </div>
-      )}
+      {isOpen && <div className="easi-accordion-link__content">{children}</div>}
     </div>
   );
 };
 
-export default AccordionLink;
+export default CollapsableLink;

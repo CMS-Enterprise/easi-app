@@ -15,9 +15,14 @@
   }
 
   &__content {
-  }
+    border-left: 3px solid;
+    margin-left: 7px;
+    margin-top: 4px;
+    padding-top: 4px;
+    padding-left: 6px;
 
-  &__bar {
-    border: 3px solid #585C62;
+    p {
+     margin-block-start: 0;
+    }
   }
 }

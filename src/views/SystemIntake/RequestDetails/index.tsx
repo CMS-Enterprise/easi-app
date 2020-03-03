@@ -10,7 +10,7 @@ import {
 } from '../../../components/shared/DropdownField';
 import processStages from '../../../constants/enums/processStages';
 import { RadioField } from '../../../components/shared/RadioField';
-import AccordionLink from '../../../components/shared/AccordionLink';
+import CollapsableLink from '../../../components/shared/CollapsableLink';
 
 type RequestDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
@@ -176,7 +176,27 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             value={false}
           />
 
-          <AccordionLink label="test">Test</AccordionLink>
+          <CollapsableLink label="How can the Enterprise Architecture team help me?">
+            <p>
+              CMS&apos; Enterprise Architecture (EA) function will help you
+              build your Business Case by addressing the following:
+              <ul>
+                <li>
+                  Explore business solutions that might exist elsewhere within
+                  CMS
+                </li>
+                <li>Discuss lessons learned from similar projects</li>
+                <li>
+                  Give you and your team an enterprise-level view of the agency
+                  to avoid duplication of projects
+                </li>
+                <li>
+                  Help you explore alternatives you might not have thought of
+                </li>
+                <li>Model your business processes and document workflows</li>
+              </ul>
+            </p>
+          </CollapsableLink>
         </fieldset>
 
         <Field
