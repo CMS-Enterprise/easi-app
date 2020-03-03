@@ -2,6 +2,7 @@ import React from 'react';
 
 type TextAreaFieldProps = {
   id: string;
+  label?: string;
   name: string;
   maxLength?: number;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
@@ -11,6 +12,7 @@ type TextAreaFieldProps = {
 
 const TextAreaField = ({
   id,
+  label,
   name,
   maxLength,
   onChange,
@@ -19,6 +21,11 @@ const TextAreaField = ({
 }: TextAreaFieldProps) => {
   return (
     <>
+      {label && (
+        <label className="usa-label" htmlFor={id}>
+          {label}
+        </label>
+      )}
       <textarea
         className="usa-textarea"
         id={id}
