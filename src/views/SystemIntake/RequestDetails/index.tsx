@@ -49,7 +49,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
 
           <Field
             as={RadioField}
-            checked={values.fundingSource.isFunded}
+            checked={values.fundingSource.isFunded === true}
             id="IntakeForm-HasFundingSourceYes"
             name="fundingSource.isFunded"
             label="Yes"
@@ -162,7 +162,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
 
           <Field
             as={RadioField}
-            checked={values.needsEaSupport}
+            checked={values.needsEaSupport === true}
             id="IntakeForm-NeedsEaSupportYes"
             name="needsEaSupport"
             label="Yes"
