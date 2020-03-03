@@ -209,9 +209,11 @@ $ docker run --detach --publish 5432:5432 postgres:11.6
 8a6196a9ae85286e3598bc49a1a59954a3762b633059829389af333964041215
 ```
 
-To test the database from your shell, `pgcli` is recommended (available in Homebrew):
+To test the database from your shell, `pgcli` is recommended:
 
 ```console
+$ brew install pgcli
+...
 $ pgcli --username postgres --host localhost
 Server: PostgreSQL 11.6 (Debian 11.6-1.pgdg90+1)
 Version: 2.2.0
