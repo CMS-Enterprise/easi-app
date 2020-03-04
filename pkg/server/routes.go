@@ -8,11 +8,15 @@ import (
 	"github.com/cmsgov/easi-app/pkg/handlers"
 )
 
-type authorizeMiddleware func(http.HandlerFunc) http.HandlerFunc
+func (s *server) routes(
+	authorizationMiddleware func(handler http.Handler) http.Handler,
+	corsMiddleware func(handler http.Handler) http.Handler) {
 
-func (s *server) routes(authorizeMiddleware authorizeMiddleware) {
 	// set to standard library marshaller
 	marshalFunc := json.Marshal
+
+	// health check goes directly on the main router to avoid auth
+	s.router.HandleFunc("/api/v1/healthcheck", handlers.HealthCheckHandler{}.Handle())
 
 	// set up CEDAR client
 	cedarClient := cedar.NewTranslatedClient(s.Config.GetString("CEDAR_API_KEY"))
@@ -26,9 +30,11 @@ func (s *server) routes(authorizeMiddleware authorizeMiddleware) {
 		Marshal:      marshalFunc,
 		Logger:       s.logger,
 	}
-	api.HandleFunc("/systems", s.corsMiddleware(authorizeMiddleware(systemHandler.Handle())))
+	api.Handle("/systems", systemHandler.Handle())
 
-	// health check endpoint
-	healthCheckHandler := handlers.HealthCheckHandler{Logger: s.logger}
-	api.HandleFunc("/healthcheck", healthCheckHandler.Handle())
+	// protect all API routes with authorization middleware
+	api.Use(authorizationMiddleware)
+
+	// wrap with CORs
+	api.Use(corsMiddleware)
 }

@@ -38,22 +38,24 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	return jwtVerifierSetup.New()
 }
 
-// NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-// TODO: we can probably remove an indentation and make this more testable
-// Might require multiple sets of function params in signature
-func NewOktaAuthorizeMiddleware(clientID string, issuer string) func(http.HandlerFunc) (handlerFunc http.HandlerFunc) {
-	verifier := newJwtVerifier(clientID, issuer)
-	return func(next http.HandlerFunc) http.HandlerFunc {
-		return func(w http.ResponseWriter, r *http.Request) {
-			if r.Method == "OPTIONS" {
-				return
-			}
-			authHeader := r.Header.Get("Authorization")
-			if authHeader == "" || !isAuthenticated(authHeader, *verifier) {
-				http.Error(w, http.StatusText(401), http.StatusUnauthorized)
-				return
-			}
-			next.ServeHTTP(w, r)
+func authorizeMiddleware(next http.Handler, verifier *jwtverifier.JwtVerifier) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "OPTIONS" {
+			return
 		}
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" || !isAuthenticated(authHeader, *verifier) {
+			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+// NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
+func NewOktaAuthorizeMiddleware(clientID string, issuer string) func(http.Handler) http.Handler {
+	verifier := newJwtVerifier(clientID, issuer)
+	return func(next http.Handler) http.Handler {
+		return authorizeMiddleware(next, verifier)
 	}
 }
