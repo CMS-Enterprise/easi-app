@@ -36,7 +36,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <Label htmlFor="IntakeForm-ProjectName" error={false}>
             Project Name
           </Label>
-          <FieldErrorMsg errorMsg="" />
+          <FieldErrorMsg />
           <Field
             as={TextField}
             id="IntakeForm-ProjectName"
@@ -71,7 +71,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
                 <Label htmlFor="IntakeForm-FundingNumber" error={false}>
                   Funding Number
                 </Label>
-                <FieldErrorMsg errorMsg="" />
+                <FieldErrorMsg />
                 <Field
                   as={TextField}
                   id="IntakeForm-FundingNumber"
@@ -146,22 +146,28 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
         <HelpText>{`${2000 -
           values.businessSolution.length} characters left`}</HelpText>
 
-        <Field
-          as={DropdownField}
-          id="IntakeForm-CurrentStage"
-          label="Where are you in the process?"
-          name="currentStage"
-        >
-          <Field as={DropdownItem} name="Select" value="" />
-          {processStages.map(stage => (
-            <Field
-              as={DropdownItem}
-              key={`ProcessStageComponent-${stage.value}`}
-              name={stage.name}
-              value={stage.name}
-            />
-          ))}
-        </Field>
+        <FieldGroup error={false}>
+          <Label htmlFor="IntakeForm-CurrentStage" error={false}>
+            Where are you in the process?
+          </Label>
+          <FieldErrorMsg />
+          <Field
+            as={DropdownField}
+            error={false}
+            id="IntakeForm-CurrentStage"
+            name="currentStage"
+          >
+            <Field as={DropdownItem} name="Select" value="" />
+            {processStages.map(stage => (
+              <Field
+                as={DropdownItem}
+                key={`ProcessStageComponent-${stage.value}`}
+                name={stage.name}
+                value={stage.name}
+              />
+            ))}
+          </Field>
+        </FieldGroup>
 
         <fieldset className="usa-fieldset margin-top-3">
           <legend className="usa-label margin-bottom-1">
@@ -219,28 +225,39 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           </CollapsableLink>
         </fieldset>
 
-        <Field
-          as={DropdownField}
-          id="IntakeForm-HasContract"
-          label="Do you have a contract in place to support this effort?"
-          helpText="This information helps the Office of Acquisition and Grants Management (OAGM) track work"
-          name="hasContract"
-        >
-          <Field as={DropdownItem} name="Select" value="" />
+        <FieldGroup error={false}>
+          <Label htmlFor="IntakeForm-HasContract" error={false}>
+            Do you have a contract in place to support this effort?
+          </Label>
+          <FieldErrorMsg />
           <Field
-            as={DropdownItem}
-            key="HasContract-Yes"
-            name="Yes"
-            value="Yes"
-          />
-          <Field as={DropdownItem} key="HasContract-No" name="No" value="No" />
-          <Field
-            as={DropdownItem}
-            key="HasContract-StatementOfWork"
-            name="No, but I have a Statement of Work/Objectives"
-            value="StatementOfWork"
-          />
-        </Field>
+            as={DropdownField}
+            error={false}
+            id="IntakeForm-HasContract"
+            helpText="This information helps the Office of Acquisition and Grants Management (OAGM) track work"
+            name="hasContract"
+          >
+            <Field as={DropdownItem} name="Select" value="" />
+            <Field
+              as={DropdownItem}
+              key="HasContract-Yes"
+              name="Yes"
+              value="Yes"
+            />
+            <Field
+              as={DropdownItem}
+              key="HasContract-No"
+              name="No"
+              value="No"
+            />
+            <Field
+              as={DropdownItem}
+              key="HasContract-StatementOfWork"
+              name="No, but I have a Statement of Work/Objectives"
+              value="StatementOfWork"
+            />
+          </Field>
+        </FieldGroup>
       </div>
     </>
   );

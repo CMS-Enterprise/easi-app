@@ -44,7 +44,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           >
             Requestor
           </Label>
-          <FieldErrorMsg errorMsg={flatErrors['requestor.name']} />
+          <FieldErrorMsg>{flatErrors['requestor.name']}</FieldErrorMsg>
           <Field
             as={TextField}
             error={!!flatErrors['requestor.name']}
@@ -59,29 +59,37 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             }}
           />
         </FieldGroup>
-
-        <Field
-          as={DropdownField}
-          id="IntakeForm-RequestorComponent"
-          label="Requestor Component"
-          name="requestor.component"
-          onChange={(e: any) => {
-            if (isReqAndBusOwnerSame) {
-              setFieldValue('businessOwner.component', e.target.value);
-            }
-            setFieldValue('requestor.component', e.target.value);
-          }}
-        >
-          <Field as={DropdownItem} name="Select an option" value="" />
-          {cmsDivisionsAndOffices.map((office: any) => (
-            <Field
-              as={DropdownItem}
-              key={`RequestorComponent-${office.acronym}`}
-              name={office.name}
-              value={office.name}
-            />
-          ))}
-        </Field>
+        <FieldGroup error={!!flatErrors['requestor.component']}>
+          <Label
+            htmlFor="IntakeForm-RequestorComponent"
+            error={!!flatErrors['requestor.component']}
+          >
+            Requestor Component
+          </Label>
+          <FieldErrorMsg>{flatErrors['requestor.component']}</FieldErrorMsg>
+          <Field
+            as={DropdownField}
+            error={!!flatErrors['requestor.component']}
+            id="IntakeForm-RequestorComponent"
+            name="requestor.component"
+            onChange={(e: any) => {
+              if (isReqAndBusOwnerSame) {
+                setFieldValue('businessOwner.component', e.target.value);
+              }
+              setFieldValue('requestor.component', e.target.value);
+            }}
+          >
+            <Field as={DropdownItem} name="Select an option" value="" />
+            {cmsDivisionsAndOffices.map((office: any) => (
+              <Field
+                as={DropdownItem}
+                key={`RequestorComponent-${office.acronym}`}
+                name={office.name}
+                value={office.name}
+              />
+            ))}
+          </Field>
+        </FieldGroup>
 
         <FieldGroup error={!!flatErrors['businessOwner.name']}>
           <Label
@@ -110,7 +118,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             }}
             value=""
           />
-          <FieldErrorMsg errorMsg={flatErrors['businessOwner.name']} />
+          <FieldErrorMsg>{flatErrors['businessOwner.name']}</FieldErrorMsg>
           <Field
             as={TextField}
             error={!!flatErrors['businessOwner.name']}
@@ -120,23 +128,34 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             name="businessOwner.name"
           />
         </FieldGroup>
-        <Field
-          as={DropdownField}
-          disabled={isReqAndBusOwnerSame}
-          id="IntakeForm-BusinessOwnerComponent"
-          label="Business Owner Component"
-          name="businessOwner.component"
-        >
-          <Field as={DropdownItem} name="Select an option" value="" />
-          {cmsDivisionsAndOffices.map(office => (
-            <Field
-              as={DropdownItem}
-              key={`BusinessOwnerComponent-${office.acronym}`}
-              name={office.name}
-              value={office.name}
-            />
-          ))}
-        </Field>
+
+        <FieldGroup error={!!flatErrors['businessOwner.component']}>
+          <Label
+            htmlFor="IntakeForm-BusinessOwnerComponent"
+            error={!!flatErrors['businessOwner.component']}
+          >
+            Business Owner Component
+          </Label>
+          <FieldErrorMsg>{flatErrors['businessOwner.component']}</FieldErrorMsg>
+          <Field
+            as={DropdownField}
+            disabled={isReqAndBusOwnerSame}
+            error={!!flatErrors['businessOwner.component']}
+            id="IntakeForm-BusinessOwnerComponent"
+            name="businessOwner.component"
+          >
+            <Field as={DropdownItem} name="Select an option" value="" />
+            {cmsDivisionsAndOffices.map(office => (
+              <Field
+                as={DropdownItem}
+                key={`BusinessOwnerComponent-${office.acronym}`}
+                name={office.name}
+                value={office.name}
+              />
+            ))}
+          </Field>
+        </FieldGroup>
+
         <FieldGroup error={!!flatErrors['productManager.name']}>
           <Label
             htmlFor="IntakeForm-ProductManager"
@@ -144,7 +163,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           >
             CMS Project/Product Manager, or lead
           </Label>
-          <FieldErrorMsg errorMsg={flatErrors['productManager.name']} />
+          <FieldErrorMsg>{flatErrors['productManager.name']}</FieldErrorMsg>
           <Field
             as={TextField}
             error={!!flatErrors['productManager.name']}
@@ -153,22 +172,35 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             name="productManager.name"
           />
         </FieldGroup>
-        <Field
-          as={DropdownField}
-          id="IntakeForm-ProductManagerComponent"
-          label="Product Manager Component"
-          name="productManager.component"
-        >
-          <Field as={DropdownItem} name="Select an option" value="" />
-          {cmsDivisionsAndOffices.map((office: any) => (
-            <Field
-              as={DropdownItem}
-              key={`ProductManagerComponent-${office.acronym}`}
-              name={office.name}
-              value={office.name}
-            />
-          ))}
-        </Field>
+
+        <FieldGroup error={!!flatErrors['productManager.component']}>
+          <Label
+            htmlFor="IntakeForm-ProductManagerComponent"
+            error={!!flatErrors['productManager.component']}
+          >
+            Product Manager Component
+          </Label>
+          <FieldErrorMsg>
+            {flatErrors['productManager.component']}
+          </FieldErrorMsg>
+          <Field
+            as={DropdownField}
+            error={!!flatErrors['productManager.component']}
+            id="IntakeForm-ProductManagerComponent"
+            label="Product Manager Component"
+            name="productManager.component"
+          >
+            <Field as={DropdownItem} name="Select an option" value="" />
+            {cmsDivisionsAndOffices.map((office: any) => (
+              <Field
+                as={DropdownItem}
+                key={`ProductManagerComponent-${office.acronym}`}
+                name={office.name}
+                value={office.name}
+              />
+            ))}
+          </Field>
+        </FieldGroup>
 
         <fieldset className="usa-fieldset margin-top-3">
           <legend className="usa-label margin-bottom-1">
@@ -199,7 +231,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
                 >
                   ISSO Name
                 </Label>
-                <FieldErrorMsg errorMsg={flatErrors['isso.name']} />
+                <FieldErrorMsg>{flatErrors['isso.name']}</FieldErrorMsg>
                 <Field
                   as={TextField}
                   error={!!flatErrors['isso.name']}
