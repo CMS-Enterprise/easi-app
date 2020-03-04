@@ -258,10 +258,16 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
               value
             />
             <div className="margin-left-3">
-              <GovernanceTeamOptions
-                values={values}
-                setFieldValue={setFieldValue}
-              />
+              <FieldGroup error={!!flatErrors['governanceTeams.teams']}>
+                <FieldErrorMsg>
+                  {flatErrors['governanceTeams.teams']}
+                </FieldErrorMsg>
+                <GovernanceTeamOptions
+                  values={values}
+                  setFieldValue={setFieldValue}
+                  errors={flatErrors.governanceTeams}
+                />
+              </FieldGroup>
             </div>
             <Field
               as={RadioField}

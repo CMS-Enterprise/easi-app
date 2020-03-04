@@ -19,14 +19,6 @@ const flattedErrors = (
       flattenedErrors[newErrorKey] = errors[key];
     }
 
-    //     if (Array.isArray(errors[key])) {
-    //       errors[key].map(errItem => {
-    //         if (errItem instanceof Object) {
-    //           parseErrors(errItem, flattenedErrors)
-    //         }
-    //       })
-    //     }
-
     if (errors[key] instanceof Object) {
       const newErrorKey = flatKey ? `${flatKey}.${key}` : key;
       flattedErrors(errors[key], flattenedErrors, newErrorKey);
