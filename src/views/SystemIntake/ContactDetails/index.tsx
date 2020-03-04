@@ -160,7 +160,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             onChange={() => {
               setFieldValue('isso.isPresent', true);
             }}
-            value={true}
+            value
           />
           {values.isso.isPresent && (
             <div className="width-card margin-top-neg-2 margin-left-3 margin-bottom-1">
@@ -204,7 +204,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             onChange={() => {
               setFieldValue('governanceTeams.isPresent', true);
             }}
-            value={true}
+            value
           />
           <div className="margin-left-3">
             <GovernanceTeamOptions
