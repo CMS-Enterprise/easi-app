@@ -2,8 +2,8 @@ import React from 'react';
 
 type TextAreaFieldProps = {
   id: string;
-  name: string;
   label?: string;
+  name: string;
   maxLength?: number;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onBlur: () => void;
@@ -12,8 +12,8 @@ type TextAreaFieldProps = {
 
 const TextAreaField = ({
   id,
-  name,
   label,
+  name,
   maxLength,
   onChange,
   onBlur,
