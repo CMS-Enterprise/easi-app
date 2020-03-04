@@ -20,6 +20,7 @@ func (s HandlerTestSuite) TestSystemsHandler() {
 		SystemsListHandler{
 			FetchSystems: makeFakeSystemShorts,
 			Marshal:      json.Marshal,
+			Logger:       s.logger,
 		}.Handle()(rr, nil)
 
 		s.Equal(http.StatusOK, rr.Code)
@@ -37,6 +38,7 @@ func (s HandlerTestSuite) TestSystemsHandler() {
 		SystemsListHandler{
 			FetchSystems: makeFakeSystemShorts,
 			Marshal:      failMarshal,
+			Logger:       s.logger,
 		}.Handle()(rr, nil)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
