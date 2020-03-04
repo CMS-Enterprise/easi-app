@@ -33,9 +33,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
       </p>
       <div className="grid-col-8 margin-bottom-7">
         <FieldGroup error={false}>
-          <Label htmlFor="IntakeForm-ProjectName" error={false}>
-            Project Name
-          </Label>
+          <Label htmlFor="IntakeForm-ProjectName">Project Name</Label>
           <FieldErrorMsg />
           <Field
             as={TextField}
@@ -68,9 +66,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           {values.fundingSource.isFunded && (
             <div className="width-card margin-top-neg-2 margin-left-3 margin-bottom-1">
               <FieldGroup error={false}>
-                <Label htmlFor="IntakeForm-FundingNumber" error={false}>
-                  Funding Number
-                </Label>
+                <Label htmlFor="IntakeForm-FundingNumber">Funding Number</Label>
                 <FieldErrorMsg />
                 <Field
                   as={TextField}
@@ -147,7 +143,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           values.businessSolution.length} characters left`}</HelpText>
 
         <FieldGroup error={false}>
-          <Label htmlFor="IntakeForm-CurrentStage" error={false}>
+          <Label htmlFor="IntakeForm-CurrentStage">
             Where are you in the process?
           </Label>
           <FieldErrorMsg />
@@ -226,7 +222,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
         </fieldset>
 
         <FieldGroup error={false}>
-          <Label htmlFor="IntakeForm-HasContract" error={false}>
+          <Label htmlFor="IntakeForm-HasContract">
             Do you have a contract in place to support this effort?
           </Label>
           <FieldErrorMsg />

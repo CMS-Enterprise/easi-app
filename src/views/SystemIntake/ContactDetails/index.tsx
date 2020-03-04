@@ -38,12 +38,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
       <div className="grid-col-6 margin-bottom-7">
         <h2 className="font-heading-xl">Contact Details</h2>
         <FieldGroup error={!!flatErrors['requestor.name']}>
-          <Label
-            error={!!flatErrors['requestor.name']}
-            htmlFor="IntakeForm-Requestor"
-          >
-            Requestor
-          </Label>
+          <Label htmlFor="IntakeForm-Requestor">Requestor</Label>
           <FieldErrorMsg>{flatErrors['requestor.name']}</FieldErrorMsg>
           <Field
             as={TextField}
@@ -60,10 +55,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           />
         </FieldGroup>
         <FieldGroup error={!!flatErrors['requestor.component']}>
-          <Label
-            htmlFor="IntakeForm-RequestorComponent"
-            error={!!flatErrors['requestor.component']}
-          >
+          <Label htmlFor="IntakeForm-RequestorComponent">
             Requestor Component
           </Label>
           <FieldErrorMsg>{flatErrors['requestor.component']}</FieldErrorMsg>
@@ -92,11 +84,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         </FieldGroup>
 
         <FieldGroup error={!!flatErrors['businessOwner.name']}>
-          <Label
-            className="margin-bottom-1"
-            htmlFor="IntakeForm-BusinessOwner"
-            error={!!flatErrors['businessOwner.name']}
-          >
+          <Label className="margin-bottom-1" htmlFor="IntakeForm-BusinessOwner">
             CMS Business/Product Owner&apos;s Name
           </Label>
           <Field
@@ -130,10 +118,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         </FieldGroup>
 
         <FieldGroup error={!!flatErrors['businessOwner.component']}>
-          <Label
-            htmlFor="IntakeForm-BusinessOwnerComponent"
-            error={!!flatErrors['businessOwner.component']}
-          >
+          <Label htmlFor="IntakeForm-BusinessOwnerComponent">
             Business Owner Component
           </Label>
           <FieldErrorMsg>{flatErrors['businessOwner.component']}</FieldErrorMsg>
@@ -157,10 +142,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         </FieldGroup>
 
         <FieldGroup error={!!flatErrors['productManager.name']}>
-          <Label
-            htmlFor="IntakeForm-ProductManager"
-            error={!!flatErrors['productManager.name']}
-          >
+          <Label htmlFor="IntakeForm-ProductManager">
             CMS Project/Product Manager, or lead
           </Label>
           <FieldErrorMsg>{flatErrors['productManager.name']}</FieldErrorMsg>
@@ -174,10 +156,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         </FieldGroup>
 
         <FieldGroup error={!!flatErrors['productManager.component']}>
-          <Label
-            htmlFor="IntakeForm-ProductManagerComponent"
-            error={!!flatErrors['productManager.component']}
-          >
+          <Label htmlFor="IntakeForm-ProductManagerComponent">
             Product Manager Component
           </Label>
           <FieldErrorMsg>
@@ -202,98 +181,102 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </Field>
         </FieldGroup>
 
-        <fieldset className="usa-fieldset margin-top-3">
-          <legend className="usa-label margin-bottom-1">
-            Does your project have an ISSO?
-          </legend>
-          <HelpText>
-            If yes, please tell use the name of your ISSO so we can get in touch
-            with them
-          </HelpText>
+        <FieldGroup error={!!flatErrors['isso.isPresent']}>
+          <fieldset className="usa-fieldset margin-top-3">
+            <legend className="usa-label margin-bottom-1">
+              Does your project have an ISSO?
+            </legend>
+            <HelpText>
+              If yes, please tell use the name of your ISSO so we can get in
+              touch with them
+            </HelpText>
+            <FieldErrorMsg>{flatErrors['isso.isPresent']}</FieldErrorMsg>
 
-          <Field
-            as={RadioField}
-            checked={values.isso.isPresent === true}
-            id="IntakeForm-HasIssoYes"
-            name="isso.isPresent"
-            label="Yes"
-            onChange={() => {
-              setFieldValue('isso.isPresent', true);
-            }}
-            value
-          />
-          {values.isso.isPresent && (
-            <div className="width-card margin-top-neg-2 margin-left-3 margin-bottom-1">
-              <FieldGroup error={!!flatErrors['isso.name']}>
-                <Label
-                  htmlFor="IntakeForm-IssoName"
-                  error={!!flatErrors['isso.name']}
-                >
-                  ISSO Name
-                </Label>
-                <FieldErrorMsg>{flatErrors['isso.name']}</FieldErrorMsg>
-                <Field
-                  as={TextField}
-                  error={!!flatErrors['isso.name']}
-                  id="IntakeForm-IssoName"
-                  maxLength={50}
-                  name="isso.name"
-                />
-              </FieldGroup>
-            </div>
-          )}
-          <Field
-            as={RadioField}
-            checked={values.isso.isPresent === false}
-            id="IntakeForm-HasIssoNo"
-            name="isso.isPresent"
-            label="No"
-            onChange={() => {
-              setFieldValue('isso.isPresent', false);
-              setFieldValue('isso.name', '');
-            }}
-            value={false}
-          />
-        </fieldset>
-
-        <fieldset className="usa-fieldset margin-top-3">
-          <legend className="usa-label margin-bottom-1">
-            My project team is currently collaborating/consulting with:
-          </legend>
-          <HelpText>
-            Please disclose the name of each person you&apos;ve worked with.
-            This helps us locate any additional information on your request
-          </HelpText>
-          <Field
-            as={RadioField}
-            checked={values.governanceTeams.isPresent === true}
-            id="IntakeForm-NoGovernanceTeams"
-            name="governanceTeams.isPresent"
-            label="1 or more of the following in OIT (select all that apply)"
-            onChange={() => {
-              setFieldValue('governanceTeams.isPresent', true);
-            }}
-            value
-          />
-          <div className="margin-left-3">
-            <GovernanceTeamOptions
-              values={values}
-              setFieldValue={setFieldValue}
+            <Field
+              as={RadioField}
+              checked={values.isso.isPresent === true}
+              id="IntakeForm-HasIssoYes"
+              name="isso.isPresent"
+              label="Yes"
+              onChange={() => {
+                setFieldValue('isso.isPresent', true);
+              }}
+              value
             />
-          </div>
-          <Field
-            as={RadioField}
-            checked={values.governanceTeams.isPresent === false}
-            id="IntakeForm-YesGovernanceTeam"
-            name="governanceTeams.isPresent"
-            label="None of the above"
-            onChange={() => {
-              setFieldValue('governanceTeams.isPresent', false);
-              setFieldValue('governanceTeams.teams', []);
-            }}
-            value={false}
-          />
-        </fieldset>
+            {values.isso.isPresent && (
+              <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
+                <FieldGroup error={!!flatErrors['isso.name']}>
+                  <Label htmlFor="IntakeForm-IssoName">ISSO Name</Label>
+                  <FieldErrorMsg>{flatErrors['isso.name']}</FieldErrorMsg>
+                  <Field
+                    as={TextField}
+                    error={!!flatErrors['isso.name']}
+                    id="IntakeForm-IssoName"
+                    maxLength={50}
+                    name="isso.name"
+                  />
+                </FieldGroup>
+              </div>
+            )}
+            <Field
+              as={RadioField}
+              checked={values.isso.isPresent === false}
+              id="IntakeForm-HasIssoNo"
+              name="isso.isPresent"
+              label="No"
+              onChange={() => {
+                setFieldValue('isso.isPresent', false);
+                setFieldValue('isso.name', '');
+              }}
+              value={false}
+            />
+          </fieldset>
+        </FieldGroup>
+
+        <FieldGroup error={flatErrors['governanceTeams.isPresent']}>
+          <fieldset className="usa-fieldset margin-top-3">
+            <legend className="usa-label margin-bottom-1">
+              My project team is currently collaborating/consulting with:
+            </legend>
+            <HelpText>
+              Please disclose the name of each person you&apos;ve worked with.
+              This helps us locate any additional information on your request
+            </HelpText>
+            <FieldErrorMsg>
+              {flatErrors['governanceTeams.isPresent']}
+            </FieldErrorMsg>
+
+            <Field
+              as={RadioField}
+              checked={values.governanceTeams.isPresent === true}
+              id="IntakeForm-NoGovernanceTeams"
+              name="governanceTeams.isPresent"
+              label="1 or more of the following in OIT (select all that apply)"
+              onChange={() => {
+                setFieldValue('governanceTeams.isPresent', true);
+              }}
+              value
+            />
+            <div className="margin-left-3">
+              <GovernanceTeamOptions
+                values={values}
+                setFieldValue={setFieldValue}
+              />
+            </div>
+            <Field
+              as={RadioField}
+              checked={values.governanceTeams.isPresent === false}
+              id="IntakeForm-YesGovernanceTeam"
+              name="governanceTeams.isPresent"
+              label="None of the above"
+              onChange={() => {
+                setFieldValue('governanceTeams.isPresent', false);
+                setFieldValue('governanceTeams.teams', []);
+              }}
+              value={false}
+            />
+          </fieldset>
+        </FieldGroup>
       </div>
     </>
   );
