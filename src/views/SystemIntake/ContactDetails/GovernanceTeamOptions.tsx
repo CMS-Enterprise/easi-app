@@ -1,6 +1,9 @@
 import React, { Fragment } from 'react';
-import { Field, FieldArray } from 'formik';
+import { Field, FieldArray, ErrorMessage } from 'formik';
+import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
+import FieldGroup from 'components/shared/FieldGroup';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import CheckboxField from 'components/shared/CheckboxField';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -8,11 +11,14 @@ import { SystemIntakeForm } from 'types/systemIntake';
 type GovernanceTeamOptionsProps = {
   values: SystemIntakeForm;
   setFieldValue: (field: string, value: any) => void;
+  errors: any;
 };
 const GovernanceTeamOptions = ({
   values,
-  setFieldValue
+  setFieldValue,
+  errors
 }: GovernanceTeamOptionsProps) => {
+  console.log(errors);
   return (
     <FieldArray name="governanceTeams.teams">
       {arrayHelpers => (
@@ -61,13 +67,24 @@ const GovernanceTeamOptions = ({
                         key={`${id}-Collaborator`}
                         className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
                       >
-                        <Field
-                          as={TextField}
-                          id={`IntakeForm-${id}-Collaborator`}
-                          label="Collaborator Name"
-                          maxLength={50}
-                          name={`governanceTeams.teams[${index}].collaborator`}
-                        />
+                        <FieldGroup error={false}>
+                          <Label htmlFor={`IntakeForm-${id}-Collaborator`}>
+                            Collaborator Name
+                          </Label>
+                          <ErrorMessage
+                            name={`governanceTeams.teams[${index}].collaborator`}
+                          >
+                            {message => (
+                              <FieldErrorMsg>{message}</FieldErrorMsg>
+                            )}
+                          </ErrorMessage>
+                          <Field
+                            as={TextField}
+                            id={`IntakeForm-${id}-Collaborator`}
+                            maxLength={50}
+                            name={`governanceTeams.teams[${index}].collaborator`}
+                          />
+                        </FieldGroup>
                       </div>
                     );
                   }
