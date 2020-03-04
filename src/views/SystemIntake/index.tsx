@@ -6,8 +6,10 @@ import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import BackNextButtons from 'components/shared/BackNextButtons';
 import PageNumber from 'components/PageNumber';
+import ErrorAlert from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
+import flattenErrors from 'utils/flattenErrors';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -106,30 +108,48 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
           validateOnChange={false}
           validateOnMount={false}
         >
-          {(formikProps: FormikProps<SystemIntakeForm>) => (
-            <>
-              <pre>{JSON.stringify(formikProps.errors, null, 2)}</pre>
-              <Form>{renderPage(page, formikProps)}</Form>
-              <BackNextButtons
-                pageNum={page}
-                totalPages={pages.length}
-                setPage={setPage}
-                onSubmit={() => {
-                  console.log('Submitted: ', formikProps.values);
-                }}
-              />
-              <button
-                onClick={() => {
-                  formikProps.validateForm().then(() => {
-                    console.log('Form validated');
-                  });
-                }}
-                type="button"
-              >
-                Validate
-              </button>
-            </>
-          )}
+          {(formikProps: FormikProps<SystemIntakeForm>) => {
+            const flatErrors: any = flattenErrors(formikProps.errors);
+            return (
+              <>
+                <pre>{JSON.stringify(formikProps.errors, null, 2)}</pre>
+                {Object.keys(formikProps.errors).length > 0 && (
+                  <ErrorAlert heading="Please check and fix the following">
+                    {Object.keys(flatErrors).map((key: string) => {
+                      return (
+                        <button
+                          className="usa-alert__text"
+                          type="button"
+                          key={`Error.${key}`}
+                        >
+                          {flatErrors[key]}
+                        </button>
+                      );
+                    })}
+                  </ErrorAlert>
+                )}
+                <Form>{renderPage(page, formikProps)}</Form>
+                <BackNextButtons
+                  pageNum={page}
+                  totalPages={pages.length}
+                  setPage={setPage}
+                  onSubmit={() => {
+                    console.log('Submitted: ', formikProps.values);
+                  }}
+                />
+                <button
+                  onClick={() => {
+                    formikProps.validateForm().then(() => {
+                      console.log('Form validated');
+                    });
+                  }}
+                  type="button"
+                >
+                  Validate
+                </button>
+              </>
+            );
+          }}
         </Formik>
         {pages[page - 1].type === 'FORM' && (
           <PageNumber

@@ -5,10 +5,15 @@ type LabelProps = {
   children: React.ReactNode;
   htmlFor: string;
   className?: string;
+  error?: boolean;
 };
 
-const Label = ({ children, htmlFor, className }: LabelProps) => {
-  const classes = classnames('usa-label', className);
+const Label = ({ children, htmlFor, className, error }: LabelProps) => {
+  const classes = classnames(
+    'usa-label',
+    { 'usa-label--error': error },
+    className
+  );
 
   return (
     <label className={classes} htmlFor={htmlFor}>
