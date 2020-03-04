@@ -1,13 +1,13 @@
 import React from 'react';
 
 type FieldErrorMsgProps = {
-  errorMsg: string;
+  children?: React.ReactNode;
 };
-const FieldErrorMsg = ({ errorMsg }: FieldErrorMsgProps) => {
-  if (errorMsg) {
+const FieldErrorMsg = ({ children }: FieldErrorMsgProps) => {
+  if (children) {
     return (
       <span className="usa-error-message" role="alert">
-        {errorMsg}
+        {children}
       </span>
     );
   }
