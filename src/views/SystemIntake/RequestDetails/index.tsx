@@ -4,11 +4,13 @@ import { SystemIntakeForm } from 'types/systemIntake';
 import { RadioField } from 'components/shared/RadioField';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import Label from 'components/shared/Label';
-import TextField from '../../../components/shared/TextField';
-import HelpText from '../../../components/shared/HelpText';
-import TextAreaField from '../../../components/shared/TextAreaField';
-import processStages from '../../../constants/enums/processStages';
-import CollapsableLink from '../../../components/shared/CollapsableLink';
+import TextField from 'components/shared/TextField';
+import FieldGroup from 'components/shared/FieldGroup';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import HelpText from 'components/shared/HelpText';
+import TextAreaField from 'components/shared/TextAreaField';
+import processStages from 'constants/enums/processStages';
+import CollapsableLink from 'components/shared/CollapsableLink';
 
 type RequestDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
@@ -30,13 +32,18 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
         need.
       </p>
       <div className="grid-col-8 margin-bottom-7">
-        <Field
-          as={TextField}
-          id="IntakeForm-ProjectName"
-          label="Project Name"
-          maxLength={50}
-          name="projectName"
-        />
+        <FieldGroup error={false}>
+          <Label htmlFor="IntakeForm-ProjectName" error={false}>
+            Project Name
+          </Label>
+          <FieldErrorMsg errorMsg="" />
+          <Field
+            as={TextField}
+            id="IntakeForm-ProjectName"
+            maxLength={50}
+            name="projectName"
+          />
+        </FieldGroup>
 
         <fieldset className="usa-fieldset margin-top-3">
           <legend className="usa-label margin-bottom-1">
@@ -60,13 +67,18 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           />
           {values.fundingSource.isFunded && (
             <div className="width-card margin-top-neg-2 margin-left-3 margin-bottom-1">
-              <Field
-                as={TextField}
-                id="IntakeForm-FundingNumber"
-                label="Funding Number"
-                maxLength={6}
-                name="fundingSource.fundingNumber"
-              />
+              <FieldGroup error={false}>
+                <Label htmlFor="IntakeForm-FundingNumber" error={false}>
+                  Funding Number
+                </Label>
+                <FieldErrorMsg errorMsg="" />
+                <Field
+                  as={TextField}
+                  id="IntakeForm-FundingNumber"
+                  maxLength={6}
+                  name="fundingSource.fundingNumber"
+                />
+              </FieldGroup>
             </div>
           )}
           <Field
