@@ -265,7 +265,6 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
                 <GovernanceTeamOptions
                   values={values}
                   setFieldValue={setFieldValue}
-                  errors={flatErrors.governanceTeams}
                 />
               </FieldGroup>
             </div>
