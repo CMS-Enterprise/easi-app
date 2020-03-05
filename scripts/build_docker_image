@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# build `easi` in docker and release to ECS
+# build `easi` in docker and push to ECR
 #
 
 # log in to ECR
