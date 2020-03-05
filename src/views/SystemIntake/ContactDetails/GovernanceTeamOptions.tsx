@@ -11,32 +11,27 @@ import { SystemIntakeForm } from 'types/systemIntake';
 type GovernanceTeamOptionsProps = {
   values: SystemIntakeForm;
   setFieldValue: (field: string, value: any) => void;
-  errors: any;
 };
 const GovernanceTeamOptions = ({
   values,
-  setFieldValue,
-  errors
+  setFieldValue
 }: GovernanceTeamOptionsProps) => {
-  console.log(errors);
   return (
     <FieldArray name="governanceTeams.teams">
       {arrayHelpers => (
         <>
-          {cmsGovernanceTeams.map(team => {
+          {cmsGovernanceTeams.map((team, index) => {
             const kebabValue = team.value.split(' ').join('-');
             return (
               <Fragment key={kebabValue}>
                 <CheckboxField
-                  checked={
-                    values.governanceTeams.teams
-                      .map(t => t.name)
-                      .indexOf(team.value) > -1
-                  }
+                  checked={values.governanceTeams.teams
+                    .map(t => t.name)
+                    .includes(team.value)}
                   disabled={values.governanceTeams.isPresent === false}
                   id={`governanceTeam-${kebabValue}`}
                   label={team.name}
-                  name={team.name}
+                  name={`governanceTeams.teams.${index}`}
                   onBlur={() => {}}
                   onChange={e => {
                     if (e.target.checked) {
@@ -50,16 +45,16 @@ const GovernanceTeamOptions = ({
                         setFieldValue('governanceTeams.isPresent', true);
                       }
                     } else {
-                      const index = values.governanceTeams.teams
+                      const removeIndex = values.governanceTeams.teams
                         .map(t => t.name)
                         .indexOf(e.target.value);
 
-                      arrayHelpers.remove(index);
+                      arrayHelpers.remove(removeIndex);
                     }
                   }}
                   value={team.value}
                 />
-                {values.governanceTeams.teams.map((t, index) => {
+                {values.governanceTeams.teams.map((t, idx) => {
                   if (team.value === t.name) {
                     const id = t.name.split(' ').join('-');
                     return (
@@ -72,7 +67,7 @@ const GovernanceTeamOptions = ({
                             Collaborator Name
                           </Label>
                           <ErrorMessage
-                            name={`governanceTeams.teams[${index}].collaborator`}
+                            name={`governanceTeams.teams.${idx}.collaborator`}
                           >
                             {message => (
                               <FieldErrorMsg>{message}</FieldErrorMsg>
@@ -82,7 +77,7 @@ const GovernanceTeamOptions = ({
                             as={TextField}
                             id={`IntakeForm-${id}-Collaborator`}
                             maxLength={50}
-                            name={`governanceTeams.teams[${index}].collaborator`}
+                            name={`governanceTeams.teams.${idx}.collaborator`}
                           />
                         </FieldGroup>
                       </div>

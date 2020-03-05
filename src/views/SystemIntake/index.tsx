@@ -70,11 +70,8 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     hasContract: ''
   };
 
-  const renderPage = (
-    pageNum: number,
-    formikProps: FormikProps<SystemIntakeForm>
-  ) => {
-    const Component = pages[pageNum - 1].view;
+  const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
+    const Component = pages[page - 1].view;
 
     if (Component) {
       return <Component formikProps={formikProps} />;
@@ -109,11 +106,12 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<SystemIntakeForm>) => {
-            const flatErrors: any = flattenErrors(formikProps.errors);
+            const { values, errors, validateForm } = formikProps;
+            const flatErrors: any = flattenErrors(errors);
             return (
               <>
-                <pre>{JSON.stringify(formikProps.errors, null, 2)}</pre>
-                {Object.keys(formikProps.errors).length > 0 && (
+                <pre>{JSON.stringify(errors, null, 2)}</pre>
+                {Object.keys(errors).length > 0 && (
                   <ErrorAlert heading="Please check and fix the following">
                     {Object.keys(flatErrors).map((key: string) => {
                       return (
@@ -128,25 +126,26 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                     })}
                   </ErrorAlert>
                 )}
-                <Form>{renderPage(page, formikProps)}</Form>
+                <Form>
+                  {renderPage(formikProps)}
+                  {/* validateForm needs to be called from inside of Form component and it cannot be type="button"; it must be type="submit" */}
+                  <button
+                    type="submit"
+                    onClick={() => {
+                      validateForm();
+                    }}
+                  >
+                    Validate
+                  </button>
+                </Form>
                 <BackNextButtons
                   pageNum={page}
                   totalPages={pages.length}
                   setPage={setPage}
                   onSubmit={() => {
-                    console.log('Submitted: ', formikProps.values);
+                    console.log('Submitted: ', values);
                   }}
                 />
-                <button
-                  onClick={() => {
-                    formikProps.validateForm().then(() => {
-                      console.log('Form validated');
-                    });
-                  }}
-                  type="button"
-                >
-                  Validate
-                </button>
               </>
             );
           }}
