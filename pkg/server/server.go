@@ -2,12 +2,12 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/okta"
 )
@@ -15,6 +15,7 @@ import (
 type server struct {
 	router *mux.Router
 	Config *viper.Viper
+	logger *zap.Logger
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -23,6 +24,12 @@ func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // Serve sets up the dependencies for a server and serves all the handlers
 func Serve(config *viper.Viper) {
+	// Set up logger first so we can use it
+	zapLogger, err := zap.NewProduction()
+	if err != nil {
+		log.Fatal("Failed to initial logger.")
+	}
+
 	// Set the router
 	r := mux.NewRouter()
 
@@ -41,14 +48,22 @@ func Serve(config *viper.Viper) {
 		)
 	}
 
+	// set up server dependencies
 	clientAddress := config.GetString("CLIENT_ADDRESS")
 
 	s := &server{
 		router: r,
 		Config: config,
+		logger: zapLogger,
 	}
 
-	fmt.Print("Serving application on localhost:8080")
+	// set up routes
 	s.routes(authMiddleware, newCORSMiddleware(clientAddress))
-	log.Fatal(http.ListenAndServe(":8080", s))
+
+	// start the server
+	zapLogger.Info("Serving application on localhost:8080")
+	err = http.ListenAndServe(":8080", s)
+	if err != nil {
+		zapLogger.Fatal("Failed to start server")
+	}
 }

@@ -20,6 +20,7 @@ func (s *IntegrationTestSuite) TestSystemsRoute() {
 	handlers.SystemsListHandler{
 		FetchSystems: services.NewFetchFakeSystems(),
 		Marshal:      json.Marshal,
+		Logger:       s.logger,
 	}.Handle()(rr, req)
 
 	s.Equal(http.StatusOK, rr.Code)
