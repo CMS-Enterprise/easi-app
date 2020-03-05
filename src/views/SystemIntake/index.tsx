@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
-
 import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
-import BackNextButtons from 'components/shared/BackNextButtons';
+import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
-import ErrorAlert from 'components/shared/ErrorAlert';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
@@ -24,6 +23,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const pages = [
     {
       type: 'FORM',
+      validation: SystemIntakeValidationSchema[1],
       view: ContactDetails
     },
     {
@@ -100,7 +100,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
           onSubmit={(data: SystemIntakeForm) => {
             console.log('Submitted Data: ', data);
           }}
-          validationSchema={SystemIntakeValidationSchema[page]}
+          validationSchema={pages[page - 1].validation}
           validateOnBlur={false}
           validateOnChange={false}
           validateOnMount={false}
@@ -110,18 +110,14 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
             const flatErrors: any = flattenErrors(errors);
             return (
               <>
-                <pre>{JSON.stringify(errors, null, 2)}</pre>
                 {Object.keys(errors).length > 0 && (
                   <ErrorAlert heading="Please check and fix the following">
-                    {Object.keys(flatErrors).map((key: string) => {
+                    {Object.keys(flatErrors).map(key => {
                       return (
-                        <button
-                          className="usa-alert__text"
-                          type="button"
+                        <ErrorAlertMessage
                           key={`Error.${key}`}
-                        >
-                          {flatErrors[key]}
-                        </button>
+                          message={flatErrors[key]}
+                        />
                       );
                     })}
                   </ErrorAlert>
@@ -129,23 +125,46 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                 <Form>
                   {renderPage(formikProps)}
                   {/* validateForm needs to be called from inside of Form component and it cannot be type="button"; it must be type="submit" */}
-                  <button
-                    type="submit"
-                    onClick={() => {
-                      validateForm();
-                    }}
-                  >
-                    Validate
-                  </button>
+                  {page > 1 && (
+                    <Button
+                      type="button"
+                      outline
+                      onClick={() => setPage(prev => prev - 1)}
+                    >
+                      Back
+                    </Button>
+                  )}
+
+                  {page < pages.length && (
+                    <Button
+                      type="submit"
+                      onClick={e => {
+                        e.preventDefault();
+                        console.log('hello');
+                        if (pages[page - 1].validation) {
+                          validateForm();
+                          console.log(errors);
+                        }
+                        if (Object.keys(errors).length > 0) {
+                          setPage(prev => prev + 1);
+                        }
+                      }}
+                    >
+                      Next
+                    </Button>
+                  )}
+
+                  {page === pages.length && (
+                    <Button
+                      type="submit"
+                      onClick={() => {
+                        console.log('Submitting Data: ', values);
+                      }}
+                    >
+                      Review and Send
+                    </Button>
+                  )}
                 </Form>
-                <BackNextButtons
-                  pageNum={page}
-                  totalPages={pages.length}
-                  setPage={setPage}
-                  onSubmit={() => {
-                    console.log('Submitted: ', values);
-                  }}
-                />
               </>
             );
           }}
