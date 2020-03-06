@@ -6,14 +6,15 @@
 # log in to ECR
 if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")" ; then
   # build & tag the docker image, then push to ECR
-  sha="${CIRCLE_SHA1:-"$(git rev-parse HEAD)"}"
+  APPLICATION_VERSION="${CIRCLE_SHA1:-"$(git rev-parse HEAD)"}"
+  APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
+  APPLICATION_TS="$(date '+%s')"
   target="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend"
-
   builddir="$(git rev-parse --show-toplevel)"
 
-  if (set -x ; docker build --no-cache --tag "easi" --build-arg APPLICATION_VERSION="$(date +%F)_${sha}" "$builddir") ; then
+  if (set -x ; docker build --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "easi" "$builddir") ; then
     ( set -x -u
-      docker tag "easi:latest" "${target}:${sha}" && docker push "${target}:${sha}" || exit
+      docker tag "easi:latest" "${target}:${APPLICATION_VERSION}" && docker push "${target}:${APPLICATION_VERSION}" || exit
       docker tag "easi:latest" "${target}:latest" && docker push "${target}:latest" || exit
     )
   else
