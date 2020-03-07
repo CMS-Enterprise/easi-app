@@ -18,4 +18,7 @@ func (s HandlerTestSuite) TestHealthcheckHandler() {
 
 	s.NoError(err)
 	s.Equal(statusPass, healthCheckActual.Status)
+	s.Equal("", healthCheckActual.Datetime)
+	s.Equal("", healthCheckActual.Version)
+	s.Equal("", healthCheckActual.Timestamp)
 }
