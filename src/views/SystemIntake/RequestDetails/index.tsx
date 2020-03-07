@@ -225,8 +225,8 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <Field
             as={DropdownItem}
             key="HasContract-StatementOfWork"
+            value="No, but I have a Statement of Work/Objectives"
             name="No, but I have a Statement of Work/Objectives"
-            value="StatementOfWork"
           />
         </Field>
       </div>
