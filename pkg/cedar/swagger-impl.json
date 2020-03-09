@@ -223,17 +223,40 @@
       }
     },
     "System" : {
-      "type" : "object",
-      "required" : [ "id", "system_acronym", "system_name" ],
+      "required" : [
+        "id",
+        "system_name"
+      ],
       "properties" : {
-        "system_acronym" : {
+        "id" : {
           "type" : "string"
         },
         "system_name" : {
           "type" : "string"
         },
-        "id" : {
+        "system_acronym" : {
           "type" : "string"
+        },
+        "system_state":{
+          "type":"string"
+        },
+        "system_type":{
+          "type":"string"
+        },
+        "system_classification":{
+          "type":"string"
+        },
+        "is_business_application":{
+          "type":"boolean"
+        },
+        "is_cms_owned":{
+          "type":"boolean"
+        },
+        "is_parent_system":{
+          "type":"boolean"
+        },
+        "parent_system_name":{
+          "type":"string"
         }
       }
     }
