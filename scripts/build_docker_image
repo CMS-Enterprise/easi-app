@@ -16,6 +16,11 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
       docker tag "easi:latest" "${target}:${sha}" && docker push "${target}:${sha}" || exit
       docker tag "easi:latest" "${target}:latest" && docker push "${target}:latest" || exit
     )
+    if [[ "$CIRCLE_BRANCH" = "master" ]]; then
+      (set -x -u ; docker tag "easi:latest" "${target}:impl" || exit)
+    else
+      (set -x -u ; docker tag "easi:latest" "${target}:dev" && docker push "${target}:dev" || exit)
+    fi
   else
     exit
   fi
