@@ -1,21 +1,39 @@
-.action-banner-button {
-  float: right;
-  display: flex-item;
-  align-self: center;
-}
-
-.action-banner-icon {
-  display: flex-item;
-  margin-right: 13px;
-}
-
-.action-banner-text {
-  display: flex-item;
-  flex-grow: 2;
-}
-
 .action-banner {
-  background-color: #f4e3db;
   display: flex;
   justify-content: flex-end;
+  align-items: flex-start;
+
+  &.usa-alert {
+      background-color: #f4e3db;
+
+    &::before {
+      width: 0;
+    }
+  }
+
+  &__icon {
+    display: flex-item;
+      margin-right: 13px;
+  }
+
+  &__button {
+    float: right;
+      display: flex-item;
+      align-self: center;
+  }
+
+  &__text {
+    display: flex-item;
+      flex-grow: 2;
+
+      h2 {
+        margin-block-start: 0;
+        margin-block-end: 0;
+      }
+
+      p {
+        margin-block-start: 2px;
+        margin-block-end: 0;
+      }
+  }
 }
