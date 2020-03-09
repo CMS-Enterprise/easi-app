@@ -128,5 +128,9 @@ workflows:
           requires:
             - build_tag_push
       - deploy_impl:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - deploy_dev
