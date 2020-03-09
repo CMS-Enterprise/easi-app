@@ -37,7 +37,12 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
       </p>
       <div className="grid-col-6 margin-bottom-7">
         <h2 className="font-heading-xl">Contact Details</h2>
-        <FieldGroup error={!!flatErrors['requestor.name']}>
+
+        {/* Requestor Name */}
+        <FieldGroup
+          scrollElement="requestor.name"
+          error={!!flatErrors['requestor.name']}
+        >
           <Label htmlFor="IntakeForm-Requestor">Requestor</Label>
           <FieldErrorMsg>{flatErrors['requestor.name']}</FieldErrorMsg>
           <Field
@@ -54,7 +59,12 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             }}
           />
         </FieldGroup>
-        <FieldGroup error={!!flatErrors['requestor.component']}>
+
+        {/* Requestor Component */}
+        <FieldGroup
+          scrollElement="requestor.component"
+          error={!!flatErrors['requestor.component']}
+        >
           <Label htmlFor="IntakeForm-RequestorComponent">
             Requestor Component
           </Label>
@@ -83,7 +93,11 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </Field>
         </FieldGroup>
 
-        <FieldGroup error={!!flatErrors['businessOwner.name']}>
+        {/* Business Owner Name */}
+        <FieldGroup
+          scrollElement="businessOwner.name"
+          error={!!flatErrors['businessOwner.name']}
+        >
           <Label className="margin-bottom-1" htmlFor="IntakeForm-BusinessOwner">
             CMS Business/Product Owner&apos;s Name
           </Label>
@@ -117,7 +131,11 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           />
         </FieldGroup>
 
-        <FieldGroup error={!!flatErrors['businessOwner.component']}>
+        {/* Business Owner Component */}
+        <FieldGroup
+          scrollElement="businessOwner.component"
+          error={!!flatErrors['businessOwner.component']}
+        >
           <Label htmlFor="IntakeForm-BusinessOwnerComponent">
             Business Owner Component
           </Label>
@@ -141,7 +159,11 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </Field>
         </FieldGroup>
 
-        <FieldGroup error={!!flatErrors['productManager.name']}>
+        {/* Product Manager Name */}
+        <FieldGroup
+          scrollElement="productManager.name"
+          error={!!flatErrors['productManager.name']}
+        >
           <Label htmlFor="IntakeForm-ProductManager">
             CMS Project/Product Manager, or lead
           </Label>
@@ -155,7 +177,11 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           />
         </FieldGroup>
 
-        <FieldGroup error={!!flatErrors['productManager.component']}>
+        {/* Product Manager Component */}
+        <FieldGroup
+          scrollElement="productManager.component"
+          error={!!flatErrors['productManager.component']}
+        >
           <Label htmlFor="IntakeForm-ProductManagerComponent">
             Product Manager Component
           </Label>
@@ -181,7 +207,11 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </Field>
         </FieldGroup>
 
-        <FieldGroup error={!!flatErrors['isso.isPresent']}>
+        {/* ISSO */}
+        <FieldGroup
+          scrollElement="isso.isPresent"
+          error={!!flatErrors['isso.isPresent']}
+        >
           <fieldset className="usa-fieldset margin-top-3">
             <legend className="usa-label margin-bottom-1">
               Does your project have an ISSO?
@@ -205,7 +235,10 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             />
             {values.isso.isPresent && (
               <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
-                <FieldGroup error={!!flatErrors['isso.name']}>
+                <FieldGroup
+                  scrollElement="isso.name"
+                  error={!!flatErrors['isso.name']}
+                >
                   <Label htmlFor="IntakeForm-IssoName">ISSO Name</Label>
                   <FieldErrorMsg>{flatErrors['isso.name']}</FieldErrorMsg>
                   <Field
@@ -233,7 +266,11 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </fieldset>
         </FieldGroup>
 
-        <FieldGroup error={flatErrors['governanceTeams.isPresent']}>
+        {/* Governance Teams */}
+        <FieldGroup
+          scrollElement="governanceTeams.isPresent"
+          error={flatErrors['governanceTeams.isPresent']}
+        >
           <fieldset className="usa-fieldset margin-top-3">
             <legend className="usa-label margin-bottom-1">
               My project team is currently collaborating/consulting with:
@@ -258,7 +295,10 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
               value
             />
             <div className="margin-left-3">
-              <FieldGroup error={!!flatErrors['governanceTeams.teams']}>
+              <FieldGroup
+                scrollElement="governanceTeams.teams"
+                error={!!flatErrors['governanceTeams.teams']}
+              >
                 <FieldErrorMsg>
                   {flatErrors['governanceTeams.teams']}
                 </FieldErrorMsg>

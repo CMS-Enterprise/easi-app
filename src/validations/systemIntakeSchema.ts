@@ -3,7 +3,7 @@ import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 
 const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
 const SystemIntakeValidationSchema: any = {
-  1: Yup.object().shape({
+  contactDetails: Yup.object().shape({
     requestor: Yup.object().shape({
       name: Yup.string().required("Enter the Requestor's name"),
       component: Yup.string().required("Enter the Requestor's component")
@@ -50,7 +50,7 @@ const SystemIntakeValidationSchema: any = {
       })
     })
   }),
-  2: {}
+  requestDetails: {}
 };
 
 export default SystemIntakeValidationSchema;

@@ -23,11 +23,12 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const pages = [
     {
       type: 'FORM',
-      validation: SystemIntakeValidationSchema[1],
+      validation: SystemIntakeValidationSchema.contactDetails,
       view: ContactDetails
     },
     {
       type: 'FORM',
+      validation: SystemIntakeValidationSchema.requestDetails,
       view: RequestDetails
     },
     {
@@ -36,6 +37,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     }
   ];
   const [page, setPage] = useState(1);
+  const pageObj = pages[page - 1];
   const initialData: SystemIntakeForm = {
     projectName: '',
     acronym: '',
@@ -71,7 +73,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   };
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
-    const Component = pages[page - 1].view;
+    const Component = pageObj.view;
 
     if (Component) {
       return <Component formikProps={formikProps} />;
@@ -83,7 +85,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     <div className="system-intake">
       <Header activeNavListItem={match.params.profileId} name="INTAKE">
         <HeaderWrapper className="grid-container margin-bottom-3">
-          {pages[page - 1].type === 'FORM' && (
+          {pageObj.type === 'FORM' && (
             <button
               type="button"
               className="easi-header__save-button usa-button"
@@ -97,10 +99,10 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
       <div className="grid-container">
         <Formik
           initialValues={initialData}
-          onSubmit={(data: SystemIntakeForm) => {
-            console.log('Submitted Data: ', data);
-          }}
-          validationSchema={pages[page - 1].validation}
+          // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
+          // Form will be manually submitted.
+          onSubmit={() => {}}
+          validationSchema={pageObj.validation}
           validateOnBlur={false}
           validateOnChange={false}
           validateOnMount={false}
@@ -117,6 +119,15 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                         <ErrorAlertMessage
                           key={`Error.${key}`}
                           message={flatErrors[key]}
+                          onClick={() => {
+                            const field = document.querySelector(
+                              `[data-scroll="${key}"]`
+                            );
+
+                            if (field) {
+                              field.scrollIntoView();
+                            }
+                          }}
                         />
                       );
                     })}
@@ -135,18 +146,20 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                     </Button>
                   )}
 
+                  {/* Button type must be submit in order for errors to populate ErrorMessage
+                   * Potential bug filed with Formik.
+                   * Button also must be inside of <Form />
+                   */}
                   {page < pages.length && (
                     <Button
                       type="submit"
-                      onClick={e => {
-                        e.preventDefault();
-                        console.log('hello');
-                        if (pages[page - 1].validation) {
-                          validateForm();
-                          console.log(errors);
-                        }
-                        if (Object.keys(errors).length > 0) {
-                          setPage(prev => prev + 1);
+                      onClick={() => {
+                        if (pageObj.validation) {
+                          validateForm().then(err => {
+                            if (Object.keys(err).length === 0) {
+                              setPage(prev => prev + 1);
+                            }
+                          });
                         }
                       }}
                     >
@@ -169,7 +182,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
             );
           }}
         </Formik>
-        {pages[page - 1].type === 'FORM' && (
+        {pageObj.type === 'FORM' && (
           <PageNumber
             currentPage={page}
             totalPages={pages.filter(p => p.type === 'FORM').length}
