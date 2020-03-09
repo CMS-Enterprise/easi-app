@@ -1,0 +1,21 @@
+.action-banner-button {
+  float: right;
+  display: flex-item;
+  align-self: center;
+}
+
+.action-banner-icon {
+  display: flex-item;
+  margin-right: 13px;
+}
+
+.action-banner-text {
+  display: flex-item;
+  flex-grow: 2;
+}
+
+.action-banner {
+  background-color: #f4e3db;
+  display: flex;
+  justify-content: flex-end;
+}
