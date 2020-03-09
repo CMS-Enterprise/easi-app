@@ -62,7 +62,10 @@ const GovernanceTeamOptions = ({
                         key={`${id}-Collaborator`}
                         className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
                       >
-                        <FieldGroup error={false}>
+                        <FieldGroup
+                          scrollElement={`governanceTeams.teams.${idx}.collaborator`}
+                          error={false}
+                        >
                           <Label htmlFor={`IntakeForm-${id}-Collaborator`}>
                             Collaborator Name
                           </Label>

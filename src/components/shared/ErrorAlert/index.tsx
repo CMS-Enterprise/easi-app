@@ -16,11 +16,16 @@ export const ErrorAlert = ({ heading, children }: ErrorAlertProps) => (
 
 type ErrorAlertMessageProps = {
   message: string;
+  onClick?: () => void;
 };
-export const ErrorAlertMessage = ({ message }: ErrorAlertMessageProps) => (
+export const ErrorAlertMessage = ({
+  message,
+  onClick
+}: ErrorAlertMessageProps) => (
   <button
     type="button"
     className="usa-error-message usa-alert__text easi-error-alert__message"
+    onClick={onClick}
   >
     {message}
   </button>
