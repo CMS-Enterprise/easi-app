@@ -97,6 +97,7 @@ const Review = ({ formikProps }: ReviewProps) => {
             {values.governanceTeams.isPresent ? (
               values.governanceTeams.teams.map(team => (
                 <DescriptionDefinition
+                  key={`GovernanceTeam-${team.name.split(' ').join('-')}`}
                   definition={`${team.name}, ${team.collaborator}`}
                 />
               ))
