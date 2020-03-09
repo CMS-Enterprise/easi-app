@@ -28,6 +28,7 @@ func (s *server) routes(
 	systemHandler := handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
 		Marshal:      marshalFunc,
+		Logger:       s.logger,
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
