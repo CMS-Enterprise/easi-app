@@ -3,14 +3,17 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+
 	"net/http"
-	"os"
+
+	"github.com/spf13/viper"
 
 	"go.uber.org/zap"
 )
 
 // HealthCheckHandler returns the API status
 type HealthCheckHandler struct {
+	Config *viper.Viper
 	Logger *zap.Logger
 }
 
@@ -32,9 +35,9 @@ func (h HealthCheckHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		statusReport := healthCheck{
 			Status:    statusPass,
-			Version:   os.Getenv("APPLICATION_VERSION"),
-			Datetime:  os.Getenv("APPLICATION_DATETIME"),
-			Timestamp: os.Getenv("APPLICATION_TS"),
+			Version:   h.Config.GetString("APPLICATION_VERSION"),
+			Datetime:  h.Config.GetString("APPLICATION_DATETIME"),
+			Timestamp: h.Config.GetString("APPLICATION_TS"),
 		}
 		js, err := json.Marshal(statusReport)
 		if err != nil {
