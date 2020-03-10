@@ -60,5 +60,5 @@ func (s ContextTestSuite) TestTrace() {
 	traceID, ok := Trace(ctx)
 
 	s.True(ok)
-	s.NotEqual(expectedID, traceID)
+	s.Equal(expectedID, traceID)
 }
