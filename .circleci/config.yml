@@ -127,6 +127,10 @@ workflows:
       - deploy_dev:
           requires:
             - build_tag_push
-      # - deploy_impl:
-      #     requires:
-      #       - deploy_dev
+      - deploy_impl:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - deploy_dev
