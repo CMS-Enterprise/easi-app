@@ -12,14 +12,19 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   target="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend"
   builddir="$(git rev-parse --show-toplevel)"
 
-  if (set -x ; docker build --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "easi" "$builddir") ; then
-    ( set -x -u
-      docker tag "easi:latest" "${target}:${APPLICATION_VERSION}" && docker push "${target}:${APPLICATION_VERSION}" || exit
-      docker tag "easi:latest" "${target}:latest" && docker push "${target}:latest" || exit
-    )
-  else
-    exit
-  fi
+  ( set -x -u
+    if docker build --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "easi" "$builddir" ; then
+        docker tag "easi:latest" "${target}:${APPLICATION_VERSION}" && docker push "${target}:${APPLICATION_VERSION}" || exit
+        docker tag "easi:latest" "${target}:latest" && docker push "${target}:latest" || exit
+        docker tag "easi:latest" "${target}:dev" && docker push "${target}:dev" || exit
+
+        if [[ "$CIRCLE_BRANCH" = "master" ]]; then
+          docker tag "easi:latest" "${target}:impl" && docker push "${target}:impl" || exit
+        fi
+    else
+      exit
+    fi
+  )
 else
   status=$?
   echo "FATAL: ECR login failed" 1>&2
