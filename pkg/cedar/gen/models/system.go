@@ -21,13 +21,33 @@ type System struct {
 	// Required: true
 	ID *string `json:"id"`
 
+	// is business application
+	IsBusinessApplication bool `json:"is_business_application,omitempty"`
+
+	// is cms owned
+	IsCmsOwned bool `json:"is_cms_owned,omitempty"`
+
+	// is parent system
+	IsParentSystem bool `json:"is_parent_system,omitempty"`
+
+	// parent system name
+	ParentSystemName string `json:"parent_system_name,omitempty"`
+
 	// system acronym
-	// Required: true
-	SystemAcronym *string `json:"system_acronym"`
+	SystemAcronym string `json:"system_acronym,omitempty"`
+
+	// system classification
+	SystemClassification string `json:"system_classification,omitempty"`
 
 	// system name
 	// Required: true
 	SystemName *string `json:"system_name"`
+
+	// system state
+	SystemState string `json:"system_state,omitempty"`
+
+	// system type
+	SystemType string `json:"system_type,omitempty"`
 }
 
 // Validate validates this system
@@ -35,10 +55,6 @@ func (m *System) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateID(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSystemAcronym(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -55,15 +71,6 @@ func (m *System) Validate(formats strfmt.Registry) error {
 func (m *System) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Required("id", "body", m.ID); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *System) validateSystemAcronym(formats strfmt.Registry) error {
-
-	if err := validate.Required("system_acronym", "body", m.SystemAcronym); err != nil {
 		return err
 	}
 
