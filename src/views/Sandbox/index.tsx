@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from 'components/Header';
 import UpcomingActions from 'components/shared/UpcomingActions';
+import ActionBanner from '../../components/shared/ActionBanner';
 
 // This view can be deleted whenever we're ready
 // This is just a sandbox page for us to test things out
@@ -11,7 +12,13 @@ const Sandbox = () => {
       <Header />
       <div className="grid-container">
         <h1>Sandbox</h1>
-        <UpcomingActions />
+        <UpcomingActions timestamp="FAKE TIME">
+          <ActionBanner
+            title="thing"
+            helpfulText="lots of helpful text"
+            buttonLabel="I am a button"
+          />
+        </UpcomingActions>
       </div>
     </div>
   );
