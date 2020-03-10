@@ -1,18 +1,31 @@
 import React from 'react';
+import classnames from 'classnames';
 import './index.scss';
 
 type ErrorAlertProps = {
   heading: string;
   children: React.ReactNode | React.ReactNodeArray;
+  classNames?: string;
 };
-export const ErrorAlert = ({ heading, children }: ErrorAlertProps) => (
-  <div className="usa-alert usa-alert--error" role="alert">
-    <div className="usa-alert__body">
-      <h3 className="usa-alert__heading">{heading}</h3>
-      {children}
+export const ErrorAlert = ({
+  heading,
+  children,
+  classNames
+}: ErrorAlertProps) => {
+  const errorAlertClasses = classnames(
+    'usa-alert',
+    'usa-alert--error',
+    classNames
+  );
+  return (
+    <div className={errorAlertClasses} role="alert">
+      <div className="usa-alert__body">
+        <h3 className="usa-alert__heading">{heading}</h3>
+        {children}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 type ErrorAlertMessageProps = {
   message: string;

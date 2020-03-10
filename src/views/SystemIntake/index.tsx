@@ -109,7 +109,10 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
             return (
               <>
                 {Object.keys(errors).length > 0 && (
-                  <ErrorAlert heading="Please check and fix the following">
+                  <ErrorAlert
+                    classNames="margin-top-3"
+                    heading="Please check and fix the following"
+                  >
                     {Object.keys(flatErrors).map(key => {
                       return (
                         <ErrorAlertMessage
