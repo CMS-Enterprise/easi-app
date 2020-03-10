@@ -86,11 +86,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
       <Header activeNavListItem={match.params.profileId} name="INTAKE">
         <HeaderWrapper className="grid-container margin-bottom-3">
           {pageObj.type === 'FORM' && (
-            <button
-              type="button"
-              className="easi-header__save-button usa-button"
-              id="save-button"
-            >
+            <button type="button" className="easi-button__save usa-button">
               <span>Save & Exit</span>
             </button>
           )}
