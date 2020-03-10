@@ -41,7 +41,7 @@ func (c TranslatedClient) FetchSystems() (models.SystemShorts, error) {
 		systems[index] = models.SystemShort{
 			ID:      *system.ID,
 			Name:    *system.SystemName,
-			Acronym: *system.SystemAcronym,
+			Acronym: system.SystemAcronym,
 		}
 	}
 	return systems, nil
