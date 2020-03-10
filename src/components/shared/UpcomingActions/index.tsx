@@ -9,8 +9,16 @@ const UpcomingActions = () => {
         <h1>Upcoming Actions</h1>
         <p>as of timestamp</p>
       </span>
-      <ActionBanner />
-      <ActionBanner />
+      <ActionBanner
+        title="TACO"
+        helpfulText="Completing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
+        buttonLabel="Finish CMS Intake"
+      />
+      <ActionBanner
+        title="BURRITO"
+        helpfulText="Completing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
+        buttonLabel="Finish CMS Intake"
+      />
     </div>
   );
 };

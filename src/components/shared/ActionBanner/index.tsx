@@ -1,21 +1,29 @@
 import React from 'react';
 import './index.scss';
 
-type ActionBannerProps = {};
+type ActionBannerProps = {
+  title: string;
+  helpfulText: string;
+  buttonLabel: string;
+};
 
-const ActionBanner = () => {
+const ActionBanner = ({
+  title,
+  helpfulText,
+  buttonLabel
+}: ActionBannerProps) => {
   return (
     <div className="action-banner usa-alert">
       <div className="action-banner__icon">
         <i className="fa fa-clock-o fa-3x" />
       </div>
       <span className="action-banner__text">
-        <h2>Header</h2>
-        <p>Here is some text</p>
+        <h2>{title}</h2>
+        <p>{helpfulText}</p>
       </span>
       <div className="action-banner__button">
         <button type="button" className="usa-button">
-          Button name
+          {buttonLabel}
         </button>
       </div>
     </div>
