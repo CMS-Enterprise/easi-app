@@ -23,7 +23,7 @@ func (s *server) routes(
 	// add a request based logger
 	s.router.Use(loggerMiddleware)
 
-  // health check goes directly on the main router to avoid auth
+	// health check goes directly on the main router to avoid auth
 	healthCheckHandler := handlers.HealthCheckHandler{
 		Config: s.Config,
 	}
