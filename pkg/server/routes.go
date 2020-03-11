@@ -15,8 +15,11 @@ func (s *server) routes(
 	// set to standard library marshaller
 	marshalFunc := json.Marshal
 
+	healthCheckHandler := handlers.HealthCheckHandler{
+		Config: s.Config,
+	}
 	// health check goes directly on the main router to avoid auth
-	s.router.HandleFunc("/api/v1/healthcheck", handlers.HealthCheckHandler{}.Handle())
+	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up CEDAR client
 	cedarClient := cedar.NewTranslatedClient(s.Config.GetString("CEDAR_API_KEY"))

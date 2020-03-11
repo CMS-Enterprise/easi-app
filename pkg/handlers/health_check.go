@@ -3,13 +3,17 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
+
 	"net/http"
+
+	"github.com/spf13/viper"
 
 	"go.uber.org/zap"
 )
 
 // HealthCheckHandler returns the API status
 type HealthCheckHandler struct {
+	Config *viper.Viper
 	Logger *zap.Logger
 }
 
@@ -20,13 +24,22 @@ const (
 )
 
 type healthCheck struct {
-	Status status `json:"status"`
+	Status    status `json:"status"`
+	Datetime  string `json:"datetime"`
+	Version   string `json:"version"`
+	Timestamp string `json:"timestamp"`
 }
 
 // Handle handles a web request and returns a healthcheck JSON payload
 func (h HealthCheckHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		js, err := json.Marshal(healthCheck{Status: statusPass})
+		statusReport := healthCheck{
+			Status:    statusPass,
+			Version:   h.Config.GetString("APPLICATION_VERSION"),
+			Datetime:  h.Config.GetString("APPLICATION_DATETIME"),
+			Timestamp: h.Config.GetString("APPLICATION_TS"),
+		}
+		js, err := json.Marshal(statusReport)
 		if err != nil {
 			h.Logger.Error(fmt.Sprintf("Failed to marshal health check: %v", err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
