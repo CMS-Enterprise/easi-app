@@ -8,7 +8,7 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   # build & tag the docker image, then push to ECR
   APPLICATION_VERSION="${CIRCLE_SHA1:-"$(git rev-parse HEAD)"}"
   APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
-  APPLICATION_TS="$(date '+%s')"
+  APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
   target="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend"
   builddir="$(git rev-parse --show-toplevel)"
 
