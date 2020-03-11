@@ -1,13 +1,15 @@
 package okta
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
+	"go.uber.org/zap"
 )
 
-func isAuthenticated(authHeader string, verifier jwtverifier.JwtVerifier) bool {
+func isAuthenticated(logger *zap.Logger, authHeader string, verifier jwtverifier.JwtVerifier) bool {
 	tokenParts := strings.Split(authHeader, "Bearer ")
 	if len(tokenParts) < 2 {
 		return false
@@ -20,6 +22,7 @@ func isAuthenticated(authHeader string, verifier jwtverifier.JwtVerifier) bool {
 	_, err := verifier.VerifyAccessToken(bearerToken)
 
 	if err != nil {
+		logger.Info(fmt.Sprintf("Unable to authorize request with okta: %v", err))
 		return false
 	}
 	return true
@@ -38,13 +41,13 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	return jwtVerifierSetup.New()
 }
 
-func authorizeMiddleware(next http.Handler, verifier *jwtverifier.JwtVerifier) http.Handler {
+func authorizeMiddleware(logger *zap.Logger, next http.Handler, verifier *jwtverifier.JwtVerifier) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "OPTIONS" {
 			return
 		}
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" || !isAuthenticated(authHeader, *verifier) {
+		if authHeader == "" || !isAuthenticated(logger, authHeader, *verifier) {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 			return
 		}
@@ -53,9 +56,9 @@ func authorizeMiddleware(next http.Handler, verifier *jwtverifier.JwtVerifier) h
 }
 
 // NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthorizeMiddleware(clientID string, issuer string) func(http.Handler) http.Handler {
+func NewOktaAuthorizeMiddleware(logger *zap.Logger, clientID string, issuer string) func(http.Handler) http.Handler {
 	verifier := newJwtVerifier(clientID, issuer)
 	return func(next http.Handler) http.Handler {
-		return authorizeMiddleware(next, verifier)
+		return authorizeMiddleware(logger, next, verifier)
 	}
 }
