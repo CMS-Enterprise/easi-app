@@ -54,7 +54,12 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, verifier *jwtver
 			return
 		}
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" || !isAuthenticated(localLogger, authHeader, *verifier) {
+		if authHeader == "" {
+			localLogger.Info("Unauthorized request with empty Authorization header")
+			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			return
+		}
+		if !isAuthenticated(localLogger, authHeader, *verifier) {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 			return
 		}
