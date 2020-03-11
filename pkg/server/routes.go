@@ -23,8 +23,11 @@ func (s *server) routes(
 	// add a request based logger
 	s.router.Use(loggerMiddleware)
 
-	// health check goes directly on the main router to avoid auth
-	s.router.HandleFunc("/api/v1/healthcheck", handlers.HealthCheckHandler{}.Handle())
+  // health check goes directly on the main router to avoid auth
+	healthCheckHandler := handlers.HealthCheckHandler{
+		Config: s.Config,
+	}
+	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up CEDAR client
 	cedarClient := cedar.NewTranslatedClient(s.Config.GetString("CEDAR_API_KEY"))
