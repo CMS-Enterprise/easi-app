@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import axios from 'axios';
 import 'uswds';
 import App from './views/App';
 import store from './store';
@@ -12,6 +13,22 @@ if (process.env.NODE_ENV === 'development') {
     axe.default(React, ReactDOM, 1000);
   });
 }
+
+axios.interceptors.request.use(
+  config => {
+    const newConfig = config;
+    if (window.localStorage['okta-token-storage']) {
+      const json = JSON.parse(window.localStorage['okta-token-storage']);
+      if (json.accessToken) {
+        newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
+      }
+    }
+    return newConfig;
+  },
+  error => {
+    Promise.reject(error);
+  }
+);
 
 ReactDOM.render(
   <Provider store={store}>

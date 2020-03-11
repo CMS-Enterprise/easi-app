@@ -69,7 +69,7 @@ export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
 
   useEffect(() => {
     const fetchSystemShorts = async (): Promise<void> => {
-      dispatch(getAllSystemShorts(await auth.getAccessToken()));
+      dispatch(getAllSystemShorts());
     };
     fetchSystemShorts();
   }, [auth, dispatch]);
