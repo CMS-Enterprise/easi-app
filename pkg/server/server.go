@@ -43,6 +43,7 @@ func Serve(config *viper.Viper) {
 		}
 	} else {
 		authMiddleware = okta.NewOktaAuthorizeMiddleware(
+			zapLogger,
 			config.GetString("OKTA_CLIENT_ID"),
 			config.GetString("OKTA_ISSUER"),
 		)
