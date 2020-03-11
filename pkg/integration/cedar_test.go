@@ -30,7 +30,6 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 
 	handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
-		Marshal:      json.Marshal,
 		Logger:       s.logger,
 	}.Handle()(rr, req)
 

@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
@@ -11,12 +12,10 @@ import (
 )
 
 type fetchSystems func() (models.SystemShorts, error)
-type marshal func(interface{}) ([]byte, error)
 
 // SystemsListHandler is the handler for listing systems
 type SystemsListHandler struct {
 	FetchSystems fetchSystems
-	Marshal      marshal
 	Logger       *zap.Logger
 }
 
@@ -36,7 +35,7 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 			return
 		}
 
-		js, err := h.Marshal(systems)
+		js, err := json.Marshal(systems)
 		if err != nil {
 			logger.Error(fmt.Sprintf("Failed to marshal system: %v", err))
 			http.Error(w, "failed to fetch systems", http.StatusInternalServerError)
