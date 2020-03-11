@@ -1,0 +1,3 @@
+export const GET_SYSTEM_INTAKE: string = 'GET_SYSTEM_INTAKE';
+export const SAVE_SYSTEM_INTAKE: string = 'SAVE_SYSTEM_INTAKE';
+export const DELETE_SYSTEM_INTAKE: string = 'DELETE_SYSTEM_INTAKE';

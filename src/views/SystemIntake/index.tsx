@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
 
@@ -6,6 +7,7 @@ import Header from 'components/Header';
 import HeaderWrapper from 'components/Header/HeaderWrapper';
 import BackNextButtons from 'components/shared/BackNextButtons';
 import PageNumber from 'components/PageNumber';
+import { saveSystemIntake } from 'actions/systemIntakeActions';
 import { SystemIntakeForm } from 'types/systemIntake';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
@@ -33,6 +35,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     }
   ];
   const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
   const initialData: SystemIntakeForm = {
     projectName: '',
     acronym: '',
@@ -88,6 +91,9 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
               type="button"
               className="easi-header__save-button usa-button"
               id="save-button"
+              onClick={() => {
+                dispatch(saveSystemIntake(initialData));
+              }}
             >
               <span>Save & Exit</span>
             </button>
