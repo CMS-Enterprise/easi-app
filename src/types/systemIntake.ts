@@ -40,3 +40,8 @@ export type SystemIntakeForm = {
   needsEaSupport: boolean | null;
   hasContract: string;
 };
+
+export type SaveSystemIntakeAction = {
+  type: string;
+  formData: SystemIntakeForm;
+};
