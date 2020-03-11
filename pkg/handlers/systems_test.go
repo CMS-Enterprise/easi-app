@@ -2,16 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/http/httptest"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
-
-func failMarshal(interface{}) ([]byte, error) {
-	return nil, errors.New("failed to marshal")
-}
 
 func (s HandlerTestSuite) TestSystemsHandler() {
 
@@ -21,7 +16,6 @@ func (s HandlerTestSuite) TestSystemsHandler() {
 		s.NoError(err)
 		SystemsListHandler{
 			FetchSystems: makeFakeSystemShorts,
-			Marshal:      json.Marshal,
 			Logger:       s.logger,
 		}.Handle()(rr, req)
 
@@ -33,20 +27,6 @@ func (s HandlerTestSuite) TestSystemsHandler() {
 		s.NoError(err)
 		s.Len(systems, 3)
 		s.Equal("CHSE", systems[0].Acronym)
-	})
-
-	s.Run("marshalling fails, returns 500", func() {
-		rr := httptest.NewRecorder()
-		req, err := http.NewRequest("GET", "/systems/", nil)
-		s.NoError(err)
-		SystemsListHandler{
-			FetchSystems: makeFakeSystemShorts,
-			Marshal:      failMarshal,
-			Logger:       s.logger,
-		}.Handle()(rr, req)
-
-		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("failed to fetch systems\n", rr.Body.String())
 	})
 }
 

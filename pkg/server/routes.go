@@ -1,7 +1,6 @@
 package server
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/cmsgov/easi-app/pkg/cedar"
@@ -13,9 +12,6 @@ func (s *server) routes(
 	corsMiddleware func(handler http.Handler) http.Handler,
 	traceMiddleware func(handler http.Handler) http.Handler,
 	loggerMiddleware func(handler http.Handler) http.Handler) {
-
-	// set to standard library marshaller
-	marshalFunc := json.Marshal
 
 	// trace all requests with an ID
 	s.router.Use(traceMiddleware)
@@ -35,7 +31,6 @@ func (s *server) routes(
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
-		Marshal:      marshalFunc,
 		Logger:       s.logger,
 	}
 	api.Handle("/systems", systemHandler.Handle())
