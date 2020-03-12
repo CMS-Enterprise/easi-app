@@ -242,6 +242,8 @@ docker run --read-only --tmpfs /tmp --publish 8080:8080 --rm easi:latest /easi/e
 
 ## Testing
 
+### Server tests
+
 Once your developer environment is setup,
 you can run tests with the `easi test` command.
 
@@ -249,3 +251,8 @@ If you run into into various `(typecheck)` errors when
 running `easi test` follow the directions for [installing
 golangci-lint](https://github.com/golangci/golangci-lint#install)
 to upgrade golangci-lint.
+
+### Cypress tests (End-to-end integration tests)
+
+Run `npx cypress run` to run the tests in the CLI. To have a slightly more interactive
+experience, you can instead run `npx cypress open`.
