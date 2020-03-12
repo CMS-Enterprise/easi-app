@@ -14,7 +14,7 @@ const flattedErrors = (
   }
   errorKeys.forEach(key => {
     if (typeof errors[key] === 'string') {
-      const newErrorKey = `${flatKey}.${key}`;
+      const newErrorKey = flatKey ? `${flatKey}.${key}` : key;
       // eslint-disable-next-line no-param-reassign
       flattenedErrors[newErrorKey] = errors[key];
     }

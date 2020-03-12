@@ -104,7 +104,13 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<SystemIntakeForm>) => {
-            const { values, errors, validateForm } = formikProps;
+            const {
+              values,
+              errors,
+              validateForm,
+              setErrors,
+              isSubmitting
+            } = formikProps;
             const flatErrors: any = flattenErrors(errors);
             return (
               <>
@@ -139,24 +145,25 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                     <Button
                       type="button"
                       outline
-                      onClick={() => setPage(prev => prev - 1)}
+                      onClick={() => {
+                        setPage(prev => prev - 1);
+                        setErrors({});
+                        window.scrollTo(0, 0);
+                      }}
                     >
                       Back
                     </Button>
                   )}
 
-                  {/* Button type must be submit in order for errors to populate ErrorMessage
-                   * Potential bug filed with Formik.
-                   * Button also must be inside of <Form />
-                   */}
                   {page < pages.length && (
                     <Button
-                      type="submit"
+                      type="button"
                       onClick={() => {
                         if (pageObj.validation) {
-                          validateForm().then(err => {
+                          validateForm().then(async err => {
                             if (Object.keys(err).length === 0) {
                               setPage(prev => prev + 1);
+                              window.scrollTo(0, 0);
                             }
                           });
                         }
@@ -166,7 +173,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                     </Button>
                   )}
 
-                  {page === pages.length && (
+                  {page === pages.length && !isSubmitting && (
                     <Button
                       type="submit"
                       onClick={() => {
