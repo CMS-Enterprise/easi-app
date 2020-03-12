@@ -20,9 +20,6 @@ func (s *server) routes(
 	// trace all requests with an ID
 	s.router.Use(traceMiddleware)
 
-	// add a request based logger
-	s.router.Use(loggerMiddleware)
-
 	// health check goes directly on the main router to avoid auth
 	healthCheckHandler := handlers.HealthCheckHandler{
 		Config: s.Config,
@@ -37,6 +34,9 @@ func (s *server) routes(
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
+
+	// add a request based logger
+	api.Use(loggerMiddleware)
 
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
