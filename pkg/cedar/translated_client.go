@@ -37,7 +37,7 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 // FetchSystems fetches a system list from CEDAR
 func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts, error) {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", "https://webmethods-apigw.cedardev.cms.gov/systems", nil)
+	req, _ := http.NewRequest("GET", "https://webmethods-apigw.cedardev.cms.gov/gateway/EASi%20Core%20API/1.0/systems", nil)
 	req.Header.Set("x-Gateway-APIKey", c.apiKey)
 	fakeResp, err := client.Do(req)
 	if err != nil {
