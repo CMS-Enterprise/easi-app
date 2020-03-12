@@ -12,6 +12,7 @@ type GovernanceTeamOptionsProps = {
   values: SystemIntakeForm;
   setFieldValue: (field: string, value: any) => void;
 };
+
 const GovernanceTeamOptions = ({
   values,
   setFieldValue
@@ -20,7 +21,7 @@ const GovernanceTeamOptions = ({
     <FieldArray name="governanceTeams.teams">
       {arrayHelpers => (
         <>
-          {cmsGovernanceTeams.map((team, index) => {
+          {cmsGovernanceTeams.map((team: any, index: number) => {
             const kebabValue = team.value.split(' ').join('-');
             return (
               <Fragment key={kebabValue}>
