@@ -2,6 +2,7 @@ package cedar
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/go-openapi/runtime"
@@ -43,7 +44,12 @@ func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts,
 	if err != nil {
 		logger.Error(fmt.Sprintf("Unable to query CEDAR API with error: %v", err))
 	}
-	logger.Info(fmt.Sprintf("Successful queried CEDAR API with response: %v", fakeResp.Body))
+	defer fakeResp.Body.Close()
+	body, err := ioutil.ReadAll(fakeResp.Body)
+	if err != nil {
+		logger.Error(fmt.Sprintf("Failed to get response body: %v", err))
+	}
+	logger.Info(fmt.Sprintf("Successful queried CEDAR API with response: %v", string(body)))
 
 	resp, err := c.client.Operations.SystemsGET1(nil, c.apiAuthHeader)
 	if err != nil {
