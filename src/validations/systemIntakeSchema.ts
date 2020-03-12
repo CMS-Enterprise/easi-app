@@ -50,7 +50,7 @@ const SystemIntakeValidationSchema: any = {
       })
     })
   }),
-  requestDetails: {}
+  requestDetails: Yup.object().shape({})
 };
 
 export default SystemIntakeValidationSchema;
