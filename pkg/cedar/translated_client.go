@@ -43,7 +43,7 @@ func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts,
 	if err != nil {
 		logger.Error(fmt.Sprintf("Unable to query CEDAR API with error: %v", err))
 	}
-	logger.Info(fmt.Sprintf("Successful queried CEDAR API with response status: %v", fakeResp.Status))
+	logger.Info(fmt.Sprintf("Successful queried CEDAR API with response: %v", fakeResp.Body))
 
 	resp, err := c.client.Operations.SystemsGET1(nil, c.apiAuthHeader)
 	if err != nil {
