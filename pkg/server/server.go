@@ -37,7 +37,7 @@ func Serve(config *viper.Viper) {
 	// They may live in /cmd, but should fail quick on startup
 	var authMiddleware func(http.Handler) http.Handler
 	// set an empty auth handle for local development
-	if config.GetString("ENVIRONMENT") == "local" {
+	if config.GetString("ENVIRONMENT") == "other" {
 		authMiddleware = func(next http.Handler) http.Handler {
 			return next
 		}

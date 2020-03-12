@@ -50,9 +50,6 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, verifier *jwtver
 			logger.Error("failed to get logger from context")
 			localLogger = logger
 		}
-		if r.Method == "OPTIONS" {
-			return
-		}
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
 			localLogger.Info("Unauthorized request with empty Authorization header")
