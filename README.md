@@ -194,6 +194,46 @@ brew install docker-completion
 Now you will need to start the Docker service: run Spotlight and type in
 'docker'.
 
+### Setup: PostgreSQL
+
+To run postgres in Docker, first you will need the image:
+
+```sh
+docker pull postgres:11.6
+```
+
+Now, you can run postgres locally in a container:
+
+```console
+$ docker run --detach --publish 5432:5432 postgres:11.6
+8a6196a9ae85286e3598bc49a1a59954a3762b633059829389af333964041215
+```
+
+To test the database from your shell, `pgcli` is recommended:
+
+```sh
+brew install pgcli
+```
+
+Thanks to variables set in the `.envrc`, connecting is simple:
+
+```console
+$ pgcli
+Server: PostgreSQL 11.6 (Debian 11.6-1.pgdg90+1)
+Version: 2.2.0
+Chat: https://gitter.im/dbcli/pgcli
+Home: http://pgcli.com
+postgres@localhost:postgres> SHOW server_version;
++-------------------------------+
+| server_version                |
+|-------------------------------|
+| 11.6 (Debian 11.6-1.pgdg90+1) |
++-------------------------------+
+SHOW
+Time: 0.016s
+postgres@localhost:postgres>
+```
+
 ## Build
 
 ### Swagger Generation
@@ -239,6 +279,16 @@ To build the application and run in Docker:
 docker build --no-cache --tag easi:latest .
 docker run --read-only --tmpfs /tmp --publish 8080:8080 --rm easi:latest /easi/easi serve
 ```
+
+### Migrating the Database
+
+We are using Flyway to handle our database migrations. You can install it with
+`brew install flyway`. Once your Postgres database is running (see above), you can
+run the migrations with `flyway migrate`.
+
+To add a new migration, add a new file to the `migrations` directory
+following the standard
+`V_${last_migration_version + 1}_your_migration_name_here.sql`
 
 ## Testing
 
