@@ -29,6 +29,12 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 			logger = h.Logger
 		}
 
+		resp, err := http.Get("https://webmethods-apigw.cedardev.cms.gov/")
+		if err != nil {
+			logger.Error(fmt.Sprintf("Unable to query CEDAR API with error: %v", err))
+		}
+		logger.Info(fmt.Sprintf("Successful queried CEDAR API with response: %v", resp))
+
 		systems, err := h.FetchSystems(logger)
 		if err != nil {
 			logger.Error(fmt.Sprintf("Failed to fetch system: %v", err))
