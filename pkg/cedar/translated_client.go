@@ -25,6 +25,7 @@ type TranslatedClient struct {
 func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, nil)
+	transport.Debug = true
 
 	// create the API client, with the transport
 	client := apiclient.New(transport, strfmt.Default)
