@@ -19,7 +19,9 @@ describe('The Action Banner component', () => {
     );
     expect(component.find('.upcoming-actions__header').length).toEqual(1);
     expect(component.find('h1').text()).toEqual('Upcoming Actions');
-    expect(component.find('p').text()).toEqual('as of 12/31/19 at 02:45am');
+    expect(component.find('.timestamp').text()).toEqual(
+      'as of 12/31/19 at 02:45am'
+    );
   });
 
   it('renders children', () => {

@@ -8,7 +8,8 @@ describe('The Action Banner component', () => {
       <ActionBanner
         title="TEST"
         helpfulText="Testing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
-        buttonLabel="Finish CMS TEST"
+        actionLabel="Finish CMS TEST"
+        onClick={() => {}}
       />
     );
   });
@@ -18,10 +19,26 @@ describe('The Action Banner component', () => {
       <ActionBanner
         title="TEST"
         helpfulText="Testing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
-        buttonLabel="Finish CMS TEST"
+        actionLabel="Finish CMS TEST"
+        onClick={() => {}}
       />
     );
     expect(component.find('button').length).toEqual(1);
     expect(component.find('button').text()).toEqual('Finish CMS TEST');
+    expect(component.find('.action-banner__action-label').length).toEqual(0);
+  });
+
+  it('renders action text instead of a button if there is no action', () => {
+    const component = mount(
+      <ActionBanner
+        title="TEST"
+        helpfulText="Testing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
+        actionLabel="Finish CMS TEST"
+      />
+    );
+    expect(component.find('button').length).toEqual(0);
+    expect(component.find('.action-banner__action-label').text()).toEqual(
+      'Finish CMS TEST'
+    );
   });
 });
