@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -11,6 +12,7 @@ import (
 	"go.uber.org/zap"
 
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/gen/client"
+	"github.com/cmsgov/easi-app/pkg/cedar/gen/client/operations"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -52,7 +54,8 @@ func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts,
 	}
 	logger.Info(fmt.Sprintf("Successful queried CEDAR API with response: %v", string(body)))
 
-	resp, err := c.client.Operations.SystemsGET1(nil, c.apiAuthHeader)
+	params := &operations.SystemsGET1Params{}
+	resp, err := c.client.Operations.SystemsGET1(params.WithTimeout(time.Second*30), c.apiAuthHeader)
 	if err != nil {
 		logger.Error(fmt.Sprintf("Failed to fetch system from CEDAR with error: %v", err))
 		return models.SystemShorts{}, err
