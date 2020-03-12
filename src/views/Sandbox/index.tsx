@@ -17,6 +17,7 @@ const Sandbox = () => {
             title="thing"
             helpfulText="lots of helpful text"
             buttonLabel="I am a button"
+            onClick={() => {}}
           />
         </UpcomingActions>
       </div>

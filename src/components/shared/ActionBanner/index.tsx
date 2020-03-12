@@ -5,12 +5,14 @@ type ActionBannerProps = {
   title: string;
   helpfulText: string;
   buttonLabel: string;
+  onClick: () => void;
 };
 
 const ActionBanner = ({
   title,
   helpfulText,
-  buttonLabel
+  buttonLabel,
+  onClick
 }: ActionBannerProps) => {
   return (
     <div className="action-banner usa-alert">
@@ -22,7 +24,7 @@ const ActionBanner = ({
         <p>{helpfulText}</p>
       </span>
       <div className="action-banner__button">
-        <button type="button" className="usa-button">
+        <button type="button" onClick={onClick} className="usa-button">
           {buttonLabel}
         </button>
       </div>
