@@ -2,6 +2,7 @@ package cedar
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -16,6 +17,7 @@ import (
 type TranslatedClient struct {
 	client        *apiclient.EASiCore
 	apiAuthHeader runtime.ClientAuthInfoWriter
+	apiKey        string
 }
 
 // NewTranslatedClient returns an API client for CEDAR using EASi language
@@ -29,11 +31,20 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	// Set auth header
 	apiKeyHeaderAuth := httptransport.APIKeyAuth("x-Gateway-APIKey", "header", cedarAPIKey)
 
-	return TranslatedClient{client, apiKeyHeaderAuth}
+	return TranslatedClient{client, apiKeyHeaderAuth, cedarAPIKey}
 }
 
 // FetchSystems fetches a system list from CEDAR
 func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts, error) {
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", "https://webmethods-apigw.cedardev.cms.gov/systems", nil)
+	req.Header.Set("x-Gateway-APIKey", c.apiKey)
+	fakeResp, err := client.Do(req)
+	if err != nil {
+		logger.Error(fmt.Sprintf("Unable to query CEDAR API with error: %v", err))
+	}
+	logger.Info(fmt.Sprintf("Successful queried CEDAR API with response status: %v", fakeResp.Status))
+
 	resp, err := c.client.Operations.SystemsGET1(nil, c.apiAuthHeader)
 	if err != nil {
 		logger.Error(fmt.Sprintf("Failed to fetch system from CEDAR with error: %v", err))
