@@ -11,7 +11,7 @@ const UpcomingActions = ({ children, timestamp }: UpcomingActionsProps) => {
     <div className="upcoming-actions">
       <span className="upcoming-actions__header">
         <h1>Upcoming Actions</h1>
-        <span>as of {timestamp}</span>
+        <span className="timestamp">as of {timestamp}</span>
       </span>
       {children}
     </div>
