@@ -77,3 +77,6 @@ nullable
 MuleSoft
 validators
 webMethods
+PostgreSQL
+postgres
+autogenerate
