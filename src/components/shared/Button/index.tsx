@@ -46,7 +46,7 @@ export const Button = (props: ButtonProps): React.ReactElement => {
       type={type}
       className={classes}
       disabled={disabled}
-      onClick={onClick}
+      onClick={disabled ? () => {} : onClick}
     >
       {children}
     </button>
