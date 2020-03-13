@@ -7,6 +7,8 @@ import (
 
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
 	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/context"
 )
 
 func isAuthenticated(logger *zap.Logger, authHeader string, verifier jwtverifier.JwtVerifier) bool {
@@ -43,11 +45,21 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 
 func authorizeMiddleware(logger *zap.Logger, next http.Handler, verifier *jwtverifier.JwtVerifier) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		localLogger, ok := context.Logger(r.Context())
+		if !ok {
+			logger.Error("failed to get logger from context")
+			localLogger = logger
+		}
 		if r.Method == "OPTIONS" {
 			return
 		}
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" || !isAuthenticated(logger, authHeader, *verifier) {
+		if authHeader == "" {
+			localLogger.Info("Unauthorized request with empty Authorization header")
+			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			return
+		}
+		if !isAuthenticated(localLogger, authHeader, *verifier) {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 			return
 		}
