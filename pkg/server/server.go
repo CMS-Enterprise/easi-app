@@ -43,6 +43,7 @@ func Serve(config *viper.Viper) {
 		}
 	} else {
 		authMiddleware = okta.NewOktaAuthorizeMiddleware(
+			zapLogger,
 			config.GetString("OKTA_CLIENT_ID"),
 			config.GetString("OKTA_ISSUER"),
 		)
@@ -58,7 +59,11 @@ func Serve(config *viper.Viper) {
 	}
 
 	// set up routes
-	s.routes(authMiddleware, newCORSMiddleware(clientAddress))
+	s.routes(
+		authMiddleware,
+		newCORSMiddleware(clientAddress),
+		NewTraceMiddleware(zapLogger),
+		NewLoggerMiddleware(zapLogger))
 
 	// start the server
 	zapLogger.Info("Serving application on localhost:8080")
