@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import ActionBanner from './index';
+import ActionBanner from './index.tsx';
 
 describe('The Action Banner component', () => {
   it('renders without crashing', () => {
@@ -8,7 +8,7 @@ describe('The Action Banner component', () => {
       <ActionBanner
         title="TEST"
         helpfulText="Testing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
-        actionLabel="Finish CMS TEST"
+        label="Finish CMS TEST"
         onClick={() => {}}
       />
     );
@@ -19,7 +19,7 @@ describe('The Action Banner component', () => {
       <ActionBanner
         title="TEST"
         helpfulText="Testing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
-        actionLabel="Finish CMS TEST"
+        label="Finish CMS TEST"
         onClick={() => {}}
       />
     );
@@ -33,7 +33,7 @@ describe('The Action Banner component', () => {
       <ActionBanner
         title="TEST"
         helpfulText="Testing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
-        actionLabel="Finish CMS TEST"
+        label="Finish CMS TEST"
       />
     );
     expect(component.find('button').length).toEqual(0);

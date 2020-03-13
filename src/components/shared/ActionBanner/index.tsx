@@ -4,14 +4,14 @@ import './index.scss';
 type ActionBannerProps = {
   title: string;
   helpfulText: string;
-  actionLabel: string;
+  label: string;
   onClick?: () => void;
 };
 
 const ActionBanner = ({
   title,
   helpfulText,
-  actionLabel,
+  label,
   onClick
 }: ActionBannerProps) => {
   return (
@@ -26,10 +26,10 @@ const ActionBanner = ({
       <div className="action-banner__button">
         {onClick ? (
           <button type="button" onClick={onClick} className="usa-button">
-            {actionLabel}
+            {label}
           </button>
         ) : (
-          <span className="action-banner__action-label">{actionLabel}</span>
+          <span className="action-banner__action-label">{label}</span>
         )}
       </div>
     </div>
