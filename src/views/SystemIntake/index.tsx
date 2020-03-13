@@ -160,7 +160,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       type="button"
                       onClick={() => {
                         if (pageObj.validation) {
-                          validateForm().then(async err => {
+                          validateForm().then(err => {
                             if (Object.keys(err).length === 0) {
                               setPage(prev => prev + 1);
                               window.scrollTo(0, 0);
