@@ -65,7 +65,7 @@ jobs:
       - run:
           name: Install migration tool
           command: |
-            wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.0/flyway-commandline-6.3.0-linux-x64.tar.gz | tar x && ln -s ./flyway-6.3.0/flyway .
+            wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.0/flyway-commandline-6.3.0-linux-x64.tar.gz | tar zx && ln -s ./flyway-6.3.0/flyway .
       - run:
           name: Set db environment variables
           command: |
