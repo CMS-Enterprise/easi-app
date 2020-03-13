@@ -6,6 +6,7 @@ import (
 
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/context"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -22,16 +23,22 @@ type SystemsListHandler struct {
 // Handle handles a web request and returns a list of systems
 func (h SystemsListHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		logger, ok := context.Logger(r.Context())
+		if !ok {
+			h.Logger.Error("Failed to logger from context in systems list handler")
+			logger = h.Logger
+		}
+
 		systems, err := h.FetchSystems()
 		if err != nil {
-			h.Logger.Error(fmt.Sprintf("Failed to fetch system: %v", err))
+			logger.Error(fmt.Sprintf("Failed to fetch system: %v", err))
 			http.Error(w, "failed to fetch systems", http.StatusInternalServerError)
 			return
 		}
 
 		js, err := h.Marshal(systems)
 		if err != nil {
-			h.Logger.Error(fmt.Sprintf("Failed to marshal system: %v", err))
+			logger.Error(fmt.Sprintf("Failed to marshal system: %v", err))
 			http.Error(w, "failed to fetch systems", http.StatusInternalServerError)
 			return
 		}
@@ -40,7 +47,7 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 
 		_, err = w.Write(js)
 		if err != nil {
-			h.Logger.Error(fmt.Sprintf("Failed to write systems response: %v", err))
+			logger.Error(fmt.Sprintf("Failed to write systems response: %v", err))
 			http.Error(w, "failed to fetch systems", http.StatusInternalServerError)
 			return
 		}
