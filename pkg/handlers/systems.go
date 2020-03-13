@@ -10,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchSystems func() (models.SystemShorts, error)
+type fetchSystems func(logger *zap.Logger) (models.SystemShorts, error)
 type marshal func(interface{}) ([]byte, error)
 
 // SystemsListHandler is the handler for listing systems
@@ -29,7 +29,7 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 			logger = h.Logger
 		}
 
-		systems, err := h.FetchSystems()
+		systems, err := h.FetchSystems(logger)
 		if err != nil {
 			logger.Error(fmt.Sprintf("Failed to fetch system: %v", err))
 			http.Error(w, "failed to fetch systems", http.StatusInternalServerError)
