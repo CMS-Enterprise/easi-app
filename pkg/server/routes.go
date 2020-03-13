@@ -34,11 +34,11 @@ func (s *server) routes(
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
-	
+
 	// add a request based logger
 	api.Use(loggerMiddleware)
-  
-  // wrap with CORs
+
+	// wrap with CORs
 	api.Use(corsMiddleware)
 
 	// protect all API routes with authorization middleware
