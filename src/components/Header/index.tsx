@@ -77,6 +77,7 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
           {isAuthenticated ? (
             <div className="easi-header__dropdown-wrapper" ref={dropdownNode}>
               <button
+                aria-label="Expand"
                 type="button"
                 className={arrowClassname}
                 onClick={() => {
