@@ -3,7 +3,7 @@ version: 2
 
 references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
-  flyway_artifact: https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.0/flyway-commandline-6.3.0-linux-x64.tar.gz
+  flyway_artifact: &flyway_artifact https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.0/flyway-commandline-6.3.0-linux-x64.tar.gz
 jobs:
   pre_test:
     docker:
