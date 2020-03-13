@@ -4,9 +4,9 @@ import './index.scss';
 
 type TextFieldProps = {
   disabled?: boolean;
+  error?: boolean;
   id: string;
   name: string;
-  label?: string;
   maxLength?: number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
@@ -15,36 +15,31 @@ type TextFieldProps = {
 
 const TextField = ({
   disabled,
+  error,
   id,
   name,
-  label,
   maxLength,
   onChange,
   onBlur,
   value
 }: TextFieldProps) => {
-  const textFieldClassNames = classnames('usa-input', {
-    'easi-textfield--disabled': disabled
-  });
+  const inputClasses = classnames(
+    'usa-input',
+    { 'easi-textfield--disabled': disabled },
+    { 'usa-input--error': error }
+  );
   return (
-    <>
-      {label && (
-        <label className="usa-label" htmlFor={id}>
-          {label}
-        </label>
-      )}
-      <input
-        className={textFieldClassNames}
-        disabled={disabled}
-        id={id}
-        name={name}
-        onChange={onChange}
-        onBlur={onBlur}
-        type="text"
-        value={value}
-        maxLength={maxLength}
-      />
-    </>
+    <input
+      className={inputClasses}
+      disabled={disabled}
+      id={id}
+      name={name}
+      onChange={onChange}
+      onBlur={onBlur}
+      type="text"
+      value={value}
+      maxLength={maxLength}
+    />
   );
 };
 

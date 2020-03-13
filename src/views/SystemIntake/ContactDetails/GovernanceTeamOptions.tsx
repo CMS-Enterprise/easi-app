@@ -1,6 +1,9 @@
 import React, { Fragment } from 'react';
-import { Field, FieldArray } from 'formik';
+import { Field, FieldArray, ErrorMessage } from 'formik';
+import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
+import FieldGroup from 'components/shared/FieldGroup';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import CheckboxField from 'components/shared/CheckboxField';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -17,20 +20,18 @@ const GovernanceTeamOptions = ({
     <FieldArray name="governanceTeams.teams">
       {arrayHelpers => (
         <>
-          {cmsGovernanceTeams.map(team => {
+          {cmsGovernanceTeams.map((team, index) => {
             const kebabValue = team.value.split(' ').join('-');
             return (
               <Fragment key={kebabValue}>
                 <CheckboxField
-                  checked={
-                    values.governanceTeams.teams
-                      .map(t => t.name)
-                      .indexOf(team.value) > -1
-                  }
+                  checked={values.governanceTeams.teams
+                    .map(t => t.name)
+                    .includes(team.value)}
                   disabled={values.governanceTeams.isPresent === false}
                   id={`governanceTeam-${kebabValue}`}
                   label={team.name}
-                  name={team.name}
+                  name={`governanceTeams.teams.${index}`}
                   onBlur={() => {}}
                   onChange={e => {
                     if (e.target.checked) {
@@ -44,16 +45,16 @@ const GovernanceTeamOptions = ({
                         setFieldValue('governanceTeams.isPresent', true);
                       }
                     } else {
-                      const index = values.governanceTeams.teams
+                      const removeIndex = values.governanceTeams.teams
                         .map(t => t.name)
                         .indexOf(e.target.value);
 
-                      arrayHelpers.remove(index);
+                      arrayHelpers.remove(removeIndex);
                     }
                   }}
                   value={team.value}
                 />
-                {values.governanceTeams.teams.map((t, index) => {
+                {values.governanceTeams.teams.map((t, idx) => {
                   if (team.value === t.name) {
                     const id = t.name.split(' ').join('-');
                     return (
@@ -61,13 +62,27 @@ const GovernanceTeamOptions = ({
                         key={`${id}-Collaborator`}
                         className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
                       >
-                        <Field
-                          as={TextField}
-                          id={`IntakeForm-${id}-Collaborator`}
-                          label="Collaborator Name"
-                          maxLength={50}
-                          name={`governanceTeams.teams[${index}].collaborator`}
-                        />
+                        <FieldGroup
+                          scrollElement={`governanceTeams.teams.${idx}.collaborator`}
+                          error={false}
+                        >
+                          <Label htmlFor={`IntakeForm-${id}-Collaborator`}>
+                            Collaborator Name
+                          </Label>
+                          <ErrorMessage
+                            name={`governanceTeams.teams.${idx}.collaborator`}
+                          >
+                            {message => (
+                              <FieldErrorMsg>{message}</FieldErrorMsg>
+                            )}
+                          </ErrorMessage>
+                          <Field
+                            as={TextField}
+                            id={`IntakeForm-${id}-Collaborator`}
+                            maxLength={50}
+                            name={`governanceTeams.teams.${idx}.collaborator`}
+                          />
+                        </FieldGroup>
                       </div>
                     );
                   }
