@@ -16,13 +16,6 @@ describe('The Text Field component', () => {
     shallow(<TextField {...requiredProps} />);
   });
 
-  it('renders a label when provided', () => {
-    const fixture = 'Demo Label';
-    const component = shallow(<TextField {...requiredProps} label={fixture} />);
-
-    expect(component.find('label').text()).toEqual(fixture);
-  });
-
   it('triggers onChange', () => {
     const event = {
       target: {
