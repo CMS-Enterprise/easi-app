@@ -3,7 +3,6 @@ version: 2
 
 references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
-  flyway_artifact: &flyway_artifact https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.0/flyway-commandline-6.3.0-linux-x64.tar.gz
 jobs:
   pre_test:
     docker:
@@ -66,7 +65,7 @@ jobs:
       - run:
           name: Install migration tool
           command: |
-            wget -qO- *flyway_artifact | tar xvz && ln -s ./flyway-6.3.0/flyway /usr/local/bin
+            wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.0/flyway-commandline-6.3.0-linux-x64.tar.gz | tar xvz && ln -s ./flyway-6.3.0/flyway /usr/local/bin
       - run:
           name: Set db environment variables
           command: |
