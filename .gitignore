@@ -7,7 +7,10 @@
 
 # testing
 /coverage
+.nyc_output
 cypress.env.json
+/cypress/videos
+/cypress/screenshots
 
 # production
 /build
@@ -20,6 +23,7 @@ cypress.env.json
 .env.production.local
 .idea
 .envrc.local
+.vscode
 
 # npm/js ignores
 tmp
