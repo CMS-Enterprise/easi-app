@@ -23,17 +23,15 @@ const ActionBanner = ({
         <h2>{title}</h2>
         <p>{helpfulText}</p>
       </span>
-      {onClick ? (
-        <div className="action-banner__button">
+      <div className="action-banner__button">
+        {onClick ? (
           <button type="button" onClick={onClick} className="usa-button">
             {actionLabel}
           </button>
-        </div>
-      ) : (
-        <div className="action-banner__button">
+        ) : (
           <span className="action-banner__action-label">{actionLabel}</span>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
