@@ -2,6 +2,11 @@
 
 ssm_params="$(set -x ; aws ssm get-parameters-by-path --path /"${APP_ENV}"/easi-app/db/)" || exit
 
+if [[ -z "$ssm_params" ]] ; then
+  echo "Failed to retrieve parameters from SSM." 1>&2
+  exit 1
+fi
+
 _ssm() {
   param="$1"
   jq --raw-output ".Parameters[] | select(.Name | contains(\"$param\")) | .Value" <<< "$ssm_params" || exit
