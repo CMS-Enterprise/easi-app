@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+ssm_params="$(set -x ; aws ssm get-parameters-by-path --path /"${APP_ENV}"/easi-app/db/)" || exit
+
+_ssm() {
+  param="$1"
+  jq --raw-output ".Parameters[] | select(.Name | contains(\"$param\")) | .Value" <<< "$ssm_params" || exit
+}
+
+cat << EOF
+echo "export FLYWAY_IGNORE_INVALID_MIGRATION_NAMES=false" >> \$BASH_ENV
+echo "export FLYWAY_DATABASE=$(_ssm dbname)" >> \$BASH_ENV
+echo "export FLYWAY_HOST=$(_ssm endpoint)" >> \$BASH_ENV
+echo "export FLYWAY_PORT=$(_ssm port)" >> \$BASH_ENV
+echo "export FLYWAY_USER=$(_ssm username)" >> \$BASH_ENV
+echo "export FLYWAY_PASSWORD=$(_ssm password)" >> \$BASH_ENV
+EOF

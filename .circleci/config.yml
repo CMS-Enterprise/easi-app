@@ -3,6 +3,7 @@ version: 2
 
 references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+  flyway_artifact: https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.0/flyway-commandline-6.3.0-linux-x64.tar.gz
 jobs:
   pre_test:
     docker:
@@ -61,6 +62,17 @@ jobs:
           REACT_APP_OKTA_REDIRECT_URI: https://dev.easi.cms.gov/implicit/callback
     steps:
       - checkout
+      - run:
+          name: Install migration tool
+          command: |
+            wget -qO- *flyway_artifact | tar xvz && ln -s ./flyway-6.3.0/flyway /usr/local/bin
+            eval "$(./scripts/set_flyway_env)"
+      - run:
+          name: Nuke the database
+          command: flyway clean
+      - run:
+          name: Run migrations
+          command: flyway migrate
       - run:
           name: Restart ECS service
           command: |
