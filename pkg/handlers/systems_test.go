@@ -17,16 +17,18 @@ func (s HandlerTestSuite) TestSystemsHandler() {
 
 	s.Run("golden path passes", func() {
 		rr := httptest.NewRecorder()
+		req, err := http.NewRequest("GET", "/systems/", nil)
+		s.NoError(err)
 		SystemsListHandler{
 			FetchSystems: makeFakeSystemShorts,
 			Marshal:      json.Marshal,
 			Logger:       s.logger,
-		}.Handle()(rr, nil)
+		}.Handle()(rr, req)
 
 		s.Equal(http.StatusOK, rr.Code)
 
 		var systems models.SystemShorts
-		err := json.Unmarshal(rr.Body.Bytes(), &systems)
+		err = json.Unmarshal(rr.Body.Bytes(), &systems)
 
 		s.NoError(err)
 		s.Len(systems, 3)
@@ -35,11 +37,13 @@ func (s HandlerTestSuite) TestSystemsHandler() {
 
 	s.Run("marshalling fails, returns 500", func() {
 		rr := httptest.NewRecorder()
+		req, err := http.NewRequest("GET", "/systems/", nil)
+		s.NoError(err)
 		SystemsListHandler{
 			FetchSystems: makeFakeSystemShorts,
 			Marshal:      failMarshal,
 			Logger:       s.logger,
-		}.Handle()(rr, nil)
+		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
 		s.Equal("failed to fetch systems\n", rr.Body.String())

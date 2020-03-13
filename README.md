@@ -280,6 +280,16 @@ docker build --no-cache --tag easi:latest .
 docker run --read-only --tmpfs /tmp --publish 8080:8080 --rm easi:latest /easi/easi serve
 ```
 
+### Migrating the Database
+
+We are using Flyway to handle our database migrations. You can install it with
+`brew install flyway`. Once your Postgres database is running (see above), you can
+run the migrations with `flyway migrate`.
+
+To add a new migration, add a new file to the `migrations` directory
+following the standard
+`V_${last_migration_version + 1}_your_migration_name_here.sql`
+
 ## Testing
 
 Once your developer environment is setup,
