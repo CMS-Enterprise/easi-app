@@ -20,9 +20,6 @@ func (s *server) routes(
 	// trace all requests with an ID
 	s.router.Use(traceMiddleware)
 
-	// add a request based logger
-	s.router.Use(loggerMiddleware)
-
 	// health check goes directly on the main router to avoid auth
 	healthCheckHandler := handlers.HealthCheckHandler{
 		Config: s.Config,
@@ -30,10 +27,16 @@ func (s *server) routes(
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up CEDAR client
-	cedarClient := cedar.NewTranslatedClient(s.Config.GetString("CEDAR_API_KEY"))
+	cedarClient := cedar.NewTranslatedClient(
+		s.Config.GetString("CEDAR_API_URL"),
+		s.Config.GetString("CEDAR_API_KEY"),
+	)
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
+
+	// add a request based logger
+	api.Use(loggerMiddleware)
 
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
