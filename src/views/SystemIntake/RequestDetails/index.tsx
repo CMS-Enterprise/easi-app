@@ -4,11 +4,13 @@ import { SystemIntakeForm } from 'types/systemIntake';
 import { RadioField } from 'components/shared/RadioField';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import Label from 'components/shared/Label';
-import TextField from '../../../components/shared/TextField';
-import HelpText from '../../../components/shared/HelpText';
-import TextAreaField from '../../../components/shared/TextAreaField';
-import processStages from '../../../constants/enums/processStages';
-import CollapsableLink from '../../../components/shared/CollapsableLink';
+import TextField from 'components/shared/TextField';
+import FieldGroup from 'components/shared/FieldGroup';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import HelpText from 'components/shared/HelpText';
+import TextAreaField from 'components/shared/TextAreaField';
+import processStages from 'constants/enums/processStages';
+import CollapsableLink from 'components/shared/CollapsableLink';
 
 type RequestDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
@@ -30,13 +32,16 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
         need.
       </p>
       <div className="grid-col-8 margin-bottom-7">
-        <Field
-          as={TextField}
-          id="IntakeForm-ProjectName"
-          label="Project Name"
-          maxLength={50}
-          name="projectName"
-        />
+        <FieldGroup error={false}>
+          <Label htmlFor="IntakeForm-ProjectName">Project Name</Label>
+          <FieldErrorMsg />
+          <Field
+            as={TextField}
+            id="IntakeForm-ProjectName"
+            maxLength={50}
+            name="projectName"
+          />
+        </FieldGroup>
 
         <fieldset className="usa-fieldset margin-top-3">
           <legend className="usa-label margin-bottom-1">
@@ -60,13 +65,16 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           />
           {values.fundingSource.isFunded && (
             <div className="width-card margin-top-neg-2 margin-left-3 margin-bottom-1">
-              <Field
-                as={TextField}
-                id="IntakeForm-FundingNumber"
-                label="Funding Number"
-                maxLength={6}
-                name="fundingSource.fundingNumber"
-              />
+              <FieldGroup error={false}>
+                <Label htmlFor="IntakeForm-FundingNumber">Funding Number</Label>
+                <FieldErrorMsg />
+                <Field
+                  as={TextField}
+                  id="IntakeForm-FundingNumber"
+                  maxLength={6}
+                  name="fundingSource.fundingNumber"
+                />
+              </FieldGroup>
             </div>
           )}
           <Field
@@ -134,22 +142,28 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
         <HelpText>{`${2000 -
           values.businessSolution.length} characters left`}</HelpText>
 
-        <Field
-          as={DropdownField}
-          id="IntakeForm-CurrentStage"
-          label="Where are you in the process?"
-          name="currentStage"
-        >
-          <Field as={DropdownItem} name="Select" value="" />
-          {processStages.map(stage => (
-            <Field
-              as={DropdownItem}
-              key={`ProcessStageComponent-${stage.value}`}
-              name={stage.name}
-              value={stage.name}
-            />
-          ))}
-        </Field>
+        <FieldGroup error={false}>
+          <Label htmlFor="IntakeForm-CurrentStage">
+            Where are you in the process?
+          </Label>
+          <FieldErrorMsg />
+          <Field
+            as={DropdownField}
+            error={false}
+            id="IntakeForm-CurrentStage"
+            name="currentStage"
+          >
+            <Field as={DropdownItem} name="Select" value="" />
+            {processStages.map(stage => (
+              <Field
+                as={DropdownItem}
+                key={`ProcessStageComponent-${stage.value}`}
+                name={stage.name}
+                value={stage.name}
+              />
+            ))}
+          </Field>
+        </FieldGroup>
 
         <fieldset className="usa-fieldset margin-top-3">
           <legend className="usa-label margin-bottom-1">
@@ -207,28 +221,39 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           </CollapsableLink>
         </fieldset>
 
-        <Field
-          as={DropdownField}
-          id="IntakeForm-HasContract"
-          label="Do you have a contract in place to support this effort?"
-          helpText="This information helps the Office of Acquisition and Grants Management (OAGM) track work"
-          name="hasContract"
-        >
-          <Field as={DropdownItem} name="Select" value="" />
+        <FieldGroup error={false}>
+          <Label htmlFor="IntakeForm-HasContract">
+            Do you have a contract in place to support this effort?
+          </Label>
+          <FieldErrorMsg />
           <Field
-            as={DropdownItem}
-            key="HasContract-Yes"
-            name="Yes"
-            value="Yes"
-          />
-          <Field as={DropdownItem} key="HasContract-No" name="No" value="No" />
-          <Field
-            as={DropdownItem}
-            key="HasContract-StatementOfWork"
-            value="No, but I have a Statement of Work/Objectives"
-            name="No, but I have a Statement of Work/Objectives"
-          />
-        </Field>
+            as={DropdownField}
+            error={false}
+            id="IntakeForm-HasContract"
+            helpText="This information helps the Office of Acquisition and Grants Management (OAGM) track work"
+            name="hasContract"
+          >
+            <Field as={DropdownItem} name="Select" value="" />
+            <Field
+              as={DropdownItem}
+              key="HasContract-Yes"
+              name="Yes"
+              value="Yes"
+            />
+            <Field
+              as={DropdownItem}
+              key="HasContract-No"
+              name="No"
+              value="No"
+            />
+            <Field
+              as={DropdownItem}
+              key="HasContract-StatementOfWork"
+              name="No, but I have a Statement of Work/Objectives"
+              value="No, but I have a Statement of Work/Objectives"
+            />
+          </Field>
+        </FieldGroup>
       </div>
     </>
   );
