@@ -173,9 +173,10 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                     </Button>
                   )}
 
-                  {page === pages.length && !isSubmitting && (
+                  {page === pages.length && (
                     <Button
                       type="submit"
+                      disabled={isSubmitting}
                       onClick={() => {
                         console.log('Submitting Data: ', values);
                       }}
