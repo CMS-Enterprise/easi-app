@@ -10,13 +10,24 @@ import (
 
 func (s *server) routes(
 	authorizationMiddleware func(handler http.Handler) http.Handler,
-	corsMiddleware func(handler http.Handler) http.Handler) {
+	corsMiddleware func(handler http.Handler) http.Handler,
+	traceMiddleware func(handler http.Handler) http.Handler,
+	loggerMiddleware func(handler http.Handler) http.Handler) {
 
 	// set to standard library marshaller
 	marshalFunc := json.Marshal
 
+	// trace all requests with an ID
+	s.router.Use(traceMiddleware)
+
+	// add a request based logger
+	s.router.Use(loggerMiddleware)
+
 	// health check goes directly on the main router to avoid auth
-	s.router.HandleFunc("/api/v1/healthcheck", handlers.HealthCheckHandler{}.Handle())
+	healthCheckHandler := handlers.HealthCheckHandler{
+		Config: s.Config,
+	}
+	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up CEDAR client
 	cedarClient := cedar.NewTranslatedClient(s.Config.GetString("CEDAR_API_KEY"))
