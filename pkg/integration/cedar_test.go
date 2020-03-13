@@ -26,7 +26,10 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 	s.NoError(err)
 	rr := httptest.NewRecorder()
 
-	cedarClient := cedar.NewTranslatedClient(os.Getenv("CEDAR_API_KEY"))
+	cedarClient := cedar.NewTranslatedClient(
+		os.Getenv("CEDAR_API_URL"),
+		os.Getenv("CEDAR_API_KEY"),
+	)
 
 	handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
