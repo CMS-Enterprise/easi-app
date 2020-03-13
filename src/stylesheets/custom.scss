@@ -1,0 +1,11 @@
+// Custom USWDS Button
+.easi-button {
+  &__save {
+    background-color: #f3966d;
+    color: #171717;
+    &:hover {
+      background-color: #f3966d;
+      color: #171717;
+    }
+  }
+}
