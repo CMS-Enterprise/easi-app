@@ -26,7 +26,7 @@ type TranslatedClient struct {
 // NewTranslatedClient returns an API client for CEDAR using EASi language
 func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
 	// create the transport
-	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, nil)
+	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
 	transport.Debug = true
 
 	// create the API client, with the transport
@@ -54,7 +54,8 @@ func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts,
 	}
 	logger.Info(fmt.Sprintf("Successful queried CEDAR API with response: %v", string(body)))
 
-	params := &operations.SystemsGET1Params{}
+	logger.Info(fmt.Sprintf("Fetching systems from CEDAR with swagger client: %v", err))
+	params := operations.NewSystemsGET1Params()
 	resp, err := c.client.Operations.SystemsGET1(params.WithTimeout(time.Second*30), c.apiAuthHeader)
 	if err != nil {
 		logger.Error(fmt.Sprintf("Failed to fetch system from CEDAR with error: %v", err))
