@@ -5,6 +5,7 @@ import './index.scss';
 type DropdownFieldProps = {
   id: string;
   disabled?: boolean;
+  error?: boolean;
   label?: string;
   name: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -15,35 +16,31 @@ type DropdownFieldProps = {
 export const DropdownField = ({
   id,
   disabled,
-  label,
+  error,
   name,
   onBlur,
   onChange,
   children,
   value
 }: DropdownFieldProps) => {
-  const dropdownClassNames = classnames('usa-select', {
-    'easi-dropdown--disabled': disabled
-  });
+  const dropdownClassNames = classnames(
+    'easi-dropdown',
+    'usa-select',
+    { 'easi-dropdown--error': error },
+    { 'easi-dropdown--disabled': disabled }
+  );
   return (
-    <>
-      {label && (
-        <label className="usa-label" htmlFor={id}>
-          {label}
-        </label>
-      )}
-      <select
-        className={dropdownClassNames}
-        disabled={disabled}
-        name={name}
-        onChange={onChange}
-        onBlur={onBlur}
-        id={id}
-        value={value}
-      >
-        {children}
-      </select>
-    </>
+    <select
+      className={dropdownClassNames}
+      disabled={disabled}
+      name={name}
+      onChange={onChange}
+      onBlur={onBlur}
+      id={id}
+      value={value}
+    >
+      {children}
+    </select>
   );
 };
 
