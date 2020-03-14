@@ -1,9 +1,12 @@
 package cedar
 
 import (
+	"fmt"
+
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"go.uber.org/zap"
 
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/gen/client"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -16,9 +19,9 @@ type TranslatedClient struct {
 }
 
 // NewTranslatedClient returns an API client for CEDAR using EASi language
-func NewTranslatedClient(cedarAPIKey string) TranslatedClient {
+func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
 	// create the transport
-	transport := httptransport.New(apiclient.DefaultHost, apiclient.DefaultBasePath, nil)
+	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
 
 	// create the API client, with the transport
 	client := apiclient.New(transport, strfmt.Default)
@@ -30,9 +33,10 @@ func NewTranslatedClient(cedarAPIKey string) TranslatedClient {
 }
 
 // FetchSystems fetches a system list from CEDAR
-func (c TranslatedClient) FetchSystems() (models.SystemShorts, error) {
+func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts, error) {
 	resp, err := c.client.Operations.SystemsGET1(nil, c.apiAuthHeader)
 	if err != nil {
+		logger.Error(fmt.Sprintf("Failed to fetch system from CEDAR with error: %v", err))
 		return models.SystemShorts{}, err
 	}
 
