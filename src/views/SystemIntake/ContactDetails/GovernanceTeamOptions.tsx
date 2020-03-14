@@ -77,6 +77,10 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                             )}
                           <Field
                             as={TextField}
+                            error={getIn(
+                              errors,
+                              `governanceTeams.teams.${idx}.collaborator`
+                            )}
                             id={`IntakeForm-${key}-Collaborator`}
                             maxLength={50}
                             name={`governanceTeams.teams.${idx}.collaborator`}
