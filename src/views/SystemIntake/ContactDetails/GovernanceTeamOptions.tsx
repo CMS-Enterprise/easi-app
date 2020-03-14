@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Field, FieldArray, ErrorMessage, FormikProps } from 'formik';
+import { Field, FieldArray, FormikProps, getIn } from 'formik';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -13,8 +13,7 @@ type GovernanceTeamOptionsProps = {
 };
 
 const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
-  const { values, setFieldValue } = formikProps;
-
+  const { values, setFieldValue, errors } = formikProps;
   return (
     <FieldArray name="governanceTeams.teams">
       {arrayHelpers => (
@@ -52,31 +51,33 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                   value={team.value}
                 />
                 {values.governanceTeams.teams.map((t, idx) => {
+                  const { key } = team;
                   if (team.value === t.name) {
                     return (
                       <div
-                        key={`${team.key}-Collaborator`}
+                        key={`${key}-Collaborator`}
                         className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
                       >
                         <FieldGroup
                           scrollElement={`governanceTeams.teams.${idx}.collaborator`}
                           error={false}
                         >
-                          <Label
-                            htmlFor={`IntakeForm-${team.key}-Collaborator`}
-                          >
+                          <Label htmlFor={`IntakeForm-${key}-Collaborator`}>
                             Collaborator Name
                           </Label>
-                          <ErrorMessage
-                            name={`governanceTeams.teams.${idx}.collaborator`}
-                          >
-                            {message => (
-                              <FieldErrorMsg>{message}</FieldErrorMsg>
+                          {errors.governanceTeams &&
+                            errors.governanceTeams.teams &&
+                            errors.governanceTeams.teams[idx] && (
+                              <FieldErrorMsg>
+                                {getIn(
+                                  errors,
+                                  `governanceTeams.teams.${idx}.collaborator`
+                                )}
+                              </FieldErrorMsg>
                             )}
-                          </ErrorMessage>
                           <Field
                             as={TextField}
-                            id={`IntakeForm-${team.key}-Collaborator`}
+                            id={`IntakeForm-${key}-Collaborator`}
                             maxLength={50}
                             name={`governanceTeams.teams.${idx}.collaborator`}
                           />
