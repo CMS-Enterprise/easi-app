@@ -302,10 +302,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
                 <FieldErrorMsg>
                   {flatErrors['governanceTeams.teams']}
                 </FieldErrorMsg>
-                <GovernanceTeamOptions
-                  values={values}
-                  setFieldValue={setFieldValue}
-                />
+                <GovernanceTeamOptions formikProps={formikProps} />
               </FieldGroup>
             </div>
             <Field
