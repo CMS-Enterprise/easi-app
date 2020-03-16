@@ -216,7 +216,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             <legend className="usa-label margin-bottom-1">
               Does your project have an ISSO?
             </legend>
-            <HelpText>
+            <HelpText className="margin-bottom-2">
               If yes, please tell use the name of your ISSO so we can get in
               touch with them
             </HelpText>
@@ -275,7 +275,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             <legend className="usa-label margin-bottom-1">
               My project team is currently collaborating/consulting with:
             </legend>
-            <HelpText>
+            <HelpText className="margin-bottom-2">
               Please disclose the name of each person you&apos;ve worked with.
               This helps us locate any additional information on your request
             </HelpText>
