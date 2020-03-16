@@ -50,7 +50,30 @@ const SystemIntakeValidationSchema: any = {
       })
     })
   }),
-  requestDetails: Yup.object().shape({})
+  requestDetails: Yup.object().shape({
+    projectName: Yup.string().required('Enter the Project Name'),
+    fundingSource: Yup.object().shape({
+      isFunded: Yup.boolean()
+        .nullable()
+        .required('Select Yes or No to indicate if you have funding'),
+      fundingNumber: Yup.string().when('isFunded', {
+        is: true,
+        then: Yup.string()
+          .length(6, 'Funding number must be exactly 6 digits')
+          .matches(/^\d+$/, 'Fuding number can only contain digits')
+          .required('Tell us your six digit funding number')
+      })
+    }),
+    businessNeed: Yup.string().required('Tell us about your business need'),
+    businessSolution: Yup.string().required(
+      'Tell us how you think of solving your business need'
+    ),
+    currentStage: Yup.string().required('Tell us where you are in the process'),
+    needsEaSupport: Yup.boolean()
+      .nullable()
+      .required('Tell us if you need Enterprise Architecture support'),
+    hasContract: Yup.string().required('Tell us about your contract situation')
+  })
 };
 
 export default SystemIntakeValidationSchema;

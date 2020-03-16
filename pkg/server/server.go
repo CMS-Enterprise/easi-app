@@ -35,19 +35,11 @@ func Serve(config *viper.Viper) {
 
 	// TODO: We should add some sort of config verifier to make sure these configs exist
 	// They may live in /cmd, but should fail quick on startup
-	var authMiddleware func(http.Handler) http.Handler
-	// set an empty auth handle for local development
-	if config.GetString("ENVIRONMENT") == "local" {
-		authMiddleware = func(next http.Handler) http.Handler {
-			return next
-		}
-	} else {
-		authMiddleware = okta.NewOktaAuthorizeMiddleware(
-			zapLogger,
-			config.GetString("OKTA_CLIENT_ID"),
-			config.GetString("OKTA_ISSUER"),
-		)
-	}
+	authMiddleware := okta.NewOktaAuthorizeMiddleware(
+		zapLogger,
+		config.GetString("OKTA_CLIENT_ID"),
+		config.GetString("OKTA_ISSUER"),
+	)
 
 	// set up server dependencies
 	clientAddress := config.GetString("CLIENT_ADDRESS")

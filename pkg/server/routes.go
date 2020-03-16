@@ -38,6 +38,12 @@ func (s *server) routes(
 	// add a request based logger
 	api.Use(loggerMiddleware)
 
+	// wrap with CORs
+	api.Use(corsMiddleware)
+
+	// protect all API routes with authorization middleware
+	api.Use(authorizationMiddleware)
+
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
@@ -45,10 +51,4 @@ func (s *server) routes(
 		Logger:       s.logger,
 	}
 	api.Handle("/systems", systemHandler.Handle())
-
-	// protect all API routes with authorization middleware
-	api.Use(authorizationMiddleware)
-
-	// wrap with CORs
-	api.Use(corsMiddleware)
 }
