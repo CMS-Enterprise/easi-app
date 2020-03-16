@@ -32,7 +32,7 @@ const Review = ({ formikProps }: ReviewProps) => {
 
   return (
     <div className="margin-bottom-7">
-      <h2 className="font-heading-xl">Check your answers before sending</h2>
+      <h1 className="font-heading-xl">Check your answers before sending</h1>
 
       <DescriptionList title="System Request">
         <div className="grid-row flex-row">

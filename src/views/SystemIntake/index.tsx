@@ -92,7 +92,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
           )}
         </HeaderWrapper>
       </Header>
-      <div className="grid-container">
+      <main className="grid-container" role="main">
         <Formik
           initialValues={initialData}
           // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
@@ -195,7 +195,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
             totalPages={pages.filter(p => p.type === 'FORM').length}
           />
         )}
-      </div>
+      </main>
     </div>
   );
 };

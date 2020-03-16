@@ -23,7 +23,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
 
   return (
     <>
-      <h2 className="font-heading-xl">Request Details</h2>
+      <h1 className="font-heading-xl">Request Details</h1>
       <p className="line-height-body-6">
         Provide a detailed explanation of the business need/issue/problem that
         the requested project will address, including any legislative mandates,
