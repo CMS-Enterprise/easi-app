@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ssm_params="$(set -x ; aws ssm get-parameters-by-path --path /"${APP_ENV}"/easi-app/db/)" || exit
+ssm_params="$(set -x ; aws ssm get-parameters-by-path --with-decryption --path /"${APP_ENV}"/easi-app/db/)" || exit
 
 if [[ -z "$ssm_params" ]] || ! jq <<< "$ssm_params" 1>/dev/null ; then
   echo "Failed to retrieve parameters from SSM." 1>&2
@@ -12,6 +12,7 @@ _ssm() {
   jq --raw-output ".Parameters[] | select(.Name | contains(\"$param\")) | .Value" <<< "$ssm_params" || exit
 }
 
+set +xv  # dont log this stuff ever
 cat << EOF
 echo "export FLYWAY_IGNORE_INVALID_MIGRATION_NAMES=false" >> \$BASH_ENV
 echo "export FLYWAY_DATABASE=$(_ssm dbname)" >> \$BASH_ENV
