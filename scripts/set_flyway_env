@@ -22,5 +22,5 @@ echo "export FLYWAY_IGNORE_INVALID_MIGRATION_NAMES=false" >> \$BASH_ENV
 echo "export FLYWAY_DATABASE=$(_ssm dbname)" >> \$BASH_ENV
 echo "export FLYWAY_USER=$(_ssm username)" >> \$BASH_ENV
 echo "export FLYWAY_PASSWORD=$(_ssm password)" >> \$BASH_ENV
-echo "export FLYWAY_URL=\"jdbc://${dbhost}:${dbport}/${dbname}\"" >> \$BASH_ENV
+echo "export FLYWAY_URL=\"jdbc:postgresql://${dbhost}:${dbport}/${dbname}\"" >> \$BASH_ENV
 EOF
