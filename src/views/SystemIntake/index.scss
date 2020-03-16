@@ -1,5 +1,13 @@
 .system-intake {
+  margin-bottom: 36px;
+
   &__hr {
     opacity: 0.3;
+  }
+
+  &__business-need-help {
+    li + li {
+      margin-top: 5px;
+    }
   }
 }

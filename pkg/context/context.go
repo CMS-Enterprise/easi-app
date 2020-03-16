@@ -12,6 +12,7 @@ type contextKey int
 const (
 	loggerKey contextKey = iota
 	traceKey
+	euaIDKey
 )
 
 // WithLogger returns a context with the given logger
@@ -35,4 +36,15 @@ func WithTrace(ctx context.Context) context.Context {
 func Trace(ctx context.Context) (uuid.UUID, bool) {
 	traceID, ok := ctx.Value(traceKey).(uuid.UUID)
 	return traceID, ok
+}
+
+// WithEuaID returns a context with the request EuaID
+func WithEuaID(ctx context.Context, euaID string) context.Context {
+	return context.WithValue(ctx, euaIDKey, euaID)
+}
+
+// EuaID returns the context's EuaID
+func EuaID(ctx context.Context) (string, bool) {
+	euaID, ok := ctx.Value(euaIDKey).(string)
+	return euaID, ok
 }
