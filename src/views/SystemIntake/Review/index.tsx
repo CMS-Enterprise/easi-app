@@ -52,7 +52,7 @@ const Review = ({ formikProps }: ReviewProps) => {
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contact Details</h2>
 
-      <DescriptionList title="System Request">
+      <DescriptionList title="Contact Details">
         <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
             <DescriptionTerm term="Requestor" />
