@@ -33,7 +33,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
         must meet). Explain the benefits of developing an IT solution for this
         need.
       </p>
-      <div className="grid-col-9 margin-bottom-7">
+      <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
           scrollElement="projectName"
           error={!!flatErrors.projectName}
