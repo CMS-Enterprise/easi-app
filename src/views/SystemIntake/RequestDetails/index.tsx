@@ -33,7 +33,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
         must meet). Explain the benefits of developing an IT solution for this
         need.
       </p>
-      <div className="grid-col-8 margin-bottom-7">
+      <div className="grid-col-9 margin-bottom-7">
         <FieldGroup
           scrollElement="projectName"
           error={!!flatErrors.projectName}
@@ -57,7 +57,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             <legend className="usa-label margin-bottom-1">
               Is this project funded from an existing funding source?
             </legend>
-            <HelpText>
+            <HelpText className="margin-bottom-1">
               If yes, please provide your six digit funding number found [TBA
               this is where you find it]
             </HelpText>
@@ -119,11 +119,11 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <Label htmlFor="IntakeForm-BusinessNeed">
             What is your business need?
           </Label>
-          <HelpText>
-            <span>
-              Include:
+          <HelpText className="margin-top-1">
+            <>
+              <span>Include:</span>
               <br />
-              <ul>
+              <ul className="system-intake__business-need-help padding-left-205">
                 <li>
                   a detailed explanation of the business need/issue/problem that
                   the project will address
@@ -143,17 +143,18 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
                   and the benefits of developing an IT solution for this need
                 </li>
               </ul>
-            </span>
+            </>
           </HelpText>
           <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
           <Field
             as={TextAreaField}
+            className="system-intake__textarea"
             error={!!flatErrors.businessNeed}
             id="IntakeForm-BusinessNeed"
             maxLength={2000}
             name="businessNeed"
           />
-          <HelpText>{`${2000 -
+          <HelpText className="margin-top-1">{`${2000 -
             values.businessNeed.length} characters left`}</HelpText>
         </FieldGroup>
 
@@ -164,16 +165,19 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <Label htmlFor="IntakeForm-BusinessSolution">
             How are you thinking of solving it?
           </Label>
-          <HelpText>Let us know if you have a solution in mind</HelpText>
+          <HelpText className="margin-y-1">
+            Let us know if you have a solution in mind
+          </HelpText>
           <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
           <Field
             as={TextAreaField}
+            className="system-intake__textarea"
             error={!!flatErrors.businessSolution}
             id="IntakeForm-BusinessSolution"
             maxLength={2000}
             name="businessSolution"
           />
-          <HelpText>{`${2000 -
+          <HelpText className="margin-top-1">{`${2000 -
             values.businessSolution.length} characters left`}</HelpText>
         </FieldGroup>
 
@@ -211,7 +215,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             <legend className="usa-label margin-bottom-1">
               Does your project need Enterprise Architecture support?
             </legend>
-            <HelpText>
+            <HelpText className="margin-bottom-1">
               If you are unsure, mark &quot;Yes&quot; and someone from the EA
               team will assess your needs.
             </HelpText>
@@ -241,7 +245,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             />
 
             <CollapsableLink label="How can the Enterprise Architecture team help me?">
-              <p>
+              <div>
                 CMS&apos; Enterprise Architecture (EA) function will help you
                 build your Business Case by addressing the following:
                 <ul>
@@ -259,7 +263,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
                   </li>
                   <li>Model your business processes and document workflows</li>
                 </ul>
-              </p>
+              </div>
             </CollapsableLink>
           </fieldset>
         </FieldGroup>

@@ -3,6 +3,7 @@ import classnames from 'classnames';
 
 type TextAreaFieldProps = {
   id: string;
+  className?: string;
   error?: boolean;
   label?: string;
   name: string;
@@ -14,6 +15,7 @@ type TextAreaFieldProps = {
 
 const TextAreaField = ({
   id,
+  className,
   error,
   label,
   name,
@@ -22,9 +24,13 @@ const TextAreaField = ({
   onBlur,
   value
 }: TextAreaFieldProps) => {
-  const textAreaClasses = classnames('usa-textarea', {
-    'usa-input--error': error
-  });
+  const textAreaClasses = classnames(
+    'usa-textarea',
+    {
+      'usa-input--error': error
+    },
+    className
+  );
   return (
     <>
       {label && (
