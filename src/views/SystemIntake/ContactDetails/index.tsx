@@ -36,7 +36,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         **All fields are required unless marked &apos;Optional&apos;
       </p>
       <div className="tablet:grid-col-6 margin-bottom-7">
-        <h2 className="font-heading-xl">Contact Details</h2>
+        <h1 className="font-heading-xl">Contact Details</h1>
 
         {/* Requestor Name */}
         <FieldGroup
