@@ -1,7 +1,10 @@
 import React from 'react';
+import classnames from 'classnames';
 
 type TextAreaFieldProps = {
   id: string;
+  className?: string;
+  error?: boolean;
   label?: string;
   name: string;
   maxLength?: number;
@@ -12,6 +15,8 @@ type TextAreaFieldProps = {
 
 const TextAreaField = ({
   id,
+  className,
+  error,
   label,
   name,
   maxLength,
@@ -19,6 +24,13 @@ const TextAreaField = ({
   onBlur,
   value
 }: TextAreaFieldProps) => {
+  const textAreaClasses = classnames(
+    'usa-textarea',
+    {
+      'usa-input--error': error
+    },
+    className
+  );
   return (
     <>
       {label && (
@@ -27,7 +39,7 @@ const TextAreaField = ({
         </label>
       )}
       <textarea
-        className="usa-textarea"
+        className={textAreaClasses}
         id={id}
         name={name}
         onChange={onChange}
