@@ -59,6 +59,7 @@ jobs:
           REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
           OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
           REACT_APP_OKTA_REDIRECT_URI: https://dev.easi.cms.gov/implicit/callback
+          REACT_APP_API_ADDRESS: https://dev.easi.cms.gov/api/v1
     steps:
       - checkout
       - run:
@@ -83,6 +84,7 @@ jobs:
           REACT_APP_OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/aus2sjf5g6mzGsnSZ297
           OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/aus2sjf5g6mzGsnSZ297
           REACT_APP_OKTA_REDIRECT_URI: https://impl.easi.cms.gov/implicit/callback
+          REACT_APP_API_ADDRESS: https://impl.easi.cms.gov/api/v1
     steps:
       - checkout
       - run:
