@@ -32,7 +32,7 @@ const Review = ({ formikProps }: ReviewProps) => {
 
   return (
     <div className="margin-bottom-7">
-      <h2 className="font-heading-xl">Check your answers before sending</h2>
+      <h1 className="font-heading-xl">Check your answers before sending</h1>
 
       <DescriptionList title="System Request">
         <div className="grid-row flex-row">
@@ -52,7 +52,7 @@ const Review = ({ formikProps }: ReviewProps) => {
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contact Details</h2>
 
-      <DescriptionList title="System Request">
+      <DescriptionList title="Contact Details">
         <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
             <DescriptionTerm term="Requestor" />
@@ -109,7 +109,7 @@ const Review = ({ formikProps }: ReviewProps) => {
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contact Details</h2>
+      <h2 className="font-heading-xl">Request Details</h2>
 
       <DescriptionList title="Request Details">
         <div className="grid-row flex-row margin-bottom-205">
