@@ -32,7 +32,9 @@ const Review = ({ formikProps }: ReviewProps) => {
 
   return (
     <div className="margin-bottom-7">
-      <h1 className="font-heading-xl">Check your answers before sending</h1>
+      <h1 className="font-heading-xl margin-top-4">
+        Check your answers before sending
+      </h1>
 
       <DescriptionList title="System Request">
         <div className="grid-row flex-row">
@@ -89,7 +91,7 @@ const Review = ({ formikProps }: ReviewProps) => {
         </div>
         <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
-            <DescriptionTerm term="Does your project have an ISSO" />
+            <DescriptionTerm term="Does your project have an Information System Security Officer (ISSO)" />
             <DescriptionDefinition definition={issoDefinition()} />
           </div>
           <div className="grid-col">
@@ -146,7 +148,7 @@ const Review = ({ formikProps }: ReviewProps) => {
         </div>
         <div className="grid-row flex-row margin-bottom-205">
           <div className="grid-col">
-            <DescriptionTerm term="Do you need EA support?" />
+            <DescriptionTerm term="Do you need Enterprise Architecture (EA) support?" />
             <DescriptionDefinition
               definition={convertBoolToYesNo(values.needsEaSupport)}
             />

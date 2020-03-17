@@ -1,6 +1,12 @@
 .easi-header {
   border-bottom: 1px solid #979797;
 
+  &__username {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
   &__wrapper {
     display: block;
     width: 100%;
@@ -51,6 +57,7 @@
   &__caret {
     border: none;
     transform: rotate(0deg);
+    cursor: pointer;
 
     &--rotate {
       transform: rotate(180deg);

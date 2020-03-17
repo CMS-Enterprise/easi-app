@@ -163,8 +163,8 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                           validateForm().then(err => {
                             if (Object.keys(err).length === 0) {
                               setPage(prev => prev + 1);
-                              window.scrollTo(0, 0);
                             }
+                            window.scrollTo(0, 0);
                           });
                         }
                       }}
