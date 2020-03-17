@@ -36,7 +36,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         **All fields are required unless marked &apos;Optional&apos;
       </p>
       <div className="tablet:grid-col-6 margin-bottom-7">
-        <h1 className="font-heading-xl">Contact Details</h1>
+        <h1 className="font-heading-xl margin-top-4">Contact Details</h1>
 
         {/* Requestor Name */}
         <FieldGroup
@@ -214,7 +214,8 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         >
           <fieldset className="usa-fieldset margin-top-3">
             <legend className="usa-label margin-bottom-1">
-              Does your project have an ISSO?
+              Does your project have an Information System Security Officer
+              (ISSO)?
             </legend>
             <HelpText className="margin-bottom-2">
               If yes, please tell use the name of your ISSO so we can get in
@@ -305,6 +306,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
                 <GovernanceTeamOptions formikProps={formikProps} />
               </FieldGroup>
             </div>
+
             <Field
               as={RadioField}
               checked={values.governanceTeams.isPresent === false}

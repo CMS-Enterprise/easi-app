@@ -56,7 +56,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                     return (
                       <div
                         key={`${key}-Collaborator`}
-                        className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
+                        className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-2"
                       >
                         <FieldGroup
                           scrollElement={`governanceTeams.teams.${idx}.collaborator`}

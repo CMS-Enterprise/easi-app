@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 import { withAuth } from '@okta/okta-react';
 import useAuth from 'hooks/useAuth';
+import UsGovBanner from 'components/UsGovBanner';
 import HeaderWrapper from './HeaderWrapper';
 import { UserActionList, UserAction } from './UserActionList';
 import './index.scss';
@@ -63,6 +64,7 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
   );
   return (
     <header className="usa-header easi-header" role="banner">
+      <UsGovBanner />
       <HeaderWrapper className="usa-navbar">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">{logo}</em>
@@ -72,7 +74,15 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
         </button>
         <div className="navbar--container">
           {user && user.name && (
-            <span className="easi-header__username">{user.name}</span>
+            <button
+              className="easi-header__username"
+              type="button"
+              onClick={() => {
+                setDisplayDropdown(!displayDropdown);
+              }}
+            >
+              {user.name}
+            </button>
           )}
           {isAuthenticated ? (
             <div className="easi-header__dropdown-wrapper" ref={dropdownNode}>
