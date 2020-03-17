@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from 'components/Header';
 import UpcomingActions from 'components/shared/UpcomingActions';
-import ActionBanner from '../../components/shared/ActionBanner/index.tsx';
+import ActionBanner from '../../components/shared/ActionBanner/index';
 
 // This view can be deleted whenever we're ready
 // This is just a sandbox page for us to test things out
