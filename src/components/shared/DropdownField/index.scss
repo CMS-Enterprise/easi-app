@@ -1,4 +1,10 @@
 .easi-dropdown {
+  &--error.usa-select {
+    padding-top: 3px;
+    border-width: 0.25rem;
+    border-color: #b50909;
+    border-style: solid;
+  }
   &--disabled.usa-select {
     background-color: $medium-gray;
   }
