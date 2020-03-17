@@ -38,7 +38,7 @@ and is what sqlx thrives at.
 
 ### sqlx
 
-* `+` *[argument 1 pro]*
+* `+` Supports struct marshalling and embedded structs through joins
 * `+` Typing sql allows us to optimize query performance
 * `+` Typing sql allows flexibility with concurrency/locking
 * `+` Good experience on other projects (eApp and saber)
