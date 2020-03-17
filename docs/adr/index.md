@@ -21,5 +21,6 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0014](0014-use-mux-for-routing.md) - Use gorilla/mux for Routing
 - [ADR-0015](0015-api-schema.md) - Use schema for API and frontend collaboration
 - [ADR-0016](0016-migration-tool.md) - Use Flyway for Database Migration
+- [ADR-0017](0017-go-orm.md) - *Use [sqlx](https://github.com/jmoiron/sqlx) for Go Database Access*
 
 <!-- adrlogstop -->
