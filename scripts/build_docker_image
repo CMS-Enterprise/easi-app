@@ -6,11 +6,10 @@
 _tag_and_push() {
   # tag an image and push it up to the target repo
   declare image="$1"
-  declare target="$2"
-  declare tag="$3"
+  declare tag="$2:$3"
 
   if docker tag "$image" "$tag" ; then
-    docker push "${target}:${tag}"
+    docker push "$tag"
   else
     return
   fi
