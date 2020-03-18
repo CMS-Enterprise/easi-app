@@ -26,3 +26,6 @@ type SystemIntake struct {
 	EASupportRequest        bool      `json:"ea_support_request"`
 	ExistingContract        string    `json:"existing_contract"`
 }
+
+// SystemIntakes is a list of System Intakes
+type SystemIntakes []SystemIntake
