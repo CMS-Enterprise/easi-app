@@ -203,14 +203,19 @@ brew install docker-compose
 brew install docker-compose-completion  # optional
 ```
 
-Now, you can stand up the app & database locally in containers:
+Now, you can stand up the app & database locally in containers.  The app server
+will stand up and migrations from your local filesystem will be run against the
+db automatically:
 
 ```console
-docker-compose up --detach
+$ docker-compose up --detach
+Starting app_db_1 ... done
+Starting app_db_clean_1 ... done
+Starting app_db_migrate_1 ... done
+Starting app_easi_1       ... done
+$ curl http://localhost:8080/api/v1/healthcheck
+{"status":"pass","datetime":"APPLICATION_DATETIME","version":"APPLICATION_VERSION","timestamp":"APPLICATION_TS"}
 ```
-
-The app server will stand up and migrations from your local filesystem
-will be run against the db automatically.
 
 To take it down:
 
