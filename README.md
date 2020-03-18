@@ -186,7 +186,7 @@ pre-commit: `brew install circleci`
 
 To set up docker on your local machine:
 
-```sh
+```console
 brew cask install docker
 brew install docker-completion
 ```
