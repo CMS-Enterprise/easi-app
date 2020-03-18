@@ -11,7 +11,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchSystems func() (models.SystemShorts, error)
+type fetchSystems func(logger *zap.Logger) (models.SystemShorts, error)
 
 // SystemsListHandler is the handler for listing systems
 type SystemsListHandler struct {
