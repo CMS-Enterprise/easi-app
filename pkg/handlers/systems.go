@@ -12,7 +12,6 @@ import (
 )
 
 type fetchSystems func(logger *zap.Logger) (models.SystemShorts, error)
-type marshal func(interface{}) ([]byte, error)
 
 // SystemsListHandler is the handler for listing systems
 type SystemsListHandler struct {
