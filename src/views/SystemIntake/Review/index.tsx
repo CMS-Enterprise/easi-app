@@ -91,7 +91,7 @@ const Review = ({ formikProps }: ReviewProps) => {
         </div>
         <div className="system-intake__review-row">
           <div>
-            <DescriptionTerm term="Does your project have an Information System Security Officer (ISSO)" />
+            <DescriptionTerm term="Does your project have an Information System Security Officer (ISSO)?" />
             <DescriptionDefinition definition={issoDefinition()} />
           </div>
           <div>
@@ -124,13 +124,13 @@ const Review = ({ formikProps }: ReviewProps) => {
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </div>
-        <div className="margin-bottom-205">
+        <div className="margin-bottom-205 line-height-body-3">
           <div>
             <DescriptionTerm term="What is your business need?" />
             <DescriptionDefinition definition={values.businessNeed} />
           </div>
         </div>
-        <div className="margin-bottom-205">
+        <div className="margin-bottom-205 line-height-body-3">
           <div>
             <DescriptionTerm term="How are you thinking of solving it?" />
             <DescriptionDefinition definition={values.businessSolution} />
