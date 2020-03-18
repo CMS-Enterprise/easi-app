@@ -194,23 +194,29 @@ brew install docker-completion
 Now you will need to start the Docker service: run Spotlight and type in
 'docker'.
 
-### Setup: PostgreSQL
+#### docker-compose
 
-To run postgres in Docker locally, we are using [`docker-compose`](https://docs.docker.com/compose/):
+To run the app in Docker locally, we are using [`docker-compose`](https://docs.docker.com/compose/):
 
-```sh
+```console
 brew install docker-compose
 brew install docker-compose-completion  # optional
 ```
 
-Now, you can run postgres locally in a container:
+Now, you can stand up the app & database locally in containers:
 
 ```console
 docker-compose up --detach
 ```
 
-The postgres server will stand up and migrations from your local filesystem
-will be run against it automatically.
+The app server will stand up and migrations from your local filesystem
+will be run against the db automatically.
+
+To take it down:
+
+```console
+docker-compose kill
+```
 
 To inspect the database from your shell, `pgcli` is recommended:
 
@@ -273,15 +279,6 @@ go build -a -o bin/easi ./cmd/easi
 ```
 
 You can then access the tool with the `easi` command.
-
-### Docker
-
-To build the application and run in Docker:
-
-```sh
-docker build --no-cache --tag easi:latest .
-docker run --read-only --tmpfs /tmp --publish 8080:8080 --rm easi:latest /easi/easi serve
-```
 
 ### Migrating the Database
 
