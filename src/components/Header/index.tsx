@@ -4,7 +4,6 @@ import classnames from 'classnames';
 import { withAuth } from '@okta/okta-react';
 import useAuth from 'hooks/useAuth';
 import UsGovBanner from 'components/UsGovBanner';
-import HeaderWrapper from './HeaderWrapper';
 import { UserActionList, UserAction } from './UserActionList';
 import './index.scss';
 
@@ -65,7 +64,7 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
   return (
     <header className="usa-header easi-header" role="banner">
       <UsGovBanner />
-      <HeaderWrapper className="usa-navbar">
+      <div className="grid-container easi-header__basic">
         <div className="usa-logo site-logo" id="logo">
           <em className="usa-logo__text">{logo}</em>
         </div>
@@ -107,9 +106,9 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
             </Link>
           )}
         </div>
-      </HeaderWrapper>
+      </div>
 
-      <div className="easi-header--desktop">{children}</div>
+      <div className="grid-container easi-header--desktop ">{children}</div>
 
       {/* Mobile Display */}
       <div className="usa-nav sidenav-mobile">

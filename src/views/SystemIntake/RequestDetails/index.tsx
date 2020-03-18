@@ -53,7 +53,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           scrollElement="fundingSource.isFunded"
           error={!!flatErrors['fundingSource.isFunded']}
         >
-          <fieldset className="usa-fieldset margin-top-3">
+          <fieldset className="usa-fieldset margin-top-4">
             <legend className="usa-label margin-bottom-1">
               Is this project funded from an existing funding source?
             </legend>
@@ -211,7 +211,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           scrollElement="needsEaSupport"
           error={!!flatErrors.needsEaSupport}
         >
-          <fieldset className="usa-fieldset margin-top-3">
+          <fieldset className="usa-fieldset margin-top-4">
             <legend className="usa-label margin-bottom-1">
               Does your project need Enterprise Architecture (EA) support?
             </legend>

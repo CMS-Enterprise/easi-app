@@ -212,7 +212,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           scrollElement="isso.isPresent"
           error={!!flatErrors['isso.isPresent']}
         >
-          <fieldset className="usa-fieldset margin-top-3">
+          <fieldset className="usa-fieldset margin-top-4">
             <legend className="usa-label margin-bottom-1">
               Does your project have an Information System Security Officer
               (ISSO)?
