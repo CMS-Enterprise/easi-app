@@ -196,7 +196,8 @@ Now you will need to start the Docker service: run Spotlight and type in
 
 #### docker-compose
 
-To run the app in Docker locally, we are using [`docker-compose`](https://docs.docker.com/compose/):
+To run the app in Docker locally, we are using
+[`docker-compose`](https://docs.docker.com/compose/):
 
 ```console
 brew install docker-compose
@@ -217,11 +218,15 @@ $ curl http://localhost:8080/api/v1/healthcheck
 {"status":"pass","datetime":"APPLICATION_DATETIME","version":"APPLICATION_VERSION","timestamp":"APPLICATION_TS"}
 ```
 
-To take it down:
+Two options to take it down:
 
 ```console
-docker-compose kill
+docker-compose kill  # stops the running containers
+docker-compose down  # stops and also removes the containers
 ```
+
+You can also force rebuilding the images (e.g. after using `kill`) with
+`docker-compose build`.
 
 To inspect the database from your shell, `pgcli` is recommended:
 
