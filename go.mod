@@ -8,7 +8,7 @@ require (
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-openapi/errors v0.19.4
 	github.com/go-openapi/loads v0.19.5 // indirect
-	github.com/go-openapi/runtime v0.19.14
+	github.com/go-openapi/runtime v0.19.15
 	github.com/go-openapi/spec v0.19.7 // indirect
 	github.com/go-openapi/strfmt v0.19.5
 	github.com/go-openapi/swag v0.19.8
@@ -25,7 +25,7 @@ require (
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/pquerna/otp v1.2.0
 	github.com/prometheus/common v0.4.0
-	github.com/spf13/cobra v0.0.6
+	github.com/spf13/cobra v0.0.7
 	github.com/spf13/viper v1.6.2
 	github.com/stretchr/testify v1.4.0
 	github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8 // indirect
