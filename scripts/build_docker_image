@@ -26,7 +26,7 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   builddir="$(git rev-parse --show-toplevel)"
 
   ecr_backend="${ecr_repo}/easi-backend"
-  if docker build --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "easi" "$builddir" ; then
+  if (set -x ; docker build --quiet --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "easi" "$builddir") ; then
     _tag_and_push "easi:latest" "${ecr_backend}" "${APPLICATION_VERSION}" || exit
     _tag_and_push "easi:latest" "${ecr_backend}" "latest"  || exit
     _tag_and_push "easi:latest" "${ecr_backend}" "dev" || exit
@@ -40,7 +40,7 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
 
   # build & tag the db migrations image, then push to ECR
   ecr_db_migrate="${ecr_repo}/easi-db-migrate"
-  if docker build --no-cache --tag "easi-db-migrate" "$builddir" --file Dockerfile.db_migrations ; then
+  if (set -x ; docker build --quiet --no-cache --tag "easi-db-migrate" "$builddir" --file Dockerfile.db_migrations) ; then
     _tag_and_push "easi-db-migrate:latest" "${ecr_db_migrate}" "${APPLICATION_VERSION}" || exit
     _tag_and_push "easi-db-migrate:latest" "${ecr_db_migrate}" "latest" || exit
     _tag_and_push "easi-db-migrate:latest" "${ecr_db_migrate}" "dev" || exit
