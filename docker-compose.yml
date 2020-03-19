@@ -1,0 +1,54 @@
+---
+version: '3'
+services:
+  db:
+    image: postgres:11.6
+    ports:
+      - 5432:5432
+  db_clean:
+    image: flyway/flyway:6.3
+    environment:
+      - FLYWAY_USER=postgres
+      - FLYWAY_PASSWORD=
+      - FLYWAY_URL=jdbc:postgresql://db/postgres
+    command: clean
+    depends_on:
+      - db
+  db_migrate:
+    image: flyway/flyway:6.3
+    environment:
+      - FLYWAY_USER=postgres
+      - FLYWAY_PASSWORD=
+      - FLYWAY_IGNORE_INVALID_MIGRATION_NAMES=false
+      - FLYWAY_URL=jdbc:postgresql://db/postgres
+    command: migrate
+    volumes:
+      - ./migrations:/flyway/sql
+    depends_on:
+      - db_clean
+  easi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - APPLICATION_VERSION=APPLICATION_VERSION
+      - APPLICATION_DATETIME=APPLICATION_DATETIME
+      - APPLICATION_TS=APPLICATION_TS
+      - ENVIRONMENT=local
+      - CLIENT_HOSTNAME=http://localhost
+      - CLIENT_PORT=3000
+      - CLIENT_ADDRESS=$CLIENT_HOSTNAME:$CLIENT_PORT
+      - API_PORT=8080
+      - REACT_APP_API_ADDRESS=$CLIENT_HOSTNAME:$API_PORT/api/v1
+      - OKTA_CLIENT_ID=0oa2e913coDQeG19S297
+      - REACT_APP_OKTA_CLIENT_ID=$OKTA_CLIENT_ID
+      - REACT_APP_OKTA_DOMAIN=https://test.idp.idm.cms.gov
+      - REACT_APP_OKTA_SERVER_ID=aus2e96etlbFPnBHt297
+      - REACT_APP_OKTA_ISSUER=$REACT_APP_OKTA_DOMAIN/oauth2/$REACT_APP_OKTA_SERVER_ID
+      - OKTA_ISSUER=$REACT_APP_OKTA_ISSUER
+      - REACT_APP_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
+    entrypoint: ["/easi/easi", "serve"]
+    ports:
+      - 8080:8080
+    depends_on:
+      - db_migrate
