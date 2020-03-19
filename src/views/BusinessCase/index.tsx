@@ -4,6 +4,7 @@ import { Formik, Form, FormikProps } from 'formik';
 
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
+import PageNumber from 'components/PageNumber';
 import { BusinessCaseModel } from 'types/businessCase';
 import GeneralProjectInfo from './GeneralProjectInfo';
 
@@ -32,7 +33,11 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
     budgetNumber: '',
     businessOwner: {
       name: ''
-    }
+    },
+    businessNeed: '',
+    cmsBenefit: '',
+    priorityAlignment: '',
+    successIndicators: ''
   };
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     const Component = pageObj.view;
@@ -120,6 +125,12 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
             );
           }}
         </Formik>
+        {pageObj.type === 'FORM' && (
+          <PageNumber
+            currentPage={page}
+            totalPages={pages.filter(p => p.type === 'FORM').length}
+          />
+        )}
       </main>
     </div>
   );
