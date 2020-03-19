@@ -38,45 +38,44 @@ const UsGovBanner = () => {
             </button>
           </div>
         </div>
-        {displayContent && (
-          <div
-            className="usa-banner__content usa-accordion__content"
-            id="gov-banner"
-          >
-            <div className="grid-row grid-gap-lg">
-              <div className="usa-banner__guidance tablet:grid-col-6">
-                <img
-                  className="usa-banner__icon usa-media-block__img"
-                  src={dotGovSvg}
-                  alt="Dot gov"
-                />
-                <div className="usa-media-block__body">
-                  <p>
-                    <strong>The .gov means it’s official.</strong>
-                    <br /> Federal government websites often end in .gov or
-                    .mil. Before sharing sensitive information, make sure you’re
-                    on a federal government site.
-                  </p>
-                </div>
+        <div
+          className="usa-banner__content usa-accordion__content"
+          id="gov-banner"
+          hidden={!displayContent}
+        >
+          <div className="grid-row grid-gap-lg">
+            <div className="usa-banner__guidance tablet:grid-col-6">
+              <img
+                className="usa-banner__icon usa-media-block__img"
+                src={dotGovSvg}
+                alt="Dot gov"
+              />
+              <div className="usa-media-block__body">
+                <p>
+                  <strong>The .gov means it’s official.</strong>
+                  <br /> Federal government websites often end in .gov or .mil.
+                  Before sharing sensitive information, make sure you’re on a
+                  federal government site.
+                </p>
               </div>
-              <div className="usa-banner__guidance tablet:grid-col-6">
-                <img
-                  className="usa-banner__icon usa-media-block__img"
-                  src={httpsSvg}
-                  alt="Https"
-                />
-                <div className="usa-media-block__body">
-                  <p>
-                    <strong>The site is secure.</strong>
-                    <br /> The <strong>https://</strong> ensures that you are
-                    connecting to the official website and that any information
-                    you provide is encrypted and transmitted securely.
-                  </p>
-                </div>
+            </div>
+            <div className="usa-banner__guidance tablet:grid-col-6">
+              <img
+                className="usa-banner__icon usa-media-block__img"
+                src={httpsSvg}
+                alt="Https"
+              />
+              <div className="usa-media-block__body">
+                <p>
+                  <strong>The site is secure.</strong>
+                  <br /> The <strong>https://</strong> ensures that you are
+                  connecting to the official website and that any information
+                  you provide is encrypted and transmitted securely.
+                </p>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
