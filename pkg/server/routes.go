@@ -73,7 +73,10 @@ func (s *server) routes(
 			services.NewAuthorizeSaveSystemIntake(s.logger),
 			s.logger,
 		),
+		FetchSystemIntakeById: nil,
 	}
+	api.Handle("/system_intake/{intake_ID}", systemIntakeHandler.Handle(s.db))
+
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
 
 	if s.Config.GetString("ENVIRONMENT") == "LOCAL" {

@@ -6,6 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
@@ -17,6 +19,7 @@ type server struct {
 	router *mux.Router
 	Config *viper.Viper
 	logger *zap.Logger
+	db 	   *sqlx.DB
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -41,10 +44,17 @@ func Serve(config *viper.Viper) {
 		config.GetString("OKTA_CLIENT_ID"),
 		config.GetString("OKTA_ISSUER"),
 	)
-
+	
 	// If we're local use override with local auth middleware
 	if config.GetString("ENVIRONMENT") == "local" {
 		authMiddleware = local.NewLocalAuthorizeMiddleware(zapLogger)
+	}
+
+	//Set up the database connection
+	pgdsn := config.GetString("SQLX_POSTGRES_DSN")
+	db, err := sqlx.Connect("postgres", pgdsn)
+	if err != nil {
+		zapLogger.Fatal("Failed to connect to db")
 	}
 
 	// set up server dependencies
@@ -54,6 +64,7 @@ func Serve(config *viper.Viper) {
 		router: r,
 		Config: config,
 		logger: zapLogger,
+		db:     db,
 	}
 
 	// set up routes

@@ -77,3 +77,12 @@ func NewSaveSystemIntake(
 		return nil
 	}
 }
+
+func FetchSystemIntakeById(id string, db sqlx.DB) (*models.SystemIntake, error) {
+	intake := models.SystemIntake{}
+	err := db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+	if err != nil {
+		return &models.SystemIntake{}, err
+	}
+return &intake, nil
+}
