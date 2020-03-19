@@ -3,6 +3,8 @@
 # build `easi` in docker and push to ECR
 #
 
+ecr_repo="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com"
+
 _tag_and_push() {
   # tag an image and push it up to the target repo
   declare image="$1"
@@ -21,17 +23,17 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   APPLICATION_VERSION="${CIRCLE_SHA1:-"$(git rev-parse HEAD)"}"
   APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
   APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
-  ecr_backend="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend"
   builddir="$(git rev-parse --show-toplevel)"
 
+  ecr_backend="${ecr_repo}/easi-backend"
   if docker build --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "easi" "$builddir" ; then
-      _tag_and_push "easi:latest" "${ecr_backend}" "${APPLICATION_VERSION}" || exit
-      _tag_and_push "easi:latest" "${ecr_backend}" "latest"  || exit
-      _tag_and_push "easi:latest" "${ecr_backend}" "dev" || exit
+    _tag_and_push "easi:latest" "${ecr_backend}" "${APPLICATION_VERSION}" || exit
+    _tag_and_push "easi:latest" "${ecr_backend}" "latest"  || exit
+    _tag_and_push "easi:latest" "${ecr_backend}" "dev" || exit
 
-      if [[ "$CIRCLE_BRANCH" = "master" ]]; then
-        _tag_and_push "easi:latest" "${ecr_backend}" "impl" || exit
-      fi
+    if [[ "$CIRCLE_BRANCH" = "master" ]]; then
+      _tag_and_push "easi:latest" "${ecr_backend}" "impl" || exit
+    fi
   else
     exit
   fi
