@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
 import Header from 'components/Header';
-import HeaderWrapper from 'components/Header/HeaderWrapper';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -84,13 +83,13 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   return (
     <div className="system-intake">
       <Header activeNavListItem={match.params.profileId} name="INTAKE">
-        <HeaderWrapper className="grid-container margin-bottom-3">
+        <div className="margin-bottom-3">
           {pageObj.type === 'FORM' && (
             <button type="button" className="easi-button__save usa-button">
               <span>Save & Exit</span>
             </button>
           )}
-        </HeaderWrapper>
+        </div>
       </Header>
       <main className="grid-container" role="main">
         <Formik
@@ -163,8 +162,8 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                           validateForm().then(err => {
                             if (Object.keys(err).length === 0) {
                               setPage(prev => prev + 1);
-                              window.scrollTo(0, 0);
                             }
+                            window.scrollTo(0, 0);
                           });
                         }
                       }}
