@@ -71,7 +71,7 @@ const SystemIntakeValidationSchema: any = {
     currentStage: Yup.string().required('Tell us where you are in the process'),
     needsEaSupport: Yup.boolean()
       .nullable()
-      .required('Tell us if you need Enterprise Architecture support'),
+      .required('Tell us if you need Enterprise Architecture (EA) support'),
     hasContract: Yup.string().required('Tell us about your contract situation')
   })
 };
