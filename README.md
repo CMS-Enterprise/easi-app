@@ -186,7 +186,7 @@ pre-commit: `brew install circleci`
 
 To set up docker on your local machine:
 
-```sh
+```console
 brew cask install docker
 brew install docker-completion
 ```
@@ -194,22 +194,41 @@ brew install docker-completion
 Now you will need to start the Docker service: run Spotlight and type in
 'docker'.
 
-### Setup: PostgreSQL
+#### docker-compose
 
-To run postgres in Docker, first you will need the image:
-
-```sh
-docker pull postgres:11.6
-```
-
-Now, you can run postgres locally in a container:
+To run the app in Docker locally, we are using
+[`docker-compose`](https://docs.docker.com/compose/):
 
 ```console
-$ docker run --detach --publish 5432:5432 postgres:11.6
-8a6196a9ae85286e3598bc49a1a59954a3762b633059829389af333964041215
+brew install docker-compose
+brew install docker-compose-completion  # optional
 ```
 
-To test the database from your shell, `pgcli` is recommended:
+Now, you can stand up the app & database locally in containers.  The app server
+will stand up and migrations from your local filesystem will be run against the
+db automatically:
+
+```console
+$ docker-compose up --detach
+Starting app_db_1 ... done
+Starting app_db_clean_1 ... done
+Starting app_db_migrate_1 ... done
+Starting app_easi_1       ... done
+$ curl http://localhost:8080/api/v1/healthcheck
+{"status":"pass","datetime":"APPLICATION_DATETIME","version":"APPLICATION_VERSION","timestamp":"APPLICATION_TS"}
+```
+
+Two options to take it down:
+
+```console
+docker-compose kill  # stops the running containers
+docker-compose down  # stops and also removes the containers
+```
+
+You can also force rebuilding the images (e.g. after using `kill`) with
+`docker-compose build`.
+
+To inspect the database from your shell, `pgcli` is recommended:
 
 ```sh
 brew install pgcli
@@ -271,20 +290,7 @@ go build -a -o bin/easi ./cmd/easi
 
 You can then access the tool with the `easi` command.
 
-### Docker
-
-To build the application and run in Docker:
-
-```sh
-docker build --no-cache --tag easi:latest .
-docker run --read-only --tmpfs /tmp --publish 8080:8080 --rm easi:latest /easi/easi serve
-```
-
 ### Migrating the Database
-
-We are using Flyway to handle our database migrations. You can install it with
-`brew install flyway`. Once your Postgres database is running (see above), you can
-run the migrations with `flyway migrate`.
 
 To add a new migration, add a new file to the `migrations` directory
 following the standard
