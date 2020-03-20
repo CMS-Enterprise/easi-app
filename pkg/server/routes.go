@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 
 	// Need blank import to connect to db. TODO delete this.
@@ -55,11 +54,16 @@ func (s *server) routes(
 		fmt.Println(err)
 	}
 
-	tx := db.MustBegin()
-	_, _ = tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, requester, component) VALUES (:id, :eua_user_id, :requester, :component)", &models.SystemIntake{ID: uuid.New(), EUAUserID: "sample", Requester: "test", Component: "test"})
-	_ = tx.Commit()
+	//tx := db.MustBegin()
+	//_, _ = tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, requester, component) VALUES (:id, :eua_user_id, :requester, :component)", &models.SystemIntake{ID: uuid.New(), EUAUserID: "sample", Requester: "test", Component: "test"})
+	//_ = tx.Commit()
 	rows := models.SystemIntakes{}
-	_ = db.Select(&rows, "SELECT eua_user_id FROM system_intake")
+	err = db.Select(&rows, "SELECT * FROM system_intake")
+	fmt.Println(err)
+	//var rowsForHandler []models.HandlerSafeSystemIntake
+	//for e := range rows {
+	//	rowsForHandler = append(rowsForHandler, models.ConvertSystemIntakeToHandlerSafe(rows[e]))
+	//}
 	byteArray, _ := json.Marshal(rows)
 	fmt.Println(string(byteArray))
 
