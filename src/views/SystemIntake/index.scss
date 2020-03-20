@@ -10,4 +10,14 @@
       margin-top: 5px;
     }
   }
+
+  &__review-row {
+    display: grid;
+    grid-gap: 1.25rem;
+    margin-bottom: 1.25rem;
+
+    @media screen and (min-width: $tablet) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
 }
