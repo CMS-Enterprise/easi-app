@@ -23,7 +23,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
 
   return (
     <>
-      <h1 className="font-heading-xl">Request Details</h1>
+      <h1 className="font-heading-xl margin-top-4">Request Details</h1>
       <p className="line-height-body-6">
         Provide a detailed explanation of the business need/issue/problem that
         the requested project will address, including any legislative mandates,
@@ -53,7 +53,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           scrollElement="fundingSource.isFunded"
           error={!!flatErrors['fundingSource.isFunded']}
         >
-          <fieldset className="usa-fieldset margin-top-3">
+          <fieldset className="usa-fieldset margin-top-4">
             <legend className="usa-label margin-bottom-1">
               Is this project funded from an existing funding source?
             </legend>
@@ -119,11 +119,11 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <Label htmlFor="IntakeForm-BusinessNeed">
             What is your business need?
           </Label>
-          <HelpText className="margin-top-1">
+          <HelpText className="margin-top-105">
             <>
               <span>Include:</span>
               <br />
-              <ul className="system-intake__business-need-help padding-left-205">
+              <ul className="system-intake__business-need-help margin-top-1 padding-left-205">
                 <li>
                   a detailed explanation of the business need/issue/problem that
                   the project will address
@@ -211,9 +211,9 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           scrollElement="needsEaSupport"
           error={!!flatErrors.needsEaSupport}
         >
-          <fieldset className="usa-fieldset margin-top-3">
+          <fieldset className="usa-fieldset margin-top-4">
             <legend className="usa-label margin-bottom-1">
-              Does your project need Enterprise Architecture support?
+              Does your project need Enterprise Architecture (EA) support?
             </legend>
             <HelpText className="margin-bottom-1">
               If you are unsure, mark &quot;Yes&quot; and someone from the EA
