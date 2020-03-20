@@ -10,6 +10,7 @@
       height: auto;
     }
   }
+
   &__no-results {
     position: absolute;
     width: 100%;
@@ -56,6 +57,10 @@
         color: #fff;
       }
     }
+  }
+
+  .usa-input {
+    margin-top: 0;
   }
 
   .usa-button {
