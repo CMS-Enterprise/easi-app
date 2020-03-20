@@ -164,11 +164,7 @@ const Review = ({ formikProps }: ReviewProps) => {
       </p>
       <ul className="usa-list">
         <li>direct you to go through the Goverannce Review process</li>
-        <li>or direct you to an existing project</li>
-        <li>
-          or issue you a lifecycle id and decide that there is no further
-          governance needed
-        </li>
+        <li>or decide there is no further governance needed</li>
       </ul>
       <p>They will get back to you in two business days.</p>
     </div>
