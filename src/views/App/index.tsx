@@ -2,7 +2,6 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
-import UsGovBanner from 'components/UsGovBanner';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import SuperSecret from 'views/SuperSecret';
@@ -24,7 +23,6 @@ class App extends React.Component<MainProps, MainState> {
     return (
       <div>
         <div className="usa-overlay" />
-        <UsGovBanner />
         <BrowserRouter>
           <AuthenticationWrapper>
             <Switch>
