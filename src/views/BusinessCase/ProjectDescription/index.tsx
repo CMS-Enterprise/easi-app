@@ -28,7 +28,6 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
           <FieldErrorMsg />
           <Field
             as={TextAreaField}
-            className="easi-business-case__small-textarea"
             error={false}
             id="BusinessCase-BusinessNeed"
             maxLength={1000}
@@ -48,7 +47,6 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
           <FieldErrorMsg />
           <Field
             as={TextAreaField}
-            className="easi-business-case__small-textarea"
             error={false}
             id="BusinessCase-CmsBenefit"
             maxLength={1000}
@@ -67,7 +65,6 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
           <FieldErrorMsg />
           <Field
             as={TextAreaField}
-            className="easi-business-case__small-textarea"
             error={false}
             id="BusinessCase-PriorityAlignment"
             maxLength={1000}
@@ -85,7 +82,6 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
           <FieldErrorMsg />
           <Field
             as={TextAreaField}
-            className="easi-business-case__small-textarea"
             error={false}
             id="BusinessCase-SuccessIndicators"
             maxLength={1000}
