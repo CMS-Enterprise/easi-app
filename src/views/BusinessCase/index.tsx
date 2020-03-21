@@ -57,11 +57,11 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
       pros: '',
       cons: '',
       estimatedLifecycleCost: {
-        year1: [],
-        year2: [],
-        year3: [],
-        year4: [],
-        year5: []
+        year1: [{ phase: '', cost: '' }],
+        year2: [{ phase: '', cost: '' }],
+        year3: [{ phase: '', cost: '' }],
+        year4: [{ phase: '', cost: '' }],
+        year5: [{ phase: '', cost: '' }]
       }
     }
   };
@@ -103,6 +103,7 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
             } = formikProps;
             return (
               <Form>
+                <pre>{JSON.stringify(formikProps.values, null, 2)}</pre>
                 {renderPage(formikProps)}
                 {page > 1 && (
                   <Button
