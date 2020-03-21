@@ -7,8 +7,13 @@ import TextAreaField from 'components/shared/TextAreaField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
+import { BusinessCaseModel } from 'types/businessCase';
 
-const AsIsSolution = () => {
+type AsIsSolutionProps = {
+  formikProps: FormikProps<BusinessCaseModel>;
+};
+const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
+  const { values } = formikProps;
   return (
     <>
       <h1 className="font-heading-xl">Options Analysis</h1>
@@ -134,7 +139,10 @@ const AsIsSolution = () => {
           </HelpText>
         </div>
       </div>
-      <EstimatedLifecycleCost />
+      <EstimatedLifecycleCost
+        formikKey="asIsSolution.estimatedLifecycleCost"
+        years={values.asIsSolution.estimatedLifecycleCost}
+      />
       <div className="tablet:grid-col-9 margin-bottom-7">
         {/* How will you determine whether or not this effort is successful? */}
       </div>
