@@ -33,6 +33,18 @@ jobs:
           paths:
             - ~/.cache/yarn
 
+  build_db_clean_image:
+    docker:
+      - image: *circleci_docker_primary
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build the db cleaner image and push to ECR
+          command: |
+            ./scripts/build_db_clean_image
+
   build_tag_push:
     docker:
       - image: *circleci_docker_primary
@@ -145,3 +157,13 @@ workflows:
                 - master
           requires:
             - deploy_dev
+  weekly:
+    triggers:
+      - schedule:
+          cron: "0 2 * * 6"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build_db_clean_image
