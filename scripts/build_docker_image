@@ -3,29 +3,14 @@
 # build `easi` in docker and push to ECR
 #
 
-ecr_repo="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com"
+runtimedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-_tag_and_push() {
-  # tag an image and push it up to the target repo
-  declare image="$1"
-  declare tag="$2:$3"
-
-  if ( set -x ; docker tag "$image" "$tag" ) ; then
-    ( set -x ; docker push "$tag" )
-  else
-    return
-  fi
-}
+# shellcheck source=scripts/buildlib.sh
+source "$runtimedir/buildlib.sh"
 
 # log in to ECR
 if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")" ; then
   # build & tag the app image, then push to ECR
-  APPLICATION_VERSION="${CIRCLE_SHA1:-"$(git rev-parse HEAD)"}"
-  APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
-  APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
-  builddir="$(git rev-parse --show-toplevel)"
-
-  ecr_backend="${ecr_repo}/easi-backend"
   if (set -x ; docker build --quiet --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "easi" "$builddir") ; then
     _tag_and_push "easi:latest" "${ecr_backend}" "${APPLICATION_VERSION}" || exit
     _tag_and_push "easi:latest" "${ecr_backend}" "latest"  || exit
@@ -39,7 +24,6 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   fi
 
   # build & tag the db migrations image, then push to ECR
-  ecr_db_migrate="${ecr_repo}/easi-db-migrate"
   if (set -x ; docker build --quiet --no-cache --tag "easi-db-migrate" "$builddir" --file Dockerfile.db_migrations) ; then
     _tag_and_push "easi-db-migrate:latest" "${ecr_db_migrate}" "${APPLICATION_VERSION}" || exit
     _tag_and_push "easi-db-migrate:latest" "${ecr_db_migrate}" "latest" || exit
