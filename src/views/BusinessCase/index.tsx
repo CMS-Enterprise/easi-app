@@ -8,6 +8,7 @@ import PageNumber from 'components/PageNumber';
 import { BusinessCaseModel } from 'types/businessCase';
 import GeneralProjectInfo from './GeneralProjectInfo';
 import ProjectDescription from './ProjectDescription';
+import AsIsSolution from './AsIsSolution';
 import './index.scss';
 
 export type BusinessCaseRouterProps = {
@@ -26,10 +27,15 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
       type: 'FORM',
       validation: null,
       view: ProjectDescription
+    },
+    {
+      type: 'FORM',
+      validation: null,
+      view: AsIsSolution
     }
   ];
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(3);
   const pageObj = pages[page - 1];
   const initialData: BusinessCaseModel = {
     projectName: '',
@@ -44,7 +50,20 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
     businessNeed: '',
     cmsBenefit: '',
     priorityAlignment: '',
-    successIndicators: ''
+    successIndicators: '',
+    asIsSolution: {
+      title: '',
+      summary: '',
+      pros: '',
+      cons: '',
+      estimatedLifecycleCost: {
+        year1: [],
+        year2: [],
+        year3: [],
+        year4: [],
+        year5: []
+      }
+    }
   };
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     const Component = pageObj.view;

@@ -1,0 +1,18 @@
+.est-lifecycle-cost {
+  &__field-group {
+    display: grid;
+    grid-template-columns: 1fr 0.6fr 0.4fr;
+    grid-gap: 1em;
+  }
+
+  &__cost-wrapper {
+    .usa-label {
+      margin-top: 0;
+    }
+  }
+
+  // Override padding because labels are inline
+  .usa-radio__input {
+    padding-left: 0;
+  }
+}

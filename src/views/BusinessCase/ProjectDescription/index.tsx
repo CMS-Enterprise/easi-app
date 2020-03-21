@@ -20,7 +20,7 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
           <Label htmlFor="BusinessCase-BusinessNeed">
             What is your business or user need?
           </Label>
-          <HelpText>
+          <HelpText className="margin-y-1">
             Provide a detailed explanation of the business need/issue/problem
             that the requested project will address, including any legislative
             mandates, regulations, etc.
@@ -40,7 +40,7 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
           <Label htmlFor="BusinessCase-CmsBenefit">
             How will CMS benefit from this effort?
           </Label>
-          <HelpText>
+          <HelpText className="margin-y-1">
             Provide a summary of how this effort benefits CMS. Include any
             information on how it supports CMS&apos; mission and strategic
             goals, creates efficiencies and/or cost savings, or reduces risk.
@@ -60,7 +60,7 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
           <Label htmlFor="BusinessCase-PriorityAlignment">
             How does this effort algin with organizational priorities?
           </Label>
-          <HelpText>
+          <HelpText className="margin-y-1">
             Does this effort support any administrator priorities or new
             legislative or regulatory mandates? Include any relevant deadlines.
           </HelpText>
@@ -79,7 +79,7 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
           <Label htmlFor="BusinessCase-SuccessIndicators">
             How will you determine whether or not this effort is successful?
           </Label>
-          <HelpText>
+          <HelpText className="margin-y-1">
             Include any indicators that you think would demonstrate success.
           </HelpText>
           <FieldErrorMsg />
