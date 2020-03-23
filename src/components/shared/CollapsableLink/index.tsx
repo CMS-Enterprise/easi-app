@@ -14,20 +14,22 @@ const CollapsableLink = ({ children, label }: CollapsableLinkProps) => {
   const [isOpen, setOpen] = useState(false);
   const arrowClassNames = classnames(
     'fa',
-    'easi-accordion-link__square',
+    'easi-collapsable-link__square',
     isOpen ? 'fa-caret-down' : 'fa-caret-right'
   );
   return (
     <div>
       <button
         type="button"
-        className="easi-accordion-link__button"
+        className="easi-collapsable-link__button"
         onClick={() => setOpen(!isOpen)}
       >
         <span className={arrowClassNames} />
         {label}
       </button>
-      {isOpen && <div className="easi-accordion-link__content">{children}</div>}
+      {isOpen && (
+        <div className="easi-collapsable-link__content">{children}</div>
+      )}
     </div>
   );
 };
