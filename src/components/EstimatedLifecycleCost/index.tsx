@@ -71,6 +71,7 @@ const Phase = ({ formikKey, index, values }: PhaseProps) => {
                 error={false}
                 id={`BusinessCase-${formikKey}.Phase${index}.cost`}
                 name={`${formikKey}.${index}.cost`}
+                maxLength={10}
                 numbersOnly
               />
             </div>
