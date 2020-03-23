@@ -3,15 +3,15 @@
 # for periodically rebuilding the db cleaner image
 #
 
-runtimedir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+builddir="$(git rev-parse --show-toplevel)"
+scriptdir="$builddir/scripts/"
 
-# shellcheck source=scripts/buildlib.sh
-source "$runtimedir/buildlib.sh"
+ecr_db_clean="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-clean"
 
 # log in to ECR
 if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")" ; then
   if (set -x ; docker build --quiet --no-cache --tag "easi-db-clean" "$builddir" --file Dockerfile.db_clean) ; then
-    _tag_and_push "easi-db-clean:latest" "${ecr_db_clean}" "latest" || exit
+    "$scriptdir"/tag_and_push "easi-db-clean:latest" "${ecr_db_clean}" "latest"
   else
     exit
   fi
