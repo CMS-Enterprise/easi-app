@@ -87,12 +87,12 @@ jobs:
       - run:
           name: Run db migrations
           command: |
-             aws ecs update-service --cluster dev-easi-app --service easi-app-db-clean --force-new-deployment
-             aws ecs update-service --cluster dev-easi-app --service easi-app-db-migrate --force-new-deployment
+            ./scripts/restart_ecs "easi-db-clean"
+            ./scripts/restart_ecs "easi-db-migrate"
       - run:
           name: Restart ECS service
           command: |
-            ./scripts/restart_ecs
+            ./scripts/restart_ecs "easi-app"
       - run:
           name: Build static assets and release to S3
           command: |
@@ -126,7 +126,7 @@ jobs:
       - run:
           name: Restart ECS service
           command: |
-            ./scripts/restart_ecs
+            ./scripts/restart_ecs "easi-app"
       - run:
           name: Build static assets and release to S3
           command: |
