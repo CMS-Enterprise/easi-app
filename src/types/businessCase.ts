@@ -5,7 +5,6 @@ export type BusinessCaseModel = {
     phoneNumber: string;
   };
   budgetNumber: string;
-
   businessOwner: {
     name: string;
   };
