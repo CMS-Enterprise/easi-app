@@ -40,7 +40,11 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
     budgetNumber: '',
     businessOwner: {
       name: ''
-    }
+    },
+    businessNeed: '',
+    cmsBenefit: '',
+    priorityAlignment: '',
+    successIndicators: ''
   };
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     const Component = pageObj.view;
