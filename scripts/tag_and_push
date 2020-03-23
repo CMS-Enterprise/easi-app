@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#
+# tag an image and push it up to a target ECR repo
+#
+
+image="$1"
+tag="$2:$3"
+
+( set -x ; docker tag "$image" "$tag" && docker push "$tag" )
