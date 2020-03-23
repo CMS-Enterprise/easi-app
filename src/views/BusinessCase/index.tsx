@@ -103,7 +103,6 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
             } = formikProps;
             return (
               <Form>
-                <pre>{JSON.stringify(formikProps.values, null, 2)}</pre>
                 {renderPage(formikProps)}
                 {page > 1 && (
                   <Button

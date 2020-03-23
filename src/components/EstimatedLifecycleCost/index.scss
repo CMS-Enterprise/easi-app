@@ -1,23 +1,69 @@
+/* autoprefixer grid: autoplace */
+
 .est-lifecycle-cost {
+  margin-top: 2.5rem;
+
   &__year-costs {
-    margin-top: 2.5rem;
+    margin-top: 2rem;
   }
 
   &__field-group {
     display: grid;
-    grid-template-columns: 1fr 0.6fr 0.4fr;
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: 1em;
+    margin-top: 0.5rem;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+
+    @media screen and (min-width: $desktop) {
+      grid-template-columns: 1fr 0.5fr 0.4fr;
+    }
   }
 
-  &__phase-wrapper,
-  &__cost-wrapper {
+  &__phase-cost-wrapper,
+  &__phase-field-wrapper,
+  &__cost-field-wrapper {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: space-between;
     height: 100%;
+  }
 
-    &--first {
-      justify-content: space-between;
+  &__phase-fieldset {
+    @media screen and (max-width: $desktop) {
+      grid-column: 1 / span 3;
+      grid-row: row;
+    }
+  }
+
+  .sum-button {
+    @media screen and (max-width: $desktop) {
+      grid-column: 3 / span 1;
+      grid-row: row 2;
+    }
+  }
+
+  &__cost-field-wrapper {
+    @media screen and (max-width: $desktop) {
+      grid-column: 1 / span 2;
+      grid-row: row 2;
+    }
+  }
+
+  &__total-cost-wrapper {
+    height: 100%;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 2rem 0 0 0;
+    padding: 2.5em 4em;
+    background-color: rgba(196, 196, 196, 0.2);
+
+    @media screen and (min-width: $desktop) {
+      margin: 0 0 0 2.5em;
     }
   }
 
@@ -28,5 +74,13 @@
   // Override padding because labels are inline
   .usa-radio__input {
     padding-left: 0;
+  }
+
+  &__dt-total {
+    font-size: 18px;
+  }
+
+  &__dd-total {
+    font-size: 20px;
   }
 }

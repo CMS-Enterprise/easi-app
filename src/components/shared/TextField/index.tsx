@@ -11,6 +11,7 @@ type TextFieldProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
   value: string;
+  numbersOnly?: boolean;
 };
 
 const TextField = ({
@@ -21,20 +22,33 @@ const TextField = ({
   maxLength,
   onChange,
   onBlur,
-  value
+  value,
+  numbersOnly = false
 }: TextFieldProps) => {
   const inputClasses = classnames(
     'usa-input',
     { 'easi-textfield--disabled': disabled },
     { 'usa-input--error': error }
   );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (numbersOnly) {
+      const regex = /^[0-9\b]+$/;
+      if (e.target.value === '' || regex.test(e.target.value)) {
+        onChange(e);
+      }
+    } else {
+      onChange(e);
+    }
+  };
+
   return (
     <input
       className={inputClasses}
       disabled={disabled}
       id={id}
       name={name}
-      onChange={onChange}
+      onChange={handleChange}
       onBlur={onBlur}
       type="text"
       value={value}
