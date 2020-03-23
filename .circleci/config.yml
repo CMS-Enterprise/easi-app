@@ -161,10 +161,10 @@ workflows:
   weekly:
     triggers:
       - schedule:
-          cron: "0 * 23 3 1"
+          cron: "0 2 * * 6"
           filters:
             branches:
               only:
-                - easi-205_weekly_clean
+                - master
     jobs:
       - build_db_clean_image
