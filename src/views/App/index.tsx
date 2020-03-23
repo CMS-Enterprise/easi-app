@@ -40,8 +40,7 @@ class App extends React.Component<MainProps, MainState> {
                 path="/system/:profileId"
                 component={SystemProfile}
               />
-              <Route path="/business/new/" component={BusinessCase} />
-
+              <SecureRoute path="/business/new/" component={BusinessCase} />
               <Route path="/implicit/callback" component={ImplicitCallback} />
             </Switch>
           </AuthenticationWrapper>
