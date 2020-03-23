@@ -1,18 +1,14 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
 
-	// Need blank import to connect to db. TODO delete this.
-	_ "github.com/lib/pq"
-
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
-	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (s *server) routes(
@@ -54,23 +50,17 @@ func (s *server) routes(
 		fmt.Println(err)
 	}
 
-	//tx := db.MustBegin()
-	//_, _ = tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, requester, component) VALUES (:id, :eua_user_id, :requester, :component)", &models.SystemIntake{ID: uuid.New(), EUAUserID: "sample", Requester: "test", Component: "test"})
-	//_ = tx.Commit()
-	rows := models.SystemIntakes{}
-	err = db.Select(&rows, "SELECT * FROM system_intake")
-	fmt.Println(err)
-	//var rowsForHandler []models.HandlerSafeSystemIntake
-	//for e := range rows {
-	//	rowsForHandler = append(rowsForHandler, models.ConvertSystemIntakeToHandlerSafe(rows[e]))
-	//}
-	byteArray, _ := json.Marshal(rows)
-	fmt.Println(string(byteArray))
-
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
 		Logger:       s.logger,
 	}
 	api.Handle("/systems", systemHandler.Handle())
+
+	systemIntakesHandler := handlers.SystemIntakesHandler{
+		Logger:             s.logger,
+		FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
+		DB:                 db,
+	}
+	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 }

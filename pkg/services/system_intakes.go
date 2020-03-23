@@ -7,7 +7,7 @@ import (
 )
 
 // FetchSystemIntakesByEuaID fetches all system intakes by a given user
-func FetchSystemIntakesByEuaID(euaID string, db sqlx.DB) (models.SystemIntakes, error) {
+func FetchSystemIntakesByEuaID(euaID string, db *sqlx.DB) (models.SystemIntakes, error) {
 	var intakes []models.SystemIntake
 	err := db.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=?", euaID)
 	if err != nil {
