@@ -85,6 +85,11 @@ jobs:
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
       - run:
+          name: Run db migrations
+          command: |
+             aws ecs update-service --cluster dev-easi-app --service easi-app-db-clean --force-new-deployment
+             aws ecs update-service --cluster dev-easi-app --service easi-app-db-migrate --force-new-deployment
+      - run:
           name: Restart ECS service
           command: |
             ./scripts/restart_ecs
