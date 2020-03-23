@@ -82,7 +82,7 @@ const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
               as={TextField}
               error={false}
               id="BusinessCase-RequestorPhoneNumber"
-              maxLength={50}
+              maxLength={20}
               name="requestor.phoneNumber"
             />
           </FieldGroup>
