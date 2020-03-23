@@ -1,0 +1,5 @@
+FROM flyway/flyway:6.3
+
+COPY migrations/ /flyway/sql
+
+ENTRYPOINT ["flyway", "migrate"]
