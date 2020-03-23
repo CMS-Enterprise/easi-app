@@ -43,14 +43,13 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         </FieldGroup>
 
         <FieldGroup scrollElement="asIsSolution.summary" error={false}>
-          <Label htmlFor="IntakeForm-AsIsSolutionSummary">
+          <Label htmlFor="BusinessCase-AsIsSolutionSummary">
             &quot;As is&quot; Solution: Summary
           </Label>
           <HelpText className="margin-top-1">
             <span>Please include:</span>
             <br />
-            {/* Need to fix this. */}
-            <ul className="system-intake__business-need-help padding-left-205">
+            <ul className="padding-left-205">
               <li>
                 a brief summary of the proposed IT solution including any
                 associated software products,
@@ -67,14 +66,14 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="IntakeForm-AsIsSolutionSummary"
+            id="BusinessCase-AsIsSolutionSummary"
             maxLength={2000}
             name="asIsSolution.summary"
           />
         </FieldGroup>
 
         <FieldGroup scrollElement="asIsSolution.pros" error={false}>
-          <Label htmlFor="IntakeForm-AsIsSolutionPros">
+          <Label htmlFor="BusinessCase-AsIsSolutionPros">
             &quot;As is&quot; Solution: Pros
           </Label>
           <HelpText className="margin-y-1">
@@ -85,14 +84,14 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="IntakeForm-AsIsSolutionPros"
+            id="BusinessCase-AsIsSolutionPros"
             maxLength={2000}
             name="asIsSolution.pros"
           />
         </FieldGroup>
 
         <FieldGroup scrollElement="asIsSolution.cons" error={false}>
-          <Label htmlFor="IntakeForm-AsIsSolutionCons">
+          <Label htmlFor="BusinessCase-AsIsSolutionCons">
             &quot;As is&quot; Solution: Cons
           </Label>
           <HelpText className="margin-y-1">
@@ -103,7 +102,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="IntakeForm-AsIsSolutionCons"
+            id="BusinessCase-AsIsSolutionCons"
             maxLength={2000}
             name="asIsSolution.cons"
           />
@@ -123,8 +122,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             <span>
               These things should be considered when estimating costs:
             </span>
-            {/* TODO NEED TO FIX THIS */}
-            <ul className="system-intake__business-need-help padding-left-205">
+            <ul className="padding-left-205">
               <li>
                 a brief summary of the proposed IT solution including any
                 associated software products,
@@ -144,7 +142,26 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         years={values.asIsSolution.estimatedLifecycleCost}
       />
       <div className="tablet:grid-col-9 margin-bottom-7">
-        {/* How will you determine whether or not this effort is successful? */}
+        <FieldGroup
+          scrollElement="asIsSolution.successIndicators"
+          error={false}
+        >
+          <Label htmlFor="BusinessCase-AsIsSolutionSuccessIndicators">
+            How will you determine whether or not this effort is successful?
+          </Label>
+          <HelpText className="margin-y-1">
+            This could include old systems going away, contract hours/ new Full
+            Time Employees not needed, or other savings, even if indirect.
+          </HelpText>
+          <FieldErrorMsg />
+          <Field
+            as={TextAreaField}
+            error={false}
+            id="BusinessCase-AsIsSolutionSuccessIndicators"
+            maxLength={2000}
+            name="asIsSolution.successIndicators"
+          />
+        </FieldGroup>
       </div>
     </>
   );

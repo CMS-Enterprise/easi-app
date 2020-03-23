@@ -209,7 +209,7 @@ const EstimatedLifecycleCost = ({
         <div className="est-lifecycle-cost__phase-help-text">
           <CollapsableLink label="What phase should I choose?">
             <div>
-              <p>
+              <p className="margin-top-0">
                 <strong>Initiate</strong>: Projects that are going through the
                 governance process, have not yet received funding or are
                 currently in development (pre-ATO)
