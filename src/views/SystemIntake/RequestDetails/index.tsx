@@ -123,7 +123,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             <>
               <span>Include:</span>
               <br />
-              <ul className="system-intake__business-need-help margin-top-1 padding-left-205">
+              <ul className="margin-top-1 padding-left-205">
                 <li>
                   a detailed explanation of the business need/issue/problem that
                   the project will address
