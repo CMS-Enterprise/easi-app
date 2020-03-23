@@ -17,12 +17,11 @@ import formatDollars from 'utils/formatDollars';
 import './index.scss';
 
 type PhaseProps = {
-  displayAddPhase: boolean;
   formikKey: string;
   index: number;
   values: LifecyclePhase;
 };
-const Phase = ({ displayAddPhase, formikKey, index, values }: PhaseProps) => {
+const Phase = ({ formikKey, index, values }: PhaseProps) => {
   return (
     <FieldArray name={formikKey}>
       {arrayHelpers => (
@@ -74,14 +73,8 @@ const Phase = ({ displayAddPhase, formikKey, index, values }: PhaseProps) => {
                 numbersOnly
               />
             </div>
-            {displayAddPhase && (
-              <div
-                className="sum-button"
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-end'
-                }}
-              >
+            <div className="est-lifecycle-cost__phase-btn-wrapper">
+              {index === 0 ? (
                 <Button
                   type="button"
                   outline
@@ -94,8 +87,20 @@ const Phase = ({ displayAddPhase, formikKey, index, values }: PhaseProps) => {
                 >
                   + Add Phase
                 </Button>
-              </div>
-            )}
+              ) : (
+                <Button
+                  className="est-lifecycle-cost__remove-phase-btn"
+                  type="button"
+                  outline
+                  onClick={() => {
+                    arrayHelpers.remove(index);
+                  }}
+                  unstyled
+                >
+                  Remove phase
+                </Button>
+              )}
+            </div>
           </FieldGroup>
         </div>
       )}
@@ -141,7 +146,6 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year1Phase-${index + 1}`}
-                displayAddPhase={years.year1.length - 1 === index}
                 formikKey={`${formikKey}.year1`}
                 index={index}
                 values={year}
@@ -155,7 +159,6 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year2Phase-${index + 1}`}
-                displayAddPhase={years.year2.length - 1 === index}
                 formikKey={`${formikKey}.year2`}
                 index={index}
                 values={year}
@@ -169,7 +172,6 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year3Phase-${index + 1}`}
-                displayAddPhase={years.year3.length - 1 === index}
                 formikKey={`${formikKey}.year3`}
                 index={index}
                 values={year}
@@ -183,7 +185,6 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year4Phase-${index + 1}`}
-                displayAddPhase={years.year4.length - 1 === index}
                 formikKey={`${formikKey}.year4`}
                 index={index}
                 values={year}
@@ -197,7 +198,6 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year5Phase-${index + 1}`}
-                displayAddPhase={years.year5.length - 1 === index}
                 formikKey={`${formikKey}.year5`}
                 index={index}
                 values={year}
@@ -206,7 +206,7 @@ const EstimatedLifecycleCost = ({
           })}
         </div>
       </div>
-      <div className="grid-col-4">
+      <div className="tablet:grid-col-4">
         <DescriptionList
           title="Estimated Lifecycle Cost Summary"
           className="est-lifecycle-cost__total-cost-wrapper"
