@@ -7,6 +7,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import TextField from 'components/shared/TextField';
 import { RadioField } from 'components/shared/RadioField';
 import Button from 'components/shared/Button';
+import CollapsableLink from 'components/shared/CollapsableLink';
 import { LifecyclePhase } from 'types/estimatedLifecycle';
 import {
   DescriptionList,
@@ -204,6 +205,21 @@ const EstimatedLifecycleCost = ({
               />
             );
           })}
+        </div>
+        <div className="est-lifecycle-cost__phase-help-text">
+          <CollapsableLink label="What phase should I choose?">
+            <div>
+              <p>
+                <strong>Initiate</strong>: Projects that are going through the
+                governance process, have not yet received funding or are
+                currently in development (pre-ATO)
+              </p>
+              <p className="margin-bottom-0">
+                <strong>Operation & Maintanence</strong>: Projects that are
+                live, post-ATO
+              </p>
+            </div>
+          </CollapsableLink>
         </div>
       </div>
       <div className="tablet:grid-col-4">
