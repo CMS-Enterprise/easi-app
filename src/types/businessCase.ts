@@ -8,4 +8,8 @@ export type BusinessCaseModel = {
   businessOwner: {
     name: string;
   };
+  businessNeed: string;
+  cmsBenefit: string;
+  priorityAlignment: string;
+  successIndicators: string;
 };

@@ -7,6 +7,8 @@ import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { BusinessCaseModel } from 'types/businessCase';
 import GeneralProjectInfo from './GeneralProjectInfo';
+import ProjectDescription from './ProjectDescription';
+import './index.scss';
 
 export type BusinessCaseRouterProps = {
   profileId: string;
@@ -19,6 +21,11 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
       type: 'FORM',
       validation: null,
       view: GeneralProjectInfo
+    },
+    {
+      type: 'FORM',
+      validation: null,
+      view: ProjectDescription
     }
   ];
 
@@ -33,7 +40,11 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
     budgetNumber: '',
     businessOwner: {
       name: ''
-    }
+    },
+    businessNeed: '',
+    cmsBenefit: '',
+    priorityAlignment: '',
+    successIndicators: ''
   };
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     const Component = pageObj.view;
@@ -100,6 +111,8 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
                         });
                         window.scrollTo(0, 0);
                       }
+                      // TODO: DELETE NEXT LINE WHEN VALIDATIONS ARE IMPLEMENTED
+                      setPage(prev => prev + 1);
                     }}
                   >
                     Next
