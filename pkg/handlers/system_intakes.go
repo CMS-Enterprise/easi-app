@@ -36,6 +36,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 			if !ok {
 				h.Logger.Error("Failed to get EUA ID from context in system intakes handler")
 				http.Error(w, "Failed to fetch System Intakes", http.StatusInternalServerError)
+				return
 			}
 
 			systemIntakes, err := h.FetchSystemIntakes(euaID, h.DB)
