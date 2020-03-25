@@ -47,6 +47,7 @@ func (s *server) routes(
 	db, err := sqlx.Connect("postgres", "user=postgres sslmode=disable")
 
 	if err != nil {
+		// Todo when database should be connected to every time, change this to error
 		fmt.Println(err)
 	}
 
@@ -57,10 +58,12 @@ func (s *server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	systemIntakesHandler := handlers.SystemIntakesHandler{
-		Logger:             s.logger,
-		FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
-		DB:                 db,
+	if s.Config.GetString("ENVIRONMENT") == "LOCAL" {
+		systemIntakesHandler := handlers.SystemIntakesHandler{
+			Logger:             s.logger,
+			FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
+			DB:                 db,
+		}
+		api.Handle("/system_intakes", systemIntakesHandler.Handle())
 	}
-	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 }
