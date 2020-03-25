@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
+	// pq is required to get the postgres driver into sqlx
+	_ "github.com/lib/pq"
 
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
@@ -57,6 +59,12 @@ func (s *server) routes(
 		Logger:       s.logger,
 	}
 	api.Handle("/systems", systemHandler.Handle())
+
+	systemIntakeHandler := handlers.SystemIntakeHandler{
+		Logger:           s.logger,
+		SaveSystemIntake: services.NewSaveSystemIntake(db),
+	}
+	api.Handle("/system_intake", systemIntakeHandler.Handle())
 
 	if s.Config.GetString("ENVIRONMENT") == "LOCAL" {
 		systemIntakesHandler := handlers.SystemIntakesHandler{
