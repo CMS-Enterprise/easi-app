@@ -24,7 +24,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := context.Logger(r.Context())
 		if !ok {
-			h.Logger.Error("Failed to logger from context in systems list handler")
+			h.Logger.Error("Failed to get logger from context in system intake handler")
 			logger = h.Logger
 		}
 
