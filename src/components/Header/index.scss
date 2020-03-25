@@ -1,6 +1,18 @@
 .easi-header {
   border-bottom: 1px solid #979797;
 
+  &__basic {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__username {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+
   &__wrapper {
     display: block;
     width: 100%;
@@ -51,36 +63,38 @@
   &__caret {
     border: none;
     transform: rotate(0deg);
+    cursor: pointer;
 
     &--rotate {
       transform: rotate(180deg);
     }
   }
 
+  .grid-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   @media (min-width: $desktop) {
     .site-logo {
-      display: initial;
-      float: left;
-      margin-bottom: 0;
+      margin-bottom: 2rem;
     }
 
     .navbar--container {
       display: flex;
       align-items: center;
-      float: right;
-      height: 5rem;
     }
 
     .sidenav-mobile {
       display: none;
     }
 
-    .easi-header {
-      &__wrapper {
-        padding-left: 2rem;
-        padding-right: 2rem;
-      }
+    .grid-container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
 
+    .easi-header {
       &--desktop {
         display: block;
       }

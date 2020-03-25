@@ -15,7 +15,9 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.4
 	github.com/graph-gophers/graphql-go v0.0.0-20191115155744-f33e81362277 // indirect
+	github.com/jmoiron/sqlx v1.2.0
 	github.com/lestrrat-go/jwx v0.9.1 // indirect
+	github.com/lib/pq v1.0.0
 	github.com/okta/okta-jwt-verifier-golang v0.1.0
 	github.com/prometheus/common v0.4.0
 	github.com/spf13/cobra v0.0.6
@@ -26,7 +28,7 @@ require (
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.14.0
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
-	golang.org/x/net v0.0.0-20200301022130-244492dfa37a // indirect
+	golang.org/x/net v0.0.0-20200301022130-244492dfa37a
 	golang.org/x/sys v0.0.0-20200302150141-5c8b2ff67527 // indirect
 	golang.org/x/tools v0.0.0-20200304193943-95d2e580d8eb // indirect
 	honnef.co/go/tools v0.0.1-2020.1.3 // indirect

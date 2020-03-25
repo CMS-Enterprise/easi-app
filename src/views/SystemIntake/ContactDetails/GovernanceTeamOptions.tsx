@@ -13,7 +13,7 @@ type GovernanceTeamOptionsProps = {
 };
 
 const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
-  const { values, setFieldValue, errors } = formikProps;
+  const { values, errors } = formikProps;
   return (
     <FieldArray name="governanceTeams.teams">
       {arrayHelpers => (
@@ -25,7 +25,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                   checked={values.governanceTeams.teams
                     .map(t => t.name)
                     .includes(team.value)}
-                  disabled={values.governanceTeams.isPresent === false}
+                  disabled={values.governanceTeams.isPresent !== true}
                   id={`governanceTeam-${team.key}`}
                   label={team.label}
                   name={`governanceTeams.teams.${index}`}
@@ -36,10 +36,6 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                         name: e.target.value,
                         collaborator: ''
                       });
-                      // Check parent radio if it's not already checked
-                      if (!values.governanceTeams.isPresent) {
-                        setFieldValue('governanceTeams.isPresent', true);
-                      }
                     } else {
                       const removeIndex = values.governanceTeams.teams
                         .map(t => t.name)
@@ -56,7 +52,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                     return (
                       <div
                         key={`${key}-Collaborator`}
-                        className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
+                        className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-2"
                       >
                         <FieldGroup
                           scrollElement={`governanceTeams.teams.${idx}.collaborator`}
