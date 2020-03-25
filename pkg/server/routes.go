@@ -1,10 +1,14 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
+	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (s *server) routes(
@@ -40,10 +44,26 @@ func (s *server) routes(
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
 
+	db, err := sqlx.Connect("postgres", "user=postgres sslmode=disable")
+
+	if err != nil {
+		// Todo when database should be connected to every time, change this to error
+		fmt.Println(err)
+	}
+
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
 		Logger:       s.logger,
 	}
 	api.Handle("/systems", systemHandler.Handle())
+
+	if s.Config.GetString("ENVIRONMENT") == "LOCAL" {
+		systemIntakesHandler := handlers.SystemIntakesHandler{
+			Logger:             s.logger,
+			FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
+			DB:                 db,
+		}
+		api.Handle("/system_intakes", systemIntakesHandler.Handle())
+	}
 }
