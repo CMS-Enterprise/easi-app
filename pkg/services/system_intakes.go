@@ -15,3 +15,14 @@ func FetchSystemIntakesByEuaID(euaID string, db *sqlx.DB) (models.SystemIntakes,
 	}
 	return intakes, nil
 }
+
+// NewSaveSystemIntake is a service to save the system intake to postgres
+func NewSaveSystemIntake(db *sqlx.DB) func(intake *models.SystemIntake) error {
+	return func(intake *models.SystemIntake) error {
+		_, err := db.NamedExec(
+			"INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)",
+			intake,
+		)
+		return err
+	}
+}
