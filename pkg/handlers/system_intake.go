@@ -43,6 +43,14 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				http.Error(w, "Bad system intake request", http.StatusBadRequest)
 				return
 			}
+			fmt.Println(intake)
+
+			euaID, ok := context.EuaID(r.Context())
+			if !ok {
+				logger.Error("Failed to get EUA ID from context")
+				http.Error(w, "Failed to PUT system", http.StatusInternalServerError)
+			}
+			intake.EUAUserID = euaID
 			err = h.SaveSystemIntake(&intake)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to save system intake: %v", err))
