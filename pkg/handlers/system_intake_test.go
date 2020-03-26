@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"github.com/google/uuid"
 	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -18,18 +19,29 @@ func newMockSaveSystemIntake(err error) saveSystemIntake {
 	}
 }
 
+func newMockFetchSystemIntakeByID(err error) fetchSystemIntakeByID {
+	intakeID, _ := uuid.Parse("f92306b9-8a08-4140-854f-5ab89917cec2")
+	intake := models.SystemIntake{
+		ID:        intakeID,
+		EUAUserID: "EUAID",
+	}
+	return func(id uuid.UUID) (*models.SystemIntake, error) {
+		return &intake, err
+	}
+}
+
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithEuaID(requestContext, "EUAID")
 
-	s.Run("golden path PUT passes", func() {
+	s.Run("golden path GET passes", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString("{}"))
+		req, err := http.NewRequestWithContext(requestContext, "GET", getURL, bytes.NewBufferString(""))
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
-			FetchSystemIntakeByID: nil,
+			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(nil),
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusOK, rr.Code)

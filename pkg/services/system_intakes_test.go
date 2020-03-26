@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s ServicesTestSuite) TestSystemIntakesFetcher() {
+func (s ServicesTestSuite) TestSystemIntakesByUserFetcher() {
 	if viper.Get("ENVIRONMENT") == "LOCAL" {
 		s.Run("successfully fetches System Intakes", func() {
 			tx := s.db.MustBegin()
@@ -126,4 +126,23 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
 	})
+}
+
+func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
+	if viper.Get("ENVIRONMENT") == "LOCAL" {
+		s.Run("successfully System Intake by ID", func() {
+			tx := s.db.MustBegin()
+			fakeID := uuid.New()
+			euaID := "FAKE"
+			_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &models.SystemIntake{ID: fakeID, EUAUserID: euaID})
+			s.NoError(err)
+			err = tx.Commit()
+			s.NoError(err)
+
+			fetched, err := NewFetchSystemIntakeByID(s.db)(fakeID)
+			s.NoError(err)
+			s.Equal(fakeID, fetched.ID)
+			s.Equal(euaID, fetched.EUAUserID)
+		})
+	}
 }
