@@ -43,7 +43,6 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				http.Error(w, "Bad system intake request", http.StatusBadRequest)
 				return
 			}
-			fmt.Println(intake)
 
 			euaID, ok := context.EuaID(r.Context())
 			if !ok {
