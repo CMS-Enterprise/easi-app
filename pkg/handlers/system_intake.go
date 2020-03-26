@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/jmoiron/sqlx"
 	"net/http"
 
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -14,13 +14,14 @@ import (
 )
 
 type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
-type fetchSystemIntakeById func(id string, db sqlx.DB) (*models.SystemIntake, error)
+type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
+
 
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
-	Logger           	  *zap.Logger
-	SaveSystemIntake 	  saveSystemIntake
-	FetchSystemIntakeById fetchSystemIntakeById
+	Logger                *zap.Logger
+	SaveSystemIntake      saveSystemIntake
+	FetchSystemIntakeByID fetchSystemIntakeByID
 }
 
 // Handle handles a request for the system intake form
@@ -39,7 +40,13 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				http.Error(w, "Intake ID required", http.StatusBadRequest)
 				return
 			}
-			intake, err := h.FetchSystemIntakeById(id[0], *db)
+			uuid, err := uuid.Parse(id[0])
+			if err != nil {
+				logger.Error("Failed to parse system intake id to uuid")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			intake, err := h.FetchSystemIntakeByID(uuid)
 			if err != nil {
 				logger.Error("Failed to fetch system intake")
 				http.Error(w, "Failed to save system intake", http.StatusInternalServerError)

@@ -27,8 +27,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString("{}"))
 		s.NoError(err)
 		SystemIntakeHandler{
-			SaveSystemIntake: newMockSaveSystemIntake(nil),
-			Logger:           s.logger,
+			SaveSystemIntake:      newMockSaveSystemIntake(nil),
+			Logger:                s.logger,
+			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusOK, rr.Code)
@@ -39,8 +40,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString(""))
 		s.NoError(err)
 		SystemIntakeHandler{
-			SaveSystemIntake: newMockSaveSystemIntake(nil),
-			Logger:           s.logger,
+			SaveSystemIntake:      newMockSaveSystemIntake(nil),
+			Logger:                s.logger,
+			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusBadRequest, rr.Code)
@@ -52,8 +54,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString("{}"))
 		s.NoError(err)
 		SystemIntakeHandler{
-			SaveSystemIntake: newMockSaveSystemIntake(fmt.Errorf("failed to save")),
-			Logger:           s.logger,
+			SaveSystemIntake:      newMockSaveSystemIntake(fmt.Errorf("failed to save")),
+			Logger:                s.logger,
+			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)

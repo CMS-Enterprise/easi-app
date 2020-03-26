@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
@@ -78,11 +79,15 @@ func NewSaveSystemIntake(
 	}
 }
 
-func FetchSystemIntakeById(id string, db sqlx.DB) (*models.SystemIntake, error) {
-	intake := models.SystemIntake{}
-	err := db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
-	if err != nil {
-		return &models.SystemIntake{}, err
+// NewFetchSystemIntakeByID is a service to fetch the system intake by intake id
+func NewFetchSystemIntakeByID(db *sqlx.DB) func(id uuid.UUID) (*models.SystemIntake, error) {
+	return func(id uuid.UUID) (*models.SystemIntake, error) {
+		intake := models.SystemIntake{}
+		err := db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+		if err != nil {
+			return &models.SystemIntake{}, err
+		}
+		return &intake, nil
 	}
-return &intake, nil
+
 }
