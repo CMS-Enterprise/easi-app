@@ -18,6 +18,19 @@ func (ns NullableString) MarshalJSON() ([]byte, error) {
 	return []byte("null"), nil
 }
 
+// UnmarshalJSON overrides the default behavior
+// to allow for using a string instead of object in the API
+func (ns *NullableString) UnmarshalJSON(data []byte) error {
+	var contents string
+	err := json.Unmarshal(data, &contents)
+	if err != nil {
+		return err
+	}
+	ns.String = contents
+	ns.Valid = true
+	return nil
+}
+
 // NullableBool extends NullBool for handling JSON conversion
 type NullableBool struct {
 	sql.NullBool
