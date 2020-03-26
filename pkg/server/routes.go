@@ -76,7 +76,8 @@ func (s *server) routes(
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(db),
 	}
 
-	api.Handle("/system_intake", systemIntakeHandler.Handle())
+	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
+	//api.Handle("/system_intake/", systemIntakeHandler.Handle())
 
 	if s.Config.GetString("ENVIRONMENT") == "LOCAL" {
 		systemIntakesHandler := handlers.SystemIntakesHandler{

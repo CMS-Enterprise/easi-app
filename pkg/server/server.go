@@ -44,7 +44,7 @@ func Serve(config *viper.Viper) {
 		config.GetString("OKTA_CLIENT_ID"),
 		config.GetString("OKTA_ISSUER"),
 	)
-	
+
 	// If we're local use override with local auth middleware
 	if config.GetString("ENVIRONMENT") == "local" {
 		authMiddleware = local.NewLocalAuthorizeMiddleware(zapLogger)

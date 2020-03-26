@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -35,12 +36,12 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 
 		switch r.Method {
 		case "GET":
-			id, ok := r.URL.Query()["intake_ID"]
-			if !ok || id[0] == "" {
+			id := mux.Vars(r)["intake_id"]
+			if id == "" {
 				http.Error(w, "Intake ID required", http.StatusBadRequest)
 				return
 			}
-			uuid, err := uuid.Parse(id[0])
+			uuid, err := uuid.Parse(id)
 			if err != nil {
 				logger.Error("Failed to parse system intake id to uuid")
 				http.Error(w, err.Error(), http.StatusInternalServerError)
