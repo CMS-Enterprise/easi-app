@@ -6,6 +6,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"golang.org/x/net/context"
+
+	context2 "github.com/cmsgov/easi-app/pkg/context"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -16,10 +19,12 @@ func newMockSaveSystemIntake(err error) saveSystemIntake {
 }
 
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
+	requestContext := context.Background()
+	requestContext = context2.WithEuaID(requestContext, "EUAID")
 
 	s.Run("golden path PUT passes", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequest("PUT", "/system_intake/", bytes.NewBufferString("{}"))
+		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString("{}"))
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake: newMockSaveSystemIntake(nil),
@@ -31,7 +36,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 
 	s.Run("PUT fails with bad request body", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequest("PUT", "/system_intake/", bytes.NewBufferString(""))
+		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString(""))
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake: newMockSaveSystemIntake(nil),
@@ -44,7 +49,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 
 	s.Run("PUT fails with bad save", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequest("PUT", "/system_intake/", bytes.NewBufferString("{}"))
+		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString("{}"))
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake: newMockSaveSystemIntake(fmt.Errorf("failed to save")),
