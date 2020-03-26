@@ -64,7 +64,6 @@ func NewSaveSystemIntake(db *sqlx.DB) func(intake *models.SystemIntake) error {
 			:existing_contract
 		)
 		ON CONFLICT (id) DO UPDATE SET
-			eua_user_id=:eua_user_id,
 			requester=:requester,
 			component=:component,
 			business_owner=:business_owner,
