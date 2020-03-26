@@ -73,9 +73,8 @@ func (s *server) routes(
 			services.NewAuthorizeSaveSystemIntake(s.logger),
 			s.logger,
 		),
-		FetchSystemIntakeById: nil,
+		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(db),
 	}
-	api.Handle("/system_intake/{intake_ID}", systemIntakeHandler.Handle(s.db))
 
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
 
