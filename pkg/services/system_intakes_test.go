@@ -15,3 +15,25 @@ func (s ServicesTestSuite) TestSystemIntakesFetcher() {
 	//	s.Len(systemIntakes, 1)
 	//})
 }
+
+func (s ServicesTestSuite) TestSystemIntakeSaver() {
+	//s.Run("successfully saves new System Intakes", func() {
+	//	fakeID := uuid.New()
+	//	euaID := "FAKE"
+	//	submittedIntake := models.SystemIntake{
+	//		ID:                      fakeID,
+	//		EUAUserID:               euaID,
+	//		Requester:               models.NullableString{
+	//			sql.NullString{
+	//				"Requester",
+	//				true}},
+	//	}
+	//	err := NewSaveSystemIntake(s.db)(&submittedIntake)
+	//	s.NoError(err)
+	//	fetchedIntake := models.SystemIntake{}
+	//	err = s.db.Get(&fetchedIntake, "SELECT * FROM system_intake WHERE id=$1", fakeID)
+	//	s.NoError(err)
+	//	s.Equal(euaID, fetchedIntake.EUAUserID)
+	//	s.Equal("Requester", fetchedIntake.Requester.String)
+	//})
+}
