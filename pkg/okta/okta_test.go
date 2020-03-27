@@ -20,7 +20,6 @@ type OktaTestSuite struct {
 }
 
 func TestOktaTestSuite(t *testing.T) {
-	// TODO: replace `os` with another package for handling env
 	testSuite := &OktaTestSuite{
 		Suite:  suite.Suite{},
 		logger: zap.NewNop(),
