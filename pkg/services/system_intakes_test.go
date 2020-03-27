@@ -42,7 +42,7 @@ func (s ServicesTestSuite) TestSystemIntakeSaver() {
 					},
 				},
 			}
-			err := NewSaveSystemIntake(s.db)(&submittedIntake)
+			err := NewSaveSystemIntake(s.store)(&submittedIntake)
 			s.NoError(err)
 			fetchedIntake := models.SystemIntake{}
 			err = s.db.Get(&fetchedIntake, "SELECT * FROM system_intake WHERE id=$1", fakeID)
