@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"time"
 
 	"github.com/okta/okta-jwt-verifier-golang/utils"
@@ -49,15 +48,22 @@ type FactorLinkVerify struct {
 // OktaAccessToken gets an access token from Okta to authorize requests to the EASi APIs in test
 // Borrowing heavily from okta jwt package but adding MFA
 // https://github.com/okta/okta-jwt-verifier-golang/blob/bf6f0d73000e3873d519714a3619b3c5d62ba615/jwtverifier_test.go#L354
-// TODO: replace os package
-func OktaAccessToken() (string, error) {
+func OktaAccessToken(
+	domain string,
+	issuer string,
+	clientID string,
+	redirectURI string,
+	username string,
+	password string,
+	secret string,
+) (string, error) {
 	// Get Session Token
-	issuerParts, _ := url.Parse(os.Getenv("OKTA_DOMAIN"))
+	issuerParts, _ := url.Parse(domain)
 	baseURL := issuerParts.Scheme + "://" + issuerParts.Hostname()
 	requestURI := baseURL + "/api/v1/authn"
 	postValues := map[string]string{
-		"username": os.Getenv("OKTA_TEST_USERNAME"),
-		"password": os.Getenv("OKTA_TEST_PASSWORD"),
+		"username": username,
+		"password": password,
 	}
 	postJSONValues, _ := json.Marshal(postValues)
 	/* #nosec */
@@ -77,13 +83,14 @@ func OktaAccessToken() (string, error) {
 		return "", err
 	}
 
+	// Submit OTP Challenge
 	var factorURI string
 	for _, factor := range authn.Embedded.Factors {
 		if factor.Provider == "GOOGLE" {
 			factorURI = factor.Link.Verify.HREF
 		}
 	}
-	passCode, err := totp.GenerateCode(os.Getenv("OKTA_TEST_SECRET"), time.Now())
+	passCode, err := totp.GenerateCode(secret, time.Now())
 	if err != nil {
 		fmt.Println("unable to generate OTP code")
 		return "", err
@@ -113,13 +120,13 @@ func OktaAccessToken() (string, error) {
 		fmt.Println("could not generate nonce")
 		return "", err
 	}
-	authzURI := os.Getenv("OKTA_ISSUER") +
+	authzURI := issuer +
 		"/v1/authorize?client_id=" +
-		os.Getenv("OKTA_CLIENT_ID") +
+		clientID +
 		"&nonce=" +
 		nonce +
 		"&redirect_uri=" +
-		os.Getenv("REACT_APP_OKTA_REDIRECT_URI") +
+		redirectURI +
 		"&response_type=token%20id_token&scope=openid&state" +
 		"=ApplicationState&sessionToken=" + authn.SessionToken
 
