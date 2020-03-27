@@ -19,7 +19,6 @@ type IntegrationTestSuite struct {
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
-	// TODO: replace `os` with another package for handling env
 	testSuite := &IntegrationTestSuite{
 		Suite:       suite.Suite{},
 		environment: os.Getenv("ENVIRONMENT"),
