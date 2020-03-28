@@ -15,7 +15,6 @@ type SystemIntake struct {
 	BusinessOwnerComponent  null.String `json:"business_owner_component" db:"business_owner_component"`
 	ProductManager          null.String `json:"product_manager" db:"product_manager"`
 	ProductManagerComponent null.String `json:"product_manager_component" db:"product_manager_component"`
-	HasISSO                 null.Bool   `json:"has_isso" db:"has_isso"`
 	ISSO                    null.String `json:"isso"`
 	TRBCollaborator         null.String `json:"trb_collaborator" db:"trb_collaborator"`
 	OITSecurityCollaborator null.String `json:"oit_security_collaborator" db:"oit_security_collaborator"`
