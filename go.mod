@@ -17,6 +17,7 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.4
 	github.com/graph-gophers/graphql-go v0.0.0-20191115155744-f33e81362277 // indirect
+	github.com/guregu/null v3.4.0+incompatible
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/lestrrat-go/jwx v0.9.1 // indirect
 	github.com/lib/pq v1.3.0
