@@ -1,1 +1,116 @@
 package storage
+
+import (
+	"fmt"
+
+	"github.com/google/uuid"
+	"github.com/guregu/null"
+
+	"github.com/cmsgov/easi-app/pkg/models"
+)
+
+// NewSystemIntake should provide a saveable intake with all struct fields
+func NewSystemIntake() models.SystemIntake {
+	return models.SystemIntake{
+		ID:                      uuid.New(),
+		EUAUserID:               "FAKE",
+		Requester:               null.StringFrom("Test Requester"),
+		Component:               null.StringFrom("Test Component"),
+		BusinessOwner:           null.StringFrom("Test Business Owner"),
+		BusinessOwnerComponent:  null.StringFrom("Test Business Owner Component"),
+		ProductManager:          null.StringFrom("Test Product Manager"),
+		ProductManagerComponent: null.StringFrom("Test Product Manager Component"),
+		ISSO:                    null.StringFrom("Test ISSO"),
+		TRBCollaborator:         null.StringFrom("Test TRB Collaborator"),
+		OITSecurityCollaborator: null.StringFrom("Test OIT Collaborator"),
+		EACollaborator:          null.StringFrom("Test EA Collaborator"),
+		ProjectName:             null.StringFrom("Test Project Name"),
+		ExistingFunding:         null.BoolFrom(true),
+		FundingSource:           null.StringFrom("123456"),
+		BusinessNeed:            null.StringFrom("Test Business Need"),
+		Solution:                null.StringFrom("Test Solution"),
+		ProcessStatus:           null.StringFrom("Just an idea"),
+		EASupportRequest:        null.BoolFrom(false),
+		ExistingContract:        null.StringFrom("Yes"),
+	}
+}
+
+func (s StoreTestSuite) TestSaveSystemIntake() {
+	s.Run("save a new system intake", func() {
+		intake := NewSystemIntake()
+
+		err := s.store.SaveSystemIntake(&intake)
+
+		s.NoError(err, "failed to save system intake")
+		var actualIntake models.SystemIntake
+		err = s.db.Get(&actualIntake, "SELECT * FROM system_intake WHERE id=$1", intake.ID)
+		s.NoError(err, "failed to fetch saved intake")
+		s.Equal(actualIntake, intake)
+	})
+
+	partialIntake := models.SystemIntake{}
+	s.Run("cannot save without EUA ID", func() {
+		id, _ := uuid.NewUUID()
+		partialIntake.ID = id
+
+		err := s.store.SaveSystemIntake(&partialIntake)
+
+		s.Error(err)
+		s.Equal("pq: new row for relation \"system_intake\" violates check constraint \"eua_id_check\"", err.Error())
+	})
+
+	euaTests := []string{
+		"f",
+		"F",
+		"5CHAR",
+		"$BAD",
+	}
+	for _, tc := range euaTests {
+		s.Run(fmt.Sprintf("cannot save with invalid EUA ID: %s", tc), func() {
+			partialIntake.EUAUserID = "F"
+
+			err := s.store.SaveSystemIntake(&partialIntake)
+
+			s.Error(err)
+			s.Equal("pq: new row for relation \"system_intake\" violates check constraint \"eua_id_check\"", err.Error())
+		})
+	}
+
+	s.Run("save a partial system intake", func() {
+		partialIntake.EUAUserID = "FAKE"
+		partialIntake.Requester = null.StringFrom("Test Requester")
+
+		err := s.store.SaveSystemIntake(&partialIntake)
+
+		s.NoError(err, "failed to save system intake")
+		var actualIntake models.SystemIntake
+		err = s.db.Get(&actualIntake, "SELECT * FROM system_intake WHERE id=$1", partialIntake.ID)
+		s.NoError(err, "failed to fetch saved intake")
+		s.Equal(actualIntake, partialIntake)
+	})
+
+	s.Run("update a partial system intake", func() {
+		partialIntake.Requester = null.StringFrom("Fix Requester")
+
+		err := s.store.SaveSystemIntake(&partialIntake)
+
+		s.NoError(err, "failed to save system intake")
+		var actualIntake models.SystemIntake
+		err = s.db.Get(&actualIntake, "SELECT * FROM system_intake WHERE id=$1", partialIntake.ID)
+		s.NoError(err, "failed to fetch saved intake")
+		s.Equal(actualIntake, partialIntake)
+	})
+
+	s.Run("EUA ID will not update", func() {
+		originalEUA := partialIntake.EUAUserID
+		partialIntake.EUAUserID = "NEWS"
+
+		err := s.store.SaveSystemIntake(&partialIntake)
+
+		s.NoError(err, "failed to save system intake")
+		var actualIntake models.SystemIntake
+		err = s.db.Get(&actualIntake, "SELECT * FROM system_intake WHERE id=$1", partialIntake.ID)
+		s.NoError(err, "failed to fetch saved intake")
+		s.Equal(originalEUA, actualIntake.EUAUserID)
+	})
+}
