@@ -4,6 +4,7 @@ import (
 	"database/sql"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/spf13/viper"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -35,7 +36,7 @@ func (s ServicesTestSuite) TestSystemIntakeSaver() {
 			submittedIntake := models.SystemIntake{
 				ID:        fakeID,
 				EUAUserID: euaID,
-				Requester: models.NullableString{
+				Requester: null.String{
 					NullString: sql.NullString{
 						String: "Requester",
 						Valid:  true,
