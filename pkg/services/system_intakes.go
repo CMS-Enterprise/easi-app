@@ -4,7 +4,6 @@ import (
 	"github.com/jmoiron/sqlx"
 
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
 // FetchSystemIntakesByEuaID fetches all system intakes by a given user
@@ -17,9 +16,11 @@ func FetchSystemIntakesByEuaID(euaID string, db *sqlx.DB) (models.SystemIntakes,
 	return intakes, nil
 }
 
-// NewSaveSystemIntake is a service to save the system intake to postgres
-func NewSaveSystemIntake(store *storage.Store) func(intake *models.SystemIntake) error {
+// NewSaveSystemIntake is a service to save the system intake
+func NewSaveSystemIntake(
+	save func(intake *models.SystemIntake) error,
+) func(intake *models.SystemIntake) error {
 	return func(intake *models.SystemIntake) error {
-		return store.SaveSystemIntake(intake)
+		return save(intake)
 	}
 }
