@@ -68,7 +68,7 @@ func (s *server) routes(
 
 	systemIntakeHandler := handlers.SystemIntakeHandler{
 		Logger:           s.logger,
-		SaveSystemIntake: services.NewSaveSystemIntake(store),
+		SaveSystemIntake: services.NewSaveSystemIntake(store.SaveSystemIntake),
 	}
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
 
