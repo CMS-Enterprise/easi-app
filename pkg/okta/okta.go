@@ -59,6 +59,7 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, verifier *jwtver
 			return
 		}
 		euaID, ok := authenticateAndGetEua(localLogger, authHeader, *verifier)
+		logger = logger.With(zap.String("user", euaID))
 		if !ok {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 			return
