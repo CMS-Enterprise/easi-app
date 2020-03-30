@@ -8,7 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -24,7 +24,7 @@ type SystemIntakesHandler struct {
 // Handle handles a request for System Intakes
 func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := context.Logger(r.Context())
+		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
 			h.Logger.Error("Failed to get logger from context in system intakes handler")
 			logger = h.Logger
@@ -32,7 +32,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 
 		switch r.Method {
 		case "GET":
-			euaID, ok := context.EuaID(r.Context())
+			euaID, ok := appcontext.EuaID(r.Context())
 			if !ok {
 				h.Logger.Error("Failed to get EUA ID from context in system intakes handler")
 				http.Error(w, "Failed to fetch System Intakes", http.StatusInternalServerError)

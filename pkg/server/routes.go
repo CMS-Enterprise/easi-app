@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -11,6 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/services"
+	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
 func (s *server) routes(
@@ -53,6 +55,11 @@ func (s *server) routes(
 		fmt.Println(err)
 	}
 
+	store := storage.NewStore(
+		db,
+		s.logger,
+	)
+
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
@@ -60,9 +67,16 @@ func (s *server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
+	fakeAuth := func(ctx context.Context) (bool, error) {
+		return true, nil
+	}
 	systemIntakeHandler := handlers.SystemIntakeHandler{
-		Logger:           s.logger,
-		SaveSystemIntake: services.NewSaveSystemIntake(db),
+		Logger: s.logger,
+		SaveSystemIntake: services.NewSaveSystemIntake(
+			store.SaveSystemIntake,
+			fakeAuth,
+			s.logger,
+		),
 	}
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
 

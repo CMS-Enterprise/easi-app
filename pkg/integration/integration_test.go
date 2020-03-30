@@ -5,9 +5,9 @@ package integration
 // and simulate production application use
 
 import (
-	"os"
 	"testing"
 
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 )
@@ -16,13 +16,18 @@ type IntegrationTestSuite struct {
 	suite.Suite
 	environment string
 	logger      *zap.Logger
+	config      *viper.Viper
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
+	config := viper.New()
+	config.AutomaticEnv()
+
 	testSuite := &IntegrationTestSuite{
 		Suite:       suite.Suite{},
-		environment: os.Getenv("ENVIRONMENT"),
+		environment: config.GetString("ENVIRONMENT"),
 		logger:      zap.NewNop(),
+		config:      config,
 	}
 
 	if !testing.Short() {

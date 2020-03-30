@@ -8,19 +8,19 @@ import (
 
 	"golang.org/x/net/context"
 
-	context2 "github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func newMockSaveSystemIntake(err error) saveSystemIntake {
-	return func(intake *models.SystemIntake) error {
+	return func(ctx context.Context, intake *models.SystemIntake) error {
 		return err
 	}
 }
 
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
-	requestContext = context2.WithEuaID(requestContext, "EUAID")
+	requestContext = appcontext.WithEuaID(requestContext, "EUAID")
 
 	s.Run("golden path PUT passes", func() {
 		rr := httptest.NewRecorder()
