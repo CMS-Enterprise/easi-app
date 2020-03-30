@@ -30,7 +30,7 @@ export const BusinessCase = () => {
     }
   ];
 
-  const [page, setPage] = useState(3);
+  const [page, setPage] = useState(1);
   const pageObj = pages[page - 1];
   const initialData: BusinessCaseModel = {
     projectName: '',
