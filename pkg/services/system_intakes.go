@@ -6,6 +6,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -33,8 +34,17 @@ func NewSaveSystemIntake(
 		}
 		if !ok {
 			logger.Info("unauthorized access to save system intake")
-			return err
+			return &apperrors.UnauthorizedError{Err: err}
 		}
-		return save(intake)
+		err = save(intake)
+		if err != nil {
+			logger.Error("failed to save system intake")
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     "system intake",
+				Operation: "save",
+			}
+		}
+		return nil
 	}
 }
