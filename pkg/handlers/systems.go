@@ -7,7 +7,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -22,7 +22,7 @@ type SystemsListHandler struct {
 // Handle handles a web request and returns a list of systems
 func (h SystemsListHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := context.Logger(r.Context())
+		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
 			h.Logger.Error("Failed to logger from context in systems list handler")
 			logger = h.Logger
