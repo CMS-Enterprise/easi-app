@@ -26,5 +26,6 @@ export type BusinessCaseModel = {
       year4: LifecyclePhase[];
       year5: LifecyclePhase[];
     };
+    costSavings: string;
   };
 };

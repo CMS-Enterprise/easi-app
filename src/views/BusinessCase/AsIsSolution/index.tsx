@@ -148,12 +148,9 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         years={values.asIsSolution.estimatedLifecycleCost}
       />
       <div className="tablet:grid-col-9 margin-bottom-7">
-        <FieldGroup
-          scrollElement="asIsSolution.successIndicators"
-          error={false}
-        >
-          <Label htmlFor="BusinessCase-AsIsSolutionSuccessIndicators">
-            How will you determine whether or not this effort is successful?
+        <FieldGroup scrollElement="asIsSolution.costSavings" error={false}>
+          <Label htmlFor="BusinessCase-AsIsSolutionCostSavings">
+            What is the cost savings or avoidance associated with this solution?
           </Label>
           <HelpText className="margin-y-1">
             This could include old systems going away, contract hours/ new Full
@@ -163,12 +160,12 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-AsIsSolutionSuccessIndicators"
+            id="BusinessCase-AsIsSolutionCostSavings"
             maxLength={2000}
-            name="successIndicators"
+            name="asIsSolution.costSavings"
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.successIndicators.length} characters left`}</HelpText>
+            values.asIsSolution.costSavings.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
     </>

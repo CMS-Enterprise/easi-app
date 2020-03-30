@@ -57,7 +57,8 @@ export const BusinessCase = () => {
         year3: [{ phase: '', cost: '' }],
         year4: [{ phase: '', cost: '' }],
         year5: [{ phase: '', cost: '' }]
-      }
+      },
+      costSavings: ''
     }
   };
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
