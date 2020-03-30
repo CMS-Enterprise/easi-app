@@ -9,7 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"golang.org/x/net/context"
 
-	context2 "github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -23,7 +23,7 @@ func (s HandlerTestSuite) TestSystemIntakesHandler() {
 	s.Run("golden path FETCH passes", func() {
 		rr := httptest.NewRecorder()
 		requestContext := context.Background()
-		requestContext = context2.WithEuaID(requestContext, "EUAID")
+		requestContext = appcontext.WithEuaID(requestContext, "EUAID")
 		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intakes/", bytes.NewBufferString("{}"))
 		s.NoError(err)
 		SystemIntakesHandler{

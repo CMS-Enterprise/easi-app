@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/net/context"
 
-	appcontext "github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
