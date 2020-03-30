@@ -8,7 +8,7 @@ import (
 	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
 func authenticateAndGetEua(logger *zap.Logger, authHeader string, verifier jwtverifier.JwtVerifier) (string, bool) {
@@ -47,7 +47,7 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 
 func authorizeMiddleware(logger *zap.Logger, next http.Handler, verifier *jwtverifier.JwtVerifier) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		localLogger, ok := context.Logger(r.Context())
+		localLogger, ok := appcontext.Logger(r.Context())
 		if !ok {
 			logger.Error("failed to get logger from context")
 			localLogger = logger
@@ -65,7 +65,7 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, verifier *jwtver
 			return
 		}
 
-		ctx := context.WithEuaID(r.Context(), euaID)
+		ctx := appcontext.WithEuaID(r.Context(), euaID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
