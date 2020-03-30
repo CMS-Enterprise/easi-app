@@ -70,6 +70,8 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             maxLength={2000}
             name="asIsSolution.summary"
           />
+          <HelpText className="margin-top-1">{`${2000 -
+            values.asIsSolution.summary.length} characters left`}</HelpText>
         </FieldGroup>
 
         <FieldGroup scrollElement="asIsSolution.pros" error={false}>
@@ -88,6 +90,8 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             maxLength={2000}
             name="asIsSolution.pros"
           />
+          <HelpText className="margin-top-1">{`${2000 -
+            values.asIsSolution.pros.length} characters left`}</HelpText>
         </FieldGroup>
 
         <FieldGroup scrollElement="asIsSolution.cons" error={false}>
@@ -106,6 +110,8 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             maxLength={2000}
             name="asIsSolution.cons"
           />
+          <HelpText className="margin-top-1">{`${2000 -
+            values.asIsSolution.cons.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
       <div>
@@ -159,8 +165,10 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             error={false}
             id="BusinessCase-AsIsSolutionSuccessIndicators"
             maxLength={2000}
-            name="asIsSolution.successIndicators"
+            name="successIndicators"
           />
+          <HelpText className="margin-top-1">{`${2000 -
+            values.successIndicators.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
     </>
