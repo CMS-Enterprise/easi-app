@@ -8,7 +8,7 @@ import (
 
 	"go.uber.org/zap"
 
-	appcontext "github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
