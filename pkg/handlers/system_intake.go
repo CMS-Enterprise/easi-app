@@ -1,17 +1,18 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/context"
+	appcontext "github.com/cmsgov/easi-app/pkg/context"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type saveSystemIntake func(intake *models.SystemIntake) error
+type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
 
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
@@ -22,7 +23,7 @@ type SystemIntakeHandler struct {
 // Handle handles a request for the system intake form
 func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := context.Logger(r.Context())
+		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
 			h.Logger.Error("Failed to get logger from context in system intake handler")
 			logger = h.Logger
@@ -44,13 +45,13 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			euaID, ok := context.EuaID(r.Context())
+			euaID, ok := appcontext.EuaID(r.Context())
 			if !ok {
 				logger.Error("Failed to get EUA ID from context")
 				http.Error(w, "Failed to PUT system", http.StatusInternalServerError)
 			}
 			intake.EUAUserID = euaID
-			err = h.SaveSystemIntake(&intake)
+			err = h.SaveSystemIntake(r.Context(), &intake)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to save system intake: %v", err))
 				// TODO: Replace with more helpful errors
