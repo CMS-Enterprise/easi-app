@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -101,7 +101,7 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		req.Header.Set("AUTHORIZATION", fmt.Sprintf("Bearer %s", accessToken))
 		rr := httptest.NewRecorder()
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			euaID, ok := context.EuaID(r.Context())
+			euaID, ok := appcontext.EuaID(r.Context())
 			s.True(ok)
 			s.Equal(username, euaID)
 		})
