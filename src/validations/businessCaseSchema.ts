@@ -10,7 +10,7 @@ const BusinessCaseValidationSchema = {
       phoneNumber: Yup.string()
         .matches(
           phoneNumberRegex,
-          "The phone number doesn't have enough digits. Check and update it."
+          "The phone number doesn't have enough digits. Check and update it"
         )
         .required(
           'Enter the Requestor’s phone number like 123456789 or 123-456-789'
@@ -20,7 +20,20 @@ const BusinessCaseValidationSchema = {
       name: Yup.string().required("Enter the Business Owner's name")
     })
   }),
-  projectDescription: Yup.object().shape({})
+  projectDescription: Yup.object().shape({
+    businessNeed: Yup.string().required(
+      'Tell us what the business or user need is'
+    ),
+    cmsBenefit: Yup.string().required(
+      'Tell us how CMS will benefit from this effort'
+    ),
+    priorityAlignment: Yup.string().required(
+      'Tell us how this effort aligns with organizational priorities'
+    ),
+    successIndicators: Yup.string().required(
+      'Tell us how you will determine whethere or not this effort is successful'
+    )
+  })
 };
 
 export default BusinessCaseValidationSchema;
