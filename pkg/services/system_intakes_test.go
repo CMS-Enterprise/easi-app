@@ -1,8 +1,6 @@
 package services
 
 import (
-	"database/sql"
-
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
 
@@ -23,32 +21,6 @@ func (s ServicesTestSuite) TestSystemIntakesFetcher() {
 			systemIntakes, err := FetchSystemIntakesByEuaID(fakeEuaID, s.db)
 			s.NoError(err)
 			s.Len(systemIntakes, 1)
-		})
-	}
-}
-
-func (s ServicesTestSuite) TestSystemIntakeSaver() {
-	if viper.Get("ENVIRONMENT") == "LOCAL" {
-		s.Run("successfully saves new System Intakes", func() {
-			fakeID := uuid.New()
-			euaID := "FAKE"
-			submittedIntake := models.SystemIntake{
-				ID:        fakeID,
-				EUAUserID: euaID,
-				Requester: models.NullableString{
-					NullString: sql.NullString{
-						String: "Requester",
-						Valid:  true,
-					},
-				},
-			}
-			err := NewSaveSystemIntake(s.db)(&submittedIntake)
-			s.NoError(err)
-			fetchedIntake := models.SystemIntake{}
-			err = s.db.Get(&fetchedIntake, "SELECT * FROM system_intake WHERE id=$1", fakeID)
-			s.NoError(err)
-			s.Equal(euaID, fetchedIntake.EUAUserID)
-			s.Equal("Requester", fetchedIntake.Requester.String)
 		})
 	}
 }
