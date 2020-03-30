@@ -11,6 +11,7 @@ type TextFieldProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
   value: string;
+  match?: RegExp;
 };
 
 const TextField = ({
@@ -21,20 +22,32 @@ const TextField = ({
   maxLength,
   onChange,
   onBlur,
-  value
+  value,
+  match
 }: TextFieldProps) => {
   const inputClasses = classnames(
     'usa-input',
     { 'easi-textfield--disabled': disabled },
     { 'usa-input--error': error }
   );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (match) {
+      if (e.target.value === '' || match.test(e.target.value)) {
+        onChange(e);
+      }
+    } else {
+      onChange(e);
+    }
+  };
+
   return (
     <input
       className={inputClasses}
       disabled={disabled}
       id={id}
       name={name}
-      onChange={onChange}
+      onChange={handleChange}
       onBlur={onBlur}
       type="text"
       value={value}
