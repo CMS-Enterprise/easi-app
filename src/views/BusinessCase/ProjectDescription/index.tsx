@@ -13,7 +13,7 @@ type ProjectDescriptionProps = {
 };
 
 const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
-  const { errors } = formikProps;
+  const { values, errors } = formikProps;
   const flatErrors = flattenErrors(errors);
   return (
     <>
@@ -36,9 +36,11 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
             as={TextAreaField}
             error={!!flatErrors.businessNeed}
             id="BusinessCase-BusinessNeed"
-            maxLength={1000}
+            maxLength={2000}
             name="businessNeed"
           />
+          <HelpText className="margin-top-1">{`${2000 -
+            values.businessNeed.length} characters left`}</HelpText>
         </FieldGroup>
 
         <FieldGroup scrollElement="cmsBenefit" error={!!flatErrors.cmsBenefit}>
@@ -55,9 +57,11 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
             as={TextAreaField}
             error={!!flatErrors.cmsBenefit}
             id="BusinessCase-CmsBenefit"
-            maxLength={1000}
+            maxLength={2000}
             name="cmsBenefit"
           />
+          <HelpText className="margin-top-1">{`${2000 -
+            values.cmsBenefit.length} characters left`}</HelpText>
         </FieldGroup>
 
         <FieldGroup
@@ -76,9 +80,11 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
             as={TextAreaField}
             error={!!flatErrors.priorityAlignment}
             id="BusinessCase-PriorityAlignment"
-            maxLength={1000}
+            maxLength={2000}
             name="priorityAlignment"
           />
+          <HelpText className="margin-top-1">{`${2000 -
+            values.priorityAlignment.length} characters left`}</HelpText>
         </FieldGroup>
 
         <FieldGroup
@@ -96,9 +102,11 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
             as={TextAreaField}
             error={!!flatErrors.successIndicators}
             id="BusinessCase-SuccessIndicators"
-            maxLength={1000}
+            maxLength={2000}
             name="successIndicators"
           />
+          <HelpText className="margin-top-1">{`${2000 -
+            values.successIndicators.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
     </>

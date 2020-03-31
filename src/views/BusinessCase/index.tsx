@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
 
 import Header from 'components/Header';
@@ -11,14 +11,10 @@ import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
 import GeneralProjectInfo from './GeneralProjectInfo';
 import ProjectDescription from './ProjectDescription';
+import AsIsSolution from './AsIsSolution';
 import './index.scss';
 
-export type BusinessCaseRouterProps = {
-  profileId: string;
-};
-
-type BusinessCaseProps = RouteComponentProps<BusinessCaseRouterProps>;
-export const BusinessCase = ({ match }: BusinessCaseProps) => {
+export const BusinessCase = () => {
   const pages = [
     {
       type: 'FORM',
@@ -29,6 +25,11 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
       type: 'FORM',
       validation: BusinessCaseValidationSchema.projectDescription,
       view: ProjectDescription
+    },
+    {
+      type: 'FORM',
+      validation: null,
+      view: AsIsSolution
     }
   ];
 
@@ -47,7 +48,21 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
     businessNeed: '',
     cmsBenefit: '',
     priorityAlignment: '',
-    successIndicators: ''
+    successIndicators: '',
+    asIsSolution: {
+      title: '',
+      summary: '',
+      pros: '',
+      cons: '',
+      estimatedLifecycleCost: {
+        year1: [{ phase: '', cost: '' }],
+        year2: [{ phase: '', cost: '' }],
+        year3: [{ phase: '', cost: '' }],
+        year4: [{ phase: '', cost: '' }],
+        year5: [{ phase: '', cost: '' }]
+      },
+      costSavings: ''
+    }
   };
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     const Component = pageObj.view;
@@ -59,7 +74,7 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
   };
   return (
     <div className="business-case">
-      <Header activeNavListItem={match.params.profileId} name="INTAKE">
+      <Header name="BUSINESS">
         <div className="margin-bottom-3">
           {pageObj.type === 'FORM' && (
             <button type="button" className="easi-button__save usa-button">
