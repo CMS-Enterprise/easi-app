@@ -72,7 +72,7 @@ const Phase = ({ formikKey, index, values }: PhaseProps) => {
                 id={`BusinessCase-${formikKey}.Phase${index}.cost`}
                 name={`${formikKey}.${index}.cost`}
                 maxLength={10}
-                numbersOnly
+                match={/^[0-9\b]+$/}
               />
             </div>
             <div className="est-lifecycle-cost__phase-btn-wrapper">

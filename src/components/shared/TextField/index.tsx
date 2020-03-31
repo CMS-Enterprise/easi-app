@@ -11,7 +11,7 @@ type TextFieldProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
   value: string;
-  numbersOnly?: boolean;
+  match?: RegExp;
 };
 
 const TextField = ({
@@ -23,7 +23,7 @@ const TextField = ({
   onChange,
   onBlur,
   value,
-  numbersOnly = false
+  match
 }: TextFieldProps) => {
   const inputClasses = classnames(
     'usa-input',
@@ -32,9 +32,8 @@ const TextField = ({
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (numbersOnly) {
-      const regex = /^[0-9\b]+$/;
-      if (e.target.value === '' || regex.test(e.target.value)) {
+    if (match) {
+      if (e.target.value === '' || match.test(e.target.value)) {
         onChange(e);
       }
     } else {
