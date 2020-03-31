@@ -23,7 +23,7 @@ func newMockFetchSystemIntakeByID(err error) fetchSystemIntakeByID {
 	intakeID, _ := uuid.Parse("f92306b9-8a08-4140-854f-5ab89917cec2")
 	intake := models.SystemIntake{
 		ID:        intakeID,
-		EUAUserID: "EUAID",
+		EUAUserID: "FAKE",
 	}
 	return func(id uuid.UUID) (*models.SystemIntake, error) {
 		return &intake, err
@@ -32,16 +32,58 @@ func newMockFetchSystemIntakeByID(err error) fetchSystemIntakeByID {
 
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
-	requestContext = appcontext.WithEuaID(requestContext, "EUAID")
+	requestContext = appcontext.WithEuaID(requestContext, "FAKE")
 
 	s.Run("golden path GET passes", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "GET", getURL, bytes.NewBufferString(""))
+		requestContext = appcontext.WithEuaID(requestContext, "FAKE")
+
+		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/f92306b9-8a08-4140-854f-5ab89917cec2", bytes.NewBufferString(""))
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(nil),
+		}.Handle()(rr, req)
+		fmt.Println(rr.Body.String())
+		s.Equal(http.StatusOK, rr.Code)
+	})
+
+	s.Run("GET returns an error if the uuid is not valid", func() {
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/NON_EXISTENT", bytes.NewBufferString(""))
+		s.NoError(err)
+		SystemIntakeHandler{
+			SaveSystemIntake:      newMockSaveSystemIntake(nil),
+			Logger:                s.logger,
+			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("Failed to parse system intake id to uuid")),
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusInternalServerError, rr.Code)
+	})
+
+	s.Run("GET returns an error if the uuid doesn't exist", func() {
+		id := uuid.New()
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/" + id.String(), bytes.NewBufferString(""))
+		s.NoError(err)
+		SystemIntakeHandler{
+			SaveSystemIntake:      newMockSaveSystemIntake(nil),
+			Logger:                s.logger,
+			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("Failed to fetch system intake")),
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusInternalServerError, rr.Code)
+		s.Equal("Failed to save system intake\n", rr.Body.String())
+	})
+
+	s.Run("golden path PUT passes", func() {
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString("{}"))
+		s.NoError(err)
+		SystemIntakeHandler{
+			SaveSystemIntake: newMockSaveSystemIntake(nil),
+			Logger:           s.logger,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusOK, rr.Code)
