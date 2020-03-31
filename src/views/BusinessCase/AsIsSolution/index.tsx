@@ -16,7 +16,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
   const { values } = formikProps;
   return (
     <>
-      <h1 className="font-heading-xl">Options Analysis</h1>
+      <h1 className="font-heading-xl">Alternatives Analysis</h1>
       <p className="line-height-body-6">
         Below you should identify options and alternatives to meet your business
         need. Include a summary of the approaches, how you will acquire the
@@ -114,34 +114,24 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             values.asIsSolution.cons.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
-      <div>
-        <div className="tablet:grid-col-9">
-          <h2>Estimated Lifecycle Cost</h2>
-          <HelpText>
-            <p>
-              You can add speculative costs if exact ones are not known or if a
-              contract is not yet in place. If your &quot;As is&quot; solution
-              does not have any existing costs associated with it (licenses,
-              contractors, etc) then please mark the cost as $0.
-            </p>
-            <br />
-            <span>
-              These things should be considered when estimating costs:
-            </span>
-            <ul className="padding-left-205">
-              <li>
-                a brief summary of the proposed IT solution including any
-                associated software products,
-              </li>
-              <li>
-                implementation approach (e.g. development/configuration,
-                phases),
-              </li>
-              <li>costs (e.g. services, software, O&M),</li>
-              <li>and potential acqueisition approaches.</li>
-            </ul>
-          </HelpText>
-        </div>
+      <div className="tablet:grid-col-9">
+        <h2>Estimated Lifecycle Cost</h2>
+        <HelpText>
+          <p>
+            You can add speculative costs if exact ones are not known or if a
+            contract is not yet in place. If your &quot;As is&quot; solution
+            does not have any existing costs associated with it (licenses,
+            contractors, etc) then please mark the cost as $0.
+          </p>
+          <br />
+          <span>These things should be considered when estimating costs:</span>
+          <ul className="padding-left-205">
+            <li>Hosting</li>
+            <li>Software subscription and licenses(COTS and GOTS products)</li>
+            <li>Contractor rates and salaries</li>
+            <li>Inflation</li>
+          </ul>
+        </HelpText>
       </div>
       <EstimatedLifecycleCost
         formikKey="asIsSolution.estimatedLifecycleCost"
