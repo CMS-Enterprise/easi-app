@@ -50,13 +50,6 @@ func Serve(config *viper.Viper) {
 		authMiddleware = local.NewLocalAuthorizeMiddleware(zapLogger)
 	}
 
-	//Set up the database connection
-	pgdsn := config.GetString("SQLX_POSTGRES_DSN")
-	db, err := sqlx.Connect("postgres", pgdsn)
-	if err != nil {
-		zapLogger.Fatal("Failed to connect to db")
-	}
-
 	// set up server dependencies
 	clientAddress := config.GetString("CLIENT_ADDRESS")
 
@@ -64,7 +57,6 @@ func Serve(config *viper.Viper) {
 		router: r,
 		Config: config,
 		logger: zapLogger,
-		db:     db,
 	}
 
 	// set up routes

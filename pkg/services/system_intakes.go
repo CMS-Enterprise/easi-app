@@ -80,14 +80,21 @@ func NewSaveSystemIntake(
 }
 
 // NewFetchSystemIntakeByID is a service to fetch the system intake by intake id
-func NewFetchSystemIntakeByID(db *sqlx.DB) func(id uuid.UUID) (*models.SystemIntake, error) {
+func NewFetchSystemIntakeByID(
+	fetch func(id uuid.UUID) (*models.SystemIntake, error),
+	logger *zap.Logger,
+) func(id uuid.UUID) (*models.SystemIntake, error) {
 	return func(id uuid.UUID) (*models.SystemIntake, error) {
-		intake := models.SystemIntake{}
-		err := db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+		intake, err := fetch(id)
 		if err != nil {
-			return &models.SystemIntake{}, err
+			logger.Error("failed to fetch system intake")
+			return &models.SystemIntake{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     "system intake",
+				Operation: "fetch",
+			}
 		}
-		return &intake, nil
+		return intake, nil
 	}
 
 }

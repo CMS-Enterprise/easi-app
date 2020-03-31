@@ -129,20 +129,31 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 }
 
 func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
-	if viper.Get("ENVIRONMENT") == "LOCAL" {
-		s.Run("successfully System Intake by ID", func() {
-			tx := s.db.MustBegin()
-			fakeID := uuid.New()
-			euaID := "FAKE"
-			_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &models.SystemIntake{ID: fakeID, EUAUserID: euaID})
-			s.NoError(err)
-			err = tx.Commit()
-			s.NoError(err)
+	logger := zap.NewNop()
+	fakeID := uuid.New()
 
-			fetched, err := NewFetchSystemIntakeByID(s.db)(fakeID)
-			s.NoError(err)
-			s.Equal(fakeID, fetched.ID)
-			s.Equal(euaID, fetched.EUAUserID)
-		})
-	}
+	s.Run("successfully fetches System Intake by ID without an error", func() {
+		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				ID: fakeID,
+			}, nil
+		}
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
+		intake, err := fetchSystemIntakeByID(fakeID)
+		s.NoError(err)
+
+		s.Equal(fakeID, intake.ID)
+	})
+
+	s.Run("returns query error when save fails", func() {
+		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+				return &models.SystemIntake{}, errors.New("save failed")
+		}
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
+
+		intake, err := fetchSystemIntakeByID(uuid.New())
+
+		s.IsType(&apperrors.QueryError{}, err)
+		s.Equal(&models.SystemIntake{}, intake)
+	})
 }
