@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-func (s *server) routes(
+func (s *Server) routes(
 	authorizationMiddleware func(handler http.Handler) http.Handler,
 	corsMiddleware func(handler http.Handler) http.Handler,
 	traceMiddleware func(handler http.Handler) http.Handler,
