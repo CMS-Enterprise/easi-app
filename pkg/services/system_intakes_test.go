@@ -1,9 +1,15 @@
 package services
 
 import (
+	"context"
+	"errors"
+
 	"github.com/google/uuid"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -23,4 +29,101 @@ func (s ServicesTestSuite) TestSystemIntakesFetcher() {
 			s.Len(systemIntakes, 1)
 		})
 	}
+}
+
+func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
+	logger := zap.NewNop()
+	authorizeSaveSystemIntake := NewAuthorizeSaveSystemIntake(logger)
+
+	s.Run("No EUA ID fails auth", func() {
+		ctx := context.Background()
+
+		ok, err := authorizeSaveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.False(ok)
+		s.IsType(&apperrors.ContextError{}, err)
+	})
+
+	s.Run("Mismatched EUA ID fails auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ZYXW")
+		intake := models.SystemIntake{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeSaveSystemIntake(ctx, &intake)
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Matched EUA ID fails auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ABCD")
+		intake := models.SystemIntake{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeSaveSystemIntake(ctx, &intake)
+
+		s.True(ok)
+		s.NoError(err)
+	})
+}
+
+func (s ServicesTestSuite) TestNewSaveSystemIntake() {
+	logger := zap.NewNop()
+	save := func(intake *models.SystemIntake) error {
+		return nil
+	}
+	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		return true, nil
+	}
+
+	s.Run("returns no error when successful", func() {
+		ctx := context.Background()
+		saveSystemIntake := NewSaveSystemIntake(save, authorize, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.NoError(err)
+	})
+
+	s.Run("returns query error when save fails", func() {
+		ctx := context.Background()
+		save = func(intake *models.SystemIntake) error {
+			return errors.New("save failed")
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, authorize, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.IsType(&apperrors.QueryError{}, err)
+	})
+
+	s.Run("returns error when authorization errors", func() {
+		ctx := context.Background()
+		err := errors.New("authorization failed")
+		authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+			return false, err
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, authorize, logger)
+
+		actualError := saveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.Error(err)
+		s.Equal(err, actualError)
+	})
+
+	s.Run("returns unauthorized error when authorization not ok", func() {
+		ctx := context.Background()
+		authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+			return false, nil
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, authorize, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.IsType(&apperrors.UnauthorizedError{}, err)
+	})
 }

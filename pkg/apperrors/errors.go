@@ -17,11 +17,19 @@ func (e *UnauthorizedError) Unwrap() error {
 	return e.Err
 }
 
+// QueryOperation provides a set of operations that can fail
+type QueryOperation string
+
+const (
+	// QuerySave is for failures when saving
+	QuerySave QueryOperation = "Save"
+)
+
 // QueryError is a typed error for query issues
 type QueryError struct {
 	Err       error
 	Model     string
-	Operation string
+	Operation QueryOperation
 }
 
 // Error provides the error as a string
@@ -32,4 +40,25 @@ func (e *QueryError) Error() string {
 // Unwrap provides the underlying error
 func (e *QueryError) Unwrap() error {
 	return e.Err
+}
+
+// ContextOperation denotes what was happened when the context failed
+type ContextOperation string
+
+const (
+	// ContextGet is for retrieving from the context
+	ContextGet ContextOperation = "Get"
+	// ContextSet is for adding to the context
+	ContextSet ContextOperation = "Set"
+)
+
+// ContextError is a typed error for context issues
+type ContextError struct {
+	Operation ContextOperation
+	Object    string
+}
+
+// Error provides the error as a string
+func (e *ContextError) Error() string {
+	return fmt.Sprintf("Could not %s %s on context", e.Operation, e.Object)
 }
