@@ -5,7 +5,10 @@ import { Formik, Form, FormikProps } from 'formik';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { BusinessCaseModel } from 'types/businessCase';
+import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import flattenErrors from 'utils/flattenErrors';
 import GeneralProjectInfo from './GeneralProjectInfo';
 import ProjectDescription from './ProjectDescription';
 import AsIsSolution from './AsIsSolution';
@@ -15,12 +18,12 @@ export const BusinessCase = () => {
   const pages = [
     {
       type: 'FORM',
-      validation: null,
+      validation: BusinessCaseValidationSchema.generalProjectInfo,
       view: GeneralProjectInfo
     },
     {
       type: 'FORM',
-      validation: null,
+      validation: BusinessCaseValidationSchema.projectDescription,
       view: ProjectDescription
     },
     {
@@ -86,6 +89,7 @@ export const BusinessCase = () => {
           // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
           // Form will be manually submitted.
           onSubmit={() => {}}
+          validationSchema={pageObj.validation}
           validateOnBlur={false}
           validateOnChange={false}
           validateOnMount={false}
@@ -93,59 +97,85 @@ export const BusinessCase = () => {
           {(formikProps: FormikProps<BusinessCaseModel>) => {
             const {
               values,
+              errors,
               validateForm,
               setErrors,
               isSubmitting
             } = formikProps;
+            const flatErrors: any = flattenErrors(errors);
             return (
-              <Form>
-                {renderPage(formikProps)}
-                {page > 1 && (
-                  <Button
-                    type="button"
-                    outline
-                    onClick={() => {
-                      setPage(prev => prev - 1);
-                      setErrors({});
-                      window.scrollTo(0, 0);
-                    }}
+              <>
+                {Object.keys(errors).length > 0 && (
+                  <ErrorAlert
+                    classNames="margin-top-3"
+                    heading="Please check and fix the following"
                   >
-                    Back
-                  </Button>
-                )}
+                    {Object.keys(flatErrors).map(key => {
+                      return (
+                        <ErrorAlertMessage
+                          key={`Error.${key}`}
+                          message={flatErrors[key]}
+                          onClick={() => {
+                            const field = document.querySelector(
+                              `[data-scroll="${key}"]`
+                            );
 
-                {page < pages.length && (
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      if (pageObj.validation) {
-                        validateForm().then(err => {
-                          if (Object.keys(err).length === 0) {
-                            setPage(prev => prev + 1);
-                          }
-                        });
+                            if (field) {
+                              field.scrollIntoView();
+                            }
+                          }}
+                        />
+                      );
+                    })}
+                  </ErrorAlert>
+                )}
+                <Form>
+                  {renderPage(formikProps)}
+                  {page > 1 && (
+                    <Button
+                      type="button"
+                      outline
+                      onClick={() => {
+                        setPage(prev => prev - 1);
+                        setErrors({});
                         window.scrollTo(0, 0);
-                      }
-                      // TODO: DELETE NEXT LINE WHEN VALIDATIONS ARE IMPLEMENTED
-                      setPage(prev => prev + 1);
-                    }}
-                  >
-                    Next
-                  </Button>
-                )}
+                      }}
+                    >
+                      Back
+                    </Button>
+                  )}
 
-                {page === pages.length && (
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    onClick={() => {
-                      console.log('Submitting Data: ', values);
-                    }}
-                  >
-                    Review and Send
-                  </Button>
-                )}
-              </Form>
+                  {page < pages.length && (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        if (pageObj.validation) {
+                          validateForm().then(err => {
+                            if (Object.keys(err).length === 0) {
+                              setPage(prev => prev + 1);
+                            }
+                          });
+                          window.scrollTo(0, 0);
+                        }
+                      }}
+                    >
+                      Next
+                    </Button>
+                  )}
+
+                  {page === pages.length && (
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      onClick={() => {
+                        console.log('Submitting Data: ', values);
+                      }}
+                    >
+                      Review and Send
+                    </Button>
+                  )}
+                </Form>
+              </>
             );
           }}
         </Formik>
