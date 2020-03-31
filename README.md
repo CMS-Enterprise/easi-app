@@ -3,6 +3,13 @@
 This repository contains the application code
 for the CMS EASi (Easy Access to System Information).
 
+## Codebase Layout
+
+## Go
+
+The server portion of the application is written in Go.
+More information can be found in the [pkg documentation](./pkg/README.md).
+
 ## Application Setup
 
 ### Setup: Developer Setup
