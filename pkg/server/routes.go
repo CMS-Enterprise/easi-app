@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
@@ -67,14 +66,11 @@ func (s *server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	fakeAuth := func(ctx context.Context) (bool, error) {
-		return true, nil
-	}
 	systemIntakeHandler := handlers.SystemIntakeHandler{
 		Logger: s.logger,
 		SaveSystemIntake: services.NewSaveSystemIntake(
 			store.SaveSystemIntake,
-			fakeAuth,
+			services.NewAuthorizeSaveSystemIntake(s.logger),
 			s.logger,
 		),
 	}
