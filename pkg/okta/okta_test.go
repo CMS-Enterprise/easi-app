@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
@@ -17,12 +17,17 @@ import (
 type OktaTestSuite struct {
 	suite.Suite
 	logger *zap.Logger
+	config *viper.Viper
 }
 
 func TestOktaTestSuite(t *testing.T) {
+	config := viper.New()
+	config.AutomaticEnv()
+
 	testSuite := &OktaTestSuite{
 		Suite:  suite.Suite{},
 		logger: zap.NewNop(),
+		config: config,
 	}
 
 	if !testing.Short() {
@@ -31,13 +36,13 @@ func TestOktaTestSuite(t *testing.T) {
 }
 
 func (s OktaTestSuite) TestAuthorizeMiddleware() {
-	oktaDomain := os.Getenv("OKTA_DOMAIN")
-	oktaIssuer := os.Getenv("OKTA_ISSUER")
-	oktaClientID := os.Getenv("OKTA_CLIENT_ID")
-	oktaRedirectURL := os.Getenv("OKTA_REDIRECT_URI")
-	username := os.Getenv("OKTA_TEST_USERNAME")
-	password := os.Getenv("OKTA_TEST_PASSWORD")
-	secret := os.Getenv("OKTA_TEST_SECRET")
+	oktaDomain := s.config.GetString("OKTA_DOMAIN")
+	oktaIssuer := s.config.GetString("OKTA_ISSUER")
+	oktaClientID := s.config.GetString("OKTA_CLIENT_ID")
+	oktaRedirectURL := s.config.GetString("OKTA_REDIRECT_URI")
+	username := s.config.GetString("OKTA_TEST_USERNAME")
+	password := s.config.GetString("OKTA_TEST_PASSWORD")
+	secret := s.config.GetString("OKTA_TEST_SECRET")
 	accessToken, err := testhelpers.OktaAccessToken(
 		oktaDomain,
 		oktaIssuer,
