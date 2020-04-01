@@ -37,7 +37,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 
 	s.Run("golden path GET passes", func() {
 		rr := httptest.NewRecorder()
-		requestContext = appcontext.WithEuaID(requestContext, "FAKE")
 		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/f92306b9-8a08-4140-854f-5ab89917cec2", bytes.NewBufferString(""))
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"intake_id": "f92306b9-8a08-4140-854f-5ab89917cec2"})
@@ -46,7 +45,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			Logger:                s.logger,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(nil),
 		}.Handle()(rr, req)
-		fmt.Println(rr.Body.String())
 		s.Equal(http.StatusOK, rr.Code)
 	})
 
@@ -77,7 +75,22 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to save system intake\n", rr.Body.String())
+		s.Equal("Failed to GET system intake\n", rr.Body.String())
+	})
+
+	s.Run("GET returns an error if the EUA ID from the request doesn't match the fetched intake", func() {
+		requestContextWithBadEUA := appcontext.WithEuaID(context.Background(), "WRNG")
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContextWithBadEUA, "GET", "/system_intake/f92306b9-8a08-4140-854f-5ab89917cec2", bytes.NewBufferString(""))
+		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"intake_id": "f92306b9-8a08-4140-854f-5ab89917cec2"})
+		SystemIntakeHandler{
+			SaveSystemIntake:      newMockSaveSystemIntake(nil),
+			Logger:                s.logger,
+			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(nil),
+		}.Handle()(rr, req)
+		s.Equal(http.StatusUnauthorized, rr.Code)
+		s.Equal("Failed to GET system intake\n", rr.Body.String())
 	})
 
 	s.Run("golden path PUT passes", func() {
