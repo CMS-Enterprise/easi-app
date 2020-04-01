@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -71,7 +69,7 @@ func (s *Server) routes(
 		Logger: s.logger,
 		SaveSystemIntake: services.NewSaveSystemIntake(
 			store.SaveSystemIntake,
-			func(uuid uuid.UUID) (*models.SystemIntake, error) { return nil, nil },
+			store.FetchSystemIntakeByID,
 			services.NewAuthorizeSaveSystemIntake(s.logger),
 			s.logger,
 		),
@@ -82,7 +80,7 @@ func (s *Server) routes(
 	}
 
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
-	//api.Handle("/system_intake/", systemIntakeHandler.Handle())
+	api.Handle("/system_intake", systemIntakeHandler.Handle())
 
 	if s.Config.GetString("ENVIRONMENT") == "LOCAL" {
 		systemIntakesHandler := handlers.SystemIntakesHandler{

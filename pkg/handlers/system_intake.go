@@ -43,7 +43,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			uuid, err := uuid.Parse(id)
 			if err != nil {
 				logger.Error("Failed to parse system intake id to uuid")
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
 			intake, err := h.FetchSystemIntakeByID(uuid)

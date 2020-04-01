@@ -25,7 +25,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 		s.NoError(err)
 		defer resp.Body.Close()
-		s.Equal(resp.StatusCode, http.StatusUnauthorized)
+		s.Equal(http.StatusUnauthorized, resp.StatusCode)
 	})
 
 	s.Run("PUT will succeed first time with token", func() {
@@ -36,11 +36,21 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
-		defer resp.Body.Close()
-		s.Equal(resp.StatusCode, http.StatusOK)
+		s.Equal(http.StatusOK, resp.StatusCode)
 	})
 
-	// TODO: hit GET endpoint here and check data
+	s.Run("GET will fetch the intake just saved", func() {
+		req, err := http.NewRequest(http.MethodGet, s.server.URL+path+id.String(), nil)
+		s.NoError(err)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
+
+		resp, err := client.Do(req)
+
+		s.NoError(err)
+		defer resp.Body.Close()
+
+		s.Equal(resp.StatusCode, http.StatusOK)
+	})
 
 	s.Run("PUT will succeed second time with with new data", func() {
 		body, err := json.Marshal(map[string]string{
