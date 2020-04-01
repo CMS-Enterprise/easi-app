@@ -12,6 +12,7 @@ import flattenErrors from 'utils/flattenErrors';
 import GeneralProjectInfo from './GeneralProjectInfo';
 import ProjectDescription from './ProjectDescription';
 import AsIsSolution from './AsIsSolution';
+import PreferredSolution from './PreferredSolution';
 import './index.scss';
 
 export const BusinessCase = () => {
@@ -30,6 +31,11 @@ export const BusinessCase = () => {
       type: 'FORM',
       validation: null,
       view: AsIsSolution
+    },
+    {
+      type: 'FORM',
+      validation: null,
+      view: PreferredSolution
     }
   ];
 
@@ -52,6 +58,21 @@ export const BusinessCase = () => {
     asIsSolution: {
       title: '',
       summary: '',
+      pros: '',
+      cons: '',
+      estimatedLifecycleCost: {
+        year1: [{ phase: '', cost: '' }],
+        year2: [{ phase: '', cost: '' }],
+        year3: [{ phase: '', cost: '' }],
+        year4: [{ phase: '', cost: '' }],
+        year5: [{ phase: '', cost: '' }]
+      },
+      costSavings: ''
+    },
+    preferredSolution: {
+      title: '',
+      summary: '',
+      acquisitionApproach: '',
       pros: '',
       cons: '',
       estimatedLifecycleCost: {
@@ -155,6 +176,9 @@ export const BusinessCase = () => {
                               setPage(prev => prev + 1);
                             }
                           });
+                          window.scrollTo(0, 0);
+                        } else {
+                          setPage(prev => prev + 1);
                           window.scrollTo(0, 0);
                         }
                       }}
