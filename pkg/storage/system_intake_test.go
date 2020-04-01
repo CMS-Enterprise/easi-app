@@ -36,6 +36,11 @@ func NewSystemIntake() models.SystemIntake {
 }
 
 func (s StoreTestSuite) TestSaveSystemIntake() {
+	if s.environment != "local" {
+		// TODO: When DB is hooked up in CircleCI, remove this check
+		return
+	}
+
 	s.Run("save a new system intake", func() {
 		intake := NewSystemIntake()
 
@@ -112,5 +117,37 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 		err = s.db.Get(&actualIntake, "SELECT * FROM system_intake WHERE id=$1", partialIntake.ID)
 		s.NoError(err, "failed to fetch saved intake")
 		s.Equal(originalEUA, actualIntake.EUAUserID)
+	})
+}
+
+func (s StoreTestSuite) TestFetchSystemIntakeByID() {
+	if s.environment != "local" {
+		// TODO: When DB is hooked up in CircleCI, remove this check
+		return
+	}
+
+	s.Run("golden path to fetch a system intake", func() {
+		intake := NewSystemIntake()
+		id := intake.ID
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		fetched, err := s.store.FetchSystemIntakeByID(id)
+
+		s.NoError(err, "failed to fetch system intake")
+		s.Equal(intake.ID, fetched.ID)
+		s.Equal(intake.EUAUserID, fetched.EUAUserID)
+	})
+
+	s.Run("cannot without an ID that exists in the db", func() {
+		badUUID, _ := uuid.Parse("")
+		fetched, err := s.store.FetchSystemIntakeByID(badUUID)
+
+		s.Error(err)
+		s.Equal("sql: no rows in result set", err.Error())
+		s.Equal(&models.SystemIntake{}, fetched)
 	})
 }
