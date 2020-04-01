@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // pq is needed for the postgres driver
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -19,7 +18,6 @@ type server struct {
 	router *mux.Router
 	Config *viper.Viper
 	logger *zap.Logger
-	db     *sqlx.DB
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
