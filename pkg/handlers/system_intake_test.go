@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -37,9 +38,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	s.Run("golden path GET passes", func() {
 		rr := httptest.NewRecorder()
 		requestContext = appcontext.WithEuaID(requestContext, "FAKE")
-
 		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/f92306b9-8a08-4140-854f-5ab89917cec2", bytes.NewBufferString(""))
 		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"intake_id": "f92306b9-8a08-4140-854f-5ab89917cec2"})
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
@@ -53,10 +54,11 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		rr := httptest.NewRecorder()
 		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/NON_EXISTENT", bytes.NewBufferString(""))
 		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"intake_id": "NON_EXISTENT"})
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
-			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("Failed to parse system intake id to uuid")),
+			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to parse system intake id to uuid")),
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
@@ -65,12 +67,13 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	s.Run("GET returns an error if the uuid doesn't exist", func() {
 		id := uuid.New()
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/" + id.String(), bytes.NewBufferString(""))
+		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/"+id.String(), bytes.NewBufferString(""))
 		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
-			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("Failed to fetch system intake")),
+			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to fetch system intake")),
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)

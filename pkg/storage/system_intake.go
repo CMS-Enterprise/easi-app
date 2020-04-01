@@ -90,7 +90,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 	return err
 }
 
-// SaveSystemIntake does an upsert for a system intake
+// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
 func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
 	err := s.db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)

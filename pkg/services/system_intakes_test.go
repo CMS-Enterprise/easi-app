@@ -147,7 +147,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 
 	s.Run("returns query error when save fails", func() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
-				return &models.SystemIntake{}, errors.New("save failed")
+			return &models.SystemIntake{}, errors.New("save failed")
 		}
 		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
 
