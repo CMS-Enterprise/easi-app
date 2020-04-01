@@ -38,54 +38,54 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
       <div className="tablet:grid-col-6 margin-bottom-7">
         <h1 className="font-heading-xl margin-top-4">Contact Details</h1>
 
-        {/* Requestor Name */}
+        {/* Requester Name */}
         <FieldGroup
-          scrollElement="requestor.name"
-          error={!!flatErrors['requestor.name']}
+          scrollElement="requester.name"
+          error={!!flatErrors['requester.name']}
         >
-          <Label htmlFor="IntakeForm-Requestor">Requestor</Label>
-          <FieldErrorMsg>{flatErrors['requestor.name']}</FieldErrorMsg>
+          <Label htmlFor="IntakeForm-Requester">Requester</Label>
+          <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={!!flatErrors['requestor.name']}
-            id="IntakeForm-Requestor"
+            error={!!flatErrors['requester.name']}
+            id="IntakeForm-Requester"
             maxLength={50}
-            name="requestor.name"
+            name="requester.name"
             onChange={(e: any) => {
               if (isReqAndBusOwnerSame) {
                 setFieldValue('businessOwner.name', e.target.value);
               }
-              setFieldValue('requestor.name', e.target.value);
+              setFieldValue('requester.name', e.target.value);
             }}
           />
         </FieldGroup>
 
-        {/* Requestor Component */}
+        {/* Requester Component */}
         <FieldGroup
-          scrollElement="requestor.component"
-          error={!!flatErrors['requestor.component']}
+          scrollElement="requester.component"
+          error={!!flatErrors['requester.component']}
         >
-          <Label htmlFor="IntakeForm-RequestorComponent">
-            Requestor Component
+          <Label htmlFor="IntakeForm-RequesterComponent">
+            Requester Component
           </Label>
-          <FieldErrorMsg>{flatErrors['requestor.component']}</FieldErrorMsg>
+          <FieldErrorMsg>{flatErrors['requester.component']}</FieldErrorMsg>
           <Field
             as={DropdownField}
-            error={!!flatErrors['requestor.component']}
-            id="IntakeForm-RequestorComponent"
-            name="requestor.component"
+            error={!!flatErrors['requester.component']}
+            id="IntakeForm-RequesterComponent"
+            name="requester.component"
             onChange={(e: any) => {
               if (isReqAndBusOwnerSame) {
                 setFieldValue('businessOwner.component', e.target.value);
               }
-              setFieldValue('requestor.component', e.target.value);
+              setFieldValue('requester.component', e.target.value);
             }}
           >
             <Field as={DropdownItem} name="Select an option" value="" />
             {cmsDivisionsAndOffices.map((office: any) => (
               <Field
                 as={DropdownItem}
-                key={`RequestorComponent-${office.acronym}`}
+                key={`RequesterComponent-${office.acronym}`}
                 name={office.name}
                 value={office.name}
               />
@@ -103,16 +103,16 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </Label>
           <Field
             as={CheckboxField}
-            id="IntakeForm-IsBusinessOwnerSameAsRequestor"
-            label="Same as Requestor"
-            name="isBusinessOwnerSameAsRequestor"
+            id="IntakeForm-IsBusinessOwnerSameAsRequester"
+            label="Same as Requester"
+            name="isBusinessOwnerSameAsRequester"
             onChange={(e: any) => {
               if (e.target.checked) {
                 setReqAndBusOwnerSame(true);
-                setFieldValue('businessOwner.name', values.requestor.name);
+                setFieldValue('businessOwner.name', values.requester.name);
                 setFieldValue(
                   'businessOwner.component',
-                  values.requestor.component
+                  values.requester.component
                 );
               } else {
                 setReqAndBusOwnerSame(false);

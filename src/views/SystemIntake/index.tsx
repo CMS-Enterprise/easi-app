@@ -40,7 +40,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const initialData: SystemIntakeForm = {
     projectName: '',
     acronym: '',
-    requestor: {
+    requester: {
       name: '',
       component: ''
     },
