@@ -55,12 +55,20 @@ func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
 // NewSaveSystemIntake is a service to save the system intake
 func NewSaveSystemIntake(
 	save func(intake *models.SystemIntake) error,
+	fetch func(id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	logger *zap.Logger,
 ) func(context context.Context, intake *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
-		// TODO: need to fetch intake here and pass it to authorization
-		ok, err := authorize(ctx, intake)
+		existingIntake, err := fetch(intake.ID)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Operation: apperrors.QueryFetch,
+				Model:     "SystemIntake",
+			}
+		}
+		ok, err := authorize(ctx, existingIntake)
 		if err != nil {
 			return err
 		}

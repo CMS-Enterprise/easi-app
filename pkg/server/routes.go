@@ -4,17 +4,18 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
-	// pq is required to get the postgres driver into sqlx
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
-func (s *server) routes(
+func (s *Server) routes(
 	authorizationMiddleware func(handler http.Handler) http.Handler,
 	corsMiddleware func(handler http.Handler) http.Handler,
 	traceMiddleware func(handler http.Handler) http.Handler,
@@ -70,6 +71,7 @@ func (s *server) routes(
 		Logger: s.logger,
 		SaveSystemIntake: services.NewSaveSystemIntake(
 			store.SaveSystemIntake,
+			func(uuid uuid.UUID) (*models.SystemIntake, error) { return nil, nil },
 			services.NewAuthorizeSaveSystemIntake(s.logger),
 			s.logger,
 		),

@@ -23,6 +23,8 @@ type QueryOperation string
 const (
 	// QuerySave is for failures when saving
 	QuerySave QueryOperation = "Save"
+	// QueryFetch is for failures when getting a resource
+	QueryFetch QueryOperation = "Fetch"
 )
 
 // QueryError is a typed error for query issues
