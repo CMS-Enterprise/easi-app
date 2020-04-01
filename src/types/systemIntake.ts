@@ -10,7 +10,7 @@ export type GovernanceCollaborationTeam = {
 export type SystemIntakeForm = {
   projectName: string;
   acronym: string;
-  requestor: {
+  requester: {
     name: string;
     component: string;
   };
