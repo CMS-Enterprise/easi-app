@@ -49,7 +49,20 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			intake, err := h.FetchSystemIntakeByID(uuid)
 			if err != nil {
 				logger.Error("Failed to fetch system intake")
-				http.Error(w, "Failed to save system intake", http.StatusInternalServerError)
+				http.Error(w, "Failed to GET system intake", http.StatusInternalServerError)
+				return
+			}
+
+			euaID, ok := appcontext.EuaID(r.Context())
+			if !ok {
+				logger.Error("Failed to get EUA ID from context")
+				http.Error(w, "Failed to GET system intake", http.StatusInternalServerError)
+				return
+			}
+
+			if intake.EUAUserID != euaID {
+				logger.Error("EUA ID from request doesn't match fetched intake " + intake.ID.String())
+				http.Error(w, "Failed to GET system intake", http.StatusUnauthorized)
 				return
 			}
 
@@ -87,7 +100,8 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			euaID, ok := appcontext.EuaID(r.Context())
 			if !ok {
 				logger.Error("Failed to get EUA ID from context")
-				http.Error(w, "Failed to PUT system", http.StatusInternalServerError)
+				http.Error(w, "Failed to PUT system intake", http.StatusInternalServerError)
+				return
 			}
 			intake.EUAUserID = euaID
 			err = h.SaveSystemIntake(r.Context(), &intake)
