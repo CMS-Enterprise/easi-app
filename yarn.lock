@@ -1786,6 +1786,11 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha512-l42BggppR6zLmpfU6fq9HEa2oGPEI8yrSPL3GITjfRInppYFahObbIQOQK3UGxEnyQpltZLaPe75046NOZQikw==
 
+"@types/text-encoding@^0.0.35":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@types/text-encoding/-/text-encoding-0.0.35.tgz#6f14474e0b232bc70c59677aadc65dcc5a99c3a9"
+  integrity sha512-jfo/A88XIiAweUa8np+1mPbm3h2w0s425YrI8t3wk5QxhH6UI7w517MboNVnGDeMSuoFwA8Rwmklno+FicvV4g==
+
 "@types/yargs-parser@*":
   version "15.0.0"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-15.0.0.tgz#cb3f9f741869e20cce330ffbeb9271590483882d"
@@ -4393,6 +4398,11 @@ destroy@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
+
+detect-browser@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-5.0.0.tgz#a43085fe7b5f0f4200e7e83f003ad9874b4a45f8"
+  integrity sha512-jUaq/SAT9YMlmhq/8w7gnqqr8AMcc7iYG1eAp7vP/7xn2eLtlcnEmxOkh2PmTg2Q+jVSUO3XD4sZ/IldbGg3dA==
 
 detect-newline@^2.1.0:
   version "2.1.0"
@@ -12530,6 +12540,11 @@ test-exclude@^6.0.0:
     "@istanbuljs/schema" "^0.1.2"
     glob "^7.1.4"
     minimatch "^3.0.4"
+
+text-encoding@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/text-encoding/-/text-encoding-0.7.0.tgz#f895e836e45990624086601798ea98e8f36ee643"
+  integrity sha512-oJQ3f1hrOnbRLOcwKz0Liq2IcrvDeZRHXhd9RgLrsT+DjWY/nty1Hi7v3dtkaEYbPYe0mUoOfzRrMwfXXwgPUA==
 
 text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
