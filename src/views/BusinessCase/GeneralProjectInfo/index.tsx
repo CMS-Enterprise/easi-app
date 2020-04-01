@@ -43,17 +43,17 @@ const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
         </FieldGroup>
 
         <FieldGroup
-          scrollElement="requestor.name"
-          error={!!flatErrors['requestor.name']}
+          scrollElement="requester.name"
+          error={!!flatErrors['requester.name']}
         >
-          <Label htmlFor="BusinessCase-RequestorName">Requestor</Label>
-          <FieldErrorMsg>{flatErrors['requestor.name']}</FieldErrorMsg>
+          <Label htmlFor="BusinessCase-RequesterName">Requester</Label>
+          <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={!!flatErrors['requestor.name']}
-            id="BusinessCase-RequestorName"
+            error={!!flatErrors['requester.name']}
+            id="BusinessCase-RequesterName"
             maxLength={50}
-            name="requestor.name"
+            name="requester.name"
           />
         </FieldGroup>
 
@@ -85,20 +85,20 @@ const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
         </FieldGroup>
 
         <FieldGroup
-          scrollElement="requestor.phoneNumber"
-          error={!!flatErrors['requestor.phoneNumber']}
+          scrollElement="requester.phoneNumber"
+          error={!!flatErrors['requester.phoneNumber']}
         >
-          <Label htmlFor="BusinessCase-RequestorPhoneNumber">
-            Requestor Phone Number
+          <Label htmlFor="BusinessCase-RequesterPhoneNumber">
+            Requester Phone Number
           </Label>
-          <FieldErrorMsg>{flatErrors['requestor.phoneNumber']}</FieldErrorMsg>
+          <FieldErrorMsg>{flatErrors['requester.phoneNumber']}</FieldErrorMsg>
           <div className="width-card-lg">
             <Field
               as={TextField}
-              error={!!flatErrors['requestor.phoneNumber']}
-              id="BusinessCase-RequestorPhoneNumber"
+              error={!!flatErrors['requester.phoneNumber']}
+              id="BusinessCase-RequesterPhoneNumber"
               maxLength={20}
-              name="requestor.phoneNumber"
+              name="requester.phoneNumber"
               match={allowedPhoneNumberCharacters}
             />
           </div>

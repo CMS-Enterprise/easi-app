@@ -57,12 +57,12 @@ const Review = ({ formikProps }: ReviewProps) => {
       <DescriptionList title="Contact Details">
         <div className="system-intake__review-row">
           <div>
-            <DescriptionTerm term="Requestor" />
-            <DescriptionDefinition definition={values.requestor.name} />
+            <DescriptionTerm term="Requester" />
+            <DescriptionDefinition definition={values.requester.name} />
           </div>
           <div>
-            <DescriptionTerm term="Requestor Component" />
-            <DescriptionDefinition definition={values.requestor.component} />
+            <DescriptionTerm term="Requester Component" />
+            <DescriptionDefinition definition={values.requester.component} />
           </div>
         </div>
         <div className="system-intake__review-row">

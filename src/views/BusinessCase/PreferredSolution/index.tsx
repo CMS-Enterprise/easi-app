@@ -9,42 +9,33 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { BusinessCaseModel } from 'types/businessCase';
 
-type AsIsSolutionProps = {
+type PreferredSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
 };
-const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
+const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
   const { values } = formikProps;
   return (
     <>
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
-      <p className="line-height-body-6">
-        Below you should identify options and alternatives to meet your business
-        need. Include a summary of the approaches, how you will acquire the
-        solution, and describe the pros, cons, total life cycle costs and
-        potential cost savings/avoidance for each alternative considered.
-        Include at least three viable alternatives: keeping things “as-is” or
-        reuse existing people, equipment, or processes; and at least two
-        additional alternatives. Identify your preferred solution.
-      </p>
       <div className="tablet:grid-col-9">
-        <h2>&quot;As is&quot; Solution</h2>
-        <FieldGroup scrollElement="asIsSolution.title" error={false}>
-          <Label htmlFor="BusinessCase-AsIsSolutionTitle">
-            &quot;As is&quot; Solution: Title
+        <h2>Preferred Solution</h2>
+        <FieldGroup scrollElement="preferredSolution.title" error={false}>
+          <Label htmlFor="BusinessCase-PreferredSolutionTitle">
+            Preferred Solution: Title
           </Label>
           <FieldErrorMsg />
           <Field
             as={TextField}
             error={false}
-            id="BusinessCase-AsIsSolutionTitle"
+            id="BusinessCase-PreferredSolutionTitle"
             maxLength={50}
-            name="asIsSolution.title"
+            name="preferredSolution.title"
           />
         </FieldGroup>
 
-        <FieldGroup scrollElement="asIsSolution.summary" error={false}>
-          <Label htmlFor="BusinessCase-AsIsSolutionSummary">
-            &quot;As is&quot; Solution: Summary
+        <FieldGroup scrollElement="preferredSolution.summary" error={false}>
+          <Label htmlFor="BusinessCase-PreferredSolutionSummary">
+            Preferred Solution: Summary
           </Label>
           <HelpText className="margin-top-1">
             <span>Please include:</span>
@@ -66,17 +57,43 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-AsIsSolutionSummary"
+            id="BusinessCase-PreferredSolutionSummary"
             maxLength={2000}
-            name="asIsSolution.summary"
+            name="preferredSolution.summary"
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.asIsSolution.summary.length} characters left`}</HelpText>
+            values.preferredSolution.summary
+              .length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement="asIsSolution.pros" error={false}>
-          <Label htmlFor="BusinessCase-AsIsSolutionPros">
-            &quot;As is&quot; Solution: Pros
+        <FieldGroup
+          scrollElement="preferredSolution.acquisitionApproach"
+          error={false}
+        >
+          <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
+            Preferred Solution: Acquisition Approach
+          </Label>
+          <HelpText className="margin-y-1">
+            Describe the approach to acquiring the products and services
+            required to deliver the system, including potential contract
+            vehicles.
+          </HelpText>
+          <FieldErrorMsg />
+          <Field
+            as={TextAreaField}
+            error={false}
+            id="BusinessCase-PreferredSolutionAcquisitionApproach"
+            maxLength={2000}
+            name="preferredSolution.acquisitionApproach"
+          />
+          <HelpText className="margin-top-1">{`${2000 -
+            values.preferredSolution.acquisitionApproach
+              .length} characters left`}</HelpText>
+        </FieldGroup>
+
+        <FieldGroup scrollElement="preferredSolution.pros" error={false}>
+          <Label htmlFor="BusinessCase-PreferredSolutionPros">
+            Preferred Solution: Pros
           </Label>
           <HelpText className="margin-y-1">
             Identify any aspects of this solution that positively differentiates
@@ -86,17 +103,17 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-AsIsSolutionPros"
+            id="BusinessCase-PreferredSolutionPros"
             maxLength={2000}
-            name="asIsSolution.pros"
+            name="preferredSolution.pros"
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.asIsSolution.pros.length} characters left`}</HelpText>
+            values.preferredSolution.pros.length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement="asIsSolution.cons" error={false}>
-          <Label htmlFor="BusinessCase-AsIsSolutionCons">
-            &quot;As is&quot; Solution: Cons
+        <FieldGroup scrollElement="preferredSolution.cons" error={false}>
+          <Label htmlFor="BusinessCase-PreferredSolutionCons">
+            Preferred Solution: Cons
           </Label>
           <HelpText className="margin-y-1">
             Identify any aspects of this solution that negatively impacts this
@@ -106,12 +123,12 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-AsIsSolutionCons"
+            id="BusinessCase-PreferredSolutionCons"
             maxLength={2000}
-            name="asIsSolution.cons"
+            name="preferredSolution.cons"
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.asIsSolution.cons.length} characters left`}</HelpText>
+            values.preferredSolution.cons.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
       <div className="tablet:grid-col-9">
@@ -119,9 +136,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         <HelpText>
           <p>
             You can add speculative costs if exact ones are not known or if a
-            contract is not yet in place. If your &quot;As is&quot; solution
-            does not have any existing costs associated with it (licenses,
-            contractors, etc) then please mark the cost as $0.
+            contract is not yet in place.
           </p>
           <br />
           <span>These things should be considered when estimating costs:</span>
@@ -134,12 +149,12 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         </HelpText>
       </div>
       <EstimatedLifecycleCost
-        formikKey="asIsSolution.estimatedLifecycleCost"
-        years={values.asIsSolution.estimatedLifecycleCost}
+        formikKey="preferredSolution.estimatedLifecycleCost"
+        years={values.preferredSolution.estimatedLifecycleCost}
       />
       <div className="tablet:grid-col-9 margin-bottom-7">
-        <FieldGroup scrollElement="asIsSolution.costSavings" error={false}>
-          <Label htmlFor="BusinessCase-AsIsSolutionCostSavings">
+        <FieldGroup scrollElement="preferredSolution.costSavings" error={false}>
+          <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
             What is the cost savings or avoidance associated with this solution?
           </Label>
           <HelpText className="margin-y-1">
@@ -150,16 +165,17 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-AsIsSolutionCostSavings"
+            id="BusinessCase-PreferredSolutionCostSavings"
             maxLength={2000}
-            name="asIsSolution.costSavings"
+            name="preferredSolution.costSavings"
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.asIsSolution.costSavings.length} characters left`}</HelpText>
+            values.preferredSolution.costSavings
+              .length} characters left`}</HelpText>
         </FieldGroup>
       </div>
     </>
   );
 };
 
-export default AsIsSolution;
+export default PreferredSolution;
