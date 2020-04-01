@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s ServicesTestSuite) TestSystemIntakesFetcher() {
+func (s ServicesTestSuite) TestSystemIntakesByUserFetcher() {
 	if viper.Get("ENVIRONMENT") == "LOCAL" {
 		s.Run("successfully fetches System Intakes", func() {
 			tx := s.db.MustBegin()
@@ -125,5 +125,35 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
+	})
+}
+
+func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
+	logger := zap.NewNop()
+	fakeID := uuid.New()
+
+	s.Run("successfully fetches System Intake by ID without an error", func() {
+		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				ID: fakeID,
+			}, nil
+		}
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
+		intake, err := fetchSystemIntakeByID(fakeID)
+		s.NoError(err)
+
+		s.Equal(fakeID, intake.ID)
+	})
+
+	s.Run("returns query error when save fails", func() {
+		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{}, errors.New("save failed")
+		}
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
+
+		intake, err := fetchSystemIntakeByID(uuid.New())
+
+		s.IsType(&apperrors.QueryError{}, err)
+		s.Equal(&models.SystemIntake{}, intake)
 	})
 }

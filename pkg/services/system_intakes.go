@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
@@ -76,4 +77,24 @@ func NewSaveSystemIntake(
 		}
 		return nil
 	}
+}
+
+// NewFetchSystemIntakeByID is a service to fetch the system intake by intake id
+func NewFetchSystemIntakeByID(
+	fetch func(id uuid.UUID) (*models.SystemIntake, error),
+	logger *zap.Logger,
+) func(id uuid.UUID) (*models.SystemIntake, error) {
+	return func(id uuid.UUID) (*models.SystemIntake, error) {
+		intake, err := fetch(id)
+		if err != nil {
+			logger.Error("failed to fetch system intake")
+			return &models.SystemIntake{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     "system intake",
+				Operation: "fetch",
+			}
+		}
+		return intake, nil
+	}
+
 }
