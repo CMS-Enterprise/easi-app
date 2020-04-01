@@ -21,7 +21,7 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
 
 export type BusinessCaseModel = {
   projectName: string;
-  requestor: {
+  requester: {
     name: string;
     phoneNumber: string;
   };

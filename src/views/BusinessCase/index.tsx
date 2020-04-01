@@ -43,7 +43,7 @@ export const BusinessCase = () => {
   const pageObj = pages[page - 1];
   const initialData: BusinessCaseModel = {
     projectName: '',
-    requestor: {
+    requester: {
       name: '',
       phoneNumber: ''
     },
