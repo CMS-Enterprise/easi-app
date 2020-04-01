@@ -73,6 +73,9 @@ func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 
 func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 	logger := zap.NewNop()
+	fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+		return nil, nil
+	}
 	save := func(intake *models.SystemIntake) error {
 		return nil
 	}
@@ -82,19 +85,31 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 
 	s.Run("returns no error when successful", func() {
 		ctx := context.Background()
-		saveSystemIntake := NewSaveSystemIntake(save, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, logger)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
 		s.NoError(err)
 	})
 
+	s.Run("returns query error when fetch fails", func() {
+		ctx := context.Background()
+		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
+			return nil, errors.New("failed to fetch system intake")
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.IsType(&apperrors.QueryError{}, err)
+	})
+
 	s.Run("returns query error when save fails", func() {
 		ctx := context.Background()
-		save = func(intake *models.SystemIntake) error {
+		failSave := func(intake *models.SystemIntake) error {
 			return errors.New("save failed")
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(failSave, fetch, authorize, logger)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -104,10 +119,10 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 	s.Run("returns error when authorization errors", func() {
 		ctx := context.Background()
 		err := errors.New("authorization failed")
-		authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, err
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, failAuthorize, logger)
 
 		actualError := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -117,10 +132,10 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 
 	s.Run("returns unauthorized error when authorization not ok", func() {
 		ctx := context.Background()
-		authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		notOKAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, notOKAuthorize, logger)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
