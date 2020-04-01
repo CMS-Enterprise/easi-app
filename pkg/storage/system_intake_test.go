@@ -121,6 +121,11 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {
+	if s.environment != "local" {
+		// TODO: When DB is hooked up in CircleCI, remove this check
+		return
+	}
+
 	s.Run("golden path to fetch a system intake", func() {
 		intake := NewSystemIntake()
 		id := intake.ID
