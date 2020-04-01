@@ -72,6 +72,9 @@ func OktaAccessToken(
 		fmt.Println(err, "Could not submit authentication endpoint")
 		return "", err
 	}
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("bad response from authentication request: %v", resp.Status)
+	}
 
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
@@ -106,6 +109,10 @@ func OktaAccessToken(
 		fmt.Println("Failed to send MFA challenge")
 		return "", err
 	}
+	if factorResp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("bad response from MFA request: %v", factorResp.Status)
+	}
+
 	defer factorResp.Body.Close()
 	body, _ = ioutil.ReadAll(factorResp.Body)
 	err = json.Unmarshal(body, &authn)
@@ -140,6 +147,9 @@ func OktaAccessToken(
 	if err != nil {
 		fmt.Println("could not submit authorization endpoint")
 		return "", err
+	}
+	if resp.StatusCode != http.StatusFound {
+		return "", fmt.Errorf("bad response from access request: %v", resp.Status)
 	}
 
 	defer resp.Body.Close()
