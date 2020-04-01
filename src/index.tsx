@@ -5,6 +5,7 @@ import { TextEncoder } from 'text-encoding';
 import { detect } from 'detect-browser';
 import 'uswds';
 import App from './views/App';
+import UnsupportedBrowser from './views/UnsupportedBrowser';
 import store from './store';
 import './index.scss';
 import * as serviceWorker from './serviceWorker';
@@ -23,9 +24,7 @@ let app;
 const browser: any = detect();
 console.log(browser.name);
 if (browser.name === 'ie') {
-  app = (
-    <h1>Internet Explorer is not supported. Please use a modern browser.</h1>
-  );
+  app = <UnsupportedBrowser />;
 } else {
   app = (
     <Provider store={store}>
