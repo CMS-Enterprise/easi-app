@@ -1,0 +1,126 @@
+# EASi Go Packages
+
+## Application Context: `appcontext`
+
+`appcontext` is for setting
+and retrieving
+per request information
+across various parts of the codebase.
+
+When using the `Context` of a request,
+this package should be updated
+with a getter and setter
+to allow for consistent key access
+and handle errors with marshaling
+or non existent values.
+
+An example is setting a trace ID
+to allow for logging a request
+and tracing it when debugging.
+
+## Application Errors: `apperrors`
+
+`apperrors` provides custom `Error` types.
+These can be used across the stack
+to assess the root of an error.
+
+The most common case for using these,
+is to inform a handler what HTTP code to return.
+For example,
+if a user is unauthorized to access a certain resource,
+we can pass a `UnauthorizedError` back up the stack
+and return a 403 response.
+
+## CEDAR: `cedar`
+
+The `cedar` package is for working with the CEDAR API.
+This allows us to work with CMS data sources.
+
+`TranslatedClient` is the main type used in this package
+which provides translation from the generated Swagger code
+to our application models.
+
+## Handlers: `handlers`
+
+`handlers` are for parsing a request and returning a response.
+They follow the Go `http.Handler` standard pattern.
+They should do minimal work to handle a request
+and offload business logic to the `services` package.
+
+A common handler pattern is:
+
+1. Unmarshal a request from JSON
+2. Offload an operation to the `services` package
+3. Generate a response based on the return value from `services`
+
+## Integration: `integration`
+
+`integration` is for testing only.
+It provides a way to test the API
+and all its integrations.
+Tests here should be limited due to performance and complexity,
+but should test that a user can access an endpoint
+as set up in production,
+including authorization, databases, and third party APIs.
+
+## Local: `local`
+
+`local` is for local mocks when running the application.
+The current example,
+is turning off authorization to make debugging easier.
+
+## Models: `models`
+
+`models` describe the data used across the application.
+They're one of the few packages
+that should be made available across the stack.
+Since they're propagated so widely,
+they should not implement many (if any) methods
+to avoid non-composable API services.
+
+## Okta: `okta`
+
+`okta` is for code interacting with the Okta identity management server.
+
+## Server: `server`
+
+`server` is for setting up the server.
+This is where all the various packages
+and configurations are tied together.
+
+Access to external APIs via type (vs. abstracted interfaces)
+should be limited to this package.
+Access to environment variables and other external configurations
+should also only reside here.
+
+## Services: `services`
+
+`services` are the entry point to business logic in the application.
+They should combine the various portions of the application
+into a cohesive unit available to handlers.
+For example,
+fetching a resource may involve authorization,
+database calls,
+or API interaction
+which should be orchestrated from here.
+
+Services tend to follow a closure pattern,
+where they're instantiated in the `server`
+with any shared components.
+The returned function operates on a per request level.
+
+## Storage: `storage`
+
+`storage` is for database interaction.
+Any database connections or SQL code
+should be restricted to this package.
+
+## Test Helpers: `testhelpers`
+
+`testhelpers` provides functions required for only testing
+and that are needed across packages.
+If the functions are only needed in a package,
+write them within.
+Otherwise, add them to `testhelpers`.
+An example is a helper for logging into Okta,
+which is required for testing in `okta` and `integration`
