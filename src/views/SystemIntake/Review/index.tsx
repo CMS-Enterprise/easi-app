@@ -163,7 +163,7 @@ const Review = ({ formikProps }: ReviewProps) => {
         <strong>one of these</strong> outcomes:
       </p>
       <ul className="usa-list">
-        <li>direct you to go through the Goverannce Review process</li>
+        <li>direct you to go through the Governance Review process</li>
         <li>or decide there is no further governance needed</li>
       </ul>
       <p>They will get back to you in two business days.</p>
