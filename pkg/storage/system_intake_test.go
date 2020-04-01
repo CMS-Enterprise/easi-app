@@ -36,6 +36,11 @@ func NewSystemIntake() models.SystemIntake {
 }
 
 func (s StoreTestSuite) TestSaveSystemIntake() {
+	if s.environment != "local" {
+		// TODO: When DB is hooked up in CircleCI, remove this check
+		return
+	}
+
 	s.Run("save a new system intake", func() {
 		intake := NewSystemIntake()
 
