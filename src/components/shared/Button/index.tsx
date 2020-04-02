@@ -13,6 +13,7 @@ type ButtonProps = {
   big?: boolean;
   unstyled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  className?: string;
 };
 
 export const Button = (props: ButtonProps): React.ReactElement => {
@@ -27,18 +28,23 @@ export const Button = (props: ButtonProps): React.ReactElement => {
     inverse,
     big,
     unstyled,
-    onClick
+    onClick,
+    className
   } = props;
 
-  const classes = classnames('usa-button', {
-    'usa-button--accent-cool': accent,
-    'usa-button--base': base,
-    'usa-button--big': big,
-    'usa-button--inverse': inverse,
-    'usa-button--outline': outline,
-    'usa-button--secondary': secondary,
-    'usa-button--unstyled': unstyled
-  });
+  const classes = classnames(
+    'usa-button',
+    {
+      'usa-button--accent-cool': accent,
+      'usa-button--base': base,
+      'usa-button--big': big,
+      'usa-button--inverse': inverse,
+      'usa-button--outline': outline,
+      'usa-button--secondary': secondary,
+      'usa-button--unstyled': unstyled
+    },
+    className
+  );
 
   return (
     // eslint-disable-next-line react/button-has-type
@@ -46,7 +52,7 @@ export const Button = (props: ButtonProps): React.ReactElement => {
       type={type}
       className={classes}
       disabled={disabled}
-      onClick={onClick}
+      onClick={disabled ? () => {} : onClick}
     >
       {children}
     </button>

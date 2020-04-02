@@ -35,57 +35,57 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
       <p className="text-italic">
         **All fields are required unless marked &apos;Optional&apos;
       </p>
-      <div className="grid-col-6 margin-bottom-7">
-        <h2 className="font-heading-xl">Contact Details</h2>
+      <div className="tablet:grid-col-6 margin-bottom-7">
+        <h1 className="font-heading-xl margin-top-4">Contact Details</h1>
 
-        {/* Requestor Name */}
+        {/* Requester Name */}
         <FieldGroup
-          scrollElement="requestor.name"
-          error={!!flatErrors['requestor.name']}
+          scrollElement="requester.name"
+          error={!!flatErrors['requester.name']}
         >
-          <Label htmlFor="IntakeForm-Requestor">Requestor</Label>
-          <FieldErrorMsg>{flatErrors['requestor.name']}</FieldErrorMsg>
+          <Label htmlFor="IntakeForm-Requester">Requester</Label>
+          <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={!!flatErrors['requestor.name']}
-            id="IntakeForm-Requestor"
+            error={!!flatErrors['requester.name']}
+            id="IntakeForm-Requester"
             maxLength={50}
-            name="requestor.name"
+            name="requester.name"
             onChange={(e: any) => {
               if (isReqAndBusOwnerSame) {
                 setFieldValue('businessOwner.name', e.target.value);
               }
-              setFieldValue('requestor.name', e.target.value);
+              setFieldValue('requester.name', e.target.value);
             }}
           />
         </FieldGroup>
 
-        {/* Requestor Component */}
+        {/* Requester Component */}
         <FieldGroup
-          scrollElement="requestor.component"
-          error={!!flatErrors['requestor.component']}
+          scrollElement="requester.component"
+          error={!!flatErrors['requester.component']}
         >
-          <Label htmlFor="IntakeForm-RequestorComponent">
-            Requestor Component
+          <Label htmlFor="IntakeForm-RequesterComponent">
+            Requester Component
           </Label>
-          <FieldErrorMsg>{flatErrors['requestor.component']}</FieldErrorMsg>
+          <FieldErrorMsg>{flatErrors['requester.component']}</FieldErrorMsg>
           <Field
             as={DropdownField}
-            error={!!flatErrors['requestor.component']}
-            id="IntakeForm-RequestorComponent"
-            name="requestor.component"
+            error={!!flatErrors['requester.component']}
+            id="IntakeForm-RequesterComponent"
+            name="requester.component"
             onChange={(e: any) => {
               if (isReqAndBusOwnerSame) {
                 setFieldValue('businessOwner.component', e.target.value);
               }
-              setFieldValue('requestor.component', e.target.value);
+              setFieldValue('requester.component', e.target.value);
             }}
           >
             <Field as={DropdownItem} name="Select an option" value="" />
             {cmsDivisionsAndOffices.map((office: any) => (
               <Field
                 as={DropdownItem}
-                key={`RequestorComponent-${office.acronym}`}
+                key={`RequesterComponent-${office.acronym}`}
                 name={office.name}
                 value={office.name}
               />
@@ -103,16 +103,16 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </Label>
           <Field
             as={CheckboxField}
-            id="IntakeForm-IsBusinessOwnerSameAsRequestor"
-            label="Same as Requestor"
-            name="isBusinessOwnerSameAsRequestor"
+            id="IntakeForm-IsBusinessOwnerSameAsRequester"
+            label="Same as Requester"
+            name="isBusinessOwnerSameAsRequester"
             onChange={(e: any) => {
               if (e.target.checked) {
                 setReqAndBusOwnerSame(true);
-                setFieldValue('businessOwner.name', values.requestor.name);
+                setFieldValue('businessOwner.name', values.requester.name);
                 setFieldValue(
                   'businessOwner.component',
-                  values.requestor.component
+                  values.requester.component
                 );
               } else {
                 setReqAndBusOwnerSame(false);
@@ -212,11 +212,12 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           scrollElement="isso.isPresent"
           error={!!flatErrors['isso.isPresent']}
         >
-          <fieldset className="usa-fieldset margin-top-3">
+          <fieldset className="usa-fieldset margin-top-4">
             <legend className="usa-label margin-bottom-1">
-              Does your project have an ISSO?
+              Does your project have an Information System Security Officer
+              (ISSO)?
             </legend>
-            <HelpText>
+            <HelpText className="margin-bottom-2">
               If yes, please tell use the name of your ISSO so we can get in
               touch with them
             </HelpText>
@@ -275,7 +276,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             <legend className="usa-label margin-bottom-1">
               My project team is currently collaborating/consulting with:
             </legend>
-            <HelpText>
+            <HelpText className="margin-bottom-2">
               Please disclose the name of each person you&apos;ve worked with.
               This helps us locate any additional information on your request
             </HelpText>
@@ -302,12 +303,10 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
                 <FieldErrorMsg>
                   {flatErrors['governanceTeams.teams']}
                 </FieldErrorMsg>
-                <GovernanceTeamOptions
-                  values={values}
-                  setFieldValue={setFieldValue}
-                />
+                <GovernanceTeamOptions formikProps={formikProps} />
               </FieldGroup>
             </div>
+
             <Field
               as={RadioField}
               checked={values.governanceTeams.isPresent === false}

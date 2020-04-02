@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Field, FieldArray, ErrorMessage } from 'formik';
+import { Field, FieldArray, FormikProps, getIn } from 'formik';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -9,28 +9,25 @@ import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 type GovernanceTeamOptionsProps = {
-  values: SystemIntakeForm;
-  setFieldValue: (field: string, value: any) => void;
+  formikProps: FormikProps<SystemIntakeForm>;
 };
-const GovernanceTeamOptions = ({
-  values,
-  setFieldValue
-}: GovernanceTeamOptionsProps) => {
+
+const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
+  const { values, errors } = formikProps;
   return (
     <FieldArray name="governanceTeams.teams">
       {arrayHelpers => (
         <>
-          {cmsGovernanceTeams.map((team, index) => {
-            const kebabValue = team.value.split(' ').join('-');
+          {cmsGovernanceTeams.map((team: any, index: number) => {
             return (
-              <Fragment key={kebabValue}>
+              <Fragment key={team.key}>
                 <CheckboxField
                   checked={values.governanceTeams.teams
                     .map(t => t.name)
                     .includes(team.value)}
-                  disabled={values.governanceTeams.isPresent === false}
-                  id={`governanceTeam-${kebabValue}`}
-                  label={team.name}
+                  disabled={values.governanceTeams.isPresent !== true}
+                  id={`governanceTeam-${team.key}`}
+                  label={team.label}
                   name={`governanceTeams.teams.${index}`}
                   onBlur={() => {}}
                   onChange={e => {
@@ -39,11 +36,6 @@ const GovernanceTeamOptions = ({
                         name: e.target.value,
                         collaborator: ''
                       });
-
-                      // Check parent radio if it's not already checked
-                      if (!values.governanceTeams.isPresent) {
-                        setFieldValue('governanceTeams.isPresent', true);
-                      }
                     } else {
                       const removeIndex = values.governanceTeams.teams
                         .map(t => t.name)
@@ -55,30 +47,37 @@ const GovernanceTeamOptions = ({
                   value={team.value}
                 />
                 {values.governanceTeams.teams.map((t, idx) => {
+                  const { key } = team;
                   if (team.value === t.name) {
-                    const id = t.name.split(' ').join('-');
                     return (
                       <div
-                        key={`${id}-Collaborator`}
-                        className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-2"
+                        key={`${key}-Collaborator`}
+                        className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-2"
                       >
                         <FieldGroup
                           scrollElement={`governanceTeams.teams.${idx}.collaborator`}
                           error={false}
                         >
-                          <Label htmlFor={`IntakeForm-${id}-Collaborator`}>
+                          <Label htmlFor={`IntakeForm-${key}-Collaborator`}>
                             Collaborator Name
                           </Label>
-                          <ErrorMessage
-                            name={`governanceTeams.teams.${idx}.collaborator`}
-                          >
-                            {message => (
-                              <FieldErrorMsg>{message}</FieldErrorMsg>
+                          {errors.governanceTeams &&
+                            errors.governanceTeams.teams &&
+                            errors.governanceTeams.teams[idx] && (
+                              <FieldErrorMsg>
+                                {getIn(
+                                  errors,
+                                  `governanceTeams.teams.${idx}.collaborator`
+                                )}
+                              </FieldErrorMsg>
                             )}
-                          </ErrorMessage>
                           <Field
                             as={TextField}
-                            id={`IntakeForm-${id}-Collaborator`}
+                            error={getIn(
+                              errors,
+                              `governanceTeams.teams.${idx}.collaborator`
+                            )}
+                            id={`IntakeForm-${key}-Collaborator`}
                             maxLength={50}
                             name={`governanceTeams.teams.${idx}.collaborator`}
                           />

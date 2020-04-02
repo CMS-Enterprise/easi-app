@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
 import Header from 'components/Header';
-import HeaderWrapper from 'components/Header/HeaderWrapper';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -41,7 +40,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const initialData: SystemIntakeForm = {
     projectName: '',
     acronym: '',
-    requestor: {
+    requester: {
       name: '',
       component: ''
     },
@@ -84,15 +83,15 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   return (
     <div className="system-intake">
       <Header activeNavListItem={match.params.profileId} name="INTAKE">
-        <HeaderWrapper className="grid-container margin-bottom-3">
+        <div className="margin-bottom-3">
           {pageObj.type === 'FORM' && (
             <button type="button" className="easi-button__save usa-button">
               <span>Save & Exit</span>
             </button>
           )}
-        </HeaderWrapper>
+        </div>
       </Header>
-      <div className="grid-container">
+      <main className="grid-container" role="main">
         <Formik
           initialValues={initialData}
           // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
@@ -104,7 +103,13 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<SystemIntakeForm>) => {
-            const { values, errors, validateForm } = formikProps;
+            const {
+              values,
+              errors,
+              validateForm,
+              setErrors,
+              isSubmitting
+            } = formikProps;
             const flatErrors: any = flattenErrors(errors);
             return (
               <>
@@ -139,25 +144,26 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                     <Button
                       type="button"
                       outline
-                      onClick={() => setPage(prev => prev - 1)}
+                      onClick={() => {
+                        setPage(prev => prev - 1);
+                        setErrors({});
+                        window.scrollTo(0, 0);
+                      }}
                     >
                       Back
                     </Button>
                   )}
 
-                  {/* Button type must be submit in order for errors to populate ErrorMessage
-                   * Potential bug filed with Formik.
-                   * Button also must be inside of <Form />
-                   */}
                   {page < pages.length && (
                     <Button
-                      type="submit"
+                      type="button"
                       onClick={() => {
                         if (pageObj.validation) {
                           validateForm().then(err => {
                             if (Object.keys(err).length === 0) {
                               setPage(prev => prev + 1);
                             }
+                            window.scrollTo(0, 0);
                           });
                         }
                       }}
@@ -169,11 +175,12 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                   {page === pages.length && (
                     <Button
                       type="submit"
+                      disabled={isSubmitting}
                       onClick={() => {
                         console.log('Submitting Data: ', values);
                       }}
                     >
-                      Review and Send
+                      Send to GRT
                     </Button>
                   )}
                 </Form>
@@ -187,7 +194,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
             totalPages={pages.filter(p => p.type === 'FORM').length}
           />
         )}
-      </div>
+      </main>
     </div>
   );
 };
