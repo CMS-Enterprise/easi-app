@@ -76,18 +76,29 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install migration tool
-          command: |
-            wget -qO- https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/6.3.0/flyway-commandline-6.3.0-linux-x64.tar.gz | tar zx && ln -s ./flyway-6.3.0/flyway .
-      - run:
-          name: Set db environment variables
-          command: eval "$(./scripts/set_flyway_env)"
-      - run:
           name: Nuke the database
-          command: ./flyway clean
+          command: |
+            aws lambda invoke --cli-read-timeout 240 \
+                --function easi-app-db-clean \
+                --payload "$(base64 <<< '{ "command": "" }')" \
+                result.json
+            exitCode="$(jq '.data.response.taskStatus.exitCode' < result.json)"
+            if [[ "$exitCode" != 0 ]] ;
+              : task exited non-zero or exit status could not be parsed
+              exit 1
+            fi
       - run:
           name: Run migrations
-          command: ./flyway migrate
+          command: |
+            aws lambda invoke --cli-read-timeout 240 \
+                --function easi-app-db-migrate \
+                --payload "$(base64 <<< '{ "command": "" }')" \
+                result.json
+            exitCode="$(jq '.data.response.taskStatus.exitCode' < result.json)"
+            if [[ "$exitCode" != 0 ]] ;
+              : task exited non-zero or exit status could not be parsed
+              exit 1
+            fi
       - run:
           name: Setup custom environment variables
           command: |
