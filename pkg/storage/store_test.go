@@ -6,9 +6,10 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // required for postgres driver in sqlx
-	"github.com/spf13/viper"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 type StoreTestSuite struct {
@@ -20,8 +21,7 @@ type StoreTestSuite struct {
 }
 
 func TestStoreTestSuite(t *testing.T) {
-	config := viper.New()
-	config.AutomaticEnv()
+	config := testhelpers.NewConfig()
 
 	dbUser := config.Get("PGUSER")
 	sslMode := config.GetString("PG_SSL_MODE")
