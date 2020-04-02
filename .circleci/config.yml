@@ -4,11 +4,18 @@ version: 2
 references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
   postgres: &postgres postgres:11.6
+  flyway: &flyway flyway/flyway:6.3
 jobs:
   test:
     docker:
       - image: *circleci_docker_primary
       - image: *postgres
+      - image: *flyway
+        environment:
+          FLYWAY_USER: postgres
+          FLYWAY_PASSWORD:
+          FLYWAY_URL: jdbc:postgresql://127.0.0.1/postgres
+        command: [migrate]
     steps:
       - checkout
       - run:
