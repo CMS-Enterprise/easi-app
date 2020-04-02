@@ -70,7 +70,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 		user:        user{euaID: username, accessToken: accessToken},
 	}
 
-	if !testing.Short() {
+	if !testing.Short() && config.Get("ENVIRONMENT") != "local" {
 		suite.Run(t, testSuite)
 	}
 }
