@@ -1,0 +1,17 @@
+.easi-radio {
+  &--inline {
+    display: inline;
+  }
+
+  &--inline + &--inline {
+    margin-left: 2rem;
+  }
+
+  &__label {
+    &--inline {
+      &.usa-radio__label {
+        padding-left: 0;
+      }
+    }
+  }
+}

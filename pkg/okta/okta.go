@@ -11,23 +11,25 @@ import (
 	"github.com/cmsgov/easi-app/pkg/context"
 )
 
-func isAuthenticated(logger *zap.Logger, authHeader string, verifier jwtverifier.JwtVerifier) bool {
+func authenticateAndGetEua(logger *zap.Logger, authHeader string, verifier jwtverifier.JwtVerifier) (string, bool) {
 	tokenParts := strings.Split(authHeader, "Bearer ")
 	if len(tokenParts) < 2 {
-		return false
+		return "", false
 	}
 	bearerToken := tokenParts[1]
 	if bearerToken == "" {
-		return false
+		return "", false
 	}
 
-	_, err := verifier.VerifyAccessToken(bearerToken)
+	jwt, err := verifier.VerifyAccessToken(bearerToken)
 
 	if err != nil {
 		logger.Info(fmt.Sprintf("Unable to authorize request with okta: %v", err))
-		return false
+		return "", false
 	}
-	return true
+
+	euaID := jwt.Claims["sub"].(string)
+	return euaID, true
 }
 
 func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
@@ -50,20 +52,20 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, verifier *jwtver
 			logger.Error("failed to get logger from context")
 			localLogger = logger
 		}
-		if r.Method == "OPTIONS" {
-			return
-		}
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
 			localLogger.Info("Unauthorized request with empty Authorization header")
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 			return
 		}
-		if !isAuthenticated(localLogger, authHeader, *verifier) {
+		euaID, ok := authenticateAndGetEua(localLogger, authHeader, *verifier)
+		if !ok {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 			return
 		}
-		next.ServeHTTP(w, r)
+
+		ctx := context.WithEuaID(r.Context(), euaID)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 

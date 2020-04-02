@@ -8,7 +8,7 @@ type HelpTextProps = {
 };
 
 const HelpText = ({ children, className }: HelpTextProps) => {
-  const classNames = classnames('easi-help-text', 'margin-bottom-2', className);
+  const classNames = classnames('easi-help-text', className);
   return <span className={classNames}>{children}</span>;
 };
 

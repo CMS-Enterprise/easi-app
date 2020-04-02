@@ -1,7 +1,10 @@
 import React from 'react';
+import classnames from 'classnames';
+import './index.scss';
 
 type RadioFieldProps = {
   id: string;
+  inline: boolean;
   checked?: boolean;
   label: string;
   name: string;
@@ -14,28 +17,38 @@ type RadioFieldProps = {
 export const RadioField = ({
   checked,
   id,
+  inline,
   label,
   name,
   onBlur,
   onChange,
   value
-}: RadioFieldProps) => (
-  <div className="usa-radio">
-    <input
-      checked={checked}
-      className="usa-radio__input"
-      id={id}
-      name={name}
-      onBlur={onBlur}
-      onChange={onChange}
-      type="radio"
-      value={value}
-    />
-    <label className="usa-radio__label" htmlFor={id}>
-      {label}
-    </label>
-  </div>
-);
+}: RadioFieldProps) => {
+  const radioClasses = classnames('usa-radio', {
+    'easi-radio--inline': inline
+  });
+
+  const radioLabelClasses = classnames('usa-radio__label', {
+    'easi-radio__label--inline': inline
+  });
+  return (
+    <div className={radioClasses}>
+      <input
+        checked={checked}
+        className="usa-radio__input"
+        id={id}
+        name={name}
+        onBlur={onBlur}
+        onChange={onChange}
+        type="radio"
+        value={value}
+      />
+      <label className={radioLabelClasses} htmlFor={id}>
+        {label}
+      </label>
+    </div>
+  );
+};
 
 /**
  * TODO: I want to continue to iterate on this even though it isn't ready yet.
