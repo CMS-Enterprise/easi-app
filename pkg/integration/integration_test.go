@@ -33,31 +33,14 @@ type IntegrationTestSuite struct {
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
-	config := viper.New()
-	config.AutomaticEnv()
+	config := testhelpers.NewConfig()
 
 	if !testing.Short() && config.Get("ENVIRONMENT") == "local" {
 		easiServer := server.NewServer(config)
 		testServer := httptest.NewServer(easiServer)
 		defer testServer.Close()
 
-		oktaDomain := config.GetString("OKTA_DOMAIN")
-		oktaIssuer := config.GetString("OKTA_ISSUER")
-		oktaClientID := config.GetString("OKTA_CLIENT_ID")
-		oktaRedirectURL := config.GetString("OKTA_REDIRECT_URI")
-		username := config.GetString("OKTA_TEST_USERNAME")
-		password := config.GetString("OKTA_TEST_PASSWORD")
-		secret := config.GetString("OKTA_TEST_SECRET")
-
-		accessToken, err := testhelpers.OktaAccessToken(
-			oktaDomain,
-			oktaIssuer,
-			oktaClientID,
-			oktaRedirectURL,
-			username,
-			password,
-			secret,
-		)
+		accessToken, err := testhelpers.OktaAccessToken(config)
 		if err != nil {
 			fmt.Println("Failed to get access token for integration testing")
 			t.Fail()
@@ -69,7 +52,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 			logger:      zap.NewNop(),
 			config:      config,
 			server:      testServer,
-			user:        user{euaID: username, accessToken: accessToken},
+			user:        user{euaID: config.GetString("OKTA_TEST_USERNAME"), accessToken: accessToken},
 		}
 
 		suite.Run(t, testSuite)

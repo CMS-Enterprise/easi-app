@@ -20,13 +20,12 @@ func newMockSaveSystemIntake(err error) saveSystemIntake {
 	}
 }
 
-func newMockFetchSystemIntakeByID(err error) fetchSystemIntakeByID {
-	intakeID, _ := uuid.Parse("f92306b9-8a08-4140-854f-5ab89917cec2")
-	intake := models.SystemIntake{
-		ID:        intakeID,
-		EUAUserID: "FAKE",
-	}
+func newMockFetchSystemIntakeByID(err error) func(id uuid.UUID) (*models.SystemIntake, error) {
 	return func(id uuid.UUID) (*models.SystemIntake, error) {
+		intake := models.SystemIntake{
+			ID:        id,
+			EUAUserID: "FAKE",
+		}
 		return &intake, err
 	}
 }
@@ -34,12 +33,13 @@ func newMockFetchSystemIntakeByID(err error) fetchSystemIntakeByID {
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithEuaID(requestContext, "FAKE")
-
+	id, err := uuid.NewUUID()
+	s.NoError(err)
 	s.Run("golden path GET passes", func() {
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/f92306b9-8a08-4140-854f-5ab89917cec2", bytes.NewBufferString(""))
+		req, err := http.NewRequestWithContext(requestContext, "GET", fmt.Sprintf("/system_intake/%s", id.String()), bytes.NewBufferString(""))
 		s.NoError(err)
-		req = mux.SetURLVars(req, map[string]string{"intake_id": "f92306b9-8a08-4140-854f-5ab89917cec2"})
+		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
@@ -63,11 +63,11 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	})
 
 	s.Run("GET returns an error if the uuid doesn't exist", func() {
-		id := uuid.New()
+		nonexistentID := uuid.New()
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/"+id.String(), bytes.NewBufferString(""))
+		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/"+nonexistentID.String(), bytes.NewBufferString(""))
 		s.NoError(err)
-		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
+		req = mux.SetURLVars(req, map[string]string{"intake_id": nonexistentID.String()})
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
@@ -81,9 +81,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	s.Run("GET returns an error if the EUA ID from the request doesn't match the fetched intake", func() {
 		requestContextWithBadEUA := appcontext.WithEuaID(context.Background(), "WRNG")
 		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContextWithBadEUA, "GET", "/system_intake/f92306b9-8a08-4140-854f-5ab89917cec2", bytes.NewBufferString(""))
+		req, err := http.NewRequestWithContext(requestContextWithBadEUA, "GET", "/system_intake/"+id.String(), bytes.NewBufferString(""))
 		s.NoError(err)
-		req = mux.SetURLVars(req, map[string]string{"intake_id": "f92306b9-8a08-4140-854f-5ab89917cec2"})
+		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
