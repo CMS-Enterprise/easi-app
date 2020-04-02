@@ -7,7 +7,6 @@ package integration
 import (
 	"fmt"
 	"net/http/httptest"
-	"os"
 	"testing"
 
 	"github.com/spf13/viper"
@@ -37,22 +36,20 @@ func TestIntegrationTestSuite(t *testing.T) {
 	config := viper.New()
 	config.AutomaticEnv()
 
-	easiServer := server.NewServer(config)
-	testServer := httptest.NewServer(easiServer)
-	defer testServer.Close()
+	if !testing.Short() && config.Get("ENVIRONMENT") == "local" {
+		easiServer := server.NewServer(config)
+		testServer := httptest.NewServer(easiServer)
+		defer testServer.Close()
 
-	oktaDomain := config.GetString("OKTA_DOMAIN")
-	oktaIssuer := config.GetString("OKTA_ISSUER")
-	oktaClientID := config.GetString("OKTA_CLIENT_ID")
-	oktaRedirectURL := config.GetString("OKTA_REDIRECT_URI")
-	username := config.GetString("OKTA_TEST_USERNAME")
-	password := config.GetString("OKTA_TEST_PASSWORD")
-	secret := config.GetString("OKTA_TEST_SECRET")
-	accessToken := config.GetString("OKTA_ACCESS_TOKEN")
+		oktaDomain := config.GetString("OKTA_DOMAIN")
+		oktaIssuer := config.GetString("OKTA_ISSUER")
+		oktaClientID := config.GetString("OKTA_CLIENT_ID")
+		oktaRedirectURL := config.GetString("OKTA_REDIRECT_URI")
+		username := config.GetString("OKTA_TEST_USERNAME")
+		password := config.GetString("OKTA_TEST_PASSWORD")
+		secret := config.GetString("OKTA_TEST_SECRET")
 
-	var err error
-	if accessToken == "" {
-		accessToken, err = testhelpers.OktaAccessToken(
+		accessToken, err := testhelpers.OktaAccessToken(
 			oktaDomain,
 			oktaIssuer,
 			oktaClientID,
@@ -65,22 +62,16 @@ func TestIntegrationTestSuite(t *testing.T) {
 			fmt.Println("Failed to get access token for integration testing")
 			t.Fail()
 		}
-		err = os.Setenv("OKTA_ACCESS_TOKEN", accessToken)
-		if err != nil {
-			fmt.Println("Failed to set okta access key in env")
+
+		testSuite := &IntegrationTestSuite{
+			Suite:       suite.Suite{},
+			environment: config.GetString("ENVIRONMENT"),
+			logger:      zap.NewNop(),
+			config:      config,
+			server:      testServer,
+			user:        user{euaID: username, accessToken: accessToken},
 		}
-	}
 
-	testSuite := &IntegrationTestSuite{
-		Suite:       suite.Suite{},
-		environment: config.GetString("ENVIRONMENT"),
-		logger:      zap.NewNop(),
-		config:      config,
-		server:      testServer,
-		user:        user{euaID: username, accessToken: accessToken},
-	}
-
-	if !testing.Short() && config.Get("ENVIRONMENT") == "local" {
 		suite.Run(t, testSuite)
 	}
 }
