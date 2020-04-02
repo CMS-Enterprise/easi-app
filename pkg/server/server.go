@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	_ "github.com/lib/pq" // pq is needed for the postgres driver
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
