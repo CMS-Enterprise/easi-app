@@ -33,8 +33,7 @@ type IntegrationTestSuite struct {
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
-	config := viper.New()
-	config.AutomaticEnv()
+	config := testhelpers.NewConfig()
 
 	if !testing.Short() && config.Get("ENVIRONMENT") == "local" {
 		easiServer := server.NewServer(config)

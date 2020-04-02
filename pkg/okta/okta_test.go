@@ -21,8 +21,7 @@ type OktaTestSuite struct {
 }
 
 func TestOktaTestSuite(t *testing.T) {
-	config := viper.New()
-	config.AutomaticEnv()
+	config := testhelpers.NewConfig()
 
 	testSuite := &OktaTestSuite{
 		Suite:  suite.Suite{},
