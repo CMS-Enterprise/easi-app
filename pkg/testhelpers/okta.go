@@ -9,10 +9,12 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"sync"
 	"time"
 
 	"github.com/okta/okta-jwt-verifier-golang/utils"
 	"github.com/pquerna/otp/totp"
+	"github.com/spf13/viper"
 )
 
 // AuthnResponse is a response marshaled from Okta authn API
@@ -45,10 +47,10 @@ type FactorLinkVerify struct {
 	HREF string `json:"href"`
 }
 
-// OktaAccessToken gets an access token from Okta to authorize requests to the EASi APIs in test
+// fetchOktaAccessToken gets an access token from Okta to authorize requests to the EASi APIs in test
 // Borrowing heavily from okta jwt package but adding MFA
 // https://github.com/okta/okta-jwt-verifier-golang/blob/bf6f0d73000e3873d519714a3619b3c5d62ba615/jwtverifier_test.go#L354
-func OktaAccessToken(
+func fetchOktaAccessToken(
 	domain string,
 	issuer string,
 	clientID string,
@@ -162,4 +164,41 @@ func OktaAccessToken(
 		return "", err
 	}
 	return fragmentParts["access_token"][0], nil
+}
+
+var oktaTokenLock = &sync.Mutex{}
+
+// OktaAccessToken is a thread safe config retrieval for an access token
+// It only fetches a new token if it hasn't been set already
+func OktaAccessToken(config *viper.Viper) (string, error) {
+	const accessTokenKey = "OKTA_ACCESS_TOKEN" /* #nosec */
+	oktaTokenLock.Lock()
+	defer oktaTokenLock.Unlock()
+
+	accessToken := config.GetString(accessTokenKey)
+	if accessToken != "" {
+		return accessToken, nil
+	}
+
+	oktaDomain := config.GetString("OKTA_DOMAIN")
+	oktaIssuer := config.GetString("OKTA_ISSUER")
+	oktaClientID := config.GetString("OKTA_CLIENT_ID")
+	oktaRedirectURL := config.GetString("OKTA_REDIRECT_URI")
+	username := config.GetString("OKTA_TEST_USERNAME")
+	password := config.GetString("OKTA_TEST_PASSWORD")
+	secret := config.GetString("OKTA_TEST_SECRET")
+	accessToken, err := fetchOktaAccessToken(
+		oktaDomain,
+		oktaIssuer,
+		oktaClientID,
+		oktaRedirectURL,
+		username,
+		password,
+		secret,
+	)
+	if err != nil {
+		return "", err
+	}
+	config.Set(accessTokenKey, accessToken)
+	return accessToken, nil
 }

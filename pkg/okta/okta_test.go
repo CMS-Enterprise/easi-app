@@ -35,29 +35,13 @@ func TestOktaTestSuite(t *testing.T) {
 }
 
 func (s OktaTestSuite) TestAuthorizeMiddleware() {
-	oktaDomain := s.config.GetString("OKTA_DOMAIN")
-	oktaIssuer := s.config.GetString("OKTA_ISSUER")
-	oktaClientID := s.config.GetString("OKTA_CLIENT_ID")
-	oktaRedirectURL := s.config.GetString("OKTA_REDIRECT_URI")
-	username := s.config.GetString("OKTA_TEST_USERNAME")
-	password := s.config.GetString("OKTA_TEST_PASSWORD")
-	secret := s.config.GetString("OKTA_TEST_SECRET")
-
-	accessToken, err := testhelpers.OktaAccessToken(
-		oktaDomain,
-		oktaIssuer,
-		oktaClientID,
-		oktaRedirectURL,
-		username,
-		password,
-		secret,
-	)
+	accessToken, err := testhelpers.OktaAccessToken(s.config)
 	s.NoError(err, "couldn't get access token")
 	s.NotEmpty(accessToken, "empty access token")
 	authMiddleware := NewOktaAuthorizeMiddleware(
 		s.logger,
-		oktaClientID,
-		oktaIssuer,
+		s.config.GetString("OKTA_CLIENT_ID"),
+		s.config.GetString("OKTA_ISSUER"),
 	)
 
 	s.Run("a valid token executes the handler", func() {
@@ -108,7 +92,7 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			euaID, ok := appcontext.EuaID(r.Context())
 			s.True(ok)
-			s.Equal(username, euaID)
+			s.Equal(s.config.GetString("OKTA_TEST_USERNAME"), euaID)
 		})
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)
