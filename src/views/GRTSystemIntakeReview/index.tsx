@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { withAuth } from '@okta/okta-react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 import {
@@ -8,12 +10,17 @@ import {
 } from 'components/shared/DescriptionGroup';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
+import { getAllSystemShorts } from '../../actions/searchActions';
 
 type GRTSystemIntakeReviewProps = {
+  auth: any;
   formikProps: FormikProps<SystemIntakeForm>;
 };
 
-const GRTSystemIntakeReview = ({ formikProps }: GRTSystemIntakeReviewProps) => {
+const GRTSystemIntakeReview = ({
+  auth,
+  formikProps
+}: GRTSystemIntakeReviewProps) => {
   const { values } = formikProps;
   const fundingDefinition = () => {
     const isFunded = convertBoolToYesNo(values.fundingSource.isFunded);
@@ -29,6 +36,15 @@ const GRTSystemIntakeReview = ({ formikProps }: GRTSystemIntakeReviewProps) => {
     }
     return hasIsso;
   };
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    const fetchSystemShorts = async (): Promise<void> => {
+      dispatch(getAllSystemShorts(await auth.getAccessToken()));
+    };
+    fetchSystemShorts();
+  }, [auth, dispatch]);
 
   return (
     <div className="system-intake__review margin-bottom-7">
