@@ -18,9 +18,23 @@ jobs:
           FLYWAY_USER: postgres
           FLYWAY_PASSWORD: easirox
           FLYWAY_URL: jdbc:postgresql://127.0.0.1/easi
-        command: [migrate]
     steps:
       - checkout
+      - run:
+          name: Run database migrations
+          command: |
+            # wait for database to stand up
+            until nc -vz localhost 5432 ; do
+              i=$((i+1))
+              if [ "$i" -gt 10 ] ; then
+                echo "Timed out waiting for postgres"
+                exit 1
+              fi
+              sleep 1
+            done
+
+            ( set -x ; docker exec flyway migrate )
+
       - run:
           name: Run easi app tests
           command: |
