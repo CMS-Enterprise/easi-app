@@ -10,11 +10,14 @@ jobs:
     docker:
       - image: *circleci_docker_primary
       - image: *postgres
+        environment:
+          POSTGRES_DB: easi
+          POSTGRES_PASSWORD: easirox
       - image: *flyway
         environment:
           FLYWAY_USER: postgres
-          FLYWAY_PASSWORD:
-          FLYWAY_URL: jdbc:postgresql://127.0.0.1/postgres
+          FLYWAY_PASSWORD: easirox
+          FLYWAY_URL: jdbc:postgresql://127.0.0.1/easi
         command: [migrate]
     steps:
       - checkout
