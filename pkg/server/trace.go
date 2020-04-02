@@ -5,13 +5,13 @@ import (
 
 	"go.uber.org/zap"
 
-	requestcontext "github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
 func traceMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		next.ServeHTTP(w, r.WithContext(requestcontext.WithTrace(ctx)))
+		next.ServeHTTP(w, r.WithContext(appcontext.WithTrace(ctx)))
 	})
 }
 
