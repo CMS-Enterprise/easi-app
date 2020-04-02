@@ -4,11 +4,14 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
 
 	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
@@ -62,6 +65,12 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		defer resp.Body.Close()
 
 		s.Equal(http.StatusOK, resp.StatusCode)
+		actualBody, err := ioutil.ReadAll(resp.Body)
+		s.NoError(err)
+		var actualIntake models.SystemIntake
+		err = json.Unmarshal(actualBody, &actualIntake)
+		s.NoError(err)
+		s.Equal(id, actualIntake.ID)
 	})
 
 	s.Run("PUT will succeed second time with with new data", func() {
@@ -80,5 +89,23 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		s.Equal(http.StatusOK, resp.StatusCode)
 	})
 
-	// TODO: hit GET endpoint here and check data is updated
+	s.Run("GET will fetch the updated intake just saved", func() {
+		req, err := http.NewRequest(http.MethodGet, getURL.String(), nil)
+		s.NoError(err)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
+
+		resp, err := client.Do(req)
+
+		s.NoError(err)
+		defer resp.Body.Close()
+
+		s.Equal(http.StatusOK, resp.StatusCode)
+		actualBody, err := ioutil.ReadAll(resp.Body)
+		s.NoError(err)
+		var actualIntake models.SystemIntake
+		err = json.Unmarshal(actualBody, &actualIntake)
+		s.NoError(err)
+		s.Equal(id, actualIntake.ID)
+		s.Equal("Test Requester", actualIntake.Requester.String)
+	})
 }
