@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 
-	requestcontext "github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
 const traceField string = "traceID"
@@ -13,13 +13,13 @@ const traceField string = "traceID"
 func loggerMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
-		traceID, ok := requestcontext.Trace(ctx)
+		traceID, ok := appcontext.Trace(ctx)
 		if ok {
 			logger = logger.With(zap.String(traceField, traceID.String()))
 		} else {
 			logger.Error("Failed to get trace ID from context")
 		}
-		ctx = requestcontext.WithLogger(ctx, logger)
+		ctx = appcontext.WithLogger(ctx, logger)
 
 		fields := []zap.Field{
 			zap.String("accepted-language", r.Header.Get("accepted-language")),
