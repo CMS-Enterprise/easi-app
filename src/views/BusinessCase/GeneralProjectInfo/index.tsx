@@ -5,11 +5,16 @@ import TextField from 'components/shared/TextField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import { BusinessCaseModel } from 'types/businessCase';
+import flattenErrors from 'utils/flattenErrors';
 
 type GeneralProjectInfoProps = {
   formikProps: FormikProps<BusinessCaseModel>;
 };
 const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
+  const { errors } = formikProps;
+  const flatErrors = flattenErrors(errors);
+  const allowedPhoneNumberCharacters = /[\d- ]+/g;
+
   return (
     <>
       <h1 className="font-heading-xl">General Project Info</h1>
@@ -22,71 +27,82 @@ const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
         consult.
       </p>
       <div className="tablet:grid-col-9 margin-bottom-7">
-        <FieldGroup scrollElement="projectName" error={false}>
+        <FieldGroup
+          scrollElement="projectName"
+          error={!!flatErrors.projectName}
+        >
           <Label htmlFor="BusinessCase-ProjectName">Project Name</Label>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors.projectName}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={false}
+            error={!!flatErrors.projectName}
             id="BusinessCase-ProjectName"
             maxLength={50}
             name="projectName"
           />
         </FieldGroup>
 
-        <FieldGroup scrollElement="requestor.name" error={false}>
-          <Label htmlFor="BusinessCase-RequestorName">Requestor</Label>
-          <FieldErrorMsg />
+        <FieldGroup
+          scrollElement="requester.name"
+          error={!!flatErrors['requester.name']}
+        >
+          <Label htmlFor="BusinessCase-RequesterName">Requester</Label>
+          <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={false}
-            id="BusinessCase-RequestorName"
+            error={!!flatErrors['requester.name']}
+            id="BusinessCase-RequesterName"
             maxLength={50}
-            name="projectName"
+            name="requester.name"
           />
         </FieldGroup>
 
-        <FieldGroup scrollElement="budgetNumber" error={false}>
+        <FieldGroup scrollElement="budgetNumber">
           <Label htmlFor="BusinessCase-BudgetNumber">
             Operating Plan Budget Number - Optional
           </Label>
-          <FieldErrorMsg />
           <Field
             as={TextField}
-            error={false}
             id="BusinessCase-BudgetNumber"
             maxLength={50}
             name="budgetNumber"
           />
         </FieldGroup>
 
-        <FieldGroup scrollElement="businessOwner.name" error={false}>
+        <FieldGroup
+          scrollElement="businessOwner.name"
+          error={!!flatErrors['businessOwner.name']}
+        >
           <Label htmlFor="BusinessCase-BusinessOwnerName">Business Owner</Label>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors['businessOwner.name']}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={false}
+            error={!!flatErrors['businessOwner.name']}
             id="BusinessCase-BusinessOwnerName"
             maxLength={50}
             name="businessOwner.name"
           />
         </FieldGroup>
 
-        <div className="width-card-lg">
-          <FieldGroup scrollElement="requestor.phoneNumber" error={false}>
-            <Label htmlFor="BusinessCase-RequestorPhoneNumber">
-              Requestor Phone Number
-            </Label>
-            <FieldErrorMsg />
+        <FieldGroup
+          scrollElement="requester.phoneNumber"
+          error={!!flatErrors['requester.phoneNumber']}
+        >
+          <Label htmlFor="BusinessCase-RequesterPhoneNumber">
+            Requester Phone Number
+          </Label>
+          <FieldErrorMsg>{flatErrors['requester.phoneNumber']}</FieldErrorMsg>
+          <div className="width-card-lg">
             <Field
               as={TextField}
-              error={false}
-              id="BusinessCase-RequestorPhoneNumber"
+              error={!!flatErrors['requester.phoneNumber']}
+              id="BusinessCase-RequesterPhoneNumber"
               maxLength={20}
-              name="requestor.phoneNumber"
+              name="requester.phoneNumber"
+              match={allowedPhoneNumberCharacters}
             />
-          </FieldGroup>
-        </div>
+          </div>
+        </FieldGroup>
       </div>
     </>
   );

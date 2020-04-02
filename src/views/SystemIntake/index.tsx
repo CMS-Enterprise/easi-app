@@ -40,7 +40,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const initialData: SystemIntakeForm = {
     projectName: '',
     acronym: '',
-    requestor: {
+    requester: {
       name: '',
       component: ''
     },
@@ -180,7 +180,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                         console.log('Submitting Data: ', values);
                       }}
                     >
-                      Review and Send
+                      Send to GRT
                     </Button>
                   )}
                 </Form>

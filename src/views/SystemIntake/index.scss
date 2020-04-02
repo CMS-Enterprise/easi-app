@@ -5,12 +5,6 @@
     opacity: 0.3;
   }
 
-  &__business-need-help {
-    li + li {
-      margin-top: 5px;
-    }
-  }
-
   &__review-row {
     display: grid;
     grid-gap: 1.25rem;

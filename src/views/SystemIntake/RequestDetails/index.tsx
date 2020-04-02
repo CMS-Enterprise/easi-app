@@ -123,7 +123,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             <>
               <span>Include:</span>
               <br />
-              <ul className="system-intake__business-need-help margin-top-1 padding-left-205">
+              <ul className="margin-top-1 padding-left-205">
                 <li>
                   a detailed explanation of the business need/issue/problem that
                   the project will address
@@ -248,7 +248,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
               <div>
                 CMS&apos; Enterprise Architecture (EA) function will help you
                 build your Business Case by addressing the following:
-                <ul>
+                <ul className="margin-bottom-0">
                   <li>
                     Explore business solutions that might exist elsewhere within
                     CMS

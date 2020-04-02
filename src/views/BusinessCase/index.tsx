@@ -1,31 +1,41 @@
 import React, { useState } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
 
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { BusinessCaseModel } from 'types/businessCase';
+import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import flattenErrors from 'utils/flattenErrors';
 import GeneralProjectInfo from './GeneralProjectInfo';
 import ProjectDescription from './ProjectDescription';
+import AsIsSolution from './AsIsSolution';
+import PreferredSolution from './PreferredSolution';
 import './index.scss';
 
-export type BusinessCaseRouterProps = {
-  profileId: string;
-};
-
-type BusinessCaseProps = RouteComponentProps<BusinessCaseRouterProps>;
-export const BusinessCase = ({ match }: BusinessCaseProps) => {
+export const BusinessCase = () => {
   const pages = [
     {
       type: 'FORM',
-      validation: null,
+      validation: BusinessCaseValidationSchema.generalProjectInfo,
       view: GeneralProjectInfo
     },
     {
       type: 'FORM',
-      validation: null,
+      validation: BusinessCaseValidationSchema.projectDescription,
       view: ProjectDescription
+    },
+    {
+      type: 'FORM',
+      validation: null,
+      view: AsIsSolution
+    },
+    {
+      type: 'FORM',
+      validation: null,
+      view: PreferredSolution
     }
   ];
 
@@ -33,7 +43,7 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
   const pageObj = pages[page - 1];
   const initialData: BusinessCaseModel = {
     projectName: '',
-    requestor: {
+    requester: {
       name: '',
       phoneNumber: ''
     },
@@ -44,7 +54,36 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
     businessNeed: '',
     cmsBenefit: '',
     priorityAlignment: '',
-    successIndicators: ''
+    successIndicators: '',
+    asIsSolution: {
+      title: '',
+      summary: '',
+      pros: '',
+      cons: '',
+      estimatedLifecycleCost: {
+        year1: [{ phase: '', cost: '' }],
+        year2: [{ phase: '', cost: '' }],
+        year3: [{ phase: '', cost: '' }],
+        year4: [{ phase: '', cost: '' }],
+        year5: [{ phase: '', cost: '' }]
+      },
+      costSavings: ''
+    },
+    preferredSolution: {
+      title: '',
+      summary: '',
+      acquisitionApproach: '',
+      pros: '',
+      cons: '',
+      estimatedLifecycleCost: {
+        year1: [{ phase: '', cost: '' }],
+        year2: [{ phase: '', cost: '' }],
+        year3: [{ phase: '', cost: '' }],
+        year4: [{ phase: '', cost: '' }],
+        year5: [{ phase: '', cost: '' }]
+      },
+      costSavings: ''
+    }
   };
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     const Component = pageObj.view;
@@ -56,7 +95,7 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
   };
   return (
     <div className="business-case">
-      <Header activeNavListItem={match.params.profileId} name="INTAKE">
+      <Header name="BUSINESS">
         <div className="margin-bottom-3">
           {pageObj.type === 'FORM' && (
             <button type="button" className="easi-button__save usa-button">
@@ -71,6 +110,7 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
           // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
           // Form will be manually submitted.
           onSubmit={() => {}}
+          validationSchema={pageObj.validation}
           validateOnBlur={false}
           validateOnChange={false}
           validateOnMount={false}
@@ -78,59 +118,88 @@ export const BusinessCase = ({ match }: BusinessCaseProps) => {
           {(formikProps: FormikProps<BusinessCaseModel>) => {
             const {
               values,
+              errors,
               validateForm,
               setErrors,
               isSubmitting
             } = formikProps;
+            const flatErrors: any = flattenErrors(errors);
             return (
-              <Form>
-                {renderPage(formikProps)}
-                {page > 1 && (
-                  <Button
-                    type="button"
-                    outline
-                    onClick={() => {
-                      setPage(prev => prev - 1);
-                      setErrors({});
-                      window.scrollTo(0, 0);
-                    }}
+              <>
+                {Object.keys(errors).length > 0 && (
+                  <ErrorAlert
+                    classNames="margin-top-3"
+                    heading="Please check and fix the following"
                   >
-                    Back
-                  </Button>
-                )}
+                    {Object.keys(flatErrors).map(key => {
+                      return (
+                        <ErrorAlertMessage
+                          key={`Error.${key}`}
+                          message={flatErrors[key]}
+                          onClick={() => {
+                            const field = document.querySelector(
+                              `[data-scroll="${key}"]`
+                            );
 
-                {page < pages.length && (
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      if (pageObj.validation) {
-                        validateForm().then(err => {
-                          if (Object.keys(err).length === 0) {
-                            setPage(prev => prev + 1);
-                          }
-                        });
+                            if (field) {
+                              field.scrollIntoView();
+                            }
+                          }}
+                        />
+                      );
+                    })}
+                  </ErrorAlert>
+                )}
+                <Form>
+                  {renderPage(formikProps)}
+                  {page > 1 && (
+                    <Button
+                      type="button"
+                      outline
+                      onClick={() => {
+                        setPage(prev => prev - 1);
+                        setErrors({});
                         window.scrollTo(0, 0);
-                      }
-                      // TODO: DELETE NEXT LINE WHEN VALIDATIONS ARE IMPLEMENTED
-                      setPage(prev => prev + 1);
-                    }}
-                  >
-                    Next
-                  </Button>
-                )}
+                      }}
+                    >
+                      Back
+                    </Button>
+                  )}
 
-                {page === pages.length && (
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    onClick={() => {
-                      console.log('Submitting Data: ', values);
-                    }}
-                  >
-                    Review and Send
-                  </Button>
-                )}
-              </Form>
+                  {page < pages.length && (
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        if (pageObj.validation) {
+                          validateForm().then(err => {
+                            if (Object.keys(err).length === 0) {
+                              setPage(prev => prev + 1);
+                            }
+                          });
+                          window.scrollTo(0, 0);
+                        } else {
+                          setPage(prev => prev + 1);
+                          window.scrollTo(0, 0);
+                        }
+                      }}
+                    >
+                      Next
+                    </Button>
+                  )}
+
+                  {page === pages.length && (
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      onClick={() => {
+                        console.log('Submitting Data: ', values);
+                      }}
+                    >
+                      Review and Send
+                    </Button>
+                  )}
+                </Form>
+              </>
             );
           }}
         </Formik>
