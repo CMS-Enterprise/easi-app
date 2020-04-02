@@ -61,7 +61,10 @@ func NewSaveSystemIntake(
 ) func(context context.Context, intake *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
 		existingIntake, err := fetch(intake.ID)
-		if err != nil {
+		// TODO: Replace with a method that intentionally decides no result
+		if err != nil && err.Error() == "sql: no rows in result set" {
+			existingIntake = nil
+		} else if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
 				Operation: apperrors.QueryFetch,
