@@ -59,7 +59,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to parse system intake id to uuid")),
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusInternalServerError, rr.Code)
+		s.Equal(http.StatusBadRequest, rr.Code)
 	})
 
 	s.Run("GET returns an error if the uuid doesn't exist", func() {
