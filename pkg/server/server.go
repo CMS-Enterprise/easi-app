@@ -9,21 +9,23 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/okta"
 )
 
-type server struct {
+// Server holds dependencies for running the EASi server
+type Server struct {
 	router *mux.Router
 	Config *viper.Viper
 	logger *zap.Logger
 }
 
-func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.router.ServeHTTP(w, r)
 }
 
-// Serve sets up the dependencies for a server and serves all the handlers
-func Serve(config *viper.Viper) {
+// NewServer sets up the dependencies for a server
+func NewServer(config *viper.Viper) *Server {
 	// Set up logger first so we can use it
 	zapLogger, err := zap.NewProduction()
 	if err != nil {
@@ -41,10 +43,15 @@ func Serve(config *viper.Viper) {
 		config.GetString("OKTA_ISSUER"),
 	)
 
+	// If we're local use override with local auth middleware
+	if config.GetString("ENVIRONMENT") == "local" {
+		authMiddleware = local.NewLocalAuthorizeMiddleware(zapLogger)
+	}
+
 	// set up server dependencies
 	clientAddress := config.GetString("CLIENT_ADDRESS")
 
-	s := &server{
+	s := &Server{
 		router: r,
 		Config: config,
 		logger: zapLogger,
@@ -57,10 +64,16 @@ func Serve(config *viper.Viper) {
 		NewTraceMiddleware(zapLogger),
 		NewLoggerMiddleware(zapLogger))
 
+	return s
+}
+
+// Serve runs the server
+func Serve(config *viper.Viper) {
+	s := NewServer(config)
 	// start the server
-	zapLogger.Info("Serving application on localhost:8080")
-	err = http.ListenAndServe(":8080", s)
+	s.logger.Info("Serving application on localhost:8080")
+	err := http.ListenAndServe(":8080", s)
 	if err != nil {
-		zapLogger.Fatal("Failed to start server")
+		s.logger.Fatal("Failed to start server")
 	}
 }
