@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"os"
 
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
@@ -27,13 +26,12 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 	rr := httptest.NewRecorder()
 
 	cedarClient := cedar.NewTranslatedClient(
-		os.Getenv("CEDAR_API_URL"),
-		os.Getenv("CEDAR_API_KEY"),
+		s.config.GetString("CEDAR_API_URL"),
+		s.config.GetString("CEDAR_API_KEY"),
 	)
 
 	handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
-		Marshal:      json.Marshal,
 		Logger:       s.logger,
 	}.Handle()(rr, req)
 
