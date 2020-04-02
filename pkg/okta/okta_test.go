@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/spf13/viper"
@@ -43,17 +44,24 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 	username := s.config.GetString("OKTA_TEST_USERNAME")
 	password := s.config.GetString("OKTA_TEST_PASSWORD")
 	secret := s.config.GetString("OKTA_TEST_SECRET")
-	accessToken, err := testhelpers.OktaAccessToken(
-		oktaDomain,
-		oktaIssuer,
-		oktaClientID,
-		oktaRedirectURL,
-		username,
-		password,
-		secret,
-	)
-	s.NoError(err, "couldn't get access token")
-	s.NotEmpty(accessToken, "empty access token")
+
+	var err error
+	accessToken := s.config.GetString("OKTA_ACCESS_TOKEN")
+	if accessToken == "" {
+		accessToken, err = testhelpers.OktaAccessToken(
+			oktaDomain,
+			oktaIssuer,
+			oktaClientID,
+			oktaRedirectURL,
+			username,
+			password,
+			secret,
+		)
+		s.NoError(err, "couldn't get access token")
+		s.NotEmpty(accessToken, "empty access token")
+		err = os.Setenv("OKTA_ACCESS_TOKEN", accessToken)
+		s.NoError(err)
+	}
 	authMiddleware := NewOktaAuthorizeMiddleware(
 		s.logger,
 		oktaClientID,

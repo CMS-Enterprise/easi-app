@@ -7,6 +7,7 @@ package integration
 import (
 	"fmt"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/spf13/viper"
@@ -47,18 +48,27 @@ func TestIntegrationTestSuite(t *testing.T) {
 	username := config.GetString("OKTA_TEST_USERNAME")
 	password := config.GetString("OKTA_TEST_PASSWORD")
 	secret := config.GetString("OKTA_TEST_SECRET")
-	accessToken, err := testhelpers.OktaAccessToken(
-		oktaDomain,
-		oktaIssuer,
-		oktaClientID,
-		oktaRedirectURL,
-		username,
-		password,
-		secret,
-	)
-	if err != nil {
-		fmt.Println("Failed to get access token for integration testing")
-		t.Fail()
+	accessToken := config.GetString("OKTA_ACCESS_TOKEN")
+
+	var err error
+	if accessToken == "" {
+		accessToken, err = testhelpers.OktaAccessToken(
+			oktaDomain,
+			oktaIssuer,
+			oktaClientID,
+			oktaRedirectURL,
+			username,
+			password,
+			secret,
+		)
+		if err != nil {
+			fmt.Println("Failed to get access token for integration testing")
+			t.Fail()
+		}
+		err = os.Setenv("OKTA_ACCESS_TOKEN", accessToken)
+		if err != nil {
+			fmt.Println("Failed to set okta access key in env")
+		}
 	}
 
 	testSuite := &IntegrationTestSuite{
