@@ -89,7 +89,7 @@ jobs:
           command: |
             aws lambda invoke --cli-read-timeout 240 \
                 --function easi-app-db-clean \
-                --payload "$(base64 <<< '{ "command": "" }')" \
+                --payload '{ "command": "" }' \
                 result.json
             exitCode="$(jq '.data.response.taskStatus.exitCode' < result.json)"
             if [[ "$exitCode" != 0 ]] ;
@@ -101,7 +101,7 @@ jobs:
           command: |
             aws lambda invoke --cli-read-timeout 240 \
                 --function easi-app-db-migrate \
-                --payload "$(base64 <<< '{ "command": "" }')" \
+                --payload '{ "command": "" }' \
                 result.json
             exitCode="$(jq '.data.response.taskStatus.exitCode' < result.json)"
             if [[ "$exitCode" != 0 ]] ;
