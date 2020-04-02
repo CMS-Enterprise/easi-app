@@ -109,13 +109,11 @@ func OktaAccessToken(
 		fmt.Println("Failed to send MFA challenge")
 		return "", err
 	}
-	defer factorResp.Body.Close()
 	if factorResp.StatusCode != http.StatusOK {
-		testBody, _ := ioutil.ReadAll(factorResp.Body)
-		fmt.Printf(string(testBody))
 		return "", fmt.Errorf("bad response from MFA request: %v", factorResp.Status)
 	}
 
+	defer factorResp.Body.Close()
 	body, _ = ioutil.ReadAll(factorResp.Body)
 	err = json.Unmarshal(body, &authn)
 	if err != nil {
