@@ -5,6 +5,17 @@ references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
   postgres: &postgres postgres:11.6
 jobs:
+  test:
+    docker:
+      - image: *circleci_docker_primary
+      - image: *postgres
+    steps:
+      - checkout
+      - run:
+          name: Run easi app tests
+          command: |
+            ./scripts/build_app
+            ./scripts/testsuite
   pre_test:
     docker:
       - image: *circleci_docker_primary
@@ -151,18 +162,6 @@ jobs:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static "$STATIC_S3_BUCKET_IMPL"
-
-  test:
-    docker:
-      - image: *circleci_docker_primary
-      - image: *postgres
-    steps:
-      - checkout
-      - run:
-          name: Run easi app tests
-          command: |
-            ./scripts/build_app
-            ./scripts/testsuite
 
 workflows:
   version: 2
