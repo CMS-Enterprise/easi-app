@@ -92,7 +92,7 @@ jobs:
                 --payload '{ "command": "" }' \
                 result.json
             exitCode="$(jq '.data.response.taskStatus.exitCode' < result.json)"
-            if [[ "$exitCode" != 0 ]] ;
+            if [[ "$exitCode" != 0 ]] ; then
               : task exited non-zero or exit status could not be parsed
               exit 1
             fi
@@ -104,7 +104,7 @@ jobs:
                 --payload '{ "command": "" }' \
                 result.json
             exitCode="$(jq '.data.response.taskStatus.exitCode' < result.json)"
-            if [[ "$exitCode" != 0 ]] ;
+            if [[ "$exitCode" != 0 ]] ; then
               : task exited non-zero or exit status could not be parsed
               exit 1
             fi
