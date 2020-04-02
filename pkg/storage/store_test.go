@@ -14,10 +14,9 @@ import (
 
 type StoreTestSuite struct {
 	suite.Suite
-	db          *sqlx.DB
-	logger      *zap.Logger
-	store       *Store
-	environment string
+	db     *sqlx.DB
+	logger *zap.Logger
+	store  *Store
 }
 
 func TestStoreTestSuite(t *testing.T) {
@@ -34,11 +33,12 @@ func TestStoreTestSuite(t *testing.T) {
 	store := NewStore(db, logger)
 
 	storeTestSuite := &StoreTestSuite{
-		Suite:       suite.Suite{},
-		db:          db,
-		logger:      logger,
-		store:       store,
-		environment: config.GetString("ENVIRONMENT"),
+		Suite:  suite.Suite{},
+		db:     db,
+		logger: logger,
+		store:  store,
 	}
-	suite.Run(t, storeTestSuite)
+	if config.GetString("ENVIRONMENT") == "local" {
+		suite.Run(t, storeTestSuite)
+	}
 }
