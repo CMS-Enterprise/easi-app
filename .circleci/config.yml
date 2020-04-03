@@ -9,6 +9,8 @@ jobs:
   test:
     docker:
       - image: *circleci_docker_primary
+        environment:
+          PG_SSL_MODE: allow
       - image: *postgres
         environment:
           POSTGRES_DB: postgres
