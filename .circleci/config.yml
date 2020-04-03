@@ -20,8 +20,8 @@ jobs:
             bash +x -c "$(set -x ; aws ecr get-login --no-include-email --region "${AWS_DEFAULT_REGION}" --registry-ids "${AWS_ACCOUNT_ID}")"
             set -x
             docker build --quiet --no-cache --tag "easi-test-db-migrate" . --file Dockerfile.db_migrations
-            docker tag "easi-test-db-migrate" "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:$CIRCLE_SHA1"
-            docker push "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:$CIRCLE_SHA1"
+            docker tag "easi-test-db-migrate" "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:test"
+            docker push "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:test"
 
   test:
     docker:
@@ -34,7 +34,7 @@ jobs:
           POSTGRES_PASSWORD: easirox
           POSTGRES_USER: postgres
           POSTGRES_HOST_AUTH_METHOD: trust
-      - image: *flyway
+      - image: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:test
         environment:
           FLYWAY_USER: postgres
           FLYWAY_PASSWORD: easirox
