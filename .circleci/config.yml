@@ -12,10 +12,9 @@ jobs:
         environment:
           FLYWAY_USER: postgres
           FLYWAY_PASSWORD: easirox
-          FLYWAY_URL: jdbc:postgresql://127.0.0.1/easi
+          FLYWAY_URL: jdbc:postgresql://127.0.0.1/postgres
       - image: *postgres
         environment:
-          POSTGRES_DB: easi
           POSTGRES_PASSWORD: easirox
     steps:
       - checkout
@@ -33,7 +32,7 @@ jobs:
               sleep 1
             done
 
-            docker run --rm flyway/flyway:6.3 -user=postgres -password=easirox -url=jdbc:postgresql://127.0.0.1/easi migrate
+            docker run --rm flyway/flyway:6.3 -user=postgres -password=easirox -url=jdbc:postgresql://127.0.0.1/postgres migrate
 
       - run:
           name: Run easi app tests
