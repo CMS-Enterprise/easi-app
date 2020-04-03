@@ -1,5 +1,14 @@
 FROM flyway/flyway:6.3
 
-COPY migrations/ /flyway/sql
+USER root
 
-ENTRYPOINT ["flyway", "migrate"]
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends netcat \
+    && rm -rf /var/lib/apt/lists/*
+
+USER flyway
+
+COPY migrations/ /flyway/sql
+COPY scripts/db_entrypoint .
+
+ENTRYPOINT ["db_entrypoint", "migrate"]
