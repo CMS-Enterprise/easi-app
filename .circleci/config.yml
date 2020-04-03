@@ -16,7 +16,7 @@ jobs:
           name: Build the flyway migrations for testing
           command: |
             set -x
-            docker build --quiet --no-cache --tag "easi-test-db-migrate" "$builddir" --file Dockerfile.db_migrations
+            docker build --quiet --no-cache --tag "easi-test-db-migrate" . --file Dockerfile.db_migrations
             docker tag "easi-test-db-migrate" "${AWS_ACCOUNT_ID_DEV}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:$CIRCLE_SHA1"
             docker push "${AWS_ACCOUNT_ID_DEV}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:$CIRCLE_SHA1"
 
