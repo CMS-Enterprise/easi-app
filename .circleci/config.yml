@@ -13,6 +13,7 @@ jobs:
         environment:
           POSTGRES_DB: postgres
           POSTGRES_PASSWORD: easirox
+          POSTGRES_USER: postgres
       - image: *flyway
         environment:
           FLYWAY_USER: postgres
