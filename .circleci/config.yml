@@ -9,24 +9,18 @@ jobs:
   test:
     docker:
       - image: *circleci_docker_primary
+      - image: *postgres
+        environment:
+          POSTGRES_DB: easi
+          POSTGRES_PASSWORD: easirox
+      - image: *flyway
         environment:
           FLYWAY_USER: postgres
           FLYWAY_PASSWORD: easirox
-          FLYWAY_URL: jdbc:postgresql://127.0.0.1/postgres
-      - image: *postgres
-        environment:
-          POSTGRES_PASSWORD: easirox
+          FLYWAY_URL: jdbc:postgresql://127.0.0.1/easi
+        command: [migrate]
     steps:
       - checkout
-      - setup_remote_docker
-      - run:
-          name: Run database migrations
-          command: |
-            # wait for database to stand up
-            sleep 10
-
-            docker run --rm flyway/flyway:6.3 -user=postgres -password=easirox -url=jdbc:postgresql://127.0.0.1/postgres migrate
-
       - run:
           name: Run easi app tests
           command: |
