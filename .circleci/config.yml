@@ -23,14 +23,7 @@ jobs:
           name: Run database migrations
           command: |
             # wait for database to stand up
-            until nc -vz localhost 5432 ; do
-              i=$((i+1))
-              if [ "$i" -gt 10 ] ; then
-                echo "Timed out waiting for postgres"
-                exit 1
-              fi
-              sleep 1
-            done
+            sleep 10
 
             docker run --rm flyway/flyway:6.3 -user=postgres -password=easirox -url=jdbc:postgresql://127.0.0.1/postgres migrate
 
