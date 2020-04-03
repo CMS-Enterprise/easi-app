@@ -6,6 +6,20 @@ references:
   postgres: &postgres postgres:11.6
   flyway: &flyway flyway/flyway:6.3
 jobs:
+  pre_test:
+    docker:
+      - image: *circleci_docker_primary
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build the flyway migrations for testing
+          command: |
+            set -x
+            docker build --quiet --no-cache --tag "easi-test-db-migrate" "$builddir" --file Dockerfile.db_migrations
+            docker tag "easi-test-db-migrate" "${AWS_ACCOUNT_ID_DEV}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:$CIRCLE_SHA1"
+            docker push "${AWS_ACCOUNT_ID_DEV}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:$CIRCLE_SHA1"
+
   test:
     docker:
       - image: *circleci_docker_primary
@@ -181,8 +195,11 @@ workflows:
   version: 2
   compile:
     jobs:
+      - pre_test
       - lint
-      - test
+      - test:
+          requires:
+            - pre_test
       - build_tag_push:
           requires:
             - lint
