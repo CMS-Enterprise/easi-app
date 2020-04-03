@@ -6,7 +6,7 @@ import (
 
 	"go.uber.org/zap"
 
-	requestcontext "github.com/cmsgov/easi-app/pkg/context"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
 func (s ServerTestSuite) TestLoggerMiddleware() {
@@ -21,7 +21,7 @@ func (s ServerTestSuite) TestLoggerMiddleware() {
 
 		// this is the actual test, since the context is cancelled post request
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			logger, ok := requestcontext.Logger(r.Context())
+			logger, ok := appcontext.Logger(r.Context())
 
 			s.True(ok)
 			s.NotEqual(prodLogger, logger)
@@ -41,7 +41,7 @@ func (s ServerTestSuite) TestLoggerMiddleware() {
 
 		// this is the actual test, since the context is cancelled post request
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			logger, ok := requestcontext.Logger(r.Context())
+			logger, ok := appcontext.Logger(r.Context())
 
 			s.True(ok)
 			s.Equal(prodLogger, logger)
