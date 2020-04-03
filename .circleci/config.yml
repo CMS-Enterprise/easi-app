@@ -18,7 +18,7 @@ jobs:
         environment:
           FLYWAY_USER: postgres
           FLYWAY_PASSWORD: easirox
-          FLYWAY_URL: jdbc:postgresql://127.0.0.1/postgres
+          FLYWAY_URL: jdbc:postgresql://localhost/postgres
         command: [migrate]
     steps:
       - checkout
