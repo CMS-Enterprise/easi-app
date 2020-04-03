@@ -63,3 +63,5 @@ export type StoreSystemIntakesAction = {
   type: string;
   systemIntakes: SystemIntakeForm[];
 };
+
+export type SystemIntakeID = string;
