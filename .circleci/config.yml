@@ -30,7 +30,7 @@ jobs:
           command: |
             ./scripts/build_app
             ./scripts/testsuite
-  pre_test:
+  lint:
     docker:
       - image: *circleci_docker_primary
     steps:
@@ -181,11 +181,11 @@ workflows:
   version: 2
   compile:
     jobs:
-      - pre_test
+      - lint
       - test
       - build_tag_push:
           requires:
-            - pre_test
+            - lint
             - test
       - deploy_dev:
           requires:
