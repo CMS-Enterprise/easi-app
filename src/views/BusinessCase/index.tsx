@@ -29,7 +29,7 @@ export const BusinessCase = () => {
     },
     {
       type: 'FORM',
-      validation: null,
+      validation: BusinessCaseValidationSchema.asIsSolution,
       view: AsIsSolution
     },
     {

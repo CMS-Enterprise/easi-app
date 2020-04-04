@@ -8,12 +8,14 @@ import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { BusinessCaseModel } from 'types/businessCase';
+import flattenErrors from 'utils/flattenErrors';
 
 type AsIsSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
 };
 const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
-  const { values } = formikProps;
+  const { values, errors } = formikProps;
+  const flatErrors = flattenErrors(errors);
   return (
     <>
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
@@ -28,21 +30,27 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
       </p>
       <div className="tablet:grid-col-9">
         <h2>&quot;As is&quot; Solution</h2>
-        <FieldGroup scrollElement="asIsSolution.title" error={false}>
+        <FieldGroup
+          scrollElement="asIsSolution.title"
+          error={!!flatErrors.title}
+        >
           <Label htmlFor="BusinessCase-AsIsSolutionTitle">
             &quot;As is&quot; Solution: Title
           </Label>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{!!flatErrors.title}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={false}
+            error={!!flatErrors.title}
             id="BusinessCase-AsIsSolutionTitle"
             maxLength={50}
             name="asIsSolution.title"
           />
         </FieldGroup>
 
-        <FieldGroup scrollElement="asIsSolution.summary" error={false}>
+        <FieldGroup
+          scrollElement="asIsSolution.summary"
+          error={!!flatErrors.summary}
+        >
           <Label htmlFor="BusinessCase-AsIsSolutionSummary">
             &quot;As is&quot; Solution: Summary
           </Label>
@@ -62,10 +70,10 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
               <li>and potential acqueisition approaches.</li>
             </ul>
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors.summary}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors.summary}
             id="BusinessCase-AsIsSolutionSummary"
             maxLength={2000}
             name="asIsSolution.summary"
@@ -74,7 +82,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             values.asIsSolution.summary.length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement="asIsSolution.pros" error={false}>
+        <FieldGroup scrollElement="asIsSolution.pros" error={!!flatErrors.pros}>
           <Label htmlFor="BusinessCase-AsIsSolutionPros">
             &quot;As is&quot; Solution: Pros
           </Label>
@@ -82,10 +90,10 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             Identify any aspects of this solution that positively differentiates
             this approach from other solutions.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors.pros}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors.pros}
             id="BusinessCase-AsIsSolutionPros"
             maxLength={2000}
             name="asIsSolution.pros"
@@ -94,7 +102,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             values.asIsSolution.pros.length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement="asIsSolution.cons" error={false}>
+        <FieldGroup scrollElement="asIsSolution.cons" error={!!flatErrors.cons}>
           <Label htmlFor="BusinessCase-AsIsSolutionCons">
             &quot;As is&quot; Solution: Cons
           </Label>
@@ -102,10 +110,10 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             Identify any aspects of this solution that negatively impacts this
             approach.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors.cons}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors.cons}
             id="BusinessCase-AsIsSolutionCons"
             maxLength={2000}
             name="asIsSolution.cons"
@@ -138,7 +146,10 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         years={values.asIsSolution.estimatedLifecycleCost}
       />
       <div className="tablet:grid-col-9 margin-bottom-7">
-        <FieldGroup scrollElement="asIsSolution.costSavings" error={false}>
+        <FieldGroup
+          scrollElement="asIsSolution.costSavings"
+          error={!!flatErrors.costSavings}
+        >
           <Label htmlFor="BusinessCase-AsIsSolutionCostSavings">
             What is the cost savings or avoidance associated with this solution?
           </Label>
@@ -146,10 +157,10 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             This could include old systems going away, contract hours/ new Full
             Time Employees not needed, or other savings, even if indirect.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors.costSavings}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors.costSavings}
             id="BusinessCase-AsIsSolutionCostSavings"
             maxLength={2000}
             name="asIsSolution.costSavings"
