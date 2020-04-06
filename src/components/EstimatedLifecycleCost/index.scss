@@ -29,6 +29,10 @@
     &:not(:last-child) {
       margin-bottom: 1rem;
     }
+
+    .usa-form-group--error {
+      margin-top: 0;
+    }
   }
 
   &__phase-cost-wrapper,
