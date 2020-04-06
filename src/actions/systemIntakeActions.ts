@@ -1,4 +1,8 @@
-import { PUT_SYSTEM_INTAKE, GET_SYSTEM_INTAKE } from 'constants/systemIntake';
+import {
+  PUT_SYSTEM_INTAKE,
+  GET_SYSTEM_INTAKE,
+  UPDATE_SYSTEM_INTAKE
+} from 'constants/systemIntake';
 import {
   SystemIntakeForm,
   SaveSystemIntakeAction,
@@ -32,5 +36,19 @@ export function getSystemIntake(
     type: GET_SYSTEM_INTAKE,
     accessToken,
     intakeID
+  };
+}
+
+type PutSystemIntakeAction = {
+  type: string;
+  systemIntake: SystemIntakeForm;
+};
+
+export function putSystemIntake(
+  systemIntake: SystemIntakeForm
+): PutSystemIntakeAction {
+  return {
+    type: UPDATE_SYSTEM_INTAKE,
+    systemIntake
   };
 }
