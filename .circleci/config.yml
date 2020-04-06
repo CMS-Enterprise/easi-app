@@ -132,27 +132,11 @@ jobs:
       - run:
           name: Nuke the database
           command: |
-            aws lambda invoke --cli-read-timeout 240 \
-                --function easi-app-db-clean \
-                --payload '{ "command": "" }' \
-                result.json
-            exitCode="$(jq '.data.response.taskStatus.exitCode' < result.json)"
-            if [[ "$exitCode" != 0 ]] ; then
-              : task exited non-zero or exit status could not be parsed
-              exit 1
-            fi
+            ./scripts/db_lambda_invoke easi-app-db-clean
       - run:
           name: Run migrations
           command: |
-            aws lambda invoke --cli-read-timeout 240 \
-                --function easi-app-db-migrate \
-                --payload '{ "command": "" }' \
-                result.json
-            exitCode="$(jq '.data.response.taskStatus.exitCode' < result.json)"
-            if [[ "$exitCode" != 0 ]] ; then
-              : task exited non-zero or exit status could not be parsed
-              exit 1
-            fi
+            ./scripts/db_lambda_invoke easi-app-db-migrate
       - run:
           name: Restart ECS service
           command: |
