@@ -4,7 +4,7 @@ import { PUT_SYSTEM_INTAKE, GET_SYSTEM_INTAKE } from 'constants/systemIntake';
 
 import { SaveSystemIntakeAction } from 'types/systemIntake';
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
-import { getSystemIntake } from '../actions/systemIntakeActions';
+import { putSystemIntake } from '../actions/systemIntakeActions';
 
 function saveSystemIntakeRequest({ id, formData }: SaveSystemIntakeAction) {
   // Make API save request
@@ -35,7 +35,7 @@ export function* fetchSystemIntake(action: any) {
     action.accessToken,
     action.intakeID
   );
-  yield put(getSystemIntake(obj.data, action.id));
+  yield put(putSystemIntake(obj.data));
 }
 
 export function* systemIntakeSaga() {
