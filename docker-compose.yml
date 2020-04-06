@@ -15,7 +15,9 @@ services:
     depends_on:
       - db
   db_migrate:
-    image: flyway/flyway:6.3
+    build:
+      context: .
+      dockerfile: Dockerfile.db_migrations
     environment:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=
