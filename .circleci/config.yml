@@ -89,7 +89,7 @@ jobs:
       - run:
           name: Build the db cleaner image and push to ECR
           command: |
-            ./scripts/build_db_image "easi-db-clean" "Dockerfile.db_clean"
+            ./scripts/build_db_image "Dockerfile.db_clean" "easi-db-clean" "latest"
 
   build_tag_push:
     docker:
