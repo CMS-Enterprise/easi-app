@@ -1,4 +1,6 @@
 import React, { ReactNode, ReactNodeArray } from 'react';
+import classnames from 'classnames';
+import './index.scss';
 
 type DescriptionListProps = {
   className?: string;
@@ -16,19 +18,26 @@ export const DescriptionList = ({
 );
 
 type DescriptionTermProps = {
+  className?: string;
   term: string;
 };
 
-export const DescriptionTerm = ({ term }: DescriptionTermProps) => (
-  <dt className="text-bold margin-bottom-05">{term}</dt>
+export const DescriptionTerm = ({ className, term }: DescriptionTermProps) => (
+  <dt className={classnames('text-bold', 'margin-bottom-05', className)}>
+    {term}
+  </dt>
 );
 
 type DescriptionDefinitionProps = {
+  className?: string;
   definition: string;
 };
 
 export const DescriptionDefinition = ({
+  className,
   definition
 }: DescriptionDefinitionProps) => (
-  <dd className="margin-0 font-ui-md">{definition}</dd>
+  <dd className={classnames('description-definition', 'margin-0', className)}>
+    {definition}
+  </dd>
 );

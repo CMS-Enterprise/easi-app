@@ -1,0 +1,36 @@
+// Custom USWDS Button
+.easi-button {
+  &__save {
+    background-color: #f3966d;
+    color: #171717;
+    &:hover {
+      background-color: #f3966d;
+      color: #171717;
+    }
+  }
+}
+
+//  Global changes to usa-label
+.usa-label {
+  margin-top: 2rem;
+  font-weight: bold;
+}
+
+// Global change to decrease space between field and label
+.usa-select,
+.usa-range,
+.usa-input,
+.usa-textarea {
+  margin-top: 0.25rem;
+}
+
+// Textarea
+.usa-textarea {
+  height: 300px;
+  max-width: 830px;
+  width: 100%;
+
+  @media (min-width: $desktop) {
+    width: 830px;
+  }
+}

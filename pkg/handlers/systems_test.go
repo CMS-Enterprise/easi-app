@@ -2,51 +2,37 @@ package handlers
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/http/httptest"
 
+	"go.uber.org/zap"
+
 	"github.com/cmsgov/easi-app/pkg/models"
 )
-
-func failMarshal(interface{}) ([]byte, error) {
-	return nil, errors.New("failed to marshal")
-}
 
 func (s HandlerTestSuite) TestSystemsHandler() {
 
 	s.Run("golden path passes", func() {
 		rr := httptest.NewRecorder()
+		req, err := http.NewRequest("GET", "/systems/", nil)
+		s.NoError(err)
 		SystemsListHandler{
 			FetchSystems: makeFakeSystemShorts,
-			Marshal:      json.Marshal,
 			Logger:       s.logger,
-		}.Handle()(rr, nil)
+		}.Handle()(rr, req)
 
 		s.Equal(http.StatusOK, rr.Code)
 
 		var systems models.SystemShorts
-		err := json.Unmarshal(rr.Body.Bytes(), &systems)
+		err = json.Unmarshal(rr.Body.Bytes(), &systems)
 
 		s.NoError(err)
 		s.Len(systems, 3)
 		s.Equal("CHSE", systems[0].Acronym)
 	})
-
-	s.Run("marshalling fails, returns 500", func() {
-		rr := httptest.NewRecorder()
-		SystemsListHandler{
-			FetchSystems: makeFakeSystemShorts,
-			Marshal:      failMarshal,
-			Logger:       s.logger,
-		}.Handle()(rr, nil)
-
-		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("failed to fetch systems\n", rr.Body.String())
-	})
 }
 
-func makeFakeSystemShorts() (models.SystemShorts, error) {
+func makeFakeSystemShorts(logger *zap.Logger) (models.SystemShorts, error) {
 	system1 := models.SystemShort{Acronym: "CHSE", Name: "Cheese"}
 	system2 := models.SystemShort{Acronym: "PPRN", Name: "Pepperoni"}
 	system3 := models.SystemShort{Acronym: "MTLV", Name: "Meat Lovers"}

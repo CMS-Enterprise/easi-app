@@ -31,18 +31,20 @@ const Review = ({ formikProps }: ReviewProps) => {
   };
 
   return (
-    <div className="margin-bottom-7">
-      <h2 className="font-heading-xl">Check your answers before sending</h2>
+    <div className="system-intake__review margin-bottom-7">
+      <h1 className="font-heading-xl margin-top-4">
+        Check your answers before sending
+      </h1>
 
       <DescriptionList title="System Request">
-        <div className="grid-row flex-row">
-          <div className="grid-col">
+        <div className="system-intake__review-row">
+          <div>
             <DescriptionTerm term="Submission Date" />
             <DescriptionDefinition
               definition={DateTime.local().toLocaleString(DateTime.DATE_MED)}
             />
           </div>
-          <div className="grid-col">
+          <div>
             <DescriptionTerm term="Request for" />
             <DescriptionDefinition definition={values.currentStage} />
           </div>
@@ -52,47 +54,47 @@ const Review = ({ formikProps }: ReviewProps) => {
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contact Details</h2>
 
-      <DescriptionList title="System Request">
-        <div className="grid-row flex-row margin-bottom-205">
-          <div className="grid-col">
-            <DescriptionTerm term="Requestor" />
-            <DescriptionDefinition definition={values.requestor.name} />
+      <DescriptionList title="Contact Details">
+        <div className="system-intake__review-row">
+          <div>
+            <DescriptionTerm term="Requester" />
+            <DescriptionDefinition definition={values.requester.name} />
           </div>
-          <div className="grid-col">
-            <DescriptionTerm term="Requestor Component" />
-            <DescriptionDefinition definition={values.requestor.component} />
+          <div>
+            <DescriptionTerm term="Requester Component" />
+            <DescriptionDefinition definition={values.requester.component} />
           </div>
         </div>
-        <div className="grid-row flex-row margin-bottom-205">
-          <div className="grid-col">
+        <div className="system-intake__review-row">
+          <div>
             <DescriptionTerm term="CMS Business/Product Owner's Name" />
             <DescriptionDefinition definition={values.businessOwner.name} />
           </div>
-          <div className="grid-col">
+          <div>
             <DescriptionTerm term="Business Owner Component" />
             <DescriptionDefinition
               definition={values.businessOwner.component}
             />
           </div>
         </div>
-        <div className="grid-row flex-row margin-bottom-205">
-          <div className="grid-col">
+        <div className="system-intake__review-row">
+          <div>
             <DescriptionTerm term="CMS Project/Product Manager or lead" />
             <DescriptionDefinition definition={values.productManager.name} />
           </div>
-          <div className="grid-col">
+          <div>
             <DescriptionTerm term="Product Manager Component" />
             <DescriptionDefinition
               definition={values.productManager.component}
             />
           </div>
         </div>
-        <div className="grid-row flex-row margin-bottom-205">
-          <div className="grid-col">
-            <DescriptionTerm term="Does your project have an ISSO" />
+        <div className="system-intake__review-row">
+          <div>
+            <DescriptionTerm term="Does your project have an Information System Security Officer (ISSO)?" />
             <DescriptionDefinition definition={issoDefinition()} />
           </div>
-          <div className="grid-col">
+          <div>
             <DescriptionTerm term="Currently collaborating with" />
             {values.governanceTeams.isPresent ? (
               values.governanceTeams.teams.map(team => (
@@ -109,44 +111,44 @@ const Review = ({ formikProps }: ReviewProps) => {
       </DescriptionList>
 
       <hr className="system-intake__hr" />
-      <h2 className="font-heading-xl">Contact Details</h2>
+      <h2 className="font-heading-xl">Request Details</h2>
 
       <DescriptionList title="Request Details">
-        <div className="grid-row flex-row margin-bottom-205">
-          <div className="grid-col">
+        <div className="system-intake__review-row">
+          <div>
             <DescriptionTerm term="Project Name" />
             <DescriptionDefinition definition={values.projectName} />
           </div>
-          <div className="grid-col">
+          <div>
             <DescriptionTerm term="Does the project have funding" />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </div>
-        <div className="grid-row flex-row margin-bottom-205">
-          <div className="grid-col">
+        <div className="margin-bottom-205 line-height-body-3">
+          <div>
             <DescriptionTerm term="What is your business need?" />
             <DescriptionDefinition definition={values.businessNeed} />
           </div>
         </div>
-        <div className="grid-row flex-row margin-bottom-205">
-          <div className="grid-col">
+        <div className="margin-bottom-205 line-height-body-3">
+          <div>
             <DescriptionTerm term="How are you thinking of solving it?" />
             <DescriptionDefinition definition={values.businessSolution} />
           </div>
         </div>
-        <div className="grid-row flex-row margin-bottom-205">
-          <div className="grid-col">
+        <div className="system-intake__review-row">
+          <div>
             <DescriptionTerm term="Where are you in the process?" />
             <DescriptionDefinition definition={values.currentStage} />
           </div>
-          <div className="grid-col">
+          <div>
             <DescriptionTerm term="Do you currently have a contract in place?" />
             <DescriptionDefinition definition={values.hasContract} />
           </div>
         </div>
-        <div className="grid-row flex-row margin-bottom-205">
-          <div className="grid-col">
-            <DescriptionTerm term="Do you need EA support?" />
+        <div className="system-intake__review-row">
+          <div>
+            <DescriptionTerm term="Do you need Enterprise Architecture (EA) support?" />
             <DescriptionDefinition
               definition={convertBoolToYesNo(values.needsEaSupport)}
             />
@@ -161,12 +163,8 @@ const Review = ({ formikProps }: ReviewProps) => {
         <strong>one of these</strong> outcomes:
       </p>
       <ul className="usa-list">
-        <li>direct you to go through the Goverannce Review process</li>
-        <li>or direct you to an existing project</li>
-        <li>
-          or issue you a lifecycle id and decide that there is no further
-          governance needed
-        </li>
+        <li>direct you to go through the Governance Review process</li>
+        <li>or decide there is no further governance needed</li>
       </ul>
       <p>They will get back to you in two business days.</p>
     </div>

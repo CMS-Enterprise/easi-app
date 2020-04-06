@@ -3,7 +3,6 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from 'components/Header';
-import HeaderWrapper from 'components/Header/HeaderWrapper';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
@@ -77,7 +76,7 @@ export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
   return (
     <div className="system-profile">
       <Header>
-        <HeaderWrapper className="system-profile__search-bar">
+        <div className="system-profile__search-bar">
           <SearchBar
             name="System search"
             onSearch={onSearch}
@@ -85,15 +84,15 @@ export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
             renderSuggestion={renderSuggestion}
             results={searchResults}
           />
-        </HeaderWrapper>
+        </div>
 
         {mockSystems.length > 0 && (
-          <HeaderWrapper className="system-profile__secondary-nav-wrapper">
+          <div className="system-profile__secondary-nav-wrapper">
             <SecondaryNav
               secondaryNavList={mockSystems.slice(0, 10)}
               activeNavItem={match.params.profileId}
             />
-          </HeaderWrapper>
+          </div>
         )}
       </Header>
       <div className="grid-container">
