@@ -4,7 +4,7 @@ version: 2
 references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
   postgres: &postgres postgres:11.6
-  flyway: &flyway flyway/flyway:6.3
+  db_migrate: &db_migrate 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:test
 jobs:
   pre_test:
     docker:
@@ -36,7 +36,7 @@ jobs:
           POSTGRES_PASSWORD: easirox
           POSTGRES_USER: postgres
           POSTGRES_HOST_AUTH_METHOD: trust
-      - image: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:test
+      - image: *db_migrate
         environment:
           FLYWAY_USER: postgres
           FLYWAY_PASSWORD: easirox
