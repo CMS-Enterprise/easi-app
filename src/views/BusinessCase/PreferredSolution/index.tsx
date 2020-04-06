@@ -8,32 +8,41 @@ import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { BusinessCaseModel } from 'types/businessCase';
+import flattenErrors from 'utils/flattenErrors';
 
 type PreferredSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
 };
 const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
-  const { values } = formikProps;
+  const { values, errors } = formikProps;
+  const flatErrors = flattenErrors(errors);
+
   return (
     <>
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
       <div className="tablet:grid-col-9">
         <h2>Preferred Solution</h2>
-        <FieldGroup scrollElement="preferredSolution.title" error={false}>
+        <FieldGroup
+          scrollElement="preferredSolution.title"
+          error={!!flatErrors['preferredSolution.title']}
+        >
           <Label htmlFor="BusinessCase-PreferredSolutionTitle">
             Preferred Solution: Title
           </Label>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors['preferredSolution.title']}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={false}
+            error={!!flatErrors['preferredSolution.title']}
             id="BusinessCase-PreferredSolutionTitle"
             maxLength={50}
             name="preferredSolution.title"
           />
         </FieldGroup>
 
-        <FieldGroup scrollElement="preferredSolution.summary" error={false}>
+        <FieldGroup
+          scrollElement="preferredSolution.summary"
+          error={!!flatErrors['preferredSolution.summary']}
+        >
           <Label htmlFor="BusinessCase-PreferredSolutionSummary">
             Preferred Solution: Summary
           </Label>
@@ -53,10 +62,12 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
               <li>and potential acqueisition approaches.</li>
             </ul>
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>
+            {flatErrors['preferredSolution.summary']}
+          </FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors['preferredSolution.summary']}
             id="BusinessCase-PreferredSolutionSummary"
             maxLength={2000}
             name="preferredSolution.summary"
@@ -68,7 +79,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
 
         <FieldGroup
           scrollElement="preferredSolution.acquisitionApproach"
-          error={false}
+          error={!!flatErrors['preferredSolution.acquisitionApproach']}
         >
           <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
             Preferred Solution: Acquisition Approach
@@ -78,10 +89,12 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             required to deliver the system, including potential contract
             vehicles.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>
+            {flatErrors['preferredSolution.acquisitionApproach']}
+          </FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors['preferredSolution.acquisitionApproach']}
             id="BusinessCase-PreferredSolutionAcquisitionApproach"
             maxLength={2000}
             name="preferredSolution.acquisitionApproach"
@@ -91,7 +104,10 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
               .length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement="preferredSolution.pros" error={false}>
+        <FieldGroup
+          scrollElement="preferredSolution.pros"
+          error={!!flatErrors['preferredSolution.pros']}
+        >
           <Label htmlFor="BusinessCase-PreferredSolutionPros">
             Preferred Solution: Pros
           </Label>
@@ -99,10 +115,10 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             Identify any aspects of this solution that positively differentiates
             this approach from other solutions.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors['preferredSolution.pros']}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors['preferredSolution.pros']}
             id="BusinessCase-PreferredSolutionPros"
             maxLength={2000}
             name="preferredSolution.pros"
@@ -111,7 +127,10 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             values.preferredSolution.pros.length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement="preferredSolution.cons" error={false}>
+        <FieldGroup
+          scrollElement="preferredSolution.cons"
+          error={!!flatErrors['preferredSolution.cons']}
+        >
           <Label htmlFor="BusinessCase-PreferredSolutionCons">
             Preferred Solution: Cons
           </Label>
@@ -119,10 +138,10 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             Identify any aspects of this solution that negatively impacts this
             approach.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors['preferredSolution.cons']}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors['preferredSolution.cons']}
             id="BusinessCase-PreferredSolutionCons"
             maxLength={2000}
             name="preferredSolution.cons"
@@ -151,10 +170,16 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
       <EstimatedLifecycleCost
         formikKey="preferredSolution.estimatedLifecycleCost"
         years={values.preferredSolution.estimatedLifecycleCost}
-        errors={{}}
+        errors={
+          errors.preferredSolution &&
+          errors.preferredSolution.estimatedLifecycleCost
+        }
       />
       <div className="tablet:grid-col-9 margin-bottom-7">
-        <FieldGroup scrollElement="preferredSolution.costSavings" error={false}>
+        <FieldGroup
+          scrollElement="preferredSolution.costSavings"
+          error={!!flatErrors['preferredSolution.costSavings']}
+        >
           <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
             What is the cost savings or avoidance associated with this solution?
           </Label>
@@ -162,10 +187,12 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             This could include old systems going away, contract hours/ new Full
             Time Employees not needed, or other savings, even if indirect.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>
+            {flatErrors['preferredSolution.costSavings']}
+          </FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors['preferredSolution.costSavings']}
             id="BusinessCase-PreferredSolutionCostSavings"
             maxLength={2000}
             name="preferredSolution.costSavings"
