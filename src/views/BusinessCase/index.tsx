@@ -34,7 +34,7 @@ export const BusinessCase = () => {
     },
     {
       type: 'FORM',
-      validation: null,
+      validation: BusinessCaseValidationSchema.preferredSolution,
       view: PreferredSolution
     }
   ];
