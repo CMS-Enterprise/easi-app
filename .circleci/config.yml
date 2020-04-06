@@ -28,13 +28,13 @@ jobs:
       - image: *circleci_docker_primary
         environment:
           PG_SSL_MODE: disable
+          PGUSER: postgres
+          PGPASS: easirox
       - image: *postgres
         environment:
           POSTGRES_DB: postgres
           POSTGRES_PASSWORD: easirox
-          PGPASS: easirox
           POSTGRES_USER: postgres
-          PGUSER: postgres
           POSTGRES_HOST_AUTH_METHOD: trust
       - image: 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:test
         environment:
