@@ -1,10 +1,5 @@
 ---
 repos:
-  - repo: meta
-    hooks:
-      - id: check-hooks-apply
-      - id: check-useless-excludes
-
   - repo: git://github.com/igorshubovych/markdownlint-cli
     rev: v0.22.0
     hooks:
@@ -49,9 +44,3 @@ repos:
         entry: scripts/pre-commit-eslint
         language: script
         files: \.(js|jsx|ts|tsx)$
-      - id: docker-compose
-        name: validate docker-compose.yml
-        language: system
-        entry: docker-compose -f docker-compose.yml config
-        files: 'docker-compose.yml'
-        pass_filenames: false
