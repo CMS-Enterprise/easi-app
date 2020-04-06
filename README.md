@@ -3,6 +3,13 @@
 This repository contains the application code
 for the CMS EASi (Easy Access to System Information).
 
+## Codebase Layout
+
+## Go
+
+The server portion of the application is written in Go.
+More information can be found in the [pkg documentation](./pkg/README.md).
+
 ## Application Setup
 
 ### Setup: Developer Setup
@@ -186,7 +193,7 @@ pre-commit: `brew install circleci`
 
 To set up docker on your local machine:
 
-```sh
+```console
 brew cask install docker
 brew install docker-completion
 ```
@@ -194,22 +201,41 @@ brew install docker-completion
 Now you will need to start the Docker service: run Spotlight and type in
 'docker'.
 
-### Setup: PostgreSQL
+#### docker-compose
 
-To run postgres in Docker, first you will need the image:
-
-```sh
-docker pull postgres:11.6
-```
-
-Now, you can run postgres locally in a container:
+To run the app in Docker locally, we are using
+[`docker-compose`](https://docs.docker.com/compose/):
 
 ```console
-$ docker run --detach --publish 5432:5432 postgres:11.6
-8a6196a9ae85286e3598bc49a1a59954a3762b633059829389af333964041215
+brew install docker-compose
+brew install docker-compose-completion  # optional
 ```
 
-To test the database from your shell, `pgcli` is recommended:
+Now, you can stand up the app & database locally in containers.  The app server
+will stand up and migrations from your local filesystem will be run against the
+db automatically:
+
+```console
+$ docker-compose up --detach
+Starting app_db_1 ... done
+Starting app_db_clean_1 ... done
+Starting app_db_migrate_1 ... done
+Starting app_easi_1       ... done
+$ curl http://localhost:8080/api/v1/healthcheck
+{"status":"pass","datetime":"APPLICATION_DATETIME","version":"APPLICATION_VERSION","timestamp":"APPLICATION_TS"}
+```
+
+Two options to take it down:
+
+```console
+docker-compose kill  # stops the running containers
+docker-compose down  # stops and also removes the containers
+```
+
+You can also force rebuilding the images (e.g. after using `kill`) with
+`docker-compose build`.
+
+To inspect the database from your shell, `pgcli` is recommended:
 
 ```sh
 brew install pgcli
@@ -271,16 +297,15 @@ go build -a -o bin/easi ./cmd/easi
 
 You can then access the tool with the `easi` command.
 
-### Docker
+### Migrating the Database
 
-To build the application and run in Docker:
-
-```sh
-docker build --no-cache --tag easi:latest .
-docker run --read-only --tmpfs /tmp --publish 8080:8080 --rm easi:latest /easi/easi serve
-```
+To add a new migration, add a new file to the `migrations` directory
+following the standard
+`V_${last_migration_version + 1}_your_migration_name_here.sql`
 
 ## Testing
+
+### Server tests
 
 Once your developer environment is setup,
 you can run tests with the `easi test` command.
@@ -289,3 +314,31 @@ If you run into into various `(typecheck)` errors when
 running `easi test` follow the directions for [installing
 golangci-lint](https://github.com/golangci/golangci-lint#install)
 to upgrade golangci-lint.
+
+### Cypress tests (End-to-end integration tests)
+
+Run `npx cypress run` to run the tests in the CLI. To have a slightly more interactive
+experience, you can instead run `npx cypress open`.
+
+## Development and Debugging
+
+### APIs
+
+The APIs reside at `localhost:8080` when running.
+To run a test request,
+you can send a GET to the health check endpoint:
+`curl localhost:8080/api/v1/healthcheck`
+
+#### Authorization
+
+Setting this `ENVIRONMENT` environment variable to "local"
+will turn off API authorization.
+This allows you to debug quickly without retrieving Okta access tokens.
+
+If you need to test the authorization,
+unset that environment variable.
+You can then retrieve access tokens
+by logging into [the development app](dev.easi.cms.gov)
+and copying `okta-token-storage/accessToken` from the browser's local storage.
+Place this in the `Authorization` header
+as `Bearer ${accessToken}`.

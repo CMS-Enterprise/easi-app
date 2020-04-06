@@ -4,47 +4,55 @@ import './index.scss';
 
 type TextFieldProps = {
   disabled?: boolean;
+  error?: boolean;
   id: string;
   name: string;
-  label?: string;
   maxLength?: number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
   value: string;
+  match?: RegExp;
 };
 
 const TextField = ({
   disabled,
+  error,
   id,
   name,
-  label,
   maxLength,
   onChange,
   onBlur,
-  value
+  value,
+  match
 }: TextFieldProps) => {
-  const textFieldClassNames = classnames('usa-input', {
-    'easi-textfield--disabled': disabled
-  });
+  const inputClasses = classnames(
+    'usa-input',
+    { 'easi-textfield--disabled': disabled },
+    { 'usa-input--error': error }
+  );
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (match) {
+      if (e.target.value === '' || match.test(e.target.value)) {
+        onChange(e);
+      }
+    } else {
+      onChange(e);
+    }
+  };
+
   return (
-    <>
-      {label && (
-        <label className="usa-label" htmlFor={id}>
-          {label}
-        </label>
-      )}
-      <input
-        className={textFieldClassNames}
-        disabled={disabled}
-        id={id}
-        name={name}
-        onChange={onChange}
-        onBlur={onBlur}
-        type="text"
-        value={value}
-        maxLength={maxLength}
-      />
-    </>
+    <input
+      className={inputClasses}
+      disabled={disabled}
+      id={id}
+      name={name}
+      onChange={handleChange}
+      onBlur={onBlur}
+      type="text"
+      value={value}
+      maxLength={maxLength}
+    />
   );
 };
 

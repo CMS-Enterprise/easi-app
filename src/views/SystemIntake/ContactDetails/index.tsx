@@ -5,7 +5,11 @@ import CheckboxField from 'components/shared/CheckboxField';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
+import FieldGroup from 'components/shared/FieldGroup';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import Label from 'components/shared/Label';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import flattenErrors from 'utils/flattenErrors';
 import { SystemIntakeForm } from 'types/systemIntake';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
@@ -14,7 +18,8 @@ type ContactDetailsProps = {
 };
 
 const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
-  const { values, setFieldValue } = formikProps;
+  const { values, setFieldValue, errors } = formikProps;
+  const flatErrors = flattenErrors(errors);
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
   return (
     <>
@@ -30,201 +35,292 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
       <p className="text-italic">
         **All fields are required unless marked &apos;Optional&apos;
       </p>
-      <div className="grid-col-6 margin-bottom-7">
-        <h2 className="font-heading-xl">Contact Details</h2>
-        <Field
-          as={TextField}
-          id="IntakeForm-Requestor"
-          label="Requestor"
-          maxLength={50}
-          name="requestor.name"
-          onChange={(e: any) => {
-            if (isReqAndBusOwnerSame) {
-              setFieldValue('businessOwner.name', e.target.value);
-            }
-            setFieldValue('requestor.name', e.target.value);
-          }}
-        />
+      <div className="tablet:grid-col-6 margin-bottom-7">
+        <h1 className="font-heading-xl margin-top-4">Contact Details</h1>
 
-        <Field
-          as={DropdownField}
-          id="IntakeForm-RequestorComponent"
-          label="Requestor Component"
-          name="requestor.component"
-          onChange={(e: any) => {
-            if (isReqAndBusOwnerSame) {
-              setFieldValue('businessOwner.component', e.target.value);
-            }
-            setFieldValue('requestor.component', e.target.value);
-          }}
+        {/* Requester Name */}
+        <FieldGroup
+          scrollElement="requester.name"
+          error={!!flatErrors['requester.name']}
         >
-          <Field as={DropdownItem} name="Select an option" value="" />
-          {cmsDivisionsAndOffices.map((office: any) => (
-            <Field
-              as={DropdownItem}
-              key={`RequestorComponent-${office.acronym}`}
-              name={office.name}
-              value={office.name}
-            />
-          ))}
-        </Field>
-
-        <label
-          className="usa-label margin-bottom-1"
-          htmlFor="IntakeForm-BusinessOwner"
-        >
-          CMS Business/Product Owner&apos;s Name
-        </label>
-        <Field
-          as={CheckboxField}
-          id="IntakeForm-IsBusinessOwnerSameAsRequestor"
-          label="Same as Requestor"
-          name="isBusinessOwnerSameAsRequestor"
-          onChange={(e: any) => {
-            if (e.target.checked) {
-              setReqAndBusOwnerSame(true);
-              setFieldValue('businessOwner.name', values.requestor.name);
-              setFieldValue(
-                'businessOwner.component',
-                values.requestor.component
-              );
-            } else {
-              setReqAndBusOwnerSame(false);
-            }
-          }}
-          value=""
-        />
-        <Field
-          as={TextField}
-          disabled={isReqAndBusOwnerSame}
-          id="IntakeForm-BusinessOwner"
-          maxLength={50}
-          name="businessOwner.name"
-        />
-        <Field
-          as={DropdownField}
-          disabled={isReqAndBusOwnerSame}
-          id="IntakeForm-BusinessOwnerComponent"
-          label="Business Owner Component"
-          name="businessOwner.component"
-        >
-          <Field as={DropdownItem} name="Select an option" value="" />
-          {cmsDivisionsAndOffices.map(office => (
-            <Field
-              as={DropdownItem}
-              key={`BusinessOwnerComponent-${office.acronym}`}
-              name={office.name}
-              value={office.name}
-            />
-          ))}
-        </Field>
-        <Field
-          as={TextField}
-          id="IntakeForm-ProductManager"
-          label="CMS Project/Product Manager, or lead"
-          maxLength={50}
-          name="productManager.name"
-        />
-        <Field
-          as={DropdownField}
-          id="IntakeForm-ProductManagerComponent"
-          label="Product Manager Component"
-          name="productManager.component"
-        >
-          <Field as={DropdownItem} name="Select an option" value="" />
-          {cmsDivisionsAndOffices.map((office: any) => (
-            <Field
-              as={DropdownItem}
-              key={`ProductManagerComponent-${office.acronym}`}
-              name={office.name}
-              value={office.name}
-            />
-          ))}
-        </Field>
-
-        <fieldset className="usa-fieldset margin-top-3">
-          <legend className="usa-label margin-bottom-1">
-            Does your project have an ISSO?
-          </legend>
-          <HelpText>
-            If yes, please tell use the name of your ISSO so we can get in touch
-            with them
-          </HelpText>
-
+          <Label htmlFor="IntakeForm-Requester">Requester</Label>
+          <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
           <Field
-            as={RadioField}
-            checked={values.isso.isPresent === true}
-            id="IntakeForm-HasIssoYes"
-            name="isso.isPresent"
-            label="Yes"
-            onChange={() => {
-              setFieldValue('isso.isPresent', true);
+            as={TextField}
+            error={!!flatErrors['requester.name']}
+            id="IntakeForm-Requester"
+            maxLength={50}
+            name="requester.name"
+            onChange={(e: any) => {
+              if (isReqAndBusOwnerSame) {
+                setFieldValue('businessOwner.name', e.target.value);
+              }
+              setFieldValue('requester.name', e.target.value);
             }}
-            value
           />
-          {values.isso.isPresent && (
-            <div className="width-card margin-top-neg-2 margin-left-3 margin-bottom-1">
+        </FieldGroup>
+
+        {/* Requester Component */}
+        <FieldGroup
+          scrollElement="requester.component"
+          error={!!flatErrors['requester.component']}
+        >
+          <Label htmlFor="IntakeForm-RequesterComponent">
+            Requester Component
+          </Label>
+          <FieldErrorMsg>{flatErrors['requester.component']}</FieldErrorMsg>
+          <Field
+            as={DropdownField}
+            error={!!flatErrors['requester.component']}
+            id="IntakeForm-RequesterComponent"
+            name="requester.component"
+            onChange={(e: any) => {
+              if (isReqAndBusOwnerSame) {
+                setFieldValue('businessOwner.component', e.target.value);
+              }
+              setFieldValue('requester.component', e.target.value);
+            }}
+          >
+            <Field as={DropdownItem} name="Select an option" value="" />
+            {cmsDivisionsAndOffices.map((office: any) => (
               <Field
-                as={TextField}
-                id="IntakeForm-IssoName"
-                label="ISSO Name"
-                maxLength={50}
-                name="isso.name"
+                as={DropdownItem}
+                key={`RequesterComponent-${office.acronym}`}
+                name={office.name}
+                value={office.name}
               />
-            </div>
-          )}
-          <Field
-            as={RadioField}
-            checked={values.isso.isPresent === false}
-            id="IntakeForm-HasIssoNo"
-            name="isso.isPresent"
-            label="No"
-            onChange={() => {
-              setFieldValue('isso.isPresent', false);
-              setFieldValue('isso.name', '');
-            }}
-            value={false}
-          />
-        </fieldset>
+            ))}
+          </Field>
+        </FieldGroup>
 
-        <fieldset className="usa-fieldset margin-top-3">
-          <legend className="usa-label margin-bottom-1">
-            My project team is currently collaborating/consulting with:
-          </legend>
-          <HelpText>
-            Please disclose the name of each person you&apos;ve worked with.
-            This helps us locate any additional information on your request
-          </HelpText>
+        {/* Business Owner Name */}
+        <FieldGroup
+          scrollElement="businessOwner.name"
+          error={!!flatErrors['businessOwner.name']}
+        >
+          <Label className="margin-bottom-1" htmlFor="IntakeForm-BusinessOwner">
+            CMS Business/Product Owner&apos;s Name
+          </Label>
           <Field
-            as={RadioField}
-            checked={values.governanceTeams.isPresent === true}
-            id="IntakeForm-NoGovernanceTeams"
-            name="governanceTeams.isPresent"
-            label="1 or more of the following in OIT (select all that apply)"
-            onChange={() => {
-              setFieldValue('governanceTeams.isPresent', true);
+            as={CheckboxField}
+            id="IntakeForm-IsBusinessOwnerSameAsRequester"
+            label="Same as Requester"
+            name="isBusinessOwnerSameAsRequester"
+            onChange={(e: any) => {
+              if (e.target.checked) {
+                setReqAndBusOwnerSame(true);
+                setFieldValue('businessOwner.name', values.requester.name);
+                setFieldValue(
+                  'businessOwner.component',
+                  values.requester.component
+                );
+              } else {
+                setReqAndBusOwnerSame(false);
+              }
             }}
-            value
+            value=""
           />
-          <div className="margin-left-3">
-            <GovernanceTeamOptions
-              values={values}
-              setFieldValue={setFieldValue}
+          <FieldErrorMsg>{flatErrors['businessOwner.name']}</FieldErrorMsg>
+          <Field
+            as={TextField}
+            error={!!flatErrors['businessOwner.name']}
+            disabled={isReqAndBusOwnerSame}
+            id="IntakeForm-BusinessOwner"
+            maxLength={50}
+            name="businessOwner.name"
+          />
+        </FieldGroup>
+
+        {/* Business Owner Component */}
+        <FieldGroup
+          scrollElement="businessOwner.component"
+          error={!!flatErrors['businessOwner.component']}
+        >
+          <Label htmlFor="IntakeForm-BusinessOwnerComponent">
+            Business Owner Component
+          </Label>
+          <FieldErrorMsg>{flatErrors['businessOwner.component']}</FieldErrorMsg>
+          <Field
+            as={DropdownField}
+            disabled={isReqAndBusOwnerSame}
+            error={!!flatErrors['businessOwner.component']}
+            id="IntakeForm-BusinessOwnerComponent"
+            name="businessOwner.component"
+          >
+            <Field as={DropdownItem} name="Select an option" value="" />
+            {cmsDivisionsAndOffices.map(office => (
+              <Field
+                as={DropdownItem}
+                key={`BusinessOwnerComponent-${office.acronym}`}
+                name={office.name}
+                value={office.name}
+              />
+            ))}
+          </Field>
+        </FieldGroup>
+
+        {/* Product Manager Name */}
+        <FieldGroup
+          scrollElement="productManager.name"
+          error={!!flatErrors['productManager.name']}
+        >
+          <Label htmlFor="IntakeForm-ProductManager">
+            CMS Project/Product Manager, or lead
+          </Label>
+          <FieldErrorMsg>{flatErrors['productManager.name']}</FieldErrorMsg>
+          <Field
+            as={TextField}
+            error={!!flatErrors['productManager.name']}
+            id="IntakeForm-ProductManager"
+            maxLength={50}
+            name="productManager.name"
+          />
+        </FieldGroup>
+
+        {/* Product Manager Component */}
+        <FieldGroup
+          scrollElement="productManager.component"
+          error={!!flatErrors['productManager.component']}
+        >
+          <Label htmlFor="IntakeForm-ProductManagerComponent">
+            Product Manager Component
+          </Label>
+          <FieldErrorMsg>
+            {flatErrors['productManager.component']}
+          </FieldErrorMsg>
+          <Field
+            as={DropdownField}
+            error={!!flatErrors['productManager.component']}
+            id="IntakeForm-ProductManagerComponent"
+            label="Product Manager Component"
+            name="productManager.component"
+          >
+            <Field as={DropdownItem} name="Select an option" value="" />
+            {cmsDivisionsAndOffices.map((office: any) => (
+              <Field
+                as={DropdownItem}
+                key={`ProductManagerComponent-${office.acronym}`}
+                name={office.name}
+                value={office.name}
+              />
+            ))}
+          </Field>
+        </FieldGroup>
+
+        {/* ISSO */}
+        <FieldGroup
+          scrollElement="isso.isPresent"
+          error={!!flatErrors['isso.isPresent']}
+        >
+          <fieldset className="usa-fieldset margin-top-4">
+            <legend className="usa-label margin-bottom-1">
+              Does your project have an Information System Security Officer
+              (ISSO)?
+            </legend>
+            <HelpText className="margin-bottom-2">
+              If yes, please tell use the name of your ISSO so we can get in
+              touch with them
+            </HelpText>
+            <FieldErrorMsg>{flatErrors['isso.isPresent']}</FieldErrorMsg>
+
+            <Field
+              as={RadioField}
+              checked={values.isso.isPresent === true}
+              id="IntakeForm-HasIssoYes"
+              name="isso.isPresent"
+              label="Yes"
+              onChange={() => {
+                setFieldValue('isso.isPresent', true);
+              }}
+              value
             />
-          </div>
-          <Field
-            as={RadioField}
-            checked={values.governanceTeams.isPresent === false}
-            id="IntakeForm-YesGovernanceTeam"
-            name="governanceTeams.isPresent"
-            label="None of the above"
-            onChange={() => {
-              setFieldValue('governanceTeams.isPresent', false);
-              setFieldValue('governanceTeams.teams', []);
-            }}
-            value={false}
-          />
-        </fieldset>
+            {values.isso.isPresent && (
+              <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
+                <FieldGroup
+                  scrollElement="isso.name"
+                  error={!!flatErrors['isso.name']}
+                >
+                  <Label htmlFor="IntakeForm-IssoName">ISSO Name</Label>
+                  <FieldErrorMsg>{flatErrors['isso.name']}</FieldErrorMsg>
+                  <Field
+                    as={TextField}
+                    error={!!flatErrors['isso.name']}
+                    id="IntakeForm-IssoName"
+                    maxLength={50}
+                    name="isso.name"
+                  />
+                </FieldGroup>
+              </div>
+            )}
+            <Field
+              as={RadioField}
+              checked={values.isso.isPresent === false}
+              id="IntakeForm-HasIssoNo"
+              name="isso.isPresent"
+              label="No"
+              onChange={() => {
+                setFieldValue('isso.isPresent', false);
+                setFieldValue('isso.name', '');
+              }}
+              value={false}
+            />
+          </fieldset>
+        </FieldGroup>
+
+        {/* Governance Teams */}
+        <FieldGroup
+          scrollElement="governanceTeams.isPresent"
+          error={flatErrors['governanceTeams.isPresent']}
+        >
+          <fieldset className="usa-fieldset margin-top-3">
+            <legend className="usa-label margin-bottom-1">
+              My project team is currently collaborating/consulting with:
+            </legend>
+            <HelpText className="margin-bottom-2">
+              Please disclose the name of each person you&apos;ve worked with.
+              This helps us locate any additional information on your request
+            </HelpText>
+            <FieldErrorMsg>
+              {flatErrors['governanceTeams.isPresent']}
+            </FieldErrorMsg>
+
+            <Field
+              as={RadioField}
+              checked={values.governanceTeams.isPresent === true}
+              id="IntakeForm-NoGovernanceTeams"
+              name="governanceTeams.isPresent"
+              label="1 or more of the following in OIT (select all that apply)"
+              onChange={() => {
+                setFieldValue('governanceTeams.isPresent', true);
+              }}
+              value
+            />
+            <div className="margin-left-3">
+              <FieldGroup
+                scrollElement="governanceTeams.teams"
+                error={!!flatErrors['governanceTeams.teams']}
+              >
+                <FieldErrorMsg>
+                  {flatErrors['governanceTeams.teams']}
+                </FieldErrorMsg>
+                <GovernanceTeamOptions formikProps={formikProps} />
+              </FieldGroup>
+            </div>
+
+            <Field
+              as={RadioField}
+              checked={values.governanceTeams.isPresent === false}
+              id="IntakeForm-YesGovernanceTeam"
+              name="governanceTeams.isPresent"
+              label="None of the above"
+              onChange={() => {
+                setFieldValue('governanceTeams.isPresent', false);
+                setFieldValue('governanceTeams.teams', []);
+              }}
+              value={false}
+            />
+          </fieldset>
+        </FieldGroup>
       </div>
     </>
   );
