@@ -17,7 +17,6 @@ jobs:
       - run:
           name: Build the flyway migrations for testing
           command: |
-            bash +x -c "$(set -x ; aws ecr get-login --no-include-email --region "${AWS_DEFAULT_REGION}" --registry-ids "${AWS_ACCOUNT_ID}")"
             ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate" "latest"
 
   test:
