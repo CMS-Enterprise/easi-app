@@ -4,7 +4,7 @@ version: 2
 references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
   postgres: &postgres postgres:11.6
-  db_migrate: &db_migrate 840301899071.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:test
+  db_migrate: &db_migrate ${AWS_ACCOUNT_ID_DEV}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:test
 jobs:
   pre_test:
     docker:
