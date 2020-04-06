@@ -44,6 +44,11 @@ export type SystemIntakeForm = {
   hasContract: string;
 };
 
+// Redux store type for a system intake
+export type SystemIntakeState = {
+  systemIntake?: SystemIntakeForm;
+};
+
 // Redux store type for systems
 export type SystemIntakesState = {
   systemIntakes: SystemIntakeForm[];
