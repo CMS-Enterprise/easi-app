@@ -19,14 +19,15 @@ import './index.scss';
 
 type PhaseProps = {
   formikKey: string;
+  year: number;
   index: number;
   values: LifecyclePhase;
   errors: any[];
 };
-const Phase = ({ formikKey, index, values, errors = [] }: PhaseProps) => {
+const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
   const phaseError = errors[index] || {};
   return (
-    <FieldArray name={formikKey}>
+    <FieldArray name={`${formikKey}.year${year}`}>
       {arrayHelpers => (
         <div className="est-lifecycle-cost__phase-cost-wrapper">
           <FieldGroup
@@ -44,6 +45,7 @@ const Phase = ({ formikKey, index, values, errors = [] }: PhaseProps) => {
                 <div className=" est-lifecycle-cost__phase-field-wrapper">
                   <legend
                     className={classnames('usa-label', 'margin-bottom-1')}
+                    aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
                   >
                     Phase
                   </legend>
@@ -51,8 +53,8 @@ const Phase = ({ formikKey, index, values, errors = [] }: PhaseProps) => {
                     <Field
                       as={RadioField}
                       checked={values.phase === 'Initiate'}
-                      id={`BusinessCase-${formikKey}.Phase${index}.initiate`}
-                      name={`${formikKey}.${index}.phase`}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.initiate`}
+                      name={`${formikKey}.year${year}.${index}.phase`}
                       label="Initiate"
                       value="Initiate"
                       inline
@@ -61,8 +63,8 @@ const Phase = ({ formikKey, index, values, errors = [] }: PhaseProps) => {
                     <Field
                       as={RadioField}
                       checked={values.phase === 'Operations & Maintanence'}
-                      id={`BusinessCase-${formikKey}.Phase${index}.opsMaintanence`}
-                      name={`${formikKey}.${index}.phase`}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintanence`}
+                      name={`${formikKey}.year${year}.${index}.phase`}
                       label="Operations & Maintanence"
                       value="Operations & Maintanence"
                       inline
@@ -71,14 +73,17 @@ const Phase = ({ formikKey, index, values, errors = [] }: PhaseProps) => {
                 </div>
               </fieldset>
               <div className="est-lifecycle-cost__cost-field-wrapper">
-                <Label htmlFor={`BusinessCase-${formikKey}.Phase${index}.cost`}>
+                <Label
+                  htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                  aria-label={`Year ${year} Phase ${index + 1} Cost`}
+                >
                   Cost
                 </Label>
                 <Field
                   as={TextField}
                   error={!!phaseError.cost}
-                  id={`BusinessCase-${formikKey}.Phase${index}.cost`}
-                  name={`${formikKey}.${index}.cost`}
+                  id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                  name={`${formikKey}.year${year}.${index}.cost`}
                   maxLength={10}
                   match={/^[0-9\b]+$/}
                 />
@@ -159,7 +164,8 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year1Phase-${index + 1}`}
-                formikKey={`${formikKey}.year1`}
+                formikKey={formikKey}
+                year={1}
                 index={index}
                 values={year}
                 errors={errors.year1}
@@ -173,7 +179,8 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year2Phase-${index + 1}`}
-                formikKey={`${formikKey}.year2`}
+                formikKey={formikKey}
+                year={2}
                 index={index}
                 values={year}
                 errors={errors.year2}
@@ -187,7 +194,8 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year3Phase-${index + 1}`}
-                formikKey={`${formikKey}.year3`}
+                formikKey={formikKey}
+                year={3}
                 index={index}
                 values={year}
                 errors={errors.year3}
@@ -201,7 +209,8 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year4Phase-${index + 1}`}
-                formikKey={`${formikKey}.year4`}
+                formikKey={formikKey}
+                year={4}
                 index={index}
                 values={year}
                 errors={errors.year4}
@@ -215,7 +224,8 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year5Phase-${index + 1}`}
-                formikKey={`${formikKey}.year5`}
+                formikKey={formikKey}
+                year={5}
                 index={index}
                 values={year}
                 errors={errors.year5}
