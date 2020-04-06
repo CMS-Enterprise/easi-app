@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 #
-# for periodically rebuilding the db cleaner image
+# for periodically rebuilding the db images
 #
+
+repo_name="$1"
+dockerfile="$2"
 
 builddir="$(git rev-parse --show-toplevel)"
 scriptdir="$builddir/scripts/"
 
-ecr_db_clean="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-clean"
+ecr_db="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/$repo_name"
 
 # log in to ECR
 if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")" ; then
-  if (set -x ; docker build --quiet --no-cache --tag "easi-db-clean" "$builddir" --file Dockerfile.db_clean) ; then
-    "$scriptdir"/tag_and_push "easi-db-clean:latest" "${ecr_db_clean}" "latest"
+  if (set -x ; docker build --quiet --no-cache --tag "$repo_name" "$builddir" --file "$dockerfile") ; then
+    "$scriptdir"/tag_and_push "$repo_name:latest" "${ecr_db}" "latest"
   else
     exit
   fi
