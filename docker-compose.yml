@@ -23,7 +23,6 @@ services:
     environment:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=
-      - FLYWAY_IGNORE_INVALID_MIGRATION_NAMES=false
       - FLYWAY_URL=jdbc:postgresql://db/postgres
     command: migrate
     volumes:
