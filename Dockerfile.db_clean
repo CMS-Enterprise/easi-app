@@ -1,3 +1,5 @@
 FROM flyway/flyway:6.3
 
+ENV FLYWAY_CONNECT_RETRIES=10
+
 ENTRYPOINT ["flyway", "clean"]
