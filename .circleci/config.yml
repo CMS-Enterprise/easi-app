@@ -25,6 +25,7 @@ jobs:
         environment:
           PG_SSL_MODE: disable
           PGUSER: postgres
+          PGPASS: easirox
       - image: *postgres
         environment:
           POSTGRES_DB: postgres
@@ -34,6 +35,7 @@ jobs:
       - image: *db_migrate
         environment:
           FLYWAY_USER: postgres
+          FLYWAY_PASSWORD: easirox
           FLYWAY_URL: jdbc:postgresql://localhost/postgres
     steps:
       - checkout
