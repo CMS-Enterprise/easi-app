@@ -6,7 +6,7 @@ references:
   postgres: &postgres postgres:11.6
   db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:latest
 jobs:
-  pre_test:
+  build_db_migrate_image:
     docker:
       - image: *circleci_docker_primary
         environment:
@@ -179,11 +179,11 @@ workflows:
   version: 2
   compile:
     jobs:
-      - pre_test
+      - build_db_migrate_image
       - lint
       - test:
           requires:
-            - pre_test
+            - build_db_migrate_image
       - build_tag_push:
           requires:
             - lint
