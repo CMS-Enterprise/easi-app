@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
@@ -39,6 +39,8 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   ];
   const [page, setPage] = useState(1);
   const dispatch = useDispatch();
+  const formikRef: any = useRef();
+  console.log(formikRef);
   const pageObj = pages[page - 1];
   const initialData: SystemIntakeForm = {
     projectName: '',
@@ -111,6 +113,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
           validateOnBlur={false}
           validateOnChange={false}
           validateOnMount={false}
+          innerRef={formikRef}
         >
           {(formikProps: FormikProps<SystemIntakeForm>) => {
             const {
