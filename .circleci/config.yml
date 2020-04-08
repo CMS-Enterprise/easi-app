@@ -3,8 +3,48 @@ version: 2
 
 references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+  postgres: &postgres postgres:11.6
+  db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:latest
 jobs:
-  pre_test:
+  build_db_migrate_image:
+    docker:
+      - image: *circleci_docker_primary
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build the flyway migrations for testing
+          command: |
+            ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate" "latest"
+
+  test:
+    docker:
+      - image: *circleci_docker_primary
+        environment:
+          PG_SSL_MODE: disable
+          PGUSER: postgres
+          PGPASS: easirox
+      - image: *postgres
+        environment:
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: easirox
+          POSTGRES_USER: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+      - image: *db_migrate
+        environment:
+          FLYWAY_USER: postgres
+          FLYWAY_PASSWORD: easirox
+          FLYWAY_URL: jdbc:postgresql://localhost/postgres
+    steps:
+      - checkout
+      - run:
+          name: Run easi app tests
+          command: |
+            ./scripts/build_app
+            ./scripts/testsuite
+  lint:
     docker:
       - image: *circleci_docker_primary
     steps:
@@ -44,7 +84,7 @@ jobs:
       - run:
           name: Build the db cleaner image and push to ECR
           command: |
-            ./scripts/build_db_clean_image
+            ./scripts/build_db_image "Dockerfile.db_clean" "easi-db-clean" "latest"
 
   build_tag_push:
     docker:
@@ -84,6 +124,14 @@ jobs:
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
+      - run:
+          name: Nuke the database
+          command: |
+            ./scripts/db_lambda_invoke easi-app-db-clean
+      - run:
+          name: Run migrations
+          command: |
+            ./scripts/db_lambda_invoke easi-app-db-migrate
       - run:
           name: Restart ECS service
           command: |
@@ -127,37 +175,29 @@ jobs:
           command: |
             ./scripts/release_static "$STATIC_S3_BUCKET_IMPL"
 
-  test:
-    docker:
-      - image: *circleci_docker_primary
-    steps:
-      - checkout
-      - run:
-          name: Run easi app tests
-          command: |
-            ./scripts/build_app
-            ./scripts/testsuite
-
 workflows:
   version: 2
   compile:
     jobs:
-      - pre_test
-      - test
+      - build_db_migrate_image
+      - lint
+      - test:
+          requires:
+            - build_db_migrate_image
       - build_tag_push:
           requires:
-            - pre_test
+            - lint
             - test
       - deploy_dev:
           requires:
             - build_tag_push
-    # - deploy_impl:
-    #     filters:
-    #       branches:
-    #         only:
-    #           - master
-    #     requires:
-    #       - deploy_dev
+      - deploy_impl:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - deploy_dev
   weekly:
     triggers:
       - schedule:
