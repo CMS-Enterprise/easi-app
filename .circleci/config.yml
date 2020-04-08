@@ -23,7 +23,7 @@ jobs:
     docker:
       - image: *circleci_docker_primary
         environment:
-          PG_SSL_MODE: disable
+          PGSSLMODE: disable
           PGUSER: postgres
           PGPASS: easirox
       - image: *postgres
