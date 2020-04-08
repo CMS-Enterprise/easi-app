@@ -23,9 +23,12 @@ jobs:
     docker:
       - image: *circleci_docker_primary
         environment:
-          PGSSLMODE: disable
+          PGHOST: localhost
+          PGPORT: 5432
+          PGDATABASE: postgres
           PGUSER: postgres
           PGPASS: easirox
+          PGSSLMODE: disable
       - image: *postgres
         environment:
           POSTGRES_DB: postgres
