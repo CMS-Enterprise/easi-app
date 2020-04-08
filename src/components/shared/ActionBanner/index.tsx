@@ -4,7 +4,7 @@ import './index.scss';
 type ActionBannerProps = {
   title: string;
   helpfulText: string;
-  label: string;
+  label: any;
   onClick?: () => void;
 };
 

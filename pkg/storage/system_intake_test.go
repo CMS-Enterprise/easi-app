@@ -14,6 +14,7 @@ func NewSystemIntake() models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
 		EUAUserID:               "FAKE",
+		Status:                  models.SystemIntakeStatusDRAFT,
 		Requester:               null.StringFrom("Test Requester"),
 		Component:               null.StringFrom("Test Component"),
 		BusinessOwner:           null.StringFrom("Test Business Owner"),
