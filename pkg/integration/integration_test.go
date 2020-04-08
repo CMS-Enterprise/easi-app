@@ -42,7 +42,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 
 		accessToken, err := testhelpers.OktaAccessToken(config)
 		if err != nil {
-			fmt.Println("Failed to get access token for integration testing")
+			fmt.Printf("Failed to get access token for integration testing with error: %s", err)
 			t.Fail()
 		}
 

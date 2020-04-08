@@ -29,7 +29,7 @@ func TestOktaTestSuite(t *testing.T) {
 		config: config,
 	}
 
-	if !testing.Short() {
+	if false || !testing.Short() {
 		suite.Run(t, testSuite)
 	}
 }
