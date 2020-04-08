@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
+import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
@@ -38,10 +39,18 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     }
   ];
   const [page, setPage] = useState(1);
+  const [id, setId] = useState('');
   const dispatch = useDispatch();
   const formikRef: any = useRef();
-  console.log(formikRef);
   const pageObj = pages[page - 1];
+
+  useEffect(() => {
+    // TODO: Make request to get system intake by id.
+    // If it doesn't exist, create a new id.
+    setId(uuidv4());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const initialData: SystemIntakeForm = {
     projectName: '',
     acronym: '',
@@ -95,7 +104,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
               className="easi-header__save-button usa-button"
               id="save-button"
               onClick={() => {
-                dispatch(saveSystemIntake(initialData));
+                dispatch(saveSystemIntake(id, formikRef.current.values));
               }}
             >
               <span>Save & Exit</span>
