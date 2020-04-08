@@ -62,7 +62,7 @@ export const BusinessCase = () => {
     {
       name: 'AlternativeSolutionA',
       type: 'FORM',
-      validation: null
+      validation: BusinessCaseValidationSchema.alternativeA
     },
     {
       name: 'Review',
