@@ -35,7 +35,7 @@ type IntegrationTestSuite struct {
 func TestIntegrationTestSuite(t *testing.T) {
 	config := testhelpers.NewConfig()
 
-	if !testing.Short() && config.Get("ENVIRONMENT") == "local" {
+	if !testing.Short() {
 		easiServer := server.NewServer(config)
 		testServer := httptest.NewServer(easiServer)
 		defer testServer.Close()

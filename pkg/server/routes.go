@@ -65,29 +65,27 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	if s.Config.GetString("ENVIRONMENT") == "local" {
-		systemIntakeHandler := handlers.SystemIntakeHandler{
-			Logger: s.logger,
-			SaveSystemIntake: services.NewSaveSystemIntake(
-				store.SaveSystemIntake,
-				store.FetchSystemIntakeByID,
-				services.NewAuthorizeSaveSystemIntake(s.logger),
-				s.logger,
-			),
-			FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
-				store.FetchSystemIntakeByID,
-				s.logger,
-			),
-		}
-
-		api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
-		api.Handle("/system_intake", systemIntakeHandler.Handle())
-
-		systemIntakesHandler := handlers.SystemIntakesHandler{
-			Logger:             s.logger,
-			FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
-			DB:                 db,
-		}
-		api.Handle("/system_intakes", systemIntakesHandler.Handle())
+	systemIntakeHandler := handlers.SystemIntakeHandler{
+		Logger: s.logger,
+		SaveSystemIntake: services.NewSaveSystemIntake(
+			store.SaveSystemIntake,
+			store.FetchSystemIntakeByID,
+			services.NewAuthorizeSaveSystemIntake(s.logger),
+			s.logger,
+		),
+		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
+			store.FetchSystemIntakeByID,
+			s.logger,
+		),
 	}
+
+	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
+	api.Handle("/system_intake", systemIntakeHandler.Handle())
+
+	systemIntakesHandler := handlers.SystemIntakesHandler{
+		Logger:             s.logger,
+		FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
+		DB:                 db,
+	}
+	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 }
