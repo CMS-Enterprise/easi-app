@@ -11,6 +11,7 @@ function saveSystemIntakeRequest(formData: SystemIntakeForm) {
 }
 
 export function* saveSystemIntake(payload: SaveSystemIntakeAction) {
+  console.log('Save System Intake Saga', payload);
   try {
     const response = yield call(saveSystemIntakeRequest, payload.formData);
     console.log('Response', response);
