@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
@@ -46,17 +46,13 @@ func (s *Server) routes(
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
 
-	db, err := sqlx.Connect("postgres", "user=postgres sslmode=disable")
-
-	if err != nil {
-		// Todo when database should be connected to every time, change this to error
-		fmt.Println(err)
-	}
-
-	store := storage.NewStore(
-		db,
+	store, err := storage.NewStore(
 		s.logger,
+		s.NewDBConfig(),
 	)
+	if err != nil {
+		s.logger.Fatal(fmt.Sprintf("Failed to connect to database: %v", err), zap.Error(err))
+	}
 
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
@@ -85,7 +81,7 @@ func (s *Server) routes(
 	systemIntakesHandler := handlers.SystemIntakesHandler{
 		Logger:             s.logger,
 		FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
-		DB:                 db,
+		DB:                 store.DB,
 	}
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 }
