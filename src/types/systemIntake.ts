@@ -40,3 +40,8 @@ export type SystemIntakeForm = {
   needsEaSupport: boolean | null;
   hasContract: string;
 };
+
+// Redux store type for systems
+export type SystemIntakesState = {
+  systemIntakes: SystemIntakeForm[];
+};
