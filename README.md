@@ -319,3 +319,26 @@ to upgrade golangci-lint.
 
 Run `npx cypress run` to run the tests in the CLI. To have a slightly more interactive
 experience, you can instead run `npx cypress open`.
+
+## Development and Debugging
+
+### APIs
+
+The APIs reside at `localhost:8080` when running.
+To run a test request,
+you can send a GET to the health check endpoint:
+`curl localhost:8080/api/v1/healthcheck`
+
+#### Authorization
+
+Setting this `ENVIRONMENT` environment variable to "local"
+will turn off API authorization.
+This allows you to debug quickly without retrieving Okta access tokens.
+
+If you need to test the authorization,
+unset that environment variable.
+You can then retrieve access tokens
+by logging into [the development app](dev.easi.cms.gov)
+and copying `okta-token-storage/accessToken` from the browser's local storage.
+Place this in the `Authorization` header
+as `Bearer ${accessToken}`.
