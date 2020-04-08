@@ -6,22 +6,23 @@ services:
     ports:
       - 5432:5432
   db_clean:
-    image: flyway/flyway:6.3
+    build:
+      context: .
+      dockerfile: Dockerfile.db_clean
     environment:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=
       - FLYWAY_URL=jdbc:postgresql://db/postgres
-    command: clean
     depends_on:
       - db
   db_migrate:
-    image: flyway/flyway:6.3
+    build:
+      context: .
+      dockerfile: Dockerfile.db_migrations
     environment:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=
-      - FLYWAY_IGNORE_INVALID_MIGRATION_NAMES=false
       - FLYWAY_URL=jdbc:postgresql://db/postgres
-    command: migrate
     volumes:
       - ./migrations:/flyway/sql
     depends_on:
