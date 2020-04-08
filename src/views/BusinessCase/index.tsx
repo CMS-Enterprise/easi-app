@@ -14,6 +14,7 @@ import ProjectDescription from './ProjectDescription';
 import AsIsSolution from './AsIsSolution';
 import PreferredSolution from './PreferredSolution';
 import AlternativeSolution from './AlternativeSolution';
+import Review from './Review';
 import './index.scss';
 
 // Default data for estimated lifecycle costs
@@ -37,7 +38,7 @@ export const defaultProposedSolution = {
 };
 
 export const BusinessCase = () => {
-  const [pages, setPages] = useState([
+  const [pages, setPages] = useState<any[]>([
     {
       name: 'GeneralProjectInfo',
       type: 'FORM',
@@ -51,17 +52,21 @@ export const BusinessCase = () => {
     {
       name: 'AsIsSolution',
       type: 'FORM',
-      validation: null
+      validation: BusinessCaseValidationSchema.asIsSolution
     },
     {
       name: 'PreferredSolution',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.asIsSolution
+      validation: BusinessCaseValidationSchema.preferredSolution
     },
     {
       name: 'AlternativeSolutionA',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.preferredSolution
+      validation: null
+    },
+    {
+      name: 'Review',
+      type: 'REVIEW'
     }
   ]);
   const [page, setPage] = useState(1);
@@ -109,43 +114,33 @@ export const BusinessCase = () => {
             formikProps={formikProps}
             altLetter="A"
             handleToggleAlternative={() => {
-              if (pageObj.validation) {
-                formikProps.validateForm().then(err => {
-                  if (Object.keys(err).length === 0) {
-                    setPages(prevArray => [
-                      ...prevArray,
-                      {
-                        name: 'AlternativeSolutionB',
-                        type: 'FORM',
-                        validation: null
-                      }
-                    ]);
-                    setPage(prev => prev + 1);
+              formikProps.validateForm().then(err => {
+                if (Object.keys(err).length === 0) {
+                  if (!formikProps.values.alternativeB) {
                     formikProps.setFieldValue(
                       'alternativeB',
                       defaultProposedSolution
                     );
-                    window.scrollTo(0, 0);
+
+                    const updatedPages = pages
+                      .slice(0, pages.length - 1)
+                      .concat([
+                        {
+                          name: 'AlternativeSolutionB',
+                          type: 'FORM',
+                          validation: BusinessCaseValidationSchema.alternativeB
+                        },
+                        {
+                          name: 'Review',
+                          type: 'Review'
+                        }
+                      ]);
+                    setPages(updatedPages);
                   }
-                });
-              } else {
-                // DELETE ELSE CLAUSE WHEN VALIDATIONS ARE IMPLEMENTED
-                setPages(prevArray => [
-                  ...prevArray,
-                  {
-                    name: 'AlternativeSolutionB',
-                    type: 'FORM',
-                    validation: null
-                  }
-                ]);
-                setPage(prev => prev + 1);
-                formikProps.setFieldValue(
-                  'alternativeB',
-                  defaultProposedSolution
-                );
+                  setPage(prev => prev + 1);
+                }
                 window.scrollTo(0, 0);
-                // DELETE ELSE CLAUSE WHEN VALIDATIONS ARE IMPLEMENTED
-              }
+              });
             }}
           />
         );
@@ -163,11 +158,14 @@ export const BusinessCase = () => {
                 );
                 setPage(prev => prev - 1);
                 formikProps.setFieldValue('alternativeB', undefined);
+                formikProps.setErrors({});
                 window.scrollTo(0, 0);
               }
             }}
           />
         );
+      case 'Review':
+        return <Review />;
       default:
         return null;
     }
@@ -256,11 +254,10 @@ export const BusinessCase = () => {
                               setPage(prev => prev + 1);
                             }
                           });
-                          window.scrollTo(0, 0);
                         } else {
                           setPage(prev => prev + 1);
-                          window.scrollTo(0, 0);
                         }
+                        window.scrollTo(0, 0);
                       }}
                     >
                       Next
