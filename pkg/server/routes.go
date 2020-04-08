@@ -65,7 +65,7 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	if s.Config.GetString("ENVIRONMENT") == "LOCAL" {
+	if s.Config.GetString("ENVIRONMENT") == "local" {
 		systemIntakeHandler := handlers.SystemIntakeHandler{
 			Logger: s.logger,
 			SaveSystemIntake: services.NewSaveSystemIntake(
