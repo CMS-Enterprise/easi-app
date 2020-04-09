@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect, Fragment, useState } from 'react';
 import { withAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
@@ -10,6 +10,7 @@ import UpcomingActions from 'components/shared/UpcomingActions';
 import ActionBanner from 'components/shared/ActionBanner';
 import { getAllSystemShorts } from 'actions/searchActions';
 import { fetchSystemIntakes } from 'actions/systemIntakeActions';
+import { DateTime } from 'luxon';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -76,15 +77,16 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
   const intakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
-  console.log(intakes);
   const searchResults = useSelector(
     (state: AppState) => state.search.allSystemShorts
   );
+  const [timeStamp, setTimeStamp] = useState('');
 
   const dispatch = useDispatch();
   useEffect(() => {
     const getSystemIntakes = async (): Promise<void> => {
       dispatch(fetchSystemIntakes(await auth.getAccessToken()));
+      await setTimeStamp(DateTime.local().toLocaleString(DateTime.DATE_MED));
     };
     getSystemIntakes();
   }, [auth, dispatch]);
@@ -119,7 +121,7 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
         )}
       </Header>
       <div className="grid-container">
-        <UpcomingActions timestamp="12/31/19 at 02:45am">
+        <UpcomingActions timestamp={timeStamp}>
           {intakes &&
             intakes.map(intake => {
               return (
