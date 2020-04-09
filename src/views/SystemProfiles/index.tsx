@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment } from 'react';
 import { withAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
@@ -50,6 +50,16 @@ const mockSystems: any[] = [
   }
 ];
 
+const getStatusNotification = (status: string) => {
+  switch (status) {
+    case 'SUBMITTED':
+      return 'Status: The form has been submitted and is being reviewed.';
+    case 'REVIEWED':
+      return 'Status: Request Form has been reviewed. Prepare your business case.';
+    default:
+      return '';
+  }
+};
 export type SystemProfilesRouterProps = {
   profileId: string;
 };
@@ -66,7 +76,7 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
   const intakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
-
+  console.log(intakes);
   const searchResults = useSelector(
     (state: AppState) => state.search.allSystemShorts
   );
@@ -110,15 +120,20 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
       </Header>
       <div className="grid-container">
         <UpcomingActions timestamp="12/31/19 at 02:45am">
-          {intakes.map(intake => {
-            return (
-              <ActionBanner
-                title={intake.projectName}
-                helpfulText="Status: yada yada yada"
-                label={<a href="/system/all">View submitted request form</a>}
-              />
-            );
-          })}
+          {intakes &&
+            intakes.map(intake => {
+              return (
+                <Fragment key={intake.id}>
+                  <ActionBanner
+                    title={intake.projectName}
+                    helpfulText={getStatusNotification(intake.status)}
+                    label={
+                      <a href="/system/all">View submitted request form</a>
+                    }
+                  />
+                </Fragment>
+              );
+            })}
         </UpcomingActions>
       </div>
     </div>

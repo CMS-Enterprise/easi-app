@@ -38,8 +38,11 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const [page, setPage] = useState(1);
   const pageObj = pages[page - 1];
   const initialData: SystemIntakeForm = {
+    id: '',
+    euaUserID: '',
     projectName: '',
     acronym: '',
+    status: 'DRAFT',
     requester: {
       name: '',
       component: ''
