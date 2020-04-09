@@ -14,7 +14,7 @@ import (
 )
 
 func (s ServicesTestSuite) TestSystemIntakesByUserFetcher() {
-	if viper.Get("ENVIRONMENT") == "LOCAL" {
+	if viper.Get("ENVIRONMENT") == "local" {
 		s.Run("successfully fetches System Intakes", func() {
 			tx := s.db.MustBegin()
 			// Todo is this the best way to generate a random string?
