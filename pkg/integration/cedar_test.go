@@ -17,7 +17,7 @@ import (
 // is set up.
 // Other tests should mock the API
 func (s *IntegrationTestSuite) TestCEDARConnection() {
-	if s.environment != appconfig.TestEnv.String() {
+	if s.environment != appconfig.LocalEnv.String() {
 		// TODO: When logger gets added, put in test also and print skips
 		return
 	}
