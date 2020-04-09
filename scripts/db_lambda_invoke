@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+
+function_name="$1"
+payload='{ "command": "" }'
+cli_read_timeout=240
+
+if (set -x ; aws lambda invoke --cli-read-timeout "$cli_read_timeout" --function "$function_name" --payload "$payload" lambda_response.json) ; then
+  exitCode="$(jq '.data.response.taskStatus.exitCode' < lambda_response.json)"
+  if [[ "$exitCode" != 0 ]] ; then
+    echo ": task exited non-zero or exit status could not be parsed" 1>&2
+    exit 1
+  fi
+else
+  exit
+fi

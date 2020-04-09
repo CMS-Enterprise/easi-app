@@ -13,34 +13,60 @@ import GeneralProjectInfo from './GeneralProjectInfo';
 import ProjectDescription from './ProjectDescription';
 import AsIsSolution from './AsIsSolution';
 import PreferredSolution from './PreferredSolution';
+import AlternativeSolution from './AlternativeSolution';
 import './index.scss';
 
-export const BusinessCase = () => {
-  const pages = [
-    {
-      type: 'FORM',
-      validation: BusinessCaseValidationSchema.generalProjectInfo,
-      view: GeneralProjectInfo
-    },
-    {
-      type: 'FORM',
-      validation: BusinessCaseValidationSchema.projectDescription,
-      view: ProjectDescription
-    },
-    {
-      type: 'FORM',
-      validation: null,
-      view: AsIsSolution
-    },
-    {
-      type: 'FORM',
-      validation: null,
-      view: PreferredSolution
-    }
-  ];
+// Default data for estimated lifecycle costs
+const defaultEstimatedLifecycle = {
+  year1: [{ phase: '', cost: '' }],
+  year2: [{ phase: '', cost: '' }],
+  year3: [{ phase: '', cost: '' }],
+  year4: [{ phase: '', cost: '' }],
+  year5: [{ phase: '', cost: '' }]
+};
 
+// Default data for a proposed solution
+export const defaultProposedSolution = {
+  title: '',
+  summary: '',
+  acquisitionApproach: '',
+  pros: '',
+  cons: '',
+  estimatedLifecycleCost: defaultEstimatedLifecycle,
+  costSavings: ''
+};
+
+export const BusinessCase = () => {
+  const [pages, setPages] = useState([
+    {
+      name: 'GeneralProjectInfo',
+      type: 'FORM',
+      validation: BusinessCaseValidationSchema.generalProjectInfo
+    },
+    {
+      name: 'ProjectDescription',
+      type: 'FORM',
+      validation: BusinessCaseValidationSchema.projectDescription
+    },
+    {
+      name: 'AsIsSolution',
+      type: 'FORM',
+      validation: null
+    },
+    {
+      name: 'PreferredSolution',
+      type: 'FORM',
+      validation: BusinessCaseValidationSchema.asIsSolution
+    },
+    {
+      name: 'AlternativeSolutionA',
+      type: 'FORM',
+      validation: null
+    }
+  ]);
   const [page, setPage] = useState(1);
   const pageObj = pages[page - 1];
+
   const initialData: BusinessCaseModel = {
     projectName: '',
     requester: {
@@ -60,39 +86,93 @@ export const BusinessCase = () => {
       summary: '',
       pros: '',
       cons: '',
-      estimatedLifecycleCost: {
-        year1: [{ phase: '', cost: '' }],
-        year2: [{ phase: '', cost: '' }],
-        year3: [{ phase: '', cost: '' }],
-        year4: [{ phase: '', cost: '' }],
-        year5: [{ phase: '', cost: '' }]
-      },
+      estimatedLifecycleCost: defaultEstimatedLifecycle,
       costSavings: ''
     },
-    preferredSolution: {
-      title: '',
-      summary: '',
-      acquisitionApproach: '',
-      pros: '',
-      cons: '',
-      estimatedLifecycleCost: {
-        year1: [{ phase: '', cost: '' }],
-        year2: [{ phase: '', cost: '' }],
-        year3: [{ phase: '', cost: '' }],
-        year4: [{ phase: '', cost: '' }],
-        year5: [{ phase: '', cost: '' }]
-      },
-      costSavings: ''
-    }
+    preferredSolution: defaultProposedSolution,
+    alternativeA: defaultProposedSolution
   };
-  const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
-    const Component = pageObj.view;
 
-    if (Component) {
-      return <Component formikProps={formikProps} />;
+  const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
+    switch (pageObj.name) {
+      case 'GeneralProjectInfo':
+        return <GeneralProjectInfo formikProps={formikProps} />;
+      case 'ProjectDescription':
+        return <ProjectDescription formikProps={formikProps} />;
+      case 'AsIsSolution':
+        return <AsIsSolution formikProps={formikProps} />;
+      case 'PreferredSolution':
+        return <PreferredSolution formikProps={formikProps} />;
+      case 'AlternativeSolutionA':
+        return (
+          <AlternativeSolution
+            formikProps={formikProps}
+            altLetter="A"
+            handleToggleAlternative={() => {
+              if (pageObj.validation) {
+                formikProps.validateForm().then(err => {
+                  if (Object.keys(err).length === 0) {
+                    setPages(prevArray => [
+                      ...prevArray,
+                      {
+                        name: 'AlternativeSolutionB',
+                        type: 'FORM',
+                        validation: null
+                      }
+                    ]);
+                    setPage(prev => prev + 1);
+                    formikProps.setFieldValue(
+                      'alternativeB',
+                      defaultProposedSolution
+                    );
+                    window.scrollTo(0, 0);
+                  }
+                });
+              } else {
+                // DELETE ELSE CLAUSE WHEN VALIDATIONS ARE IMPLEMENTED
+                setPages(prevArray => [
+                  ...prevArray,
+                  {
+                    name: 'AlternativeSolutionB',
+                    type: 'FORM',
+                    validation: null
+                  }
+                ]);
+                setPage(prev => prev + 1);
+                formikProps.setFieldValue(
+                  'alternativeB',
+                  defaultProposedSolution
+                );
+                window.scrollTo(0, 0);
+                // DELETE ELSE CLAUSE WHEN VALIDATIONS ARE IMPLEMENTED
+              }
+            }}
+          />
+        );
+      case 'AlternativeSolutionB':
+        return (
+          <AlternativeSolution
+            formikProps={formikProps}
+            altLetter="B"
+            handleToggleAlternative={() => {
+              if (
+                window.confirm('Are you sure you want to remove Alternative B?')
+              ) {
+                setPages(prevArray =>
+                  prevArray.filter(p => p.name !== 'AlternativeSolutionB')
+                );
+                setPage(prev => prev - 1);
+                formikProps.setFieldValue('alternativeB', undefined);
+                window.scrollTo(0, 0);
+              }
+            }}
+          />
+        );
+      default:
+        return null;
     }
-    return null;
   };
+
   return (
     <div className="business-case">
       <Header name="BUSINESS">
