@@ -149,6 +149,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
       <EstimatedLifecycleCost
         formikKey="preferredSolution.estimatedLifecycleCost"
         years={values.preferredSolution.estimatedLifecycleCost}
+        errors={{}}
       />
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup scrollElement="preferredSolution.costSavings" error={false}>
