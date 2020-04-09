@@ -84,4 +84,8 @@ func (s *Server) routes(
 		DB:                 store.DB,
 	}
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
+
+	s.router.PathPrefix("/").Handler(handlers.CatchAllHandler{
+		Logger: s.logger,
+	}.Handle())
 }
