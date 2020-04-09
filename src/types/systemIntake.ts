@@ -8,8 +8,11 @@ export type GovernanceCollaborationTeam = {
  *
  */
 export type SystemIntakeForm = {
+  id: string;
+  euaUserID: string;
   projectName: string;
   acronym: string;
+  status: string;
   requester: {
     name: string;
     component: string;
