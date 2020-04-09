@@ -1,22 +1,19 @@
 import axios from 'axios';
 import { takeLatest, call } from 'redux-saga/effects';
-import { SAVE_SYSTEM_INTAKE } from 'constants/systemIntake';
+import { PUT_SYSTEM_INTAKE } from 'constants/systemIntake';
 
-import { SystemIntakeForm, SaveSystemIntakeAction } from 'types/systemIntake';
+import { SaveSystemIntakeAction } from 'types/systemIntake';
+import { prepareSystemIntakeForApi } from 'data/systemIntake';
 
-function saveSystemIntakeRequest(formData: SystemIntakeForm) {
+function saveSystemIntakeRequest({ id, formData }: SaveSystemIntakeAction) {
   // Make API save request
-
-  return axios.put(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake`,
-    formData
-  );
+  const data = prepareSystemIntakeForApi(id, formData);
+  return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }
 
 export function* saveSystemIntake(payload: SaveSystemIntakeAction) {
-  console.log('Save System Intake Saga', payload);
   try {
-    const response = yield call(saveSystemIntakeRequest, payload.formData);
+    const response = yield call(saveSystemIntakeRequest, payload);
     console.log('Response', response);
   } catch (err) {
     console.log(err);
@@ -24,5 +21,5 @@ export function* saveSystemIntake(payload: SaveSystemIntakeAction) {
 }
 
 export function* systemIntakeSaga() {
-  yield takeLatest(SAVE_SYSTEM_INTAKE, saveSystemIntake);
+  yield takeLatest(PUT_SYSTEM_INTAKE, saveSystemIntake);
 }
