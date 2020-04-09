@@ -184,6 +184,7 @@ const AlternativeSolution = ({
       <EstimatedLifecycleCost
         formikKey={`${altId}.estimatedLifecycleCost`}
         years={altValues.estimatedLifecycleCost}
+        errors={{}}
       />
       <div className="tablet:grid-col-9 margin-top-2 margin-bottom-7">
         <FieldGroup scrollElement={`${altId}.costSavings`} error={false}>
