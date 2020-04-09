@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -16,7 +17,7 @@ import (
 // is set up.
 // Other tests should mock the API
 func (s *IntegrationTestSuite) TestCEDARConnection() {
-	if s.environment != "local" {
+	if s.environment != appconfig.TestEnv.String() {
 		// TODO: When logger gets added, put in test also and print skips
 		return
 	}

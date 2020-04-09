@@ -13,6 +13,7 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/server"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -48,7 +49,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 
 		testSuite := &IntegrationTestSuite{
 			Suite:       suite.Suite{},
-			environment: config.GetString("ENVIRONMENT"),
+			environment: config.GetString(appconfig.EnvironmentKey),
 			logger:      zap.NewNop(),
 			config:      config,
 			server:      testServer,
