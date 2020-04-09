@@ -9,7 +9,7 @@ type HelpTextProps = {
 
 const HelpText = ({ children, className }: HelpTextProps) => {
   const classNames = classnames('easi-help-text', className);
-  return <span className={classNames}>{children}</span>;
+  return <div className={classNames}>{children}</div>;
 };
 
 export default HelpText;

@@ -35,4 +35,6 @@ export type BusinessCaseModel = {
   successIndicators: string;
   asIsSolution: BusinessCaseSolution;
   preferredSolution: ProposedBusinessCaseSolution;
+  alternativeA: ProposedBusinessCaseSolution;
+  alternativeB?: ProposedBusinessCaseSolution;
 };
