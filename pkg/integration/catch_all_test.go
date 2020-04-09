@@ -2,33 +2,40 @@ package integration
 
 import (
 	"net/http"
-	"net/http/httptest"
-
-	"github.com/cmsgov/easi-app/pkg/handlers"
+	"net/url"
+	"path"
 )
 
 func (s *IntegrationTestSuite) TestCatchAllRoute() {
+	client := &http.Client{}
+
+	apiURL, err := url.Parse(s.server.URL)
+	s.NoError(err, "failed to parse URL")
+
 	s.Run("get /", func() {
-		req, err := http.NewRequest("GET", "/notapath", nil)
+		notPath, err := url.Parse(apiURL.String())
+		s.NoError(err, "failed to parse URL")
+		notPath.Path = path.Join(notPath.Path, "/notapath")
+		req, err := http.NewRequest("GET", notPath.String(), nil)
 		s.NoError(err)
-		rr := httptest.NewRecorder()
 
-		handlers.CatchAllHandler{
-			Logger: s.logger,
-		}.Handle()(rr, req)
+		resp, err := client.Do(req)
 
-		s.Equal(http.StatusNotFound, rr.Code)
+		s.NoError(err)
+		s.Equal(http.StatusNotFound, resp.StatusCode)
 	})
 
 	s.Run("get /api/v1/notapath", func() {
-		req, err := http.NewRequest("GET", "/api/v1/notapath", nil)
+		apiURL.Path = path.Join(apiURL.Path, "/api/v1")
+		notPath, err := url.Parse(apiURL.String())
+		s.NoError(err, "failed to parse URL")
+		notPath.Path = path.Join(notPath.Path, "/notapath")
+		req, err := http.NewRequest("GET", notPath.String(), nil)
 		s.NoError(err)
-		rr := httptest.NewRecorder()
 
-		handlers.CatchAllHandler{
-			Logger: s.logger,
-		}.Handle()(rr, req)
+		resp, err := client.Do(req)
 
-		s.Equal(http.StatusNotFound, rr.Code)
+		s.NoError(err)
+		s.Equal(http.StatusNotFound, resp.StatusCode)
 	})
 }
