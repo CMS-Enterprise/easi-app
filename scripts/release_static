@@ -10,7 +10,7 @@ if [[ -z "$s3_err" ]] ; then
   ( set -x -u ;
     yarn install
     yarn run build || exit
-    aws s3 sync --no-progress build/ s3://"$STATIC_S3_BUCKET"/
+    aws s3 sync --no-progress --delete build/ s3://"$STATIC_S3_BUCKET"/
   )
 else
   echo "+ aws s3 ls $STATIC_S3_BUCKET"
