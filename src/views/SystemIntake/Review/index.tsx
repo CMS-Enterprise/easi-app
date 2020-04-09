@@ -57,12 +57,12 @@ const Review = ({ formikProps }: ReviewProps) => {
       <DescriptionList title="Contact Details">
         <div className="system-intake__review-row">
           <div>
-            <DescriptionTerm term="Requestor" />
-            <DescriptionDefinition definition={values.requestor.name} />
+            <DescriptionTerm term="Requester" />
+            <DescriptionDefinition definition={values.requester.name} />
           </div>
           <div>
-            <DescriptionTerm term="Requestor Component" />
-            <DescriptionDefinition definition={values.requestor.component} />
+            <DescriptionTerm term="Requester Component" />
+            <DescriptionDefinition definition={values.requester.component} />
           </div>
         </div>
         <div className="system-intake__review-row">
@@ -163,7 +163,7 @@ const Review = ({ formikProps }: ReviewProps) => {
         <strong>one of these</strong> outcomes:
       </p>
       <ul className="usa-list">
-        <li>direct you to go through the Goverannce Review process</li>
+        <li>direct you to go through the Governance Review process</li>
         <li>or decide there is no further governance needed</li>
       </ul>
       <p>They will get back to you in two business days.</p>
