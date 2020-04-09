@@ -9,7 +9,9 @@ import (
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 type ServicesTestSuite struct {
@@ -20,15 +22,27 @@ type ServicesTestSuite struct {
 }
 
 func TestServicesTestSuite(t *testing.T) {
-	db, err := sqlx.Connect("postgres", "user=postgres sslmode=disable")
-	fmt.Println(err)
+	config := testhelpers.NewConfig()
 	logger := zap.NewNop()
-	store := storage.NewStore(db, logger)
+
+	dbConfig := storage.DBConfig{
+		Host:     config.GetString(appconfig.DBHostConfigKey),
+		Port:     config.GetString(appconfig.DBPortConfigKey),
+		Database: config.GetString(appconfig.DBNameConfigKey),
+		Username: config.GetString(appconfig.DBUsernameConfigKey),
+		Password: config.GetString(appconfig.DBPasswordConfigKey),
+		SSLMode:  config.GetString(appconfig.DBSSLModeConfigKey),
+	}
+	store, err := storage.NewStore(logger, dbConfig)
+	if err != nil {
+		t.Fail()
+		fmt.Printf("Failed to connect to database: %v", err)
+	}
 	servicesTestSuite := &ServicesTestSuite{
 		Suite:  suite.Suite{},
 		logger: logger,
 		store:  store,
-		db:     db,
+		db:     store.DB,
 	}
 	suite.Run(t, servicesTestSuite)
 }

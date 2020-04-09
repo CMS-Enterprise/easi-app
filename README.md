@@ -331,7 +331,7 @@ you can send a GET to the health check endpoint:
 
 #### Authorization
 
-Setting this `ENVIRONMENT` environment variable to "local"
+Setting this `APP_ENV` environment variable to "local"
 will turn off API authorization.
 This allows you to debug quickly without retrieving Okta access tokens.
 
