@@ -6,40 +6,77 @@ import TextField from 'components/shared/TextField';
 import TextAreaField from 'components/shared/TextAreaField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import Button from 'components/shared/Button';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
-import { BusinessCaseModel } from 'types/businessCase';
+import { defaultProposedSolution } from 'views/BusinessCase';
+import {
+  BusinessCaseModel,
+  ProposedBusinessCaseSolution
+} from 'types/businessCase';
 
-type PreferredSolutionProps = {
+type AlternativeSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
+  altLetter: string;
+  handleToggleAlternative?: () => void;
 };
-const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
+
+const AlternativeSolution = ({
+  formikProps,
+  altLetter,
+  handleToggleAlternative
+}: AlternativeSolutionProps) => {
   const { values } = formikProps;
+  const altLabel = `Alternative ${altLetter}`;
+  const altId = `alternative${altLetter}`;
+  const altValues = ((letter: string): ProposedBusinessCaseSolution => {
+    switch (letter) {
+      case 'A':
+        return values.alternativeA;
+      case 'B':
+        return values.alternativeB || defaultProposedSolution;
+      default:
+        return defaultProposedSolution;
+    }
+  })(altLetter);
+
   return (
     <>
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
       <div className="tablet:grid-col-9">
-        <h2>Preferred Solution</h2>
-        <FieldGroup scrollElement="preferredSolution.title" error={false}>
-          <Label htmlFor="BusinessCase-PreferredSolutionTitle">
-            Preferred Solution: Title
+        <div className="easi-business-case__name-wrapper">
+          <h2>{altLabel}</h2>
+          {altLetter === 'B' && (
+            <Button
+              type="button"
+              className="margin-left-2"
+              unstyled
+              onClick={handleToggleAlternative}
+            >
+              Remove Alternative B
+            </Button>
+          )}
+        </div>
+        <FieldGroup scrollElement={`${altId}.title`} error={false}>
+          <Label htmlFor={`BusinessCase-${altId}Title`}>
+            {`${altLabel}: Title`}
           </Label>
           <FieldErrorMsg />
           <Field
             as={TextField}
             error={false}
-            id="BusinessCase-PreferredSolutionTitle"
+            id={`BusinessCase-${altId}Title`}
             maxLength={50}
-            name="preferredSolution.title"
+            name={`${altId}.title`}
           />
         </FieldGroup>
 
-        <FieldGroup scrollElement="preferredSolution.summary" error={false}>
-          <Label htmlFor="BusinessCase-PreferredSolutionSummary">
-            Preferred Solution: Summary
+        <FieldGroup scrollElement={`${altId}.summary`} error={false}>
+          <Label htmlFor={`BusinessCase-${altId}Summary`}>
+            {`${altLabel}: Summary`}
           </Label>
           <HelpText className="margin-top-1">
             <span>Please include:</span>
-            <ul className="padding-left-205">
+            <ul className="padding-left-205 margin-bottom-1">
               <li>
                 a brief summary of the proposed IT solution including any
                 associated software products,
@@ -56,21 +93,20 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-PreferredSolutionSummary"
+            id={`BusinessCase-${altId}Summary`}
             maxLength={2000}
-            name="preferredSolution.summary"
+            name={`${altId}.summary`}
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.summary
-              .length} characters left`}</HelpText>
+            altValues.summary.length} characters left`}</HelpText>
         </FieldGroup>
 
         <FieldGroup
-          scrollElement="preferredSolution.acquisitionApproach"
+          scrollElement={`${altId}.acquisitionApproach`}
           error={false}
         >
-          <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
-            Preferred Solution: Acquisition Approach
+          <Label htmlFor={`BusinessCase-${altId}AcquisitionApproach`}>
+            {`${altLabel}: Acquisition Approach`}
           </Label>
           <HelpText className="margin-y-1">
             Describe the approach to acquiring the products and services
@@ -81,18 +117,17 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-PreferredSolutionAcquisitionApproach"
+            id={`BusinessCase-${altId}AcquisitionApproach`}
             maxLength={2000}
-            name="preferredSolution.acquisitionApproach"
+            name={`${altId}.acquisitionApproach`}
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.acquisitionApproach
-              .length} characters left`}</HelpText>
+            altValues.acquisitionApproach.length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement="preferredSolution.pros" error={false}>
-          <Label htmlFor="BusinessCase-PreferredSolutionPros">
-            Preferred Solution: Pros
+        <FieldGroup scrollElement={`${altId}.pros`} error={false}>
+          <Label htmlFor={`BusinessCase-${altId}Pros`}>
+            {`${altLabel}: Pros`}
           </Label>
           <HelpText className="margin-y-1">
             Identify any aspects of this solution that positively differentiates
@@ -102,17 +137,17 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-PreferredSolutionPros"
+            id={`BusinessCase-${altId}Pros`}
             maxLength={2000}
-            name="preferredSolution.pros"
+            name={`${altId}.pros`}
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.pros.length} characters left`}</HelpText>
+            altValues.pros.length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement="preferredSolution.cons" error={false}>
-          <Label htmlFor="BusinessCase-PreferredSolutionCons">
-            Preferred Solution: Cons
+        <FieldGroup scrollElement={`${altId}.cons`} error={false}>
+          <Label htmlFor={`BusinessCase-${altId}Cons`}>
+            {`${altLabel}: Cons`}
           </Label>
           <HelpText className="margin-y-1">
             Identify any aspects of this solution that negatively impacts this
@@ -122,12 +157,12 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-PreferredSolutionCons"
+            id={`BusinessCase-${altId}Cons`}
             maxLength={2000}
-            name="preferredSolution.cons"
+            name={`${altId}.cons`}
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.cons.length} characters left`}</HelpText>
+            altValues.cons.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
       <div className="tablet:grid-col-9 margin-top-2">
@@ -147,13 +182,13 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
         </HelpText>
       </div>
       <EstimatedLifecycleCost
-        formikKey="preferredSolution.estimatedLifecycleCost"
-        years={values.preferredSolution.estimatedLifecycleCost}
+        formikKey={`${altId}.estimatedLifecycleCost`}
+        years={altValues.estimatedLifecycleCost}
         errors={{}}
       />
-      <div className="tablet:grid-col-9 margin-bottom-7">
-        <FieldGroup scrollElement="preferredSolution.costSavings" error={false}>
-          <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
+      <div className="tablet:grid-col-9 margin-top-2 margin-bottom-7">
+        <FieldGroup scrollElement={`${altId}.costSavings`} error={false}>
+          <Label htmlFor={`BusinessCase-${altId}CostSavings`}>
             What is the cost savings or avoidance associated with this solution?
           </Label>
           <HelpText className="margin-y-1">
@@ -164,17 +199,33 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={false}
-            id="BusinessCase-PreferredSolutionCostSavings"
+            id={`BusinessCase-${altId}CostSavings`}
             maxLength={2000}
-            name="preferredSolution.costSavings"
+            name={`${altId}.costSavings`}
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.costSavings
-              .length} characters left`}</HelpText>
+            altValues.costSavings.length} characters left`}</HelpText>
         </FieldGroup>
+
+        {altLetter === 'A' && (
+          <>
+            <h2 className="margin-bottom-1">Additional Alternatives</h2>
+            <HelpText>
+              If you are building a multi-year project that will require
+              significant upkeep, you may want to include more options. Keep in
+              mind that Government Off the Shelf and Commercial Off the Shelf
+              are acceptable alternatives to include.
+            </HelpText>
+            <div className="margin-top-2">
+              <Button type="button" base onClick={handleToggleAlternative}>
+                + Alternative B
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </>
   );
 };
 
-export default PreferredSolution;
+export default AlternativeSolution;
