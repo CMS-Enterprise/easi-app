@@ -22,7 +22,6 @@ if (typeof (window as any).TextEncoder === 'undefined') {
 
 let app;
 const browser: any = detect();
-console.log(browser.name);
 if (browser.name === 'ie') {
   app = <UnsupportedBrowser />;
 } else {
