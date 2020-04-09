@@ -4,7 +4,7 @@ import { storeSystemIntakes } from 'actions/systemIntakeActions';
 import { FETCH_SYSTEM_INTAKES } from 'constants/systemIntakes';
 
 function requestSystemIntakes(accessToken: string) {
-  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intakes/`, {
+  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intakes`, {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }

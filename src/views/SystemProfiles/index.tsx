@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { withAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'reducers/rootReducer';
-import { RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import UpcomingActions from 'components/shared/UpcomingActions';
 import ActionBanner from 'components/shared/ActionBanner';
+import { getAllSystemShorts } from 'actions/searchActions';
+import { fetchSystemIntakes } from 'actions/systemIntakeActions';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -56,13 +59,32 @@ type SystemProfilesProps = RouteComponentProps<SystemProfilesRouterProps> & {
   searchResults: any;
 };
 
-export const SystemProfiles = () => {
+export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
   const onSearch = () => {};
   const getSuggestionValue = (suggestion: any): string => suggestion.name;
   const renderSuggestion = (suggestion: any): string => suggestion.name;
+  const intakes = useSelector(
+    (state: AppState) => state.systemIntakes.systemIntakes
+  );
+
   const searchResults = useSelector(
     (state: AppState) => state.search.allSystemShorts
   );
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const getSystemIntakes = async (): Promise<void> => {
+      dispatch(fetchSystemIntakes(await auth.getAccessToken()));
+    };
+    getSystemIntakes();
+  }, [auth, dispatch]);
+
+  useEffect(() => {
+    const fetchSystemShorts = async (): Promise<void> => {
+      dispatch(getAllSystemShorts(await auth.getAccessToken()));
+    };
+    fetchSystemShorts();
+  }, [auth, dispatch]);
 
   return (
     <div>
@@ -88,15 +110,19 @@ export const SystemProfiles = () => {
       </Header>
       <div className="grid-container">
         <UpcomingActions timestamp="12/31/19 at 02:45am">
-          <ActionBanner
-            title="TACO System Request"
-            label={<a href="/system/all">View submitted request form</a>}
-            helpfulText="Status: The form has been submitted and is being reviewed."
-          />
+          {intakes.map(intake => {
+            return (
+              <ActionBanner
+                title={intake.projectName}
+                helpfulText="Status: yada yada yada"
+                label={<a href="/system/all">View submitted request form</a>}
+              />
+            );
+          })}
         </UpcomingActions>
       </div>
     </div>
   );
 };
 
-export default SystemProfiles;
+export default withRouter(withAuth(SystemProfiles));
