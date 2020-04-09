@@ -19,89 +19,103 @@ import './index.scss';
 
 type PhaseProps = {
   formikKey: string;
+  year: number;
   index: number;
   values: LifecyclePhase;
+  errors: any[];
 };
-const Phase = ({ formikKey, index, values }: PhaseProps) => {
+const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
+  const phaseError = errors[index] || {};
   return (
-    <FieldArray name={formikKey}>
+    <FieldArray name={`${formikKey}.year${year}`}>
       {arrayHelpers => (
         <div className="est-lifecycle-cost__phase-cost-wrapper">
           <FieldGroup
-            className="est-lifecycle-cost__field-group"
             scrollElement="somethingGoesHere"
-            error={false}
+            error={phaseError.phase || phaseError.cost}
           >
-            <FieldErrorMsg />
-            <FieldErrorMsg />
-            <fieldset className="usa-fieldset est-lifecycle-cost__phase-fieldset">
-              <div className=" est-lifecycle-cost__phase-field-wrapper">
-                <legend className={classnames('usa-label', 'margin-bottom-1')}>
-                  Phase
-                </legend>
-                <div>
-                  <Field
-                    as={RadioField}
-                    checked={values.phase === 'Initiate'}
-                    id={`BusinessCase-${formikKey}.Phase${index}.initiate`}
-                    name={`${formikKey}.${index}.phase`}
-                    label="Initiate"
-                    value="Initiate"
-                    inline
-                  />
+            {phaseError.phase && (
+              <FieldErrorMsg>{phaseError.phase}</FieldErrorMsg>
+            )}
+            {phaseError.cost && (
+              <FieldErrorMsg>{phaseError.cost}</FieldErrorMsg>
+            )}
+            <div className="est-lifecycle-cost__field-group">
+              <fieldset className="usa-fieldset est-lifecycle-cost__phase-fieldset">
+                <div className=" est-lifecycle-cost__phase-field-wrapper">
+                  <legend
+                    className={classnames('usa-label', 'margin-bottom-1')}
+                    aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
+                  >
+                    Phase
+                  </legend>
+                  <div>
+                    <Field
+                      as={RadioField}
+                      checked={values.phase === 'Initiate'}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.initiate`}
+                      name={`${formikKey}.year${year}.${index}.phase`}
+                      label="Initiate"
+                      value="Initiate"
+                      inline
+                    />
 
-                  <Field
-                    as={RadioField}
-                    checked={values.phase === 'Operations & Maintanence'}
-                    id={`BusinessCase-${formikKey}.Phase${index}.opsMaintanence`}
-                    name={`${formikKey}.${index}.phase`}
-                    label="Operations & Maintanence"
-                    value="Operations & Maintanence"
-                    inline
-                  />
+                    <Field
+                      as={RadioField}
+                      checked={values.phase === 'Operations & Maintanence'}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintanence`}
+                      name={`${formikKey}.year${year}.${index}.phase`}
+                      label="Operations & Maintanence"
+                      value="Operations & Maintanence"
+                      inline
+                    />
+                  </div>
                 </div>
+              </fieldset>
+              <div className="est-lifecycle-cost__cost-field-wrapper">
+                <Label
+                  htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                  aria-label={`Year ${year} Phase ${index + 1} Cost`}
+                >
+                  Cost
+                </Label>
+                <Field
+                  as={TextField}
+                  error={!!phaseError.cost}
+                  id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                  name={`${formikKey}.year${year}.${index}.cost`}
+                  maxLength={10}
+                  match={/^[0-9\b]+$/}
+                />
               </div>
-            </fieldset>
-            <div className="est-lifecycle-cost__cost-field-wrapper">
-              <Label htmlFor={`BusinessCase-${formikKey}.Phase${index}.cost`}>
-                Cost
-              </Label>
-              <Field
-                as={TextField}
-                error={false}
-                id={`BusinessCase-${formikKey}.Phase${index}.cost`}
-                name={`${formikKey}.${index}.cost`}
-                maxLength={10}
-                match={/^[0-9\b]+$/}
-              />
-            </div>
-            <div className="est-lifecycle-cost__phase-btn-wrapper">
-              {index === 0 ? (
-                <Button
-                  type="button"
-                  outline
-                  onClick={() => {
-                    arrayHelpers.push({
-                      phase: '',
-                      cost: ''
-                    });
-                  }}
-                >
-                  + Add Phase
-                </Button>
-              ) : (
-                <Button
-                  className="est-lifecycle-cost__remove-phase-btn"
-                  type="button"
-                  outline
-                  onClick={() => {
-                    arrayHelpers.remove(index);
-                  }}
-                  unstyled
-                >
-                  Remove phase
-                </Button>
-              )}
+              <div className="est-lifecycle-cost__phase-btn-wrapper">
+                {index === 0 ? (
+                  <Button
+                    type="button"
+                    outline
+                    onClick={() => {
+                      arrayHelpers.push({
+                        phase: '',
+                        cost: ''
+                      });
+                    }}
+                  >
+                    + Add Phase
+                  </Button>
+                ) : (
+                  <Button
+                    className="est-lifecycle-cost__remove-phase-btn"
+                    type="button"
+                    outline
+                    onClick={() => {
+                      arrayHelpers.remove(index);
+                    }}
+                    unstyled
+                  >
+                    Remove phase
+                  </Button>
+                )}
+              </div>
             </div>
           </FieldGroup>
         </div>
@@ -119,10 +133,12 @@ type EstimatedLifecycleCostProps = {
     year4: LifecyclePhase[];
     year5: LifecyclePhase[];
   };
+  errors: any;
 };
 const EstimatedLifecycleCost = ({
   formikKey,
-  years
+  years,
+  errors = {}
 }: EstimatedLifecycleCostProps) => {
   const sumCostinYear = (phases: LifecyclePhase[]) => {
     return phases.reduce((prev, current) => {
@@ -148,9 +164,11 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year1Phase-${index + 1}`}
-                formikKey={`${formikKey}.year1`}
+                formikKey={formikKey}
+                year={1}
                 index={index}
                 values={year}
+                errors={errors.year1}
               />
             );
           })}
@@ -161,9 +179,11 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year2Phase-${index + 1}`}
-                formikKey={`${formikKey}.year2`}
+                formikKey={formikKey}
+                year={2}
                 index={index}
                 values={year}
+                errors={errors.year2}
               />
             );
           })}
@@ -174,9 +194,11 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year3Phase-${index + 1}`}
-                formikKey={`${formikKey}.year3`}
+                formikKey={formikKey}
+                year={3}
                 index={index}
                 values={year}
+                errors={errors.year3}
               />
             );
           })}
@@ -187,9 +209,11 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year4Phase-${index + 1}`}
-                formikKey={`${formikKey}.year4`}
+                formikKey={formikKey}
+                year={4}
                 index={index}
                 values={year}
+                errors={errors.year4}
               />
             );
           })}
@@ -200,9 +224,11 @@ const EstimatedLifecycleCost = ({
             return (
               <Phase
                 key={`Year5Phase-${index + 1}`}
-                formikKey={`${formikKey}.year5`}
+                formikKey={formikKey}
+                year={5}
                 index={index}
                 values={year}
+                errors={errors.year5}
               />
             );
           })}
