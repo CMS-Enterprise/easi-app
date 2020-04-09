@@ -122,7 +122,6 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <HelpText className="margin-top-105">
             <>
               <span>Include:</span>
-              <br />
               <ul className="margin-top-1 padding-left-205">
                 <li>
                   a detailed explanation of the business need/issue/problem that
