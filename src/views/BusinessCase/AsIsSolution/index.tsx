@@ -48,7 +48,6 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           </Label>
           <HelpText className="margin-top-1">
             <span>Please include:</span>
-            <br />
             <ul className="padding-left-205">
               <li>
                 a brief summary of the proposed IT solution including any
@@ -114,16 +113,15 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             values.asIsSolution.cons.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
-      <div className="tablet:grid-col-9">
-        <h2>Estimated Lifecycle Cost</h2>
+      <div className="tablet:grid-col-9 margin-top-2">
+        <h2 className="margin-0">Estimated Lifecycle Cost</h2>
         <HelpText>
-          <p>
+          <p className="margin-y-2">
             You can add speculative costs if exact ones are not known or if a
             contract is not yet in place. If your &quot;As is&quot; solution
             does not have any existing costs associated with it (licenses,
             contractors, etc) then please mark the cost as $0.
           </p>
-          <br />
           <span>These things should be considered when estimating costs:</span>
           <ul className="padding-left-205">
             <li>Hosting</li>
