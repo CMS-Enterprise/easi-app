@@ -48,7 +48,6 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           </Label>
           <HelpText className="margin-top-1">
             <span>Please include:</span>
-            <br />
             <ul className="padding-left-205">
               <li>
                 a brief summary of the proposed IT solution including any
@@ -150,14 +149,13 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             values.preferredSolution.cons.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
-      <div className="tablet:grid-col-9">
-        <h2>Estimated Lifecycle Cost</h2>
+      <div className="tablet:grid-col-9 margin-top-2">
+        <h2 className="margin-0">Estimated Lifecycle Cost</h2>
         <HelpText>
-          <p>
+          <p className="margin-y-2">
             You can add speculative costs if exact ones are not known or if a
             contract is not yet in place.
           </p>
-          <br />
           <span>These things should be considered when estimating costs:</span>
           <ul className="padding-left-205">
             <li>Hosting</li>
