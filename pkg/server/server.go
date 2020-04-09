@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/okta"
 )
@@ -44,7 +45,7 @@ func NewServer(config *viper.Viper) *Server {
 	)
 
 	// If we're local use override with local auth middleware
-	if config.GetString("ENVIRONMENT") == "local" {
+	if config.GetString(appconfig.EnvironmentKey) == appconfig.LocalEnv.String() {
 		authMiddleware = local.NewLocalAuthorizeMiddleware(zapLogger)
 	}
 
