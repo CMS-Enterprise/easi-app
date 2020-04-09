@@ -10,12 +10,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s ServicesTestSuite) TestSystemIntakesByUserFetcher() {
 	s.Run("successfully fetches System Intakes", func() {
 		tx := s.db.MustBegin()
-		fakeEuaID := "FAKE"
+		fakeEuaID := testhelpers.RandomEUAID()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &models.SystemIntake{ID: uuid.New(), EUAUserID: fakeEuaID})
 		s.NoError(err)
 		err = tx.Commit()

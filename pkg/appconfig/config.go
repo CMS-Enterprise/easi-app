@@ -22,6 +22,8 @@ func (e Environment) String() string {
 	switch e {
 	case LocalEnv:
 		return "local"
+	case TestEnv:
+		return "test"
 	case DevEnv:
 		return "dev"
 	case ImplEnv:
