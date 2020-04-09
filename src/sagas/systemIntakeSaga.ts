@@ -7,7 +7,10 @@ import { SystemIntakeForm, SaveSystemIntakeAction } from 'types/systemIntake';
 function saveSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
 
-  return axios.post('/system/save', formData);
+  return axios.put(
+    `${process.env.REACT_APP_API_ADDRESS}/system_intake`,
+    formData
+  );
 }
 
 export function* saveSystemIntake(payload: SaveSystemIntakeAction) {
