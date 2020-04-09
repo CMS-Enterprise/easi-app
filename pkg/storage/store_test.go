@@ -38,7 +38,6 @@ func TestStoreTestSuite(t *testing.T) {
 		logger: logger,
 		store:  store,
 	}
-	if config.GetString("ENVIRONMENT") == "local" {
-		suite.Run(t, storeTestSuite)
-	}
+
+	suite.Run(t, storeTestSuite)
 }
