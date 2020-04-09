@@ -23,6 +23,7 @@ jobs:
     docker:
       - image: *circleci_docker_primary
         environment:
+          APP_ENV: test
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
