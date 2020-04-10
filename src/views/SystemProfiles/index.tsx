@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
@@ -131,24 +131,20 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
       </Header>
       <div className="grid-container">
         <UpcomingActions timestamp={timeStamp}>
-          {intakes &&
-            intakes
-              .filter(intake =>
-                ['SUBMITTED', 'REVIEWED'].includes(intake.status)
-              )
-              .map(intake => {
-                return (
-                  <Fragment key={intake.id}>
-                    <ActionBanner
-                      title={`${intake.projectName} Intake Request`}
-                      helpfulText={getStatusNotification(intake.status)}
-                      onClick={() => {}}
-                      buttonUnstyled={intake.status === 'SUBMITTED'}
-                      label={getButtonLabel(intake.status)}
-                    />
-                  </Fragment>
-                );
-              })}
+          {intakes
+            .filter(intake => ['SUBMITTED', 'REVIEWED'].includes(intake.status))
+            .map(intake => {
+              return (
+                <ActionBanner
+                  key={intake.id}
+                  title={`${intake.projectName} Intake Request`}
+                  helpfulText={getStatusNotification(intake.status)}
+                  onClick={() => {}}
+                  buttonUnstyled={intake.status === 'SUBMITTED'}
+                  label={getButtonLabel(intake.status)}
+                />
+              );
+            })}
         </UpcomingActions>
       </div>
     </div>
