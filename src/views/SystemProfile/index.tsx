@@ -54,7 +54,6 @@ export type SystemProfileRouterProps = {
 
 type SystemProfileProps = RouteComponentProps<SystemProfileRouterProps> & {
   auth: any;
-  searchResults: any;
 };
 
 export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
