@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/handlers"
@@ -46,17 +46,13 @@ func (s *Server) routes(
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
 
-	db, err := sqlx.Connect("postgres", "user=postgres sslmode=disable")
-
-	if err != nil {
-		// Todo when database should be connected to every time, change this to error
-		fmt.Println(err)
-	}
-
-	store := storage.NewStore(
-		db,
+	store, err := storage.NewStore(
 		s.logger,
+		s.NewDBConfig(),
 	)
+	if err != nil {
+		s.logger.Fatal(fmt.Sprintf("Failed to connect to database: %v", err), zap.Error(err))
+	}
 
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
@@ -65,29 +61,31 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	if s.Config.GetString("ENVIRONMENT") == "local" {
-		systemIntakeHandler := handlers.SystemIntakeHandler{
-			Logger: s.logger,
-			SaveSystemIntake: services.NewSaveSystemIntake(
-				store.SaveSystemIntake,
-				store.FetchSystemIntakeByID,
-				services.NewAuthorizeSaveSystemIntake(s.logger),
-				s.logger,
-			),
-			FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
-				store.FetchSystemIntakeByID,
-				s.logger,
-			),
-		}
-
-		api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
-		api.Handle("/system_intake", systemIntakeHandler.Handle())
-
-		systemIntakesHandler := handlers.SystemIntakesHandler{
-			Logger:             s.logger,
-			FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
-			DB:                 db,
-		}
-		api.Handle("/system_intakes", systemIntakesHandler.Handle())
+	systemIntakeHandler := handlers.SystemIntakeHandler{
+		Logger: s.logger,
+		SaveSystemIntake: services.NewSaveSystemIntake(
+			store.SaveSystemIntake,
+			store.FetchSystemIntakeByID,
+			services.NewAuthorizeSaveSystemIntake(s.logger),
+			s.logger,
+		),
+		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
+			store.FetchSystemIntakeByID,
+			s.logger,
+		),
 	}
+
+	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
+	api.Handle("/system_intake", systemIntakeHandler.Handle())
+
+	systemIntakesHandler := handlers.SystemIntakesHandler{
+		Logger:             s.logger,
+		FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
+		DB:                 store.DB,
+	}
+	api.Handle("/system_intakes", systemIntakesHandler.Handle())
+
+	s.router.PathPrefix("/").Handler(handlers.CatchAllHandler{
+		Logger: s.logger,
+	}.Handle())
 }
