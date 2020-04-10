@@ -53,19 +53,6 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			euaID, ok := appcontext.EuaID(r.Context())
-			if !ok {
-				logger.Error("Failed to get EUA ID from context")
-				http.Error(w, "Failed to GET system intake", http.StatusInternalServerError)
-				return
-			}
-
-			if intake.EUAUserID != euaID {
-				logger.Error("EUA ID from request doesn't match fetched intake " + intake.ID.String())
-				http.Error(w, "Failed to GET system intake", http.StatusUnauthorized)
-				return
-			}
-
 			responseBody, err := json.Marshal(intake)
 			if err != nil {
 				logger.Error("Failed to marshal system intake")

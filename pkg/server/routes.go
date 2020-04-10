@@ -54,6 +54,7 @@ func (s *Server) routes(
 		s.logger.Fatal(fmt.Sprintf("Failed to connect to database: %v", err), zap.Error(err))
 	}
 
+	// TODO remove the commented out part
 	// endpoint for system list
 	systemHandler := handlers.SystemsListHandler{
 		FetchSystems: cedarClient.FetchSystems,
