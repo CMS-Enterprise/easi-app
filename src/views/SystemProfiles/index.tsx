@@ -10,7 +10,6 @@ import ActionBanner from 'components/shared/ActionBanner';
 import { getAllSystemShorts } from 'actions/searchActions';
 import { fetchSystemIntakes } from 'actions/systemIntakeActions';
 import { DateTime } from 'luxon';
-import Button from 'components/shared/Button';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -62,6 +61,7 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
   const intakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
+  console.log(intakes);
   const searchResults = useSelector(
     (state: AppState) => state.search.allSystemShorts
   );
@@ -96,16 +96,12 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
     }
   };
 
-  const getStatusButton = (status: string) => {
+  const getButtonLabel = (status: string) => {
     switch (status) {
       case 'SUBMITTED':
-        return (
-          <Button type="button" unstyled>
-            View submitted request form
-          </Button>
-        );
+        return 'View submitted request form';
       case 'REVIEWED':
-        return <Button type="button">Begin Business Case</Button>;
+        return 'Begin Business Case';
       default:
         return '';
     }
@@ -137,14 +133,18 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
         <UpcomingActions timestamp={timeStamp}>
           {intakes &&
             intakes
-              .filter(intake => ['SUBMITTED, REVIEWED'].includes(intake.status))
+              .filter(intake =>
+                ['SUBMITTED', 'REVIEWED'].includes(intake.status)
+              )
               .map(intake => {
                 return (
                   <Fragment key={intake.id}>
                     <ActionBanner
                       title={`${intake.projectName} Intake Request`}
                       helpfulText={getStatusNotification(intake.status)}
-                      label={getStatusButton(intake.status)}
+                      onClick={() => {}}
+                      buttonUnstyled={intake.status === 'SUBMITTED'}
+                      label={getButtonLabel(intake.status)}
                     />
                   </Fragment>
                 );

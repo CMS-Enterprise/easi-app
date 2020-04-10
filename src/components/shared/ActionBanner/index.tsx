@@ -1,10 +1,12 @@
 import React from 'react';
 import './index.scss';
+import Button from 'components/shared/Button';
 
 type ActionBannerProps = {
   title: string;
   helpfulText: string;
   label: any;
+  buttonUnstyled?: boolean;
   onClick?: () => void;
 };
 
@@ -12,6 +14,7 @@ const ActionBanner = ({
   title,
   helpfulText,
   label,
+  buttonUnstyled,
   onClick
 }: ActionBannerProps) => {
   return (
@@ -25,9 +28,14 @@ const ActionBanner = ({
       </span>
       <div className="action-banner__button">
         {onClick ? (
-          <button type="button" onClick={onClick} className="usa-button">
+          <Button
+            type="button"
+            onClick={onClick}
+            className="usa-button"
+            unstyled={buttonUnstyled}
+          >
             {label}
-          </button>
+          </Button>
         ) : (
           <span className="action-banner__action-label">{label}</span>
         )}
