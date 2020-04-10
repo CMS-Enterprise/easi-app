@@ -40,7 +40,7 @@ class App extends React.Component<MainProps, MainState> {
                 component={SystemProfile}
               />
               <SecureRoute
-                path="/new-system/review"
+                path="/new-system/review/:systemID"
                 component={GRTSystemIntakeReview}
               />
               <SecureRoute path="/business/new" component={BusinessCase} />
