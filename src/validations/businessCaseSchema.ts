@@ -76,6 +76,56 @@ const BusinessCaseValidationSchema = {
         'Tell us about the cost savings or avoidance associated with this solution'
       )
     })
+  }),
+  preferredSolution: Yup.object().shape({
+    preferredSolution: Yup.object().shape({
+      title: Yup.string().required('Enter a title for the Preferred solution'),
+      summary: Yup.string().required('Tell us about the Preferred solution'),
+      acquisitionApproach: Yup.string().required(
+        'Tell us about the acquisition approach for the Preferred solution'
+      ),
+      pros: Yup.string().required(
+        'Tell us about the pros of Preferred solution'
+      ),
+      cons: Yup.string().required(
+        'Tell us about the cons of Preferred solution'
+      ),
+      estimatedLifecycleCost: Yup.object().shape({
+        year1: Yup.array().of(
+          Yup.object().shape({
+            phase: Yup.string().required('Select the type of phase for Year 1'),
+            cost: Yup.string().required('Enter the cost for Year 1')
+          })
+        ),
+        year2: Yup.array().of(
+          Yup.object().shape({
+            phase: Yup.string().required('Select the type of phase for Year 2'),
+            cost: Yup.string().required('Enter the cost for Year 2')
+          })
+        ),
+        year3: Yup.array().of(
+          Yup.object().shape({
+            phase: Yup.string().required('Select the type of phase for Year 3'),
+            cost: Yup.string().required('Enter the cost for Year 3')
+          })
+        ),
+        year4: Yup.array().of(
+          Yup.object().shape({
+            phase: Yup.string().required('Select the type of phase for Year 4'),
+            cost: Yup.string().required('Enter the cost for Year 4')
+          })
+        ),
+        year5: Yup.array().of(
+          Yup.object().shape({
+            phase: Yup.string().required('Select the type of phase for Year 5'),
+            cost: Yup.string().required('Enter the cost for Year 5')
+          })
+        )
+      }),
+      costSavings: Yup.string().required(
+        'Tell us about the cost savings or avoidance associated with this solution'
+      )
+    })
   })
 };
 
