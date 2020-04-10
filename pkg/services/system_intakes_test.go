@@ -5,30 +5,27 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s ServicesTestSuite) TestSystemIntakesByUserFetcher() {
-	if viper.Get("ENVIRONMENT") == "local" {
-		s.Run("successfully fetches System Intakes", func() {
-			tx := s.db.MustBegin()
-			// Todo is this the best way to generate a random string?
-			fakeEuaID := uuid.New().String()
-			_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &models.SystemIntake{ID: uuid.New(), EUAUserID: fakeEuaID})
-			s.NoError(err)
-			err = tx.Commit()
-			s.NoError(err)
+	s.Run("successfully fetches System Intakes", func() {
+		tx := s.db.MustBegin()
+		fakeEuaID := testhelpers.RandomEUAID()
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &models.SystemIntake{ID: uuid.New(), EUAUserID: fakeEuaID})
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
 
-			systemIntakes, err := FetchSystemIntakesByEuaID(fakeEuaID, s.db)
-			s.NoError(err)
-			s.Len(systemIntakes, 1)
-		})
-	}
+		systemIntakes, err := FetchSystemIntakesByEuaID(fakeEuaID, s.db)
+		s.NoError(err)
+		s.Len(systemIntakes, 1)
+	})
 }
 
 func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
