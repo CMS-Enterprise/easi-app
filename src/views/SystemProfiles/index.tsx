@@ -11,6 +11,7 @@ import ActionBanner from 'components/shared/ActionBanner';
 import { getAllSystemShorts } from 'actions/searchActions';
 import { fetchSystemIntakes } from 'actions/systemIntakeActions';
 import { DateTime } from 'luxon';
+import Button from 'components/shared/Button';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -51,17 +52,6 @@ const mockSystems: any[] = [
   }
 ];
 
-const getStatusNotification = (status: string) => {
-  switch (status) {
-    case 'SUBMITTED':
-      return 'Status: The form has been submitted and is being reviewed.';
-    case 'REVIEWED':
-      return 'Status: Request Form has been reviewed. Prepare your business case.';
-    default:
-      return '';
-  }
-};
-
 type SystemProfilesProps = RouteComponentProps & {
   auth: any;
 };
@@ -96,6 +86,32 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
     fetchSystemShorts();
   }, [auth, dispatch]);
 
+  const getStatusNotification = (status: string) => {
+    switch (status) {
+      case 'SUBMITTED':
+        return 'Status: The form has been submitted and is being reviewed.';
+      case 'REVIEWED':
+        return 'Status: Request Form has been reviewed. Prepare your business case.';
+      default:
+        return '';
+    }
+  };
+
+  const getStatusButton = (status: string) => {
+    switch (status) {
+      case 'SUBMITTED':
+        return (
+          <Button type="button" unstyled>
+            View submitted request form
+          </Button>
+        );
+      case 'REVIEWED':
+        return <Button type="button">Begin Business Case</Button>;
+      default:
+        return '';
+    }
+  };
+
   return (
     <div>
       <Header>
@@ -121,19 +137,19 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
       <div className="grid-container">
         <UpcomingActions timestamp={timeStamp}>
           {intakes &&
-            intakes.map(intake => {
-              return (
-                <Fragment key={intake.id}>
-                  <ActionBanner
-                    title={intake.projectName}
-                    helpfulText={getStatusNotification(intake.status)}
-                    label={
-                      <a href="/system/all">View submitted request form</a>
-                    }
-                  />
-                </Fragment>
-              );
-            })}
+            intakes
+              .filter(intake => ['SUBMITTED, REVIEWED'].includes(intake.status))
+              .map(intake => {
+                return (
+                  <Fragment key={intake.id}>
+                    <ActionBanner
+                      title={`${intake.projectName} Intake Request`}
+                      helpfulText={getStatusNotification(intake.status)}
+                      label={getStatusButton(intake.status)}
+                    />
+                  </Fragment>
+                );
+              })}
         </UpcomingActions>
       </div>
     </div>
