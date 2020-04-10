@@ -23,9 +23,13 @@ jobs:
     docker:
       - image: *circleci_docker_primary
         environment:
-          PG_SSL_MODE: disable
+          APP_ENV: test
+          PGHOST: localhost
+          PGPORT: 5432
+          PGDATABASE: postgres
           PGUSER: postgres
           PGPASS: easirox
+          PGSSLMODE: disable
       - image: *postgres
         environment:
           POSTGRES_DB: postgres
@@ -166,6 +170,10 @@ jobs:
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
+      - run:
+          name: Run migrations
+          command: |
+            ./scripts/db_lambda_invoke easi-app-db-migrate
       - run:
           name: Restart ECS service
           command: |
