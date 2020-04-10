@@ -53,6 +53,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 	s.Run("cannot save without EUA ID", func() {
 		id, _ := uuid.NewUUID()
 		partialIntake.ID = id
+		partialIntake.Status = models.SystemIntakeStatusDRAFT
 
 		err := s.store.SaveSystemIntake(&partialIntake)
 
