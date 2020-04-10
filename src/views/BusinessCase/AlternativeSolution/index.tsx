@@ -13,6 +13,7 @@ import {
   BusinessCaseModel,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
+import flattenErrors from 'utils/flattenErrors';
 
 type AlternativeSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -25,7 +26,8 @@ const AlternativeSolution = ({
   altLetter,
   handleToggleAlternative
 }: AlternativeSolutionProps) => {
-  const { values } = formikProps;
+  const { values, errors } = formikProps;
+  const flatErrors = flattenErrors(errors);
   const altLabel = `Alternative ${altLetter}`;
   const altId = `alternative${altLetter}`;
   const altValues = ((letter: string): ProposedBusinessCaseSolution => {
@@ -36,6 +38,17 @@ const AlternativeSolution = ({
         return values.alternativeB || defaultProposedSolution;
       default:
         return defaultProposedSolution;
+    }
+  })(altLetter);
+
+  const altErrors = ((letter: string): any => {
+    switch (letter) {
+      case 'A':
+        return errors.alternativeA;
+      case 'B':
+        return errors.alternativeB;
+      default:
+        return {};
     }
   })(altLetter);
 
@@ -56,21 +69,27 @@ const AlternativeSolution = ({
             </Button>
           )}
         </div>
-        <FieldGroup scrollElement={`${altId}.title`} error={false}>
+        <FieldGroup
+          scrollElement={`${altId}.title`}
+          error={!!flatErrors[`${altId}.title`]}
+        >
           <Label htmlFor={`BusinessCase-${altId}Title`}>
             {`${altLabel}: Title`}
           </Label>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors[`${altId}.title`]}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={false}
+            error={!!flatErrors[`${altId}.title`]}
             id={`BusinessCase-${altId}Title`}
             maxLength={50}
             name={`${altId}.title`}
           />
         </FieldGroup>
 
-        <FieldGroup scrollElement={`${altId}.summary`} error={false}>
+        <FieldGroup
+          scrollElement={`${altId}.summary`}
+          error={!!flatErrors[`${altId}.summary`]}
+        >
           <Label htmlFor={`BusinessCase-${altId}Summary`}>
             {`${altLabel}: Summary`}
           </Label>
@@ -89,10 +108,10 @@ const AlternativeSolution = ({
               <li>and potential acqueisition approaches.</li>
             </ul>
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors[`${altId}.summary`]}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors[`${altId}.summary`]}
             id={`BusinessCase-${altId}Summary`}
             maxLength={2000}
             name={`${altId}.summary`}
@@ -103,7 +122,7 @@ const AlternativeSolution = ({
 
         <FieldGroup
           scrollElement={`${altId}.acquisitionApproach`}
-          error={false}
+          error={!!flatErrors[`${altId}.acquisitionApproach`]}
         >
           <Label htmlFor={`BusinessCase-${altId}AcquisitionApproach`}>
             {`${altLabel}: Acquisition Approach`}
@@ -113,10 +132,12 @@ const AlternativeSolution = ({
             required to deliver the system, including potential contract
             vehicles.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>
+            {flatErrors[`${altId}.acquisitionApproach`]}
+          </FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={flatErrors[`${altId}.acquisitionApproach`]}
             id={`BusinessCase-${altId}AcquisitionApproach`}
             maxLength={2000}
             name={`${altId}.acquisitionApproach`}
@@ -125,7 +146,10 @@ const AlternativeSolution = ({
             altValues.acquisitionApproach.length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement={`${altId}.pros`} error={false}>
+        <FieldGroup
+          scrollElement={`${altId}.pros`}
+          error={!!flatErrors[`${altId}.pros`]}
+        >
           <Label htmlFor={`BusinessCase-${altId}Pros`}>
             {`${altLabel}: Pros`}
           </Label>
@@ -133,10 +157,10 @@ const AlternativeSolution = ({
             Identify any aspects of this solution that positively differentiates
             this approach from other solutions.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors[`${altId}.pros`]}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors[`${altId}.pros`]}
             id={`BusinessCase-${altId}Pros`}
             maxLength={2000}
             name={`${altId}.pros`}
@@ -145,7 +169,10 @@ const AlternativeSolution = ({
             altValues.pros.length} characters left`}</HelpText>
         </FieldGroup>
 
-        <FieldGroup scrollElement={`${altId}.cons`} error={false}>
+        <FieldGroup
+          scrollElement={`${altId}.cons`}
+          error={!!flatErrors[`${altId}.cons`]}
+        >
           <Label htmlFor={`BusinessCase-${altId}Cons`}>
             {`${altLabel}: Cons`}
           </Label>
@@ -153,10 +180,10 @@ const AlternativeSolution = ({
             Identify any aspects of this solution that negatively impacts this
             approach.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors[`${altId}.cons`]}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors[`${altId}.cons`]}
             id={`BusinessCase-${altId}Cons`}
             maxLength={2000}
             name={`${altId}.cons`}
@@ -175,7 +202,7 @@ const AlternativeSolution = ({
           <span>These things should be considered when estimating costs:</span>
           <ul className="padding-left-205">
             <li>Hosting</li>
-            <li>Software subscription and licenses(COTS and GOTS products)</li>
+            <li>Software subscription and licenses (COTS and GOTS products)</li>
             <li>Contractor rates and salaries</li>
             <li>Inflation</li>
           </ul>
@@ -184,10 +211,13 @@ const AlternativeSolution = ({
       <EstimatedLifecycleCost
         formikKey={`${altId}.estimatedLifecycleCost`}
         years={altValues.estimatedLifecycleCost}
-        errors={{}}
+        errors={altErrors && altErrors.estimatedLifecycleCost}
       />
       <div className="tablet:grid-col-9 margin-top-2 margin-bottom-7">
-        <FieldGroup scrollElement={`${altId}.costSavings`} error={false}>
+        <FieldGroup
+          scrollElement={`${altId}.costSavings`}
+          error={!!flatErrors[`${altId}.costSavings`]}
+        >
           <Label htmlFor={`BusinessCase-${altId}CostSavings`}>
             What is the cost savings or avoidance associated with this solution?
           </Label>
@@ -195,10 +225,10 @@ const AlternativeSolution = ({
             This could include old systems going away, contract hours/ new Full
             Time Employees not needed, or other savings, even if indirect.
           </HelpText>
-          <FieldErrorMsg />
+          <FieldErrorMsg>{flatErrors[`${altId}.costSavings`]}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={false}
+            error={!!flatErrors[`${altId}.costSavings`]}
             id={`BusinessCase-${altId}CostSavings`}
             maxLength={2000}
             name={`${altId}.costSavings`}
@@ -207,7 +237,7 @@ const AlternativeSolution = ({
             altValues.costSavings.length} characters left`}</HelpText>
         </FieldGroup>
 
-        {altLetter === 'A' && (
+        {altLetter === 'A' && !values.alternativeB && (
           <>
             <h2 className="margin-bottom-1">Additional Alternatives</h2>
             <HelpText>
