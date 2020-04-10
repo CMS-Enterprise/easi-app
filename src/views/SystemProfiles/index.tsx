@@ -61,13 +61,9 @@ const getStatusNotification = (status: string) => {
       return '';
   }
 };
-export type SystemProfilesRouterProps = {
-  profileId: string;
-};
 
-type SystemProfilesProps = RouteComponentProps<SystemProfilesRouterProps> & {
+type SystemProfilesProps = RouteComponentProps & {
   auth: any;
-  searchResults: any;
 };
 
 export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
@@ -86,7 +82,9 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
   useEffect(() => {
     const getSystemIntakes = async (): Promise<void> => {
       dispatch(fetchSystemIntakes(await auth.getAccessToken()));
-      await setTimeStamp(DateTime.local().toLocaleString(DateTime.DATE_MED));
+      await setTimeStamp(
+        DateTime.local().toLocaleString(DateTime.DATETIME_MED)
+      );
     };
     getSystemIntakes();
   }, [auth, dispatch]);

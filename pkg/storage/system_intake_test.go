@@ -121,7 +121,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		intake := NewSystemIntake()
 		id := intake.ID
 		tx := s.db.MustBegin()
-		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &intake)
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
 		s.NoError(err)
 		err = tx.Commit()
 		s.NoError(err)

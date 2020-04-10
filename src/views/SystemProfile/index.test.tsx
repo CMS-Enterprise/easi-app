@@ -30,7 +30,6 @@ describe('The System Profile view', () => {
           history={mockHistory}
           location={mockLocation}
           auth={null}
-          searchResults={[]}
         />
       </Provider>
     );
