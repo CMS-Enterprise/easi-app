@@ -38,7 +38,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 		VALUES (
 			:id,
 			:eua_user_id,
-		    :status
+		    :status,
 			:requester,
 			:component,
 			:business_owner,
