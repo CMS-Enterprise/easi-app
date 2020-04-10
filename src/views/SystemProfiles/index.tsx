@@ -5,7 +5,6 @@ import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'reducers/rootReducer';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import UpcomingActions from 'components/shared/UpcomingActions';
 import ActionBanner from 'components/shared/ActionBanner';
 import { getAllSystemShorts } from 'actions/searchActions';
@@ -52,7 +51,7 @@ const mockSystems: any[] = [
   }
 ];
 
-type SystemProfilesProps = RouteComponentProps & {
+type SystemProfilesProps = {
   auth: any;
 };
 
@@ -156,4 +155,4 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
   );
 };
 
-export default withRouter(withAuth(SystemProfiles));
+export default withAuth(SystemProfiles);
