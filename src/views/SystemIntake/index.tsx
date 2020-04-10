@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useHistory, withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
 import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
@@ -38,6 +38,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
       view: Review
     }
   ];
+  const history = useHistory();
   const [page, setPage] = useState(1);
   const [id, setId] = useState('');
   const dispatch = useDispatch();
@@ -105,6 +106,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
               id="save-button"
               onClick={() => {
                 dispatch(saveSystemIntake(id, formikRef.current.values));
+                history.push('/system/all');
               }}
             >
               <span>Save & Exit</span>
