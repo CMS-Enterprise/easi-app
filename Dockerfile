@@ -15,6 +15,7 @@ ENV APPLICATION_VERSION=${ARG_APPLICATION_VERSION}
 ENV APPLICATION_DATETIME=${ARG_APPLICATION_DATETIME}
 ENV APPLICATION_TS=${ARG_APPLICATION_TS}
 
+COPY config/tls/rds-ca-2019-root.pem /usr/local/share/ca-certificates/rds-ca-2019-root.pem
 COPY config/tls/hhs-fpki-intermediate-ca.pem /usr/local/share/ca-certificates/hhs-fpki-intermediate-ca.crt
 RUN update-ca-certificates
 
