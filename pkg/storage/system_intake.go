@@ -79,7 +79,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			ea_support_request=:ea_support_request,
 			existing_contract=:existing_contract
 	`
-	_, err := s.db.NamedExec(
+	_, err := s.DB.NamedExec(
 		SystemIntakeInsertSQL,
 		intake,
 	)
@@ -96,7 +96,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 // FetchSystemIntakeByID queries the DB for a system intake matching the given ID
 func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
-	err := s.db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
 	if err != nil {
 		s.logger.Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),

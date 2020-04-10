@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/spf13/cobra"
 
 	"github.com/cmsgov/easi-app/cmd/easi/test"
@@ -25,6 +28,10 @@ var all bool
 var serverTest bool
 
 func init() {
+	err := os.Setenv("APP_ENV", "test")
+	if err != nil {
+		fmt.Printf("Failed to set APP_ENV: %v", err)
+	}
 	testCmd.Flags().BoolVarP(&all, "all", "a", false, "Run all tests")
 	testCmd.Flags().BoolVarP(&serverTest, "server", "s", false, "Run server tests")
 }
