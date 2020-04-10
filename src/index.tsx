@@ -32,7 +32,13 @@ if (browser.name === 'ie') {
 axios.interceptors.request.use(
   config => {
     const newConfig = config;
-    if (window.localStorage['okta-token-storage']) {
+
+    if (
+      newConfig &&
+      newConfig.url &&
+      newConfig.url.includes(process.env.REACT_APP_API_ADDRESS || ' ') &&
+      window.localStorage['okta-token-storage']
+    ) {
       const json = JSON.parse(window.localStorage['okta-token-storage']);
       if (json.accessToken) {
         newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
