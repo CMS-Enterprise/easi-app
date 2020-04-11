@@ -18,9 +18,7 @@ services:
     depends_on:
       - db
   easi:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: cosmtrek/air:v1.12.1
     environment:
       - APPLICATION_VERSION=APPLICATION_VERSION
       - APPLICATION_DATETIME=APPLICATION_DATETIME
@@ -38,7 +36,16 @@ services:
       - REACT_APP_OKTA_ISSUER=$REACT_APP_OKTA_DOMAIN/oauth2/$REACT_APP_OKTA_SERVER_ID
       - OKTA_ISSUER=$REACT_APP_OKTA_ISSUER
       - REACT_APP_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
-    entrypoint: ["/easi/easi", "serve"]
+      - PGHOST=db
+      - PGPORT=$PGPORT
+      - PGDATABASE=$PGDATABASE
+      - PGUSER=$PGUSER
+      - PGPASS=$PGPASS
+      - PGSSLMODE=$PGSSLMODE
+    volumes:
+      - ./:/easi
+    working_dir: /easi
+    entrypoint: ["/go/bin/air"]
     ports:
       - 8080:8080
     depends_on:
