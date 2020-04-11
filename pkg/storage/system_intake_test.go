@@ -78,8 +78,18 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 		})
 	}
 
-	s.Run("save a partial system intake", func() {
+	s.Run("cannot save with invalid status", func() {
 		partialIntake.EUAUserID = "FAKE"
+		partialIntake.Status = "fakeStatus"
+
+		err := s.store.SaveSystemIntake(&partialIntake)
+
+		s.Error(err)
+		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
+	})
+
+	s.Run("save a partial system intake", func() {
+		partialIntake.Status = models.SystemIntakeStatusDRAFT
 		partialIntake.Requester = null.StringFrom("Test Requester")
 
 		err := s.store.SaveSystemIntake(&partialIntake)
