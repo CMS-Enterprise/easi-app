@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import ActionBanner from './index.tsx';
+import ActionBanner from './index';
 
 describe('The Action Banner component', () => {
   it('renders without crashing', () => {
