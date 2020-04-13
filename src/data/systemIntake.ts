@@ -14,6 +14,7 @@ export const prepareSystemIntakeForApi = (
 
   return {
     id,
+    status: systemIntake.status,
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,
     businessOwner: systemIntake.businessOwner.name,
