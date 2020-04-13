@@ -3,7 +3,11 @@
 # Restart ECS service
 #
 
-healthcheck_url="https://${APP_ENV}.easi.cms.gov/api/v1/healthcheck"
+if [[ "$APP_ENV" != "prod" ]] ; then
+  url_prefix="${APP_ENV}."
+fi
+
+healthcheck_url="https://${url_prefix}easi.cms.gov/api/v1/healthcheck"
 healthcheck_timeout="180"
 
 cluster_name="${APP_ENV}-easi-app"
