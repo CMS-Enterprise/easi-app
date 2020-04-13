@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { storeSystemIntakes } from 'actions/systemIntakeActions';
+import { storeSystemIntakes } from 'actions/systemIntakesActions';
 import { FETCH_SYSTEM_INTAKES } from 'constants/systemIntakes';
 
 function requestSystemIntakes(accessToken: string) {
