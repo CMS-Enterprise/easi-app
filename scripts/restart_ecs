@@ -3,6 +3,24 @@
 # Restart ECS service
 #
 
+healthcheck_url="https://${APP_ENV}.easi.cms.gov/api/v1/healthcheck"
+healthcheck_timeout="180"
+
 cluster_name="${APP_ENV}-easi-app"
 service_name="easi-app"
 ( set -x ; aws ecs update-service --cluster "$cluster_name" --service "$service_name" --force-new-deployment )
+
+# wait for the new service to come up
+echo -n "Waiting for health check version to match new deployment." 1>&2
+until [[ "$(jq --raw-output --monochrome-output .version < <(curl --silent --show-error --location "$healthcheck_url"))" == "$CIRCLE_SHA1" ]] ; do
+  if ((++time > healthcheck_timeout)) ; then
+    # we timed out
+    echo ""
+    echo "FATAL: Timed out waiting." 1>&2
+    exit 1
+  else
+    [[ $((time % 10)) -eq 0 ]] && echo -n "."
+    sleep 1
+  fi
+done
+echo ""
