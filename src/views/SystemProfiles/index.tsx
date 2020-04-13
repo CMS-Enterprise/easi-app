@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { withAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
@@ -8,7 +7,7 @@ import { AppState } from 'reducers/rootReducer';
 import UpcomingActions from 'components/shared/UpcomingActions';
 import ActionBanner from 'components/shared/ActionBanner';
 import { getAllSystemShorts } from 'actions/searchActions';
-import { fetchSystemIntakes } from 'actions/systemIntakeActions';
+import { fetchSystemIntakes } from 'actions/systemIntakesActions';
 import { DateTime } from 'luxon';
 
 const mockSystems: any[] = [
@@ -50,11 +49,7 @@ const mockSystems: any[] = [
   }
 ];
 
-type SystemProfilesProps = {
-  auth: any;
-};
-
-export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
+export const SystemProfiles = () => {
   const onSearch = () => {};
   const getSuggestionValue = (suggestion: any): string => suggestion.name;
   const renderSuggestion = (suggestion: any): string => suggestion.name;
@@ -70,20 +65,20 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
   const dispatch = useDispatch();
   useEffect(() => {
     const getSystemIntakes = async (): Promise<void> => {
-      dispatch(fetchSystemIntakes(await auth.getAccessToken()));
+      dispatch(fetchSystemIntakes());
       await setTimeStamp(
         DateTime.local().toLocaleString(DateTime.DATETIME_MED)
       );
     };
     getSystemIntakes();
-  }, [auth, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchSystemShorts = async (): Promise<void> => {
-      dispatch(getAllSystemShorts(await auth.getAccessToken()));
+      dispatch(getAllSystemShorts());
     };
     fetchSystemShorts();
-  }, [auth, dispatch]);
+  }, [dispatch]);
 
   const getStatusNotification = (status: string) => {
     switch (status) {
@@ -151,4 +146,4 @@ export const SystemProfiles = ({ auth }: SystemProfilesProps) => {
   );
 };
 
-export default withAuth(SystemProfiles);
+export default SystemProfiles;

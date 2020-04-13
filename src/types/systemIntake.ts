@@ -54,3 +54,12 @@ export type SaveSystemIntakeAction = {
   id: string;
   formData: SystemIntakeForm;
 };
+
+export type FetchSystemIntakesAction = {
+  type: string;
+};
+
+export type StoreSystemIntakesAction = {
+  type: string;
+  systemIntakes: SystemIntakeForm[];
+};
