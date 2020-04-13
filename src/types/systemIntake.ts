@@ -48,3 +48,9 @@ export type SystemIntakeForm = {
 export type SystemIntakesState = {
   systemIntakes: SystemIntakeForm[];
 };
+
+export type SaveSystemIntakeAction = {
+  type: string;
+  id: string;
+  formData: SystemIntakeForm;
+};

@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory, withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
+import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
+import { saveSystemIntake } from 'actions/systemIntakeActions';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -35,8 +38,20 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
       view: Review
     }
   ];
+  const history = useHistory();
   const [page, setPage] = useState(1);
+  const [id, setId] = useState('');
+  const dispatch = useDispatch();
+  const formikRef: any = useRef();
   const pageObj = pages[page - 1];
+
+  useEffect(() => {
+    // TODO: Make request to get system intake by id.
+    // If it doesn't exist, create a new id.
+    setId(uuidv4());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const initialData: SystemIntakeForm = {
     id: '',
     euaUserID: '',
@@ -86,13 +101,21 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   return (
     <div className="system-intake">
       <Header activeNavListItem={match.params.profileId} name="INTAKE">
-        <div className="margin-bottom-3">
-          {pageObj.type === 'FORM' && (
-            <button type="button" className="easi-button__save usa-button">
+        {pageObj.type === 'FORM' && (
+          <div className="margin-bottom-3">
+            <button
+              type="button"
+              className="easi-header__save-button usa-button"
+              id="save-button"
+              onClick={() => {
+                dispatch(saveSystemIntake(id, formikRef.current.values));
+                history.push('/system/all');
+              }}
+            >
               <span>Save & Exit</span>
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </Header>
       <main className="grid-container" role="main">
         <Formik
@@ -104,6 +127,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
           validateOnBlur={false}
           validateOnChange={false}
           validateOnMount={false}
+          innerRef={formikRef}
         >
           {(formikProps: FormikProps<SystemIntakeForm>) => {
             const {
