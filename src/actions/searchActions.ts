@@ -6,15 +6,11 @@ import { ShortSystem } from '../types/system';
 
 type GetAllSystemShortsAction = {
   type: string;
-  accessToken: string;
 };
 
-export function getAllSystemShorts(
-  accessToken: string
-): GetAllSystemShortsAction {
+export function getAllSystemShorts(): GetAllSystemShortsAction {
   return {
-    type: GET_ALL_SYSTEM_SHORTS,
-    accessToken
+    type: GET_ALL_SYSTEM_SHORTS
   };
 }
 

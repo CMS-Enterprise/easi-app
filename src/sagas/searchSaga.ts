@@ -3,16 +3,12 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import { GET_ALL_SYSTEM_SHORTS } from '../constants/system';
 import { putSystemShorts } from '../actions/searchActions';
 
-function requestSystemShorts(accessToken: string) {
-  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/systems`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
+function requestSystemShorts() {
+  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/systems`);
 }
 
-export function* fetchAllSystemShorts(action: any) {
-  const obj = yield call(requestSystemShorts, action.accessToken);
+export function* fetchAllSystemShorts() {
+  const obj = yield call(requestSystemShorts);
   yield put(putSystemShorts(obj.data));
 }
 
