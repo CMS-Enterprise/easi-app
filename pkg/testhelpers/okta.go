@@ -124,6 +124,7 @@ func fetchOktaAccessToken(
 		return "", err
 	}
 
+	// Request can return 200 even if session token unset.
 	if authn.SessionToken == "" {
 		fmt.Println("did not receive session token")
 		return "", errors.New("did not receive session token from OTP challenge response")
