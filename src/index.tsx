@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import axios from 'axios';
 import { TextEncoder } from 'text-encoding';
 import { detect } from 'detect-browser';
 import 'uswds';
@@ -16,10 +17,6 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-if (typeof (window as any).TextEncoder === 'undefined') {
-  (window as any).TextEncoder = TextEncoder;
-}
-
 let app;
 const browser: any = detect();
 if (browser.name === 'ie') {
@@ -30,6 +27,39 @@ if (browser.name === 'ie') {
       <App />
     </Provider>
   );
+}
+
+axios.interceptors.request.use(
+  config => {
+    const newConfig = config;
+
+    if (
+      newConfig &&
+      newConfig.url &&
+      newConfig.url.includes(process.env.REACT_APP_API_ADDRESS || ' ') &&
+      window.localStorage['okta-token-storage']
+    ) {
+      const json = JSON.parse(window.localStorage['okta-token-storage']);
+      if (json.accessToken) {
+        newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
+      }
+    }
+    return newConfig;
+  },
+  error => {
+    Promise.reject(error);
+  }
+);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+
+if (typeof (window as any).TextEncoder === 'undefined') {
+  (window as any).TextEncoder = TextEncoder;
 }
 
 ReactDOM.render(app, document.getElementById('root'));

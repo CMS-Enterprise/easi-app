@@ -139,7 +139,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <span>These things should be considered when estimating costs:</span>
           <ul className="padding-left-205">
             <li>Hosting</li>
-            <li>Software subscription and licenses(COTS and GOTS products)</li>
+            <li>Software subscription and licenses (COTS and GOTS products)</li>
             <li>Contractor rates and salaries</li>
             <li>Inflation</li>
           </ul>
