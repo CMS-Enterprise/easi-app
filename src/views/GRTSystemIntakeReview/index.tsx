@@ -31,9 +31,7 @@ export const GRTSystemIntakeReview = ({
 
   useEffect(() => {
     const fetchSystemIntake = async (): Promise<void> => {
-      dispatch(
-        getSystemIntake(await auth.getAccessToken(), match.params.systemID)
-      );
+      dispatch(getSystemIntake(await match.params.systemID));
     };
     fetchSystemIntake();
   }, [auth, dispatch, match.params.systemID]);
