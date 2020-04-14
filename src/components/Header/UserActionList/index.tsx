@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import './index.scss';
 
 type UserActionListProps = {
+  id: string;
   className?: string;
   children: React.ReactNodeArray;
 };
@@ -14,11 +15,16 @@ type UserActionProps = {
 };
 
 export const UserActionList = ({
+  id,
   className,
   children
 }: UserActionListProps) => {
   const classNames = classnames('user-actions-dropdown', className);
-  return <ul className={classNames}>{children}</ul>;
+  return (
+    <ul id={id} className={classNames}>
+      {children}
+    </ul>
+  );
 };
 
 export const UserAction = ({ onClick, link, children }: UserActionProps) => {
