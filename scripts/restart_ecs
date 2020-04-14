@@ -12,7 +12,9 @@ healthcheck_timeout="180"
 
 cluster_name="${APP_ENV}-easi-app"
 service_name="easi-app"
-( set -x ; aws ecs update-service --cluster "$cluster_name" --service "$service_name" --force-new-deployment ) | jq '.service.events = ["REDACTED"]'
+
+# we remove the list of service events since it is verbose and rarely needed when reviewing logs in CI
+( set -x ; aws ecs update-service --cluster "$cluster_name" --service "$service_name" --force-new-deployment ) | jq '.service.events = ["REMOVED"]'
 
 # wait for the new service to come up
 echo -n "Waiting for health check version to match new deployment on ${healthcheck_url}" 1>&2
