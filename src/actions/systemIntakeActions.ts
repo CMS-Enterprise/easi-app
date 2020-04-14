@@ -1,6 +1,6 @@
 import {
   STORE_SYSTEM_INTAKE,
-  FETCH_SYSTEM_INTAKE,
+  RETRIEVE_SYSTEM_INTAKE,
   UPDATE_SYSTEM_INTAKE
 } from 'constants/systemIntake';
 import {
@@ -29,7 +29,7 @@ export function getSystemIntake(
   intakeID: SystemIntakeID
 ): GetSystemIntakeAction {
   return {
-    type: FETCH_SYSTEM_INTAKE,
+    type: RETRIEVE_SYSTEM_INTAKE,
     intakeID
   };
 }
