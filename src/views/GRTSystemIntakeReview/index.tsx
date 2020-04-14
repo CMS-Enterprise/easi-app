@@ -40,7 +40,7 @@ export const GRTSystemIntakeReview = ({
   );
   const fundingDefinition = () => {
     const isFunded = convertBoolToYesNo(!!systemIntake.fundingSource);
-    if (systemIntake.funding_source) {
+    if (systemIntake.fundingSource) {
       return `${isFunded}, ${systemIntake.fundingSource}`;
     }
     return isFunded;

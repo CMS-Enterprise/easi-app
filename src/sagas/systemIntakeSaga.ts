@@ -2,7 +2,7 @@ import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
 import {
   STORE_SYSTEM_INTAKE,
-  FETCH_SYSTEM_INTAKE
+  RETRIEVE_SYSTEM_INTAKE
 } from 'constants/systemIntake';
 
 import { SaveSystemIntakeAction } from 'types/systemIntake';
@@ -24,16 +24,16 @@ export function* saveSystemIntake(payload: SaveSystemIntakeAction) {
   }
 }
 
-function requestSystemIntake(id: string) {
+function getSystemIntake(id: string) {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}`);
 }
 
 export function* fetchSystemIntake(action: any) {
-  const obj = yield call(requestSystemIntake, action.intakeID);
+  const obj = yield call(getSystemIntake, action.intakeID);
   yield put(putSystemIntake(obj.data));
 }
 
 export function* systemIntakeSaga() {
-  yield takeLatest(FETCH_SYSTEM_INTAKE, fetchSystemIntake);
+  yield takeLatest(RETRIEVE_SYSTEM_INTAKE, fetchSystemIntake);
   yield takeLatest(STORE_SYSTEM_INTAKE, saveSystemIntake);
 }
