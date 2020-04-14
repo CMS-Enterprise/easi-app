@@ -41,9 +41,9 @@ export const GRTSystemIntakeReview = ({
     (state: AppState) => state.systemIntake.systemIntake
   );
   const fundingDefinition = () => {
-    const isFunded = convertBoolToYesNo(!!systemIntake.funding_source);
+    const isFunded = convertBoolToYesNo(!!systemIntake.fundingSource);
     if (systemIntake.funding_source) {
-      return `${isFunded}, ${systemIntake.funding_source}`;
+      return `${isFunded}, ${systemIntake.fundingSource}`;
     }
     return isFunded;
   };
@@ -80,7 +80,7 @@ export const GRTSystemIntakeReview = ({
                 <div>
                   <DescriptionTerm term="Request for" />
                   <DescriptionDefinition
-                    definition={systemIntake.process_status}
+                    definition={systemIntake.processStatus}
                   />
                 </div>
               </div>
@@ -104,13 +104,13 @@ export const GRTSystemIntakeReview = ({
                 <div>
                   <DescriptionTerm term="CMS Business/Product Owner's Name" />
                   <DescriptionDefinition
-                    definition={systemIntake.business_owner}
+                    definition={systemIntake.businessOwner}
                   />
                 </div>
                 <div>
                   <DescriptionTerm term="Business Owner Component" />
                   <DescriptionDefinition
-                    definition={systemIntake.business_owner_component}
+                    definition={systemIntake.businessOwnerComponent}
                   />
                 </div>
               </div>
@@ -118,13 +118,13 @@ export const GRTSystemIntakeReview = ({
                 <div>
                   <DescriptionTerm term="CMS Project/Product Manager or lead" />
                   <DescriptionDefinition
-                    definition={systemIntake.product_manager}
+                    definition={systemIntake.productManager}
                   />
                 </div>
                 <div>
                   <DescriptionTerm term="Product Manager Component" />
                   <DescriptionDefinition
-                    definition={systemIntake.product_manager_component}
+                    definition={systemIntake.productManagerComponent}
                   />
                 </div>
               </div>
@@ -168,7 +168,7 @@ export const GRTSystemIntakeReview = ({
                 <div>
                   <DescriptionTerm term="Project Name" />
                   <DescriptionDefinition
-                    definition={systemIntake.project_name}
+                    definition={systemIntake.projectName}
                   />
                 </div>
                 <div>
@@ -180,7 +180,7 @@ export const GRTSystemIntakeReview = ({
                 <div>
                   <DescriptionTerm term="What is your business need?" />
                   <DescriptionDefinition
-                    definition={systemIntake.business_need}
+                    definition={systemIntake.businessNeed}
                   />
                 </div>
               </div>
@@ -194,13 +194,15 @@ export const GRTSystemIntakeReview = ({
                 <div>
                   <DescriptionTerm term="Where are you in the process?" />
                   <DescriptionDefinition
-                    definition={systemIntake.process_status}
+                    definition={systemIntake.processStatus}
                   />
                 </div>
                 <div>
                   <DescriptionTerm term="Do you currently have a contract in place?" />
                   <DescriptionDefinition
-                    definition={systemIntake.existing_contract}
+                    definition={convertBoolToYesNo(
+                      !!systemIntake.existingContract
+                    )}
                   />
                 </div>
               </div>
@@ -209,7 +211,7 @@ export const GRTSystemIntakeReview = ({
                   <DescriptionTerm term="Do you need Enterprise Architecture (EA) support?" />
                   <DescriptionDefinition
                     definition={convertBoolToYesNo(
-                      !!systemIntake.needs_ea_support
+                      !!systemIntake.needsEaSupport
                     )}
                   />
                 </div>
