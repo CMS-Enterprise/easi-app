@@ -8,6 +8,7 @@
   }
 
   &__username {
+    padding: 0;
     border: none;
     background-color: transparent;
     cursor: pointer;
@@ -61,6 +62,7 @@
   }
 
   &__caret {
+    margin-left: 5px;
     border: none;
     transform: rotate(0deg);
     cursor: pointer;
