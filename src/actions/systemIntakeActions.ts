@@ -9,7 +9,6 @@ import {
   SystemIntakeID
 } from 'types/systemIntake';
 
-// eslint-disable-next-line import/prefer-default-export
 export function saveSystemIntake(
   id: string,
   formData: SystemIntakeForm
@@ -27,7 +26,6 @@ type GetSystemIntakeAction = {
   intakeID: SystemIntakeID;
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export function getSystemIntake(
   accessToken: string,
   intakeID: SystemIntakeID
