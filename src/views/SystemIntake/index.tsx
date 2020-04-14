@@ -53,8 +53,11 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   }, []);
 
   const initialData: SystemIntakeForm = {
+    id: '',
+    euaUserID: '',
     projectName: '',
     acronym: '',
+    status: 'DRAFT',
     requester: {
       name: '',
       component: ''

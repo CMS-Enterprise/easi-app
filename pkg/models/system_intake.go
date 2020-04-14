@@ -5,28 +5,43 @@ import (
 	"github.com/guregu/null"
 )
 
+// SystemIntakeStatus represents the status of a system intake
+type SystemIntakeStatus string
+
+const (
+	// SystemIntakeStatusDRAFT captures enum value "DRAFT"
+	SystemIntakeStatusDRAFT SystemIntakeStatus = "DRAFT"
+	// SystemIntakeStatusSUBMITTED captures enum value "SUBMITTED"
+	SystemIntakeStatusSUBMITTED SystemIntakeStatus = "SUBMITTED"
+	// SystemIntakeStatusREVIEWED captures enum value "REVIEWED"
+	SystemIntakeStatusREVIEWED SystemIntakeStatus = "REVIEWED"
+	// SystemIntakeStatusREJECTED captures enum value "REJECTED"
+	SystemIntakeStatusREJECTED SystemIntakeStatus = "REJECTED"
+)
+
 // SystemIntake is the model for the system intake form
 type SystemIntake struct {
-	ID                      uuid.UUID   `json:"id"`
-	EUAUserID               string      `json:"eua_user_id" db:"eua_user_id"`
-	Requester               null.String `json:"requester"`
-	Component               null.String `json:"component"`
-	BusinessOwner           null.String `json:"business_owner" db:"business_owner"`
-	BusinessOwnerComponent  null.String `json:"business_owner_component" db:"business_owner_component"`
-	ProductManager          null.String `json:"product_manager" db:"product_manager"`
-	ProductManagerComponent null.String `json:"product_manager_component" db:"product_manager_component"`
-	ISSO                    null.String `json:"isso"`
-	TRBCollaborator         null.String `json:"trb_collaborator" db:"trb_collaborator"`
-	OITSecurityCollaborator null.String `json:"oit_security_collaborator" db:"oit_security_collaborator"`
-	EACollaborator          null.String `json:"ea_collaborator" db:"ea_collaborator"`
-	ProjectName             null.String `json:"project_name" db:"project_name"`
-	ExistingFunding         null.Bool   `json:"existing_funding" db:"existing_funding"`
-	FundingSource           null.String `json:"funding_source" db:"funding_source"`
-	BusinessNeed            null.String `json:"business_need" db:"business_need"`
-	Solution                null.String `json:"solution"`
-	ProcessStatus           null.String `json:"process_status" db:"process_status"`
-	EASupportRequest        null.Bool   `json:"ea_support_request" db:"ea_support_request"`
-	ExistingContract        null.String `json:"existing_contract" db:"existing_contract"`
+	ID                      uuid.UUID          `json:"id"`
+	EUAUserID               string             `json:"euaUserId" db:"eua_user_id"`
+	Status                  SystemIntakeStatus `json:"status"`
+	Requester               null.String        `json:"requester"`
+	Component               null.String        `json:"component"`
+	BusinessOwner           null.String        `json:"businessOwner" db:"business_owner"`
+	BusinessOwnerComponent  null.String        `json:"businessOwnerComponent" db:"business_owner_component"`
+	ProductManager          null.String        `json:"productManager" db:"product_manager"`
+	ProductManagerComponent null.String        `json:"productManagerComponent" db:"product_manager_component"`
+	ISSO                    null.String        `json:"isso"`
+	TRBCollaborator         null.String        `json:"trbCollaborator" db:"trb_collaborator"`
+	OITSecurityCollaborator null.String        `json:"oitSecurityCollaborator" db:"oit_security_collaborator"`
+	EACollaborator          null.String        `json:"eaCollaborator" db:"ea_collaborator"`
+	ProjectName             null.String        `json:"projectName" db:"project_name"`
+	ExistingFunding         null.Bool          `json:"existingFunding" db:"existing_funding"`
+	FundingSource           null.String        `json:"fundingSource" db:"funding_source"`
+	BusinessNeed            null.String        `json:"businessNeed" db:"business_need"`
+	Solution                null.String        `json:"solution"`
+	ProcessStatus           null.String        `json:"processStatus" db:"process_status"`
+	EASupportRequest        null.Bool          `json:"eaSupportRequest" db:"ea_support_request"`
+	ExistingContract        null.String        `json:"existingContract" db:"existing_contract"`
 }
 
 // SystemIntakes is a list of System Intakes

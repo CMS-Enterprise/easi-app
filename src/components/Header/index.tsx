@@ -72,29 +72,25 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
           <span className="fa fa-bars" />
         </button>
         <div className="navbar--container">
-          {user && user.name && (
-            <button
-              className="easi-header__username"
-              type="button"
-              onClick={() => {
-                setDisplayDropdown(!displayDropdown);
-              }}
-            >
-              {user.name}
-            </button>
-          )}
           {isAuthenticated ? (
             <div className="easi-header__dropdown-wrapper" ref={dropdownNode}>
               <button
-                aria-label="Expand"
+                aria-label={
+                  displayDropdown ? 'Collapse User Menu' : 'Expand User Menu'
+                }
+                aria-expanded={displayDropdown}
+                aria-controls="Header-UserActionsList"
                 type="button"
-                className={arrowClassname}
+                className="easi-header__username"
                 onClick={() => {
                   setDisplayDropdown(!displayDropdown);
                 }}
-              />
+              >
+                {user && user.name ? user.name : ''}
+                <i className={arrowClassname} />
+              </button>
               {displayDropdown && (
-                <UserActionList>
+                <UserActionList id="Header-UserActionsList">
                   <UserAction link="/system/new">Add New System</UserAction>
                   <UserAction onClick={handleLogout}>Log Out</UserAction>
                 </UserActionList>
