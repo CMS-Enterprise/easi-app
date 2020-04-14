@@ -26,6 +26,10 @@ case "$APP_ENV" in
     export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_PROD"
     ;;
   *)
+    echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
+    echo "Allowed values: 'dev', 'impl', 'prod'"
+    exit 1
+    ;;
 esac
 
 export REACT_APP_OKTA_ISSUER="${REACT_APP_OKTA_DOMAIN}/oauth2/${REACT_APP_OKTA_SERVER_ID}"
