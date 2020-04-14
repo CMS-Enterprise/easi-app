@@ -14,26 +14,27 @@ export const prepareSystemIntakeForApi = (
 
   return {
     id,
+    status: systemIntake.status,
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,
-    business_owner: systemIntake.businessOwner.name,
-    business_owner_component: systemIntake.businessOwner.component,
-    product_manager: systemIntake.productManager.name,
-    product_manager_component: systemIntake.productManager.component,
+    businessOwner: systemIntake.businessOwner.name,
+    businessOwnerComponent: systemIntake.businessOwner.component,
+    productManager: systemIntake.productManager.name,
+    productManagerComponent: systemIntake.productManager.component,
     isso: systemIntake.isso.name,
-    trb_collaborator: getGovernanceCollaborator('Technical Review Board'),
-    oit_security_collaborator: getGovernanceCollaborator(
+    trbCollaborator: getGovernanceCollaborator('Technical Review Board'),
+    oitSecurityCollaborator: getGovernanceCollaborator(
       "OIT's Security and Privacy Group"
     ),
-    ea_collaborator: getGovernanceCollaborator('Enterprise Architecture'),
-    project_name: systemIntake.projectName,
-    existing_funding: systemIntake.fundingSource.isFunded,
-    funding_source: systemIntake.fundingSource.fundingNumber,
-    business_need: systemIntake.businessNeed,
+    eaCollaborator: getGovernanceCollaborator('Enterprise Architecture'),
+    projectName: systemIntake.projectName,
+    existingFunding: systemIntake.fundingSource.isFunded,
+    fundingSource: systemIntake.fundingSource.fundingNumber,
+    businessNeed: systemIntake.businessNeed,
     solution: systemIntake.businessSolution,
-    process_status: systemIntake.currentStage,
-    ea_support_request: systemIntake.needsEaSupport,
-    existing_contract: systemIntake.hasContract
+    processStatus: systemIntake.currentStage,
+    eaSupportRequest: systemIntake.needsEaSupport,
+    existingContract: systemIntake.hasContract
   };
 };
 

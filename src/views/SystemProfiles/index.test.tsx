@@ -1,9 +1,20 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import SystemProfiles from './index';
+import configureMockStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
+import { SystemProfiles } from './index';
 
-describe('The System Profiles list page', () => {
+describe('The System Profile view', () => {
   it('renders without crashing', () => {
-    shallow(<SystemProfiles />);
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      demoName: ''
+    });
+
+    shallow(
+      <Provider store={store}>
+        <SystemProfiles />
+      </Provider>
+    );
   });
 });
