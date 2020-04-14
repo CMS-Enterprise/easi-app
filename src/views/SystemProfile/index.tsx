@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { withAuth } from '@okta/okta-react';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
@@ -52,11 +51,9 @@ export type SystemProfileRouterProps = {
   profileId: string;
 };
 
-type SystemProfileProps = RouteComponentProps<SystemProfileRouterProps> & {
-  auth: any;
-};
+type SystemProfileProps = RouteComponentProps<SystemProfileRouterProps>;
 
-export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
+export const SystemProfile = ({ match }: SystemProfileProps) => {
   const onSearch = () => {};
   const getSuggestionValue = (suggestion: any): string => suggestion.name;
   const renderSuggestion = (suggestion: any): string => suggestion.name;
@@ -70,7 +67,7 @@ export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
       dispatch(getAllSystemShorts());
     };
     fetchSystemShorts();
-  }, [auth, dispatch]);
+  }, [dispatch]);
 
   return (
     <div className="system-profile">
@@ -140,4 +137,4 @@ export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
   );
 };
 
-export default withRouter(withAuth(SystemProfile));
+export default withRouter(SystemProfile);

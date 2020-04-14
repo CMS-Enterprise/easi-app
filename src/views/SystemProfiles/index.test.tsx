@@ -13,7 +13,7 @@ describe('The System Profile view', () => {
 
     shallow(
       <Provider store={store}>
-        <SystemProfiles auth={null} />
+        <SystemProfiles />
       </Provider>
     );
   });
