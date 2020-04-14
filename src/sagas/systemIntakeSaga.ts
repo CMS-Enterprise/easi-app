@@ -24,20 +24,12 @@ export function* saveSystemIntake(payload: SaveSystemIntakeAction) {
   }
 }
 
-function requestSystemIntake(accessToken: string, id: string) {
-  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  });
+function requestSystemIntake(id: string) {
+  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}`);
 }
 
 export function* fetchSystemIntake(action: any) {
-  const obj = yield call(
-    requestSystemIntake,
-    action.accessToken,
-    action.intakeID
-  );
+  const obj = yield call(requestSystemIntake, action.intakeID);
   yield put(putSystemIntake(obj.data));
 }
 
