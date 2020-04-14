@@ -10,8 +10,6 @@ function systemIntakeReducer(state = initialState, action: any): any {
         ...state,
         systemIntake: action.systemIntake
       };
-    case '':
-      return state;
     default:
       return state;
   }
