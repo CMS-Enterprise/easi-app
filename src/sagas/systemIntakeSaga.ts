@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { PUT_SYSTEM_INTAKE, GET_SYSTEM_INTAKE } from 'constants/systemIntake';
+import {
+  STORE_SYSTEM_INTAKE,
+  FETCH_SYSTEM_INTAKE
+} from 'constants/systemIntake';
 
 import { SaveSystemIntakeAction } from 'types/systemIntake';
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
@@ -39,6 +42,6 @@ export function* fetchSystemIntake(action: any) {
 }
 
 export function* systemIntakeSaga() {
-  yield takeLatest(GET_SYSTEM_INTAKE, fetchSystemIntake);
-  yield takeLatest(PUT_SYSTEM_INTAKE, saveSystemIntake);
+  yield takeLatest(FETCH_SYSTEM_INTAKE, fetchSystemIntake);
+  yield takeLatest(STORE_SYSTEM_INTAKE, saveSystemIntake);
 }

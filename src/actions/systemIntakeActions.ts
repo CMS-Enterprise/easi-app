@@ -1,6 +1,6 @@
 import {
-  PUT_SYSTEM_INTAKE,
-  GET_SYSTEM_INTAKE,
+  STORE_SYSTEM_INTAKE,
+  FETCH_SYSTEM_INTAKE,
   UPDATE_SYSTEM_INTAKE
 } from 'constants/systemIntake';
 import {
@@ -14,7 +14,7 @@ export function saveSystemIntake(
   formData: SystemIntakeForm
 ): SaveSystemIntakeAction {
   return {
-    type: PUT_SYSTEM_INTAKE,
+    type: STORE_SYSTEM_INTAKE,
     id,
     formData
   };
@@ -22,17 +22,14 @@ export function saveSystemIntake(
 
 type GetSystemIntakeAction = {
   type: string;
-  accessToken: string;
   intakeID: SystemIntakeID;
 };
 
 export function getSystemIntake(
-  accessToken: string,
   intakeID: SystemIntakeID
 ): GetSystemIntakeAction {
   return {
-    type: GET_SYSTEM_INTAKE,
-    accessToken,
+    type: FETCH_SYSTEM_INTAKE,
     intakeID
   };
 }
