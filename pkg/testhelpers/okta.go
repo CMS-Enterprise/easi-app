@@ -5,7 +5,6 @@ package testhelpers
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -125,9 +124,9 @@ func fetchOktaAccessToken(
 	}
 
 	// Request can return 200 even if session token unset.
-	if authn.SessionToken == "" {
-		fmt.Println("did not receive session token")
-		return "", errors.New("did not receive session token from OTP challenge response")
+	if authn.Status != "SUCCESS" {
+		fmt.Println("did not succeed MFA challenge")
+		return "", fmt.Errorf("bad status in response from MFA request: %s", authn.Status)
 	}
 
 	// Issue get request with session token to get id/access tokens
