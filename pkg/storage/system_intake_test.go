@@ -14,6 +14,7 @@ func NewSystemIntake() models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
 		EUAUserID:               "FAKE",
+		Status:                  models.SystemIntakeStatusDRAFT,
 		Requester:               null.StringFrom("Test Requester"),
 		Component:               null.StringFrom("Test Component"),
 		BusinessOwner:           null.StringFrom("Test Business Owner"),
@@ -52,6 +53,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 	s.Run("cannot save without EUA ID", func() {
 		id, _ := uuid.NewUUID()
 		partialIntake.ID = id
+		partialIntake.Status = models.SystemIntakeStatusDRAFT
 
 		err := s.store.SaveSystemIntake(&partialIntake)
 
@@ -76,8 +78,18 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 		})
 	}
 
-	s.Run("save a partial system intake", func() {
+	s.Run("cannot save with invalid status", func() {
 		partialIntake.EUAUserID = "FAKE"
+		partialIntake.Status = "fakeStatus"
+
+		err := s.store.SaveSystemIntake(&partialIntake)
+
+		s.Error(err)
+		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
+	})
+
+	s.Run("save a partial system intake", func() {
+		partialIntake.Status = models.SystemIntakeStatusDRAFT
 		partialIntake.Requester = null.StringFrom("Test Requester")
 
 		err := s.store.SaveSystemIntake(&partialIntake)
@@ -120,7 +132,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		intake := NewSystemIntake()
 		id := intake.ID
 		tx := s.db.MustBegin()
-		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &intake)
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
 		s.NoError(err)
 		err = tx.Commit()
 		s.NoError(err)
