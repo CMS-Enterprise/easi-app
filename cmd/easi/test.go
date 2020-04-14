@@ -14,6 +14,10 @@ var testCmd = &cobra.Command{
 	Short: "Test the EASi application",
 	Long:  `Test the EASi application`,
 	Run: func(cmd *cobra.Command, args []string) {
+		err := os.Setenv("APP_ENV", "test")
+		if err != nil {
+			fmt.Printf("Failed to set APP_ENV: %v", err)
+		}
 		if all {
 			test.All()
 		} else if serverTest {
@@ -28,10 +32,6 @@ var all bool
 var serverTest bool
 
 func init() {
-	err := os.Setenv("APP_ENV", "test")
-	if err != nil {
-		fmt.Printf("Failed to set APP_ENV: %v", err)
-	}
 	testCmd.Flags().BoolVarP(&all, "all", "a", false, "Run all tests")
 	testCmd.Flags().BoolVarP(&serverTest, "server", "s", false, "Run server tests")
 }
