@@ -5,6 +5,7 @@ package testhelpers
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -121,6 +122,11 @@ func fetchOktaAccessToken(
 	if err != nil {
 		fmt.Println("could not marshall mfa response")
 		return "", err
+	}
+
+	if authn.SessionToken == "" {
+		fmt.Println("did not receive session token")
+		return "", errors.New("did not receive session token from OTP challenge response")
 	}
 
 	// Issue get request with session token to get id/access tokens
