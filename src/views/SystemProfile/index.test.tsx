@@ -29,8 +29,6 @@ describe('The System Profile view', () => {
           match={mockMatch}
           history={mockHistory}
           location={mockLocation}
-          auth={null}
-          searchResults={[]}
         />
       </Provider>
     );
