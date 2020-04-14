@@ -109,14 +109,6 @@ jobs:
         environment:
           AWS_DEFAULT_REGION: us-west-2
           APP_ENV: dev
-          OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
-          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
-          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
-          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
-          OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_REDIRECT_URI: https://dev.easi.cms.gov/implicit/callback
-          REACT_APP_API_ADDRESS: https://dev.easi.cms.gov/api/v1
     steps:
       - checkout
       - run:
@@ -143,7 +135,7 @@ jobs:
       - run:
           name: Build static assets and release to S3
           command: |
-            ./scripts/release_static $STATIC_S3_BUCKET_DEV
+            ./scripts/release_static
 
   deploy_impl:
     docker:
@@ -151,14 +143,6 @@ jobs:
         environment:
           AWS_DEFAULT_REGION: us-west-2
           APP_ENV: impl
-          OKTA_CLIENT_ID: 0oa2sjdaxkwy3TrW1297
-          REACT_APP_OKTA_CLIENT_ID: 0oa2sjdaxkwy3TrW1297
-          REACT_APP_OKTA_DOMAIN: https://impl.idp.idm.cms.gov
-          REACT_APP_OKTA_SERVER_ID: aus2sjf5g6mzGsnSZ297
-          REACT_APP_OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/aus2sjf5g6mzGsnSZ297
-          OKTA_ISSUER: https://impl.idp.idm.cms.gov/oauth2/aus2sjf5g6mzGsnSZ297
-          REACT_APP_OKTA_REDIRECT_URI: https://impl.easi.cms.gov/implicit/callback
-          REACT_APP_API_ADDRESS: https://impl.easi.cms.gov/api/v1
     steps:
       - checkout
       - run:
@@ -181,7 +165,7 @@ jobs:
       - run:
           name: Build static assets and release to S3
           command: |
-            ./scripts/release_static "$STATIC_S3_BUCKET_IMPL"
+            ./scripts/release_static
 
 workflows:
   version: 2
