@@ -1,7 +1,40 @@
 #!/usr/bin/env bash
 #
 
-STATIC_S3_BUCKET=$1
+set -eu -o pipefail
+
+case "$APP_ENV" in
+  "dev")
+    STATIC_S3_BUCKET="$STATIC_S3_BUCKET_DEV"
+    EASI_URL="https://dev.easi.cms.gov"
+    export REACT_APP_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
+    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_DEV"
+    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV"
+    ;;
+  "impl")
+    STATIC_S3_BUCKET="$STATIC_S3_BUCKET_IMPL"
+    EASI_URL="https://impl.easi.cms.gov"
+    export REACT_APP_OKTA_DOMAIN="https://impl.idp.idm.cms.gov"
+    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_IMPL"
+    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_IMPL"
+    ;;
+  "prod")
+    STATIC_S3_BUCKET="$STATIC_S3_BUCKET_PROD"
+    EASI_URL="https://easi.cms.gov"
+    export REACT_APP_OKTA_DOMAIN="https://idm.cms.gov"
+    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_PROD"
+    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_PROD"
+    ;;
+  *)
+    echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
+    echo "Allowed values: 'dev', 'impl', 'prod'"
+    exit 1
+    ;;
+esac
+
+export REACT_APP_OKTA_ISSUER="${REACT_APP_OKTA_DOMAIN}/oauth2/${REACT_APP_OKTA_SERVER_ID}"
+export REACT_APP_OKTA_REDIRECT_URI="${EASI_URL}/implicit/callback"
+export REACT_APP_API_ADDRESS="${EASI_URL}/api/v1"
 
 # Check if we have any access to the s3 bucket
 # Since `s3 ls` returns zero even if the command failed, we assume failure if this command prints anything to stderr
