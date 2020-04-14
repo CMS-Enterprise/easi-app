@@ -3,11 +3,7 @@ import {
   RETRIEVE_SYSTEM_INTAKE,
   UPDATE_SYSTEM_INTAKE
 } from 'constants/systemIntake';
-import {
-  SystemIntakeForm,
-  SaveSystemIntakeAction,
-  SystemIntakeID
-} from 'types/systemIntake';
+import { SystemIntakeForm, SaveSystemIntakeAction } from 'types/systemIntake';
 
 export function saveSystemIntake(
   id: string,
@@ -22,12 +18,10 @@ export function saveSystemIntake(
 
 type GetSystemIntakeAction = {
   type: string;
-  intakeID: SystemIntakeID;
+  intakeID: string;
 };
 
-export function getSystemIntake(
-  intakeID: SystemIntakeID
-): GetSystemIntakeAction {
+export function getSystemIntake(intakeID: string): GetSystemIntakeAction {
   return {
     type: RETRIEVE_SYSTEM_INTAKE,
     intakeID
