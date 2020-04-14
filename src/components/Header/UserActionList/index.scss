@@ -24,8 +24,11 @@
 
     &:hover {
       background-color: #005ea2;
-      color: #fff;
-      cursor: pointer;
+
+      button {
+        color: #fff;
+        cursor: pointer;
+      }
     }
   }
 }
