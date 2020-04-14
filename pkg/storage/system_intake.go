@@ -15,6 +15,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 		INSERT INTO system_intake (
 			id,
 			eua_user_id,
+		    status,
 			requester,
 			component,
 			business_owner,
@@ -37,6 +38,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 		VALUES (
 			:id,
 			:eua_user_id,
+		    :status,
 			:requester,
 			:component,
 			:business_owner,
@@ -57,6 +59,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			:existing_contract
 		)
 		ON CONFLICT (id) DO UPDATE SET
+		    status=:status,
 			requester=:requester,
 			component=:component,
 			business_owner=:business_owner,
