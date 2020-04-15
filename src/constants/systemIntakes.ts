@@ -1,2 +1,0 @@
-export const FETCH_SYSTEM_INTAKES: string = 'FETCH_SYSTEM_INTAKES';
-export const STORE_SYSTEM_INTAKES: string = 'STORE_SYSTEM_INTAKES';

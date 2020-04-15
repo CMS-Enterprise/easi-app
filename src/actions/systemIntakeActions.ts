@@ -1,16 +1,16 @@
 import {
-  STORE_SYSTEM_INTAKE,
-  RETRIEVE_SYSTEM_INTAKE,
-  UPDATE_SYSTEM_INTAKE
-} from 'constants/systemIntake';
-import { SystemIntakeForm, SaveSystemIntakeAction } from 'types/systemIntake';
+  PUT_SYSTEM_INTAKE,
+  GET_SYSTEM_INTAKE,
+  STORE_SYSTEM_INTAKE
+} from 'constants/actions';
+import { SystemIntakeForm, PutSystemIntakeAction } from 'types/systemIntake';
 
 export function saveSystemIntake(
   id: string,
   formData: SystemIntakeForm
-): SaveSystemIntakeAction {
+): PutSystemIntakeAction {
   return {
-    type: STORE_SYSTEM_INTAKE,
+    type: PUT_SYSTEM_INTAKE,
     id,
     formData
   };
@@ -23,21 +23,21 @@ type GetSystemIntakeAction = {
 
 export function getSystemIntake(intakeID: string): GetSystemIntakeAction {
   return {
-    type: RETRIEVE_SYSTEM_INTAKE,
+    type: GET_SYSTEM_INTAKE,
     intakeID
   };
 }
 
-type PutSystemIntakeAction = {
+type StoreSystemIntakeAction = {
   type: string;
   systemIntake: SystemIntakeForm;
 };
 
-export function putSystemIntake(
+export function storeSystemIntake(
   systemIntake: SystemIntakeForm
-): PutSystemIntakeAction {
+): StoreSystemIntakeAction {
   return {
-    type: UPDATE_SYSTEM_INTAKE,
+    type: STORE_SYSTEM_INTAKE,
     systemIntake
   };
 }

@@ -7,11 +7,11 @@ function requestSystemShorts() {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/systems`);
 }
 
-export function* fetchAllSystemShorts() {
+export function* getAllSystemShorts() {
   const obj = yield call(requestSystemShorts);
   yield put(storeSystemShorts(obj.data));
 }
 
 export function* searchSaga() {
-  yield takeLatest(GET_ALL_SYSTEM_SHORTS, fetchAllSystemShorts);
+  yield takeLatest(GET_ALL_SYSTEM_SHORTS, getAllSystemShorts);
 }
