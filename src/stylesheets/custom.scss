@@ -35,8 +35,9 @@
   }
 }
 
-// USWDS font-heading class names are set to Merriweather Web
 // The default font for this project should be Public Sans
-[class*='font-heading-'] {
+[class*='font-heading-'],
+.usa-accordion,
+.usa-header {
   font-family: 'Public Sans';
 }
