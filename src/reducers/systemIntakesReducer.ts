@@ -1,4 +1,4 @@
-import { STORE_SYSTEM_INTAKES } from '../constants/systemIntakes';
+import { STORE_SYSTEM_INTAKES } from '../constants/actions';
 import { SystemIntakesState } from '../types/systemIntake';
 
 const initialState: SystemIntakesState = {
