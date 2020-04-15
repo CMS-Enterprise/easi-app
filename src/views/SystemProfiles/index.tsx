@@ -56,7 +56,6 @@ export const SystemProfiles = () => {
   const intakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
-  console.log(intakes);
   const searchResults = useSelector(
     (state: AppState) => state.search.allSystemShorts
   );
