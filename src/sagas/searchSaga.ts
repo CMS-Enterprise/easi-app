@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { GET_ALL_SYSTEM_SHORTS } from '../constants/system';
-import { putSystemShorts } from '../actions/searchActions';
+import { GET_ALL_SYSTEM_SHORTS } from '../constants/actions';
+import { storeSystemShorts } from '../actions/searchActions';
 
 function requestSystemShorts() {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/systems`);
@@ -9,7 +9,7 @@ function requestSystemShorts() {
 
 export function* fetchAllSystemShorts() {
   const obj = yield call(requestSystemShorts);
-  yield put(putSystemShorts(obj.data));
+  yield put(storeSystemShorts(obj.data));
 }
 
 export function* searchSaga() {
