@@ -4,7 +4,6 @@ import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import Home from 'views/Home';
 import Login from 'views/Login';
-import SuperSecret from 'views/SuperSecret';
 import BusinessCase from 'views/BusinessCase';
 import SystemProfile from 'views/SystemProfile';
 import SystemProfiles from 'views/SystemProfiles';
@@ -29,7 +28,6 @@ class App extends React.Component<MainProps, MainState> {
               <Route path="/" exact component={Home} />
               <Route path="/login" exact component={Login} />
               <Route path="/sandbox" exact component={Sandbox} />
-              <SecureRoute path="/protected" exact component={SuperSecret} />
               <SecureRoute
                 path="/system/all"
                 exact
