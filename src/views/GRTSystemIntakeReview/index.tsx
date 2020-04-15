@@ -52,6 +52,16 @@ export const GRTSystemIntakeReview = ({
     }
     return hasIsso;
   };
+  const anyCollaborators = () => {
+    if (
+      systemIntake.trbCollaborator ||
+      systemIntake.oitSecurityCollaborator ||
+      systemIntake.eaCollaborator
+    ) {
+      return true;
+    }
+    return false;
+  };
 
   return (
     <div className="system-intake__review margin-bottom-7">
@@ -133,26 +143,26 @@ export const GRTSystemIntakeReview = ({
                 </div>
                 <div>
                   <DescriptionTerm term="Currently collaborating with" />
-                  {systemIntake.governanceTeams ? (
-                    systemIntake.governanceTeams.teams.map(
-                      (team: {
-                        name: {
-                          split: (
-                            arg0: string
-                          ) => { join: (arg0: string) => void };
-                        };
-                        collaborator: any;
-                      }) => (
-                        <DescriptionDefinition
-                          key={`GovernanceTeam-${team.name
-                            .split(' ')
-                            .join('-')}`}
-                          definition={`${team.name}, ${team.collaborator}`}
-                        />
-                      )
-                    )
-                  ) : (
+                  {!anyCollaborators && (
                     <DescriptionDefinition definition="N/A" />
+                  )}
+                  {!!systemIntake.trbCollaborator && (
+                    <DescriptionDefinition
+                      key="GovernanceTeam-TRB-Collaborator"
+                      definition={`Technical Review Board, ${systemIntake.trbCollaborator}`}
+                    />
+                  )}
+                  {!!systemIntake.oitSecurityCollaborator && (
+                    <DescriptionDefinition
+                      key="GovernanceTeam-OIT-Collaborator"
+                      definition={`OIT's Security and Privacy Group, ${systemIntake.oitSecurityCollaborator}`}
+                    />
+                  )}
+                  {!!systemIntake.eaCollaborator && (
+                    <DescriptionDefinition
+                      key="GovernanceTeam-EA-Collaborator"
+                      definition={`Enterprise Architecture, ${systemIntake.eaCollaborator}`}
+                    />
                   )}
                 </div>
               </div>
