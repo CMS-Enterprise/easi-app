@@ -14,7 +14,7 @@ import { getSystemIntake } from '../../actions/systemIntakeActions';
 import { AppState } from '../../reducers/rootReducer';
 
 export type SystemIDRouterProps = {
-  systemID: string;
+  systemId: string;
 };
 
 export type GRTSystemIntakeReviewProps = RouteComponentProps<
@@ -31,10 +31,10 @@ export const GRTSystemIntakeReview = ({
 
   useEffect(() => {
     const fetchSystemIntake = async (): Promise<void> => {
-      dispatch(getSystemIntake(await match.params.systemID));
+      dispatch(getSystemIntake(await match.params.systemId));
     };
     fetchSystemIntake();
-  }, [auth, dispatch, match.params.systemID]);
+  }, [auth, dispatch, match.params.systemId]);
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
@@ -70,7 +70,7 @@ export const GRTSystemIntakeReview = ({
         <h1 className="font-heading-xl margin-top-4">CMS Sytem Request</h1>
         {!systemIntake && (
           <h2 className="font-heading-xl">
-            System intake with ID: {match.params.systemID} was not found
+            System intake with ID: {match.params.systemId} was not found
           </h2>
         )}
         {systemIntake && (

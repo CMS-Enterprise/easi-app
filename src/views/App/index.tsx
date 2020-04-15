@@ -36,12 +36,12 @@ class App extends React.Component<MainProps, MainState> {
               />
               <SecureRoute path="/system/new" component={SystemIntake} />
               <SecureRoute
-                path="/system/:profileId"
-                component={SystemProfile}
+                path="/system/:systemId/grt-review"
+                component={GRTSystemIntakeReview}
               />
               <SecureRoute
-                path="/new-system/review/:systemID"
-                component={GRTSystemIntakeReview}
+                path="/system/:profileId"
+                component={SystemProfile}
               />
               <SecureRoute path="/business/new" component={BusinessCase} />
               <Route path="/implicit/callback" component={ImplicitCallback} />
