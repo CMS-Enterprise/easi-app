@@ -34,3 +34,9 @@
     width: 830px;
   }
 }
+
+// USWDS font-heading class names are set to Merriweather Web
+// The default font for this project should be Public Sans
+[class*='font-heading-'] {
+  font-family: 'Public Sans';
+}
