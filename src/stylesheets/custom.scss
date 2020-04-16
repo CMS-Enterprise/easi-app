@@ -34,3 +34,10 @@
     width: 830px;
   }
 }
+
+// The default font for this project should be Public Sans
+[class*='font-heading-'],
+.usa-accordion,
+.usa-header {
+  font-family: 'Public Sans';
+}
