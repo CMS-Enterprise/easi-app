@@ -31,7 +31,7 @@ function systemIntakeReducer(state = initialState, action: any): any {
       name: ''
     },
     governanceTeams: {
-      isPresent: null,
+      isPresent: false,
       teams: []
     },
     fundingSource: {
@@ -80,7 +80,7 @@ function systemIntakeReducer(state = initialState, action: any): any {
         name: action.systemIntake.isso || ''
       },
       governanceTeams: {
-        isPresent: governanceTeams().length === 0,
+        isPresent: governanceTeams().length !== 0,
         teams: governanceTeams() || []
       },
       fundingSource: {
