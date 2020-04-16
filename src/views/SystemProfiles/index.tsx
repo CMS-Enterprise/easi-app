@@ -7,7 +7,7 @@ import { AppState } from 'reducers/rootReducer';
 import UpcomingActions from 'components/shared/UpcomingActions';
 import ActionBanner from 'components/shared/ActionBanner';
 import { getAllSystemShorts } from 'actions/searchActions';
-import { fetchSystemIntakes } from 'actions/systemIntakesActions';
+import { getSystemIntakes } from 'actions/systemIntakesActions';
 import { DateTime } from 'luxon';
 
 const mockSystems: any[] = [
@@ -56,7 +56,6 @@ export const SystemProfiles = () => {
   const intakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
-  console.log(intakes);
   const searchResults = useSelector(
     (state: AppState) => state.search.allSystemShorts
   );
@@ -64,13 +63,13 @@ export const SystemProfiles = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    const getSystemIntakes = async (): Promise<void> => {
-      dispatch(fetchSystemIntakes());
+    const getSystemIntakesEffect = async (): Promise<void> => {
+      dispatch(getSystemIntakes());
       await setTimeStamp(
         DateTime.local().toLocaleString(DateTime.DATETIME_MED)
       );
     };
-    getSystemIntakes();
+    getSystemIntakesEffect();
   }, [dispatch]);
 
   useEffect(() => {

@@ -1,25 +1,36 @@
 import axios from 'axios';
-import { takeLatest, call } from 'redux-saga/effects';
-import { PUT_SYSTEM_INTAKE } from 'constants/systemIntake';
+import { takeLatest, call, put } from 'redux-saga/effects';
+import { PUT_SYSTEM_INTAKE, GET_SYSTEM_INTAKE } from 'constants/actions';
 
-import { SaveSystemIntakeAction } from 'types/systemIntake';
+import { PutSystemIntakeAction } from 'types/systemIntake';
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
+import { storeSystemIntake } from '../actions/systemIntakeActions';
 
-function saveSystemIntakeRequest({ id, formData }: SaveSystemIntakeAction) {
+function putSystemIntakeRequest({ id, formData }: PutSystemIntakeAction) {
   // Make API save request
   const data = prepareSystemIntakeForApi(id, formData);
   return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }
 
-export function* saveSystemIntake(payload: SaveSystemIntakeAction) {
+export function* putSystemIntake(payload: PutSystemIntakeAction) {
   try {
-    const response = yield call(saveSystemIntakeRequest, payload);
+    const response = yield call(putSystemIntakeRequest, payload);
     console.log('Response', response);
   } catch (err) {
     console.log(err);
   }
 }
 
+function getSystemIntake(id: string) {
+  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}`);
+}
+
+export function* getAndStoreSystemIntake(action: any) {
+  const obj = yield call(getSystemIntake, action.intakeID);
+  yield put(storeSystemIntake(obj.data));
+}
+
 export function* systemIntakeSaga() {
-  yield takeLatest(PUT_SYSTEM_INTAKE, saveSystemIntake);
+  yield takeLatest(GET_SYSTEM_INTAKE, getAndStoreSystemIntake);
+  yield takeLatest(PUT_SYSTEM_INTAKE, putSystemIntake);
 }
