@@ -56,7 +56,6 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     id: '',
     euaUserID: '',
     projectName: '',
-    acronym: '',
     status: 'DRAFT',
     requester: {
       name: '',
