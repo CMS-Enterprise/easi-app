@@ -16,12 +16,14 @@ import (
 
 type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
 type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
+type submitSystemIntake func(intake *models.SystemIntake, logger *zap.Logger) (string, error)
 
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
 	Logger                *zap.Logger
 	SaveSystemIntake      saveSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
+	SubmitSystemIntake    submitSystemIntake
 }
 
 // Handle handles a request for the system intake form
