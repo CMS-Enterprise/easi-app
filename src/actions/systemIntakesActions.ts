@@ -1,16 +1,13 @@
+import { GET_SYSTEM_INTAKES, STORE_SYSTEM_INTAKES } from 'constants/actions';
 import {
-  FETCH_SYSTEM_INTAKES,
-  STORE_SYSTEM_INTAKES
-} from 'constants/systemIntakes';
-import {
-  FetchSystemIntakesAction,
+  GetSystemIntakesAction,
   StoreSystemIntakesAction,
   SystemIntakeForm
 } from 'types/systemIntake';
 
-export function fetchSystemIntakes(): FetchSystemIntakesAction {
+export function getSystemIntakes(): GetSystemIntakesAction {
   return {
-    type: FETCH_SYSTEM_INTAKES
+    type: GET_SYSTEM_INTAKES
   };
 }
 
