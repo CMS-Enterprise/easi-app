@@ -6,6 +6,7 @@ import {
   DescriptionTerm,
   DescriptionDefinition
 } from 'components/shared/DescriptionGroup';
+import ScrollableTabs from 'components/shared/ScrollableTabs';
 import { BusinessCaseModel } from 'types/businessCase';
 
 type ReviewProps = {
@@ -75,6 +76,20 @@ const Review = ({ formikProps }: ReviewProps) => {
           </div>
         </ReviewRow>
       </DescriptionList>
+
+      <h2 className="font-heading-xl margin-top-6">Alternatives Analysis</h2>
+      <div className="bg-base-lightest">
+        <ScrollableTabs
+          tabs={[
+            'As-Is Solution',
+            'Preferred Solution',
+            'Alternative A',
+            'Alternative B'
+          ]}
+        >
+          <div />
+        </ScrollableTabs>
+      </div>
     </div>
   );
 };
