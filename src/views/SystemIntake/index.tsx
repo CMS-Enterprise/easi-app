@@ -99,6 +99,12 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     return null;
   };
 
+  const autosave = () => {
+    if (id) {
+      dispatch(saveSystemIntake(id, formikRef.current.values));
+    }
+  };
+
   return (
     <div className="system-intake">
       <Header activeNavListItem={match.params.profileId} name="INTAKE">
@@ -211,17 +217,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       Send to GRT
                     </Button>
                   )}
-                  <AutoSave
-                    values={values}
-                    onSave={() => {
-                      // TODO WHY IS ID ALWAYS UNSET HERE? SCOPING ISSUE?
-                      if (id) {
-                        dispatch(
-                          saveSystemIntake(id, formikRef.current.values)
-                        );
-                      }
-                    }}
-                  />
+                  <AutoSave values={values} onSave={autosave} />
                 </Form>
               </>
             );
