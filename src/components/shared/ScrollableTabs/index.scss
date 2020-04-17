@@ -1,0 +1,55 @@
+.easi-scrollable-tabs {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  &__tab-list {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+  }
+
+  &__tab {
+    display: inline-flex;
+    height: 64px;
+    flex-shrink: 0;
+    align-items: center;
+
+    &--selected {
+      background-color: #fff;
+
+      .easi-scrollable-tabs__tab-btn {
+        font-weight: bold;
+        //   border-bottom: 4px solid #009bc3;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &__tab + &__tab {
+    .easi-scrollable-tabs__tab-text {
+      border-left: 2px solid #c7c7c7;
+    }
+  }
+
+  &__tab--selected + &__tab,
+  &__tab + &__tab--selected {
+    .easi-scrollable-tabs__tab-text {
+      border-left: 0;
+    }
+  }
+
+  &__tab-btn {
+    height: 100%;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: 22px;
+  }
+
+  &__tab-text {
+    padding: 3px 24px;
+  }
+}
