@@ -9,10 +9,12 @@ type ReviewProps = {
 
 const Review = ({ formikProps }: ReviewProps) => {
   const { values } = formikProps;
-  const heading = 'Check your answers before sending';
   return (
-    <div>
-      <SystemIntakeReview heading={heading} systemIntake={values} />
+    <div className="system-intake__review margin-bottom-7">
+      <h1 className="font-heading-xl margin-top-4">
+        Check your answers before sending
+      </h1>
+      <SystemIntakeReview systemIntake={values} />
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">What happens next?</h2>
       <p>
