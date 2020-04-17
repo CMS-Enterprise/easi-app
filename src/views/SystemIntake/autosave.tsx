@@ -1,13 +1,5 @@
-import _ from 'lodash';
-import { useEffect, useRef } from 'react';
-
-export function usePrevious<T>(value: T) {
-  const ref = useRef<T>();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current as T;
-}
+import debounce from 'lodash/debounce';
+import { useEffect, useCallback } from 'react';
 
 type AutosaveProps = {
   values: any;
@@ -15,12 +7,11 @@ type AutosaveProps = {
 };
 
 const Autosave = ({ values, onSave }: AutosaveProps) => {
-  // const previousValues = usePrevious(values);
-  const debounceSave = useRef(_.debounce(onSave, 3000)).current;
+  const debounceSave = useCallback(debounce(onSave, 3000), [onSave]);
 
   useEffect(() => {
     debounceSave();
-  }, [values]);
+  }, [values, onSave]);
 
   return null;
 };
