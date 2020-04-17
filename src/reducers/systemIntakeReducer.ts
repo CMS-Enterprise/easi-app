@@ -48,9 +48,9 @@ function systemIntakeReducer(state = initialState, action: any): any {
     const governanceTeams = () => {
       const teams: GovernanceCollaborationTeam[] = [];
       cmsGovernanceTeams.forEach(team => {
-        if (action.systemIntake[team.apiKey]) {
+        if (action.systemIntake[team.collaboratorKey]) {
           teams.push({
-            collaborator: action.systemIntake[team.apiKey],
+            collaborator: action.systemIntake[team.collaboratorKey],
             name: team.value
           });
         }

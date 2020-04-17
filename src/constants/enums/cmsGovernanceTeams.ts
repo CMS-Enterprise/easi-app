@@ -3,19 +3,19 @@ const cmsGovernanceTeams = [
     key: 'technicalReviewBoard',
     label: 'Technical Review Board (TRB)',
     value: 'Technical Review Board',
-    apiKey: 'trbCollaborator'
+    collaboratorKey: 'trbCollaborator'
   },
   {
     key: 'securityPrivacy',
     label: "OIT's Security and Privacy Group",
     value: "OIT's Security and Privacy Group",
-    apiKey: 'oitSecurityCollaborator'
+    collaboratorKey: 'oitSecurityCollaborator'
   },
   {
     key: 'enterpriseArchitecture',
     label: 'Enterprise Architecture (EA)',
     value: 'Enterprise Architecture',
-    apiKey: 'eaCollaborator'
+    collaboratorKey: 'eaCollaborator'
   }
 ];
 
