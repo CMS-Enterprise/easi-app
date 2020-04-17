@@ -11,6 +11,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
+import AutoSave from 'views/SystemIntake/autosave';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -210,6 +211,17 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       Send to GRT
                     </Button>
                   )}
+                  <AutoSave
+                    values={values}
+                    onSave={() => {
+                      // TODO WHY IS ID ALWAYS UNSET HERE? SCOPING ISSUE?
+                      if (id) {
+                        dispatch(
+                          saveSystemIntake(id, formikRef.current.values)
+                        );
+                      }
+                    }}
+                  />
                 </Form>
               </>
             );
