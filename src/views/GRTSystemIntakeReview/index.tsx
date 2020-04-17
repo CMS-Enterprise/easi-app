@@ -26,17 +26,18 @@ export const GRTSystemIntakeReview = ({
     };
     fetchSystemIntake();
   }, [dispatch, match.params.systemId]);
-  const heading = 'CMS Sytem Request';
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
   return (
-    <div>
-      <SystemIntakeReview
-        heading={heading}
-        systemIntake={systemIntake}
-        id={match.params.systemId}
-      />
+    <div className="system-intake__review margin-bottom-7">
+      <h1 className="font-heading-xl margin-top-4">CMS System Request</h1>
+      {!systemIntake && (
+        <h2 className="font-heading-xl">
+          System intake with ID: {match.params.systemId} was not found
+        </h2>
+      )}
+      {systemIntake && <SystemIntakeReview systemIntake={systemIntake} />}
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">What to do after reviewing?</h2>
       <p>Email the requester and:</p>
