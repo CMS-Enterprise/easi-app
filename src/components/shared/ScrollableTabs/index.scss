@@ -1,25 +1,35 @@
 .easi-scrollable-tabs {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
+
+  &__tabs-wrapper {
+    position: relative;
+  }
+
   &__tab-list {
     display: inline-block;
     padding: 0;
     margin: 0;
     list-style-type: none;
+    white-space: nowrap;
   }
 
   &__tab {
     display: inline-flex;
-    height: 64px;
-    flex-shrink: 0;
     align-items: center;
+    height: 54px;
+    padding: 5px 0;
+    flex-shrink: 0;
 
     &--selected {
       background-color: #fff;
 
       .easi-scrollable-tabs__tab-btn {
         font-weight: bold;
-        //   border-bottom: 4px solid #009bc3;
+      }
+
+      .easi-scrollable-tabs__tab-text {
+        border-bottom: 4px solid #009bc3;
       }
     }
 
@@ -29,20 +39,20 @@
   }
 
   &__tab + &__tab {
-    .easi-scrollable-tabs__tab-text {
+    .easi-scrollable-tabs__tab-btn {
       border-left: 2px solid #c7c7c7;
     }
   }
 
   &__tab--selected + &__tab,
   &__tab + &__tab--selected {
-    .easi-scrollable-tabs__tab-text {
+    .easi-scrollable-tabs__tab-btn {
       border-left: 0;
     }
   }
 
   &__tab-btn {
-    height: 100%;
+    height: 30px;
     padding: 0;
     background: none;
     border: 0;
@@ -50,6 +60,36 @@
   }
 
   &__tab-text {
-    padding: 3px 24px;
+    margin: 0 24px;
+    padding: 5px 0;
+  }
+
+  &__more-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-bottom: 0;
+    background-color: transparent;
+    border: 0;
+    font-size: 14px;
+    font-weight: bold;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &__angle-right {
+    margin-top: -0.125em;
+    margin-right: 10px;
+    font-size: 40px !important;
+    vertical-align: middle;
+  }
+
+  &__more-menu {
+    position: absolute;
+    right: 0;
+    list-style-type: none;
   }
 }
