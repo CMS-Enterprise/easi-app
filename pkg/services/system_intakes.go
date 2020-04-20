@@ -60,13 +60,13 @@ func NewSaveSystemIntake(
 	logger *zap.Logger,
 ) func(context context.Context, intake *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
-		existingIntake, err := fetch(intake.ID)
+		existingIntake, fetchErr := fetch(intake.ID)
 		// TODO: Replace with a method that intentionally decides no result
-		if err != nil && err.Error() == "sql: no rows in result set" {
+		if fetchErr != nil && fetchErr.Error() == "sql: no rows in result set" {
 			existingIntake = nil
-		} else if err != nil {
+		} else if fetchErr != nil {
 			return &apperrors.QueryError{
-				Err:       err,
+				Err:       fetchErr,
 				Operation: apperrors.QueryFetch,
 				Model:     "SystemIntake",
 			}
