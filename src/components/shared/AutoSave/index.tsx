@@ -7,7 +7,7 @@ type AutoSaveProps = {
 };
 
 const AutoSave = ({ values, onSave }: AutoSaveProps) => {
-  const debounceSave = useCallback(debounce(onSave, 3000), [onSave]);
+  const debounceSave = useCallback(debounce(onSave, 1000), [onSave]);
   const initialValues = useRef(values);
 
   useEffect(() => {
