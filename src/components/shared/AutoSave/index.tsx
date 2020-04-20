@@ -1,12 +1,12 @@
 import debounce from 'lodash/debounce';
 import { useEffect, useCallback } from 'react';
 
-type AutosaveProps = {
+type AutoSaveProps = {
   values: any;
   onSave: () => void;
 };
 
-const Autosave = ({ values, onSave }: AutosaveProps) => {
+const AutoSave = ({ values, onSave }: AutoSaveProps) => {
   const debounceSave = useCallback(debounce(onSave, 3000), [onSave]);
 
   useEffect(() => {
@@ -16,4 +16,4 @@ const Autosave = ({ values, onSave }: AutosaveProps) => {
   return null;
 };
 
-export default Autosave;
+export default AutoSave;
