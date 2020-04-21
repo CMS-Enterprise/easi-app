@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -93,6 +94,19 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 			intake.EUAUserID = euaID
+			updatedTime := time.Now().UTC()
+			intake.UpdatedAt = &updatedTime
+
+			// If status is submitted, the user is trying to submit the system intake to CEDAR
+			if intake.Status == models.SystemIntakeStatusSUBMITTED {
+				_, err = h.SubmitSystemIntake(&intake, logger)
+				if err != nil {
+					logger.Error(fmt.Sprintf("Failed to submit system intake: %v", err))
+					http.Error(w, "Failed to save system intake", http.StatusInternalServerError)
+					return
+				}
+				return
+			}
 			err = h.SaveSystemIntake(r.Context(), &intake)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to save system intake: %v", err))

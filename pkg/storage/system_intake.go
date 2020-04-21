@@ -33,7 +33,8 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			solution,
 			process_status,
 			ea_support_request,
-			existing_contract
+			existing_contract,
+			updated_at
 		) 
 		VALUES (
 			:id,
@@ -56,7 +57,8 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			:solution,
 			:process_status,
 			:ea_support_request,
-			:existing_contract
+			:existing_contract,
+		    :updated_at
 		)
 		ON CONFLICT (id) DO UPDATE SET
 		    status=:status,
@@ -77,7 +79,8 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			solution=:solution,
 			process_status=:process_status,
 			ea_support_request=:ea_support_request,
-			existing_contract=:existing_contract
+			existing_contract=:existing_contract,
+			updated_at=:updated_at
 	`
 	_, err := s.DB.NamedExec(
 		SystemIntakeInsertSQL,

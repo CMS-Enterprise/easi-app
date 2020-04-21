@@ -36,6 +36,8 @@ jobs:
           POSTGRES_PASSWORD: easirox
           POSTGRES_USER: postgres
           POSTGRES_HOST_AUTH_METHOD: trust
+          TZ: UTC
+          PGTZ: UTC
       - image: *db_migrate
         environment:
           FLYWAY_USER: postgres
