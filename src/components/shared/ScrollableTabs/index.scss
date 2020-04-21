@@ -2,6 +2,11 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
 
+  &__navigation {
+    display: flex;
+    justify-content: space-between;
+  }
+
   &__tabs-wrapper {
     position: relative;
   }
@@ -18,7 +23,6 @@
     display: inline-flex;
     align-items: center;
     height: 54px;
-    padding: 5px 0;
     flex-shrink: 0;
 
     &--selected {
@@ -39,20 +43,20 @@
   }
 
   &__tab + &__tab {
-    .easi-scrollable-tabs__tab-btn {
+    .easi-scrollable-tabs__tab-divider {
       border-left: 2px solid #c7c7c7;
     }
   }
 
   &__tab--selected + &__tab,
   &__tab + &__tab--selected {
-    .easi-scrollable-tabs__tab-btn {
+    .easi-scrollable-tabs__tab-divider {
       border-left: 0;
     }
   }
 
   &__tab-btn {
-    height: 30px;
+    height: 100%;
     padding: 0;
     background: none;
     border: 0;
@@ -65,10 +69,7 @@
   }
 
   &__more-btn {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    flex-shrink: 0;
     padding-bottom: 0;
     background-color: transparent;
     border: 0;

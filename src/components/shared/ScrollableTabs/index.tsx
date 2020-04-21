@@ -16,7 +16,7 @@ const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
   const [tabInfo, setTabInfo] = useState<{ name: string; width: number }[]>([]);
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const dropdownNode = useRef<any>();
-  const moreButtonWidth = 73;
+  const moreButtonWidth = 80; // Includes extra pixels for buffer
 
   const handleClick = (e: Event) => {
     if (
@@ -48,7 +48,9 @@ const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
   // Set widths and event listners to watch for screen resizing
   useEffect(() => {
     const handleResize = () => {
-      const component: any = document.querySelector('.easi-scrollable-tabs');
+      const component: any = document.querySelector(
+        '.easi-scrollable-tabs__navigation'
+      );
       const tabList: any = document.querySelector(
         '.easi-scrollable-tabs__tab-list'
       );
@@ -63,15 +65,16 @@ const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
 
   // Remove tabs when they don't fit
   useLayoutEffect(() => {
-    if (componentWidth < tabListWidth + moreButtonWidth) {
+    if (componentWidth > 0 && tabListWidth > 0) {
       const tabElements = document.querySelectorAll(
         '.easi-scrollable-tabs__tab'
       );
-      let updatedTabListWidth = tabListWidth + moreButtonWidth;
-      if (componentWidth < updatedTabListWidth) {
+      const availableSpace = componentWidth - moreButtonWidth;
+      let updatedTabListWidth = tabListWidth;
+      if (availableSpace < updatedTabListWidth) {
         let numberOfTabsToRemove = 0;
 
-        while (componentWidth < updatedTabListWidth) {
+        while (availableSpace < updatedTabListWidth) {
           numberOfTabsToRemove += 1;
           updatedTabListWidth -=
             tabElements[tabElements.length - numberOfTabsToRemove].clientWidth;
@@ -127,25 +130,31 @@ const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
 
   return (
     <div className="easi-scrollable-tabs">
-      <div className="easi-scrollable-tabs__tabs-wrapper">
-        <ul className="easi-scrollable-tabs__tab-list">
-          {displayedTabs.map((tab, index) => (
-            <li
-              key={tab}
-              className={classnames('easi-scrollable-tabs__tab', {
-                'easi-scrollable-tabs__tab--selected': selectedIndex === index
-              })}
-            >
-              <button
-                type="button"
-                className="easi-scrollable-tabs__tab-btn"
-                onClick={() => setSelectedIndex(index)}
+      <div className="easi-scrollable-tabs__navigation">
+        <div className="easi-scrollable-tabs__tabs-wrapper">
+          <ul className="easi-scrollable-tabs__tab-list">
+            {displayedTabs.map((tab, index) => (
+              <li
+                key={tab}
+                className={classnames('easi-scrollable-tabs__tab', {
+                  'easi-scrollable-tabs__tab--selected': selectedIndex === index
+                })}
               >
-                <span className="easi-scrollable-tabs__tab-text">{tab}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
+                <button
+                  type="button"
+                  className="easi-scrollable-tabs__tab-btn"
+                  onClick={() => setSelectedIndex(index)}
+                >
+                  <span className="easi-scrollable-tabs__tab-divider">
+                    <span className="easi-scrollable-tabs__tab-text">
+                      {tab}
+                    </span>
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
         {moreTabsList.length > 0 && (
           <button
             type="button"
