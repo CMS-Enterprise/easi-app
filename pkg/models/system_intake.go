@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 )
@@ -42,6 +44,8 @@ type SystemIntake struct {
 	ProcessStatus           null.String        `json:"processStatus" db:"process_status"`
 	EASupportRequest        null.Bool          `json:"eaSupportRequest" db:"ea_support_request"`
 	ExistingContract        null.String        `json:"existingContract" db:"existing_contract"`
+	UpdatedAt               *time.Time         `json:"updatedAt" db:"updated_at"`
+	SubmittedAt             *time.Time         `json:"submittedAt" db:"submitted_at"`
 }
 
 // SystemIntakes is a list of System Intakes

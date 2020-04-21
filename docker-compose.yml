@@ -5,6 +5,9 @@ services:
     image: postgres:11.6
     ports:
       - 5432:5432
+    environment:
+      - TZ=UTC
+      - PGTZ=UTC
   db_migrate:
     build:
       context: .
