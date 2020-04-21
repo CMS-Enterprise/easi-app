@@ -1,7 +1,4 @@
-import {
-  FETCH_SYSTEM_INTAKES,
-  STORE_SYSTEM_INTAKES
-} from '../constants/systemIntakes';
+import { STORE_SYSTEM_INTAKES } from '../constants/actions';
 import { SystemIntakesState } from '../types/systemIntake';
 
 const initialState: SystemIntakesState = {
@@ -13,15 +10,11 @@ function systemIntakesReducer(
   action: any
 ): SystemIntakesState {
   switch (action.type) {
-    case FETCH_SYSTEM_INTAKES:
-      return state;
     case STORE_SYSTEM_INTAKES:
       return {
         ...state,
         systemIntakes: action.systemIntakes
       };
-    case '':
-      return state;
     default:
       return state;
   }

@@ -1,7 +1,7 @@
 import {
   GET_ALL_SYSTEM_SHORTS,
-  UPDATE_SYSTEM_SHORTS
-} from '../constants/system';
+  STORE_SYSTEM_SHORTS
+} from '../constants/actions';
 import { ShortSystem } from '../types/system';
 
 type GetAllSystemShortsAction = {
@@ -14,14 +14,16 @@ export function getAllSystemShorts(): GetAllSystemShortsAction {
   };
 }
 
-type PutSystemShortsAction = {
+type StoreSystemShortsAction = {
   type: string;
   shorts: ShortSystem[];
 };
 
-export function putSystemShorts(shorts: ShortSystem[]): PutSystemShortsAction {
+export function storeSystemShorts(
+  shorts: ShortSystem[]
+): StoreSystemShortsAction {
   return {
-    type: UPDATE_SYSTEM_SHORTS,
+    type: STORE_SYSTEM_SHORTS,
     shorts
   };
 }
