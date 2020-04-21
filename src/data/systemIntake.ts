@@ -26,7 +26,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     name: ''
   },
   governanceTeams: {
-    isPresent: false,
+    isPresent: null,
     teams: []
   },
   fundingSource: {

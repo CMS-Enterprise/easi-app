@@ -1,22 +1,20 @@
 import { STORE_SYSTEM_INTAKE } from '../constants/actions';
-import { SystemIntakeState, SystemIntakeForm } from '../types/systemIntake';
+import { SystemIntakeState } from '../types/systemIntake';
 import {
   initialSystemIntakeForm,
   prepareSystemIntakeForApp
 } from '../data/systemIntake';
 
-const initialState: SystemIntakeState = {};
+const initialState: SystemIntakeState = {
+  systemIntake: initialSystemIntakeForm
+};
 
 function systemIntakeReducer(state = initialState, action: any): any {
-  let systemIntake: SystemIntakeForm = initialSystemIntakeForm;
-  if (action.systemIntake) {
-    systemIntake = prepareSystemIntakeForApp(action.systemIntake);
-  }
   switch (action.type) {
     case STORE_SYSTEM_INTAKE:
       return {
         ...state,
-        systemIntake
+        systemIntake: prepareSystemIntakeForApp(action.systemIntake)
       };
     default:
       return state;
