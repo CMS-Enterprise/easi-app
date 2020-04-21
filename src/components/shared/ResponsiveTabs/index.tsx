@@ -98,6 +98,7 @@ const ResponsiveTabs = ({
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabListWidth, componentWidth]);
 
   // Add tabs when they fit
@@ -116,6 +117,7 @@ const ResponsiveTabs = ({
         );
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabListWidth, componentWidth]);
 
   // Close "More Tabs" menu when it is empty
