@@ -16,6 +16,7 @@ import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
+import { initialSystemIntakeForm } from '../../data/systemIntake';
 
 export type SystemIntakeRouterProps = {
   profileId: string;
@@ -53,42 +54,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const initialData: SystemIntakeForm = {
-    id: '',
-    euaUserID: '',
-    projectName: '',
-    acronym: '',
-    status: 'DRAFT',
-    requester: {
-      name: '',
-      component: ''
-    },
-    businessOwner: {
-      name: '',
-      component: ''
-    },
-    productManager: {
-      name: '',
-      component: ''
-    },
-    isso: {
-      isPresent: null,
-      name: ''
-    },
-    governanceTeams: {
-      isPresent: null,
-      teams: []
-    },
-    fundingSource: {
-      isFunded: null,
-      fundingNumber: ''
-    },
-    businessNeed: '',
-    businessSolution: '',
-    currentStage: '',
-    needsEaSupport: null,
-    hasContract: ''
-  };
+  const initialData: SystemIntakeForm = initialSystemIntakeForm;
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
     const Component = pageObj.view;
