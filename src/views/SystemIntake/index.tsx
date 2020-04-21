@@ -11,6 +11,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
+import AutoSave from 'components/shared/AutoSave';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -62,6 +63,12 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
       return <Component formikProps={formikProps} />;
     }
     return null;
+  };
+
+  const dispatchSave = () => {
+    if (id && formikRef.current.dirty) {
+      dispatch(saveSystemIntake(id, formikRef.current.values));
+    }
   };
 
   return (
@@ -176,6 +183,11 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       Send to GRT
                     </Button>
                   )}
+                  <AutoSave
+                    values={values}
+                    onSave={dispatchSave}
+                    debounceDelay={1000}
+                  />
                 </Form>
               </>
             );
