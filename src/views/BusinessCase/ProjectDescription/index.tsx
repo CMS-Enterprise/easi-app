@@ -16,7 +16,7 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
   const { values, errors } = formikProps;
   const flatErrors = flattenErrors(errors);
   return (
-    <>
+    <div className="grid-container">
       <h1 className="font-heading-xl">Project Description</h1>
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
@@ -109,7 +109,7 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
             values.successIndicators.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
-    </>
+    </div>
   );
 };
 
