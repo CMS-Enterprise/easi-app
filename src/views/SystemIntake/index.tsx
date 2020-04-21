@@ -100,7 +100,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   };
 
   const dispatchSave = () => {
-    if (id) {
+    if (id && formikRef.current.dirty) {
       dispatch(saveSystemIntake(id, formikRef.current.values));
     }
   };
@@ -217,7 +217,11 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       Send to GRT
                     </Button>
                   )}
-                  <AutoSave values={values} onSave={dispatchSave} />
+                  <AutoSave
+                    values={values}
+                    onSave={dispatchSave}
+                    debounceDelay={1000}
+                  />
                 </Form>
               </>
             );
