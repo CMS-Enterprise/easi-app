@@ -113,6 +113,18 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
+	s.Run("saves when fetch existing fails with no results", func() {
+		ctx := context.Background()
+		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
+			return nil, errors.New("sql: no rows in result set")
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.NoError(err)
+	})
+
 	s.Run("returns error when authorization errors", func() {
 		ctx := context.Background()
 		err := errors.New("authorization failed")
