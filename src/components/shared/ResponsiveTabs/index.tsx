@@ -2,13 +2,19 @@ import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import classnames from 'classnames';
 import './index.scss';
 
-type ScrollableTabsProps = {
+type ResponsiveTabsProps = {
+  activeTab: string;
   tabs: string[];
   children: React.ReactNode | React.ReactNodeArray;
+  handleTabClick: (tab: string) => void;
 };
 
-const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
+const ResponsiveTabs = ({
+  activeTab,
+  tabs,
+  children,
+  handleTabClick
+}: ResponsiveTabsProps) => {
   const [displayedTabs, setDisplayedTabs] = useState(tabs);
   const [moreTabsList, setMoreTabsList] = useState<string[]>([]);
   const [componentWidth, setComponentWidth] = useState(0);
@@ -33,7 +39,7 @@ const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
   // Set tabs/widths on component mount
   useEffect(() => {
     const tabElements: any = document.querySelectorAll(
-      '.easi-scrollable-tabs__tab'
+      '.easi-responsive-tabs__tab'
     );
     const arr: { name: string; width: number }[] = [];
     tabElements.forEach((tab: HTMLElement) => {
@@ -49,10 +55,10 @@ const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
   useEffect(() => {
     const handleResize = () => {
       const component: any = document.querySelector(
-        '.easi-scrollable-tabs__navigation'
+        '.easi-responsive-tabs__navigation'
       );
       const tabList: any = document.querySelector(
-        '.easi-scrollable-tabs__tab-list'
+        '.easi-responsive-tabs__tab-list'
       );
 
       setComponentWidth(component.offsetWidth);
@@ -67,7 +73,7 @@ const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
   useLayoutEffect(() => {
     if (componentWidth > 0 && tabListWidth > 0) {
       const tabElements = document.querySelectorAll(
-        '.easi-scrollable-tabs__tab'
+        '.easi-responsive-tabs__tab'
       );
       const availableSpace = componentWidth - moreButtonWidth;
       let updatedTabListWidth = tabListWidth;
@@ -129,24 +135,24 @@ const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
   }, []);
 
   return (
-    <div className="easi-scrollable-tabs">
-      <div className="easi-scrollable-tabs__navigation">
-        <div className="easi-scrollable-tabs__tabs-wrapper">
-          <ul className="easi-scrollable-tabs__tab-list">
-            {displayedTabs.map((tab, index) => (
+    <div className="easi-responsive-tabs bg-base-lightest">
+      <div className="easi-responsive-tabs__navigation">
+        <div className="easi-responsive-tabs__tabs-wrapper">
+          <ul className="easi-responsive-tabs__tab-list">
+            {displayedTabs.map(tab => (
               <li
                 key={tab}
-                className={classnames('easi-scrollable-tabs__tab', {
-                  'easi-scrollable-tabs__tab--selected': selectedIndex === index
+                className={classnames('easi-responsive-tabs__tab', {
+                  'easi-responsive-tabs__tab--selected': activeTab === tab
                 })}
               >
                 <button
                   type="button"
-                  className="easi-scrollable-tabs__tab-btn"
-                  onClick={() => setSelectedIndex(index)}
+                  className="easi-responsive-tabs__tab-btn"
+                  onClick={() => handleTabClick(tab)}
                 >
-                  <span className="easi-scrollable-tabs__tab-divider">
-                    <span className="easi-scrollable-tabs__tab-text">
+                  <span className="easi-responsive-tabs__tab-divider">
+                    <span className="easi-responsive-tabs__tab-text">
                       {tab}
                     </span>
                   </span>
@@ -155,38 +161,62 @@ const ScrollableTabs = ({ tabs, children }: ScrollableTabsProps) => {
             ))}
           </ul>
         </div>
-        {moreTabsList.length > 0 && (
-          <button
-            type="button"
-            ref={dropdownNode}
-            className="easi-scrollable-tabs__more-btn"
-            onClick={() => {
-              setIsMoreMenuOpen(true);
-            }}
-            aria-label={
-              isMoreMenuOpen ? 'Close More Tabs Menu' : 'Expand More Tabs Menu'
-            }
-            aria-controls="ScrollableTabs-MoreMenu"
-            aria-expanded={isMoreMenuOpen}
-          >
-            <i className="fa fa-angle-right easi-scrollable-tabs__angle-right" />
-            <span>More</span>
-          </button>
-        )}
-        {isMoreMenuOpen && (
-          <ul
-            id="ScrollableTabs-MoreMenu"
-            className="easi-scrollable-tabs__more-menu"
-          >
-            {moreTabsList.map(tab => (
-              <li key={`menu-tab-${tab}`}>{tab}</li>
-            ))}
-          </ul>
-        )}
+        <div ref={dropdownNode}>
+          {moreTabsList.length > 0 && (
+            <button
+              type="button"
+              // ref={dropdownNode}
+              className="easi-responsive-tabs__more-btn"
+              onClick={() => {
+                setIsMoreMenuOpen(prevOpen => !prevOpen);
+              }}
+              aria-label={
+                isMoreMenuOpen
+                  ? 'Close More Tabs Menu'
+                  : 'Expand More Tabs Menu'
+              }
+              aria-controls="ResponsiveTabs-MoreMenu"
+              aria-expanded={isMoreMenuOpen}
+            >
+              <i
+                className={classnames(
+                  'fa',
+                  {
+                    'fa-angle-right': !isMoreMenuOpen,
+                    'fa-angle-down': isMoreMenuOpen
+                  },
+                  'easi-responsive-tabs__angle-right'
+                )}
+              />
+              <span>More</span>
+            </button>
+          )}
+          {isMoreMenuOpen && (
+            <ul
+              id="ResponsiveTabs-MoreMenu"
+              className="easi-responsive-tabs__more-menu bg-base-lightest"
+            >
+              {moreTabsList.map(tab => (
+                <li key={`menu-tab-${tab}`}>
+                  <button
+                    type="button"
+                    className="easi-responsive-tabs__tab-btn"
+                    onClick={() => {
+                      handleTabClick(tab);
+                      setIsMoreMenuOpen(false);
+                    }}
+                  >
+                    {tab}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
       {children}
     </div>
   );
 };
 
-export default ScrollableTabs;
+export default ResponsiveTabs;

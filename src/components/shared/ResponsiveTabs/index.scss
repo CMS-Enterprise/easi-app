@@ -1,13 +1,10 @@
-.easi-scrollable-tabs {
+.easi-responsive-tabs {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
 
   &__navigation {
     display: flex;
     justify-content: space-between;
-  }
-
-  &__tabs-wrapper {
     position: relative;
   }
 
@@ -28,29 +25,25 @@
     &--selected {
       background-color: #fff;
 
-      .easi-scrollable-tabs__tab-btn {
+      .easi-responsive-tabs__tab-btn {
         font-weight: bold;
       }
 
-      .easi-scrollable-tabs__tab-text {
+      .easi-responsive-tabs__tab-text {
         border-bottom: 4px solid #009bc3;
       }
-    }
-
-    &:hover {
-      cursor: pointer;
     }
   }
 
   &__tab + &__tab {
-    .easi-scrollable-tabs__tab-divider {
+    .easi-responsive-tabs__tab-divider {
       border-left: 2px solid #c7c7c7;
     }
   }
 
   &__tab--selected + &__tab,
   &__tab + &__tab--selected {
-    .easi-scrollable-tabs__tab-divider {
+    .easi-responsive-tabs__tab-divider {
       border-left: 0;
     }
   }
@@ -61,6 +54,10 @@
     background: none;
     border: 0;
     font-size: 22px;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   &__tab-text {
@@ -69,7 +66,7 @@
   }
 
   &__more-btn {
-    flex-shrink: 0;
+    height: 100%;
     padding-bottom: 0;
     background-color: transparent;
     border: 0;
@@ -90,7 +87,15 @@
 
   &__more-menu {
     position: absolute;
+    top: 100%;
     right: 0;
+    margin: 0;
+    padding: 0;
     list-style-type: none;
+
+    li {
+      padding: 10px;
+      font-size: 22px;
+    }
   }
 }
