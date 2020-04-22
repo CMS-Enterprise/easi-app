@@ -165,7 +165,7 @@ export const BusinessCase = () => {
           />
         );
       case 'Review':
-        return <Review />;
+        return <Review formikProps={formikProps} />;
       default:
         return null;
     }
@@ -272,7 +272,7 @@ export const BusinessCase = () => {
                         console.log('Submitting Data: ', values);
                       }}
                     >
-                      Review and Send
+                      Send to Review Team
                     </Button>
                   )}
                 </Form>
