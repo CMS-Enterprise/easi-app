@@ -4,19 +4,21 @@ import { PUT_SYSTEM_INTAKE, GET_SYSTEM_INTAKE } from 'constants/actions';
 
 import { PutSystemIntakeAction } from 'types/systemIntake';
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
-import { storeSystemIntake } from '../actions/systemIntakeActions';
+import { storeSystemIntake } from 'actions/systemIntakeActions';
 
-function putSystemIntakeRequest({ id, formData }: PutSystemIntakeAction) {
+function putSystemIntakeRequest({ formData }: PutSystemIntakeAction) {
   // Make API save request
-  const data = prepareSystemIntakeForApi(id, formData);
+  const data = prepareSystemIntakeForApi(formData);
   return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }
 
 export function* putSystemIntake(payload: PutSystemIntakeAction) {
   try {
     const response = yield call(putSystemIntakeRequest, payload);
+    // eslint-disable-next-line no-console
     console.log('Response', response);
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
   }
 }

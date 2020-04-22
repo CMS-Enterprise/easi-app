@@ -6,12 +6,10 @@ import {
 import { SystemIntakeForm, PutSystemIntakeAction } from 'types/systemIntake';
 
 export function saveSystemIntake(
-  id: string,
   formData: SystemIntakeForm
 ): PutSystemIntakeAction {
   return {
     type: PUT_SYSTEM_INTAKE,
-    id,
     formData
   };
 }

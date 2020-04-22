@@ -55,7 +55,6 @@ export type SystemIntakesState = {
 
 export type PutSystemIntakeAction = {
   type: string;
-  id: string;
   formData: SystemIntakeForm;
 };
 
