@@ -44,6 +44,31 @@ func (e *QueryError) Unwrap() error {
 	return e.Err
 }
 
+// CedarOperation provides a set of operations that can fail
+type CedarOperation string
+
+const (
+	// CedarSubmit is for failures when submitting
+	CedarSubmit CedarOperation = "Submit"
+)
+
+// CedarError is a typed error for query issues
+type CedarError struct {
+	Err       error
+	IntakeID  string
+	Operation CedarOperation
+}
+
+// Error provides the error as a string
+func (e *CedarError) Error() string {
+	return fmt.Sprintf("Could not hit CEDAR for intake %s with operation %s", e.IntakeID, e.Operation)
+}
+
+// Unwrap provides the underlying error
+func (e *CedarError) Unwrap() error {
+	return e.Err
+}
+
 // ContextOperation denotes what was happened when the context failed
 type ContextOperation string
 
