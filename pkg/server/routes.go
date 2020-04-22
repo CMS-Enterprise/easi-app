@@ -73,7 +73,11 @@ func (s *Server) routes(
 			store.FetchSystemIntakeByID,
 			s.logger,
 		),
-		SubmitSystemIntake: cedarClient.SubmitSystemIntake,
+		SubmitSystemIntake: services.NewSubmitSystemIntake(
+			cedarClient.SubmitSystemIntake,
+			store.SaveSystemIntake,
+			s.logger,
+		),
 	}
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
