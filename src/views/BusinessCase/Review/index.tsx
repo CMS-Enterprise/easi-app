@@ -8,6 +8,8 @@ import {
 } from 'components/shared/DescriptionGroup';
 import ResponsiveTabs from 'components/shared/ResponsiveTabs';
 import { BusinessCaseModel } from 'types/businessCase';
+import AsIsSolutionReview from './AsIsSolutionReview';
+import ProposedBusinessCaseSolutionReview from './ProposedBusinessCaseSolutionReview';
 
 type ReviewProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -15,8 +17,16 @@ type ReviewProps = {
 
 const Review = ({ formikProps }: ReviewProps) => {
   const [activeSolutionTab, setActiveSolutionTab] = useState('As-Is Solution');
-
   const { values } = formikProps;
+
+  const getFilledSolutions = () => {
+    const solutions = ['As-Is Solution', 'Preferred Solution', 'Alternative A'];
+    if (values.alternativeB) {
+      solutions.push('Alternative B');
+    }
+    return solutions;
+  };
+
   return (
     <div className="margin-bottom-7">
       <div className="grid-container">
@@ -93,43 +103,43 @@ const Review = ({ formikProps }: ReviewProps) => {
       <div className="grid-container bg-base-lightest padding-top-2 padding-bottom-8">
         <ResponsiveTabs
           activeTab={activeSolutionTab}
-          tabs={[
-            'As-Is Solution',
-            'Preferred Solution',
-            'Alternative A',
-            'Alternative B'
-          ]}
+          tabs={getFilledSolutions()}
           handleTabClick={tab => {
             setActiveSolutionTab(tab);
           }}
         >
-          <div className="bg-white" style={{ overflow: 'auto' }}>
+          <div
+            className="bg-white easi-business-case__review-solutions-wrapper"
+            style={{ overflow: 'auto' }}
+          >
             {(tab => {
               switch (tab) {
                 case 'As-Is Solution':
-                  return (
-                    <div>
-                      <h1>As-Is Solution</h1>
-                    </div>
-                  );
+                  return <AsIsSolutionReview solution={values.asIsSolution} />;
                 case 'Preferred Solution':
                   return (
-                    <div>
-                      <h1>Preferred Solution</h1>
-                    </div>
+                    <ProposedBusinessCaseSolutionReview
+                      name="Preferred Solution"
+                      solution={values.preferredSolution}
+                    />
                   );
                 case 'Alternative A':
                   return (
-                    <div>
-                      <h1>Alternative A</h1>
-                    </div>
+                    <ProposedBusinessCaseSolutionReview
+                      name="Alternative A"
+                      solution={values.alternativeA}
+                    />
                   );
                 case 'Alternative B':
-                  return (
-                    <div>
-                      <h1>Alternative B</h1>
-                    </div>
-                  );
+                  if (values.alternativeB) {
+                    return (
+                      <ProposedBusinessCaseSolutionReview
+                        name="Alternative B"
+                        solution={values.alternativeB}
+                      />
+                    );
+                  }
+                  return null;
                 default:
                   return <div />;
               }
