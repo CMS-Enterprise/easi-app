@@ -2,45 +2,42 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-import { v4 as uuidv4 } from 'uuid';
 import cmsGovernanceTeams from '../constants/enums/cmsGovernanceTeams';
 
-export const initialSystemIntakeForm = (): SystemIntakeForm => {
-  return {
-    id: uuidv4(),
-    euaUserID: '',
-    projectName: '',
-    status: 'DRAFT',
-    requester: {
-      name: '',
-      component: ''
-    },
-    businessOwner: {
-      name: '',
-      component: ''
-    },
-    productManager: {
-      name: '',
-      component: ''
-    },
-    isso: {
-      isPresent: null,
-      name: ''
-    },
-    governanceTeams: {
-      isPresent: null,
-      teams: []
-    },
-    fundingSource: {
-      isFunded: null,
-      fundingNumber: ''
-    },
-    businessNeed: '',
-    businessSolution: '',
-    currentStage: '',
-    needsEaSupport: null,
-    hasContract: ''
-  };
+export const initialSystemIntakeForm: SystemIntakeForm = {
+  id: '',
+  euaUserID: '',
+  projectName: '',
+  status: 'DRAFT',
+  requester: {
+    name: '',
+    component: ''
+  },
+  businessOwner: {
+    name: '',
+    component: ''
+  },
+  productManager: {
+    name: '',
+    component: ''
+  },
+  isso: {
+    isPresent: null,
+    name: ''
+  },
+  governanceTeams: {
+    isPresent: null,
+    teams: []
+  },
+  fundingSource: {
+    isFunded: null,
+    fundingNumber: ''
+  },
+  businessNeed: '',
+  businessSolution: '',
+  currentStage: '',
+  needsEaSupport: null,
+  hasContract: ''
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {

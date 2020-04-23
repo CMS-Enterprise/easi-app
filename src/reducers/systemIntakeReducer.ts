@@ -6,7 +6,7 @@ import {
 } from '../data/systemIntake';
 
 const initialState: SystemIntakeState = {
-  systemIntake: initialSystemIntakeForm()
+  systemIntake: initialSystemIntakeForm
 };
 
 function systemIntakeReducer(state = initialState, action: any): any {
