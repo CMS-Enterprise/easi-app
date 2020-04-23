@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
-
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
@@ -131,7 +129,7 @@ export const BusinessCase = () => {
 
   return (
     <div className="business-case">
-      <Header name="BUSINESS" />
+      <Header name="CMS Business Case" />
       <main role="main">
         <Formik
           initialValues={businessCaseInitalData}
@@ -263,4 +261,4 @@ export const BusinessCase = () => {
   );
 };
 
-export default withRouter(BusinessCase);
+export default BusinessCase;
