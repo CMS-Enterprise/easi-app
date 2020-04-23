@@ -12,9 +12,9 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
 import AutoSave from 'components/shared/AutoSave';
 import { initialSystemIntakeForm } from 'data/systemIntake';
-import { getSystemIntakes } from 'actions/systemIntakesActions';
 import { AppState } from 'reducers/rootReducer';
 import { v4 as uuidv4 } from 'uuid';
+import { fetchSystemIntakes } from 'routines/routines';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -44,7 +44,6 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   ];
   const history = useHistory();
   const [page, setPage] = useState(1);
-  const [existingIntakesLoaded, setExistingIntakesLoaded] = useState(false);
   const dispatch = useDispatch();
   const formikRef: any = useRef();
   const id = useRef<string>(uuidv4());
@@ -58,6 +57,9 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   if (initialData.id === '') {
     initialData.id = id.current;
   }
+  const existingIntakesLoaded = useSelector(
+    (state: AppState) => state.systemIntakes.loaded
+  );
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
     const Component = pageObj.view;
@@ -75,11 +77,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   };
 
   useEffect(() => {
-    const getSystemIntakesEffect = async (): Promise<void> => {
-      dispatch(getSystemIntakes());
-      await setExistingIntakesLoaded(true);
-    };
-    getSystemIntakesEffect();
+    dispatch(fetchSystemIntakes());
   }, [dispatch]);
 
   return (
