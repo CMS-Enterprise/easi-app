@@ -7,6 +7,10 @@ import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { BusinessCaseModel } from 'types/businessCase';
+import {
+  businessCaseInitalData,
+  defaultProposedSolution
+} from 'data/businessCase';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
 import GeneralProjectInfo from './GeneralProjectInfo';
@@ -16,26 +20,6 @@ import PreferredSolution from './PreferredSolution';
 import AlternativeSolution from './AlternativeSolution';
 import Review from './Review';
 import './index.scss';
-
-// Default data for estimated lifecycle costs
-const defaultEstimatedLifecycle = {
-  year1: [{ phase: '', cost: '' }],
-  year2: [{ phase: '', cost: '' }],
-  year3: [{ phase: '', cost: '' }],
-  year4: [{ phase: '', cost: '' }],
-  year5: [{ phase: '', cost: '' }]
-};
-
-// Default data for a proposed solution
-export const defaultProposedSolution = {
-  title: '',
-  summary: '',
-  acquisitionApproach: '',
-  pros: '',
-  cons: '',
-  estimatedLifecycleCost: defaultEstimatedLifecycle,
-  costSavings: ''
-};
 
 export const BusinessCase = () => {
   const [pages, setPages] = useState<any[]>([
@@ -71,32 +55,6 @@ export const BusinessCase = () => {
   ]);
   const [page, setPage] = useState(1);
   const pageObj = pages[page - 1];
-
-  const initialData: BusinessCaseModel = {
-    projectName: '',
-    requester: {
-      name: '',
-      phoneNumber: ''
-    },
-    budgetNumber: '',
-    businessOwner: {
-      name: ''
-    },
-    businessNeed: '',
-    cmsBenefit: '',
-    priorityAlignment: '',
-    successIndicators: '',
-    asIsSolution: {
-      title: '',
-      summary: '',
-      pros: '',
-      cons: '',
-      estimatedLifecycleCost: defaultEstimatedLifecycle,
-      costSavings: ''
-    },
-    preferredSolution: defaultProposedSolution,
-    alternativeA: defaultProposedSolution
-  };
 
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     switch (pageObj.name) {
@@ -184,7 +142,7 @@ export const BusinessCase = () => {
       </Header>
       <main role="main">
         <Formik
-          initialValues={initialData}
+          initialValues={businessCaseInitalData}
           // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
           // Form will be manually submitted.
           onSubmit={() => {}}
