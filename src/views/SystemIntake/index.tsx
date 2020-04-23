@@ -55,6 +55,9 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   ).filter(intake => intake.status === 'DRAFT');
   const initialData: SystemIntakeForm =
     draftIntakes.length > 0 ? draftIntakes[0] : initialSystemIntakeForm;
+  if (initialData.id === '') {
+    initialData.id = id.current;
+  }
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
     const Component = pageObj.view;
@@ -67,9 +70,6 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
 
   const dispatchSave = () => {
     if (formikRef.current.dirty) {
-      if (formikRef.current.values.id === '') {
-        formikRef.current.setFieldValue('id', id.current, false);
-      }
       dispatch(saveSystemIntake(formikRef.current.values));
     }
   };
