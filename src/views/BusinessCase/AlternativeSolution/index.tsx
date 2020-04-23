@@ -53,7 +53,7 @@ const AlternativeSolution = ({
   })(altLetter);
 
   return (
-    <>
+    <div className="grid-container">
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
       <div className="tablet:grid-col-9">
         <div className="easi-business-case__name-wrapper">
@@ -254,7 +254,7 @@ const AlternativeSolution = ({
           </>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

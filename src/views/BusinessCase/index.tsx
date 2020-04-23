@@ -182,7 +182,7 @@ export const BusinessCase = () => {
           )}
         </div>
       </Header>
-      <main className="grid-container" role="main">
+      <main role="main">
         <Formik
           initialValues={initialData}
           // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
@@ -204,88 +204,94 @@ export const BusinessCase = () => {
             const flatErrors: any = flattenErrors(errors);
             return (
               <>
-                {Object.keys(errors).length > 0 && (
-                  <ErrorAlert
-                    classNames="margin-top-3"
-                    heading="Please check and fix the following"
-                  >
-                    {Object.keys(flatErrors).map(key => {
-                      return (
-                        <ErrorAlertMessage
-                          key={`Error.${key}`}
-                          message={flatErrors[key]}
-                          onClick={() => {
-                            const field = document.querySelector(
-                              `[data-scroll="${key}"]`
-                            );
+                <div className="grid-container">
+                  {Object.keys(errors).length > 0 && (
+                    <ErrorAlert
+                      classNames="margin-top-3"
+                      heading="Please check and fix the following"
+                    >
+                      {Object.keys(flatErrors).map(key => {
+                        return (
+                          <ErrorAlertMessage
+                            key={`Error.${key}`}
+                            message={flatErrors[key]}
+                            onClick={() => {
+                              const field = document.querySelector(
+                                `[data-scroll="${key}"]`
+                              );
 
-                            if (field) {
-                              field.scrollIntoView();
-                            }
-                          }}
-                        />
-                      );
-                    })}
-                  </ErrorAlert>
-                )}
+                              if (field) {
+                                field.scrollIntoView();
+                              }
+                            }}
+                          />
+                        );
+                      })}
+                    </ErrorAlert>
+                  )}
+                </div>
                 <Form>
                   {renderPage(formikProps)}
-                  {page > 1 && (
-                    <Button
-                      type="button"
-                      outline
-                      onClick={() => {
-                        setPage(prev => prev - 1);
-                        setErrors({});
-                        window.scrollTo(0, 0);
-                      }}
-                    >
-                      Back
-                    </Button>
-                  )}
+                  <div className="grid-container">
+                    {page > 1 && (
+                      <Button
+                        type="button"
+                        outline
+                        onClick={() => {
+                          setPage(prev => prev - 1);
+                          setErrors({});
+                          window.scrollTo(0, 0);
+                        }}
+                      >
+                        Back
+                      </Button>
+                    )}
 
-                  {page < pages.length && (
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        if (pageObj.validation) {
-                          validateForm().then(err => {
-                            if (Object.keys(err).length === 0) {
-                              setPage(prev => prev + 1);
-                            }
-                          });
-                        } else {
-                          setPage(prev => prev + 1);
-                        }
-                        window.scrollTo(0, 0);
-                      }}
-                    >
-                      Next
-                    </Button>
-                  )}
+                    {page < pages.length && (
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (pageObj.validation) {
+                            validateForm().then(err => {
+                              if (Object.keys(err).length === 0) {
+                                setPage(prev => prev + 1);
+                              }
+                            });
+                          } else {
+                            setPage(prev => prev + 1);
+                          }
+                          window.scrollTo(0, 0);
+                        }}
+                      >
+                        Next
+                      </Button>
+                    )}
 
-                  {page === pages.length && (
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      onClick={() => {
-                        console.log('Submitting Data: ', values);
-                      }}
-                    >
-                      Send to Review Team
-                    </Button>
-                  )}
+                    {page === pages.length && (
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        onClick={() => {
+                          console.log('Submitting Data: ', values);
+                        }}
+                      >
+                        Send to Review Team
+                      </Button>
+                    )}
+                  </div>
                 </Form>
               </>
             );
           }}
         </Formik>
-        {pageObj.type === 'FORM' && (
-          <PageNumber
-            currentPage={page}
-            totalPages={pages.filter(p => p.type === 'FORM').length}
-          />
-        )}
+        <div className="grid-container">
+          {pageObj.type === 'FORM' && (
+            <PageNumber
+              currentPage={page}
+              totalPages={pages.filter(p => p.type === 'FORM').length}
+            />
+          )}
+        </div>
       </main>
     </div>
   );
