@@ -16,7 +16,7 @@ const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
   const allowedPhoneNumberCharacters = /[\d- ]+/g;
 
   return (
-    <>
+    <div className="grid-container">
       <h1 className="font-heading-xl">General Project Info</h1>
       <p className="line-height-body-6">
         The next step is for the Business Owner to select an approved solution
@@ -104,7 +104,7 @@ const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
           </div>
         </FieldGroup>
       </div>
-    </>
+    </div>
   );
 };
 
