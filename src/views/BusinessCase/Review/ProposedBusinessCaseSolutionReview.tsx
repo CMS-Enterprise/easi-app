@@ -1,5 +1,5 @@
 import React from 'react';
-
+import EstimatedLifecycleCostReview from 'components/EstimatedLifecycleCost/Review';
 import ReviewRow from 'components/ReviewRow';
 import {
   DescriptionList,
@@ -54,6 +54,9 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
         <DescriptionTerm term={`${name}: Cons`} />
         <DescriptionDefinition definition={solution.cons} />
       </div>
+    </ReviewRow>
+    <ReviewRow>
+      <EstimatedLifecycleCostReview data={solution.estimatedLifecycleCost} />
     </ReviewRow>
     <ReviewRow>
       <div className="line-height-body-3">
