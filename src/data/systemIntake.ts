@@ -1,4 +1,44 @@
-import { SystemIntakeForm } from 'types/systemIntake';
+import {
+  GovernanceCollaborationTeam,
+  SystemIntakeForm
+} from 'types/systemIntake';
+import cmsGovernanceTeams from '../constants/enums/cmsGovernanceTeams';
+
+export const initialSystemIntakeForm: SystemIntakeForm = {
+  id: '',
+  euaUserID: '',
+  projectName: '',
+  status: 'DRAFT',
+  requester: {
+    name: '',
+    component: ''
+  },
+  businessOwner: {
+    name: '',
+    component: ''
+  },
+  productManager: {
+    name: '',
+    component: ''
+  },
+  isso: {
+    isPresent: null,
+    name: ''
+  },
+  governanceTeams: {
+    isPresent: null,
+    teams: []
+  },
+  fundingSource: {
+    isFunded: null,
+    fundingNumber: ''
+  },
+  businessNeed: '',
+  businessSolution: '',
+  currentStage: '',
+  needsEaSupport: null,
+  hasContract: ''
+};
 
 export const prepareSystemIntakeForApi = (
   id: string,
@@ -38,4 +78,53 @@ export const prepareSystemIntakeForApi = (
   };
 };
 
-export const prepareSystemIntakeForApp = () => {};
+export const prepareSystemIntakeForApp = (systemIntake: any) => {
+  const governanceTeams = () => {
+    const teams: GovernanceCollaborationTeam[] = [];
+    cmsGovernanceTeams.forEach(team => {
+      if (systemIntake[team.collaboratorKey]) {
+        teams.push({
+          collaborator: systemIntake[team.collaboratorKey],
+          name: team.value
+        });
+      }
+    });
+    return teams;
+  };
+
+  return {
+    id: systemIntake.id || '',
+    euaUserID: systemIntake.euaUserID || '',
+    projectName: systemIntake.projectName || '',
+    status: systemIntake.status || 'DRAFT',
+    requester: {
+      name: systemIntake.requester || '',
+      component: systemIntake.component || ''
+    },
+    businessOwner: {
+      name: systemIntake.businessOwner || '',
+      component: systemIntake.businessOwnerComponent || ''
+    },
+    productManager: {
+      name: systemIntake.productManager || '',
+      component: systemIntake.productManagerComponent || ''
+    },
+    isso: {
+      isPresent: !!systemIntake.isso || null,
+      name: systemIntake.isso || ''
+    },
+    governanceTeams: {
+      isPresent: governanceTeams().length !== 0,
+      teams: governanceTeams() || []
+    },
+    fundingSource: {
+      isFunded: systemIntake.existingFunding || null,
+      fundingNumber: systemIntake.fundingSource || ''
+    },
+    businessNeed: systemIntake.businessNeed || '',
+    businessSolution: systemIntake.solution || '',
+    currentStage: systemIntake.processStatus || '',
+    needsEaSupport: systemIntake.eaSupportRequest || null,
+    hasContract: systemIntake.existingContract || ''
+  };
+};
