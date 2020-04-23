@@ -50,7 +50,10 @@ const AsIsSolutionReview = ({ solution }: ReviewProps) => (
         </div>
       </ReviewRow>
     </DescriptionList>
-    <EstimatedLifecycleCostReview data={solution.estimatedLifecycleCost} />
+    <ReviewRow>
+      <EstimatedLifecycleCostReview data={solution.estimatedLifecycleCost} />
+    </ReviewRow>
+
     <ReviewRow>
       <div className="line-height-body-3">
         <DescriptionTerm term="What is the cost savings or avoidance associated with this solution?" />

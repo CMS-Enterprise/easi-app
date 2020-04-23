@@ -62,11 +62,11 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
 
                     <Field
                       as={RadioField}
-                      checked={values.phase === 'Operations & Maintanence'}
-                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintanence`}
+                      checked={values.phase === 'Operations & Maintenance'}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
                       name={`${formikKey}.year${year}.${index}.phase`}
-                      label="Operations & Maintanence"
-                      value="Operations & Maintanence"
+                      label="Operations & Maintenance"
+                      value="Operations & Maintenance"
                       inline
                     />
                   </div>
@@ -242,7 +242,7 @@ const EstimatedLifecycleCost = ({
                 currently in development (pre-ATO)
               </p>
               <p className="margin-bottom-0">
-                <strong>Operation & Maintanence</strong>: Projects that are
+                <strong>Operation & Maintenance</strong>: Projects that are
                 live, post-ATO
               </p>
             </div>

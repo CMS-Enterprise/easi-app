@@ -34,4 +34,29 @@ const EstimatedLifecycleCostReview = ({
   );
 };
 
+export const sumByPhaseType = (items: LifecyclePhase[], phase: string) => {
+  const phaseMap: { [key: string]: string } = {
+    initiate: 'Initiate',
+    om: 'Operations & Maintenance'
+  };
+
+  return items
+    .filter(obj => obj.phase === phaseMap[phase])
+    .reduce((total, current) => {
+      if (current.cost) {
+        return total + parseFloat(current.cost);
+      }
+      return total;
+    }, 0);
+};
+
+export const sumCosts = (items: LifecyclePhase[]) => {
+  return items.reduce((total, current) => {
+    if (current.cost) {
+      return total + parseFloat(current.cost);
+    }
+    return total;
+  }, 0);
+};
+
 export default EstimatedLifecycleCostReview;
