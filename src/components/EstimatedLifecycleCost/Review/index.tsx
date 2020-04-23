@@ -91,7 +91,15 @@ const EstimatedLifecycleCostReview = ({
             {matches.mobile && (
               <div
                 data-testid="est-lifecycle--mobile"
-                className="bg-base-lightest padding-3 margin-bottom-2"
+                className={classnames(
+                  'bg-base-lightest',
+                  'padding-3',
+                  'margin-bottom-2',
+                  {
+                    'est-lifecycle-cost__review-table--blur':
+                      totalInitiateCosts + totalOmCosts === 0
+                  }
+                )}
               >
                 <p className="est-lifecycle-cost__review-table-caption">
                   Phase per year breakdown
@@ -144,7 +152,12 @@ const EstimatedLifecycleCostReview = ({
                 data-testid="est-lifecycle--desktop"
                 className="est-lifecycle-cost__review-table-wrapper bg-base-lightest margin-bottom-2"
               >
-                <table className="est-lifecycle-cost__review-table">
+                <table
+                  className={classnames('est-lifecycle-cost__review-table', {
+                    'est-lifecycle-cost__review-table--blur':
+                      totalInitiateCosts + totalOmCosts === 0
+                  })}
+                >
                   <caption className="est-lifecycle-cost__review-table-caption">
                     Phase per year breakdown
                   </caption>
