@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory, withRouter, RouteComponentProps } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
-import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
@@ -12,11 +11,12 @@ import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
 import AutoSave from 'components/shared/AutoSave';
+import { initialSystemIntakeForm } from 'data/systemIntake';
+import { v4 as uuidv4 } from 'uuid';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
-import { initialSystemIntakeForm } from '../../data/systemIntake';
 
 export type SystemIntakeRouterProps = {
   profileId: string;
