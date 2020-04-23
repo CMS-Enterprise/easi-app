@@ -8,7 +8,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Button from 'components/shared/Button';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
-import { defaultProposedSolution } from 'views/BusinessCase';
+import { defaultProposedSolution } from 'data/businessCase';
 import {
   BusinessCaseModel,
   ProposedBusinessCaseSolution
