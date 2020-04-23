@@ -14,6 +14,7 @@ import AutoSave from 'components/shared/AutoSave';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { getSystemIntakes } from 'actions/systemIntakesActions';
 import { AppState } from 'reducers/rootReducer';
+import { v4 as uuidv4 } from 'uuid';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -46,13 +47,14 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const [existingIntakesLoaded, setExistingIntakesLoaded] = useState(false);
   const dispatch = useDispatch();
   const formikRef: any = useRef();
+  const id = useRef<string>(uuidv4());
   const pageObj = pages[page - 1];
 
   const draftIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   ).filter(intake => intake.status === 'DRAFT');
   const initialData: SystemIntakeForm =
-    draftIntakes.length > 0 ? draftIntakes[0] : initialSystemIntakeForm();
+    draftIntakes.length > 0 ? draftIntakes[0] : initialSystemIntakeForm;
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
     const Component = pageObj.view;
@@ -65,6 +67,9 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
 
   const dispatchSave = () => {
     if (formikRef.current.dirty) {
+      if (formikRef.current.values.id === '') {
+        formikRef.current.setFieldValue('id', id.current, false);
+      }
       dispatch(saveSystemIntake(formikRef.current.values));
     }
   };
@@ -87,7 +92,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
               className="easi-header__save-button usa-button"
               id="save-button"
               onClick={() => {
-                dispatch(saveSystemIntake(formikRef.current.values));
+                dispatchSave();
                 history.push('/system/all');
               }}
             >
