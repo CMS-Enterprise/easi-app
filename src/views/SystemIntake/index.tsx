@@ -73,23 +73,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
 
   return (
     <div className="system-intake">
-      <Header activeNavListItem={match.params.profileId} name="INTAKE">
-        {pageObj.type === 'FORM' && (
-          <div className="margin-bottom-3">
-            <button
-              type="button"
-              className="easi-header__save-button usa-button"
-              id="save-button"
-              onClick={() => {
-                dispatch(saveSystemIntake(id, formikRef.current.values));
-                history.push('/system/all');
-              }}
-            >
-              <span>Save & Exit</span>
-            </button>
-          </div>
-        )}
-      </Header>
+      <Header activeNavListItem={match.params.profileId} name="INTAKE" />
       <main className="grid-container" role="main">
         <Formik
           initialValues={initialData}
@@ -183,6 +167,24 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       Send to GRT
                     </Button>
                   )}
+
+                  {pageObj.type === 'FORM' && (
+                    <div className="margin-y-3">
+                      <Button
+                        type="button"
+                        unstyled
+                        onClick={() => {
+                          dispatch(saveSystemIntake(id, values));
+                          history.push('/system/all');
+                        }}
+                      >
+                        <span>
+                          <i className="fa fa-angle-left" /> Save & Exit
+                        </span>
+                      </Button>
+                    </div>
+                  )}
+
                   <AutoSave
                     values={values}
                     onSave={dispatchSave}

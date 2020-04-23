@@ -131,15 +131,7 @@ export const BusinessCase = () => {
 
   return (
     <div className="business-case">
-      <Header name="BUSINESS">
-        <div className="margin-bottom-3">
-          {pageObj.type === 'FORM' && (
-            <button type="button" className="easi-button__save usa-button">
-              <span>Save & Exit</span>
-            </button>
-          )}
-        </div>
-      </Header>
+      <Header name="BUSINESS" />
       <main role="main">
         <Formik
           initialValues={businessCaseInitalData}
@@ -235,6 +227,22 @@ export const BusinessCase = () => {
                       >
                         Send to Review Team
                       </Button>
+                    )}
+
+                    {pageObj.type === 'FORM' && (
+                      <div className="margin-y-3">
+                        <Button
+                          type="button"
+                          unstyled
+                          onClick={() => {
+                            // dispatch save and exit function
+                          }}
+                        >
+                          <span>
+                            <i className="fa fa-angle-left" /> Save & Exit
+                          </span>
+                        </Button>
+                      </div>
                     )}
                   </div>
                 </Form>
