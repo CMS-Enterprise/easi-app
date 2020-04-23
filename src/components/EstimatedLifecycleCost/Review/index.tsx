@@ -89,7 +89,7 @@ const EstimatedLifecycleCostReview = ({
         {matches => (
           <>
             {matches.mobile && (
-              <div className="bg-base-lightest padding-3">
+              <div className="bg-base-lightest padding-3 margin-bottom-2">
                 <p className="est-lifecycle-cost__review-table-caption">
                   Phase per year breakdown
                 </p>
