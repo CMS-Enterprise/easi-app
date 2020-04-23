@@ -11,10 +11,12 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
+import AutoSave from 'components/shared/AutoSave';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
+import { initialSystemIntakeForm } from '../../data/systemIntake';
 
 export type SystemIntakeRouterProps = {
   profileId: string;
@@ -52,42 +54,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const initialData: SystemIntakeForm = {
-    id: '',
-    euaUserID: '',
-    projectName: '',
-    acronym: '',
-    status: 'DRAFT',
-    requester: {
-      name: '',
-      component: ''
-    },
-    businessOwner: {
-      name: '',
-      component: ''
-    },
-    productManager: {
-      name: '',
-      component: ''
-    },
-    isso: {
-      isPresent: null,
-      name: ''
-    },
-    governanceTeams: {
-      isPresent: null,
-      teams: []
-    },
-    fundingSource: {
-      isFunded: null,
-      fundingNumber: ''
-    },
-    businessNeed: '',
-    businessSolution: '',
-    currentStage: '',
-    needsEaSupport: null,
-    hasContract: ''
-  };
+  const initialData: SystemIntakeForm = initialSystemIntakeForm;
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
     const Component = pageObj.view;
@@ -96,6 +63,12 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
       return <Component formikProps={formikProps} />;
     }
     return null;
+  };
+
+  const dispatchSave = () => {
+    if (id && formikRef.current.dirty) {
+      dispatch(saveSystemIntake(id, formikRef.current.values));
+    }
   };
 
   return (
@@ -210,6 +183,11 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       Send to GRT
                     </Button>
                   )}
+                  <AutoSave
+                    values={values}
+                    onSave={dispatchSave}
+                    debounceDelay={1000}
+                  />
                 </Form>
               </>
             );
