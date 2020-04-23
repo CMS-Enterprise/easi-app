@@ -112,6 +112,7 @@
   &__review-table-wrapper {
     padding: 32px 16px;
   }
+
   &__review-table {
     table-layout: fixed;
     border-collapse: collapse;
@@ -125,6 +126,10 @@
       &:last-of-type {
         border-bottom: none;
       }
+    }
+
+    &--blur {
+      filter: blur(3px);
     }
   }
 
