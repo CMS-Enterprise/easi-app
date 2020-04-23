@@ -89,7 +89,10 @@ const EstimatedLifecycleCostReview = ({
         {matches => (
           <>
             {matches.mobile && (
-              <div className="bg-base-lightest padding-3 margin-bottom-2">
+              <div
+                data-testid="est-lifecycle--mobile"
+                className="bg-base-lightest padding-3 margin-bottom-2"
+              >
                 <p className="est-lifecycle-cost__review-table-caption">
                   Phase per year breakdown
                 </p>
@@ -137,7 +140,10 @@ const EstimatedLifecycleCostReview = ({
             )}
 
             {matches.desktop && (
-              <div className="est-lifecycle-cost__review-table-wrapper bg-base-lightest margin-bottom-2">
+              <div
+                data-testid="est-lifecycle--desktop"
+                className="est-lifecycle-cost__review-table-wrapper bg-base-lightest margin-bottom-2"
+              >
                 <table className="est-lifecycle-cost__review-table">
                   <caption className="est-lifecycle-cost__review-table-caption">
                     Phase per year breakdown
@@ -145,11 +151,11 @@ const EstimatedLifecycleCostReview = ({
                   <thead>
                     <tr className="est-lifecycle-cost__border">
                       <td className="est-lifecycle-cost__review-th--row" />
-                      <TableHead scope="col">Current Year</TableHead>
-                      <TableHead scope="col">Year 2</TableHead>
-                      <TableHead scope="col">Year 3</TableHead>
-                      <TableHead scope="col">Year 4</TableHead>
-                      <TableHead scope="col">Year 5</TableHead>
+                      {Object.keys(yearMapping).map(year => (
+                        <TableHead key={`${year}-label`} scope="col">
+                          {yearMapping[year]}
+                        </TableHead>
+                      ))}
                       <TableHead scope="col">Total</TableHead>
                     </tr>
                   </thead>
@@ -157,11 +163,17 @@ const EstimatedLifecycleCostReview = ({
                     <tr>
                       <TableHead scope="row">Initiate</TableHead>
                       {Object.keys(yearMapping).map(year => (
-                        <td className="padding-y-3 text-right">
+                        <td
+                          key={`${year}-initiate-costs`}
+                          className="padding-y-3 text-right"
+                        >
                           {formatDollars(initiateCosts[year])}
                         </td>
                       ))}
-                      <td className="padding-y-3 text-right">
+                      <td
+                        data-testid="total-initiate-costs"
+                        className="padding-y-3 text-right"
+                      >
                         {formatDollars(totalInitiateCosts)}
                       </td>
                     </tr>
@@ -170,7 +182,10 @@ const EstimatedLifecycleCostReview = ({
                         Operations & Maintenance
                       </TableHead>
                       {Object.keys(yearMapping).map(year => (
-                        <td className="padding-y-3 text-right">
+                        <td
+                          key={`${year}-om-costs`}
+                          className="padding-y-3 text-right"
+                        >
                           {formatDollars(omCosts[year])}
                         </td>
                       ))}
@@ -181,7 +196,10 @@ const EstimatedLifecycleCostReview = ({
                     <tr>
                       <td />
                       {Object.keys(yearMapping).map(year => (
-                        <td className="padding-y-3 text-right">
+                        <td
+                          key={`${year}-costs`}
+                          className="padding-y-3 text-right"
+                        >
                           {formatDollars(totalCosts[year])}
                         </td>
                       ))}
