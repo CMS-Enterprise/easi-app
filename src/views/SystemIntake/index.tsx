@@ -12,7 +12,7 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
 import AutoSave from 'components/shared/AutoSave';
 import { initialSystemIntakeForm } from 'data/systemIntake';
-import { AppState, LoadingStatus } from 'reducers/rootReducer';
+import { AppState } from 'reducers/rootReducer';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchSystemIntakes } from 'routines/routines';
 import ContactDetails from './ContactDetails';
@@ -39,9 +39,9 @@ export const SystemIntake = () => {
   ];
   const history = useHistory();
   const [page, setPage] = useState(1);
+  const [id] = useState(uuidv4());
   const dispatch = useDispatch();
   const formikRef: any = useRef();
-  const id = useRef<string>(uuidv4());
   const pageObj = pages[page - 1];
 
   const draftIntakes = useSelector(
@@ -50,11 +50,10 @@ export const SystemIntake = () => {
   const initialData: SystemIntakeForm =
     draftIntakes.length > 0 ? draftIntakes[0] : initialSystemIntakeForm;
   if (initialData.id === '') {
-    initialData.id = id.current;
+    initialData.id = id;
   }
-  const existingIntakesLoaded = useSelector(
-    (state: AppState) =>
-      state.systemIntakes.loadingStatus === LoadingStatus.Success
+  const existingIntakesLoading = useSelector(
+    (state: AppState) => state.systemIntakes.isLoading
   );
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
@@ -80,7 +79,7 @@ export const SystemIntake = () => {
     <div className="system-intake">
       <Header name="CMS System Intake" />
       <main className="grid-container" role="main">
-        {existingIntakesLoaded && (
+        {existingIntakesLoading === false && (
           <Formik
             initialValues={initialData}
             // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
