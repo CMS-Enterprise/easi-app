@@ -13,25 +13,10 @@ type HeaderProps = {
   name: string;
 };
 
-const easiLogo = (
-  <Link to="/" title="Home" aria-label="EASi home">
-    EASi
-  </Link>
-);
-
-const intakeLogo = <span aria-label="EASi home">CMS System Intake</span>;
-
 export const Header = ({ auth, children, name }: HeaderProps) => {
   const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const dropdownNode = useRef<any>();
-
-  let logo;
-  if (name === 'INTAKE') {
-    logo = intakeLogo;
-  } else {
-    logo = easiLogo;
-  }
 
   const handleClick = (e: Event) => {
     if (
@@ -66,7 +51,7 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
       <UsGovBanner />
       <div className="grid-container easi-header__basic">
         <div className="usa-logo site-logo" id="logo">
-          <em className="usa-logo__text">{logo}</em>
+          <em className="usa-logo__text">{name || 'EASi'}</em>
         </div>
         <button type="button" className="usa-menu-btn">
           <span className="fa fa-bars" />
