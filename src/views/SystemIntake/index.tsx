@@ -20,12 +20,7 @@ import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
 
-export type SystemIntakeRouterProps = {
-  profileId: string;
-};
-type SystemIntakeProps = RouteComponentProps<SystemIntakeRouterProps> & {};
-
-export const SystemIntake = ({ match }: SystemIntakeProps) => {
+export const SystemIntake = () => {
   const pages = [
     {
       type: 'FORM',
@@ -82,23 +77,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
 
   return (
     <div className="system-intake">
-      <Header activeNavListItem={match.params.profileId} name="INTAKE">
-        {pageObj.type === 'FORM' && (
-          <div className="margin-bottom-3">
-            <button
-              type="button"
-              className="easi-header__save-button usa-button"
-              id="save-button"
-              onClick={() => {
-                dispatchSave();
-                history.push('/system/all');
-              }}
-            >
-              <span>Save & Exit</span>
-            </button>
-          </div>
-        )}
-      </Header>
+      <Header name="CMS System Intake" />
       <main className="grid-container" role="main">
         {existingIntakesLoaded && (
           <Formik
@@ -164,37 +143,35 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                         Back
                       </Button>
                     )}
-
-                    {page < pages.length && (
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          if (pageObj.validation) {
-                            validateForm().then(err => {
-                              if (Object.keys(err).length === 0) {
-                                setPage(prev => prev + 1);
-                              }
-                              window.scrollTo(0, 0);
-                            });
-                          }
-                        }}
-                      >
-                        Next
-                      </Button>
-                    )}
-
                     {page === pages.length && (
                       <Button
                         type="submit"
                         disabled={isSubmitting}
                         onClick={() => {
-                          // eslint-disable-next-line no-console
                           console.log('Submitting Data: ', values);
                         }}
                       >
                         Send to GRT
                       </Button>
                     )}
+
+                    {pageObj.type === 'FORM' && (
+                      <div className="margin-y-3">
+                        <Button
+                          type="button"
+                          unstyled
+                          onClick={() => {
+                            dispatchSave();
+                            history.push('/system/all');
+                          }}
+                        >
+                          <span>
+                            <i className="fa fa-angle-left" /> Save & Exit
+                          </span>
+                        </Button>
+                      </div>
+                    )}
+
                     <AutoSave
                       values={values}
                       onSave={dispatchSave}
@@ -217,4 +194,4 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   );
 };
 
-export default withRouter(SystemIntake);
+export default SystemIntake;
