@@ -2,12 +2,11 @@ import { SystemIntakesState } from 'types/systemIntake';
 import { prepareSystemIntakeForApp } from 'data/systemIntake';
 import { fetchSystemIntakes } from 'routines/routines';
 import { DateTime } from 'luxon';
+import { LoadingStatus } from 'reducers/rootReducer';
 
 const initialState: SystemIntakesState = {
   systemIntakes: [],
-  loaded: false,
-  loadedTimestamp: null,
-  error: null
+  loadingStatus: LoadingStatus.Unstarted
 };
 
 function systemIntakesReducer(
@@ -15,31 +14,25 @@ function systemIntakesReducer(
   action: any
 ): SystemIntakesState {
   switch (action.type) {
-    case fetchSystemIntakes.TRIGGER:
+    case fetchSystemIntakes.REQUEST:
       return {
         ...state,
-        loaded: false
+        loadingStatus: LoadingStatus.InProgress
       };
-    case fetchSystemIntakes.REQUEST:
-      return state;
     case fetchSystemIntakes.SUCCESS:
-      console.log(action);
       return {
         ...state,
         systemIntakes: action.payload.map((intake: any) =>
           prepareSystemIntakeForApp(intake)
-        )
+        ),
+        loadingStatus: LoadingStatus.Success,
+        loadedTimestamp: DateTime.local()
       };
     case fetchSystemIntakes.FAILURE:
       return {
         ...state,
+        loadingStatus: LoadingStatus.Failure,
         error: action.payload
-      };
-    case fetchSystemIntakes.FULFILL:
-      return {
-        ...state,
-        loaded: true,
-        loadedTimestamp: DateTime.local()
       };
     default:
       return state;
