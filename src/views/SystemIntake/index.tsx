@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, withRouter, RouteComponentProps } from 'react-router-dom';
-import { Formik, Form, FormikProps } from 'formik';
+import { useHistory } from 'react-router-dom';
+import { Form, Formik, FormikProps } from 'formik';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
@@ -12,7 +12,7 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
 import AutoSave from 'components/shared/AutoSave';
 import { initialSystemIntakeForm } from 'data/systemIntake';
-import { AppState } from 'reducers/rootReducer';
+import { AppState, LoadingStatus } from 'reducers/rootReducer';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchSystemIntakes } from 'routines/routines';
 import ContactDetails from './ContactDetails';
@@ -53,7 +53,8 @@ export const SystemIntake = () => {
     initialData.id = id.current;
   }
   const existingIntakesLoaded = useSelector(
-    (state: AppState) => state.systemIntakes.loaded
+    (state: AppState) =>
+      state.systemIntakes.loadingStatus === LoadingStatus.Success
   );
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
@@ -93,13 +94,7 @@ export const SystemIntake = () => {
             enableReinitialize
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
-              const {
-                values,
-                errors,
-                validateForm,
-                setErrors,
-                isSubmitting
-              } = formikProps;
+              const { values, errors, setErrors, isSubmitting } = formikProps;
               const flatErrors: any = flattenErrors(errors);
               return (
                 <>
