@@ -62,12 +62,3 @@ export type PutSystemIntakeAction = {
   id: string;
   formData: SystemIntakeForm;
 };
-
-export type GetSystemIntakesAction = {
-  type: string;
-};
-
-export type StoreSystemIntakesAction = {
-  type: string;
-  systemIntakes: SystemIntakeForm[];
-};
