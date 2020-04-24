@@ -7,6 +7,10 @@ import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { BusinessCaseModel } from 'types/businessCase';
+import {
+  businessCaseInitalData,
+  defaultProposedSolution
+} from 'data/businessCase';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
 import GeneralProjectInfo from './GeneralProjectInfo';
@@ -16,26 +20,6 @@ import PreferredSolution from './PreferredSolution';
 import AlternativeSolution from './AlternativeSolution';
 import Review from './Review';
 import './index.scss';
-
-// Default data for estimated lifecycle costs
-const defaultEstimatedLifecycle = {
-  year1: [{ phase: '', cost: '' }],
-  year2: [{ phase: '', cost: '' }],
-  year3: [{ phase: '', cost: '' }],
-  year4: [{ phase: '', cost: '' }],
-  year5: [{ phase: '', cost: '' }]
-};
-
-// Default data for a proposed solution
-export const defaultProposedSolution = {
-  title: '',
-  summary: '',
-  acquisitionApproach: '',
-  pros: '',
-  cons: '',
-  estimatedLifecycleCost: defaultEstimatedLifecycle,
-  costSavings: ''
-};
 
 export const BusinessCase = () => {
   const [pages, setPages] = useState<any[]>([
@@ -71,32 +55,6 @@ export const BusinessCase = () => {
   ]);
   const [page, setPage] = useState(1);
   const pageObj = pages[page - 1];
-
-  const initialData: BusinessCaseModel = {
-    projectName: '',
-    requester: {
-      name: '',
-      phoneNumber: ''
-    },
-    budgetNumber: '',
-    businessOwner: {
-      name: ''
-    },
-    businessNeed: '',
-    cmsBenefit: '',
-    priorityAlignment: '',
-    successIndicators: '',
-    asIsSolution: {
-      title: '',
-      summary: '',
-      pros: '',
-      cons: '',
-      estimatedLifecycleCost: defaultEstimatedLifecycle,
-      costSavings: ''
-    },
-    preferredSolution: defaultProposedSolution,
-    alternativeA: defaultProposedSolution
-  };
 
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     switch (pageObj.name) {
@@ -165,7 +123,7 @@ export const BusinessCase = () => {
           />
         );
       case 'Review':
-        return <Review />;
+        return <Review formikProps={formikProps} />;
       default:
         return null;
     }
@@ -182,9 +140,9 @@ export const BusinessCase = () => {
           )}
         </div>
       </Header>
-      <main className="grid-container" role="main">
+      <main role="main">
         <Formik
-          initialValues={initialData}
+          initialValues={businessCaseInitalData}
           // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
           // Form will be manually submitted.
           onSubmit={() => {}}
@@ -204,88 +162,94 @@ export const BusinessCase = () => {
             const flatErrors: any = flattenErrors(errors);
             return (
               <>
-                {Object.keys(errors).length > 0 && (
-                  <ErrorAlert
-                    classNames="margin-top-3"
-                    heading="Please check and fix the following"
-                  >
-                    {Object.keys(flatErrors).map(key => {
-                      return (
-                        <ErrorAlertMessage
-                          key={`Error.${key}`}
-                          message={flatErrors[key]}
-                          onClick={() => {
-                            const field = document.querySelector(
-                              `[data-scroll="${key}"]`
-                            );
+                <div className="grid-container">
+                  {Object.keys(errors).length > 0 && (
+                    <ErrorAlert
+                      classNames="margin-top-3"
+                      heading="Please check and fix the following"
+                    >
+                      {Object.keys(flatErrors).map(key => {
+                        return (
+                          <ErrorAlertMessage
+                            key={`Error.${key}`}
+                            message={flatErrors[key]}
+                            onClick={() => {
+                              const field = document.querySelector(
+                                `[data-scroll="${key}"]`
+                              );
 
-                            if (field) {
-                              field.scrollIntoView();
-                            }
-                          }}
-                        />
-                      );
-                    })}
-                  </ErrorAlert>
-                )}
+                              if (field) {
+                                field.scrollIntoView();
+                              }
+                            }}
+                          />
+                        );
+                      })}
+                    </ErrorAlert>
+                  )}
+                </div>
                 <Form>
                   {renderPage(formikProps)}
-                  {page > 1 && (
-                    <Button
-                      type="button"
-                      outline
-                      onClick={() => {
-                        setPage(prev => prev - 1);
-                        setErrors({});
-                        window.scrollTo(0, 0);
-                      }}
-                    >
-                      Back
-                    </Button>
-                  )}
+                  <div className="grid-container">
+                    {page > 1 && (
+                      <Button
+                        type="button"
+                        outline
+                        onClick={() => {
+                          setPage(prev => prev - 1);
+                          setErrors({});
+                          window.scrollTo(0, 0);
+                        }}
+                      >
+                        Back
+                      </Button>
+                    )}
 
-                  {page < pages.length && (
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        if (pageObj.validation) {
-                          validateForm().then(err => {
-                            if (Object.keys(err).length === 0) {
-                              setPage(prev => prev + 1);
-                            }
-                          });
-                        } else {
-                          setPage(prev => prev + 1);
-                        }
-                        window.scrollTo(0, 0);
-                      }}
-                    >
-                      Next
-                    </Button>
-                  )}
+                    {page < pages.length && (
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (pageObj.validation) {
+                            validateForm().then(err => {
+                              if (Object.keys(err).length === 0) {
+                                setPage(prev => prev + 1);
+                              }
+                            });
+                          } else {
+                            setPage(prev => prev + 1);
+                          }
+                          window.scrollTo(0, 0);
+                        }}
+                      >
+                        Next
+                      </Button>
+                    )}
 
-                  {page === pages.length && (
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      onClick={() => {
-                        console.log('Submitting Data: ', values);
-                      }}
-                    >
-                      Review and Send
-                    </Button>
-                  )}
+                    {page === pages.length && (
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        onClick={() => {
+                          console.log('Submitting Data: ', values);
+                        }}
+                      >
+                        Send to Review Team
+                      </Button>
+                    )}
+                  </div>
                 </Form>
               </>
             );
           }}
         </Formik>
-        {pageObj.type === 'FORM' && (
-          <PageNumber
-            currentPage={page}
-            totalPages={pages.filter(p => p.type === 'FORM').length}
-          />
-        )}
+        <div className="grid-container">
+          {pageObj.type === 'FORM' && (
+            <PageNumber
+              currentPage={page}
+              totalPages={pages.filter(p => p.type === 'FORM').length}
+            />
+          )}
+        </div>
       </main>
     </div>
   );
