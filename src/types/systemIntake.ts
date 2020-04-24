@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { LoadingStatus } from 'reducers/rootReducer';
 
 export type GovernanceCollaborationTeam = {
   collaborator: string;
@@ -54,7 +53,7 @@ export type SystemIntakeState = {
 // Redux store type for systems
 export type SystemIntakesState = {
   systemIntakes: SystemIntakeForm[];
-  loadingStatus: LoadingStatus;
+  isLoading?: boolean;
   loadedTimestamp?: DateTime;
   error?: string;
 };
