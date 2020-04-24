@@ -8,7 +8,7 @@ import UpcomingActions from 'components/shared/UpcomingActions';
 import ActionBanner from 'components/shared/ActionBanner';
 import { getAllSystemShorts } from 'actions/searchActions';
 import { DateTime } from 'luxon';
-import { fetchSystemIntakes } from 'routines/routines';
+import { fetchSystemIntakes } from 'types/routines';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },

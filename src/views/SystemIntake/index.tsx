@@ -14,7 +14,7 @@ import AutoSave from 'components/shared/AutoSave';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { v4 as uuidv4 } from 'uuid';
-import { fetchSystemIntakes } from 'routines/routines';
+import { fetchSystemIntakes } from 'types/routines';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';

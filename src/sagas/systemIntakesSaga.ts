@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { fetchSystemIntakes } from 'routines/routines';
+import { fetchSystemIntakes } from 'types/routines';
 
 function getSystemIntakesRequest() {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intakes`);

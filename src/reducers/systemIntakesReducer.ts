@@ -1,6 +1,6 @@
 import { SystemIntakesState } from 'types/systemIntake';
 import { prepareSystemIntakeForApp } from 'data/systemIntake';
-import { fetchSystemIntakes } from 'routines/routines';
+import { fetchSystemIntakes } from 'types/routines';
 import { DateTime } from 'luxon';
 
 const initialState: SystemIntakesState = {
