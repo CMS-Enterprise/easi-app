@@ -2,6 +2,7 @@ import { SystemIntakesState } from 'types/systemIntake';
 import { prepareSystemIntakeForApp } from 'data/systemIntake';
 import { fetchSystemIntakes } from 'types/routines';
 import { DateTime } from 'luxon';
+import { Action } from 'redux-actions';
 
 const initialState: SystemIntakesState = {
   systemIntakes: []
@@ -9,7 +10,7 @@ const initialState: SystemIntakesState = {
 
 function systemIntakesReducer(
   state = initialState,
-  action: any
+  action: Action<any>
 ): SystemIntakesState {
   switch (action.type) {
     case fetchSystemIntakes.REQUEST:
