@@ -6,9 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'reducers/rootReducer';
 import UpcomingActions from 'components/shared/UpcomingActions';
 import ActionBanner from 'components/shared/ActionBanner';
-import { getAllSystemShorts } from 'actions/searchActions';
 import { DateTime } from 'luxon';
-import { fetchSystemIntakes } from 'types/routines';
+import { fetchSystemIntakes, fetchSystemShorts } from 'types/routines';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -57,7 +56,7 @@ export const SystemProfiles = () => {
     (state: AppState) => state.systemIntakes.systemIntakes
   );
   const searchResults = useSelector(
-    (state: AppState) => state.search.allSystemShorts
+    (state: AppState) => state.search.systemShorts
   );
   const timeStamp = useSelector(
     (state: AppState) => state.systemIntakes.loadedTimestamp
@@ -72,10 +71,7 @@ export const SystemProfiles = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const fetchSystemShorts = async (): Promise<void> => {
-      dispatch(getAllSystemShorts());
-    };
-    fetchSystemShorts();
+    dispatch(fetchSystemShorts());
   }, [dispatch]);
 
   const getStatusNotification = (status: string) => {

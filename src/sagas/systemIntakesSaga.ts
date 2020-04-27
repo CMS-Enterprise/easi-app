@@ -6,7 +6,7 @@ function getSystemIntakesRequest() {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intakes`);
 }
 
-export function* getSystemIntakes() {
+function* getSystemIntakes() {
   try {
     yield put(fetchSystemIntakes.request());
     const response = yield call(getSystemIntakesRequest);
@@ -18,6 +18,6 @@ export function* getSystemIntakes() {
   }
 }
 
-export function* systemIntakesSaga() {
+export default function* systemIntakesSaga() {
   yield takeLatest(fetchSystemIntakes.TRIGGER, getSystemIntakes);
 }
