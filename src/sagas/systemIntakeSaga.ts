@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { PUT_SYSTEM_INTAKE } from 'constants/actions';
 import { PutSystemIntakeAction } from 'types/systemIntake';
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
-import { fetchSystemIntake } from 'types/routines';
+import { fetchSystemIntake, saveSystemIntake } from 'types/routines';
 import { Action } from 'redux-actions';
 
 function putSystemIntakeRequest({ id, formData }: PutSystemIntakeAction) {
@@ -12,12 +11,15 @@ function putSystemIntakeRequest({ id, formData }: PutSystemIntakeAction) {
   return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }
 
-export function* putSystemIntake(payload: PutSystemIntakeAction) {
+function* putSystemIntake(action: Action<any>) {
   try {
-    const response = yield call(putSystemIntakeRequest, payload);
-    console.log('Response', response);
-  } catch (err) {
-    console.log(err);
+    yield put(saveSystemIntake.request());
+    const response = yield call(putSystemIntakeRequest, action.payload);
+    yield put(saveSystemIntake.success(response.data));
+  } catch (error) {
+    yield put(saveSystemIntake.failure(error.message));
+  } finally {
+    yield put(saveSystemIntake.fulfill());
   }
 }
 
@@ -37,7 +39,8 @@ function* getSystemIntake(action: Action<any>) {
   }
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
-  yield takeLatest(PUT_SYSTEM_INTAKE, putSystemIntake);
+  yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
 }
