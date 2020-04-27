@@ -1,10 +1,7 @@
-import {
-  PUT_SYSTEM_INTAKE,
-  GET_SYSTEM_INTAKE,
-  STORE_SYSTEM_INTAKE
-} from 'constants/actions';
+import { PUT_SYSTEM_INTAKE } from 'constants/actions';
 import { SystemIntakeForm, PutSystemIntakeAction } from 'types/systemIntake';
 
+// eslint-disable-next-line import/prefer-default-export
 export function saveSystemIntake(
   formData: SystemIntakeForm
 ): PutSystemIntakeAction {
@@ -18,24 +15,3 @@ type GetSystemIntakeAction = {
   type: string;
   intakeID: string;
 };
-
-export function getSystemIntake(intakeID: string): GetSystemIntakeAction {
-  return {
-    type: GET_SYSTEM_INTAKE,
-    intakeID
-  };
-}
-
-type StoreSystemIntakeAction = {
-  type: string;
-  systemIntake: SystemIntakeForm;
-};
-
-export function storeSystemIntake(
-  systemIntake: SystemIntakeForm
-): StoreSystemIntakeAction {
-  return {
-    type: STORE_SYSTEM_INTAKE,
-    systemIntake
-  };
-}
