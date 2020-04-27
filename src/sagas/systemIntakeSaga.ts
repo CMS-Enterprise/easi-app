@@ -39,8 +39,7 @@ function* getSystemIntake(action: Action<any>) {
   }
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export function* systemIntakeSaga() {
+export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
 }
