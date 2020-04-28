@@ -15,10 +15,20 @@ function systemIntakeReducer(
   action: Action<any>
 ): SystemIntakeState {
   switch (action.type) {
+    case fetchSystemIntake.REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
     case fetchSystemIntake.SUCCESS:
       return {
         ...state,
         systemIntake: prepareSystemIntakeForApp(action.payload)
+      };
+    case fetchSystemIntake.FULFILL:
+      return {
+        ...state,
+        isLoading: false
       };
     default:
       return state;

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
@@ -13,14 +13,19 @@ import flattenErrors from 'utils/flattenErrors';
 import AutoSave from 'components/shared/AutoSave';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
-import { v4 as uuidv4 } from 'uuid';
-import { fetchSystemIntakes } from 'types/routines';
+import { fetchSystemIntake } from 'types/routines';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
 
-export const SystemIntake = () => {
+export type SystemIDRouterProps = {
+  systemId: string;
+};
+
+export type SystemIntakeProps = RouteComponentProps<SystemIDRouterProps>;
+
+export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const pages = [
     {
       type: 'FORM',
@@ -39,21 +44,20 @@ export const SystemIntake = () => {
   ];
   const history = useHistory();
   const [page, setPage] = useState(1);
-  const [id] = useState(uuidv4());
   const dispatch = useDispatch();
   const formikRef: any = useRef();
   const pageObj = pages[page - 1];
 
-  const draftIntakes = useSelector(
-    (state: AppState) => state.systemIntakes.systemIntakes
-  ).filter(intake => intake.status === 'DRAFT');
-  const initialData: SystemIntakeForm =
-    draftIntakes.length > 0 ? draftIntakes[0] : initialSystemIntakeForm;
+  // Todo: could someone edit an already-submitted form?
+  const draftIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake
+  );
+  const initialData: SystemIntakeForm = draftIntake || initialSystemIntakeForm;
   if (initialData.id === '') {
-    initialData.id = id;
+    initialData.id = match.params.systemId;
   }
   const existingIntakesLoading = useSelector(
-    (state: AppState) => state.systemIntakes.isLoading
+    (state: AppState) => state.systemIntake.isLoading
   );
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
@@ -72,7 +76,7 @@ export const SystemIntake = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchSystemIntakes());
+    dispatch(fetchSystemIntake(match.params.systemId));
   }, [dispatch]);
 
   return (
