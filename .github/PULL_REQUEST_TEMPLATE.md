@@ -1,4 +1,4 @@
-# EASI-000
+# [EASI-000](https://jiraent.cms.gov/browse/EASI-000)
 
 <!--
     If applicable, insert the Jira story number in the markdown header above
