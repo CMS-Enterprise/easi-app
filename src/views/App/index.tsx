@@ -34,7 +34,10 @@ class App extends React.Component<MainProps, MainState> {
                 exact
                 component={SystemProfiles}
               />
-              <SecureRoute path="/system/new" component={SystemIntake} />
+              <SecureRoute
+                path="/system/:systemId/new"
+                component={SystemIntake}
+              />
               <SecureRoute
                 path="/system/:systemId/grt-review"
                 component={GRTSystemIntakeReview}

@@ -48,6 +48,7 @@ export type SystemIntakeForm = {
 // Redux store type for a system intake
 export type SystemIntakeState = {
   systemIntake?: SystemIntakeForm;
+  isLoading?: boolean;
 };
 
 // Redux store type for systems
@@ -55,7 +56,6 @@ export type SystemIntakesState = {
   systemIntakes: SystemIntakeForm[];
   isLoading?: boolean;
   loadedTimestamp?: DateTime;
-  error?: string;
 };
 
 export type PutSystemIntakeAction = {

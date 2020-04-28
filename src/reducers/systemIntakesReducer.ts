@@ -26,11 +26,6 @@ function systemIntakesReducer(
         ),
         loadedTimestamp: DateTime.local()
       };
-    case fetchSystemIntakes.FAILURE:
-      return {
-        ...state,
-        error: action.payload
-      };
     case fetchSystemIntakes.FULFILL:
       return {
         ...state,
