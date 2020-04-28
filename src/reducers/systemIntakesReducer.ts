@@ -4,10 +4,7 @@ import { fetchSystemIntakes } from 'routines/routines';
 import { DateTime } from 'luxon';
 
 const initialState: SystemIntakesState = {
-  systemIntakes: [],
-  loaded: false,
-  loadedTimestamp: null,
-  error: null
+  systemIntakes: []
 };
 
 function systemIntakesReducer(
@@ -15,30 +12,22 @@ function systemIntakesReducer(
   action: any
 ): SystemIntakesState {
   switch (action.type) {
-    case fetchSystemIntakes.TRIGGER:
+    case fetchSystemIntakes.REQUEST:
       return {
         ...state,
-        loaded: false
+        isLoading: true
       };
-    case fetchSystemIntakes.REQUEST:
-      return state;
     case fetchSystemIntakes.SUCCESS:
-      console.log(action);
       return {
         ...state,
         systemIntakes: action.payload.map((intake: any) =>
           prepareSystemIntakeForApp(intake)
         )
       };
-    case fetchSystemIntakes.FAILURE:
-      return {
-        ...state,
-        error: action.payload
-      };
     case fetchSystemIntakes.FULFILL:
       return {
         ...state,
-        loaded: true,
+        isLoading: false,
         loadedTimestamp: DateTime.local()
       };
     default:
