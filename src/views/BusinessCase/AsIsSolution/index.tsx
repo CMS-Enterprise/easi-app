@@ -17,7 +17,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
   const { values, errors } = formikProps;
   const flatErrors = flattenErrors(errors);
   return (
-    <>
+    <div className="grid-container">
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
       <p className="line-height-body-6">
         Below you should identify options and alternatives to meet your business
@@ -178,7 +178,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             values.asIsSolution.costSavings.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
-    </>
+    </div>
   );
 };
 
