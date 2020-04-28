@@ -235,7 +235,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
               value
             />
             {values.isso.isPresent && (
-              <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
+              <div className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
                 <FieldGroup
                   scrollElement="isso.name"
                   error={!!flatErrors['isso.name']}
