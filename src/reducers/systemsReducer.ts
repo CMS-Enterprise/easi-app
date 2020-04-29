@@ -1,16 +1,20 @@
-import { STORE_SYSTEM_SHORTS } from '../constants/actions';
-import { SystemState } from '../types/system';
+import { SystemState } from 'types/system';
+import { Action } from 'redux-actions';
+import { fetchSystemShorts } from 'types/routines';
 
 const initialState: SystemState = {
-  allSystemShorts: []
+  systemShorts: []
 };
 
-function systemsReducer(state = initialState, action: any): SystemState {
+function systemsReducer(
+  state = initialState,
+  action: Action<any>
+): SystemState {
   switch (action.type) {
-    case STORE_SYSTEM_SHORTS:
+    case fetchSystemShorts.SUCCESS:
       return {
         ...state,
-        allSystemShorts: action.shorts
+        systemShorts: action.payload
       };
     default:
       return state;
