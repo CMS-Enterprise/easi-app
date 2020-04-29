@@ -131,7 +131,7 @@ export const SystemProfiles = () => {
               return (
                 <ActionBanner
                   key={intake.id}
-                  title={`${intake.projectName} Intake Request`}
+                  title={`${intake.requestName} Intake Request`}
                   helpfulText={getStatusNotification(intake.status)}
                   onClick={() => {}}
                   buttonUnstyled={intake.status === 'SUBMITTED'}

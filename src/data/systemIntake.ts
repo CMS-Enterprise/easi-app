@@ -7,7 +7,7 @@ import cmsGovernanceTeams from '../constants/enums/cmsGovernanceTeams';
 export const initialSystemIntakeForm: SystemIntakeForm = {
   id: '',
   euaUserID: '',
-  projectName: '',
+  requestName: '',
   status: 'DRAFT',
   requester: {
     name: '',
@@ -67,7 +67,7 @@ export const prepareSystemIntakeForApi = (
       "OIT's Security and Privacy Group"
     ),
     eaCollaborator: getGovernanceCollaborator('Enterprise Architecture'),
-    projectName: systemIntake.projectName,
+    projectName: systemIntake.requestName,
     existingFunding: systemIntake.fundingSource.isFunded,
     fundingSource: systemIntake.fundingSource.fundingNumber,
     businessNeed: systemIntake.businessNeed,
@@ -95,7 +95,7 @@ export const prepareSystemIntakeForApp = (systemIntake: any) => {
   return {
     id: systemIntake.id || '',
     euaUserID: systemIntake.euaUserID || '',
-    projectName: systemIntake.projectName || '',
+    requestName: systemIntake.projectName || '',
     status: systemIntake.status || 'DRAFT',
     requester: {
       name: systemIntake.requester || '',

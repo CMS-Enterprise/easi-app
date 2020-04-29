@@ -5,21 +5,19 @@ const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
 const SystemIntakeValidationSchema: any = {
   contactDetails: Yup.object().shape({
     requester: Yup.object().shape({
-      name: Yup.string().required("Enter the Requester's name"),
-      component: Yup.string().required("Enter the Requester's component")
+      name: Yup.string().required('Enter a name for this request'),
+      component: Yup.string().required("Select the Requester's component")
     }),
     businessOwner: Yup.object().shape({
       name: Yup.string().required("Enter the Business or Product Owner's name"),
-      component: Yup.string().required(
-        "Enter the Business or Product Owner's component"
-      )
+      component: Yup.string().required('Select a Business Owner Component')
     }),
     productManager: Yup.object().shape({
       name: Yup.string().required(
-        "Enter the CMS Product/Project Manager, or Lead's Name"
+        'Enter the CMS Project/Product Manager or Lead name'
       ),
       component: Yup.string().required(
-        "Enter the CMS Product/Project Manager, or Lead's component"
+        'Select a project/ product manager, or Lead Component'
       )
     }),
     isso: Yup.object().shape({
@@ -51,7 +49,16 @@ const SystemIntakeValidationSchema: any = {
     })
   }),
   requestDetails: Yup.object().shape({
-    projectName: Yup.string().required('Enter the Project Name'),
+    requestName: Yup.string().required('Enter the Project Name'),
+    businessNeed: Yup.string().required('Tell us about your request'),
+    businessSolution: Yup.string().required(
+      'Tell us how you think of solving your business need'
+    ),
+    needsEaSupport: Yup.boolean()
+      .nullable()
+      .required('Tell us if you need Enterprise Architecture (EA) support'),
+    currentStage: Yup.string().required('Tell us where you are in the process'),
+    hasContract: Yup.string().required('Tell us about your contract situation'),
     fundingSource: Yup.object().shape({
       isFunded: Yup.boolean()
         .nullable()
@@ -61,18 +68,11 @@ const SystemIntakeValidationSchema: any = {
         then: Yup.string()
           .length(6, 'Funding number must be exactly 6 digits')
           .matches(/^\d+$/, 'Fuding number can only contain digits')
-          .required('Tell us your six digit funding number')
+          .required(
+            'Tell us your funding number. This is a six digit number and starts with 00'
+          )
       })
-    }),
-    businessNeed: Yup.string().required('Tell us about your business need'),
-    businessSolution: Yup.string().required(
-      'Tell us how you think of solving your business need'
-    ),
-    currentStage: Yup.string().required('Tell us where you are in the process'),
-    needsEaSupport: Yup.boolean()
-      .nullable()
-      .required('Tell us if you need Enterprise Architecture (EA) support'),
-    hasContract: Yup.string().required('Tell us about your contract situation')
+    })
   })
 };
 

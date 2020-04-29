@@ -68,7 +68,7 @@ export const SystemIntake = () => {
 
   return (
     <div className="system-intake">
-      <Header name="CMS System Intake" />
+      <Header name="EASi System Intake" />
       <main className="grid-container" role="main">
         <Formik
           initialValues={initialData}
@@ -159,7 +159,7 @@ export const SystemIntake = () => {
                         console.log('Submitting Data: ', values);
                       }}
                     >
-                      Send to GRT
+                      Send my intake request
                     </Button>
                   )}
 
