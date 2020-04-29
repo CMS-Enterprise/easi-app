@@ -6,7 +6,6 @@ import Home from 'views/Home';
 import Login from 'views/Login';
 import BusinessCase from 'views/BusinessCase';
 import GRTSystemIntakeReview from 'views/GRTSystemIntakeReview';
-import SystemProfiles from 'views/SystemProfiles';
 import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
 
@@ -28,16 +27,16 @@ class App extends React.Component<MainProps, MainState> {
               <Route path="/" exact component={Home} />
               <Route path="/login" exact component={Login} />
               <Route path="/sandbox" exact component={Sandbox} />
-              <SecureRoute
-                path="/system/all"
-                exact
-                component={SystemProfiles}
-              />
               <SecureRoute path="/system/new" component={SystemIntake} />
               <SecureRoute
                 path="/system/:systemId/grt-review"
                 component={GRTSystemIntakeReview}
               />
+              {/* <SecureRoute
+                path="/system/all"
+                exact
+                component={SystemProfiles}
+              /> */}
               {/* <SecureRoute
                 path="/system/:profileId"
                 component={SystemProfile}
