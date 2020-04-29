@@ -23,13 +23,13 @@ function systemIntakesReducer(
         ...state,
         systemIntakes: action.payload.map((intake: any) =>
           prepareSystemIntakeForApp(intake)
-        )
+        ),
+        loadedTimestamp: DateTime.local()
       };
     case fetchSystemIntakes.FULFILL:
       return {
         ...state,
-        isLoading: false,
-        loadedTimestamp: DateTime.local()
+        isLoading: false
       };
     default:
       return state;
