@@ -6,7 +6,6 @@ import Home from 'views/Home';
 import Login from 'views/Login';
 import BusinessCase from 'views/BusinessCase';
 import GRTSystemIntakeReview from 'views/GRTSystemIntakeReview';
-import SystemProfile from 'views/SystemProfile';
 import SystemProfiles from 'views/SystemProfiles';
 import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
@@ -39,10 +38,10 @@ class App extends React.Component<MainProps, MainState> {
                 path="/system/:systemId/grt-review"
                 component={GRTSystemIntakeReview}
               />
-              <SecureRoute
+              {/* <SecureRoute
                 path="/system/:profileId"
                 component={SystemProfile}
-              />
+              /> */}
               <SecureRoute path="/business/new" component={BusinessCase} />
               <Route path="/implicit/callback" component={ImplicitCallback} />
             </Switch>
