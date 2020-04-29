@@ -4,6 +4,8 @@ import {
 } from 'types/systemIntake';
 import cmsGovernanceTeams from '../constants/enums/cmsGovernanceTeams';
 
+// On the frontend, the field is now "requestName", but the backend API
+// has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
   id: '',
   euaUserID: '',
