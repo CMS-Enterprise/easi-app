@@ -5,8 +5,8 @@ import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
-import { getAllSystemShorts } from '../../actions/searchActions';
-import { AppState } from '../../reducers/rootReducer';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemShorts } from 'types/routines';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -59,14 +59,11 @@ export const SystemProfile = ({ match }: SystemProfileProps) => {
   const renderSuggestion = (suggestion: any): string => suggestion.name;
   const dispatch = useDispatch();
   const searchResults = useSelector(
-    (state: AppState) => state.search.allSystemShorts
+    (state: AppState) => state.search.systemShorts
   );
 
   useEffect(() => {
-    const fetchSystemShorts = async (): Promise<void> => {
-      dispatch(getAllSystemShorts());
-    };
-    fetchSystemShorts();
+    dispatch(fetchSystemShorts());
   }, [dispatch]);
 
   return (
