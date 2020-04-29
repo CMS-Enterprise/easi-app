@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import Header from 'components/Header';
-import { getSystemIntake } from '../../actions/systemIntakeActions';
-import { AppState } from '../../reducers/rootReducer';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntake } from 'types/routines';
 
 export type SystemIDRouterProps = {
   systemId: string;
@@ -22,10 +22,7 @@ export const GRTSystemIntakeReview = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchSystemIntake = async (): Promise<void> => {
-      dispatch(getSystemIntake(await match.params.systemId));
-    };
-    fetchSystemIntake();
+    dispatch(fetchSystemIntake(match.params.systemId));
   }, [dispatch, match.params.systemId]);
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake

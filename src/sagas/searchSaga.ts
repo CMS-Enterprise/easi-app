@@ -1,17 +1,23 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { GET_ALL_SYSTEM_SHORTS } from '../constants/actions';
-import { storeSystemShorts } from '../actions/searchActions';
+import { fetchSystemShorts } from 'types/routines';
 
 function requestSystemShorts() {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/systems`);
 }
 
-export function* getAllSystemShorts() {
-  const obj = yield call(requestSystemShorts);
-  yield put(storeSystemShorts(obj.data));
+function* getSystemShorts() {
+  try {
+    yield put(fetchSystemShorts.request());
+    const response = yield call(requestSystemShorts);
+    yield put(fetchSystemShorts.success(response.data));
+  } catch (error) {
+    yield put(fetchSystemShorts.failure(error.message));
+  } finally {
+    yield put(fetchSystemShorts.fulfill());
+  }
 }
 
-export function* searchSaga() {
-  yield takeLatest(GET_ALL_SYSTEM_SHORTS, getAllSystemShorts);
+export default function* searchSaga() {
+  yield takeLatest(fetchSystemShorts.TRIGGER, getSystemShorts);
 }
