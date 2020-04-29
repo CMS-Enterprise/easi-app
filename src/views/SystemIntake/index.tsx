@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory, withRouter, RouteComponentProps } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
@@ -18,12 +18,7 @@ import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
 
-export type SystemIntakeRouterProps = {
-  profileId: string;
-};
-type SystemIntakeProps = RouteComponentProps<SystemIntakeRouterProps> & {};
-
-export const SystemIntake = ({ match }: SystemIntakeProps) => {
+export const SystemIntake = () => {
   const pages = [
     {
       type: 'FORM',
@@ -73,23 +68,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
 
   return (
     <div className="system-intake">
-      <Header activeNavListItem={match.params.profileId} name="INTAKE">
-        {pageObj.type === 'FORM' && (
-          <div className="margin-bottom-3">
-            <button
-              type="button"
-              className="easi-header__save-button usa-button"
-              id="save-button"
-              onClick={() => {
-                dispatchSave();
-                history.push('/system/all');
-              }}
-            >
-              <span>Save & Exit</span>
-            </button>
-          </div>
-        )}
-      </Header>
+      <Header name="CMS System Intake" />
       <main className="grid-container" role="main">
         <Formik
           initialValues={initialData}
@@ -183,6 +162,24 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       Send to GRT
                     </Button>
                   )}
+
+                  {pageObj.type === 'FORM' && (
+                    <div className="margin-y-3">
+                      <Button
+                        type="button"
+                        unstyled
+                        onClick={() => {
+                          dispatchSave();
+                          history.push('/system/all');
+                        }}
+                      >
+                        <span>
+                          <i className="fa fa-angle-left" /> Save & Exit
+                        </span>
+                      </Button>
+                    </div>
+                  )}
+
                   <AutoSave
                     values={values}
                     onSave={dispatchSave}
@@ -204,4 +201,4 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   );
 };
 
-export default withRouter(SystemIntake);
+export default SystemIntake;
