@@ -170,7 +170,7 @@ export const SystemIntake = () => {
                         unstyled
                         onClick={() => {
                           dispatchSave();
-                          history.push('/system/all');
+                          history.push('/');
                         }}
                       >
                         <span>
