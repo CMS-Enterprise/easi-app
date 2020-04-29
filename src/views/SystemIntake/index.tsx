@@ -67,7 +67,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
 
   const dispatchSave = () => {
     if (id && formikRef.current.dirty) {
-      dispatch(saveSystemIntake(id, formikRef.current.values));
+      dispatch(saveSystemIntake({ formData: formikRef.current.values, id }));
     }
   };
 
@@ -81,7 +81,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
               className="easi-header__save-button usa-button"
               id="save-button"
               onClick={() => {
-                dispatch(saveSystemIntake(id, formikRef.current.values));
+                dispatchSave();
                 history.push('/system/all');
               }}
             >
