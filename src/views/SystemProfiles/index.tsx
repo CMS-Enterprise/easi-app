@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
@@ -6,9 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'reducers/rootReducer';
 import UpcomingActions from 'components/shared/UpcomingActions';
 import ActionBanner from 'components/shared/ActionBanner';
-import { getAllSystemShorts } from 'actions/searchActions';
-import { getSystemIntakes } from 'actions/systemIntakesActions';
 import { DateTime } from 'luxon';
+import { fetchSystemIntakes, fetchSystemShorts } from 'types/routines';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -57,26 +56,22 @@ export const SystemProfiles = () => {
     (state: AppState) => state.systemIntakes.systemIntakes
   );
   const searchResults = useSelector(
-    (state: AppState) => state.search.allSystemShorts
+    (state: AppState) => state.search.systemShorts
   );
-  const [timeStamp, setTimeStamp] = useState('');
+  const timeStamp = useSelector(
+    (state: AppState) => state.systemIntakes.loadedTimestamp
+  );
 
   const dispatch = useDispatch();
   useEffect(() => {
     const getSystemIntakesEffect = async (): Promise<void> => {
-      dispatch(getSystemIntakes());
-      await setTimeStamp(
-        DateTime.local().toLocaleString(DateTime.DATETIME_MED)
-      );
+      dispatch(fetchSystemIntakes());
     };
     getSystemIntakesEffect();
   }, [dispatch]);
 
   useEffect(() => {
-    const fetchSystemShorts = async (): Promise<void> => {
-      dispatch(getAllSystemShorts());
-    };
-    fetchSystemShorts();
+    dispatch(fetchSystemShorts());
   }, [dispatch]);
 
   const getStatusNotification = (status: string) => {
@@ -124,22 +119,30 @@ export const SystemProfiles = () => {
         )}
       </Header>
       <div className="grid-container">
-        <UpcomingActions timestamp={timeStamp}>
-          {intakes
-            .filter(intake => ['SUBMITTED', 'REVIEWED'].includes(intake.status))
-            .map(intake => {
-              return (
-                <ActionBanner
-                  key={intake.id}
-                  title={`${intake.projectName} Intake Request`}
-                  helpfulText={getStatusNotification(intake.status)}
-                  onClick={() => {}}
-                  buttonUnstyled={intake.status === 'SUBMITTED'}
-                  label={getButtonLabel(intake.status)}
-                />
-              );
-            })}
-        </UpcomingActions>
+        {timeStamp && (
+          <UpcomingActions
+            timestamp={(timeStamp as DateTime).toLocaleString(
+              DateTime.DATETIME_MED
+            )}
+          >
+            {intakes
+              .filter(intake =>
+                ['SUBMITTED', 'REVIEWED'].includes(intake.status)
+              )
+              .map(intake => {
+                return (
+                  <ActionBanner
+                    key={intake.id}
+                    title={`${intake.projectName} Intake Request`}
+                    helpfulText={getStatusNotification(intake.status)}
+                    onClick={() => {}}
+                    buttonUnstyled={intake.status === 'SUBMITTED'}
+                    label={getButtonLabel(intake.status)}
+                  />
+                );
+              })}
+          </UpcomingActions>
+        )}
       </div>
     </div>
   );

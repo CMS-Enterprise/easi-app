@@ -8,5 +8,5 @@ export type ShortSystem = {
 
 // Redux store type for systems
 export type SystemState = {
-  allSystemShorts: ShortSystem[];
+  systemShorts: ShortSystem[];
 };
