@@ -5,7 +5,6 @@ import { Form, Formik, FormikProps } from 'formik';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
-import { saveSystemIntake } from 'actions/systemIntakeActions';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -13,7 +12,7 @@ import flattenErrors from 'utils/flattenErrors';
 import AutoSave from 'components/shared/AutoSave';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntake } from 'types/routines';
+import { fetchSystemIntake, saveSystemIntake } from 'types/routines';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -160,7 +159,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                           unstyled
                           onClick={() => {
                             dispatchSave();
-                            history.push('/system/all');
+                            history.push('/');
                           }}
                         >
                           <span>
