@@ -76,7 +76,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
               value
             />
             {values.fundingSource.isFunded && (
-              <div className="width-card margin-top-neg-2 margin-left-3 margin-bottom-1">
+              <div className="width-card margin-top-neg-2 margin-left-4 margin-bottom-1">
                 <FieldGroup
                   scrollElement="fundingSource.fundingNumber"
                   error={!!flatErrors['fundingSource.fundingNumber']}
