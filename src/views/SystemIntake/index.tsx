@@ -2,17 +2,17 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
-import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
-import { saveSystemIntake } from 'actions/systemIntakeActions';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
 import AutoSave from 'components/shared/AutoSave';
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import { v4 as uuidv4 } from 'uuid';
+import { saveSystemIntake } from 'types/routines';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -62,7 +62,7 @@ export const SystemIntake = () => {
 
   const dispatchSave = () => {
     if (id && formikRef.current.dirty) {
-      dispatch(saveSystemIntake(id, formikRef.current.values));
+      dispatch(saveSystemIntake({ formData: formikRef.current.values, id }));
     }
   };
 
@@ -169,8 +169,8 @@ export const SystemIntake = () => {
                         type="button"
                         unstyled
                         onClick={() => {
-                          dispatch(saveSystemIntake(id, values));
-                          history.push('/system/all');
+                          dispatchSave();
+                          history.push('/');
                         }}
                       >
                         <span>
