@@ -7,38 +7,37 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 
-type GeneralProjectInfoProps = {
+type GeneralRequestInfoProps = {
   formikProps: FormikProps<BusinessCaseModel>;
 };
-const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
+const GeneralRequestInfo = ({ formikProps }: GeneralRequestInfoProps) => {
   const { errors } = formikProps;
   const flatErrors = flattenErrors(errors);
   const allowedPhoneNumberCharacters = /[\d- ]+/g;
 
   return (
     <div className="grid-container">
-      <h1 className="font-heading-xl">General Project Info</h1>
+      <h1 className="font-heading-xl">General request information</h1>
       <p className="line-height-body-6">
-        The next step is for the Business Owner to select an approved solution
-        alternative and notify the Governance Review Team (GRT) of their
-        selection. The GRT will issue an investment life cycle ID number, which
-        the business owner can use to request or allocate funding. You can
-        complete this information on your own or with a GRT member during your
-        consult.
+        Make a first draft of the various solutions you’ve thought of and the
+        costs involved to build or buy them. Once you have a draft business case
+        ready for review, send it to the Governance Review Admin Team who will
+        ensure it is ready to be presented at the Governance Review Team (GRT)
+        Meeting.
       </p>
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
-          scrollElement="projectName"
-          error={!!flatErrors.projectName}
+          scrollElement="requestName"
+          error={!!flatErrors.requestName}
         >
-          <Label htmlFor="BusinessCase-ProjectName">Project Name</Label>
-          <FieldErrorMsg>{flatErrors.projectName}</FieldErrorMsg>
+          <Label htmlFor="BusinessCase-RequestName">Request Name</Label>
+          <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={!!flatErrors.projectName}
-            id="BusinessCase-ProjectName"
+            error={!!flatErrors.requestName}
+            id="BusinessCase-RequestName"
             maxLength={50}
-            name="projectName"
+            name="requestName"
           />
         </FieldGroup>
 
@@ -54,18 +53,6 @@ const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
             id="BusinessCase-RequesterName"
             maxLength={50}
             name="requester.name"
-          />
-        </FieldGroup>
-
-        <FieldGroup scrollElement="budgetNumber">
-          <Label htmlFor="BusinessCase-BudgetNumber">
-            Operating Plan Budget Number - Optional
-          </Label>
-          <Field
-            as={TextField}
-            id="BusinessCase-BudgetNumber"
-            maxLength={50}
-            name="budgetNumber"
           />
         </FieldGroup>
 
@@ -108,4 +95,4 @@ const GeneralProjectInfo = ({ formikProps }: GeneralProjectInfoProps) => {
   );
 };
 
-export default GeneralProjectInfo;
+export default GeneralRequestInfo;

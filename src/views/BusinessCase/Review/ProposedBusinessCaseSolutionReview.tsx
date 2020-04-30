@@ -39,7 +39,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
     </ReviewRow>
     <ReviewRow>
       <div className="line-height-body-3">
-        <DescriptionTerm term={`${name}: Acquisition Approach`} />
+        <DescriptionTerm term={`${name}: Acquisition approach`} />
         <DescriptionDefinition definition={solution.acquisitionApproach} />
       </div>
     </ReviewRow>
