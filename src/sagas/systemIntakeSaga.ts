@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { PUT_SYSTEM_INTAKE, GET_SYSTEM_INTAKE } from 'constants/actions';
-
 import { PutSystemIntakeAction } from 'types/systemIntake';
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
-import { storeSystemIntake } from '../actions/systemIntakeActions';
+import { fetchSystemIntake, saveSystemIntake } from 'types/routines';
+import { Action } from 'redux-actions';
 
 function putSystemIntakeRequest({ id, formData }: PutSystemIntakeAction) {
   // Make API save request
@@ -12,25 +11,35 @@ function putSystemIntakeRequest({ id, formData }: PutSystemIntakeAction) {
   return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }
 
-export function* putSystemIntake(payload: PutSystemIntakeAction) {
+function* putSystemIntake(action: Action<any>) {
   try {
-    const response = yield call(putSystemIntakeRequest, payload);
-    console.log('Response', response);
-  } catch (err) {
-    console.log(err);
+    yield put(saveSystemIntake.request());
+    const response = yield call(putSystemIntakeRequest, action.payload);
+    yield put(saveSystemIntake.success(response.data));
+  } catch (error) {
+    yield put(saveSystemIntake.failure(error.message));
+  } finally {
+    yield put(saveSystemIntake.fulfill());
   }
 }
 
-function getSystemIntake(id: string) {
+function getSystemIntakeRequest(id: string) {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}`);
 }
 
-export function* getAndStoreSystemIntake(action: any) {
-  const obj = yield call(getSystemIntake, action.intakeID);
-  yield put(storeSystemIntake(obj.data));
+function* getSystemIntake(action: Action<any>) {
+  try {
+    yield put(fetchSystemIntake.request());
+    const response = yield call(getSystemIntakeRequest, action.payload);
+    yield put(fetchSystemIntake.success(response.data));
+  } catch (error) {
+    yield put(fetchSystemIntake.failure(error.message));
+  } finally {
+    yield put(fetchSystemIntake.fulfill());
+  }
 }
 
-export function* systemIntakeSaga() {
-  yield takeLatest(GET_SYSTEM_INTAKE, getAndStoreSystemIntake);
-  yield takeLatest(PUT_SYSTEM_INTAKE, putSystemIntake);
+export default function* systemIntakeSaga() {
+  yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
+  yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
 }
