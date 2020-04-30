@@ -1,5 +1,8 @@
-import { STORE_SYSTEM_INTAKES } from '../constants/actions';
-import { SystemIntakesState } from '../types/systemIntake';
+import { SystemIntakesState } from 'types/systemIntake';
+import { prepareSystemIntakeForApp } from 'data/systemIntake';
+import { fetchSystemIntakes } from 'types/routines';
+import { DateTime } from 'luxon';
+import { Action } from 'redux-actions';
 
 const initialState: SystemIntakesState = {
   systemIntakes: []
@@ -7,13 +10,26 @@ const initialState: SystemIntakesState = {
 
 function systemIntakesReducer(
   state = initialState,
-  action: any
+  action: Action<any>
 ): SystemIntakesState {
   switch (action.type) {
-    case STORE_SYSTEM_INTAKES:
+    case fetchSystemIntakes.REQUEST:
       return {
         ...state,
-        systemIntakes: action.systemIntakes
+        isLoading: true
+      };
+    case fetchSystemIntakes.SUCCESS:
+      return {
+        ...state,
+        systemIntakes: action.payload.map((intake: any) =>
+          prepareSystemIntakeForApp(intake)
+        ),
+        loadedTimestamp: DateTime.local()
+      };
+    case fetchSystemIntakes.FULFILL:
+      return {
+        ...state,
+        isLoading: false
       };
     default:
       return state;
