@@ -95,7 +95,7 @@ const AlternativeSolution = ({
           </Label>
           <HelpText className="margin-top-1">
             <span>Please include:</span>
-            <ul className="padding-left-205">
+            <ul className="padding-left-205 margin-bottom-1">
               <li>
                 a brief summary of the proposed IT solution including any
                 associated software products,
