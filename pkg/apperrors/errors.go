@@ -48,6 +48,8 @@ func (e *QueryError) Unwrap() error {
 type CedarOperation string
 
 const (
+	// CedarValidate is for failures when validating
+	CedarValidate CedarOperation = "Validate"
 	// CedarSubmit is for failures when submitting
 	CedarSubmit CedarOperation = "Submit"
 )
