@@ -9,3 +9,6 @@ export const saveSystemIntake = createRoutine('PUT_SYSTEM_INTAKE');
 
 // SystemShorts routines
 export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');
+
+// BusinessCase routines
+export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');

@@ -1,5 +1,6 @@
 import { LifecyclePhase } from 'types/estimatedLifecycle';
 
+// Base Solution
 export type BusinessCaseSolution = {
   title: string;
   summary: string;
@@ -15,10 +16,12 @@ export type BusinessCaseSolution = {
   costSavings: string;
 };
 
+// Proposed Solution
 export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
   acquisitionApproach: string;
 };
 
+// Business Case Form Model
 export type BusinessCaseModel = {
   projectName: string;
   requester: {
@@ -37,4 +40,11 @@ export type BusinessCaseModel = {
   preferredSolution: ProposedBusinessCaseSolution;
   alternativeA: ProposedBusinessCaseSolution;
   alternativeB?: ProposedBusinessCaseSolution;
+};
+
+// Redux store type for business case
+export type BusinessCaseState = {
+  form: BusinessCaseModel;
+  isLoading: boolean | null;
+  error: any;
 };

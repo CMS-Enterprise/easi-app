@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import BusinessCaseReview from 'components/BusinessCaseReview';
 import Header from 'components/Header';
-import { getSystemIntake } from '../../actions/systemIntakeActions';
+import { fetchBusinessCase } from 'types/routines';
 import { AppState } from '../../reducers/rootReducer';
 
 export type BusinessCaseRouterProps = {
@@ -22,13 +22,11 @@ export const GrtBusinessCaseReview = ({
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchSystemIntake = async (): Promise<void> => {
-      dispatch(getSystemIntake(await match.params.businessCaseId));
-    };
-    fetchSystemIntake();
+    dispatch(fetchBusinessCase(match.params.businessCaseId));
   }, [dispatch, match.params.businessCaseId]);
+
   const businessCase = useSelector(
-    (state: AppState) => state.businessCase.values
+    (state: AppState) => state.businessCase.form
   );
   return (
     <div>
