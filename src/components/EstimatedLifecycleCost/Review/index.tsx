@@ -23,7 +23,7 @@ const EstimatedLifecycleCostReview = ({
   data
 }: EstimatedLifecycleCostReviewProps) => {
   const yearMapping: { [key: string]: string } = {
-    year1: 'Current Year',
+    year1: 'Current year',
     year2: 'Year 2',
     year3: 'Year 3',
     year4: 'Year 4',
@@ -32,7 +32,7 @@ const EstimatedLifecycleCostReview = ({
   const sumByPhaseType = (items: LifecyclePhase[], phase: string) => {
     const phaseMap: { [key: string]: string } = {
       initiate: 'Initiate',
-      om: 'Operations & Maintenance'
+      om: 'Operations and Maintenance'
     };
 
     return items
@@ -192,7 +192,7 @@ const EstimatedLifecycleCostReview = ({
                     </tr>
                     <tr className="est-lifecycle-cost__border">
                       <TableHead scope="row">
-                        Operations & Maintenance
+                        Operations and Maintenance
                       </TableHead>
                       {Object.keys(yearMapping).map(year => (
                         <td
@@ -226,8 +226,8 @@ const EstimatedLifecycleCostReview = ({
         )}
       </Media>
       <div className="bg-base-lightest overflow-auto padding-x-2">
-        <DescriptionList title="System Total Cost">
-          <DescriptionTerm term="System Total Cost" />
+        <DescriptionList title="System total Ccst">
+          <DescriptionTerm term="System total cost" />
           <DescriptionDefinition
             definition={formatDollars(totalInitiateCosts + totalOmCosts)}
           />
