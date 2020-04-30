@@ -167,7 +167,6 @@ func (c TranslatedClient) SubmitSystemIntake(intake *models.SystemIntake, logger
 		SystemName:              &intake.ProjectName.String,
 		TrbCollaborator:         intake.TRBCollaborator.String,
 	}
-	logger.Info("made it through the validation")
 	governanceConversion := []*apimodels.GovernanceIntake{
 		&governanceIntake,
 	}
@@ -180,8 +179,13 @@ func (c TranslatedClient) SubmitSystemIntake(intake *models.SystemIntake, logger
 		return "", err
 	}
 	alfabetID := ""
-	if *resp.Payload.Response.Result == "success" {
-		alfabetID = resp.Payload.Response.Message[0]
+	if *resp.Payload.Response.Result != "success" {
+		return "", &apperrors.CedarError{
+			Err:       errors.New("CEDAR return result: " + *resp.Payload.Response.Result),
+			IntakeID:  intake.ID.String(),
+			Operation: apperrors.CedarSubmit,
+		}
 	}
+	alfabetID = resp.Payload.Response.Message[0]
 	return alfabetID, nil
 }

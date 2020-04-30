@@ -47,6 +47,7 @@ func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
 				Object:    "EUA ID",
 			}
 		}
+
 		// If intake doesn't exist or owned by user, authorize
 		if intake == nil || euaID == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
@@ -124,27 +125,31 @@ func NewSubmitSystemIntake(
 	submit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 	save func(intake *models.SystemIntake) error,
 	logger *zap.Logger,
-) func(intake *models.SystemIntake, logger *zap.Logger) (*models.SystemIntake, error) {
-	return func(intake *models.SystemIntake, logger *zap.Logger) (*models.SystemIntake, error) {
+) func(intake *models.SystemIntake, logger *zap.Logger) error {
+	return func(intake *models.SystemIntake, logger *zap.Logger) error {
 		if intake.AlfabetID.Valid {
 			err := &apperrors.CedarError{
 				Err:       errors.New("intake has already been submitted to CEDAR"),
 				Operation: apperrors.CedarSubmit,
 				IntakeID:  intake.ID.String(),
 			}
-			return intake, err
+			return err
 		}
 		alfabetID, err := submit(intake, logger)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		intake.Status = models.SystemIntakeStatusSUBMITTED
 		intake.AlfabetID = null.StringFrom(alfabetID)
 
 		err = save(intake)
 		if err != nil {
-			return nil, err
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     "SystemIntake",
+				Operation: apperrors.QuerySave,
+			}
 		}
-		return intake, nil
+		return nil
 	}
 }
