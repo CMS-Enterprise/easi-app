@@ -1,20 +1,24 @@
-import { STORE_SYSTEM_INTAKE } from '../constants/actions';
-import { SystemIntakeState } from '../types/systemIntake';
+import { SystemIntakeState } from 'types/systemIntake';
 import {
   initialSystemIntakeForm,
   prepareSystemIntakeForApp
-} from '../data/systemIntake';
+} from 'data/systemIntake';
+import { fetchSystemIntake } from 'types/routines';
+import { Action } from 'redux-actions';
 
 const initialState: SystemIntakeState = {
   systemIntake: initialSystemIntakeForm
 };
 
-function systemIntakeReducer(state = initialState, action: any): any {
+function systemIntakeReducer(
+  state = initialState,
+  action: Action<any>
+): SystemIntakeState {
   switch (action.type) {
-    case STORE_SYSTEM_INTAKE:
+    case fetchSystemIntake.SUCCESS:
       return {
         ...state,
-        systemIntake: prepareSystemIntakeForApp(action.systemIntake)
+        systemIntake: prepareSystemIntakeForApp(action.payload)
       };
     default:
       return state;
