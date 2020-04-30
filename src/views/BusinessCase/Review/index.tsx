@@ -41,7 +41,7 @@ const Review = ({ formikProps }: ReviewProps) => {
         </h1>
 
         <h2 className="font-heading-xl">General request information</h2>
-        <DescriptionList title="General Project Information">
+        <DescriptionList title="General request information">
           <ReviewRow>
             <div>
               <DescriptionTerm term="Request Name" />
@@ -67,7 +67,7 @@ const Review = ({ formikProps }: ReviewProps) => {
         </DescriptionList>
 
         <h2 className="font-heading-xl margin-top-6">Request description</h2>
-        <DescriptionList title="Project Description">
+        <DescriptionList title="Request description">
           <ReviewRow>
             <div className="margin-bottom-205 line-height-body-3">
               <DescriptionTerm term="What is your business or user need?" />
