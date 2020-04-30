@@ -30,7 +30,7 @@ function systemIntakeReducer(
     case fetchBusinessCase.FAILURE:
       return {
         ...state,
-        error: action.error
+        error: action.payload
       };
     case fetchBusinessCase.FULFILL:
       return {
