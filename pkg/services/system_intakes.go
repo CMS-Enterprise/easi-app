@@ -2,7 +2,9 @@ package services
 
 import (
 	"context"
+	"errors"
 
+	"github.com/guregu/null"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
@@ -112,6 +114,36 @@ func NewFetchSystemIntakeByID(
 				Model:     "system intake",
 				Operation: apperrors.QueryFetch,
 			}
+		}
+		return intake, nil
+	}
+}
+
+// NewSubmitSystemIntake is a service to submit system intake to CEDAR
+func NewSubmitSystemIntake(
+	submit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
+	save func(intake *models.SystemIntake) error,
+	logger *zap.Logger,
+) func(intake *models.SystemIntake, logger *zap.Logger) (*models.SystemIntake, error) {
+	return func(intake *models.SystemIntake, logger *zap.Logger) (*models.SystemIntake, error) {
+		if intake.AlfabetID.Valid {
+			err := &apperrors.CedarError{
+				Err:       errors.New("intake has already been submitted to CEDAR"),
+				Operation: apperrors.CedarSubmit,
+				IntakeID:  intake.ID.String(),
+			}
+			return intake, err
+		}
+		alfabetID, err := submit(intake, logger)
+		if err != nil {
+			return nil, err
+		}
+		intake.Status = models.SystemIntakeStatusSUBMITTED
+		intake.AlfabetID = null.StringFrom(alfabetID)
+
+		err = save(intake)
+		if err != nil {
+			return nil, err
 		}
 		return intake, nil
 	}

@@ -46,7 +46,7 @@ type SystemIntake struct {
 	ExistingContract        null.String        `json:"existingContract" db:"existing_contract"`
 	UpdatedAt               *time.Time         `json:"updatedAt" db:"updated_at"`
 	SubmittedAt             *time.Time         `json:"submittedAt" db:"submitted_at"`
-	AlfabetID            	null.String        `json:"alfabetID" db:"alfabet_id"`
+	AlfabetID               null.String        `json:"alfabetID" db:"alfabet_id"`
 }
 
 // SystemIntakes is a list of System Intakes
