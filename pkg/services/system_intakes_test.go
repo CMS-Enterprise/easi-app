@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -193,5 +194,78 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
+	})
+}
+
+func (s ServicesTestSuite) TestSystemIntakeSubmitter() {
+	logger := zap.NewNop()
+	submit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+		return "", nil
+	}
+	save := func(intake *models.SystemIntake) error {
+		return nil
+	}
+
+	s.Run("returns no error when successful", func() {
+		submitSystemIntake := NewSubmitSystemIntake(submit, save, logger)
+
+		err := submitSystemIntake(&models.SystemIntake{}, logger)
+
+		s.NoError(err)
+	})
+
+	s.Run("returns error when validation fails", func() {
+		failValidationSubmission := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+			return "", &apperrors.CedarError{
+				Err:       errors.New("validation failed on these fields: ID"),
+				IntakeID:  intake.ID.String(),
+				Operation: apperrors.CedarValidate,
+			}
+		}
+		submitSystemIntake := NewSubmitSystemIntake(failValidationSubmission, save, logger)
+
+		err := submitSystemIntake(&models.SystemIntake{}, logger)
+
+		s.IsType(&apperrors.CedarError{}, err)
+	})
+
+	s.Run("returns error when submission fails", func() {
+		failValidationSubmission := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+			return "", &apperrors.CedarError{
+				Err:       errors.New("CEDAR return result: unexpected failure"),
+				IntakeID:  intake.ID.String(),
+				Operation: apperrors.CedarSubmit,
+			}
+		}
+		submitSystemIntake := NewSubmitSystemIntake(failValidationSubmission, save, logger)
+
+		err := submitSystemIntake(&models.SystemIntake{}, logger)
+
+		s.IsType(&apperrors.CedarError{}, err)
+	})
+
+	s.Run("returns error when intake has already been submitted", func() {
+		alreadySubmittedIntake := models.SystemIntake{
+			AlfabetID: null.StringFrom("394-141-0"),
+			ID:        uuid.New(),
+			EUAUserID: "EUAI",
+		}
+		submitSystemIntake := NewSubmitSystemIntake(submit, save, logger)
+
+		err := submitSystemIntake(&alreadySubmittedIntake, logger)
+
+		s.IsType(&apperrors.CedarError{}, err)
+	})
+
+	s.Run("returns error if the save fails", func() {
+		failSave := func(intake *models.SystemIntake) error {
+			return errors.New("save failed")
+		}
+
+		submitSystemIntake := NewSubmitSystemIntake(submit, failSave, logger)
+
+		err := submitSystemIntake(&models.SystemIntake{}, logger)
+
+		s.IsType(&apperrors.QueryError{}, err)
 	})
 }

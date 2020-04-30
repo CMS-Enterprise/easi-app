@@ -17,7 +17,7 @@ import (
 
 type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
 type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
-type submitSystemIntake func(intake *models.SystemIntake, logger *zap.Logger) (*models.SystemIntake, error)
+type submitSystemIntake func(intake *models.SystemIntake, logger *zap.Logger) error
 
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
@@ -90,7 +90,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			euaID, ok := appcontext.EuaID(r.Context())
 			if !ok {
 				logger.Error("Failed to get EUA ID from context")
-				http.Error(w, "Failed to PUT system intake", http.StatusInternalServerError)
+				http.Error(w, "Failed to PUT system intake", http.StatusUnauthorized)
 				return
 			}
 			intake.EUAUserID = euaID
@@ -99,10 +99,15 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 
 			// If status is submitted, the user is trying to submit the system intake to CEDAR
 			if intake.Status == models.SystemIntakeStatusSUBMITTED {
-				_, err = h.SubmitSystemIntake(&intake, logger)
+				err = h.SubmitSystemIntake(&intake, logger)
 				if err != nil {
+					if err.Error() == ("Could not hit CEDAR for intake " + intake.ID.String() + " with operation Validate") {
+						logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
+						http.Error(w, "Failed to submit system intake", http.StatusBadRequest)
+						return
+					}
 					logger.Error(fmt.Sprintf("Failed to submit system intake: %v", err))
-					http.Error(w, "Failed to save system intake", http.StatusInternalServerError)
+					http.Error(w, "Failed to submit system intake", http.StatusInternalServerError)
 					return
 				}
 				return
