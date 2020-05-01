@@ -121,6 +121,10 @@ jobs:
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
       - run:
+          name: Backup the database
+          command: |
+            ./scripts/rds-snapshot-app-db
+      - run:
           name: Nuke the database
           command: |
             ./scripts/db_lambda_invoke easi-app-db-clean
