@@ -11,6 +11,7 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
 import AutoSave from 'components/shared/AutoSave';
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import { v4 as uuidv4 } from 'uuid';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntake, saveSystemIntake } from 'types/routines';
 import ContactDetails from './ContactDetails';
@@ -43,21 +44,25 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   ];
   const history = useHistory();
   const [page, setPage] = useState(1);
+  const [isFormDisplayed, setFormDisplayed] = useState(!match.params.systemId);
+
   const dispatch = useDispatch();
   const formikRef: any = useRef();
   const pageObj = pages[page - 1];
 
-  // Todo: could someone edit an already-submitted form?
-  const draftIntake = useSelector(
+  const existingIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
-  const initialData: SystemIntakeForm = draftIntake || initialSystemIntakeForm;
-  if (initialData.id === '') {
-    initialData.id = match.params.systemId;
-  }
+  // Todo: could someone edit an already-submitted form?
+  // Todo: the "same as requester" button state isn't saved
+  const initialData = existingIntake || initialSystemIntakeForm;
+  const [lastSavedValues, setLastSavedValues] = useState(initialData);
   const existingIntakesLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
+  if (existingIntakesLoading === false && !isFormDisplayed) {
+    setFormDisplayed(true);
+  }
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
     const Component = pageObj.view;
@@ -70,19 +75,32 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
 
   const dispatchSave = () => {
     if (formikRef.current.dirty) {
-      dispatch(saveSystemIntake(formikRef.current.values));
+      // Todo this should save if values change away from initial values and then change back
+      // but it doesn't. Maybe fix the autosave component to do this?
+      if (match.params.systemId) {
+        dispatch(saveSystemIntake(formikRef.current.values));
+        setLastSavedValues(formikRef.current.values);
+      } else {
+        const newID = uuidv4();
+        formikRef.current.setFieldValue('id', newID, false);
+        dispatch(saveSystemIntake(formikRef.current.values));
+        setLastSavedValues(formikRef.current.values);
+        history.push(`/system/${newID}`);
+      }
     }
   };
 
   useEffect(() => {
-    dispatch(fetchSystemIntake(match.params.systemId));
+    if (match.params.systemId) {
+      dispatch(fetchSystemIntake(match.params.systemId));
+    }
   }, [dispatch]);
 
   return (
     <div className="system-intake">
       <Header name="CMS System Intake" />
       <main className="grid-container" role="main">
-        {existingIntakesLoading === false && (
+        {isFormDisplayed && (
           <Formik
             initialValues={initialData}
             // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
@@ -173,6 +191,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       values={values}
                       onSave={dispatchSave}
                       debounceDelay={1000}
+                      lastSavedValues={lastSavedValues}
                     />
                   </Form>
                 </>
