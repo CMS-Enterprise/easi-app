@@ -45,7 +45,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const history = useHistory();
   const [page, setPage] = useState(1);
   const [isFormDisplayed, setFormDisplayed] = useState(!match.params.systemId);
-
+  const [newID] = useState(uuidv4());
   const dispatch = useDispatch();
   const formikRef: any = useRef();
   const pageObj = pages[page - 1];
@@ -56,6 +56,11 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   // Todo: could someone edit an already-submitted form?
   // Todo: the "same as requester" button state isn't saved
   const initialData = existingIntake || initialSystemIntakeForm;
+  // Setting id now rather than at first save because doing so would trigger another autosave.
+  if (initialData.id === '') {
+    initialData.id = newID;
+  }
+
   const [lastSavedValues, setLastSavedValues] = useState(initialData);
   const existingIntakesLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
@@ -81,8 +86,6 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
         dispatch(saveSystemIntake(formikRef.current.values));
         setLastSavedValues(formikRef.current.values);
       } else {
-        const newID = uuidv4();
-        formikRef.current.setFieldValue('id', newID, false);
         dispatch(saveSystemIntake(formikRef.current.values));
         setLastSavedValues(formikRef.current.values);
         history.push(`/system/${newID}`);

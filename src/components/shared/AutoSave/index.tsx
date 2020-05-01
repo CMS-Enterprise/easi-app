@@ -25,7 +25,6 @@ const AutoSave = ({
     if (isEqual(lastSavedValues, values)) {
       return;
     }
-    console.log(lastSavedValues, values);
     debounceSave();
   }, [values]);
 
