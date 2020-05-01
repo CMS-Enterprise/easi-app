@@ -27,7 +27,7 @@ const Home = ({ auth, history }: HomeProps) => {
     if (isAuthenticated) {
       dispatch(fetchSystemIntakes());
     }
-  }, [isAuthenticated]);
+  }, [dispatch, isAuthenticated]);
 
   const getSystemIntakeBanners = () => {
     return systemIntakes.map((intake: SystemIntakeForm) => {
