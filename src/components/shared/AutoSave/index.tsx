@@ -9,12 +9,9 @@ type AutoSaveProps = {
 
 const AutoSave = ({ values, onSave, debounceDelay }: AutoSaveProps) => {
   const debounceSave = useCallback(debounce(onSave, debounceDelay), [
-    onSave,
     debounceDelay
   ]);
-
   useEffect(debounceSave, [debounceSave, values]);
-
   return null;
 };
 
