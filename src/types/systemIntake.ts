@@ -57,8 +57,3 @@ export type SystemIntakesState = {
   isLoading?: boolean;
   loadedTimestamp?: DateTime;
 };
-
-export type PutSystemIntakeAction = {
-  type: string;
-  formData: SystemIntakeForm;
-};
