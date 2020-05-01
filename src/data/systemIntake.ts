@@ -111,7 +111,7 @@ export const prepareSystemIntakeForApp = (systemIntake: any) => {
       name: systemIntake.isso || ''
     },
     governanceTeams: {
-      isPresent: governanceTeams().length !== 0,
+      isPresent: governanceTeams().length !== 0 || null,
       teams: governanceTeams() || []
     },
     fundingSource: {

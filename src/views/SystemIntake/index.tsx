@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RouteComponentProps, useHistory } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
+import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
@@ -10,10 +11,12 @@ import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
 import AutoSave from 'components/shared/AutoSave';
-import { initialSystemIntakeForm } from 'data/systemIntake';
-import { v4 as uuidv4 } from 'uuid';
 import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntake, saveSystemIntake } from 'types/routines';
+import {
+  fetchSystemIntake,
+  saveSystemIntake,
+  storeSystemIntakeId
+} from 'types/routines';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -44,30 +47,16 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   ];
   const history = useHistory();
   const [page, setPage] = useState(1);
-  const [isFormDisplayed, setFormDisplayed] = useState(!match.params.systemId);
-  const [newID] = useState(uuidv4());
   const dispatch = useDispatch();
   const formikRef: any = useRef();
   const pageObj = pages[page - 1];
 
-  const existingIntake = useSelector(
+  const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
-  // Todo: could someone edit an already-submitted form?
-  // Todo: the "same as requester" button state isn't saved
-  const initialData = existingIntake || initialSystemIntakeForm;
-  // Setting id now rather than at first save because doing so would trigger another autosave.
-  if (initialData.id === '') {
-    initialData.id = newID;
-  }
-
-  const [lastSavedValues, setLastSavedValues] = useState(initialData);
-  const existingIntakesLoading = useSelector(
+  const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
-  if (existingIntakesLoading === false && !isFormDisplayed) {
-    setFormDisplayed(true);
-  }
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
     const Component = pageObj.view;
@@ -80,15 +69,9 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
 
   const dispatchSave = () => {
     if (formikRef.current.dirty) {
-      // Todo this should save if values change away from initial values and then change back
-      // but it doesn't. Maybe fix the autosave component to do this?
-      if (match.params.systemId) {
-        dispatch(saveSystemIntake(formikRef.current.values));
-        setLastSavedValues(formikRef.current.values);
-      } else {
-        dispatch(saveSystemIntake(formikRef.current.values));
-        setLastSavedValues(formikRef.current.values);
-        history.push(`/system/${newID}`);
+      dispatch(saveSystemIntake(formikRef.current.values));
+      if (window.location.pathname === '/system/new') {
+        history.replace(`/system/${formikRef.current.values.id}`);
       }
     }
   };
@@ -96,25 +79,24 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   useEffect(() => {
     if (match.params.systemId) {
       dispatch(fetchSystemIntake(match.params.systemId));
+    } else {
+      dispatch(storeSystemIntakeId(uuidv4()));
     }
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className="system-intake">
       <Header name="CMS System Intake" />
       <main className="grid-container" role="main">
-        {isFormDisplayed && (
+        {isLoading === false && (
           <Formik
-            initialValues={initialData}
-            // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
-            // Form will be manually submitted.
+            initialValues={systemIntake}
             onSubmit={() => {}}
             validationSchema={pageObj.validation}
             validateOnBlur={false}
             validateOnChange={false}
             validateOnMount={false}
             innerRef={formikRef}
-            enableReinitialize
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
               const { values, errors, setErrors, isSubmitting } = formikProps;
@@ -194,7 +176,6 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                       values={values}
                       onSave={dispatchSave}
                       debounceDelay={1000}
-                      lastSavedValues={lastSavedValues}
                     />
                   </Form>
                 </>
