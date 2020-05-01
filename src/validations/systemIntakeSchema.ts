@@ -42,9 +42,25 @@ const SystemIntakeValidationSchema: any = {
           .of(
             Yup.object().shape({
               name: Yup.string().oneOf(governanceTeamNames),
-              collaborator: Yup.string().required(
-                "Tell us the name of the person you've been working with"
-              )
+              collaborator: Yup.string()
+                .when('name', {
+                  is: 'Technical Review Board',
+                  then: Yup.string().required(
+                    "Tell us the name of the person you've been working with from the Technical Review Board"
+                  )
+                })
+                .when('name', {
+                  is: "OIT's Security and Privacy Group",
+                  then: Yup.string().required(
+                    "Tell us the name of the person you've been working with from OIT's Security and Privacy Group"
+                  )
+                })
+                .when('name', {
+                  is: 'Enterprise Architecture',
+                  then: Yup.string().required(
+                    "Tell us the name of the person you've been working with from Enterprise Architecture"
+                  )
+                })
             })
           )
       })
