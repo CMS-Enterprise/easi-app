@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -u
+set -eu -o pipefail
 
 payload="{\"repository\": \"$1\", \"imageTag\": \"$2\"}"
 aws lambda invoke --function-name ecr-scan-findings --payload "$payload" scan_response.json
