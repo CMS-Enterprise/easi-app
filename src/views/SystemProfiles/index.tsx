@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'reducers/rootReducer';
 import UpcomingActions from 'components/shared/UpcomingActions';
 import ActionBanner from 'components/shared/ActionBanner';
-import { DateTime } from 'luxon';
 import { fetchSystemIntakes, fetchSystemShorts } from 'types/routines';
 
 const mockSystems: any[] = [
@@ -116,30 +115,22 @@ export const SystemProfiles = () => {
         )}
       </Header>
       <div className="grid-container">
-        {timeStamp && (
-          <UpcomingActions
-            timestamp={(timeStamp as DateTime).toLocaleString(
-              DateTime.DATETIME_MED
-            )}
-          >
-            {intakes
-              .filter(intake =>
-                ['SUBMITTED', 'REVIEWED'].includes(intake.status)
-              )
-              .map(intake => {
-                return (
-                  <ActionBanner
-                    key={intake.id}
-                    title={`${intake.projectName} Intake Request`}
-                    helpfulText={getStatusNotification(intake.status)}
-                    onClick={() => {}}
-                    buttonUnstyled={intake.status === 'SUBMITTED'}
-                    label={getButtonLabel(intake.status)}
-                  />
-                );
-              })}
-          </UpcomingActions>
-        )}
+        <UpcomingActions timestamp={timeStamp}>
+          {intakes
+            .filter(intake => ['SUBMITTED', 'REVIEWED'].includes(intake.status))
+            .map(intake => {
+              return (
+                <ActionBanner
+                  key={intake.id}
+                  title={`${intake.requestName} Intake Request`}
+                  helpfulText={getStatusNotification(intake.status)}
+                  onClick={() => {}}
+                  buttonUnstyled={intake.status === 'SUBMITTED'}
+                  label={getButtonLabel(intake.status)}
+                />
+              );
+            })}
+        </UpcomingActions>
       </div>
     </div>
   );
