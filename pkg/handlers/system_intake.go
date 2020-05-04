@@ -48,10 +48,6 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			}
 			intake, err := h.FetchSystemIntakeByID(uuid)
 			if err != nil {
-				if err.Error() == "sql: no rows in result set" {
-					http.Error(w, "Failed to GET system intake", http.StatusNotFound)
-					return
-				}
 				logger.Error("Failed to fetch system intake")
 				http.Error(w, "Failed to GET system intake", http.StatusInternalServerError)
 				return

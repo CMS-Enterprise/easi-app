@@ -71,6 +71,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     const currentRef = formikRef.current as FormikProps<SystemIntakeForm>;
     if (currentRef.dirty) {
       dispatch(saveSystemIntake(currentRef.values));
+      // Set initial values to those just saved so ref.dirty is compared against last saved values.
       currentRef.resetForm({ values: currentRef.values });
       if (!match.params.systemId) {
         history.replace(`/system/${currentRef.values.id}`);
