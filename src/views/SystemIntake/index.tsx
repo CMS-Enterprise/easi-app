@@ -70,7 +70,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const dispatchSave = () => {
     if (formikRef.current.dirty) {
       dispatch(saveSystemIntake(formikRef.current.values));
-      if (window.location.pathname === '/system/new') {
+      if (!match.params.systemId) {
         history.replace(`/system/${formikRef.current.values.id}`);
       }
     }

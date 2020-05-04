@@ -64,7 +64,7 @@ export const SystemProfiles = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchSystemIntakes);
+    dispatch(fetchSystemIntakes());
   }, [dispatch]);
 
   useEffect(() => {
