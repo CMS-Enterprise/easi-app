@@ -21,6 +21,19 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
   const { values, setFieldValue, errors } = formikProps;
   const flatErrors = flattenErrors(errors);
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
+
+  const cmsDivionsAndOfficesOptions = (fieldId: string) =>
+    cmsDivisionsAndOffices.map((office: any) => (
+      <Field
+        as={DropdownItem}
+        key={`${fieldId}-${office.acronym}`}
+        name={
+          office.acronym ? `${office.name} (${office.acronym})` : office.name
+        }
+        value={office.name}
+      />
+    ));
+
   return (
     <>
       <p className="line-height-body-6">
@@ -82,14 +95,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             }}
           >
             <Field as={DropdownItem} name="Select an option" value="" />
-            {cmsDivisionsAndOffices.map((office: any) => (
-              <Field
-                as={DropdownItem}
-                key={`RequesterComponent-${office.acronym}`}
-                name={office.name}
-                value={office.name}
-              />
-            ))}
+            {cmsDivionsAndOfficesOptions('RequesterComponent')}
           </Field>
         </FieldGroup>
 
@@ -148,14 +154,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             name="businessOwner.component"
           >
             <Field as={DropdownItem} name="Select an option" value="" />
-            {cmsDivisionsAndOffices.map(office => (
-              <Field
-                as={DropdownItem}
-                key={`BusinessOwnerComponent-${office.acronym}`}
-                name={office.name}
-                value={office.name}
-              />
-            ))}
+            {cmsDivionsAndOfficesOptions('BusinessOwnerComponent')}
           </Field>
         </FieldGroup>
 
@@ -196,14 +195,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             name="productManager.component"
           >
             <Field as={DropdownItem} name="Select an option" value="" />
-            {cmsDivisionsAndOffices.map((office: any) => (
-              <Field
-                as={DropdownItem}
-                key={`ProductManagerComponent-${office.acronym}`}
-                name={office.name}
-                value={office.name}
-              />
-            ))}
+            {cmsDivionsAndOfficesOptions('ProductManagerComponent')}
           </Field>
         </FieldGroup>
 
