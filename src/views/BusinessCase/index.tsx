@@ -11,8 +11,8 @@ import {
 } from 'data/businessCase';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
-import GeneralProjectInfo from './GeneralProjectInfo';
-import ProjectDescription from './ProjectDescription';
+import GeneralRequestInfo from './GeneralRequestInfo';
+import RequestDescription from './RequestDescription';
 import AsIsSolution from './AsIsSolution';
 import PreferredSolution from './PreferredSolution';
 import AlternativeSolution from './AlternativeSolution';
@@ -22,14 +22,14 @@ import './index.scss';
 export const BusinessCase = () => {
   const [pages, setPages] = useState<any[]>([
     {
-      name: 'GeneralProjectInfo',
+      name: 'GeneralRequestInfo',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.generalProjectInfo
+      validation: BusinessCaseValidationSchema.generalRequestInfo
     },
     {
-      name: 'ProjectDescription',
+      name: 'RequestDescription',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.projectDescription
+      validation: BusinessCaseValidationSchema.requestDescription
     },
     {
       name: 'AsIsSolution',
@@ -56,10 +56,10 @@ export const BusinessCase = () => {
 
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     switch (pageObj.name) {
-      case 'GeneralProjectInfo':
-        return <GeneralProjectInfo formikProps={formikProps} />;
-      case 'ProjectDescription':
-        return <ProjectDescription formikProps={formikProps} />;
+      case 'GeneralRequestInfo':
+        return <GeneralRequestInfo formikProps={formikProps} />;
+      case 'RequestDescription':
+        return <RequestDescription formikProps={formikProps} />;
       case 'AsIsSolution':
         return <AsIsSolution formikProps={formikProps} />;
       case 'PreferredSolution':
@@ -223,7 +223,7 @@ export const BusinessCase = () => {
                           console.log('Submitting Data: ', values);
                         }}
                       >
-                        Send to Review Team
+                        Send my business case
                       </Button>
                     )}
 
