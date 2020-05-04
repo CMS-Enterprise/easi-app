@@ -94,6 +94,8 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
         {isLoading === false && (
           <Formik
             initialValues={systemIntake}
+            // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
+            // Form will be manually submitted.
             onSubmit={() => {}}
             validationSchema={pageObj.validation}
             validateOnBlur={false}
@@ -102,7 +104,13 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
             innerRef={formikRef}
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
-              const { values, errors, setErrors, isSubmitting } = formikProps;
+              const {
+                values,
+                errors,
+                validateForm,
+                setErrors,
+                isSubmitting
+              } = formikProps;
               const flatErrors: any = flattenErrors(errors);
               return (
                 <>
@@ -146,6 +154,25 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                         Back
                       </Button>
                     )}
+
+                    {page < pages.length && (
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (pageObj.validation) {
+                            validateForm().then(err => {
+                              if (Object.keys(err).length === 0) {
+                                setPage(prev => prev + 1);
+                              }
+                              window.scrollTo(0, 0);
+                            });
+                          }
+                        }}
+                      >
+                        Next
+                      </Button>
+                    )}
+
                     {page === pages.length && (
                       <Button
                         type="submit"
@@ -154,7 +181,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                           console.log('Submitting Data: ', values);
                         }}
                       >
-                        Send to GRT
+                        Send my intake request
                       </Button>
                     )}
 
