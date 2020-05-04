@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-set -eu -o pipefail
+set -u
 
 payload="{\"repository\": \"$1\", \"imageTag\": \"$2\"}"
-aws lambda invoke --function-name ecr-scan-findings --payload "$payload" scan_response.json
+aws lambda invoke --function-name ecr-scan-findings --payload "$payload" scan_response.json || exit
 totalFindings="$(jq -r < scan_response.json | jq .totalFindings)"
 if [[ "$totalFindings" != 0 ]]; then
   echo "Scan found $totalFindings findings!"
