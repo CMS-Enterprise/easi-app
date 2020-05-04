@@ -18,7 +18,7 @@ const Review = ({ formikProps }: ReviewProps) => {
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">What happens next?</h2>
       <p>
-        The Governance Review Team will review and get back to you with{' '}
+        The Governance Review Admin Team will review and get back to you with{' '}
         <strong>one of these</strong> outcomes:
       </p>
       <ul className="usa-list">
