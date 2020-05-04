@@ -105,7 +105,6 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             This person owns a line of business related to this request and will
             champion the request moving forward
           </HelpText>
-          {/* margin-top: .75em; */}
           <Field
             as={CheckboxField}
             id="IntakeForm-IsBusinessOwnerSameAsRequester"
