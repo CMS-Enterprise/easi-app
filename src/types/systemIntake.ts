@@ -12,7 +12,7 @@ export type GovernanceCollaborationTeam = {
 export type SystemIntakeForm = {
   id: string;
   euaUserID: string;
-  projectName: string;
+  requestName: string;
   status: string;
   requester: {
     name: string;

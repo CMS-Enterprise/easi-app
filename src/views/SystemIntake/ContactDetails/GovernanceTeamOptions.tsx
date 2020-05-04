@@ -59,7 +59,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                           error={false}
                         >
                           <Label htmlFor={`IntakeForm-${key}-Collaborator`}>
-                            Collaborator Name
+                            {`${team.acronym} Collaborator Name`}
                           </Label>
                           {errors.governanceTeams &&
                             errors.governanceTeams.teams &&
