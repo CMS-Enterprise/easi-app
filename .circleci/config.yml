@@ -18,10 +18,6 @@ jobs:
           name: Build the flyway migrations for testing
           command: |
             ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate" "latest"
-      - run:
-          name: Check for vulnerability scan findings
-          command: |
-            ./scripts/check_ecr_findings "easi-db-migrate" "latest"
 
   test:
     docker:
