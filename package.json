@@ -81,7 +81,7 @@
   },
   "devDependencies": {
     "@cypress/instrument-cra": "^1.1.0",
-    "cypress": "^3.5.0",
+    "cypress": "4.5.0",
     "cypress-otp": "^1.0.2",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",

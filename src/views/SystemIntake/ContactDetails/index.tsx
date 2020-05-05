@@ -298,7 +298,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             <Field
               as={RadioField}
               checked={values.governanceTeams.isPresent === true}
-              id="IntakeForm-NoGovernanceTeams"
+              id="IntakeForm-YesGovernanceTeams"
               name="governanceTeams.isPresent"
               label="1 or more of the following in OIT (select all that apply)"
               onChange={() => {
@@ -321,7 +321,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             <Field
               as={RadioField}
               checked={values.governanceTeams.isPresent === false}
-              id="IntakeForm-YesGovernanceTeam"
+              id="IntakeForm-NoGovernanceTeam"
               name="governanceTeams.isPresent"
               label="No one in OIT"
               onChange={() => {
