@@ -85,7 +85,9 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     } else {
       dispatch(storeSystemIntakeId(uuidv4()));
     }
-  }, [dispatch, match.params.systemId]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="system-intake">
