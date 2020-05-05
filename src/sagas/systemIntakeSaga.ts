@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { PutSystemIntakeAction } from 'types/systemIntake';
+import { SystemIntakeForm } from 'types/systemIntake';
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
 import { fetchSystemIntake, saveSystemIntake } from 'types/routines';
 import { Action } from 'redux-actions';
 
-function putSystemIntakeRequest({ id, formData }: PutSystemIntakeAction) {
+function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
-  const data = prepareSystemIntakeForApi(id, formData);
+  const data = prepareSystemIntakeForApi(formData);
   return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }
 

@@ -42,10 +42,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   hasContract: ''
 };
 
-export const prepareSystemIntakeForApi = (
-  id: string,
-  systemIntake: SystemIntakeForm
-) => {
+export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
   const getGovernanceCollaborator = (name: string) => {
     const selectedTeam = systemIntake.governanceTeams.teams.find(
       team => team.name === name
@@ -55,7 +52,7 @@ export const prepareSystemIntakeForApi = (
   };
 
   return {
-    id,
+    id: systemIntake.id,
     status: systemIntake.status,
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,
@@ -116,7 +113,7 @@ export const prepareSystemIntakeForApp = (systemIntake: any) => {
       name: systemIntake.isso || ''
     },
     governanceTeams: {
-      isPresent: governanceTeams().length !== 0,
+      isPresent: governanceTeams().length !== 0 || null,
       teams: governanceTeams() || []
     },
     fundingSource: {
