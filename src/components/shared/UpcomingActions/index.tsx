@@ -4,7 +4,7 @@ import './index.scss';
 
 type UpcomingActionsProps = {
   children: any;
-  timestamp: DateTime | undefined;
+  timestamp: DateTime | null;
 };
 
 const UpcomingActions = ({ children, timestamp }: UpcomingActionsProps) => {
