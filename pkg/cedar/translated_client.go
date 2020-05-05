@@ -134,10 +134,11 @@ func validateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logge
 func (c TranslatedClient) SubmitSystemIntake(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
 	err := validateSystemIntakeForCedar(intake, logger)
 	if err != nil {
-		return "", &apperrors.CedarError{
+		return "", &apperrors.ExternalAPIError{
 			Err:       err,
-			IntakeID:  intake.ID.String(),
-			Operation: apperrors.CedarValidate,
+			ModelID:   intake.ID.String(),
+			Model:     "System Intake",
+			Operation: apperrors.Validate,
 		}
 	}
 	id := intake.ID.String()
@@ -180,10 +181,11 @@ func (c TranslatedClient) SubmitSystemIntake(intake *models.SystemIntake, logger
 	}
 	alfabetID := ""
 	if *resp.Payload.Response.Result != "success" {
-		return "", &apperrors.CedarError{
+		return "", &apperrors.ExternalAPIError{
 			Err:       errors.New("CEDAR return result: " + *resp.Payload.Response.Result),
-			IntakeID:  intake.ID.String(),
-			Operation: apperrors.CedarSubmit,
+			ModelID:   intake.ID.String(),
+			Model:     "System Intake",
+			Operation: apperrors.Submit,
 		}
 	}
 	alfabetID = resp.Payload.Response.Message[0]
