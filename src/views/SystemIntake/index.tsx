@@ -85,7 +85,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     } else {
       dispatch(storeSystemIntakeId(uuidv4()));
     }
-  }, []);
+  }, [dispatch, match.params.systemId]);
 
   return (
     <div className="system-intake">
