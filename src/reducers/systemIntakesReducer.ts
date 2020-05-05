@@ -5,7 +5,10 @@ import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 
 const initialState: SystemIntakesState = {
-  systemIntakes: []
+  systemIntakes: [],
+  isLoading: null,
+  loadedTimestamp: null,
+  error: null
 };
 
 function systemIntakesReducer(
@@ -25,6 +28,11 @@ function systemIntakesReducer(
           prepareSystemIntakeForApp(intake)
         ),
         loadedTimestamp: DateTime.local()
+      };
+    case fetchSystemIntakes.FAILURE:
+      return {
+        ...state,
+        error: action.payload
       };
     case fetchSystemIntakes.FULFILL:
       return {
