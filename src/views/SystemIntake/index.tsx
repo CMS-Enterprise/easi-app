@@ -68,13 +68,12 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   };
 
   const dispatchSave = () => {
-    const currentRef = formikRef.current as FormikProps<SystemIntakeForm>;
-    if (currentRef.dirty) {
-      dispatch(saveSystemIntake(currentRef.values));
-      // Set initial values to those just saved so ref.dirty is compared against last saved values.
-      currentRef.resetForm({ values: currentRef.values });
+    const { current } = formikRef;
+    if (current.dirty) {
+      dispatch(saveSystemIntake(current.values));
+      current.dirty = false;
       if (!match.params.systemId) {
-        history.replace(`/system/${currentRef.values.id}`);
+        history.replace(`/system/${current.values.id}`);
       }
     }
   };
@@ -102,6 +101,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
             validateOnChange={false}
             validateOnMount={false}
             innerRef={formikRef}
+            enableReinitialize
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
               const {
