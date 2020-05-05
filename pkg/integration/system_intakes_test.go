@@ -8,9 +8,12 @@ import (
 	"net/http"
 	"net/url"
 	"path"
+	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -91,57 +94,68 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		s.Equal(http.StatusOK, resp.StatusCode)
 	})
 
-	// TODO uncomment when we have CircleCI configured to hit CEDAR
-	//s.Run("PUT will succeed if status is 'SUBMITTED' and it passes validation", func() {
-	//	updatedAt := time.Now().UTC()
-	//	intake := models.SystemIntake{
-	//		ID:                      id,
-	//		EUAUserID:               "FAKE",
-	//		Requester:               null.StringFrom("Test Requester"),
-	//		Component:               null.StringFrom("Test Requester"),
-	//		BusinessOwner:           null.StringFrom("Test Requester"),
-	//		BusinessOwnerComponent:  null.StringFrom("Test Requester"),
-	//		ProductManager:          null.StringFrom("Test Requester"),
-	//		ProductManagerComponent: null.StringFrom("Test Requester"),
-	//		ProjectName:             null.StringFrom("Test Requester"),
-	//		ExistingFunding:         null.BoolFrom(false),
-	//		BusinessNeed:            null.StringFrom("test business need"),
-	//		Solution:                null.StringFrom("Test Requester"),
-	//		ProcessStatus:           null.StringFrom("Test Requester"),
-	//		EASupportRequest:        null.BoolFrom(true),
-	//		ExistingContract:        null.StringFrom("Test Requester"),
-	//		UpdatedAt:               &updatedAt,
-	//		Status:                  models.SystemIntakeStatusSUBMITTED,
-	//	}
-	//	body, err := json.Marshal(intake)
-	//	s.NoError(err)
-	//	req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
-	//	s.NoError(err)
-	//	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
-	//
-	//	resp, err := client.Do(req)
-	//
-	//	s.NoError(err)
-	//	s.Equal(http.StatusOK, resp.StatusCode)
-	//})
-	//
-	// TODO uncomment when we have CircleCI configured to hit CEDAR
-	//s.Run("PUT will fail if status is 'SUBMITTED', but it doesn't pass validation", func() {
-	//	body, err := json.Marshal(map[string]string{
-	//		"id":        id.String(),
-	//		"status":    "SUBMITTED",
-	//		"requester": "Test Requester",
-	//	})
-	//	s.NoError(err)
-	//	req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
-	//	s.NoError(err)
-	//	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
-	//
-	//	resp, err := client.Do(req)
-	//
-	//	s.NoError(err)
-	//	s.Equal(http.StatusBadRequest, resp.StatusCode)
-	//})
+	// Since we can't always hit the CEDAR API in the following
+	// 2 tests (both for performance and VPN reasons)
+	// this test can be run in local environments to make sure CEDAR
+	// is set up.
+	// Other tests should mock the API
+	s.Run("PUT will succeed if status is 'SUBMITTED' and it passes validation", func() {
+		if s.environment != appconfig.LocalEnv.String() {
+			// TODO: When logger gets added, put in test also and print skips
+			return
+		}
+		updatedAt := time.Now().UTC()
+		intake := models.SystemIntake{
+			ID:                      id,
+			EUAUserID:               "FAKE",
+			Requester:               null.StringFrom("Test Requester"),
+			Component:               null.StringFrom("Test Requester"),
+			BusinessOwner:           null.StringFrom("Test Requester"),
+			BusinessOwnerComponent:  null.StringFrom("Test Requester"),
+			ProductManager:          null.StringFrom("Test Requester"),
+			ProductManagerComponent: null.StringFrom("Test Requester"),
+			ProjectName:             null.StringFrom("Test Requester"),
+			ExistingFunding:         null.BoolFrom(false),
+			BusinessNeed:            null.StringFrom("test business need"),
+			Solution:                null.StringFrom("Test Requester"),
+			ProcessStatus:           null.StringFrom("Test Requester"),
+			EASupportRequest:        null.BoolFrom(true),
+			ExistingContract:        null.StringFrom("Test Requester"),
+			UpdatedAt:               &updatedAt,
+			Status:                  models.SystemIntakeStatusSUBMITTED,
+		}
+		body, err := json.Marshal(intake)
+		s.NoError(err)
+		req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
+		s.NoError(err)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
+
+		resp, err := client.Do(req)
+
+		s.NoError(err)
+		s.Equal(http.StatusOK, resp.StatusCode)
+	})
+
+	s.Run("PUT will fail if status is 'SUBMITTED', but it doesn't pass validation", func() {
+		if s.environment != appconfig.LocalEnv.String() {
+			// TODO: When logger gets added, put in test also and print skips
+			return
+		}
+		body, err := json.Marshal(map[string]string{
+			"id":        id.String(),
+			"status":    "SUBMITTED",
+			"requester": "Test Requester",
+		})
+		s.NoError(err)
+		req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
+		s.NoError(err)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
+
+		resp, err := client.Do(req)
+
+		s.NoError(err)
+		s.Equal(http.StatusBadRequest, resp.StatusCode)
+	})
 
 	s.Run("GET will fetch the updated intake just saved", func() {
 		req, err := http.NewRequest(http.MethodGet, getURL.String(), nil)
