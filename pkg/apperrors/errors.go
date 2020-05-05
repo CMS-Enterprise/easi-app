@@ -44,30 +44,47 @@ func (e *QueryError) Unwrap() error {
 	return e.Err
 }
 
-// CedarOperation provides a set of operations that can fail
-type CedarOperation string
-
-const (
-	// CedarValidate is for failures when validating
-	CedarValidate CedarOperation = "Validate"
-	// CedarSubmit is for failures when submitting
-	CedarSubmit CedarOperation = "Submit"
-)
-
-// CedarError is a typed error for query issues
-type CedarError struct {
-	Err       error
-	IntakeID  string
-	Operation CedarOperation
+type validationError struct {
+	Err     error
+	Model   string
+	ModelID string
 }
 
 // Error provides the error as a string
-func (e *CedarError) Error() string {
-	return fmt.Sprintf("Could not hit CEDAR for intake %s with operation %s", e.IntakeID, e.Operation)
+func (e *validationError) Error() string {
+	return fmt.Sprintf("Could not hit validate %s %s", e.Model, e.ModelID)
 }
 
 // Unwrap provides the underlying error
-func (e *CedarError) Unwrap() error {
+func (e *validationError) Unwrap() error {
+	return e.Err
+}
+
+// ExternalAPIOperation provides a set of operations that can fail
+type ExternalAPIOperation string
+
+const (
+	// Validate is for failures when validating
+	Validate ExternalAPIOperation = "Validate"
+	// Submit is for failures when submitting
+	Submit ExternalAPIOperation = "Submit"
+)
+
+// ExternalAPIError is a typed error for query issues
+type ExternalAPIError struct {
+	Err       error
+	Model     string
+	ModelID   string
+	Operation ExternalAPIOperation
+}
+
+// Error provides the error as a string
+func (e *ExternalAPIError) Error() string {
+	return fmt.Sprintf("Could not hit CEDAR for %s %s with operation %s", e.Model, e.ModelID, e.Operation)
+}
+
+// Unwrap provides the underlying error
+func (e *ExternalAPIError) Unwrap() error {
 	return e.Err
 }
 

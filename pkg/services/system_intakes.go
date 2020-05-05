@@ -128,10 +128,11 @@ func NewSubmitSystemIntake(
 ) func(intake *models.SystemIntake, logger *zap.Logger) error {
 	return func(intake *models.SystemIntake, logger *zap.Logger) error {
 		if intake.AlfabetID.Valid {
-			err := &apperrors.CedarError{
+			err := &apperrors.ExternalAPIError{
 				Err:       errors.New("intake has already been submitted to CEDAR"),
-				Operation: apperrors.CedarSubmit,
-				IntakeID:  intake.ID.String(),
+				ModelID:   intake.ID.String(),
+				Model:     "System Intake",
+				Operation: apperrors.Submit,
 			}
 			return err
 		}

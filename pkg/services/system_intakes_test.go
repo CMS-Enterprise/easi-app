@@ -216,32 +216,34 @@ func (s ServicesTestSuite) TestSystemIntakeSubmitter() {
 
 	s.Run("returns error when validation fails", func() {
 		failValidationSubmission := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-			return "", &apperrors.CedarError{
+			return "", &apperrors.ExternalAPIError{
 				Err:       errors.New("validation failed on these fields: ID"),
-				IntakeID:  intake.ID.String(),
-				Operation: apperrors.CedarValidate,
+				ModelID:   intake.ID.String(),
+				Model:     "System Intake",
+				Operation: apperrors.Validate,
 			}
 		}
 		submitSystemIntake := NewSubmitSystemIntake(failValidationSubmission, save, logger)
 
 		err := submitSystemIntake(&models.SystemIntake{}, logger)
 
-		s.IsType(&apperrors.CedarError{}, err)
+		s.IsType(&apperrors.ExternalAPIError{}, err)
 	})
 
 	s.Run("returns error when submission fails", func() {
 		failValidationSubmission := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-			return "", &apperrors.CedarError{
+			return "", &apperrors.ExternalAPIError{
 				Err:       errors.New("CEDAR return result: unexpected failure"),
-				IntakeID:  intake.ID.String(),
-				Operation: apperrors.CedarSubmit,
+				ModelID:   intake.ID.String(),
+				Model:     "System Intake",
+				Operation: apperrors.Submit,
 			}
 		}
 		submitSystemIntake := NewSubmitSystemIntake(failValidationSubmission, save, logger)
 
 		err := submitSystemIntake(&models.SystemIntake{}, logger)
 
-		s.IsType(&apperrors.CedarError{}, err)
+		s.IsType(&apperrors.ExternalAPIError{}, err)
 	})
 
 	s.Run("returns error when intake has already been submitted", func() {
@@ -254,7 +256,7 @@ func (s ServicesTestSuite) TestSystemIntakeSubmitter() {
 
 		err := submitSystemIntake(&alreadySubmittedIntake, logger)
 
-		s.IsType(&apperrors.CedarError{}, err)
+		s.IsType(&apperrors.ExternalAPIError{}, err)
 	})
 
 	s.Run("returns error if the save fails", func() {
