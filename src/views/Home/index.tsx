@@ -38,8 +38,8 @@ const Home = ({ auth, history }: HomeProps) => {
             <ActionBanner
               key={intake.id}
               title={
-                intake.projectName
-                  ? `${intake.projectName}: Intake Request`
+                intake.requestName
+                  ? `${intake.requestName}: Intake Request`
                   : 'Intake Request'
               }
               helpfulText="Your Intake Request is incomplete, please submit it when you are ready so that we can move you to the next phase"
