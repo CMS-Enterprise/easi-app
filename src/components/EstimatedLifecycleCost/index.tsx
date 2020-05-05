@@ -62,11 +62,11 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
 
                     <Field
                       as={RadioField}
-                      checked={values.phase === 'Operations & Maintenance'}
+                      checked={values.phase === 'Operations and Maintenance'}
                       id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
                       name={`${formikKey}.year${year}.${index}.phase`}
-                      label="Operations & Maintenance"
-                      value="Operations & Maintenance"
+                      label="Operations and Maintenance"
+                      value="Operations and Maintenance"
                       inline
                     />
                   </div>
@@ -159,7 +159,7 @@ const EstimatedLifecycleCost = ({
     <div className="est-lifecycle-cost grid-row">
       <div className="tablet:grid-col-8">
         <div className="est-lifecycle-cost__year-costs margin-top-0">
-          <span className="text-bold">Current Year</span>
+          <span className="text-bold">Current year</span>
           {years.year1.map((year: LifecyclePhase, index: number) => {
             return (
               <Phase
@@ -237,13 +237,13 @@ const EstimatedLifecycleCost = ({
           <CollapsableLink label="What phase should I choose?">
             <div>
               <p className="margin-top-0">
-                <strong>Initiate</strong>: Projects that are going through the
-                governance process, have not yet received funding or are
-                currently in development (pre-ATO)
+                <strong>Initiate: </strong>Projects that are going through the
+                governance process, have not yet received funding, or are
+                currently in development (pre-Authority to Operate)
               </p>
               <p className="margin-bottom-0">
-                <strong>Operation & Maintenance</strong>: Projects that are
-                live, post-ATO
+                <strong>Operation and Maintenance: </strong>Projects that are
+                live, post-Authority to Operate
               </p>
             </div>
           </CollapsableLink>
@@ -255,7 +255,7 @@ const EstimatedLifecycleCost = ({
           className="est-lifecycle-cost__total-cost-wrapper"
         >
           <div>
-            <DescriptionTerm term="Current Year" />
+            <DescriptionTerm term="Current year" />
             <DescriptionDefinition
               definition={`${formatDollars(currentYearCost)}`}
             />
@@ -280,7 +280,7 @@ const EstimatedLifecycleCost = ({
             <hr className="margin-bottom-3 text-black" />
             <DescriptionTerm
               className="est-lifecycle-cost__dt-total"
-              term="System Total Cost"
+              term="System total cost"
             />
             <DescriptionDefinition
               className="est-lifecycle-cost__dd-total"

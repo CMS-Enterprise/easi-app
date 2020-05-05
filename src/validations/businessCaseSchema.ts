@@ -3,14 +3,14 @@ import * as Yup from 'yup';
 //
 const phoneNumberRegex = /( *-*[0-9] *?){10,}/;
 const BusinessCaseValidationSchema = {
-  generalProjectInfo: Yup.object().shape({
-    projectName: Yup.string().required('Enter the Project Name'),
+  generalRequestInfo: Yup.object().shape({
+    requestName: Yup.string().required('Enter the Request Name'),
     requester: Yup.object().shape({
       name: Yup.string().required("Enter the Requester's name"),
       phoneNumber: Yup.string()
         .matches(
           phoneNumberRegex,
-          "The phone number doesn't have enough digits. Check and update it"
+          'Enter the requester’s phone number like 123456789 or 123-456-789'
         )
         .required(
           'Enter the Requester’s phone number like 123456789 or 123-456-789'
@@ -20,7 +20,7 @@ const BusinessCaseValidationSchema = {
       name: Yup.string().required("Enter the Business Owner's name")
     })
   }),
-  projectDescription: Yup.object().shape({
+  requestDescription: Yup.object().shape({
     businessNeed: Yup.string().required(
       'Tell us what the business or user need is'
     ),

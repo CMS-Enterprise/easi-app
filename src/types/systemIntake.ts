@@ -12,7 +12,7 @@ export type GovernanceCollaborationTeam = {
 export type SystemIntakeForm = {
   id: string;
   euaUserID: string;
-  projectName: string;
+  requestName: string;
   status: string;
   requester: {
     name: string;
@@ -47,7 +47,9 @@ export type SystemIntakeForm = {
 
 // Redux store type for a system intake
 export type SystemIntakeState = {
-  systemIntake?: SystemIntakeForm;
+  systemIntake: SystemIntakeForm;
+  isLoading: boolean | null;
+  error?: any;
 };
 
 // Redux store type for systems
@@ -56,10 +58,4 @@ export type SystemIntakesState = {
   isLoading: boolean | null;
   loadedTimestamp: DateTime | null;
   error: string | null;
-};
-
-export type PutSystemIntakeAction = {
-  type: string;
-  id: string;
-  formData: SystemIntakeForm;
 };
