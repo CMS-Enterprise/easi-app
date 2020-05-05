@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -u
+
+payload="{\"repository\": \"$1\", \"imageTag\": \"$2\"}"
+aws lambda invoke --function-name ecr-scan-findings --payload "$payload" scan_response.json || exit 1
+totalFindings="$(jq "fromjson | .totalFindings" scan_response.json)"
+if [[ "$totalFindings" != 0 ]]; then
+  echo "Scan found $totalFindings findings!"
+  exit 1
+else
+  echo "Scan found no findings"
+fi

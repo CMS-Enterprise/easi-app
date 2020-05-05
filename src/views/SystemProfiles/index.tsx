@@ -63,10 +63,7 @@ export const SystemProfiles = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    const getSystemIntakesEffect = async (): Promise<void> => {
-      dispatch(fetchSystemIntakes());
-    };
-    getSystemIntakesEffect();
+    dispatch(fetchSystemIntakes());
   }, [dispatch]);
 
   useEffect(() => {
