@@ -8,6 +8,7 @@ import { RadioField } from 'components/shared/RadioField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import flattenErrors from 'utils/flattenErrors';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -45,11 +46,10 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         promptly from the IT_Governance mailbox, and an IT Governance Team
         member will reach out regarding next steps.
       </p>
-      <p className="text-italic">
-        **All fields are required unless marked &apos;Optional&apos;
-      </p>
+
       <div className="tablet:grid-col-6 margin-bottom-7">
-        <h1 className="font-heading-xl margin-top-4">Contact Details</h1>
+        <MandatoryFieldsAlert />
+        <h1 className="font-heading-xl margin-top-3">Contact details</h1>
 
         {/* Requester Name */}
         <FieldGroup
@@ -107,10 +107,14 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           <Label className="margin-bottom-1" htmlFor="IntakeForm-BusinessOwner">
             CMS Business/Product Owner&apos;s Name
           </Label>
+          <HelpText className="margin-bottom-105">
+            This person owns a line of business related to this request and will
+            champion the request moving forward
+          </HelpText>
           <Field
             as={CheckboxField}
             id="IntakeForm-IsBusinessOwnerSameAsRequester"
-            label="Same as Requester"
+            label="CMS Business/Product Owner is same as requester"
             name="isBusinessOwnerSameAsRequester"
             onChange={(e: any) => {
               if (e.target.checked) {
@@ -163,9 +167,16 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           scrollElement="productManager.name"
           error={!!flatErrors['productManager.name']}
         >
-          <Label htmlFor="IntakeForm-ProductManager">
+          <Label
+            htmlFor="IntakeForm-ProductManager"
+            className="margin-bottom-1"
+          >
             CMS Project/Product Manager, or lead
           </Label>
+          <HelpText>
+            This person may be contacted for follow ups and to understand the
+            state of the contract
+          </HelpText>
           <FieldErrorMsg>{flatErrors['productManager.name']}</FieldErrorMsg>
           <Field
             as={TextField}
@@ -210,8 +221,8 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
               (ISSO)?
             </legend>
             <HelpText className="margin-bottom-2">
-              If yes, please tell use the name of your ISSO so we can get in
-              touch with them
+              If yes, please tell us the name of your Information System
+              Security Officer so we can get in touch with them
             </HelpText>
             <FieldErrorMsg>{flatErrors['isso.isPresent']}</FieldErrorMsg>
 
@@ -266,7 +277,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         >
           <fieldset className="usa-fieldset margin-top-3">
             <legend className="usa-label margin-bottom-1">
-              My project team is currently collaborating/consulting with:
+              For this request, I have started collaborating/consulting with:
             </legend>
             <HelpText className="margin-bottom-2">
               Please disclose the name of each person you&apos;ve worked with.
@@ -304,7 +315,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
               checked={values.governanceTeams.isPresent === false}
               id="IntakeForm-YesGovernanceTeam"
               name="governanceTeams.isPresent"
-              label="None of the above"
+              label="No one in OIT"
               onChange={() => {
                 setFieldValue('governanceTeams.isPresent', false);
                 setFieldValue('governanceTeams.teams', []);

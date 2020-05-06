@@ -104,8 +104,10 @@ const AlternativeSolution = ({
                 implementation approach (e.g. development/configuration,
                 phases),
               </li>
-              <li>costs (e.g. services, software, O&M),</li>
-              <li>and potential acqueisition approaches.</li>
+              <li>
+                costs (e.g. services, software, Operation and Maintenance),{' '}
+              </li>
+              <li>and potential acquisition approaches</li>
             </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.summary`]}</FieldErrorMsg>
@@ -125,7 +127,7 @@ const AlternativeSolution = ({
           error={!!flatErrors[`${altId}.acquisitionApproach`]}
         >
           <Label htmlFor={`BusinessCase-${altId}AcquisitionApproach`}>
-            {`${altLabel}: Acquisition Approach`}
+            {`${altLabel}: Acquisition approach`}
           </Label>
           <HelpText className="margin-y-1">
             Describe the approach to acquiring the products and services
@@ -155,7 +157,7 @@ const AlternativeSolution = ({
           </Label>
           <HelpText className="margin-y-1">
             Identify any aspects of this solution that positively differentiates
-            this approach from other solutions.
+            this approach from other solutions
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.pros`]}</FieldErrorMsg>
           <Field
@@ -177,8 +179,8 @@ const AlternativeSolution = ({
             {`${altLabel}: Cons`}
           </Label>
           <HelpText className="margin-y-1">
-            Identify any aspects of this solution that negatively impacts this
-            approach.
+            Identify any aspects of this solution that negatively impact this
+            approach
           </HelpText>
           <FieldErrorMsg>{flatErrors[`${altId}.cons`]}</FieldErrorMsg>
           <Field
@@ -193,7 +195,7 @@ const AlternativeSolution = ({
         </FieldGroup>
       </div>
       <div className="tablet:grid-col-9 margin-top-2">
-        <h2 className="margin-0">Estimated Lifecycle Cost</h2>
+        <h2 className="margin-0">Estimated lifecycle cost</h2>
         <HelpText>
           <p className="margin-y-2">
             You can add speculative costs if exact ones are not known or if a
@@ -202,7 +204,10 @@ const AlternativeSolution = ({
           <span>These things should be considered when estimating costs:</span>
           <ul className="padding-left-205">
             <li>Hosting</li>
-            <li>Software subscription and licenses (COTS and GOTS products)</li>
+            <li>
+              Software subscription and licenses (Commercial off-the-shelf and
+              Government off-the-shelf products)
+            </li>
             <li>Contractor rates and salaries</li>
             <li>Inflation</li>
           </ul>
@@ -239,12 +244,12 @@ const AlternativeSolution = ({
 
         {altLetter === 'A' && !values.alternativeB && (
           <>
-            <h2 className="margin-bottom-1">Additional Alternatives</h2>
+            <h2 className="margin-bottom-1">Additional alternatives</h2>
             <HelpText>
-              If you are building a multi-year project that will require
-              significant upkeep, you may want to include more options. Keep in
-              mind that Government Off the Shelf and Commercial Off the Shelf
-              are acceptable alternatives to include.
+              If you are buillding a multi-year project that will require
+              significant upkeep, you may want to include more alternatives.
+              Keep in mind that Government off-the-shelf and Commercial
+              off-the-shelf products are acceptable alternatives to include.
             </HelpText>
             <div className="margin-top-2">
               <Button type="button" base onClick={handleToggleAlternative}>

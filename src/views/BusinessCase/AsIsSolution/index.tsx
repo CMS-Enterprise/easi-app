@@ -29,13 +29,13 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         additional alternatives. Identify your preferred solution.
       </p>
       <div className="tablet:grid-col-9">
-        <h2>&quot;As is&quot; Solution</h2>
+        <h2>&quot;As is&quot; solution</h2>
         <FieldGroup
           scrollElement="asIsSolution.title"
           error={!!flatErrors['asIsSolution.title']}
         >
           <Label htmlFor="BusinessCase-AsIsSolutionTitle">
-            &quot;As is&quot; Solution: Title
+            &quot;As is&quot; solution: Title
           </Label>
           <FieldErrorMsg>{flatErrors['asIsSolution.title']}</FieldErrorMsg>
           <Field
@@ -52,7 +52,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           error={!!flatErrors['asIsSolution.summary']}
         >
           <Label htmlFor="BusinessCase-AsIsSolutionSummary">
-            &quot;As is&quot; Solution: Summary
+            &quot;As is&quot; solution: Summary
           </Label>
           <HelpText className="margin-top-1">
             <span>Please include:</span>
@@ -65,8 +65,10 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
                 implementation approach (e.g. development/configuration,
                 phases),
               </li>
-              <li>costs (e.g. services, software, O&M),</li>
-              <li>and potential acqueisition approaches.</li>
+              <li>
+                costs (e.g. services, software, Operation and Maintenance),{' '}
+              </li>
+              <li>and potential acquisition approaches</li>
             </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors['asIsSolution.summary']}</FieldErrorMsg>
@@ -86,11 +88,11 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           error={!!flatErrors['asIsSolution.pros']}
         >
           <Label htmlFor="BusinessCase-AsIsSolutionPros">
-            &quot;As is&quot; Solution: Pros
+            &quot;As is&quot; solution: Pros
           </Label>
           <HelpText className="margin-y-1">
             Identify any aspects of this solution that positively differentiates
-            this approach from other solutions.
+            this approach from other solutions
           </HelpText>
           <FieldErrorMsg>{flatErrors['asIsSolution.pros']}</FieldErrorMsg>
           <Field
@@ -109,11 +111,11 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           error={!!flatErrors['asIsSolution.cons']}
         >
           <Label htmlFor="BusinessCase-AsIsSolutionCons">
-            &quot;As is&quot; Solution: Cons
+            &quot;As is&quot; solution: Cons
           </Label>
           <HelpText className="margin-y-1">
-            Identify any aspects of this solution that negatively impacts this
-            approach.
+            Identify any aspects of this solution that negatively impact this
+            approach
           </HelpText>
           <FieldErrorMsg>{flatErrors['asIsSolution.cons']}</FieldErrorMsg>
           <Field
@@ -128,7 +130,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         </FieldGroup>
       </div>
       <div className="tablet:grid-col-9 margin-top-2">
-        <h2 className="margin-0">Estimated Lifecycle Cost</h2>
+        <h2 className="margin-0">Estimated lifecycle cost</h2>
         <HelpText>
           <p className="margin-y-2">
             You can add speculative costs if exact ones are not known or if a
@@ -139,7 +141,10 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <span>These things should be considered when estimating costs:</span>
           <ul className="padding-left-205">
             <li>Hosting</li>
-            <li>Software subscription and licenses (COTS and GOTS products)</li>
+            <li>
+              Software subscription and licenses (Commercial off-the-shelf and
+              Government off-the-shelf products)
+            </li>
             <li>Contractor rates and salaries</li>
             <li>Inflation</li>
           </ul>
