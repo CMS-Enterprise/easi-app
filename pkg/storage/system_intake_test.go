@@ -153,3 +153,31 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		s.Equal(&models.SystemIntake{}, fetched)
 	})
 }
+
+func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
+	s.Run("golden path to fetch system intakes", func() {
+		intake := NewSystemIntake()
+		intake2 := NewSystemIntake()
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
+		s.NoError(err)
+		_, err = tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake2)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		fetched, err := s.store.FetchSystemIntakesByEuaID("FAKE")
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Len(fetched, 2)
+		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
+	})
+
+	s.Run("cannot without an ID that exists in the db", func() {
+		fetched, err := s.store.FetchSystemIntakesByEuaID("OTHR")
+
+		s.Error(err)
+		s.Equal("sql: no rows in result set", err.Error())
+		s.Equal(models.SystemIntakes{}, fetched)
+	})
+}
