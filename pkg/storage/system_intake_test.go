@@ -10,10 +10,10 @@ import (
 )
 
 // NewSystemIntake should provide a saveable intake with all struct fields
-func NewSystemIntake() models.SystemIntake {
+func NewSystemIntake(euaID string) models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
-		EUAUserID:               "FAKE",
+		EUAUserID:               euaID,
 		Status:                  models.SystemIntakeStatusDRAFT,
 		Requester:               null.StringFrom("Test Requester"),
 		Component:               null.StringFrom("Test Component"),
@@ -38,7 +38,7 @@ func NewSystemIntake() models.SystemIntake {
 
 func (s StoreTestSuite) TestSaveSystemIntake() {
 	s.Run("save a new system intake", func() {
-		intake := NewSystemIntake()
+		intake := NewSystemIntake("FAKE")
 
 		err := s.store.SaveSystemIntake(&intake)
 
@@ -129,7 +129,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 	s.Run("golden path to fetch a system intake", func() {
-		intake := NewSystemIntake()
+		intake := NewSystemIntake("BYID")
 		id := intake.ID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
@@ -156,8 +156,8 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	s.Run("golden path to fetch system intakes", func() {
-		intake := NewSystemIntake()
-		intake2 := NewSystemIntake()
+		intake := NewSystemIntake("EUAS")
+		intake2 := NewSystemIntake("EUAS")
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
 		s.NoError(err)
