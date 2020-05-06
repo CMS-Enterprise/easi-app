@@ -109,7 +109,7 @@ const cmsDivisionsAndOffices = [
     name: 'Office of Support Services and Operations'
   },
   {
-    acronym: 'OTHER',
+    acronym: '',
     name: 'Other'
   }
 ];
