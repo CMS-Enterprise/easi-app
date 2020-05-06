@@ -173,11 +173,11 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
 	})
 
-	s.Run("cannot without an ID that exists in the db", func() {
+	s.Run("fetches no results with other EUA ID", func() {
 		fetched, err := s.store.FetchSystemIntakesByEuaID("OTHR")
 
-		s.Error(err)
-		s.Equal("sql: no rows in result set", err.Error())
+		s.NoError(err)
+		s.Len(fetched, 0)
 		s.Equal(models.SystemIntakes{}, fetched)
 	})
 }
