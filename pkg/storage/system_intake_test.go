@@ -166,7 +166,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakesByEuaID("FAKE")
+		fetched, err := s.store.FetchSystemIntakesByEuaID("EUAS")
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Len(fetched, 2)
