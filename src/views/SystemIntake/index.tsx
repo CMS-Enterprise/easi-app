@@ -43,10 +43,10 @@ export const SystemIntake = () => {
 
   const history = useHistory();
   const { systemId, formPage } = useParams();
-  const [page, setPage] = useState(0);
+  const [pageIndex, setPageIndex] = useState(0);
   const dispatch = useDispatch();
   const formikRef: any = useRef();
-  const pageObj = pages[page];
+  const pageObj = pages[pageIndex];
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -77,10 +77,10 @@ export const SystemIntake = () => {
   useEffect(() => {
     const pageSlugs: any[] = pages.map(p => p.slug);
     if (pageSlugs.includes(formPage)) {
-      setPage(pageSlugs.indexOf(formPage));
+      setPageIndex(pageSlugs.indexOf(formPage));
     } else {
       history.replace(`/system/${systemId}/contact-details`);
-      setPage(0);
+      setPageIndex(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pages, systemId, formPage]);
@@ -153,13 +153,13 @@ export const SystemIntake = () => {
                       render={() => <Review formikProps={formikProps} />}
                     />
 
-                    {page > 0 && (
+                    {pageIndex > 0 && (
                       <Button
                         type="button"
                         outline
                         onClick={() => {
                           setErrors({});
-                          const newUrl = pages[page - 1].slug;
+                          const newUrl = pages[pageIndex - 1].slug;
                           history.push(newUrl);
                           window.scrollTo(0, 0);
                         }}
@@ -167,14 +167,14 @@ export const SystemIntake = () => {
                         Back
                       </Button>
                     )}
-                    {page < pages.length - 1 && (
+                    {pageIndex < pages.length - 1 && (
                       <Button
                         type="button"
                         onClick={() => {
                           if (pageObj.validation) {
                             validateForm().then(err => {
                               if (Object.keys(err).length === 0) {
-                                const newUrl = pages[page + 1].slug;
+                                const newUrl = pages[pageIndex + 1].slug;
                                 history.push(newUrl);
                               }
                               window.scrollTo(0, 0);
@@ -185,7 +185,7 @@ export const SystemIntake = () => {
                         Next
                       </Button>
                     )}
-                    {page === pages.length - 1 && (
+                    {pageIndex === pages.length - 1 && (
                       <Button
                         type="submit"
                         disabled={isSubmitting}
@@ -227,7 +227,7 @@ export const SystemIntake = () => {
         )}
         {pageObj.type === 'FORM' && (
           <PageNumber
-            currentPage={page + 1}
+            currentPage={pageIndex + 1}
             totalPages={pages.filter(p => p.type === 'FORM').length}
           />
         )}
