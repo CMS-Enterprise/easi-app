@@ -75,8 +75,14 @@ export const SystemIntake = () => {
   }, []);
 
   useEffect(() => {
-    const pageSlugs = pages.map(p => p.slug);
-    setPage(pageSlugs.indexOf(formPage || ''));
+    const pageSlugs: any[] = pages.map(p => p.slug);
+    if (pageSlugs.includes(formPage)) {
+      setPage(pageSlugs.indexOf(formPage));
+    } else {
+      history.replace(`/system/${systemId}/contact-details`);
+      setPage(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pages, formPage]);
 
   return (
