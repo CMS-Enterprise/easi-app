@@ -83,7 +83,7 @@ export const SystemIntake = () => {
       setPage(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pages, formPage]);
+  }, [pages, systemId, formPage]);
 
   return (
     <div className="system-intake">
