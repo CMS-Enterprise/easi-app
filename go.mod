@@ -3,6 +3,7 @@ module github.com/cmsgov/easi-app
 go 1.13
 
 require (
+	github.com/aws/aws-sdk-go v1.30.24
 	github.com/coreos/go-etcd v2.0.0+incompatible // indirect
 	github.com/cpuguy83/go-md2man v1.0.10 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
@@ -27,7 +28,7 @@ require (
 	github.com/prometheus/common v0.4.0
 	github.com/spf13/cobra v0.0.7
 	github.com/spf13/viper v1.6.2
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.5.1
 	github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8 // indirect
 	go.mongodb.org/mongo-driver v1.3.1 // indirect
 	go.uber.org/zap v1.14.1
