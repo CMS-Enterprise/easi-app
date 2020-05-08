@@ -30,7 +30,7 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 		s.Equal(fakeEuaID, intakes[0].EUAUserID)
 	})
 
-	s.Run("returns query error when save fails", func() {
+	s.Run("returns query error when fetch fails", func() {
 		fetch := func(euaID string) (models.SystemIntakes, error) {
 			return models.SystemIntakes{}, errors.New("fetch failed")
 		}
