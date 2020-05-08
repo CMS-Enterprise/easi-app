@@ -1,4 +1,4 @@
-package ses
+package appses
 
 import (
 	"testing"
