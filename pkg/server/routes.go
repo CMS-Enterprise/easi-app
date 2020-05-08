@@ -78,9 +78,11 @@ func (s *Server) routes(
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
 
 	systemIntakesHandler := handlers.SystemIntakesHandler{
-		Logger:             s.logger,
-		FetchSystemIntakes: services.FetchSystemIntakesByEuaID,
-		DB:                 store.DB,
+		Logger: s.logger,
+		FetchSystemIntakes: services.NewFetchSystemIntakesByEuaID(
+			store.FetchSystemIntakesByEuaID,
+			s.logger,
+		),
 	}
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 
