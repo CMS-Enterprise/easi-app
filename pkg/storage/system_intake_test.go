@@ -7,13 +7,14 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 // NewSystemIntake should provide a saveable intake with all struct fields
 func NewSystemIntake() models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
-		EUAUserID:               "FAKE",
+		EUAUserID:               testhelpers.RandomEUAID(),
 		Status:                  models.SystemIntakeStatusDRAFT,
 		Requester:               null.StringFrom("Test Requester"),
 		Component:               null.StringFrom("Test Component"),
@@ -151,5 +152,34 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		s.Error(err)
 		s.Equal("sql: no rows in result set", err.Error())
 		s.Equal(&models.SystemIntake{}, fetched)
+	})
+}
+
+func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
+	s.Run("golden path to fetch system intakes", func() {
+		intake := NewSystemIntake()
+		intake2 := NewSystemIntake()
+		intake2.EUAUserID = intake.EUAUserID
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
+		s.NoError(err)
+		_, err = tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake2)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		fetched, err := s.store.FetchSystemIntakesByEuaID(intake.EUAUserID)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Len(fetched, 2)
+		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
+	})
+
+	s.Run("fetches no results with other EUA ID", func() {
+		fetched, err := s.store.FetchSystemIntakesByEuaID(testhelpers.RandomEUAID())
+
+		s.NoError(err)
+		s.Len(fetched, 0)
+		s.Equal(models.SystemIntakes{}, fetched)
 	})
 }
