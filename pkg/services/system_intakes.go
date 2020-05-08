@@ -107,5 +107,4 @@ func NewFetchSystemIntakeByID(
 		}
 		return intake, nil
 	}
-
 }
