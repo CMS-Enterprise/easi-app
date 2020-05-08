@@ -1,4 +1,4 @@
-package ses
+package appses
 
 func (s *SESTestSuite) TestSendSystemIntakeEmail() {
 	out, err := s.client.sendEmail()

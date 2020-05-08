@@ -1,4 +1,4 @@
-package ses
+package appses
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
