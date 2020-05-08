@@ -23,7 +23,7 @@ func NewFetchSystemIntakesByEuaID(
 			return models.SystemIntakes{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     "system intakes",
-				Operation: "fetch",
+				Operation: apperrors.QueryFetch,
 			}
 		}
 		return intakes, nil
@@ -110,7 +110,7 @@ func NewFetchSystemIntakeByID(
 			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     "system intake",
-				Operation: "fetch",
+				Operation: apperrors.QueryFetch,
 			}
 		}
 		return intake, nil

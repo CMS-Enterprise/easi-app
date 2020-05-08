@@ -7,13 +7,14 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 // NewSystemIntake should provide a saveable intake with all struct fields
-func NewSystemIntake(euaID string) models.SystemIntake {
+func NewSystemIntake() models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
-		EUAUserID:               euaID,
+		EUAUserID:               testhelpers.RandomEUAID(),
 		Status:                  models.SystemIntakeStatusDRAFT,
 		Requester:               null.StringFrom("Test Requester"),
 		Component:               null.StringFrom("Test Component"),
@@ -38,7 +39,7 @@ func NewSystemIntake(euaID string) models.SystemIntake {
 
 func (s StoreTestSuite) TestSaveSystemIntake() {
 	s.Run("save a new system intake", func() {
-		intake := NewSystemIntake("FAKE")
+		intake := NewSystemIntake()
 
 		err := s.store.SaveSystemIntake(&intake)
 
@@ -129,7 +130,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 	s.Run("golden path to fetch a system intake", func() {
-		intake := NewSystemIntake("BYID")
+		intake := NewSystemIntake()
 		id := intake.ID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
@@ -156,8 +157,9 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	s.Run("golden path to fetch system intakes", func() {
-		intake := NewSystemIntake("EUAS")
-		intake2 := NewSystemIntake("EUAS")
+		intake := NewSystemIntake()
+		intake2 := NewSystemIntake()
+		intake2.EUAUserID = intake.EUAUserID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
 		s.NoError(err)
@@ -166,7 +168,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakesByEuaID("EUAS")
+		fetched, err := s.store.FetchSystemIntakesByEuaID(intake.EUAUserID)
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Len(fetched, 2)
@@ -174,7 +176,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	})
 
 	s.Run("fetches no results with other EUA ID", func() {
-		fetched, err := s.store.FetchSystemIntakesByEuaID("OTHR")
+		fetched, err := s.store.FetchSystemIntakesByEuaID(testhelpers.RandomEUAID())
 
 		s.NoError(err)
 		s.Len(fetched, 0)
