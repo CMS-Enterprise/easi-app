@@ -50,3 +50,9 @@ const DBPasswordConfigKey = "PGPASS"
 
 // DBSSLModeConfigKey is the Postgres SSL mode config key
 const DBSSLModeConfigKey = "PGSSLMODE"
+
+// AWSSESSourceARN is the key for the ARN for sending email
+const AWSSESSourceARN = "AWS_SES_SOURCE_ARN"
+
+// AWSSESSource is the key for the sender for sending email
+const AWSSESSource = "AWS_SES_SOURCE"
