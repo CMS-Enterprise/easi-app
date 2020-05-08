@@ -46,7 +46,7 @@ const (
 // EstimatedLifecycleCost is the model for the cost of an estimated lifecycle line in the business case.
 type EstimatedLifecycleCost struct {
 	ID             uuid.UUID
-	BusinessCaseID uuid.UUID
+	BusinessCaseID uuid.UUID `db:"business_case"`
 	Solution       LifecycleCostSolution
 	Phase          LifecycleCostPhase
 	Year           LifecycleCostYear
@@ -64,7 +64,7 @@ func (e *EstimatedLifecycleCosts) Scan(src interface{}) error {
 // BusinessCase is the model for the business case form.
 type BusinessCase struct {
 	ID                              uuid.UUID
-	EUAUserID                       null.String `db:"eua_user_id"`
+	EUAUserID                       string      `db:"eua_user_id"`
 	ProjectName                     null.String `db:"project_name"`
 	Requester                       null.String
 	RequesterPhoneNumber            null.String             `db:"requester_phone_number"`
