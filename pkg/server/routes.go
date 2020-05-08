@@ -74,7 +74,6 @@ func (s *Server) routes(
 			s.logger,
 		),
 	}
-
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
 
@@ -84,6 +83,15 @@ func (s *Server) routes(
 		DB:                 store.DB,
 	}
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
+
+	businessCaseHandler := handlers.BusinessCaseHandler{
+		Logger: s.logger,
+		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
+			store.FetchBusinessCaseByID,
+			s.logger,
+		),
+	}
+	api.Handle("/business_case", businessCaseHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.CatchAllHandler{
 		Logger: s.logger,
