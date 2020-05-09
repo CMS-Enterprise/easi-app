@@ -26,3 +26,22 @@ func NewFetchBusinessCaseByID(
 		return businessCase, nil
 	}
 }
+
+// NewFetchBusinessCasesByEuaID is a service to fetch a list of business cases by EUA ID
+func NewFetchBusinessCasesByEuaID(
+	fetch func(euaID string) (models.BusinessCases, error),
+	logger *zap.Logger,
+) func(euaID string) (models.BusinessCases, error) {
+	return func(euaID string) (models.BusinessCases, error) {
+		businessCases, err := fetch(euaID)
+		if err != nil {
+			logger.Error("failed to fetch business cases")
+			return models.BusinessCases{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     "business cases",
+				Operation: "fetch",
+			}
+		}
+		return businessCases, nil
+	}
+}

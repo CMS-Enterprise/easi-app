@@ -99,3 +99,54 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.Equal(&models.BusinessCase{}, fetched)
 	})
 }
+
+func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
+	s.Run("golden path to fetch business cases", func() {
+		businessCase := newBusinessCase()
+		businessCase2 := newBusinessCase()
+		businessCase2.EUAUserID = businessCase.EUAUserID
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(
+			`INSERT INTO business_case (id, eua_user_id, project_name) 
+			VALUES (:id, :eua_user_id, :project_name)`,
+			&businessCase)
+		s.NoError(err)
+		_, err = tx.NamedExec(
+			`INSERT INTO business_case (id, eua_user_id, project_name) 
+			VALUES (:id, :eua_user_id, :project_name)`,
+			&businessCase2)
+		s.NoError(err)
+		for _, lifecycleItem := range businessCase.LifecycleCostLines {
+			_, err = tx.NamedExec(
+				`INSERT INTO estimated_lifecycle_cost (id, business_case, solution, year, phase, cost)
+					VALUES (:id, :business_case, :solution, :year, :phase, :cost)`,
+				&lifecycleItem)
+			s.NoError(err)
+		}
+		for _, lifecycleItem := range businessCase2.LifecycleCostLines {
+			_, err = tx.NamedExec(
+				`INSERT INTO estimated_lifecycle_cost (id, business_case, solution, year, phase, cost)
+					VALUES (:id, :business_case, :solution, :year, :phase, :cost)`,
+				&lifecycleItem)
+			s.NoError(err)
+		}
+		err = tx.Commit()
+		s.NoError(err)
+
+		fetched, err := s.store.FetchBusinessCasesByEuaID(businessCase.EUAUserID)
+
+		s.NoError(err, "failed to fetch business cases")
+		s.Len(fetched, 2)
+		s.Len(fetched[0].LifecycleCostLines, 2)
+		s.Equal(businessCase.EUAUserID, fetched[0].EUAUserID)
+	})
+
+	s.Run("fetches no results with other EUA ID", func() {
+		fetched, err := s.store.FetchBusinessCasesByEuaID(testhelpers.RandomEUAID())
+
+		s.NoError(err)
+		s.Len(fetched, 0)
+		s.Equal(models.BusinessCases{}, fetched)
+	})
+}

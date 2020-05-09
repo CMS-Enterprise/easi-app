@@ -98,3 +98,6 @@ type BusinessCase struct {
 	AlternativeBCostSavings         null.String             `db:"alternative_b_cost_savings"`
 	LifecycleCostLines              EstimatedLifecycleCosts `db:"lifecycle_cost_lines"`
 }
+
+// BusinessCases is the model for a list of business cases
+type BusinessCases []BusinessCase
