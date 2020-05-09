@@ -1,7 +1,11 @@
 package appses
 
+import (
+	"github.com/google/uuid"
+)
+
 func (s *SESTestSuite) TestSendSystemIntakeEmail() {
-	out, err := s.client.sendEmail()
+	intakeID, _ := uuid.NewUUID()
+	err := s.client.SendSystemIntakeSubmissionEmail("Test McTester", intakeID)
 	s.NoError(err)
-	s.NotNil(out)
 }
