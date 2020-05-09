@@ -61,5 +61,4 @@ const AWSSESSourceKey = "AWS_SES_SOURCE"
 const GRTEmailKey = "GRT_EMAIL"
 
 // ApplicationHostKey is the key for getting the application's domain name
-// Note CLIENT_ADDRESS is used in the environment, but "Host" is the Go URL convention
-const ApplicationHostKey = "CLIENT_ADDRESS"
+const ApplicationHostKey = "APP_HOST"
