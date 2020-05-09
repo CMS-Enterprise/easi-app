@@ -156,8 +156,8 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	s.Run("golden path to fetch system intakes", func() {
-		intake := NewSystemIntake()
-		intake2 := NewSystemIntake()
+		intake := newSystemIntake()
+		intake2 := newSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
