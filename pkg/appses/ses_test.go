@@ -21,8 +21,10 @@ func TestSESTestSuite(t *testing.T) {
 	config := testhelpers.NewConfig()
 
 	sesConfig := Config{
-		SourceARN: config.GetString(appconfig.AWSSESSourceARN),
-		Source:    config.GetString(appconfig.AWSSESSource),
+		SourceARN:       config.GetString(appconfig.AWSSESSourceARNKey),
+		Source:          config.GetString(appconfig.AWSSESSourceKey),
+		GRTEmail:        config.GetString(appconfig.GRTEmailKey),
+		ApplicationHost: config.GetString(appconfig.ApplicationHostKey),
 	}
 
 	sesTestSuite := &SESTestSuite{

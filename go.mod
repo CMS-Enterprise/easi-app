@@ -15,6 +15,7 @@ require (
 	github.com/go-openapi/swag v0.19.8
 	github.com/go-openapi/validate v0.19.7
 	github.com/go-swagger/go-swagger v0.22.0 // indirect
+	github.com/gogo/protobuf v1.2.1
 	github.com/google/uuid v1.1.1
 	github.com/gorilla/mux v1.7.4
 	github.com/graph-gophers/graphql-go v0.0.0-20191115155744-f33e81362277 // indirect

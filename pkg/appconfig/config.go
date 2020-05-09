@@ -51,8 +51,15 @@ const DBPasswordConfigKey = "PGPASS"
 // DBSSLModeConfigKey is the Postgres SSL mode config key
 const DBSSLModeConfigKey = "PGSSLMODE"
 
-// AWSSESSourceARN is the key for the ARN for sending email
-const AWSSESSourceARN = "AWS_SES_SOURCE_ARN"
+// AWSSESSourceARNKey is the key for the ARN for sending email
+const AWSSESSourceARNKey = "AWS_SES_SOURCE_ARN"
 
-// AWSSESSource is the key for the sender for sending email
-const AWSSESSource = "AWS_SES_SOURCE"
+// AWSSESSourceKey is the key for the sender for sending email
+const AWSSESSourceKey = "AWS_SES_SOURCE"
+
+// GRTEmailKey is the key for the receiving email for the GRT
+const GRTEmailKey = "GRT_EMAIL"
+
+// ApplicationHostKey is the key for getting the application's domain name
+// Note CLIENT_ADDRESS is used in the environment, but "Host" is the Go URL convention
+const ApplicationHostKey = "CLIENT_ADDRESS"
