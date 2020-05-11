@@ -130,43 +130,32 @@ func validateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logge
 	return nil
 }
 
-// SubmitSystemIntake submits a system intake to CEDAR
-func (c TranslatedClient) SubmitSystemIntake(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-	err := validateSystemIntakeForCedar(intake, logger)
-	if err != nil {
-		return "", &apperrors.ExternalAPIError{
-			Err:       err,
-			ModelID:   intake.ID.String(),
-			Model:     "System Intake",
-			Operation: apperrors.Validate,
-		}
-	}
-	id := intake.ID.String()
-	submissionTime := intake.UpdatedAt.String()
+func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient, logger *zap.Logger) (string, error) {
+	id := validatedIntake.ID.String()
+	submissionTime := validatedIntake.UpdatedAt.String()
 	params := apioperations.NewIntakegovernancePOST4Params()
 	governanceIntake := apimodels.GovernanceIntake{
-		BusinessNeeds:           &intake.BusinessNeed.String,
-		BusinessOwner:           &intake.BusinessOwner.String,
-		BusinessOwnerComponent:  &intake.BusinessOwnerComponent.String,
-		EaCollaborator:          intake.EACollaborator.String,
-		EaSupportRequest:        &intake.EASupportRequest.Bool,
-		EuaUserID:               &intake.EUAUserID,
-		ExistingContract:        &intake.ExistingContract.String,
-		ExistingFunding:         &intake.ExistingFunding.Bool,
-		FundingNumber:           intake.FundingSource.String,
-		FundingSource:           intake.FundingSource.String,
+		BusinessNeeds:           &validatedIntake.BusinessNeed.String,
+		BusinessOwner:           &validatedIntake.BusinessOwner.String,
+		BusinessOwnerComponent:  &validatedIntake.BusinessOwnerComponent.String,
+		EaCollaborator:          validatedIntake.EACollaborator.String,
+		EaSupportRequest:        &validatedIntake.EASupportRequest.Bool,
+		EuaUserID:               &validatedIntake.EUAUserID,
+		ExistingContract:        &validatedIntake.ExistingContract.String,
+		ExistingFunding:         &validatedIntake.ExistingFunding.Bool,
+		FundingSource:           validatedIntake.FundingSource.String,
 		ID:                      &id,
-		Isso:                    intake.ISSO.String,
-		OitSecurityCollaborator: intake.OITSecurityCollaborator.String,
-		ProcessStatus:           &intake.ProcessStatus.String,
-		ProductManager:          &intake.ProductManager.String,
-		ProductManagerComponent: &intake.ProductManagerComponent.String,
-		Requester:               &intake.Requester.String,
-		RequesterComponent:      &intake.Component.String,
-		Solution:                &intake.Solution.String,
+		Isso:                    validatedIntake.ISSO.String,
+		OitSecurityCollaborator: validatedIntake.OITSecurityCollaborator.String,
+		ProcessStatus:           &validatedIntake.ProcessStatus.String,
+		ProductManager:          &validatedIntake.ProductManager.String,
+		ProductManagerComponent: &validatedIntake.ProductManagerComponent.String,
+		Requester:               &validatedIntake.Requester.String,
+		RequesterComponent:      &validatedIntake.Component.String,
+		Solution:                &validatedIntake.Solution.String,
 		SubmittedTime:           &submissionTime,
-		SystemName:              &intake.ProjectName.String,
-		TrbCollaborator:         intake.TRBCollaborator.String,
+		SystemName:              &validatedIntake.ProjectName.String,
+		TrbCollaborator:         validatedIntake.TRBCollaborator.String,
 	}
 	governanceConversion := []*apimodels.GovernanceIntake{
 		&governanceIntake,
@@ -175,6 +164,7 @@ func (c TranslatedClient) SubmitSystemIntake(intake *models.SystemIntake, logger
 		Governance: governanceConversion,
 	}
 	resp, err := c.client.Operations.IntakegovernancePOST4(params, c.apiAuthHeader)
+	fmt.Println(err)
 	if err != nil {
 		logger.Error(fmt.Sprintf("Failed to submit intake for CEDAR with error: %v", err))
 		return "", err
@@ -183,11 +173,24 @@ func (c TranslatedClient) SubmitSystemIntake(intake *models.SystemIntake, logger
 	if *resp.Payload.Response.Result != "success" {
 		return "", &apperrors.ExternalAPIError{
 			Err:       errors.New("CEDAR return result: " + *resp.Payload.Response.Result),
-			ModelID:   intake.ID.String(),
+			ModelID:   validatedIntake.ID.String(),
 			Model:     "System Intake",
 			Operation: apperrors.Submit,
 		}
 	}
 	alfabetID = resp.Payload.Response.Message[0]
 	return alfabetID, nil
+}
+
+// ValidateAndSubmitSystemIntake submits a system intake to CEDAR
+func (c TranslatedClient) ValidateAndSubmitSystemIntake(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+	err := validateSystemIntakeForCedar(intake, logger)
+	if err != nil {
+		return "", &apperrors.ValidationError{
+			Err:     err,
+			ModelID: intake.ID.String(),
+			Model:   "System Intake",
+		}
+	}
+	return submitSystemIntake(intake, c, logger)
 }

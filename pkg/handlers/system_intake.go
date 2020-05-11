@@ -12,19 +12,18 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
 type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
-type submitSystemIntake func(intake *models.SystemIntake, logger *zap.Logger) error
 
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
 	Logger                *zap.Logger
 	SaveSystemIntake      saveSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
-	SubmitSystemIntake    submitSystemIntake
 }
 
 // Handle handles a request for the system intake form
@@ -97,26 +96,22 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			updatedTime := time.Now().UTC()
 			intake.UpdatedAt = &updatedTime
 
-			// If status is submitted, the user is trying to submit the system intake to CEDAR
-			if intake.Status == models.SystemIntakeStatusSUBMITTED {
-				err = h.SubmitSystemIntake(&intake, logger)
-				if err != nil {
-					if err.Error() == ("Could not hit CEDAR for intake " + intake.ID.String() + " with operation Validate") {
-						logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
-						http.Error(w, "Failed to submit system intake", http.StatusBadRequest)
-						return
-					}
-					logger.Error(fmt.Sprintf("Failed to submit system intake: %v", err))
-					http.Error(w, "Failed to submit system intake", http.StatusInternalServerError)
-					return
-				}
-				return
-			}
 			err = h.SaveSystemIntake(r.Context(), &intake)
 			if err != nil {
-				logger.Error(fmt.Sprintf("Failed to save system intake: %v", err))
-				// TODO: Replace with more helpful errors
-				http.Error(w, "Failed to save system intake", http.StatusInternalServerError)
+				switch err.(type) {
+				case *apperrors.ValidationError:
+					logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
+					// TODO: Replace with more helpful errors
+					http.Error(w, "Failed to validate system intake", http.StatusBadRequest)
+				case *apperrors.ExternalAPIError:
+					logger.Error(fmt.Sprintf("Failed to submit system intake: %v", err))
+					// TODO: Replace with more helpful errors
+					http.Error(w, "Failed to submit system intake", http.StatusInternalServerError)
+				default:
+					logger.Error(fmt.Sprintf("Failed to save system intake: %v", err))
+					// TODO: Replace with more helpful errors
+					http.Error(w, "Failed to save system intake", http.StatusInternalServerError)
+				}
 				return
 			}
 		default:

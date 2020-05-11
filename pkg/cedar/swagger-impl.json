@@ -5,7 +5,7 @@
     "version" : "1.0",
     "title" : "EASi Core API"
   },
-  "host" : "webmethods-apigw.cedarimpl.cms.gov",
+  "host" : "cdrdevapigw1.awscloud.cms.local:5555",
   "basePath" : "/gateway/EASi Core API/1.0",
   "schemes" : [ "http" ],
   "consumes" : [ "application/json" ],
@@ -17,7 +17,6 @@
     "/system/{id}" : {
       "get" : {
         "operationId" : "systemid_GET_3",
-        "consumes" : [ ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
@@ -50,7 +49,6 @@
     "/systems" : {
       "get" : {
         "operationId" : "systems_GET_1",
-        "consumes" : [ ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
@@ -85,7 +83,7 @@
         "parameters" : [ {
           "in" : "body",
           "name" : "body",
-          "required" : false,
+          "required" : true,
           "schema" : {
             "$ref" : "#/definitions/Intake"
           }
@@ -112,7 +110,6 @@
     "/intake/governance/{id}" : {
       "get" : {
         "operationId" : "intakegovernanceid_GET_5",
-        "consumes" : [ ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
@@ -142,7 +139,6 @@
     "/systems/{id}" : {
       "get" : {
         "operationId" : "systemsid_GET_2",
-        "consumes" : [ ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
@@ -193,10 +189,10 @@
     "software_product" : {
       "type" : "object",
       "properties" : {
-        "software_manufacture" : {
+        "software_product_name" : {
           "type" : "string"
         },
-        "software_product_name" : {
+        "software_manufacture" : {
           "type" : "string"
         },
         "software_product_type" : {
@@ -257,50 +253,35 @@
       "type" : "object",
       "required" : [ "id", "system_name" ],
       "properties" : {
-        "id" : {
+        "system_acronym" : {
           "type" : "string"
-        },
-        "is_business_application" : {
-          "type" : "boolean"
         },
         "is_cms_owned" : {
           "type" : "boolean"
         },
-        "is_parent_system" : {
-          "type" : "boolean"
-        },
-        "parent_system_name" : {
-          "type" : "string"
-        },
-        "system_acronym" : {
-          "type" : "string"
-        },
-        "system_classification" : {
+        "system_type" : {
           "type" : "string"
         },
         "system_name" : {
           "type" : "string"
         },
+        "is_business_application" : {
+          "type" : "boolean"
+        },
+        "system_classification" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
         "system_state" : {
           "type" : "string"
         },
-        "system_type" : {
+        "parent_system_name" : {
           "type" : "string"
-        }
-      }
-    },
-    "Response" : {
-      "type" : "object",
-      "required" : [ "message", "result" ],
-      "properties" : {
-        "message" : {
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          }
         },
-        "result" : {
-          "type" : "string"
+        "is_parent_system" : {
+          "type" : "boolean"
         }
       }
     },
@@ -308,11 +289,26 @@
       "type" : "object",
       "required" : [ "Intake" ],
       "properties" : {
-        "Intake" : {
-          "$ref" : "#/definitions/Intake_1"
-        },
         "Response" : {
           "$ref" : "#/definitions/Response"
+        },
+        "Intake" : {
+          "$ref" : "#/definitions/Intake_1"
+        }
+      }
+    },
+    "Response" : {
+      "type" : "object",
+      "required" : [ "message", "result" ],
+      "properties" : {
+        "result" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     },
@@ -320,10 +316,25 @@
       "type" : "object",
       "required" : [ "business_needs", "business_owner", "business_owner_component", "ea_support_request", "eua_user_id", "existing_contract", "existing_funding", "id", "process_status", "product_manager", "product_manager_component", "requester", "requester_component", "solution", "submitted_time", "system_name" ],
       "properties" : {
+        "requester" : {
+          "type" : "string"
+        },
         "business_needs" : {
           "type" : "string"
         },
+        "eua_user_id" : {
+          "type" : "string"
+        },
         "business_owner" : {
+          "type" : "string"
+        },
+        "product_manager" : {
+          "type" : "string"
+        },
+        "existing_funding" : {
+          "type" : "boolean"
+        },
+        "system_name" : {
           "type" : "string"
         },
         "business_owner_component" : {
@@ -332,58 +343,43 @@
         "ea_collaborator" : {
           "type" : "string"
         },
-        "ea_support_request" : {
-          "type" : "boolean"
-        },
-        "eua_user_id" : {
-          "type" : "string"
-        },
         "existing_contract" : {
-          "type" : "string"
-        },
-        "existing_funding" : {
-          "type" : "boolean"
-        },
-        "funding_number" : {
-          "type" : "string"
-        },
-        "funding_source" : {
-          "type" : "string"
-        },
-        "id" : {
-          "type" : "string"
-        },
-        "isso" : {
-          "type" : "string"
-        },
-        "oit_security_collaborator" : {
-          "type" : "string"
-        },
-        "process_status" : {
-          "type" : "string"
-        },
-        "product_manager" : {
-          "type" : "string"
-        },
-        "product_manager_component" : {
-          "type" : "string"
-        },
-        "requester" : {
-          "type" : "string"
-        },
-        "requester_component" : {
-          "type" : "string"
-        },
-        "solution" : {
           "type" : "string"
         },
         "submitted_time" : {
           "type" : "string"
         },
-        "system_name" : {
+        "oit_security_collaborator" : {
+          "type" : "string"
+        },
+        "solution" : {
+          "type" : "string"
+        },
+        "funding_source" : {
+          "type" : "string"
+        },
+        "isso" : {
+          "type" : "string"
+        },
+        "process_status" : {
+          "type" : "string"
+        },
+        "requester_component" : {
+          "type" : "string"
+        },
+        "ea_support_request" : {
+          "type" : "boolean"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "product_manager_component" : {
           "type" : "string"
         },
         "trb_collaborator" : {
+          "type" : "string"
+        },
+        "funding_number" : {
           "type" : "string"
         }
       }
@@ -418,11 +414,9 @@
       "type" : "object",
       "required" : [ "id", "software_products", "system_acronym", "system_name" ],
       "properties" : {
-        "business_function_alignments" : {
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          }
+        "supported_user_count" : {
+          "type" : "integer",
+          "format" : "int32"
         },
         "business_owner" : {
           "type" : "string"
@@ -430,58 +424,7 @@
         "business_owner_org" : {
           "type" : "string"
         },
-        "contractor_ftes" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "csp_hosted" : {
-          "type" : "boolean"
-        },
-        "csp_names" : {
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          }
-        },
-        "csp_service_model_type" : {
-          "type" : "string"
-        },
         "data_categories" : {
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          }
-        },
-        "data_center_names" : {
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          }
-        },
-        "federal_ftes" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "gpr_changes_in_next_release" : {
-          "type" : "boolean",
-          "description" : "yyyy-MM-dd"
-        },
-        "id" : {
-          "type" : "string"
-        },
-        "is_business_application" : {
-          "type" : "boolean"
-        },
-        "is_cms_owned" : {
-          "type" : "boolean"
-        },
-        "is_parent_system" : {
-          "type" : "boolean"
-        },
-        "isso" : {
-          "type" : "string"
-        },
-        "major_program_alignments" : {
           "type" : "array",
           "items" : {
             "type" : "string"
@@ -493,21 +436,74 @@
             "$ref" : "#/definitions/mission_essential_function"
           }
         },
+        "csp_hosted" : {
+          "type" : "boolean"
+        },
+        "product_owner" : {
+          "type" : "string"
+        },
+        "contractor_ftes" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "is_business_application" : {
+          "type" : "boolean"
+        },
+        "system_maintainer_org" : {
+          "type" : "string"
+        },
+        "gpr_changes_in_next_release" : {
+          "type" : "boolean",
+          "description" : "yyyy-MM-dd"
+        },
+        "parent_system_name" : {
+          "type" : "string"
+        },
+        "csp_service_model_type" : {
+          "type" : "string"
+        },
         "next_major_project_date" : {
           "type" : "string",
           "format" : "date",
           "description" : "yyyy-MM-dd"
+        },
+        "is_cms_owned" : {
+          "type" : "boolean"
+        },
+        "system_owner" : {
+          "type" : "string"
+        },
+        "system_classification" : {
+          "type" : "string"
+        },
+        "tlc_profile_reviewer" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "major_program_alignments" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "system_acronym" : {
+          "type" : "string"
         },
         "next_planned_prod_release_date" : {
           "type" : "string",
           "format" : "date",
           "description" : "yyyy-MM-dd"
         },
-        "parent_system_name" : {
+        "system_name" : {
           "type" : "string"
         },
-        "product_owner" : {
+        "system_state" : {
           "type" : "string"
+        },
+        "is_parent_system" : {
+          "type" : "boolean"
         },
         "software_products" : {
           "type" : "array",
@@ -515,33 +511,33 @@
             "$ref" : "#/definitions/software_product"
           }
         },
-        "supported_user_count" : {
-          "type" : "integer",
-          "format" : "int32"
-        },
-        "system_acronym" : {
-          "type" : "string"
-        },
-        "system_classification" : {
-          "type" : "string"
-        },
-        "system_maintainer_org" : {
-          "type" : "string"
-        },
-        "system_name" : {
-          "type" : "string"
-        },
-        "system_owner" : {
-          "type" : "string"
-        },
-        "system_state" : {
-          "type" : "string"
-        },
         "system_type" : {
           "type" : "string"
         },
-        "tlc_profile_reviewer" : {
+        "federal_ftes" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "isso" : {
           "type" : "string"
+        },
+        "csp_names" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "data_center_names" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "business_function_alignments" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     }

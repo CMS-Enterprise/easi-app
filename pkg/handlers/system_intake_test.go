@@ -9,10 +9,10 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"go.uber.org/zap"
 	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -32,12 +32,6 @@ func newMockFetchSystemIntakeByID(err error) func(id uuid.UUID) (*models.SystemI
 	}
 }
 
-func newMockSubmitSystemIntake(err error) submitSystemIntake {
-	return func(intake *models.SystemIntake, logger *zap.Logger) error {
-		return err
-	}
-}
-
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithEuaID(requestContext, "FAKE")
@@ -52,7 +46,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			SaveSystemIntake:      nil,
 			Logger:                s.logger,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(nil),
-			SubmitSystemIntake:    nil,
 		}.Handle()(rr, req)
 		s.Equal(http.StatusOK, rr.Code)
 	})
@@ -66,7 +59,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			SaveSystemIntake:      nil,
 			Logger:                s.logger,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to parse system intake id to uuid")),
-			SubmitSystemIntake:    nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusBadRequest, rr.Code)
@@ -82,7 +74,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			SaveSystemIntake:      nil,
 			Logger:                s.logger,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to fetch system intake")),
-			SubmitSystemIntake:    nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
@@ -97,7 +88,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
-			SubmitSystemIntake:    nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusOK, rr.Code)
@@ -111,7 +101,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
 			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
-			SubmitSystemIntake:    nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusBadRequest, rr.Code)
@@ -126,11 +115,31 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			SaveSystemIntake:      newMockSaveSystemIntake(fmt.Errorf("failed to save")),
 			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
-			SubmitSystemIntake:    nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
 		s.Equal("Failed to save system intake\n", rr.Body.String())
+	})
+
+	s.Run("PUT fails with failed validation", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"id":     id.String(),
+			"status": "SUBMITTED",
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
+		s.NoError(err)
+		expectedErrMessage := fmt.Errorf("failed to validate")
+		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: "System intake", ModelID: id.String()}
+		SystemIntakeHandler{
+			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
+			Logger:                s.logger,
+			FetchSystemIntakeByID: nil,
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal("Failed to validate system intake\n", rr.Body.String())
 	})
 
 	s.Run("PUT fails with failed submit", func() {
@@ -142,11 +151,12 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
+		expectedErrMessage := fmt.Errorf("failed to submit")
+		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: "System intake", ModelID: id.String()}
 		SystemIntakeHandler{
-			SaveSystemIntake:      nil,
+			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
 			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
-			SubmitSystemIntake:    newMockSubmitSystemIntake(fmt.Errorf("failed to submit system intake")),
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
