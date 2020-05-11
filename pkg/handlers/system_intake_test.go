@@ -152,7 +152,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		expectedErrMessage := fmt.Errorf("failed to submit")
-		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: "System intake", ModelID: id.String()}
+		expectedErr := &apperrors.ExternalAPIError{Err: expectedErrMessage, Model: "System intake", ModelID: id.String(), Operation: apperrors.Submit}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
 			Logger:                s.logger,

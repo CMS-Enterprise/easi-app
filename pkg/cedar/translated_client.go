@@ -85,9 +85,10 @@ func requiredFields() cedarIntake {
 		"Solution":                true,
 		"EASupportRequest":        true,
 		"ProcessStatus":           true,
-		"ExistingContract":        true,
-		"UpdatedAt":               true,
-		"SubmittedAt":             true,
+		// Existing Contract is required, but sometimes will an empty string
+		"ExistingContract": false,
+		"UpdatedAt":        true,
+		"SubmittedAt":      true,
 	}
 }
 
