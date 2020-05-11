@@ -3,6 +3,8 @@ package email
 import (
 	"testing"
 
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ses"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
@@ -32,7 +34,14 @@ func TestSESTestSuite(t *testing.T) {
 		Source:    config.GetString(appconfig.AWSSESSourceKey),
 	}
 
-	client, err := NewClient(emailConfig, sesConfig)
+	sesSession := session.Must(session.NewSession())
+	sesClient := ses.New(sesSession)
+	sesSender := SESSender{
+		sesClient,
+		sesConfig,
+	}
+
+	client, err := NewClient(emailConfig, sesSender)
 	if err != nil {
 		t.Errorf("Failed to create email client %v", err)
 	}

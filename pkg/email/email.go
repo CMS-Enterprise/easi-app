@@ -5,9 +5,6 @@ import (
 	"html/template"
 	"net/url"
 	"path"
-
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ses"
 )
 
 // Config holds EASi application specific configs for SES
@@ -37,15 +34,8 @@ func templateError(name string) error {
 	return fmt.Errorf("failed to get template: %s", name)
 }
 
-// NewClient returns a new SES Client for EASi
-func NewClient(config Config, sesConfig SESConfig) (Client, error) {
-	sesSession := session.Must(session.NewSession())
-	sesClient := ses.New(sesSession)
-	sesSender := sesSender{
-		sesClient,
-		sesConfig,
-	}
-
+// NewClient returns a new email client for EASi
+func NewClient(config Config, sender sender) (Client, error) {
 	rawTemplates, err := template.ParseGlob(path.Join(config.TemplateDirectory, "*.gohtml"))
 	if err != nil {
 		return Client{}, err
@@ -62,7 +52,7 @@ func NewClient(config Config, sesConfig SESConfig) (Client, error) {
 	client := Client{
 		config:    config,
 		templates: appTemplates,
-		sender:    sesSender,
+		sender:    sender,
 	}
 	return client, nil
 }
