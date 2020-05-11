@@ -43,6 +43,6 @@ func (s HandlerTestSuite) TestBusinessCasesHandler() {
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to fetch Business Cases\n", rr.Body.String())
+		s.Equal("Failed to fetch business cases\n", rr.Body.String())
 	})
 }
