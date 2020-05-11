@@ -106,3 +106,17 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 	}
 	return &intake, nil
 }
+
+// FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
+func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, error) {
+	intakes := []models.SystemIntake{}
+	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1", euaID)
+	if err != nil {
+		s.logger.Error(
+			fmt.Sprintf("Failed to fetch system intakes %s", err),
+			zap.String("euaID", euaID),
+		)
+		return models.SystemIntakes{}, err
+	}
+	return intakes, nil
+}
