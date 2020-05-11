@@ -27,6 +27,8 @@ class App extends React.Component<MainProps, MainState> {
               <Route path="/" exact component={Home} />
               <Route path="/login" exact component={Login} />
               <Route path="/sandbox" exact component={Sandbox} />
+              /* Subroutes should precede any parent routes or they will not be
+              callable */
               <SecureRoute path="/system/new" exact component={SystemIntake} />
               <SecureRoute
                 path="/system/:systemId/grt-review"
