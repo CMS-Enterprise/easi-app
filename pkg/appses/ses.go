@@ -2,7 +2,9 @@ package appses
 
 import (
 	"fmt"
+	"html/template"
 	"net/url"
+	"path"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -11,27 +13,53 @@ import (
 
 // Config holds EASi application specific configs for SES
 type Config struct {
-	SourceARN       string
-	Source          string
-	GRTEmail        string
-	ApplicationHost string
+	SourceARN         string
+	Source            string
+	GRTEmail          string
+	URLHost           string
+	URLScheme         string
+	TemplateDirectory string
+}
+
+type templates struct {
+	systemIntakeSubmissionTemplate *template.Template
 }
 
 // Client is an EASi SES client wrapper
 type Client struct {
-	config Config
-	client *ses.SES
+	config    Config
+	client    *ses.SES
+	templates templates
+}
+
+func templateError(name string) error {
+	return fmt.Errorf("failed to get template: %s", name)
 }
 
 // NewClient returns a new SES Client for EASi
-func NewClient(config Config) Client {
+func NewClient(config Config) (Client, error) {
 	sesSession := session.Must(session.NewSession())
 	sesClient := ses.New(sesSession)
 
-	return Client{
-		config: config,
-		client: sesClient,
+	rawTemplates, err := template.ParseGlob(path.Join(config.TemplateDirectory, "*.gohtml"))
+	if err != nil {
+		return Client{}, err
 	}
+	appTemplates := templates{}
+
+	systemIntakeSubmissionTemplateName := "system_intake_submission.gohtml"
+	systemIntakeSubmissionTemplate := rawTemplates.Lookup(systemIntakeSubmissionTemplateName)
+	if systemIntakeSubmissionTemplate == nil {
+		return Client{}, templateError(systemIntakeSubmissionTemplateName)
+	}
+	appTemplates.systemIntakeSubmissionTemplate = systemIntakeSubmissionTemplate
+
+	client := Client{
+		config:    config,
+		client:    sesClient,
+		templates: appTemplates,
+	}
+	return client, nil
 }
 
 func (c Client) sendEmail(
@@ -64,15 +92,11 @@ func (c Client) sendEmail(
 	return out, err
 }
 
-func (c Client) htmlLink(path string, content string) string {
+func (c Client) urlFromPath(path string) string {
 	u := url.URL{
-		Scheme: "https",
-		Host:   c.config.ApplicationHost,
+		Scheme: c.config.URLScheme,
+		Host:   c.config.URLHost,
 		Path:   path,
 	}
-	link := fmt.Sprintf(
-		"<a class=\"ulink\" href=\"%s\" target=\"_blank\">%s</a>",
-		u.String(),
-		content)
-	return link
+	return u.String()
 }

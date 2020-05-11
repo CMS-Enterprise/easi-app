@@ -62,3 +62,9 @@ const GRTEmailKey = "GRT_EMAIL"
 
 // ApplicationHostKey is the key for getting the application's domain name
 const ApplicationHostKey = "APP_HOST"
+
+// ApplicationProtocolKey is the key for getting the application's protocol
+const ApplicationProtocolKey = "APP_PROTOCOL"
+
+// EmailTemplateDirectoryKey is the key for getting the email template directory
+const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
