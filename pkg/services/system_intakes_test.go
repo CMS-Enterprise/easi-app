@@ -10,21 +10,35 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s ServicesTestSuite) TestSystemIntakesByUserFetcher() {
-	s.Run("successfully fetches System Intakes", func() {
-		tx := s.db.MustBegin()
-		fakeEuaID := testhelpers.RandomEUAID()
-		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &models.SystemIntake{ID: uuid.New(), EUAUserID: fakeEuaID})
-		s.NoError(err)
-		err = tx.Commit()
-		s.NoError(err)
+func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
+	logger := zap.NewNop()
+	fakeEuaID := "FAKE"
 
-		systemIntakes, err := FetchSystemIntakesByEuaID(fakeEuaID, s.db)
+	s.Run("successfully fetches System Intakes by EUA ID without an error", func() {
+		fetch := func(euaID string) (models.SystemIntakes, error) {
+			return models.SystemIntakes{
+				models.SystemIntake{
+					EUAUserID: fakeEuaID,
+				},
+			}, nil
+		}
+		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(fetch, logger)
+		intakes, err := fetchSystemIntakesByEuaID(fakeEuaID)
 		s.NoError(err)
-		s.Len(systemIntakes, 1)
+		s.Equal(fakeEuaID, intakes[0].EUAUserID)
+	})
+
+	s.Run("returns query error when fetch fails", func() {
+		fetch := func(euaID string) (models.SystemIntakes, error) {
+			return models.SystemIntakes{}, errors.New("fetch failed")
+		}
+		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(fetch, logger)
+		intakes, err := fetchSystemIntakesByEuaID("FAKE")
+
+		s.IsType(&apperrors.QueryError{}, err)
+		s.Equal(models.SystemIntakes{}, intakes)
 	})
 }
 
@@ -113,6 +127,18 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
+	s.Run("saves when fetch existing fails with no results", func() {
+		ctx := context.Background()
+		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
+			return nil, errors.New("sql: no rows in result set")
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.NoError(err)
+	})
+
 	s.Run("returns error when authorization errors", func() {
 		ctx := context.Background()
 		err := errors.New("authorization failed")
@@ -157,9 +183,9 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 		s.Equal(fakeID, intake.ID)
 	})
 
-	s.Run("returns query error when save fails", func() {
+	s.Run("returns query error when fetch fails", func() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
-			return &models.SystemIntake{}, errors.New("save failed")
+			return &models.SystemIntake{}, errors.New("fetch failed")
 		}
 		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
 

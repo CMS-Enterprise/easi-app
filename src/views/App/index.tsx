@@ -4,10 +4,8 @@ import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import Home from 'views/Home';
 import Login from 'views/Login';
-import SuperSecret from 'views/SuperSecret';
 import BusinessCase from 'views/BusinessCase';
-import SystemProfile from 'views/SystemProfile';
-import SystemProfiles from 'views/SystemProfiles';
+import GRTSystemIntakeReview from 'views/GRTSystemIntakeReview';
 import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
 
@@ -29,18 +27,22 @@ class App extends React.Component<MainProps, MainState> {
               <Route path="/" exact component={Home} />
               <Route path="/login" exact component={Login} />
               <Route path="/sandbox" exact component={Sandbox} />
-              <SecureRoute path="/protected" exact component={SuperSecret} />
+              <SecureRoute path="/system/new" exact component={SystemIntake} />
+              <SecureRoute path="/system/:systemId" component={SystemIntake} />
               <SecureRoute
+                path="/system/:systemId/grt-review"
+                component={GRTSystemIntakeReview}
+              />
+              {/* <SecureRoute
                 path="/system/all"
                 exact
                 component={SystemProfiles}
-              />
-              <SecureRoute path="/system/new/" component={SystemIntake} />
-              <SecureRoute
+              /> */}
+              {/* <SecureRoute
                 path="/system/:profileId"
                 component={SystemProfile}
-              />
-              <SecureRoute path="/business/new/" component={BusinessCase} />
+              /> */}
+              <SecureRoute path="/business/new" component={BusinessCase} />
               <Route path="/implicit/callback" component={ImplicitCallback} />
             </Switch>
           </AuthenticationWrapper>

@@ -123,6 +123,12 @@ func fetchOktaAccessToken(
 		return "", err
 	}
 
+	// Request can return 200 even if session token unset.
+	if authn.Status != "SUCCESS" {
+		fmt.Println("did not succeed MFA challenge")
+		return "", fmt.Errorf("bad status in response from MFA request: %s", authn.Status)
+	}
+
 	// Issue get request with session token to get id/access tokens
 	nonce, err := utils.GenerateNonce()
 	if err != nil {

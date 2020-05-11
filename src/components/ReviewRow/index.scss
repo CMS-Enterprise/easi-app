@@ -1,0 +1,9 @@
+.easi-review-row {
+  display: grid;
+  grid-gap: 1.25rem;
+  margin-bottom: 1.25rem;
+
+  @media screen and (min-width: $tablet) {
+    grid-template-columns: repeat(auto-fit, minmax(0px, 1fr));
+  }
+}

@@ -7,13 +7,15 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 // NewSystemIntake should provide a saveable intake with all struct fields
 func NewSystemIntake() models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
-		EUAUserID:               "FAKE",
+		EUAUserID:               testhelpers.RandomEUAID(),
+		Status:                  models.SystemIntakeStatusDRAFT,
 		Requester:               null.StringFrom("Test Requester"),
 		Component:               null.StringFrom("Test Component"),
 		BusinessOwner:           null.StringFrom("Test Business Owner"),
@@ -52,6 +54,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 	s.Run("cannot save without EUA ID", func() {
 		id, _ := uuid.NewUUID()
 		partialIntake.ID = id
+		partialIntake.Status = models.SystemIntakeStatusDRAFT
 
 		err := s.store.SaveSystemIntake(&partialIntake)
 
@@ -76,8 +79,18 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 		})
 	}
 
-	s.Run("save a partial system intake", func() {
+	s.Run("cannot save with invalid status", func() {
 		partialIntake.EUAUserID = "FAKE"
+		partialIntake.Status = "fakeStatus"
+
+		err := s.store.SaveSystemIntake(&partialIntake)
+
+		s.Error(err)
+		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
+	})
+
+	s.Run("save a partial system intake", func() {
+		partialIntake.Status = models.SystemIntakeStatusDRAFT
 		partialIntake.Requester = null.StringFrom("Test Requester")
 
 		err := s.store.SaveSystemIntake(&partialIntake)
@@ -120,7 +133,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		intake := NewSystemIntake()
 		id := intake.ID
 		tx := s.db.MustBegin()
-		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id) VALUES (:id, :eua_user_id)", &intake)
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
 		s.NoError(err)
 		err = tx.Commit()
 		s.NoError(err)
@@ -139,5 +152,34 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		s.Error(err)
 		s.Equal("sql: no rows in result set", err.Error())
 		s.Equal(&models.SystemIntake{}, fetched)
+	})
+}
+
+func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
+	s.Run("golden path to fetch system intakes", func() {
+		intake := NewSystemIntake()
+		intake2 := NewSystemIntake()
+		intake2.EUAUserID = intake.EUAUserID
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
+		s.NoError(err)
+		_, err = tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake2)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		fetched, err := s.store.FetchSystemIntakesByEuaID(intake.EUAUserID)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Len(fetched, 2)
+		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
+	})
+
+	s.Run("fetches no results with other EUA ID", func() {
+		fetched, err := s.store.FetchSystemIntakesByEuaID(testhelpers.RandomEUAID())
+
+		s.NoError(err)
+		s.Len(fetched, 0)
+		s.Equal(models.SystemIntakes{}, fetched)
 	})
 }

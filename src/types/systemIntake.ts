@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 export type GovernanceCollaborationTeam = {
   collaborator: string;
   name: string;
@@ -8,8 +10,10 @@ export type GovernanceCollaborationTeam = {
  *
  */
 export type SystemIntakeForm = {
-  projectName: string;
-  acronym: string;
+  id: string;
+  euaUserID: string;
+  requestName: string;
+  status: string;
   requester: {
     name: string;
     component: string;
@@ -39,4 +43,19 @@ export type SystemIntakeForm = {
   currentStage: string;
   needsEaSupport: boolean | null;
   hasContract: string;
+};
+
+// Redux store type for a system intake
+export type SystemIntakeState = {
+  systemIntake: SystemIntakeForm;
+  isLoading: boolean | null;
+  error?: any;
+};
+
+// Redux store type for systems
+export type SystemIntakesState = {
+  systemIntakes: SystemIntakeForm[];
+  isLoading: boolean | null;
+  loadedTimestamp: DateTime | null;
+  error: string | null;
 };

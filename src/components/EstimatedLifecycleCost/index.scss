@@ -107,4 +107,50 @@
   &__dd-total {
     font-size: 20px;
   }
+
+  // Review Table Styles
+  &__review-table-wrapper {
+    padding: 32px 16px;
+  }
+
+  &__review-table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+
+    &--mobile {
+      width: 300px;
+      margin-left: auto;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+    }
+
+    &--blur {
+      filter: blur(3px);
+    }
+  }
+
+  &__review-table-caption {
+    margin-bottom: 1em;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: left;
+  }
+
+  &__review-th {
+    &--col {
+      padding-bottom: 24px;
+    }
+
+    &--row {
+      width: 110px;
+    }
+  }
+
+  &__border {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  }
 }

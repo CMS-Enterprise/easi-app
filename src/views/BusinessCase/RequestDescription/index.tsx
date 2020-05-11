@@ -8,16 +8,16 @@ import HelpText from 'components/shared/HelpText';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 
-type ProjectDescriptionProps = {
+type RequestDescriptionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
 };
 
-const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
+const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
   const { values, errors } = formikProps;
   const flatErrors = flattenErrors(errors);
   return (
-    <>
-      <h1 className="font-heading-xl">Project Description</h1>
+    <div className="grid-container">
+      <h1 className="font-heading-xl">Request description</h1>
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
           scrollElement="businessNeed"
@@ -27,9 +27,27 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
             What is your business or user need?
           </Label>
           <HelpText className="margin-y-1">
-            Provide a detailed explanation of the business need/issue/problem
-            that the requested project will address, including any legislative
-            mandates, regulations, etc.
+            <span>Include:</span>
+            <ul className="margin-top-1 padding-left-205">
+              <li>
+                a detailed explanation of the business need/issue/problem that
+                the request will address
+              </li>
+              <li>
+                any legislative mandates or regulations that needs to be met
+              </li>
+              <li>
+                any expected benefits from the investment of organizational
+                resources into the request
+              </li>
+              <li>
+                relevant deadlines (e.g., statutory deadlines that CMS must
+                meet)
+              </li>
+              <li>
+                and the benefits of developing an IT solution for this need
+              </li>
+            </ul>
           </HelpText>
           <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
           <Field
@@ -50,7 +68,7 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
           <HelpText className="margin-y-1">
             Provide a summary of how this effort benefits CMS. Include any
             information on how it supports CMS&apos; mission and strategic
-            goals, creates efficiencies and/or cost savings, or reduces risk.
+            goals, creates efficiencies and/or cost savings, or reduces risk
           </HelpText>
           <FieldErrorMsg>{flatErrors.cmsBenefit}</FieldErrorMsg>
           <Field
@@ -72,8 +90,9 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
             How does this effort algin with organizational priorities?
           </Label>
           <HelpText className="margin-y-1">
-            Does this effort support any administrator priorities or new
-            legislative or regulatory mandates? Include any relevant deadlines.
+            List out any administrator priorities or new legislative/regulatory
+            mandates this effort supports. If applicable, include any relevant
+            deadlines
           </HelpText>
           <FieldErrorMsg>{flatErrors.priorityAlignment}</FieldErrorMsg>
           <Field
@@ -95,7 +114,7 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
             How will you determine whether or not this effort is successful?
           </Label>
           <HelpText className="margin-y-1">
-            Include any indicators that you think would demonstrate success.
+            Include any indicators that you think would demonstrate success
           </HelpText>
           <FieldErrorMsg>{flatErrors.successIndicators}</FieldErrorMsg>
           <Field
@@ -109,8 +128,8 @@ const ProjectDescription = ({ formikProps }: ProjectDescriptionProps) => {
             values.successIndicators.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
-    </>
+    </div>
   );
 };
 
-export default ProjectDescription;
+export default RequestDescription;
