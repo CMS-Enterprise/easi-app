@@ -6,6 +6,8 @@ import (
 	"path"
 
 	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 )
 
 type systemIntakeSubmission struct {
@@ -25,23 +27,20 @@ func (c Client) systemIntakeSubmissionBody(intakeID uuid.UUID) (string, error) {
 	return b.String(), nil
 }
 
-func (c Client) systemIntakeSubmissionSubject(requester string) string {
-	return fmt.Sprintf("New intake request: %s", requester)
-}
-
 // SendSystemIntakeSubmissionEmail sends an email for a submitted system intake
 func (c Client) SendSystemIntakeSubmissionEmail(requester string, intakeID uuid.UUID) error {
+	subject := fmt.Sprintf("New intake request: %s", requester)
 	body, err := c.systemIntakeSubmissionBody(intakeID)
 	if err != nil {
-		return err
+		return &apperrors.NotificationError{Err: err, Destination: apperrors.DestinationEmail}
 	}
 	err = c.sender.Send(
 		c.config.GRTEmail,
-		c.systemIntakeSubmissionSubject(requester),
+		subject,
 		body,
 	)
 	if err != nil {
-		return err
+		return &apperrors.NotificationError{Err: err, Destination: apperrors.DestinationEmail}
 	}
 	return nil
 }
