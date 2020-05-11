@@ -21,16 +21,22 @@ func TestSESTestSuite(t *testing.T) {
 	config := testhelpers.NewConfig()
 
 	sesConfig := Config{
-		SourceARN:       config.GetString(appconfig.AWSSESSourceARNKey),
-		Source:          config.GetString(appconfig.AWSSESSourceKey),
-		GRTEmail:        config.GetString(appconfig.GRTEmailKey),
-		ApplicationHost: config.GetString(appconfig.ApplicationHostKey),
+		SourceARN:         config.GetString(appconfig.AWSSESSourceARNKey),
+		Source:            config.GetString(appconfig.AWSSESSourceKey),
+		GRTEmail:          config.GetString(appconfig.GRTEmailKey),
+		URLHost:           config.GetString(appconfig.ApplicationHostKey),
+		URLScheme:         config.GetString(appconfig.ApplicationProtocolKey),
+		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
+	client, err := NewClient(sesConfig)
+	if err != nil {
+		t.Errorf("Failed to create email client %v", err)
+	}
 	sesTestSuite := &SESTestSuite{
 		Suite:  suite.Suite{},
 		logger: logger,
-		client: NewClient(sesConfig),
+		client: client,
 	}
 
 	suite.Run(t, sesTestSuite)

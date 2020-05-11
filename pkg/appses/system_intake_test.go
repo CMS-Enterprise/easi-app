@@ -1,8 +1,6 @@
 package appses
 
-import (
-	"github.com/google/uuid"
-)
+import "github.com/google/uuid"
 
 func (s *SESTestSuite) TestSendSystemIntakeEmail() {
 	intakeID, _ := uuid.NewUUID()
