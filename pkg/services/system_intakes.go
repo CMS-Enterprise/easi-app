@@ -68,6 +68,7 @@ func NewSaveSystemIntake(
 	save func(intake *models.SystemIntake) error,
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
+	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 	logger *zap.Logger,
 ) func(context context.Context, intake *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
@@ -88,6 +89,22 @@ func NewSaveSystemIntake(
 		}
 		if !ok {
 			return &apperrors.UnauthorizedError{Err: err}
+		}
+		if intake.Status == models.SystemIntakeStatusSUBMITTED {
+			if intake.AlfabetID.Valid {
+				return &apperrors.ValidationError{
+					Err:     errors.New("intake has already been submitted to CEDAR"),
+					ModelID: intake.ID.String(),
+					Model:   "System Intake",
+				}
+			}
+
+			alfabetID, validateAndSubmitErr := validateAndSubmit(intake, logger)
+			if validateAndSubmitErr != nil {
+				return err
+			}
+			intake.SubmittedAt = intake.UpdatedAt
+			intake.AlfabetID = null.StringFrom(alfabetID)
 		}
 		err = save(intake)
 		if err != nil {
@@ -112,7 +129,7 @@ func NewFetchSystemIntakeByID(
 			logger.Error("failed to fetch system intake")
 			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       err,
-				Model:     "system intake",
+				Model:     "System intake",
 				Operation: apperrors.QueryFetch,
 			}
 		}
@@ -120,37 +137,23 @@ func NewFetchSystemIntakeByID(
 	}
 }
 
-// NewSubmitSystemIntake is a service to submit system intake to CEDAR
-func NewSubmitSystemIntake(
+// NewValidateAndSubmitSystemIntake is a service to submit system intake to CEDAR
+func NewValidateAndSubmitSystemIntake(
 	submit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
-	save func(intake *models.SystemIntake) error,
-	logger *zap.Logger,
-) func(intake *models.SystemIntake, logger *zap.Logger) error {
-	return func(intake *models.SystemIntake, logger *zap.Logger) error {
+) func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+	return func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
 		if intake.AlfabetID.Valid {
-			err := &apperrors.ExternalAPIError{
-				Err:       errors.New("intake has already been submitted to CEDAR"),
-				ModelID:   intake.ID.String(),
-				Model:     "System Intake",
-				Operation: apperrors.Submit,
+			err := &apperrors.ValidationError{
+				Err:     errors.New("intake has already been submitted to CEDAR"),
+				ModelID: intake.ID.String(),
+				Model:   "System intake",
 			}
-			return err
+			return "", err
 		}
 		alfabetID, err := submit(intake, logger)
 		if err != nil {
-			return err
+			return "", err
 		}
-		intake.Status = models.SystemIntakeStatusSUBMITTED
-		intake.AlfabetID = null.StringFrom(alfabetID)
-
-		err = save(intake)
-		if err != nil {
-			return &apperrors.QueryError{
-				Err:       err,
-				Model:     "SystemIntake",
-				Operation: apperrors.QuerySave,
-			}
-		}
-		return nil
+		return alfabetID, nil
 	}
 }

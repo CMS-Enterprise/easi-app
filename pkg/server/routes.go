@@ -67,15 +67,11 @@ func (s *Server) routes(
 			store.SaveSystemIntake,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeSaveSystemIntake(s.logger),
+			services.NewValidateAndSubmitSystemIntake(cedarClient.ValidateAndSubmitSystemIntake),
 			s.logger,
 		),
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
 			store.FetchSystemIntakeByID,
-			s.logger,
-		),
-		SubmitSystemIntake: services.NewSubmitSystemIntake(
-			cedarClient.SubmitSystemIntake,
-			store.SaveSystemIntake,
 			s.logger,
 		),
 	}

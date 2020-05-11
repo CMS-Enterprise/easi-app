@@ -94,12 +94,24 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
+	submit := func(intake *models.SystemIntake, logger2 *zap.Logger) (string, error) {
+		return "ALFABET-ID", nil
+	}
 
-	s.Run("returns no error when successful", func() {
+	s.Run("returns no error when successful on save", func() {
 		ctx := context.Background()
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, logger)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.NoError(err)
+	})
+
+	s.Run("returns no error when successful on submit and save", func() {
+		ctx := context.Background()
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
 		s.NoError(err)
 	})
@@ -109,7 +121,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("failed to fetch system intake")
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, submit, logger)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -121,7 +133,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failSave := func(intake *models.SystemIntake) error {
 			return errors.New("save failed")
 		}
-		saveSystemIntake := NewSaveSystemIntake(failSave, fetch, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(failSave, fetch, authorize, submit, logger)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -133,7 +145,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("sql: no rows in result set")
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, submit, logger)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -146,7 +158,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, err
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, failAuthorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, failAuthorize, submit, logger)
 
 		actualError := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -159,11 +171,71 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		notOKAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, notOKAuthorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, notOKAuthorize, submit, logger)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
+	})
+
+	s.Run("returns query error when fetch fails", func() {
+		ctx := context.Background()
+		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{}, errors.New("fetch failed")
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
+
+		s.IsType(&apperrors.ValidationError{}, err)
+	})
+
+	s.Run("returns error when validation fails", func() {
+		ctx := context.Background()
+		failValidationSubmit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+			return "", &apperrors.ValidationError{
+				Err:     errors.New("validation failed on these fields: ID"),
+				ModelID: intake.ID.String(),
+				Model:   "System Intake",
+			}
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, failValidationSubmit, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
+
+		s.IsType(&apperrors.ValidationError{}, err)
+	})
+
+	s.Run("returns error when submission fails", func() {
+		ctx := context.Background()
+		failValidationSubmit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+			return "", &apperrors.ExternalAPIError{
+				Err:       errors.New("CEDAR return result: unexpected failure"),
+				ModelID:   intake.ID.String(),
+				Model:     "System Intake",
+				Operation: apperrors.Submit,
+			}
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, failValidationSubmit, logger)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
+
+		s.IsType(&apperrors.ExternalAPIError{}, err)
+	})
+
+	s.Run("returns error when intake has already been submitted", func() {
+		ctx := context.Background()
+		alreadySubmittedIntake := models.SystemIntake{
+			AlfabetID: null.StringFrom("394-141-0"),
+			ID:        uuid.New(),
+			Status:    models.SystemIntakeStatusSUBMITTED,
+			EUAUserID: "EUAI",
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, logger)
+
+		err := saveSystemIntake(ctx, &alreadySubmittedIntake)
+
+		s.IsType(&apperrors.ValidationError{}, err)
 	})
 }
 
@@ -184,9 +256,9 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 		s.Equal(fakeID, intake.ID)
 	})
 
-	s.Run("returns query error when fetch fails", func() {
+	s.Run("returns query error when save fails", func() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
-			return &models.SystemIntake{}, errors.New("fetch failed")
+			return &models.SystemIntake{}, errors.New("save failed")
 		}
 		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
 
@@ -194,80 +266,5 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
-	})
-}
-
-func (s ServicesTestSuite) TestSystemIntakeSubmitter() {
-	logger := zap.NewNop()
-	submit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-		return "", nil
-	}
-	save := func(intake *models.SystemIntake) error {
-		return nil
-	}
-
-	s.Run("returns no error when successful", func() {
-		submitSystemIntake := NewSubmitSystemIntake(submit, save, logger)
-
-		err := submitSystemIntake(&models.SystemIntake{}, logger)
-
-		s.NoError(err)
-	})
-
-	s.Run("returns error when validation fails", func() {
-		failValidationSubmission := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-			return "", &apperrors.ExternalAPIError{
-				Err:       errors.New("validation failed on these fields: ID"),
-				ModelID:   intake.ID.String(),
-				Model:     "System Intake",
-				Operation: apperrors.Validate,
-			}
-		}
-		submitSystemIntake := NewSubmitSystemIntake(failValidationSubmission, save, logger)
-
-		err := submitSystemIntake(&models.SystemIntake{}, logger)
-
-		s.IsType(&apperrors.ExternalAPIError{}, err)
-	})
-
-	s.Run("returns error when submission fails", func() {
-		failValidationSubmission := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-			return "", &apperrors.ExternalAPIError{
-				Err:       errors.New("CEDAR return result: unexpected failure"),
-				ModelID:   intake.ID.String(),
-				Model:     "System Intake",
-				Operation: apperrors.Submit,
-			}
-		}
-		submitSystemIntake := NewSubmitSystemIntake(failValidationSubmission, save, logger)
-
-		err := submitSystemIntake(&models.SystemIntake{}, logger)
-
-		s.IsType(&apperrors.ExternalAPIError{}, err)
-	})
-
-	s.Run("returns error when intake has already been submitted", func() {
-		alreadySubmittedIntake := models.SystemIntake{
-			AlfabetID: null.StringFrom("394-141-0"),
-			ID:        uuid.New(),
-			EUAUserID: "EUAI",
-		}
-		submitSystemIntake := NewSubmitSystemIntake(submit, save, logger)
-
-		err := submitSystemIntake(&alreadySubmittedIntake, logger)
-
-		s.IsType(&apperrors.ExternalAPIError{}, err)
-	})
-
-	s.Run("returns error if the save fails", func() {
-		failSave := func(intake *models.SystemIntake) error {
-			return errors.New("save failed")
-		}
-
-		submitSystemIntake := NewSubmitSystemIntake(submit, failSave, logger)
-
-		err := submitSystemIntake(&models.SystemIntake{}, logger)
-
-		s.IsType(&apperrors.QueryError{}, err)
 	})
 }

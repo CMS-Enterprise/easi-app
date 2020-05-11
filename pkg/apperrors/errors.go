@@ -44,19 +44,20 @@ func (e *QueryError) Unwrap() error {
 	return e.Err
 }
 
-type validationError struct {
+// ValidationError is a typed error for issues with validation
+type ValidationError struct {
 	Err     error
 	Model   string
 	ModelID string
 }
 
 // Error provides the error as a string
-func (e *validationError) Error() string {
+func (e *ValidationError) Error() string {
 	return fmt.Sprintf("Could not hit validate %s %s", e.Model, e.ModelID)
 }
 
 // Unwrap provides the underlying error
-func (e *validationError) Unwrap() error {
+func (e *ValidationError) Unwrap() error {
 	return e.Err
 }
 
