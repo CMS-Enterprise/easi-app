@@ -11,14 +11,14 @@ type SESConfig struct {
 	Source    string
 }
 
-// sesSender is an implementation for sending email with the SES Go SDK
-type sesSender struct {
+// SESSender is an implementation for sending email with the SES Go SDK
+type SESSender struct {
 	client *ses.SES
 	config SESConfig
 }
 
 // Send sends an email
-func (s sesSender) Send(
+func (s SESSender) Send(
 	toAddress string,
 	subject string,
 	body string,
