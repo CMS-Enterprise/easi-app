@@ -1,4 +1,4 @@
-package appses
+package email
 
 import "github.com/google/uuid"
 

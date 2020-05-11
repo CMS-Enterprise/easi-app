@@ -1,4 +1,4 @@
-package appses
+package email
 
 import (
 	"fmt"
@@ -6,15 +6,12 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
 )
 
 // Config holds EASi application specific configs for SES
 type Config struct {
-	SourceARN         string
-	Source            string
 	GRTEmail          string
 	URLHost           string
 	URLScheme         string
@@ -25,11 +22,15 @@ type templates struct {
 	systemIntakeSubmissionTemplate *template.Template
 }
 
+type sender interface {
+	Send(toAddress string, subject string, body string) error
+}
+
 // Client is an EASi SES client wrapper
 type Client struct {
 	config    Config
-	client    *ses.SES
 	templates templates
+	sender    sender
 }
 
 func templateError(name string) error {
@@ -37,9 +38,13 @@ func templateError(name string) error {
 }
 
 // NewClient returns a new SES Client for EASi
-func NewClient(config Config) (Client, error) {
+func NewClient(config Config, sesConfig SESConfig) (Client, error) {
 	sesSession := session.Must(session.NewSession())
 	sesClient := ses.New(sesSession)
+	sesSender := sesSender{
+		sesClient,
+		sesConfig,
+	}
 
 	rawTemplates, err := template.ParseGlob(path.Join(config.TemplateDirectory, "*.gohtml"))
 	if err != nil {
@@ -56,40 +61,10 @@ func NewClient(config Config) (Client, error) {
 
 	client := Client{
 		config:    config,
-		client:    sesClient,
 		templates: appTemplates,
+		sender:    sesSender,
 	}
 	return client, nil
-}
-
-func (c Client) sendEmail(
-	toAddress string,
-	subject string,
-	body string,
-) (*ses.SendEmailOutput, error) {
-	input := &ses.SendEmailInput{
-		Destination: &ses.Destination{
-			ToAddresses: []*string{
-				aws.String(toAddress),
-			},
-		},
-		Message: &ses.Message{
-			Subject: &ses.Content{
-				Charset: aws.String("UTF-8"),
-				Data:    aws.String(subject),
-			},
-			Body: &ses.Body{
-				Html: &ses.Content{
-					Charset: aws.String("UTF-8"),
-					Data:    aws.String(body),
-				},
-			},
-		},
-		Source:    aws.String(c.config.Source),
-		SourceArn: aws.String(c.config.SourceARN),
-	}
-	out, err := c.client.SendEmail(input)
-	return out, err
 }
 
 func (c Client) urlFromPath(path string) string {

@@ -1,4 +1,4 @@
-package appses
+package email
 
 import (
 	"bytes"
@@ -9,13 +9,13 @@ import (
 )
 
 type systemIntakeSubmission struct {
-	intakeLink string
+	IntakeLink string
 }
 
 func (c Client) systemIntakeSubmissionBody(intakeID uuid.UUID) (string, error) {
 	intakePath := path.Join("intake", intakeID.String())
 	data := systemIntakeSubmission{
-		intakeLink: c.urlFromPath(intakePath),
+		IntakeLink: c.urlFromPath(intakePath),
 	}
 	var b bytes.Buffer
 	err := c.templates.systemIntakeSubmissionTemplate.Execute(&b, data)
@@ -35,7 +35,7 @@ func (c Client) SendSystemIntakeSubmissionEmail(requester string, intakeID uuid.
 	if err != nil {
 		return err
 	}
-	_, err = c.sendEmail(
+	err = c.sender.Send(
 		c.config.GRTEmail,
 		c.systemIntakeSubmissionSubject(requester),
 		body,
