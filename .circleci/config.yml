@@ -48,6 +48,16 @@ jobs:
           command: |
             ./scripts/build_app
             ./scripts/testsuite
+      - restore_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - run:
+          name: Run Cypress integration tests
+          command: yarn cypress:ci-run
+
   lint:
     docker:
       - image: *circleci_docker_primary
@@ -197,7 +207,7 @@ workflows:
   weekly:
     triggers:
       - schedule:
-          cron: "0 2 * * 6"
+          cron: '0 2 * * 6'
           filters:
             branches:
               only:

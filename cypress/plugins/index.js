@@ -18,4 +18,12 @@ module.exports = (on, config) => {
     generateOTP: require('cypress-otp')
   });
   on('task', require('@cypress/code-coverage/task'));
+
+  const newConfig = config;
+  newConfig.env.oktaDomain = process.env.OKTA_DOMAIN;
+  newConfig.env.username = process.env.OKTA_TEST_USERNAME;
+  newConfig.env.password = process.env.OKTA_TEST_PASSWORD;
+  newConfig.env.otpSecret = process.env.OKTA_TEST_SECRET;
+
+  return config;
 };
