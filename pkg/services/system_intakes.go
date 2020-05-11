@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/guregu/null"
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -73,7 +73,6 @@ func NewSaveSystemIntake(
 ) func(context context.Context, intake *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
 		existingIntake, fetchErr := fetch(intake.ID)
-		// TODO: Replace with a method that intentionally decides no result
 		if fetchErr != nil && fetchErr.Error() == "sql: no rows in result set" {
 			existingIntake = nil
 		} else if fetchErr != nil {
@@ -139,7 +138,7 @@ func NewFetchSystemIntakeByID(
 
 // NewValidateAndSubmitSystemIntake is a service to submit system intake to CEDAR
 func NewValidateAndSubmitSystemIntake(
-	submit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
+	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 ) func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
 	return func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
 		if intake.AlfabetID.Valid {
@@ -150,7 +149,7 @@ func NewValidateAndSubmitSystemIntake(
 			}
 			return "", err
 		}
-		alfabetID, err := submit(intake, logger)
+		alfabetID, err := validateAndSubmit(intake, logger)
 		if err != nil {
 			return "", err
 		}

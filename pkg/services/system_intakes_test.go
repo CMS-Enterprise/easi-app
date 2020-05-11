@@ -180,7 +180,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 
 	s.Run("returns query error when fetch fails", func() {
 		ctx := context.Background()
-		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+		fetch = func(id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("fetch failed")
 		}
 		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, logger)
