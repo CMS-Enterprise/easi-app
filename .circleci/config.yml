@@ -136,6 +136,7 @@ jobs:
           name: Restart ECS service
           command: |
             ./scripts/restart_ecs
+            ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
           command: |
@@ -170,6 +171,7 @@ jobs:
           name: Restart ECS service
           command: |
             ./scripts/restart_ecs
+            ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
           command: |
