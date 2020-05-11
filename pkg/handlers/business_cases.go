@@ -33,7 +33,7 @@ func (h BusinessCasesHandler) Handle() http.HandlerFunc {
 			euaID, ok := appcontext.EuaID(r.Context())
 			if !ok {
 				h.Logger.Error("Failed to get EUA ID from context in business cases handler")
-				http.Error(w, "Failed to fetch System Intakes", http.StatusInternalServerError)
+				http.Error(w, "Failed to fetch business cases", http.StatusInternalServerError)
 				return
 			}
 
