@@ -13,7 +13,7 @@ type systemIntakeSubmission struct {
 }
 
 func (c Client) systemIntakeSubmissionBody(intakeID uuid.UUID) (string, error) {
-	intakePath := path.Join("intake", intakeID.String())
+	intakePath := path.Join("system", intakeID.String(), "grt-review")
 	data := systemIntakeSubmission{
 		IntakeLink: c.urlFromPath(intakePath),
 	}
