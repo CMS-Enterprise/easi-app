@@ -18,16 +18,16 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
   const flatErrors = flattenErrors(errors);
 
   return (
-    <>
+    <div className="grid-container">
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
       <div className="tablet:grid-col-9">
-        <h2>Preferred Solution</h2>
+        <h2>Preferred solution</h2>
         <FieldGroup
           scrollElement="preferredSolution.title"
           error={!!flatErrors['preferredSolution.title']}
         >
           <Label htmlFor="BusinessCase-PreferredSolutionTitle">
-            Preferred Solution: Title
+            Preferred solution: Title
           </Label>
           <FieldErrorMsg>{flatErrors['preferredSolution.title']}</FieldErrorMsg>
           <Field
@@ -44,7 +44,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           error={!!flatErrors['preferredSolution.summary']}
         >
           <Label htmlFor="BusinessCase-PreferredSolutionSummary">
-            Preferred Solution: Summary
+            Preferred solution: Summary
           </Label>
           <HelpText className="margin-top-1">
             <span>Please include:</span>
@@ -57,8 +57,10 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
                 implementation approach (e.g. development/configuration,
                 phases),
               </li>
-              <li>costs (e.g. services, software, O&M),</li>
-              <li>and potential acqueisition approaches.</li>
+              <li>
+                costs (e.g. services, software, Operation and Maintenance),{' '}
+              </li>
+              <li>and potential acquisition approaches</li>
             </ul>
           </HelpText>
           <FieldErrorMsg>
@@ -81,7 +83,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           error={!!flatErrors['preferredSolution.acquisitionApproach']}
         >
           <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
-            Preferred Solution: Acquisition Approach
+            Preferred solution: Acquisition approach
           </Label>
           <HelpText className="margin-y-1">
             Describe the approach to acquiring the products and services
@@ -108,11 +110,11 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           error={!!flatErrors['preferredSolution.pros']}
         >
           <Label htmlFor="BusinessCase-PreferredSolutionPros">
-            Preferred Solution: Pros
+            Preferred solution: Pros
           </Label>
           <HelpText className="margin-y-1">
             Identify any aspects of this solution that positively differentiates
-            this approach from other solutions.
+            this approach from other solutions
           </HelpText>
           <FieldErrorMsg>{flatErrors['preferredSolution.pros']}</FieldErrorMsg>
           <Field
@@ -131,11 +133,11 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           error={!!flatErrors['preferredSolution.cons']}
         >
           <Label htmlFor="BusinessCase-PreferredSolutionCons">
-            Preferred Solution: Cons
+            Preferred solution: Cons
           </Label>
           <HelpText className="margin-y-1">
-            Identify any aspects of this solution that negatively impacts this
-            approach.
+            Identify any aspects of this solution that negatively impact this
+            approach
           </HelpText>
           <FieldErrorMsg>{flatErrors['preferredSolution.cons']}</FieldErrorMsg>
           <Field
@@ -150,7 +152,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
         </FieldGroup>
       </div>
       <div className="tablet:grid-col-9 margin-top-2">
-        <h2 className="margin-0">Estimated Lifecycle Cost</h2>
+        <h2 className="margin-0">Estimated lifecycle cost</h2>
         <HelpText>
           <p className="margin-y-2">
             You can add speculative costs if exact ones are not known or if a
@@ -159,7 +161,10 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <span>These things should be considered when estimating costs:</span>
           <ul className="padding-left-205">
             <li>Hosting</li>
-            <li>Software subscription and licenses (COTS and GOTS products)</li>
+            <li>
+              Software subscription and licenses (Commercial off-the-shelf and
+              Government off-the-shelf products)
+            </li>
             <li>Contractor rates and salaries</li>
             <li>Inflation</li>
           </ul>
@@ -200,7 +205,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
               .length} characters left`}</HelpText>
         </FieldGroup>
       </div>
-    </>
+    </div>
   );
 };
 

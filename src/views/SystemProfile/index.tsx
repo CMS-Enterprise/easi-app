@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { withAuth } from '@okta/okta-react';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
 import './index.scss';
-import { getAllSystemShorts } from '../../actions/searchActions';
-import { AppState } from '../../reducers/rootReducer';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemShorts } from 'types/routines';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
@@ -52,26 +51,20 @@ export type SystemProfileRouterProps = {
   profileId: string;
 };
 
-type SystemProfileProps = RouteComponentProps<SystemProfileRouterProps> & {
-  auth: any;
-  searchResults: any;
-};
+type SystemProfileProps = RouteComponentProps<SystemProfileRouterProps>;
 
-export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
+export const SystemProfile = ({ match }: SystemProfileProps) => {
   const onSearch = () => {};
   const getSuggestionValue = (suggestion: any): string => suggestion.name;
   const renderSuggestion = (suggestion: any): string => suggestion.name;
   const dispatch = useDispatch();
   const searchResults = useSelector(
-    (state: AppState) => state.search.allSystemShorts
+    (state: AppState) => state.search.systemShorts
   );
 
   useEffect(() => {
-    const fetchSystemShorts = async (): Promise<void> => {
-      dispatch(getAllSystemShorts(await auth.getAccessToken()));
-    };
-    fetchSystemShorts();
-  }, [auth, dispatch]);
+    dispatch(fetchSystemShorts());
+  }, [dispatch]);
 
   return (
     <div className="system-profile">
@@ -141,4 +134,4 @@ export const SystemProfile = ({ match, auth }: SystemProfileProps) => {
   );
 };
 
-export default withRouter(withAuth(SystemProfile));
+export default withRouter(SystemProfile);

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Formik, Form, FormikProps } from 'formik';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { Form, Formik, FormikProps } from 'formik';
+import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
@@ -8,15 +10,23 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
+import AutoSave from 'components/shared/AutoSave';
+import { AppState } from 'reducers/rootReducer';
+import {
+  fetchSystemIntake,
+  saveSystemIntake,
+  storeSystemIntakeId
+} from 'types/routines';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
 
-export type SystemIntakeRouterProps = {
-  profileId: string;
+export type SystemIDRouterProps = {
+  systemId: string;
 };
-type SystemIntakeProps = RouteComponentProps<SystemIntakeRouterProps> & {};
+
+export type SystemIntakeProps = RouteComponentProps<SystemIDRouterProps>;
 
 export const SystemIntake = ({ match }: SystemIntakeProps) => {
   const pages = [
@@ -35,41 +45,18 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
       view: Review
     }
   ];
+  const history = useHistory();
   const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
+  const formikRef: any = useRef();
   const pageObj = pages[page - 1];
-  const initialData: SystemIntakeForm = {
-    projectName: '',
-    acronym: '',
-    requester: {
-      name: '',
-      component: ''
-    },
-    businessOwner: {
-      name: '',
-      component: ''
-    },
-    productManager: {
-      name: '',
-      component: ''
-    },
-    isso: {
-      isPresent: null,
-      name: ''
-    },
-    governanceTeams: {
-      isPresent: null,
-      teams: []
-    },
-    fundingSource: {
-      isFunded: null,
-      fundingNumber: ''
-    },
-    businessNeed: '',
-    businessSolution: '',
-    currentStage: '',
-    needsEaSupport: null,
-    hasContract: ''
-  };
+
+  const systemIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake
+  );
+  const isLoading = useSelector(
+    (state: AppState) => state.systemIntake.isLoading
+  );
 
   const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
     const Component = pageObj.view;
@@ -80,114 +67,154 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     return null;
   };
 
+  const dispatchSave = () => {
+    const currentRef = formikRef.current as FormikProps<SystemIntakeForm>;
+    if (currentRef.dirty) {
+      dispatch(saveSystemIntake(currentRef.values));
+      // Set initial values to those just saved so ref.dirty is compared against last saved values.
+      currentRef.resetForm({ values: currentRef.values });
+      if (!match.params.systemId) {
+        history.replace(`/system/${currentRef.values.id}`);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (match.params.systemId) {
+      dispatch(fetchSystemIntake(match.params.systemId));
+    } else {
+      dispatch(storeSystemIntakeId(uuidv4()));
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="system-intake">
-      <Header activeNavListItem={match.params.profileId} name="INTAKE">
-        <div className="margin-bottom-3">
-          {pageObj.type === 'FORM' && (
-            <button type="button" className="easi-button__save usa-button">
-              <span>Save & Exit</span>
-            </button>
-          )}
-        </div>
-      </Header>
+      <Header name="EASi System Intake" />
       <main className="grid-container" role="main">
-        <Formik
-          initialValues={initialData}
-          // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
-          // Form will be manually submitted.
-          onSubmit={() => {}}
-          validationSchema={pageObj.validation}
-          validateOnBlur={false}
-          validateOnChange={false}
-          validateOnMount={false}
-        >
-          {(formikProps: FormikProps<SystemIntakeForm>) => {
-            const {
-              values,
-              errors,
-              validateForm,
-              setErrors,
-              isSubmitting
-            } = formikProps;
-            const flatErrors: any = flattenErrors(errors);
-            return (
-              <>
-                {Object.keys(errors).length > 0 && (
-                  <ErrorAlert
-                    classNames="margin-top-3"
-                    heading="Please check and fix the following"
-                  >
-                    {Object.keys(flatErrors).map(key => {
-                      return (
-                        <ErrorAlertMessage
-                          key={`Error.${key}`}
-                          message={flatErrors[key]}
+        {isLoading === false && (
+          <Formik
+            initialValues={systemIntake}
+            // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
+            // Form will be manually submitted.
+            onSubmit={() => {}}
+            validationSchema={pageObj.validation}
+            validateOnBlur={false}
+            validateOnChange={false}
+            validateOnMount={false}
+            innerRef={formikRef}
+          >
+            {(formikProps: FormikProps<SystemIntakeForm>) => {
+              const {
+                values,
+                errors,
+                validateForm,
+                setErrors,
+                isSubmitting
+              } = formikProps;
+              const flatErrors: any = flattenErrors(errors);
+              return (
+                <>
+                  {Object.keys(errors).length > 0 && (
+                    <ErrorAlert
+                      classNames="margin-top-3"
+                      heading="Please check and fix the following"
+                    >
+                      {Object.keys(flatErrors).map(key => {
+                        return (
+                          <ErrorAlertMessage
+                            key={`Error.${key}`}
+                            message={flatErrors[key]}
+                            onClick={() => {
+                              const field = document.querySelector(
+                                `[data-scroll="${key}"]`
+                              );
+
+                              if (field) {
+                                field.scrollIntoView();
+                              }
+                            }}
+                          />
+                        );
+                      })}
+                    </ErrorAlert>
+                  )}
+                  <Form>
+                    {renderPage(formikProps)}
+                    {/* validateForm needs to be called from inside of Form component and it cannot be type="button"; it must be type="submit" */}
+                    {page > 1 && (
+                      <Button
+                        type="button"
+                        outline
+                        onClick={() => {
+                          setPage(prev => prev - 1);
+                          setErrors({});
+                          window.scrollTo(0, 0);
+                        }}
+                      >
+                        Back
+                      </Button>
+                    )}
+
+                    {page < pages.length && (
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (pageObj.validation) {
+                            validateForm().then(err => {
+                              if (Object.keys(err).length === 0) {
+                                setPage(prev => prev + 1);
+                              }
+                              window.scrollTo(0, 0);
+                            });
+                          }
+                        }}
+                      >
+                        Next
+                      </Button>
+                    )}
+
+                    {page === pages.length && (
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        onClick={() => {
+                          console.log('Submitting Data: ', values);
+                        }}
+                      >
+                        Send my intake request
+                      </Button>
+                    )}
+
+                    {pageObj.type === 'FORM' && (
+                      <div className="margin-y-3">
+                        <Button
+                          type="button"
+                          unstyled
                           onClick={() => {
-                            const field = document.querySelector(
-                              `[data-scroll="${key}"]`
-                            );
-
-                            if (field) {
-                              field.scrollIntoView();
-                            }
+                            dispatchSave();
+                            history.push('/');
                           }}
-                        />
-                      );
-                    })}
-                  </ErrorAlert>
-                )}
-                <Form>
-                  {renderPage(formikProps)}
-                  {/* validateForm needs to be called from inside of Form component and it cannot be type="button"; it must be type="submit" */}
-                  {page > 1 && (
-                    <Button
-                      type="button"
-                      outline
-                      onClick={() => {
-                        setPage(prev => prev - 1);
-                        setErrors({});
-                        window.scrollTo(0, 0);
-                      }}
-                    >
-                      Back
-                    </Button>
-                  )}
+                        >
+                          <span>
+                            <i className="fa fa-angle-left" /> Save & Exit
+                          </span>
+                        </Button>
+                      </div>
+                    )}
 
-                  {page < pages.length && (
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        if (pageObj.validation) {
-                          validateForm().then(err => {
-                            if (Object.keys(err).length === 0) {
-                              setPage(prev => prev + 1);
-                            }
-                            window.scrollTo(0, 0);
-                          });
-                        }
-                      }}
-                    >
-                      Next
-                    </Button>
-                  )}
-
-                  {page === pages.length && (
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      onClick={() => {
-                        console.log('Submitting Data: ', values);
-                      }}
-                    >
-                      Send to GRT
-                    </Button>
-                  )}
-                </Form>
-              </>
-            );
-          }}
-        </Formik>
+                    <AutoSave
+                      values={values}
+                      onSave={dispatchSave}
+                      debounceDelay={1000}
+                    />
+                  </Form>
+                </>
+              );
+            }}
+          </Formik>
+        )}
         {pageObj.type === 'FORM' && (
           <PageNumber
             currentPage={page}
@@ -199,4 +226,4 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
   );
 };
 
-export default withRouter(SystemIntake);
+export default SystemIntake;

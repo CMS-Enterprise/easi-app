@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import axios from 'axios';
 import { TextEncoder } from 'text-encoding';
 import { detect } from 'detect-browser';
 import 'uswds';
@@ -10,14 +11,13 @@ import store from './store';
 import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
+/**
+ * Enables react axe accessibility tooling in development environments
+ */
 if (process.env.NODE_ENV === 'development') {
   import('react-axe').then(axe => {
     axe.default(React, ReactDOM, 1000);
   });
-}
-
-if (typeof (window as any).TextEncoder === 'undefined') {
-  (window as any).TextEncoder = TextEncoder;
 }
 
 let app;
@@ -30,6 +30,41 @@ if (browser.name === 'ie') {
       <App />
     </Provider>
   );
+}
+
+/**
+ * axios interceptor to add authorization tokens to all requests made to
+ * our application API
+ */
+axios.interceptors.request.use(
+  config => {
+    const newConfig = config;
+
+    if (
+      newConfig &&
+      newConfig.url &&
+      newConfig.url.includes(process.env.REACT_APP_API_ADDRESS || ' ') &&
+      window.localStorage['okta-token-storage']
+    ) {
+      const json = JSON.parse(window.localStorage['okta-token-storage']);
+      if (json.accessToken) {
+        newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
+      }
+    }
+    return newConfig;
+  },
+  error => {
+    Promise.reject(error);
+  }
+);
+
+/**
+ * text-encoding isn't supported in IE11. This polyfill is needed for us
+ * to show the browser support error message. If this is not here, the
+ * user will see a blank white screen
+ */
+if (typeof (window as any).TextEncoder === 'undefined') {
+  (window as any).TextEncoder = TextEncoder;
 }
 
 ReactDOM.render(app, document.getElementById('root'));

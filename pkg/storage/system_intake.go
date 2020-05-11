@@ -15,6 +15,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 		INSERT INTO system_intake (
 			id,
 			eua_user_id,
+		    status,
 			requester,
 			component,
 			business_owner,
@@ -37,6 +38,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 		VALUES (
 			:id,
 			:eua_user_id,
+		    :status,
 			:requester,
 			:component,
 			:business_owner,
@@ -57,6 +59,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			:existing_contract
 		)
 		ON CONFLICT (id) DO UPDATE SET
+		    status=:status,
 			requester=:requester,
 			component=:component,
 			business_owner=:business_owner,
@@ -102,4 +105,18 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 		return &models.SystemIntake{}, err
 	}
 	return &intake, nil
+}
+
+// FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
+func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, error) {
+	intakes := []models.SystemIntake{}
+	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1", euaID)
+	if err != nil {
+		s.logger.Error(
+			fmt.Sprintf("Failed to fetch system intakes %s", err),
+			zap.String("euaID", euaID),
+		)
+		return models.SystemIntakes{}, err
+	}
+	return intakes, nil
 }

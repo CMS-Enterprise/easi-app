@@ -5,19 +5,17 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchSystemIntakes func(string, *sqlx.DB) (models.SystemIntakes, error)
+type fetchSystemIntakes func(string) (models.SystemIntakes, error)
 
 // SystemIntakesHandler is the handler for CRUD operations on system intakes
 type SystemIntakesHandler struct {
 	Logger             *zap.Logger
-	DB                 *sqlx.DB
 	FetchSystemIntakes fetchSystemIntakes
 }
 
@@ -39,7 +37,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			systemIntakes, err := h.FetchSystemIntakes(euaID, h.DB)
+			systemIntakes, err := h.FetchSystemIntakes(euaID)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to fetch system intakes: %v", err))
 				http.Error(w, "failed to fetch system intakes", http.StatusInternalServerError)

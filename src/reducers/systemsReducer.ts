@@ -1,24 +1,21 @@
-import {
-  GET_ALL_SYSTEM_SHORTS,
-  UPDATE_SYSTEM_SHORTS
-} from '../constants/system';
-import { SystemState } from '../types/system';
+import { SystemState } from 'types/system';
+import { Action } from 'redux-actions';
+import { fetchSystemShorts } from 'types/routines';
 
 const initialState: SystemState = {
-  allSystemShorts: []
+  systemShorts: []
 };
 
-function systemsReducer(state = initialState, action: any): SystemState {
+function systemsReducer(
+  state = initialState,
+  action: Action<any>
+): SystemState {
   switch (action.type) {
-    case GET_ALL_SYSTEM_SHORTS:
-      return state;
-    case UPDATE_SYSTEM_SHORTS:
+    case fetchSystemShorts.SUCCESS:
       return {
         ...state,
-        allSystemShorts: action.shorts
+        systemShorts: action.payload
       };
-    case '':
-      return state;
     default:
       return state;
   }

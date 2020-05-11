@@ -24,7 +24,8 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	id, _ := uuid.NewUUID()
 	body, err := json.Marshal(map[string]string{
-		"id": id.String(),
+		"id":     id.String(),
+		"status": "DRAFT",
 	})
 	s.NoError(err)
 
@@ -76,6 +77,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	s.Run("PUT will succeed second time with with new data", func() {
 		body, err := json.Marshal(map[string]string{
 			"id":        id.String(),
+			"status":    "DRAFT",
 			"requester": "Test Requester",
 		})
 		s.NoError(err)

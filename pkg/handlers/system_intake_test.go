@@ -78,21 +78,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.Equal("Failed to GET system intake\n", rr.Body.String())
 	})
 
-	s.Run("GET returns an error if the EUA ID from the request doesn't match the fetched intake", func() {
-		requestContextWithBadEUA := appcontext.WithEuaID(context.Background(), "WRNG")
-		rr := httptest.NewRecorder()
-		req, err := http.NewRequestWithContext(requestContextWithBadEUA, "GET", "/system_intake/"+id.String(), bytes.NewBufferString(""))
-		s.NoError(err)
-		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
-		SystemIntakeHandler{
-			SaveSystemIntake:      newMockSaveSystemIntake(nil),
-			Logger:                s.logger,
-			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(nil),
-		}.Handle()(rr, req)
-		s.Equal(http.StatusUnauthorized, rr.Code)
-		s.Equal("Failed to GET system intake\n", rr.Body.String())
-	})
-
 	s.Run("golden path PUT passes", func() {
 		rr := httptest.NewRecorder()
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString("{}"))

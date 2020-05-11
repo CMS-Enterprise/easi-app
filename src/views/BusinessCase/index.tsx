@@ -1,53 +1,35 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
 import { Formik, Form, FormikProps } from 'formik';
-
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { BusinessCaseModel } from 'types/businessCase';
+import {
+  businessCaseInitalData,
+  defaultProposedSolution
+} from 'data/businessCase';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
-import GeneralProjectInfo from './GeneralProjectInfo';
-import ProjectDescription from './ProjectDescription';
+import GeneralRequestInfo from './GeneralRequestInfo';
+import RequestDescription from './RequestDescription';
 import AsIsSolution from './AsIsSolution';
 import PreferredSolution from './PreferredSolution';
 import AlternativeSolution from './AlternativeSolution';
 import Review from './Review';
 import './index.scss';
 
-// Default data for estimated lifecycle costs
-const defaultEstimatedLifecycle = {
-  year1: [{ phase: '', cost: '' }],
-  year2: [{ phase: '', cost: '' }],
-  year3: [{ phase: '', cost: '' }],
-  year4: [{ phase: '', cost: '' }],
-  year5: [{ phase: '', cost: '' }]
-};
-
-// Default data for a proposed solution
-export const defaultProposedSolution = {
-  title: '',
-  summary: '',
-  acquisitionApproach: '',
-  pros: '',
-  cons: '',
-  estimatedLifecycleCost: defaultEstimatedLifecycle,
-  costSavings: ''
-};
-
 export const BusinessCase = () => {
   const [pages, setPages] = useState<any[]>([
     {
-      name: 'GeneralProjectInfo',
+      name: 'GeneralRequestInfo',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.generalProjectInfo
+      validation: BusinessCaseValidationSchema.generalRequestInfo
     },
     {
-      name: 'ProjectDescription',
+      name: 'RequestDescription',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.projectDescription
+      validation: BusinessCaseValidationSchema.requestDescription
     },
     {
       name: 'AsIsSolution',
@@ -72,38 +54,12 @@ export const BusinessCase = () => {
   const [page, setPage] = useState(1);
   const pageObj = pages[page - 1];
 
-  const initialData: BusinessCaseModel = {
-    projectName: '',
-    requester: {
-      name: '',
-      phoneNumber: ''
-    },
-    budgetNumber: '',
-    businessOwner: {
-      name: ''
-    },
-    businessNeed: '',
-    cmsBenefit: '',
-    priorityAlignment: '',
-    successIndicators: '',
-    asIsSolution: {
-      title: '',
-      summary: '',
-      pros: '',
-      cons: '',
-      estimatedLifecycleCost: defaultEstimatedLifecycle,
-      costSavings: ''
-    },
-    preferredSolution: defaultProposedSolution,
-    alternativeA: defaultProposedSolution
-  };
-
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     switch (pageObj.name) {
-      case 'GeneralProjectInfo':
-        return <GeneralProjectInfo formikProps={formikProps} />;
-      case 'ProjectDescription':
-        return <ProjectDescription formikProps={formikProps} />;
+      case 'GeneralRequestInfo':
+        return <GeneralRequestInfo formikProps={formikProps} />;
+      case 'RequestDescription':
+        return <RequestDescription formikProps={formikProps} />;
       case 'AsIsSolution':
         return <AsIsSolution formikProps={formikProps} />;
       case 'PreferredSolution':
@@ -165,7 +121,7 @@ export const BusinessCase = () => {
           />
         );
       case 'Review':
-        return <Review />;
+        return <Review formikProps={formikProps} />;
       default:
         return null;
     }
@@ -173,18 +129,10 @@ export const BusinessCase = () => {
 
   return (
     <div className="business-case">
-      <Header name="BUSINESS">
-        <div className="margin-bottom-3">
-          {pageObj.type === 'FORM' && (
-            <button type="button" className="easi-button__save usa-button">
-              <span>Save & Exit</span>
-            </button>
-          )}
-        </div>
-      </Header>
-      <main className="grid-container" role="main">
+      <Header name="CMS Business Case" />
+      <main role="main">
         <Formik
-          initialValues={initialData}
+          initialValues={businessCaseInitalData}
           // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
           // Form will be manually submitted.
           onSubmit={() => {}}
@@ -204,91 +152,113 @@ export const BusinessCase = () => {
             const flatErrors: any = flattenErrors(errors);
             return (
               <>
-                {Object.keys(errors).length > 0 && (
-                  <ErrorAlert
-                    classNames="margin-top-3"
-                    heading="Please check and fix the following"
-                  >
-                    {Object.keys(flatErrors).map(key => {
-                      return (
-                        <ErrorAlertMessage
-                          key={`Error.${key}`}
-                          message={flatErrors[key]}
-                          onClick={() => {
-                            const field = document.querySelector(
-                              `[data-scroll="${key}"]`
-                            );
+                <div className="grid-container">
+                  {Object.keys(errors).length > 0 && (
+                    <ErrorAlert
+                      classNames="margin-top-3"
+                      heading="Please check and fix the following"
+                    >
+                      {Object.keys(flatErrors).map(key => {
+                        return (
+                          <ErrorAlertMessage
+                            key={`Error.${key}`}
+                            message={flatErrors[key]}
+                            onClick={() => {
+                              const field = document.querySelector(
+                                `[data-scroll="${key}"]`
+                              );
 
-                            if (field) {
-                              field.scrollIntoView();
-                            }
-                          }}
-                        />
-                      );
-                    })}
-                  </ErrorAlert>
-                )}
+                              if (field) {
+                                field.scrollIntoView();
+                              }
+                            }}
+                          />
+                        );
+                      })}
+                    </ErrorAlert>
+                  )}
+                </div>
                 <Form>
                   {renderPage(formikProps)}
-                  {page > 1 && (
-                    <Button
-                      type="button"
-                      outline
-                      onClick={() => {
-                        setPage(prev => prev - 1);
-                        setErrors({});
-                        window.scrollTo(0, 0);
-                      }}
-                    >
-                      Back
-                    </Button>
-                  )}
+                  <div className="grid-container">
+                    {page > 1 && (
+                      <Button
+                        type="button"
+                        outline
+                        onClick={() => {
+                          setPage(prev => prev - 1);
+                          setErrors({});
+                          window.scrollTo(0, 0);
+                        }}
+                      >
+                        Back
+                      </Button>
+                    )}
 
-                  {page < pages.length && (
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        if (pageObj.validation) {
-                          validateForm().then(err => {
-                            if (Object.keys(err).length === 0) {
-                              setPage(prev => prev + 1);
-                            }
-                          });
-                        } else {
-                          setPage(prev => prev + 1);
-                        }
-                        window.scrollTo(0, 0);
-                      }}
-                    >
-                      Next
-                    </Button>
-                  )}
+                    {page < pages.length && (
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (pageObj.validation) {
+                            validateForm().then(err => {
+                              if (Object.keys(err).length === 0) {
+                                setPage(prev => prev + 1);
+                              }
+                            });
+                          } else {
+                            setPage(prev => prev + 1);
+                          }
+                          window.scrollTo(0, 0);
+                        }}
+                      >
+                        Next
+                      </Button>
+                    )}
 
-                  {page === pages.length && (
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      onClick={() => {
-                        console.log('Submitting Data: ', values);
-                      }}
-                    >
-                      Review and Send
-                    </Button>
-                  )}
+                    {page === pages.length && (
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        onClick={() => {
+                          console.log('Submitting Data: ', values);
+                        }}
+                      >
+                        Send my business case
+                      </Button>
+                    )}
+
+                    {pageObj.type === 'FORM' && (
+                      <div className="margin-y-3">
+                        <Button
+                          type="button"
+                          unstyled
+                          onClick={() => {
+                            // dispatch save and exit function
+                          }}
+                        >
+                          <span>
+                            <i className="fa fa-angle-left" /> Save & Exit
+                          </span>
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                 </Form>
               </>
             );
           }}
         </Formik>
-        {pageObj.type === 'FORM' && (
-          <PageNumber
-            currentPage={page}
-            totalPages={pages.filter(p => p.type === 'FORM').length}
-          />
-        )}
+        <div className="grid-container">
+          {pageObj.type === 'FORM' && (
+            <PageNumber
+              currentPage={page}
+              totalPages={pages.filter(p => p.type === 'FORM').length}
+            />
+          )}
+        </div>
       </main>
     </div>
   );
 };
 
-export default withRouter(BusinessCase);
+export default BusinessCase;
