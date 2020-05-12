@@ -93,7 +93,7 @@ func (s *Server) routes(
 			s.logger,
 		),
 	}
-	api.Handle("/business_case/business_case_id", businessCaseHandler.Handle())
+	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.CatchAllHandler{
