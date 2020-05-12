@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { withAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@okta/okta-react';
 
-import useAuth from 'hooks/useAuth';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import ActionBanner from 'components/shared/ActionBanner';
@@ -13,21 +12,19 @@ import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import './index.scss';
 
-type HomeProps = RouteComponentProps & {
-  auth: any;
-};
+type HomeProps = RouteComponentProps;
 
-const Home = ({ auth, history }: HomeProps) => {
-  const [isAuthenticated] = useAuth(auth);
+const Home = ({ history }: HomeProps) => {
+  const { authState } = useOktaAuth();
   const dispatch = useDispatch();
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
   useEffect(() => {
-    if (isAuthenticated) {
+    if (authState.isAuthenticated) {
       dispatch(fetchSystemIntakes());
     }
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, authState.isAuthenticated]);
 
   const getSystemIntakeBanners = () => {
     return systemIntakes.map((intake: SystemIntakeForm) => {
@@ -84,7 +81,7 @@ const Home = ({ auth, history }: HomeProps) => {
               .
             </p>
           </div>
-          {isAuthenticated ? (
+          {authState.isAuthenticated ? (
             <Button
               type="button"
               onClick={() => {
@@ -109,4 +106,4 @@ const Home = ({ auth, history }: HomeProps) => {
   );
 };
 
-export default withRouter(withAuth(Home));
+export default withRouter(Home);
