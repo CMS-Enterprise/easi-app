@@ -36,3 +36,9 @@ echo ": Invoking the $function_name lambda..."
 time (set -x ; aws lambda invoke --function-name "$function_name" --qualifier "$function_qualifier" --payload file://./payload.json output.json) || exit
 
 jq < output.json
+
+status="$(jq '.data.response.ResponseMetadata.HTTPStatusCode' < output.json)"
+if [[ "$status" -ne 200 ]]; then
+  echo ": FATAL HTTPStatusCode is not 200"
+  exit 1
+fi
