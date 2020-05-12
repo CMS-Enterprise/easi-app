@@ -101,8 +101,15 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				switch err.(type) {
 				case *apperrors.ValidationError:
 					logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
-					// TODO: Replace with more helpful errors
-					http.Error(w, "Failed to validate system intake", http.StatusBadRequest)
+					if err.Error() == "intake has already been submitted to CEDAR" {
+						logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
+						// TODO: Replace with more helpful errors
+						http.Error(w, "System has already been submitted", http.StatusConflict)
+					} else {
+						logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
+						// TODO: Replace with more helpful errors
+						http.Error(w, "Failed to validate system intake", http.StatusBadRequest)
+					}
 				case *apperrors.ExternalAPIError:
 					logger.Error(fmt.Sprintf("Failed to submit system intake: %v", err))
 					// TODO: Replace with more helpful errors

@@ -97,12 +97,11 @@ func NewSaveSystemIntake(
 					Model:   "System Intake",
 				}
 			}
-
+			intake.SubmittedAt = intake.UpdatedAt
 			alfabetID, validateAndSubmitErr := validateAndSubmit(intake, logger)
 			if validateAndSubmitErr != nil {
 				return err
 			}
-			intake.SubmittedAt = intake.UpdatedAt
 			intake.AlfabetID = null.StringFrom(alfabetID)
 		}
 		err = save(intake)
