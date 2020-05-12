@@ -1,10 +1,9 @@
 package email
 
 import (
+	"errors"
 	"testing"
 
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ses"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
@@ -15,7 +14,26 @@ import (
 type SESTestSuite struct {
 	suite.Suite
 	logger *zap.Logger
-	client Client
+	config Config
+}
+
+type mockSender struct {
+	toAddress string
+	subject   string
+	body      string
+}
+
+func (s *mockSender) Send(toAddress string, subject string, body string) error {
+	s.toAddress = toAddress
+	s.subject = subject
+	s.body = body
+	return nil
+}
+
+type mockFailedSender struct{}
+
+func (s *mockFailedSender) Send(toAddress string, subject string, body string) error {
+	return errors.New("sender had an error")
 }
 
 func TestSESTestSuite(t *testing.T) {
@@ -29,26 +47,23 @@ func TestSESTestSuite(t *testing.T) {
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
-	sesConfig := SESConfig{
-		SourceARN: config.GetString(appconfig.AWSSESSourceARNKey),
-		Source:    config.GetString(appconfig.AWSSESSourceKey),
-	}
+	// we'll need this code for integration testing
+	//sesConfig := SESConfig{
+	//	SourceARN: config.GetString(appconfig.AWSSESSourceARNKey),
+	//	Source:    config.GetString(appconfig.AWSSESSourceKey),
+	//}
 
-	sesSession := session.Must(session.NewSession())
-	sesClient := ses.New(sesSession)
-	sesSender := SESSender{
-		sesClient,
-		sesConfig,
-	}
+	//sesSession := session.Must(session.NewSession())
+	//sesClient := ses.New(sesSession)
+	//sesSender := SESSender{
+	//	sesClient,
+	//	sesConfig,
+	//}
 
-	client, err := NewClient(emailConfig, sesSender)
-	if err != nil {
-		t.Errorf("Failed to create email client %v", err)
-	}
 	sesTestSuite := &SESTestSuite{
 		Suite:  suite.Suite{},
 		logger: logger,
-		client: client,
+		config: emailConfig,
 	}
 
 	suite.Run(t, sesTestSuite)
