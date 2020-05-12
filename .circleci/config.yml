@@ -127,15 +127,15 @@ jobs:
       - run:
           name: Nuke the database
           command: |
-            ./scripts/db_lambda_invoke easi-app-db-clean
+            ./scripts/deploy_service "easi-app-db-clean"
       - run:
           name: Run migrations
           command: |
-            ./scripts/db_lambda_invoke easi-app-db-migrate
+            ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
       - run:
-          name: Restart ECS service
+          name: Deploy ECS service
           command: |
-            ./scripts/restart_ecs
+            ./scripts/deploy_service "easi-app" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
@@ -166,11 +166,11 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/db_lambda_invoke easi-app-db-migrate
+            ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
       - run:
-          name: Restart ECS service
+          name: Deploy ECS service
           command: |
-            ./scripts/restart_ecs
+            ./scripts/deploy_service "easi-app" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
