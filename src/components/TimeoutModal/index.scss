@@ -1,0 +1,44 @@
+.easi-timeout-modal {
+  &__overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 10;
+  }
+
+  &__content {
+    position: absolute;
+    width: 668px;
+    height: 460px;
+    background: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    font-size: 22px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 35px;
+    align-items: center;
+    background: black;
+    color: white;
+  }
+
+  &__x-button {
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: 26px;
+    color: white;
+  }
+
+  &__body {
+    padding: 10px 35px;
+  }
+}
