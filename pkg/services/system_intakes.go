@@ -100,7 +100,15 @@ func NewSaveSystemIntake(
 			intake.SubmittedAt = intake.UpdatedAt
 			alfabetID, validateAndSubmitErr := validateAndSubmit(intake, logger)
 			if validateAndSubmitErr != nil {
-				return err
+				return validateAndSubmitErr
+			}
+			if alfabetID == "" {
+				return &apperrors.ExternalAPIError{
+					Err:       errors.New("submission was not successful"),
+					Model:     "System Intake",
+					ModelID:   intake.ID.String(),
+					Operation: apperrors.Submit,
+				}
 			}
 			intake.AlfabetID = null.StringFrom(alfabetID)
 		}
