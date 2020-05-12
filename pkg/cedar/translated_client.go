@@ -3,15 +3,11 @@ package cedar
 import (
 	"errors"
 	"fmt"
-	"reflect"
 	"strings"
-	"time"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/google/uuid"
-	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -19,6 +15,7 @@ import (
 	apioperations "github.com/cmsgov/easi-app/pkg/cedar/gen/client/operations"
 	apimodels "github.com/cmsgov/easi-app/pkg/cedar/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
 // TranslatedClient is an API client for CEDAR using EASi language
@@ -60,71 +57,61 @@ func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts,
 	return systems, nil
 }
 
-type cedarIntake map[string]bool
-
-func requiredFields() cedarIntake {
-	return cedarIntake{
-		"ID":                      true,
-		"EUAUserID":               true,
-		"Status":                  true,
-		"Requester":               true,
-		"Component":               true,
-		"BusinessOwner":           true,
-		"BusinessOwnerComponent":  true,
-		"ProductManager":          true,
-		"ProductManagerComponent": true,
-		"ISSO":                    false,
-		"TRBCollaborator":         false,
-		"OITSecurityCollaborator": false,
-		"EACollaborator":          false,
-		"ProjectName":             true,
-		"ExistingFunding":         true,
-		"FundingNumber":           false,
-		"FundingSource":           false,
-		"BusinessNeed":            true,
-		"Solution":                true,
-		"EASupportRequest":        true,
-		"ProcessStatus":           true,
-		"ExistingContract":        true,
-		"UpdatedAt":               true,
-		"SubmittedAt":             true,
-	}
-}
-
 func validateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logger) error {
 	var res []string
-	v := reflect.ValueOf(*intake)
-	requiredFields := requiredFields()
-	for i := 0; i < v.NumField(); i++ {
-		if requiredFields[v.Type().Field(i).Name] {
-			switch v.Field(i).Interface().(type) {
-			case uuid.UUID:
-				if v.Field(i).Interface().(uuid.UUID) == uuid.Nil {
-					res = append(res, v.Type().Field(i).Name)
-				}
-			case string:
-				if v.Field(i).Interface().(string) == "" {
-					res = append(res, v.Type().Field(i).Name)
-				}
-			case null.String:
-				if !v.Field(i).Interface().(null.String).Valid {
-					res = append(res, v.Type().Field(i).Name)
-				}
-			case null.Bool:
-				if !v.Field(i).Interface().(null.Bool).Valid {
-					res = append(res, v.Type().Field(i).Name)
-				}
-			case time.Time:
-				if v.Field(i).Interface().(time.Time).IsZero() {
-					res = append(res, v.Type().Field(i).Name)
-				}
-			default:
-				break
-			}
-		}
+	if validate.RequireUUID(intake.ID) {
+		res = append(res, "ID")
+	}
+	if validate.RequireString(intake.EUAUserID) {
+		res = append(res, "EUAUserID")
+	}
+	if validate.RequireNullString(intake.Requester) {
+		res = append(res, "Requester")
+	}
+	if validate.RequireNullString(intake.Component) {
+		res = append(res, "Component")
+	}
+	if validate.RequireNullString(intake.BusinessOwner) {
+		res = append(res, "BusinessOwner")
+	}
+	if validate.RequireNullString(intake.BusinessOwnerComponent) {
+		res = append(res, "BusinessOwnerComponent")
+	}
+	if validate.RequireNullString(intake.ProductManager) {
+		res = append(res, "ProductManager")
+	}
+	if validate.RequireNullString(intake.ProductManagerComponent) {
+		res = append(res, "ProductManagerComponent")
+	}
+	if validate.RequireNullString(intake.ProjectName) {
+		res = append(res, "ProjectName")
+	}
+	if validate.RequireNullBool(intake.ExistingFunding) {
+		res = append(res, "ExistingFunding")
+	}
+	if intake.ExistingFunding.Bool && validate.RequireNullString(intake.FundingSource) {
+		res = append(res, "FundingSource")
+	}
+	if validate.RequireNullString(intake.BusinessNeed) {
+		res = append(res, "BusinessNeed")
+	}
+	if validate.RequireNullString(intake.Solution) {
+		res = append(res, "Solution")
+	}
+	if validate.RequireNullBool(intake.EASupportRequest) {
+		res = append(res, "EASupportRequest")
+	}
+	if validate.RequireNullString(intake.ProcessStatus) {
+		res = append(res, "ProcessStatus")
+	}
+	if validate.RequireNullString(intake.ExistingContract) {
+		res = append(res, "ExistingContract")
+	}
+	if validate.RequireTime(*intake.SubmittedAt) {
+		res = append(res, "SubmittedAt")
 	}
 	if len(res) != 0 {
-		invalidFields := strings.Join(res, " ")
+		invalidFields := strings.Join(res, ", ")
 		return errors.New("Validation failed on these fields: " + invalidFields)
 	}
 	return nil
@@ -132,7 +119,7 @@ func validateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logge
 
 func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient, logger *zap.Logger) (string, error) {
 	id := validatedIntake.ID.String()
-	submissionTime := validatedIntake.UpdatedAt.String()
+	submissionTime := validatedIntake.SubmittedAt.String()
 	params := apioperations.NewIntakegovernancePOST4Params()
 	governanceIntake := apimodels.GovernanceIntake{
 		BusinessNeeds:           &validatedIntake.BusinessNeed.String,

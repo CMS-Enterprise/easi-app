@@ -121,6 +121,28 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.Equal("Failed to save system intake\n", rr.Body.String())
 	})
 
+	s.Run("PUT fails with already submitted intake", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"id":         id.String(),
+			"status":     "SUBMITTED",
+			"alfabet_id": "123-345-19",
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
+		s.NoError(err)
+		expectedErrMessage := fmt.Errorf("failed to validate")
+		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: "System intake", ModelID: id.String()}
+		SystemIntakeHandler{
+			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
+			Logger:                s.logger,
+			FetchSystemIntakeByID: nil,
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal("Failed to validate system intake\n", rr.Body.String())
+	})
+
 	s.Run("PUT fails with failed validation", func() {
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
