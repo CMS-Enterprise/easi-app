@@ -59,6 +59,7 @@ export const SystemIntake = () => {
     const currentRef = formikRef.current as FormikProps<SystemIntakeForm>;
     if (currentRef.dirty) {
       dispatch(saveSystemIntake(currentRef.values));
+      currentRef.resetForm({ values: currentRef.values });
       if (systemId === 'new') {
         history.replace(`/system/${currentRef.values.id}/${pageObj.slug}`);
       }
