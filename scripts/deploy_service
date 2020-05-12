@@ -28,7 +28,7 @@ _payload() {
   echo "$result"
 }
 
-_payload "${image_tag:-}" > payload.json
+_payload "${image_tag:-}" > payload.json || exit
 
 jq < payload.json
 
