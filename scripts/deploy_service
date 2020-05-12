@@ -38,7 +38,7 @@ time (set -x ; aws lambda invoke --function-name "$function_name" --qualifier "$
 jq < output.json
 
 status="$(jq '.data.response.ResponseMetadata.HTTPStatusCode' < output.json)"
-if [[ "$status" -ne 200 ]]; then
+if [[ "$status" != 200 ]]; then
   echo ": FATAL HTTPStatusCode is not 200"
   exit 1
 fi
