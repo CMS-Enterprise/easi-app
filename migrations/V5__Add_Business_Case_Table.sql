@@ -1,11 +1,11 @@
-create table business_case (
+create table bidness_case (
    id uuid PRIMARY KEY not null,
    eua_user_id text not null,
    project_name text,
    requester text,
    requester_phone_number text,
-   business_owner text,
-   business_need text,
+   bidness_owner text,
+   bidness_need text,
    cms_benefit text,
    priority_alignment text,
    success_indicators text,
@@ -44,7 +44,7 @@ CREATE TYPE lifecycle_cost_year AS ENUM ('1', '2', '3', '4', '5');
 
 create table estimated_lifecycle_cost (
     id uuid PRIMARY KEY not null,
-    business_case uuid not null REFERENCES business_case(id),
+    bidness_case uuid not null REFERENCES bidness_case(id),
     solution lifecycle_cost_solution not null,
     year lifecycle_cost_year not null,
     phase lifecycle_cost_phase not null,

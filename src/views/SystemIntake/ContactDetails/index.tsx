@@ -66,7 +66,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             name="requester.name"
             onChange={(e: any) => {
               if (isReqAndBusOwnerSame) {
-                setFieldValue('businessOwner.name', e.target.value);
+                setFieldValue('bidnessOwner.name', e.target.value);
               }
               setFieldValue('requester.name', e.target.value);
             }}
@@ -89,7 +89,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             name="requester.component"
             onChange={(e: any) => {
               if (isReqAndBusOwnerSame) {
-                setFieldValue('businessOwner.component', e.target.value);
+                setFieldValue('bidnessOwner.component', e.target.value);
               }
               setFieldValue('requester.component', e.target.value);
             }}
@@ -99,29 +99,29 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </Field>
         </FieldGroup>
 
-        {/* Business Owner Name */}
+        {/* Bidness Owner Name */}
         <FieldGroup
-          scrollElement="businessOwner.name"
-          error={!!flatErrors['businessOwner.name']}
+          scrollElement="bidnessOwner.name"
+          error={!!flatErrors['bidnessOwner.name']}
         >
-          <Label className="margin-bottom-1" htmlFor="IntakeForm-BusinessOwner">
-            CMS Business/Product Owner&apos;s Name
+          <Label className="margin-bottom-1" htmlFor="IntakeForm-BidnessOwner">
+            CMS Bidness/Product Owner&apos;s Name
           </Label>
           <HelpText className="margin-bottom-105">
-            This person owns a line of business related to this request and will
+            This person owns a line of bidness related to this request and will
             champion the request moving forward
           </HelpText>
           <Field
             as={CheckboxField}
-            id="IntakeForm-IsBusinessOwnerSameAsRequester"
-            label="CMS Business/Product Owner is same as requester"
-            name="isBusinessOwnerSameAsRequester"
+            id="IntakeForm-IsBidnessOwnerSameAsRequester"
+            label="CMS Bidness/Product Owner is same as requester"
+            name="isBidnessOwnerSameAsRequester"
             onChange={(e: any) => {
               if (e.target.checked) {
                 setReqAndBusOwnerSame(true);
-                setFieldValue('businessOwner.name', values.requester.name);
+                setFieldValue('bidnessOwner.name', values.requester.name);
                 setFieldValue(
-                  'businessOwner.component',
+                  'bidnessOwner.component',
                   values.requester.component
                 );
               } else {
@@ -130,35 +130,35 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             }}
             value=""
           />
-          <FieldErrorMsg>{flatErrors['businessOwner.name']}</FieldErrorMsg>
+          <FieldErrorMsg>{flatErrors['bidnessOwner.name']}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={!!flatErrors['businessOwner.name']}
+            error={!!flatErrors['bidnessOwner.name']}
             disabled={isReqAndBusOwnerSame}
-            id="IntakeForm-BusinessOwner"
+            id="IntakeForm-BidnessOwner"
             maxLength={50}
-            name="businessOwner.name"
+            name="bidnessOwner.name"
           />
         </FieldGroup>
 
-        {/* Business Owner Component */}
+        {/* Bidness Owner Component */}
         <FieldGroup
-          scrollElement="businessOwner.component"
-          error={!!flatErrors['businessOwner.component']}
+          scrollElement="bidnessOwner.component"
+          error={!!flatErrors['bidnessOwner.component']}
         >
-          <Label htmlFor="IntakeForm-BusinessOwnerComponent">
-            Business Owner Component
+          <Label htmlFor="IntakeForm-BidnessOwnerComponent">
+            Bidness Owner Component
           </Label>
-          <FieldErrorMsg>{flatErrors['businessOwner.component']}</FieldErrorMsg>
+          <FieldErrorMsg>{flatErrors['bidnessOwner.component']}</FieldErrorMsg>
           <Field
             as={DropdownField}
             disabled={isReqAndBusOwnerSame}
-            error={!!flatErrors['businessOwner.component']}
-            id="IntakeForm-BusinessOwnerComponent"
-            name="businessOwner.component"
+            error={!!flatErrors['bidnessOwner.component']}
+            id="IntakeForm-BidnessOwnerComponent"
+            name="bidnessOwner.component"
           >
             <Field as={DropdownItem} name="Select an option" value="" />
-            {cmsDivionsAndOfficesOptions('BusinessOwnerComponent')}
+            {cmsDivionsAndOfficesOptions('BidnessOwnerComponent')}
           </Field>
         </FieldGroup>
 

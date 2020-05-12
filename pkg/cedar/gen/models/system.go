@@ -21,8 +21,8 @@ type System struct {
 	// Required: true
 	ID *string `json:"id"`
 
-	// is business application
-	IsBusinessApplication bool `json:"is_business_application,omitempty"`
+	// is bidness application
+	IsBidnessApplication bool `json:"is_bidness_application,omitempty"`
 
 	// is cms owned
 	IsCmsOwned bool `json:"is_cms_owned,omitempty"`

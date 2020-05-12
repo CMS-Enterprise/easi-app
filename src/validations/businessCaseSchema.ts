@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 //
 const phoneNumberRegex = /( *-*[0-9] *?){10,}/;
-const BusinessCaseValidationSchema = {
+const BidnessCaseValidationSchema = {
   generalRequestInfo: Yup.object().shape({
     requestName: Yup.string().required('Enter the Request Name'),
     requester: Yup.object().shape({
@@ -16,13 +16,13 @@ const BusinessCaseValidationSchema = {
           'Enter the Requester’s phone number like 123456789 or 123-456-789'
         )
     }),
-    businessOwner: Yup.object().shape({
-      name: Yup.string().required("Enter the Business Owner's name")
+    bidnessOwner: Yup.object().shape({
+      name: Yup.string().required("Enter the Bidness Owner's name")
     })
   }),
   requestDescription: Yup.object().shape({
-    businessNeed: Yup.string().required(
-      'Tell us what the business or user need is'
+    bidnessNeed: Yup.string().required(
+      'Tell us what the bidness or user need is'
     ),
     cmsBenefit: Yup.string().required(
       'Tell us how CMS will benefit from this effort'
@@ -237,4 +237,4 @@ const BusinessCaseValidationSchema = {
   })
 };
 
-export default BusinessCaseValidationSchema;
+export default BidnessCaseValidationSchema;

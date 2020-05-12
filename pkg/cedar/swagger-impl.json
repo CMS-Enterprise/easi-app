@@ -118,7 +118,7 @@
       "type" : "object",
       "required" : [ "id", "mission_essential_function", "software", "system_acronym", "system_name" ],
       "properties" : {
-        "business_function_alignment" : {
+        "bidness_function_alignment" : {
           "type" : "array",
           "items" : {
             "type" : "string"
@@ -128,10 +128,10 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "business_owner" : {
+        "bidness_owner" : {
           "type" : "string"
         },
-        "business_owner_org" : {
+        "bidness_owner_org" : {
           "type" : "string"
         },
         "data_categories" : {
@@ -246,7 +246,7 @@
         "system_classification":{
           "type":"string"
         },
-        "is_business_application":{
+        "is_bidness_application":{
           "type":"boolean"
         },
         "is_cms_owned":{

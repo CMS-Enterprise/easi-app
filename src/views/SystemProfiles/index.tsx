@@ -75,7 +75,7 @@ export const SystemProfiles = () => {
       case 'SUBMITTED':
         return 'Status: The form has been submitted and is being reviewed.';
       case 'REVIEWED':
-        return 'Status: Request Form has been reviewed. Prepare your business case.';
+        return 'Status: Request Form has been reviewed. Prepare your bidness case.';
       default:
         return '';
     }
@@ -86,7 +86,7 @@ export const SystemProfiles = () => {
       case 'SUBMITTED':
         return 'View submitted request form';
       case 'REVIEWED':
-        return 'Begin Business Case';
+        return 'Begin Bidness Case';
       default:
         return '';
     }

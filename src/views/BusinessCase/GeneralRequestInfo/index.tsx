@@ -4,11 +4,11 @@ import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import { BusinessCaseModel } from 'types/businessCase';
+import { BidnessCaseModel } from 'types/bidnessCase';
 import flattenErrors from 'utils/flattenErrors';
 
 type GeneralRequestInfoProps = {
-  formikProps: FormikProps<BusinessCaseModel>;
+  formikProps: FormikProps<BidnessCaseModel>;
 };
 const GeneralRequestInfo = ({ formikProps }: GeneralRequestInfoProps) => {
   const { errors } = formikProps;
@@ -20,7 +20,7 @@ const GeneralRequestInfo = ({ formikProps }: GeneralRequestInfoProps) => {
       <h1 className="font-heading-xl">General request information</h1>
       <p className="line-height-body-6">
         Make a first draft of the various solutions you’ve thought of and the
-        costs involved to build or buy them. Once you have a draft business case
+        costs involved to build or buy them. Once you have a draft bidness case
         ready for review, send it to the Governance Review Admin Team who will
         ensure it is ready to be presented at the Governance Review Team (GRT)
         Meeting.
@@ -30,12 +30,12 @@ const GeneralRequestInfo = ({ formikProps }: GeneralRequestInfoProps) => {
           scrollElement="requestName"
           error={!!flatErrors.requestName}
         >
-          <Label htmlFor="BusinessCase-RequestName">Request Name</Label>
+          <Label htmlFor="BidnessCase-RequestName">Request Name</Label>
           <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
           <Field
             as={TextField}
             error={!!flatErrors.requestName}
-            id="BusinessCase-RequestName"
+            id="BidnessCase-RequestName"
             maxLength={50}
             name="requestName"
           />
@@ -45,29 +45,29 @@ const GeneralRequestInfo = ({ formikProps }: GeneralRequestInfoProps) => {
           scrollElement="requester.name"
           error={!!flatErrors['requester.name']}
         >
-          <Label htmlFor="BusinessCase-RequesterName">Requester</Label>
+          <Label htmlFor="BidnessCase-RequesterName">Requester</Label>
           <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
           <Field
             as={TextField}
             error={!!flatErrors['requester.name']}
-            id="BusinessCase-RequesterName"
+            id="BidnessCase-RequesterName"
             maxLength={50}
             name="requester.name"
           />
         </FieldGroup>
 
         <FieldGroup
-          scrollElement="businessOwner.name"
-          error={!!flatErrors['businessOwner.name']}
+          scrollElement="bidnessOwner.name"
+          error={!!flatErrors['bidnessOwner.name']}
         >
-          <Label htmlFor="BusinessCase-BusinessOwnerName">Business Owner</Label>
-          <FieldErrorMsg>{flatErrors['businessOwner.name']}</FieldErrorMsg>
+          <Label htmlFor="BidnessCase-BidnessOwnerName">Bidness Owner</Label>
+          <FieldErrorMsg>{flatErrors['bidnessOwner.name']}</FieldErrorMsg>
           <Field
             as={TextField}
-            error={!!flatErrors['businessOwner.name']}
-            id="BusinessCase-BusinessOwnerName"
+            error={!!flatErrors['bidnessOwner.name']}
+            id="BidnessCase-BidnessOwnerName"
             maxLength={50}
-            name="businessOwner.name"
+            name="bidnessOwner.name"
           />
         </FieldGroup>
 
@@ -75,7 +75,7 @@ const GeneralRequestInfo = ({ formikProps }: GeneralRequestInfoProps) => {
           scrollElement="requester.phoneNumber"
           error={!!flatErrors['requester.phoneNumber']}
         >
-          <Label htmlFor="BusinessCase-RequesterPhoneNumber">
+          <Label htmlFor="BidnessCase-RequesterPhoneNumber">
             Requester Phone Number
           </Label>
           <FieldErrorMsg>{flatErrors['requester.phoneNumber']}</FieldErrorMsg>
@@ -83,7 +83,7 @@ const GeneralRequestInfo = ({ formikProps }: GeneralRequestInfoProps) => {
             <Field
               as={TextField}
               error={!!flatErrors['requester.phoneNumber']}
-              id="BusinessCase-RequesterPhoneNumber"
+              id="BidnessCase-RequesterPhoneNumber"
               maxLength={20}
               name="requester.phoneNumber"
               match={allowedPhoneNumberCharacters}

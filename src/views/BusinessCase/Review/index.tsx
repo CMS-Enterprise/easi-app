@@ -7,12 +7,12 @@ import {
   DescriptionDefinition
 } from 'components/shared/DescriptionGroup';
 import ResponsiveTabs from 'components/shared/ResponsiveTabs';
-import { BusinessCaseModel } from 'types/businessCase';
+import { BidnessCaseModel } from 'types/bidnessCase';
 import AsIsSolutionReview from './AsIsSolutionReview';
-import ProposedBusinessCaseSolutionReview from './ProposedBusinessCaseSolutionReview';
+import ProposedBidnessCaseSolutionReview from './ProposedBidnessCaseSolutionReview';
 
 type ReviewProps = {
-  formikProps: FormikProps<BusinessCaseModel>;
+  formikProps: FormikProps<BidnessCaseModel>;
 };
 
 const Review = ({ formikProps }: ReviewProps) => {
@@ -48,8 +48,8 @@ const Review = ({ formikProps }: ReviewProps) => {
               <DescriptionDefinition definition={values.requestName} />
             </div>
             <div>
-              <DescriptionTerm term="Business Owner" />
-              <DescriptionDefinition definition={values.businessOwner.name} />
+              <DescriptionTerm term="Bidness Owner" />
+              <DescriptionDefinition definition={values.bidnessOwner.name} />
             </div>
           </ReviewRow>
           <ReviewRow>
@@ -70,8 +70,8 @@ const Review = ({ formikProps }: ReviewProps) => {
         <DescriptionList title="Request description">
           <ReviewRow>
             <div className="margin-bottom-205 line-height-body-3">
-              <DescriptionTerm term="What is your business or user need?" />
-              <DescriptionDefinition definition={values.businessNeed} />
+              <DescriptionTerm term="What is your bidness or user need?" />
+              <DescriptionDefinition definition={values.bidnessNeed} />
             </div>
           </ReviewRow>
           <ReviewRow>
@@ -109,7 +109,7 @@ const Review = ({ formikProps }: ReviewProps) => {
           }}
         >
           <div
-            className="bg-white easi-business-case__review-solutions-wrapper"
+            className="bg-white easi-bidness-case__review-solutions-wrapper"
             style={{ overflow: 'auto' }}
           >
             {(tab => {
@@ -118,14 +118,14 @@ const Review = ({ formikProps }: ReviewProps) => {
                   return <AsIsSolutionReview solution={values.asIsSolution} />;
                 case 'Preferred solution':
                   return (
-                    <ProposedBusinessCaseSolutionReview
+                    <ProposedBidnessCaseSolutionReview
                       name="Preferred solution"
                       solution={values.preferredSolution}
                     />
                   );
                 case 'Alternative A':
                   return (
-                    <ProposedBusinessCaseSolutionReview
+                    <ProposedBidnessCaseSolutionReview
                       name="Alternative A"
                       solution={values.alternativeA}
                     />
@@ -133,7 +133,7 @@ const Review = ({ formikProps }: ReviewProps) => {
                 case 'Alternative B':
                   if (values.alternativeB) {
                     return (
-                      <ProposedBusinessCaseSolutionReview
+                      <ProposedBidnessCaseSolutionReview
                         name="Alternative B"
                         solution={values.alternativeB}
                       />

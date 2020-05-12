@@ -4,12 +4,12 @@ import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import { BusinessCaseModel } from 'types/businessCase';
+import { BidnessCaseModel } from 'types/bidnessCase';
 import {
-  businessCaseInitalData,
+  bidnessCaseInitalData,
   defaultProposedSolution
-} from 'data/businessCase';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+} from 'data/bidnessCase';
+import BidnessCaseValidationSchema from 'validations/bidnessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
 import GeneralRequestInfo from './GeneralRequestInfo';
 import RequestDescription from './RequestDescription';
@@ -19,32 +19,32 @@ import AlternativeSolution from './AlternativeSolution';
 import Review from './Review';
 import './index.scss';
 
-export const BusinessCase = () => {
+export const BidnessCase = () => {
   const [pages, setPages] = useState<any[]>([
     {
       name: 'GeneralRequestInfo',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.generalRequestInfo
+      validation: BidnessCaseValidationSchema.generalRequestInfo
     },
     {
       name: 'RequestDescription',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.requestDescription
+      validation: BidnessCaseValidationSchema.requestDescription
     },
     {
       name: 'AsIsSolution',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.asIsSolution
+      validation: BidnessCaseValidationSchema.asIsSolution
     },
     {
       name: 'PreferredSolution',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.preferredSolution
+      validation: BidnessCaseValidationSchema.preferredSolution
     },
     {
       name: 'AlternativeSolutionA',
       type: 'FORM',
-      validation: BusinessCaseValidationSchema.alternativeA
+      validation: BidnessCaseValidationSchema.alternativeA
     },
     {
       name: 'Review',
@@ -54,7 +54,7 @@ export const BusinessCase = () => {
   const [page, setPage] = useState(1);
   const pageObj = pages[page - 1];
 
-  const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
+  const renderPage = (formikProps: FormikProps<BidnessCaseModel>) => {
     switch (pageObj.name) {
       case 'GeneralRequestInfo':
         return <GeneralRequestInfo formikProps={formikProps} />;
@@ -84,7 +84,7 @@ export const BusinessCase = () => {
                         {
                           name: 'AlternativeSolutionB',
                           type: 'FORM',
-                          validation: BusinessCaseValidationSchema.alternativeB
+                          validation: BidnessCaseValidationSchema.alternativeB
                         },
                         {
                           name: 'Review',
@@ -128,11 +128,11 @@ export const BusinessCase = () => {
   };
 
   return (
-    <div className="business-case">
-      <Header name="CMS Business Case" />
+    <div className="bidness-case">
+      <Header name="CMS Bidness Case" />
       <main role="main">
         <Formik
-          initialValues={businessCaseInitalData}
+          initialValues={bidnessCaseInitalData}
           // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
           // Form will be manually submitted.
           onSubmit={() => {}}
@@ -141,7 +141,7 @@ export const BusinessCase = () => {
           validateOnChange={false}
           validateOnMount={false}
         >
-          {(formikProps: FormikProps<BusinessCaseModel>) => {
+          {(formikProps: FormikProps<BidnessCaseModel>) => {
             const {
               values,
               errors,
@@ -223,7 +223,7 @@ export const BusinessCase = () => {
                           console.log('Submitting Data: ', values);
                         }}
                       >
-                        Send my business case
+                        Send my bidness case
                       </Button>
                     )}
 
@@ -261,4 +261,4 @@ export const BusinessCase = () => {
   );
 };
 
-export default BusinessCase;
+export default BidnessCase;

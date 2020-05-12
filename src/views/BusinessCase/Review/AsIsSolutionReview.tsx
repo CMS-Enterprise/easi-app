@@ -6,7 +6,7 @@ import {
   DescriptionTerm,
   DescriptionDefinition
 } from 'components/shared/DescriptionGroup';
-import { BusinessCaseSolution } from 'types/businessCase';
+import { BidnessCaseSolution } from 'types/bidnessCase';
 import EstimatedLifecycleCostReview from 'components/EstimatedLifecycleCost/Review';
 
 /**
@@ -19,7 +19,7 @@ import EstimatedLifecycleCostReview from 'components/EstimatedLifecycleCost/Revi
  */
 
 type ReviewProps = {
-  solution: BusinessCaseSolution;
+  solution: BidnessCaseSolution;
 };
 
 const AsIsSolutionReview = ({ solution }: ReviewProps) => (

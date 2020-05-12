@@ -6,7 +6,7 @@ import {
   DescriptionTerm,
   DescriptionDefinition
 } from 'components/shared/DescriptionGroup';
-import { ProposedBusinessCaseSolution } from 'types/businessCase';
+import { ProposedBidnessCaseSolution } from 'types/bidnessCase';
 
 /**
  * Title
@@ -20,10 +20,10 @@ import { ProposedBusinessCaseSolution } from 'types/businessCase';
 
 type ReviewProps = {
   name: string;
-  solution: ProposedBusinessCaseSolution;
+  solution: ProposedBidnessCaseSolution;
 };
 
-const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
+const PropsedBidnessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
   <DescriptionList title={name}>
     <ReviewRow>
       <div className="line-height-body-3">
@@ -67,4 +67,4 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
   </DescriptionList>
 );
 
-export default PropsedBusinessCaseSolutionReview;
+export default PropsedBidnessCaseSolutionReview;

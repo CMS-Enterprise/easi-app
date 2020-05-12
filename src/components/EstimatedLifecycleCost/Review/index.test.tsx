@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import { defaultEstimatedLifecycle } from 'data/businessCase';
+import { defaultEstimatedLifecycle } from 'data/bidnessCase';
 import EstimatedLifecycleCostReview from './index';
 
 // Get past TS errors

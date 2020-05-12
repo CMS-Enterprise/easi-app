@@ -26,8 +26,8 @@ type SystemIntake struct {
 	Status                  SystemIntakeStatus `json:"status"`
 	Requester               null.String        `json:"requester"`
 	Component               null.String        `json:"component"`
-	BusinessOwner           null.String        `json:"businessOwner" db:"business_owner"`
-	BusinessOwnerComponent  null.String        `json:"businessOwnerComponent" db:"business_owner_component"`
+	BidnessOwner            null.String        `json:"bidnessOwner" db:"bidness_owner"`
+	BidnessOwnerComponent   null.String        `json:"bidnessOwnerComponent" db:"bidness_owner_component"`
 	ProductManager          null.String        `json:"productManager" db:"product_manager"`
 	ProductManagerComponent null.String        `json:"productManagerComponent" db:"product_manager_component"`
 	ISSO                    null.String        `json:"isso"`
@@ -37,7 +37,7 @@ type SystemIntake struct {
 	ProjectName             null.String        `json:"projectName" db:"project_name"`
 	ExistingFunding         null.Bool          `json:"existingFunding" db:"existing_funding"`
 	FundingSource           null.String        `json:"fundingSource" db:"funding_source"`
-	BusinessNeed            null.String        `json:"businessNeed" db:"business_need"`
+	BidnessNeed             null.String        `json:"bidnessNeed" db:"bidness_need"`
 	Solution                null.String        `json:"solution"`
 	ProcessStatus           null.String        `json:"processStatus" db:"process_status"`
 	EASupportRequest        null.Bool          `json:"eaSupportRequest" db:"ea_support_request"`

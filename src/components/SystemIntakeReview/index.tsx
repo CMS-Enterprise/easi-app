@@ -60,15 +60,15 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="CMS Business/Product Owner's Name" />
+            <DescriptionTerm term="CMS Bidness/Product Owner's Name" />
             <DescriptionDefinition
-              definition={systemIntake.businessOwner.name}
+              definition={systemIntake.bidnessOwner.name}
             />
           </div>
           <div>
-            <DescriptionTerm term="Business Owner Component" />
+            <DescriptionTerm term="Bidness Owner Component" />
             <DescriptionDefinition
-              definition={systemIntake.businessOwner.component}
+              definition={systemIntake.bidnessOwner.component}
             />
           </div>
         </ReviewRow>
@@ -119,14 +119,14 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
         </ReviewRow>
         <div className="margin-bottom-205 line-height-body-3">
           <div>
-            <DescriptionTerm term="What is your business need?" />
-            <DescriptionDefinition definition={systemIntake.businessNeed} />
+            <DescriptionTerm term="What is your bidness need?" />
+            <DescriptionDefinition definition={systemIntake.bidnessNeed} />
           </div>
         </div>
         <div className="margin-bottom-205 line-height-body-3">
           <div>
             <DescriptionTerm term="How are you thinking of solving it?" />
-            <DescriptionDefinition definition={systemIntake.businessSolution} />
+            <DescriptionDefinition definition={systemIntake.bidnessSolution} />
           </div>
         </div>
         <ReviewRow>

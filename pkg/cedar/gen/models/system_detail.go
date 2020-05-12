@@ -19,14 +19,14 @@ import (
 // swagger:model SystemDetail
 type SystemDetail struct {
 
-	// business function alignment
-	BusinessFunctionAlignment []string `json:"business_function_alignment"`
+	// bidness function alignment
+	BidnessFunctionAlignment []string `json:"bidness_function_alignment"`
 
-	// business owner
-	BusinessOwner string `json:"business_owner,omitempty"`
+	// bidness owner
+	BidnessOwner string `json:"bidness_owner,omitempty"`
 
-	// business owner org
-	BusinessOwnerOrg string `json:"business_owner_org,omitempty"`
+	// bidness owner org
+	BidnessOwnerOrg string `json:"bidness_owner_org,omitempty"`
 
 	// contractor ftes
 	ContractorFtes int32 `json:"contractor_ftes,omitempty"`

@@ -7,11 +7,11 @@ import TextAreaField from 'components/shared/TextAreaField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
-import { BusinessCaseModel } from 'types/businessCase';
+import { BidnessCaseModel } from 'types/bidnessCase';
 import flattenErrors from 'utils/flattenErrors';
 
 type AsIsSolutionProps = {
-  formikProps: FormikProps<BusinessCaseModel>;
+  formikProps: FormikProps<BidnessCaseModel>;
 };
 const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
   const { values, errors } = formikProps;
@@ -20,7 +20,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
     <div className="grid-container">
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
       <p className="line-height-body-6">
-        Below you should identify options and alternatives to meet your business
+        Below you should identify options and alternatives to meet your bidness
         need. Include a summary of the approaches, how you will acquire the
         solution, and describe the pros, cons, total life cycle costs and
         potential cost savings/avoidance for each alternative considered.
@@ -34,14 +34,14 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           scrollElement="asIsSolution.title"
           error={!!flatErrors['asIsSolution.title']}
         >
-          <Label htmlFor="BusinessCase-AsIsSolutionTitle">
+          <Label htmlFor="BidnessCase-AsIsSolutionTitle">
             &quot;As is&quot; solution: Title
           </Label>
           <FieldErrorMsg>{flatErrors['asIsSolution.title']}</FieldErrorMsg>
           <Field
             as={TextField}
             error={!!flatErrors['asIsSolution.title']}
-            id="BusinessCase-AsIsSolutionTitle"
+            id="BidnessCase-AsIsSolutionTitle"
             maxLength={50}
             name="asIsSolution.title"
           />
@@ -51,7 +51,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           scrollElement="asIsSolution.summary"
           error={!!flatErrors['asIsSolution.summary']}
         >
-          <Label htmlFor="BusinessCase-AsIsSolutionSummary">
+          <Label htmlFor="BidnessCase-AsIsSolutionSummary">
             &quot;As is&quot; solution: Summary
           </Label>
           <HelpText className="margin-top-1">
@@ -75,7 +75,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors['asIsSolution.summary']}
-            id="BusinessCase-AsIsSolutionSummary"
+            id="BidnessCase-AsIsSolutionSummary"
             maxLength={2000}
             name="asIsSolution.summary"
           />
@@ -87,7 +87,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           scrollElement="asIsSolution.pros"
           error={!!flatErrors['asIsSolution.pros']}
         >
-          <Label htmlFor="BusinessCase-AsIsSolutionPros">
+          <Label htmlFor="BidnessCase-AsIsSolutionPros">
             &quot;As is&quot; solution: Pros
           </Label>
           <HelpText className="margin-y-1">
@@ -98,7 +98,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors['asIsSolution.pros']}
-            id="BusinessCase-AsIsSolutionPros"
+            id="BidnessCase-AsIsSolutionPros"
             maxLength={2000}
             name="asIsSolution.pros"
           />
@@ -110,7 +110,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           scrollElement="asIsSolution.cons"
           error={!!flatErrors['asIsSolution.cons']}
         >
-          <Label htmlFor="BusinessCase-AsIsSolutionCons">
+          <Label htmlFor="BidnessCase-AsIsSolutionCons">
             &quot;As is&quot; solution: Cons
           </Label>
           <HelpText className="margin-y-1">
@@ -121,7 +121,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors['asIsSolution.cons']}
-            id="BusinessCase-AsIsSolutionCons"
+            id="BidnessCase-AsIsSolutionCons"
             maxLength={2000}
             name="asIsSolution.cons"
           />
@@ -162,7 +162,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           scrollElement="asIsSolution.costSavings"
           error={!!flatErrors['asIsSolution.costSavings']}
         >
-          <Label htmlFor="BusinessCase-AsIsSolutionCostSavings">
+          <Label htmlFor="BidnessCase-AsIsSolutionCostSavings">
             What is the cost savings or avoidance associated with this solution?
           </Label>
           <HelpText className="margin-y-1">
@@ -175,7 +175,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors['asIsSolution.costSavings']}
-            id="BusinessCase-AsIsSolutionCostSavings"
+            id="BidnessCase-AsIsSolutionCostSavings"
             maxLength={2000}
             name="asIsSolution.costSavings"
           />

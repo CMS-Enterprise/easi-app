@@ -7,11 +7,11 @@ import TextAreaField from 'components/shared/TextAreaField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
-import { BusinessCaseModel } from 'types/businessCase';
+import { BidnessCaseModel } from 'types/bidnessCase';
 import flattenErrors from 'utils/flattenErrors';
 
 type PreferredSolutionProps = {
-  formikProps: FormikProps<BusinessCaseModel>;
+  formikProps: FormikProps<BidnessCaseModel>;
 };
 const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
   const { values, errors } = formikProps;
@@ -26,14 +26,14 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           scrollElement="preferredSolution.title"
           error={!!flatErrors['preferredSolution.title']}
         >
-          <Label htmlFor="BusinessCase-PreferredSolutionTitle">
+          <Label htmlFor="BidnessCase-PreferredSolutionTitle">
             Preferred solution: Title
           </Label>
           <FieldErrorMsg>{flatErrors['preferredSolution.title']}</FieldErrorMsg>
           <Field
             as={TextField}
             error={!!flatErrors['preferredSolution.title']}
-            id="BusinessCase-PreferredSolutionTitle"
+            id="BidnessCase-PreferredSolutionTitle"
             maxLength={50}
             name="preferredSolution.title"
           />
@@ -43,7 +43,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           scrollElement="preferredSolution.summary"
           error={!!flatErrors['preferredSolution.summary']}
         >
-          <Label htmlFor="BusinessCase-PreferredSolutionSummary">
+          <Label htmlFor="BidnessCase-PreferredSolutionSummary">
             Preferred solution: Summary
           </Label>
           <HelpText className="margin-top-1">
@@ -69,7 +69,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors['preferredSolution.summary']}
-            id="BusinessCase-PreferredSolutionSummary"
+            id="BidnessCase-PreferredSolutionSummary"
             maxLength={2000}
             name="preferredSolution.summary"
           />
@@ -82,7 +82,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           scrollElement="preferredSolution.acquisitionApproach"
           error={!!flatErrors['preferredSolution.acquisitionApproach']}
         >
-          <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
+          <Label htmlFor="BidnessCase-PreferredSolutionAcquisitionApproach">
             Preferred solution: Acquisition approach
           </Label>
           <HelpText className="margin-y-1">
@@ -96,7 +96,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors['preferredSolution.acquisitionApproach']}
-            id="BusinessCase-PreferredSolutionAcquisitionApproach"
+            id="BidnessCase-PreferredSolutionAcquisitionApproach"
             maxLength={2000}
             name="preferredSolution.acquisitionApproach"
           />
@@ -109,7 +109,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           scrollElement="preferredSolution.pros"
           error={!!flatErrors['preferredSolution.pros']}
         >
-          <Label htmlFor="BusinessCase-PreferredSolutionPros">
+          <Label htmlFor="BidnessCase-PreferredSolutionPros">
             Preferred solution: Pros
           </Label>
           <HelpText className="margin-y-1">
@@ -120,7 +120,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors['preferredSolution.pros']}
-            id="BusinessCase-PreferredSolutionPros"
+            id="BidnessCase-PreferredSolutionPros"
             maxLength={2000}
             name="preferredSolution.pros"
           />
@@ -132,7 +132,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           scrollElement="preferredSolution.cons"
           error={!!flatErrors['preferredSolution.cons']}
         >
-          <Label htmlFor="BusinessCase-PreferredSolutionCons">
+          <Label htmlFor="BidnessCase-PreferredSolutionCons">
             Preferred solution: Cons
           </Label>
           <HelpText className="margin-y-1">
@@ -143,7 +143,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors['preferredSolution.cons']}
-            id="BusinessCase-PreferredSolutionCons"
+            id="BidnessCase-PreferredSolutionCons"
             maxLength={2000}
             name="preferredSolution.cons"
           />
@@ -183,7 +183,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           scrollElement="preferredSolution.costSavings"
           error={!!flatErrors['preferredSolution.costSavings']}
         >
-          <Label htmlFor="BusinessCase-PreferredSolutionCostSavings">
+          <Label htmlFor="BidnessCase-PreferredSolutionCostSavings">
             What is the cost savings or avoidance associated with this solution?
           </Label>
           <HelpText className="margin-y-1">
@@ -196,7 +196,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors['preferredSolution.costSavings']}
-            id="BusinessCase-PreferredSolutionCostSavings"
+            id="BidnessCase-PreferredSolutionCostSavings"
             maxLength={2000}
             name="preferredSolution.costSavings"
           />

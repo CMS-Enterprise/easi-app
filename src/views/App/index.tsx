@@ -4,7 +4,7 @@ import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import Home from 'views/Home';
 import Login from 'views/Login';
-import BusinessCase from 'views/BusinessCase';
+import BidnessCase from 'views/BidnessCase';
 import GRTSystemIntakeReview from 'views/GRTSystemIntakeReview';
 import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
@@ -44,7 +44,7 @@ class App extends React.Component<MainProps, MainState> {
                 path="/system/:profileId"
                 component={SystemProfile}
               /> */}
-              <SecureRoute path="/business/new" component={BusinessCase} />
+              <SecureRoute path="/bidness/new" component={BidnessCase} />
               <Route path="/implicit/callback" component={ImplicitCallback} />
             </Switch>
           </AuthenticationWrapper>

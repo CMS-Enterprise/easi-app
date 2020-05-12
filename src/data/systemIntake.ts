@@ -15,7 +15,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     name: '',
     component: ''
   },
-  businessOwner: {
+  bidnessOwner: {
     name: '',
     component: ''
   },
@@ -35,8 +35,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     isFunded: null,
     fundingNumber: ''
   },
-  businessNeed: '',
-  businessSolution: '',
+  bidnessNeed: '',
+  bidnessSolution: '',
   currentStage: '',
   needsEaSupport: null,
   hasContract: ''
@@ -56,8 +56,8 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     status: systemIntake.status,
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,
-    businessOwner: systemIntake.businessOwner.name,
-    businessOwnerComponent: systemIntake.businessOwner.component,
+    bidnessOwner: systemIntake.bidnessOwner.name,
+    bidnessOwnerComponent: systemIntake.bidnessOwner.component,
     productManager: systemIntake.productManager.name,
     productManagerComponent: systemIntake.productManager.component,
     isso: systemIntake.isso.name,
@@ -69,8 +69,8 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     projectName: systemIntake.requestName,
     existingFunding: systemIntake.fundingSource.isFunded,
     fundingSource: systemIntake.fundingSource.fundingNumber,
-    businessNeed: systemIntake.businessNeed,
-    solution: systemIntake.businessSolution,
+    bidnessNeed: systemIntake.bidnessNeed,
+    solution: systemIntake.bidnessSolution,
     processStatus: systemIntake.currentStage,
     eaSupportRequest: systemIntake.needsEaSupport,
     existingContract: systemIntake.hasContract
@@ -100,9 +100,9 @@ export const prepareSystemIntakeForApp = (systemIntake: any) => {
       name: systemIntake.requester || '',
       component: systemIntake.component || ''
     },
-    businessOwner: {
-      name: systemIntake.businessOwner || '',
-      component: systemIntake.businessOwnerComponent || ''
+    bidnessOwner: {
+      name: systemIntake.bidnessOwner || '',
+      component: systemIntake.bidnessOwnerComponent || ''
     },
     productManager: {
       name: systemIntake.productManager || '',
@@ -120,8 +120,8 @@ export const prepareSystemIntakeForApp = (systemIntake: any) => {
       isFunded: systemIntake.existingFunding || null,
       fundingNumber: systemIntake.fundingSource || ''
     },
-    businessNeed: systemIntake.businessNeed || '',
-    businessSolution: systemIntake.solution || '',
+    bidnessNeed: systemIntake.bidnessNeed || '',
+    bidnessSolution: systemIntake.solution || '',
     currentStage: systemIntake.processStatus || '',
     needsEaSupport: systemIntake.eaSupportRequest || null,
     hasContract: systemIntake.existingContract || ''

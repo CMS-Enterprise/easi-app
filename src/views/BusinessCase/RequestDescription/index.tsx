@@ -5,11 +5,11 @@ import TextAreaField from 'components/shared/TextAreaField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
-import { BusinessCaseModel } from 'types/businessCase';
+import { BidnessCaseModel } from 'types/bidnessCase';
 import flattenErrors from 'utils/flattenErrors';
 
 type RequestDescriptionProps = {
-  formikProps: FormikProps<BusinessCaseModel>;
+  formikProps: FormikProps<BidnessCaseModel>;
 };
 
 const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
@@ -20,17 +20,17 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
       <h1 className="font-heading-xl">Request description</h1>
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
-          scrollElement="businessNeed"
-          error={!!flatErrors.businessNeed}
+          scrollElement="bidnessNeed"
+          error={!!flatErrors.bidnessNeed}
         >
-          <Label htmlFor="BusinessCase-BusinessNeed">
-            What is your business or user need?
+          <Label htmlFor="BidnessCase-BidnessNeed">
+            What is your bidness or user need?
           </Label>
           <HelpText className="margin-y-1">
             <span>Include:</span>
             <ul className="margin-top-1 padding-left-205">
               <li>
-                a detailed explanation of the business need/issue/problem that
+                a detailed explanation of the bidness need/issue/problem that
                 the request will address
               </li>
               <li>
@@ -49,20 +49,20 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
               </li>
             </ul>
           </HelpText>
-          <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
+          <FieldErrorMsg>{flatErrors.bidnessNeed}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            error={!!flatErrors.businessNeed}
-            id="BusinessCase-BusinessNeed"
+            error={!!flatErrors.bidnessNeed}
+            id="BidnessCase-BidnessNeed"
             maxLength={2000}
-            name="businessNeed"
+            name="bidnessNeed"
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.businessNeed.length} characters left`}</HelpText>
+            values.bidnessNeed.length} characters left`}</HelpText>
         </FieldGroup>
 
         <FieldGroup scrollElement="cmsBenefit" error={!!flatErrors.cmsBenefit}>
-          <Label htmlFor="BusinessCase-CmsBenefit">
+          <Label htmlFor="BidnessCase-CmsBenefit">
             How will CMS benefit from this effort?
           </Label>
           <HelpText className="margin-y-1">
@@ -74,7 +74,7 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors.cmsBenefit}
-            id="BusinessCase-CmsBenefit"
+            id="BidnessCase-CmsBenefit"
             maxLength={2000}
             name="cmsBenefit"
           />
@@ -86,7 +86,7 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
           scrollElement="priorityAlignment"
           error={!!flatErrors.priorityAlignment}
         >
-          <Label htmlFor="BusinessCase-PriorityAlignment">
+          <Label htmlFor="BidnessCase-PriorityAlignment">
             How does this effort algin with organizational priorities?
           </Label>
           <HelpText className="margin-y-1">
@@ -98,7 +98,7 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors.priorityAlignment}
-            id="BusinessCase-PriorityAlignment"
+            id="BidnessCase-PriorityAlignment"
             maxLength={2000}
             name="priorityAlignment"
           />
@@ -110,7 +110,7 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
           scrollElement="successIndicators"
           error={!!flatErrors.successIndicators}
         >
-          <Label htmlFor="BusinessCase-SuccessIndicators">
+          <Label htmlFor="BidnessCase-SuccessIndicators">
             How will you determine whether or not this effort is successful?
           </Label>
           <HelpText className="margin-y-1">
@@ -120,7 +120,7 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
           <Field
             as={TextAreaField}
             error={!!flatErrors.successIndicators}
-            id="BusinessCase-SuccessIndicators"
+            id="BidnessCase-SuccessIndicators"
             maxLength={2000}
             name="successIndicators"
           />

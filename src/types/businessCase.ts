@@ -1,6 +1,6 @@
 import { LifecyclePhase } from 'types/estimatedLifecycle';
 
-export type BusinessCaseSolution = {
+export type BidnessCaseSolution = {
   title: string;
   summary: string;
   pros: string;
@@ -15,25 +15,25 @@ export type BusinessCaseSolution = {
   costSavings: string;
 };
 
-export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
+export type ProposedBidnessCaseSolution = BidnessCaseSolution & {
   acquisitionApproach: string;
 };
 
-export type BusinessCaseModel = {
+export type BidnessCaseModel = {
   requestName: string;
   requester: {
     name: string;
     phoneNumber: string;
   };
-  businessOwner: {
+  bidnessOwner: {
     name: string;
   };
-  businessNeed: string;
+  bidnessNeed: string;
   cmsBenefit: string;
   priorityAlignment: string;
   successIndicators: string;
-  asIsSolution: BusinessCaseSolution;
-  preferredSolution: ProposedBusinessCaseSolution;
-  alternativeA: ProposedBusinessCaseSolution;
-  alternativeB?: ProposedBusinessCaseSolution;
+  asIsSolution: BidnessCaseSolution;
+  preferredSolution: ProposedBidnessCaseSolution;
+  alternativeA: ProposedBidnessCaseSolution;
+  alternativeB?: ProposedBidnessCaseSolution;
 };

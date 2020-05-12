@@ -45,7 +45,7 @@ to our application models.
 `handlers` are for parsing a request and returning a response.
 They follow the Go `http.Handler` standard pattern.
 They should do minimal work to handle a request
-and offload business logic to the `services` package.
+and offload bidness logic to the `services` package.
 
 A common handler pattern is:
 
@@ -95,7 +95,7 @@ should also only reside here.
 
 ## Services: `services`
 
-`services` are the entry point to business logic in the application.
+`services` are the entry point to bidness logic in the application.
 They should combine the various portions of the application
 into a cohesive unit available to handlers.
 For example,

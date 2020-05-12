@@ -18,7 +18,7 @@ export type SystemIntakeForm = {
     name: string;
     component: string;
   };
-  businessOwner: {
+  bidnessOwner: {
     name: string;
     component: string;
   };
@@ -38,8 +38,8 @@ export type SystemIntakeForm = {
     isFunded: boolean | null;
     fundingNumber: string;
   };
-  businessNeed: string;
-  businessSolution: string;
+  bidnessNeed: string;
+  bidnessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
   hasContract: string;

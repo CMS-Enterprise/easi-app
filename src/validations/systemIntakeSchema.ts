@@ -8,9 +8,9 @@ const SystemIntakeValidationSchema: any = {
       name: Yup.string().required('Enter a name for this request'),
       component: Yup.string().required("Select the Requester's component")
     }),
-    businessOwner: Yup.object().shape({
-      name: Yup.string().required("Enter the Business or Product Owner's name"),
-      component: Yup.string().required('Select a Business Owner Component')
+    bidnessOwner: Yup.object().shape({
+      name: Yup.string().required("Enter the Bidness or Product Owner's name"),
+      component: Yup.string().required('Select a Bidness Owner Component')
     }),
     productManager: Yup.object().shape({
       name: Yup.string().required(
@@ -66,9 +66,9 @@ const SystemIntakeValidationSchema: any = {
   }),
   requestDetails: Yup.object().shape({
     requestName: Yup.string().required('Enter the Project Name'),
-    businessNeed: Yup.string().required('Tell us about your request'),
-    businessSolution: Yup.string().required(
-      'Tell us how you think of solving your business need'
+    bidnessNeed: Yup.string().required('Tell us about your request'),
+    bidnessSolution: Yup.string().required(
+      'Tell us how you think of solving your bidness need'
     ),
     needsEaSupport: Yup.boolean()
       .nullable()

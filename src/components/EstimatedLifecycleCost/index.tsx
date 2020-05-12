@@ -53,7 +53,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                     <Field
                       as={RadioField}
                       checked={values.phase === 'Initiate'}
-                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.initiate`}
+                      id={`BidnessCase-${formikKey}.Year${year}.Phase${index}.initiate`}
                       name={`${formikKey}.year${year}.${index}.phase`}
                       label="Initiate"
                       value="Initiate"
@@ -63,7 +63,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                     <Field
                       as={RadioField}
                       checked={values.phase === 'Operations and Maintenance'}
-                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
+                      id={`BidnessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
                       name={`${formikKey}.year${year}.${index}.phase`}
                       label="Operations and Maintenance"
                       value="Operations and Maintenance"
@@ -74,7 +74,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
               </fieldset>
               <div className="est-lifecycle-cost__cost-field-wrapper">
                 <Label
-                  htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                  htmlFor={`BidnessCase-${formikKey}.Year${year}.Phase${index}.cost`}
                   aria-label={`Year ${year} Phase ${index + 1} Cost`}
                 >
                   Cost
@@ -82,7 +82,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                 <Field
                   as={TextField}
                   error={!!phaseError.cost}
-                  id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                  id={`BidnessCase-${formikKey}.Year${year}.Phase${index}.cost`}
                   name={`${formikKey}.year${year}.${index}.cost`}
                   maxLength={10}
                   match={/^[0-9\b]+$/}

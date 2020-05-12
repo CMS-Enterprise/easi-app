@@ -1,4 +1,4 @@
-import { BusinessCaseModel } from 'types/businessCase';
+import { BidnessCaseModel } from 'types/bidnessCase';
 
 export const defaultEstimatedLifecycle = {
   year1: [{ phase: '', cost: '' }],
@@ -18,16 +18,16 @@ export const defaultProposedSolution = {
   costSavings: ''
 };
 
-export const businessCaseInitalData: BusinessCaseModel = {
+export const bidnessCaseInitalData: BidnessCaseModel = {
   requestName: '',
   requester: {
     name: '',
     phoneNumber: ''
   },
-  businessOwner: {
+  bidnessOwner: {
     name: ''
   },
-  businessNeed: '',
+  bidnessNeed: '',
   cmsBenefit: '',
   priorityAlignment: '',
   successIndicators: '',

@@ -26,7 +26,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
     <>
       <h1 className="font-heading-xl margin-top-4">Request details</h1>
       <p className="line-height-body-6">
-        Provide a detailed explanation of the business need/issue/problem that
+        Provide a detailed explanation of the bidness need/issue/problem that
         the requested project will address, including any legislative mandates,
         regulations, etc. Include any expected benefits from the investment of
         organizational resources into this project. Please be sure to indicate
@@ -55,18 +55,18 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
         </FieldGroup>
 
         <FieldGroup
-          scrollElement="businessNeed"
-          error={!!flatErrors.businessNeed}
+          scrollElement="bidnessNeed"
+          error={!!flatErrors.bidnessNeed}
         >
-          <Label htmlFor="IntakeForm-BusinessNeed">
-            What is your business need?
+          <Label htmlFor="IntakeForm-BidnessNeed">
+            What is your bidness need?
           </Label>
           <HelpText className="margin-top-105">
             <>
               <span>Include:</span>
               <ul className="margin-top-1 padding-left-205">
                 <li>
-                  a detailed explanation of the business need/issue/problem that
+                  a detailed explanation of the bidness need/issue/problem that
                   the request will address
                 </li>
                 <li>
@@ -86,40 +86,40 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
               </ul>
             </>
           </HelpText>
-          <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
+          <FieldErrorMsg>{flatErrors.bidnessNeed}</FieldErrorMsg>
           <Field
             as={TextAreaField}
             className="system-intake__textarea"
-            error={!!flatErrors.businessNeed}
-            id="IntakeForm-BusinessNeed"
+            error={!!flatErrors.bidnessNeed}
+            id="IntakeForm-BidnessNeed"
             maxLength={2000}
-            name="businessNeed"
+            name="bidnessNeed"
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.businessNeed.length} characters left`}</HelpText>
+            values.bidnessNeed.length} characters left`}</HelpText>
         </FieldGroup>
 
         <FieldGroup
-          scrollElement="businessSolution"
-          error={!!flatErrors.businessSolution}
+          scrollElement="bidnessSolution"
+          error={!!flatErrors.bidnessSolution}
         >
-          <Label htmlFor="IntakeForm-BusinessSolution">
+          <Label htmlFor="IntakeForm-BidnessSolution">
             How are you thinking of solving it?
           </Label>
           <HelpText className="margin-y-1">
             Let us know if you have a solution in mind
           </HelpText>
-          <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
+          <FieldErrorMsg>{flatErrors.bidnessSolution}</FieldErrorMsg>
           <Field
             as={TextAreaField}
             className="system-intake__textarea"
-            error={!!flatErrors.businessSolution}
-            id="IntakeForm-BusinessSolution"
+            error={!!flatErrors.bidnessSolution}
+            id="IntakeForm-BidnessSolution"
             maxLength={2000}
-            name="businessSolution"
+            name="bidnessSolution"
           />
           <HelpText className="margin-top-1">{`${2000 -
-            values.businessSolution.length} characters left`}</HelpText>
+            values.bidnessSolution.length} characters left`}</HelpText>
         </FieldGroup>
 
         <FieldGroup
@@ -162,10 +162,10 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             <CollapsableLink label="How can the Enterprise Architecture team help me?">
               <div>
                 CMS&apos; Enterprise Architecture (EA) function will help you
-                build your Business Case by addressing the following:
+                build your Bidness Case by addressing the following:
                 <ul className="margin-bottom-0">
                   <li>
-                    Explore business solutions that might exist elsewhere within
+                    Explore bidness solutions that might exist elsewhere within
                     CMS
                   </li>
                   <li>Discuss lessons learned from similar projects</li>
@@ -176,7 +176,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
                   <li>
                     Help you explore alternatives you might not have thought of
                   </li>
-                  <li>Model your business processes and document workflows</li>
+                  <li>Model your bidness processes and document workflows</li>
                 </ul>
               </div>
             </CollapsableLink>
