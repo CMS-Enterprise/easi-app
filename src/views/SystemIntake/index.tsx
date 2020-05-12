@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
+import { SecureRoute } from '@okta/okta-react';
 import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
@@ -22,34 +23,30 @@ import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
 
-export type SystemIDRouterProps = {
-  systemId: string;
-};
-
-export type SystemIntakeProps = RouteComponentProps<SystemIDRouterProps>;
-
-export const SystemIntake = ({ match }: SystemIntakeProps) => {
+export const SystemIntake = () => {
   const pages = [
     {
       type: 'FORM',
-      validation: SystemIntakeValidationSchema.contactDetails,
-      view: ContactDetails
+      slug: 'contact-details',
+      validation: SystemIntakeValidationSchema.contactDetails
     },
     {
       type: 'FORM',
-      validation: SystemIntakeValidationSchema.requestDetails,
-      view: RequestDetails
+      slug: 'request-details',
+      validation: SystemIntakeValidationSchema.requestDetails
     },
     {
       type: 'REVIEW',
-      view: Review
+      slug: 'request-details'
     }
   ];
+
   const history = useHistory();
-  const [page, setPage] = useState(1);
+  const { systemId, formPage } = useParams();
+  const [pageIndex, setPageIndex] = useState(0);
   const dispatch = useDispatch();
   const formikRef: any = useRef();
-  const pageObj = pages[page - 1];
+  const pageObj = pages[pageIndex];
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -58,36 +55,36 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
     (state: AppState) => state.systemIntake.isLoading
   );
 
-  const renderPage = (formikProps: FormikProps<SystemIntakeForm>) => {
-    const Component = pageObj.view;
-
-    if (Component) {
-      return <Component formikProps={formikProps} />;
-    }
-    return null;
-  };
-
   const dispatchSave = () => {
     const currentRef = formikRef.current as FormikProps<SystemIntakeForm>;
     if (currentRef.dirty) {
       dispatch(saveSystemIntake(currentRef.values));
-      // Set initial values to those just saved so ref.dirty is compared against last saved values.
       currentRef.resetForm({ values: currentRef.values });
-      if (!match.params.systemId) {
-        history.replace(`/system/${currentRef.values.id}`);
+      if (systemId === 'new') {
+        history.replace(`/system/${currentRef.values.id}/${pageObj.slug}`);
       }
     }
   };
 
   useEffect(() => {
-    if (match.params.systemId) {
-      dispatch(fetchSystemIntake(match.params.systemId));
-    } else {
+    if (systemId === 'new') {
       dispatch(storeSystemIntakeId(uuidv4()));
+    } else {
+      dispatch(fetchSystemIntake(systemId));
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const pageSlugs: any[] = pages.map(p => p.slug);
+    if (pageSlugs.includes(formPage)) {
+      setPageIndex(pageSlugs.indexOf(formPage));
+    } else {
+      history.replace(`/system/${systemId}/contact-details`);
+      setPageIndex(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pages, systemId, formPage]);
 
   return (
     <div className="system-intake">
@@ -96,8 +93,6 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
         {isLoading === false && (
           <Formik
             initialValues={systemIntake}
-            // Empty onSubmit so the 'Next' buttons don't accidentally submit the form
-            // Form will be manually submitted.
             onSubmit={() => {}}
             validationSchema={pageObj.validation}
             validateOnBlur={false}
@@ -109,11 +104,12 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
               const {
                 values,
                 errors,
-                validateForm,
                 setErrors,
+                validateForm,
                 isSubmitting
               } = formikProps;
               const flatErrors: any = flattenErrors(errors);
+
               return (
                 <>
                   {Object.keys(errors).length > 0 && (
@@ -141,30 +137,46 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                     </ErrorAlert>
                   )}
                   <Form>
-                    {renderPage(formikProps)}
-                    {/* validateForm needs to be called from inside of Form component and it cannot be type="button"; it must be type="submit" */}
-                    {page > 1 && (
+                    <SecureRoute
+                      path="/system/:systemId/contact-details"
+                      render={() => (
+                        <ContactDetails formikProps={formikProps} />
+                      )}
+                    />
+                    <SecureRoute
+                      path="/system/:systemId/request-details"
+                      render={() => (
+                        <RequestDetails formikProps={formikProps} />
+                      )}
+                    />
+                    <SecureRoute
+                      path="/system/:systemId/review"
+                      render={() => <Review formikProps={formikProps} />}
+                    />
+
+                    {pageIndex > 0 && (
                       <Button
                         type="button"
                         outline
                         onClick={() => {
-                          setPage(prev => prev - 1);
                           setErrors({});
+                          const newUrl = pages[pageIndex - 1].slug;
+                          history.push(newUrl);
                           window.scrollTo(0, 0);
                         }}
                       >
                         Back
                       </Button>
                     )}
-
-                    {page < pages.length && (
+                    {pageIndex < pages.length - 1 && (
                       <Button
                         type="button"
                         onClick={() => {
                           if (pageObj.validation) {
                             validateForm().then(err => {
                               if (Object.keys(err).length === 0) {
-                                setPage(prev => prev + 1);
+                                const newUrl = pages[pageIndex + 1].slug;
+                                history.push(newUrl);
                               }
                               window.scrollTo(0, 0);
                             });
@@ -174,8 +186,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
                         Next
                       </Button>
                     )}
-
-                    {page === pages.length && (
+                    {pageIndex === pages.length - 1 && (
                       <Button
                         type="submit"
                         disabled={isSubmitting}
@@ -217,7 +228,7 @@ export const SystemIntake = ({ match }: SystemIntakeProps) => {
         )}
         {pageObj.type === 'FORM' && (
           <PageNumber
-            currentPage={page}
+            currentPage={pageIndex + 1}
             totalPages={pages.filter(p => p.type === 'FORM').length}
           />
         )}

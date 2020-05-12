@@ -58,7 +58,7 @@ const Home = ({ auth, history }: HomeProps) => {
   return (
     <div>
       <Header />
-      <div role="main" className="grid-container margin-top-6">
+      <div role="main" className="grid-container margin-y-6">
         {getSystemIntakeBanners()}
         <div className="tablet:grid-col-9">
           <h1 className="margin-top-6">Welcome to EASi</h1>
