@@ -12,6 +12,8 @@ type SESConfig struct {
 }
 
 // SESSender is an implementation for sending email with the SES Go SDK
+// It lives in package "email" for now, but can be pulled out and imported
+// if necessary for testing
 type SESSender struct {
 	client *ses.SES
 	config SESConfig

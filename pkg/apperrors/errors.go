@@ -81,5 +81,5 @@ type NotificationError struct {
 
 // Error is the error message for a notification error
 func (e *NotificationError) Error() string {
-	return fmt.Sprintf("Email error %s on destination %s", e.Err, e.Destination)
+	return fmt.Sprintf("Email error '%s' on destination %s", e.Err, e.Destination)
 }

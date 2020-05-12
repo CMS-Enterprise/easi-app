@@ -2,6 +2,7 @@ package email
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"path"
 
@@ -20,6 +21,9 @@ func (c Client) systemIntakeSubmissionBody(intakeID uuid.UUID) (string, error) {
 		IntakeLink: c.urlFromPath(intakePath),
 	}
 	var b bytes.Buffer
+	if c.templates.systemIntakeSubmissionTemplate == nil {
+		return "", errors.New("system intake submission template is nil")
+	}
 	err := c.templates.systemIntakeSubmissionTemplate.Execute(&b, data)
 	if err != nil {
 		return "", err
