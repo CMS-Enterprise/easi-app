@@ -36,7 +36,7 @@ func (s *SESTestSuite) TestSendSystemIntakeEmail() {
 		s.Equal(expectedEmail, sender.body)
 	})
 
-	s.Run("if the templating fails, we get the error from it", func() {
+	s.Run("if the template is nil, we get the error from it", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 		client.templates = templates{}
@@ -48,6 +48,20 @@ func (s *SESTestSuite) TestSendSystemIntakeEmail() {
 		e := err.(*apperrors.NotificationError)
 		s.Equal(apperrors.DestinationEmail, e.Destination)
 		s.Equal("system intake submission template is nil", e.Err.Error())
+	})
+
+	s.Run("if the template fails to execute, we get the error from it", func() {
+		client, err := NewClient(s.config, &sender)
+		s.NoError(err)
+		client.templates.systemIntakeSubmissionTemplate = mockFailedTemplateCaller{}
+
+		err = client.SendSystemIntakeSubmissionEmail(tester, intakeID)
+
+		s.Error(err)
+		s.IsType(err, &apperrors.NotificationError{})
+		e := err.(*apperrors.NotificationError)
+		s.Equal(apperrors.DestinationEmail, e.Destination)
+		s.Equal("template caller had an error", e.Err.Error())
 	})
 
 	s.Run("if the sender fails, we get the error from it", func() {

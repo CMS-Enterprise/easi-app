@@ -2,6 +2,7 @@ package email
 
 import (
 	"errors"
+	"io"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -34,6 +35,12 @@ type mockFailedSender struct{}
 
 func (s *mockFailedSender) Send(toAddress string, subject string, body string) error {
 	return errors.New("sender had an error")
+}
+
+type mockFailedTemplateCaller struct{}
+
+func (c mockFailedTemplateCaller) Execute(wr io.Writer, data interface{}) error {
+	return errors.New("template caller had an error")
 }
 
 func TestSESTestSuite(t *testing.T) {

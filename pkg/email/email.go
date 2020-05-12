@@ -3,6 +3,7 @@ package email
 import (
 	"fmt"
 	"html/template"
+	"io"
 	"net/url"
 	"path"
 )
@@ -15,8 +16,12 @@ type Config struct {
 	TemplateDirectory string
 }
 
+type templateCaller interface {
+	Execute(wr io.Writer, data interface{}) error
+}
+
 type templates struct {
-	systemIntakeSubmissionTemplate *template.Template
+	systemIntakeSubmissionTemplate templateCaller
 }
 
 type sender interface {
