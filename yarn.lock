@@ -1455,40 +1455,38 @@
   resolved "https://registry.yarnpkg.com/@okta/configuration-validation/-/configuration-validation-0.4.1.tgz#6fa4520bc96c27b3d7aedcb0523de1fbceee9105"
   integrity sha512-p8QcApCSyAXtlyB7p7jXkAkcTedvK9WFkmEduVA3XxQQVs3njxD9vTooFj4+AF6WNRIuGOis/utL7m0BzYkyVw==
 
-"@okta/okta-auth-js@^2.11.2":
-  version "2.13.2"
-  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-2.13.2.tgz#94cc3f9cb621fa8f2f71eecc3cb025ad805bbd0f"
-  integrity sha512-fjPZATU286/cYTMiUY0PxItrukPNa3W3cwhEPCjeHYxb4EXCt8OdmPjaoKfvERALmLEHbNGqweqalTF5Q7x3wg==
+"@okta/okta-auth-js@^3.0.0":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@okta/okta-auth-js/-/okta-auth-js-3.1.1.tgz#af6b3ee9829d663788e77f9aa6afd47024698c8e"
+  integrity sha512-ojAyTaLrdS5x2BolXOGnOnFhyuuEX+J8RL721Kb0Nu4oWnPOYHEbEPKRrd3P5MB+A3ykCp3Gi4U9Tp75KbaZ2g==
   dependencies:
     Base64 "0.3.0"
     cross-fetch "^3.0.0"
     js-cookie "2.2.0"
     node-cache "^4.2.0"
-    q "1.4.1"
-    reqwest "2.0.5"
     tiny-emitter "1.1.0"
     xhr2 "0.1.3"
 
-"@okta/okta-react@^1.2.3":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@okta/okta-react/-/okta-react-1.4.1.tgz#1b40e2b647d4f4f9af02872fdaa6d5674cc6273c"
-  integrity sha512-QX7x2Ke7XVEW/fSbXjvjvDkWeRSEh15+FmWQiPRPACQVCrsK7ft7kvlbTO3TJVFZrI+TxoWe1Y3SzuBm+2SVCw==
+"@okta/okta-react@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@okta/okta-react/-/okta-react-3.0.1.tgz#f8763d7a47882ea3807e75cce343f93b28b30eb2"
+  integrity sha512-t6eE4OJgdfmxbkjmQNYVoTJAuXgJ6sYkD49QCk7p2TPzrRQCk5aSNc3802zEBV583ahtZUzvA1q3wRAV6GQGmw==
   dependencies:
     "@okta/configuration-validation" "^0.4.1"
-    "@okta/okta-auth-js" "^2.11.2"
+    "@okta/okta-auth-js" "^3.0.0"
     babel-runtime "^6.26.0"
     prop-types "^15.5.10"
 
 "@okta/okta-signin-widget@^3.4.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-3.9.0.tgz#6b852fe72282ba6b52cee2f471fa31916331970a"
-  integrity sha512-+fIvryhIQc3kJggQ4yRptdpyZ0MosZurXRS76svxdfatdD1FL0+1s36/SJnP4Wf1kPMrfCVDmGHlpo/WRMEVbQ==
+  version "3.9.2"
+  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-3.9.2.tgz#a96809f964a78fa83a21dfed8e4ef32b638d8979"
+  integrity sha512-7p1eQvsh/SFuRAHYPH8JJMJbcJ8qo+ZGRmydsnxj8o+uHeYwbpCvH5LanjZftsrI7y8OnaOXGWFTEFHtys0R8g==
   dependencies:
     babel-polyfill "^6.23.0"
     babel-runtime "^6.26.0"
     cross-fetch "^3.0.4"
     eslint-plugin-jasmine "^4.1.0"
-    handlebars "^4.5.1"
+    handlebars "^4.5.3"
     q "1.4.1"
     u2f-api-polyfill "0.4.3"
     underscore "1.8.3"
@@ -6402,7 +6400,7 @@ handle-thing@^2.0.0:
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"
   integrity sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==
 
-handlebars@^4.5.1:
+handlebars@^4.5.3:
   version "4.7.6"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.6.tgz#d4c05c1baf90e9945f77aa68a7a219aa4a7df74e"
   integrity sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==
@@ -11668,11 +11666,6 @@ requires-port@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
   integrity sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=
-
-reqwest@2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/reqwest/-/reqwest-2.0.5.tgz#00fb15ac4918c419ca82b43f24c78882e66039a1"
-  integrity sha1-APsVrEkYxBnKgrQ/JMeIguZgOaE=
 
 reselect@^4.0.0:
   version "4.0.0"
