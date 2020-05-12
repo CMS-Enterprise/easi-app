@@ -33,6 +33,6 @@ _payload "${image_tag:-}" > payload.json
 jq < payload.json
 
 echo ": Invoking the $function_name lambda..."
-time aws lambda invoke --function-name "$function_name" --qualifier "$function_qualifier" --payload "$(base64 < payload.json)" output.json || exit
+time (set -x ; aws lambda invoke --function-name "$function_name" --qualifier "$function_qualifier" --payload file://./payload.json output.json) || exit
 
 jq < output.json
