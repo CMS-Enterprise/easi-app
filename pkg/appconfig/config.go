@@ -60,11 +60,11 @@ const AWSSESSourceKey = "AWS_SES_SOURCE"
 // GRTEmailKey is the key for the receiving email for the GRT
 const GRTEmailKey = "GRT_EMAIL"
 
-// ApplicationHostKey is the key for getting the application's domain name
-const ApplicationHostKey = "APP_HOST"
+// ClientHostKey is the key for getting the client's domain name
+const ClientHostKey = "CLIENT_HOST"
 
-// ApplicationProtocolKey is the key for getting the application's protocol
-const ApplicationProtocolKey = "APP_PROTOCOL"
+// ClientProtocolKey is the key for getting the client's protocol
+const ClientProtocolKey = "CLIENT_PROTOCOL"
 
 // EmailTemplateDirectoryKey is the key for getting the email template directory
 const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"

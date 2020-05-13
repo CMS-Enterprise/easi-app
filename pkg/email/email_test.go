@@ -49,8 +49,8 @@ func TestSESTestSuite(t *testing.T) {
 
 	emailConfig := Config{
 		GRTEmail:          config.GetString(appconfig.GRTEmailKey),
-		URLHost:           config.GetString(appconfig.ApplicationHostKey),
-		URLScheme:         config.GetString(appconfig.ApplicationProtocolKey),
+		URLHost:           config.GetString(appconfig.ClientHostKey),
+		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
