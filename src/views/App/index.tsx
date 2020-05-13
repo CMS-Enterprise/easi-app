@@ -54,7 +54,15 @@ class App extends React.Component<MainProps, MainState> {
                 path="/system/:profileId"
                 component={SystemProfile}
               /> */}
-              <SecureRoute path="/business/new" component={BusinessCase} />
+              <Redirect
+                exact
+                from="/system/:businessCaseId"
+                to="/system/:businessCaseId/general-project-info"
+              />
+              <SecureRoute
+                path="/business/:businessCaseId/:formPage"
+                component={BusinessCase}
+              />
               <Route path="/implicit/callback" component={ImplicitCallback} />
             </Switch>
           </AuthenticationWrapper>
