@@ -47,11 +47,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Set custom env variables
-          command : |
-            echo "export APP_DIR=$(pwd)" >> $BASH_ENV
-            echo "export EMAIL_TEMPLATE_DIR=$APP_DIR/pkg/email/templates" >> $BASH_ENV
-      - run:
           name: Run easi app tests
           command: |
             ./scripts/build_app
