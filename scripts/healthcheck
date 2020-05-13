@@ -7,7 +7,7 @@ if [[ "$APP_ENV" != "prod" ]] ; then
 fi
 
 healthcheck_url="https://${url_prefix}easi.cms.gov/api/v1/healthcheck"
-healthcheck_timeout="180"
+healthcheck_timeout="300"
 
 # wait for the new service to come up
 echo -n "Waiting for health check version to match new deployment on ${healthcheck_url}" 1>&2
