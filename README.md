@@ -260,6 +260,32 @@ Time: 0.016s
 postgres@localhost:postgres>
 ```
 
+### Setup: Cloud Services
+
+You may need to access cloud service
+to develop the application.
+This allows access to AWS resources (ex. SES Email).
+
+Follow the instructions in the infra repo
+[here](https://github.com/CMSgov/easi-infra#ctkey-wrapper).
+You'll need to add the infra account environment variables
+to your `.envrc.local`.
+You can then run the `ctkey` command
+to get/set AWS environment variables.
+
+```bash
+https_proxy=localhost:8888 \\
+ctkey --username=$CTKEY_USERNAME \\
+--password=$CTKEY_PASSWORD \\
+--account=$AWS_ACCOUNT_ID \\
+--url=$CTKEY_URL \\
+--idms=$CT_IDMS \\
+--iam-role=$CT_AWS_ROLE setenv
+```
+
+Eventually, we will move this over to wrapper
+so developers do not need to manually run these commands.
+
 ## Build
 
 ### Swagger Generation
