@@ -1,13 +1,14 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/cedar"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -34,6 +35,15 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
+	// set up Email Client
+	sesConfig := s.NewSESConfig()
+	sesSender := appses.NewSender(sesConfig)
+	emailConfig := s.NewEmailConfig()
+	_, err := email.NewClient(emailConfig, sesSender)
+	if err != nil {
+		s.logger.Fatal("Failed to create email client", zap.Error(err))
+	}
+
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 
@@ -51,7 +61,7 @@ func (s *Server) routes(
 		s.NewDBConfig(),
 	)
 	if err != nil {
-		s.logger.Fatal(fmt.Sprintf("Failed to connect to database: %v", err), zap.Error(err))
+		s.logger.Fatal("Failed to connect to database", zap.Error(err))
 	}
 
 	// endpoint for system list

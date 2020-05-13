@@ -2,6 +2,7 @@ package appses
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
 )
 
@@ -17,6 +18,16 @@ type Config struct {
 type Sender struct {
 	client *ses.SES
 	config Config
+}
+
+// NewSender constructs a Sender
+func NewSender(config Config) Sender {
+	sesSession := session.Must(session.NewSession())
+	client := ses.New(sesSession)
+	return Sender{
+		client,
+		config,
+	}
 }
 
 // Send sends an email
