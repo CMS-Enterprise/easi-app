@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
-import { SecureRoute } from '@okta/okta-react';
+import { SecureRoute, withAuth } from '@okta/okta-react';
 import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
@@ -16,14 +16,18 @@ import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
   saveSystemIntake,
-  storeSystemIntakeId
+  storeSystemIntake
 } from 'types/routines';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
 
-export const SystemIntake = () => {
+type SystemIntakeProps = {
+  auth: any;
+};
+
+export const SystemIntake = ({ auth }: SystemIntakeProps) => {
   const pages = [
     {
       type: 'FORM',
@@ -68,7 +72,18 @@ export const SystemIntake = () => {
 
   useEffect(() => {
     if (systemId === 'new') {
-      dispatch(storeSystemIntakeId(uuidv4()));
+      auth.getUser().then((user: any) => {
+        console.log(user);
+        dispatch(
+          storeSystemIntake({
+            id: uuidv4(),
+            requester: {
+              name: user.name,
+              component: ''
+            }
+          })
+        );
+      });
     } else {
       dispatch(fetchSystemIntake(systemId));
     }
@@ -237,4 +252,4 @@ export const SystemIntake = () => {
   );
 };
 
-export default SystemIntake;
+export default withAuth(SystemIntake);
