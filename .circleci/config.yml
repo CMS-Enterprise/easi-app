@@ -24,6 +24,9 @@ jobs:
       - image: *circleci_docker_primary
         environment:
           APP_ENV: test
+          CLIENT_PORT: 3000
+          CLIENT_HOSTNAME: localhost:3000
+          GRT_EMAIL: easi-team+test@truss.works
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
@@ -43,6 +46,11 @@ jobs:
           FLYWAY_URL: jdbc:postgresql://localhost/postgres
     steps:
       - checkout
+      - run:
+          name: Set custom env variables
+          command : |
+            echo "export APP_DIR=$(pwd)" >> $BASH_ENV
+            echo "export EMAIL_TEMPLATE_DIR=$APP_DIR/pkg/email/templates" >> $BASH_ENV
       - run:
           name: Run easi app tests
           command: |
