@@ -4,5 +4,7 @@
 #
 
 builddir="$(git rev-parse --show-toplevel)"
+APP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export EMAIL_TEMPLATE_DIR=$APP_DIR/pkg/email/templates
 
 ( set -x -u ; exec "$builddir"/bin/easi test )
