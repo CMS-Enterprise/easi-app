@@ -10,6 +10,7 @@ import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
 
 import './index.scss';
+import GovernanceOverview from 'views/GovernanceOverview';
 
 type MainState = {};
 
@@ -29,6 +30,11 @@ class App extends React.Component<MainProps, MainState> {
               <Route path="/sandbox" exact component={Sandbox} />
               /* Subroutes should precede any parent routes or they will not be
               callable */
+              <SecureRoute
+                path="/overview"
+                exact
+                component={GovernanceOverview}
+              />
               <SecureRoute path="/system/new" exact component={SystemIntake} />
               <SecureRoute
                 exact
