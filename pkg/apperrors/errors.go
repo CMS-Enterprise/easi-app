@@ -65,21 +65,21 @@ func (e *ContextError) Error() string {
 	return fmt.Sprintf("Could not %s %s on context", e.Operation, e.Object)
 }
 
-// NotificationDestination is a type of destination for a notification
-type NotificationDestination string
+// NotificationDestinationType is a type of destination for a notification
+type NotificationDestinationType string
 
 const (
-	// DestinationEmail is for an error with an email notification
-	DestinationEmail NotificationDestination = "Email"
+	// DestinationTypeEmail is for an error with an email notification
+	DestinationTypeEmail NotificationDestinationType = "Email"
 )
 
 // NotificationError is a typed error for when a notification fails
 type NotificationError struct {
-	Err         error
-	Destination NotificationDestination
+	Err             error
+	DestinationType NotificationDestinationType
 }
 
 // Error is the error message for a notification error
 func (e *NotificationError) Error() string {
-	return fmt.Sprintf("Email error '%s' on destination %s", e.Err, e.Destination)
+	return fmt.Sprintf("Email error '%s' on destination %s", e.Err, e.DestinationType)
 }
