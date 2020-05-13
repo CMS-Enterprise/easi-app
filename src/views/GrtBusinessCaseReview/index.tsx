@@ -48,7 +48,7 @@ export const GrtBusinessCaseReview = ({
             <li>
               Tell them what to expect after they submit the business case
             </li>
-            <li>And how to get in touch if they have any questions.</li>
+            <li>And how to gjet in touch if they have any questions.</li>
           </ul>
         </div>
       </div>
