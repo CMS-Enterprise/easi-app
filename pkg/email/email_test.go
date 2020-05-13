@@ -12,7 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-type SESTestSuite struct {
+type EmailTestSuite struct {
 	suite.Suite
 	logger *zap.Logger
 	config Config
@@ -43,7 +43,7 @@ func (c mockFailedTemplateCaller) Execute(wr io.Writer, data interface{}) error 
 	return errors.New("template caller had an error")
 }
 
-func TestSESTestSuite(t *testing.T) {
+func TestEmailTestSuite(t *testing.T) {
 	logger := zap.NewNop()
 	config := testhelpers.NewConfig()
 
@@ -67,7 +67,7 @@ func TestSESTestSuite(t *testing.T) {
 	//	sesConfig,
 	//}
 
-	sesTestSuite := &SESTestSuite{
+	sesTestSuite := &EmailTestSuite{
 		Suite:  suite.Suite{},
 		logger: logger,
 		config: emailConfig,

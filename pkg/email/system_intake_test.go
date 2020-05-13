@@ -8,7 +8,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 )
 
-func (s *SESTestSuite) TestSendSystemIntakeEmail() {
+func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 	sender := mockSender{}
 
 	tester := "Test McTester"
