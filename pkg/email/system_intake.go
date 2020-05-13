@@ -36,7 +36,7 @@ func (c Client) SendSystemIntakeSubmissionEmail(requester string, intakeID uuid.
 	subject := fmt.Sprintf("New intake request: %s", requester)
 	body, err := c.systemIntakeSubmissionBody(intakeID)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, Destination: apperrors.DestinationEmail}
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 	err = c.sender.Send(
 		c.config.GRTEmail,
@@ -44,7 +44,7 @@ func (c Client) SendSystemIntakeSubmissionEmail(requester string, intakeID uuid.
 		body,
 	)
 	if err != nil {
-		return &apperrors.NotificationError{Err: err, Destination: apperrors.DestinationEmail}
+		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 	return nil
 }

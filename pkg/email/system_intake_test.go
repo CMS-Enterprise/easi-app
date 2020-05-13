@@ -46,7 +46,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
 		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationEmail, e.Destination)
+		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
 		s.Equal("system intake submission template is nil", e.Err.Error())
 	})
 
@@ -60,7 +60,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
 		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationEmail, e.Destination)
+		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
 		s.Equal("template caller had an error", e.Err.Error())
 	})
 
@@ -75,7 +75,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
 		e := err.(*apperrors.NotificationError)
-		s.Equal(apperrors.DestinationEmail, e.Destination)
+		s.Equal(apperrors.DestinationTypeEmail, e.DestinationType)
 		s.Equal("sender had an error", e.Err.Error())
 	})
 }
