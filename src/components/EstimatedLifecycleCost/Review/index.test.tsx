@@ -21,14 +21,14 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
   const omSampleData = {
     year1: [
-      { phase: 'Operations & Maintenance', cost: '5000' },
-      { phase: 'Operations & Maintenance', cost: '5000' },
-      { phase: 'Operations & Maintenance' }
+      { phase: 'Operations and Maintenance', cost: '5000' },
+      { phase: 'Operations and Maintenance', cost: '5000' },
+      { phase: 'Operations and Maintenance' }
     ],
-    year2: [{ phase: 'Operations & Maintenance', cost: '5000' }],
-    year3: [{ phase: 'Operations & Maintenance', cost: '5000' }],
-    year4: [{ phase: 'Operations & Maintenance', cost: '5000' }],
-    year5: [{ phase: 'Operations & Maintenance', cost: '5000' }]
+    year2: [{ phase: 'Operations and Maintenance', cost: '5000' }],
+    year3: [{ phase: 'Operations and Maintenance', cost: '5000' }],
+    year4: [{ phase: 'Operations and Maintenance', cost: '5000' }],
+    year5: [{ phase: 'Operations and Maintenance', cost: '5000' }]
   };
 
   it('renders without crashing', () => {

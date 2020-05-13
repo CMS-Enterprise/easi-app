@@ -1,6 +1,5 @@
 import debounce from 'lodash/debounce';
-import isEqual from 'lodash/isEqual';
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useCallback } from 'react';
 
 type AutoSaveProps = {
   values: any;
@@ -10,19 +9,10 @@ type AutoSaveProps = {
 
 const AutoSave = ({ values, onSave, debounceDelay }: AutoSaveProps) => {
   const debounceSave = useCallback(debounce(onSave, debounceDelay), [
-    onSave,
-    debounceDelay
+    debounceDelay,
+    onSave
   ]);
-  const initialValues = useRef(values);
-
-  useEffect(() => {
-    // Don't save until values are changed from initial values (avoids save on initial render)
-    if (isEqual(initialValues.current, values)) {
-      return;
-    }
-    debounceSave();
-  }, [debounceSave, values]);
-
+  useEffect(debounceSave, [debounceSave, values]);
   return null;
 };
 

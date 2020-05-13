@@ -8,6 +8,7 @@ import { RadioField } from 'components/shared/RadioField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import Label from 'components/shared/Label';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import flattenErrors from 'utils/flattenErrors';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -21,6 +22,19 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
   const { values, setFieldValue, errors } = formikProps;
   const flatErrors = flattenErrors(errors);
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
+
+  const cmsDivionsAndOfficesOptions = (fieldId: string) =>
+    cmsDivisionsAndOffices.map((office: any) => (
+      <Field
+        as={DropdownItem}
+        key={`${fieldId}-${office.acronym}`}
+        name={
+          office.acronym ? `${office.name} (${office.acronym})` : office.name
+        }
+        value={office.name}
+      />
+    ));
+
   return (
     <>
       <p className="line-height-body-6">
@@ -32,11 +46,10 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         promptly from the IT_Governance mailbox, and an IT Governance Team
         member will reach out regarding next steps.
       </p>
-      <p className="text-italic">
-        **All fields are required unless marked &apos;Optional&apos;
-      </p>
+
       <div className="tablet:grid-col-6 margin-bottom-7">
-        <h1 className="font-heading-xl margin-top-4">Contact Details</h1>
+        <MandatoryFieldsAlert />
+        <h1 className="font-heading-xl margin-top-3">Contact details</h1>
 
         {/* Requester Name */}
         <FieldGroup
@@ -82,14 +95,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             }}
           >
             <Field as={DropdownItem} name="Select an option" value="" />
-            {cmsDivisionsAndOffices.map((office: any) => (
-              <Field
-                as={DropdownItem}
-                key={`RequesterComponent-${office.acronym}`}
-                name={office.name}
-                value={office.name}
-              />
-            ))}
+            {cmsDivionsAndOfficesOptions('RequesterComponent')}
           </Field>
         </FieldGroup>
 
@@ -101,10 +107,14 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           <Label className="margin-bottom-1" htmlFor="IntakeForm-BusinessOwner">
             CMS Business/Product Owner&apos;s Name
           </Label>
+          <HelpText className="margin-bottom-105">
+            This person owns a line of business related to this request and will
+            champion the request moving forward
+          </HelpText>
           <Field
             as={CheckboxField}
             id="IntakeForm-IsBusinessOwnerSameAsRequester"
-            label="Same as Requester"
+            label="CMS Business/Product Owner is same as requester"
             name="isBusinessOwnerSameAsRequester"
             onChange={(e: any) => {
               if (e.target.checked) {
@@ -148,14 +158,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             name="businessOwner.component"
           >
             <Field as={DropdownItem} name="Select an option" value="" />
-            {cmsDivisionsAndOffices.map(office => (
-              <Field
-                as={DropdownItem}
-                key={`BusinessOwnerComponent-${office.acronym}`}
-                name={office.name}
-                value={office.name}
-              />
-            ))}
+            {cmsDivionsAndOfficesOptions('BusinessOwnerComponent')}
           </Field>
         </FieldGroup>
 
@@ -164,9 +167,16 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           scrollElement="productManager.name"
           error={!!flatErrors['productManager.name']}
         >
-          <Label htmlFor="IntakeForm-ProductManager">
+          <Label
+            htmlFor="IntakeForm-ProductManager"
+            className="margin-bottom-1"
+          >
             CMS Project/Product Manager, or lead
           </Label>
+          <HelpText>
+            This person may be contacted for follow ups and to understand the
+            state of the contract
+          </HelpText>
           <FieldErrorMsg>{flatErrors['productManager.name']}</FieldErrorMsg>
           <Field
             as={TextField}
@@ -196,14 +206,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             name="productManager.component"
           >
             <Field as={DropdownItem} name="Select an option" value="" />
-            {cmsDivisionsAndOffices.map((office: any) => (
-              <Field
-                as={DropdownItem}
-                key={`ProductManagerComponent-${office.acronym}`}
-                name={office.name}
-                value={office.name}
-              />
-            ))}
+            {cmsDivionsAndOfficesOptions('ProductManagerComponent')}
           </Field>
         </FieldGroup>
 
@@ -218,8 +221,8 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
               (ISSO)?
             </legend>
             <HelpText className="margin-bottom-2">
-              If yes, please tell use the name of your ISSO so we can get in
-              touch with them
+              If yes, please tell us the name of your Information System
+              Security Officer so we can get in touch with them
             </HelpText>
             <FieldErrorMsg>{flatErrors['isso.isPresent']}</FieldErrorMsg>
 
@@ -235,7 +238,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
               value
             />
             {values.isso.isPresent && (
-              <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
+              <div className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
                 <FieldGroup
                   scrollElement="isso.name"
                   error={!!flatErrors['isso.name']}
@@ -274,7 +277,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
         >
           <fieldset className="usa-fieldset margin-top-3">
             <legend className="usa-label margin-bottom-1">
-              My project team is currently collaborating/consulting with:
+              For this request, I have started collaborating/consulting with:
             </legend>
             <HelpText className="margin-bottom-2">
               Please disclose the name of each person you&apos;ve worked with.
@@ -312,7 +315,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
               checked={values.governanceTeams.isPresent === false}
               id="IntakeForm-YesGovernanceTeam"
               name="governanceTeams.isPresent"
-              label="None of the above"
+              label="No one in OIT"
               onChange={() => {
                 setFieldValue('governanceTeams.isPresent', false);
                 setFieldValue('governanceTeams.teams', []);

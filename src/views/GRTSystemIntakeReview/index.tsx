@@ -12,9 +12,7 @@ export type SystemIDRouterProps = {
 
 export type GRTSystemIntakeReviewProps = RouteComponentProps<
   SystemIDRouterProps
-> & {
-  auth: any;
-};
+>;
 
 export const GRTSystemIntakeReview = ({
   match
