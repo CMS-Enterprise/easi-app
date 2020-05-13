@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
@@ -34,5 +35,20 @@ func (s Server) NewDBConfig() storage.DBConfig {
 		Username: s.Config.GetString(appconfig.DBUsernameConfigKey),
 		Password: s.Config.GetString(appconfig.DBPasswordConfigKey),
 		SSLMode:  s.Config.GetString(appconfig.DBSSLModeConfigKey),
+	}
+}
+
+// NewEmailConfig returns a new email.Config and checks required fields
+func (s Server) NewEmailConfig() email.Config {
+	s.checkRequiredConfig(appconfig.GRTEmailKey)
+	s.checkRequiredConfig(appconfig.ClientHostKey)
+	s.checkRequiredConfig(appconfig.ClientProtocolKey)
+	s.checkRequiredConfig(appconfig.EmailTemplateDirectoryKey)
+
+	return email.Config{
+		GRTEmail:          s.Config.GetString(appconfig.GRTEmailKey),
+		URLHost:           s.Config.GetString(appconfig.ClientHostKey),
+		URLScheme:         s.Config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory: s.Config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 }
