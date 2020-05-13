@@ -16,14 +16,18 @@ type Config struct {
 	TemplateDirectory string
 }
 
+// templateCaller is an interface to helping with testing template dependencies
 type templateCaller interface {
 	Execute(wr io.Writer, data interface{}) error
 }
 
+// templates stores typed templates
+// since the template.Template uses string access
 type templates struct {
 	systemIntakeSubmissionTemplate templateCaller
 }
 
+// sender is an interface for swapping out email provider implementations
 type sender interface {
 	Send(toAddress string, subject string, body string) error
 }
@@ -35,6 +39,7 @@ type Client struct {
 	sender    sender
 }
 
+// templateError is just a helper method for formatting errors
 func templateError(name string) error {
 	return fmt.Errorf("failed to get template: %s", name)
 }
@@ -62,6 +67,7 @@ func NewClient(config Config, sender sender) (Client, error) {
 	return client, nil
 }
 
+// urlFromPath uses the client's URL configs to format one with a specific path
 func (c Client) urlFromPath(path string) string {
 	u := url.URL{
 		Scheme: c.config.URLScheme,
