@@ -61,7 +61,7 @@ const AWSSESSourceKey = "AWS_SES_SOURCE"
 const GRTEmailKey = "GRT_EMAIL"
 
 // ClientHostKey is the key for getting the client's domain name
-const ClientHostKey = "CLIENT_HOST"
+const ClientHostKey = "CLIENT_HOSTNAME"
 
 // ClientProtocolKey is the key for getting the client's protocol
 const ClientProtocolKey = "CLIENT_PROTOCOL"
