@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -93,23 +92,17 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 			intake.EUAUserID = euaID
-			updatedTime := time.Now().UTC()
-			intake.UpdatedAt = &updatedTime
 
 			err = h.SaveSystemIntake(r.Context(), &intake)
 			if err != nil {
 				switch err.(type) {
+				case *apperrors.ResourceConflictError:
+					logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
+					// TODO: Replace with more helpful errors
+					http.Error(w, "System has already been submitted", http.StatusConflict)
 				case *apperrors.ValidationError:
 					logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
-					if err.Error() == "intake has already been submitted to CEDAR" {
-						logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
-						// TODO: Replace with more helpful errors
-						http.Error(w, "System has already been submitted", http.StatusConflict)
-					} else {
-						logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
-						// TODO: Replace with more helpful errors
-						http.Error(w, "Failed to validate system intake", http.StatusBadRequest)
-					}
+					http.Error(w, "Failed to validate system intake", http.StatusBadRequest)
 				case *apperrors.ExternalAPIError:
 					logger.Error(fmt.Sprintf("Failed to submit system intake: %v", err))
 					// TODO: Replace with more helpful errors

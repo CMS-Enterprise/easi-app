@@ -101,7 +101,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	// Other tests should mock the API
 	s.Run("PUT will succeed if status is 'SUBMITTED' and it passes validation", func() {
 		if s.environment != appconfig.LocalEnv.String() {
-			// TODO: When logger gets added, put in test also and print skips
+			fmt.Println("Skipped 'PUT will succeed if status is 'SUBMITTED' and it passes validation'")
 			return
 		}
 		updatedAt := time.Now().UTC()
@@ -138,7 +138,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	s.Run("PUT will fail if status is 'SUBMITTED', but it doesn't pass validation", func() {
 		if s.environment != appconfig.LocalEnv.String() {
-			// TODO: When logger gets added, put in test also and print skips
+			fmt.Println("Skipped 'PUT will fail if status is 'SUBMITTED' and it doesn't pass validation'")
 			return
 		}
 		body, err := json.Marshal(map[string]string{

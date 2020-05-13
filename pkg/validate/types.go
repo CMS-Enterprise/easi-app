@@ -1,6 +1,7 @@
 package validate
 
 import (
+	"regexp"
 	"time"
 
 	"github.com/google/uuid"
@@ -45,4 +46,13 @@ func RequireUUID(id uuid.UUID) bool {
 		return true
 	}
 	return false
+}
+
+// FundingNumberInvalid checks if it's a six digit string
+func FundingNumberInvalid(fundingNumber string) bool {
+	re := regexp.MustCompile(`[0-9]{6}`)
+	if re.MatchString(fundingNumber) && (len(fundingNumber) == 6) {
+		return false
+	}
+	return true
 }
