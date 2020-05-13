@@ -16,11 +16,17 @@ type ReviewProps = {
 };
 
 const Review = ({ formikProps }: ReviewProps) => {
-  const [activeSolutionTab, setActiveSolutionTab] = useState('As-Is Solution');
+  const [activeSolutionTab, setActiveSolutionTab] = useState(
+    '"As is" solution'
+  );
   const { values } = formikProps;
 
   const getFilledSolutions = () => {
-    const solutions = ['As-Is Solution', 'Preferred Solution', 'Alternative A'];
+    const solutions = [
+      '"As is" solution',
+      'Preferred solution',
+      'Alternative A'
+    ];
     if (values.alternativeB) {
       solutions.push('Alternative B');
     }
@@ -30,14 +36,16 @@ const Review = ({ formikProps }: ReviewProps) => {
   return (
     <div className="margin-bottom-7">
       <div className="grid-container">
-        <h1 className="font-heading-xl margin-top-4">Review</h1>
+        <h1 className="font-heading-xl margin-top-4">
+          Check your answers before sending
+        </h1>
 
-        <h2 className="font-heading-xl">Contact Details</h2>
-        <DescriptionList title="General Project Information">
+        <h2 className="font-heading-xl">General request information</h2>
+        <DescriptionList title="General request information">
           <ReviewRow>
             <div>
-              <DescriptionTerm term="Project Name" />
-              <DescriptionDefinition definition={values.projectName} />
+              <DescriptionTerm term="Request Name" />
+              <DescriptionDefinition definition={values.requestName} />
             </div>
             <div>
               <DescriptionTerm term="Business Owner" />
@@ -56,18 +64,10 @@ const Review = ({ formikProps }: ReviewProps) => {
               />
             </div>
           </ReviewRow>
-          <ReviewRow>
-            <div>
-              <DescriptionTerm term="Operating Plan Budget Number" />
-              <DescriptionDefinition
-                definition={values.budgetNumber || 'N/A'}
-              />
-            </div>
-          </ReviewRow>
         </DescriptionList>
 
-        <h2 className="font-heading-xl margin-top-6">Project Description</h2>
-        <DescriptionList title="Project Description">
+        <h2 className="font-heading-xl margin-top-6">Request description</h2>
+        <DescriptionList title="Request description">
           <ReviewRow>
             <div className="margin-bottom-205 line-height-body-3">
               <DescriptionTerm term="What is your business or user need?" />
@@ -97,7 +97,7 @@ const Review = ({ formikProps }: ReviewProps) => {
 
       <div className="grid-container">
         <h2 className="font-heading-xl margin-top-6 margin-bottom-2">
-          Alternatives Analysis
+          Alternatives analysis
         </h2>
       </div>
       <div className="grid-container bg-base-lightest padding-top-2 padding-bottom-8">
@@ -114,12 +114,12 @@ const Review = ({ formikProps }: ReviewProps) => {
           >
             {(tab => {
               switch (tab) {
-                case 'As-Is Solution':
+                case '"As is" solution':
                   return <AsIsSolutionReview solution={values.asIsSolution} />;
-                case 'Preferred Solution':
+                case 'Preferred solution':
                   return (
                     <ProposedBusinessCaseSolutionReview
-                      name="Preferred Solution"
+                      name="Preferred solution"
                       solution={values.preferredSolution}
                     />
                   );

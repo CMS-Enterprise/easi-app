@@ -23,12 +23,11 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
 
 // Business Case Form Model
 export type BusinessCaseModel = {
-  projectName: string;
+  requestName: string;
   requester: {
     name: string;
     phoneNumber: string;
   };
-  budgetNumber: string;
   businessOwner: {
     name: string;
   };

@@ -4,10 +4,12 @@ import {
 } from 'types/systemIntake';
 import cmsGovernanceTeams from '../constants/enums/cmsGovernanceTeams';
 
+// On the frontend, the field is now "requestName", but the backend API
+// has it as "projectName". This was an update from design.
 export const initialSystemIntakeForm: SystemIntakeForm = {
   id: '',
   euaUserID: '',
-  projectName: '',
+  requestName: '',
   status: 'DRAFT',
   requester: {
     name: '',
@@ -40,10 +42,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   hasContract: ''
 };
 
-export const prepareSystemIntakeForApi = (
-  id: string,
-  systemIntake: SystemIntakeForm
-) => {
+export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
   const getGovernanceCollaborator = (name: string) => {
     const selectedTeam = systemIntake.governanceTeams.teams.find(
       team => team.name === name
@@ -53,7 +52,7 @@ export const prepareSystemIntakeForApi = (
   };
 
   return {
-    id,
+    id: systemIntake.id,
     status: systemIntake.status,
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,
@@ -67,7 +66,7 @@ export const prepareSystemIntakeForApi = (
       "OIT's Security and Privacy Group"
     ),
     eaCollaborator: getGovernanceCollaborator('Enterprise Architecture'),
-    projectName: systemIntake.projectName,
+    projectName: systemIntake.requestName,
     existingFunding: systemIntake.fundingSource.isFunded,
     fundingSource: systemIntake.fundingSource.fundingNumber,
     businessNeed: systemIntake.businessNeed,
@@ -95,7 +94,7 @@ export const prepareSystemIntakeForApp = (systemIntake: any) => {
   return {
     id: systemIntake.id || '',
     euaUserID: systemIntake.euaUserID || '',
-    projectName: systemIntake.projectName || '',
+    requestName: systemIntake.projectName || '',
     status: systemIntake.status || 'DRAFT',
     requester: {
       name: systemIntake.requester || '',
@@ -114,17 +113,23 @@ export const prepareSystemIntakeForApp = (systemIntake: any) => {
       name: systemIntake.isso || ''
     },
     governanceTeams: {
-      isPresent: governanceTeams().length !== 0,
+      isPresent: governanceTeams().length !== 0 || null,
       teams: governanceTeams() || []
     },
     fundingSource: {
-      isFunded: systemIntake.existingFunding || null,
+      isFunded:
+        systemIntake.existingFunding === null
+          ? null
+          : systemIntake.existingFunding,
       fundingNumber: systemIntake.fundingSource || ''
     },
     businessNeed: systemIntake.businessNeed || '',
     businessSolution: systemIntake.solution || '',
     currentStage: systemIntake.processStatus || '',
-    needsEaSupport: systemIntake.eaSupportRequest || null,
+    needsEaSupport:
+      systemIntake.eaSupportRequest === null
+        ? null
+        : systemIntake.eaSupportRequest,
     hasContract: systemIntake.existingContract || ''
   };
 };

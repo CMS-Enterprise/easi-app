@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -12,14 +11,23 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// FetchSystemIntakesByEuaID fetches all system intakes by a given user
-func FetchSystemIntakesByEuaID(euaID string, db *sqlx.DB) (models.SystemIntakes, error) {
-	intakes := []models.SystemIntake{}
-	err := db.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1", euaID)
-	if err != nil {
-		return models.SystemIntakes{}, err
+// NewFetchSystemIntakesByEuaID is a service to fetch system intakes by EUA id
+func NewFetchSystemIntakesByEuaID(
+	fetch func(euaID string) (models.SystemIntakes, error),
+	logger *zap.Logger,
+) func(euaID string) (models.SystemIntakes, error) {
+	return func(euaID string) (models.SystemIntakes, error) {
+		intakes, err := fetch(euaID)
+		if err != nil {
+			logger.Error("failed to fetch system intakes")
+			return models.SystemIntakes{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     "system intakes",
+				Operation: apperrors.QueryFetch,
+			}
+		}
+		return intakes, nil
 	}
-	return intakes, nil
 }
 
 // NewAuthorizeSaveSystemIntake returns a function
@@ -102,10 +110,9 @@ func NewFetchSystemIntakeByID(
 			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     "system intake",
-				Operation: "fetch",
+				Operation: apperrors.QueryFetch,
 			}
 		}
 		return intake, nil
 	}
-
 }

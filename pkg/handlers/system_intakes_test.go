@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/jmoiron/sqlx"
 	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -14,7 +13,7 @@ import (
 )
 
 func newMockFetchSystemIntakes(systemIntakes models.SystemIntakes, err error) fetchSystemIntakes {
-	return func(euaID string, db *sqlx.DB) (models.SystemIntakes, error) {
+	return func(euaID string) (models.SystemIntakes, error) {
 		return systemIntakes, err
 	}
 }

@@ -19,12 +19,11 @@ export const defaultProposedSolution = {
 };
 
 export const businessCaseInitalData: BusinessCaseModel = {
-  projectName: '',
+  requestName: '',
   requester: {
     name: '',
     phoneNumber: ''
   },
-  budgetNumber: '',
   businessOwner: {
     name: ''
   },

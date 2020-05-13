@@ -102,6 +102,10 @@ jobs:
           name: Build the app and push to ECR
           command: |
             ./scripts/build_docker_image
+      - run:
+          name: Check for vulnerability scan findings
+          command: |
+            ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1"
 
   deploy_dev:
     docker:
@@ -123,15 +127,16 @@ jobs:
       - run:
           name: Nuke the database
           command: |
-            ./scripts/db_lambda_invoke easi-app-db-clean
+            ./scripts/db_lambda_invoke "easi-app-db-clean"
       - run:
           name: Run migrations
           command: |
-            ./scripts/db_lambda_invoke easi-app-db-migrate
+            ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
       - run:
-          name: Restart ECS service
+          name: Deploy ECS service
           command: |
-            ./scripts/restart_ecs
+            ./scripts/deploy_service "easi-app" "easi-backend"
+            ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
           command: |
@@ -155,13 +160,18 @@ jobs:
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
       - run:
+          name: Backup the database
+          command: |
+            ./scripts/rds-snapshot-app-db
+      - run:
           name: Run migrations
           command: |
-            ./scripts/db_lambda_invoke easi-app-db-migrate
+            ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
       - run:
-          name: Restart ECS service
+          name: Deploy ECS service
           command: |
-            ./scripts/restart_ecs
+            ./scripts/deploy_service "easi-app" "easi-backend"
+            ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
           command: |
