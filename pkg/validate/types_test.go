@@ -51,3 +51,18 @@ func (s ValidateTestSuite) TestRequireUUID() {
 		s.False(RequireUUID(uuid.New()))
 	})
 }
+
+func (s ValidateTestSuite) TestFundingNumberInvalid() {
+	s.Run("funding number has letters", func() {
+		s.True(FundingNumberInvalid("AAAAAA"))
+	})
+	s.Run("funding number is greater than 6 digits", func() {
+		s.True(FundingNumberInvalid("999999999"))
+	})
+	s.Run("funding number is fewer than 6 digits", func() {
+		s.True(FundingNumberInvalid("1"))
+	})
+	s.Run("funding number is valid", func() {
+		s.False(FundingNumberInvalid("123456"))
+	})
+}

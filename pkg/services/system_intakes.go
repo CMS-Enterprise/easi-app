@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"go.uber.org/zap"
@@ -89,15 +90,20 @@ func NewSaveSystemIntake(
 		if !ok {
 			return &apperrors.UnauthorizedError{Err: err}
 		}
+		updatedTime := clock.New().Now().UTC()
+		intake.UpdatedAt = &updatedTime
+
 		if intake.Status == models.SystemIntakeStatusSUBMITTED {
 			if intake.AlfabetID.Valid {
-				return &apperrors.ValidationError{
-					Err:     errors.New("intake has already been submitted to CEDAR"),
-					ModelID: intake.ID.String(),
-					Model:   "System Intake",
+				err := &apperrors.ResourceConflictError{
+					Err:        errors.New("intake has already been submitted to CEDAR"),
+					ResourceID: intake.ID.String(),
+					Resource:   "System intake",
 				}
+				return err
 			}
-			intake.SubmittedAt = intake.UpdatedAt
+
+			intake.SubmittedAt = &updatedTime
 			alfabetID, validateAndSubmitErr := validateAndSubmit(intake, logger)
 			if validateAndSubmitErr != nil {
 				return validateAndSubmitErr
@@ -108,6 +114,7 @@ func NewSaveSystemIntake(
 					Model:     "System Intake",
 					ModelID:   intake.ID.String(),
 					Operation: apperrors.Submit,
+					Source:    "CEDAR",
 				}
 			}
 			intake.AlfabetID = null.StringFrom(alfabetID)
@@ -148,14 +155,6 @@ func NewValidateAndSubmitSystemIntake(
 	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 ) func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
 	return func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-		if intake.AlfabetID.Valid {
-			err := &apperrors.ValidationError{
-				Err:     errors.New("intake has already been submitted to CEDAR"),
-				ModelID: intake.ID.String(),
-				Model:   "System intake",
-			}
-			return "", err
-		}
 		alfabetID, err := validateAndSubmit(intake, logger)
 		if err != nil {
 			return "", err

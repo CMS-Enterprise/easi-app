@@ -214,6 +214,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 				ModelID:   intake.ID.String(),
 				Model:     "System Intake",
 				Operation: apperrors.Submit,
+				Source:    "CEDAR",
 			}
 		}
 		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, failValidationSubmit, logger)
@@ -235,7 +236,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 
 		err := saveSystemIntake(ctx, &alreadySubmittedIntake)
 
-		s.IsType(&apperrors.ValidationError{}, err)
+		s.IsType(&apperrors.ResourceConflictError{}, err)
 	})
 }
 

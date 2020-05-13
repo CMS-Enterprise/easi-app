@@ -3,7 +3,6 @@ package cedar
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -58,61 +57,69 @@ func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts,
 }
 
 func validateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logger) error {
-	var res []string
+	expectedError := apperrors.ValidationError{
+		Err:         errors.New("validation failed"),
+		Validations: apperrors.Validations{},
+		ModelID:     intake.ID.String(),
+		Model:       "System Intake",
+	}
+	const validationMessage = "is not valid"
 	if validate.RequireUUID(intake.ID) {
-		res = append(res, "ID")
+		expectedError.WithValidation("ID", validationMessage)
 	}
 	if validate.RequireString(intake.EUAUserID) {
-		res = append(res, "EUAUserID")
+		expectedError.WithValidation("EUAUserID", validationMessage)
 	}
 	if validate.RequireNullString(intake.Requester) {
-		res = append(res, "Requester")
+		expectedError.WithValidation("Requester", validationMessage)
 	}
 	if validate.RequireNullString(intake.Component) {
-		res = append(res, "Component")
+		expectedError.WithValidation("Component", validationMessage)
 	}
 	if validate.RequireNullString(intake.BusinessOwner) {
-		res = append(res, "BusinessOwner")
+		expectedError.WithValidation("BusinessOwner", validationMessage)
 	}
 	if validate.RequireNullString(intake.BusinessOwnerComponent) {
-		res = append(res, "BusinessOwnerComponent")
+		expectedError.WithValidation("BusinessOwnerComponent", validationMessage)
 	}
 	if validate.RequireNullString(intake.ProductManager) {
-		res = append(res, "ProductManager")
+		expectedError.WithValidation("ProductManager", validationMessage)
 	}
 	if validate.RequireNullString(intake.ProductManagerComponent) {
-		res = append(res, "ProductManagerComponent")
+		expectedError.WithValidation("ProductManagerComponent", validationMessage)
 	}
 	if validate.RequireNullString(intake.ProjectName) {
-		res = append(res, "ProjectName")
+		expectedError.WithValidation("ProjectName", validationMessage)
 	}
 	if validate.RequireNullBool(intake.ExistingFunding) {
-		res = append(res, "ExistingFunding")
+		expectedError.WithValidation("ExistingFunding", validationMessage)
 	}
 	if intake.ExistingFunding.Bool && validate.RequireNullString(intake.FundingSource) {
-		res = append(res, "FundingSource")
+		expectedError.WithValidation("FundingSource", validationMessage)
+	}
+	if intake.FundingSource.Valid && validate.FundingNumberInvalid(intake.FundingSource.String) {
+		expectedError.WithValidation("FundingSource", "must be a 6 digit string")
 	}
 	if validate.RequireNullString(intake.BusinessNeed) {
-		res = append(res, "BusinessNeed")
+		expectedError.WithValidation("BusinessNeed", validationMessage)
 	}
 	if validate.RequireNullString(intake.Solution) {
-		res = append(res, "Solution")
+		expectedError.WithValidation("Solution", validationMessage)
 	}
 	if validate.RequireNullBool(intake.EASupportRequest) {
-		res = append(res, "EASupportRequest")
+		expectedError.WithValidation("EASupportRequest", validationMessage)
 	}
 	if validate.RequireNullString(intake.ProcessStatus) {
-		res = append(res, "ProcessStatus")
+		expectedError.WithValidation("ProcessStatus", validationMessage)
 	}
 	if validate.RequireNullString(intake.ExistingContract) {
-		res = append(res, "ExistingContract")
+		expectedError.WithValidation("ExistingContract", validationMessage)
 	}
 	if validate.RequireTime(*intake.SubmittedAt) {
-		res = append(res, "SubmittedAt")
+		expectedError.WithValidation("SubmittedAt", validationMessage)
 	}
-	if len(res) != 0 {
-		invalidFields := strings.Join(res, ", ")
-		return errors.New("Validation failed on these fields: " + invalidFields)
+	if len(expectedError.Validations) > 0 {
+		return &expectedError
 	}
 	return nil
 }
@@ -151,10 +158,15 @@ func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient
 		Governance: governanceConversion,
 	}
 	resp, err := c.client.Operations.IntakegovernancePOST4(params, c.apiAuthHeader)
-	fmt.Println(err)
 	if err != nil {
 		logger.Error(fmt.Sprintf("Failed to submit intake for CEDAR with error: %v", err))
-		return "", err
+		return "", &apperrors.ExternalAPIError{
+			Err:       err,
+			Model:     "System Intake",
+			ModelID:   id,
+			Operation: apperrors.Submit,
+			Source:    "CEDAR",
+		}
 	}
 	alfabetID := ""
 	if *resp.Payload.Response.Result != "success" {
@@ -163,6 +175,7 @@ func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient
 			ModelID:   validatedIntake.ID.String(),
 			Model:     "System Intake",
 			Operation: apperrors.Submit,
+			Source:    "CEDAR",
 		}
 	}
 	alfabetID = resp.Payload.Response.Message[0]
@@ -173,11 +186,7 @@ func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient
 func (c TranslatedClient) ValidateAndSubmitSystemIntake(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
 	err := validateSystemIntakeForCedar(intake, logger)
 	if err != nil {
-		return "", &apperrors.ValidationError{
-			Err:     err,
-			ModelID: intake.ID.String(),
-			Model:   "System Intake",
-		}
+		return "", err
 	}
 	return submitSystemIntake(intake, c, logger)
 }
