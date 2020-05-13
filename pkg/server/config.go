@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -50,5 +51,16 @@ func (s Server) NewEmailConfig() email.Config {
 		URLHost:           s.Config.GetString(appconfig.ClientHostKey),
 		URLScheme:         s.Config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: s.Config.GetString(appconfig.EmailTemplateDirectoryKey),
+	}
+}
+
+// NewSESConfig returns a new email.Config and checks required fields
+func (s Server) NewSESConfig() appses.Config {
+	s.checkRequiredConfig(appconfig.AWSSESSourceARNKey)
+	s.checkRequiredConfig(appconfig.AWSSESSourceKey)
+
+	return appses.Config{
+		SourceARN: s.Config.GetString(appconfig.AWSSESSourceARNKey),
+		Source:    s.Config.GetString(appconfig.AWSSESSourceKey),
 	}
 }
