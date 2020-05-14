@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, FormikProps } from 'formik';
+import { useHistory, useParams } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
@@ -21,39 +22,47 @@ import Review from './Review';
 import './index.scss';
 
 export const BusinessCase = () => {
+  const history = useHistory();
+  const { businessCaseId, formPage } = useParams();
   const [pages, setPages] = useState<any[]>([
     {
       name: 'GeneralRequestInfo',
       type: 'FORM',
+      slug: 'general-request-info',
       validation: BusinessCaseValidationSchema.generalRequestInfo
     },
     {
       name: 'RequestDescription',
       type: 'FORM',
+      slug: 'request-description',
       validation: BusinessCaseValidationSchema.requestDescription
     },
     {
       name: 'AsIsSolution',
       type: 'FORM',
+      slug: 'as-is-solution',
       validation: BusinessCaseValidationSchema.asIsSolution
     },
     {
       name: 'PreferredSolution',
       type: 'FORM',
+      slug: 'preferred-solution',
       validation: BusinessCaseValidationSchema.preferredSolution
     },
     {
       name: 'AlternativeSolutionA',
       type: 'FORM',
+      slug: 'alternative-solution-a',
       validation: BusinessCaseValidationSchema.alternativeA
     },
     {
       name: 'Review',
-      type: 'REVIEW'
+      type: 'REVIEW',
+      slug: 'review'
     }
   ]);
-  const [page, setPage] = useState(1);
-  const pageObj = pages[page - 1];
+  const [pageIndex, setPageIndex] = useState(0);
+  const pageObj = pages[pageIndex];
 
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {
     switch (pageObj.name) {
@@ -67,7 +76,7 @@ export const BusinessCase = () => {
       case 'RequestDescription':
         return (
           <SecureRoute
-            path="/business/:businessCaseId/project-description"
+            path="/business/:businessCaseId/request-description"
             render={() => <RequestDescription formikProps={formikProps} />}
           />
         );
@@ -88,7 +97,7 @@ export const BusinessCase = () => {
       case 'AlternativeSolutionA':
         return (
           <SecureRoute
-            path="/business/:businessCaseId/preferred-solution"
+            path="/business/:businessCaseId/alternative-solution-a"
             render={() => (
               <AlternativeSolution
                 formikProps={formikProps}
@@ -108,6 +117,7 @@ export const BusinessCase = () => {
                             {
                               name: 'AlternativeSolutionB',
                               type: 'FORM',
+                              slug: 'alternative-solution-b',
                               validation:
                                 BusinessCaseValidationSchema.alternativeB
                             },
@@ -117,8 +127,9 @@ export const BusinessCase = () => {
                             }
                           ]);
                         setPages(updatedPages);
+                        const newUrl = updatedPages[pageIndex + 1].slug;
+                        history.push(newUrl);
                       }
-                      setPage(prev => prev + 1);
                     }
                     window.scrollTo(0, 0);
                   });
@@ -130,7 +141,7 @@ export const BusinessCase = () => {
       case 'AlternativeSolutionB':
         return (
           <SecureRoute
-            path="/business/:businessCaseId/preferred-solution"
+            path="/business/:businessCaseId/alternative-solution-b"
             render={() => (
               <AlternativeSolution
                 formikProps={formikProps}
@@ -144,7 +155,9 @@ export const BusinessCase = () => {
                     setPages(prevArray =>
                       prevArray.filter(p => p.name !== 'AlternativeSolutionB')
                     );
-                    setPage(prev => prev - 1);
+                    history.replace(
+                      `/business/${businessCaseId}/alternative-solution-a`
+                    );
                     formikProps.setFieldValue('alternativeB', undefined);
                     formikProps.setErrors({});
                     window.scrollTo(0, 0);
@@ -161,8 +174,19 @@ export const BusinessCase = () => {
     }
   };
 
+  useEffect(() => {
+    const pageSlugs: any[] = pages.map(p => p.slug);
+    if (pageSlugs.includes(formPage)) {
+      setPageIndex(pageSlugs.indexOf(formPage));
+    } else {
+      history.replace(`/business/${businessCaseId}/general-request-info`);
+      setPageIndex(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pages, businessCaseId, formPage]);
+
   return (
-    <div className="business-case">
+    <div className="business-case margin-bottom-5">
       <Header name="CMS Business Case" />
       <main role="main">
         <Formik
@@ -215,13 +239,14 @@ export const BusinessCase = () => {
                 <Form>
                   {renderPage(formikProps)}
                   <div className="grid-container">
-                    {page > 1 && (
+                    {pageIndex > 0 && (
                       <Button
                         type="button"
                         outline
                         onClick={() => {
-                          setPage(prev => prev - 1);
                           setErrors({});
+                          const newUrl = pages[pageIndex - 1].slug;
+                          history.push(newUrl);
                           window.scrollTo(0, 0);
                         }}
                       >
@@ -229,18 +254,18 @@ export const BusinessCase = () => {
                       </Button>
                     )}
 
-                    {page < pages.length && (
+                    {pageIndex < pages.length - 1 && (
                       <Button
                         type="button"
                         onClick={() => {
                           if (pageObj.validation) {
                             validateForm().then(err => {
                               if (Object.keys(err).length === 0) {
-                                setPage(prev => prev + 1);
+                                const newUrl = pages[pageIndex + 1].slug;
+
+                                history.push(newUrl);
                               }
                             });
-                          } else {
-                            setPage(prev => prev + 1);
                           }
                           window.scrollTo(0, 0);
                         }}
@@ -249,7 +274,7 @@ export const BusinessCase = () => {
                       </Button>
                     )}
 
-                    {page === pages.length && (
+                    {pageIndex === pages.length - 1 && (
                       <Button
                         type="submit"
                         disabled={isSubmitting}
@@ -285,7 +310,7 @@ export const BusinessCase = () => {
         <div className="grid-container">
           {pageObj.type === 'FORM' && (
             <PageNumber
-              currentPage={page}
+              currentPage={pageIndex + 1}
               totalPages={pages.filter(p => p.type === 'FORM').length}
             />
           )}

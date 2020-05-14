@@ -56,8 +56,8 @@ class App extends React.Component<MainProps, MainState> {
               /> */}
               <Redirect
                 exact
-                from="/system/:businessCaseId"
-                to="/system/:businessCaseId/general-project-info"
+                from="/business/:businessCaseId"
+                to="/business/:businessCaseId/general-project-info"
               />
               <SecureRoute
                 path="/business/:businessCaseId/:formPage"
