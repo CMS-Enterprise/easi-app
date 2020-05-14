@@ -52,7 +52,7 @@ const NumberedListTerminalItem = ({
 
 const GovernanceOverview = () => {
   return (
-    <div className="governance-overview">
+    <div className="easi-governance-overview">
       <Header name="EASi Governance Overview" />
       <main role="main" className="grid-container">
         <p>
@@ -132,20 +132,22 @@ const GovernanceOverview = () => {
           header="Decision and next steps"
           body="If your business case is approved you will receive a unique Lifecycle ID. Depending on allocation, funding may or may not be immediately approved."
         />
-        <CollapsableLink label="Why does the governance process exist?">
-          <div>
-            These steps make sure
-            <ul className="margin-bottom-0">
-              <li>CMS has enough budget to allocate for your project</li>
-              <li>They can assist and help you consider various solutions</li>
-              <li>
-                They can help your team not re-build a solution that already
-                exists at CMS
-              </li>
-              <li>CMS meets various policies and remains compliant</li>
-            </ul>
-          </div>
-        </CollapsableLink>
+        <div className="margin-top-6 margin-bottom-7">
+          <CollapsableLink label="Why does the governance process exist?">
+            <div>
+              These steps make sure
+              <ul className="margin-bottom-0">
+                <li>CMS has enough budget to allocate for your project</li>
+                <li>They can assist and help you consider various solutions</li>
+                <li>
+                  They can help your team not re-build a solution that already
+                  exists at CMS
+                </li>
+                <li>CMS meets various policies and remains compliant</li>
+              </ul>
+            </div>
+          </CollapsableLink>
+        </div>
         <Button type="button">Get started</Button>
       </main>
     </div>
