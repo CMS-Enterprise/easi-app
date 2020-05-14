@@ -56,7 +56,8 @@ func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts,
 	return systems, nil
 }
 
-func validateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logger) error {
+// ValidateSystemIntakeForCedar validates all required fields to ensure we won't get errors for contents of the request
+func ValidateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logger) error {
 	expectedError := apperrors.ValidationError{
 		Err:         errors.New("validation failed"),
 		Validations: apperrors.Validations{},
@@ -184,7 +185,7 @@ func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient
 
 // ValidateAndSubmitSystemIntake submits a system intake to CEDAR
 func (c TranslatedClient) ValidateAndSubmitSystemIntake(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-	err := validateSystemIntakeForCedar(intake, logger)
+	err := ValidateSystemIntakeForCedar(intake, logger)
 	if err != nil {
 		return "", err
 	}
