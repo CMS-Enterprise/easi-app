@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/facebookgo/clock"
-	"github.com/google/uuid"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
@@ -46,11 +45,6 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to create email client", zap.Error(err))
 	}
 
-	err = emailClient.SendSystemIntakeSubmissionEmail("Mikena Test", uuid.MustParse("1abc2671-c5df-45a0-b2be-c30899b473ba"))
-	if err != nil {
-		s.logger.Fatal("Failed to send email", zap.Error(err))
-	}
-
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 
@@ -86,6 +80,7 @@ func (s *Server) routes(
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeSaveSystemIntake(s.logger),
 			cedarClient.ValidateAndSubmitSystemIntake,
+			emailClient.SendSystemIntakeSubmissionEmail,
 			s.logger,
 			saveClock,
 		),
