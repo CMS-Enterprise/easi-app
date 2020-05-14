@@ -1,6 +1,9 @@
 package apperrors
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 // UnauthorizedError is a typed error for when authorization fails
 type UnauthorizedError struct {
@@ -41,6 +44,82 @@ func (e *QueryError) Error() string {
 
 // Unwrap provides the underlying error
 func (e *QueryError) Unwrap() error {
+	return e.Err
+}
+
+// ResourceConflictError is for when a task can't be completed because of the resource state
+type ResourceConflictError struct {
+	Err        error
+	Resource   string
+	ResourceID string
+}
+
+// Error provides the error as a string
+func (e *ResourceConflictError) Error() string {
+	return fmt.Sprintf("Could not perform action on %s %s", e.Resource, e.ResourceID)
+}
+
+// Unwrap provides the underlying error
+func (e *ResourceConflictError) Unwrap() error {
+	return e.Err
+}
+
+// Validations maps attributes to validation messages
+type Validations map[string]string
+
+// ValidationError is a typed error for issues with validation
+type ValidationError struct {
+	Err         error
+	Validations Validations
+	Model       string
+	ModelID     string
+}
+
+// WithValidation allows a failed validation message be added to the ValidationError
+func (e ValidationError) WithValidation(key string, message string) {
+	e.Validations[key] = message
+}
+
+// Error provides the error as a string
+func (e *ValidationError) Error() string {
+	data, err := json.Marshal(e.Validations)
+	if err != nil {
+		return err.Error()
+	}
+	return fmt.Sprintf("Could not validate %s %s: %s", e.Model, e.ModelID, string(data))
+}
+
+// Unwrap provides the underlying error
+func (e *ValidationError) Unwrap() error {
+	return e.Err
+}
+
+// ExternalAPIOperation provides a set of operations that can fail
+type ExternalAPIOperation string
+
+const (
+	// Fetch is for failures when fetching data from an external source
+	Fetch ExternalAPIOperation = "Fetch"
+	// Submit is for failures when submitting to an external source
+	Submit ExternalAPIOperation = "Submit"
+)
+
+// ExternalAPIError is a typed error for query issues
+type ExternalAPIError struct {
+	Err       error
+	Model     string
+	ModelID   string
+	Operation ExternalAPIOperation
+	Source    string
+}
+
+// Error provides the error as a string
+func (e *ExternalAPIError) Error() string {
+	return fmt.Sprintf("Could not hit %s for %s %s with operation %s", e.Source, e.Model, e.ModelID, e.Operation)
+}
+
+// Unwrap provides the underlying error
+func (e *ExternalAPIError) Unwrap() error {
 	return e.Err
 }
 
