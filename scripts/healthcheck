@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+# wait some time for the easi health check http endpoint to return the expected version
+
+if [[ "$APP_ENV" != "prod" ]] ; then
+  url_prefix="${APP_ENV}."
+fi
+
+healthcheck_url="https://${url_prefix}easi.cms.gov/api/v1/healthcheck"
+healthcheck_timeout="300"
+
+# wait for the new service to come up
+echo -n "Waiting for health check version to match new deployment on ${healthcheck_url}" 1>&2
+until [[ "$(jq --raw-output --monochrome-output .version < <(curl --silent --show-error --max-time 2 --location "$healthcheck_url"))" == "$CIRCLE_SHA1" ]] ; do
+  if ((++time > healthcheck_timeout)) ; then
+    # we timed out
+    echo ""
+    echo "FATAL: Timed out waiting." 1>&2
+    exit 1
+  else
+    [[ $((time % 10)) -eq 0 ]] && echo -n "."
+    sleep 1
+  fi
+done
+echo ""
