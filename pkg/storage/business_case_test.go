@@ -107,15 +107,82 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 		businessCase2.EUAUserID = businessCase.EUAUserID
 
 		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(
-			`INSERT INTO business_case (id, eua_user_id, project_name) 
-			VALUES (:id, :eua_user_id, :project_name)`,
-			&businessCase)
+		insertBusinessCaseSQL := `
+			INSERT INTO business_case (
+				 id, 
+				 eua_user_id, 
+				 project_name, 
+				 requester, 
+				 requester_phone_number, 
+				 business_owner, 
+				 business_need, 
+				 cms_benefit, 
+				 priority_alignment, 
+				 success_indicators, 
+				 as_is_title, 
+				 as_is_summary, 
+				 as_is_pros, 
+				 as_is_cons, 
+				 as_is_cost_savings, 
+				 preferred_title, 
+				 preferred_summary, 
+				 preferred_acquisition_approach, 
+				 preferred_pros, 
+				 preferred_cons, 
+				 preferred_cost_savings, 
+				 alternative_a_title, 
+				 alternative_a_summary, 
+				 alternative_a_acquisition_approach, 
+				 alternative_a_pros, 
+				 alternative_a_cons, 
+				 alternative_a_cost_savings, 
+				 alternative_b_title, 
+				 alternative_b_summary, 
+				 alternative_b_acquisition_approach, 
+				 alternative_b_pros, 
+				 alternative_b_cons, 
+				 alternative_b_cost_savings
+			)
+			VALUES 
+			(
+				 :id, 
+				 :eua_user_id, 
+				 :project_name, 
+				 :requester, 
+				 :requester_phone_number, 
+				 :business_owner, 
+				 :business_need, 
+				 :cms_benefit, 
+				 :priority_alignment, 
+				 :success_indicators, 
+				 :as_is_title, 
+				 :as_is_summary, 
+				 :as_is_pros, 
+				 :as_is_cons, 
+				 :as_is_cost_savings, 
+				 :preferred_title, 
+				 :preferred_summary, 
+				 :preferred_acquisition_approach, 
+				 :preferred_pros, 
+				 :preferred_cons, 
+				 :preferred_cost_savings, 
+				 :alternative_a_title, 
+				 :alternative_a_summary, 
+				 :alternative_a_acquisition_approach, 
+				 :alternative_a_pros, 
+				 :alternative_a_cons, 
+				 :alternative_a_cost_savings, 
+				 :alternative_b_title, 
+				 :alternative_b_summary, 
+				 :alternative_b_acquisition_approach, 
+				 :alternative_b_pros, 
+				 :alternative_b_cons, 
+				 :alternative_b_cost_savings 
+			)
+		`
+		_, err := tx.NamedExec(insertBusinessCaseSQL, &businessCase)
 		s.NoError(err)
-		_, err = tx.NamedExec(
-			`INSERT INTO business_case (id, eua_user_id, project_name) 
-			VALUES (:id, :eua_user_id, :project_name)`,
-			&businessCase2)
+		_, err = tx.NamedExec(insertBusinessCaseSQL, &businessCase2)
 		s.NoError(err)
 		for _, lifecycleItem := range businessCase.LifecycleCostLines {
 			_, err = tx.NamedExec(
@@ -140,6 +207,7 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 		s.Len(fetched, 2)
 		s.Len(fetched[0].LifecycleCostLines, 2)
 		s.Equal(businessCase.EUAUserID, fetched[0].EUAUserID)
+		s.Contains(fetched, businessCase)
 	})
 
 	s.Run("fetches no results with other EUA ID", func() {
