@@ -6,12 +6,11 @@ package client
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"github.com/go-openapi/runtime"
+	"github.com/cmsgov/easi-app/pkg/cedar/gen/client/operations"
 	httptransport "github.com/go-openapi/runtime/client"
 
-	strfmt "github.com/go-openapi/strfmt"
-
-	"github.com/cmsgov/easi-app/pkg/cedar/gen/client/operations"
+	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
 )
 
 // Default e a si core HTTP client.
@@ -20,7 +19,7 @@ var Default = NewHTTPClient(nil)
 const (
 	// DefaultHost is the default Host
 	// found in Meta (info) section of spec file
-	DefaultHost string = "webmethods-apigw.cedarimpl.cms.gov"
+	DefaultHost string = "cdrdevapigw1.awscloud.cms.local:5555"
 	// DefaultBasePath is the default BasePath
 	// found in Meta (info) section of spec file
 	DefaultBasePath string = "/gateway/EASi Core API/1.0"
@@ -56,9 +55,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *EASiCore {
 
 	cli := new(EASiCore)
 	cli.Transport = transport
-
 	cli.Operations = operations.New(transport, formats)
-
 	return cli
 }
 
@@ -103,7 +100,7 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // EASiCore is a client for e a si core
 type EASiCore struct {
-	Operations *operations.Client
+	Operations operations.ClientService
 
 	Transport runtime.ClientTransport
 }
@@ -111,7 +108,5 @@ type EASiCore struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *EASiCore) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
-
 	c.Operations.SetTransport(transport)
-
 }

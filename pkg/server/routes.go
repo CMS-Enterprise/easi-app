@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/facebookgo/clock"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
@@ -61,13 +62,16 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
+	saveClock := clock.New()
 	systemIntakeHandler := handlers.SystemIntakeHandler{
 		Logger: s.logger,
 		SaveSystemIntake: services.NewSaveSystemIntake(
 			store.SaveSystemIntake,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeSaveSystemIntake(s.logger),
+			cedarClient.ValidateAndSubmitSystemIntake,
 			s.logger,
+			saveClock,
 		),
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
 			store.FetchSystemIntakeByID,

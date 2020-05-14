@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -87,15 +88,30 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			euaID, ok := appcontext.EuaID(r.Context())
 			if !ok {
 				logger.Error("Failed to get EUA ID from context")
-				http.Error(w, "Failed to PUT system intake", http.StatusInternalServerError)
+				http.Error(w, "Failed to PUT system intake", http.StatusUnauthorized)
 				return
 			}
 			intake.EUAUserID = euaID
+
 			err = h.SaveSystemIntake(r.Context(), &intake)
 			if err != nil {
-				logger.Error(fmt.Sprintf("Failed to save system intake: %v", err))
-				// TODO: Replace with more helpful errors
-				http.Error(w, "Failed to save system intake", http.StatusInternalServerError)
+				switch err.(type) {
+				case *apperrors.ResourceConflictError:
+					logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
+					// TODO: Replace with more helpful errors
+					http.Error(w, "System has already been submitted", http.StatusConflict)
+				case *apperrors.ValidationError:
+					logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
+					http.Error(w, "Failed to validate system intake", http.StatusBadRequest)
+				case *apperrors.ExternalAPIError:
+					logger.Error(fmt.Sprintf("Failed to submit system intake: %v", err))
+					// TODO: Replace with more helpful errors
+					http.Error(w, "Failed to submit system intake", http.StatusInternalServerError)
+				default:
+					logger.Error(fmt.Sprintf("Failed to save system intake: %v", err))
+					// TODO: Replace with more helpful errors
+					http.Error(w, "Failed to save system intake", http.StatusInternalServerError)
+				}
 				return
 			}
 		default:
