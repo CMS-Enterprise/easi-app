@@ -25,7 +25,7 @@ func NewFetchSystemIntakesByEuaID(
 			logger.Error("failed to fetch system intakes")
 			return models.SystemIntakes{}, &apperrors.QueryError{
 				Err:       err,
-				Model:     "system intakes",
+				Model:     "System Intakes",
 				Operation: apperrors.QueryFetch,
 			}
 		}
@@ -71,6 +71,7 @@ func NewSaveSystemIntake(
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 	logger *zap.Logger,
+	clock clock.Clock,
 ) func(context context.Context, intake *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
 		existingIntake, fetchErr := fetch(intake.ID)
@@ -80,7 +81,7 @@ func NewSaveSystemIntake(
 			return &apperrors.QueryError{
 				Err:       fetchErr,
 				Operation: apperrors.QueryFetch,
-				Model:     "SystemIntake",
+				Model:     "System Intake",
 			}
 		}
 		ok, err := authorize(ctx, existingIntake)
@@ -90,7 +91,7 @@ func NewSaveSystemIntake(
 		if !ok {
 			return &apperrors.UnauthorizedError{Err: err}
 		}
-		updatedTime := clock.New().Now().UTC()
+		updatedTime := clock.Now().UTC()
 		intake.UpdatedAt = &updatedTime
 
 		if intake.Status == models.SystemIntakeStatusSUBMITTED {
@@ -123,7 +124,7 @@ func NewSaveSystemIntake(
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
-				Model:     "SystemIntake",
+				Model:     "System Intake",
 				Operation: apperrors.QuerySave,
 			}
 		}
@@ -142,23 +143,10 @@ func NewFetchSystemIntakeByID(
 			logger.Error("failed to fetch system intake")
 			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       err,
-				Model:     "System intake",
+				Model:     "System Intake",
 				Operation: apperrors.QueryFetch,
 			}
 		}
 		return intake, nil
-	}
-}
-
-// NewValidateAndSubmitSystemIntake is a service to submit system intake to CEDAR
-func NewValidateAndSubmitSystemIntake(
-	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
-) func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-	return func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-		alfabetID, err := validateAndSubmit(intake, logger)
-		if err != nil {
-			return "", err
-		}
-		return alfabetID, nil
 	}
 }

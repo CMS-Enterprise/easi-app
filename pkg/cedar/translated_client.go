@@ -63,7 +63,7 @@ func validateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logge
 		ModelID:     intake.ID.String(),
 		Model:       "System Intake",
 	}
-	const validationMessage = "is not valid"
+	const validationMessage = "is required"
 	if validate.RequireUUID(intake.ID) {
 		expectedError.WithValidation("ID", validationMessage)
 	}
