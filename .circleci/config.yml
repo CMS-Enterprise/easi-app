@@ -48,6 +48,7 @@ jobs:
           command: |
             ./scripts/build_app
             ./scripts/testsuite
+
   lint:
     docker:
       - image: *circleci_docker_primary
