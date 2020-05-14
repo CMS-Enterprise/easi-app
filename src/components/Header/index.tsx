@@ -13,17 +13,15 @@ type HeaderProps = {
 
 export const Header = ({ children, name }: HeaderProps) => {
   const { authState, authService } = useOktaAuth();
-  const [userInfo, setUserInfo] = useState({ name: '' });
+  const [userName, setUserName] = useState('');
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const dropdownNode = useRef<any>();
 
   useEffect(() => {
     if (authState.isAuthenticated) {
       authService.getUser().then((info: any) => {
-        setUserInfo(info);
+        setUserName(info.name);
       });
-    } else {
-      setUserInfo({ name: '' });
     }
   }, [authState, authService]);
 
@@ -80,7 +78,7 @@ export const Header = ({ children, name }: HeaderProps) => {
                   setDisplayDropdown(!displayDropdown);
                 }}
               >
-                {userInfo.name || ''}
+                {userName}
                 <i className={arrowClassname} />
               </button>
               {displayDropdown && (
