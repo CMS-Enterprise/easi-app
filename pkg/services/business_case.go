@@ -19,7 +19,7 @@ func NewFetchBusinessCaseByID(
 			logger.Error("failed to fetch business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
 				Err:       err,
-				Model:     "business case",
+				Model:     "Business Case",
 				Operation: "fetch",
 			}
 		}
