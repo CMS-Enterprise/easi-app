@@ -21,7 +21,7 @@ const NumberedListContinuingItem = ({
       <div className="easi-governance-overview__list-item-continuing">
         <span className="easi-governance-overview__dot">{index}</span>
       </div>
-      <div className="margin-top-05 margin-left-1 margin-bottom-4">
+      <div className="margin-top-05 margin-left-1 margin-bottom-3 tablet:margin-bottom-4">
         <p className="text-bold margin-top-0 margin-bottom-05">{header}</p>
         <p className="margin-bottom-0 line-height-body-4 margin-top-2px">
           {body}
