@@ -98,7 +98,9 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 	submit := func(intake *models.SystemIntake, logger2 *zap.Logger) (string, error) {
 		return "ALFABET-ID", nil
 	}
+	emailCount := 0
 	sendEmail := func(requester string, intakeID uuid.UUID) error {
+		emailCount++
 		return nil
 	}
 	saveClock := clock.NewMock()
@@ -115,10 +117,14 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 	s.Run("returns no error when successful on submit and save", func() {
 		ctx := context.Background()
 		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, sendEmail, logger, saveClock)
+		s.Equal(0, emailCount)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
 		s.NoError(err)
+		s.Equal(1, emailCount)
+
+		emailCount = 0
 	})
 
 	s.Run("returns query error when fetch fails", func() {
@@ -209,6 +215,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
 		s.IsType(&apperrors.ValidationError{}, err)
+		s.Equal(0, emailCount)
 	})
 
 	s.Run("returns error when submission fails", func() {
@@ -227,6 +234,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
 		s.IsType(&apperrors.ExternalAPIError{}, err)
+		s.Equal(0, emailCount)
 	})
 
 	s.Run("returns error when intake has already been submitted", func() {
@@ -242,9 +250,10 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		err := saveSystemIntake(ctx, &alreadySubmittedIntake)
 
 		s.IsType(&apperrors.ResourceConflictError{}, err)
+		s.Equal(0, emailCount)
 	})
 
-	s.Run("returns query error when email fails", func() {
+	s.Run("returns notification error when email fails", func() {
 		ctx := context.Background()
 		failSendEmail := func(requester string, intakeID uuid.UUID) error {
 			return &apperrors.NotificationError{
