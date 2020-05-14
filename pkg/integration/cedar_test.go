@@ -2,6 +2,7 @@ package integration
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 
@@ -18,7 +19,7 @@ import (
 // Other tests should mock the API
 func (s *IntegrationTestSuite) TestCEDARConnection() {
 	if s.environment != appconfig.LocalEnv.String() {
-		// TODO: When logger gets added, put in test also and print skips
+		fmt.Println("Skipped 'TestCEDARConnection' test")
 		return
 	}
 
