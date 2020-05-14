@@ -21,10 +21,10 @@ const Home = ({ history }: HomeProps) => {
     (state: AppState) => state.systemIntakes.systemIntakes
   );
   useEffect(() => {
-    if (authState.isAuthenticated) {
-      dispatch(fetchSystemIntakes());
-    }
-  }, [dispatch, authState.isAuthenticated]);
+    dispatch(fetchSystemIntakes());
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getSystemIntakeBanners = () => {
     return systemIntakes.map((intake: SystemIntakeForm) => {
