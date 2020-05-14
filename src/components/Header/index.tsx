@@ -76,7 +76,9 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
               </button>
               {displayDropdown && (
                 <UserActionList id="Header-UserActionsList">
-                  <UserAction link="/system/new">Add New System</UserAction>
+                  <UserAction link="/governance-overview">
+                    Add New System
+                  </UserAction>
                   <UserAction onClick={handleLogout}>Log Out</UserAction>
                 </UserActionList>
               )}

@@ -88,7 +88,7 @@ const Home = ({ auth, history }: HomeProps) => {
             <Button
               type="button"
               onClick={() => {
-                history.push('/system/new');
+                history.push('/governance-overview');
               }}
             >
               Start now
