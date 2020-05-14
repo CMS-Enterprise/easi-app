@@ -17,7 +17,7 @@ jobs:
       - run:
           name: Build the flyway migrations for testing
           command: |
-            ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate" "latest"
+            ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate"
 
   test:
     docker:
