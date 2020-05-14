@@ -7,7 +7,6 @@ builddir="$(git rev-parse --show-toplevel)"
 scriptdir="$builddir/scripts/"
 
 ecr_backend="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend"
-ecr_db_migrate="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate"
 
 APPLICATION_VERSION="${CIRCLE_SHA1:-"$(git rev-parse HEAD)"}"
 APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
@@ -27,21 +26,4 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   else
     exit
   fi
-
-  # build & tag the db migrations image, then push to ECR
-  if (set -x ; docker build --quiet --no-cache --tag "easi-db-migrate" "$builddir" --file Dockerfile.db_migrations) ; then
-    "$scriptdir"/tag_and_push "easi-db-migrate:latest" "${ecr_db_migrate}" "${APPLICATION_VERSION}" || exit
-    "$scriptdir"/tag_and_push "easi-db-migrate:latest" "${ecr_db_migrate}" "latest" || exit
-    "$scriptdir"/tag_and_push "easi-db-migrate:latest" "${ecr_db_migrate}" "dev" || exit
-
-    if [[ "$CIRCLE_BRANCH" = "master" ]]; then
-      "$scriptdir"/tag_and_push "easi-db-migrate:latest" "${ecr_db_migrate}" "impl" || exit
-    fi
-  else
-    exit
-  fi
-else
-  status=$?
-  echo "FATAL: ECR login failed" 1>&2
-  exit "$status"
 fi
