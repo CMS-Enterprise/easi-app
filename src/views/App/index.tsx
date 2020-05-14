@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
+import { SecureRoute, LoginCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -27,9 +27,6 @@ class App extends React.Component<MainProps, MainState> {
               <Route path="/" exact component={Home} />
               <Route path="/login" exact component={Login} />
               <Route path="/sandbox" exact component={Sandbox} />
-              /* Subroutes should precede any parent routes or they will not be
-              callable */
-              <SecureRoute path="/system/new" exact component={SystemIntake} />
               <SecureRoute
                 exact
                 path="/system/:systemId/grt-review"
@@ -63,7 +60,7 @@ class App extends React.Component<MainProps, MainState> {
                 path="/business/:businessCaseId/:formPage"
                 component={BusinessCase}
               />
-              <Route path="/implicit/callback" component={ImplicitCallback} />
+              <Route path="/implicit/callback" component={LoginCallback} />
             </Switch>
           </AuthenticationWrapper>
         </BrowserRouter>
