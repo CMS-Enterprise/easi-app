@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Header from 'components/Header';
 import './index.scss';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -50,7 +51,7 @@ const NumberedListTerminalItem = ({
   );
 };
 
-const GovernanceOverview = () => {
+const GovernanceOverview = ({ history }: RouteComponentProps) => {
   return (
     <div className="easi-governance-overview">
       <Header name="EASi Governance Overview" />
@@ -148,10 +149,17 @@ const GovernanceOverview = () => {
             </div>
           </CollapsableLink>
         </div>
-        <Button type="button">Get started</Button>
+        <Button
+          type="button"
+          onClick={() => {
+            history.push('/governance-overview');
+          }}
+        >
+          Get started
+        </Button>
       </main>
     </div>
   );
 };
 
-export default GovernanceOverview;
+export default withRouter(GovernanceOverview);
