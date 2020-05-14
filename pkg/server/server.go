@@ -73,7 +73,7 @@ func Serve(config *viper.Viper) {
 	s := NewServer(config)
 	// start the server
 	s.logger.Info("Serving application on localhost:8080")
-	err := http.ListenAndServe(":8080", s)
+	err := http.ListenAndServe("localhost:8080", s)
 	if err != nil {
 		s.logger.Fatal("Failed to start server")
 	}
