@@ -13,7 +13,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	models "github.com/cmsgov/easi-app/pkg/cedar/gen/models"
+	"github.com/cmsgov/easi-app/pkg/cedar/gen/models"
 )
 
 // SystemsGET1Reader is a Reader for the SystemsGET1 structure.
@@ -30,8 +30,20 @@ func (o *SystemsGET1Reader) ReadResponse(response runtime.ClientResponse, consum
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewSystemsGET1BadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 401:
 		result := NewSystemsGET1Unauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewSystemsGET1InternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -75,6 +87,27 @@ func (o *SystemsGET1OK) readResponse(response runtime.ClientResponse, consumer r
 	return nil
 }
 
+// NewSystemsGET1BadRequest creates a SystemsGET1BadRequest with default headers values
+func NewSystemsGET1BadRequest() *SystemsGET1BadRequest {
+	return &SystemsGET1BadRequest{}
+}
+
+/*SystemsGET1BadRequest handles this case with default header values.
+
+Bad Request
+*/
+type SystemsGET1BadRequest struct {
+}
+
+func (o *SystemsGET1BadRequest) Error() string {
+	return fmt.Sprintf("[GET /systems][%d] systemsGET1BadRequest ", 400)
+}
+
+func (o *SystemsGET1BadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
 // NewSystemsGET1Unauthorized creates a SystemsGET1Unauthorized with default headers values
 func NewSystemsGET1Unauthorized() *SystemsGET1Unauthorized {
 	return &SystemsGET1Unauthorized{}
@@ -92,6 +125,27 @@ func (o *SystemsGET1Unauthorized) Error() string {
 }
 
 func (o *SystemsGET1Unauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewSystemsGET1InternalServerError creates a SystemsGET1InternalServerError with default headers values
+func NewSystemsGET1InternalServerError() *SystemsGET1InternalServerError {
+	return &SystemsGET1InternalServerError{}
+}
+
+/*SystemsGET1InternalServerError handles this case with default header values.
+
+Internal Server Error
+*/
+type SystemsGET1InternalServerError struct {
+}
+
+func (o *SystemsGET1InternalServerError) Error() string {
+	return fmt.Sprintf("[GET /systems][%d] systemsGET1InternalServerError ", 500)
+}
+
+func (o *SystemsGET1InternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
