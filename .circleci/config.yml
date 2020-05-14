@@ -136,6 +136,7 @@ jobs:
           name: Run migrations
           command: |
             ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
@@ -171,6 +172,7 @@ jobs:
           name: Run migrations
           command: |
             ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
