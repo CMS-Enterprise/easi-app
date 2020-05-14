@@ -20,7 +20,7 @@ import (
 // NewSystemsGET1Params creates a new SystemsGET1Params object
 // with the default values initialized.
 func NewSystemsGET1Params() *SystemsGET1Params {
-
+	var ()
 	return &SystemsGET1Params{
 
 		timeout: cr.DefaultTimeout,
@@ -30,7 +30,7 @@ func NewSystemsGET1Params() *SystemsGET1Params {
 // NewSystemsGET1ParamsWithTimeout creates a new SystemsGET1Params object
 // with the default values initialized, and the ability to set a timeout on a request
 func NewSystemsGET1ParamsWithTimeout(timeout time.Duration) *SystemsGET1Params {
-
+	var ()
 	return &SystemsGET1Params{
 
 		timeout: timeout,
@@ -40,7 +40,7 @@ func NewSystemsGET1ParamsWithTimeout(timeout time.Duration) *SystemsGET1Params {
 // NewSystemsGET1ParamsWithContext creates a new SystemsGET1Params object
 // with the default values initialized, and the ability to set a context for a request
 func NewSystemsGET1ParamsWithContext(ctx context.Context) *SystemsGET1Params {
-
+	var ()
 	return &SystemsGET1Params{
 
 		Context: ctx,
@@ -50,7 +50,7 @@ func NewSystemsGET1ParamsWithContext(ctx context.Context) *SystemsGET1Params {
 // NewSystemsGET1ParamsWithHTTPClient creates a new SystemsGET1Params object
 // with the default values initialized, and the ability to set a custom HTTPClient for a request
 func NewSystemsGET1ParamsWithHTTPClient(client *http.Client) *SystemsGET1Params {
-
+	var ()
 	return &SystemsGET1Params{
 		HTTPClient: client,
 	}
@@ -60,6 +60,10 @@ func NewSystemsGET1ParamsWithHTTPClient(client *http.Client) *SystemsGET1Params 
 for the systems g e t 1 operation typically these are written to a http.Request
 */
 type SystemsGET1Params struct {
+
+	/*ID*/
+	ID *string
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -98,6 +102,17 @@ func (o *SystemsGET1Params) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithID adds the id to the systems g e t 1 params
+func (o *SystemsGET1Params) WithID(id *string) *SystemsGET1Params {
+	o.SetID(id)
+	return o
+}
+
+// SetID adds the id to the systems g e t 1 params
+func (o *SystemsGET1Params) SetID(id *string) {
+	o.ID = id
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *SystemsGET1Params) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -105,6 +120,22 @@ func (o *SystemsGET1Params) WriteToRequest(r runtime.ClientRequest, reg strfmt.R
 		return err
 	}
 	var res []error
+
+	if o.ID != nil {
+
+		// query param id
+		var qrID string
+		if o.ID != nil {
+			qrID = *o.ID
+		}
+		qID := qrID
+		if qID != "" {
+			if err := r.SetQueryParam("id", qID); err != nil {
+				return err
+			}
+		}
+
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
