@@ -10,8 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-// NewSystemIntake should provide a saveable intake with all struct fields
-func NewSystemIntake() models.SystemIntake {
+func newSystemIntake() models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
 		EUAUserID:               testhelpers.RandomEUAID(),
@@ -39,7 +38,7 @@ func NewSystemIntake() models.SystemIntake {
 
 func (s StoreTestSuite) TestSaveSystemIntake() {
 	s.Run("save a new system intake", func() {
-		intake := NewSystemIntake()
+		intake := newSystemIntake()
 
 		err := s.store.SaveSystemIntake(&intake)
 
@@ -130,7 +129,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 	s.Run("golden path to fetch a system intake", func() {
-		intake := NewSystemIntake()
+		intake := newSystemIntake()
 		id := intake.ID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
@@ -157,8 +156,8 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	s.Run("golden path to fetch system intakes", func() {
-		intake := NewSystemIntake()
-		intake2 := NewSystemIntake()
+		intake := newSystemIntake()
+		intake2 := newSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)

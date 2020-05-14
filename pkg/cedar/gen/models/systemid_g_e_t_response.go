@@ -6,25 +6,29 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // SystemidGETResponse systemid g e t response
 // swagger:model systemid_GET_response
 type SystemidGETResponse struct {
 
+	// response
+	Response *Response `json:"Response,omitempty"`
+
 	// system detail
-	// Required: true
-	SystemDetail *SystemDetail `json:"SystemDetail"`
+	SystemDetail *SystemDetail `json:"SystemDetail,omitempty"`
 }
 
 // Validate validates this systemid g e t response
 func (m *SystemidGETResponse) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateResponse(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateSystemDetail(formats); err != nil {
 		res = append(res, err)
@@ -36,10 +40,28 @@ func (m *SystemidGETResponse) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *SystemidGETResponse) validateResponse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Response) { // not required
+		return nil
+	}
+
+	if m.Response != nil {
+		if err := m.Response.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("Response")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *SystemidGETResponse) validateSystemDetail(formats strfmt.Registry) error {
 
-	if err := validate.Required("SystemDetail", "body", m.SystemDetail); err != nil {
-		return err
+	if swag.IsZero(m.SystemDetail) { // not required
+		return nil
 	}
 
 	if m.SystemDetail != nil {

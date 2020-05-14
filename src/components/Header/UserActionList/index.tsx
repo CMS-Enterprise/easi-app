@@ -9,7 +9,7 @@ type UserActionListProps = {
 };
 
 type UserActionProps = {
-  onClick?: () => {};
+  onClick?: () => void;
   link?: string;
   children: React.ReactNode;
 };

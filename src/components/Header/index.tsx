@@ -1,22 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
-import { withAuth } from '@okta/okta-react';
-import useAuth from 'hooks/useAuth';
+import { useOktaAuth } from '@okta/okta-react';
 import UsGovBanner from 'components/UsGovBanner';
 import { UserActionList, UserAction } from './UserActionList';
 import './index.scss';
 
 type HeaderProps = {
-  auth: any;
-  children: React.ReactNode | React.ReactNodeArray;
-  name: string;
+  children?: React.ReactNode | React.ReactNodeArray;
+  name?: string;
 };
 
-export const Header = ({ auth, children, name }: HeaderProps) => {
-  const [isAuthenticated, user = {}, handleLogout] = useAuth(auth);
+export const Header = ({ children, name }: HeaderProps) => {
+  const { authState, authService } = useOktaAuth();
+  const [userName, setUserName] = useState('');
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const dropdownNode = useRef<any>();
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      authService.getUser().then((info: any) => {
+        setUserName(info.name);
+      });
+    }
+  }, [authState, authService]);
 
   const handleClick = (e: Event) => {
     if (
@@ -57,7 +64,7 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
           <span className="fa fa-bars" />
         </button>
         <div className="navbar--container">
-          {isAuthenticated ? (
+          {authState.isAuthenticated ? (
             <div className="easi-header__dropdown-wrapper" ref={dropdownNode}>
               <button
                 aria-label={
@@ -71,7 +78,7 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
                   setDisplayDropdown(!displayDropdown);
                 }}
               >
-                {user && user.name ? user.name : ''}
+                {userName}
                 <i className={arrowClassname} />
               </button>
               {displayDropdown && (
@@ -79,7 +86,13 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
                   <UserAction link="/governance-overview">
                     Add New System
                   </UserAction>
-                  <UserAction onClick={handleLogout}>Log Out</UserAction>
+                  <UserAction
+                    onClick={() => {
+                      authService.logout();
+                    }}
+                  >
+                    Log Out
+                  </UserAction>
                 </UserActionList>
               )}
             </div>
@@ -100,11 +113,13 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
         </button>
         <div className="usa-nav__inner">
           {children}
-          {isAuthenticated ? (
+          {authState.isAuthenticated ? (
             <button
               type="button"
               className="easi-header__nav-link"
-              onClick={handleLogout}
+              onClick={() => {
+                authService.logout();
+              }}
             >
               Logout
             </button>
@@ -119,4 +134,4 @@ export const Header = ({ auth, children, name }: HeaderProps) => {
   );
 };
 
-export default withAuth(Header);
+export default Header;
