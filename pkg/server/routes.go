@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 
+	"github.com/google/uuid"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
@@ -39,9 +40,14 @@ func (s *Server) routes(
 	sesConfig := s.NewSESConfig()
 	sesSender := appses.NewSender(sesConfig)
 	emailConfig := s.NewEmailConfig()
-	_, err := email.NewClient(emailConfig, sesSender)
+	emailClient, err := email.NewClient(emailConfig, sesSender)
 	if err != nil {
 		s.logger.Fatal("Failed to create email client", zap.Error(err))
+	}
+
+	err = emailClient.SendSystemIntakeSubmissionEmail("Mikena Test", uuid.MustParse("1abc2671-c5df-45a0-b2be-c30899b473ba"))
+	if err != nil {
+		s.logger.Fatal("Failed to send email", zap.Error(err))
 	}
 
 	// API base path is versioned
