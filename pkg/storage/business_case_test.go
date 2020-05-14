@@ -99,3 +99,122 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.Equal(&models.BusinessCase{}, fetched)
 	})
 }
+
+func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
+	s.Run("golden path to fetch business cases", func() {
+		businessCase := newBusinessCase()
+		businessCase2 := newBusinessCase()
+		businessCase2.EUAUserID = businessCase.EUAUserID
+
+		tx := s.db.MustBegin()
+		insertBusinessCaseSQL := `
+			INSERT INTO business_case (
+				 id, 
+				 eua_user_id, 
+				 project_name, 
+				 requester, 
+				 requester_phone_number, 
+				 business_owner, 
+				 business_need, 
+				 cms_benefit, 
+				 priority_alignment, 
+				 success_indicators, 
+				 as_is_title, 
+				 as_is_summary, 
+				 as_is_pros, 
+				 as_is_cons, 
+				 as_is_cost_savings, 
+				 preferred_title, 
+				 preferred_summary, 
+				 preferred_acquisition_approach, 
+				 preferred_pros, 
+				 preferred_cons, 
+				 preferred_cost_savings, 
+				 alternative_a_title, 
+				 alternative_a_summary, 
+				 alternative_a_acquisition_approach, 
+				 alternative_a_pros, 
+				 alternative_a_cons, 
+				 alternative_a_cost_savings, 
+				 alternative_b_title, 
+				 alternative_b_summary, 
+				 alternative_b_acquisition_approach, 
+				 alternative_b_pros, 
+				 alternative_b_cons, 
+				 alternative_b_cost_savings
+			)
+			VALUES 
+			(
+				 :id, 
+				 :eua_user_id, 
+				 :project_name, 
+				 :requester, 
+				 :requester_phone_number, 
+				 :business_owner, 
+				 :business_need, 
+				 :cms_benefit, 
+				 :priority_alignment, 
+				 :success_indicators, 
+				 :as_is_title, 
+				 :as_is_summary, 
+				 :as_is_pros, 
+				 :as_is_cons, 
+				 :as_is_cost_savings, 
+				 :preferred_title, 
+				 :preferred_summary, 
+				 :preferred_acquisition_approach, 
+				 :preferred_pros, 
+				 :preferred_cons, 
+				 :preferred_cost_savings, 
+				 :alternative_a_title, 
+				 :alternative_a_summary, 
+				 :alternative_a_acquisition_approach, 
+				 :alternative_a_pros, 
+				 :alternative_a_cons, 
+				 :alternative_a_cost_savings, 
+				 :alternative_b_title, 
+				 :alternative_b_summary, 
+				 :alternative_b_acquisition_approach, 
+				 :alternative_b_pros, 
+				 :alternative_b_cons, 
+				 :alternative_b_cost_savings 
+			)
+		`
+		_, err := tx.NamedExec(insertBusinessCaseSQL, &businessCase)
+		s.NoError(err)
+		_, err = tx.NamedExec(insertBusinessCaseSQL, &businessCase2)
+		s.NoError(err)
+		for _, lifecycleItem := range businessCase.LifecycleCostLines {
+			_, err = tx.NamedExec(
+				`INSERT INTO estimated_lifecycle_cost (id, business_case, solution, year, phase, cost)
+					VALUES (:id, :business_case, :solution, :year, :phase, :cost)`,
+				&lifecycleItem)
+			s.NoError(err)
+		}
+		for _, lifecycleItem := range businessCase2.LifecycleCostLines {
+			_, err = tx.NamedExec(
+				`INSERT INTO estimated_lifecycle_cost (id, business_case, solution, year, phase, cost)
+					VALUES (:id, :business_case, :solution, :year, :phase, :cost)`,
+				&lifecycleItem)
+			s.NoError(err)
+		}
+		err = tx.Commit()
+		s.NoError(err)
+
+		fetched, err := s.store.FetchBusinessCasesByEuaID(businessCase.EUAUserID)
+
+		s.NoError(err, "failed to fetch business cases")
+		s.Len(fetched, 2)
+		s.Len(fetched[0].LifecycleCostLines, 2)
+		s.Equal(businessCase.EUAUserID, fetched[0].EUAUserID)
+		s.Contains(fetched, businessCase)
+	})
+
+	s.Run("fetches no results with other EUA ID", func() {
+		fetched, err := s.store.FetchBusinessCasesByEuaID(testhelpers.RandomEUAID())
+
+		s.NoError(err)
+		s.Len(fetched, 0)
+		s.Equal(models.BusinessCases{}, fetched)
+	})
+}
