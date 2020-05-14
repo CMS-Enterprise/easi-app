@@ -23,6 +23,7 @@ require (
 	github.com/graph-gophers/graphql-go v0.0.0-20191115155744-f33e81362277 // indirect
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/jmoiron/sqlx v1.2.0
+	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/lestrrat-go/jwx v1.0.2 // indirect
 	github.com/lib/pq v1.5.2
 	github.com/mitchellh/mapstructure v1.3.0 // indirect
