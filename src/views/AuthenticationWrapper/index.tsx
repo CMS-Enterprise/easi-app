@@ -1,23 +1,24 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { Security } from '@okta/okta-react';
-
-// This can do anything. It doesn't have to redirect
-// It can be a pop up modal, alert message, etc.
-function onAuthRequired({ history }: any): void {
-  history.push('/login');
-}
 
 type AuthenticationWrapperProps = {
   children: React.ReactNode;
 };
 
 const AuthenticationWrapper = ({ children }: AuthenticationWrapperProps) => {
+  const history = useHistory();
+
+  const handleAuthRequiredRedirect = () => {
+    history.push('/login');
+  };
+
   return (
     <Security
       issuer={process.env.REACT_APP_OKTA_ISSUER}
       clientId={process.env.REACT_APP_OKTA_CLIENT_ID}
       redirectUri={process.env.REACT_APP_OKTA_REDIRECT_URI}
-      onAuthRequired={onAuthRequired}
+      onAuthRequired={handleAuthRequiredRedirect}
       responseType={['code']}
       pkce
     >

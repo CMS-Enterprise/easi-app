@@ -8,9 +8,8 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
@@ -19,8 +18,8 @@ import (
 // swagger:model SystemDetail
 type SystemDetail struct {
 
-	// business function alignment
-	BusinessFunctionAlignment []string `json:"business_function_alignment"`
+	// business function alignments
+	BusinessFunctionAlignments []string `json:"business_function_alignments"`
 
 	// business owner
 	BusinessOwner string `json:"business_owner,omitempty"`
@@ -49,38 +48,48 @@ type SystemDetail struct {
 	// federal ftes
 	FederalFtes int32 `json:"federal_ftes,omitempty"`
 
-	// gpr changes next release
-	GprChangesNextRelease bool `json:"gpr_changes_next_release,omitempty"`
+	// yyyy-MM-dd
+	GprChangesInNextRelease bool `json:"gpr_changes_in_next_release,omitempty"`
 
 	// id
 	// Required: true
 	ID *string `json:"id"`
 
+	// is business application
+	IsBusinessApplication bool `json:"is_business_application,omitempty"`
+
+	// is cms owned
+	IsCmsOwned bool `json:"is_cms_owned,omitempty"`
+
+	// is parent system
+	IsParentSystem bool `json:"is_parent_system,omitempty"`
+
 	// isso
 	Isso string `json:"isso,omitempty"`
 
-	// major program alignment
-	MajorProgramAlignment []string `json:"major_program_alignment"`
-
-	// mission essential function
-	// Required: true
-	MissionEssentialFunction []*MissionEssentialFunction `json:"mission_essential_function"`
+	// major program alignments
+	MajorProgramAlignments []string `json:"major_program_alignments"`
 
 	// mission essential functions
-	MissionEssentialFunctions string `json:"mission_essential_functions,omitempty"`
+	MissionEssentialFunctions []*MissionEssentialFunction `json:"mission_essential_functions"`
 
-	// next major project date
-	NextMajorProjectDate string `json:"next_major_project_date,omitempty"`
+	// yyyy-MM-dd
+	// Format: date
+	NextMajorProjectDate strfmt.Date `json:"next_major_project_date,omitempty"`
 
-	// next planned prod release date
-	NextPlannedProdReleaseDate string `json:"next_planned_prod_release_date,omitempty"`
+	// yyyy-MM-dd
+	// Format: date
+	NextPlannedProdReleaseDate strfmt.Date `json:"next_planned_prod_release_date,omitempty"`
+
+	// parent system name
+	ParentSystemName string `json:"parent_system_name,omitempty"`
 
 	// product owner
 	ProductOwner string `json:"product_owner,omitempty"`
 
-	// software
+	// software products
 	// Required: true
-	Software []*Software `json:"software"`
+	SoftwareProducts []*SoftwareProduct `json:"software_products"`
 
 	// supported user count
 	SupportedUserCount int32 `json:"supported_user_count,omitempty"`
@@ -88,6 +97,9 @@ type SystemDetail struct {
 	// system acronym
 	// Required: true
 	SystemAcronym *string `json:"system_acronym"`
+
+	// system classification
+	SystemClassification string `json:"system_classification,omitempty"`
 
 	// system maintainer org
 	SystemMaintainerOrg string `json:"system_maintainer_org,omitempty"`
@@ -98,6 +110,12 @@ type SystemDetail struct {
 
 	// system owner
 	SystemOwner string `json:"system_owner,omitempty"`
+
+	// system state
+	SystemState string `json:"system_state,omitempty"`
+
+	// system type
+	SystemType string `json:"system_type,omitempty"`
 
 	// tlc profile reviewer
 	TlcProfileReviewer string `json:"tlc_profile_reviewer,omitempty"`
@@ -111,11 +129,19 @@ func (m *SystemDetail) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateMissionEssentialFunction(formats); err != nil {
+	if err := m.validateMissionEssentialFunctions(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateSoftware(formats); err != nil {
+	if err := m.validateNextMajorProjectDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNextPlannedProdReleaseDate(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSoftwareProducts(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -142,21 +168,21 @@ func (m *SystemDetail) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *SystemDetail) validateMissionEssentialFunction(formats strfmt.Registry) error {
+func (m *SystemDetail) validateMissionEssentialFunctions(formats strfmt.Registry) error {
 
-	if err := validate.Required("mission_essential_function", "body", m.MissionEssentialFunction); err != nil {
-		return err
+	if swag.IsZero(m.MissionEssentialFunctions) { // not required
+		return nil
 	}
 
-	for i := 0; i < len(m.MissionEssentialFunction); i++ {
-		if swag.IsZero(m.MissionEssentialFunction[i]) { // not required
+	for i := 0; i < len(m.MissionEssentialFunctions); i++ {
+		if swag.IsZero(m.MissionEssentialFunctions[i]) { // not required
 			continue
 		}
 
-		if m.MissionEssentialFunction[i] != nil {
-			if err := m.MissionEssentialFunction[i].Validate(formats); err != nil {
+		if m.MissionEssentialFunctions[i] != nil {
+			if err := m.MissionEssentialFunctions[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("mission_essential_function" + "." + strconv.Itoa(i))
+					return ve.ValidateName("mission_essential_functions" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
@@ -167,21 +193,47 @@ func (m *SystemDetail) validateMissionEssentialFunction(formats strfmt.Registry)
 	return nil
 }
 
-func (m *SystemDetail) validateSoftware(formats strfmt.Registry) error {
+func (m *SystemDetail) validateNextMajorProjectDate(formats strfmt.Registry) error {
 
-	if err := validate.Required("software", "body", m.Software); err != nil {
+	if swag.IsZero(m.NextMajorProjectDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("next_major_project_date", "body", "date", m.NextMajorProjectDate.String(), formats); err != nil {
 		return err
 	}
 
-	for i := 0; i < len(m.Software); i++ {
-		if swag.IsZero(m.Software[i]) { // not required
+	return nil
+}
+
+func (m *SystemDetail) validateNextPlannedProdReleaseDate(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.NextPlannedProdReleaseDate) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("next_planned_prod_release_date", "body", "date", m.NextPlannedProdReleaseDate.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *SystemDetail) validateSoftwareProducts(formats strfmt.Registry) error {
+
+	if err := validate.Required("software_products", "body", m.SoftwareProducts); err != nil {
+		return err
+	}
+
+	for i := 0; i < len(m.SoftwareProducts); i++ {
+		if swag.IsZero(m.SoftwareProducts[i]) { // not required
 			continue
 		}
 
-		if m.Software[i] != nil {
-			if err := m.Software[i].Validate(formats); err != nil {
+		if m.SoftwareProducts[i] != nil {
+			if err := m.SoftwareProducts[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("software" + "." + strconv.Itoa(i))
+					return ve.ValidateName("software_products" + "." + strconv.Itoa(i))
 				}
 				return err
 			}
