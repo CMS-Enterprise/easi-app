@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
-import { SecureRoute, withAuth } from '@okta/okta-react';
+import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
@@ -23,11 +23,7 @@ import RequestDetails from './RequestDetails';
 import Review from './Review';
 import './index.scss';
 
-type SystemIntakeProps = {
-  auth: any;
-};
-
-export const SystemIntake = ({ auth }: SystemIntakeProps) => {
+export const SystemIntake = () => {
   const pages = [
     {
       type: 'FORM',
@@ -47,6 +43,7 @@ export const SystemIntake = ({ auth }: SystemIntakeProps) => {
 
   const history = useHistory();
   const { systemId, formPage } = useParams();
+  const { authService } = useOktaAuth();
   const [pageIndex, setPageIndex] = useState(0);
   const dispatch = useDispatch();
   const formikRef: any = useRef();
@@ -72,8 +69,7 @@ export const SystemIntake = ({ auth }: SystemIntakeProps) => {
 
   useEffect(() => {
     if (systemId === 'new') {
-      auth.getUser().then((user: any) => {
-        console.log(user);
+      authService.getUser().then((user: any) => {
         dispatch(
           storeSystemIntake({
             id: uuidv4(),
@@ -252,4 +248,4 @@ export const SystemIntake = ({ auth }: SystemIntakeProps) => {
   );
 };
 
-export default withAuth(SystemIntake);
+export default SystemIntake;
