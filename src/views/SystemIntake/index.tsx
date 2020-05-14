@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
@@ -56,12 +56,14 @@ export const SystemIntake = () => {
   );
 
   const dispatchSave = () => {
-    const currentRef = formikRef.current as FormikProps<SystemIntakeForm>;
-    if (currentRef.dirty) {
-      dispatch(saveSystemIntake(currentRef.values));
-      currentRef.resetForm({ values: currentRef.values });
+    const { current } = formikRef as MutableRefObject<
+      FormikProps<SystemIntakeForm>
+    >;
+    if (current.dirty && current.values.id) {
+      dispatch(saveSystemIntake(current.values));
+      current.resetForm({ values: current.values });
       if (systemId === 'new') {
-        history.replace(`/system/${currentRef.values.id}/${pageObj.slug}`);
+        history.replace(`/system/${current.values.id}/${pageObj.slug}`);
       }
     }
   };
