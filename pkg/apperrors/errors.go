@@ -86,7 +86,7 @@ func (e *ValidationError) Error() string {
 	if err != nil {
 		return err.Error()
 	}
-	return fmt.Sprintf("Could not hit validate %s %s: %s", e.Model, e.ModelID, string(data))
+	return fmt.Sprintf("Could not validate %s %s: %s", e.Model, e.ModelID, string(data))
 }
 
 // Unwrap provides the underlying error
