@@ -37,7 +37,7 @@ export const SystemIntake = () => {
     },
     {
       type: 'REVIEW',
-      slug: 'request-details'
+      slug: 'review'
     }
   ];
 
@@ -56,12 +56,12 @@ export const SystemIntake = () => {
   );
 
   const dispatchSave = () => {
-    const currentRef = formikRef.current as FormikProps<SystemIntakeForm>;
-    if (currentRef.dirty) {
-      dispatch(saveSystemIntake(currentRef.values));
-      currentRef.resetForm({ values: currentRef.values });
+    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
+    if (current.dirty && current.values.id) {
+      dispatch(saveSystemIntake(current.values));
+      current.resetForm({ values: current.values });
       if (systemId === 'new') {
-        history.replace(`/system/${currentRef.values.id}/${pageObj.slug}`);
+        history.replace(`/system/${current.values.id}/${pageObj.slug}`);
       }
     }
   };
