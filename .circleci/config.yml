@@ -24,6 +24,8 @@ jobs:
       - image: *circleci_docker_primary
         environment:
           APP_ENV: test
+          AWS_REGION: us-west-2
+          AWS_SES_SOURCE: no-reply-test@easi.cms.gov
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
