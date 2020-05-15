@@ -26,4 +26,6 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   else
     exit
   fi
+else
+  exit
 fi
