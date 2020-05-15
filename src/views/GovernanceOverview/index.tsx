@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
 import Header from 'components/Header';
 import './index.scss';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -57,12 +57,17 @@ const GovernanceOverview = ({ history }: RouteComponentProps) => {
       <Header name="EASi Governance Overview" />
       <main role="main" className="grid-container">
         <p>
-          <a href="/">Home</a> <i className="fa fa-angle-right" /> Add a new
-          system or service
+          <Link to="/">Home</Link>
+          <i className="fa fa-angle-right margin-x-05" />
+          Add a new system or service
         </p>
         <p>
-          {/* TODO: Make the arrow part of the link w/o underlining the space */}
-          <i className="fa fa-angle-left" /> <a href="/">Back</a>
+          <Link to="/">
+            <div className="text-no-underline display-inline-block">
+              <i className="fa fa-angle-left margin-right-05" />
+            </div>
+            Back
+          </Link>
         </p>
         <h1 className="font-heading-2xl margin-top-4">
           Add a new system or service
