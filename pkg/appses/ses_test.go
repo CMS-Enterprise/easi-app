@@ -28,11 +28,6 @@ func TestSESTestSuite(t *testing.T) {
 	logger := zap.NewNop()
 	config := testhelpers.NewConfig()
 
-	// for now, return when not local because CircleCI is not configured for email
-	if config.GetString(appconfig.EnvironmentKey) != appconfig.LocalEnv.String() {
-		return
-	}
-
 	sesConfig := Config{
 		SourceARN: config.GetString(appconfig.AWSSESSourceARNKey),
 		Source:    config.GetString(appconfig.AWSSESSourceKey),
