@@ -233,7 +233,7 @@ export const BusinessCase = () => {
                     />
                   )}
                   <SecureRoute
-                    path="business/:businessCaseId/review"
+                    path="/business/:businessCaseId/review"
                     render={() => <Review formikProps={formikProps} />}
                   />
 
