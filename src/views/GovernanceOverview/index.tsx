@@ -67,7 +67,7 @@ const GovernanceOverview = ({ history }: RouteComponentProps) => {
         <h1 className="font-heading-2xl margin-top-4">
           Add a new system or service
         </h1>
-        <p className="easi-governance-overview__text">
+        <p className="line-height-body-5 font-body-lg">
           To add a new system or service, you need to go through a set of steps
           and get approved by the Governance Review Board (GRB).
         </p>
