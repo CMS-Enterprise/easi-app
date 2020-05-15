@@ -100,6 +100,15 @@ func (s *Server) routes(
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
 
+	businessCasesHandler := handlers.BusinessCasesHandler{
+		Logger: s.logger,
+		FetchBusinessCases: services.NewFetchBusinessCasesByEuaID(
+			store.FetchBusinessCasesByEuaID,
+			s.logger,
+		),
+	}
+	api.Handle("/business_cases", businessCasesHandler.Handle())
+
 	s.router.PathPrefix("/").Handler(handlers.CatchAllHandler{
 		Logger: s.logger,
 	}.Handle())

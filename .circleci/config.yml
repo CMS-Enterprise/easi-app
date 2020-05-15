@@ -24,6 +24,10 @@ jobs:
       - image: *circleci_docker_primary
         environment:
           APP_ENV: test
+          CLIENT_PROTOCOL: http
+          CLIENT_PORT: 3000
+          CLIENT_HOSTNAME: localhost:3000
+          GRT_EMAIL: easi-team+test@truss.works
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
