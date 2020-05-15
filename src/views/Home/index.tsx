@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 
 import Header from 'components/Header';
-import Button from 'components/shared/Button';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import './index.scss';
+import LinkButton from 'components/shared/LinkButton';
 
 type HomeProps = RouteComponentProps;
 
@@ -82,23 +82,9 @@ const Home = ({ history }: HomeProps) => {
             </p>
           </div>
           {authState.isAuthenticated ? (
-            <Button
-              type="button"
-              onClick={() => {
-                history.push('/governance-overview');
-              }}
-            >
-              Start now
-            </Button>
+            <LinkButton to="/overview">Start now</LinkButton>
           ) : (
-            <Button
-              type="button"
-              onClick={() => {
-                history.push('/login');
-              }}
-            >
-              Sign in to start
-            </Button>
+            <LinkButton to="/login">Sign in to start</LinkButton>
           )}
         </div>
       </div>
