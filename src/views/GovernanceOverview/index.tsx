@@ -1,9 +1,9 @@
 import React from 'react';
-import { withRouter, RouteComponentProps, Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import Header from 'components/Header';
 import './index.scss';
 import CollapsableLink from 'components/shared/CollapsableLink';
-import Button from 'components/shared/Button';
+import LinkButton from 'components/shared/LinkButton';
 
 type NumberedListItemProps = {
   stepName: string;
@@ -51,7 +51,7 @@ const NumberedListTerminalItem = ({
   );
 };
 
-const GovernanceOverview = ({ history }: RouteComponentProps) => {
+const GovernanceOverview = () => {
   return (
     <div className="easi-governance-overview">
       <Header name="EASi Governance Overview" />
@@ -154,14 +154,7 @@ const GovernanceOverview = ({ history }: RouteComponentProps) => {
             </div>
           </CollapsableLink>
         </div>
-        <Button
-          type="button"
-          onClick={() => {
-            history.push('/governance-overview');
-          }}
-        >
-          Get started
-        </Button>
+        <LinkButton to="/system/new">Get started</LinkButton>
       </main>
     </div>
   );
