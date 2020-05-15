@@ -50,3 +50,21 @@ const DBPasswordConfigKey = "PGPASS"
 
 // DBSSLModeConfigKey is the Postgres SSL mode config key
 const DBSSLModeConfigKey = "PGSSLMODE"
+
+// AWSSESSourceARNKey is the key for the ARN for sending email
+const AWSSESSourceARNKey = "AWS_SES_SOURCE_ARN"
+
+// AWSSESSourceKey is the key for the sender for sending email
+const AWSSESSourceKey = "AWS_SES_SOURCE"
+
+// GRTEmailKey is the key for the receiving email for the GRT
+const GRTEmailKey = "GRT_EMAIL"
+
+// ClientHostKey is the key for getting the client's domain name
+const ClientHostKey = "CLIENT_HOSTNAME"
+
+// ClientProtocolKey is the key for getting the client's protocol
+const ClientProtocolKey = "CLIENT_PROTOCOL"
+
+// EmailTemplateDirectoryKey is the key for getting the email template directory
+const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
