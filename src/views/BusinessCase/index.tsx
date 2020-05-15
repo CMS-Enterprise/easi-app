@@ -106,7 +106,6 @@ export const BusinessCase = () => {
             const flatErrors: any = flattenErrors(errors);
             return (
               <>
-                <pre>{JSON.stringify(values, null, 2)}</pre>
                 <div className="grid-container">
                   {Object.keys(errors).length > 0 && (
                     <ErrorAlert
