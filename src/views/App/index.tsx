@@ -41,7 +41,6 @@ class App extends React.Component<MainProps, MainState> {
                 path="/system/:systemId/:formPage"
                 component={SystemIntake}
               />
-              <SecureRoute path="/system/:systemId" component={SystemIntake} />
               {/* <SecureRoute
                 path="/system/all"
                 exact
