@@ -30,7 +30,6 @@ const Home = ({ history }: HomeProps) => {
     return systemIntakes.map((intake: SystemIntakeForm) => {
       switch (intake.status) {
         case 'DRAFT':
-          // TODO: When content sweep gets merged, this needs to be requestName
           return (
             <ActionBanner
               key={intake.id}
@@ -44,6 +43,19 @@ const Home = ({ history }: HomeProps) => {
                 history.push(`/system/${intake.id}`);
               }}
               label="Go to Intake Request"
+            />
+          );
+        case 'SUBMITTED':
+          return (
+            <ActionBanner
+              key={intake.id}
+              title="Impact Analysis Network: Business Case"
+              helpfulText="Your intake form has been submitted. The admin team will be in touch with you to fill out a Business Case"
+              onClick={() => {
+                // TODO: Append /general-request-info to the end when the route gets merged.
+                history.push(`/business/new`);
+              }}
+              label="Start my Business Case"
             />
           );
         default:
