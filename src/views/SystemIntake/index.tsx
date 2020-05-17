@@ -37,7 +37,7 @@ export const SystemIntake = () => {
     },
     {
       type: 'REVIEW',
-      slug: 'request-details'
+      slug: 'review'
     }
   ];
 
