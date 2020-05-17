@@ -47,6 +47,6 @@ export type BusinessCaseModel = {
 export type BusinessCasesState = {
   businessCases: BusinessCaseModel[];
   isLoading: boolean | null;
-  loadedTimestamp: DateTime;
+  loadedTimestamp: DateTime | null;
   error: string | null;
 };
