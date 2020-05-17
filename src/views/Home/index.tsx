@@ -49,7 +49,11 @@ const Home = ({ history }: HomeProps) => {
           return (
             <ActionBanner
               key={intake.id}
-              title="Impact Analysis Network: Business Case"
+              title={
+                intake.requestName
+                  ? `${intake.requestName}: Business Case`
+                  : 'Business Case'
+              }
               helpfulText="Your intake form has been submitted. The admin team will be in touch with you to fill out a Business Case"
               onClick={() => {
                 // TODO: Append /general-request-info to the end when the route gets merged.
