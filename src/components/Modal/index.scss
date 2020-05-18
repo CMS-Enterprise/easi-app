@@ -11,13 +11,21 @@
 
   &__content {
     position: absolute;
-    width: 668px;
+    width: 100%;
+    height: 100%;
     background: white;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
     font-size: 22px;
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (min-width: $tablet) {
+      width: 668px;
+      height: auto;
+    }
   }
 
   &__header {
@@ -39,5 +47,6 @@
 
   &__body {
     padding: 35px 35px;
+    overflow-y: scroll;
   }
 }
