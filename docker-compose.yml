@@ -25,7 +25,6 @@ services:
       - APPLICATION_VERSION=APPLICATION_VERSION
       - APPLICATION_DATETIME=APPLICATION_DATETIME
       - APPLICATION_TS=APPLICATION_TS
-      - APP_DIR
       - APP_ENV=local
       - CLIENT_PROTOCOL=http
       - CLIENT_DOMAIN=localhost
@@ -41,14 +40,19 @@ services:
       - REACT_APP_OKTA_ISSUER=$REACT_APP_OKTA_DOMAIN/oauth2/$REACT_APP_OKTA_SERVER_ID
       - OKTA_ISSUER=$REACT_APP_OKTA_ISSUER
       - REACT_APP_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
-      - EMAIL_TEMPLATE_DIR=$APP_DIR/pkg/email/templates
-      - GRT_EMAIL=easi-team+test@truss.works
+      - GRT_EMAIL=mikena@truss.works
       - AWS_REGION=us-west-2
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
       - AWS_SESSION_TOKEN
       - AWS_SES_SOURCE=no-reply-$APP_ENV@info.easi.cms.gov
       - AWS_SES_SOURCE_ARN
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASS=""
+      - PGSSLMODE=disable
     entrypoint: ["/easi/easi", "serve"]
     ports:
       - 8080:8080
