@@ -25,6 +25,7 @@ const Modal = ({ title, children, isOpen, closeModal }: ModalProps) => {
         <button
           type="button"
           className="easi-modal__x-button"
+          aria-label="Close Modal"
           onClick={closeModal}
         >
           <i className="fa fa-times" />
