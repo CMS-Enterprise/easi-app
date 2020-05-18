@@ -19,6 +19,8 @@ type LifecycleCostYear string
 const (
 	// LifecycleCostPhaseINITIATE captures enum value "Initiate"
 	LifecycleCostPhaseINITIATE LifecycleCostPhase = "Initiate"
+	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
+	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
 	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operation & Maintenance"
 	LifecycleCostPhaseOPERATIONMAINTENANCE LifecycleCostPhase = "Operation & Maintenance"
 
@@ -65,6 +67,7 @@ func (e *EstimatedLifecycleCosts) Scan(src interface{}) error {
 type BusinessCase struct {
 	ID                              uuid.UUID
 	EUAUserID                       string      `db:"eua_user_id"`
+	SystemIntakeID					uuid.UUID	`db:"system_intake"`
 	ProjectName                     null.String `db:"project_name"`
 	Requester                       null.String
 	RequesterPhoneNumber            null.String             `db:"requester_phone_number"`
