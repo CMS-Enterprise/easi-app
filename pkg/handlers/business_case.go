@@ -20,7 +20,7 @@ type createBusinessCase func(businessCase *models.BusinessCase) (*models.Busines
 type BusinessCaseHandler struct {
 	Logger                *zap.Logger
 	FetchBusinessCaseByID fetchBusinessCaseByID
-	CreateBusinessCase	  createBusinessCase
+	CreateBusinessCase    createBusinessCase
 }
 
 // Handle handles a request for the business case form
@@ -87,7 +87,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			if err != nil {
 				logger.Error("Failed to marshal business case")
 				http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+				return
 			}
 
 			_, err = w.Write(responseBody)

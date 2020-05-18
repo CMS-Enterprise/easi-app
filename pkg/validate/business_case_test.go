@@ -8,7 +8,7 @@ import (
 )
 
 func (s ValidateTestSuite) TestValidateLifecycleCosts() {
-	s.Run(" returns true when the lifecycle costs are valid", func(){
+	s.Run("returns true when the lifecycle costs are valid", func() {
 		bizCaseID := uuid.New()
 		//opt1 := testhelpers.EstimatedLifecycleCostOptions{}
 		preferred := models.LifecycleCostSolutionPREFERRED
@@ -23,7 +23,7 @@ func (s ValidateTestSuite) TestValidateLifecycleCosts() {
 		}
 		s.True(CheckUniqLifecycleCosts(costs))
 	})
-	s.Run("returns false when the lifecycle costs are invalid", func(){
+	s.Run("returns false when the lifecycle costs are invalid", func() {
 		bizCaseID := uuid.New()
 		elc1 := testhelpers.NewEstimatedLifecycleCost(bizCaseID, testhelpers.EstimatedLifecycleCostOptions{})
 		elc2 := testhelpers.NewEstimatedLifecycleCost(bizCaseID, testhelpers.EstimatedLifecycleCostOptions{})

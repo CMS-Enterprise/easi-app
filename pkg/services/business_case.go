@@ -2,12 +2,13 @@ package services
 
 import (
 	"errors"
-	"github.com/cmsgov/easi-app/pkg/validate"
+
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
@@ -29,7 +30,7 @@ func NewFetchBusinessCaseByID(
 	}
 }
 
-// NewFetchBusinessCaseByID is a service to fetch the business case by id
+// NewCreateBusinessCase is a service to create a business case
 func NewCreateBusinessCase(
 	create func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
 	logger *zap.Logger,
@@ -40,9 +41,9 @@ func NewCreateBusinessCase(
 		valid := validate.CheckUniqLifecycleCosts(businessCase.LifecycleCostLines)
 		if !valid {
 			err := apperrors.ValidationError{
-				Err:       	 errors.New("there are duplicate lifecycle cost phases in a solution"),
-				Model:    	 businessCase,
-				ModelID:   	 businessCase.ID.String(),
+				Err:         errors.New("there are duplicate lifecycle cost phases in a solution"),
+				Model:       businessCase,
+				ModelID:     businessCase.ID.String(),
 				Validations: apperrors.Validations{},
 			}
 			err.WithValidation(
