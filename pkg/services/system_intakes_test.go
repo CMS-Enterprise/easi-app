@@ -207,7 +207,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 			return "", &apperrors.ValidationError{
 				Err:     errors.New("validation failed on these fields: ID"),
 				ModelID: intake.ID.String(),
-				Model:   "System Intake",
+				Model:   intake,
 			}
 		}
 		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, failValidationSubmit, sendEmail, logger, saveClock)
@@ -224,7 +224,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 			return "", &apperrors.ExternalAPIError{
 				Err:       errors.New("CEDAR return result: unexpected failure"),
 				ModelID:   intake.ID.String(),
-				Model:     "System Intake",
+				Model:     intake,
 				Operation: apperrors.Submit,
 				Source:    "CEDAR",
 			}
