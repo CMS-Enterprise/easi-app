@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+	"github.com/cmsgov/easi-app/pkg/validate"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
@@ -35,6 +37,20 @@ func NewCreateBusinessCase(
 	return func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		id := uuid.New()
 		businessCase.ID = id
+		valid := validate.CheckUniqLifecycleCosts(businessCase.LifecycleCostLines)
+		if !valid {
+			err := apperrors.ValidationError{
+				Err:       	 errors.New("there are duplicate lifecycle cost phases in a solution"),
+				Model:    	 businessCase,
+				ModelID:   	 businessCase.ID.String(),
+				Validations: apperrors.Validations{},
+			}
+			err.WithValidation(
+				"LifecycleCostPhase",
+				"cannot have multiple costs for the same phase, solution, and year",
+			)
+			return &models.BusinessCase{}, &err
+		}
 		businessCase, err := create(businessCase)
 		if err != nil {
 			logger.Error("failed to create a business case")

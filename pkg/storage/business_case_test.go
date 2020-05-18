@@ -21,6 +21,7 @@ func newEstimatedLifecycleCost(businessCaseID uuid.UUID) models.EstimatedLifecyc
 
 func newBusinessCase() models.BusinessCase {
 	businessCaseID := uuid.New()
+	year2 := models.LifecycleCostYear2
 	return models.BusinessCase{
 		ID:                              businessCaseID,
 		EUAUserID:                       testhelpers.RandomEUAID(),
@@ -56,8 +57,11 @@ func newBusinessCase() models.BusinessCase {
 		AlternativeBCons:                null.StringFrom("Test Alternative B Cons"),
 		AlternativeBCostSavings:         null.StringFrom("Test Alternative B Cost Savings"),
 		LifecycleCostLines: models.EstimatedLifecycleCosts{
-			newEstimatedLifecycleCost(businessCaseID),
-			newEstimatedLifecycleCost(businessCaseID),
+			testhelpers.NewEstimatedLifecycleCost(
+				businessCaseID,
+				testhelpers.EstimatedLifecycleCostOptions{Year: &year2},
+			),
+			testhelpers.NewEstimatedLifecycleCost(businessCaseID, testhelpers.EstimatedLifecycleCostOptions{}),
 		},
 	}
 }
