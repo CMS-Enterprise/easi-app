@@ -286,6 +286,26 @@ ctkey --username=$CTKEY_USERNAME \\
 Eventually, we will move this over to wrapper
 so developers do not need to manually run these commands.
 
+### Live Reload Go with Air (Optional)
+
+If you want to reload the Go application on changes locally,
+you can use [Air](github.com/cosmtrek/air)
+
+Install it:
+
+```bash
+go get -u github.com/cosmtrek/air
+```
+
+Run it:
+
+```bash
+air
+```
+
+It's not currently set up to run with docker.
+You can edit the config [here](.air.conf)
+
 ## Build
 
 ### Swagger Generation
