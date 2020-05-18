@@ -29,30 +29,11 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 const RequestDetails = () => {
-  const pages = [
-    {
-      type: 'FORM',
-      slug: 'contact-details',
-      validation: SystemIntakeValidationSchema.contactDetails
-    },
-    {
-      type: 'FORM',
-      slug: 'request-details',
-      validation: SystemIntakeValidationSchema.requestDetails
-    },
-    {
-      type: 'REVIEW',
-      slug: 'review'
-    }
-  ];
-
   const history = useHistory();
   const { systemId, formPage } = useParams();
   const { authService } = useOktaAuth();
-  const [pageIndex, setPageIndex] = useState(0);
   const dispatch = useDispatch();
   const formikRef: any = useRef();
-  const pageObj = pages[pageIndex];
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -74,21 +55,7 @@ const RequestDetails = () => {
   };
 
   useEffect(() => {
-    if (systemId === 'new') {
-      authService.getUser().then((user: any) => {
-        dispatch(
-          storeSystemIntake({
-            id: uuidv4(),
-            requester: {
-              name: user.name,
-              component: ''
-            }
-          })
-        );
-      });
-    } else {
-      dispatch(fetchSystemIntake(systemId));
-    }
+    dispatch(fetchSystemIntake(systemId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -107,7 +74,7 @@ const RequestDetails = () => {
     <Formik
     initialValues={systemIntake}
     onSubmit={() => {}}
-    validationSchema={pageObj.validation}
+    validationSchema={SystemIntakeValidationSchema.requestDetails}
     validateOnBlur={false}
     validateOnChange={false}
     validateOnMount={false}

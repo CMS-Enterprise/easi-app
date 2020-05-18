@@ -30,10 +30,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 const ContactDetails = () => {
   const history = useHistory();
-  const { systemId } = useParams();
+  const { systemId: systemIdFromParams, formPage } = useParams();
   const { authService } = useOktaAuth();
   const dispatch = useDispatch();
   const formikRef: any = useRef();
+  const [systemId, setSystemId] = useState(systemIdFromParams);
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -47,18 +48,20 @@ const ContactDetails = () => {
     // if (current.dirty && current.values.id) {
       dispatch(saveSystemIntake(values));
       // current.resetForm({ values });
-      if (systemId === 'new') {
-        history.replace(`/system/${values.id}/contact-details`);
-      }
+      // if (systemId === 'new') {
+      //   history.replace(`/system/${values.id}/contact-details`);
+      // }
     // }
   };
 
   useEffect(() => {
     if (systemId === 'new') {
       authService.getUser().then((user: any) => {
+        const uuid = uuidv4()
+        setSystemId(uuid)
         dispatch(
           storeSystemIntake({
-            id: uuidv4(),
+            id: uuid,
             requester: {
               name: user.name,
               component: ''
@@ -422,7 +425,7 @@ const ContactDetails = () => {
                         onClick={() => {
                             // validateForm().then(err => {
                               // if (Object.keys(err).length === 0) {
-                                const newUrl = 'request-details'
+                                const newUrl = `/system/${systemId}/request-details`
                                 history.push(newUrl);
                               // }
                               // window.scrollTo(0, 0);
