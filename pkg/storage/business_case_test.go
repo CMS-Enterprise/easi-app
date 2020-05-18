@@ -8,17 +8,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func newEstimatedLifecycleCost(businessCaseID uuid.UUID) models.EstimatedLifecycleCost {
-	return models.EstimatedLifecycleCost{
-		ID:             uuid.New(),
-		BusinessCaseID: businessCaseID,
-		Solution:       models.LifecycleCostSolutionASIS,
-		Phase:          models.LifecycleCostPhaseINITIATE,
-		Year:           models.LifecycleCostYear1,
-		Cost:           100,
-	}
-}
-
 func newBusinessCase() models.BusinessCase {
 	businessCaseID := uuid.New()
 	year2 := models.LifecycleCostYear2
@@ -68,12 +57,16 @@ func newBusinessCase() models.BusinessCase {
 
 func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 	s.Run("golden path to fetch a business case", func() {
+		intake := testhelpers.NewSystemIntake()
+		err := s.store.SaveSystemIntake(&intake)
+		s.NoError(err)
 		businessCase := newBusinessCase()
+		businessCase.SystemIntakeID = intake.ID
 		id := businessCase.ID
 		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(
-			`INSERT INTO business_case (id, eua_user_id, project_name) 
-			VALUES (:id, :eua_user_id, :project_name)`,
+		_, err = tx.NamedExec(
+			`INSERT INTO business_case (id, eua_user_id, system_intake, project_name)
+			VALUES (:id, :eua_user_id, :system_intake, :project_name)`,
 			&businessCase)
 		s.NoError(err)
 		for _, lifecycleItem := range businessCase.LifecycleCostLines {

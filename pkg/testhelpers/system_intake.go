@@ -5,7 +5,6 @@ import (
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
-
 )
 
 // NewSystemIntake generates a system intake to use in tests

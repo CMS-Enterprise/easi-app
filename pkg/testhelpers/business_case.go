@@ -6,13 +6,15 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// EstimatedLifecycleCostOptions allows cost options to be customized
 type EstimatedLifecycleCostOptions struct {
 	Solution *models.LifecycleCostSolution
 	Phase    *models.LifecycleCostPhase
 	Year     *models.LifecycleCostYear
 	Cost     *int
 }
-// New EstimatedLifecycleCost helps generate a new lifecycle cost for a given business case
+
+// NewEstimatedLifecycleCost helps generate a new lifecycle cost for a given business case
 func NewEstimatedLifecycleCost(businessCaseID uuid.UUID, opts EstimatedLifecycleCostOptions) models.EstimatedLifecycleCost {
 	elc := models.EstimatedLifecycleCost{
 		ID:             uuid.New(),
