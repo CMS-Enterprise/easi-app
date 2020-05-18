@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Field, FormikProps } from 'formik';
+import React, { useEffect, useRef, useState } from 'react';
 import TextField from 'components/shared/TextField';
 import CheckboxField from 'components/shared/CheckboxField';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
@@ -13,14 +12,66 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import flattenErrors from 'utils/flattenErrors';
 import { SystemIntakeForm } from 'types/systemIntake';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
+import { Form, Formik, FormikProps, Field } from 'formik';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import Button from 'components/shared/Button';
+import AutoSave from 'components/shared/AutoSave';
+import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
+import { useHistory, useParams } from 'react-router-dom';
+import { SecureRoute, useOktaAuth } from '@okta/okta-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from 'reducers/rootReducer';
+import {
+  fetchSystemIntake,
+  saveSystemIntake,
+  storeSystemIntake
+} from 'types/routines';
+import { v4 as uuidv4 } from 'uuid';
 
-type ContactDetailsProps = {
-  formikProps: FormikProps<SystemIntakeForm>;
-};
+const ContactDetails = () => {
+  const history = useHistory();
+  const { systemId } = useParams();
+  const { authService } = useOktaAuth();
+  const dispatch = useDispatch();
+  const formikRef: any = useRef();
 
-const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
-  const { values, setFieldValue, errors } = formikProps;
-  const flatErrors = flattenErrors(errors);
+  const systemIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake
+  );
+  const isLoading = useSelector(
+    (state: AppState) => state.systemIntake.isLoading
+  );
+
+  const dispatchSave = (values: any) => {
+    // const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
+    // if (current.dirty && current.values.id) {
+      dispatch(saveSystemIntake(values));
+      // current.resetForm({ values });
+      if (systemId === 'new') {
+        history.replace(`/system/${values.id}/contact-details`);
+      }
+    // }
+  };
+
+  useEffect(() => {
+    if (systemId === 'new') {
+      authService.getUser().then((user: any) => {
+        dispatch(
+          storeSystemIntake({
+            id: uuidv4(),
+            requester: {
+              name: user.name,
+              component: ''
+            }
+          })
+        );
+      });
+    } else {
+      dispatch(fetchSystemIntake(systemId));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
 
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
@@ -36,7 +87,53 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
     ));
 
   return (
+    <Formik
+      initialValues={systemIntake}
+      onSubmit={() => {}}
+      validationSchema={SystemIntakeValidationSchema.contactDetails}
+      validateOnBlur={false}
+      validateOnChange={false}
+      validateOnMount={false}
+      innerRef={formikRef}
+    >
+      {(formikProps: FormikProps<SystemIntakeForm>) => {
+          const {
+            values,
+            errors,
+            setErrors,
+            validateForm,
+            isSubmitting,
+            setFieldValue
+          } = formikProps;
+        const flatErrors: any = flattenErrors(errors);
+
+        return (
     <>
+    {Object.keys(errors).length > 0 && (
+                    <ErrorAlert
+                      classNames="margin-top-3"
+                      heading="Please check and fix the following"
+                    >
+                      {Object.keys(flatErrors).map(key => {
+                        return (
+                          <ErrorAlertMessage
+                            key={`Error.${key}`}
+                            message={flatErrors[key]}
+                            onClick={() => {
+                              const field = document.querySelector(
+                                `[data-scroll="${key}"]`
+                              );
+
+                              if (field) {
+                                field.scrollIntoView();
+                              }
+                            }}
+                          />
+                        );
+                      })}
+                    </ErrorAlert>
+                  )}
+    <Form>
       <p className="line-height-body-6">
         The EASi System Intake process can guide you through all stages of your
         project, connecting you with the resources, people and services that you
@@ -64,7 +161,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             id="IntakeForm-Requester"
             maxLength={50}
             name="requester.name"
-            disabled
+            // disabled
           />
         </FieldGroup>
 
@@ -320,7 +417,45 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
           </fieldset>
         </FieldGroup>
       </div>
+                      <Button
+                        type="button"
+                        onClick={() => {
+                            // validateForm().then(err => {
+                              // if (Object.keys(err).length === 0) {
+                                const newUrl = 'request-details'
+                                history.push(newUrl);
+                              // }
+                              // window.scrollTo(0, 0);
+                            // });
+                        }}
+                      >
+                        Next
+                      </Button>
+                      <div className="margin-y-3">
+                        <Button
+                          type="button"
+                          unstyled
+                          onClick={() => {
+                            dispatchSave(values);
+                            history.push('/');
+                          }}
+                        >
+                          <span>
+                            <i className="fa fa-angle-left" /> Save & Exit
+                          </span>
+                        </Button>
+                      </div>
+
+                    {/* <AutoSave
+                      values={values}
+                      onSave={() => dispatchSave(values)}
+                      debounceDelay={1000}
+                    /> */}
+    </Form>
     </>
+      );
+    }}
+    </Formik>
   );
 };
 

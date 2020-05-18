@@ -14,11 +14,11 @@ import * as serviceWorker from './serviceWorker';
 /**
  * Enables react axe accessibility tooling in development environments
  */
-if (process.env.NODE_ENV === 'development') {
-  import('react-axe').then(axe => {
-    axe.default(React, ReactDOM, 1000);
-  });
-}
+// if (process.env.NODE_ENV === 'development') {
+//   import('react-axe').then(axe => {
+//     axe.default(React, ReactDOM, 1000);
+//   });
+// }
 
 let app;
 const browser: any = detect();
