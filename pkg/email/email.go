@@ -25,6 +25,7 @@ type templateCaller interface {
 // since the template.Template uses string access
 type templates struct {
 	systemIntakeSubmissionTemplate templateCaller
+	businessCaseSubmissionTemplate templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -58,6 +59,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(systemIntakeSubmissionTemplateName)
 	}
 	appTemplates.systemIntakeSubmissionTemplate = systemIntakeSubmissionTemplate
+
+	businessCaseSubmissionTemplateName := "business_case_submission.gohtml"
+	businessCaseSubmissionTemplate := rawTemplates.Lookup(businessCaseSubmissionTemplateName)
+	if businessCaseSubmissionTemplate == nil {
+		return Client{}, templateError(businessCaseSubmissionTemplateName)
+	}
+	appTemplates.businessCaseSubmissionTemplate = businessCaseSubmissionTemplate
 
 	client := Client{
 		config:    config,
