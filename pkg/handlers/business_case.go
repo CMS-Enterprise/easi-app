@@ -14,11 +14,13 @@ import (
 )
 
 type fetchBusinessCaseByID func(id uuid.UUID) (*models.BusinessCase, error)
+type createBusinessCase func(businessCase *models.BusinessCase) (*models.BusinessCase, error)
 
 // BusinessCaseHandler is the handler for CRUD operations on business case
 type BusinessCaseHandler struct {
 	Logger                *zap.Logger
 	FetchBusinessCaseByID fetchBusinessCaseByID
+	CreateBusinessCase	  createBusinessCase
 }
 
 // Handle handles a request for the business case form
@@ -65,7 +67,37 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			}
 
 			return
+		case "POST":
+			if r.Body == nil {
+				http.Error(w, "Empty request not allowed", http.StatusBadRequest)
+				return
+			}
+			defer r.Body.Close()
+			decoder := json.NewDecoder(r.Body)
+			requestedBusinessCase := models.BusinessCase{}
+			err := decoder.Decode(&requestedBusinessCase)
+			businessCase, err := h.CreateBusinessCase(&requestedBusinessCase)
+			if err != nil {
+				h.Logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
+				http.Error(w, "Failed to create a business case", http.StatusInternalServerError)
+				return
+			}
 
+			responseBody, err := json.Marshal(businessCase)
+			if err != nil {
+				logger.Error("Failed to marshal business case")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+			}
+
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.Logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
+				http.Error(w, "Failed to get business case", http.StatusInternalServerError)
+				return
+			}
+
+			return
 		default:
 			logger.Info("Unsupported method requested")
 			http.Error(w, "Method not allowed for business case", http.StatusMethodNotAllowed)
