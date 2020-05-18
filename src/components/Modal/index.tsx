@@ -1,5 +1,4 @@
 import React, { ReactNode, ReactNodeArray } from 'react';
-import classNames from 'classnames';
 import ReactModal from 'react-modal';
 import noScroll from 'no-scroll';
 import './index.scss';
@@ -12,14 +11,11 @@ type ModalProps = {
 };
 
 const Modal = ({ title, children, isOpen, closeModal }: ModalProps) => {
-  const overlayClassName = classNames('easi-modal__overlay');
-  const contentClassName = classNames('easi-modal__content');
-
   return (
     <ReactModal
       isOpen={isOpen}
-      overlayClassName={overlayClassName}
-      className={contentClassName}
+      overlayClassName="easi-modal__overlay"
+      className="easi-modal__content"
       onAfterOpen={noScroll.on}
       onAfterClose={noScroll.off}
       onRequestClose={closeModal}
