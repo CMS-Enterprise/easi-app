@@ -64,12 +64,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             id="IntakeForm-Requester"
             maxLength={50}
             name="requester.name"
-            onChange={(e: any) => {
-              if (isReqAndBusOwnerSame) {
-                setFieldValue('businessOwner.name', e.target.value);
-              }
-              setFieldValue('requester.name', e.target.value);
-            }}
+            disabled
           />
         </FieldGroup>
 
