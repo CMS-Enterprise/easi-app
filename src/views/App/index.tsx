@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { SecureRoute, LoginCallback } from '@okta/okta-react';
+import { LoginCallback } from '@okta/okta-react';
+import SecureRoute from 'components/SecureRoute';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -39,7 +40,7 @@ class App extends React.Component<MainProps, MainState> {
               />
               <SecureRoute
                 path="/system/:systemId/:formPage"
-                render={() => <SystemIntake />}
+                component={SystemIntake}
               />
               {/* <SecureRoute
                 path="/system/all"
