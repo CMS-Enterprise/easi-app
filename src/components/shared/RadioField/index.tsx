@@ -52,7 +52,7 @@ export const RadioField = ({
 
 /**
  * TODO: I want to continue to iterate on this even though it isn't ready yet.
- * The thought is to create a compount component so that the "checked" state
+ * The thought is to create a compound component so that the "checked" state
  * is managed by a "parent" rather than each radio button.
  *
  * I ran into some issues with having custom onChange so I dropped it for now.

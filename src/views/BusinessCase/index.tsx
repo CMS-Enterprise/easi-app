@@ -107,6 +107,7 @@ export const BusinessCase = () => {
             altLetter="B"
             handleToggleAlternative={() => {
               if (
+                // eslint-disable-next-line no-alert
                 window.confirm('Are you sure you want to remove Alternative B?')
               ) {
                 setPages(prevArray =>
@@ -220,6 +221,7 @@ export const BusinessCase = () => {
                         type="submit"
                         disabled={isSubmitting}
                         onClick={() => {
+                          // eslint-disable-next-line no-console
                           console.log('Submitting Data: ', values);
                         }}
                       >
