@@ -17,7 +17,7 @@ message="The $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME $CIRCLE_BRANCH br
 #####
 # 'color' can be any hex code or the key words 'good', 'warning', or 'danger'
 color="warning"
-if [[ $CIRCLE_JOB == *"deploy"* ]]; then
+if [[ $CIRCLE_JOB = *"deploy"* ]]; then
   color="danger"
 fi
 
