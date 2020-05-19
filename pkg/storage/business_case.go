@@ -58,6 +58,7 @@ func (s *Store) FetchBusinessCasesByEuaID(euaID string) (models.BusinessCases, e
 	}
 	return businessCases, nil
 }
+
 const createEstimatedLifecycleCostSQL = `
 	INSERT INTO estimated_lifecycle_cost (
 		id,

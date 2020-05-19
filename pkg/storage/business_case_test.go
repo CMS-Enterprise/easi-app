@@ -12,7 +12,7 @@ func newBusinessCase() models.BusinessCase {
 	year2 := models.LifecycleCostYear2
 	return models.BusinessCase{
 		EUAUserID:                       testhelpers.RandomEUAID(),
-		SystemIntakeID:					 uuid.New(),
+		SystemIntakeID:                  uuid.New(),
 		ProjectName:                     null.StringFrom("Test Project Name"),
 		Requester:                       null.StringFrom("Test Requester"),
 		RequesterPhoneNumber:            null.StringFrom("Test Requester Phone Number"),
