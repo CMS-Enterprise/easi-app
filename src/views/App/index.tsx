@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { LoginCallback } from '@okta/okta-react';
-import SecureRoute from 'components/SecureRoute';
+import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -31,7 +30,8 @@ class App extends React.Component<MainProps, MainState> {
               <SecureRoute
                 exact
                 path="/system/:systemId/grt-review"
-                component={() => <GRTSystemIntakeReview />}
+                render={({ component }: any) => component()}
+                component={GRTSystemIntakeReview}
               />
               <Redirect
                 exact
@@ -40,6 +40,7 @@ class App extends React.Component<MainProps, MainState> {
               />
               <SecureRoute
                 path="/system/:systemId/:formPage"
+                render={({ component }: any) => component()}
                 component={SystemIntake}
               />
               {/* <SecureRoute
@@ -53,7 +54,8 @@ class App extends React.Component<MainProps, MainState> {
               /> */}
               <SecureRoute
                 path="/business/new"
-                render={() => <BusinessCase />}
+                render={({ component }: any) => component()}
+                component={BusinessCase}
               />
               <Route path="/implicit/callback" component={LoginCallback} />
             </Switch>
