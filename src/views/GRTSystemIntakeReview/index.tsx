@@ -1,27 +1,18 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import Header from 'components/Header';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntake } from 'types/routines';
 
-export type SystemIDRouterProps = {
-  systemId: string;
-};
-
-export type GRTSystemIntakeReviewProps = RouteComponentProps<
-  SystemIDRouterProps
->;
-
-export const GRTSystemIntakeReview = ({
-  match
-}: GRTSystemIntakeReviewProps) => {
+export const GRTSystemIntakeReview = () => {
+  const { systemId } = useParams();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchSystemIntake(match.params.systemId));
-  }, [dispatch, match.params.systemId]);
+    dispatch(fetchSystemIntake(systemId));
+  }, [dispatch, systemId]);
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
@@ -33,7 +24,7 @@ export const GRTSystemIntakeReview = ({
           <h1 className="font-heading-xl margin-top-4">CMS System Request</h1>
           {!systemIntake && (
             <h2 className="font-heading-xl">
-              System intake with ID: {match.params.systemId} was not found
+              System intake with ID: {systemId} was not found
             </h2>
           )}
           {systemIntake && <SystemIntakeReview systemIntake={systemIntake} />}
