@@ -10,3 +10,6 @@ export const storeSystemIntake = createRoutine('STORE_SYSTEM_INTAKE');
 
 // SystemShorts routines
 export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');
+
+// BusinessCase routines
+export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');

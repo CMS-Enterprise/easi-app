@@ -70,6 +70,7 @@ func NewSaveSystemIntake(
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
+	sendEmail func(requester string, intakeID uuid.UUID) error,
 	logger *zap.Logger,
 	clock clock.Clock,
 ) func(context context.Context, intake *models.SystemIntake) error {
@@ -126,6 +127,13 @@ func NewSaveSystemIntake(
 				Err:       err,
 				Model:     "System Intake",
 				Operation: apperrors.QuerySave,
+			}
+		}
+		// only send an email when everything went ok
+		if intake.Status == models.SystemIntakeStatusSUBMITTED {
+			err = sendEmail(intake.Requester.ValueOrZero(), intake.ID)
+			if err != nil {
+				return err
 			}
 		}
 		return nil

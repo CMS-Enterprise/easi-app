@@ -1,26 +1,37 @@
-package email
+package appses
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
 )
 
-// SESConfig is email configs used only for SES
-type SESConfig struct {
+// Config is email configs used only for SES
+type Config struct {
 	SourceARN string
 	Source    string
 }
 
-// SESSender is an implementation for sending email with the SES Go SDK
+// Sender is an implementation for sending email with the SES Go SDK
 // It lives in package "email" for now, but can be pulled out and imported
 // if necessary for testing
-type SESSender struct {
+type Sender struct {
 	client *ses.SES
-	config SESConfig
+	config Config
+}
+
+// NewSender constructs a Sender
+func NewSender(config Config) Sender {
+	sesSession := session.Must(session.NewSession())
+	client := ses.New(sesSession)
+	return Sender{
+		client,
+		config,
+	}
 }
 
 // Send sends an email
-func (s SESSender) Send(
+func (s Sender) Send(
 	toAddress string,
 	subject string,
 	body string,
