@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -76,11 +77,27 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			decoder := json.NewDecoder(r.Body)
 			requestedBusinessCase := models.BusinessCase{}
 			err := decoder.Decode(&requestedBusinessCase)
+
+			euaID, ok := appcontext.EuaID(r.Context())
+			if !ok {
+				logger.Error("Failed to get EUA ID from context")
+				http.Error(w, "Failed to POST business case", http.StatusUnauthorized)
+				return
+			}
+			requestedBusinessCase.EUAUserID = euaID
+
 			businessCase, err := h.CreateBusinessCase(&requestedBusinessCase)
 			if err != nil {
 				h.Logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
-				http.Error(w, "Failed to create a business case", http.StatusInternalServerError)
-				return
+
+				switch err.(type) {
+				case *apperrors.ValidationError:
+					http.Error(w, "Failed to create a business case", http.StatusBadRequest)
+					return
+				default:
+					http.Error(w, "Failed to create a business case", http.StatusInternalServerError)
+					return
+				}
 			}
 
 			responseBody, err := json.Marshal(businessCase)
@@ -93,7 +110,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			_, err = w.Write(responseBody)
 			if err != nil {
 				h.Logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
-				http.Error(w, "Failed to get business case", http.StatusInternalServerError)
+				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
 				return
 			}
 

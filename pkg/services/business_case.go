@@ -41,7 +41,7 @@ func NewCreateBusinessCase(
 			err := apperrors.ValidationError{
 				Err:         errors.New("there are duplicate lifecycle cost phases in a solution"),
 				Model:       businessCase,
-				ModelID:     businessCase.ID.String(),
+				ModelID:     "",
 				Validations: apperrors.Validations{},
 			}
 			err.WithValidation(

@@ -8,6 +8,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
@@ -27,9 +28,9 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 		s.Equal(fakeID, businessCase.ID)
 	})
 
-	s.Run("returns query error when save fails", func() {
+	s.Run("returns query error when fetch fails", func() {
 		fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, errors.New("save failed")
+			return &models.BusinessCase{}, errors.New("fetch failed")
 		}
 		fetchBusinessCaseByID := NewFetchBusinessCaseByID(fetch, logger)
 
@@ -67,5 +68,50 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(models.BusinessCases{}, businessCases)
+	})
+}
+
+func (s ServicesTestSuite) TestBusinessCaseCreater() {
+	logger := zap.NewNop()
+	euaID := testhelpers.RandomEUAID()
+	input := models.BusinessCase{
+		EUAUserID:      euaID,
+		SystemIntakeID: uuid.New(),
+	}
+	create := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+		return &models.BusinessCase{
+			EUAUserID: euaID,
+		}, nil
+	}
+
+	s.Run("successfully creates a Business Case without an error", func() {
+		createBusinessCase := NewCreateBusinessCase(create, logger)
+		businessCase, err := createBusinessCase(&input)
+		s.NoError(err)
+
+		s.Equal(euaID, businessCase.EUAUserID)
+	})
+
+	s.Run("returns query error when create fails", func() {
+		create = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+			return &models.BusinessCase{}, errors.New("creation failed")
+		}
+		createBusinessCase := NewCreateBusinessCase(create, logger)
+		businessCase, err := createBusinessCase(&input)
+
+		s.IsType(&apperrors.QueryError{}, err)
+		s.Equal(&models.BusinessCase{}, businessCase)
+	})
+
+	s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
+		input.LifecycleCostLines = models.EstimatedLifecycleCosts{
+			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+		}
+		createBusinessCase := NewCreateBusinessCase(create, logger)
+		businessCase, err := createBusinessCase(&input)
+
+		s.IsType(&apperrors.ValidationError{}, err)
+		s.Equal(&models.BusinessCase{}, businessCase)
 	})
 }
