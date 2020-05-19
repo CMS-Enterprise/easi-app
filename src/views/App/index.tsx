@@ -30,7 +30,7 @@ class App extends React.Component<MainProps, MainState> {
               <SecureRoute
                 exact
                 path="/system/:systemId/grt-review"
-                component={GRTSystemIntakeReview}
+                component={() => <GRTSystemIntakeReview />}
               />
               <Redirect
                 exact
@@ -39,7 +39,7 @@ class App extends React.Component<MainProps, MainState> {
               />
               <SecureRoute
                 path="/system/:systemId/:formPage"
-                component={SystemIntake}
+                render={() => <SystemIntake />}
               />
               {/* <SecureRoute
                 path="/system/all"
@@ -50,7 +50,10 @@ class App extends React.Component<MainProps, MainState> {
                 path="/system/:profileId"
                 component={SystemProfile}
               /> */}
-              <SecureRoute path="/business/new" component={BusinessCase} />
+              <SecureRoute
+                path="/business/new"
+                render={() => <BusinessCase />}
+              />
               <Route path="/implicit/callback" component={LoginCallback} />
             </Switch>
           </AuthenticationWrapper>
