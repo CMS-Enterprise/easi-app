@@ -65,41 +65,41 @@ func (e *EstimatedLifecycleCosts) Scan(src interface{}) error {
 
 // BusinessCase is the model for the business case form.
 type BusinessCase struct {
-	ID                              uuid.UUID
-	EUAUserID                       string      `db:"eua_user_id"`
-	SystemIntakeID                  uuid.UUID   `db:"system_intake"`
-	ProjectName                     null.String `db:"project_name"`
-	Requester                       null.String
-	RequesterPhoneNumber            null.String             `db:"requester_phone_number"`
-	BusinessOwner                   null.String             `db:"business_owner"`
-	BusinessNeed                    null.String             `db:"business_need"`
-	CMSBenefit                      null.String             `db:"cms_benefit"`
-	PriorityAlignment               null.String             `db:"priority_alignment"`
-	SuccessIndicators               null.String             `db:"success_indicators"`
-	AsIsTitle                       null.String             `db:"as_is_title"`
-	AsIsSummary                     null.String             `db:"as_is_summary"`
-	AsIsPros                        null.String             `db:"as_is_pros"`
-	AsIsCons                        null.String             `db:"as_is_cons"`
-	AsIsCostSavings                 null.String             `db:"as_is_cost_savings"`
-	PreferredTitle                  null.String             `db:"preferred_title"`
-	PreferredSummary                null.String             `db:"preferred_summary"`
-	PreferredAcquisitionApproach    null.String             `db:"preferred_acquisition_approach"`
-	PreferredPros                   null.String             `db:"preferred_pros"`
-	PreferredCons                   null.String             `db:"preferred_cons"`
-	PreferredCostSavings            null.String             `db:"preferred_cost_savings"`
-	AlternativeATitle               null.String             `db:"alternative_a_title"`
-	AlternativeASummary             null.String             `db:"alternative_a_summary"`
-	AlternativeAAcquisitionApproach null.String             `db:"alternative_a_acquisition_approach"`
-	AlternativeAPros                null.String             `db:"alternative_a_pros"`
-	AlternativeACons                null.String             `db:"alternative_a_cons"`
-	AlternativeACostSavings         null.String             `db:"alternative_a_cost_savings"`
-	AlternativeBTitle               null.String             `db:"alternative_b_title"`
-	AlternativeBSummary             null.String             `db:"alternative_b_summary"`
-	AlternativeBAcquisitionApproach null.String             `db:"alternative_b_acquisition_approach"`
-	AlternativeBPros                null.String             `db:"alternative_b_pros"`
-	AlternativeBCons                null.String             `db:"alternative_b_cons"`
-	AlternativeBCostSavings         null.String             `db:"alternative_b_cost_savings"`
-	LifecycleCostLines              EstimatedLifecycleCosts `db:"lifecycle_cost_lines"`
+	ID                              uuid.UUID               `json:"id"`
+	EUAUserID                       string                  `json:"euaUserId" db:"eua_user_id"`
+	SystemIntakeID                  uuid.UUID               `json:"systemIntake" db:"system_intake"`
+	ProjectName                     null.String             `json:"projectName" db:"project_name"`
+	Requester                       null.String             `json:"requester"`
+	RequesterPhoneNumber            null.String             `json:"requesterPhoneNumber" db:"requester_phone_number"`
+	BusinessOwner                   null.String             `json:"businessOwner" db:"business_owner"`
+	BusinessNeed                    null.String             `json:"businessNeed" db:"business_need"`
+	CMSBenefit                      null.String             `json:"cmsBenefit" db:"cms_benefit"`
+	PriorityAlignment               null.String             `json:"priorityAlignment" db:"priority_alignment"`
+	SuccessIndicators               null.String             `json:"successIndicators" db:"success_indicators"`
+	AsIsTitle                       null.String             `json:"asIsTitle" db:"as_is_title"`
+	AsIsSummary                     null.String             `json:"asIsSummary" db:"as_is_summary"`
+	AsIsPros                        null.String             `json:"asIsPros" db:"as_is_pros"`
+	AsIsCons                        null.String             `json:"asIsCons" db:"as_is_cons"`
+	AsIsCostSavings                 null.String             `json:"asIsCostSavings" db:"as_is_cost_savings"`
+	PreferredTitle                  null.String             `json:"preferredTitle" db:"preferred_title"`
+	PreferredSummary                null.String             `json:"preferredSummary" db:"preferred_summary"`
+	PreferredAcquisitionApproach    null.String             `json:"preferredAcquisitionApproach" db:"preferred_acquisition_approach"`
+	PreferredPros                   null.String             `json:"preferredPros" db:"preferred_pros"`
+	PreferredCons                   null.String             `json:"preferredCons" db:"preferred_cons"`
+	PreferredCostSavings            null.String             `json:"preferredCostSavings" db:"preferred_cost_savings"`
+	AlternativeATitle               null.String             `json:"alternativeATitle" db:"alternative_a_title"`
+	AlternativeASummary             null.String             `json:"alternativeASummary" db:"alternative_a_summary"`
+	AlternativeAAcquisitionApproach null.String             `json:"alternativeAAcquisitionApproach" db:"alternative_a_acquisition_approach"`
+	AlternativeAPros                null.String             `json:"alternativeAPros" db:"alternative_a_pros"`
+	AlternativeACons                null.String             `json:"alternativeACons" db:"alternative_a_cons"`
+	AlternativeACostSavings         null.String             `json:"alternativeACostSavings" db:"alternative_a_cost_savings"`
+	AlternativeBTitle               null.String             `json:"alternativeBTitle" db:"alternative_b_title"`
+	AlternativeBSummary             null.String             `json:"alternativeBSummary" db:"alternative_b_summary"`
+	AlternativeBAcquisitionApproach null.String             `json:"alternativeBAcquisitionApproach" db:"alternative_b_acquisition_approach"`
+	AlternativeBPros                null.String             `json:"alternativeBPros" db:"alternative_b_pros"`
+	AlternativeBCons                null.String             `json:"alternativeBCons" db:"alternative_b_cons"`
+	AlternativeBCostSavings         null.String             `json:"alternativeBCostSavings" db:"alternative_b_cost_savings"`
+	LifecycleCostLines              EstimatedLifecycleCosts `json:"lifecycleCostLines" db:"lifecycle_cost_lines"`
 }
 
 // BusinessCases is the model for a list of business cases
