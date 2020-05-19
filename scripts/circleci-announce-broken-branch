@@ -4,7 +4,7 @@ set -euo pipefail
 #####
 ## Only alert on master branch
 #####
-# [[ $CIRCLE_BRANCH = master ]] || exit 0
+[[ $CIRCLE_BRANCH = master ]] || exit 0
 
 NOW=$(date '+%s')
 
