@@ -24,10 +24,12 @@ jobs:
       - image: *circleci_docker_primary
         environment:
           APP_ENV: test
+          AWS_REGION: us-west-2
+          AWS_SES_SOURCE: "\"EASi Test\" <no-reply-test@info.easi.cms.gov>"
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
-          GRT_EMAIL: easi-team+test@truss.works
+          GRT_EMAIL: success@simulator.amazonses.com
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
