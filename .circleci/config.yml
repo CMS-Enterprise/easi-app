@@ -15,6 +15,10 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Simulate failure
+          command: |
+            exit 1
+      - run:
           name: Build the flyway migrations for testing
           command: |
             ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate"
