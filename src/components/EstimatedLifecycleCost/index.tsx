@@ -30,10 +30,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
     <FieldArray name={`${formikKey}.year${year}`}>
       {arrayHelpers => (
         <div className="est-lifecycle-cost__phase-cost-wrapper">
-          <FieldGroup
-            scrollElement="somethingGoesHere"
-            error={phaseError.phase || phaseError.cost}
-          >
+          <FieldGroup error={phaseError.phase || phaseError.cost}>
             {phaseError.phase && (
               <FieldErrorMsg>{phaseError.phase}</FieldErrorMsg>
             )}
@@ -41,7 +38,10 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
               <FieldErrorMsg>{phaseError.cost}</FieldErrorMsg>
             )}
             <div className="est-lifecycle-cost__field-group">
-              <fieldset className="usa-fieldset est-lifecycle-cost__phase-fieldset">
+              <fieldset
+                className="usa-fieldset est-lifecycle-cost__phase-fieldset"
+                data-scroll={`${formikKey}.year${year}.${index}.phase`}
+              >
                 <div className=" est-lifecycle-cost__phase-field-wrapper">
                   <legend
                     className={classnames('usa-label', 'margin-bottom-1')}
@@ -49,7 +49,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                   >
                     Phase
                   </legend>
-                  <div>
+                  <div className="est-lifecycle-cost__radio-row">
                     <Field
                       as={RadioField}
                       checked={values.phase === 'Initiate'}
@@ -72,7 +72,10 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                   </div>
                 </div>
               </fieldset>
-              <div className="est-lifecycle-cost__cost-field-wrapper">
+              <div
+                className="est-lifecycle-cost__cost-field-wrapper"
+                data-scroll={`${formikKey}.year${year}.${index}.cost`}
+              >
                 <Label
                   htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
                   aria-label={`Year ${year} Phase ${index + 1} Cost`}
