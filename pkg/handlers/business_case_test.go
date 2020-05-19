@@ -3,6 +3,7 @@ package handlers
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -11,6 +12,7 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -21,6 +23,13 @@ func newMockFetchBusinessCaseByID(err error) func(id uuid.UUID) (*models.Busines
 			EUAUserID: "FAKE",
 		}
 		return &businessCase, err
+	}
+}
+
+func newMockCreateBusinessCase(err error) func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+	return func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+		businessCase.ID = uuid.New()
+		return businessCase, err
 	}
 }
 
@@ -37,6 +46,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		BusinessCaseHandler{
 			Logger:                s.logger,
 			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(nil),
+			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 		s.Equal(http.StatusOK, rr.Code)
 	})
@@ -49,6 +59,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		BusinessCaseHandler{
 			Logger:                s.logger,
 			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to parse business case id to uuid")),
+			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusBadRequest, rr.Code)
@@ -63,9 +74,82 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		BusinessCaseHandler{
 			Logger:                s.logger,
 			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to fetch business case")),
+			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
 		s.Equal("Failed to GET business case\n", rr.Body.String())
+	})
+
+	s.Run("golden path POST passes", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"system_intake_id": id.String(),
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "POST", "/business_case/", bytes.NewBuffer(body))
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			CreateBusinessCase:    newMockCreateBusinessCase(nil),
+		}.Handle()(rr, req)
+		s.Equal(http.StatusOK, rr.Code)
+	})
+
+	s.Run("POST fails if there is no eua ID in the context", func() {
+		badContext := context.Background()
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"system_intake_id": id.String(),
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(badContext, "POST", "/business_case/", bytes.NewBuffer(body))
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			CreateBusinessCase:    newMockCreateBusinessCase(nil),
+		}.Handle()(rr, req)
+		s.Equal(http.StatusUnauthorized, rr.Code)
+	})
+
+	s.Run("POST fails if a validation error is thrown", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"system_intake_id": id.String(),
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "POST", "/business_case/", bytes.NewBuffer(body))
+
+		s.NoError(err)
+		expectedErr := apperrors.ValidationError{
+			Model:   models.BusinessCase{},
+			ModelID: "",
+			Err:     fmt.Errorf("failed validations"),
+		}
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			CreateBusinessCase:    newMockCreateBusinessCase(&expectedErr),
+		}.Handle()(rr, req)
+		s.Equal(http.StatusBadRequest, rr.Code)
+	})
+
+	s.Run("POST fails if business case isn't created", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"system_intake_id": id.String(),
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "POST", "/business_case/", bytes.NewBuffer(body))
+
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			CreateBusinessCase:    newMockCreateBusinessCase(fmt.Errorf("failed to create business case")),
+		}.Handle()(rr, req)
+		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
 }
