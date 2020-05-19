@@ -4,7 +4,7 @@ version: 2
 references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
   postgres: &postgres postgres:11.6
-  db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:latest
+  db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}
 jobs:
   build_db_migrate_image:
     docker:
@@ -17,17 +17,24 @@ jobs:
       - run:
           name: Build the flyway migrations for testing
           command: |
-            ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate" "latest"
+            ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate"
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   test:
     docker:
       - image: *circleci_docker_primary
         environment:
           APP_ENV: test
+          AWS_REGION: us-west-2
+          AWS_SES_SOURCE: "\"EASi Test\" <no-reply-test@info.easi.cms.gov>"
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
-          GRT_EMAIL: easi-team+test@truss.works
+          GRT_EMAIL: success@simulator.amazonses.com
           PGHOST: localhost
           PGPORT: 5432
           PGDATABASE: postgres
@@ -52,6 +59,12 @@ jobs:
           command: |
             ./scripts/build_app
             ./scripts/testsuite
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
+
   lint:
     docker:
       - image: *circleci_docker_primary
@@ -80,6 +93,11 @@ jobs:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   build_db_clean_image:
     docker:
@@ -93,6 +111,11 @@ jobs:
           name: Build the db cleaner image and push to ECR
           command: |
             ./scripts/build_db_image "Dockerfile.db_clean" "easi-db-clean" "latest"
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   build_tag_push:
     docker:
@@ -110,6 +133,11 @@ jobs:
           name: Check for vulnerability scan findings
           command: |
             ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1"
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   deploy_dev:
     docker:
@@ -146,6 +174,11 @@ jobs:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   deploy_impl:
     docker:
@@ -182,6 +215,11 @@ jobs:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
 workflows:
   version: 2
