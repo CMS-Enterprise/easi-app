@@ -7,13 +7,13 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import TextField from 'components/shared/TextField';
 import { RadioField } from 'components/shared/RadioField';
 import Button from 'components/shared/Button';
-import CollapsableLink from 'components/shared/CollapsableLink';
-import { LifecyclePhase } from 'types/estimatedLifecycle';
 import {
   DescriptionList,
   DescriptionTerm,
   DescriptionDefinition
 } from 'components/shared/DescriptionGroup';
+import { LifecyclePhase } from 'types/estimatedLifecycle';
+
 import formatDollars from 'utils/formatDollars';
 import './index.scss';
 
@@ -29,7 +29,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
   return (
     <FieldArray name={`${formikKey}.year${year}`}>
       {arrayHelpers => (
-        <div className="est-lifecycle-cost__phase-cost-wrapper">
+        <div>
           <FieldGroup
             scrollElement="somethingGoesHere"
             error={phaseError.phase || phaseError.cost}
@@ -40,9 +40,9 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
             {phaseError.cost && (
               <FieldErrorMsg>{phaseError.cost}</FieldErrorMsg>
             )}
-            <div className="est-lifecycle-cost__field-group">
-              <fieldset className="usa-fieldset est-lifecycle-cost__phase-fieldset">
-                <div className=" est-lifecycle-cost__phase-field-wrapper">
+            <div>
+              <fieldset className="usa-fieldset margin-bottom-205">
+                <div>
                   <legend
                     className={classnames('usa-label', 'margin-bottom-1')}
                     aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
@@ -72,49 +72,52 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                   </div>
                 </div>
               </fieldset>
-              <div className="est-lifecycle-cost__cost-field-wrapper">
-                <Label
-                  htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
-                  aria-label={`Year ${year} Phase ${index + 1} Cost`}
-                >
-                  Cost
-                </Label>
-                <Field
-                  as={TextField}
-                  error={!!phaseError.cost}
-                  id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
-                  name={`${formikKey}.year${year}.${index}.cost`}
-                  maxLength={10}
-                  match={/^[0-9\b]+$/}
-                />
-              </div>
-              <div className="est-lifecycle-cost__phase-btn-wrapper">
-                {index === 0 ? (
-                  <Button
-                    type="button"
-                    outline
-                    onClick={() => {
-                      arrayHelpers.push({
-                        phase: '',
-                        cost: ''
-                      });
-                    }}
+              <div className="est-lifecycle-cost__phase-cost-row">
+                <div>
+                  <Label
+                    htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                    aria-label={`Year ${year} Phase ${index + 1} Cost`}
                   >
-                    + Add Phase
-                  </Button>
-                ) : (
-                  <Button
-                    className="est-lifecycle-cost__remove-phase-btn"
-                    type="button"
-                    outline
-                    onClick={() => {
-                      arrayHelpers.remove(index);
-                    }}
-                    unstyled
-                  >
-                    Remove phase
-                  </Button>
-                )}
+                    Cost
+                  </Label>
+                  <Field
+                    as={TextField}
+                    error={!!phaseError.cost}
+                    id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                    name={`${formikKey}.year${year}.${index}.cost`}
+                    maxLength={10}
+                    match={/^[0-9\b]+$/}
+                  />
+                </div>
+
+                <div className="est-lifecycle-cost__phase-btn-wrapper">
+                  {index === 0 ? (
+                    <Button
+                      type="button"
+                      outline
+                      onClick={() => {
+                        arrayHelpers.push({
+                          phase: '',
+                          cost: ''
+                        });
+                      }}
+                    >
+                      + Add Phase
+                    </Button>
+                  ) : (
+                    <Button
+                      className="est-lifecycle-cost__remove-phase-btn"
+                      type="button"
+                      outline
+                      onClick={() => {
+                        arrayHelpers.remove(index);
+                      }}
+                      unstyled
+                    >
+                      Remove phase
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </FieldGroup>
@@ -148,7 +151,6 @@ const EstimatedLifecycleCost = ({
       return prev;
     }, 0);
   };
-
   const currentYearCost = sumCostinYear(years.year1);
   const year2Cost = sumCostinYear(years.year2);
   const year3Cost = sumCostinYear(years.year3);
@@ -157,7 +159,28 @@ const EstimatedLifecycleCost = ({
 
   return (
     <div className="est-lifecycle-cost grid-row">
-      <div className="tablet:grid-col-8">
+      <div className="tablet:grid-col-5">
+        <div className="est-lifecycle-cost__help-box">
+          <span className="est-lifecycle-cost__help-title text-bold">
+            What do phases mean?
+          </span>
+          <dl className="margin-bottom-105">
+            <dt className="margin-bottom-1 text-bold">Development</dt>
+            <dd className="margin-0 line-height-body-3">
+              Costs related to current development that is pre-production
+            </dd>
+          </dl>
+          <dl>
+            <dt className="margin-bottom-1 text-bold">
+              Operations and Maintenance
+            </dt>
+            <dd className="margin-0 line-height-body-3">
+              Costs related to running and upkeep post-production
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <div className="tablet:grid-col-7">
         <div className="est-lifecycle-cost__year-costs margin-top-0">
           <span className="text-bold">Current year</span>
           {years.year1.map((year: LifecyclePhase, index: number) => {
@@ -233,63 +256,16 @@ const EstimatedLifecycleCost = ({
             );
           })}
         </div>
-        <div className="est-lifecycle-cost__phase-help-text">
-          <CollapsableLink label="What phase should I choose?">
-            <div>
-              <p className="margin-top-0">
-                <strong>Initiate: </strong>Projects that are going through the
-                governance process, have not yet received funding, or are
-                currently in development (pre-Authority to Operate)
-              </p>
-              <p className="margin-bottom-0">
-                <strong>Operation and Maintenance: </strong>Projects that are
-                live, post-Authority to Operate
-              </p>
-            </div>
-          </CollapsableLink>
-        </div>
-      </div>
-      <div className="tablet:grid-col-4">
-        <DescriptionList
-          title="Estimated Lifecycle Cost Summary"
-          className="est-lifecycle-cost__total-cost-wrapper"
-        >
-          <div>
-            <DescriptionTerm term="Current year" />
+        <div className="bg-base-lightest overflow-auto margin-top-3 padding-x-2">
+          <DescriptionList title="System total cost">
+            <DescriptionTerm term="System total cost" />
             <DescriptionDefinition
-              definition={`${formatDollars(currentYearCost)}`}
-            />
-          </div>
-          <div>
-            <DescriptionTerm term="Year 2" />
-            <DescriptionDefinition definition={`${formatDollars(year2Cost)}`} />
-          </div>
-          <div>
-            <DescriptionTerm term="Year 3" />
-            <DescriptionDefinition definition={`${formatDollars(year3Cost)}`} />
-          </div>
-          <div>
-            <DescriptionTerm term="Year 4" />
-            <DescriptionDefinition definition={`${formatDollars(year4Cost)}`} />
-          </div>
-          <div>
-            <DescriptionTerm term="Year 5" />
-            <DescriptionDefinition definition={`${formatDollars(year5Cost)}`} />
-          </div>
-          <div>
-            <hr className="margin-bottom-3 text-black" />
-            <DescriptionTerm
-              className="est-lifecycle-cost__dt-total"
-              term="System total cost"
-            />
-            <DescriptionDefinition
-              className="est-lifecycle-cost__dd-total"
-              definition={`${formatDollars(
+              definition={formatDollars(
                 currentYearCost + year2Cost + year3Cost + year4Cost + year5Cost
-              )}`}
+              )}
             />
-          </div>
-        </DescriptionList>
+          </DescriptionList>
+        </div>
       </div>
     </div>
   );
