@@ -18,6 +18,7 @@ type LifecycleCostYear string
 
 const (
 	// LifecycleCostPhaseINITIATE captures enum value "Initiate"
+	// TODO: Remove initiate phase after this gets merged in
 	LifecycleCostPhaseINITIATE LifecycleCostPhase = "Initiate"
 	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"

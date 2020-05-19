@@ -70,7 +70,7 @@ func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 		s.NoError(err)
 	})
 
-	s.Run("Matched EUA ID fails auth", func() {
+	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
 		ctx = appcontext.WithEuaID(ctx, "ABCD")
 		intake := models.SystemIntake{

@@ -1,1 +1,0 @@
-alter type lifecycle_cost_phase add value 'Development' after 'Initiate';
