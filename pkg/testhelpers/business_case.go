@@ -8,19 +8,20 @@ import (
 
 // EstimatedLifecycleCostOptions allows cost options to be customized
 type EstimatedLifecycleCostOptions struct {
-	Solution *models.LifecycleCostSolution
-	Phase    *models.LifecycleCostPhase
-	Year     *models.LifecycleCostYear
-	Cost     *int
+	BusinessCaseID *uuid.UUID
+	Solution       *models.LifecycleCostSolution
+	Phase          *models.LifecycleCostPhase
+	Year           *models.LifecycleCostYear
+	Cost           *int
 }
 
 // NewEstimatedLifecycleCost helps generate a new lifecycle cost for a given business case
-func NewEstimatedLifecycleCost(businessCaseID uuid.UUID, opts EstimatedLifecycleCostOptions) models.EstimatedLifecycleCost {
+func NewEstimatedLifecycleCost(opts EstimatedLifecycleCostOptions) models.EstimatedLifecycleCost {
 	elc := models.EstimatedLifecycleCost{
 		ID:             uuid.New(),
-		BusinessCaseID: businessCaseID,
+		BusinessCaseID: uuid.New(),
 		Solution:       models.LifecycleCostSolutionASIS,
-		Phase:          models.LifecycleCostPhaseINITIATE,
+		Phase:          models.LifecycleCostPhaseDEVELOPMENT,
 		Year:           models.LifecycleCostYear1,
 		Cost:           100,
 	}
@@ -35,6 +36,9 @@ func NewEstimatedLifecycleCost(businessCaseID uuid.UUID, opts EstimatedLifecycle
 	}
 	if opts.Cost != nil {
 		elc.Cost = *opts.Cost
+	}
+	if opts.BusinessCaseID != nil {
+		elc.BusinessCaseID = *opts.BusinessCaseID
 	}
 	return elc
 }

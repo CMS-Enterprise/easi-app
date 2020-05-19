@@ -36,8 +36,6 @@ func NewCreateBusinessCase(
 	logger *zap.Logger,
 ) func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-		id := uuid.New()
-		businessCase.ID = id
 		valid := validate.CheckUniqLifecycleCosts(businessCase.LifecycleCostLines)
 		if !valid {
 			err := apperrors.ValidationError{
