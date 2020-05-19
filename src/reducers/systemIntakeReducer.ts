@@ -3,7 +3,7 @@ import {
   initialSystemIntakeForm,
   prepareSystemIntakeForApp
 } from 'data/systemIntake';
-import { fetchSystemIntake, storeSystemIntakeId } from 'types/routines';
+import { fetchSystemIntake, storeSystemIntake } from 'types/routines';
 import { Action } from 'redux-actions';
 
 const initialState: SystemIntakeState = {
@@ -31,21 +31,21 @@ function systemIntakeReducer(
         ...state,
         isLoading: false
       };
-    case storeSystemIntakeId.TRIGGER:
+    case storeSystemIntake.TRIGGER:
       return {
         ...state,
         systemIntake: {
           ...state.systemIntake,
-          id: action.payload
+          ...action.payload
         },
         isLoading: false
       };
-    case storeSystemIntakeId.FAILURE:
+    case storeSystemIntake.FAILURE:
       return {
         ...state,
         error: action.payload
       };
-    case storeSystemIntakeId.FULFILL:
+    case storeSystemIntake.FULFILL:
       return {
         ...state,
         isLoading: false
