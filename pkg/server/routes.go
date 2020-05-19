@@ -104,7 +104,7 @@ func (s *Server) routes(
 	businessCaseHandler := handlers.BusinessCaseHandler{
 		Logger: s.logger,
 		CreateBusinessCase: services.NewCreateBusinessCase(
-			nil,
+			store.CreateBusinessCase,
 			s.logger,
 		),
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
