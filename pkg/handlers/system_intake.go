@@ -107,6 +107,9 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 					logger.Error(fmt.Sprintf("Failed to submit system intake: %v", err))
 					// TODO: Replace with more helpful errors
 					http.Error(w, "Failed to submit system intake", http.StatusInternalServerError)
+				case *apperrors.NotificationError:
+					logger.Error("Failed to send notification", zap.Error(err))
+					http.Error(w, "Failed to send notification", http.StatusInternalServerError)
 				default:
 					logger.Error(fmt.Sprintf("Failed to save system intake: %v", err))
 					// TODO: Replace with more helpful errors
