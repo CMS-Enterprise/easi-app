@@ -91,7 +91,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				h.Logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
 
 				switch err.(type) {
-				case *apperrors.ValidationError:
+				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
 					http.Error(w, "Failed to create a business case", http.StatusBadRequest)
 					return
 				default:

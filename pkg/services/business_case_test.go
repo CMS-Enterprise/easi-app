@@ -71,21 +71,76 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 	})
 }
 
-func (s ServicesTestSuite) TestBusinessCaseCreater() {
+func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
+	logger := zap.NewNop()
+	authorizeCreateBusinessCase := NewAuthorizeCreateBusinessCase(logger)
+
+	s.Run("No EUA ID fails auth", func() {
+		ok, err := authorizeCreateBusinessCase(&models.BusinessCase{}, &models.SystemIntake{})
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Mismatched EUA ID fails auth", func() {
+		businessCase := models.BusinessCase{
+			EUAUserID: "ZYXW",
+		}
+		intake := models.SystemIntake{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeCreateBusinessCase(&businessCase, &intake)
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Matched EUA ID passes auth", func() {
+		businessCase := models.BusinessCase{
+			EUAUserID: "ABCD",
+		}
+		intake := models.SystemIntake{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeCreateBusinessCase(&businessCase, &intake)
+
+		s.True(ok)
+		s.NoError(err)
+	})
+}
+
+func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	logger := zap.NewNop()
 	euaID := testhelpers.RandomEUAID()
+	intakeID := uuid.New()
+	intake := models.SystemIntake{
+		EUAUserID: euaID,
+		ID:        intakeID,
+		Status:    models.SystemIntakeStatusSUBMITTED,
+	}
+	err := s.store.SaveSystemIntake(&intake)
+	s.NoError(err)
+
 	input := models.BusinessCase{
 		EUAUserID:      euaID,
-		SystemIntakeID: uuid.New(),
+		SystemIntakeID: intakeID,
+	}
+	fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+		return &intake, nil
 	}
 	create := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		return &models.BusinessCase{
 			EUAUserID: euaID,
 		}, nil
 	}
+	authorize := func(businessCase *models.BusinessCase, intake *models.SystemIntake) (bool, error) {
+		return true, nil
+	}
 
 	s.Run("successfully creates a Business Case without an error", func() {
-		createBusinessCase := NewCreateBusinessCase(create, logger)
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
 		businessCase, err := createBusinessCase(&input)
 		s.NoError(err)
 
@@ -96,7 +151,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreater() {
 		create = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("creation failed")
 		}
-		createBusinessCase := NewCreateBusinessCase(create, logger)
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
 		businessCase, err := createBusinessCase(&input)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -108,7 +163,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreater() {
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 		}
-		createBusinessCase := NewCreateBusinessCase(create, logger)
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
 		businessCase, err := createBusinessCase(&input)
 
 		s.IsType(&apperrors.ValidationError{}, err)
