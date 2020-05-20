@@ -42,3 +42,19 @@ export const businessCaseInitalData: BusinessCaseModel = {
   preferredSolution: defaultProposedSolution,
   alternativeA: defaultProposedSolution
 };
+
+export const prepareBusinessCaseForApi = (
+  id: string,
+  businessCase: BusinessCaseModel
+) => {
+  console.log(id, businessCase);
+  return {};
+};
+
+export const prepareBusinessCaseForApp = (
+  businessCase: any
+): BusinessCaseModel => {
+  console.log(businessCase);
+  // TODO: need to see what the API model looks like
+  return businessCaseInitalData;
+};
