@@ -256,6 +256,11 @@ jobs:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
 workflows:
   version: 2
