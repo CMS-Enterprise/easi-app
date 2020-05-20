@@ -52,8 +52,13 @@ class App extends React.Component<MainProps, MainState> {
                 path="/system/:profileId"
                 component={SystemProfile}
               /> */}
+              <Redirect
+                exact
+                from="/business/:businessCaseId"
+                to="/business/:businessCaseId/general-project-info"
+              />
               <SecureRoute
-                path="/business/new"
+                path="/business/:businessCaseId/:formPage"
                 render={({ component }: any) => component()}
                 component={BusinessCase}
               />
