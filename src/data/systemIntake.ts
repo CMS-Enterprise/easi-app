@@ -77,7 +77,9 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
   };
 };
 
-export const prepareSystemIntakeForApp = (systemIntake: any) => {
+export const prepareSystemIntakeForApp = (
+  systemIntake: any
+): SystemIntakeForm => {
   const governanceTeams = () => {
     const teams: GovernanceCollaborationTeam[] = [];
     cmsGovernanceTeams.forEach(team => {
