@@ -51,7 +51,7 @@ export const BusinessCase = () => {
       type: 'REVIEW'
     }
   ]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(3);
   const pageObj = pages[page - 1];
 
   const renderPage = (formikProps: FormikProps<BusinessCaseModel>) => {

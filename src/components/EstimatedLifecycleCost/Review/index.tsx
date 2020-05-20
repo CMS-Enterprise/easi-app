@@ -23,7 +23,7 @@ const EstimatedLifecycleCostReview = ({
   data
 }: EstimatedLifecycleCostReviewProps) => {
   const yearMapping: { [key: string]: string } = {
-    year1: 'Current year',
+    year1: 'Year 1',
     year2: 'Year 2',
     year3: 'Year 3',
     year4: 'Year 4',

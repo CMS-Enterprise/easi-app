@@ -29,7 +29,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
   return (
     <FieldArray name={`${formikKey}.year${year}`}>
       {arrayHelpers => (
-        <div>
+        <div className="est-lifecycle-cost__phase-cost-wrapper">
           <FieldGroup
             scrollElement="somethingGoesHere"
             error={phaseError.phase || phaseError.cost}
@@ -151,7 +151,7 @@ const EstimatedLifecycleCost = ({
       return prev;
     }, 0);
   };
-  const currentYearCost = sumCostinYear(years.year1);
+  const year1Cost = sumCostinYear(years.year1);
   const year2Cost = sumCostinYear(years.year2);
   const year3Cost = sumCostinYear(years.year3);
   const year4Cost = sumCostinYear(years.year4);
@@ -161,9 +161,9 @@ const EstimatedLifecycleCost = ({
     <div className="est-lifecycle-cost grid-row">
       <div className="tablet:grid-col-5">
         <div className="est-lifecycle-cost__help-box">
-          <span className="est-lifecycle-cost__help-title text-bold">
+          <h3 className="est-lifecycle-cost__help-title text-bold">
             What do phases mean?
-          </span>
+          </h3>
           <dl className="margin-bottom-105">
             <dt className="margin-bottom-1 text-bold">Development</dt>
             <dd className="margin-0 line-height-body-3">
@@ -182,7 +182,7 @@ const EstimatedLifecycleCost = ({
       </div>
       <div className="tablet:grid-col-7">
         <div className="est-lifecycle-cost__year-costs margin-top-0">
-          <span className="text-bold">Current year</span>
+          <span className="text-bold">Year 1</span>
           {years.year1.map((year: LifecyclePhase, index: number) => {
             return (
               <Phase
@@ -261,7 +261,7 @@ const EstimatedLifecycleCost = ({
             <DescriptionTerm term="System total cost" />
             <DescriptionDefinition
               definition={formatDollars(
-                currentYearCost + year2Cost + year3Cost + year4Cost + year5Cost
+                year1Cost + year2Cost + year3Cost + year4Cost + year5Cost
               )}
             />
           </DescriptionList>
