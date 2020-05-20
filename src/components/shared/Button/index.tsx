@@ -3,24 +3,8 @@ import classnames from 'classnames';
 import { Link } from 'react-router-dom';
 
 type ButtonProps = {
-  type: 'button';
+  type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  buttonType?: 'button' | 'submit' | 'reset';
-};
-
-type AProps = {
-  type: 'a';
-  href?: string;
-};
-
-type LinkProps = {
-  type: 'link';
-  to?: string;
-};
-
-type UniversalProps = {
-  type: string;
   children: React.ReactNode;
   secondary?: boolean;
   base?: boolean;
@@ -29,20 +13,16 @@ type UniversalProps = {
   inverse?: boolean;
   big?: boolean;
   unstyled?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  to?: string;
+  href?: string;
   className?: string;
 };
 
-const elementTypes = {
-  button: 'button',
-  a: 'a',
-  link: Link
-};
-
-export const Button = (
-  props: (ButtonProps | AProps | LinkProps) & UniversalProps
-): React.ReactElement => {
+export const Button = (props: ButtonProps): React.ReactElement => {
   const {
     type,
+    disabled,
     children,
     secondary,
     base,
@@ -51,6 +31,9 @@ export const Button = (
     inverse,
     big,
     unstyled,
+    onClick,
+    to,
+    href,
     className
   } = props;
 
@@ -68,27 +51,33 @@ export const Button = (
     className
   );
 
-  let componentProps;
-  if (type === 'a') {
-    componentProps = {
-      href: (props as AProps).href,
-      className: classes
-    };
-  } else if (type === 'link') {
-    componentProps = {
-      to: (props as LinkProps).to,
-      className: classes
-    };
-  } else {
-    const buttonProps = props as ButtonProps;
-    componentProps = {
-      type: buttonProps.buttonType,
-      disabled: buttonProps.disabled,
-      onClick: buttonProps.disabled ? () => {} : buttonProps.onClick
-    };
+  if (to) {
+    return (
+      <Link className={classes} to={to}>
+        {children}
+      </Link>
+    );
   }
 
-  return React.createElement(elementTypes[type], componentProps, children);
+  if (href) {
+    return (
+      <a href={href} className={classes}>
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    // eslint-disable-next-line react/button-has-type
+    <button
+      type={type}
+      className={classes}
+      disabled={disabled}
+      onClick={disabled ? () => {} : onClick}
+    >
+      {children}
+    </button>
+  );
 };
 
 export default Button;
