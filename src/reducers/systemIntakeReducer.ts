@@ -60,6 +60,11 @@ function systemIntakeReducer(
         ...state,
         isSubmitting: true
       };
+    case submitSystemIntake.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
     case submitSystemIntake.FULFILL:
       return {
         ...state,
