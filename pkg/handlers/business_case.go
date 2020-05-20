@@ -78,6 +78,12 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			requestedBusinessCase := models.BusinessCase{}
 			err := decoder.Decode(&requestedBusinessCase)
 
+			if err != nil {
+				logger.Error("Failed to decode business case body")
+				http.Error(w, "Bad business case request", http.StatusBadRequest)
+				return
+			}
+
 			euaID, ok := appcontext.EuaID(r.Context())
 			if !ok {
 				logger.Error("Failed to get EUA ID from context")
