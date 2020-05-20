@@ -1,9 +1,9 @@
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import Header from 'components/Header';
-import './index.scss';
 import CollapsableLink from 'components/shared/CollapsableLink';
-import LinkButton from 'components/shared/LinkButton';
+import './index.scss';
+import Button from 'components/shared/Button';
 
 type NumberedListItemProps = {
   stepName: string;
@@ -156,7 +156,7 @@ const GovernanceOverview = () => {
             </div>
           </CollapsableLink>
         </div>
-        <LinkButton to="/system/new">Get started</LinkButton>
+        <Button to="/system/new">Get started</Button>
       </main>
     </div>
   );
