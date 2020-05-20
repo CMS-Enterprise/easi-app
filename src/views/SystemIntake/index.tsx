@@ -60,6 +60,7 @@ export const SystemIntake = () => {
   const isSubmitting = useSelector(
     (state: AppState) => state.systemIntake.isSubmitting
   );
+  const error = useSelector((state: AppState) => state.systemIntake.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
 
   const dispatchSave = () => {
@@ -104,7 +105,7 @@ export const SystemIntake = () => {
   }, [pages, systemId, formPage]);
 
   useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting) {
+    if (prevIsSubmitting && !isSubmitting && !error) {
       history.push('/');
     }
 
