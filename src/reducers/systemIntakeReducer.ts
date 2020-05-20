@@ -3,12 +3,17 @@ import {
   initialSystemIntakeForm,
   prepareSystemIntakeForApp
 } from 'data/systemIntake';
-import { fetchSystemIntake, storeSystemIntake } from 'types/routines';
+import {
+  fetchSystemIntake,
+  storeSystemIntake,
+  submitSystemIntake
+} from 'types/routines';
 import { Action } from 'redux-actions';
 
 const initialState: SystemIntakeState = {
   systemIntake: initialSystemIntakeForm,
-  isLoading: null
+  isLoading: null,
+  isSubmitting: false
 };
 
 function systemIntakeReducer(
@@ -49,6 +54,16 @@ function systemIntakeReducer(
       return {
         ...state,
         isLoading: false
+      };
+    case submitSystemIntake.REQUEST:
+      return {
+        ...state,
+        isSubmitting: true
+      };
+    case submitSystemIntake.FULFILL:
+      return {
+        ...state,
+        isSubmitting: false
       };
     default:
       return state;
