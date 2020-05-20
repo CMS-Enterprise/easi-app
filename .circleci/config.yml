@@ -18,6 +18,11 @@ jobs:
           name: Build the flyway migrations for testing
           command: |
             ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate"
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   test:
     docker:
@@ -54,6 +59,11 @@ jobs:
           command: |
             ./scripts/build_app
             ./scripts/testsuite
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   lint:
     docker:
@@ -83,6 +93,11 @@ jobs:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   build_db_clean_image:
     docker:
@@ -96,6 +111,11 @@ jobs:
           name: Build the db cleaner image and push to ECR
           command: |
             ./scripts/build_db_image "Dockerfile.db_clean" "easi-db-clean" "latest"
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   build_tag_push:
     docker:
@@ -113,6 +133,11 @@ jobs:
           name: Check for vulnerability scan findings
           command: |
             ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1"
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   deploy_dev:
     docker:
@@ -149,6 +174,11 @@ jobs:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   deploy_impl:
     docker:
@@ -185,6 +215,11 @@ jobs:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   deploy_prod:
     docker:
