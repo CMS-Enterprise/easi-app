@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -15,7 +16,7 @@ import (
 )
 
 type fetchBusinessCaseByID func(id uuid.UUID) (*models.BusinessCase, error)
-type createBusinessCase func(businessCase *models.BusinessCase) (*models.BusinessCase, error)
+type createBusinessCase func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error)
 
 // BusinessCaseHandler is the handler for CRUD operations on business case
 type BusinessCaseHandler struct {
@@ -75,8 +76,8 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			}
 			defer r.Body.Close()
 			decoder := json.NewDecoder(r.Body)
-			requestedBusinessCase := models.BusinessCase{}
-			err := decoder.Decode(&requestedBusinessCase)
+			businessCaseToCreate := models.BusinessCase{}
+			err := decoder.Decode(&businessCaseToCreate)
 
 			if err != nil {
 				logger.Error("Failed to decode business case body")
@@ -90,9 +91,9 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				http.Error(w, "Failed to POST business case", http.StatusUnauthorized)
 				return
 			}
-			requestedBusinessCase.EUAUserID = euaID
+			businessCaseToCreate.EUAUserID = euaID
 
-			businessCase, err := h.CreateBusinessCase(&requestedBusinessCase)
+			businessCase, err := h.CreateBusinessCase(r.Context(), &businessCaseToCreate)
 			if err != nil {
 				h.Logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
 

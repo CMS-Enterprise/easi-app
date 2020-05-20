@@ -1,4 +1,4 @@
-package validate
+package appvalidation
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s ValidateTestSuite) TestCheckUniqLifecycleCosts() {
+func (s AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
 	s.Run("returns empty strings when the lifecycle costs are valid", func() {
 		preferred := models.LifecycleCostSolutionPREFERRED
 		elc1 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
@@ -37,7 +37,7 @@ func (s ValidateTestSuite) TestCheckUniqLifecycleCosts() {
 	})
 }
 
-func (s ValidateTestSuite) TestCheckSystemIntakeSubmitted() {
+func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 	s.Run("returns empty strings when intake is submitted", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
 		submittedIntake.Status = models.SystemIntakeStatusSUBMITTED
@@ -52,7 +52,7 @@ func (s ValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 	})
 }
 
-func (s ValidateTestSuite) TestBusinessCaseForSubmission() {
+func (s AppValidateTestSuite) TestBusinessCaseForSubmission() {
 	s.Run("golden path", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
 		submittedIntake.Status = models.SystemIntakeStatusSUBMITTED

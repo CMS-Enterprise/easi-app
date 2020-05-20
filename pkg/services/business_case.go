@@ -1,14 +1,16 @@
 package services
 
 import (
+	"context"
 	"errors"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
@@ -33,18 +35,26 @@ func NewFetchBusinessCaseByID(
 // NewAuthorizeCreateBusinessCase returns a function
 // that authorizes a user for creating a business case
 func NewAuthorizeCreateBusinessCase(logger *zap.Logger) func(
-	businessCase *models.BusinessCase,
+	context context.Context,
 	intake *models.SystemIntake,
 ) (bool, error) {
-	return func(businessCase *models.BusinessCase, intake *models.SystemIntake) (bool, error) {
-		if intake == nil || businessCase == nil {
+	return func(context context.Context, intake *models.SystemIntake) (bool, error) {
+		if intake == nil {
 			logger.With(zap.Bool("Authorized", false)).
 				With(zap.String("Operation", "CreateBusinessCase")).
-				Info("intake or business case were not created")
+				Info("intake does not exist")
+			return false, nil
+		}
+		euaID, ok := appcontext.EuaID(context)
+		if !ok {
+			// Default to failure to authorize and create a quick audit log
+			logger.With(zap.Bool("Authorized", false)).
+				With(zap.String("Operation", "CreateBusinessCase")).
+				Info("something went wrong fetching the eua id from the context")
 			return false, nil
 		}
 		// If intake is owned by user, authorize
-		if businessCase.EUAUserID != "" && businessCase.EUAUserID == intake.EUAUserID {
+		if euaID == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
 				With(zap.String("Operation", "CreateBusinessCase")).
 				Info("user authorized to create business case")
@@ -61,11 +71,11 @@ func NewAuthorizeCreateBusinessCase(logger *zap.Logger) func(
 // NewCreateBusinessCase is a service to create a business case
 func NewCreateBusinessCase(
 	fetchIntake func(id uuid.UUID) (*models.SystemIntake, error),
-	authorize func(businessCase *models.BusinessCase, intake *models.SystemIntake) (bool, error),
+	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	create func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
 	logger *zap.Logger,
-) func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-	return func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		intake, err := fetchIntake(businessCase.SystemIntakeID)
 		if err != nil {
 			// We return an empty id in this error because the business case hasn't been created
@@ -75,14 +85,14 @@ func NewCreateBusinessCase(
 				ResourceID: "",
 			}
 		}
-		ok, err := authorize(businessCase, intake)
+		ok, err := authorize(context, intake)
 		if err != nil {
 			return &models.BusinessCase{}, err
 		}
 		if !ok {
 			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: err}
 		}
-		err = validate.BusinessCaseForCreation(businessCase, intake)
+		err = appvalidation.BusinessCaseForCreation(businessCase, intake)
 		if err != nil {
 			return &models.BusinessCase{}, err
 		}
