@@ -10,7 +10,7 @@ import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import './index.scss';
-import LinkButton from 'components/shared/LinkButton';
+import Button from 'components/shared/Button';
 
 type HomeProps = RouteComponentProps;
 
@@ -82,9 +82,9 @@ const Home = ({ history }: HomeProps) => {
             </p>
           </div>
           {authState.isAuthenticated ? (
-            <LinkButton to="/overview">Start now</LinkButton>
+            <Button to="/overview">Start now</Button>
           ) : (
-            <LinkButton to="/login">Sign in to start</LinkButton>
+            <Button to="/login">Sign in to start</Button>
           )}
         </div>
       </div>

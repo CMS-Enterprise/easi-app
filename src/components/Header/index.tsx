@@ -83,9 +83,7 @@ export const Header = ({ children, name }: HeaderProps) => {
               </button>
               {displayDropdown && (
                 <UserActionList id="Header-UserActionsList">
-                  <UserAction link="/governance-overview">
-                    Add New System
-                  </UserAction>
+                  <UserAction link="/overview">Add New System</UserAction>
                   <UserAction
                     onClick={() => {
                       authService.logout();
