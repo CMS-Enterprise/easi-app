@@ -26,8 +26,8 @@ func newMockFetchBusinessCaseByID(err error) func(id uuid.UUID) (*models.Busines
 	}
 }
 
-func newMockCreateBusinessCase(err error) func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-	return func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+func newMockCreateBusinessCase(err error) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		businessCase.ID = uuid.New()
 		return businessCase, err
 	}

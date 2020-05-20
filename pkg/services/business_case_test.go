@@ -1,11 +1,13 @@
 package services
 
 import (
+	"context"
 	"errors"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -76,35 +78,35 @@ func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
 	authorizeCreateBusinessCase := NewAuthorizeCreateBusinessCase(logger)
 
 	s.Run("No EUA ID fails auth", func() {
-		ok, err := authorizeCreateBusinessCase(&models.BusinessCase{}, &models.SystemIntake{})
+		ctx := context.Background()
+		ok, err := authorizeCreateBusinessCase(ctx, &models.SystemIntake{})
 
 		s.False(ok)
 		s.NoError(err)
 	})
 
 	s.Run("Mismatched EUA ID fails auth", func() {
-		businessCase := models.BusinessCase{
-			EUAUserID: "ZYXW",
-		}
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ZYXW")
+
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
 		}
 
-		ok, err := authorizeCreateBusinessCase(&businessCase, &intake)
+		ok, err := authorizeCreateBusinessCase(ctx, &intake)
 
 		s.False(ok)
 		s.NoError(err)
 	})
 
 	s.Run("Matched EUA ID passes auth", func() {
-		businessCase := models.BusinessCase{
-			EUAUserID: "ABCD",
-		}
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ABCD")
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
 		}
 
-		ok, err := authorizeCreateBusinessCase(&businessCase, &intake)
+		ok, err := authorizeCreateBusinessCase(ctx, &intake)
 
 		s.True(ok)
 		s.NoError(err)
@@ -135,13 +137,14 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 			EUAUserID: euaID,
 		}, nil
 	}
-	authorize := func(businessCase *models.BusinessCase, intake *models.SystemIntake) (bool, error) {
+	authorize := func(context context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
+	ctx := context.Background()
 
 	s.Run("successfully creates a Business Case without an error", func() {
 		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
-		businessCase, err := createBusinessCase(&input)
+		businessCase, err := createBusinessCase(ctx, &input)
 		s.NoError(err)
 
 		s.Equal(euaID, businessCase.EUAUserID)
@@ -152,7 +155,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 			return &models.BusinessCase{}, errors.New("creation failed")
 		}
 		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
-		businessCase, err := createBusinessCase(&input)
+		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.BusinessCase{}, businessCase)
@@ -164,7 +167,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 		}
 		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
-		businessCase, err := createBusinessCase(&input)
+		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.IsType(&apperrors.ValidationError{}, err)
 		s.Equal(&models.BusinessCase{}, businessCase)

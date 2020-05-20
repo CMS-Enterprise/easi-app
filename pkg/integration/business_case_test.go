@@ -66,12 +66,13 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		err = json.Unmarshal(actualBody, &actualBusinessCase)
 		s.NoError(err)
 		s.Equal(intakeID, actualBusinessCase.SystemIntakeID)
+		s.Equal(s.user.euaID, actualBusinessCase.EUAUserID)
 
 		id = actualBusinessCase.ID
 	})
 
+	// This needs to be run after the previous test to ensure we have a business case to fetch
 	s.Run("GET will fetch the updated intake just saved", func() {
-
 		getURL, err := url.Parse(businessCaseURL.String())
 		s.NoError(err, "failed to parse URL")
 		getURL.Path = path.Join(getURL.Path, id.String())
