@@ -221,6 +221,47 @@ jobs:
             ./scripts/circleci-announce-broken-branch
           when: on_fail
 
+  deploy_prod:
+    docker:
+      - image: *circleci_docker_primary
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+          APP_ENV: prod
+    steps:
+      - checkout
+      - run:
+          name: Setup custom environment variables
+          command: |
+            temp_role=$(aws sts assume-role \
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/circleci \
+                    --role-session-name circleci)
+            echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
+      - run:
+          name: Backup the database
+          command: |
+            ./scripts/rds-snapshot-app-db
+      - run:
+          name: Run migrations
+          command: |
+            ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "easi-app-db-migrate"
+      - run:
+          name: Deploy ECS service
+          command: |
+            ./scripts/deploy_service "easi-app" "easi-backend"
+            ./scripts/healthcheck
+      - run:
+          name: Build static assets and release to S3
+          command: |
+            ./scripts/release_static
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
+
 workflows:
   version: 2
   compile:
@@ -244,6 +285,13 @@ workflows:
                 - master
           requires:
             - deploy_dev
+      - hold_prod:
+          type: approval
+          requires:
+            - deploy_impl
+      - deploy_prod:
+          requires:
+            - hold_prod
   weekly:
     triggers:
       - schedule:
