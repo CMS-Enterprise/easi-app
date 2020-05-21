@@ -103,7 +103,6 @@ const Review = ({ formikProps }: ReviewProps) => {
       <div className="bg-base-lightest padding-top-2 padding-bottom-8">
         <div className="grid-container">
           <ResponsiveTabs
-            className=""
             activeTab={activeSolutionTab}
             tabs={getFilledSolutions()}
             handleTabClick={tab => {
