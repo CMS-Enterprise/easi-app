@@ -136,17 +136,20 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 
 // GetSystemIntakeMetrics gets a metrics digest for system intake
 func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
-	const SystemIntakesMetricsSQL = `
-		SELECT count(*) 
-		FROM system_intake;
+	const startedCountSQL = `
+		SELECT count(*) FROM system_intake WHERE created_at >=  $1 and created_at < $2
 	`
-	var metrics models.SystemIntakeMetrics
-	_, err := s.DB.NamedExec(
-		SystemIntakesMetricsSQL,
-		&metrics,
+	metrics := models.SystemIntakeMetrics{}
+	var startedRequests int
+	err := s.DB.Get(
+		&startedRequests,
+		startedCountSQL,
+		&startTime,
+		&endTime,
 	)
 	if err != nil {
 		return metrics, err
 	}
+	metrics.StartedRequests = startedRequests
 	return metrics, nil
 }
