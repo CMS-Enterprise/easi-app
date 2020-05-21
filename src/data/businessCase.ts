@@ -23,7 +23,7 @@ export const defaultProposedSolution = {
 };
 
 export const businessCaseInitalData: BusinessCaseModel = {
-  systemIntake: 'a84f7cc3-75e1-4686-aaac-68af95455ae8',
+  systemIntake: '',
   requestName: '',
   requester: {
     name: '',
