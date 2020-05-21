@@ -230,4 +230,49 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 			s.Equal(tt.expectedCount, metrics.CompletedOfStarted)
 		})
 	}
+
+	var fundedTests = []struct {
+		name           string
+		submittedAt    time.Time
+		funded         bool
+		completedCount int
+		fundedCount    int
+	}{
+		{
+			"completed out of range and funded",
+			endDate.AddDate(0, 0, 1),
+			true,
+			0,
+			0,
+		},
+		{
+			"completed in range and funded",
+			startDate,
+			true,
+			1,
+			1,
+		},
+		{
+			"completed in range and not funded",
+			startDate,
+			false,
+			2,
+			1,
+		},
+	}
+	for _, tt := range fundedTests {
+		s.Run(tt.name, func() {
+			intake := testhelpers.NewSystemIntake()
+			intake.SubmittedAt = &tt.submittedAt
+			intake.ExistingFunding = null.BoolFrom(tt.funded)
+			err := s.store.SaveSystemIntake(&intake)
+			s.NoError(err)
+
+			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+
+			s.NoError(err)
+			s.Equal(tt.completedCount, metrics.Completed)
+			s.Equal(tt.fundedCount, metrics.Funded)
+		})
+	}
 }
