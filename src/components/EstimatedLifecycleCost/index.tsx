@@ -37,40 +37,42 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
             {phaseError.cost && (
               <FieldErrorMsg>{phaseError.cost}</FieldErrorMsg>
             )}
-            <fieldset
-              className="usa-fieldset est-lifecycle-cost__phase-fieldset"
-              data-scroll={`${formikKey}.year${year}.${index}.phase`}
-            >
-              <div>
-                <legend
-                  className={classnames('usa-label', 'margin-bottom-1')}
-                  aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
-                >
-                  Phase
-                </legend>
-                <div className="est-lifecycle-cost__radio-row">
-                  <Field
-                    as={RadioField}
-                    checked={values.phase === 'Development'}
-                    id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.Development`}
-                    name={`${formikKey}.year${year}.${index}.phase`}
-                    label="Development"
-                    value="Development"
-                    inline
-                  />
+            <div className="margin-right-2">
+              <fieldset
+                className="usa-fieldset"
+                data-scroll={`${formikKey}.year${year}.${index}.phase`}
+              >
+                <div>
+                  <legend
+                    className={classnames('usa-label', 'margin-bottom-1')}
+                    aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
+                  >
+                    Phase
+                  </legend>
+                  <div className="est-lifecycle-cost__radio-row">
+                    <Field
+                      as={RadioField}
+                      checked={values.phase === 'Development'}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.Development`}
+                      name={`${formikKey}.year${year}.${index}.phase`}
+                      label="Development"
+                      value="Development"
+                      inline
+                    />
 
-                  <Field
-                    as={RadioField}
-                    checked={values.phase === 'Operations and Maintenance'}
-                    id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
-                    name={`${formikKey}.year${year}.${index}.phase`}
-                    label="Operations and Maintenance"
-                    value="Operations and Maintenance"
-                    inline
-                  />
+                    <Field
+                      as={RadioField}
+                      checked={values.phase === 'Operations and Maintenance'}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
+                      name={`${formikKey}.year${year}.${index}.phase`}
+                      label="Operations and Maintenance"
+                      value="Operations and Maintenance"
+                      inline
+                    />
+                  </div>
                 </div>
-              </div>
-            </fieldset>
+              </fieldset>
+            </div>
             <div
               className="est-lifecycle-cost__phase-cost-row"
               data-scroll={`${formikKey}.year${year}.${index}.cost`}
@@ -160,7 +162,7 @@ const EstimatedLifecycleCost = ({
 
   return (
     <div className="est-lifecycle-cost grid-row">
-      <div className="tablet:grid-col-5">
+      <div className="tablet:grid-col-4">
         <div className="est-lifecycle-cost__help-box">
           <h3 className="est-lifecycle-cost__help-title text-bold">
             What do phases mean?
@@ -181,7 +183,7 @@ const EstimatedLifecycleCost = ({
           </dl>
         </div>
       </div>
-      <div className="tablet:grid-col-7">
+      <div className="tablet:grid-col-8">
         <div className="est-lifecycle-cost__year-costs margin-top-0">
           <span className="text-bold">Year 1</span>
           {years.year1.map((year: LifecyclePhase, index: number) => {
