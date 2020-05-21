@@ -25,7 +25,7 @@ func NewFetchSystemIntakesByEuaID(
 			logger.Error("failed to fetch system intakes")
 			return models.SystemIntakes{}, &apperrors.QueryError{
 				Err:       err,
-				Model:     "System Intakes",
+				Model:     intakes,
 				Operation: apperrors.QueryFetch,
 			}
 		}
@@ -82,7 +82,7 @@ func NewSaveSystemIntake(
 			return &apperrors.QueryError{
 				Err:       fetchErr,
 				Operation: apperrors.QueryFetch,
-				Model:     "System Intake",
+				Model:     existingIntake,
 			}
 		}
 		ok, err := authorize(ctx, existingIntake)
@@ -100,7 +100,7 @@ func NewSaveSystemIntake(
 				err := &apperrors.ResourceConflictError{
 					Err:        errors.New("intake has already been submitted to CEDAR"),
 					ResourceID: intake.ID.String(),
-					Resource:   "System intake",
+					Resource:   intake,
 				}
 				return err
 			}
@@ -113,7 +113,7 @@ func NewSaveSystemIntake(
 			if alfabetID == "" {
 				return &apperrors.ExternalAPIError{
 					Err:       errors.New("submission was not successful"),
-					Model:     "System Intake",
+					Model:     intake,
 					ModelID:   intake.ID.String(),
 					Operation: apperrors.Submit,
 					Source:    "CEDAR",
@@ -125,7 +125,7 @@ func NewSaveSystemIntake(
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
-				Model:     "System Intake",
+				Model:     intake,
 				Operation: apperrors.QuerySave,
 			}
 		}
@@ -151,7 +151,7 @@ func NewFetchSystemIntakeByID(
 			logger.Error("failed to fetch system intake")
 			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       err,
-				Model:     "System Intake",
+				Model:     intake,
 				Operation: apperrors.QueryFetch,
 			}
 		}
