@@ -24,6 +24,8 @@ func (e *UnauthorizedError) Unwrap() error {
 type QueryOperation string
 
 const (
+	// QueryPost is for failures when creating a resource
+	QueryPost QueryOperation = "Create"
 	// QuerySave is for failures when saving
 	QuerySave QueryOperation = "Save"
 	// QueryFetch is for failures when getting a resource
@@ -33,13 +35,13 @@ const (
 // QueryError is a typed error for query issues
 type QueryError struct {
 	Err       error
-	Model     string
+	Model     interface{}
 	Operation QueryOperation
 }
 
 // Error provides the error as a string
 func (e *QueryError) Error() string {
-	return fmt.Sprintf("Could not query model %s with operation %s", e.Model, e.Operation)
+	return fmt.Sprintf("Could not query model %T with operation %s", e.Model, e.Operation)
 }
 
 // Unwrap provides the underlying error
@@ -50,13 +52,13 @@ func (e *QueryError) Unwrap() error {
 // ResourceConflictError is for when a task can't be completed because of the resource state
 type ResourceConflictError struct {
 	Err        error
-	Resource   string
+	Resource   interface{}
 	ResourceID string
 }
 
 // Error provides the error as a string
 func (e *ResourceConflictError) Error() string {
-	return fmt.Sprintf("Could not perform action on %s %s", e.Resource, e.ResourceID)
+	return fmt.Sprintf("Could not perform action on %T %s", e.Resource, e.ResourceID)
 }
 
 // Unwrap provides the underlying error
@@ -71,7 +73,7 @@ type Validations map[string]string
 type ValidationError struct {
 	Err         error
 	Validations Validations
-	Model       string
+	Model       interface{}
 	ModelID     string
 }
 
@@ -86,7 +88,7 @@ func (e *ValidationError) Error() string {
 	if err != nil {
 		return err.Error()
 	}
-	return fmt.Sprintf("Could not validate %s %s: %s", e.Model, e.ModelID, string(data))
+	return fmt.Sprintf("Could not validate %T %s: %s", e.Model, e.ModelID, string(data))
 }
 
 // Unwrap provides the underlying error
@@ -107,7 +109,7 @@ const (
 // ExternalAPIError is a typed error for query issues
 type ExternalAPIError struct {
 	Err       error
-	Model     string
+	Model     interface{}
 	ModelID   string
 	Operation ExternalAPIOperation
 	Source    string
@@ -115,7 +117,7 @@ type ExternalAPIError struct {
 
 // Error provides the error as a string
 func (e *ExternalAPIError) Error() string {
-	return fmt.Sprintf("Could not hit %s for %s %s with operation %s", e.Source, e.Model, e.ModelID, e.Operation)
+	return fmt.Sprintf("Could not hit %s for %T %s with operation %s", e.Source, e.Model, e.ModelID, e.Operation)
 }
 
 // Unwrap provides the underlying error

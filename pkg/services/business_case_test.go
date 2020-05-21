@@ -1,13 +1,16 @@
 package services
 
 import (
+	"context"
 	"errors"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
@@ -27,9 +30,9 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 		s.Equal(fakeID, businessCase.ID)
 	})
 
-	s.Run("returns query error when save fails", func() {
+	s.Run("returns query error when fetch fails", func() {
 		fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
-			return &models.BusinessCase{}, errors.New("save failed")
+			return &models.BusinessCase{}, errors.New("fetch failed")
 		}
 		fetchBusinessCaseByID := NewFetchBusinessCaseByID(fetch, logger)
 
@@ -67,5 +70,106 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(models.BusinessCases{}, businessCases)
+	})
+}
+
+func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
+	logger := zap.NewNop()
+	authorizeCreateBusinessCase := NewAuthorizeCreateBusinessCase(logger)
+
+	s.Run("No EUA ID fails auth", func() {
+		ctx := context.Background()
+		ok, err := authorizeCreateBusinessCase(ctx, &models.SystemIntake{})
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Mismatched EUA ID fails auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ZYXW")
+
+		intake := models.SystemIntake{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeCreateBusinessCase(ctx, &intake)
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Matched EUA ID passes auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ABCD")
+		intake := models.SystemIntake{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeCreateBusinessCase(ctx, &intake)
+
+		s.True(ok)
+		s.NoError(err)
+	})
+}
+
+func (s ServicesTestSuite) TestBusinessCaseCreator() {
+	logger := zap.NewNop()
+	euaID := testhelpers.RandomEUAID()
+	intakeID := uuid.New()
+	intake := models.SystemIntake{
+		EUAUserID: euaID,
+		ID:        intakeID,
+		Status:    models.SystemIntakeStatusSUBMITTED,
+	}
+	err := s.store.SaveSystemIntake(&intake)
+	s.NoError(err)
+
+	input := models.BusinessCase{
+		EUAUserID:      euaID,
+		SystemIntakeID: intakeID,
+	}
+	fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+		return &intake, nil
+	}
+	create := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+		return &models.BusinessCase{
+			EUAUserID: euaID,
+		}, nil
+	}
+	authorize := func(context context.Context, intake *models.SystemIntake) (bool, error) {
+		return true, nil
+	}
+	ctx := context.Background()
+
+	s.Run("successfully creates a Business Case without an error", func() {
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		businessCase, err := createBusinessCase(ctx, &input)
+		s.NoError(err)
+
+		s.Equal(euaID, businessCase.EUAUserID)
+	})
+
+	s.Run("returns query error when create fails", func() {
+		create = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+			return &models.BusinessCase{}, errors.New("creation failed")
+		}
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		businessCase, err := createBusinessCase(ctx, &input)
+
+		s.IsType(&apperrors.QueryError{}, err)
+		s.Equal(&models.BusinessCase{}, businessCase)
+	})
+
+	s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
+		input.LifecycleCostLines = models.EstimatedLifecycleCosts{
+			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+		}
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		businessCase, err := createBusinessCase(ctx, &input)
+
+		s.IsType(&apperrors.ValidationError{}, err)
+		s.Equal(&models.BusinessCase{}, businessCase)
 	})
 }
