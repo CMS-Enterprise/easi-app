@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
@@ -115,6 +116,7 @@ func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
 
 func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	logger := zap.NewNop()
+	mockClock := clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intakeID := uuid.New()
 	intake := models.SystemIntake{
@@ -143,7 +145,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	ctx := context.Background()
 
 	s.Run("successfully creates a Business Case without an error", func() {
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
 		businessCase, err := createBusinessCase(ctx, &input)
 		s.NoError(err)
 
@@ -154,7 +156,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 		create = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("creation failed")
 		}
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
 		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -166,7 +168,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 		}
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
 		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.IsType(&apperrors.ValidationError{}, err)
