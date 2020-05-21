@@ -2,4 +2,4 @@
 
 git diff --cached --name-only --diff-filter=d | \
   grep -E '\.tsx?$' | \
-  xargs yarn run eslint --ext .ts,.tsx -c .eslintrc
+  xargs yarn run eslint --ext .ts,.tsx -c .eslintrc --fix

@@ -117,7 +117,9 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 			alternative_b_acquisition_approach,
 			alternative_b_pros,
 			alternative_b_cons,
-			alternative_b_cost_savings
+			alternative_b_cost_savings,
+		    created_at,
+			updated_at
 		)
 		VALUES (
 			:id,
@@ -153,7 +155,9 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 			:alternative_b_acquisition_approach,
 			:alternative_b_pros,
 			:alternative_b_cons,
-			:alternative_b_cost_savings
+			:alternative_b_cost_savings,
+		    :created_at,
+		    :updated_at
 		)`
 	tx := s.DB.MustBegin()
 	//Rollback only happens if transaction isn't committed
