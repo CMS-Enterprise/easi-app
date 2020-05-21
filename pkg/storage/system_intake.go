@@ -136,35 +136,48 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 
 // GetSystemIntakeMetrics gets a metrics digest for system intake
 func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
+	type startedQueryResponse struct {
+		StartedCount   int `db:"started_count"`
+		CompletedCount int `db:"completed_count"`
+	}
 	const startedCountSQL = `
-		SELECT count(*) 
-		FROM system_intake 
-		WHERE created_at >=  $1 
-		  and created_at < $2
-	`
-	const completedCountSQL = `
-		WITH "started_intakes" as (
+		WITH "started" AS (
 		    SELECT * 
 		    FROM system_intake 
-		    WHERE created_at >=  $1 
-		      and created_at < $2
+		    WHERE created_at >=  $1
+		      AND created_at < $2
 		)
-		SELECT count(*) 
-		from started_intakes
-		WHERE submitted_at >=  $1 
-		  and submitted_at < $2
+		SELECT count(*) AS started_count,
+		       coalesce(
+		           sum(
+		               CASE WHEN submitted_at >=  $1
+		                             AND submitted_at < $2
+		                   THEN 1 ELSE 0 END
+		               ),
+		           0) AS completed_count
+		FROM started;
 	`
+	type fundedQueryResponse struct {
+		CompletedCount int `db:"completed_count"`
+		FundedCount    int `db:"funded_count"`
+	}
 	const fundedCountSQL = `
-		SELECT count(*) 
-		FROM system_intake 
-		WHERE submitted_at >=  $1 
-		  and submitted_at < $2
-		  and existing_funding = true
+		WITH "completed" AS (
+		    SELECT existing_funding
+		    FROM system_intake 
+		    WHERE submitted_at >=  $1 
+		      AND submitted_at < $2    
+		) 
+		SELECT count(*) AS completed_count, 
+		       coalesce(sum(CASE WHEN existing_funding IS true THEN 1 ELSE 0 END),0) AS funded_count
+		FROM completed
 	`
+
 	metrics := models.SystemIntakeMetrics{}
-	var startedRequests int
+
+	var startedResponse startedQueryResponse
 	err := s.DB.Get(
-		&startedRequests,
+		&startedResponse,
 		startedCountSQL,
 		&startTime,
 		&endTime,
@@ -172,23 +185,12 @@ func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (
 	if err != nil {
 		return metrics, err
 	}
-	metrics.StartedRequests = startedRequests
+	metrics.Started = startedResponse.StartedCount
+	metrics.CompletedOfStarted = startedResponse.CompletedCount
 
-	var completedRequests int
+	var fundedResponse fundedQueryResponse
 	err = s.DB.Get(
-		&completedRequests,
-		completedCountSQL,
-		&startTime,
-		&endTime,
-	)
-	if err != nil {
-		return metrics, err
-	}
-	metrics.CompletedRequests = completedRequests
-
-	var fundedRequests int
-	err = s.DB.Get(
-		&fundedRequests,
+		&fundedResponse,
 		fundedCountSQL,
 		&startTime,
 		&endTime,
@@ -196,6 +198,8 @@ func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (
 	if err != nil {
 		return metrics, err
 	}
-	metrics.FundedRequests = fundedRequests
+	metrics.Completed = fundedResponse.CompletedCount
+	metrics.Funded = fundedResponse.FundedCount
+
 	return metrics, nil
 }

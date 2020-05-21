@@ -187,7 +187,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
 
 			s.NoError(err)
-			s.Equal(tt.expectedCount, metrics.StartedRequests)
+			s.Equal(tt.expectedCount, metrics.Started)
 		})
 	}
 
@@ -227,7 +227,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
 
 			s.NoError(err)
-			s.Equal(tt.expectedCount, metrics.CompletedRequests)
+			s.Equal(tt.expectedCount, metrics.CompletedOfStarted)
 		})
 	}
 }
