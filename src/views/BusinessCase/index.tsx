@@ -69,6 +69,7 @@ export const BusinessCase = () => {
       slug: 'review'
     }
   ]);
+
   const [pageIndex, setPageIndex] = useState(0);
   const pageObj = pages[pageIndex];
 
