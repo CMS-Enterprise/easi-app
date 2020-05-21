@@ -8,7 +8,7 @@ import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import AutoSave from 'components/shared/AutoSave';
+// import AutoSave from 'components/shared/AutoSave';
 import {
   fetchBusinessCase,
   postBusinessCase,

@@ -2,7 +2,7 @@ import {
   BusinessCaseModel,
   EstimatedLifecycleCostLines
 } from 'types/businessCase';
-import { LifecyclePhase } from 'types/estimatedLifecycle';
+// import { LifecyclePhase } from 'types/estimatedLifecycle';
 
 export const defaultEstimatedLifecycle = {
   year1: [{ phase: '', cost: '' }],
@@ -154,64 +154,64 @@ export const prepareBusinessCaseForApp = (
 export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
-  const solutionNameMap: {
-    solutionLifecycleCostLines: EstimatedLifecycleCostLines;
-    solutionApiName: string;
-  }[] = [
-    {
-      solutionLifecycleCostLines:
-        businessCase.asIsSolution.estimatedLifecycleCost,
-      solutionApiName: 'As Is'
-    },
-    {
-      solutionLifecycleCostLines:
-        businessCase.preferredSolution.estimatedLifecycleCost,
-      solutionApiName: 'Preferred'
-    },
-    {
-      solutionLifecycleCostLines:
-        businessCase.alternativeA.estimatedLifecycleCost,
-      solutionApiName: 'A'
-    },
-    ...(businessCase.alternativeB
-      ? [
-          {
-            solutionLifecycleCostLines:
-              businessCase.alternativeB.estimatedLifecycleCost,
-            solutionApiName: 'B'
-          }
-        ]
-      : [])
-  ];
+  // const solutionNameMap: {
+  //   solutionLifecycleCostLines: EstimatedLifecycleCostLines;
+  //   solutionApiName: string;
+  // }[] = [
+  //   {
+  //     solutionLifecycleCostLines:
+  //       businessCase.asIsSolution.estimatedLifecycleCost,
+  //     solutionApiName: 'As Is'
+  //   },
+  //   {
+  //     solutionLifecycleCostLines:
+  //       businessCase.preferredSolution.estimatedLifecycleCost,
+  //     solutionApiName: 'Preferred'
+  //   },
+  //   {
+  //     solutionLifecycleCostLines:
+  //       businessCase.alternativeA.estimatedLifecycleCost,
+  //     solutionApiName: 'A'
+  //   },
+  //   ...(businessCase.alternativeB
+  //     ? [
+  //         {
+  //           solutionLifecycleCostLines:
+  //             businessCase.alternativeB.estimatedLifecycleCost,
+  //           solutionApiName: 'B'
+  //         }
+  //       ]
+  //     : [])
+  // ];
 
-  const yearMap = (
-    lifecycleCostLines: EstimatedLifecycleCostLines
-  ): { phases: LifecyclePhase[]; year: string }[] => {
-    return [
-      { phases: lifecycleCostLines.year1, year: '1' },
-      { phases: lifecycleCostLines.year2, year: '2' },
-      { phases: lifecycleCostLines.year3, year: '3' },
-      { phases: lifecycleCostLines.year4, year: '4' },
-      { phases: lifecycleCostLines.year5, year: '5' }
-    ];
-  };
+  // const yearMap = (
+  //   lifecycleCostLines: EstimatedLifecycleCostLines
+  // ): { phases: LifecyclePhase[]; year: string }[] => {
+  //   return [
+  //     { phases: lifecycleCostLines.year1, year: '1' },
+  //     { phases: lifecycleCostLines.year2, year: '2' },
+  //     { phases: lifecycleCostLines.year3, year: '3' },
+  //     { phases: lifecycleCostLines.year4, year: '4' },
+  //     { phases: lifecycleCostLines.year5, year: '5' }
+  //   ];
+  // };
 
-  const lifecycleCostLines = solutionNameMap
-    .map(({ solutionLifecycleCostLines, solutionApiName }) => {
-      return yearMap(solutionLifecycleCostLines)
-        .map(({ phases, year }) => {
-          return phases.map(lifecyclePhase => {
-            return {
-              solution: solutionApiName,
-              phase: lifecyclePhase.phase,
-              cost: lifecyclePhase.cost,
-              year
-            };
-          });
-        })
-        .flat();
-    })
-    .flat();
+  // const lifecycleCostLines = solutionNameMap
+  //   .map(({ solutionLifecycleCostLines, solutionApiName }) => {
+  //     return yearMap(solutionLifecycleCostLines)
+  //       .map(({ phases, year }) => {
+  //         return phases.map(lifecyclePhase => {
+  //           return {
+  //             solution: solutionApiName,
+  //             phase: lifecyclePhase.phase,
+  //             cost: lifecyclePhase.cost,
+  //             year
+  //           };
+  //         });
+  //       })
+  //       .flat();
+  //   })
+  //   .flat();
 
   return {
     ...(businessCase.id && {
