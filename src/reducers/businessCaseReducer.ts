@@ -3,7 +3,11 @@ import {
   businessCaseInitalData,
   prepareBusinessCaseForApp
 } from 'data/businessCase';
-import { fetchBusinessCase } from 'types/routines';
+import {
+  fetchBusinessCase,
+  postBusinessCase,
+  storeBusinessCase
+} from 'types/routines';
 import { Action } from 'redux-actions';
 
 const initialState: BusinessCaseState = {
@@ -33,6 +37,25 @@ function businessCaseReducer(
         error: action.payload
       };
     case fetchBusinessCase.FULFILL:
+      return {
+        ...state,
+        isLoading: false
+      };
+    case postBusinessCase.SUCCESS:
+      return {
+        ...state,
+        form: prepareBusinessCaseForApp(action.payload)
+      };
+    case storeBusinessCase.TRIGGER:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          ...action.payload
+        },
+        isLoading: false
+      };
+    case storeBusinessCase.FULFILL:
       return {
         ...state,
         isLoading: false

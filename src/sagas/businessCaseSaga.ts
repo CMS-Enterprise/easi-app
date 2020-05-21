@@ -28,7 +28,7 @@ function* getBusinessCase(action: Action<any>) {
 
 function postBusinessCaseRequest(formData: BusinessCaseModel) {
   const data = prepareBusinessCaseForApi(formData);
-  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/business_case`, data);
+  return axios.post(`${process.env.REACT_APP_API_ADDRESS}/business_case`, data);
 }
 
 function* createBusinessCase(action: Action<any>) {
@@ -45,7 +45,7 @@ function* createBusinessCase(action: Action<any>) {
 
 function putBusinessCaseRequest(formData: BusinessCaseModel) {
   const data = prepareBusinessCaseForApi(formData);
-  return axios.get(
+  return axios.put(
     `${process.env.REACT_APP_API_ADDRESS}/business_case/${data.id}`,
     data
   );
