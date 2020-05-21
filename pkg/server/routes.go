@@ -103,6 +103,12 @@ func (s *Server) routes(
 
 	businessCaseHandler := handlers.BusinessCaseHandler{
 		Logger: s.logger,
+		CreateBusinessCase: services.NewCreateBusinessCase(
+			store.FetchSystemIntakeByID,
+			services.NewAuthorizeCreateBusinessCase(s.logger),
+			store.CreateBusinessCase,
+			s.logger,
+		),
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
 			store.FetchBusinessCaseByID,
 			s.logger,
