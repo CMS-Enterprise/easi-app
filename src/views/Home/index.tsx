@@ -98,7 +98,7 @@ const Home = ({ history }: HomeProps) => {
             </p>
           </div>
           {authState.isAuthenticated ? (
-            <Button to="/overview">Start now</Button>
+            <Button to="/governance-overview">Start now</Button>
           ) : (
             <Button to="/login">Sign in to start</Button>
           )}

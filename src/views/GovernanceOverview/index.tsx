@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Header from 'components/Header';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import './index.scss';
@@ -144,7 +144,7 @@ const GovernanceOverview = () => {
           <CollapsableLink label="Why does the governance process exist?">
             <div>
               These steps make sure
-              <ul className="margin-bottom-0">
+              <ul className="margin-bottom-0 margin-top-1 padding-left-205 line-height-body-5">
                 <li>CMS has enough budget to allocate for your project</li>
                 <li>They can assist and help you consider various solutions</li>
                 <li>
@@ -162,4 +162,4 @@ const GovernanceOverview = () => {
   );
 };
 
-export default withRouter(GovernanceOverview);
+export default GovernanceOverview;
