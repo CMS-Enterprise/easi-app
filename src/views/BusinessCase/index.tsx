@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Formik, Form, FormikProps } from 'formik';
 import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { SecureRoute } from '@okta/okta-react';
 import { ObjectSchema } from 'yup';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import { postBusinessCase, putBusinessCase } from 'types/routines';
 import { BusinessCaseModel } from 'types/businessCase';
 import {
   businessCaseInitalData,
   defaultProposedSolution
 } from 'data/businessCase';
+import { AppState } from 'reducers/rootReducer';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
 import GeneralRequestInfo from './GeneralRequestInfo';
@@ -32,6 +35,8 @@ type Page = {
 export const BusinessCase = () => {
   const history = useHistory();
   const { businessCaseId, formPage } = useParams();
+  const formikRef: any = useRef();
+  const dispatch = useDispatch();
   const [pages, setPages] = useState<Page[]>([
     {
       name: 'GeneralRequestInfo',
@@ -70,8 +75,27 @@ export const BusinessCase = () => {
     }
   ]);
 
+  const businessCase = useSelector(
+    (state: AppState) => state.businessCase.form
+  );
+
   const [pageIndex, setPageIndex] = useState(0);
   const pageObj = pages[pageIndex];
+
+  const dispatchSave = () => {
+    const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
+    if (current && current.dirty) {
+      if (businessCaseId === 'new') {
+        dispatch(postBusinessCase(current.values));
+      } else {
+        dispatch(putBusinessCase(current.values));
+      }
+    }
+  };
+
+  useEffect(() => {
+    history.replace(`/business/${businessCase.id}/formPage`);
+  }, [history, businessCase.id]);
 
   useEffect(() => {
     const pageSlugs: any[] = pages.map(p => p.slug);
@@ -95,6 +119,7 @@ export const BusinessCase = () => {
           validateOnBlur={false}
           validateOnChange={false}
           validateOnMount={false}
+          innerRef={formikRef}
         >
           {(formikProps: FormikProps<BusinessCaseModel>) => {
             const {
@@ -292,7 +317,7 @@ export const BusinessCase = () => {
                           type="button"
                           unstyled
                           onClick={() => {
-                            // dispatch save and exit function
+                            dispatchSave();
                           }}
                         >
                           <span>

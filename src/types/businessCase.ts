@@ -25,6 +25,7 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
 
 // Business Case Form Model
 export type BusinessCaseModel = {
+  id: string;
   requestName: string;
   requester: {
     name: string;
