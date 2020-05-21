@@ -9,6 +9,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 
 type AsIsSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -28,6 +29,9 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         reuse existing people, equipment, or processes; and at least two
         additional alternatives. Identify your preferred solution.
       </p>
+      <div className="tablet:grid-col-5">
+        <MandatoryFieldsAlert />
+      </div>
       <div className="tablet:grid-col-9">
         <h2>&quot;As is&quot; solution</h2>
         <FieldGroup
