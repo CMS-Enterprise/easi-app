@@ -129,6 +129,7 @@ func (s *Server) routes(
 			services.NewAuthorizeUpdateBusinessCase(s.logger),
 			store.UpdateBusinessCase,
 			s.logger,
+			saveClock,
 		),
 	}
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())

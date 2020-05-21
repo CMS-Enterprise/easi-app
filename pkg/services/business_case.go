@@ -175,6 +175,7 @@ func NewUpdateBusinessCase(
 	authorize func(context context.Context, businessCase *models.BusinessCase) (bool, error),
 	update func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
 	logger *zap.Logger,
+	clock clock.Clock,
 ) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		existingBusinessCase, err := fetchBusinessCase(businessCase.ID)
@@ -196,6 +197,8 @@ func NewUpdateBusinessCase(
 		if err != nil {
 			return &models.BusinessCase{}, err
 		}
+		updatedAt := clock.Now()
+		businessCase.UpdatedAt = &updatedAt
 		businessCase, err = update(businessCase)
 		if err != nil {
 			logger.Error("failed to update business case")
