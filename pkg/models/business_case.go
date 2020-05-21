@@ -48,12 +48,12 @@ const (
 
 // EstimatedLifecycleCost is the model for the cost of an estimated lifecycle line in the business case.
 type EstimatedLifecycleCost struct {
-	ID             uuid.UUID
-	BusinessCaseID uuid.UUID `db:"business_case" json:"business_case"`
-	Solution       LifecycleCostSolution
-	Phase          LifecycleCostPhase
-	Year           LifecycleCostYear
-	Cost           int
+	ID             uuid.UUID             `json:"id"`
+	BusinessCaseID uuid.UUID             `json:"business_case" db:"business_case"`
+	Solution       LifecycleCostSolution `json:"solution"`
+	Phase          LifecycleCostPhase    `json:"phase"`
+	Year           LifecycleCostYear     `json:"year"`
+	Cost           int                   `json:"cost"`
 }
 
 // EstimatedLifecycleCosts models a list of EstimatedLifecycleCost line items
