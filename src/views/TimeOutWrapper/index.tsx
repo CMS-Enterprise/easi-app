@@ -18,7 +18,7 @@ const registerExpire = async (authService: any, lastActiveAt: number) => {
     const activeSessionWindow = DateTime.local()
       .minus(sessionTimeout)
       .toMillis();
-    if (lastActiveAt > activeSessionWindow) {
+    if (lastActiveAt > activeSessionWindow && key === 'accessToken') {
       tokenManager.renew(key);
     }
   });
