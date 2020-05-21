@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Formik, Form, FormikProps } from 'formik';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { SecureRoute } from '@okta/okta-react';
 import { ObjectSchema } from 'yup';
@@ -40,6 +40,7 @@ export const BusinessCase = () => {
   const { businessCaseId, formPage } = useParams();
   const formikRef: any = useRef();
   const dispatch = useDispatch();
+  const location = useLocation<any>();
   const [pages, setPages] = useState<Page[]>([
     {
       name: 'GeneralRequestInfo',
@@ -103,7 +104,16 @@ export const BusinessCase = () => {
   // Resume existing business case
   useEffect(() => {
     if (businessCaseId === 'new') {
-      dispatch(storeBusinessCase({}));
+      // TODO location.state.systemIntake isn't a good solution
+      // We need a solution that will work for a user to be able to
+      // make sure there's a systemIntake ID if they type the URL
+      const systemIntake =
+        (location.state && location.state.systemIntake) || '';
+      dispatch(
+        storeBusinessCase({
+          systemIntake
+        })
+      );
     } else {
       dispatch(fetchBusinessCase(businessCaseId));
     }
