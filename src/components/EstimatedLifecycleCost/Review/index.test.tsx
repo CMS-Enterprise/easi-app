@@ -7,16 +7,16 @@ import EstimatedLifecycleCostReview from './index';
 declare const global: any;
 
 describe('The Estimated Lifecycle Cost review component', () => {
-  const initiateSampleData = {
+  const developmentSampleData = {
     year1: [
-      { phase: 'Initiate', cost: '5000' },
-      { phase: 'Initiate', cost: '5000' },
-      { phase: 'Initiate' }
+      { phase: 'Development', cost: '5000' },
+      { phase: 'Development', cost: '5000' },
+      { phase: 'Development' }
     ],
-    year2: [{ phase: 'Initiate', cost: '5000' }],
-    year3: [{ phase: 'Initiate', cost: '5000' }],
-    year4: [{ phase: 'Initiate', cost: '5000' }],
-    year5: [{ phase: 'Initiate', cost: '5000' }]
+    year2: [{ phase: 'Development', cost: '5000' }],
+    year3: [{ phase: 'Development', cost: '5000' }],
+    year4: [{ phase: 'Development', cost: '5000' }],
+    year5: [{ phase: 'Development', cost: '5000' }]
   };
 
   const omSampleData = {
@@ -57,13 +57,13 @@ describe('The Estimated Lifecycle Cost review component', () => {
       ).toBe(false);
     });
 
-    it('adds up initiate total correctly', () => {
+    it('adds up development total correctly', () => {
       const component = mount(
-        <EstimatedLifecycleCostReview data={initiateSampleData} />
+        <EstimatedLifecycleCostReview data={developmentSampleData} />
       );
 
       expect(
-        component.find("[data-testid='total-initiate-costs']").text()
+        component.find("[data-testid='total-development-costs']").text()
       ).toEqual('$30,000');
     });
   });
@@ -89,8 +89,8 @@ describe('The Estimated Lifecycle Cost review component', () => {
       ).toBe(false);
     });
 
-    it('renders mobile view with initiate data', () => {
-      mount(<EstimatedLifecycleCostReview data={initiateSampleData} />);
+    it('renders mobile view with development data', () => {
+      mount(<EstimatedLifecycleCostReview data={developmentSampleData} />);
     });
 
     it('renders mobile view with O&M data', () => {

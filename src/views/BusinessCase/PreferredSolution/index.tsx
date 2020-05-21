@@ -9,6 +9,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 
 type PreferredSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -20,6 +21,9 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
   return (
     <div className="grid-container">
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
+      <div className="tablet:grid-col-5">
+        <MandatoryFieldsAlert />
+      </div>
       <div className="tablet:grid-col-9">
         <h2>Preferred solution</h2>
         <FieldGroup
@@ -169,15 +173,15 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             <li>Inflation</li>
           </ul>
         </HelpText>
+        <EstimatedLifecycleCost
+          formikKey="preferredSolution.estimatedLifecycleCost"
+          years={values.preferredSolution.estimatedLifecycleCost}
+          errors={
+            errors.preferredSolution &&
+            errors.preferredSolution.estimatedLifecycleCost
+          }
+        />
       </div>
-      <EstimatedLifecycleCost
-        formikKey="preferredSolution.estimatedLifecycleCost"
-        years={values.preferredSolution.estimatedLifecycleCost}
-        errors={
-          errors.preferredSolution &&
-          errors.preferredSolution.estimatedLifecycleCost
-        }
-      />
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
           scrollElement="preferredSolution.costSavings"
