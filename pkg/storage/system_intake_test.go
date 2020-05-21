@@ -191,6 +191,9 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 		})
 	}
 
+	endYear = rand.Intn(294276)
+	endDate = time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
+	startDate = endDate.AddDate(0, -1, 0)
 	var completedTests = []struct {
 		name          string
 		createdAt     time.Time
@@ -231,6 +234,9 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 		})
 	}
 
+	endYear = rand.Intn(294276)
+	endDate = time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
+	startDate = endDate.AddDate(0, -1, 0)
 	var fundedTests = []struct {
 		name           string
 		submittedAt    time.Time
