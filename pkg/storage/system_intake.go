@@ -139,6 +139,9 @@ func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (
 	const startedCountSQL = `
 		SELECT count(*) FROM system_intake WHERE created_at >=  $1 and created_at < $2
 	`
+	const completedCountSQL = `
+		SELECT count(*) FROM system_intake WHERE submitted_at >=  $1 and submitted_at < $2
+	`
 	metrics := models.SystemIntakeMetrics{}
 	var startedRequests int
 	err := s.DB.Get(
@@ -151,5 +154,17 @@ func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (
 		return metrics, err
 	}
 	metrics.StartedRequests = startedRequests
+
+	var completedRequests int
+	err = s.DB.Get(
+		&completedRequests,
+		completedCountSQL,
+		&startTime,
+		&endTime,
+	)
+	if err != nil {
+		return metrics, err
+	}
+	metrics.CompletedRequests = completedRequests
 	return metrics, nil
 }
