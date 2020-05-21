@@ -168,7 +168,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 	startDate := endDate.AddDate(0, -1, 0)
 	var startedTests = []struct {
 		name          string
-		createAt      time.Time
+		createdAt     time.Time
 		expectedCount int
 	}{
 		{"start time is included", startDate, 1},
@@ -180,7 +180,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 	for _, tt := range startedTests {
 		s.Run(fmt.Sprintf("%s for started count", tt.name), func() {
 			intake := testhelpers.NewSystemIntake()
-			intake.CreatedAt = &tt.createAt
+			intake.CreatedAt = &tt.createdAt
 			err := s.store.SaveSystemIntake(&intake)
 			s.NoError(err)
 
@@ -188,6 +188,46 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 
 			s.NoError(err)
 			s.Equal(tt.expectedCount, metrics.StartedRequests)
+		})
+	}
+
+	var completedTests = []struct {
+		name          string
+		createdAt     time.Time
+		submittedAt   time.Time
+		expectedCount int
+	}{
+		{
+			"started but not finished is not included",
+			startDate,
+			endDate.AddDate(0, 0, 1),
+			0,
+		},
+		{
+			"started and finished is included",
+			startDate,
+			startDate.AddDate(0, 0, 1),
+			1,
+		},
+		{
+			"started before is not included",
+			startDate.AddDate(0, 0, -1),
+			startDate.AddDate(0, 0, 1),
+			1,
+		},
+	}
+	for _, tt := range completedTests {
+		s.Run(fmt.Sprintf("%s for completed count", tt.name), func() {
+			intake := testhelpers.NewSystemIntake()
+			intake.CreatedAt = &tt.createdAt
+			intake.SubmittedAt = &tt.submittedAt
+			err := s.store.SaveSystemIntake(&intake)
+			s.NoError(err)
+
+			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+
+			s.NoError(err)
+			s.Equal(tt.expectedCount, metrics.CompletedRequests)
 		})
 	}
 }
