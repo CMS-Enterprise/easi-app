@@ -8,22 +8,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func newEstimatedLifecycleCost(businessCaseID uuid.UUID) models.EstimatedLifecycleCost {
-	return models.EstimatedLifecycleCost{
-		ID:             uuid.New(),
-		BusinessCaseID: businessCaseID,
-		Solution:       models.LifecycleCostSolutionASIS,
-		Phase:          models.LifecycleCostPhaseINITIATE,
-		Year:           models.LifecycleCostYear1,
-		Cost:           100,
-	}
-}
-
 func newBusinessCase() models.BusinessCase {
-	businessCaseID := uuid.New()
+	year2 := models.LifecycleCostYear2
 	return models.BusinessCase{
-		ID:                              businessCaseID,
 		EUAUserID:                       testhelpers.RandomEUAID(),
+		SystemIntakeID:                  uuid.New(),
 		ProjectName:                     null.StringFrom("Test Project Name"),
 		Requester:                       null.StringFrom("Test Requester"),
 		RequesterPhoneNumber:            null.StringFrom("Test Requester Phone Number"),
@@ -56,36 +45,27 @@ func newBusinessCase() models.BusinessCase {
 		AlternativeBCons:                null.StringFrom("Test Alternative B Cons"),
 		AlternativeBCostSavings:         null.StringFrom("Test Alternative B Cost Savings"),
 		LifecycleCostLines: models.EstimatedLifecycleCosts{
-			newEstimatedLifecycleCost(businessCaseID),
-			newEstimatedLifecycleCost(businessCaseID),
+			testhelpers.NewEstimatedLifecycleCost(
+				testhelpers.EstimatedLifecycleCostOptions{Year: &year2},
+			),
+			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 		},
 	}
 }
 
 func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 	s.Run("golden path to fetch a business case", func() {
+		intake := testhelpers.NewSystemIntake()
+		err := s.store.SaveSystemIntake(&intake)
+		s.NoError(err)
 		businessCase := newBusinessCase()
-		id := businessCase.ID
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(
-			`INSERT INTO business_case (id, eua_user_id, project_name) 
-			VALUES (:id, :eua_user_id, :project_name)`,
-			&businessCase)
+		businessCase.SystemIntakeID = intake.ID
+		created, err := s.store.CreateBusinessCase(&businessCase)
 		s.NoError(err)
-		for _, lifecycleItem := range businessCase.LifecycleCostLines {
-			_, err = tx.NamedExec(
-				`INSERT INTO estimated_lifecycle_cost (id, business_case, solution, year, phase, cost)
-					VALUES (:id, :business_case, :solution, :year, :phase, :cost)`,
-				&lifecycleItem)
-			s.NoError(err)
-		}
-		err = tx.Commit()
-		s.NoError(err)
-
-		fetched, err := s.store.FetchBusinessCaseByID(id)
+		fetched, err := s.store.FetchBusinessCaseByID(created.ID)
 
 		s.NoError(err, "failed to fetch business case")
-		s.Equal(businessCase.ID, fetched.ID)
+		s.Equal(created.ID, fetched.ID)
 		s.Equal(businessCase.EUAUserID, fetched.EUAUserID)
 		s.Len(fetched.LifecycleCostLines, 2)
 	})
@@ -97,5 +77,107 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.Error(err)
 		s.Equal("sql: no rows in result set", err.Error())
 		s.Equal(&models.BusinessCase{}, fetched)
+	})
+}
+
+func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
+	s.Run("golden path to fetch business cases", func() {
+		intake := testhelpers.NewSystemIntake()
+		intake.Status = models.SystemIntakeStatusSUBMITTED
+		err := s.store.SaveSystemIntake(&intake)
+		s.NoError(err)
+
+		intake2 := testhelpers.NewSystemIntake()
+		intake2.EUAUserID = intake.EUAUserID
+		intake2.Status = models.SystemIntakeStatusSUBMITTED
+		err = s.store.SaveSystemIntake(&intake2)
+		s.NoError(err)
+
+		businessCase := newBusinessCase()
+		businessCase.EUAUserID = intake.EUAUserID
+		businessCase.SystemIntakeID = intake.ID
+
+		businessCase2 := newBusinessCase()
+		businessCase2.EUAUserID = intake.EUAUserID
+		businessCase2.SystemIntakeID = intake2.ID
+
+		_, err = s.store.CreateBusinessCase(&businessCase)
+		s.NoError(err)
+
+		_, err = s.store.CreateBusinessCase(&businessCase2)
+		s.NoError(err)
+
+		fetched, err := s.store.FetchBusinessCasesByEuaID(businessCase.EUAUserID)
+
+		s.NoError(err, "failed to fetch business cases")
+		s.Len(fetched, 2)
+		s.Len(fetched[0].LifecycleCostLines, 2)
+		s.Equal(businessCase.EUAUserID, fetched[0].EUAUserID)
+	})
+
+	s.Run("fetches no results with other EUA ID", func() {
+		fetched, err := s.store.FetchBusinessCasesByEuaID(testhelpers.RandomEUAID())
+
+		s.NoError(err)
+		s.Len(fetched, 0)
+		s.Equal(models.BusinessCases{}, fetched)
+	})
+}
+
+func (s StoreTestSuite) TestCreateBusinessCase() {
+	s.Run("golden path to create a business case", func() {
+		intake := testhelpers.NewSystemIntake()
+		err := s.store.SaveSystemIntake(&intake)
+		s.NoError(err)
+		businessCase := models.BusinessCase{
+			SystemIntakeID: intake.ID,
+			EUAUserID:      testhelpers.RandomEUAID(),
+			LifecycleCostLines: models.EstimatedLifecycleCosts{
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+			},
+		}
+		created, err := s.store.CreateBusinessCase(&businessCase)
+
+		s.NoError(err, "failed to create a business case")
+		s.NotNil(created.ID)
+		s.Equal(businessCase.EUAUserID, created.EUAUserID)
+		s.Len(created.LifecycleCostLines, 1)
+	})
+
+	s.Run("requires a system intake ID", func() {
+		businessCase := models.BusinessCase{
+			EUAUserID: testhelpers.RandomEUAID(),
+		}
+
+		_, err := s.store.CreateBusinessCase(&businessCase)
+
+		s.Error(err)
+		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+	})
+
+	s.Run("requires a system intake ID that exists in the db", func() {
+		badintakeID := uuid.New()
+		businessCase := models.BusinessCase{
+			SystemIntakeID: badintakeID,
+			EUAUserID:      testhelpers.RandomEUAID(),
+		}
+
+		_, err := s.store.CreateBusinessCase(&businessCase)
+
+		s.Error(err)
+		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+	})
+
+	s.Run("cannot without a eua user id", func() {
+		intake := testhelpers.NewSystemIntake()
+		err := s.store.SaveSystemIntake(&intake)
+		s.NoError(err)
+		businessCase := models.BusinessCase{
+			SystemIntakeID: intake.ID,
+		}
+		_, err = s.store.CreateBusinessCase(&businessCase)
+
+		s.Error(err)
+		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
 	})
 }

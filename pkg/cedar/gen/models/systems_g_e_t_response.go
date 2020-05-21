@@ -8,25 +8,29 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // SystemsGETResponse systems g e t response
 // swagger:model systems_GET_response
 type SystemsGETResponse struct {
 
+	// response
+	Response *Response `json:"Response,omitempty"`
+
 	// systems
-	// Required: true
 	Systems []*System `json:"Systems"`
 }
 
 // Validate validates this systems g e t response
 func (m *SystemsGETResponse) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateResponse(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateSystems(formats); err != nil {
 		res = append(res, err)
@@ -38,10 +42,28 @@ func (m *SystemsGETResponse) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *SystemsGETResponse) validateResponse(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Response) { // not required
+		return nil
+	}
+
+	if m.Response != nil {
+		if err := m.Response.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("Response")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *SystemsGETResponse) validateSystems(formats strfmt.Registry) error {
 
-	if err := validate.Required("Systems", "body", m.Systems); err != nil {
-		return err
+	if swag.IsZero(m.Systems) { // not required
+		return nil
 	}
 
 	for i := 0; i < len(m.Systems); i++ {

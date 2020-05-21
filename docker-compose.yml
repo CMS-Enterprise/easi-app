@@ -26,9 +26,11 @@ services:
       - APPLICATION_DATETIME=APPLICATION_DATETIME
       - APPLICATION_TS=APPLICATION_TS
       - APP_ENV=local
-      - CLIENT_HOSTNAME=http://localhost
+      - CLIENT_PROTOCOL=http
+      - CLIENT_DOMAIN=localhost
       - CLIENT_PORT=3000
-      - CLIENT_ADDRESS=$CLIENT_HOSTNAME:$CLIENT_PORT
+      - CLIENT_HOSTNAME=$CLIENT_DOMAIN:$CLIENT_PORT
+      - CLIENT_ADDRESS=$CLIENT_PROTOCOL://$CLIENT_HOSTNAME
       - API_PORT=8080
       - REACT_APP_API_ADDRESS=$CLIENT_HOSTNAME:$API_PORT/api/v1
       - OKTA_CLIENT_ID=0oa2e913coDQeG19S297
@@ -38,6 +40,19 @@ services:
       - REACT_APP_OKTA_ISSUER=$REACT_APP_OKTA_DOMAIN/oauth2/$REACT_APP_OKTA_SERVER_ID
       - OKTA_ISSUER=$REACT_APP_OKTA_ISSUER
       - REACT_APP_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
+      - GRT_EMAIL=mikena@truss.works
+      - AWS_REGION=us-west-2
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - AWS_SES_SOURCE=no-reply-$APP_ENV@info.easi.cms.gov
+      - AWS_SES_SOURCE_ARN
+      - PGHOST=db
+      - PGPORT=5432
+      - PGDATABASE=postgres
+      - PGUSER=postgres
+      - PGPASS=""
+      - PGSSLMODE=disable
     entrypoint: ["/easi/easi", "serve"]
     ports:
       - 8080:8080

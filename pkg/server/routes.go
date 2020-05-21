@@ -1,13 +1,15 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/facebookgo/clock"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/cedar"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
@@ -34,6 +36,15 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
+	// set up Email Client
+	sesConfig := s.NewSESConfig()
+	sesSender := appses.NewSender(sesConfig)
+	emailConfig := s.NewEmailConfig()
+	emailClient, err := email.NewClient(emailConfig, sesSender)
+	if err != nil {
+		s.logger.Fatal("Failed to create email client", zap.Error(err))
+	}
+
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 
@@ -51,7 +62,7 @@ func (s *Server) routes(
 		s.NewDBConfig(),
 	)
 	if err != nil {
-		s.logger.Fatal(fmt.Sprintf("Failed to connect to database: %v", err), zap.Error(err))
+		s.logger.Fatal("Failed to connect to database", zap.Error(err))
 	}
 
 	// endpoint for system list
@@ -61,13 +72,17 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
+	saveClock := clock.New()
 	systemIntakeHandler := handlers.SystemIntakeHandler{
 		Logger: s.logger,
 		SaveSystemIntake: services.NewSaveSystemIntake(
 			store.SaveSystemIntake,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeSaveSystemIntake(s.logger),
+			cedarClient.ValidateAndSubmitSystemIntake,
+			emailClient.SendSystemIntakeSubmissionEmail,
 			s.logger,
+			saveClock,
 		),
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
 			store.FetchSystemIntakeByID,
@@ -88,6 +103,12 @@ func (s *Server) routes(
 
 	businessCaseHandler := handlers.BusinessCaseHandler{
 		Logger: s.logger,
+		CreateBusinessCase: services.NewCreateBusinessCase(
+			store.FetchSystemIntakeByID,
+			services.NewAuthorizeCreateBusinessCase(s.logger),
+			store.CreateBusinessCase,
+			s.logger,
+		),
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
 			store.FetchBusinessCaseByID,
 			s.logger,
@@ -95,6 +116,15 @@ func (s *Server) routes(
 	}
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
+
+	businessCasesHandler := handlers.BusinessCasesHandler{
+		Logger: s.logger,
+		FetchBusinessCases: services.NewFetchBusinessCasesByEuaID(
+			store.FetchBusinessCasesByEuaID,
+			s.logger,
+		),
+	}
+	api.Handle("/business_cases", businessCasesHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.CatchAllHandler{
 		Logger: s.logger,
