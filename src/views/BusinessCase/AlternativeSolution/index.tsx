@@ -14,6 +14,7 @@ import {
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 
 type AlternativeSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -55,6 +56,9 @@ const AlternativeSolution = ({
   return (
     <div className="grid-container">
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
+      <div className="tablet:grid-col-5">
+        <MandatoryFieldsAlert />
+      </div>
       <div className="tablet:grid-col-9">
         <p className="line-height-body-6">
           Some examples of options to consider may include:

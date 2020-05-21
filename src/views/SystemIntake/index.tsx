@@ -98,7 +98,7 @@ export const SystemIntake = () => {
   }, [pages, systemId, formPage]);
 
   return (
-    <div className="system-intake">
+    <div className="system-intake margin-bottom-5">
       <Header name="EASi System Intake" />
       <main className="grid-container" role="main">
         {isLoading === false && (
