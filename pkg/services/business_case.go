@@ -15,13 +15,13 @@ import (
 
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
 func NewFetchBusinessCaseByID(
+	config Config,
 	fetch func(id uuid.UUID) (*models.BusinessCase, error),
-	logger *zap.Logger,
 ) func(id uuid.UUID) (*models.BusinessCase, error) {
 	return func(id uuid.UUID) (*models.BusinessCase, error) {
 		businessCase, err := fetch(id)
 		if err != nil {
-			logger.Error("failed to fetch business case")
+			config.logger.Error("failed to fetch business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -70,10 +70,10 @@ func NewAuthorizeCreateBusinessCase(logger *zap.Logger) func(
 
 // NewCreateBusinessCase is a service to create a business case
 func NewCreateBusinessCase(
+	config Config,
 	fetchIntake func(id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	create func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
-	logger *zap.Logger,
 ) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		intake, err := fetchIntake(businessCase.SystemIntakeID)
@@ -98,7 +98,7 @@ func NewCreateBusinessCase(
 		}
 		businessCase, err = create(businessCase)
 		if err != nil {
-			logger.Error("failed to create a business case")
+			config.logger.Error("failed to create a business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -111,13 +111,13 @@ func NewCreateBusinessCase(
 
 // NewFetchBusinessCasesByEuaID is a service to fetch a list of business cases by EUA ID
 func NewFetchBusinessCasesByEuaID(
+	config Config,
 	fetch func(euaID string) (models.BusinessCases, error),
-	logger *zap.Logger,
 ) func(euaID string) (models.BusinessCases, error) {
 	return func(euaID string) (models.BusinessCases, error) {
 		businessCases, err := fetch(euaID)
 		if err != nil {
-			logger.Error("failed to fetch business cases")
+			config.logger.Error("failed to fetch business cases")
 			return models.BusinessCases{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     "business cases",
