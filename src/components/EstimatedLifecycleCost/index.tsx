@@ -40,84 +40,82 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
             {phaseError.cost && (
               <FieldErrorMsg>{phaseError.cost}</FieldErrorMsg>
             )}
-            <div>
-              <fieldset className="usa-fieldset margin-bottom-205">
+            <fieldset className="usa-fieldset margin-bottom-205">
+              <div>
+                <legend
+                  className={classnames('usa-label', 'margin-bottom-1')}
+                  aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
+                >
+                  Phase
+                </legend>
                 <div>
-                  <legend
-                    className={classnames('usa-label', 'margin-bottom-1')}
-                    aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
-                  >
-                    Phase
-                  </legend>
-                  <div>
-                    <Field
-                      as={RadioField}
-                      checked={values.phase === 'Development'}
-                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.Development`}
-                      name={`${formikKey}.year${year}.${index}.phase`}
-                      label="Development"
-                      value="Development"
-                      inline
-                    />
-
-                    <Field
-                      as={RadioField}
-                      checked={values.phase === 'Operations and Maintenance'}
-                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
-                      name={`${formikKey}.year${year}.${index}.phase`}
-                      label="Operations and Maintenance"
-                      value="Operations and Maintenance"
-                      inline
-                    />
-                  </div>
-                </div>
-              </fieldset>
-              <div className="est-lifecycle-cost__phase-cost-row">
-                <div>
-                  <Label
-                    htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
-                    aria-label={`Year ${year} Phase ${index + 1} Cost`}
-                  >
-                    Cost
-                  </Label>
                   <Field
-                    as={TextField}
-                    error={!!phaseError.cost}
-                    id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
-                    name={`${formikKey}.year${year}.${index}.cost`}
-                    maxLength={10}
-                    match={/^[0-9\b]+$/}
+                    as={RadioField}
+                    checked={values.phase === 'Development'}
+                    id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.Development`}
+                    name={`${formikKey}.year${year}.${index}.phase`}
+                    label="Development"
+                    value="Development"
+                    inline
+                  />
+
+                  <Field
+                    as={RadioField}
+                    checked={values.phase === 'Operations and Maintenance'}
+                    id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
+                    name={`${formikKey}.year${year}.${index}.phase`}
+                    label="Operations and Maintenance"
+                    value="Operations and Maintenance"
+                    inline
                   />
                 </div>
+              </div>
+            </fieldset>
+            <div className="est-lifecycle-cost__phase-cost-row">
+              <div>
+                <Label
+                  htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                  aria-label={`Year ${year} Phase ${index + 1} Cost`}
+                >
+                  Cost
+                </Label>
+                <Field
+                  as={TextField}
+                  error={!!phaseError.cost}
+                  id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
+                  name={`${formikKey}.year${year}.${index}.cost`}
+                  maxLength={10}
+                  match={/^[0-9\b]+$/}
+                />
+              </div>
 
-                <div className="est-lifecycle-cost__phase-btn-wrapper">
-                  {index === 0 ? (
-                    <Button
-                      type="button"
-                      outline
-                      onClick={() => {
-                        arrayHelpers.push({
-                          phase: '',
-                          cost: ''
-                        });
-                      }}
-                    >
-                      + Add Phase
-                    </Button>
-                  ) : (
-                    <Button
-                      className="est-lifecycle-cost__remove-phase-btn"
-                      type="button"
-                      outline
-                      onClick={() => {
-                        arrayHelpers.remove(index);
-                      }}
-                      unstyled
-                    >
-                      Remove phase
-                    </Button>
-                  )}
-                </div>
+              <div className="est-lifecycle-cost__phase-btn-wrapper">
+                {index === 0 ? (
+                  <Button
+                    type="button"
+                    outline
+                    onClick={() => {
+                      arrayHelpers.push({
+                        phase: '',
+                        cost: ''
+                      });
+                    }}
+                  >
+                    + Add Phase
+                  </Button>
+                ) : (
+                  <Button
+                    className="est-lifecycle-cost__remove-phase-btn"
+                    type="button"
+                    outline
+                    onClick={() => {
+                      arrayHelpers.remove(index);
+                    }}
+                    unstyled
+                  >
+                    Remove phase
+                  </Button>
+                )}
               </div>
             </div>
           </FieldGroup>
