@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -101,6 +102,8 @@ type BusinessCase struct {
 	AlternativeBCons                null.String             `json:"alternativeBCons" db:"alternative_b_cons"`
 	AlternativeBCostSavings         null.String             `json:"alternativeBCostSavings" db:"alternative_b_cost_savings"`
 	LifecycleCostLines              EstimatedLifecycleCosts `json:"lifecycleCostLines" db:"lifecycle_cost_lines"`
+	CreatedAt                       *time.Time              `json:"createdAt" db:"created_at"`
+	UpdatedAt                       *time.Time              `json:"updatedAt" db:"updated_at"`
 }
 
 // BusinessCases is the model for a list of business cases
