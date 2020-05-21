@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
@@ -74,6 +75,7 @@ func NewCreateBusinessCase(
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	create func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
 	logger *zap.Logger,
+	clock clock.Clock,
 ) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		intake, err := fetchIntake(businessCase.SystemIntakeID)
@@ -96,6 +98,9 @@ func NewCreateBusinessCase(
 		if err != nil {
 			return &models.BusinessCase{}, err
 		}
+		createAt := clock.Now()
+		businessCase.CreatedAt = &createAt
+		businessCase.UpdatedAt = &createAt
 		businessCase, err = create(businessCase)
 		if err != nil {
 			logger.Error("failed to create a business case")
