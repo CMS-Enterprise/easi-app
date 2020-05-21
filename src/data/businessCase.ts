@@ -55,23 +55,16 @@ const emptyEstimatedLifecycle = {
   year5: []
 };
 
+type lifecycleCostLinesType = {
+  'As Is': EstimatedLifecycleCostLines;
+  Preferred: EstimatedLifecycleCostLines;
+  A: EstimatedLifecycleCostLines;
+  B: EstimatedLifecycleCostLines;
+};
+
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
-  const yearMap: { [index: string]: keyof EstimatedLifecycleCostLines } = {
-    '1': 'year1',
-    '2': 'year2',
-    '3': 'year3',
-    '4': 'year4',
-    '5': 'year5'
-  };
-
-  type lifecycleCostLinesType = {
-    'As Is': EstimatedLifecycleCostLines;
-    Preferred: EstimatedLifecycleCostLines;
-    A: EstimatedLifecycleCostLines;
-    B: EstimatedLifecycleCostLines;
-  };
   const lifecycleCostLines: lifecycleCostLinesType = {
     'As Is': emptyEstimatedLifecycle,
     Preferred: emptyEstimatedLifecycle,
@@ -80,9 +73,27 @@ export const prepareBusinessCaseForApp = (
   };
 
   businessCase.lifecycleCostLines.forEach((line: any) => {
-    lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
-      yearMap[line.year]
-    ].push({ phase: line.phase, cost: line.cost });
+    const solution = (solutionName => {
+      switch (solutionName) {
+        case 'As Is':
+          return lifecycleCostLines['As Is'];
+        case 'Preferred':
+          return lifecycleCostLines.Preferred;
+        case 'A':
+          return lifecycleCostLines.A;
+        case 'B':
+          return lifecycleCostLines.B;
+        default:
+          return null;
+      }
+    })(line.solution);
+
+    if (solution) {
+      solution[`year${line.year}` as keyof EstimatedLifecycleCostLines].push({
+        phase: line.phase,
+        cost: line.cost
+      });
+    }
   });
 
   return {
