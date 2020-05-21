@@ -143,8 +143,14 @@ func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (
 		  and created_at < $2
 	`
 	const completedCountSQL = `
+		WITH "started_intakes" as (
+		    SELECT * 
+		    FROM system_intake 
+		    WHERE created_at >=  $1 
+		      and created_at < $2
+		)
 		SELECT count(*) 
-		FROM system_intake 
+		from started_intakes
 		WHERE submitted_at >=  $1 
 		  and submitted_at < $2
 	`

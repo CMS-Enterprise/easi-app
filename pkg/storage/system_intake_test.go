@@ -1,7 +1,6 @@
 package storage
 
 import (
-	"encoding/json"
 	"fmt"
 	"math/rand"
 	"time"
@@ -161,70 +160,34 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 }
 
 func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
-	s.Run("gets proper number of started intakes", func() {
-		// create a random year to avoid test collisions
-		// uses postgres max year minus 1000000
-		rand.Seed(time.Now().UnixNano())
-		endYear := rand.Intn(294276)
-		endDate := time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
-		startDate := endDate.AddDate(0, -1, 0)
-		intake := testhelpers.NewSystemIntake()
-		intake.CreatedAt = &startDate
-		err := s.store.SaveSystemIntake(&intake)
-		s.NoError(err)
-		intake2 := testhelpers.NewSystemIntake()
-		intake2.ID = uuid.New()
-		intake2.CreatedAt = &endDate
-		err = s.store.SaveSystemIntake(&intake2)
-		s.NoError(err)
-		intake3 := testhelpers.NewSystemIntake()
-		intake3.ID = uuid.New()
-		intake3Date := startDate.AddDate(0, 0, 1)
-		intake3.CreatedAt = &intake3Date
-		err = s.store.SaveSystemIntake(&intake3)
-		s.NoError(err)
+	// create a random year to avoid test collisions
+	// uses postgres max year minus 1000000
+	rand.Seed(time.Now().UnixNano())
+	endYear := rand.Intn(294276)
+	endDate := time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
+	startDate := endDate.AddDate(0, -1, 0)
+	var startedTests = []struct {
+		name          string
+		createAt      time.Time
+		expectedCount int
+	}{
+		{"start time is included", startDate, 1},
+		{"end time is not included", endDate, 1},
+		{"mid time is included", startDate.AddDate(0, 0, 1), 2},
+		{"before time is not included", startDate.AddDate(0, 0, -1), 2},
+		{"after time is not included", endDate.AddDate(0, 0, 1), 2},
+	}
+	for _, tt := range startedTests {
+		s.Run(fmt.Sprintf("%s for started count", tt.name), func() {
+			intake := testhelpers.NewSystemIntake()
+			intake.CreatedAt = &tt.createAt
+			err := s.store.SaveSystemIntake(&intake)
+			s.NoError(err)
 
-		metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
 
-		s.NoError(err)
-		s.Equal(2, metrics.StartedRequests)
-		responseBody, err := json.Marshal(metrics)
-		s.NoError(err)
-		fmt.Printf(string(responseBody))
-	})
-
-	s.Run("gets proper number of completed and funded intakes", func() {
-		// create a random year to avoid test collisions
-		// uses postgres max year minus 1000000
-		rand.Seed(time.Now().UnixNano())
-		endYear := rand.Intn(294276)
-		endDate := time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
-		startDate := endDate.AddDate(0, -1, 0)
-		intake := testhelpers.NewSystemIntake()
-		intake.SubmittedAt = &startDate
-		intake.ExistingFunding = null.BoolFrom(false)
-		err := s.store.SaveSystemIntake(&intake)
-		s.NoError(err)
-		intake2 := testhelpers.NewSystemIntake()
-		intake2.ID = uuid.New()
-		intake2.SubmittedAt = &endDate
-		err = s.store.SaveSystemIntake(&intake2)
-		s.NoError(err)
-		intake3 := testhelpers.NewSystemIntake()
-		intake3.ID = uuid.New()
-		intake3Date := startDate.AddDate(0, 0, 1)
-		intake3.SubmittedAt = &intake3Date
-		intake3.ExistingFunding = null.BoolFrom(true)
-		err = s.store.SaveSystemIntake(&intake3)
-		s.NoError(err)
-
-		metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
-
-		s.NoError(err)
-		s.Equal(2, metrics.CompletedRequests)
-		s.Equal(1, metrics.FundedRequests)
-		responseBody, err := json.Marshal(metrics)
-		s.NoError(err)
-		fmt.Printf(string(responseBody))
-	})
+			s.NoError(err)
+			s.Equal(tt.expectedCount, metrics.StartedRequests)
+		})
+	}
 }
