@@ -6,6 +6,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 
 type GeneralRequestInfoProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -25,6 +26,9 @@ const GeneralRequestInfo = ({ formikProps }: GeneralRequestInfoProps) => {
         ensure it is ready to be presented at the Governance Review Team (GRT)
         Meeting.
       </p>
+      <div className="tablet:grid-col-5">
+        <MandatoryFieldsAlert />
+      </div>
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
           scrollElement="requestName"
