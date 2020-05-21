@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 
 import Header from 'components/Header';
-import Button from 'components/shared/Button';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import './index.scss';
+import Button from 'components/shared/Button';
 
 type HomeProps = RouteComponentProps;
 
@@ -75,7 +75,7 @@ const Home = ({ history }: HomeProps) => {
         {getSystemIntakeBanners()}
         <div className="tablet:grid-col-9">
           <h1 className="margin-top-6">Welcome to EASi</h1>
-          <p className="easi-home__body">
+          <p className="line-height-body-5 font-body-lg text-light">
             You can use EASi to go through the set of steps needed for Lifecycle
             ID approval by the Governance Review Board (GRB).
           </p>
@@ -98,23 +98,9 @@ const Home = ({ history }: HomeProps) => {
             </p>
           </div>
           {authState.isAuthenticated ? (
-            <Button
-              type="button"
-              onClick={() => {
-                history.push('/system/new');
-              }}
-            >
-              Start now
-            </Button>
+            <Button to="/governance-overview">Start now</Button>
           ) : (
-            <Button
-              type="button"
-              onClick={() => {
-                history.push('/login');
-              }}
-            >
-              Sign in to start
-            </Button>
+            <Button to="/login">Sign in to start</Button>
           )}
         </div>
       </div>

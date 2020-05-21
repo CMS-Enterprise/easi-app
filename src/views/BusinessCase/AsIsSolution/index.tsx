@@ -20,7 +20,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
   return (
     <div className="grid-container">
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
-      <p className="line-height-body-6">
+      <p className="line-height-body-5">
         Below you should identify options and alternatives to meet your business
         need. Include a summary of the approaches, how you will acquire the
         solution, and describe the pros, cons, total life cycle costs and
