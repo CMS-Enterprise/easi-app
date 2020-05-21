@@ -94,6 +94,9 @@ func NewSaveSystemIntake(
 		}
 		updatedTime := clock.Now().UTC()
 		intake.UpdatedAt = &updatedTime
+		if existingIntake == nil {
+			intake.CreatedAt = &updatedTime
+		}
 
 		if intake.Status == models.SystemIntakeStatusSUBMITTED {
 			if intake.AlfabetID.Valid {
