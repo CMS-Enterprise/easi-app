@@ -137,10 +137,23 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 // GetSystemIntakeMetrics gets a metrics digest for system intake
 func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
 	const startedCountSQL = `
-		SELECT count(*) FROM system_intake WHERE created_at >=  $1 and created_at < $2
+		SELECT count(*) 
+		FROM system_intake 
+		WHERE created_at >=  $1 
+		  and created_at < $2
 	`
 	const completedCountSQL = `
-		SELECT count(*) FROM system_intake WHERE submitted_at >=  $1 and submitted_at < $2
+		SELECT count(*) 
+		FROM system_intake 
+		WHERE submitted_at >=  $1 
+		  and submitted_at < $2
+	`
+	const fundedCountSQL = `
+		SELECT count(*) 
+		FROM system_intake 
+		WHERE submitted_at >=  $1 
+		  and submitted_at < $2
+		  and existing_funding = true
 	`
 	metrics := models.SystemIntakeMetrics{}
 	var startedRequests int
@@ -166,5 +179,17 @@ func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (
 		return metrics, err
 	}
 	metrics.CompletedRequests = completedRequests
+
+	var fundedRequests int
+	err = s.DB.Get(
+		&fundedRequests,
+		fundedCountSQL,
+		&startTime,
+		&endTime,
+	)
+	if err != nil {
+		return metrics, err
+	}
+	metrics.FundedRequests = fundedRequests
 	return metrics, nil
 }

@@ -193,7 +193,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 		fmt.Printf(string(responseBody))
 	})
 
-	s.Run("gets proper number of completed intakes", func() {
+	s.Run("gets proper number of completed and funded intakes", func() {
 		// create a random year to avoid test collisions
 		// uses postgres max year minus 1000000
 		rand.Seed(time.Now().UnixNano())
@@ -202,6 +202,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 		startDate := endDate.AddDate(0, -1, 0)
 		intake := testhelpers.NewSystemIntake()
 		intake.SubmittedAt = &startDate
+		intake.ExistingFunding = null.BoolFrom(false)
 		err := s.store.SaveSystemIntake(&intake)
 		s.NoError(err)
 		intake2 := testhelpers.NewSystemIntake()
@@ -213,6 +214,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 		intake3.ID = uuid.New()
 		intake3Date := startDate.AddDate(0, 0, 1)
 		intake3.SubmittedAt = &intake3Date
+		intake3.ExistingFunding = null.BoolFrom(true)
 		err = s.store.SaveSystemIntake(&intake3)
 		s.NoError(err)
 
@@ -220,6 +222,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 
 		s.NoError(err)
 		s.Equal(2, metrics.CompletedRequests)
+		s.Equal(1, metrics.FundedRequests)
 		responseBody, err := json.Marshal(metrics)
 		s.NoError(err)
 		fmt.Printf(string(responseBody))
