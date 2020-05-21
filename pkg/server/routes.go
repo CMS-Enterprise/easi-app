@@ -113,14 +113,14 @@ func (s *Server) routes(
 	businessCaseHandler := handlers.BusinessCaseHandler{
 		Logger: s.logger,
 		CreateBusinessCase: services.NewCreateBusinessCase(
+			serviceConfig,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeCreateBusinessCase(s.logger),
 			store.CreateBusinessCase,
-			s.logger,
 		),
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
+			serviceConfig,
 			store.FetchBusinessCaseByID,
-			s.logger,
 		),
 	}
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
@@ -129,8 +129,8 @@ func (s *Server) routes(
 	businessCasesHandler := handlers.BusinessCasesHandler{
 		Logger: s.logger,
 		FetchBusinessCases: services.NewFetchBusinessCasesByEuaID(
+			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
-			s.logger,
 		),
 	}
 	api.Handle("/business_cases", businessCasesHandler.Handle())

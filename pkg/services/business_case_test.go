@@ -16,6 +16,7 @@ import (
 func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
+	serviceConfig := NewConfig(logger)
 
 	s.Run("successfully fetches Business Case by ID without an error", func() {
 		fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
@@ -23,7 +24,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 				ID: fakeID,
 			}, nil
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(fetch, logger)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch)
 		businessCase, err := fetchBusinessCaseByID(fakeID)
 		s.NoError(err)
 
@@ -34,7 +35,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 		fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("fetch failed")
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(fetch, logger)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch)
 
 		businessCase, err := fetchBusinessCaseByID(uuid.New())
 
@@ -46,6 +47,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 	logger := zap.NewNop()
 	fakeEuaID := "FAKE"
+	serviceConfig := NewConfig(logger)
 
 	s.Run("successfully fetches Business Cases by EUA ID without an error", func() {
 		fetch := func(euaID string) (models.BusinessCases, error) {
@@ -55,7 +57,7 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 				},
 			}, nil
 		}
-		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(fetch, logger)
+		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(serviceConfig, fetch)
 		businessCases, err := fetchBusinessCasesByEuaID(fakeEuaID)
 		s.NoError(err)
 		s.Equal(fakeEuaID, businessCases[0].EUAUserID)
@@ -65,7 +67,7 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 		fetch := func(euaID string) (models.BusinessCases, error) {
 			return models.BusinessCases{}, errors.New("fetch failed")
 		}
-		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(fetch, logger)
+		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(serviceConfig, fetch)
 		businessCases, err := fetchBusinessCasesByEuaID("FAKE")
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -115,6 +117,7 @@ func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
 
 func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	logger := zap.NewNop()
+	serviceConfig := NewConfig(logger)
 	euaID := testhelpers.RandomEUAID()
 	intakeID := uuid.New()
 	intake := models.SystemIntake{
@@ -143,7 +146,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	ctx := context.Background()
 
 	s.Run("successfully creates a Business Case without an error", func() {
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, create)
 		businessCase, err := createBusinessCase(ctx, &input)
 		s.NoError(err)
 
@@ -154,7 +157,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 		create = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("creation failed")
 		}
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, create)
 		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -166,7 +169,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 		}
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, create)
 		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.IsType(&apperrors.ValidationError{}, err)
