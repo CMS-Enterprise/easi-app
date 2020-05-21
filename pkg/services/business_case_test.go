@@ -218,6 +218,7 @@ func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
 
 func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	logger := zap.NewNop()
+	mockClock := clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intakeID := uuid.New()
 	intake := models.SystemIntake{
@@ -243,7 +244,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	ctx := context.Background()
 
 	s.Run("successfully updates a Business Case without an error", func() {
-		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger)
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 		s.NoError(err)
 
@@ -254,7 +255,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		update = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("creation failed")
 		}
-		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger)
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -266,7 +267,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 		}
-		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger)
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
 		s.IsType(&apperrors.ValidationError{}, err)
