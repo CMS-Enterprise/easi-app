@@ -1,0 +1,98 @@
+package integration
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"path"
+
+	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/models"
+)
+
+func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
+	apiURL, err := url.Parse(s.server.URL)
+	s.NoError(err, "failed to parse URL")
+	apiURL.Path = path.Join(apiURL.Path, "/api/v1")
+	businessCaseURL, err := url.Parse(apiURL.String())
+	s.NoError(err, "failed to parse URL")
+	businessCaseURL.Path = path.Join(businessCaseURL.Path, "/business_case")
+
+	intakeID := uuid.New()
+	intake := models.SystemIntake{
+		ID:        intakeID,
+		Status:    "SUBMITTED",
+		EUAUserID: s.user.euaID,
+	}
+
+	_ = s.store.SaveSystemIntake(&intake)
+
+	body, err := json.Marshal(map[string]string{
+		"systemIntake": intakeID.String(),
+	})
+	s.NoError(err)
+
+	//initialize business case id for assignment after creating
+	var id uuid.UUID
+
+	client := &http.Client{}
+
+	s.Run("POST will fail with no Authorization", func() {
+		req, err := http.NewRequest(http.MethodPost, businessCaseURL.String(), bytes.NewBuffer(body))
+		req.Header.Del("Authorization")
+		s.NoError(err)
+		resp, err := client.Do(req)
+
+		s.NoError(err)
+		s.Equal(http.StatusUnauthorized, resp.StatusCode)
+	})
+
+	s.Run("POST will succeed with token", func() {
+		req, err := http.NewRequest(http.MethodPost, businessCaseURL.String(), bytes.NewBuffer(body))
+		s.NoError(err)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
+
+		resp, err := client.Do(req)
+
+		s.NoError(err)
+		s.Equal(http.StatusOK, resp.StatusCode)
+		actualBody, err := ioutil.ReadAll(resp.Body)
+		s.NoError(err)
+		var actualBusinessCase models.BusinessCase
+		err = json.Unmarshal(actualBody, &actualBusinessCase)
+		s.NoError(err)
+		s.Equal(intakeID, actualBusinessCase.SystemIntakeID)
+		s.Equal(s.user.euaID, actualBusinessCase.EUAUserID)
+
+		id = actualBusinessCase.ID
+	})
+
+	// This needs to be run after the previous test to ensure we have a business case to fetch
+	s.Run("GET will fetch the updated intake just saved", func() {
+		getURL, err := url.Parse(businessCaseURL.String())
+		s.NoError(err, "failed to parse URL")
+		getURL.Path = path.Join(getURL.Path, id.String())
+
+		req, err := http.NewRequest(http.MethodGet, getURL.String(), nil)
+		s.NoError(err)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
+
+		resp, err := client.Do(req)
+
+		s.NoError(err)
+		defer resp.Body.Close()
+
+		s.Equal(http.StatusOK, resp.StatusCode)
+		actualBody, err := ioutil.ReadAll(resp.Body)
+		s.NoError(err)
+		var actualBusinessCase models.BusinessCase
+		err = json.Unmarshal(actualBody, &actualBusinessCase)
+		s.NoError(err)
+		s.Equal(id, actualBusinessCase.ID)
+		s.Equal(intakeID, actualBusinessCase.SystemIntakeID)
+	})
+}
