@@ -3,7 +3,6 @@ package server
 import (
 	"net/http"
 
-	"github.com/facebookgo/clock"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
@@ -67,6 +66,8 @@ func (s *Server) routes(
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
 
+	serviceConfig := services.NewConfig(s.logger)
+
 	store, err := storage.NewStore(
 		s.logger,
 		s.NewDBConfig(),
@@ -82,21 +83,19 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	saveClock := clock.New()
 	systemIntakeHandler := handlers.SystemIntakeHandler{
 		Logger: s.logger,
 		SaveSystemIntake: services.NewSaveSystemIntake(
+			serviceConfig,
 			store.SaveSystemIntake,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeSaveSystemIntake(s.logger),
 			cedarClient.ValidateAndSubmitSystemIntake,
 			emailClient.SendSystemIntakeSubmissionEmail,
-			s.logger,
-			saveClock,
 		),
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
+			serviceConfig,
 			store.FetchSystemIntakeByID,
-			s.logger,
 		),
 	}
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
@@ -105,8 +104,8 @@ func (s *Server) routes(
 	systemIntakesHandler := handlers.SystemIntakesHandler{
 		Logger: s.logger,
 		FetchSystemIntakes: services.NewFetchSystemIntakesByEuaID(
+			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
-			s.logger,
 		),
 	}
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
