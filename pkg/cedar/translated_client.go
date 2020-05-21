@@ -62,7 +62,7 @@ func ValidateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logge
 		Err:         errors.New("validation failed"),
 		Validations: apperrors.Validations{},
 		ModelID:     intake.ID.String(),
-		Model:       "System Intake",
+		Model:       intake,
 	}
 	const validationMessage = "is required"
 	if validate.RequireUUID(intake.ID) {
@@ -163,7 +163,7 @@ func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient
 		logger.Error(fmt.Sprintf("Failed to submit intake for CEDAR with error: %v", err))
 		return "", &apperrors.ExternalAPIError{
 			Err:       err,
-			Model:     "System Intake",
+			Model:     validatedIntake,
 			ModelID:   id,
 			Operation: apperrors.Submit,
 			Source:    "CEDAR",
@@ -174,7 +174,7 @@ func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient
 		return "", &apperrors.ExternalAPIError{
 			Err:       errors.New("CEDAR return result: " + *resp.Payload.Response.Result),
 			ModelID:   validatedIntake.ID.String(),
-			Model:     "System Intake",
+			Model:     validatedIntake,
 			Operation: apperrors.Submit,
 			Source:    "CEDAR",
 		}

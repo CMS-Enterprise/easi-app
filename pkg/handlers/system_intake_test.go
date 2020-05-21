@@ -132,7 +132,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		expectedErrMessage := fmt.Errorf("failed to validate")
-		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: "System intake", ModelID: id.String()}
+		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String()}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
 			Logger:                s.logger,
@@ -153,7 +153,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		expectedErrMessage := fmt.Errorf("failed to validate")
-		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: "System intake", ModelID: id.String()}
+		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String()}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
 			Logger:                s.logger,
@@ -174,7 +174,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		expectedErrMessage := fmt.Errorf("failed to submit")
-		expectedErr := &apperrors.ExternalAPIError{Err: expectedErrMessage, Model: "System intake", ModelID: id.String(), Operation: apperrors.Submit, Source: "CEDAR"}
+		expectedErr := &apperrors.ExternalAPIError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String(), Operation: apperrors.Submit, Source: "CEDAR"}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
 			Logger:                s.logger,
