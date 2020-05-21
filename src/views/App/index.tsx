@@ -10,6 +10,7 @@ import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
 
 import './index.scss';
+import GovernanceOverview from 'views/GovernanceOverview';
 
 type MainState = {};
 
@@ -27,6 +28,11 @@ class App extends React.Component<MainProps, MainState> {
               <Route path="/" exact component={Home} />
               <Route path="/login" exact component={Login} />
               <Route path="/sandbox" exact component={Sandbox} />
+              <Route
+                path="/governance-overview"
+                exact
+                component={GovernanceOverview}
+              />
               <SecureRoute
                 exact
                 path="/system/:systemId/grt-review"
@@ -52,8 +58,13 @@ class App extends React.Component<MainProps, MainState> {
                 path="/system/:profileId"
                 component={SystemProfile}
               /> */}
+              <Redirect
+                exact
+                from="/business/:businessCaseId"
+                to="/business/:businessCaseId/general-project-info"
+              />
               <SecureRoute
-                path="/business/new"
+                path="/business/:businessCaseId/:formPage"
                 render={({ component }: any) => component()}
                 component={BusinessCase}
               />

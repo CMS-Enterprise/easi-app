@@ -53,7 +53,7 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 		err := ValidateSystemIntakeForCedar(&intake, logger)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate System Intake %s: {\"Requester\":\"is required\"}",
+			"Could not validate *models.SystemIntake %s: {\"Requester\":\"is required\"}",
 			id.String(),
 		)
 		s.EqualError(err, expectedErrString)
@@ -66,7 +66,7 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 		err := ValidateSystemIntakeForCedar(&intake, logger)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate System Intake %s: {\"ExistingFunding\":\"is required\"}",
+			"Could not validate *models.SystemIntake %s: {\"ExistingFunding\":\"is required\"}",
 			id.String(),
 		)
 		s.EqualError(err, expectedErrString)
@@ -80,7 +80,7 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 		err := ValidateSystemIntakeForCedar(&intake, logger)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate System Intake %s: {\"FundingSource\":\"is required\"}",
+			"Could not validate *models.SystemIntake %s: {\"FundingSource\":\"is required\"}",
 			id.String(),
 		)
 		s.EqualError(err, expectedErrString)
@@ -95,7 +95,7 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 		err := ValidateSystemIntakeForCedar(&intake, logger)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate System Intake %s: {\"FundingSource\":\"must be a 6 digit string\"}",
+			"Could not validate *models.SystemIntake %s: {\"FundingSource\":\"must be a 6 digit string\"}",
 			id.String(),
 		)
 		s.EqualError(err, expectedErrString)
@@ -121,7 +121,7 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 		err := ValidateSystemIntakeForCedar(&intake, logger)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate System Intake %s: {\"EUAUserID\":\"is required\"}",
+			"Could not validate *models.SystemIntake %s: {\"EUAUserID\":\"is required\"}",
 			id.String(),
 		)
 		s.EqualError(err, expectedErrString)
@@ -135,7 +135,7 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 		err := ValidateSystemIntakeForCedar(&intake, logger)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate System Intake %s: {\"ID\":\"is required\"}",
+			"Could not validate *models.SystemIntake %s: {\"ID\":\"is required\"}",
 			uuid.Nil.String(),
 		)
 		s.EqualError(err, expectedErrString)
@@ -149,7 +149,7 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 		err := ValidateSystemIntakeForCedar(&intake, logger)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate System Intake %s: {\"SubmittedAt\":\"is required\"}",
+			"Could not validate *models.SystemIntake %s: {\"SubmittedAt\":\"is required\"}",
 			id.String(),
 		)
 		s.EqualError(err, expectedErrString)
