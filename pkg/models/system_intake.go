@@ -51,3 +51,12 @@ type SystemIntake struct {
 
 // SystemIntakes is a list of System Intakes
 type SystemIntakes []SystemIntake
+
+// SystemIntakeMetrics is a model for storing metrics related to system intake
+type SystemIntakeMetrics struct {
+	StartTime         *time.Time `json:"startTime"`
+	EndTime           *time.Time `json:"endTime"`
+	StartedRequests   int        `json:"startedRequests"`
+	CompletedRequests int        `json:"completedRequests"`
+	FundedRequests    int        `json:"fundedRequests"`
+}

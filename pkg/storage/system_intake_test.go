@@ -1,7 +1,9 @@
 package storage
 
 import (
+	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -154,5 +156,18 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		s.NoError(err)
 		s.Len(fetched, 0)
 		s.Equal(models.SystemIntakes{}, fetched)
+	})
+}
+
+func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
+	startDate := time.Now()
+	endDate := time.Now().AddDate(0, 1, 0)
+
+	s.Run("gets metrics successfully", func() {
+		metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+		s.NoError(err)
+		responseBody, err := json.Marshal(metrics)
+		s.NoError(err)
+		fmt.Printf(string(responseBody))
 	})
 }

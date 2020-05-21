@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -128,4 +129,21 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 		return models.SystemIntakes{}, err
 	}
 	return intakes, nil
+}
+
+// GetSystemIntakeMetrics gets a metrics digest for system intake
+func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
+	const SystemIntakesMetricsSQL = `
+		SELECT count(*) 
+		FROM system_intake;
+	`
+	var metrics models.SystemIntakeMetrics
+	_, err := s.DB.NamedExec(
+		SystemIntakesMetricsSQL,
+		&metrics,
+	)
+	if err != nil {
+		return metrics, err
+	}
+	return metrics, nil
 }
