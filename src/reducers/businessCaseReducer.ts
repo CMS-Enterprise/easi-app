@@ -12,7 +12,7 @@ const initialState: BusinessCaseState = {
   error: null
 };
 
-function systemIntakeReducer(
+function businessCaseReducer(
   state = initialState,
   action: Action<any>
 ): BusinessCaseState {
@@ -42,4 +42,4 @@ function systemIntakeReducer(
   }
 }
 
-export default systemIntakeReducer;
+export default businessCaseReducer;

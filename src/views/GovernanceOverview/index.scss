@@ -1,0 +1,34 @@
+.easi-governance-overview {
+  margin-bottom: 36px;
+
+  &__indented-wrapper {
+    border-left: 4px solid #585C62;
+    padding: 6px 0;
+    margin: 1em 0;
+  }
+
+  &__indented-body {
+    margin: 0 0 0 6px;
+    font-weight: bold;
+  }
+
+  &__dot {
+    height: 24px;
+    width: 24px;
+    background-color: #C4C4C4;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    line-height: 24px;
+  }
+
+  &__numbered-list-item {
+    display: flex;
+  }
+
+  &__list-item-continuing {
+    background: linear-gradient(#000, #000) no-repeat center/2px 100%;
+    width: 24px;
+    vertical-align: top;
+  }
+}

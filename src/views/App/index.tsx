@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
+import { SecureRoute, LoginCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import Home from 'views/Home';
 import Login from 'views/Login';
@@ -11,6 +11,7 @@ import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
 
 import './index.scss';
+import GovernanceOverview from 'views/GovernanceOverview';
 
 type MainState = {};
 
@@ -28,12 +29,15 @@ class App extends React.Component<MainProps, MainState> {
               <Route path="/" exact component={Home} />
               <Route path="/login" exact component={Login} />
               <Route path="/sandbox" exact component={Sandbox} />
-              /* Subroutes should precede any parent routes or they will not be
-              callable */
-              <SecureRoute path="/system/new" exact component={SystemIntake} />
+              <Route
+                path="/governance-overview"
+                exact
+                component={GovernanceOverview}
+              />
               <SecureRoute
                 exact
                 path="/system/:systemId/grt-review"
+                render={({ component }: any) => component()}
                 component={GRTSystemIntakeReview}
               />
               <Redirect
@@ -43,9 +47,9 @@ class App extends React.Component<MainProps, MainState> {
               />
               <SecureRoute
                 path="/system/:systemId/:formPage"
+                render={({ component }: any) => component()}
                 component={SystemIntake}
               />
-              <SecureRoute path="/system/:systemId" component={SystemIntake} />
               {/* <SecureRoute
                 path="/system/all"
                 exact
@@ -59,8 +63,17 @@ class App extends React.Component<MainProps, MainState> {
                 path="/business/:businessCaseId/grt-review"
                 component={GrtBusinessCaseReview}
               />
-              <SecureRoute path="/business/new" component={BusinessCase} />
-              <Route path="/implicit/callback" component={ImplicitCallback} />
+              <Redirect
+                exact
+                from="/business/:businessCaseId"
+                to="/business/:businessCaseId/general-project-info"
+              />
+              <SecureRoute
+                path="/business/:businessCaseId/:formPage"
+                render={({ component }: any) => component()}
+                component={BusinessCase}
+              />
+              <Route path="/implicit/callback" component={LoginCallback} />
             </Switch>
           </AuthenticationWrapper>
         </BrowserRouter>

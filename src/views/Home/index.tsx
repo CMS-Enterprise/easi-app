@@ -2,38 +2,34 @@ import React, { useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { withAuth } from '@okta/okta-react';
+import { useOktaAuth } from '@okta/okta-react';
 
-import useAuth from 'hooks/useAuth';
 import Header from 'components/Header';
-import Button from 'components/shared/Button';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import './index.scss';
+import Button from 'components/shared/Button';
 
-type HomeProps = RouteComponentProps & {
-  auth: any;
-};
+type HomeProps = RouteComponentProps;
 
-const Home = ({ auth, history }: HomeProps) => {
-  const [isAuthenticated] = useAuth(auth);
+const Home = ({ history }: HomeProps) => {
+  const { authState } = useOktaAuth();
   const dispatch = useDispatch();
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
   useEffect(() => {
-    if (isAuthenticated) {
+    if (authState.isAuthenticated) {
       dispatch(fetchSystemIntakes());
     }
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, authState.isAuthenticated]);
 
   const getSystemIntakeBanners = () => {
     return systemIntakes.map((intake: SystemIntakeForm) => {
       switch (intake.status) {
         case 'DRAFT':
-          // TODO: When content sweep gets merged, this needs to be requestName
           return (
             <ActionBanner
               key={intake.id}
@@ -49,6 +45,23 @@ const Home = ({ auth, history }: HomeProps) => {
               label="Go to Intake Request"
             />
           );
+        case 'SUBMITTED':
+          return (
+            <ActionBanner
+              key={intake.id}
+              title={
+                intake.requestName
+                  ? `${intake.requestName}: Business Case`
+                  : 'Business Case'
+              }
+              helpfulText="Your intake form has been submitted. The admin team will be in touch with you to fill out a Business Case"
+              onClick={() => {
+                // TODO: Append /general-request-info to the end when the route gets merged.
+                history.push(`/business/new`);
+              }}
+              label="Start my Business Case"
+            />
+          );
         default:
           return null;
       }
@@ -62,7 +75,7 @@ const Home = ({ auth, history }: HomeProps) => {
         {getSystemIntakeBanners()}
         <div className="tablet:grid-col-9">
           <h1 className="margin-top-6">Welcome to EASi</h1>
-          <p className="easi-home__body">
+          <p className="line-height-body-5 font-body-lg text-light">
             You can use EASi to go through the set of steps needed for Lifecycle
             ID approval by the Governance Review Board (GRB).
           </p>
@@ -84,24 +97,10 @@ const Home = ({ auth, history }: HomeProps) => {
               .
             </p>
           </div>
-          {isAuthenticated ? (
-            <Button
-              type="button"
-              onClick={() => {
-                history.push('/system/new');
-              }}
-            >
-              Start now
-            </Button>
+          {authState.isAuthenticated ? (
+            <Button to="/governance-overview">Start now</Button>
           ) : (
-            <Button
-              type="button"
-              onClick={() => {
-                history.push('/login');
-              }}
-            >
-              Sign in to start
-            </Button>
+            <Button to="/login">Sign in to start</Button>
           )}
         </div>
       </div>
@@ -109,4 +108,4 @@ const Home = ({ auth, history }: HomeProps) => {
   );
 };
 
-export default withRouter(withAuth(Home));
+export default withRouter(Home);
