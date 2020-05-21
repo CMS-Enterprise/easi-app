@@ -18,7 +18,10 @@ type LifecycleCostYear string
 
 const (
 	// LifecycleCostPhaseINITIATE captures enum value "Initiate"
+	// TODO: Remove initiate phase after this gets merged in
 	LifecycleCostPhaseINITIATE LifecycleCostPhase = "Initiate"
+	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
+	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
 	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operation & Maintenance"
 	LifecycleCostPhaseOPERATIONMAINTENANCE LifecycleCostPhase = "Operation & Maintenance"
 
@@ -65,6 +68,7 @@ func (e *EstimatedLifecycleCosts) Scan(src interface{}) error {
 type BusinessCase struct {
 	ID                              uuid.UUID               `json:"id"`
 	EUAUserID                       string                  `json:"euaUserId" db:"eua_user_id"`
+	SystemIntakeID                  uuid.UUID               `json:"systemIntake" db:"system_intake"`
 	ProjectName                     null.String             `json:"projectName" db:"project_name"`
 	Requester                       null.String             `json:"requester"`
 	RequesterPhoneNumber            null.String             `json:"requesterPhoneNumber" db:"requester_phone_number"`
