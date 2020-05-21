@@ -95,11 +95,13 @@ func ValidateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logge
 	if validate.RequireNullBool(intake.ExistingFunding) {
 		expectedError.WithValidation("ExistingFunding", validationMessage)
 	}
-	if intake.ExistingFunding.Bool && validate.RequireNullString(intake.FundingSource) {
-		expectedError.WithValidation("FundingSource", validationMessage)
-	}
-	if intake.FundingSource.Valid && validate.FundingNumberInvalid(intake.FundingSource.String) {
-		expectedError.WithValidation("FundingSource", "must be a 6 digit string")
+	if intake.ExistingFunding.Bool {
+		if validate.RequireNullString(intake.FundingSource) {
+			expectedError.WithValidation("FundingSource", validationMessage)
+		}
+		if intake.FundingSource.Valid && validate.FundingNumberInvalid(intake.FundingSource.String) {
+			expectedError.WithValidation("FundingSource", "must be a 6 digit string")
+		}
 	}
 	if validate.RequireNullString(intake.BusinessNeed) {
 		expectedError.WithValidation("BusinessNeed", validationMessage)
