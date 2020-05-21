@@ -35,6 +35,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			process_status,
 			ea_support_request,
 			existing_contract,
+			created_at,
 			updated_at,
 		    submitted_at,
 		    alfabet_id
@@ -61,6 +62,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			:process_status,
 			:ea_support_request,
 			:existing_contract,
+		    :created_at,
 		    :updated_at,
 		    :submitted_at,
 		    :alfabet_id
@@ -85,6 +87,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			process_status=:process_status,
 			ea_support_request=:ea_support_request,
 			existing_contract=:existing_contract,
+		    created_at=:created_at,
 			updated_at=:updated_at,
 			submitted_at=:submitted_at,
 		    alfabet_id=:alfabet_id
