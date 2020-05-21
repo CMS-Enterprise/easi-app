@@ -80,7 +80,7 @@ const EstimatedLifecycleCostReview = ({
 
   return (
     <div>
-      {totalInitiateCosts + totalOmCosts === 0 && (
+      {totalDevelopmentCosts + totalOmCosts === 0 && (
         <DescriptionTerm term="Requester indicated there is no associated cost with this solution" />
       )}
       <Media
