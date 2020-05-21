@@ -23,6 +23,7 @@ export const defaultProposedSolution = {
 };
 
 export const businessCaseInitalData: BusinessCaseModel = {
+  id: '',
   requestName: '',
   requester: {
     name: '',
@@ -86,6 +87,7 @@ export const prepareBusinessCaseForApp = (
   });
 
   return {
+    id: businessCase.id || '',
     requestName: businessCase.projectName || '',
     requester: {
       name: businessCase.requester || '',
