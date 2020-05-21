@@ -161,7 +161,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 }
 
 func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
-	s.Run("gets metrics successfully", func() {
+	s.Run("gets proper number of started intakes", func() {
 		// create a random year to avoid test collisions
 		// uses postgres max year minus 1000000
 		rand.Seed(time.Now().UnixNano())
@@ -188,6 +188,38 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 
 		s.NoError(err)
 		s.Equal(2, metrics.StartedRequests)
+		responseBody, err := json.Marshal(metrics)
+		s.NoError(err)
+		fmt.Printf(string(responseBody))
+	})
+
+	s.Run("gets proper number of completed intakes", func() {
+		// create a random year to avoid test collisions
+		// uses postgres max year minus 1000000
+		rand.Seed(time.Now().UnixNano())
+		endYear := rand.Intn(294276)
+		endDate := time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
+		startDate := endDate.AddDate(0, -1, 0)
+		intake := testhelpers.NewSystemIntake()
+		intake.SubmittedAt = &startDate
+		err := s.store.SaveSystemIntake(&intake)
+		s.NoError(err)
+		intake2 := testhelpers.NewSystemIntake()
+		intake2.ID = uuid.New()
+		intake2.SubmittedAt = &endDate
+		err = s.store.SaveSystemIntake(&intake2)
+		s.NoError(err)
+		intake3 := testhelpers.NewSystemIntake()
+		intake3.ID = uuid.New()
+		intake3Date := startDate.AddDate(0, 0, 1)
+		intake3.SubmittedAt = &intake3Date
+		err = s.store.SaveSystemIntake(&intake3)
+		s.NoError(err)
+
+		metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+
+		s.NoError(err)
+		s.Equal(2, metrics.CompletedRequests)
 		responseBody, err := json.Marshal(metrics)
 		s.NoError(err)
 		fmt.Printf(string(responseBody))
