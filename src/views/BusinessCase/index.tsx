@@ -8,12 +8,15 @@ import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import { postBusinessCase, putBusinessCase } from 'types/routines';
-import { BusinessCaseModel } from 'types/businessCase';
+import AutoSave from 'components/shared/AutoSave';
 import {
-  businessCaseInitalData,
-  defaultProposedSolution
-} from 'data/businessCase';
+  fetchBusinessCase,
+  postBusinessCase,
+  putBusinessCase,
+  storeBusinessCase
+} from 'types/routines';
+import { BusinessCaseModel } from 'types/businessCase';
+import { defaultProposedSolution } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
@@ -79,6 +82,10 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.form
   );
 
+  const isLoading = useSelector(
+    (state: AppState) => state.businessCase.isLoading
+  );
+
   const [pageIndex, setPageIndex] = useState(0);
   const pageObj = pages[pageIndex];
 
@@ -93,9 +100,22 @@ export const BusinessCase = () => {
     }
   };
 
+  // Resume existing business case
   useEffect(() => {
-    history.replace(`/business/${businessCase.id}/formPage`);
-  }, [history, businessCase.id]);
+    if (businessCaseId === 'new') {
+      dispatch(storeBusinessCase({}));
+    } else {
+      dispatch(fetchBusinessCase(businessCaseId));
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (businessCase.id) {
+      history.replace(`/business/${businessCase.id}/${formPage}`);
+    }
+  }, [history, businessCase.id, formPage]);
 
   useEffect(() => {
     const pageSlugs: any[] = pages.map(p => p.slug);
@@ -112,226 +132,237 @@ export const BusinessCase = () => {
     <div className="business-case margin-bottom-5">
       <Header name="CMS Business Case" />
       <main role="main">
-        <Formik
-          initialValues={businessCaseInitalData}
-          onSubmit={() => {}}
-          validationSchema={pageObj.validation}
-          validateOnBlur={false}
-          validateOnChange={false}
-          validateOnMount={false}
-          innerRef={formikRef}
-        >
-          {(formikProps: FormikProps<BusinessCaseModel>) => {
-            const {
-              values,
-              errors,
-              validateForm,
-              setErrors,
-              isSubmitting
-            } = formikProps;
-            const flatErrors: any = flattenErrors(errors);
-            return (
-              <>
-                <div className="grid-container">
-                  {Object.keys(errors).length > 0 && (
-                    <ErrorAlert
-                      classNames="margin-top-3"
-                      heading="Please check and fix the following"
-                    >
-                      {Object.keys(flatErrors).map(key => {
-                        return (
-                          <ErrorAlertMessage
-                            key={`Error.${key}`}
-                            message={flatErrors[key]}
-                            onClick={() => {
-                              const field = document.querySelector(
-                                `[data-scroll="${key}"]`
-                              );
-
-                              if (field) {
-                                field.scrollIntoView();
-                              }
-                            }}
-                          />
-                        );
-                      })}
-                    </ErrorAlert>
-                  )}
-                </div>
-                <Form>
-                  <SecureRoute
-                    path="/business/:businessCaseId/general-request-info"
-                    render={() => (
-                      <GeneralRequestInfo formikProps={formikProps} />
-                    )}
-                  />
-                  <SecureRoute
-                    path="/business/:businessCaseId/request-description"
-                    render={() => (
-                      <RequestDescription formikProps={formikProps} />
-                    )}
-                  />
-                  <SecureRoute
-                    path="/business/:businessCaseId/as-is-solution"
-                    render={() => <AsIsSolution formikProps={formikProps} />}
-                  />
-                  <SecureRoute
-                    path="/business/:businessCaseId/preferred-solution"
-                    render={() => (
-                      <PreferredSolution formikProps={formikProps} />
-                    )}
-                  />
-                  <SecureRoute
-                    path="/business/:businessCaseId/alternative-solution-a"
-                    render={() => (
-                      <AlternativeSolution
-                        formikProps={formikProps}
-                        altLetter="A"
-                        handleToggleAlternative={() => {
-                          formikProps.validateForm().then(err => {
-                            if (Object.keys(err).length === 0) {
-                              if (!formikProps.values.alternativeB) {
-                                formikProps.setFieldValue(
-                                  'alternativeB',
-                                  defaultProposedSolution
+        {isLoading === false && (
+          <Formik
+            initialValues={businessCase}
+            onSubmit={() => {}}
+            validationSchema={pageObj.validation}
+            validateOnBlur={false}
+            validateOnChange={false}
+            validateOnMount={false}
+            innerRef={formikRef}
+          >
+            {(formikProps: FormikProps<BusinessCaseModel>) => {
+              const {
+                values,
+                errors,
+                validateForm,
+                setErrors,
+                isSubmitting
+              } = formikProps;
+              const flatErrors: any = flattenErrors(errors);
+              return (
+                <>
+                  <div className="grid-container">
+                    {Object.keys(errors).length > 0 && (
+                      <ErrorAlert
+                        classNames="margin-top-3"
+                        heading="Please check and fix the following"
+                      >
+                        {Object.keys(flatErrors).map(key => {
+                          return (
+                            <ErrorAlertMessage
+                              key={`Error.${key}`}
+                              message={flatErrors[key]}
+                              onClick={() => {
+                                const field = document.querySelector(
+                                  `[data-scroll="${key}"]`
                                 );
 
-                                const updatedPages = pages
-                                  .slice(0, pages.length - 1)
-                                  .concat([
-                                    {
-                                      name: 'AlternativeSolutionB',
-                                      type: 'FORM',
-                                      slug: 'alternative-solution-b',
-                                      validation:
-                                        BusinessCaseValidationSchema.alternativeB
-                                    },
-                                    {
-                                      name: 'Review',
-                                      type: 'Review',
-                                      slug: 'review'
-                                    }
-                                  ]);
-                                setPages(updatedPages);
-                                const newUrl = updatedPages[pageIndex + 1].slug;
-                                history.push(newUrl);
-                              }
-                            }
-                            window.scrollTo(0, 0);
-                          });
-                        }}
-                      />
+                                if (field) {
+                                  field.scrollIntoView();
+                                }
+                              }}
+                            />
+                          );
+                        })}
+                      </ErrorAlert>
                     )}
-                  />
-                  {pages
-                    .map((p: Page) => p.name)
-                    .includes('AlternativeSolutionB') && (
+                  </div>
+                  <Form>
                     <SecureRoute
-                      path="/business/:businessCaseId/alternative-solution-b"
+                      path="/business/:businessCaseId/general-request-info"
+                      render={() => (
+                        <GeneralRequestInfo formikProps={formikProps} />
+                      )}
+                    />
+                    <SecureRoute
+                      path="/business/:businessCaseId/request-description"
+                      render={() => (
+                        <RequestDescription formikProps={formikProps} />
+                      )}
+                    />
+                    <SecureRoute
+                      path="/business/:businessCaseId/as-is-solution"
+                      render={() => <AsIsSolution formikProps={formikProps} />}
+                    />
+                    <SecureRoute
+                      path="/business/:businessCaseId/preferred-solution"
+                      render={() => (
+                        <PreferredSolution formikProps={formikProps} />
+                      )}
+                    />
+                    <SecureRoute
+                      path="/business/:businessCaseId/alternative-solution-a"
                       render={() => (
                         <AlternativeSolution
                           formikProps={formikProps}
-                          altLetter="B"
+                          altLetter="A"
                           handleToggleAlternative={() => {
-                            if (
-                              window.confirm(
-                                'Are you sure you want to remove Alternative B?'
-                              )
-                            ) {
-                              setPages(prevArray =>
-                                prevArray.filter(
-                                  p => p.name !== 'AlternativeSolutionB'
-                                )
-                              );
-                              history.replace(
-                                `/business/${businessCaseId}/alternative-solution-a`
-                              );
-                              formikProps.setFieldValue(
-                                'alternativeB',
-                                undefined
-                              );
-                              formikProps.setErrors({});
+                            formikProps.validateForm().then(err => {
+                              if (Object.keys(err).length === 0) {
+                                if (!formikProps.values.alternativeB) {
+                                  formikProps.setFieldValue(
+                                    'alternativeB',
+                                    defaultProposedSolution
+                                  );
+
+                                  const updatedPages = pages
+                                    .slice(0, pages.length - 1)
+                                    .concat([
+                                      {
+                                        name: 'AlternativeSolutionB',
+                                        type: 'FORM',
+                                        slug: 'alternative-solution-b',
+                                        validation:
+                                          BusinessCaseValidationSchema.alternativeB
+                                      },
+                                      {
+                                        name: 'Review',
+                                        type: 'Review',
+                                        slug: 'review'
+                                      }
+                                    ]);
+                                  setPages(updatedPages);
+                                  const newUrl =
+                                    updatedPages[pageIndex + 1].slug;
+                                  history.push(newUrl);
+                                }
+                              }
                               window.scrollTo(0, 0);
-                            }
+                            });
                           }}
                         />
                       )}
                     />
-                  )}
-                  <SecureRoute
-                    path="/business/:businessCaseId/review"
-                    render={() => <Review formikProps={formikProps} />}
-                  />
-
-                  <div className="grid-container">
-                    {pageIndex > 0 && (
-                      <Button
-                        type="button"
-                        outline
-                        onClick={() => {
-                          setErrors({});
-                          const newUrl = pages[pageIndex - 1].slug;
-                          history.push(newUrl);
-                          window.scrollTo(0, 0);
-                        }}
-                      >
-                        Back
-                      </Button>
-                    )}
-
-                    {pageIndex < pages.length - 1 && (
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          if (pageObj.validation) {
-                            validateForm().then(err => {
-                              if (Object.keys(err).length === 0) {
-                                const newUrl = pages[pageIndex + 1].slug;
-
-                                history.push(newUrl);
+                    {pages
+                      .map((p: Page) => p.name)
+                      .includes('AlternativeSolutionB') && (
+                      <SecureRoute
+                        path="/business/:businessCaseId/alternative-solution-b"
+                        render={() => (
+                          <AlternativeSolution
+                            formikProps={formikProps}
+                            altLetter="B"
+                            handleToggleAlternative={() => {
+                              if (
+                                window.confirm(
+                                  'Are you sure you want to remove Alternative B?'
+                                )
+                              ) {
+                                setPages(prevArray =>
+                                  prevArray.filter(
+                                    p => p.name !== 'AlternativeSolutionB'
+                                  )
+                                );
+                                history.replace(
+                                  `/business/${businessCaseId}/alternative-solution-a`
+                                );
+                                formikProps.setFieldValue(
+                                  'alternativeB',
+                                  undefined
+                                );
+                                formikProps.setErrors({});
+                                window.scrollTo(0, 0);
                               }
-                            });
-                          }
-                          window.scrollTo(0, 0);
-                        }}
-                      >
-                        Next
-                      </Button>
+                            }}
+                          />
+                        )}
+                      />
                     )}
+                    <SecureRoute
+                      path="/business/:businessCaseId/review"
+                      render={() => <Review formikProps={formikProps} />}
+                    />
 
-                    {pageIndex === pages.length - 1 && (
-                      <Button
-                        type="submit"
-                        disabled={isSubmitting}
-                        onClick={() => {
-                          console.log('Submitting Data: ', values);
-                        }}
-                      >
-                        Send my business case
-                      </Button>
-                    )}
-
-                    {pageObj.type === 'FORM' && (
-                      <div className="margin-y-3">
+                    <div className="grid-container">
+                      {pageIndex > 0 && (
                         <Button
                           type="button"
-                          unstyled
+                          outline
                           onClick={() => {
-                            dispatchSave();
+                            setErrors({});
+                            const newUrl = pages[pageIndex - 1].slug;
+                            history.push(newUrl);
+                            window.scrollTo(0, 0);
                           }}
                         >
-                          <span>
-                            <i className="fa fa-angle-left" /> Save & Exit
-                          </span>
+                          Back
                         </Button>
-                      </div>
-                    )}
-                  </div>
-                </Form>
-              </>
-            );
-          }}
-        </Formik>
+                      )}
+
+                      {pageIndex < pages.length - 1 && (
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            if (pageObj.validation) {
+                              validateForm().then(err => {
+                                if (Object.keys(err).length === 0) {
+                                  const newUrl = pages[pageIndex + 1].slug;
+
+                                  history.push(newUrl);
+                                }
+                              });
+                            }
+                            window.scrollTo(0, 0);
+                          }}
+                        >
+                          Next
+                        </Button>
+                      )}
+
+                      {pageIndex === pages.length - 1 && (
+                        <Button
+                          type="submit"
+                          disabled={isSubmitting}
+                          onClick={() => {
+                            console.log('Submitting Data: ', values);
+                          }}
+                        >
+                          Send my business case
+                        </Button>
+                      )}
+
+                      {pageObj.type === 'FORM' && (
+                        <div className="margin-y-3">
+                          <Button
+                            type="button"
+                            unstyled
+                            onClick={() => {
+                              dispatchSave();
+                              // TODO: We probably want to check whether save was sucessful
+                              // then redirect.
+                              history.push('/');
+                            }}
+                          >
+                            <span>
+                              <i className="fa fa-angle-left" /> Save & Exit
+                            </span>
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                    {/* <AutoSave
+                    values={values}
+                    onSave={dispatchSave}
+                    debounceDelay={1000}
+                  /> */}
+                  </Form>
+                </>
+              );
+            }}
+          </Formik>
+        )}
         <div className="grid-container">
           {pageObj.type === 'FORM' && (
             <PageNumber

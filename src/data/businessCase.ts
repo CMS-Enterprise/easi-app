@@ -23,7 +23,7 @@ export const defaultProposedSolution = {
 };
 
 export const businessCaseInitalData: BusinessCaseModel = {
-  id: '',
+  systemIntake: 'a84f7cc3-75e1-4686-aaac-68af95455ae8',
   requestName: '',
   requester: {
     name: '',
@@ -98,19 +98,21 @@ export const prepareBusinessCaseForApp = (
   });
 
   return {
-    id: businessCase.id || '',
-    requestName: businessCase.projectName || '',
+    id: businessCase.id,
+    euaUserId: businessCase.euaUserId,
+    systemIntake: businessCase.systemIntake,
+    requestName: businessCase.projectName,
     requester: {
-      name: businessCase.requester || '',
-      phoneNumber: businessCase.requesterPhoneNumber || ''
+      name: businessCase.requester,
+      phoneNumber: businessCase.requesterPhoneNumber
     },
     businessOwner: {
-      name: businessCase.businessOwner || ''
+      name: businessCase.businessOwner
     },
-    businessNeed: businessCase.businessNeed || '',
-    cmsBenefit: businessCase.cmsBenefit || '',
-    priorityAlignment: businessCase.priorityAlignment || '',
-    successIndicators: businessCase.successIndicators || '',
+    businessNeed: businessCase.businessNeed,
+    cmsBenefit: businessCase.cmsBenefit,
+    priorityAlignment: businessCase.priorityAlignment,
+    successIndicators: businessCase.successIndicators,
     asIsSolution: {
       title: businessCase.asIsTitle,
       summary: businessCase.asIsSummary,
@@ -212,12 +214,17 @@ export const prepareBusinessCaseForApi = (
     .flat();
 
   return {
-    id: '',
-    euaUserId: '',
+    ...(businessCase.id && {
+      id: businessCase.id
+    }),
+    ...(businessCase.euaUserId && {
+      euaUserId: businessCase.euaUserId
+    }),
+    systemIntake: businessCase.systemIntake,
     projectName: businessCase.requestName,
     requester: businessCase.requester.name,
     requesterPhoneNumber: businessCase.requester.phoneNumber,
-    businessOwner: businessCase.businessOwner,
+    businessOwner: businessCase.businessOwner.name,
     businessNeed: businessCase.businessNeed,
     cmsBenefit: businessCase.cmsBenefit,
     priorityAlignment: businessCase.priorityAlignment,
@@ -259,6 +266,6 @@ export const prepareBusinessCaseForApi = (
     alternativeBCostSavings: businessCase.alternativeB
       ? businessCase.alternativeB.costSavings
       : '',
-    lifecycleCostLines
+    lifecycleCostLines: []
   };
 };
