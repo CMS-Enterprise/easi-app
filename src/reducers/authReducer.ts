@@ -1,6 +1,6 @@
 import { Action } from 'redux-actions';
 
-const newTimeStamp = () => new Date().getTime();
+const newTimeStamp = () => Date.now();
 
 type authReducerState = {
   lastActiveAt: number;
