@@ -71,7 +71,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                 </div>
               </div>
             </fieldset>
-            <div 
+            <div
               className="est-lifecycle-cost__phase-cost-row"
               data-scroll={`${formikKey}.year${year}.${index}.cost`}
             >
