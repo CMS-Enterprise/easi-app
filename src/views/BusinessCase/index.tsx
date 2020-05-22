@@ -322,7 +322,6 @@ export const BusinessCase = () => {
                           Back
                         </Button>
                       )}
-
                       {pageIndex < pages.length - 1 && (
                         <Button
                           type="button"
@@ -342,19 +341,18 @@ export const BusinessCase = () => {
                           Next
                         </Button>
                       )}
-
                       {pageIndex === pages.length - 1 && (
                         <Button
                           type="submit"
                           disabled={isSubmitting}
                           onClick={() => {
+                            // eslint-disable-next-line no-console
                             console.log('Submitting Data: ', values);
                           }}
                         >
                           Send my business case
                         </Button>
                       )}
-
                       {pageObj.type === 'FORM' && (
                         <div className="margin-y-3">
                           <Button

@@ -137,7 +137,7 @@ const ResponsiveTabs = ({
   }, []);
 
   return (
-    <div className="easi-responsive-tabs bg-base-lightest">
+    <div className={classnames('easi-responsive-tabs', 'bg-base-lightest')}>
       <div className="easi-responsive-tabs__navigation">
         <div className="easi-responsive-tabs__tabs-wrapper">
           <ul className="easi-responsive-tabs__tab-list">
