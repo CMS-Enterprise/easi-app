@@ -7,6 +7,7 @@ export const fetchSystemIntakes = createRoutine('FETCH_SYSTEM_INTAKES');
 export const fetchSystemIntake = createRoutine('FETCH_SYSTEM_INTAKE');
 export const saveSystemIntake = createRoutine('PUT_SYSTEM_INTAKE');
 export const storeSystemIntake = createRoutine('STORE_SYSTEM_INTAKE');
+export const submitSystemIntake = createRoutine('SUBMIT_SYSTEM_INTAKE');
 
 // SystemShorts routines
 export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');
