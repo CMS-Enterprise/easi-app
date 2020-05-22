@@ -8,7 +8,7 @@ import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-// import AutoSave from 'components/shared/AutoSave';
+import AutoSave from 'components/shared/AutoSave';
 import {
   fetchBusinessCase,
   postBusinessCase,
@@ -94,9 +94,23 @@ export const BusinessCase = () => {
     const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
     if (current && current.dirty) {
       if (businessCaseId === 'new') {
-        dispatch(postBusinessCase(current.values));
+        current.resetForm({ values: current.values });
+        const systemIntake =
+          (location.state && location.state.systemIntake) || '';
+
+        dispatch(
+          postBusinessCase({
+            ...current.values,
+            systemIntake
+          })
+        );
       } else {
-        dispatch(putBusinessCase(current.values));
+        dispatch(
+          putBusinessCase({
+            businessCase,
+            ...current.values
+          })
+        );
       }
     }
   };
@@ -104,9 +118,6 @@ export const BusinessCase = () => {
   // Resume existing business case
   useEffect(() => {
     if (businessCaseId === 'new') {
-      // TODO location.state.systemIntake isn't a good solution
-      // We need a solution that will work for a user to be able to
-      // make sure there's a systemIntake ID if they type the URL
       const systemIntake =
         (location.state && location.state.systemIntake) || '';
       dispatch(
@@ -151,6 +162,7 @@ export const BusinessCase = () => {
             validateOnChange={false}
             validateOnMount={false}
             innerRef={formikRef}
+            enableReinitialize
           >
             {(formikProps: FormikProps<BusinessCaseModel>) => {
               const {
@@ -362,11 +374,11 @@ export const BusinessCase = () => {
                         </div>
                       )}
                     </div>
-                    {/* <AutoSave
-                    values={values}
-                    onSave={dispatchSave}
-                    debounceDelay={1000}
-                  /> */}
+                    <AutoSave
+                      values={values}
+                      onSave={dispatchSave}
+                      debounceDelay={1500}
+                    />
                   </Form>
                 </>
               );
