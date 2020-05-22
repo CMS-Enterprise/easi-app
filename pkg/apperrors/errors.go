@@ -69,6 +69,16 @@ func (e *ResourceConflictError) Unwrap() error {
 // Validations maps attributes to validation messages
 type Validations map[string]string
 
+// NewValidationError returns a validation error with fields insantiated
+func NewValidationError(err error, model interface{}, modelID string) ValidationError {
+	return ValidationError{
+		Err:         err,
+		Validations: Validations{},
+		Model:       model,
+		ModelID:     modelID,
+	}
+}
+
 // ValidationError is a typed error for issues with validation
 type ValidationError struct {
 	Err         error

@@ -216,11 +216,11 @@ func NewUpdateBusinessCase(
 		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
 			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
 			if !businessCase.Requester.Valid {
-				validationError := apperrors.ValidationError{
-					Err:     errors.New("failed to validate for email"),
-					Model:   businessCase,
-					ModelID: businessCase.ID.String(),
-				}
+				validationError := apperrors.NewValidationError(
+					errors.New("failed to validate for email"),
+					businessCase,
+					businessCase.ID.String(),
+				)
 				validationError.WithValidation("Requester", "is required")
 				return businessCase, &validationError
 			}
