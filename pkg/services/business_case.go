@@ -222,10 +222,12 @@ func NewUpdateBusinessCase(
 					businessCase.ID.String(),
 				)
 				validationError.WithValidation("Requester", "is required")
+				logger.Error("Failed to validate", zap.Error(&validationError))
 				return businessCase, &validationError
 			}
 			err = sendEmail(businessCase.Requester.String, businessCase.ID)
 			if err != nil {
+				logger.Error("Failed to send email", zap.Error(err))
 				return businessCase, err
 			}
 		}
