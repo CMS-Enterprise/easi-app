@@ -10,35 +10,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func newSystemIntake() models.SystemIntake {
-	return models.SystemIntake{
-		ID:                      uuid.New(),
-		EUAUserID:               testhelpers.RandomEUAID(),
-		Status:                  models.SystemIntakeStatusDRAFT,
-		Requester:               null.StringFrom("Test Requester"),
-		Component:               null.StringFrom("Test Component"),
-		BusinessOwner:           null.StringFrom("Test Business Owner"),
-		BusinessOwnerComponent:  null.StringFrom("Test Business Owner Component"),
-		ProductManager:          null.StringFrom("Test Product Manager"),
-		ProductManagerComponent: null.StringFrom("Test Product Manager Component"),
-		ISSO:                    null.StringFrom("Test ISSO"),
-		TRBCollaborator:         null.StringFrom("Test TRB Collaborator"),
-		OITSecurityCollaborator: null.StringFrom("Test OIT Collaborator"),
-		EACollaborator:          null.StringFrom("Test EA Collaborator"),
-		ProjectName:             null.StringFrom("Test Project Name"),
-		ExistingFunding:         null.BoolFrom(true),
-		FundingSource:           null.StringFrom("123456"),
-		BusinessNeed:            null.StringFrom("Test Business Need"),
-		Solution:                null.StringFrom("Test Solution"),
-		ProcessStatus:           null.StringFrom("Just an idea"),
-		EASupportRequest:        null.BoolFrom(false),
-		ExistingContract:        null.StringFrom("Yes"),
-	}
-}
-
 func (s StoreTestSuite) TestSaveSystemIntake() {
 	s.Run("save a new system intake", func() {
-		intake := newSystemIntake()
+		intake := testhelpers.NewSystemIntake()
 
 		err := s.store.SaveSystemIntake(&intake)
 
@@ -129,7 +103,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 	s.Run("golden path to fetch a system intake", func() {
-		intake := newSystemIntake()
+		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
@@ -156,8 +130,8 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	s.Run("golden path to fetch system intakes", func() {
-		intake := newSystemIntake()
-		intake2 := newSystemIntake()
+		intake := testhelpers.NewSystemIntake()
+		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)

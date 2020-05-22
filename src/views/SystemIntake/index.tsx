@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
-import { SecureRoute } from '@okta/okta-react';
+import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { v4 as uuidv4 } from 'uuid';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
@@ -16,8 +16,10 @@ import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
   saveSystemIntake,
-  storeSystemIntakeId
+  storeSystemIntake,
+  submitSystemIntake
 } from 'types/routines';
+import usePrevious from 'hooks/usePrevious';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -43,6 +45,7 @@ export const SystemIntake = () => {
 
   const history = useHistory();
   const { systemId, formPage } = useParams();
+  const { authService } = useOktaAuth();
   const [pageIndex, setPageIndex] = useState(0);
   const dispatch = useDispatch();
   const formikRef: any = useRef();
@@ -54,10 +57,15 @@ export const SystemIntake = () => {
   const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
+  const isSubmitting = useSelector(
+    (state: AppState) => state.systemIntake.isSubmitting
+  );
+  const error = useSelector((state: AppState) => state.systemIntake.error);
+  const prevIsSubmitting = usePrevious(isSubmitting);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current.dirty && current.values.id) {
+    if (current && current.dirty && current.values.id) {
       dispatch(saveSystemIntake(current.values));
       current.resetForm({ values: current.values });
       if (systemId === 'new') {
@@ -68,7 +76,17 @@ export const SystemIntake = () => {
 
   useEffect(() => {
     if (systemId === 'new') {
-      dispatch(storeSystemIntakeId(uuidv4()));
+      authService.getUser().then((user: any) => {
+        dispatch(
+          storeSystemIntake({
+            id: uuidv4(),
+            requester: {
+              name: user.name,
+              component: ''
+            }
+          })
+        );
+      });
     } else {
       dispatch(fetchSystemIntake(systemId));
     }
@@ -86,14 +104,24 @@ export const SystemIntake = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pages, systemId, formPage]);
 
+  useEffect(() => {
+    if (prevIsSubmitting && !isSubmitting && !error) {
+      history.push('/');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitting]);
+
   return (
-    <div className="system-intake">
+    <div className="system-intake margin-bottom-5">
       <Header name="EASi System Intake" />
       <main className="grid-container" role="main">
         {isLoading === false && (
           <Formik
             initialValues={systemIntake}
-            onSubmit={() => {}}
+            onSubmit={values => {
+              dispatch(submitSystemIntake(values));
+            }}
             validationSchema={pageObj.validation}
             validateOnBlur={false}
             validateOnChange={false}
@@ -101,13 +129,7 @@ export const SystemIntake = () => {
             innerRef={formikRef}
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
-              const {
-                values,
-                errors,
-                setErrors,
-                validateForm,
-                isSubmitting
-              } = formikProps;
+              const { values, errors, setErrors, validateForm } = formikProps;
               const flatErrors: any = flattenErrors(errors);
 
               return (
@@ -187,13 +209,7 @@ export const SystemIntake = () => {
                       </Button>
                     )}
                     {pageIndex === pages.length - 1 && (
-                      <Button
-                        type="submit"
-                        disabled={isSubmitting}
-                        onClick={() => {
-                          console.log('Submitting Data: ', values);
-                        }}
-                      >
+                      <Button type="submit" disabled={isSubmitting}>
                         Send my intake request
                       </Button>
                     )}

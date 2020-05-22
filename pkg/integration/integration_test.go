@@ -15,6 +15,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/server"
+	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -31,6 +32,7 @@ type IntegrationTestSuite struct {
 	config      *viper.Viper
 	server      *httptest.Server
 	user        user
+	store       *storage.Store
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
@@ -47,13 +49,30 @@ func TestIntegrationTestSuite(t *testing.T) {
 			t.Fail()
 		}
 
+		logger := zap.NewNop()
+
+		dbConfig := storage.DBConfig{
+			Host:     config.GetString(appconfig.DBHostConfigKey),
+			Port:     config.GetString(appconfig.DBPortConfigKey),
+			Database: config.GetString(appconfig.DBNameConfigKey),
+			Username: config.GetString(appconfig.DBUsernameConfigKey),
+			Password: config.GetString(appconfig.DBPasswordConfigKey),
+			SSLMode:  config.GetString(appconfig.DBSSLModeConfigKey),
+		}
+		store, err := storage.NewStore(logger, dbConfig)
+		if err != nil {
+			fmt.Printf("Failed to get new database: %v", err)
+			t.Fail()
+		}
+
 		testSuite := &IntegrationTestSuite{
 			Suite:       suite.Suite{},
 			environment: config.GetString(appconfig.EnvironmentKey),
-			logger:      zap.NewNop(),
+			logger:      logger,
 			config:      config,
 			server:      testServer,
 			user:        user{euaID: config.GetString("OKTA_TEST_USERNAME"), accessToken: accessToken},
+			store:       store,
 		}
 
 		suite.Run(t, testSuite)
