@@ -44,7 +44,10 @@ function businessCaseReducer(
     case postBusinessCase.SUCCESS:
       return {
         ...state,
-        form: prepareBusinessCaseForApp(action.payload)
+        form: {
+          ...state.form,
+          ...prepareBusinessCaseForApp(action.payload)
+        }
       };
     case storeBusinessCase.TRIGGER:
       return {
