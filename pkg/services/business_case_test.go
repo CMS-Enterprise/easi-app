@@ -163,17 +163,18 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 		s.Equal(&models.BusinessCase{}, businessCase)
 	})
 
-	s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
-		input.LifecycleCostLines = models.EstimatedLifecycleCosts{
-			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
-			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
-		}
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
-		businessCase, err := createBusinessCase(ctx, &input)
-
-		s.IsType(&apperrors.ValidationError{}, err)
-		s.Equal(&models.BusinessCase{}, businessCase)
-	})
+	// Uncomment below when UI has changed for unique lifecycle costs
+	//s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
+	//	input.LifecycleCostLines = models.EstimatedLifecycleCosts{
+	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+	//	}
+	//	createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
+	//	businessCase, err := createBusinessCase(ctx, &input)
+	//
+	//	s.IsType(&apperrors.ValidationError{}, err)
+	//	s.Equal(&models.BusinessCase{}, businessCase)
+	//})
 }
 
 func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
@@ -262,15 +263,16 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		s.Equal(&models.BusinessCase{}, businessCase)
 	})
 
-	s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
-		existingBusinessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
-			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
-			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
-		}
-		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
-		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
-
-		s.IsType(&apperrors.ValidationError{}, err)
-		s.Equal(&models.BusinessCase{}, businessCase)
-	})
+	// Uncomment below when UI has changed for unique lifecycle costs
+	//s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
+	//	existingBusinessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
+	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+	//	}
+	//	updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
+	//	businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
+	//
+	//	s.IsType(&apperrors.ValidationError{}, err)
+	//	s.Equal(&models.BusinessCase{}, businessCase)
+	//})
 }
