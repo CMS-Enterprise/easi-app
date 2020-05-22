@@ -24,6 +24,7 @@ export const defaultProposedSolution = {
 
 export const businessCaseInitalData: BusinessCaseModel = {
   id: '',
+  systemIntakeId: '',
   status: 'DRAFT',
   requestName: '',
   requester: {
@@ -100,6 +101,7 @@ export const prepareBusinessCaseForApp = (
 
   return {
     id: businessCase.id || '',
+    systemIntakeId: businessCase.systemIntakeId || '',
     status: businessCase.status || '',
     requestName: businessCase.projectName || '',
     requester: {
@@ -215,6 +217,7 @@ export const prepareBusinessCaseForApi = (
 
   return {
     id: '',
+    systemIntakeId: businessCase.systemIntakeId,
     euaUserId: '',
     projectName: businessCase.requestName,
     requester: businessCase.requester.name,

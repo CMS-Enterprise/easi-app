@@ -52,6 +52,13 @@ const Home = ({ history }: HomeProps) => {
             />
           );
         case 'SUBMITTED':
+          if (
+            businessCases.some(
+              businessCase => businessCase.systemIntakeId === intake.id
+            )
+          ) {
+            return null;
+          }
           return (
             <ActionBanner
               key={intake.id}
