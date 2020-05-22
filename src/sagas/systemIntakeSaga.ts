@@ -8,6 +8,7 @@ import {
   submitSystemIntake
 } from 'types/routines';
 import { Action } from 'redux-actions';
+import { updateLastActiveAt } from 'reducers/authReducer';
 
 function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
@@ -20,6 +21,7 @@ function* putSystemIntake(action: Action<any>) {
     yield put(saveSystemIntake.request());
     const response = yield call(putSystemIntakeRequest, action.payload);
     yield put(saveSystemIntake.success(response.data));
+    yield put(updateLastActiveAt);
   } catch (error) {
     yield put(saveSystemIntake.failure(error.message));
   } finally {
@@ -36,6 +38,7 @@ function* getSystemIntake(action: Action<any>) {
     yield put(fetchSystemIntake.request());
     const response = yield call(getSystemIntakeRequest, action.payload);
     yield put(fetchSystemIntake.success(response.data));
+    yield put(updateLastActiveAt);
   } catch (error) {
     yield put(fetchSystemIntake.failure(error.message));
   } finally {

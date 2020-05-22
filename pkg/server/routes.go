@@ -7,10 +7,12 @@ import (
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/handlers"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -43,6 +45,14 @@ func (s *Server) routes(
 	emailClient, err := email.NewClient(emailConfig, sesSender)
 	if err != nil {
 		s.logger.Fatal("Failed to create email client", zap.Error(err))
+	}
+	// override email client with local one
+	if s.Config.GetString(appconfig.EnvironmentKey) == appconfig.LocalEnv.String() {
+		localSender := local.NewSender(s.logger)
+		emailClient, err = email.NewClient(emailConfig, localSender)
+		if err != nil {
+			s.logger.Fatal("Failed to create email client", zap.Error(err))
+		}
 	}
 
 	// API base path is versioned
@@ -108,10 +118,18 @@ func (s *Server) routes(
 			services.NewAuthorizeCreateBusinessCase(s.logger),
 			store.CreateBusinessCase,
 			s.logger,
+			saveClock,
 		),
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
 			store.FetchBusinessCaseByID,
 			s.logger,
+		),
+		UpdateBusinessCase: services.NewUpdateBusinessCase(
+			store.FetchBusinessCaseByID,
+			services.NewAuthorizeUpdateBusinessCase(s.logger),
+			store.UpdateBusinessCase,
+			s.logger,
+			saveClock,
 		),
 	}
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())

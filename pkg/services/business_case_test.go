@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
@@ -115,6 +116,7 @@ func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
 
 func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	logger := zap.NewNop()
+	mockClock := clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intakeID := uuid.New()
 	intake := models.SystemIntake{
@@ -143,7 +145,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	ctx := context.Background()
 
 	s.Run("successfully creates a Business Case without an error", func() {
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
 		businessCase, err := createBusinessCase(ctx, &input)
 		s.NoError(err)
 
@@ -154,7 +156,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 		create = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("creation failed")
 		}
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
 		businessCase, err := createBusinessCase(ctx, &input)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -166,8 +168,107 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 		}
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger)
+		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
 		businessCase, err := createBusinessCase(ctx, &input)
+
+		s.IsType(&apperrors.ValidationError{}, err)
+		s.Equal(&models.BusinessCase{}, businessCase)
+	})
+}
+
+func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
+	logger := zap.NewNop()
+	authorizeUpdateBusinessCase := NewAuthorizeUpdateBusinessCase(logger)
+
+	s.Run("No EUA ID fails auth", func() {
+		ctx := context.Background()
+		ok, err := authorizeUpdateBusinessCase(ctx, &models.BusinessCase{})
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Mismatched EUA ID fails auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ZYXW")
+
+		businessCase := models.BusinessCase{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeUpdateBusinessCase(ctx, &businessCase)
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Matched EUA ID passes auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ABCD")
+		businessCase := models.BusinessCase{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeUpdateBusinessCase(ctx, &businessCase)
+
+		s.True(ok)
+		s.NoError(err)
+	})
+}
+
+func (s ServicesTestSuite) TestBusinessCaseUpdater() {
+	logger := zap.NewNop()
+	mockClock := clock.NewMock()
+	euaID := testhelpers.RandomEUAID()
+	intakeID := uuid.New()
+	intake := models.SystemIntake{
+		EUAUserID: euaID,
+		ID:        intakeID,
+		Status:    models.SystemIntakeStatusSUBMITTED,
+	}
+	err := s.store.SaveSystemIntake(&intake)
+	s.NoError(err)
+
+	existingBusinessCase := testhelpers.NewBusinessCase()
+	fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
+		return &existingBusinessCase, nil
+	}
+	update := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+		return &models.BusinessCase{
+			EUAUserID: euaID,
+		}, nil
+	}
+	authorize := func(context context.Context, businessCase *models.BusinessCase) (bool, error) {
+		return true, nil
+	}
+	ctx := context.Background()
+
+	s.Run("successfully updates a Business Case without an error", func() {
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
+		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
+		s.NoError(err)
+
+		s.Equal(euaID, businessCase.EUAUserID)
+	})
+
+	s.Run("returns query error when update fails", func() {
+		update = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+			return &models.BusinessCase{}, errors.New("creation failed")
+		}
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
+		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
+
+		s.IsType(&apperrors.QueryError{}, err)
+		s.Equal(&models.BusinessCase{}, businessCase)
+	})
+
+	s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
+		existingBusinessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
+			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+		}
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
+		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
 		s.IsType(&apperrors.ValidationError{}, err)
 		s.Equal(&models.BusinessCase{}, businessCase)
