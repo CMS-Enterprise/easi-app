@@ -38,12 +38,14 @@ func BusinessCaseForCreation(businessCase *models.BusinessCase, intake *models.S
 		ModelID:     "",
 		Validations: apperrors.Validations{},
 	}
-	k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines)
-	if k != "" {
-		expectedErr.WithValidation(k, v)
-	}
 
-	k, v = checkSystemIntakeSubmitted(intake)
+	// Uncomment below when UI has changed for unique lifecycle costs
+	//k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines)
+	//if k != "" {
+	//	expectedErr.WithValidation(k, v)
+	//}
+
+	k, v := checkSystemIntakeSubmitted(intake)
 	if k != "" {
 		expectedErr.WithValidation(k, v)
 	}

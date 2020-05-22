@@ -193,10 +193,11 @@ func NewUpdateBusinessCase(
 		if !ok {
 			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: err}
 		}
-		err = appvalidation.BusinessCaseForUpdate(businessCase)
-		if err != nil {
-			return &models.BusinessCase{}, err
-		}
+		// Uncomment below when UI has changed for unique lifecycle costs
+		//err = appvalidation.BusinessCaseForUpdate(businessCase)
+		//if err != nil {
+		//	return &models.BusinessCase{}, err
+		//}
 		updatedAt := clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 		businessCase, err = update(businessCase)
