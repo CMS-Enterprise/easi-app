@@ -118,6 +118,7 @@ func (s *Server) routes(
 			services.NewAuthorizeCreateBusinessCase(s.logger),
 			store.CreateBusinessCase,
 			s.logger,
+			saveClock,
 		),
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
 			store.FetchBusinessCaseByID,
