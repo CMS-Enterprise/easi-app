@@ -23,6 +23,7 @@ func (s AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
 		k, _ := checkUniqLifecycleCosts(costs)
 		s.Equal("", k)
 	})
+
 	s.Run("returns validation when the lifecycle costs are invalid", func() {
 		elc1 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
 		elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
@@ -44,6 +45,7 @@ func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 		k, _ := checkSystemIntakeSubmitted(&submittedIntake)
 		s.Equal("", k)
 	})
+
 	s.Run("returns false when the lifecycle costs are invalid", func() {
 		draftIntake := testhelpers.NewSystemIntake()
 		k, v := checkSystemIntakeSubmitted(&draftIntake)
@@ -63,26 +65,43 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmission() {
 		err := BusinessCaseForCreation(&businessCase, &submittedIntake)
 		s.NoError(err)
 	})
+
 	s.Run("returns validation error when business case fails validation", func() {
-		submittedIntake := testhelpers.NewSystemIntake()
-		elc1 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
-		elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
+		intake := testhelpers.NewSystemIntake()
 		businessCase := models.BusinessCase{
-			SystemIntakeID: submittedIntake.ID,
-			LifecycleCostLines: models.EstimatedLifecycleCosts{
-				elc1,
-				elc2,
-			},
+			SystemIntakeID: intake.ID,
 		}
-		err := BusinessCaseForCreation(&businessCase, &submittedIntake)
+		err := BusinessCaseForCreation(&businessCase, &intake)
 		s.Error(err)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCase : " +
-			"{\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"," +
-			"\"SystemIntake\":\"must have already been submitted\"}",
+			"{\"SystemIntake\":\"must have already been submitted\"}",
 		)
 		s.Equal(expectedErrMessage, err.Error())
 	})
+
+	// Uncomment below when UI has changed for unique lifecycle costs by
+	// replacing the previous test with this one.
+	//s.Run("returns validation error when business case fails validation", func() {
+	//	submittedIntake := testhelpers.NewSystemIntake()
+	//	elc1 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
+	//	elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
+	//	businessCase := models.BusinessCase{
+	//		SystemIntakeID: submittedIntake.ID,
+	//		LifecycleCostLines: models.EstimatedLifecycleCosts{
+	//			elc1,
+	//			elc2,
+	//		},
+	//	}
+	//	err := BusinessCaseForCreation(&businessCase, &submittedIntake)
+	//	s.Error(err)
+	//	s.IsType(&apperrors.ValidationError{}, err)
+	//	expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCase : " +
+	//		"{\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"," +
+	//		"\"SystemIntake\":\"must have already been submitted\"}",
+	//	)
+	//	s.Equal(expectedErrMessage, err.Error())
+	//})
 }
 
 func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
@@ -95,6 +114,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
 		err := BusinessCaseForUpdate(&businessCase)
 		s.NoError(err)
 	})
+
 	s.Run("returns validation error when business case fails validation", func() {
 		elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
 
