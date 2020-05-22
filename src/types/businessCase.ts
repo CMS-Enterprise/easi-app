@@ -24,14 +24,12 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
   acquisitionApproach: string;
 };
 
-// TODO: We can probably move this out and use it for System Intake too
-// if the status types match.
-type FormStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
+type BusinessCaseStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
 
 // Business Case Form Model
 export type BusinessCaseModel = {
   id: string;
-  status: FormStatus;
+  status: BusinessCaseStatus;
   requestName: string;
   requester: {
     name: string;

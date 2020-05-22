@@ -7,7 +7,7 @@ import { useOktaAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntakes } from 'types/routines';
+import { fetchBusinessCases, fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 import './index.scss';
@@ -28,6 +28,7 @@ const Home = ({ history }: HomeProps) => {
   useEffect(() => {
     if (authState.isAuthenticated) {
       dispatch(fetchSystemIntakes());
+      dispatch(fetchBusinessCases());
     }
   }, [dispatch, authState.isAuthenticated]);
 
