@@ -23,7 +23,16 @@ type HandlerBase struct {
 	logger *zap.Logger
 }
 
-type errorResponse struct{}
+type responseError struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
+}
+
+type errorResponse struct {
+	Errors  responseError `json:"errors"`
+	Code    int           `json:"code"`
+	Message int           `json:"message"`
+}
 
 func (b HandlerBase) writeErrorResponse(ctx context.Context, w http.ResponseWriter, appError error, logMessage string) {
 	logger, ok := appcontext.Logger(ctx)
