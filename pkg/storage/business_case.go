@@ -88,9 +88,8 @@ func createEstimatedLifecycleCosts(tx *sqlx.Tx, businessCase *models.BusinessCas
 		if err != nil {
 			logger.Error(
 				fmt.Sprintf(
-					"Failed to create cost %s %s %s with error %s",
+					"Failed to create cost %s %s with error %s",
 					cost.Solution,
-					cost.Phase,
 					cost.Year,
 					err,
 				),
