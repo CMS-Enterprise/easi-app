@@ -91,7 +91,7 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
           error={!!flatErrors.priorityAlignment}
         >
           <Label htmlFor="BusinessCase-PriorityAlignment">
-            How does this effort algin with organizational priorities?
+            How does this effort align with organizational priorities?
           </Label>
           <HelpText className="margin-y-1">
             List out any administrator priorities or new legislative/regulatory
