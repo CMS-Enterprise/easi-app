@@ -128,6 +128,7 @@ func (s *Server) routes(
 			store.FetchBusinessCaseByID,
 			services.NewAuthorizeUpdateBusinessCase(s.logger),
 			store.UpdateBusinessCase,
+			emailClient.SendBusinessCaseSubmissionEmail,
 			s.logger,
 			saveClock,
 		),
