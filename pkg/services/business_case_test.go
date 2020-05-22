@@ -242,10 +242,15 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	authorize := func(context context.Context, businessCase *models.BusinessCase) (bool, error) {
 		return true, nil
 	}
+	emailCount := 0
+	sendEmail := func(requester string, intakeID uuid.UUID) error {
+		emailCount++
+		return nil
+	}
 	ctx := context.Background()
 
 	s.Run("successfully updates a Business Case without an error", func() {
-		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, sendEmail, logger, mockClock)
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 		s.NoError(err)
 
@@ -256,7 +261,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		update = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("creation failed")
 		}
-		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, sendEmail, logger, mockClock)
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
 		s.IsType(&apperrors.QueryError{}, err)
