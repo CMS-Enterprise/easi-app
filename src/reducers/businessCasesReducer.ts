@@ -1,5 +1,5 @@
 import { BusinessCasesState } from 'types/businessCase';
-// import { prepareBusinessCaseForApp } from 'data/businessCase';
+import { prepareBusinessCaseForApp } from 'data/businessCase';
 import { fetchBusinessCases } from 'types/routines';
 import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
@@ -24,9 +24,8 @@ function businessCasesReducer(
     case fetchBusinessCases.SUCCESS:
       return {
         ...state,
-        businessCases: action.payload.map(
-          () => ({})
-          // prepareBusinessCaseForApp(busCase)
+        businessCases: action.payload.map((businessCase: any) =>
+          prepareBusinessCaseForApp(businessCase)
         ),
         loadedTimestamp: DateTime.local()
       };
