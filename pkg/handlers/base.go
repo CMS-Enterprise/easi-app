@@ -2,10 +2,13 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
+	"net/http"
 
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 )
 
 // NewHandlerBase constructs a HandlerBase
@@ -20,11 +23,44 @@ type HandlerBase struct {
 	logger *zap.Logger
 }
 
-func (b HandlerBase) writeErrorResponse(ctx context.Context, appError error, logMessage string) {
+type errorResponse struct{}
+
+func (b HandlerBase) writeErrorResponse(ctx context.Context, w http.ResponseWriter, appError error, logMessage string) {
 	logger, ok := appcontext.Logger(ctx)
 	if !ok {
 		logger = b.logger
 	}
-	logger.Error(logMessage, zap.Error(appError))
+
+	// get code and reponse
+	var code int
+	var response errorResponse
+	switch appError.(type) {
+	case *apperrors.QueryError:
+		code = http.StatusInternalServerError
+		response = errorResponse{}
+	default:
+		code = http.StatusInternalServerError
+		response = errorResponse{}
+	}
+
+	// log error with customized message
+	logger.Error("Returning error response from handler because:"+logMessage, zap.Error(appError))
+
+	// write a JSON response and fallback to generic message
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	responseBody, err := json.Marshal(response)
+	if err != nil {
+		logger.Error("Failed to marshal error response. Defaulting to generic.")
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = w.Write(responseBody)
+	if err != nil {
+		logger.Error("Failed to write error response. Defaulting to generic.")
+		http.Error(w, "Something went wrong", http.StatusInternalServerError)
+		return
+	}
 	return
 }
