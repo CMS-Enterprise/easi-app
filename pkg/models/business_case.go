@@ -52,9 +52,9 @@ type EstimatedLifecycleCost struct {
 	ID             uuid.UUID             `json:"id"`
 	BusinessCaseID uuid.UUID             `json:"business_case" db:"business_case"`
 	Solution       LifecycleCostSolution `json:"solution"`
-	Phase          LifecycleCostPhase    `json:"phase"`
+	Phase          *LifecycleCostPhase   `json:"phase"`
 	Year           LifecycleCostYear     `json:"year"`
-	Cost           int                   `json:"cost"`
+	Cost           *int                  `json:"cost"`
 }
 
 // EstimatedLifecycleCosts models a list of EstimatedLifecycleCost line items
