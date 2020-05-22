@@ -22,7 +22,7 @@ export const defaultProposedSolution = {
   costSavings: ''
 };
 
-export const businessCaseInitalData: BusinessCaseModel = {
+export const businessCaseInitialData: BusinessCaseModel = {
   id: '',
   systemIntakeId: '',
   status: 'DRAFT',
