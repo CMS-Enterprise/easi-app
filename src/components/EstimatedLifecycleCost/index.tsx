@@ -5,7 +5,7 @@ import Label from 'components/shared/Label';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import TextField from 'components/shared/TextField';
-import { RadioField } from 'components/shared/RadioField';
+import { RadioGroup, RadioField } from 'components/shared/RadioField';
 import Button from 'components/shared/Button';
 import {
   DescriptionList,
@@ -49,7 +49,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                   >
                     Phase
                   </legend>
-                  <div className="est-lifecycle-cost__radio-row">
+                  <RadioGroup inline>
                     <Field
                       as={RadioField}
                       checked={values.phase === 'Development'}
@@ -69,7 +69,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                       value="Operations and Maintenance"
                       inline
                     />
-                  </div>
+                  </RadioGroup>
                 </div>
               </fieldset>
             </div>
@@ -162,7 +162,7 @@ const EstimatedLifecycleCost = ({
 
   return (
     <div className="est-lifecycle-cost grid-row">
-      <div className="tablet:grid-col-4">
+      <div className="tablet:grid-col-5">
         <div className="est-lifecycle-cost__help-box">
           <h3 className="est-lifecycle-cost__help-title text-bold">
             What do phases mean?
@@ -183,7 +183,7 @@ const EstimatedLifecycleCost = ({
           </dl>
         </div>
       </div>
-      <div className="tablet:grid-col-8">
+      <div className="tablet:grid-col-7">
         <div className="est-lifecycle-cost__year-costs margin-top-0">
           <span className="text-bold">Year 1</span>
           {years.year1.map((year: LifecyclePhase, index: number) => {
