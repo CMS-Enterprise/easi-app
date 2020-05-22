@@ -88,9 +88,8 @@ func createEstimatedLifecycleCosts(tx *sqlx.Tx, businessCase *models.BusinessCas
 		if err != nil {
 			logger.Error(
 				fmt.Sprintf(
-					"Failed to create cost %s %s %s with error %s",
+					"Failed to create cost %s %s with error %s",
 					cost.Solution,
-					cost.Phase,
 					cost.Year,
 					err,
 				),
@@ -112,6 +111,7 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 			id,
 			eua_user_id,
 			system_intake,
+			status,
 			project_name,
 			requester,
 			requester_phone_number,
@@ -150,6 +150,7 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 			:id,
 			:eua_user_id,
 			:system_intake,
+			:status,
 			:project_name,
 			:requester,
 			:requester_phone_number,

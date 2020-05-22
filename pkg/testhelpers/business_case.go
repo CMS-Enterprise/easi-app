@@ -18,25 +18,27 @@ type EstimatedLifecycleCostOptions struct {
 
 // NewEstimatedLifecycleCost helps generate a new lifecycle cost for a given business case
 func NewEstimatedLifecycleCost(opts EstimatedLifecycleCostOptions) models.EstimatedLifecycleCost {
+	development := models.LifecycleCostPhaseDEVELOPMENT
+	cost := 100
 	elc := models.EstimatedLifecycleCost{
 		ID:             uuid.New(),
 		BusinessCaseID: uuid.New(),
 		Solution:       models.LifecycleCostSolutionASIS,
-		Phase:          models.LifecycleCostPhaseDEVELOPMENT,
+		Phase:          &development,
 		Year:           models.LifecycleCostYear1,
-		Cost:           100,
+		Cost:           &cost,
 	}
 	if opts.Solution != nil {
 		elc.Solution = *opts.Solution
 	}
 	if opts.Phase != nil {
-		elc.Phase = *opts.Phase
+		elc.Phase = opts.Phase
 	}
 	if opts.Year != nil {
 		elc.Year = *opts.Year
 	}
 	if opts.Cost != nil {
-		elc.Cost = *opts.Cost
+		elc.Cost = opts.Cost
 	}
 	if opts.BusinessCaseID != nil {
 		elc.BusinessCaseID = *opts.BusinessCaseID
@@ -51,6 +53,7 @@ func NewBusinessCase() models.BusinessCase {
 		EUAUserID:                       RandomEUAID(),
 		SystemIntakeID:                  uuid.New(),
 		ProjectName:                     null.StringFrom("Test Project Name"),
+		Status:                          models.BusinessCaseStatusDRAFT,
 		Requester:                       null.StringFrom("Test Requester"),
 		RequesterPhoneNumber:            null.StringFrom("Test Requester Phone Number"),
 		BusinessOwner:                   null.StringFrom("Test Business Owner"),

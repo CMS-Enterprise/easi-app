@@ -12,7 +12,7 @@ func checkUniqLifecycleCosts(costs models.EstimatedLifecycleCosts) (string, stri
 	costMap := map[string]bool{}
 
 	for _, cost := range costs {
-		attribute := string(cost.Solution) + string(cost.Year) + string(cost.Phase)
+		attribute := string(cost.Solution) + string(cost.Year) + string(*cost.Phase)
 		if costMap[attribute] {
 			return "LifecycleCostPhase", "cannot have multiple costs for the same phase, solution, and year"
 		}
