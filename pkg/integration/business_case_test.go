@@ -29,7 +29,8 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		EUAUserID: s.user.euaID,
 	}
 
-	_ = s.store.SaveSystemIntake(&intake)
+	err = s.store.SaveSystemIntake(&intake)
+	s.NoError(err)
 
 	body, err := json.Marshal(map[string]string{
 		"systemIntake": intakeID.String(),
