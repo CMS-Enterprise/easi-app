@@ -1,6 +1,7 @@
 package appses
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -27,6 +28,11 @@ func TestSESTestSuite(t *testing.T) {
 
 	logger := zap.NewNop()
 	config := testhelpers.NewConfig()
+
+	if config.GetString(appconfig.EnvironmentKey) == appconfig.LocalEnv.String() {
+		fmt.Println("Skipping AWS SES test in local environment")
+		return
+	}
 
 	sesConfig := Config{
 		SourceARN: config.GetString(appconfig.AWSSESSourceARNKey),

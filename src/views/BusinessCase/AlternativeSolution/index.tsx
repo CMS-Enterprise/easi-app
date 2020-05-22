@@ -216,12 +216,12 @@ const AlternativeSolution = ({
             <li>Inflation</li>
           </ul>
         </HelpText>
+        <EstimatedLifecycleCost
+          formikKey={`${altId}.estimatedLifecycleCost`}
+          years={altValues.estimatedLifecycleCost}
+          errors={altErrors && altErrors.estimatedLifecycleCost}
+        />
       </div>
-      <EstimatedLifecycleCost
-        formikKey={`${altId}.estimatedLifecycleCost`}
-        years={altValues.estimatedLifecycleCost}
-        errors={altErrors && altErrors.estimatedLifecycleCost}
-      />
       <div className="tablet:grid-col-9 margin-top-2 margin-bottom-7">
         <FieldGroup
           scrollElement={`${altId}.costSavings`}
