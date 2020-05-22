@@ -50,6 +50,22 @@ export const RadioField = ({
   );
 };
 
+type RadioGroupProps = {
+  children: React.ReactNode | React.ReactNodeArray;
+  inline?: boolean;
+};
+
+export const RadioGroup = ({ children, inline }: RadioGroupProps) => {
+  const classes = classnames('easi-radio__group', {
+    'easi-radio__group--inline': inline
+  });
+  return (
+    <div className={classes} role="radiogroup">
+      {children}
+    </div>
+  );
+};
+
 /**
  * TODO: I want to continue to iterate on this even though it isn't ready yet.
  * The thought is to create a compound component so that the "checked" state
