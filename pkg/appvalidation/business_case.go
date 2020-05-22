@@ -53,3 +53,24 @@ func BusinessCaseForCreation(businessCase *models.BusinessCase, intake *models.S
 	}
 	return nil
 }
+
+// BusinessCaseForUpdate checks if it's a valid business case to update
+func BusinessCaseForUpdate(businessCase *models.BusinessCase) error {
+	// We return an empty id in this error because the business case hasn't been created
+	expectedErr := apperrors.ValidationError{
+		Err:         errors.New("business case failed validations"),
+		Model:       businessCase,
+		ModelID:     "",
+		Validations: apperrors.Validations{},
+	}
+
+	k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines)
+	if k != "" {
+		expectedErr.WithValidation(k, v)
+	}
+
+	if len(expectedErr.Validations) > 0 {
+		return &expectedErr
+	}
+	return nil
+}
