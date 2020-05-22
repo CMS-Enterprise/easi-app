@@ -9,6 +9,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 
 type AsIsSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -19,7 +20,7 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
   return (
     <div className="grid-container">
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
-      <p className="line-height-body-6">
+      <p className="line-height-body-5">
         Below you should identify options and alternatives to meet your business
         need. Include a summary of the approaches, how you will acquire the
         solution, and describe the pros, cons, total life cycle costs and
@@ -28,6 +29,9 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
         reuse existing people, equipment, or processes; and at least two
         additional alternatives. Identify your preferred solution.
       </p>
+      <div className="tablet:grid-col-5">
+        <MandatoryFieldsAlert />
+      </div>
       <div className="tablet:grid-col-9">
         <h2>&quot;As is&quot; solution</h2>
         <FieldGroup
@@ -149,14 +153,14 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             <li>Inflation</li>
           </ul>
         </HelpText>
+        <EstimatedLifecycleCost
+          formikKey="asIsSolution.estimatedLifecycleCost"
+          years={values.asIsSolution.estimatedLifecycleCost}
+          errors={
+            errors.asIsSolution && errors.asIsSolution.estimatedLifecycleCost
+          }
+        />
       </div>
-      <EstimatedLifecycleCost
-        formikKey="asIsSolution.estimatedLifecycleCost"
-        years={values.asIsSolution.estimatedLifecycleCost}
-        errors={
-          errors.asIsSolution && errors.asIsSolution.estimatedLifecycleCost
-        }
-      />
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
           scrollElement="asIsSolution.costSavings"

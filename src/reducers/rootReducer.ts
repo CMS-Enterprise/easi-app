@@ -2,13 +2,17 @@ import { combineReducers } from 'redux';
 import systemIntakesReducer from 'reducers/systemIntakesReducer';
 import systemsReducer from './systemsReducer';
 import systemIntakeReducer from './systemIntakeReducer';
+import businessCaseReducer from './businessCaseReducer';
 import businessCasesReducer from './businessCasesReducer';
+import authReducer from './authReducer';
 
 const rootReducer = combineReducers({
   search: systemsReducer,
   systemIntake: systemIntakeReducer,
   systemIntakes: systemIntakesReducer,
-  businessCases: businessCasesReducer
+  businessCase: businessCaseReducer,
+  businessCases: businessCasesReducer,
+  auth: authReducer
 });
 
 export default rootReducer;

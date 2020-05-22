@@ -54,19 +54,6 @@ func TestEmailTestSuite(t *testing.T) {
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),
 	}
 
-	// we'll need this code for integration testing
-	//sesConfig := SESConfig{
-	//	SourceARN: config.GetString(appconfig.AWSSESSourceARNKey),
-	//	Source:    config.GetString(appconfig.AWSSESSourceKey),
-	//}
-
-	//sesSession := session.Must(session.NewSession())
-	//sesClient := ses.New(sesSession)
-	//sesSender := SESSender{
-	//	sesClient,
-	//	sesConfig,
-	//}
-
 	sesTestSuite := &EmailTestSuite{
 		Suite:  suite.Suite{},
 		logger: logger,

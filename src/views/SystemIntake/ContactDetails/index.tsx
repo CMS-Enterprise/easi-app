@@ -37,7 +37,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
 
   return (
     <>
-      <p className="line-height-body-6">
+      <p className="line-height-body-5">
         The EASi System Intake process can guide you through all stages of your
         project, connecting you with the resources, people and services that you
         need. Please complete and submit this CMS IT Intake form to engage with
@@ -64,12 +64,7 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             id="IntakeForm-Requester"
             maxLength={50}
             name="requester.name"
-            onChange={(e: any) => {
-              if (isReqAndBusOwnerSame) {
-                setFieldValue('businessOwner.name', e.target.value);
-              }
-              setFieldValue('requester.name', e.target.value);
-            }}
+            disabled
           />
         </FieldGroup>
 

@@ -19,6 +19,7 @@ export default class OktaSignInWidget extends Component<
       baseUrl: process.env.REACT_APP_OKTA_DOMAIN,
       authParams: {
         pkce: true,
+        issuer: process.env.REACT_APP_OKTA_ISSUER,
         responseMode: 'query'
       },
       el: '#sign-in-widget'
