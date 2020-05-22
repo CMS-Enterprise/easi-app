@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -78,6 +79,29 @@ const createEstimatedLifecycleCostSQL = `
 		:cost
 	)
 `
+
+func createEstimatedLifecycleCosts(tx *sqlx.Tx, businessCase *models.BusinessCase, logger *zap.Logger) error {
+	for _, cost := range businessCase.LifecycleCostLines {
+		cost.ID = uuid.New()
+		cost.BusinessCaseID = businessCase.ID
+		_, err := tx.NamedExec(createEstimatedLifecycleCostSQL, &cost)
+		if err != nil {
+			logger.Error(
+				fmt.Sprintf(
+					"Failed to create cost %s %s %s with error %s",
+					cost.Solution,
+					cost.Phase,
+					cost.Year,
+					err,
+				),
+				zap.String("EUAUserID", businessCase.EUAUserID),
+				zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
+			)
+			return err
+		}
+	}
+	return nil
+}
 
 // CreateBusinessCase creates a business case
 func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
@@ -171,24 +195,10 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 		)
 	}
-	for _, cost := range businessCase.LifecycleCostLines {
-		cost.ID = uuid.New()
-		cost.BusinessCaseID = id
-		_, err = tx.NamedExec(createEstimatedLifecycleCostSQL, &cost)
-		if err != nil {
-			s.logger.Error(
-				fmt.Sprintf(
-					"Failed to create cost %s %s %s with error %s",
-					cost.Solution,
-					cost.Phase,
-					cost.Year,
-					err,
-				),
-				zap.String("EUAUserID", businessCase.EUAUserID),
-				zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
-			)
-			return &models.BusinessCase{}, err
-		}
+
+	err = createEstimatedLifecycleCosts(tx, businessCase, s.logger)
+	if err != nil {
+		return &models.BusinessCase{}, err
 	}
 	err = tx.Commit()
 	if err != nil {
@@ -277,24 +287,9 @@ func (s *Store) UpdateBusinessCase(businessCase *models.BusinessCase) (*models.B
 		return businessCase, err
 	}
 
-	for _, cost := range businessCase.LifecycleCostLines {
-		cost.ID = uuid.New()
-		cost.BusinessCaseID = businessCase.ID
-		_, err = tx.NamedExec(createEstimatedLifecycleCostSQL, &cost)
-		if err != nil {
-			s.logger.Error(
-				fmt.Sprintf(
-					"Failed to create cost %s %s %s with error %s",
-					cost.Solution,
-					cost.Phase,
-					cost.Year,
-					err,
-				),
-				zap.String("EUAUserID", businessCase.EUAUserID),
-				zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
-			)
-			return businessCase, err
-		}
+	err = createEstimatedLifecycleCosts(tx, businessCase, s.logger)
+	if err != nil {
+		return businessCase, err
 	}
 
 	err = tx.Commit()
