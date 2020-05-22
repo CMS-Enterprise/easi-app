@@ -8,6 +8,7 @@ import {
 import { BusinessCaseModel } from 'types/businessCase';
 import { prepareBusinessCaseForApi } from 'data/businessCase';
 import { Action } from 'redux-actions';
+import { updateLastActiveAt } from 'reducers/authReducer';
 
 function getBusinessCaseRequest(id: string) {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/business_case/${id}`);
@@ -19,6 +20,7 @@ function* getBusinessCase(action: Action<any>) {
     // TODO: Probably have to prepare this data to be sent
     const response = yield call(getBusinessCaseRequest, action.payload);
     yield put(fetchBusinessCase.success(response.data));
+    yield put(updateLastActiveAt);
   } catch (error) {
     yield put(fetchBusinessCase.failure(error.message));
   } finally {
