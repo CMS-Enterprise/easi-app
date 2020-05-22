@@ -81,7 +81,7 @@ func (e *EstimatedLifecycleCosts) Scan(src interface{}) error {
 type BusinessCase struct {
 	ID                              uuid.UUID               `json:"id"`
 	EUAUserID                       string                  `json:"euaUserId" db:"eua_user_id"`
-	SystemIntakeID                  uuid.UUID               `json:"systemIntake" db:"system_intake"`
+	SystemIntakeID                  uuid.UUID               `json:"systemIntakeId" db:"system_intake"`
 	Status                          BusinessCaseStatus      `json:"status"`
 	ProjectName                     null.String             `json:"projectName" db:"project_name"`
 	Requester                       null.String             `json:"requester"`
