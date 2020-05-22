@@ -84,3 +84,32 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmission() {
 		s.Equal(expectedErrMessage, err.Error())
 	})
 }
+
+func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
+	elc1 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
+
+	s.Run("golden path", func() {
+		businessCase := models.BusinessCase{
+			LifecycleCostLines: models.EstimatedLifecycleCosts{elc1},
+		}
+		err := BusinessCaseForUpdate(&businessCase)
+		s.NoError(err)
+	})
+	s.Run("returns validation error when business case fails validation", func() {
+		elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
+
+		businessCase := models.BusinessCase{
+			LifecycleCostLines: models.EstimatedLifecycleCosts{
+				elc1,
+				elc2,
+			},
+		}
+		err := BusinessCaseForUpdate(&businessCase)
+		s.Error(err)
+		s.IsType(&apperrors.ValidationError{}, err)
+		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCase : " +
+			"{\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
+		)
+		s.Equal(expectedErrMessage, err.Error())
+	})
+}

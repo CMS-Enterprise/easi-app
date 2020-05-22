@@ -124,6 +124,13 @@ func (s *Server) routes(
 			store.FetchBusinessCaseByID,
 			s.logger,
 		),
+		UpdateBusinessCase: services.NewUpdateBusinessCase(
+			store.FetchBusinessCaseByID,
+			services.NewAuthorizeUpdateBusinessCase(s.logger),
+			store.UpdateBusinessCase,
+			s.logger,
+			saveClock,
+		),
 	}
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
