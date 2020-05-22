@@ -87,7 +87,6 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
 			EUAUserID:      testhelpers.RandomEUAID(),
-			Status:         models.BusinessCaseStatusDRAFT,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			},
@@ -103,7 +102,6 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 	s.Run("requires a system intake ID", func() {
 		businessCase := models.BusinessCase{
 			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.BusinessCaseStatusDRAFT,
 		}
 
 		_, err := s.store.CreateBusinessCase(&businessCase)
@@ -117,7 +115,6 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		businessCase := models.BusinessCase{
 			SystemIntakeID: badintakeID,
 			EUAUserID:      testhelpers.RandomEUAID(),
-			Status:         models.BusinessCaseStatusDRAFT,
 		}
 
 		_, err := s.store.CreateBusinessCase(&businessCase)
@@ -126,27 +123,12 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
 	})
 
-	s.Run("requires an eua user id", func() {
+	s.Run("cannot without a eua user id", func() {
 		intake := testhelpers.NewSystemIntake()
 		err := s.store.SaveSystemIntake(&intake)
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
-			Status:         models.BusinessCaseStatusDRAFT,
-		}
-		_, err = s.store.CreateBusinessCase(&businessCase)
-
-		s.Error(err)
-		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
-	})
-
-	s.Run("requires a status", func() {
-		intake := testhelpers.NewSystemIntake()
-		err := s.store.SaveSystemIntake(&intake)
-		s.NoError(err)
-		businessCase := models.BusinessCase{
-			SystemIntakeID: intake.ID,
-			EUAUserID:      testhelpers.RandomEUAID(),
 		}
 		_, err = s.store.CreateBusinessCase(&businessCase)
 
