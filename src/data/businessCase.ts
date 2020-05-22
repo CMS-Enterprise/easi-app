@@ -99,6 +99,8 @@ export const prepareBusinessCaseForApp = (
   });
 
   return {
+    id: businessCase.id || '',
+    status: businessCase.status || '',
     requestName: businessCase.projectName || '',
     requester: {
       name: businessCase.requester || '',

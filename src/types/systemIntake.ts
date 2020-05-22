@@ -5,6 +5,8 @@ export type GovernanceCollaborationTeam = {
   name: string;
 };
 
+type SystemIntakeStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
+
 /**
  * Type for SystemIntakeForm
  *
@@ -13,7 +15,7 @@ export type SystemIntakeForm = {
   id: string;
   euaUserID: string;
   requestName: string;
-  status: string;
+  status: SystemIntakeStatus;
   requester: {
     name: string;
     component: string;
