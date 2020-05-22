@@ -49,6 +49,7 @@ export type SystemIntakeForm = {
 export type SystemIntakeState = {
   systemIntake: SystemIntakeForm;
   isLoading: boolean | null;
+  isSubmitting: boolean;
   error?: any;
 };
 

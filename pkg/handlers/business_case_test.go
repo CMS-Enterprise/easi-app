@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -29,6 +30,13 @@ func newMockFetchBusinessCaseByID(err error) func(id uuid.UUID) (*models.Busines
 func newMockCreateBusinessCase(err error) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		businessCase.ID = uuid.New()
+		return businessCase, err
+	}
+}
+
+func newMockUpdateBusinessCase(err error) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+		businessCase.RequesterPhoneNumber = null.StringFrom("1234567890")
 		return businessCase, err
 	}
 }
@@ -149,6 +157,132 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			Logger:                s.logger,
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(fmt.Errorf("failed to create business case")),
+		}.Handle()(rr, req)
+		s.Equal(http.StatusInternalServerError, rr.Code)
+	})
+
+	s.Run("golden path PUT passes", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"requesterPhoneNumber": "1234567890",
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
+			CreateBusinessCase:    nil,
+		}.Handle()(rr, req)
+		s.Equal(http.StatusOK, rr.Code)
+	})
+
+	s.Run("returns an error if the body is empty", func() {
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBufferString(""))
+		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
+			CreateBusinessCase:    nil,
+		}.Handle()(rr, req)
+		s.Equal(http.StatusBadRequest, rr.Code)
+	})
+
+	s.Run("returns an error if there is no id in the url", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"requesterPhoneNumber": "1234567890",
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", "3"), bytes.NewBuffer(body))
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
+			CreateBusinessCase:    nil,
+		}.Handle()(rr, req)
+		s.Equal(http.StatusBadRequest, rr.Code)
+	})
+
+	s.Run("PUT fails if there is no eua ID in the context", func() {
+		badContext := context.Background()
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"requesterPhoneNumber": "1234567890",
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(badContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
+			CreateBusinessCase:    nil,
+		}.Handle()(rr, req)
+		s.Equal(http.StatusUnauthorized, rr.Code)
+	})
+
+	s.Run("returns an error if there updating fails with a validation error", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"requesterPhoneNumber": "1234567890",
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			UpdateBusinessCase:    newMockUpdateBusinessCase(&apperrors.ValidationError{}),
+			CreateBusinessCase:    nil,
+		}.Handle()(rr, req)
+		s.Equal(http.StatusBadRequest, rr.Code)
+	})
+
+	s.Run("returns an error if there updating fails with a resource conflict error", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"requesterPhoneNumber": "1234567890",
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			UpdateBusinessCase:    newMockUpdateBusinessCase(&apperrors.ResourceConflictError{}),
+			CreateBusinessCase:    nil,
+		}.Handle()(rr, req)
+		s.Equal(http.StatusBadRequest, rr.Code)
+	})
+
+	s.Run("returns an error if there updating fails in another way", func() {
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"requesterPhoneNumber": "1234567890",
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", id.String()), bytes.NewBuffer(body))
+		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
+		s.NoError(err)
+		BusinessCaseHandler{
+			Logger:                s.logger,
+			FetchBusinessCaseByID: nil,
+			UpdateBusinessCase:    newMockUpdateBusinessCase(fmt.Errorf("failed to update business case")),
+			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
