@@ -1,17 +1,15 @@
 .easi-radio {
   &--inline {
     display: inline;
-  }
-
-  &--inline + &--inline {
     margin-left: 2rem;
   }
 
-  &__label {
+  &__group {
     &--inline {
-      &.usa-radio__label {
-        padding-left: 0;
-      }
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-left: -2rem;
     }
   }
 }
