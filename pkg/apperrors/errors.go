@@ -69,7 +69,7 @@ func (e *ResourceConflictError) Unwrap() error {
 // Validations maps attributes to validation messages
 type Validations map[string]string
 
-// NewValidationError returns a validation error with fields insantiated
+// NewValidationError returns a validation error with fields instantiated
 func NewValidationError(err error, model interface{}, modelID string) ValidationError {
 	return ValidationError{
 		Err:         err,
