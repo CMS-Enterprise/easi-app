@@ -5,7 +5,7 @@ import Label from 'components/shared/Label';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import TextField from 'components/shared/TextField';
-import { RadioField } from 'components/shared/RadioField';
+import { RadioGroup, RadioField } from 'components/shared/RadioField';
 import Button from 'components/shared/Button';
 import {
   DescriptionList,
@@ -30,48 +30,53 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
     <FieldArray name={`${formikKey}.year${year}`}>
       {arrayHelpers => (
         <div className="est-lifecycle-cost__phase-cost-wrapper">
-          <FieldGroup
-            scrollElement="somethingGoesHere"
-            error={phaseError.phase || phaseError.cost}
-          >
+          <FieldGroup error={phaseError.phase || phaseError.cost}>
             {phaseError.phase && (
               <FieldErrorMsg>{phaseError.phase}</FieldErrorMsg>
             )}
             {phaseError.cost && (
               <FieldErrorMsg>{phaseError.cost}</FieldErrorMsg>
             )}
-            <fieldset className="usa-fieldset margin-bottom-205">
-              <div>
-                <legend
-                  className={classnames('usa-label', 'margin-bottom-1')}
-                  aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
-                >
-                  Phase
-                </legend>
+            <div className="margin-right-2">
+              <fieldset
+                className="usa-fieldset"
+                data-scroll={`${formikKey}.year${year}.${index}.phase`}
+              >
                 <div>
-                  <Field
-                    as={RadioField}
-                    checked={values.phase === 'Development'}
-                    id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.Development`}
-                    name={`${formikKey}.year${year}.${index}.phase`}
-                    label="Development"
-                    value="Development"
-                    inline
-                  />
+                  <legend
+                    className={classnames('usa-label', 'margin-bottom-1')}
+                    aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
+                  >
+                    Phase
+                  </legend>
+                  <RadioGroup inline>
+                    <Field
+                      as={RadioField}
+                      checked={values.phase === 'Development'}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.Development`}
+                      name={`${formikKey}.year${year}.${index}.phase`}
+                      label="Development"
+                      value="Development"
+                      inline
+                    />
 
-                  <Field
-                    as={RadioField}
-                    checked={values.phase === 'Operations and Maintenance'}
-                    id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
-                    name={`${formikKey}.year${year}.${index}.phase`}
-                    label="Operations and Maintenance"
-                    value="Operations and Maintenance"
-                    inline
-                  />
+                    <Field
+                      as={RadioField}
+                      checked={values.phase === 'Operations and Maintenance'}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
+                      name={`${formikKey}.year${year}.${index}.phase`}
+                      label="Operations and Maintenance"
+                      value="Operations and Maintenance"
+                      inline
+                    />
+                  </RadioGroup>
                 </div>
-              </div>
-            </fieldset>
-            <div className="est-lifecycle-cost__phase-cost-row">
+              </fieldset>
+            </div>
+            <div
+              className="est-lifecycle-cost__phase-cost-row"
+              data-scroll={`${formikKey}.year${year}.${index}.cost`}
+            >
               <div>
                 <Label
                   htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
