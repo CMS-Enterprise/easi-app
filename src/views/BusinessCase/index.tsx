@@ -94,14 +94,14 @@ export const BusinessCase = () => {
     const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
     if (current && current.dirty) {
       if (businessCaseId === 'new') {
-        current.resetForm({ values: current.values });
-        const systemIntake =
-          (location.state && location.state.systemIntake) || '';
+        current.resetForm({ values: current.values, errors: current.errors });
+        const systemIntakeId =
+          (location.state && location.state.systemIntakeId) || '';
 
         dispatch(
           postBusinessCase({
             ...current.values,
-            systemIntake
+            systemIntakeId
           })
         );
       } else {
@@ -118,11 +118,11 @@ export const BusinessCase = () => {
   // Resume existing business case
   useEffect(() => {
     if (businessCaseId === 'new') {
-      const systemIntake =
-        (location.state && location.state.systemIntake) || '';
+      const systemIntakeId =
+        (location.state && location.state.systemIntakeId) || '';
       dispatch(
         storeBusinessCase({
-          systemIntake
+          systemIntakeId
         })
       );
     } else {

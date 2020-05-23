@@ -27,7 +27,8 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
 export type BusinessCaseModel = {
   id?: string;
   euaUserId?: string;
-  systemIntake: string;
+  status: string;
+  systemIntakeId: string;
   requestName: string;
   requester: {
     name: string;
