@@ -59,7 +59,7 @@ const Home = ({ history }: HomeProps) => {
                 history.push({
                   pathname: `/business/new/general-request-info`,
                   state: {
-                    systemIntake: intake.id
+                    systemIntakeId: intake.id
                   }
                 });
               }}

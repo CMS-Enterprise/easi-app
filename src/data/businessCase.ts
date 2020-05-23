@@ -23,7 +23,8 @@ export const defaultProposedSolution = {
 };
 
 export const businessCaseInitalData: BusinessCaseModel = {
-  systemIntake: '',
+  status: 'DRAFT',
+  systemIntakeId: '',
   requestName: '',
   requester: {
     name: '',
@@ -48,14 +49,6 @@ export const businessCaseInitalData: BusinessCaseModel = {
   alternativeA: defaultProposedSolution
 };
 
-const emptyEstimatedLifecycle = {
-  year1: [],
-  year2: [],
-  year3: [],
-  year4: [],
-  year5: []
-};
-
 type lifecycleCostLinesType = {
   'As Is': EstimatedLifecycleCostLines;
   Preferred: EstimatedLifecycleCostLines;
@@ -67,10 +60,34 @@ export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
   const lifecycleCostLines: lifecycleCostLinesType = {
-    'As Is': emptyEstimatedLifecycle,
-    Preferred: emptyEstimatedLifecycle,
-    A: emptyEstimatedLifecycle,
-    B: emptyEstimatedLifecycle
+    'As Is': {
+      year1: [],
+      year2: [],
+      year3: [],
+      year4: [],
+      year5: []
+    },
+    Preferred: {
+      year1: [],
+      year2: [],
+      year3: [],
+      year4: [],
+      year5: []
+    },
+    A: {
+      year1: [],
+      year2: [],
+      year3: [],
+      year4: [],
+      year5: []
+    },
+    B: {
+      year1: [],
+      year2: [],
+      year3: [],
+      year4: [],
+      year5: []
+    }
   };
 
   businessCase.lifecycleCostLines.forEach((line: any) => {
@@ -88,32 +105,19 @@ export const prepareBusinessCaseForApp = (
           return null;
       }
     })(line.solution);
-
     if (solution) {
       solution[`year${line.year}` as keyof EstimatedLifecycleCostLines].push({
-        phase: line.phase,
-        cost: line.cost
+        phase: line.phase || '',
+        cost: line.cost || ''
       });
     }
-  });
-
-  // Fill in at least 1 entry if the year is empty so the UI can render
-  // TODO HACK idk it works
-  Object.values(lifecycleCostLines).forEach(solution => {
-    Object.values(solution).forEach(year => {
-      if (year.length === 0) {
-        year.push({
-          phase: '',
-          cost: ''
-        });
-      }
-    });
   });
 
   return {
     id: businessCase.id,
     euaUserId: businessCase.euaUserId,
-    systemIntake: businessCase.systemIntake,
+    status: businessCase.status,
+    systemIntakeId: businessCase.systemIntake,
     requestName: businessCase.projectName,
     requester: {
       name: businessCase.requester,
@@ -152,15 +156,22 @@ export const prepareBusinessCaseForApp = (
       costSavings: businessCase.alternativeACostSavings,
       estimatedLifecycleCost: lifecycleCostLines.A
     },
-    alternativeB: {
-      title: businessCase.alternativeBTitle,
-      summary: businessCase.alternativeBSummary,
-      acquisitionApproach: businessCase.alternativeBAcquisitionApproach,
-      pros: businessCase.alternativeBPros,
-      cons: businessCase.alternativeBCons,
-      costSavings: businessCase.alternativeBCostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.B
-    }
+    ...(businessCase.alternativeBTitle ||
+      businessCase.alternativeBSummary ||
+      businessCase.alternativeBAcquisitionApproach ||
+      businessCase.alternativeBPros ||
+      businessCase.alternativeBCons ||
+      (businessCase.alternativeBCostSavings && {
+        alternativeB: {
+          title: businessCase.alternativeBTitle,
+          summary: businessCase.alternativeBSummary,
+          acquisitionApproach: businessCase.alternativeBAcquisitionApproach,
+          pros: businessCase.alternativeBPros,
+          cons: businessCase.alternativeBCons,
+          costSavings: businessCase.alternativeBCostSavings,
+          estimatedLifecycleCost: lifecycleCostLines.B
+        }
+      }))
   };
 };
 
@@ -216,8 +227,8 @@ export const prepareBusinessCaseForApi = (
           return phases.map(lifecyclePhase => {
             return {
               solution: solutionApiName,
-              phase: lifecyclePhase.phase,
-              cost: lifecyclePhase.cost,
+              phase: lifecyclePhase.phase || null,
+              cost: lifecyclePhase.cost || null,
               year
             };
           });
@@ -226,9 +237,6 @@ export const prepareBusinessCaseForApi = (
     })
     .flat();
 
-  // TODO Delete this; logging it so i dont need to comment everything out
-  console.log(lifecycleCostLines);
-
   return {
     ...(businessCase.id && {
       id: businessCase.id
@@ -236,7 +244,8 @@ export const prepareBusinessCaseForApi = (
     ...(businessCase.euaUserId && {
       euaUserId: businessCase.euaUserId
     }),
-    systemIntake: businessCase.systemIntake,
+    status: businessCase.status,
+    systemIntake: businessCase.systemIntakeId,
     projectName: businessCase.requestName,
     requester: businessCase.requester.name,
     requesterPhoneNumber: businessCase.requester.phoneNumber,
@@ -282,6 +291,6 @@ export const prepareBusinessCaseForApi = (
     alternativeBCostSavings: businessCase.alternativeB
       ? businessCase.alternativeB.costSavings
       : '',
-    lifecycleCostLines: []
+    lifecycleCostLines
   };
 };
