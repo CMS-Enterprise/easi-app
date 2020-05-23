@@ -87,12 +87,16 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.isLoading
   );
 
+  const isSaving = useSelector(
+    (state: AppState) => state.businessCase.isSaving
+  );
+
   const [pageIndex, setPageIndex] = useState(0);
   const pageObj = pages[pageIndex];
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
-    if (current && current.dirty) {
+    if (current && current.dirty && !isSaving) {
       if (businessCaseId === 'new') {
         current.resetForm({ values: current.values, errors: current.errors });
         const systemIntakeId =

@@ -13,6 +13,7 @@ import { Action } from 'redux-actions';
 const initialState: BusinessCaseState = {
   form: businessCaseInitalData,
   isLoading: null,
+  isSaving: false,
   error: null
 };
 
@@ -41,6 +42,11 @@ function businessCaseReducer(
         ...state,
         isLoading: false
       };
+    case postBusinessCase.REQUEST:
+      return {
+        ...state,
+        isSaving: true
+      };
     case postBusinessCase.SUCCESS:
       return {
         ...state,
@@ -48,6 +54,11 @@ function businessCaseReducer(
           ...state.form,
           ...prepareBusinessCaseForApp(action.payload)
         }
+      };
+    case postBusinessCase.FULFILL:
+      return {
+        ...state,
+        isSaving: false
       };
     case storeBusinessCase.TRIGGER:
       return {
