@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import {
   BusinessCaseModel,
   EstimatedLifecycleCostLines
@@ -49,6 +50,14 @@ export const businessCaseInitalData: BusinessCaseModel = {
   alternativeA: defaultProposedSolution
 };
 
+const emptyEstimatedLifecycle = {
+  year1: [],
+  year2: [],
+  year3: [],
+  year4: [],
+  year5: []
+};
+
 type lifecycleCostLinesType = {
   'As Is': EstimatedLifecycleCostLines;
   Preferred: EstimatedLifecycleCostLines;
@@ -59,35 +68,12 @@ type lifecycleCostLinesType = {
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
+  let hasAlternativeBLifecycleCostLines = false;
   const lifecycleCostLines: lifecycleCostLinesType = {
-    'As Is': {
-      year1: [],
-      year2: [],
-      year3: [],
-      year4: [],
-      year5: []
-    },
-    Preferred: {
-      year1: [],
-      year2: [],
-      year3: [],
-      year4: [],
-      year5: []
-    },
-    A: {
-      year1: [],
-      year2: [],
-      year3: [],
-      year4: [],
-      year5: []
-    },
-    B: {
-      year1: [],
-      year2: [],
-      year3: [],
-      year4: [],
-      year5: []
-    }
+    'As Is': cloneDeep(emptyEstimatedLifecycle),
+    Preferred: cloneDeep(emptyEstimatedLifecycle),
+    A: cloneDeep(emptyEstimatedLifecycle),
+    B: cloneDeep(emptyEstimatedLifecycle)
   };
 
   businessCase.lifecycleCostLines.forEach((line: any) => {
@@ -105,11 +91,16 @@ export const prepareBusinessCaseForApp = (
           return null;
       }
     })(line.solution);
+
     if (solution) {
       solution[`year${line.year}` as keyof EstimatedLifecycleCostLines].push({
         phase: line.phase || '',
-        cost: line.cost || ''
+        cost: line.cost ? line.cost.toString() : ''
       });
+
+      if (line.solution === 'B' && (line.phase || line.cost)) {
+        hasAlternativeBLifecycleCostLines = true;
+      }
     }
   });
 
@@ -161,7 +152,8 @@ export const prepareBusinessCaseForApp = (
       businessCase.alternativeBAcquisitionApproach ||
       businessCase.alternativeBPros ||
       businessCase.alternativeBCons ||
-      (businessCase.alternativeBCostSavings && {
+      businessCase.alternativeBCostSavings ||
+      (hasAlternativeBLifecycleCostLines && {
         alternativeB: {
           title: businessCase.alternativeBTitle,
           summary: businessCase.alternativeBSummary,
@@ -228,7 +220,9 @@ export const prepareBusinessCaseForApi = (
             return {
               solution: solutionApiName,
               phase: lifecyclePhase.phase || null,
-              cost: lifecyclePhase.cost || null,
+              cost: lifecyclePhase.cost
+                ? parseFloat(lifecyclePhase.cost)
+                : null,
               year
             };
           });
