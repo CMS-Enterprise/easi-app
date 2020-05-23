@@ -10,6 +10,7 @@ describe('The business case reducer', () => {
     expect(businessCaseReducer(undefined, {})).toEqual({
       form: businessCaseInitalData,
       isLoading: null,
+      isSaving: false,
       error: null
     });
   });
@@ -23,6 +24,7 @@ describe('The business case reducer', () => {
     expect(businessCaseReducer(undefined, mockRequestAction)).toEqual({
       form: businessCaseInitalData,
       isLoading: true,
+      isSaving: false,
       error: null
     });
   });
@@ -38,6 +40,7 @@ describe('The business case reducer', () => {
     expect(businessCaseReducer(undefined, mockRequestAction)).toEqual({
       form: prepareBusinessCaseForApp(mockBusinessCase),
       isLoading: true,
+      isSaving: false,
       error: null
     });
   });
@@ -51,6 +54,7 @@ describe('The business case reducer', () => {
     expect(businessCaseReducer(undefined, mockRequestAction)).toEqual({
       form: businessCaseInitalData,
       isLoading: null,
+      isSaving: false,
       error: 'Error Found!'
     });
   });
@@ -64,6 +68,7 @@ describe('The business case reducer', () => {
     expect(businessCaseReducer(undefined, mockRequestAction)).toEqual({
       form: businessCaseInitalData,
       isLoading: false,
+      isSaving: false,
       error: null
     });
   });

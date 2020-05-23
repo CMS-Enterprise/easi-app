@@ -51,5 +51,6 @@ export type BusinessCaseModel = {
 export type BusinessCaseState = {
   form: BusinessCaseModel;
   isLoading: boolean | null;
+  isSaving: boolean;
   error: any;
 };
