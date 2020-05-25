@@ -208,20 +208,6 @@ describe('The business case reducer', () => {
 
       expect(businessCaseReducer(undefined, mockTriggerAction)).toEqual({
         form: { ...businessCaseInitalData, ...{ id: '12345' } },
-        isLoading: null,
-        isSaving: false,
-        error: null
-      });
-    });
-
-    it('handles storeBusinessCase.FULFILL', () => {
-      const mockFulfillAction = {
-        type: storeBusinessCase.FULFILL,
-        payload: undefined
-      };
-
-      expect(businessCaseReducer(undefined, mockFulfillAction)).toEqual({
-        form: businessCaseInitalData,
         isLoading: false,
         isSaving: false,
         error: null
