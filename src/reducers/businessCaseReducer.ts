@@ -66,8 +66,7 @@ function businessCaseReducer(
         form: {
           ...state.form,
           ...action.payload
-        },
-        isLoading: false
+        }
       };
     case storeBusinessCase.FULFILL:
       return {
@@ -80,3 +79,4 @@ function businessCaseReducer(
 }
 
 export default businessCaseReducer;
+// TODO ADD TESTS! THAT WAS NEXT
