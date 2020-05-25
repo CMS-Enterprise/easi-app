@@ -66,11 +66,7 @@ function businessCaseReducer(
         form: {
           ...state.form,
           ...action.payload
-        }
-      };
-    case storeBusinessCase.FULFILL:
-      return {
-        ...state,
+        },
         isLoading: false
       };
     default:
