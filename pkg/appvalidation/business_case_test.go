@@ -2,6 +2,7 @@ package appvalidation
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/guregu/null"
 
@@ -171,6 +172,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"Requester":"is required",` +
 			`"RequesterPhoneNumber":"is required",` +
 			`"Status":"Cannot be SUBMITTED",` +
+			`"SubmittedAt":"is required",` +
 			`"SuccessIndicators":"is required",` +
 			`"SystemIntakeID":"is required"}`
 		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
@@ -184,6 +186,8 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		existingBusinessCase.Status = models.BusinessCaseStatusDRAFT
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		submittedAt := time.Now()
+		businessCase.SubmittedAt = &submittedAt
 		businessCase.AlternativeBTitle = null.NewString("B Title", true)
 		businessCase.AlternativeBSummary = null.NewString("", false)
 		businessCase.AlternativeBPros = null.NewString("", false)
