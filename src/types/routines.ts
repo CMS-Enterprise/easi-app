@@ -13,6 +13,7 @@ export const submitSystemIntake = createRoutine('SUBMIT_SYSTEM_INTAKE');
 export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');
 
 // BusinessCase routines
+export const fetchBusinessCases = createRoutine('FETCH_BUSINESS_CASES');
 export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');
 export const postBusinessCase = createRoutine('POST_BUSINESS_CASE');
 export const putBusinessCase = createRoutine('PUT_BUSINESS_CASE');
