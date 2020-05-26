@@ -116,6 +116,13 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 		intake.FundingSource = null.String{}
 	})
 
+	s.Run("An intake with a no existing funding doesn't validate funding source", func() {
+		intake.ExistingFunding = null.BoolFrom(false)
+		intake.FundingSource = null.String{}
+		err := ValidateSystemIntakeForCedar(&intake, logger)
+		s.NoError(err)
+	})
+
 	s.Run("An intake without a required string fails", func() {
 		intake.EUAUserID = ""
 		err := ValidateSystemIntakeForCedar(&intake, logger)

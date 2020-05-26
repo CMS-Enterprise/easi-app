@@ -153,14 +153,14 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             <li>Inflation</li>
           </ul>
         </HelpText>
+        <EstimatedLifecycleCost
+          formikKey="asIsSolution.estimatedLifecycleCost"
+          years={values.asIsSolution.estimatedLifecycleCost}
+          errors={
+            errors.asIsSolution && errors.asIsSolution.estimatedLifecycleCost
+          }
+        />
       </div>
-      <EstimatedLifecycleCost
-        formikKey="asIsSolution.estimatedLifecycleCost"
-        years={values.asIsSolution.estimatedLifecycleCost}
-        errors={
-          errors.asIsSolution && errors.asIsSolution.estimatedLifecycleCost
-        }
-      />
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
           scrollElement="asIsSolution.costSavings"

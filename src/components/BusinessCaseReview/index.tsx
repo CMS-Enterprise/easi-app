@@ -94,52 +94,56 @@ const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
           Alternatives analysis
         </h2>
       </div>
-      <div className="grid-container bg-base-lightest padding-top-2 padding-bottom-8">
-        <ResponsiveTabs
-          activeTab={activeSolutionTab}
-          tabs={getFilledSolutions()}
-          handleTabClick={tab => {
-            setActiveSolutionTab(tab);
-          }}
-        >
-          <div
-            className="bg-white easi-business-case__review-solutions-wrapper"
-            style={{ overflow: 'auto' }}
+      <div className="bg-base-lightest padding-top-2 padding-bottom-8">
+        <div className="grid-container">
+          <ResponsiveTabs
+            activeTab={activeSolutionTab}
+            tabs={getFilledSolutions()}
+            handleTabClick={tab => {
+              setActiveSolutionTab(tab);
+            }}
           >
-            {(tab => {
-              switch (tab) {
-                case '"As is" solution':
-                  return <AsIsSolutionReview solution={values.asIsSolution} />;
-                case 'Preferred solution':
-                  return (
-                    <ProposedBusinessCaseSolutionReview
-                      name="Preferred solution"
-                      solution={values.preferredSolution}
-                    />
-                  );
-                case 'Alternative A':
-                  return (
-                    <ProposedBusinessCaseSolutionReview
-                      name="Alternative A"
-                      solution={values.alternativeA}
-                    />
-                  );
-                case 'Alternative B':
-                  if (values.alternativeB) {
+            <div
+              className="bg-white easi-business-case__review-solutions-wrapper"
+              style={{ overflow: 'auto' }}
+            >
+              {(tab => {
+                switch (tab) {
+                  case '"As is" solution':
+                    return (
+                      <AsIsSolutionReview solution={values.asIsSolution} />
+                    );
+                  case 'Preferred solution':
                     return (
                       <ProposedBusinessCaseSolutionReview
-                        name="Alternative B"
-                        solution={values.alternativeB}
+                        name="Preferred solution"
+                        solution={values.preferredSolution}
                       />
                     );
-                  }
-                  return null;
-                default:
-                  return <div />;
-              }
-            })(activeSolutionTab)}
-          </div>
-        </ResponsiveTabs>
+                  case 'Alternative A':
+                    return (
+                      <ProposedBusinessCaseSolutionReview
+                        name="Alternative A"
+                        solution={values.alternativeA}
+                      />
+                    );
+                  case 'Alternative B':
+                    if (values.alternativeB) {
+                      return (
+                        <ProposedBusinessCaseSolutionReview
+                          name="Alternative B"
+                          solution={values.alternativeB}
+                        />
+                      );
+                    }
+                    return null;
+                  default:
+                    return <div />;
+                }
+              })(activeSolutionTab)}
+            </div>
+          </ResponsiveTabs>
+        </div>
       </div>
     </>
   );

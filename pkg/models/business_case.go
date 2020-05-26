@@ -2,10 +2,14 @@ package models
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 )
+
+// BusinessCaseStatus represents the status of a system intake
+type BusinessCaseStatus string
 
 // LifecycleCostPhase represents the phase of a lifecycle cost line
 type LifecycleCostPhase string
@@ -17,13 +21,19 @@ type LifecycleCostSolution string
 type LifecycleCostYear string
 
 const (
-	// LifecycleCostPhaseINITIATE captures enum value "Initiate"
-	// TODO: Remove initiate phase after this gets merged in
-	LifecycleCostPhaseINITIATE LifecycleCostPhase = "Initiate"
+	// BusinessCaseStatusDRAFT captures enum value "DRAFT"
+	BusinessCaseStatusDRAFT BusinessCaseStatus = "DRAFT"
+	// BusinessCaseStatusSUBMITTED captures enum value "SUBMITTED"
+	BusinessCaseStatusSUBMITTED BusinessCaseStatus = "SUBMITTED"
+	// BusinessCaseStatusREVIEWED captures enum value "REVIEWED"
+	BusinessCaseStatusREVIEWED BusinessCaseStatus = "REVIEWED"
+	// BusinessCaseStatusREJECTED captures enum value "REJECTED"
+	BusinessCaseStatusREJECTED BusinessCaseStatus = "REJECTED"
+
 	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
-	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operation & Maintenance"
-	LifecycleCostPhaseOPERATIONMAINTENANCE LifecycleCostPhase = "Operation & Maintenance"
+	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operations and Maintenance"
+	LifecycleCostPhaseOPERATIONMAINTENANCE LifecycleCostPhase = "Operations and Maintenance"
 
 	// LifecycleCostSolutionASIS captures enum value "As Is"
 	LifecycleCostSolutionASIS LifecycleCostSolution = "As Is"
@@ -51,9 +61,9 @@ type EstimatedLifecycleCost struct {
 	ID             uuid.UUID             `json:"id"`
 	BusinessCaseID uuid.UUID             `json:"business_case" db:"business_case"`
 	Solution       LifecycleCostSolution `json:"solution"`
-	Phase          LifecycleCostPhase    `json:"phase"`
+	Phase          *LifecycleCostPhase   `json:"phase"`
 	Year           LifecycleCostYear     `json:"year"`
-	Cost           int                   `json:"cost"`
+	Cost           *int                  `json:"cost"`
 }
 
 // EstimatedLifecycleCosts models a list of EstimatedLifecycleCost line items
@@ -68,7 +78,8 @@ func (e *EstimatedLifecycleCosts) Scan(src interface{}) error {
 type BusinessCase struct {
 	ID                              uuid.UUID               `json:"id"`
 	EUAUserID                       string                  `json:"euaUserId" db:"eua_user_id"`
-	SystemIntakeID                  uuid.UUID               `json:"systemIntake" db:"system_intake"`
+	SystemIntakeID                  uuid.UUID               `json:"systemIntakeId" db:"system_intake"`
+	Status                          BusinessCaseStatus      `json:"status"`
 	ProjectName                     null.String             `json:"projectName" db:"project_name"`
 	Requester                       null.String             `json:"requester"`
 	RequesterPhoneNumber            null.String             `json:"requesterPhoneNumber" db:"requester_phone_number"`
@@ -101,6 +112,8 @@ type BusinessCase struct {
 	AlternativeBCons                null.String             `json:"alternativeBCons" db:"alternative_b_cons"`
 	AlternativeBCostSavings         null.String             `json:"alternativeBCostSavings" db:"alternative_b_cost_savings"`
 	LifecycleCostLines              EstimatedLifecycleCosts `json:"lifecycleCostLines" db:"lifecycle_cost_lines"`
+	CreatedAt                       *time.Time              `json:"createdAt" db:"created_at"`
+	UpdatedAt                       *time.Time              `json:"updatedAt" db:"updated_at"`
 }
 
 // BusinessCases is the model for a list of business cases
