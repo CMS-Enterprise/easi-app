@@ -7,8 +7,9 @@ import { useOktaAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntakes } from 'types/routines';
+import { fetchBusinessCases, fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
+import { BusinessCaseModel } from 'types/businessCase';
 import './index.scss';
 import Button from 'components/shared/Button';
 
@@ -20,9 +21,14 @@ const Home = ({ history }: HomeProps) => {
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
+  const businessCases = useSelector(
+    (state: AppState) => state.businessCases.businessCases
+  );
+
   useEffect(() => {
     if (authState.isAuthenticated) {
       dispatch(fetchSystemIntakes());
+      dispatch(fetchBusinessCases());
     }
   }, [dispatch, authState.isAuthenticated]);
 
@@ -46,6 +52,13 @@ const Home = ({ history }: HomeProps) => {
             />
           );
         case 'SUBMITTED':
+          if (
+            businessCases.some(
+              businessCase => businessCase.systemIntakeId === intake.id
+            )
+          ) {
+            return null;
+          }
           return (
             <ActionBanner
               key={intake.id}
@@ -56,10 +69,55 @@ const Home = ({ history }: HomeProps) => {
               }
               helpfulText="Your intake form has been submitted. The admin team will be in touch with you to fill out a Business Case"
               onClick={() => {
-                // TODO: Append /general-request-info to the end when the route gets merged.
-                history.push(`/business/new`);
+                history.push({
+                  pathname: `/business/new/general-request-info`,
+                  state: {
+                    systemIntakeId: intake.id
+                  }
+                });
               }}
               label="Start my Business Case"
+            />
+          );
+        default:
+          return null;
+      }
+    });
+  };
+
+  const getBusinessCaseBanners = () => {
+    return businessCases.map((busCase: BusinessCaseModel) => {
+      switch (busCase.status) {
+        case 'DRAFT':
+          return (
+            <ActionBanner
+              key={busCase.id}
+              title={
+                busCase.requestName
+                  ? `${busCase.requestName}: Business Case`
+                  : 'Business Case'
+              }
+              helpfulText="Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next phase"
+              onClick={() => {
+                history.push(`/business/${busCase.id}/general-request-info`);
+              }}
+              label="Go to Business Case"
+            />
+          );
+        case 'SUBMITTED':
+          return (
+            <ActionBanner
+              key={busCase.id}
+              title={
+                busCase.requestName
+                  ? `${busCase.requestName}: Business Case`
+                  : 'Business Case'
+              }
+              helpfulText="The form has been submitted for review. You can update it and re-submit it any time in the process"
+              onClick={() => {
+                history.push(`/business/${busCase.id}/general-request-info`);
+              }}
+              label="Update Business Case"
             />
           );
         default:
@@ -73,6 +131,7 @@ const Home = ({ history }: HomeProps) => {
       <Header />
       <div role="main" className="grid-container margin-y-6">
         {getSystemIntakeBanners()}
+        {getBusinessCaseBanners()}
         <div className="tablet:grid-col-9">
           <h1 className="margin-top-6">Welcome to EASi</h1>
           <p className="line-height-body-5 font-body-lg text-light">
