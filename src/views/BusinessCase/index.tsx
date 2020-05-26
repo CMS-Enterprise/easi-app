@@ -9,7 +9,7 @@ import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { BusinessCaseModel } from 'types/businessCase';
 import {
-  businessCaseInitalData,
+  businessCaseInitialData,
   defaultProposedSolution
 } from 'data/businessCase';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
@@ -89,7 +89,7 @@ export const BusinessCase = () => {
       <Header name="CMS Business Case" />
       <main role="main">
         <Formik
-          initialValues={businessCaseInitalData}
+          initialValues={businessCaseInitialData}
           onSubmit={() => {}}
           validationSchema={pageObj.validation}
           validateOnBlur={false}
@@ -209,6 +209,7 @@ export const BusinessCase = () => {
                           altLetter="B"
                           handleToggleAlternative={() => {
                             if (
+                              // eslint-disable-next-line no-alert
                               window.confirm(
                                 'Are you sure you want to remove Alternative B?'
                               )

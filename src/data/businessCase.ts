@@ -22,7 +22,10 @@ export const defaultProposedSolution = {
   costSavings: ''
 };
 
-export const businessCaseInitalData: BusinessCaseModel = {
+export const businessCaseInitialData: BusinessCaseModel = {
+  id: '',
+  systemIntakeId: '',
+  status: 'DRAFT',
   requestName: '',
   requester: {
     name: '',
@@ -97,6 +100,9 @@ export const prepareBusinessCaseForApp = (
   });
 
   return {
+    id: businessCase.id || '',
+    systemIntakeId: businessCase.systemIntakeId || '',
+    status: businessCase.status || '',
     requestName: businessCase.projectName || '',
     requester: {
       name: businessCase.requester || '',
@@ -211,6 +217,7 @@ export const prepareBusinessCaseForApi = (
 
   return {
     id: '',
+    systemIntakeId: businessCase.systemIntakeId,
     euaUserId: '',
     projectName: businessCase.requestName,
     requester: businessCase.requester.name,
