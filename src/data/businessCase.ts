@@ -148,22 +148,24 @@ export const prepareBusinessCaseForApp = (
       estimatedLifecycleCost: lifecycleCostLines.A
     },
     ...(businessCase.alternativeBTitle ||
-      businessCase.alternativeBSummary ||
-      businessCase.alternativeBAcquisitionApproach ||
-      businessCase.alternativeBPros ||
-      businessCase.alternativeBCons ||
-      businessCase.alternativeBCostSavings ||
-      (hasAlternativeBLifecycleCostLines && {
-        alternativeB: {
-          title: businessCase.alternativeBTitle,
-          summary: businessCase.alternativeBSummary,
-          acquisitionApproach: businessCase.alternativeBAcquisitionApproach,
-          pros: businessCase.alternativeBPros,
-          cons: businessCase.alternativeBCons,
-          costSavings: businessCase.alternativeBCostSavings,
-          estimatedLifecycleCost: lifecycleCostLines.B
+    businessCase.alternativeBSummary ||
+    businessCase.alternativeBAcquisitionApproach ||
+    businessCase.alternativeBPros ||
+    businessCase.alternativeBCons ||
+    businessCase.alternativeBCostSavings ||
+    hasAlternativeBLifecycleCostLines
+      ? {
+          alternativeB: {
+            title: businessCase.alternativeBTitle,
+            summary: businessCase.alternativeBSummary,
+            acquisitionApproach: businessCase.alternativeBAcquisitionApproach,
+            pros: businessCase.alternativeBPros,
+            cons: businessCase.alternativeBCons,
+            costSavings: businessCase.alternativeBCostSavings,
+            estimatedLifecycleCost: lifecycleCostLines.B
+          }
         }
-      }))
+      : {})
   };
 };
 

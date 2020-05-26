@@ -264,27 +264,6 @@ export const BusinessCase = () => {
                                   history.push(newUrl);
                                 }
                               }
-                              if (
-                                // eslint-disable-next-line no-alert
-                                window.confirm(
-                                  'Are you sure you want to remove Alternative B?'
-                                )
-                              ) {
-                                setPages(prevArray =>
-                                  prevArray.filter(
-                                    p => p.name !== 'AlternativeSolutionB'
-                                  )
-                                );
-                                history.replace(
-                                  `/business/${businessCaseId}/alternative-solution-a`
-                                );
-                                formikProps.setFieldValue(
-                                  'alternativeB',
-                                  undefined
-                                );
-                                formikProps.setErrors({});
-                                window.scrollTo(0, 0);
-                              }
                             });
                           }}
                         />
