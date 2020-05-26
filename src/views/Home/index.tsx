@@ -69,8 +69,12 @@ const Home = ({ history }: HomeProps) => {
               }
               helpfulText="Your intake form has been submitted. The admin team will be in touch with you to fill out a Business Case"
               onClick={() => {
-                // TODO: Append /general-request-info to the end when the route gets merged.
-                history.push(`/business/new`);
+                history.push({
+                  pathname: `/business/new/general-request-info`,
+                  state: {
+                    systemIntakeId: intake.id
+                  }
+                });
               }}
               label="Start my Business Case"
             />
