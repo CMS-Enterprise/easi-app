@@ -1,5 +1,5 @@
 import {
-  businessCaseInitalData,
+  businessCaseInitialData,
   prepareBusinessCaseForApp
 } from 'data/businessCase';
 import { fetchBusinessCase } from 'types/routines';
@@ -8,7 +8,7 @@ import businessCaseReducer from './businessCaseReducer';
 describe('The business case reducer', () => {
   it('returns the initial state', () => {
     expect(businessCaseReducer(undefined, {})).toEqual({
-      form: businessCaseInitalData,
+      form: businessCaseInitialData,
       isLoading: null,
       error: null
     });
@@ -21,7 +21,7 @@ describe('The business case reducer', () => {
     };
 
     expect(businessCaseReducer(undefined, mockRequestAction)).toEqual({
-      form: businessCaseInitalData,
+      form: businessCaseInitialData,
       isLoading: true,
       error: null
     });
@@ -49,7 +49,7 @@ describe('The business case reducer', () => {
     };
 
     expect(businessCaseReducer(undefined, mockRequestAction)).toEqual({
-      form: businessCaseInitalData,
+      form: businessCaseInitialData,
       isLoading: null,
       error: 'Error Found!'
     });
@@ -62,7 +62,7 @@ describe('The business case reducer', () => {
     };
 
     expect(businessCaseReducer(undefined, mockRequestAction)).toEqual({
-      form: businessCaseInitalData,
+      form: businessCaseInitialData,
       isLoading: false,
       error: null
     });

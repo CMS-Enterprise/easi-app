@@ -14,3 +14,4 @@ export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');
 
 // BusinessCase routines
 export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');
+export const fetchBusinessCases = createRoutine('FETCH_BUSINESS_CASES');
