@@ -118,6 +118,25 @@ export const BusinessCase = () => {
     }
   };
 
+  const updateAvailablePages = () => {
+    const updatedPages = pages.slice(0, pages.length - 1).concat([
+      {
+        name: 'AlternativeSolutionB',
+        type: 'FORM',
+        slug: 'alternative-solution-b',
+        validation: BusinessCaseValidationSchema.alternativeB
+      },
+      {
+        name: 'Review',
+        type: 'Review',
+        slug: 'review'
+      }
+    ]);
+    setPages(updatedPages);
+    const newUrl = updatedPages[pageIndex + 1].slug;
+    history.push(newUrl);
+  };
+
   // Resume existing business case
   useEffect(() => {
     if (businessCaseId === 'new') {
@@ -134,6 +153,14 @@ export const BusinessCase = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Update the pages when there's an alternative b
+  useEffect(() => {
+    if (businessCase.alternativeB) {
+      updateAvailablePages();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [businessCase.alternativeB]);
 
   useEffect(() => {
     if (businessCase.id) {
@@ -241,27 +268,8 @@ export const BusinessCase = () => {
                                     'alternativeB',
                                     defaultProposedSolution
                                   );
-
-                                  const updatedPages = pages
-                                    .slice(0, pages.length - 1)
-                                    .concat([
-                                      {
-                                        name: 'AlternativeSolutionB',
-                                        type: 'FORM',
-                                        slug: 'alternative-solution-b',
-                                        validation:
-                                          BusinessCaseValidationSchema.alternativeB
-                                      },
-                                      {
-                                        name: 'Review',
-                                        type: 'Review',
-                                        slug: 'review'
-                                      }
-                                    ]);
-                                  setPages(updatedPages);
-                                  const newUrl =
-                                    updatedPages[pageIndex + 1].slug;
-                                  history.push(newUrl);
+                                  updateAvailablePages();
+                                  window.scrollTo(0, 0);
                                 }
                               }
                             });
