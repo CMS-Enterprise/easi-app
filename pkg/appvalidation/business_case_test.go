@@ -54,7 +54,7 @@ func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 	})
 }
 
-func (s AppValidateTestSuite) TestBusinessCaseForSubmission() {
+func (s AppValidateTestSuite) TestBusinessCaseForCreation() {
 	s.Run("golden path", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
 		submittedIntake.Status = models.SystemIntakeStatusSUBMITTED
@@ -131,5 +131,49 @@ func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
 			"{\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
 		)
 		s.Equal(expectedErrMessage, err.Error())
+	})
+}
+
+func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
+	s.Run("returns validations when submitted", func() {
+		existingBusinessCase := models.BusinessCase{}
+		existingBusinessCase.Status = models.BusinessCaseStatusREVIEWED
+		businessCase := models.BusinessCase{}
+		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		expectedError := `Could not validate *models.BusinessCase ` +
+			`00000000-0000-0000-0000-000000000000: ` +
+			`{"AlternativeAAcquisitionApproach":"is required",` +
+			`"AlternativeACons":"is required",` +
+			`"AlternativeACostSavings":"is required",` +
+			`"AlternativeAPros":"is required",` +
+			`"AlternativeASummary":"is required",` +
+			`"AlternativeATitle":"is required",` +
+			`"AsIsCons":"is required",` +
+			`"AsIsCostSavings":"is required",` +
+			`"AsIsPros":"is required",` +
+			`"AsIsSummary":"is required",` +
+			`"AsIsTitle":"is required",` +
+			`"BusinessNeed":"is required",` +
+			`"BusinessOwner":"is required",` +
+			`"CMSBenefit":"is required",` +
+			`"EUAUserID":"is required",` +
+			`"ID":"is required",` +
+			`"PreferredAcquisitionApproach":"is required",` +
+			`"PreferredCons":"is required",` +
+			`"PreferredCostSavings":"is required",` +
+			`"PreferredPros":"is required",` +
+			`"PreferredSummary":"is required",` +
+			`"PreferredTitle":"is required",` +
+			`"PriorityAlignment":"is required",` +
+			`"ProjectName":"is required",` +
+			`"Requester":"is required",` +
+			`"RequesterPhoneNumber":"is required",` +
+			`"Status":"Cannot be SUBMITTED",` +
+			`"SuccessIndicators":"is required",` +
+			`"SystemIntakeID":"is required"}`
+		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+
+		s.IsType(err, &apperrors.ValidationError{})
+		s.Equal(expectedError, err.Error())
 	})
 }
