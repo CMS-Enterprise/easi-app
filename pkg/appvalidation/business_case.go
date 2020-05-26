@@ -12,7 +12,7 @@ func checkUniqLifecycleCosts(costs models.EstimatedLifecycleCosts) (string, stri
 	costMap := map[string]bool{}
 
 	for _, cost := range costs {
-		attribute := string(cost.Solution) + string(cost.Year) + string(cost.Phase)
+		attribute := string(cost.Solution) + string(cost.Year) + string(*cost.Phase)
 		if costMap[attribute] {
 			return "LifecycleCostPhase", "cannot have multiple costs for the same phase, solution, and year"
 		}
@@ -38,12 +38,14 @@ func BusinessCaseForCreation(businessCase *models.BusinessCase, intake *models.S
 		ModelID:     "",
 		Validations: apperrors.Validations{},
 	}
-	k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines)
-	if k != "" {
-		expectedErr.WithValidation(k, v)
-	}
 
-	k, v = checkSystemIntakeSubmitted(intake)
+	// Uncomment below when UI has changed for unique lifecycle costs
+	//k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines)
+	//if k != "" {
+	//	expectedErr.WithValidation(k, v)
+	//}
+
+	k, v := checkSystemIntakeSubmitted(intake)
 	if k != "" {
 		expectedErr.WithValidation(k, v)
 	}
