@@ -1,13 +1,13 @@
 import { BusinessCaseState } from 'types/businessCase';
 import {
-  businessCaseInitalData,
+  businessCaseInitialData,
   prepareBusinessCaseForApp
 } from 'data/businessCase';
 import { fetchBusinessCase } from 'types/routines';
 import { Action } from 'redux-actions';
 
 const initialState: BusinessCaseState = {
-  form: businessCaseInitalData,
+  form: businessCaseInitialData,
   isLoading: null,
   error: null
 };
