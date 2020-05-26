@@ -6,7 +6,7 @@ import {
   fetchSystemIntake,
   storeSystemIntake,
   submitSystemIntake,
-  removeSystemIntake
+  clearSystemIntake
 } from 'types/routines';
 import systemIntakeReducer from './systemIntakeReducer';
 
@@ -182,49 +182,21 @@ describe('The system intake reducer', () => {
 
       expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        isSubmitting: null,
+        isLoading: null,
+        isSubmitting: false,
         error: null
       });
     });
   });
 
-  describe('removeSystemIntake', () => {
-    it('handles removeSystemIntake.TRIGGER', () => {
+  describe('clearSystemIntake', () => {
+    it('handles clearSystemIntake.TRIGGER', () => {
       const mockRequestAction = {
-        type: removeSystemIntake.TRIGGER,
+        type: clearSystemIntake.TRIGGER,
         payload: undefined
       };
 
       expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        isSubmitting: false,
-        error: null
-      });
-    });
-
-    it('handles removeSystemIntake.FAILURE', () => {
-      const mockFailureAction = {
-        type: removeSystemIntake.FAILURE,
-        payload: 'Error Error'
-      };
-
-      expect(systemIntakeReducer(undefined, mockFailureAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: null,
-        isSubmitting: false,
-        error: 'Error Error'
-      });
-    });
-
-    it('handles removeSystemIntake.FULFILL', () => {
-      const mockFulfillAction = {
-        type: removeSystemIntake.FULFILL,
-        payload: undefined
-      };
-
-      expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSubmitting: false,

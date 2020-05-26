@@ -18,7 +18,7 @@ import {
   saveSystemIntake,
   storeSystemIntake,
   submitSystemIntake,
-  removeSystemIntake
+  clearSystemIntake
 } from 'types/routines';
 import usePrevious from 'hooks/usePrevious';
 import ContactDetails from './ContactDetails';
@@ -75,10 +75,6 @@ export const SystemIntake = () => {
     }
   };
 
-  const dispatchClearSystemIntake = () => {
-    dispatch(removeSystemIntake());
-  };
-
   useEffect(() => {
     if (systemId === 'new') {
       authService.getUser().then((user: any) => {
@@ -95,6 +91,10 @@ export const SystemIntake = () => {
     } else {
       dispatch(fetchSystemIntake(systemId));
     }
+    // This return will clear system intake from store when component is unmounted
+    return () => {
+      dispatch(clearSystemIntake());
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -226,7 +226,6 @@ export const SystemIntake = () => {
                           unstyled
                           onClick={() => {
                             dispatchSave();
-                            dispatchClearSystemIntake();
                             history.push('/');
                           }}
                         >
