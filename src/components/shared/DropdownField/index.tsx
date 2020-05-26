@@ -47,8 +47,11 @@ export const DropdownField = ({
 type DropdownItemProps = {
   name: string;
   value: string;
+  disabled?: boolean;
 };
 
-export const DropdownItem = ({ name, value }: DropdownItemProps) => (
-  <option value={value}>{name}</option>
+export const DropdownItem = ({ name, value, disabled }: DropdownItemProps) => (
+  <option value={value} disabled={disabled}>
+    {name}
+  </option>
 );
