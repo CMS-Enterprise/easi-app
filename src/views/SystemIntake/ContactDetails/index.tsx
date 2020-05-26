@@ -89,7 +89,12 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
               setFieldValue('requester.component', e.target.value);
             }}
           >
-            <Field as={DropdownItem} name="Select an option" value="" />
+            <Field
+              as={DropdownItem}
+              name="Select an option"
+              value=""
+              disabled
+            />
             {cmsDivionsAndOfficesOptions('RequesterComponent')}
           </Field>
         </FieldGroup>
@@ -152,7 +157,12 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             id="IntakeForm-BusinessOwnerComponent"
             name="businessOwner.component"
           >
-            <Field as={DropdownItem} name="Select an option" value="" />
+            <Field
+              as={DropdownItem}
+              name="Select an option"
+              value=""
+              disabled
+            />
             {cmsDivionsAndOfficesOptions('BusinessOwnerComponent')}
           </Field>
         </FieldGroup>
@@ -200,7 +210,12 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             label="Product Manager Component"
             name="productManager.component"
           >
-            <Field as={DropdownItem} name="Select an option" value="" />
+            <Field
+              as={DropdownItem}
+              name="Select an option"
+              value=""
+              disabled
+            />
             {cmsDivionsAndOfficesOptions('ProductManagerComponent')}
           </Field>
         </FieldGroup>
