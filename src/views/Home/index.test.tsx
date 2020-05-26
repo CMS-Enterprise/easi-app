@@ -6,6 +6,7 @@ import { initialSystemIntakeForm } from 'data/systemIntake';
 import ActionBanner from 'components/shared/ActionBanner';
 import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+import { businessCaseInitialData } from 'data/businessCase';
 import Home from './index';
 
 jest.mock('@okta/okta-react', () => ({
@@ -44,6 +45,9 @@ describe('The home page', () => {
       const store = mockStore({
         systemIntakes: {
           systemIntakes: []
+        },
+        businessCases: {
+          businessCases: []
         }
       });
       let component: any;
@@ -67,7 +71,7 @@ describe('The home page', () => {
       });
     });
 
-    xit('displays banners for system intakes in draft', async done => {
+    it('displays banners for system intakes in draft', async done => {
       const mockStore = configureMockStore();
       const store = mockStore({
         systemIntakes: {
@@ -84,6 +88,20 @@ describe('The home page', () => {
             {
               ...initialSystemIntakeForm,
               id: '3'
+            },
+            {
+              ...initialSystemIntakeForm,
+              id: '4',
+              status: 'SUBMITTED'
+            }
+          ]
+        },
+        businessCases: {
+          businessCases: [
+            {
+              ...businessCaseInitialData,
+              id: '1',
+              systemIntakeId: '4'
             }
           ]
         }
@@ -101,7 +119,7 @@ describe('The home page', () => {
 
         setImmediate(() => {
           component.update();
-          expect(component.find(ActionBanner).length).toEqual(2);
+          expect(component.find(ActionBanner).length).toEqual(4);
           done();
         });
       });
