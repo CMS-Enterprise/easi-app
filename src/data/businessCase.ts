@@ -95,7 +95,7 @@ export const prepareBusinessCaseForApp = (
     if (solution) {
       solution[`year${line.year}` as keyof EstimatedLifecycleCostLines].push({
         phase: line.phase || '',
-        cost: line.cost ? line.cost.toString() : ''
+        cost: line.cost === null ? '' : line.cost.toString()
       });
 
       if (line.solution === 'B' && (line.phase || line.cost)) {
