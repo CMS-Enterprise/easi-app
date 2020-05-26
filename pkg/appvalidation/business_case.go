@@ -5,6 +5,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
 // checkUniqLifecycleCosts checks if there's any duplicates
@@ -59,16 +60,149 @@ func BusinessCaseForCreation(businessCase *models.BusinessCase, intake *models.S
 // BusinessCaseForUpdate checks if it's a valid business case to update
 func BusinessCaseForUpdate(businessCase *models.BusinessCase) error {
 	// We return an empty id in this error because the business case hasn't been created
-	expectedErr := apperrors.ValidationError{
-		Err:         errors.New("business case failed validations"),
-		Model:       businessCase,
-		ModelID:     "",
-		Validations: apperrors.Validations{},
-	}
+	expectedErr := apperrors.NewValidationError(
+		errors.New("business case failed validations"),
+		businessCase,
+		businessCase.ID.String(),
+	)
 
-	k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines)
-	if k != "" {
-		expectedErr.WithValidation(k, v)
+	//k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines)
+	//if k != "" {
+	//	expectedErr.WithValidation(k, v)
+	//}
+
+	if len(expectedErr.Validations) > 0 {
+		return &expectedErr
+	}
+	return nil
+}
+
+// BusinessCaseForSubmit checks if it's a valid business case to update
+func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCase *models.BusinessCase) error {
+	// We return an empty id in this error because the business case hasn't been created
+	expectedErr := apperrors.NewValidationError(
+		errors.New("business case failed validations"),
+		businessCase,
+		businessCase.ID.String(),
+	)
+
+	if businessCase.Status == models.BusinessCaseStatusSUBMITTED {
+		if existingBusinessCase.Status != models.BusinessCaseStatusDRAFT &&
+			existingBusinessCase.Status != models.BusinessCaseStatusSUBMITTED {
+			expectedErr.WithValidation("Status", "Cannot be SUBMITTED")
+		}
+
+		if validate.RequireUUID(businessCase.ID) {
+			expectedErr.WithValidation("ID", "is required")
+		}
+		if validate.RequireString(businessCase.EUAUserID) {
+			expectedErr.WithValidation("EUAUserID", "is required")
+		}
+		if validate.RequireUUID(businessCase.SystemIntakeID) {
+			expectedErr.WithValidation("SystemIntakeID", "is required")
+		}
+		if validate.RequireNullString(businessCase.ProjectName) {
+			expectedErr.WithValidation("ProjectName", "is required")
+		}
+		if validate.RequireNullString(businessCase.Requester) {
+			expectedErr.WithValidation("Requester", "is required")
+		}
+		if validate.RequireNullString(businessCase.RequesterPhoneNumber) {
+			expectedErr.WithValidation("RequesterPhoneNumber", "is required")
+		}
+		if validate.RequireNullString(businessCase.BusinessOwner) {
+			expectedErr.WithValidation("BusinessOwner", "is required")
+		}
+		if validate.RequireNullString(businessCase.BusinessNeed) {
+			expectedErr.WithValidation("BusinessNeed", "is required")
+		}
+		if validate.RequireNullString(businessCase.CMSBenefit) {
+			expectedErr.WithValidation("CMSBenefit", "is required")
+		}
+		if validate.RequireNullString(businessCase.PriorityAlignment) {
+			expectedErr.WithValidation("PriorityAlignment", "is required")
+		}
+		if validate.RequireNullString(businessCase.SuccessIndicators) {
+			expectedErr.WithValidation("SuccessIndicators", "is required")
+		}
+		if validate.RequireNullString(businessCase.AsIsTitle) {
+			expectedErr.WithValidation("AsIsTitle", "is required")
+		}
+		if validate.RequireNullString(businessCase.AsIsSummary) {
+			expectedErr.WithValidation("AsIsSummary", "is required")
+		}
+		if validate.RequireNullString(businessCase.AsIsPros) {
+			expectedErr.WithValidation("AsIsPros", "is required")
+		}
+		if validate.RequireNullString(businessCase.AsIsCons) {
+			expectedErr.WithValidation("AsIsCons", "is required")
+		}
+		if validate.RequireNullString(businessCase.AsIsCostSavings) {
+			expectedErr.WithValidation("AsIsCostSavings", "is required")
+		}
+		if validate.RequireNullString(businessCase.PreferredTitle) {
+			expectedErr.WithValidation("PreferredTitle", "is required")
+		}
+		if validate.RequireNullString(businessCase.PreferredSummary) {
+			expectedErr.WithValidation("PreferredSummary", "is required")
+		}
+		if validate.RequireNullString(businessCase.PreferredAcquisitionApproach) {
+			expectedErr.WithValidation("PreferredAcquisitionApproach", "is required")
+		}
+		if validate.RequireNullString(businessCase.PreferredPros) {
+			expectedErr.WithValidation("PreferredPros", "is required")
+		}
+		if validate.RequireNullString(businessCase.PreferredCons) {
+			expectedErr.WithValidation("PreferredCons", "is required")
+		}
+		if validate.RequireNullString(businessCase.PreferredCostSavings) {
+			expectedErr.WithValidation("PreferredCostSavings", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeATitle) {
+			expectedErr.WithValidation("AlternativeATitle", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeASummary) {
+			expectedErr.WithValidation("AlternativeASummary", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeAAcquisitionApproach) {
+			expectedErr.WithValidation("AlternativeAAcquisitionApproach", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeAPros) {
+			expectedErr.WithValidation("AlternativeAPros", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeACons) {
+			expectedErr.WithValidation("AlternativeACons", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeACostSavings) {
+			expectedErr.WithValidation("AlternativeACostSavings", "is required")
+		}
+		if businessCase.AlternativeBTitle.Valid ||
+			businessCase.AlternativeBSummary.Valid ||
+			businessCase.AlternativeBAcquisitionApproach.Valid ||
+			businessCase.AlternativeBPros.Valid ||
+			businessCase.AlternativeBCons.Valid ||
+			businessCase.AlternativeBCostSavings.Valid {
+			if validate.RequireNullString(businessCase.AlternativeBTitle) {
+				expectedErr.WithValidation("AlternativeBTitle", "is required")
+			}
+			if validate.RequireNullString(businessCase.AlternativeBSummary) {
+				expectedErr.WithValidation("AlternativeBSummary", "is required")
+			}
+			if validate.RequireNullString(businessCase.AlternativeBAcquisitionApproach) {
+				expectedErr.WithValidation("AlternativeBAcquisitionApproach", "is required")
+			}
+			if validate.RequireNullString(businessCase.AlternativeBPros) {
+				expectedErr.WithValidation("AlternativeBPros", "is required")
+			}
+			if validate.RequireNullString(businessCase.AlternativeBCons) {
+				expectedErr.WithValidation("AlternativeBCons", "is required")
+			}
+			if validate.RequireNullString(businessCase.AlternativeBCostSavings) {
+				expectedErr.WithValidation("AlternativeBCostSavings", "is required")
+			}
+		}
+		// Add LifecycleCostLines
+		// Add SubmittedAt
 	}
 
 	if len(expectedErr.Validations) > 0 {
