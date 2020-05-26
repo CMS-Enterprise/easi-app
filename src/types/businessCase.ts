@@ -1,4 +1,5 @@
 import { LifecyclePhase } from 'types/estimatedLifecycle';
+import { DateTime } from 'luxon';
 
 export type EstimatedLifecycleCostLines = {
   year1: LifecyclePhase[];
@@ -23,8 +24,14 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
   acquisitionApproach: string;
 };
 
+type BusinessCaseStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
+
 // Business Case Form Model
 export type BusinessCaseModel = {
+  id?: string;
+  euaUserId?: string;
+  status: BusinessCaseStatus;
+  systemIntakeId: string;
   requestName: string;
   requester: {
     name: string;
@@ -43,9 +50,17 @@ export type BusinessCaseModel = {
   alternativeB?: ProposedBusinessCaseSolution;
 };
 
+export type BusinessCasesState = {
+  businessCases: BusinessCaseModel[];
+  isLoading: boolean | null;
+  loadedTimestamp: DateTime | null;
+  error: string | null;
+};
+
 // Redux store type for business case
 export type BusinessCaseState = {
   form: BusinessCaseModel;
   isLoading: boolean | null;
+  isSaving: boolean;
   error: any;
 };
