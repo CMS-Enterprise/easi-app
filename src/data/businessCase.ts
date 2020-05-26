@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import {
   BusinessCaseModel,
   EstimatedLifecycleCostLines
@@ -23,9 +24,8 @@ export const defaultProposedSolution = {
 };
 
 export const businessCaseInitialData: BusinessCaseModel = {
-  id: '',
-  systemIntakeId: '',
   status: 'DRAFT',
+  systemIntakeId: '',
   requestName: '',
   requester: {
     name: '',
@@ -68,11 +68,12 @@ type lifecycleCostLinesType = {
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
+  let hasAlternativeBLifecycleCostLines = false;
   const lifecycleCostLines: lifecycleCostLinesType = {
-    'As Is': emptyEstimatedLifecycle,
-    Preferred: emptyEstimatedLifecycle,
-    A: emptyEstimatedLifecycle,
-    B: emptyEstimatedLifecycle
+    'As Is': cloneDeep(emptyEstimatedLifecycle),
+    Preferred: cloneDeep(emptyEstimatedLifecycle),
+    A: cloneDeep(emptyEstimatedLifecycle),
+    B: cloneDeep(emptyEstimatedLifecycle)
   };
 
   businessCase.lifecycleCostLines.forEach((line: any) => {
@@ -93,28 +94,33 @@ export const prepareBusinessCaseForApp = (
 
     if (solution) {
       solution[`year${line.year}` as keyof EstimatedLifecycleCostLines].push({
-        phase: line.phase,
-        cost: line.cost
+        phase: line.phase || '',
+        cost: line.cost === null ? '' : line.cost.toString()
       });
+
+      if (line.solution === 'B' && (line.phase || line.cost)) {
+        hasAlternativeBLifecycleCostLines = true;
+      }
     }
   });
 
   return {
-    id: businessCase.id || '',
-    systemIntakeId: businessCase.systemIntakeId || '',
-    status: businessCase.status || '',
-    requestName: businessCase.projectName || '',
+    id: businessCase.id,
+    euaUserId: businessCase.euaUserId,
+    status: businessCase.status,
+    systemIntakeId: businessCase.systemIntake,
+    requestName: businessCase.projectName,
     requester: {
-      name: businessCase.requester || '',
-      phoneNumber: businessCase.requesterPhoneNumber || ''
+      name: businessCase.requester,
+      phoneNumber: businessCase.requesterPhoneNumber
     },
     businessOwner: {
-      name: businessCase.businessOwner || ''
+      name: businessCase.businessOwner
     },
-    businessNeed: businessCase.businessNeed || '',
-    cmsBenefit: businessCase.cmsBenefit || '',
-    priorityAlignment: businessCase.priorityAlignment || '',
-    successIndicators: businessCase.successIndicators || '',
+    businessNeed: businessCase.businessNeed,
+    cmsBenefit: businessCase.cmsBenefit,
+    priorityAlignment: businessCase.priorityAlignment,
+    successIndicators: businessCase.successIndicators,
     asIsSolution: {
       title: businessCase.asIsTitle,
       summary: businessCase.asIsSummary,
@@ -141,15 +147,25 @@ export const prepareBusinessCaseForApp = (
       costSavings: businessCase.alternativeACostSavings,
       estimatedLifecycleCost: lifecycleCostLines.A
     },
-    alternativeB: {
-      title: businessCase.alternativeBTitle,
-      summary: businessCase.alternativeBSummary,
-      acquisitionApproach: businessCase.alternativeBAcquisitionApproach,
-      pros: businessCase.alternativeBPros,
-      cons: businessCase.alternativeBCons,
-      costSavings: businessCase.alternativeBCostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.B
-    }
+    ...(businessCase.alternativeBTitle ||
+    businessCase.alternativeBSummary ||
+    businessCase.alternativeBAcquisitionApproach ||
+    businessCase.alternativeBPros ||
+    businessCase.alternativeBCons ||
+    businessCase.alternativeBCostSavings ||
+    hasAlternativeBLifecycleCostLines
+      ? {
+          alternativeB: {
+            title: businessCase.alternativeBTitle,
+            summary: businessCase.alternativeBSummary,
+            acquisitionApproach: businessCase.alternativeBAcquisitionApproach,
+            pros: businessCase.alternativeBPros,
+            cons: businessCase.alternativeBCons,
+            costSavings: businessCase.alternativeBCostSavings,
+            estimatedLifecycleCost: lifecycleCostLines.B
+          }
+        }
+      : {})
   };
 };
 
@@ -205,8 +221,10 @@ export const prepareBusinessCaseForApi = (
           return phases.map(lifecyclePhase => {
             return {
               solution: solutionApiName,
-              phase: lifecyclePhase.phase,
-              cost: lifecyclePhase.cost,
+              phase: lifecyclePhase.phase || null,
+              cost: lifecyclePhase.cost
+                ? parseFloat(lifecyclePhase.cost)
+                : null,
               year
             };
           });
@@ -216,13 +234,18 @@ export const prepareBusinessCaseForApi = (
     .flat();
 
   return {
-    id: '',
-    systemIntakeId: businessCase.systemIntakeId,
-    euaUserId: '',
+    ...(businessCase.id && {
+      id: businessCase.id
+    }),
+    ...(businessCase.euaUserId && {
+      euaUserId: businessCase.euaUserId
+    }),
+    status: businessCase.status,
+    systemIntake: businessCase.systemIntakeId,
     projectName: businessCase.requestName,
     requester: businessCase.requester.name,
     requesterPhoneNumber: businessCase.requester.phoneNumber,
-    businessOwner: businessCase.businessOwner,
+    businessOwner: businessCase.businessOwner.name,
     businessNeed: businessCase.businessNeed,
     cmsBenefit: businessCase.cmsBenefit,
     priorityAlignment: businessCase.priorityAlignment,
