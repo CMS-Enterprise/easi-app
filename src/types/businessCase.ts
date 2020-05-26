@@ -28,9 +28,10 @@ type BusinessCaseStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
 
 // Business Case Form Model
 export type BusinessCaseModel = {
-  id: string;
-  systemIntakeId: string;
+  id?: string;
+  euaUserId?: string;
   status: BusinessCaseStatus;
+  systemIntakeId: string;
   requestName: string;
   requester: {
     name: string;
@@ -60,5 +61,6 @@ export type BusinessCasesState = {
 export type BusinessCaseState = {
   form: BusinessCaseModel;
   isLoading: boolean | null;
+  isSaving: boolean;
   error: any;
 };
