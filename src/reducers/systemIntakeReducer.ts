@@ -6,7 +6,8 @@ import {
 import {
   fetchSystemIntake,
   storeSystemIntake,
-  submitSystemIntake
+  submitSystemIntake,
+  removeSystemIntake
 } from 'types/routines';
 import { Action } from 'redux-actions';
 
@@ -34,6 +35,23 @@ function systemIntakeReducer(
         systemIntake: prepareSystemIntakeForApp(action.payload)
       };
     case fetchSystemIntake.FULFILL:
+      return {
+        ...state,
+        isLoading: false
+      };
+    case removeSystemIntake.TRIGGER:
+      return {
+        ...state,
+        systemIntake: initialSystemIntakeForm,
+        isLoading: false,
+        error: null
+      };
+    case removeSystemIntake.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case removeSystemIntake.FULFILL:
       return {
         ...state,
         isLoading: false

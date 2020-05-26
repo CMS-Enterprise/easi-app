@@ -17,7 +17,8 @@ import {
   fetchSystemIntake,
   saveSystemIntake,
   storeSystemIntake,
-  submitSystemIntake
+  submitSystemIntake,
+  removeSystemIntake
 } from 'types/routines';
 import usePrevious from 'hooks/usePrevious';
 import ContactDetails from './ContactDetails';
@@ -72,6 +73,10 @@ export const SystemIntake = () => {
         history.replace(`/system/${current.values.id}/${pageObj.slug}`);
       }
     }
+  };
+
+  const dispatchClearSystemIntake = () => {
+    dispatch(removeSystemIntake());
   };
 
   useEffect(() => {
@@ -221,6 +226,7 @@ export const SystemIntake = () => {
                           unstyled
                           onClick={() => {
                             dispatchSave();
+                            dispatchClearSystemIntake();
                             history.push('/');
                           }}
                         >
