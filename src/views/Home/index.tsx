@@ -88,7 +88,7 @@ const Home = ({ history }: HomeProps) => {
               service or make major changes and upgrades to an existing one. For
               all other requests, please use the{' '}
               <a
-                href="http://google.com"
+                href="https://share.cms.gov/Office/OIT/CIOCorner/Lists/Intake/NewForm.aspx"
                 target="_blank"
                 rel="noopener noreferrer"
               >
