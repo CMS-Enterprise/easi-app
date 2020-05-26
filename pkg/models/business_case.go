@@ -30,13 +30,10 @@ const (
 	// BusinessCaseStatusREJECTED captures enum value "REJECTED"
 	BusinessCaseStatusREJECTED BusinessCaseStatus = "REJECTED"
 
-	// LifecycleCostPhaseINITIATE captures enum value "Initiate"
-	// TODO: Remove initiate phase after this gets merged in
-	LifecycleCostPhaseINITIATE LifecycleCostPhase = "Initiate"
 	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
-	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operation & Maintenance"
-	LifecycleCostPhaseOPERATIONMAINTENANCE LifecycleCostPhase = "Operation & Maintenance"
+	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operation and Maintenance"
+	LifecycleCostPhaseOPERATIONMAINTENANCE LifecycleCostPhase = "Operation and Maintenance"
 
 	// LifecycleCostSolutionASIS captures enum value "As Is"
 	LifecycleCostSolutionASIS LifecycleCostSolution = "As Is"
