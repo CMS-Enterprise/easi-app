@@ -66,10 +66,10 @@ func BusinessCaseForUpdate(businessCase *models.BusinessCase) error {
 		businessCase.ID.String(),
 	)
 
-	//k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines)
-	//if k != "" {
-	//	expectedErr.WithValidation(k, v)
-	//}
+	k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines)
+	if k != "" {
+		expectedErr.WithValidation(k, v)
+	}
 
 	if len(expectedErr.Validations) > 0 {
 		return &expectedErr
@@ -206,8 +206,9 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 				expectedErr.WithValidation("AlternativeBCostSavings", "is required")
 			}
 		}
-		// Add LifecycleCostLines
-		// Add SubmittedAt
+		if k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines); k != "" {
+			expectedErr.WithValidation(k, v)
+		}
 	}
 
 	if len(expectedErr.Validations) > 0 {

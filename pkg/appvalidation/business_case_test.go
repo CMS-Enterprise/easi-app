@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -120,8 +121,10 @@ func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
 
 	s.Run("returns validation error when business case fails validation", func() {
 		elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
+		id := uuid.New()
 
 		businessCase := models.BusinessCase{
+			ID: id,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				elc1,
 				elc2,
@@ -130,17 +133,26 @@ func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
 		err := BusinessCaseForUpdate(&businessCase)
 		s.Error(err)
 		s.IsType(&apperrors.ValidationError{}, err)
-		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCase : " +
-			"{\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
+		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCase " + id.String() +
+			": {\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
 		)
 		s.Equal(expectedErrMessage, err.Error())
 	})
 }
 
 func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
+	existingBusinessCase := models.BusinessCase{}
+	existingBusinessCase.Status = models.BusinessCaseStatusREVIEWED
+
+	s.Run("golden path", func() {
+		businessCase := testhelpers.NewBusinessCase()
+		submittedTime := time.Now()
+		businessCase.SubmittedAt = &submittedTime
+		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+		s.NoError(err)
+	})
+
 	s.Run("returns validations when submitted", func() {
-		existingBusinessCase := models.BusinessCase{}
-		existingBusinessCase.Status = models.BusinessCaseStatusREVIEWED
 		businessCase := models.BusinessCase{}
 		businessCase.Status = models.BusinessCaseStatusSUBMITTED
 		expectedError := `Could not validate *models.BusinessCase ` +
