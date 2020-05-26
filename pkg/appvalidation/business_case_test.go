@@ -3,6 +3,8 @@ package appvalidation
 import (
 	"fmt"
 
+	"github.com/guregu/null"
+
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -174,6 +176,31 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
 
 		s.IsType(err, &apperrors.ValidationError{})
+		s.Equal(expectedError, err.Error())
+	})
+
+	s.Run("returns validations when optional alternative", func() {
+		existingBusinessCase := testhelpers.NewBusinessCase()
+		existingBusinessCase.Status = models.BusinessCaseStatusDRAFT
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		businessCase.AlternativeBTitle = null.NewString("B Title", true)
+		businessCase.AlternativeBSummary = null.NewString("", false)
+		businessCase.AlternativeBPros = null.NewString("", false)
+		businessCase.AlternativeBCons = null.NewString("", false)
+		businessCase.AlternativeBAcquisitionApproach = null.NewString("", false)
+		businessCase.AlternativeBCostSavings = null.NewString("", false)
+		expectedError := `Could not validate *models.BusinessCase ` +
+			fmt.Sprintf("%s: ", businessCase.ID) +
+			`{"AlternativeBAcquisitionApproach":"is required",` +
+			`"AlternativeBCons":"is required",` +
+			`"AlternativeBCostSavings":"is required",` +
+			`"AlternativeBPros":"is required",` +
+			`"AlternativeBSummary":"is required"}`
+
+		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+
+		s.Error(err)
 		s.Equal(expectedError, err.Error())
 	})
 }

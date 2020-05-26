@@ -50,6 +50,7 @@ func NewEstimatedLifecycleCost(opts EstimatedLifecycleCostOptions) models.Estima
 func NewBusinessCase() models.BusinessCase {
 	year2 := models.LifecycleCostYear2
 	return models.BusinessCase{
+		ID:                              uuid.New(),
 		EUAUserID:                       RandomEUAID(),
 		SystemIntakeID:                  uuid.New(),
 		ProjectName:                     null.StringFrom("Test Project Name"),
