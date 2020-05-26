@@ -98,10 +98,8 @@ export const BusinessCase = () => {
     const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
     if (current && current.dirty && !isSaving) {
       if (businessCaseId === 'new') {
-        current.resetForm({ values: current.values, errors: current.errors });
         const systemIntakeId =
           (location.state && location.state.systemIntakeId) || '';
-
         dispatch(
           postBusinessCase({
             ...current.values,
@@ -116,6 +114,7 @@ export const BusinessCase = () => {
           })
         );
       }
+      current.resetForm({ values: current.values, errors: current.errors });
     }
   };
 
