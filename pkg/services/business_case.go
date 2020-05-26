@@ -201,6 +201,10 @@ func NewUpdateBusinessCase(
 		//}
 		updatedAt := clock.Now()
 		businessCase.UpdatedAt = &updatedAt
+
+		// Once CEDAR endpoint exists, we should be doing validations and submissions before db changes to ensure
+		// that we are allowed to make the changes.
+
 		businessCase, err = update(businessCase)
 		if err != nil {
 			logger.Error("failed to update business case")
