@@ -174,6 +174,7 @@ func NewUpdateBusinessCase(
 	fetchBusinessCase func(id uuid.UUID) (*models.BusinessCase, error),
 	authorize func(context context.Context, businessCase *models.BusinessCase) (bool, error),
 	update func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
+	sendEmail func(requester string, intakeID uuid.UUID) error,
 	logger *zap.Logger,
 	clock clock.Clock,
 ) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
@@ -207,6 +208,27 @@ func NewUpdateBusinessCase(
 				Err:       err,
 				Model:     businessCase,
 				Operation: apperrors.QuerySave,
+			}
+		}
+		// Right now, add some validations for sending an email here
+		// Similar to system intake,
+		// these should be covered by validations above
+		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
+			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
+			if !businessCase.Requester.Valid {
+				validationError := apperrors.NewValidationError(
+					errors.New("failed to validate for email"),
+					businessCase,
+					businessCase.ID.String(),
+				)
+				validationError.WithValidation("Requester", "is required")
+				logger.Error("Failed to validate", zap.Error(&validationError))
+				return businessCase, &validationError
+			}
+			err = sendEmail(businessCase.Requester.String, businessCase.ID)
+			if err != nil {
+				logger.Error("Failed to send email", zap.Error(err))
+				return businessCase, err
 			}
 		}
 		return businessCase, nil

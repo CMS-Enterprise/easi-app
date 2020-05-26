@@ -33,8 +33,8 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	s.NoError(err)
 
 	body, err := json.Marshal(map[string]string{
-		"systemIntake": intakeID.String(),
-		"status":       "DRAFT",
+		"systemIntakeId": intakeID.String(),
+		"status":         "DRAFT",
 	})
 	s.NoError(err)
 
