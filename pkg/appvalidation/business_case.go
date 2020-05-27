@@ -2,6 +2,7 @@ package appvalidation
 
 import (
 	"errors"
+	"strings"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -13,11 +14,13 @@ func checkUniqLifecycleCosts(costs models.EstimatedLifecycleCosts) (string, stri
 	costMap := map[string]bool{}
 
 	for _, cost := range costs {
-		attribute := string(cost.Solution) + string(cost.Year) + string(*cost.Phase)
-		if costMap[attribute] {
-			return "LifecycleCostPhase", "cannot have multiple costs for the same phase, solution, and year"
+		if cost.Phase != nil {
+			attribute := string(cost.Solution) + string(cost.Year) + string(*cost.Phase)
+			if costMap[attribute] {
+				return "LifecycleCostPhase", "cannot have multiple costs for the same phase, solution, and year"
+			}
+			costMap[attribute] = true
 		}
-		costMap[attribute] = true
 	}
 	return "", ""
 }
@@ -75,6 +78,100 @@ func BusinessCaseForUpdate(businessCase *models.BusinessCase) error {
 		return &expectedErr
 	}
 	return nil
+}
+
+func alternativeBRequired(businessCase *models.BusinessCase) bool {
+	return businessCase.AlternativeBTitle.Valid ||
+		businessCase.AlternativeBSummary.Valid ||
+		businessCase.AlternativeBAcquisitionApproach.Valid ||
+		businessCase.AlternativeBPros.Valid ||
+		businessCase.AlternativeBCons.Valid ||
+		businessCase.AlternativeBCostSavings.Valid
+}
+
+type solutionCostLines map[string]map[string]int
+
+func validateRequiredCost(lines solutionCostLines) string {
+	years := []string{}
+	if len(lines["1"]) == 0 {
+		years = append(years, "1")
+	}
+	if len(lines["2"]) == 0 {
+		years = append(years, "2")
+	}
+	if len(lines["3"]) == 0 {
+		years = append(years, "3")
+	}
+	if len(lines["4"]) == 0 {
+		years = append(years, "4")
+	}
+	if len(lines["5"]) == 0 {
+		years = append(years, "5")
+	}
+	noun := "year "
+	verb := " is "
+	if len(years) > 1 {
+		verb = " are "
+		noun = "years "
+	}
+	if len(years) > 0 {
+		return noun + strings.Join(years, ", ") + verb + "required"
+	}
+	return ""
+}
+
+func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCase) map[string]string {
+	validations := map[string]string{}
+	asIsCosts := solutionCostLines{}
+	preferredCosts := solutionCostLines{}
+	aCosts := solutionCostLines{}
+	bCosts := solutionCostLines{}
+
+	for _, cost := range businessCase.LifecycleCostLines {
+		valid := true
+		if validate.RequireCostPhase(cost.Phase) {
+			solutionYear := string(cost.Solution) + string(cost.Year)
+			validations[solutionYear] = "requires a phase"
+			valid = false
+		}
+
+		if validate.RequireInt(cost.Cost) {
+			solutionYearPhase := string(cost.Solution) + string(cost.Year) + string(*cost.Phase)
+			validations[solutionYearPhase] = "requires a cost"
+			valid = false
+		}
+
+		if valid {
+			value := map[string]int{
+				string(*cost.Phase): *cost.Cost,
+			}
+			switch cost.Solution {
+			case models.LifecycleCostSolutionASIS:
+				asIsCosts[string(cost.Year)] = value
+			case models.LifecycleCostSolutionPREFERRED:
+				preferredCosts[string(cost.Year)] = value
+			case models.LifecycleCostSolutionA:
+				aCosts[string(cost.Year)] = value
+			case models.LifecycleCostSolutionB:
+				bCosts[string(cost.Year)] = value
+			}
+		}
+	}
+	if v := validateRequiredCost(asIsCosts); v != "" {
+		validations["asIsSolution"] = v
+	}
+	if v := validateRequiredCost(preferredCosts); v != "" {
+		validations["preferredSolution"] = v
+	}
+	if v := validateRequiredCost(aCosts); v != "" {
+		validations["alternativeASolution"] = v
+	}
+	if alternativeBRequired(businessCase) {
+		if v := validateRequiredCost(bCosts); v != "" {
+			validations["alternativeBSolution"] = v
+		}
+	}
+	return validations
 }
 
 // BusinessCaseForSubmit checks if it's a valid business case to update
@@ -181,12 +278,7 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 		} else if validate.RequireTime(*businessCase.SubmittedAt) {
 			expectedErr.WithValidation("SubmittedAt", "is cannot be zero")
 		}
-		if businessCase.AlternativeBTitle.Valid ||
-			businessCase.AlternativeBSummary.Valid ||
-			businessCase.AlternativeBAcquisitionApproach.Valid ||
-			businessCase.AlternativeBPros.Valid ||
-			businessCase.AlternativeBCons.Valid ||
-			businessCase.AlternativeBCostSavings.Valid {
+		if alternativeBRequired(businessCase) {
 			if validate.RequireNullString(businessCase.AlternativeBTitle) {
 				expectedErr.WithValidation("AlternativeBTitle", "is required")
 			}
@@ -208,6 +300,11 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 		}
 		if k, v := checkUniqLifecycleCosts(businessCase.LifecycleCostLines); k != "" {
 			expectedErr.WithValidation(k, v)
+		}
+		if lifecycleValidations := validateAllRequiredLifecycleCosts(businessCase); len(lifecycleValidations) != 0 {
+			for k, v := range lifecycleValidations {
+				expectedErr.WithValidation(k, v)
+			}
 		}
 	}
 
