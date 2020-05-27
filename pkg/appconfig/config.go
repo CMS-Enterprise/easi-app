@@ -13,6 +13,8 @@ func NewEnvironment(config string) (Environment, error) {
 		return DevEnv, nil
 	case ImplEnv.String():
 		return ImplEnv, nil
+	case ProdEnv.String():
+		return ProdEnv, nil
 	default:
 		return "", fmt.Errorf("unknown environment: %s", config)
 	}
@@ -33,6 +35,8 @@ const (
 	DevEnv Environment = "dev"
 	// ImplEnv is the environment for the impl deployed env
 	ImplEnv Environment = "impl"
+	// ProdEnv is the environment for the impl deployed env
+	ProdEnv Environment = "prod"
 )
 
 // String gets the environment as a string
@@ -46,9 +50,51 @@ func (e Environment) String() string {
 		return "dev"
 	case ImplEnv:
 		return "impl"
+	case ProdEnv:
+		return "prod"
 	default:
 		return ""
 	}
+}
+
+// Local returns true if the environment is local
+func (e Environment) Local() bool {
+	if e == LocalEnv {
+		return true
+	}
+	return false
+}
+
+// Test returns true if the environment is local
+func (e Environment) Test() bool {
+	if e == TestEnv {
+		return true
+	}
+	return false
+}
+
+// Dev returns true if the environment is local
+func (e Environment) Dev() bool {
+	if e == TestEnv {
+		return true
+	}
+	return false
+}
+
+// Impl returns true if the environment is local
+func (e Environment) Impl() bool {
+	if e == ImplEnv {
+		return true
+	}
+	return false
+}
+
+// Prod returns true if the environment is local
+func (e Environment) Prod() bool {
+	if e == ProdEnv {
+		return true
+	}
+	return false
 }
 
 // DBHostConfigKey is the Postgres hostname config key
