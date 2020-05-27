@@ -18,7 +18,6 @@ function getBusinessCaseRequest(id: string) {
 function* getBusinessCase(action: Action<any>) {
   try {
     yield put(fetchBusinessCase.request());
-    // TODO: Probably have to prepare this data to be sent
     const response = yield call(getBusinessCaseRequest, action.payload);
     yield put(fetchBusinessCase.success(response.data));
     yield put(updateLastActiveAt);
