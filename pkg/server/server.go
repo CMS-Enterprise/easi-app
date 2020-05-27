@@ -37,7 +37,7 @@ func NewServer(config *viper.Viper) *Server {
 	// Set environment from config
 	environment, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
 	if err != nil {
-		zapLogger.Panic("Unable to set environment", zap.Error(err))
+		zapLogger.Fatal("Unable to set environment", zap.Error(err))
 	}
 
 	// Set the router
