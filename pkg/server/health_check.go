@@ -15,7 +15,7 @@ func (s Server) CheckCEDARClientConnection(client cedar.TranslatedClient) {
 	// and tests that we're authorized to retrieve information
 	_, err := client.FetchSystems(s.logger)
 	if err != nil {
-		s.logger.Panic("Failed to connect to CEDAR on startup", zap.Error(err))
+		s.logger.Fatal("Failed to connect to CEDAR on startup", zap.Error(err))
 	}
 }
 
@@ -25,6 +25,6 @@ func (s Server) CheckEmailClient(client email.Client) {
 	s.logger.Info("Testing email client")
 	err := client.SendTestEmail()
 	if err != nil {
-		s.logger.Panic("Failed to send test email", zap.Error(err))
+		s.logger.Fatal("Failed to send test email", zap.Error(err))
 	}
 }
