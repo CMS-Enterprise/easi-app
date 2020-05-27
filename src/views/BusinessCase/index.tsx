@@ -21,6 +21,7 @@ import { defaultProposedSolution } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
+import usePrevious from 'hooks/usePrevious';
 import GeneralRequestInfo from './GeneralRequestInfo';
 import RequestDescription from './RequestDescription';
 import AsIsSolution from './AsIsSolution';
@@ -93,8 +94,11 @@ export const BusinessCase = () => {
   );
 
   const isSubmitting = useSelector(
-    (state: AppState) => state.systemIntake.isSubmitting
+    (state: AppState) => state.businessCase.isSubmitting
   );
+
+  const error = useSelector((state: AppState) => state.businessCase.error);
+  const prevIsSubmitting = usePrevious(isSubmitting);
 
   const [pageIndex, setPageIndex] = useState(0);
   const pageObj = pages[pageIndex];
@@ -183,6 +187,15 @@ export const BusinessCase = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pages, businessCaseId, formPage]);
+
+  // Handle submit
+  useEffect(() => {
+    if (prevIsSubmitting && !isSubmitting && !error) {
+      history.push('/');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitting]);
 
   return (
     <div className="business-case margin-bottom-5">
