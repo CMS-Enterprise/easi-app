@@ -29,7 +29,12 @@ func TestSESTestSuite(t *testing.T) {
 	logger := zap.NewNop()
 	config := testhelpers.NewConfig()
 
-	if config.GetString(appconfig.EnvironmentKey) == appconfig.LocalEnv.String() {
+	env, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
+	if err != nil {
+		fmt.Printf("Failed to get environment: %v", err)
+		t.Fail()
+	}
+	if env.Local() {
 		fmt.Println("Skipping AWS SES test in local environment")
 		return
 	}

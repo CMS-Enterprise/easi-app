@@ -13,7 +13,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -100,7 +99,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	// is set up.
 	// Other tests should mock the API
 	s.Run("PUT will succeed if status is 'SUBMITTED' and it passes validation", func() {
-		if s.environment != appconfig.LocalEnv.String() {
+		if !s.environment.Local() {
 			fmt.Println("Skipped 'PUT will succeed if status is 'SUBMITTED' and it passes validation'")
 			return
 		}
@@ -137,7 +136,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	})
 
 	s.Run("PUT will fail if status is 'SUBMITTED', but it doesn't pass validation", func() {
-		if s.environment != appconfig.LocalEnv.String() {
+		if !s.environment.Local() {
 			fmt.Println("Skipped 'PUT will fail if status is 'SUBMITTED' and it doesn't pass validation'")
 			return
 		}
