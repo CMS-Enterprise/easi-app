@@ -75,7 +75,7 @@ func (e Environment) Test() bool {
 
 // Dev returns true if the environment is local
 func (e Environment) Dev() bool {
-	if e == TestEnv {
+	if e == DevEnv {
 		return true
 	}
 	return false
