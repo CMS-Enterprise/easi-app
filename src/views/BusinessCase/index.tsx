@@ -13,7 +13,8 @@ import {
   fetchBusinessCase,
   postBusinessCase,
   putBusinessCase,
-  storeBusinessCase
+  storeBusinessCase,
+  submitBusinessCase
 } from 'types/routines';
 import { BusinessCaseModel } from 'types/businessCase';
 import { defaultProposedSolution } from 'data/businessCase';
@@ -89,6 +90,10 @@ export const BusinessCase = () => {
 
   const isSaving = useSelector(
     (state: AppState) => state.businessCase.isSaving
+  );
+
+  const isSubmitting = useSelector(
+    (state: AppState) => state.systemIntake.isSubmitting
   );
 
   const [pageIndex, setPageIndex] = useState(0);
@@ -186,7 +191,9 @@ export const BusinessCase = () => {
         {isLoading === false && (
           <Formik
             initialValues={businessCase}
-            onSubmit={() => {}}
+            onSubmit={values => {
+              dispatch(submitBusinessCase(values));
+            }}
             validationSchema={pageObj.validation}
             validateOnBlur={false}
             validateOnChange={false}
@@ -195,13 +202,7 @@ export const BusinessCase = () => {
             enableReinitialize
           >
             {(formikProps: FormikProps<BusinessCaseModel>) => {
-              const {
-                values,
-                errors,
-                validateForm,
-                setErrors,
-                isSubmitting
-              } = formikProps;
+              const { values, errors, validateForm, setErrors } = formikProps;
               const flatErrors: any = flattenErrors(errors);
               return (
                 <>
@@ -352,14 +353,7 @@ export const BusinessCase = () => {
                         </Button>
                       )}
                       {pageIndex === pages.length - 1 && (
-                        <Button
-                          type="submit"
-                          disabled={isSubmitting}
-                          onClick={() => {
-                            // eslint-disable-next-line no-console
-                            console.log('Submitting Data: ', values);
-                          }}
-                        >
+                        <Button type="submit" disabled={isSubmitting}>
                           Send my business case
                         </Button>
                       )}
