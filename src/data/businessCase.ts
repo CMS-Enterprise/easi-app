@@ -108,7 +108,7 @@ export const prepareBusinessCaseForApp = (
     id: businessCase.id,
     euaUserId: businessCase.euaUserId,
     status: businessCase.status,
-    systemIntakeId: businessCase.systemIntake,
+    systemIntakeId: businessCase.systemIntakeId,
     requestName: businessCase.projectName,
     requester: {
       name: businessCase.requester,
@@ -241,7 +241,7 @@ export const prepareBusinessCaseForApi = (
       euaUserId: businessCase.euaUserId
     }),
     status: businessCase.status,
-    systemIntake: businessCase.systemIntakeId,
+    systemIntakeId: businessCase.systemIntakeId,
     projectName: businessCase.requestName,
     requester: businessCase.requester.name,
     requesterPhoneNumber: businessCase.requester.phoneNumber,
