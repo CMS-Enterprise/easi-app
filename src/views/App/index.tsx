@@ -6,6 +6,7 @@ import Home from 'views/Home';
 import Login from 'views/Login';
 import BusinessCase from 'views/BusinessCase';
 import GRTSystemIntakeReview from 'views/GRTSystemIntakeReview';
+import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
 import TimeOutWrapper from 'views/TimeOutWrapper';
@@ -60,6 +61,10 @@ class App extends React.Component<MainProps, MainState> {
                   path="/system/:profileId"
                   component={SystemProfile}
                 /> */}
+                <SecureRoute
+                  path="/business/:businessCaseId/grt-review"
+                  component={GrtBusinessCaseReview}
+                />
                 <Redirect
                   exact
                   from="/business/:businessCaseId"
