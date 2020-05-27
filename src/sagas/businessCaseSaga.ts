@@ -3,7 +3,8 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import {
   fetchBusinessCase,
   postBusinessCase,
-  putBusinessCase
+  putBusinessCase,
+  submitBusinessCase
 } from 'types/routines';
 import { BusinessCaseModel } from 'types/businessCase';
 import { prepareBusinessCaseForApi } from 'data/businessCase';
@@ -53,10 +54,11 @@ function putBusinessCaseRequest(formData: BusinessCaseModel) {
   );
 }
 
-function* updateBuisnessCase(action: Action<any>) {
+function* updateBusinessCase(action: Action<any>) {
   try {
     yield put(putBusinessCase.request());
     const reponse = yield call(putBusinessCaseRequest, action.payload);
+
     yield put(putBusinessCase.success(reponse.data));
   } catch (error) {
     yield put(putBusinessCase.failure(error.message));
@@ -65,8 +67,24 @@ function* updateBuisnessCase(action: Action<any>) {
   }
 }
 
+function* completeBusinessCase(action: Action<any>) {
+  try {
+    yield put(submitBusinessCase.request());
+    yield call(putBusinessCaseRequest, {
+      ...action.payload,
+      status: 'SUBMITTED'
+    });
+    yield put(submitBusinessCase.success());
+  } catch (error) {
+    yield put(submitBusinessCase.failure(error.message));
+  } finally {
+    yield put(submitBusinessCase.fulfill());
+  }
+}
+
 export default function* businessCaseSaga() {
   yield takeLatest(fetchBusinessCase.TRIGGER, getBusinessCase);
   yield takeLatest(postBusinessCase.TRIGGER, createBusinessCase);
-  yield takeLatest(putBusinessCase.TRIGGER, updateBuisnessCase);
+  yield takeLatest(putBusinessCase.TRIGGER, updateBusinessCase);
+  yield takeLatest(submitBusinessCase.TRIGGER, completeBusinessCase);
 }
