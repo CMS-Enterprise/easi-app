@@ -59,6 +59,10 @@ func (s *Server) routes(
 		}
 	}
 
+	if s.environment.Deployed() {
+		s.CheckEmailClient(emailClient)
+	}
+
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 
