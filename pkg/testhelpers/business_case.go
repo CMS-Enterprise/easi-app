@@ -46,6 +46,183 @@ func NewEstimatedLifecycleCost(opts EstimatedLifecycleCostOptions) models.Estima
 	return elc
 }
 
+// NewValidLifecycleCosts helps generate valid lifecycle costs for a given business case ready for submission
+func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
+	dev := models.LifecycleCostPhaseDEVELOPMENT
+	om := models.LifecycleCostPhaseOPERATIONMAINTENANCE
+	cost := 100
+	return models.EstimatedLifecycleCosts{
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionASIS,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &dev,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionASIS,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionASIS,
+			Year:           models.LifecycleCostYear2,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionASIS,
+			Year:           models.LifecycleCostYear3,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionASIS,
+			Year:           models.LifecycleCostYear4,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionASIS,
+			Year:           models.LifecycleCostYear5,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionPREFERRED,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &dev,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionPREFERRED,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionPREFERRED,
+			Year:           models.LifecycleCostYear2,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionPREFERRED,
+			Year:           models.LifecycleCostYear3,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionPREFERRED,
+			Year:           models.LifecycleCostYear4,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionPREFERRED,
+			Year:           models.LifecycleCostYear5,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionA,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &dev,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionA,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionA,
+			Year:           models.LifecycleCostYear2,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionA,
+			Year:           models.LifecycleCostYear3,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionA,
+			Year:           models.LifecycleCostYear4,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionA,
+			Year:           models.LifecycleCostYear5,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionB,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &dev,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionB,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionB,
+			Year:           models.LifecycleCostYear2,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionB,
+			Year:           models.LifecycleCostYear3,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionB,
+			Year:           models.LifecycleCostYear4,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionB,
+			Year:           models.LifecycleCostYear5,
+			Phase:          &om,
+			Cost:           &cost,
+		},
+	}
+}
+
 // NewBusinessCase allows us to generate a business case for tests
 func NewBusinessCase() models.BusinessCase {
 	year2 := models.LifecycleCostYear2
