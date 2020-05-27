@@ -202,8 +202,17 @@ func NewUpdateBusinessCase(
 		updatedAt := clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
-		// Once CEDAR endpoint exists, we should be doing validations and submissions before db changes to ensure
-		// that we are allowed to make the changes.
+		// Once CEDAR endpoint exists, we should be doing validations and submissions in the CEDAR package
+		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
+			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
+			// Set submitted at time before validations as it is one of the fields that is validated
+			businessCase.SubmittedAt = businessCase.UpdatedAt
+			err = appvalidation.BusinessCaseForSubmit(businessCase, existingBusinessCase)
+			if err != nil {
+				logger.Error("Failed to validate", zap.Error(err))
+				return businessCase, err
+			}
+		}
 
 		businessCase, err = update(businessCase)
 		if err != nil {
@@ -215,18 +224,8 @@ func NewUpdateBusinessCase(
 			}
 		}
 
-		// Right now, add some validations for sending an email here
-		// Similar to system intake,
-		// these should be covered by validations above
-		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
-			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
-			// Set submitted at time before validations as it is one of the fields that is validated
-			businessCase.SubmittedAt = businessCase.UpdatedAt
-			err := appvalidation.BusinessCaseForSubmit(businessCase, existingBusinessCase)
-			if err != nil {
-				logger.Error("Failed to validate", zap.Error(err))
-				return businessCase, err
-			}
+		// At this point, if everything has gone well, email the GRT
+		if businessCase.Status == models.BusinessCaseStatusSUBMITTED {
 			err = sendEmail(businessCase.Requester.String, businessCase.ID)
 			if err != nil {
 				logger.Error("Failed to send email", zap.Error(err))

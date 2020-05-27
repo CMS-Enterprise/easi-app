@@ -300,6 +300,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		businessCase.Status = models.BusinessCaseStatusSUBMITTED
 		businessCase.ID = existingBusinessCase.ID
 		businessCase.EUAUserID = existingBusinessCase.EUAUserID
+		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 
 		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
 
@@ -321,6 +322,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		businessCase.Status = models.BusinessCaseStatusSUBMITTED
 		businessCase.ID = existingBusinessCase.ID
 		businessCase.EUAUserID = existingBusinessCase.EUAUserID
+		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 
 		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
 
