@@ -5,16 +5,16 @@ import "fmt"
 // NewEnvironment returns an environment from a string
 func NewEnvironment(config string) (Environment, error) {
 	switch config {
-	case LocalEnv.String():
-		return LocalEnv, nil
-	case TestEnv.String():
-		return TestEnv, nil
-	case DevEnv.String():
-		return DevEnv, nil
-	case ImplEnv.String():
-		return ImplEnv, nil
-	case ProdEnv.String():
-		return ProdEnv, nil
+	case localEnv.String():
+		return localEnv, nil
+	case testEnv.String():
+		return testEnv, nil
+	case devEnv.String():
+		return devEnv, nil
+	case implEnv.String():
+		return implEnv, nil
+	case prodEnv.String():
+		return prodEnv, nil
 	default:
 		return "", fmt.Errorf("unknown environment: %s", config)
 	}
@@ -27,30 +27,30 @@ const EnvironmentKey = "APP_ENV"
 type Environment string
 
 const (
-	// LocalEnv is the local environment
-	LocalEnv Environment = "local"
-	// TestEnv is the environment for running tests
-	TestEnv Environment = "test"
-	// DevEnv is the environment for the dev deployed env
-	DevEnv Environment = "dev"
-	// ImplEnv is the environment for the impl deployed env
-	ImplEnv Environment = "impl"
-	// ProdEnv is the environment for the impl deployed env
-	ProdEnv Environment = "prod"
+	// localEnv is the local environment
+	localEnv Environment = "local"
+	// testEnv is the environment for running tests
+	testEnv Environment = "test"
+	// devEnv is the environment for the dev deployed env
+	devEnv Environment = "dev"
+	// implEnv is the environment for the impl deployed env
+	implEnv Environment = "impl"
+	// prodEnv is the environment for the impl deployed env
+	prodEnv Environment = "prod"
 )
 
 // String gets the environment as a string
 func (e Environment) String() string {
 	switch e {
-	case LocalEnv:
+	case localEnv:
 		return "local"
-	case TestEnv:
+	case testEnv:
 		return "test"
-	case DevEnv:
+	case devEnv:
 		return "dev"
-	case ImplEnv:
+	case implEnv:
 		return "impl"
-	case ProdEnv:
+	case prodEnv:
 		return "prod"
 	default:
 		return ""
@@ -59,7 +59,7 @@ func (e Environment) String() string {
 
 // Local returns true if the environment is local
 func (e Environment) Local() bool {
-	if e == LocalEnv {
+	if e == localEnv {
 		return true
 	}
 	return false
@@ -67,7 +67,7 @@ func (e Environment) Local() bool {
 
 // Test returns true if the environment is local
 func (e Environment) Test() bool {
-	if e == TestEnv {
+	if e == testEnv {
 		return true
 	}
 	return false
@@ -75,7 +75,7 @@ func (e Environment) Test() bool {
 
 // Dev returns true if the environment is local
 func (e Environment) Dev() bool {
-	if e == DevEnv {
+	if e == devEnv {
 		return true
 	}
 	return false
@@ -83,7 +83,7 @@ func (e Environment) Dev() bool {
 
 // Impl returns true if the environment is local
 func (e Environment) Impl() bool {
-	if e == ImplEnv {
+	if e == implEnv {
 		return true
 	}
 	return false
@@ -91,7 +91,7 @@ func (e Environment) Impl() bool {
 
 // Prod returns true if the environment is local
 func (e Environment) Prod() bool {
-	if e == ProdEnv {
+	if e == prodEnv {
 		return true
 	}
 	return false
@@ -100,11 +100,11 @@ func (e Environment) Prod() bool {
 // Deployed returns true if in a deployed environment
 func (e Environment) Deployed() bool {
 	switch e {
-	case DevEnv:
+	case devEnv:
 		return true
-	case ImplEnv:
+	case implEnv:
 		return true
-	case ProdEnv:
+	case prodEnv:
 		return true
 	default:
 		return false

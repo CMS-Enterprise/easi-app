@@ -52,7 +52,7 @@ func NewServer(config *viper.Viper) *Server {
 	)
 
 	// If we're local use override with local auth middleware
-	if config.GetString(appconfig.EnvironmentKey) == appconfig.LocalEnv.String() {
+	if environment.Local() {
 		authMiddleware = local.NewLocalAuthorizeMiddleware(zapLogger)
 	}
 

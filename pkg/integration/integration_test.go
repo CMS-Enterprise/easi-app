@@ -27,7 +27,7 @@ type user struct {
 
 type IntegrationTestSuite struct {
 	suite.Suite
-	environment string
+	environment appconfig.Environment
 	logger      *zap.Logger
 	config      *viper.Viper
 	server      *httptest.Server
@@ -65,9 +65,14 @@ func TestIntegrationTestSuite(t *testing.T) {
 			t.Fail()
 		}
 
+		env, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
+		if err != nil {
+			fmt.Printf("Failed to get environment: %v", err)
+			t.Fail()
+		}
 		testSuite := &IntegrationTestSuite{
 			Suite:       suite.Suite{},
-			environment: config.GetString(appconfig.EnvironmentKey),
+			environment: env,
 			logger:      logger,
 			config:      config,
 			server:      testServer,
