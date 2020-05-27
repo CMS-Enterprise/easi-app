@@ -241,7 +241,7 @@ export const prepareBusinessCaseForApi = (
       euaUserId: businessCase.euaUserId
     }),
     status: businessCase.status,
-    systemIntake: businessCase.systemIntakeId,
+    systemIntakeId: businessCase.systemIntakeId,
     projectName: businessCase.requestName,
     requester: businessCase.requester.name,
     requesterPhoneNumber: businessCase.requester.phoneNumber,
