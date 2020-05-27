@@ -97,6 +97,20 @@ func (e Environment) Prod() bool {
 	return false
 }
 
+// Deployed returns true if in a deployed environment
+func (e Environment) Deployed() bool {
+	switch e {
+	case DevEnv:
+		return true
+	case ImplEnv:
+		return true
+	case ProdEnv:
+		return true
+	default:
+		return false
+	}
+}
+
 // DBHostConfigKey is the Postgres hostname config key
 const DBHostConfigKey = "PGHOST"
 
