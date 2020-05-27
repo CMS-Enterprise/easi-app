@@ -5,7 +5,8 @@ import {
 import {
   fetchSystemIntake,
   storeSystemIntake,
-  submitSystemIntake
+  submitSystemIntake,
+  clearSystemIntake
 } from 'types/routines';
 import systemIntakeReducer from './systemIntakeReducer';
 
@@ -33,6 +34,7 @@ describe('The system intake reducer', () => {
     existingContract: ''
   };
   it('returns the initial state', () => {
+    // @ts-ignore
     expect(systemIntakeReducer(undefined, {})).toEqual({
       systemIntake: initialSystemIntakeForm,
       isLoading: null,
@@ -181,6 +183,22 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
+        isSubmitting: false,
+        error: null
+      });
+    });
+  });
+
+  describe('clearSystemIntake', () => {
+    it('handles clearSystemIntake.TRIGGER', () => {
+      const mockRequestAction = {
+        type: clearSystemIntake.TRIGGER,
+        payload: undefined
+      };
+
+      expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
+        systemIntake: initialSystemIntakeForm,
+        isLoading: false,
         isSubmitting: false,
         error: null
       });
