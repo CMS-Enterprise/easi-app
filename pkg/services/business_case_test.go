@@ -6,6 +6,7 @@ import (
 
 	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -163,15 +164,166 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 		s.Equal(&models.BusinessCase{}, businessCase)
 	})
 
-	s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
-		input.LifecycleCostLines = models.EstimatedLifecycleCosts{
-			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
-			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+	// Uncomment below when UI has changed for unique lifecycle costs
+	//s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
+	//	input.LifecycleCostLines = models.EstimatedLifecycleCosts{
+	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+	//	}
+	//	createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
+	//	businessCase, err := createBusinessCase(ctx, &input)
+	//
+	//	s.IsType(&apperrors.ValidationError{}, err)
+	//	s.Equal(&models.BusinessCase{}, businessCase)
+	//})
+}
+
+func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
+	logger := zap.NewNop()
+	authorizeUpdateBusinessCase := NewAuthorizeUpdateBusinessCase(logger)
+
+	s.Run("No EUA ID fails auth", func() {
+		ctx := context.Background()
+		ok, err := authorizeUpdateBusinessCase(ctx, &models.BusinessCase{})
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Mismatched EUA ID fails auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ZYXW")
+
+		businessCase := models.BusinessCase{
+			EUAUserID: "ABCD",
 		}
-		createBusinessCase := NewCreateBusinessCase(fetch, authorize, create, logger, mockClock)
-		businessCase, err := createBusinessCase(ctx, &input)
+
+		ok, err := authorizeUpdateBusinessCase(ctx, &businessCase)
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Matched EUA ID passes auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithEuaID(ctx, "ABCD")
+		businessCase := models.BusinessCase{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeUpdateBusinessCase(ctx, &businessCase)
+
+		s.True(ok)
+		s.NoError(err)
+	})
+}
+
+func (s ServicesTestSuite) TestBusinessCaseUpdater() {
+	logger := zap.NewNop()
+	mockClock := clock.NewMock()
+	euaID := testhelpers.RandomEUAID()
+	intakeID := uuid.New()
+	intake := models.SystemIntake{
+		EUAUserID: euaID,
+		ID:        intakeID,
+		Status:    models.SystemIntakeStatusSUBMITTED,
+	}
+	err := s.store.SaveSystemIntake(&intake)
+	s.NoError(err)
+
+	existingBusinessCase := testhelpers.NewBusinessCase()
+	fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
+		return &existingBusinessCase, nil
+	}
+	update := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+		return businessCase, nil
+	}
+	authorize := func(context context.Context, businessCase *models.BusinessCase) (bool, error) {
+		return true, nil
+	}
+	emailCount := 0
+	sendEmail := func(requester string, intakeID uuid.UUID) error {
+		emailCount++
+		return nil
+	}
+	ctx := context.Background()
+
+	s.Run("successfully updates a Business Case without an error", func() {
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, sendEmail, logger, mockClock)
+
+		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
+
+		s.NoError(err)
+		s.Equal(existingBusinessCase, *businessCase)
+	})
+
+	s.Run("returns query error when update fails", func() {
+		failUpdate := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+			return &models.BusinessCase{}, errors.New("creation failed")
+		}
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, failUpdate, sendEmail, logger, mockClock)
+		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
+
+		s.IsType(&apperrors.QueryError{}, err)
+		s.Equal(&models.BusinessCase{}, businessCase)
+	})
+
+	// Uncomment below when UI has changed for unique lifecycle costs
+	//s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
+	//	existingBusinessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
+	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+	//		testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+	//	}
+	//	updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, logger, mockClock)
+	//	businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
+	//
+	//	s.IsType(&apperrors.ValidationError{}, err)
+	//	s.Equal(&models.BusinessCase{}, businessCase)
+	//})
+
+	s.Run("returns error when validation fails", func() {
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, sendEmail, logger, mockClock)
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.ID = existingBusinessCase.ID
+		businessCase.EUAUserID = existingBusinessCase.EUAUserID
+		businessCase.Requester = null.NewString("", false)
+		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+
+		_, err := updateBusinessCase(ctx, &businessCase)
 
 		s.IsType(&apperrors.ValidationError{}, err)
-		s.Equal(&models.BusinessCase{}, businessCase)
+	})
+
+	s.Run("returns no error when successful on submit", func() {
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, sendEmail, logger, mockClock)
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		businessCase.ID = existingBusinessCase.ID
+		businessCase.EUAUserID = existingBusinessCase.EUAUserID
+
+		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
+
+		s.NoError(err)
+		s.Equal(businessCase, *actualBusinessCase)
+		s.Equal(1, emailCount)
+	})
+
+	s.Run("returns notification error when email fails", func() {
+		failSendEmail := func(requester string, intakeID uuid.UUID) error {
+			return &apperrors.NotificationError{
+				Err:             errors.New("failed to send Email"),
+				DestinationType: apperrors.DestinationTypeEmail,
+			}
+		}
+		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, failSendEmail, logger, mockClock)
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		businessCase.ID = existingBusinessCase.ID
+		businessCase.EUAUserID = existingBusinessCase.EUAUserID
+
+		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
+
+		s.IsType(&apperrors.NotificationError{}, err)
+		s.Equal(businessCase, *actualBusinessCase)
 	})
 }
