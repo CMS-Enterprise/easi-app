@@ -77,18 +77,18 @@ func (s ConfigTestSuite) TestProd() {
 
 func (s ConfigTestSuite) TestDeployed() {
 	s.Run("local isn't deployed environment", func() {
-		s.False(LocalEnv.Deployed())
+		s.False(localEnv.Deployed())
 	})
 	s.Run("test isn't deployed environment", func() {
-		s.False(TestEnv.Deployed())
+		s.False(testEnv.Deployed())
 	})
 	s.Run("dev is deployed environment", func() {
-		s.True(DevEnv.Deployed())
+		s.True(devEnv.Deployed())
 	})
 	s.Run("impl is deployed environment", func() {
-		s.True(ImplEnv.Deployed())
+		s.True(implEnv.Deployed())
 	})
 	s.Run("prod is deployed environment", func() {
-		s.True(ProdEnv.Deployed())
+		s.True(prodEnv.Deployed())
 	})
 }
