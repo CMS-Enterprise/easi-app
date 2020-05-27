@@ -17,7 +17,8 @@ import {
   fetchSystemIntake,
   saveSystemIntake,
   storeSystemIntake,
-  submitSystemIntake
+  submitSystemIntake,
+  clearSystemIntake
 } from 'types/routines';
 import usePrevious from 'hooks/usePrevious';
 import ContactDetails from './ContactDetails';
@@ -90,6 +91,10 @@ export const SystemIntake = () => {
     } else {
       dispatch(fetchSystemIntake(systemId));
     }
+    // This return will clear system intake from store when component is unmounted
+    return () => {
+      dispatch(clearSystemIntake());
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
