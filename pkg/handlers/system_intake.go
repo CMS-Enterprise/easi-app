@@ -80,7 +80,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			intake := models.SystemIntake{}
 			err := decoder.Decode(&intake)
 			if err != nil {
-				logger.Error("Failed to decode system intake body")
+				logger.Error("Failed to decode system intake body", zap.Error(err))
 				http.Error(w, "Bad system intake request", http.StatusBadRequest)
 				return
 			}

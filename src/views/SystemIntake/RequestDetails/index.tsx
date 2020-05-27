@@ -201,7 +201,12 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             id="IntakeForm-CurrentStage"
             name="currentStage"
           >
-            <Field as={DropdownItem} name="Select" value="" />
+            <Field
+              as={DropdownItem}
+              name="Select an option"
+              value=""
+              disabled
+            />
             {processStages.map(stage => (
               <Field
                 as={DropdownItem}
@@ -232,7 +237,12 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             helpText="This information helps the Office of Acquisition and Grants Management (OAGM) track work"
             name="hasContract"
           >
-            <Field as={DropdownItem} name="Select" value="" />
+            <Field
+              as={DropdownItem}
+              name="Select an option"
+              value=""
+              disabled
+            />
             <Field
               as={DropdownItem}
               key="HasContract-Yes"
