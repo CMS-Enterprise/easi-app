@@ -1,5 +1,23 @@
 package appconfig
 
+import "fmt"
+
+// NewEnvironment returns an environment from a string
+func NewEnvironment(config string) (Environment, error) {
+	switch config {
+	case LocalEnv.String():
+		return LocalEnv, nil
+	case TestEnv.String():
+		return TestEnv, nil
+	case DevEnv.String():
+		return DevEnv, nil
+	case ImplEnv.String():
+		return ImplEnv, nil
+	default:
+		return "", fmt.Errorf("unknown environment: %s", config)
+	}
+}
+
 // EnvironmentKey is used to access the environment from a config
 const EnvironmentKey = "APP_ENV"
 

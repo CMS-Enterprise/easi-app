@@ -16,9 +16,10 @@ import (
 
 // Server holds dependencies for running the EASi server
 type Server struct {
-	router *mux.Router
-	Config *viper.Viper
-	logger *zap.Logger
+	router      *mux.Router
+	Config      *viper.Viper
+	logger      *zap.Logger
+	environment appconfig.Environment
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -31,6 +32,12 @@ func NewServer(config *viper.Viper) *Server {
 	zapLogger, err := zap.NewProduction()
 	if err != nil {
 		log.Fatal("Failed to initial logger.")
+	}
+
+	// Set environment from config
+	environment, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
+	if err != nil {
+		zapLogger.Panic("Unable to set environment", zap.Error(err))
 	}
 
 	// Set the router
@@ -53,9 +60,10 @@ func NewServer(config *viper.Viper) *Server {
 	clientAddress := config.GetString("CLIENT_ADDRESS")
 
 	s := &Server{
-		router: r,
-		Config: config,
-		logger: zapLogger,
+		router:      r,
+		Config:      config,
+		logger:      zapLogger,
+		environment: environment,
 	}
 
 	// set up routes
