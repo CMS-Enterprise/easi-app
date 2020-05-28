@@ -153,7 +153,7 @@ func (s *Server) routes(
 	api.Handle("/business_cases", businessCasesHandler.Handle())
 
 	metricsHandler := handlers.MetricsHandler{
-		FetchMetrics: services.NewFetchMetrics(store.GetSystemIntakeMetrics),
+		FetchMetrics: services.NewFetchMetrics(s.logger, store.GetSystemIntakeMetrics),
 		Logger:       s.logger,
 		Clock:        handlerClock,
 	}
