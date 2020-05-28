@@ -1,10 +1,8 @@
 import React from 'react';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
 
 type ButtonProps = {
-  type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
+  component?: React.ComponentClass<any> | string;
   children: React.ReactNode;
   secondary?: boolean;
   base?: boolean;
@@ -13,30 +11,23 @@ type ButtonProps = {
   inverse?: boolean;
   big?: boolean;
   unstyled?: boolean;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  to?: string;
-  href?: string;
   className?: string;
+  [x: string]: any;
 };
 
-export const Button = (props: ButtonProps): React.ReactElement => {
-  const {
-    type,
-    disabled,
-    children,
-    secondary,
-    base,
-    accent,
-    outline,
-    inverse,
-    big,
-    unstyled,
-    onClick,
-    to,
-    href,
-    className
-  } = props;
-
+export const Button = ({
+  component,
+  children,
+  secondary,
+  base,
+  accent,
+  outline,
+  inverse,
+  big,
+  unstyled,
+  className,
+  ...props
+}: ButtonProps): React.ReactElement => {
   const classes = classnames(
     'usa-button',
     {
@@ -51,32 +42,13 @@ export const Button = (props: ButtonProps): React.ReactElement => {
     className
   );
 
-  if (to) {
-    return (
-      <Link className={classes} to={to}>
-        {children}
-      </Link>
-    );
-  }
-
-  if (href) {
-    return (
-      <a href={href} className={classes}>
-        {children}
-      </a>
-    );
-  }
-
-  return (
-    // eslint-disable-next-line react/button-has-type
-    <button
-      type={type}
-      className={classes}
-      disabled={disabled}
-      onClick={disabled ? () => {} : onClick}
-    >
-      {children}
-    </button>
+  return React.createElement(
+    component || 'button',
+    {
+      ...props,
+      className: classes
+    },
+    children
   );
 };
 
