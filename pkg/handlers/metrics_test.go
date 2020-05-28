@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -49,11 +50,93 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 
 		s.Equal(http.StatusOK, rr.Code)
 
-		var metrics models.MetricsDigest
-		err = json.Unmarshal(rr.Body.Bytes(), &metrics)
-		s.NoError(err)
-		s.Equal(expectedMetrics, metrics)
 	})
+
+	var paramTests = []struct {
+		name   string
+		params map[string]string
+		status int
+	}{
+		{
+			name:   "no params",
+			params: map[string]string{},
+			status: http.StatusBadRequest,
+		},
+		{
+			name: "bad startTime",
+			params: map[string]string{
+				"startTime": "bad time",
+			},
+			status: http.StatusBadRequest,
+		},
+		{
+			name: "non RFC3339 format startTime",
+			params: map[string]string{
+				"startTime": handlerClock.Now().Format(time.RFC822),
+			},
+			status: http.StatusBadRequest,
+		},
+		{
+			name: "non RFC3339 format endTime",
+			params: map[string]string{
+				"startTime": handlerClock.Now().Format(time.RFC3339),
+				"endTime":   handlerClock.Now().Format(time.RFC822),
+			},
+			status: http.StatusBadRequest,
+		},
+		{
+			name: "bad endTime",
+			params: map[string]string{
+				"startTime": handlerClock.Now().Format(time.RFC3339),
+				"endTime":   "badTime",
+			},
+			status: http.StatusBadRequest,
+		},
+		{
+			name: "startTime no endTime",
+			params: map[string]string{
+				"startTime": handlerClock.Now().Format(time.RFC3339),
+			},
+			status: http.StatusOK,
+		},
+		{
+			name: "startTime and endTime",
+			params: map[string]string{
+				"startTime": handlerClock.Now().Format(time.RFC3339),
+				"endTime":   handlerClock.Now().Format(time.RFC3339),
+			},
+			status: http.StatusOK,
+		},
+	}
+	for _, t := range paramTests {
+		s.Run(fmt.Sprintf("%s returns %d", t.name, t.status), func() {
+			q := metricsURL.Query()
+			for k, v := range t.params {
+				q.Add(k, v)
+			}
+			u := url.URL{
+				RawQuery: q.Encode(),
+			}
+			rr := httptest.NewRecorder()
+			req, err := http.NewRequest("GET", u.String(), nil)
+			s.NoError(err)
+
+			MetricsHandler{
+				FetchMetrics: fetchMetrics,
+				Logger:       s.logger,
+				Clock:        handlerClock,
+			}.Handle()(rr, req)
+
+			s.Equal(t.status, rr.Code)
+
+			if t.status == http.StatusOK {
+				var metrics models.MetricsDigest
+				err = json.Unmarshal(rr.Body.Bytes(), &metrics)
+				s.NoError(err)
+				s.Equal(expectedMetrics, metrics)
+			}
+		})
+	}
 
 	s.Run("Invalid method is not allowed", func() {
 		rr := httptest.NewRecorder()
