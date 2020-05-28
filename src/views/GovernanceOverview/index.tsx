@@ -156,7 +156,9 @@ const GovernanceOverview = () => {
             </div>
           </CollapsableLink>
         </div>
-        <Button to="/system/new">Get started</Button>
+        <Button component={Link} to="/system/new">
+          Get started
+        </Button>
       </main>
     </div>
   );

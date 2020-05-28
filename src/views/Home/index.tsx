@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useOktaAuth } from '@okta/okta-react';
@@ -157,9 +157,13 @@ const Home = ({ history }: HomeProps) => {
             </p>
           </div>
           {authState.isAuthenticated ? (
-            <Button to="/governance-overview">Start now</Button>
+            <Button component={Link} to="/governance-overview">
+              Start now
+            </Button>
           ) : (
-            <Button to="/login">Sign in to start</Button>
+            <Button component={Link} to="/login">
+              Sign in to start
+            </Button>
           )}
         </div>
       </div>
