@@ -294,18 +294,41 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		s.IsType(&apperrors.ValidationError{}, err)
 	})
 
+	s.Run("doesn't email if existing businessCase was previously submitted", func() {
+		earlierBusinessCase := testhelpers.NewBusinessCase()
+		earlierBusinessCase.Status = models.BusinessCaseStatusSUBMITTED
+		fetchDifferent := func(id uuid.UUID) (*models.BusinessCase, error) {
+			return &earlierBusinessCase, nil
+		}
+
+		updateBusinessCase := NewUpdateBusinessCase(fetchDifferent, authorize, update, sendEmail, logger, mockClock)
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		businessCase.ID = earlierBusinessCase.ID
+		businessCase.EUAUserID = earlierBusinessCase.EUAUserID
+
+		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
+
+		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
+		s.NoError(err)
+		s.Equal(businessCase, *actualBusinessCase)
+		s.Equal(0, emailCount)
+	})
+
 	s.Run("returns no error when successful on submit", func() {
 		updateBusinessCase := NewUpdateBusinessCase(fetch, authorize, update, sendEmail, logger, mockClock)
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.Status = models.BusinessCaseStatusSUBMITTED
 		businessCase.ID = existingBusinessCase.ID
 		businessCase.EUAUserID = existingBusinessCase.EUAUserID
+		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 
 		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
 
 		s.NoError(err)
 		s.Equal(businessCase, *actualBusinessCase)
 		s.Equal(1, emailCount)
+		s.Equal(mockClock.Now(), *actualBusinessCase.SubmittedAt)
 	})
 
 	s.Run("returns notification error when email fails", func() {
@@ -320,6 +343,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		businessCase.Status = models.BusinessCaseStatusSUBMITTED
 		businessCase.ID = existingBusinessCase.ID
 		businessCase.EUAUserID = existingBusinessCase.EUAUserID
+		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 
 		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
 
