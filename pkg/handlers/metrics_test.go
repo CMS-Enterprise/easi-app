@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -137,6 +138,28 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 			}
 		})
 	}
+
+	s.Run("fetch error returns server error", func() {
+		failFetchMetrics := func(ctx context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error) {
+			return models.MetricsDigest{}, errors.New("failed to fetch metrics")
+		}
+		q := metricsURL.Query()
+		q.Add("startTime", handlerClock.Now().Format(time.RFC3339))
+		u := url.URL{
+			RawQuery: q.Encode(),
+		}
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequest("GET", u.String(), nil)
+		s.NoError(err)
+
+		MetricsHandler{
+			FetchMetrics: failFetchMetrics,
+			Logger:       s.logger,
+			Clock:        handlerClock,
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusInternalServerError, rr.Code)
+	})
 
 	s.Run("Invalid method is not allowed", func() {
 		rr := httptest.NewRecorder()
