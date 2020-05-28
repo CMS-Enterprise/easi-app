@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/facebookgo/clock"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -19,6 +20,7 @@ type fetchMetrics func(context context.Context, startTime time.Time, endTime tim
 type MetricsHandler struct {
 	FetchMetrics fetchMetrics
 	Logger       *zap.Logger
+	Clock        clock.Clock
 }
 
 // Handle handles a web request and returns a metrics digest
@@ -43,18 +45,16 @@ func (h MetricsHandler) Handle() http.HandlerFunc {
 				http.Error(w, "startTime must adhere to RFC 339", http.StatusBadRequest)
 				return
 			}
+			endTime := h.Clock.Now()
 			endTimeParam, ok := r.URL.Query()["endTime"]
-			if !ok || len(startTimeParam[0]) < 1 {
-				http.Error(w, "endTime is required", http.StatusBadRequest)
-				return
+			if ok {
+				endTime, err = time.Parse(time.RFC3339, endTimeParam[0])
+				if err != nil {
+					logger.Info("failed to parse endTime", zap.Error(err))
+					http.Error(w, "endTime must adhere to RFC 339", http.StatusBadRequest)
+					return
+				}
 			}
-			endTime, err := time.Parse(time.RFC3339, endTimeParam[0])
-			if err != nil {
-				logger.Info("failed to parse endTime", zap.Error(err))
-				http.Error(w, "endTime must adhere to RFC 339", http.StatusBadRequest)
-				return
-			}
-
 			metricsDigest, err := h.FetchMetrics(r.Context(), startTime, endTime)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to fetch metrics: %v", err))
