@@ -6,7 +6,8 @@ import {
   fetchBusinessCase,
   postBusinessCase,
   storeBusinessCase,
-  submitBusinessCase
+  submitBusinessCase,
+  clearBusinessCase
 } from 'types/routines';
 import businessCaseReducer from './businessCaseReducer';
 
@@ -292,6 +293,23 @@ describe('The business case reducer', () => {
       expect(businessCaseReducer(undefined, mockFulfillAction)).toEqual({
         form: businessCaseInitialData,
         isLoading: null,
+        isSaving: false,
+        isSubmitting: false,
+        error: null
+      });
+    });
+  });
+
+  describe('clearBusinessCase', () => {
+    it('handles clearBusinessCase.TRIGGER', () => {
+      const mockTriggerAction = {
+        type: clearBusinessCase.TRIGGER,
+        payload: null
+      };
+
+      expect(businessCaseReducer(undefined, mockTriggerAction)).toEqual({
+        form: businessCaseInitialData,
+        isLoading: false,
         isSaving: false,
         isSubmitting: false,
         error: null
