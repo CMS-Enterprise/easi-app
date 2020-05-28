@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+#
+# deploy containers to our ecs services tagged with the git digest of the current build
+
+set -u
+
+service_id="$1"
+image="${2:-}"
+
+function_name="$APP_ENV-ecs-manager"
+function_qualifier="master"
+ecr_backend="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com"
+
+if [[ -n "$image" ]]; then
+  image_tag="$ecr_backend/$image:${CIRCLE_SHA1-$(git rev-parse HEAD)}"
+fi
+
+_payload() {
+  local image_tag="${1:-}"
+  local cluster_id="${3:-$APP_ENV-easi-app}"
+
+  result=$(jq --null-input '.command = "deploy" | .body.cluster_id = "'"$cluster_id"'" | .body.service_ids = ["'"$service_id"'"]') || return
+
+  if [[ -n "$image_tag" ]]; then
+    result=$(jq '.body.image = "'"$image_tag"'"' <<< "$result") || return
+  fi
+
+  echo "$result"
+}
+
+_payload "${image_tag:-}" > payload.json || exit
+
+jq < payload.json
+
+echo ": Invoking the $function_name lambda..."
+time (set -x ; aws lambda invoke --function-name "$function_name" --qualifier "$function_qualifier" --payload file://./payload.json output.json) || exit
+
+jq < output.json
+
+status="$(jq '.data.response.ResponseMetadata.HTTPStatusCode' < output.json)"
+if [[ "$status" != 200 ]]; then
+  echo ": FATAL HTTPStatusCode is not 200"
+  exit 1
+fi

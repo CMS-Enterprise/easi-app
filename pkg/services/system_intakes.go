@@ -2,8 +2,11 @@ package services
 
 import (
 	"context"
+	"errors"
 
+	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -22,7 +25,7 @@ func NewFetchSystemIntakesByEuaID(
 			logger.Error("failed to fetch system intakes")
 			return models.SystemIntakes{}, &apperrors.QueryError{
 				Err:       err,
-				Model:     "system intakes",
+				Model:     intakes,
 				Operation: apperrors.QueryFetch,
 			}
 		}
@@ -45,6 +48,7 @@ func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
 				Object:    "EUA ID",
 			}
 		}
+
 		// If intake doesn't exist or owned by user, authorize
 		if intake == nil || euaID == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
@@ -65,18 +69,20 @@ func NewSaveSystemIntake(
 	save func(intake *models.SystemIntake) error,
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
+	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
+	sendEmail func(requester string, intakeID uuid.UUID) error,
 	logger *zap.Logger,
+	clock clock.Clock,
 ) func(context context.Context, intake *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
 		existingIntake, fetchErr := fetch(intake.ID)
-		// TODO: Replace with a method that intentionally decides no result
 		if fetchErr != nil && fetchErr.Error() == "sql: no rows in result set" {
 			existingIntake = nil
 		} else if fetchErr != nil {
 			return &apperrors.QueryError{
 				Err:       fetchErr,
 				Operation: apperrors.QueryFetch,
-				Model:     "SystemIntake",
+				Model:     existingIntake,
 			}
 		}
 		ok, err := authorize(ctx, existingIntake)
@@ -86,12 +92,51 @@ func NewSaveSystemIntake(
 		if !ok {
 			return &apperrors.UnauthorizedError{Err: err}
 		}
+		updatedTime := clock.Now().UTC()
+		intake.UpdatedAt = &updatedTime
+		if existingIntake == nil {
+			intake.CreatedAt = &updatedTime
+		}
+
+		if intake.Status == models.SystemIntakeStatusSUBMITTED {
+			if intake.AlfabetID.Valid {
+				err := &apperrors.ResourceConflictError{
+					Err:        errors.New("intake has already been submitted to CEDAR"),
+					ResourceID: intake.ID.String(),
+					Resource:   intake,
+				}
+				return err
+			}
+
+			intake.SubmittedAt = &updatedTime
+			alfabetID, validateAndSubmitErr := validateAndSubmit(intake, logger)
+			if validateAndSubmitErr != nil {
+				return validateAndSubmitErr
+			}
+			if alfabetID == "" {
+				return &apperrors.ExternalAPIError{
+					Err:       errors.New("submission was not successful"),
+					Model:     intake,
+					ModelID:   intake.ID.String(),
+					Operation: apperrors.Submit,
+					Source:    "CEDAR",
+				}
+			}
+			intake.AlfabetID = null.StringFrom(alfabetID)
+		}
 		err = save(intake)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
-				Model:     "SystemIntake",
+				Model:     intake,
 				Operation: apperrors.QuerySave,
+			}
+		}
+		// only send an email when everything went ok
+		if intake.Status == models.SystemIntakeStatusSUBMITTED {
+			err = sendEmail(intake.Requester.ValueOrZero(), intake.ID)
+			if err != nil {
+				return err
 			}
 		}
 		return nil
@@ -109,11 +154,10 @@ func NewFetchSystemIntakeByID(
 			logger.Error("failed to fetch system intake")
 			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       err,
-				Model:     "system intake",
+				Model:     intake,
 				Operation: apperrors.QueryFetch,
 			}
 		}
 		return intake, nil
 	}
-
 }

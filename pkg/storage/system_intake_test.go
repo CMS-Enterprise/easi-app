@@ -2,6 +2,8 @@ package storage
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -10,36 +12,9 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-// NewSystemIntake should provide a saveable intake with all struct fields
-func NewSystemIntake() models.SystemIntake {
-	return models.SystemIntake{
-		ID:                      uuid.New(),
-		EUAUserID:               testhelpers.RandomEUAID(),
-		Status:                  models.SystemIntakeStatusDRAFT,
-		Requester:               null.StringFrom("Test Requester"),
-		Component:               null.StringFrom("Test Component"),
-		BusinessOwner:           null.StringFrom("Test Business Owner"),
-		BusinessOwnerComponent:  null.StringFrom("Test Business Owner Component"),
-		ProductManager:          null.StringFrom("Test Product Manager"),
-		ProductManagerComponent: null.StringFrom("Test Product Manager Component"),
-		ISSO:                    null.StringFrom("Test ISSO"),
-		TRBCollaborator:         null.StringFrom("Test TRB Collaborator"),
-		OITSecurityCollaborator: null.StringFrom("Test OIT Collaborator"),
-		EACollaborator:          null.StringFrom("Test EA Collaborator"),
-		ProjectName:             null.StringFrom("Test Project Name"),
-		ExistingFunding:         null.BoolFrom(true),
-		FundingSource:           null.StringFrom("123456"),
-		BusinessNeed:            null.StringFrom("Test Business Need"),
-		Solution:                null.StringFrom("Test Solution"),
-		ProcessStatus:           null.StringFrom("Just an idea"),
-		EASupportRequest:        null.BoolFrom(false),
-		ExistingContract:        null.StringFrom("Yes"),
-	}
-}
-
 func (s StoreTestSuite) TestSaveSystemIntake() {
 	s.Run("save a new system intake", func() {
-		intake := NewSystemIntake()
+		intake := testhelpers.NewSystemIntake()
 
 		err := s.store.SaveSystemIntake(&intake)
 
@@ -130,7 +105,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 	s.Run("golden path to fetch a system intake", func() {
-		intake := NewSystemIntake()
+		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
@@ -157,8 +132,8 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	s.Run("golden path to fetch system intakes", func() {
-		intake := NewSystemIntake()
-		intake2 := NewSystemIntake()
+		intake := testhelpers.NewSystemIntake()
+		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
@@ -182,4 +157,128 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		s.Len(fetched, 0)
 		s.Equal(models.SystemIntakes{}, fetched)
 	})
+}
+
+func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
+	// create a random year to avoid test collisions
+	// uses postgres max year minus 1000000
+	rand.Seed(time.Now().UnixNano())
+	endYear := rand.Intn(294276)
+	endDate := time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
+	startDate := endDate.AddDate(0, -1, 0)
+	var startedTests = []struct {
+		name          string
+		createdAt     time.Time
+		expectedCount int
+	}{
+		{"start time is included", startDate, 1},
+		{"end time is not included", endDate, 1},
+		{"mid time is included", startDate.AddDate(0, 0, 1), 2},
+		{"before time is not included", startDate.AddDate(0, 0, -1), 2},
+		{"after time is not included", endDate.AddDate(0, 0, 1), 2},
+	}
+	for _, tt := range startedTests {
+		s.Run(fmt.Sprintf("%s for started count", tt.name), func() {
+			intake := testhelpers.NewSystemIntake()
+			intake.CreatedAt = &tt.createdAt
+			err := s.store.SaveSystemIntake(&intake)
+			s.NoError(err)
+
+			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+
+			s.NoError(err)
+			s.Equal(tt.expectedCount, metrics.Started)
+		})
+	}
+
+	endYear = rand.Intn(294276)
+	endDate = time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
+	startDate = endDate.AddDate(0, -1, 0)
+	var completedTests = []struct {
+		name          string
+		createdAt     time.Time
+		submittedAt   time.Time
+		expectedCount int
+	}{
+		{
+			"started but not finished is not included",
+			startDate,
+			endDate.AddDate(0, 0, 1),
+			0,
+		},
+		{
+			"started and finished is included",
+			startDate,
+			startDate.AddDate(0, 0, 1),
+			1,
+		},
+		{
+			"started before is not included",
+			startDate.AddDate(0, 0, -1),
+			startDate.AddDate(0, 0, 1),
+			1,
+		},
+	}
+	for _, tt := range completedTests {
+		s.Run(fmt.Sprintf("%s for completed count", tt.name), func() {
+			intake := testhelpers.NewSystemIntake()
+			intake.CreatedAt = &tt.createdAt
+			intake.SubmittedAt = &tt.submittedAt
+			err := s.store.SaveSystemIntake(&intake)
+			s.NoError(err)
+
+			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+
+			s.NoError(err)
+			s.Equal(tt.expectedCount, metrics.CompletedOfStarted)
+		})
+	}
+
+	endYear = rand.Intn(294276)
+	endDate = time.Date(endYear, 0, 0, 0, 0, 0, 0, time.UTC)
+	startDate = endDate.AddDate(0, -1, 0)
+	var fundedTests = []struct {
+		name           string
+		submittedAt    time.Time
+		funded         bool
+		completedCount int
+		fundedCount    int
+	}{
+		{
+			"completed out of range and funded",
+			endDate.AddDate(0, 0, 1),
+			true,
+			0,
+			0,
+		},
+		{
+			"completed in range and funded",
+			startDate,
+			true,
+			1,
+			1,
+		},
+		{
+			"completed in range and not funded",
+			startDate,
+			false,
+			2,
+			1,
+		},
+	}
+	for _, tt := range fundedTests {
+		s.Run(tt.name, func() {
+			intake := testhelpers.NewSystemIntake()
+			intake.SubmittedAt = &tt.submittedAt
+			intake.ExistingFunding = null.BoolFrom(tt.funded)
+			err := s.store.SaveSystemIntake(&intake)
+			s.NoError(err)
+
+			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+
+			s.NoError(err)
+			s.Equal(tt.completedCount, metrics.Completed)
+			s.Equal(tt.fundedCount, metrics.Funded)
+		})
+	}
 }

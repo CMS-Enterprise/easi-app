@@ -5,7 +5,7 @@
     "version" : "1.0",
     "title" : "EASi Core API"
   },
-  "host" : "webmethods-apigw.cedarimpl.cms.gov",
+  "host" : "cdrdevapigw1.awscloud.cms.local:5555",
   "basePath" : "/gateway/EASi Core API/1.0",
   "schemes" : [ "http" ],
   "consumes" : [ "application/json" ],
@@ -16,7 +16,7 @@
   "paths" : {
     "/system/{id}" : {
       "get" : {
-        "operationId" : "systemid_GET_2",
+        "operationId" : "systemid_GET_3",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
@@ -31,8 +31,17 @@
               "$ref" : "#/definitions/systemid_GET_response"
             }
           },
+          "400" : {
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Access Denied"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/systemid_GET_response"
+            }
           }
         }
       }
@@ -41,7 +50,12 @@
       "get" : {
         "operationId" : "systems_GET_1",
         "produces" : [ "application/json" ],
-        "parameters" : [ ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -49,8 +63,107 @@
               "$ref" : "#/definitions/systems_GET_response"
             }
           },
+          "400" : {
+            "description" : "Bad Request"
+          },
           "401" : {
             "description" : "Access Denied"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/intake/governance" : {
+      "post" : {
+        "operationId" : "intakegovernance_POST_4",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Intake"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/intakegovernance_POST_response"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Access Denied"
+          },
+          "501" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/intake/governance/{id}" : {
+      "get" : {
+        "operationId" : "intakegovernanceid_GET_5",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/intakegovernanceid_GET_response"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Access Denied"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/systems/{id}" : {
+      "get" : {
+        "operationId" : "systemsid_GET_2",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/systemsid_GET_response"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Access Denied"
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/systemsid_GET_response"
+            }
           }
         }
       }
@@ -64,19 +177,16 @@
     }
   },
   "definitions" : {
-    "systems_GET_response" : {
+    "Intake_1" : {
       "type" : "object",
-      "required" : [ "Systems" ],
+      "required" : [ "Governance" ],
       "properties" : {
-        "Systems" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/System"
-          }
+        "Governance" : {
+          "$ref" : "#/definitions/GovernanceIntake"
         }
       }
     },
-    "software" : {
+    "software_product" : {
       "type" : "object",
       "properties" : {
         "software_product_name" : {
@@ -105,25 +215,205 @@
         }
       }
     },
+    "systemsid_GET_response" : {
+      "type" : "object",
+      "properties" : {
+        "Response" : {
+          "$ref" : "#/definitions/Response"
+        },
+        "Systems" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/System"
+          }
+        }
+      }
+    },
+    "intakegovernance_POST_response" : {
+      "type" : "object",
+      "required" : [ "Response" ],
+      "properties" : {
+        "Response" : {
+          "$ref" : "#/definitions/Response"
+        }
+      }
+    },
     "systemid_GET_response" : {
       "type" : "object",
-      "required" : [ "SystemDetail" ],
       "properties" : {
+        "Response" : {
+          "$ref" : "#/definitions/Response"
+        },
         "SystemDetail" : {
           "$ref" : "#/definitions/SystemDetail"
         }
       }
     },
-    "SystemDetail" : {
+    "System" : {
       "type" : "object",
-      "required" : [ "id", "mission_essential_function", "software", "system_acronym", "system_name" ],
+      "required" : [ "id", "system_name" ],
       "properties" : {
-        "business_function_alignment" : {
+        "system_acronym" : {
+          "type" : "string"
+        },
+        "is_cms_owned" : {
+          "type" : "boolean"
+        },
+        "system_type" : {
+          "type" : "string"
+        },
+        "system_name" : {
+          "type" : "string"
+        },
+        "is_business_application" : {
+          "type" : "boolean"
+        },
+        "system_classification" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "system_state" : {
+          "type" : "string"
+        },
+        "parent_system_name" : {
+          "type" : "string"
+        },
+        "is_parent_system" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "intakegovernanceid_GET_response" : {
+      "type" : "object",
+      "required" : [ "Intake" ],
+      "properties" : {
+        "Response" : {
+          "$ref" : "#/definitions/Response"
+        },
+        "Intake" : {
+          "$ref" : "#/definitions/Intake_1"
+        }
+      }
+    },
+    "Response" : {
+      "type" : "object",
+      "required" : [ "message", "result" ],
+      "properties" : {
+        "result" : {
+          "type" : "string"
+        },
+        "message" : {
           "type" : "array",
           "items" : {
             "type" : "string"
           }
+        }
+      }
+    },
+    "GovernanceIntake" : {
+      "type" : "object",
+      "required" : [ "business_needs", "business_owner", "business_owner_component", "ea_support_request", "eua_user_id", "existing_contract", "existing_funding", "id", "process_status", "product_manager", "product_manager_component", "requester", "requester_component", "solution", "submitted_time", "system_name" ],
+      "properties" : {
+        "requester" : {
+          "type" : "string"
         },
+        "business_needs" : {
+          "type" : "string"
+        },
+        "eua_user_id" : {
+          "type" : "string"
+        },
+        "business_owner" : {
+          "type" : "string"
+        },
+        "product_manager" : {
+          "type" : "string"
+        },
+        "existing_funding" : {
+          "type" : "boolean"
+        },
+        "system_name" : {
+          "type" : "string"
+        },
+        "business_owner_component" : {
+          "type" : "string"
+        },
+        "ea_collaborator" : {
+          "type" : "string"
+        },
+        "existing_contract" : {
+          "type" : "string"
+        },
+        "submitted_time" : {
+          "type" : "string"
+        },
+        "oit_security_collaborator" : {
+          "type" : "string"
+        },
+        "solution" : {
+          "type" : "string"
+        },
+        "funding_source" : {
+          "type" : "string"
+        },
+        "isso" : {
+          "type" : "string"
+        },
+        "process_status" : {
+          "type" : "string"
+        },
+        "requester_component" : {
+          "type" : "string"
+        },
+        "ea_support_request" : {
+          "type" : "boolean"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "product_manager_component" : {
+          "type" : "string"
+        },
+        "trb_collaborator" : {
+          "type" : "string"
+        },
+        "funding_number" : {
+          "type" : "string"
+        }
+      }
+    },
+    "systems_GET_response" : {
+      "type" : "object",
+      "properties" : {
+        "Response" : {
+          "$ref" : "#/definitions/Response"
+        },
+        "Systems" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/System"
+          }
+        }
+      }
+    },
+    "Intake" : {
+      "type" : "object",
+      "required" : [ "Governance" ],
+      "properties" : {
+        "Governance" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/GovernanceIntake"
+          }
+        }
+      }
+    },
+    "SystemDetail" : {
+      "type" : "object",
+      "required" : [ "id", "software_products", "system_acronym", "system_name" ],
+      "properties" : {
         "supported_user_count" : {
           "type" : "integer",
           "format" : "int32"
@@ -141,16 +431,13 @@
           }
         },
         "mission_essential_functions" : {
-          "type" : "string"
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/mission_essential_function"
+          }
         },
         "csp_hosted" : {
           "type" : "boolean"
-        },
-        "software" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/software"
-          }
         },
         "product_owner" : {
           "type" : "string"
@@ -159,19 +446,34 @@
           "type" : "integer",
           "format" : "int32"
         },
-        "gpr_changes_next_release" : {
+        "is_business_application" : {
           "type" : "boolean"
         },
         "system_maintainer_org" : {
+          "type" : "string"
+        },
+        "gpr_changes_in_next_release" : {
+          "type" : "boolean",
+          "description" : "yyyy-MM-dd"
+        },
+        "parent_system_name" : {
           "type" : "string"
         },
         "csp_service_model_type" : {
           "type" : "string"
         },
         "next_major_project_date" : {
-          "type" : "string"
+          "type" : "string",
+          "format" : "date",
+          "description" : "yyyy-MM-dd"
+        },
+        "is_cms_owned" : {
+          "type" : "boolean"
         },
         "system_owner" : {
+          "type" : "string"
+        },
+        "system_classification" : {
           "type" : "string"
         },
         "tlc_profile_reviewer" : {
@@ -180,19 +482,36 @@
         "id" : {
           "type" : "string"
         },
+        "major_program_alignments" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
         "system_acronym" : {
           "type" : "string"
         },
-        "mission_essential_function" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/mission_essential_function"
-          }
-        },
         "next_planned_prod_release_date" : {
-          "type" : "string"
+          "type" : "string",
+          "format" : "date",
+          "description" : "yyyy-MM-dd"
         },
         "system_name" : {
+          "type" : "string"
+        },
+        "system_state" : {
+          "type" : "string"
+        },
+        "is_parent_system" : {
+          "type" : "boolean"
+        },
+        "software_products" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/software_product"
+          }
+        },
+        "system_type" : {
           "type" : "string"
         },
         "federal_ftes" : {
@@ -214,49 +533,11 @@
             "type" : "string"
           }
         },
-        "major_program_alignment" : {
+        "business_function_alignments" : {
           "type" : "array",
           "items" : {
             "type" : "string"
           }
-        }
-      }
-    },
-    "System" : {
-      "required" : [
-        "id",
-        "system_name"
-      ],
-      "properties" : {
-        "id" : {
-          "type" : "string"
-        },
-        "system_name" : {
-          "type" : "string"
-        },
-        "system_acronym" : {
-          "type" : "string"
-        },
-        "system_state":{
-          "type":"string"
-        },
-        "system_type":{
-          "type":"string"
-        },
-        "system_classification":{
-          "type":"string"
-        },
-        "is_business_application":{
-          "type":"boolean"
-        },
-        "is_cms_owned":{
-          "type":"boolean"
-        },
-        "is_parent_system":{
-          "type":"boolean"
-        },
-        "parent_system_name":{
-          "type":"string"
         }
       }
     }

@@ -7,6 +7,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import HelpText from 'components/shared/HelpText';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 
 type RequestDescriptionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -18,6 +19,9 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
   return (
     <div className="grid-container">
       <h1 className="font-heading-xl">Request description</h1>
+      <div className="tablet:grid-col-5">
+        <MandatoryFieldsAlert />
+      </div>
       <div className="tablet:grid-col-9 margin-bottom-7">
         <FieldGroup
           scrollElement="businessNeed"
@@ -87,7 +91,7 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
           error={!!flatErrors.priorityAlignment}
         >
           <Label htmlFor="BusinessCase-PriorityAlignment">
-            How does this effort algin with organizational priorities?
+            How does this effort align with organizational priorities?
           </Label>
           <HelpText className="margin-y-1">
             List out any administrator priorities or new legislative/regulatory
