@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"go.uber.org/zap"
@@ -17,6 +18,7 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 	logger := zap.NewNop()
 	fakeEuaID := "FAKE"
 	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 
 	s.Run("successfully fetches System Intakes by EUA ID without an error", func() {
 		fetch := func(euaID string) (models.SystemIntakes, error) {
@@ -104,6 +106,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		return nil
 	}
 	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 
 	s.Run("returns no error when successful on save", func() {
 		ctx := context.Background()
@@ -273,6 +276,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 
 	s.Run("successfully fetches System Intake by ID without an error", func() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
