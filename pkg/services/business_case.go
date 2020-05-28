@@ -54,7 +54,7 @@ func NewAuthorizeCreateBusinessCase(logger *zap.Logger) func(
 				Info("something went wrong fetching the eua id from the context")
 			return false, nil
 		}
-		// If intake is owned by user, authorize
+		// If business case is owned by user, authorize
 		if user.EUAUserID == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
 				With(zap.String("Operation", "CreateBusinessCase")).
