@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"go.uber.org/zap"
@@ -18,6 +19,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 
 	s.Run("successfully fetches Business Case by ID without an error", func() {
 		fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
@@ -49,6 +51,7 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 	logger := zap.NewNop()
 	fakeEuaID := "FAKE"
 	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 
 	s.Run("successfully fetches Business Cases by EUA ID without an error", func() {
 		fetch := func(euaID string) (models.BusinessCases, error) {
@@ -119,6 +122,7 @@ func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
 func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intakeID := uuid.New()
 	intake := models.SystemIntake{
@@ -222,6 +226,7 @@ func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
 func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intakeID := uuid.New()
 	intake := models.SystemIntake{
