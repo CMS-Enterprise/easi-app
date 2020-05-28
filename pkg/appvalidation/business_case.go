@@ -170,6 +170,10 @@ func validateAllRequiredLifecycleCosts(businessCase *models.BusinessCase) map[st
 		if v := validateRequiredCost(bCosts); v != "" {
 			validations["alternativeBSolution"] = v
 		}
+	} else {
+		if len(bCosts) != 0 {
+			validations["alternativeBSolution"] = "is required to be empty"
+		}
 	}
 	return validations
 }
