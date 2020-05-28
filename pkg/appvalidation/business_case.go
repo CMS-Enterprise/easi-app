@@ -80,14 +80,6 @@ func BusinessCaseForUpdate(businessCase *models.BusinessCase) error {
 	return nil
 }
 
-// isSubmittable checks if the business case status is submitted and the previous version is not
-func isSubmittable(existing *models.BusinessCase) bool {
-	if existing.Status != models.BusinessCaseStatusSUBMITTED && existing.Status != models.BusinessCaseStatusDRAFT {
-		return false
-	}
-	return true
-}
-
 func alternativeBRequired(businessCase *models.BusinessCase) bool {
 	return businessCase.AlternativeBTitle.Valid ||
 		businessCase.AlternativeBSummary.Valid ||
@@ -196,7 +188,7 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 	)
 
 	if businessCase.Status == models.BusinessCaseStatusSUBMITTED {
-		if !isSubmittable(existingBusinessCase) {
+		if existingBusinessCase.Status != models.BusinessCaseStatusDRAFT {
 			expectedErr.WithValidation("Status", "cannot be SUBMITTED")
 		}
 
