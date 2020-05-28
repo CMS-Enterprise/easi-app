@@ -19,13 +19,11 @@ func (s Server) checkRequiredConfig(config string) {
 
 // NewDBConfig returns a new DBConfig and check required fields
 func (s Server) NewDBConfig() storage.DBConfig {
-	environment := s.Config.GetString(appconfig.EnvironmentKey)
 	s.checkRequiredConfig(appconfig.DBHostConfigKey)
 	s.checkRequiredConfig(appconfig.DBPortConfigKey)
 	s.checkRequiredConfig(appconfig.DBNameConfigKey)
 	s.checkRequiredConfig(appconfig.DBUsernameConfigKey)
-	if environment != appconfig.LocalEnv.String() &&
-		environment != appconfig.TestEnv.String() {
+	if s.environment.Deployed() {
 		s.checkRequiredConfig(appconfig.DBPasswordConfigKey)
 	}
 	s.checkRequiredConfig(appconfig.DBSSLModeConfigKey)

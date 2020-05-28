@@ -22,7 +22,7 @@ func (s HandlerTestSuite) TestSystemIntakesHandler() {
 	s.Run("golden path FETCH passes", func() {
 		rr := httptest.NewRecorder()
 		requestContext := context.Background()
-		requestContext = appcontext.WithEuaID(requestContext, "EUAID")
+		requestContext = appcontext.WithUser(requestContext, models.User{EUAUserID: "EUAID"})
 		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intakes/", bytes.NewBufferString("{}"))
 		s.NoError(err)
 		SystemIntakesHandler{

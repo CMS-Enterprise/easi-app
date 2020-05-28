@@ -91,18 +91,18 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			err := decoder.Decode(&businessCaseToCreate)
 
 			if err != nil {
-				logger.Error("Failed to decode business case body")
+				logger.Error("Failed to decode business case body", zap.Error(err))
 				http.Error(w, "Bad business case request", http.StatusBadRequest)
 				return
 			}
 
-			euaID, ok := appcontext.EuaID(r.Context())
+			user, ok := appcontext.User(r.Context())
 			if !ok {
 				logger.Error("Failed to get EUA ID from context")
 				http.Error(w, "Failed to POST business case", http.StatusUnauthorized)
 				return
 			}
-			businessCaseToCreate.EUAUserID = euaID
+			businessCaseToCreate.EUAUserID = user.EUAUserID
 
 			businessCase, err := h.CreateBusinessCase(r.Context(), &businessCaseToCreate)
 			if err != nil {
@@ -155,13 +155,13 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			}
 			businessCaseToUpdate.ID = businessCaseID
 
-			euaID, ok := appcontext.EuaID(r.Context())
+			user, ok := appcontext.User(r.Context())
 			if !ok {
 				logger.Error("Failed to get EUA ID from context")
 				http.Error(w, "Failed to PUT business case", http.StatusUnauthorized)
 				return
 			}
-			businessCaseToUpdate.EUAUserID = euaID
+			businessCaseToUpdate.EUAUserID = user.EUAUserID
 			updatedBusinessCase, err := h.UpdateBusinessCase(r.Context(), &businessCaseToUpdate)
 			if err != nil {
 				h.Logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))

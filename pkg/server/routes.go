@@ -3,11 +3,9 @@ package server
 import (
 	"net/http"
 
-	"github.com/facebookgo/clock"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -38,6 +36,10 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
+	if s.environment.Deployed() {
+		s.CheckCEDARClientConnection(cedarClient)
+	}
+
 	// set up Email Client
 	sesConfig := s.NewSESConfig()
 	sesSender := appses.NewSender(sesConfig)
@@ -47,12 +49,16 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to create email client", zap.Error(err))
 	}
 	// override email client with local one
-	if s.Config.GetString(appconfig.EnvironmentKey) == appconfig.LocalEnv.String() {
+	if s.environment.Local() {
 		localSender := local.NewSender(s.logger)
 		emailClient, err = email.NewClient(emailConfig, localSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
 		}
+	}
+
+	if s.environment.Deployed() {
+		s.CheckEmailClient(emailClient)
 	}
 
 	// API base path is versioned
@@ -66,6 +72,8 @@ func (s *Server) routes(
 
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
+
+	serviceConfig := services.NewConfig(s.logger)
 
 	store, err := storage.NewStore(
 		s.logger,
@@ -82,21 +90,19 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	saveClock := clock.New()
 	systemIntakeHandler := handlers.SystemIntakeHandler{
 		Logger: s.logger,
 		SaveSystemIntake: services.NewSaveSystemIntake(
+			serviceConfig,
 			store.SaveSystemIntake,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeSaveSystemIntake(s.logger),
 			cedarClient.ValidateAndSubmitSystemIntake,
 			emailClient.SendSystemIntakeSubmissionEmail,
-			s.logger,
-			saveClock,
 		),
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
+			serviceConfig,
 			store.FetchSystemIntakeByID,
-			s.logger,
 		),
 	}
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
@@ -105,8 +111,8 @@ func (s *Server) routes(
 	systemIntakesHandler := handlers.SystemIntakesHandler{
 		Logger: s.logger,
 		FetchSystemIntakes: services.NewFetchSystemIntakesByEuaID(
+			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
-			s.logger,
 		),
 	}
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
@@ -114,22 +120,21 @@ func (s *Server) routes(
 	businessCaseHandler := handlers.BusinessCaseHandler{
 		Logger: s.logger,
 		CreateBusinessCase: services.NewCreateBusinessCase(
+			serviceConfig,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeCreateBusinessCase(s.logger),
 			store.CreateBusinessCase,
-			s.logger,
-			saveClock,
 		),
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
+			serviceConfig,
 			store.FetchBusinessCaseByID,
-			s.logger,
 		),
 		UpdateBusinessCase: services.NewUpdateBusinessCase(
+			serviceConfig,
 			store.FetchBusinessCaseByID,
 			services.NewAuthorizeUpdateBusinessCase(s.logger),
 			store.UpdateBusinessCase,
-			s.logger,
-			saveClock,
+			emailClient.SendBusinessCaseSubmissionEmail,
 		),
 	}
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
@@ -138,8 +143,8 @@ func (s *Server) routes(
 	businessCasesHandler := handlers.BusinessCasesHandler{
 		Logger: s.logger,
 		FetchBusinessCases: services.NewFetchBusinessCasesByEuaID(
+			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
-			s.logger,
 		),
 	}
 	api.Handle("/business_cases", businessCasesHandler.Handle())

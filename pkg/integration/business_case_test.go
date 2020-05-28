@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
@@ -23,16 +24,17 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	businessCaseURL.Path = path.Join(businessCaseURL.Path, "/business_case")
 
 	intakeID := uuid.New()
-	intake := models.SystemIntake{
-		ID:        intakeID,
-		Status:    "SUBMITTED",
-		EUAUserID: s.user.euaID,
-	}
+	intake := testhelpers.NewSystemIntake()
+	intake.ID = intakeID
+	intake.Status = models.SystemIntakeStatusSUBMITTED
+	intake.EUAUserID = s.user.euaID
 
-	_ = s.store.SaveSystemIntake(&intake)
+	err = s.store.SaveSystemIntake(&intake)
+	s.NoError(err)
 
 	body, err := json.Marshal(map[string]string{
-		"systemIntake": intakeID.String(),
+		"systemIntakeId": intakeID.String(),
+		"status":         "DRAFT",
 	})
 	s.NoError(err)
 

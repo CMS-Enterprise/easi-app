@@ -30,14 +30,14 @@ func (h BusinessCasesHandler) Handle() http.HandlerFunc {
 
 		switch r.Method {
 		case "GET":
-			euaID, ok := appcontext.EuaID(r.Context())
+			user, ok := appcontext.User(r.Context())
 			if !ok {
 				h.Logger.Error("Failed to get EUA ID from context in business cases handler")
 				http.Error(w, "Failed to fetch business cases", http.StatusInternalServerError)
 				return
 			}
 
-			businessCases, err := h.FetchBusinessCases(euaID)
+			businessCases, err := h.FetchBusinessCases(user.EUAUserID)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to fetch business cases: %v", err))
 				http.Error(w, "failed to fetch business cases", http.StatusInternalServerError)
