@@ -30,14 +30,14 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 
 		switch r.Method {
 		case "GET":
-			euaID, ok := appcontext.EuaID(r.Context())
+			user, ok := appcontext.User(r.Context())
 			if !ok {
 				h.Logger.Error("Failed to get EUA ID from context in system intakes handler")
 				http.Error(w, "Failed to fetch System Intakes", http.StatusInternalServerError)
 				return
 			}
 
-			systemIntakes, err := h.FetchSystemIntakes(euaID)
+			systemIntakes, err := h.FetchSystemIntakes(user.EUAUserID)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to fetch system intakes: %v", err))
 				http.Error(w, "failed to fetch system intakes", http.StatusInternalServerError)
