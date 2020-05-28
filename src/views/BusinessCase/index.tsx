@@ -13,13 +13,16 @@ import {
   fetchBusinessCase,
   postBusinessCase,
   putBusinessCase,
-  storeBusinessCase
+  storeBusinessCase,
+  submitBusinessCase,
+  clearBusinessCase
 } from 'types/routines';
 import { BusinessCaseModel } from 'types/businessCase';
 import { defaultProposedSolution } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
+import usePrevious from 'hooks/usePrevious';
 import GeneralRequestInfo from './GeneralRequestInfo';
 import RequestDescription from './RequestDescription';
 import AsIsSolution from './AsIsSolution';
@@ -91,6 +94,13 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.isSaving
   );
 
+  const isSubmitting = useSelector(
+    (state: AppState) => state.businessCase.isSubmitting
+  );
+
+  const error = useSelector((state: AppState) => state.businessCase.error);
+  const prevIsSubmitting = usePrevious(isSubmitting);
+
   const [pageIndex, setPageIndex] = useState(0);
   const pageObj = pages[pageIndex];
 
@@ -151,6 +161,10 @@ export const BusinessCase = () => {
       dispatch(fetchBusinessCase(businessCaseId));
     }
 
+    return () => {
+      dispatch(clearBusinessCase());
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -179,6 +193,15 @@ export const BusinessCase = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pages, businessCaseId, formPage]);
 
+  // Handle submit
+  useEffect(() => {
+    if (prevIsSubmitting && !isSubmitting && !error) {
+      history.push('/');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitting]);
+
   return (
     <div className="business-case margin-bottom-5">
       <Header name="CMS Business Case" />
@@ -186,7 +209,9 @@ export const BusinessCase = () => {
         {isLoading === false && (
           <Formik
             initialValues={businessCase}
-            onSubmit={() => {}}
+            onSubmit={values => {
+              dispatch(submitBusinessCase(values));
+            }}
             validationSchema={pageObj.validation}
             validateOnBlur={false}
             validateOnChange={false}
@@ -195,13 +220,7 @@ export const BusinessCase = () => {
             enableReinitialize
           >
             {(formikProps: FormikProps<BusinessCaseModel>) => {
-              const {
-                values,
-                errors,
-                validateForm,
-                setErrors,
-                isSubmitting
-              } = formikProps;
+              const { values, errors, validateForm, setErrors } = formikProps;
               const flatErrors: any = flattenErrors(errors);
               return (
                 <>
@@ -352,14 +371,7 @@ export const BusinessCase = () => {
                         </Button>
                       )}
                       {pageIndex === pages.length - 1 && (
-                        <Button
-                          type="submit"
-                          disabled={isSubmitting}
-                          onClick={() => {
-                            // eslint-disable-next-line no-console
-                            console.log('Submitting Data: ', values);
-                          }}
-                        >
+                        <Button type="submit" disabled={isSubmitting}>
                           Send my business case
                         </Button>
                       )}
