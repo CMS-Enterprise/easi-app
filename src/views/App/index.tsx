@@ -30,7 +30,9 @@ class App extends React.Component<MainProps, MainState> {
               <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/login" exact component={Login} />
-                <Route path="/sandbox" exact component={Sandbox} />
+                {process.env.NODE_ENV === 'development' && (
+                  <Route path="/sandbox" exact component={Sandbox} />
+                )}
                 <Route
                   path="/governance-overview"
                   exact
