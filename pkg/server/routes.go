@@ -7,7 +7,6 @@ import (
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/cedar"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -38,6 +37,10 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
+	if s.environment.Deployed() {
+		s.CheckCEDARClientConnection(cedarClient)
+	}
+
 	// set up Email Client
 	sesConfig := s.NewSESConfig()
 	sesSender := appses.NewSender(sesConfig)
@@ -47,12 +50,16 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to create email client", zap.Error(err))
 	}
 	// override email client with local one
-	if s.Config.GetString(appconfig.EnvironmentKey) == appconfig.LocalEnv.String() {
+	if s.environment.Local() {
 		localSender := local.NewSender(s.logger)
 		emailClient, err = email.NewClient(emailConfig, localSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
 		}
+	}
+
+	if s.environment.Deployed() {
+		s.CheckEmailClient(emailClient)
 	}
 
 	// API base path is versioned

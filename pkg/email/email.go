@@ -84,3 +84,9 @@ func (c Client) urlFromPath(path string) string {
 	}
 	return u.String()
 }
+
+// SendTestEmail sends an email to a no-reply address
+func (c Client) SendTestEmail() error {
+	const testToAddress = "success@simulator.amazonses.com"
+	return c.sender.Send(testToAddress, "test", "test")
+}
