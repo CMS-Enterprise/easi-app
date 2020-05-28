@@ -12,7 +12,7 @@ type UnauthorizedError struct {
 
 // Error provides the error as a string
 func (e *UnauthorizedError) Error() string {
-	return "User is unauthorized"
+	return fmt.Sprintf("User is unauthorized: %s", e.Err)
 }
 
 // Unwrap provides the underlying error
@@ -41,7 +41,7 @@ type QueryError struct {
 
 // Error provides the error as a string
 func (e *QueryError) Error() string {
-	return fmt.Sprintf("Could not query model %T with operation %s", e.Model, e.Operation)
+	return fmt.Sprintf("Could not query model %T with operation %s, received error: %s", e.Model, e.Operation, e.Err)
 }
 
 // Unwrap provides the underlying error
@@ -58,7 +58,7 @@ type ResourceConflictError struct {
 
 // Error provides the error as a string
 func (e *ResourceConflictError) Error() string {
-	return fmt.Sprintf("Could not perform action on %T %s", e.Resource, e.ResourceID)
+	return fmt.Sprintf("Could not perform action on %T %s with error: %s", e.Resource, e.ResourceID, e.Err)
 }
 
 // Unwrap provides the underlying error
@@ -127,7 +127,14 @@ type ExternalAPIError struct {
 
 // Error provides the error as a string
 func (e *ExternalAPIError) Error() string {
-	return fmt.Sprintf("Could not hit %s for %T %s with operation %s", e.Source, e.Model, e.ModelID, e.Operation)
+	return fmt.Sprintf(
+		"Could not hit %s for %T %s with operation %s, received error: %s",
+		e.Source,
+		e.Model,
+		e.ModelID,
+		e.Operation,
+		e.Err,
+	)
 }
 
 // Unwrap provides the underlying error
@@ -153,7 +160,7 @@ type ContextError struct {
 
 // Error provides the error as a string
 func (e *ContextError) Error() string {
-	return fmt.Sprintf("Could not %s %s on context", e.Operation, e.Object)
+	return fmt.Sprintf("Could not %s %s on context with error: %s", e.Operation, e.Object, e.Error())
 }
 
 // NotificationDestinationType is a type of destination for a notification
