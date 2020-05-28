@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtverifier.Jwt, error) {
@@ -22,6 +23,15 @@ func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtv
 	}
 
 	return f.verifier.VerifyAccessToken(bearerToken)
+}
+
+func (f oktaMiddlewareFactory) newUser(logger *zap.Logger, jwt *jwtverifier.Jwt) (models.User, error) {
+	euaID := jwt.Claims["sub"].(string)
+	if euaID == "" {
+		return models.User{}, errors.New("unable to retrieve EUA ID from JWT")
+	}
+
+	return models.User{EUAUserID: euaID}, nil
 }
 
 func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Handler {
@@ -45,14 +55,14 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 			return
 		}
 
-		euaID := jwt.Claims["sub"].(string)
-		logger = logger.With(zap.String("user", euaID))
-		if !ok {
+		user, err := f.newUser(logger, jwt)
+		if err != nil {
 			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
 			return
 		}
+		logger = logger.With(zap.String("user", user.EUAUserID))
 
-		ctx := appcontext.WithEuaID(r.Context(), euaID)
+		ctx := appcontext.WithEuaID(r.Context(), user.EUAUserID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
