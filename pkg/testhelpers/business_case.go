@@ -233,7 +233,7 @@ func NewBusinessCase() models.BusinessCase {
 		ProjectName:                     null.StringFrom("Test Project Name"),
 		Status:                          models.BusinessCaseStatusDRAFT,
 		Requester:                       null.StringFrom("Test Requester"),
-		RequesterPhoneNumber:            null.StringFrom("Test Requester Phone Number"),
+		RequesterPhoneNumber:            null.StringFrom("6666666666"),
 		BusinessOwner:                   null.StringFrom("Test Business Owner"),
 		BusinessNeed:                    null.StringFrom("Test Business Need"),
 		CMSBenefit:                      null.StringFrom("Test CMS Benefit"),

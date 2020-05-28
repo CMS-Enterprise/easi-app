@@ -225,7 +225,8 @@ func NewUpdateBusinessCase(
 		}
 
 		// At this point, if everything has gone well, email the GRT
-		if businessCase.Status == models.BusinessCaseStatusSUBMITTED {
+		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
+			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
 			err = sendEmail(businessCase.Requester.String, businessCase.ID)
 			if err != nil {
 				logger.Error("Failed to send email", zap.Error(err))

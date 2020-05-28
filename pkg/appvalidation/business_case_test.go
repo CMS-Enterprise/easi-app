@@ -196,6 +196,17 @@ func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 		s.Equal("requires a phase", result[string(models.LifecycleCostSolutionPREFERRED)+string(models.LifecycleCostYear1)])
 		s.Equal(5, len(result))
 	})
+
+	s.Run("when alt b costs exist but alt b is not required", func() {
+		altB := models.LifecycleCostSolutionB
+		businessCase := models.BusinessCase{
+			LifecycleCostLines: models.EstimatedLifecycleCosts{
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{Solution: &altB}),
+			},
+		}
+		result := validateAllRequiredLifecycleCosts(&businessCase)
+		s.Equal("is required to be empty", result["alternativeBSolution"])
+	})
 }
 
 func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
