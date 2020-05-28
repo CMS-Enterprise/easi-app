@@ -39,7 +39,7 @@ func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
 	intake *models.SystemIntake,
 ) (bool, error) {
 	return func(context context.Context, intake *models.SystemIntake) (bool, error) {
-		euaID, ok := appcontext.EuaID(context)
+		user, ok := appcontext.User(context)
 		if !ok {
 			logger.Error("unable to get EUA ID from context")
 			return false, &apperrors.ContextError{
@@ -49,7 +49,7 @@ func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
 		}
 
 		// If intake doesn't exist or owned by user, authorize
-		if intake == nil || euaID == intake.EUAUserID {
+		if intake == nil || user.EUAUserID == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
 				With(zap.String("Operation", "SaveSystemIntake")).
 				Info("user authorized to save system intake")
@@ -92,6 +92,9 @@ func NewSaveSystemIntake(
 		}
 		updatedTime := config.clock.Now().UTC()
 		intake.UpdatedAt = &updatedTime
+		if existingIntake == nil {
+			intake.CreatedAt = &updatedTime
+		}
 
 		if intake.Status == models.SystemIntakeStatusSUBMITTED {
 			if intake.AlfabetID.Valid {

@@ -45,7 +45,7 @@ func NewAuthorizeCreateBusinessCase(logger *zap.Logger) func(
 				Info("intake does not exist")
 			return false, nil
 		}
-		euaID, ok := appcontext.EuaID(context)
+		user, ok := appcontext.User(context)
 		if !ok {
 			// Default to failure to authorize and create a quick audit log
 			logger.With(zap.Bool("Authorized", false)).
@@ -53,8 +53,8 @@ func NewAuthorizeCreateBusinessCase(logger *zap.Logger) func(
 				Info("something went wrong fetching the eua id from the context")
 			return false, nil
 		}
-		// If intake is owned by user, authorize
-		if euaID == intake.EUAUserID {
+		// If business case is owned by user, authorize
+		if user.EUAUserID == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
 				With(zap.String("Operation", "CreateBusinessCase")).
 				Info("user authorized to create business case")
@@ -96,6 +96,9 @@ func NewCreateBusinessCase(
 		if err != nil {
 			return &models.BusinessCase{}, err
 		}
+		createAt := config.clock.Now()
+		businessCase.CreatedAt = &createAt
+		businessCase.UpdatedAt = &createAt
 		businessCase, err = create(businessCase)
 		if err != nil {
 			config.logger.Error("failed to create a business case")
@@ -125,5 +128,108 @@ func NewFetchBusinessCasesByEuaID(
 			}
 		}
 		return businessCases, nil
+	}
+}
+
+// NewAuthorizeUpdateBusinessCase returns a function
+// that authorizes a user for updating an existing business case
+func NewAuthorizeUpdateBusinessCase(logger *zap.Logger) func(
+	context context.Context,
+	businessCase *models.BusinessCase,
+) (bool, error) {
+	return func(context context.Context, businessCase *models.BusinessCase) (bool, error) {
+		if businessCase == nil {
+			logger.With(zap.Bool("Authorized", false)).
+				With(zap.String("Operation", "UpdateBusinessCase")).
+				Info("business case does not exist")
+			return false, nil
+		}
+		user, ok := appcontext.User(context)
+		if !ok {
+			// Default to failure to authorize and create a quick audit log
+			logger.With(zap.Bool("Authorized", false)).
+				With(zap.String("Operation", "UpdateBusinessCase")).
+				Info("something went wrong fetching the eua id from the context")
+			return false, nil
+		}
+		// If intake is owned by user, authorize
+		if user.EUAUserID == businessCase.EUAUserID {
+			logger.With(zap.Bool("Authorized", true)).
+				With(zap.String("Operation", "UpdateBusinessCase")).
+				Info("user authorized to update business case")
+			return true, nil
+		}
+		// Default to failure to authorize and create a quick audit log
+		logger.With(zap.Bool("Authorized", false)).
+			With(zap.String("Operation", "UpdateBusinessCase")).
+			Info("unauthorized attempt to update business case")
+		return false, nil
+	}
+}
+
+// NewUpdateBusinessCase is a service to create a business case
+func NewUpdateBusinessCase(
+	config Config,
+	fetchBusinessCase func(id uuid.UUID) (*models.BusinessCase, error),
+	authorize func(context context.Context, businessCase *models.BusinessCase) (bool, error),
+	update func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
+	sendEmail func(requester string, intakeID uuid.UUID) error,
+) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+		existingBusinessCase, err := fetchBusinessCase(businessCase.ID)
+		if err != nil {
+			return &models.BusinessCase{}, &apperrors.ResourceConflictError{
+				Err:        errors.New("business case does not exist"),
+				Resource:   businessCase,
+				ResourceID: businessCase.ID.String(),
+			}
+		}
+		ok, err := authorize(context, existingBusinessCase)
+		if err != nil {
+			return &models.BusinessCase{}, err
+		}
+		if !ok {
+			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: err}
+		}
+		// Uncomment below when UI has changed for unique lifecycle costs
+		//err = appvalidation.BusinessCaseForUpdate(businessCase)
+		//if err != nil {
+		//	return &models.BusinessCase{}, err
+		//}
+		updatedAt := config.clock.Now()
+		businessCase.UpdatedAt = &updatedAt
+
+		// Once CEDAR endpoint exists, we should be doing validations and submissions in the CEDAR package
+		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
+			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
+			// Set submitted at time before validations as it is one of the fields that is validated
+			businessCase.SubmittedAt = businessCase.UpdatedAt
+			err = appvalidation.BusinessCaseForSubmit(businessCase, existingBusinessCase)
+			if err != nil {
+				config.logger.Error("Failed to validate", zap.Error(err))
+				return businessCase, err
+			}
+		}
+
+		businessCase, err = update(businessCase)
+		if err != nil {
+			config.logger.Error("failed to update business case")
+			return &models.BusinessCase{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     businessCase,
+				Operation: apperrors.QuerySave,
+			}
+		}
+
+		// At this point, if everything has gone well, email the GRT
+		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
+			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
+			err = sendEmail(businessCase.Requester.String, businessCase.ID)
+			if err != nil {
+				config.logger.Error("Failed to send email", zap.Error(err))
+				return businessCase, err
+			}
+		}
+		return businessCase, nil
 	}
 }
