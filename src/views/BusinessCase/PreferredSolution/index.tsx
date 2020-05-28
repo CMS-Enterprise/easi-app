@@ -21,7 +21,25 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
   return (
     <div className="grid-container">
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
-      <div className="tablet:grid-col-5">
+      <div className="tablet:grid-col-9">
+        <div className="line-height-body-6">
+          Some examples of options to consider may include:
+          <ul className="padding-left-205 margin-y-0">
+            <li>Buy vs. build vs. lease vs. reuse of existing system</li>
+            <li>
+              Commercial off-the-shelf (COTS) vs. Government off-the-shelf
+              (GOTS)
+            </li>
+            <li>Mainframe vs. server-based vs. clustering vs. Cloud</li>
+          </ul>
+          <br />
+          In your options, include details such as differences between system
+          capabilities, user friendliness, technical and security
+          considerations, ease and timing of integration with CMS&apos; IT
+          infrastructure, etc.
+        </div>
+      </div>
+      <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
         <MandatoryFieldsAlert />
       </div>
       <div className="tablet:grid-col-9">
