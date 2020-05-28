@@ -143,6 +143,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
 func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 	businessCase := testhelpers.NewBusinessCase()
 	dev := models.LifecycleCostPhaseDEVELOPMENT
+	cost := 300
 
 	s.Run("golden path", func() {
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
@@ -158,6 +159,37 @@ func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 		s.Equal("years 1, 2, 3, 4, 5 are required", result["alternativeASolution"])
 		s.Equal("years 1, 2, 3, 4, 5 are required", result["alternativeBSolution"])
 		s.Equal(4, len(result))
+	})
+
+	s.Run("returns validations only for the years that are missing", func() {
+		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionASIS,
+				Phase:    &dev,
+				Year:     models.LifecycleCostYear1,
+				Cost:     &cost,
+			},
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionASIS,
+				Phase:    &dev,
+				Year:     models.LifecycleCostYear2,
+				Cost:     &cost,
+			},
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionASIS,
+				Phase:    &dev,
+				Year:     models.LifecycleCostYear3,
+				Cost:     &cost,
+			},
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionASIS,
+				Phase:    &dev,
+				Year:     models.LifecycleCostYear4,
+				Cost:     &cost,
+			},
+		}
+		result := validateAllRequiredLifecycleCosts(&businessCase)
+		s.Equal("year 5 is required", result["asIsSolution"])
 	})
 
 	s.Run("when a cost is missing", func() {
@@ -179,7 +211,6 @@ func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 	})
 
 	s.Run("when a phase is missing", func() {
-		cost := 300
 		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
 			models.EstimatedLifecycleCost{
 				Solution: models.LifecycleCostSolutionPREFERRED,
