@@ -89,7 +89,7 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	saveClock := clock.New()
+	handlerClock := clock.New()
 	systemIntakeHandler := handlers.SystemIntakeHandler{
 		Logger: s.logger,
 		SaveSystemIntake: services.NewSaveSystemIntake(
@@ -99,7 +99,7 @@ func (s *Server) routes(
 			cedarClient.ValidateAndSubmitSystemIntake,
 			emailClient.SendSystemIntakeSubmissionEmail,
 			s.logger,
-			saveClock,
+			handlerClock,
 		),
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
 			store.FetchSystemIntakeByID,
@@ -125,7 +125,7 @@ func (s *Server) routes(
 			services.NewAuthorizeCreateBusinessCase(s.logger),
 			store.CreateBusinessCase,
 			s.logger,
-			saveClock,
+			handlerClock,
 		),
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
 			store.FetchBusinessCaseByID,
@@ -137,7 +137,7 @@ func (s *Server) routes(
 			store.UpdateBusinessCase,
 			emailClient.SendBusinessCaseSubmissionEmail,
 			s.logger,
-			saveClock,
+			handlerClock,
 		),
 	}
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
@@ -155,6 +155,7 @@ func (s *Server) routes(
 	metricsHandler := handlers.MetricsHandler{
 		FetchMetrics: services.NewFetchMetrics(store.GetSystemIntakeMetrics),
 		Logger:       s.logger,
+		Clock:        handlerClock,
 	}
 	api.Handle("/metrics", metricsHandler.Handle())
 
