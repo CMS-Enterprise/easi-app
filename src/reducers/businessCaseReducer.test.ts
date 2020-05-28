@@ -5,7 +5,8 @@ import {
 import {
   fetchBusinessCase,
   postBusinessCase,
-  storeBusinessCase
+  storeBusinessCase,
+  submitBusinessCase
 } from 'types/routines';
 import businessCaseReducer from './businessCaseReducer';
 
@@ -15,6 +16,7 @@ describe('The business case reducer', () => {
       form: businessCaseInitialData,
       isLoading: null,
       isSaving: false,
+      isSubmitting: false,
       error: null
     });
   });
@@ -30,6 +32,7 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: true,
         isSaving: false,
+        isSubmitting: false,
         error: null
       });
     });
@@ -84,6 +87,7 @@ describe('The business case reducer', () => {
         form: prepareBusinessCaseForApp(mockBusinessCase),
         isLoading: null,
         isSaving: false,
+        isSubmitting: false,
         error: null
       });
     });
@@ -98,6 +102,7 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: false,
+        isSubmitting: false,
         error: 'Error Found!'
       });
     });
@@ -112,6 +117,7 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: false,
         isSaving: false,
+        isSubmitting: false,
         error: null
       });
     });
@@ -128,6 +134,7 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: true,
+        isSubmitting: false,
         error: null
       });
     });
@@ -180,6 +187,7 @@ describe('The business case reducer', () => {
         form: prepareBusinessCaseForApp(mockSuccessAction.payload),
         isLoading: null,
         isSaving: false,
+        isSubmitting: false,
         error: null
       });
     });
@@ -193,10 +201,12 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: false,
+        isSubmitting: false,
         error: null
       });
     });
   });
+
   describe('storeBusinessCase', () => {
     it('handles storeBusinessCase.TRIGGER', () => {
       const mockTriggerAction = {
@@ -210,6 +220,80 @@ describe('The business case reducer', () => {
         form: { ...businessCaseInitialData, ...{ id: '12345' } },
         isLoading: false,
         isSaving: false,
+        isSubmitting: false,
+        error: null
+      });
+    });
+  });
+
+  describe('submitBusinessCase', () => {
+    const initialState = {
+      form: {
+        ...businessCaseInitialData,
+        id: 'Test Id 123'
+      },
+      isLoading: null,
+      isSaving: false,
+      isSubmitting: true,
+      error: null
+    };
+
+    it('handles submitBusinessCase.REQUEST', () => {
+      const mockRequestAction = {
+        type: submitBusinessCase.REQUEST,
+        payload: undefined
+      };
+
+      expect(businessCaseReducer(undefined, mockRequestAction)).toEqual({
+        form: businessCaseInitialData,
+        isLoading: null,
+        isSaving: false,
+        isSubmitting: true,
+        error: null
+      });
+    });
+
+    it('handles submitBusinessCase.SUCCESS', () => {
+      const mockSuccessAction = {
+        type: submitBusinessCase.SUCCESS,
+        payload: undefined
+      };
+
+      expect(businessCaseReducer(initialState, mockSuccessAction)).toEqual({
+        form: businessCaseInitialData,
+        isLoading: null,
+        isSaving: false,
+        isSubmitting: true,
+        error: null
+      });
+    });
+
+    it('handles submitBusinessCase.FAILURE', () => {
+      const mockFailureAction = {
+        type: submitBusinessCase.FAILURE,
+        payload: 'Error'
+      };
+
+      expect(businessCaseReducer(initialState, mockFailureAction)).toEqual({
+        form: initialState.form,
+        isLoading: null,
+        isSaving: false,
+        isSubmitting: true,
+        error: 'Error'
+      });
+    });
+
+    it('handles submitBusinessCase.FULFILL', () => {
+      const mockFulfillAction = {
+        type: submitBusinessCase.FULFILL,
+        payload: undefined
+      };
+
+      expect(businessCaseReducer(undefined, mockFulfillAction)).toEqual({
+        form: businessCaseInitialData,
+        isLoading: null,
+        isSaving: false,
+        isSubmitting: false,
         error: null
       });
     });
