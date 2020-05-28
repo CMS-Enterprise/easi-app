@@ -1,6 +1,8 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 )
@@ -42,7 +44,21 @@ type SystemIntake struct {
 	ProcessStatus           null.String        `json:"processStatus" db:"process_status"`
 	EASupportRequest        null.Bool          `json:"eaSupportRequest" db:"ea_support_request"`
 	ExistingContract        null.String        `json:"existingContract" db:"existing_contract"`
+	CreatedAt               *time.Time         `json:"createdAt" db:"created_at"`
+	UpdatedAt               *time.Time         `json:"updatedAt" db:"updated_at"`
+	SubmittedAt             *time.Time         `json:"submittedAt" db:"submitted_at"`
+	AlfabetID               null.String        `json:"alfabetID" db:"alfabet_id"`
 }
 
 // SystemIntakes is a list of System Intakes
 type SystemIntakes []SystemIntake
+
+// SystemIntakeMetrics is a model for storing metrics related to system intake
+type SystemIntakeMetrics struct {
+	StartTime          *time.Time `json:"startTime"`
+	EndTime            *time.Time `json:"endTime"`
+	Started            int        `json:"started"`
+	CompletedOfStarted int        `json:"completedOfStarted"`
+	Completed          int        `json:"completed"`
+	Funded             int        `json:"funded"`
+}

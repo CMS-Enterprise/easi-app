@@ -16,9 +16,10 @@ import (
 
 // Server holds dependencies for running the EASi server
 type Server struct {
-	router *mux.Router
-	Config *viper.Viper
-	logger *zap.Logger
+	router      *mux.Router
+	Config      *viper.Viper
+	logger      *zap.Logger
+	environment appconfig.Environment
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -33,6 +34,12 @@ func NewServer(config *viper.Viper) *Server {
 		log.Fatal("Failed to initial logger.")
 	}
 
+	// Set environment from config
+	environment, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
+	if err != nil {
+		zapLogger.Fatal("Unable to set environment", zap.Error(err))
+	}
+
 	// Set the router
 	r := mux.NewRouter()
 
@@ -45,7 +52,7 @@ func NewServer(config *viper.Viper) *Server {
 	)
 
 	// If we're local use override with local auth middleware
-	if config.GetString(appconfig.EnvironmentKey) == appconfig.LocalEnv.String() {
+	if environment.Local() {
 		authMiddleware = local.NewLocalAuthorizeMiddleware(zapLogger)
 	}
 
@@ -53,9 +60,10 @@ func NewServer(config *viper.Viper) *Server {
 	clientAddress := config.GetString("CLIENT_ADDRESS")
 
 	s := &Server{
-		router: r,
-		Config: config,
-		logger: zapLogger,
+		router:      r,
+		Config:      config,
+		logger:      zapLogger,
+		environment: environment,
 	}
 
 	// set up routes
@@ -72,7 +80,7 @@ func NewServer(config *viper.Viper) *Server {
 func Serve(config *viper.Viper) {
 	s := NewServer(config)
 	// start the server
-	s.logger.Info("Serving application on localhost:8080")
+	s.logger.Info("Serving application on port 8080")
 	err := http.ListenAndServe(":8080", s)
 	if err != nil {
 		s.logger.Fatal("Failed to start server")

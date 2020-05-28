@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 
+	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -68,7 +70,7 @@ func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 		s.NoError(err)
 	})
 
-	s.Run("Matched EUA ID fails auth", func() {
+	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
 		ctx = appcontext.WithEuaID(ctx, "ABCD")
 		intake := models.SystemIntake{
@@ -93,14 +95,36 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
+	submit := func(intake *models.SystemIntake, logger2 *zap.Logger) (string, error) {
+		return "ALFABET-ID", nil
+	}
+	emailCount := 0
+	sendEmail := func(requester string, intakeID uuid.UUID) error {
+		emailCount++
+		return nil
+	}
+	saveClock := clock.NewMock()
 
-	s.Run("returns no error when successful", func() {
+	s.Run("returns no error when successful on save", func() {
 		ctx := context.Background()
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, sendEmail, logger, saveClock)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
 		s.NoError(err)
+	})
+
+	s.Run("returns no error when successful on submit and save", func() {
+		ctx := context.Background()
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, sendEmail, logger, saveClock)
+		s.Equal(0, emailCount)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
+
+		s.NoError(err)
+		s.Equal(1, emailCount)
+
+		emailCount = 0
 	})
 
 	s.Run("returns query error when fetch fails", func() {
@@ -108,7 +132,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("failed to fetch system intake")
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, submit, sendEmail, logger, saveClock)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -120,7 +144,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failSave := func(intake *models.SystemIntake) error {
 			return errors.New("save failed")
 		}
-		saveSystemIntake := NewSaveSystemIntake(failSave, fetch, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(failSave, fetch, authorize, submit, sendEmail, logger, saveClock)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -132,7 +156,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("sql: no rows in result set")
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, submit, sendEmail, logger, saveClock)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -145,7 +169,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, err
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, failAuthorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, failAuthorize, submit, sendEmail, logger, saveClock)
 
 		actualError := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -158,11 +182,90 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		notOKAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, notOKAuthorize, logger)
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, notOKAuthorize, submit, sendEmail, logger, saveClock)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
+	})
+
+	s.Run("returns query error when fetch fails", func() {
+		ctx := context.Background()
+		failFetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{}, errors.New("fetch failed")
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, submit, sendEmail, logger, saveClock)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.IsType(&apperrors.QueryError{}, err)
+	})
+
+	s.Run("returns error when validation fails", func() {
+		ctx := context.Background()
+		failValidationSubmit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+			return "", &apperrors.ValidationError{
+				Err:     errors.New("validation failed on these fields: ID"),
+				ModelID: intake.ID.String(),
+				Model:   intake,
+			}
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, failValidationSubmit, sendEmail, logger, saveClock)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
+
+		s.IsType(&apperrors.ValidationError{}, err)
+		s.Equal(0, emailCount)
+	})
+
+	s.Run("returns error when submission fails", func() {
+		ctx := context.Background()
+		failValidationSubmit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+			return "", &apperrors.ExternalAPIError{
+				Err:       errors.New("CEDAR return result: unexpected failure"),
+				ModelID:   intake.ID.String(),
+				Model:     intake,
+				Operation: apperrors.Submit,
+				Source:    "CEDAR",
+			}
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, failValidationSubmit, sendEmail, logger, saveClock)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
+
+		s.IsType(&apperrors.ExternalAPIError{}, err)
+		s.Equal(0, emailCount)
+	})
+
+	s.Run("returns error when intake has already been submitted", func() {
+		ctx := context.Background()
+		alreadySubmittedIntake := models.SystemIntake{
+			AlfabetID: null.StringFrom("394-141-0"),
+			ID:        uuid.New(),
+			Status:    models.SystemIntakeStatusSUBMITTED,
+			EUAUserID: "EUAI",
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, sendEmail, logger, saveClock)
+
+		err := saveSystemIntake(ctx, &alreadySubmittedIntake)
+
+		s.IsType(&apperrors.ResourceConflictError{}, err)
+		s.Equal(0, emailCount)
+	})
+
+	s.Run("returns notification error when email fails", func() {
+		ctx := context.Background()
+		failSendEmail := func(requester string, intakeID uuid.UUID) error {
+			return &apperrors.NotificationError{
+				Err:             errors.New("failed to send Email"),
+				DestinationType: apperrors.DestinationTypeEmail,
+			}
+		}
+		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, failSendEmail, logger, saveClock)
+
+		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
+
+		s.IsType(&apperrors.NotificationError{}, err)
 	})
 }
 
@@ -183,9 +286,9 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 		s.Equal(fakeID, intake.ID)
 	})
 
-	s.Run("returns query error when fetch fails", func() {
+	s.Run("returns query error when save fails", func() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
-			return &models.SystemIntake{}, errors.New("fetch failed")
+			return &models.SystemIntake{}, errors.New("save failed")
 		}
 		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
 

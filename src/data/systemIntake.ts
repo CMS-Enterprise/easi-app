@@ -77,7 +77,9 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
   };
 };
 
-export const prepareSystemIntakeForApp = (systemIntake: any) => {
+export const prepareSystemIntakeForApp = (
+  systemIntake: any
+): SystemIntakeForm => {
   const governanceTeams = () => {
     const teams: GovernanceCollaborationTeam[] = [];
     cmsGovernanceTeams.forEach(team => {
@@ -117,13 +119,19 @@ export const prepareSystemIntakeForApp = (systemIntake: any) => {
       teams: governanceTeams() || []
     },
     fundingSource: {
-      isFunded: systemIntake.existingFunding || null,
+      isFunded:
+        systemIntake.existingFunding === null
+          ? null
+          : systemIntake.existingFunding,
       fundingNumber: systemIntake.fundingSource || ''
     },
     businessNeed: systemIntake.businessNeed || '',
     businessSolution: systemIntake.solution || '',
     currentStage: systemIntake.processStatus || '',
-    needsEaSupport: systemIntake.eaSupportRequest || null,
+    needsEaSupport:
+      systemIntake.eaSupportRequest === null
+        ? null
+        : systemIntake.eaSupportRequest,
     hasContract: systemIntake.existingContract || ''
   };
 };

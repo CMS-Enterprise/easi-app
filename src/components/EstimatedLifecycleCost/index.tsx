@@ -5,15 +5,15 @@ import Label from 'components/shared/Label';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import TextField from 'components/shared/TextField';
-import { RadioField } from 'components/shared/RadioField';
+import { RadioGroup, RadioField } from 'components/shared/RadioField';
 import Button from 'components/shared/Button';
-import CollapsableLink from 'components/shared/CollapsableLink';
-import { LifecyclePhase } from 'types/estimatedLifecycle';
 import {
   DescriptionList,
   DescriptionTerm,
   DescriptionDefinition
 } from 'components/shared/DescriptionGroup';
+import { LifecyclePhase } from 'types/estimatedLifecycle';
+
 import formatDollars from 'utils/formatDollars';
 import './index.scss';
 
@@ -30,33 +30,33 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
     <FieldArray name={`${formikKey}.year${year}`}>
       {arrayHelpers => (
         <div className="est-lifecycle-cost__phase-cost-wrapper">
-          <FieldGroup
-            scrollElement="somethingGoesHere"
-            error={phaseError.phase || phaseError.cost}
-          >
+          <FieldGroup error={phaseError.phase || phaseError.cost}>
             {phaseError.phase && (
               <FieldErrorMsg>{phaseError.phase}</FieldErrorMsg>
             )}
             {phaseError.cost && (
               <FieldErrorMsg>{phaseError.cost}</FieldErrorMsg>
             )}
-            <div className="est-lifecycle-cost__field-group">
-              <fieldset className="usa-fieldset est-lifecycle-cost__phase-fieldset">
-                <div className=" est-lifecycle-cost__phase-field-wrapper">
+            <div className="margin-right-2">
+              <fieldset
+                className="usa-fieldset"
+                data-scroll={`${formikKey}.year${year}.${index}.phase`}
+              >
+                <div>
                   <legend
                     className={classnames('usa-label', 'margin-bottom-1')}
                     aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
                   >
                     Phase
                   </legend>
-                  <div>
+                  <RadioGroup inline>
                     <Field
                       as={RadioField}
-                      checked={values.phase === 'Initiate'}
-                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.initiate`}
+                      checked={values.phase === 'Development'}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.Development`}
                       name={`${formikKey}.year${year}.${index}.phase`}
-                      label="Initiate"
-                      value="Initiate"
+                      label="Development"
+                      value="Development"
                       inline
                     />
 
@@ -69,10 +69,15 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                       value="Operations and Maintenance"
                       inline
                     />
-                  </div>
+                  </RadioGroup>
                 </div>
               </fieldset>
-              <div className="est-lifecycle-cost__cost-field-wrapper">
+            </div>
+            <div
+              className="est-lifecycle-cost__phase-cost-row"
+              data-scroll={`${formikKey}.year${year}.${index}.cost`}
+            >
+              <div>
                 <Label
                   htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
                   aria-label={`Year ${year} Phase ${index + 1} Cost`}
@@ -88,6 +93,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                   match={/^[0-9\b]+$/}
                 />
               </div>
+
               <div className="est-lifecycle-cost__phase-btn-wrapper">
                 {index === 0 ? (
                   <Button
@@ -148,8 +154,7 @@ const EstimatedLifecycleCost = ({
       return prev;
     }, 0);
   };
-
-  const currentYearCost = sumCostinYear(years.year1);
+  const year1Cost = sumCostinYear(years.year1);
   const year2Cost = sumCostinYear(years.year2);
   const year3Cost = sumCostinYear(years.year3);
   const year4Cost = sumCostinYear(years.year4);
@@ -157,9 +162,30 @@ const EstimatedLifecycleCost = ({
 
   return (
     <div className="est-lifecycle-cost grid-row">
-      <div className="tablet:grid-col-8">
+      <div className="tablet:grid-col-5">
+        <div className="est-lifecycle-cost__help-box">
+          <h3 className="est-lifecycle-cost__help-title text-bold">
+            What do phases mean?
+          </h3>
+          <dl className="margin-bottom-105">
+            <dt className="margin-bottom-1 text-bold">Development</dt>
+            <dd className="margin-0 line-height-body-3">
+              Costs related to current development that is pre-production
+            </dd>
+          </dl>
+          <dl>
+            <dt className="margin-bottom-1 text-bold">
+              Operations and Maintenance
+            </dt>
+            <dd className="margin-0 line-height-body-3">
+              Costs related to running and upkeep post-production
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <div className="tablet:grid-col-7">
         <div className="est-lifecycle-cost__year-costs margin-top-0">
-          <span className="text-bold">Current year</span>
+          <span className="text-bold">Year 1</span>
           {years.year1.map((year: LifecyclePhase, index: number) => {
             return (
               <Phase
@@ -233,63 +259,16 @@ const EstimatedLifecycleCost = ({
             );
           })}
         </div>
-        <div className="est-lifecycle-cost__phase-help-text">
-          <CollapsableLink label="What phase should I choose?">
-            <div>
-              <p className="margin-top-0">
-                <strong>Initiate: </strong>Projects that are going through the
-                governance process, have not yet received funding, or are
-                currently in development (pre-Authority to Operate)
-              </p>
-              <p className="margin-bottom-0">
-                <strong>Operation and Maintenance: </strong>Projects that are
-                live, post-Authority to Operate
-              </p>
-            </div>
-          </CollapsableLink>
+        <div className="bg-base-lightest overflow-auto margin-top-3 padding-x-2">
+          <DescriptionList title="System total cost">
+            <DescriptionTerm term="System total cost" />
+            <DescriptionDefinition
+              definition={formatDollars(
+                year1Cost + year2Cost + year3Cost + year4Cost + year5Cost
+              )}
+            />
+          </DescriptionList>
         </div>
-      </div>
-      <div className="tablet:grid-col-4">
-        <DescriptionList
-          title="Estimated Lifecycle Cost Summary"
-          className="est-lifecycle-cost__total-cost-wrapper"
-        >
-          <div>
-            <DescriptionTerm term="Current year" />
-            <DescriptionDefinition
-              definition={`${formatDollars(currentYearCost)}`}
-            />
-          </div>
-          <div>
-            <DescriptionTerm term="Year 2" />
-            <DescriptionDefinition definition={`${formatDollars(year2Cost)}`} />
-          </div>
-          <div>
-            <DescriptionTerm term="Year 3" />
-            <DescriptionDefinition definition={`${formatDollars(year3Cost)}`} />
-          </div>
-          <div>
-            <DescriptionTerm term="Year 4" />
-            <DescriptionDefinition definition={`${formatDollars(year4Cost)}`} />
-          </div>
-          <div>
-            <DescriptionTerm term="Year 5" />
-            <DescriptionDefinition definition={`${formatDollars(year5Cost)}`} />
-          </div>
-          <div>
-            <hr className="margin-bottom-3 text-black" />
-            <DescriptionTerm
-              className="est-lifecycle-cost__dt-total"
-              term="System total cost"
-            />
-            <DescriptionDefinition
-              className="est-lifecycle-cost__dd-total"
-              definition={`${formatDollars(
-                currentYearCost + year2Cost + year3Cost + year4Cost + year5Cost
-              )}`}
-            />
-          </div>
-        </DescriptionList>
       </div>
     </div>
   );
