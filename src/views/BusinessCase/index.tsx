@@ -14,7 +14,8 @@ import {
   postBusinessCase,
   putBusinessCase,
   storeBusinessCase,
-  submitBusinessCase
+  submitBusinessCase,
+  clearBusinessCase
 } from 'types/routines';
 import { BusinessCaseModel } from 'types/businessCase';
 import { defaultProposedSolution } from 'data/businessCase';
@@ -159,6 +160,10 @@ export const BusinessCase = () => {
     } else {
       dispatch(fetchBusinessCase(businessCaseId));
     }
+
+    return () => {
+      dispatch(clearBusinessCase());
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
