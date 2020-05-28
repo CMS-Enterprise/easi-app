@@ -17,6 +17,8 @@ import (
 func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 	logger := zap.NewNop()
 	fakeEuaID := "FAKE"
+	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 
 	s.Run("successfully fetches System Intakes by EUA ID without an error", func() {
 		fetch := func(euaID string) (models.SystemIntakes, error) {
@@ -26,7 +28,7 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 				},
 			}, nil
 		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(fetch, logger)
+		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch)
 		intakes, err := fetchSystemIntakesByEuaID(fakeEuaID)
 		s.NoError(err)
 		s.Equal(fakeEuaID, intakes[0].EUAUserID)
@@ -36,7 +38,7 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 		fetch := func(euaID string) (models.SystemIntakes, error) {
 			return models.SystemIntakes{}, errors.New("fetch failed")
 		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(fetch, logger)
+		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch)
 		intakes, err := fetchSystemIntakesByEuaID("FAKE")
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -103,11 +105,12 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		emailCount++
 		return nil
 	}
-	saveClock := clock.NewMock()
+	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 
 	s.Run("returns no error when successful on save", func() {
 		ctx := context.Background()
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, fetch, authorize, submit, sendEmail)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -116,7 +119,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 
 	s.Run("returns no error when successful on submit and save", func() {
 		ctx := context.Background()
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, fetch, authorize, submit, sendEmail)
 		s.Equal(0, emailCount)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
@@ -132,7 +135,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("failed to fetch system intake")
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, submit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendEmail)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -144,7 +147,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failSave := func(intake *models.SystemIntake) error {
 			return errors.New("save failed")
 		}
-		saveSystemIntake := NewSaveSystemIntake(failSave, fetch, authorize, submit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, failSave, fetch, authorize, submit, sendEmail)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -156,7 +159,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("sql: no rows in result set")
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, submit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendEmail)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -169,7 +172,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, err
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, failAuthorize, submit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, fetch, failAuthorize, submit, sendEmail)
 
 		actualError := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -182,7 +185,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		notOKAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, notOKAuthorize, submit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, fetch, notOKAuthorize, submit, sendEmail)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -194,7 +197,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 		failFetch := func(id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("fetch failed")
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, failFetch, authorize, submit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendEmail)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -210,7 +213,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 				Model:   intake,
 			}
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, failValidationSubmit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendEmail)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
@@ -229,7 +232,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 				Source:    "CEDAR",
 			}
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, failValidationSubmit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendEmail)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
@@ -245,7 +248,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 			Status:    models.SystemIntakeStatusSUBMITTED,
 			EUAUserID: "EUAI",
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, sendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, fetch, authorize, submit, sendEmail)
 
 		err := saveSystemIntake(ctx, &alreadySubmittedIntake)
 
@@ -261,7 +264,7 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 				DestinationType: apperrors.DestinationTypeEmail,
 			}
 		}
-		saveSystemIntake := NewSaveSystemIntake(save, fetch, authorize, submit, failSendEmail, logger, saveClock)
+		saveSystemIntake := NewSaveSystemIntake(serviceConfig, save, fetch, authorize, submit, failSendEmail)
 
 		err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
@@ -272,6 +275,8 @@ func (s ServicesTestSuite) TestNewSaveSystemIntake() {
 func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
+	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
 
 	s.Run("successfully fetches System Intake by ID without an error", func() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
@@ -279,7 +284,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 				ID: fakeID,
 			}, nil
 		}
-		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch)
 		intake, err := fetchSystemIntakeByID(fakeID)
 		s.NoError(err)
 
@@ -290,7 +295,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("save failed")
 		}
-		fetchSystemIntakeByID := NewFetchSystemIntakeByID(fetch, logger)
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch)
 
 		intake, err := fetchSystemIntakeByID(uuid.New())
 

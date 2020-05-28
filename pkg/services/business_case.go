@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
@@ -16,13 +15,13 @@ import (
 
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
 func NewFetchBusinessCaseByID(
+	config Config,
 	fetch func(id uuid.UUID) (*models.BusinessCase, error),
-	logger *zap.Logger,
 ) func(id uuid.UUID) (*models.BusinessCase, error) {
 	return func(id uuid.UUID) (*models.BusinessCase, error) {
 		businessCase, err := fetch(id)
 		if err != nil {
-			logger.Error("failed to fetch business case")
+			config.logger.Error("failed to fetch business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -71,11 +70,10 @@ func NewAuthorizeCreateBusinessCase(logger *zap.Logger) func(
 
 // NewCreateBusinessCase is a service to create a business case
 func NewCreateBusinessCase(
+	config Config,
 	fetchIntake func(id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	create func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
-	logger *zap.Logger,
-	clock clock.Clock,
 ) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		intake, err := fetchIntake(businessCase.SystemIntakeID)
@@ -98,12 +96,12 @@ func NewCreateBusinessCase(
 		if err != nil {
 			return &models.BusinessCase{}, err
 		}
-		createAt := clock.Now()
+		createAt := config.clock.Now()
 		businessCase.CreatedAt = &createAt
 		businessCase.UpdatedAt = &createAt
 		businessCase, err = create(businessCase)
 		if err != nil {
-			logger.Error("failed to create a business case")
+			config.logger.Error("failed to create a business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -116,13 +114,13 @@ func NewCreateBusinessCase(
 
 // NewFetchBusinessCasesByEuaID is a service to fetch a list of business cases by EUA ID
 func NewFetchBusinessCasesByEuaID(
+	config Config,
 	fetch func(euaID string) (models.BusinessCases, error),
-	logger *zap.Logger,
 ) func(euaID string) (models.BusinessCases, error) {
 	return func(euaID string) (models.BusinessCases, error) {
 		businessCases, err := fetch(euaID)
 		if err != nil {
-			logger.Error("failed to fetch business cases")
+			config.logger.Error("failed to fetch business cases")
 			return models.BusinessCases{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     "business cases",
@@ -171,12 +169,11 @@ func NewAuthorizeUpdateBusinessCase(logger *zap.Logger) func(
 
 // NewUpdateBusinessCase is a service to create a business case
 func NewUpdateBusinessCase(
+	config Config,
 	fetchBusinessCase func(id uuid.UUID) (*models.BusinessCase, error),
 	authorize func(context context.Context, businessCase *models.BusinessCase) (bool, error),
 	update func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
 	sendEmail func(requester string, intakeID uuid.UUID) error,
-	logger *zap.Logger,
-	clock clock.Clock,
 ) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		existingBusinessCase, err := fetchBusinessCase(businessCase.ID)
@@ -199,7 +196,7 @@ func NewUpdateBusinessCase(
 		//if err != nil {
 		//	return &models.BusinessCase{}, err
 		//}
-		updatedAt := clock.Now()
+		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
 		// Once CEDAR endpoint exists, we should be doing validations and submissions in the CEDAR package
@@ -209,14 +206,14 @@ func NewUpdateBusinessCase(
 			businessCase.SubmittedAt = businessCase.UpdatedAt
 			err = appvalidation.BusinessCaseForSubmit(businessCase, existingBusinessCase)
 			if err != nil {
-				logger.Error("Failed to validate", zap.Error(err))
+				config.logger.Error("Failed to validate", zap.Error(err))
 				return businessCase, err
 			}
 		}
 
 		businessCase, err = update(businessCase)
 		if err != nil {
-			logger.Error("failed to update business case")
+			config.logger.Error("failed to update business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -229,7 +226,7 @@ func NewUpdateBusinessCase(
 			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
 			err = sendEmail(businessCase.Requester.String, businessCase.ID)
 			if err != nil {
-				logger.Error("Failed to send email", zap.Error(err))
+				config.logger.Error("Failed to send email", zap.Error(err))
 				return businessCase, err
 			}
 		}
