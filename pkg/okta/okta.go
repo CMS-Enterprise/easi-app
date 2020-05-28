@@ -1,7 +1,7 @@
 package okta
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 	"strings"
 
@@ -11,25 +11,50 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
-func (f oktaMiddlewareFactory) authenticateAndGetEua(logger *zap.Logger, authHeader string) (string, bool) {
+func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtverifier.Jwt, error) {
 	tokenParts := strings.Split(authHeader, "Bearer ")
 	if len(tokenParts) < 2 {
-		return "", false
+		return nil, errors.New("invalid Bearer in auth header")
 	}
 	bearerToken := tokenParts[1]
 	if bearerToken == "" {
-		return "", false
+		return nil, errors.New("empty bearer value")
 	}
 
-	jwt, err := f.verifier.VerifyAccessToken(bearerToken)
+	return f.verifier.VerifyAccessToken(bearerToken)
+}
 
-	if err != nil {
-		logger.Info(fmt.Sprintf("Unable to authorize request with okta: %v", err))
-		return "", false
-	}
+func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		logger, ok := appcontext.Logger(r.Context())
+		if !ok {
+			f.logger.Error("failed to get logger from context")
+			logger = f.logger
+		}
 
-	euaID := jwt.Claims["sub"].(string)
-	return euaID, true
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" {
+			logger.Info("Unauthorized request with empty Authorization header")
+			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			return
+		}
+
+		jwt, err := f.jwt(logger, authHeader)
+		if err != nil {
+			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			return
+		}
+
+		euaID := jwt.Claims["sub"].(string)
+		logger = logger.With(zap.String("user", euaID))
+		if !ok {
+			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			return
+		}
+
+		ctx := appcontext.WithEuaID(r.Context(), euaID)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
 func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
@@ -43,31 +68,6 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 	}
 
 	return jwtVerifierSetup.New()
-}
-
-func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := appcontext.Logger(r.Context())
-		if !ok {
-			f.logger.Error("failed to get logger from context")
-			logger = f.logger
-		}
-		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			logger.Info("Unauthorized request with empty Authorization header")
-			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
-			return
-		}
-		euaID, ok := f.authenticateAndGetEua(logger, authHeader)
-		logger = logger.With(zap.String("user", euaID))
-		if !ok {
-			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
-			return
-		}
-
-		ctx := appcontext.WithEuaID(r.Context(), euaID)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
 }
 
 type oktaMiddlewareFactory struct {
