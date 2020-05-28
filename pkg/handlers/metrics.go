@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchMetrics func(context context.Context, startTime time.Time, endTime time.Time) (*models.MetricsDigest, error)
+type fetchMetrics func(context context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error)
 
 // MetricsHandler is the handler for retrieving metrics
 type MetricsHandler struct {
