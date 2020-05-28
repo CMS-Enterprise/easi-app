@@ -62,7 +62,7 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 		}
 		logger = logger.With(zap.String("user", user.EUAUserID))
 
-		ctx := appcontext.WithEuaID(r.Context(), user.EUAUserID)
+		ctx := appcontext.WithUser(r.Context(), user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

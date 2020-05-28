@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 const testEUAID = "ABCD"
@@ -13,7 +14,7 @@ const testEUAID = "ABCD"
 func authorizeMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger.Info("Using local authorization middleware and populating EUA ID")
-		ctx := appcontext.WithEuaID(r.Context(), testEUAID)
+		ctx := appcontext.WithUser(r.Context(), models.User{EUAUserID: testEUAID})
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

@@ -85,13 +85,13 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			euaID, ok := appcontext.EuaID(r.Context())
+			user, ok := appcontext.User(r.Context())
 			if !ok {
 				logger.Error("Failed to get EUA ID from context")
 				http.Error(w, "Failed to PUT system intake", http.StatusUnauthorized)
 				return
 			}
-			intake.EUAUserID = euaID
+			intake.EUAUserID = user.EUAUserID
 
 			err = h.SaveSystemIntake(r.Context(), &intake)
 			if err != nil {
