@@ -134,8 +134,8 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 	return intakes, nil
 }
 
-// GetSystemIntakeMetrics gets a metrics digest for system intake
-func (s *Store) GetSystemIntakeMetrics(startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
+// FetchSystemIntakeMetrics gets a metrics digest for system intake
+func (s *Store) FetchSystemIntakeMetrics(startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
 	type startedQueryResponse struct {
 		StartedCount   int `db:"started_count"`
 		CompletedCount int `db:"completed_count"`
