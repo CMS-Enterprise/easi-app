@@ -7,7 +7,8 @@ import {
   fetchBusinessCase,
   postBusinessCase,
   storeBusinessCase,
-  submitBusinessCase
+  submitBusinessCase,
+  clearBusinessCase
 } from 'types/routines';
 import { Action } from 'redux-actions';
 
@@ -91,6 +92,13 @@ function businessCaseReducer(
       return {
         ...state,
         isSubmitting: false
+      };
+    case clearBusinessCase.TRIGGER:
+      return {
+        ...state,
+        form: businessCaseInitialData,
+        isLoading: false,
+        error: null
       };
     default:
       return state;
