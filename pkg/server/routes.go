@@ -1,7 +1,9 @@
 package server
 
 import (
+	"context"
 	"net/http"
+	"time"
 
 	"github.com/facebookgo/clock"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
@@ -12,6 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -151,6 +154,17 @@ func (s *Server) routes(
 		),
 	}
 	api.Handle("/business_cases", businessCasesHandler.Handle())
+
+	m := func(ctx context.Context, time time.Time, time2 time.Time) (*models.MetricsDigest, error) {
+		s.logger.Info("Metrics service", zap.Time("start time", time), zap.Time("end time", time2))
+		return &models.MetricsDigest{}, nil
+	}
+
+	metricsHandler := handlers.MetricsHandler{
+		FetchMetrics: m,
+		Logger:       s.logger,
+	}
+	api.Handle("/metrics", metricsHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.CatchAllHandler{
 		Logger: s.logger,
