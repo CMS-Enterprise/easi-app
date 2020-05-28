@@ -13,13 +13,17 @@ import (
 
 // NewFetchMetrics returns a service for fetching a metrics digest
 func NewFetchMetrics(
+	logger *zap.Logger,
 	fetchSystemIntakeMetrics func(time.Time, time.Time) (models.SystemIntakeMetrics, error),
 ) func(ctx context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error) {
 	return func(ctx context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error) {
-		logger, _ := appcontext.Logger(ctx)
+		localLogger, ok := appcontext.Logger(ctx)
+		if !ok {
+			localLogger = logger
+		}
 		systemIntakeMetrics, err := fetchSystemIntakeMetrics(startTime, endTime)
 		if err != nil {
-			logger.Error("failed to query system intake metrics", zap.Error(err))
+			localLogger.Error("failed to query system intake metrics", zap.Error(err))
 			return models.MetricsDigest{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     models.SystemIntakeMetrics{},
