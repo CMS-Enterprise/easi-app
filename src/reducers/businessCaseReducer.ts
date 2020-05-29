@@ -94,12 +94,7 @@ function businessCaseReducer(
         isSubmitting: false
       };
     case clearBusinessCase.TRIGGER:
-      return {
-        ...state,
-        form: businessCaseInitialData,
-        isLoading: false,
-        error: null
-      };
+      return initialState;
     default:
       return state;
   }
