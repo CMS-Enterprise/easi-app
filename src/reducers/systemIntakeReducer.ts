@@ -40,12 +40,7 @@ function systemIntakeReducer(
         isLoading: false
       };
     case clearSystemIntake.TRIGGER:
-      return {
-        ...state,
-        systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        error: null
-      };
+      return initialState;
     case storeSystemIntake.TRIGGER:
       return {
         ...state,
