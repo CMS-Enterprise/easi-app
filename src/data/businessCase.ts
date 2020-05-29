@@ -156,12 +156,13 @@ export const prepareBusinessCaseForApp = (
     hasAlternativeBLifecycleCostLines
       ? {
           alternativeB: {
-            title: businessCase.alternativeBTitle,
-            summary: businessCase.alternativeBSummary,
-            acquisitionApproach: businessCase.alternativeBAcquisitionApproach,
-            pros: businessCase.alternativeBPros,
-            cons: businessCase.alternativeBCons,
-            costSavings: businessCase.alternativeBCostSavings,
+            title: businessCase.alternativeBTitle || '',
+            summary: businessCase.alternativeBSummary || '',
+            acquisitionApproach:
+              businessCase.alternativeBAcquisitionApproach || '',
+            pros: businessCase.alternativeBPros || '',
+            cons: businessCase.alternativeBCons || '',
+            costSavings: businessCase.alternativeBCostSavings || '',
             estimatedLifecycleCost: lifecycleCostLines.B
           }
         }
@@ -271,22 +272,22 @@ export const prepareBusinessCaseForApi = (
     alternativeACostSavings: businessCase.alternativeA.costSavings,
     alternativeBTitle: businessCase.alternativeB
       ? businessCase.alternativeB.title
-      : '',
+      : null,
     alternativeBSummary: businessCase.alternativeB
       ? businessCase.alternativeB.summary
-      : '',
+      : null,
     alternativeBAcquisitionApproach: businessCase.alternativeB
       ? businessCase.alternativeB.acquisitionApproach
-      : '',
+      : null,
     alternativeBPros: businessCase.alternativeB
       ? businessCase.alternativeB.pros
-      : '',
+      : null,
     alternativeBCons: businessCase.alternativeB
       ? businessCase.alternativeB.cons
-      : '',
+      : null,
     alternativeBCostSavings: businessCase.alternativeB
       ? businessCase.alternativeB.costSavings
-      : '',
+      : null,
     lifecycleCostLines
   };
 };
