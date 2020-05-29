@@ -114,6 +114,7 @@ type BusinessCase struct {
 	LifecycleCostLines              EstimatedLifecycleCosts `json:"lifecycleCostLines" db:"lifecycle_cost_lines"`
 	CreatedAt                       *time.Time              `json:"createdAt" db:"created_at"`
 	UpdatedAt                       *time.Time              `json:"updatedAt" db:"updated_at"`
+	SubmittedAt                     *time.Time              `json:"submittedAt" db:"submitted_at"`
 }
 
 // BusinessCases is the model for a list of business cases

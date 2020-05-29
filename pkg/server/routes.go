@@ -74,6 +74,8 @@ func (s *Server) routes(
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
 
+	serviceConfig := services.NewConfig(s.logger)
+
 	store, err := storage.NewStore(
 		s.logger,
 		s.NewDBConfig(),
@@ -89,21 +91,19 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	handlerClock := clock.New()
 	systemIntakeHandler := handlers.SystemIntakeHandler{
 		Logger: s.logger,
 		SaveSystemIntake: services.NewSaveSystemIntake(
+			serviceConfig,
 			store.SaveSystemIntake,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeSaveSystemIntake(s.logger),
 			cedarClient.ValidateAndSubmitSystemIntake,
 			emailClient.SendSystemIntakeSubmissionEmail,
-			s.logger,
-			handlerClock,
 		),
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
+			serviceConfig,
 			store.FetchSystemIntakeByID,
-			s.logger,
 		),
 	}
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
@@ -112,8 +112,8 @@ func (s *Server) routes(
 	systemIntakesHandler := handlers.SystemIntakesHandler{
 		Logger: s.logger,
 		FetchSystemIntakes: services.NewFetchSystemIntakesByEuaID(
+			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
-			s.logger,
 		),
 	}
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
@@ -121,23 +121,21 @@ func (s *Server) routes(
 	businessCaseHandler := handlers.BusinessCaseHandler{
 		Logger: s.logger,
 		CreateBusinessCase: services.NewCreateBusinessCase(
+			serviceConfig,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeCreateBusinessCase(s.logger),
 			store.CreateBusinessCase,
-			s.logger,
-			handlerClock,
 		),
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
+			serviceConfig,
 			store.FetchBusinessCaseByID,
-			s.logger,
 		),
 		UpdateBusinessCase: services.NewUpdateBusinessCase(
+			serviceConfig,
 			store.FetchBusinessCaseByID,
 			services.NewAuthorizeUpdateBusinessCase(s.logger),
 			store.UpdateBusinessCase,
 			emailClient.SendBusinessCaseSubmissionEmail,
-			s.logger,
-			handlerClock,
 		),
 	}
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
@@ -146,12 +144,13 @@ func (s *Server) routes(
 	businessCasesHandler := handlers.BusinessCasesHandler{
 		Logger: s.logger,
 		FetchBusinessCases: services.NewFetchBusinessCasesByEuaID(
+			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
-			s.logger,
 		),
 	}
 	api.Handle("/business_cases", businessCasesHandler.Handle())
 
+	handlerClock := clock.New()
 	metricsHandler := handlers.MetricsHandler{
 		FetchMetrics: services.NewFetchMetrics(s.logger, store.FetchSystemIntakeMetrics),
 		Logger:       s.logger,
