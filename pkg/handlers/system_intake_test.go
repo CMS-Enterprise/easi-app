@@ -34,7 +34,7 @@ func newMockFetchSystemIntakeByID(err error) func(id uuid.UUID) (*models.SystemI
 
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
-	requestContext = appcontext.WithEuaID(requestContext, "FAKE")
+	requestContext = appcontext.WithUser(requestContext, models.User{EUAUserID: "FAKE"})
 	id, err := uuid.NewUUID()
 	s.NoError(err)
 	s.Run("golden path GET passes", func() {
