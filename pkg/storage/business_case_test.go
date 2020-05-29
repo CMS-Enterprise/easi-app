@@ -175,6 +175,7 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 		expectedProjectName := null.StringFrom("Fake name")
 		businessCaseToUpdate := models.BusinessCase{
 			ID:                   id,
+			Status:               models.BusinessCaseStatusDRAFT,
 			ProjectName:          expectedProjectName,
 			RequesterPhoneNumber: expectedPhoneNumber,
 			PriorityAlignment:    null.String{},
@@ -201,7 +202,8 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 
 	s.Run("lifecycle costs are recreated", func() {
 		businessCaseToUpdate := models.BusinessCase{
-			ID: id,
+			ID:     id,
+			Status: models.BusinessCaseStatusSUBMITTED,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
@@ -237,6 +239,7 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 		unwantedEUAUserID := testhelpers.RandomEUAID()
 		businessCaseToUpdate := models.BusinessCase{
 			ID:             id,
+			Status:         models.BusinessCaseStatusDRAFT,
 			SystemIntakeID: unwantedSystemIntakeID,
 			EUAUserID:      unwantedEUAUserID,
 		}
@@ -255,6 +258,7 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 		badUUID := uuid.New()
 		businessCaseToUpdate := models.BusinessCase{
 			ID:                 badUUID,
+			Status:             models.BusinessCaseStatusDRAFT,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{},
 		}
 		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
