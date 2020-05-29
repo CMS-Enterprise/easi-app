@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/facebookgo/clock"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -13,13 +14,15 @@ import (
 
 func (s ServicesTestSuite) TestNewFetchMetrics() {
 	serviceClock := clock.NewMock()
+	serviceConfig := NewConfig(zap.NewNop())
+	serviceConfig.clock = serviceClock
 	systemIntakeMetrics := models.SystemIntakeMetrics{}
 	fetchSystemIntakeMetrics := func(time.Time, time.Time) (models.SystemIntakeMetrics, error) {
 		return systemIntakeMetrics, nil
 	}
 
 	s.Run("golden path returns metric digest", func() {
-		fetchMetrics := NewFetchMetrics(s.logger, fetchSystemIntakeMetrics)
+		fetchMetrics := NewFetchMetrics(serviceConfig, fetchSystemIntakeMetrics)
 		startTime := serviceClock.Now()
 		systemIntakeMetrics.StartTime = startTime
 		endTime := serviceClock.Now()
@@ -35,7 +38,7 @@ func (s ServicesTestSuite) TestNewFetchMetrics() {
 		failFetchSystemIntakeMetrics := func(time.Time, time.Time) (models.SystemIntakeMetrics, error) {
 			return systemIntakeMetrics, errors.New("failed to fetch system intake metrics")
 		}
-		fetchMetrics := NewFetchMetrics(s.logger, failFetchSystemIntakeMetrics)
+		fetchMetrics := NewFetchMetrics(serviceConfig, failFetchSystemIntakeMetrics)
 		startTime := serviceClock.Now()
 		endTime := serviceClock.Now()
 

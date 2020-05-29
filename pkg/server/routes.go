@@ -152,7 +152,7 @@ func (s *Server) routes(
 
 	handlerClock := clock.New()
 	metricsHandler := handlers.MetricsHandler{
-		FetchMetrics: services.NewFetchMetrics(s.logger, store.FetchSystemIntakeMetrics),
+		FetchMetrics: services.NewFetchMetrics(serviceConfig, store.FetchSystemIntakeMetrics),
 		Logger:       s.logger,
 		Clock:        handlerClock,
 	}
