@@ -113,6 +113,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
+			"status":    "DRAFT",
 			"requester": requester,
 		})
 		s.NoError(err)
@@ -130,6 +131,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
+			"status":    "DRAFT",
 			"requester": requester,
 		})
 		s.NoError(err)

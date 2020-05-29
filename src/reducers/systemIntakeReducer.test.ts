@@ -198,7 +198,7 @@ describe('The system intake reducer', () => {
 
       expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
-        isLoading: false,
+        isLoading: null,
         isSubmitting: false,
         error: null
       });
