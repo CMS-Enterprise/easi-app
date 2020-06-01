@@ -5,6 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type contextKey int
@@ -12,7 +14,7 @@ type contextKey int
 const (
 	loggerKey contextKey = iota
 	traceKey
-	euaIDKey
+	userKey
 )
 
 // WithLogger returns a context with the given logger
@@ -38,13 +40,13 @@ func Trace(ctx context.Context) (uuid.UUID, bool) {
 	return traceID, ok
 }
 
-// WithEuaID returns a context with the request EuaID
-func WithEuaID(ctx context.Context, euaID string) context.Context {
-	return context.WithValue(ctx, euaIDKey, euaID)
+// WithUser returns a context with the request User
+func WithUser(ctx context.Context, user models.User) context.Context {
+	return context.WithValue(ctx, userKey, user)
 }
 
-// EuaID returns the context's EuaID
-func EuaID(ctx context.Context) (string, bool) {
-	euaID, ok := ctx.Value(euaIDKey).(string)
-	return euaID, ok
+// User returns the context's User
+func User(ctx context.Context) (models.User, bool) {
+	user, ok := ctx.Value(userKey).(models.User)
+	return user, ok
 }

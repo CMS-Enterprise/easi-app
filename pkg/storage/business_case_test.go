@@ -8,57 +8,12 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func newBusinessCase() models.BusinessCase {
-	year2 := models.LifecycleCostYear2
-	return models.BusinessCase{
-		EUAUserID:                       testhelpers.RandomEUAID(),
-		SystemIntakeID:                  uuid.New(),
-		ProjectName:                     null.StringFrom("Test Project Name"),
-		Requester:                       null.StringFrom("Test Requester"),
-		RequesterPhoneNumber:            null.StringFrom("Test Requester Phone Number"),
-		BusinessOwner:                   null.StringFrom("Test Business Owner"),
-		BusinessNeed:                    null.StringFrom("Test Business Need"),
-		CMSBenefit:                      null.StringFrom("Test CMS Benefit"),
-		PriorityAlignment:               null.StringFrom("Test Priority Alignment"),
-		SuccessIndicators:               null.StringFrom("Test Success Indicators"),
-		AsIsTitle:                       null.StringFrom("Test As Is Title"),
-		AsIsSummary:                     null.StringFrom("Test As Is Summary"),
-		AsIsPros:                        null.StringFrom("Test As Is Pros"),
-		AsIsCons:                        null.StringFrom("Test As Is Cons"),
-		AsIsCostSavings:                 null.StringFrom("Test As Is Cost Savings"),
-		PreferredTitle:                  null.StringFrom("Test Preferred Title"),
-		PreferredSummary:                null.StringFrom("Test Preferred Summary"),
-		PreferredAcquisitionApproach:    null.StringFrom("Test Preferred Acquisition Approach"),
-		PreferredPros:                   null.StringFrom("Test Preferred Pros"),
-		PreferredCons:                   null.StringFrom("Test Preferred Cons"),
-		PreferredCostSavings:            null.StringFrom("Test Preferred Cost Savings"),
-		AlternativeATitle:               null.StringFrom("Test Alternative A Title"),
-		AlternativeASummary:             null.StringFrom("Test Alternative A Summary"),
-		AlternativeAAcquisitionApproach: null.StringFrom("Test Alternative A Acquisition Approach"),
-		AlternativeAPros:                null.StringFrom("Test Alternative A Pros"),
-		AlternativeACons:                null.StringFrom("Test Alternative A Cons"),
-		AlternativeACostSavings:         null.StringFrom("Test Alternative A Cost Savings"),
-		AlternativeBTitle:               null.StringFrom("Test Alternative B Title"),
-		AlternativeBSummary:             null.StringFrom("Test Alternative B Summary"),
-		AlternativeBAcquisitionApproach: null.StringFrom("Test Alternative B Acquisition Approach"),
-		AlternativeBPros:                null.StringFrom("Test Alternative B Pros"),
-		AlternativeBCons:                null.StringFrom("Test Alternative B Cons"),
-		AlternativeBCostSavings:         null.StringFrom("Test Alternative B Cost Savings"),
-		LifecycleCostLines: models.EstimatedLifecycleCosts{
-			testhelpers.NewEstimatedLifecycleCost(
-				testhelpers.EstimatedLifecycleCostOptions{Year: &year2},
-			),
-			testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
-		},
-	}
-}
-
 func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 	s.Run("golden path to fetch a business case", func() {
 		intake := testhelpers.NewSystemIntake()
 		err := s.store.SaveSystemIntake(&intake)
 		s.NoError(err)
-		businessCase := newBusinessCase()
+		businessCase := testhelpers.NewBusinessCase()
 		businessCase.SystemIntakeID = intake.ID
 		created, err := s.store.CreateBusinessCase(&businessCase)
 		s.NoError(err)
@@ -93,11 +48,11 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 		err = s.store.SaveSystemIntake(&intake2)
 		s.NoError(err)
 
-		businessCase := newBusinessCase()
+		businessCase := testhelpers.NewBusinessCase()
 		businessCase.EUAUserID = intake.EUAUserID
 		businessCase.SystemIntakeID = intake.ID
 
-		businessCase2 := newBusinessCase()
+		businessCase2 := testhelpers.NewBusinessCase()
 		businessCase2.EUAUserID = intake.EUAUserID
 		businessCase2.SystemIntakeID = intake2.ID
 
@@ -132,6 +87,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
 			EUAUserID:      testhelpers.RandomEUAID(),
+			Status:         models.BusinessCaseStatusDRAFT,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			},
@@ -147,6 +103,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 	s.Run("requires a system intake ID", func() {
 		businessCase := models.BusinessCase{
 			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.BusinessCaseStatusDRAFT,
 		}
 
 		_, err := s.store.CreateBusinessCase(&businessCase)
@@ -160,6 +117,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		businessCase := models.BusinessCase{
 			SystemIntakeID: badintakeID,
 			EUAUserID:      testhelpers.RandomEUAID(),
+			Status:         models.BusinessCaseStatusDRAFT,
 		}
 
 		_, err := s.store.CreateBusinessCase(&businessCase)
@@ -168,16 +126,143 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
 	})
 
-	s.Run("cannot without a eua user id", func() {
+	s.Run("requires an eua user id", func() {
 		intake := testhelpers.NewSystemIntake()
 		err := s.store.SaveSystemIntake(&intake)
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
+			Status:         models.BusinessCaseStatusDRAFT,
 		}
 		_, err = s.store.CreateBusinessCase(&businessCase)
 
 		s.Error(err)
 		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+	})
+
+	s.Run("requires a status", func() {
+		intake := testhelpers.NewSystemIntake()
+		err := s.store.SaveSystemIntake(&intake)
+		s.NoError(err)
+		businessCase := models.BusinessCase{
+			SystemIntakeID: intake.ID,
+			EUAUserID:      testhelpers.RandomEUAID(),
+		}
+		_, err = s.store.CreateBusinessCase(&businessCase)
+
+		s.Error(err)
+		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+	})
+}
+
+func (s StoreTestSuite) TestUpdateBusinessCase() {
+	intake := testhelpers.NewSystemIntake()
+	err := s.store.SaveSystemIntake(&intake)
+	s.NoError(err)
+	euaID := intake.EUAUserID
+	businessCaseOriginal := testhelpers.NewBusinessCase()
+	businessCaseOriginal.EUAUserID = euaID
+	businessCaseOriginal.SystemIntakeID = intake.ID
+	createdBusinessCase, err := s.store.CreateBusinessCase(&businessCaseOriginal)
+	s.NoError(err)
+	id := createdBusinessCase.ID
+	year2 := models.LifecycleCostYear2
+	year3 := models.LifecycleCostYear3
+	solution := models.LifecycleCostSolutionA
+
+	s.Run("golden path to update a business case", func() {
+		expectedPhoneNumber := null.StringFrom("3452345678")
+		expectedProjectName := null.StringFrom("Fake name")
+		businessCaseToUpdate := models.BusinessCase{
+			ID:                   id,
+			Status:               models.BusinessCaseStatusDRAFT,
+			ProjectName:          expectedProjectName,
+			RequesterPhoneNumber: expectedPhoneNumber,
+			PriorityAlignment:    null.String{},
+			LifecycleCostLines: models.EstimatedLifecycleCosts{
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
+					Year: &year2,
+				}),
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
+					Solution: &solution,
+				}),
+			},
+		}
+		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
+		s.NoError(err)
+		//	fetch the newly updated business case
+		updated, err := s.store.FetchBusinessCaseByID(id)
+		s.NoError(err)
+		s.Equal(expectedPhoneNumber, updated.RequesterPhoneNumber)
+		s.Equal(expectedProjectName, updated.ProjectName)
+		s.Equal(null.String{}, updated.PriorityAlignment)
+		s.Equal(3, len(updated.LifecycleCostLines))
+	})
+
+	s.Run("lifecycle costs are recreated", func() {
+		businessCaseToUpdate := models.BusinessCase{
+			ID:     id,
+			Status: models.BusinessCaseStatusSUBMITTED,
+			LifecycleCostLines: models.EstimatedLifecycleCosts{
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
+					Year:     &year2,
+					Solution: &solution,
+				}),
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
+					Year:     &year3,
+					Solution: &solution,
+				}),
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
+					Year: &year2,
+				}),
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
+					Year: &year3,
+				}),
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
+					Solution: &solution,
+				}),
+			},
+		}
+		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
+		s.NoError(err)
+		//	fetch the newly updated business case
+		updated, err := s.store.FetchBusinessCaseByID(id)
+		s.NoError(err)
+		s.Equal(7, len(updated.LifecycleCostLines))
+	})
+
+	s.Run("doesn't update system intake or eua user id", func() {
+		unwantedSystemIntakeID := uuid.New()
+		unwantedEUAUserID := testhelpers.RandomEUAID()
+		businessCaseToUpdate := models.BusinessCase{
+			ID:             id,
+			Status:         models.BusinessCaseStatusDRAFT,
+			SystemIntakeID: unwantedSystemIntakeID,
+			EUAUserID:      unwantedEUAUserID,
+		}
+		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
+		s.NoError(err)
+		//	fetch the newly updated business case
+		updated, err := s.store.FetchBusinessCaseByID(id)
+		s.NoError(err)
+		s.NotEqual(unwantedSystemIntakeID, updated.SystemIntakeID)
+		s.Equal(intake.ID, updated.SystemIntakeID)
+		s.NotEqual(unwantedEUAUserID, updated.EUAUserID)
+		s.Equal(euaID, updated.EUAUserID)
+	})
+
+	s.Run("fails if the business case ID doesn't exist", func() {
+		badUUID := uuid.New()
+		businessCaseToUpdate := models.BusinessCase{
+			ID:                 badUUID,
+			Status:             models.BusinessCaseStatusDRAFT,
+			LifecycleCostLines: models.EstimatedLifecycleCosts{},
+		}
+		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
+		s.Error(err)
+		s.Equal("business case not found", err.Error())
 	})
 }

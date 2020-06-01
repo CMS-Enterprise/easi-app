@@ -1,14 +1,22 @@
 import { BusinessCaseState } from 'types/businessCase';
 import {
-  businessCaseInitalData,
+  businessCaseInitialData,
   prepareBusinessCaseForApp
 } from 'data/businessCase';
-import { fetchBusinessCase } from 'types/routines';
+import {
+  fetchBusinessCase,
+  postBusinessCase,
+  storeBusinessCase,
+  submitBusinessCase,
+  clearBusinessCase
+} from 'types/routines';
 import { Action } from 'redux-actions';
 
 const initialState: BusinessCaseState = {
-  form: businessCaseInitalData,
+  form: businessCaseInitialData,
   isLoading: null,
+  isSaving: false,
+  isSubmitting: false,
   error: null
 };
 
@@ -37,6 +45,56 @@ function businessCaseReducer(
         ...state,
         isLoading: false
       };
+    case postBusinessCase.REQUEST:
+      return {
+        ...state,
+        isSaving: true
+      };
+    case postBusinessCase.SUCCESS:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          ...prepareBusinessCaseForApp(action.payload)
+        }
+      };
+    case postBusinessCase.FULFILL:
+      return {
+        ...state,
+        isSaving: false
+      };
+    case storeBusinessCase.TRIGGER:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          ...action.payload
+        },
+        isLoading: false
+      };
+    case submitBusinessCase.REQUEST:
+      return {
+        ...state,
+        isSubmitting: true,
+        error: null
+      };
+    case submitBusinessCase.SUCCESS:
+      return {
+        ...state,
+        form: businessCaseInitialData
+      };
+    case submitBusinessCase.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case submitBusinessCase.FULFILL:
+      return {
+        ...state,
+        isSubmitting: false
+      };
+    case clearBusinessCase.TRIGGER:
+      return initialState;
     default:
       return state;
   }

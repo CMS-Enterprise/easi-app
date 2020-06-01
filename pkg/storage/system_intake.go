@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -34,6 +35,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			process_status,
 			ea_support_request,
 			existing_contract,
+			created_at,
 			updated_at,
 		    submitted_at,
 		    alfabet_id
@@ -60,6 +62,7 @@ func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 			:process_status,
 			:ea_support_request,
 			:existing_contract,
+		    :created_at,
 		    :updated_at,
 		    :submitted_at,
 		    :alfabet_id
@@ -128,4 +131,74 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 		return models.SystemIntakes{}, err
 	}
 	return intakes, nil
+}
+
+// FetchSystemIntakeMetrics gets a metrics digest for system intake
+func (s *Store) FetchSystemIntakeMetrics(startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
+	type startedQueryResponse struct {
+		StartedCount   int `db:"started_count"`
+		CompletedCount int `db:"completed_count"`
+	}
+	const startedCountSQL = `
+		WITH "started" AS (
+		    SELECT * 
+		    FROM system_intake 
+		    WHERE created_at >=  $1
+		      AND created_at < $2
+		)
+		SELECT count(*) AS started_count,
+		       coalesce(
+		           sum(
+		               CASE WHEN submitted_at >=  $1
+		                             AND submitted_at < $2
+		                   THEN 1 ELSE 0 END
+		               ),
+		           0) AS completed_count
+		FROM started;
+	`
+	type fundedQueryResponse struct {
+		CompletedCount int `db:"completed_count"`
+		FundedCount    int `db:"funded_count"`
+	}
+	const fundedCountSQL = `
+		WITH "completed" AS (
+		    SELECT existing_funding
+		    FROM system_intake 
+		    WHERE submitted_at >=  $1 
+		      AND submitted_at < $2    
+		) 
+		SELECT count(*) AS completed_count, 
+		       coalesce(sum(CASE WHEN existing_funding IS true THEN 1 ELSE 0 END),0) AS funded_count
+		FROM completed
+	`
+
+	metrics := models.SystemIntakeMetrics{}
+
+	var startedResponse startedQueryResponse
+	err := s.DB.Get(
+		&startedResponse,
+		startedCountSQL,
+		&startTime,
+		&endTime,
+	)
+	if err != nil {
+		return metrics, err
+	}
+	metrics.Started = startedResponse.StartedCount
+	metrics.CompletedOfStarted = startedResponse.CompletedCount
+
+	var fundedResponse fundedQueryResponse
+	err = s.DB.Get(
+		&fundedResponse,
+		fundedCountSQL,
+		&startTime,
+		&endTime,
+	)
+	if err != nil {
+		return metrics, err
+	}
+	metrics.Completed = fundedResponse.CompletedCount
+	metrics.Funded = fundedResponse.FundedCount
+
+	return metrics, nil
 }

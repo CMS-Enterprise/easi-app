@@ -3,7 +3,7 @@ import authReducer, { updateLastActiveAt } from './authReducer';
 const RealDate = Date.now;
 const fakeTime = 123456789;
 
-describe('The business case reducer', () => {
+describe('The auth reducer', () => {
   beforeAll(() => {
     global.Date.now = jest.fn(() => fakeTime);
   });

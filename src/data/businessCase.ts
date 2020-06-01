@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import {
   BusinessCaseModel,
   EstimatedLifecycleCostLines
@@ -22,7 +23,9 @@ export const defaultProposedSolution = {
   costSavings: ''
 };
 
-export const businessCaseInitalData: BusinessCaseModel = {
+export const businessCaseInitialData: BusinessCaseModel = {
+  status: 'DRAFT',
+  systemIntakeId: '',
   requestName: '',
   requester: {
     name: '',
@@ -55,49 +58,69 @@ const emptyEstimatedLifecycle = {
   year5: []
 };
 
+type lifecycleCostLinesType = {
+  'As Is': EstimatedLifecycleCostLines;
+  Preferred: EstimatedLifecycleCostLines;
+  A: EstimatedLifecycleCostLines;
+  B: EstimatedLifecycleCostLines;
+};
+
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
-  const yearMap: { [index: string]: keyof EstimatedLifecycleCostLines } = {
-    '1': 'year1',
-    '2': 'year2',
-    '3': 'year3',
-    '4': 'year4',
-    '5': 'year5'
-  };
-
-  type lifecycleCostLinesType = {
-    'As Is': EstimatedLifecycleCostLines;
-    Preferred: EstimatedLifecycleCostLines;
-    A: EstimatedLifecycleCostLines;
-    B: EstimatedLifecycleCostLines;
-  };
+  let hasAlternativeBLifecycleCostLines = false;
   const lifecycleCostLines: lifecycleCostLinesType = {
-    'As Is': emptyEstimatedLifecycle,
-    Preferred: emptyEstimatedLifecycle,
-    A: emptyEstimatedLifecycle,
-    B: emptyEstimatedLifecycle
+    'As Is': cloneDeep(emptyEstimatedLifecycle),
+    Preferred: cloneDeep(emptyEstimatedLifecycle),
+    A: cloneDeep(emptyEstimatedLifecycle),
+    B: cloneDeep(emptyEstimatedLifecycle)
   };
 
   businessCase.lifecycleCostLines.forEach((line: any) => {
-    lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
-      yearMap[line.year]
-    ].push({ phase: line.phase, cost: line.cost });
+    const solution = (solutionName => {
+      switch (solutionName) {
+        case 'As Is':
+          return lifecycleCostLines['As Is'];
+        case 'Preferred':
+          return lifecycleCostLines.Preferred;
+        case 'A':
+          return lifecycleCostLines.A;
+        case 'B':
+          return lifecycleCostLines.B;
+        default:
+          return null;
+      }
+    })(line.solution);
+
+    if (solution) {
+      solution[`year${line.year}` as keyof EstimatedLifecycleCostLines].push({
+        phase: line.phase || '',
+        cost: line.cost === null ? '' : line.cost.toString()
+      });
+
+      if (line.solution === 'B' && (line.phase || line.cost)) {
+        hasAlternativeBLifecycleCostLines = true;
+      }
+    }
   });
 
   return {
-    requestName: businessCase.projectName || '',
+    id: businessCase.id,
+    euaUserId: businessCase.euaUserId,
+    status: businessCase.status,
+    systemIntakeId: businessCase.systemIntakeId,
+    requestName: businessCase.projectName,
     requester: {
-      name: businessCase.requester || '',
-      phoneNumber: businessCase.requesterPhoneNumber || ''
+      name: businessCase.requester,
+      phoneNumber: businessCase.requesterPhoneNumber
     },
     businessOwner: {
-      name: businessCase.businessOwner || ''
+      name: businessCase.businessOwner
     },
-    businessNeed: businessCase.businessNeed || '',
-    cmsBenefit: businessCase.cmsBenefit || '',
-    priorityAlignment: businessCase.priorityAlignment || '',
-    successIndicators: businessCase.successIndicators || '',
+    businessNeed: businessCase.businessNeed,
+    cmsBenefit: businessCase.cmsBenefit,
+    priorityAlignment: businessCase.priorityAlignment,
+    successIndicators: businessCase.successIndicators,
     asIsSolution: {
       title: businessCase.asIsTitle,
       summary: businessCase.asIsSummary,
@@ -124,15 +147,26 @@ export const prepareBusinessCaseForApp = (
       costSavings: businessCase.alternativeACostSavings,
       estimatedLifecycleCost: lifecycleCostLines.A
     },
-    alternativeB: {
-      title: businessCase.alternativeBTitle,
-      summary: businessCase.alternativeBSummary,
-      acquisitionApproach: businessCase.alternativeBAcquisitionApproach,
-      pros: businessCase.alternativeBPros,
-      cons: businessCase.alternativeBCons,
-      costSavings: businessCase.alternativeBCostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.B
-    }
+    ...(businessCase.alternativeBTitle ||
+    businessCase.alternativeBSummary ||
+    businessCase.alternativeBAcquisitionApproach ||
+    businessCase.alternativeBPros ||
+    businessCase.alternativeBCons ||
+    businessCase.alternativeBCostSavings ||
+    hasAlternativeBLifecycleCostLines
+      ? {
+          alternativeB: {
+            title: businessCase.alternativeBTitle || '',
+            summary: businessCase.alternativeBSummary || '',
+            acquisitionApproach:
+              businessCase.alternativeBAcquisitionApproach || '',
+            pros: businessCase.alternativeBPros || '',
+            cons: businessCase.alternativeBCons || '',
+            costSavings: businessCase.alternativeBCostSavings || '',
+            estimatedLifecycleCost: lifecycleCostLines.B
+          }
+        }
+      : {})
   };
 };
 
@@ -188,8 +222,10 @@ export const prepareBusinessCaseForApi = (
           return phases.map(lifecyclePhase => {
             return {
               solution: solutionApiName,
-              phase: lifecyclePhase.phase,
-              cost: lifecyclePhase.cost,
+              phase: lifecyclePhase.phase || null,
+              cost: lifecyclePhase.cost
+                ? parseFloat(lifecyclePhase.cost)
+                : null,
               year
             };
           });
@@ -199,12 +235,18 @@ export const prepareBusinessCaseForApi = (
     .flat();
 
   return {
-    id: '',
-    euaUserId: '',
+    ...(businessCase.id && {
+      id: businessCase.id
+    }),
+    ...(businessCase.euaUserId && {
+      euaUserId: businessCase.euaUserId
+    }),
+    status: businessCase.status,
+    systemIntakeId: businessCase.systemIntakeId,
     projectName: businessCase.requestName,
     requester: businessCase.requester.name,
     requesterPhoneNumber: businessCase.requester.phoneNumber,
-    businessOwner: businessCase.businessOwner,
+    businessOwner: businessCase.businessOwner.name,
     businessNeed: businessCase.businessNeed,
     cmsBenefit: businessCase.cmsBenefit,
     priorityAlignment: businessCase.priorityAlignment,
@@ -230,22 +272,22 @@ export const prepareBusinessCaseForApi = (
     alternativeACostSavings: businessCase.alternativeA.costSavings,
     alternativeBTitle: businessCase.alternativeB
       ? businessCase.alternativeB.title
-      : '',
+      : null,
     alternativeBSummary: businessCase.alternativeB
       ? businessCase.alternativeB.summary
-      : '',
+      : null,
     alternativeBAcquisitionApproach: businessCase.alternativeB
       ? businessCase.alternativeB.acquisitionApproach
-      : '',
+      : null,
     alternativeBPros: businessCase.alternativeB
       ? businessCase.alternativeB.pros
-      : '',
+      : null,
     alternativeBCons: businessCase.alternativeB
       ? businessCase.alternativeB.cons
-      : '',
+      : null,
     alternativeBCostSavings: businessCase.alternativeB
       ? businessCase.alternativeB.costSavings
-      : '',
+      : null,
     lifecycleCostLines
   };
 };

@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
@@ -23,18 +24,22 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	businessCaseURL.Path = path.Join(businessCaseURL.Path, "/business_case")
 
 	intakeID := uuid.New()
-	intake := models.SystemIntake{
-		ID:        intakeID,
-		Status:    "SUBMITTED",
-		EUAUserID: s.user.euaID,
-	}
+	intake := testhelpers.NewSystemIntake()
+	intake.ID = intakeID
+	intake.Status = models.SystemIntakeStatusSUBMITTED
+	intake.EUAUserID = s.user.euaID
 
-	_ = s.store.SaveSystemIntake(&intake)
+	err = s.store.SaveSystemIntake(&intake)
+	s.NoError(err)
 
 	body, err := json.Marshal(map[string]string{
-		"systemIntake": intakeID.String(),
+		"systemIntakeId": intakeID.String(),
+		"status":         "DRAFT",
 	})
 	s.NoError(err)
+
+	getURL, err := url.Parse(businessCaseURL.String())
+	s.NoError(err, "failed to parse URL")
 
 	//initialize business case id for assignment after creating
 	var id uuid.UUID
@@ -71,12 +76,19 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		id = actualBusinessCase.ID
 	})
 
-	// This needs to be run after the previous test to ensure we have a business case to fetch
-	s.Run("GET will fetch the updated intake just saved", func() {
-		getURL, err := url.Parse(businessCaseURL.String())
-		s.NoError(err, "failed to parse URL")
+	s.Run("GET will fail with no Authorization", func() {
 		getURL.Path = path.Join(getURL.Path, id.String())
+		req, err := http.NewRequest(http.MethodPost, getURL.String(), nil)
+		req.Header.Del("Authorization")
+		s.NoError(err)
+		resp, err := client.Do(req)
 
+		s.NoError(err)
+		s.Equal(http.StatusUnauthorized, resp.StatusCode)
+	})
+
+	// This needs to be run after the successful post test to ensure we have a business case to fetch
+	s.Run("GET will fetch the updated intake just saved", func() {
 		req, err := http.NewRequest(http.MethodGet, getURL.String(), nil)
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
@@ -94,5 +106,52 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		s.NoError(err)
 		s.Equal(id, actualBusinessCase.ID)
 		s.Equal(intakeID, actualBusinessCase.SystemIntakeID)
+	})
+
+	// This needs to be run after the successful post test to ensure we have a business case to fetch
+	s.Run("UPDATE will fail with no Authorization", func() {
+		putURL := getURL
+		requester := "Test Requester"
+		body, err := json.Marshal(map[string]string{
+			"status":    "DRAFT",
+			"requester": requester,
+		})
+		s.NoError(err)
+		req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
+		s.NoError(err)
+		req.Header.Del("Authorization")
+		resp, err := client.Do(req)
+
+		s.NoError(err)
+		s.Equal(http.StatusUnauthorized, resp.StatusCode)
+	})
+
+	// This needs to be run after the successful post test to ensure we have a business case to fetch
+	s.Run("UPDATE will fetch the updated intake just saved", func() {
+		putURL := getURL
+		requester := "Test Requester"
+		body, err := json.Marshal(map[string]string{
+			"status":    "DRAFT",
+			"requester": requester,
+		})
+		s.NoError(err)
+
+		req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
+		s.NoError(err)
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
+
+		resp, err := client.Do(req)
+
+		s.NoError(err)
+		defer resp.Body.Close()
+
+		s.Equal(http.StatusOK, resp.StatusCode)
+		actualBody, err := ioutil.ReadAll(resp.Body)
+		s.NoError(err)
+		var actualBusinessCase models.BusinessCase
+		err = json.Unmarshal(actualBody, &actualBusinessCase)
+		s.NoError(err)
+		s.Equal(id, actualBusinessCase.ID)
+		s.Equal(requester, actualBusinessCase.Requester.String)
 	})
 }
