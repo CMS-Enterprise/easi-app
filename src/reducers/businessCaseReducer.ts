@@ -61,6 +61,7 @@ function businessCaseReducer(
     case postBusinessCase.FULFILL:
       return {
         ...state,
+        isLoading: false,
         isSaving: false
       };
     case storeBusinessCase.TRIGGER:

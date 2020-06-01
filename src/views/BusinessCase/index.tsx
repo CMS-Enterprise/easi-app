@@ -13,7 +13,6 @@ import {
   fetchBusinessCase,
   postBusinessCase,
   putBusinessCase,
-  storeBusinessCase,
   submitBusinessCase,
   clearBusinessCase
 } from 'types/routines';
@@ -107,23 +106,12 @@ export const BusinessCase = () => {
   const dispatchSave = () => {
     const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
     if (current && current.dirty && !isSaving) {
-      if (businessCaseId === 'new') {
-        const systemIntakeId =
-          (location.state && location.state.systemIntakeId) || '';
-        dispatch(
-          postBusinessCase({
-            ...current.values,
-            systemIntakeId
-          })
-        );
-      } else {
-        dispatch(
-          putBusinessCase({
-            businessCase,
-            ...current.values
-          })
-        );
-      }
+      dispatch(
+        putBusinessCase({
+          businessCase,
+          ...current.values
+        })
+      );
       current.resetForm({ values: current.values, errors: current.errors });
     }
   };
@@ -153,7 +141,8 @@ export const BusinessCase = () => {
       const systemIntakeId =
         (location.state && location.state.systemIntakeId) || '';
       dispatch(
-        storeBusinessCase({
+        postBusinessCase({
+          ...businessCase,
           systemIntakeId
         })
       );
