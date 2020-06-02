@@ -13,7 +13,6 @@ import {
   fetchBusinessCase,
   postBusinessCase,
   putBusinessCase,
-  storeBusinessCase,
   submitBusinessCase,
   clearBusinessCase
 } from 'types/routines';
@@ -86,10 +85,6 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  const isLoading = useSelector(
-    (state: AppState) => state.businessCase.isLoading
-  );
-
   const isSaving = useSelector(
     (state: AppState) => state.businessCase.isSaving
   );
@@ -107,23 +102,12 @@ export const BusinessCase = () => {
   const dispatchSave = () => {
     const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
     if (current && current.dirty && !isSaving) {
-      if (businessCaseId === 'new') {
-        const systemIntakeId =
-          (location.state && location.state.systemIntakeId) || '';
-        dispatch(
-          postBusinessCase({
-            ...current.values,
-            systemIntakeId
-          })
-        );
-      } else {
-        dispatch(
-          putBusinessCase({
-            businessCase,
-            ...current.values
-          })
-        );
-      }
+      dispatch(
+        putBusinessCase({
+          businessCase,
+          ...current.values
+        })
+      );
       current.resetForm({ values: current.values, errors: current.errors });
     }
   };
@@ -153,7 +137,8 @@ export const BusinessCase = () => {
       const systemIntakeId =
         (location.state && location.state.systemIntakeId) || '';
       dispatch(
-        storeBusinessCase({
+        postBusinessCase({
+          ...businessCase,
           systemIntakeId
         })
       );
@@ -206,7 +191,7 @@ export const BusinessCase = () => {
     <div className="business-case margin-bottom-5">
       <Header name="CMS Business Case" />
       <main role="main">
-        {isLoading === false && (
+        {businessCase.id && (
           <Formik
             initialValues={businessCase}
             onSubmit={values => {
