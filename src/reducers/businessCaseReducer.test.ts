@@ -223,7 +223,7 @@ describe('The business case reducer', () => {
 
       expect(businessCaseReducer(undefined, mockFulfillAction)).toEqual({
         form: businessCaseInitialData,
-        isLoading: false,
+        isLoading: null,
         isSaving: false,
         isSubmitting: false,
         error: null
