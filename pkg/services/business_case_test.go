@@ -169,6 +169,32 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 		s.Equal(&models.BusinessCase{}, businessCase)
 	})
 
+	s.Run("autofills information from the intake", func() {
+		create = func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+			return &models.BusinessCase{
+				Requester:     businessCase.Requester,
+				BusinessOwner: businessCase.BusinessOwner,
+				ProjectName:   businessCase.ProjectName,
+				BusinessNeed:  businessCase.BusinessNeed,
+			}, nil
+		}
+		intake.Requester = null.StringFrom("Charlie Chaplin")
+		intake.BusinessOwner = null.StringFrom("Aretha Franklin")
+		intake.ProjectName = null.StringFrom("Sitting on the dock of the bay")
+		intake.BusinessNeed = null.StringFrom("To be or not to be, that is the question")
+		err := s.store.SaveSystemIntake(&intake)
+		s.NoError(err)
+
+		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, create)
+
+		businessCase, err := createBusinessCase(ctx, &input)
+		s.NoError(err)
+		s.Equal(intake.Requester, businessCase.Requester)
+		s.Equal(intake.BusinessOwner, businessCase.BusinessOwner)
+		s.Equal(intake.ProjectName, businessCase.ProjectName)
+		s.Equal(intake.BusinessNeed, businessCase.BusinessNeed)
+	})
+
 	// Uncomment below when UI has changed for unique lifecycle costs
 	//s.Run("returns validation error when lifecycle cost phases are duplicated", func() {
 	//	input.LifecycleCostLines = models.EstimatedLifecycleCosts{
