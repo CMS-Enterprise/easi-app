@@ -37,6 +37,8 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	client := &http.Client{}
 
+	// TODO add post test first.
+
 	s.Run("PUT will fail with no Authorization", func() {
 		req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)

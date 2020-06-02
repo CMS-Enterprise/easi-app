@@ -46,6 +46,51 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 	})
 }
 
+func (s ServicesTestSuite) TestSystemIntakeCreator() {
+	logger := zap.NewNop()
+	fakeEuaID := "FAKE"
+	requester := "Test Requester"
+	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
+	ctx := context.Background()
+	ctx = appcontext.WithUser(ctx, models.User{EUAUserID: fakeEuaID})
+
+	s.Run("successfully creates a system intake without an error", func() {
+		time := serviceConfig.clock.Now()
+		create := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
+			return &models.SystemIntake{
+				EUAUserID: intake.EUAUserID,
+				Requester: null.StringFrom(requester),
+				Status: models.SystemIntakeStatusDRAFT,
+				CreatedAt: intake.CreatedAt,
+				UpdatedAt: intake.UpdatedAt,
+			}, nil
+		}
+		createIntake := NewCreateSystemIntake(serviceConfig, create)
+		intake, err := createIntake(ctx, &models.SystemIntake{
+			Requester: null.StringFrom(requester),
+			Status: models.SystemIntakeStatusDRAFT,
+		})
+		s.NoError(err)
+		s.Equal(fakeEuaID, intake.EUAUserID)
+		s.Equal(&time, intake.CreatedAt)
+		s.Equal(&time, intake.UpdatedAt)
+	})
+
+	s.Run("returns query error when create fails", func() {
+		create := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
+			return &models.SystemIntake{}, errors.New("creation failed")
+		}
+		createIntake := NewCreateSystemIntake(serviceConfig, create)
+		intake, err := createIntake(ctx, &models.SystemIntake{
+			Requester: null.StringFrom(requester),
+			Status: models.SystemIntakeStatusDRAFT,
+		})
+		s.IsType(&apperrors.QueryError{}, err)
+		s.Equal(&models.SystemIntake{}, intake)
+	})
+}
+
 func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 	logger := zap.NewNop()
 	authorizeSaveSystemIntake := NewAuthorizeSaveSystemIntake(logger)

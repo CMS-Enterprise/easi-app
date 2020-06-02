@@ -10,6 +10,75 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// CreateSystemIntake creates a system intake
+func(s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemIntake, error) {
+	id := uuid.New()
+	intake.ID = id
+	const createIntakeSQL = `		
+		INSERT INTO system_intake (
+			id,
+			eua_user_id,
+		    status,
+			requester,
+			component,
+			business_owner,
+			business_owner_component,
+			product_manager,
+			product_manager_component,
+			isso,
+			trb_collaborator,
+			oit_security_collaborator,
+			ea_collaborator,
+			project_name,
+			existing_funding,
+			funding_source,
+			business_need,
+			solution,
+			process_status,
+			ea_support_request,
+			existing_contract,
+			created_at,
+			updated_at
+		) 
+		VALUES (
+			:id,
+			:eua_user_id,
+		    :status,
+			:requester,
+			:component,
+			:business_owner,
+			:business_owner_component,
+			:product_manager,
+			:product_manager_component,
+			:isso,
+			:trb_collaborator,
+			:oit_security_collaborator,
+			:ea_collaborator,
+			:project_name,
+			:existing_funding,
+			:funding_source,
+			:business_need,
+			:solution,
+			:process_status,
+			:ea_support_request,
+			:existing_contract,
+		    :created_at,
+		    :updated_at
+		)`
+	_, err := s.DB.NamedExec(
+		createIntakeSQL,
+		intake,
+	)
+	if err != nil {
+		s.logger.Error(
+			fmt.Sprintf("Failed to create system intake with error %s", err),
+			zap.String("user", intake.EUAUserID),
+		)
+		return &models.SystemIntake{}, err
+	}
+	return intake, nil
+}
+
 // SaveSystemIntake does an upsert for a system intake
 func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
 	const SystemIntakeInsertSQL = `
