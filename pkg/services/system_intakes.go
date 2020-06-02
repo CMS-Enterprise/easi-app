@@ -3,7 +3,6 @@ package services
 import (
 	"context"
 	"errors"
-
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"go.uber.org/zap"
@@ -29,6 +28,38 @@ func NewFetchSystemIntakesByEuaID(
 			}
 		}
 		return intakes, nil
+	}
+}
+
+// NewCreateSystemIntake is a service to create a business case
+func NewCreateSystemIntake(
+	config Config,
+	create func(intake *models.SystemIntake) (*models.SystemIntake, error),
+) func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+		user, ok := appcontext.User(context)
+		if !ok {
+			// Default to failure to authorize and create a quick audit log
+			config.logger.With(zap.Bool("Authorized", false)).
+				With(zap.String("Operation", "CreateSystemIntake")).
+				Info("something went wrong fetching the eua id from the context")
+			return &models.SystemIntake{}, &apperrors.UnauthorizedError{}
+		}
+		intake.EUAUserID = user.EUAUserID
+		// app validation belongs here
+		createAt := config.clock.Now()
+		intake.CreatedAt = &createAt
+		intake.UpdatedAt = &createAt
+		createdIntake, err := create(intake)
+		if err != nil {
+			config.logger.Error("failed to create a system intake")
+			return &models.SystemIntake{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QueryPost,
+			}
+		}
+		return createdIntake, nil
 	}
 }
 
