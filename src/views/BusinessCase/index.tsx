@@ -85,10 +85,6 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  const isLoading = useSelector(
-    (state: AppState) => state.businessCase.isLoading
-  );
-
   const isSaving = useSelector(
     (state: AppState) => state.businessCase.isSaving
   );
@@ -195,7 +191,7 @@ export const BusinessCase = () => {
     <div className="business-case margin-bottom-5">
       <Header name="CMS Business Case" />
       <main role="main">
-        {isLoading === false && (
+        {businessCase.id && (
           <Formik
             initialValues={businessCase}
             onSubmit={values => {
