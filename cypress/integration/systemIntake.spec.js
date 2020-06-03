@@ -27,9 +27,7 @@ describe('The System Intake Form', () => {
 
     cy.wait(2000);
 
-    cy.get('button')
-      .contains('Next')
-      .click();
+    cy.contains('button', 'Next').click();
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -38,12 +36,10 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.get('button')
-      .contains('Next')
-      .click();
+    cy.contains('button', 'Next').click();
 
     // Review
-    cy.get('h1').contains('Check your answers before sending');
+    cy.contains('h1', 'Check your answers before sending');
   });
 
   it('displays and fills conditional fields', () => {
@@ -72,9 +68,9 @@ describe('The System Intake Form', () => {
         .should('have.value', `${team.value} Collaborator`);
     });
 
-    cy.get('button')
-      .contains('Next')
-      .click();
+    cy.wait(2000);
+
+    cy.contains('button', 'Next').click();
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -87,18 +83,14 @@ describe('The System Intake Form', () => {
       .type('111111')
       .should('have.value', '111111');
 
-    cy.get('button')
-      .contains('Next')
-      .click();
+    cy.contains('button', 'Next').click();
 
     // Review
-    cy.get('h1').contains('Check your answers before sending');
+    cy.contains('h1', 'Check your answers before sending');
   });
 
   it('displays contact details error messages', () => {
-    cy.get('button')
-      .contains('Next')
-      .click();
+    cy.contains('button', 'Next').click();
 
     cy.get('[data-testid="system-intake-errors"]');
   });
@@ -114,15 +106,13 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.get('button')
-      .contains('Next')
-      .click();
+    cy.wait(2000);
 
-    cy.get('h1').contains('Request details');
+    cy.contains('button', 'Next').click();
 
-    cy.get('button')
-      .contains('Next')
-      .click();
+    cy.contains('h1', 'Request details');
+
+    cy.contains('button', 'Next').click();
 
     cy.get('[data-testid="system-intake-errors"]');
   });
