@@ -6,6 +6,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // RequireNullBool checks if it's a valid nullBool
@@ -48,6 +50,14 @@ func RequireUUID(id uuid.UUID) bool {
 	return false
 }
 
+// RequireInt checks if it's not nil
+func RequireInt(i *int) bool {
+	if i == nil {
+		return true
+	}
+	return false
+}
+
 // FundingNumberInvalid checks if it's a six digit string
 func FundingNumberInvalid(fundingNumber string) bool {
 	re := regexp.MustCompile(`[0-9]{6}`)
@@ -55,4 +65,12 @@ func FundingNumberInvalid(fundingNumber string) bool {
 		return false
 	}
 	return true
+}
+
+// RequireCostPhase checks if it's not nil
+func RequireCostPhase(p *models.LifecycleCostPhase) bool {
+	if p == nil {
+		return true
+	}
+	return false
 }
