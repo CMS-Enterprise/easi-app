@@ -6,6 +6,8 @@ describe('The System Intake Form', () => {
     // TODO HACK
     cy.wait(1000);
     cy.saveLocalStorage();
+
+    cy.route('PUT', 'api/v1/system_intake').as('putSystemIntake');
   });
 
   beforeEach(() => {
@@ -25,7 +27,8 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.wait(2000);
+    // Allow autosave
+    cy.wait('@putSystemIntake');
 
     cy.contains('button', 'Next').click();
 
@@ -68,7 +71,7 @@ describe('The System Intake Form', () => {
         .should('have.value', `${team.value} Collaborator`);
     });
 
-    cy.wait(2000);
+    cy.wait('@putSystemIntake');
 
     cy.contains('button', 'Next').click();
 
@@ -195,7 +198,7 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.wait(2000);
+    cy.wait('@putSystemIntake');
 
     cy.contains('button', 'Next').click();
 
