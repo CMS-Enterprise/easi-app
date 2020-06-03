@@ -90,9 +90,9 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		req.Header.Set("AUTHORIZATION", fmt.Sprintf("Bearer %s", accessToken))
 		rr := httptest.NewRecorder()
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			euaID, ok := appcontext.EuaID(r.Context())
+			user, ok := appcontext.User(r.Context())
 			s.True(ok)
-			s.Equal(s.config.GetString("OKTA_TEST_USERNAME"), euaID)
+			s.Equal(s.config.GetString("OKTA_TEST_USERNAME"), user.EUAUserID)
 		})
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)

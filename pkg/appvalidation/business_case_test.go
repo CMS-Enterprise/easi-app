@@ -2,6 +2,10 @@ package appvalidation
 
 import (
 	"fmt"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -54,7 +58,7 @@ func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 	})
 }
 
-func (s AppValidateTestSuite) TestBusinessCaseForSubmission() {
+func (s AppValidateTestSuite) TestBusinessCaseForCreation() {
 	s.Run("golden path", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
 		submittedIntake.Status = models.SystemIntakeStatusSUBMITTED
@@ -117,8 +121,10 @@ func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
 
 	s.Run("returns validation error when business case fails validation", func() {
 		elc2 := testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{})
+		id := uuid.New()
 
 		businessCase := models.BusinessCase{
+			ID: id,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				elc1,
 				elc2,
@@ -127,9 +133,205 @@ func (s AppValidateTestSuite) TestBusinessCaseForUpdate() {
 		err := BusinessCaseForUpdate(&businessCase)
 		s.Error(err)
 		s.IsType(&apperrors.ValidationError{}, err)
-		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCase : " +
-			"{\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
+		expectedErrMessage := fmt.Sprintf("Could not validate *models.BusinessCase " + id.String() +
+			": {\"LifecycleCostPhase\":\"cannot have multiple costs for the same phase, solution, and year\"}",
 		)
 		s.Equal(expectedErrMessage, err.Error())
+	})
+}
+
+func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
+	businessCase := testhelpers.NewBusinessCase()
+	dev := models.LifecycleCostPhaseDEVELOPMENT
+	cost := 300
+
+	s.Run("golden path", func() {
+		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
+		result := validateAllRequiredLifecycleCosts(&businessCase)
+		s.Equal(0, len(result))
+	})
+
+	s.Run("returns validations when there are missing years", func() {
+		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{}
+		result := validateAllRequiredLifecycleCosts(&businessCase)
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["asIsSolution"])
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["preferredSolution"])
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["alternativeASolution"])
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["alternativeBSolution"])
+		s.Equal(4, len(result))
+	})
+
+	s.Run("returns validations only for the years that are missing", func() {
+		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionASIS,
+				Phase:    &dev,
+				Year:     models.LifecycleCostYear1,
+				Cost:     &cost,
+			},
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionASIS,
+				Phase:    &dev,
+				Year:     models.LifecycleCostYear2,
+				Cost:     &cost,
+			},
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionASIS,
+				Phase:    &dev,
+				Year:     models.LifecycleCostYear3,
+				Cost:     &cost,
+			},
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionASIS,
+				Phase:    &dev,
+				Year:     models.LifecycleCostYear4,
+				Cost:     &cost,
+			},
+		}
+		result := validateAllRequiredLifecycleCosts(&businessCase)
+		s.Equal("year 5 is required", result["asIsSolution"])
+	})
+
+	s.Run("when a cost is missing", func() {
+		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionPREFERRED,
+				Phase:    &dev,
+				Year:     models.LifecycleCostYear1,
+				Cost:     nil,
+			},
+		}
+		result := validateAllRequiredLifecycleCosts(&businessCase)
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["asIsSolution"])
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["preferredSolution"])
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["alternativeASolution"])
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["alternativeBSolution"])
+		s.Equal("requires a cost", result[string(models.LifecycleCostSolutionPREFERRED)+string(models.LifecycleCostYear1)+string(dev)])
+		s.Equal(5, len(result))
+	})
+
+	s.Run("when a phase is missing", func() {
+		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionPREFERRED,
+				Phase:    nil,
+				Year:     models.LifecycleCostYear1,
+				Cost:     &cost,
+			},
+		}
+		result := validateAllRequiredLifecycleCosts(&businessCase)
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["asIsSolution"])
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["preferredSolution"])
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["alternativeASolution"])
+		s.Equal("years 1, 2, 3, 4, 5 are required", result["alternativeBSolution"])
+		s.Equal("requires a phase", result[string(models.LifecycleCostSolutionPREFERRED)+string(models.LifecycleCostYear1)])
+		s.Equal(5, len(result))
+	})
+
+	s.Run("when alt b costs exist but alt b is not required", func() {
+		altB := models.LifecycleCostSolutionB
+		businessCase := models.BusinessCase{
+			LifecycleCostLines: models.EstimatedLifecycleCosts{
+				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{Solution: &altB}),
+			},
+		}
+		result := validateAllRequiredLifecycleCosts(&businessCase)
+		s.Equal("is required to be empty", result["alternativeBSolution"])
+	})
+}
+
+func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
+	existingBusinessCase := models.BusinessCase{}
+	existingBusinessCase.Status = models.BusinessCaseStatusREVIEWED
+
+	s.Run("golden path", func() {
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
+		submittedTime := time.Now()
+		businessCase.SubmittedAt = &submittedTime
+		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+		s.NoError(err)
+	})
+
+	s.Run("returns validations when submitted", func() {
+		businessCase := models.BusinessCase{}
+		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		cost := 300
+		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
+			models.EstimatedLifecycleCost{
+				Solution: models.LifecycleCostSolutionPREFERRED,
+				Phase:    nil,
+				Year:     models.LifecycleCostYear1,
+				Cost:     &cost,
+			},
+		}
+		expectedError := `Could not validate *models.BusinessCase ` +
+			`00000000-0000-0000-0000-000000000000: ` +
+			`{"AlternativeAAcquisitionApproach":"is required",` +
+			`"AlternativeACons":"is required",` +
+			`"AlternativeACostSavings":"is required",` +
+			`"AlternativeAPros":"is required",` +
+			`"AlternativeASummary":"is required",` +
+			`"AlternativeATitle":"is required",` +
+			`"AsIsCons":"is required",` +
+			`"AsIsCostSavings":"is required",` +
+			`"AsIsPros":"is required",` +
+			`"AsIsSummary":"is required",` +
+			`"AsIsTitle":"is required",` +
+			`"BusinessNeed":"is required",` +
+			`"BusinessOwner":"is required",` +
+			`"CMSBenefit":"is required",` +
+			`"EUAUserID":"is required",` +
+			`"ID":"is required",` +
+			`"Preferred1":"requires a phase",` +
+			`"PreferredAcquisitionApproach":"is required",` +
+			`"PreferredCons":"is required",` +
+			`"PreferredCostSavings":"is required",` +
+			`"PreferredPros":"is required",` +
+			`"PreferredSummary":"is required",` +
+			`"PreferredTitle":"is required",` +
+			`"PriorityAlignment":"is required",` +
+			`"ProjectName":"is required",` +
+			`"Requester":"is required",` +
+			`"RequesterPhoneNumber":"is required",` +
+			`"Status":"cannot be SUBMITTED",` +
+			`"SubmittedAt":"is required",` +
+			`"SuccessIndicators":"is required",` +
+			`"SystemIntakeID":"is required",` +
+			`"alternativeASolution":"years 1, 2, 3, 4, 5 are required",` +
+			`"asIsSolution":"years 1, 2, 3, 4, 5 are required",` +
+			`"preferredSolution":"years 1, 2, 3, 4, 5 are required"}`
+		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+
+		s.IsType(err, &apperrors.ValidationError{})
+		s.Equal(expectedError, err.Error())
+	})
+
+	s.Run("returns validations when optional alternative", func() {
+		existingBusinessCase := testhelpers.NewBusinessCase()
+		existingBusinessCase.Status = models.BusinessCaseStatusDRAFT
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
+		submittedAt := time.Now()
+		businessCase.SubmittedAt = &submittedAt
+		businessCase.AlternativeBTitle = null.NewString("B Title", true)
+		businessCase.AlternativeBSummary = null.NewString("", false)
+		businessCase.AlternativeBPros = null.NewString("", false)
+		businessCase.AlternativeBCons = null.NewString("", false)
+		businessCase.AlternativeBAcquisitionApproach = null.NewString("", false)
+		businessCase.AlternativeBCostSavings = null.NewString("", false)
+		expectedError := `Could not validate *models.BusinessCase ` +
+			fmt.Sprintf("%s: ", businessCase.ID) +
+			`{"AlternativeBAcquisitionApproach":"is required",` +
+			`"AlternativeBCons":"is required",` +
+			`"AlternativeBCostSavings":"is required",` +
+			`"AlternativeBPros":"is required",` +
+			`"AlternativeBSummary":"is required"}`
+
+		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+
+		s.Error(err)
+		s.Equal(expectedError, err.Error())
 	})
 }

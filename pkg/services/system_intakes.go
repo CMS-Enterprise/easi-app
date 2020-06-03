@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 
-	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"go.uber.org/zap"
@@ -16,13 +15,13 @@ import (
 
 // NewFetchSystemIntakesByEuaID is a service to fetch system intakes by EUA id
 func NewFetchSystemIntakesByEuaID(
+	config Config,
 	fetch func(euaID string) (models.SystemIntakes, error),
-	logger *zap.Logger,
 ) func(euaID string) (models.SystemIntakes, error) {
 	return func(euaID string) (models.SystemIntakes, error) {
 		intakes, err := fetch(euaID)
 		if err != nil {
-			logger.Error("failed to fetch system intakes")
+			config.logger.Error("failed to fetch system intakes")
 			return models.SystemIntakes{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     intakes,
@@ -40,7 +39,7 @@ func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
 	intake *models.SystemIntake,
 ) (bool, error) {
 	return func(context context.Context, intake *models.SystemIntake) (bool, error) {
-		euaID, ok := appcontext.EuaID(context)
+		user, ok := appcontext.User(context)
 		if !ok {
 			logger.Error("unable to get EUA ID from context")
 			return false, &apperrors.ContextError{
@@ -50,7 +49,7 @@ func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
 		}
 
 		// If intake doesn't exist or owned by user, authorize
-		if intake == nil || euaID == intake.EUAUserID {
+		if intake == nil || user.EUAUserID == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
 				With(zap.String("Operation", "SaveSystemIntake")).
 				Info("user authorized to save system intake")
@@ -66,13 +65,12 @@ func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
 
 // NewSaveSystemIntake is a service to save the system intake
 func NewSaveSystemIntake(
+	config Config,
 	save func(intake *models.SystemIntake) error,
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 	sendEmail func(requester string, intakeID uuid.UUID) error,
-	logger *zap.Logger,
-	clock clock.Clock,
 ) func(context context.Context, intake *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
 		existingIntake, fetchErr := fetch(intake.ID)
@@ -92,7 +90,7 @@ func NewSaveSystemIntake(
 		if !ok {
 			return &apperrors.UnauthorizedError{Err: err}
 		}
-		updatedTime := clock.Now().UTC()
+		updatedTime := config.clock.Now().UTC()
 		intake.UpdatedAt = &updatedTime
 		if existingIntake == nil {
 			intake.CreatedAt = &updatedTime
@@ -109,7 +107,7 @@ func NewSaveSystemIntake(
 			}
 
 			intake.SubmittedAt = &updatedTime
-			alfabetID, validateAndSubmitErr := validateAndSubmit(intake, logger)
+			alfabetID, validateAndSubmitErr := validateAndSubmit(intake, config.logger)
 			if validateAndSubmitErr != nil {
 				return validateAndSubmitErr
 			}
@@ -145,13 +143,13 @@ func NewSaveSystemIntake(
 
 // NewFetchSystemIntakeByID is a service to fetch the system intake by intake id
 func NewFetchSystemIntakeByID(
+	config Config,
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
-	logger *zap.Logger,
 ) func(id uuid.UUID) (*models.SystemIntake, error) {
 	return func(id uuid.UUID) (*models.SystemIntake, error) {
 		intake, err := fetch(id)
 		if err != nil {
-			logger.Error("failed to fetch system intake")
+			config.logger.Error("failed to fetch system intake")
 			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     intake,

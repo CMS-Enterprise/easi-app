@@ -43,7 +43,7 @@ func newMockUpdateBusinessCase(err error) func(context context.Context, business
 
 func (s HandlerTestSuite) TestBusinessCaseHandler() {
 	requestContext := context.Background()
-	requestContext = appcontext.WithEuaID(requestContext, "FAKE")
+	requestContext = appcontext.WithUser(requestContext, models.User{EUAUserID: "FAKE"})
 	id, err := uuid.NewUUID()
 	s.NoError(err)
 	s.Run("golden path GET passes", func() {
