@@ -192,6 +192,29 @@ describe('The business case reducer', () => {
         error: null
       });
     });
+
+    it('handles postBusinessCase.FAILURE', () => {
+      const initialState = {
+        form: businessCaseInitialData,
+        isLoading: false,
+        isSaving: true,
+        isSubmitting: false,
+        error: null
+      };
+      const mockFailureAction = {
+        type: postBusinessCase.FAILURE,
+        payload: 'Error'
+      };
+
+      expect(businessCaseReducer(initialState, mockFailureAction)).toEqual({
+        form: businessCaseInitialData,
+        isLoading: false,
+        isSaving: true,
+        isSubmitting: false,
+        error: 'Error'
+      });
+    });
+
     it('handles postBusinessCase.FULFILL', () => {
       const mockFulfillAction = {
         type: postBusinessCase.FULFILL,
@@ -309,7 +332,7 @@ describe('The business case reducer', () => {
 
       expect(businessCaseReducer(undefined, mockTriggerAction)).toEqual({
         form: businessCaseInitialData,
-        isLoading: false,
+        isLoading: null,
         isSaving: false,
         isSubmitting: false,
         error: null
