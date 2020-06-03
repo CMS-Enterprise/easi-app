@@ -27,6 +27,7 @@
 const LOCAL_STORAGE_MEMORY = {};
 
 Cypress.Commands.add('saveLocalStorage', () => {
+  console.log(localStorage);
   Object.keys(localStorage).forEach(key => {
     LOCAL_STORAGE_MEMORY[key] = localStorage[key];
   });
