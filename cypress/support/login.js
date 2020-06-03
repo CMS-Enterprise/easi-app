@@ -1,7 +1,9 @@
 Cypress.Commands.add('login', () => {
   cy.server();
   cy.route('POST', '/api/v1/authn').as('authn');
-  cy.route('GET', '/.well-known/openid-configuration').as('oidcConfig');
+  cy.route('GET', '/oauth2/*/.well-known/openid-configuration').as(
+    'oidcConfig'
+  );
   cy.route('POST', '/oauth2/*').as('oauthPost');
   cy.route('GET', '/oauth2/*').as('oauthGet');
 

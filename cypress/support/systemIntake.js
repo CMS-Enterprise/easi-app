@@ -1,10 +1,6 @@
 cy.systemIntake = {
   contactDetails: {
     fillNonBranchingFields: () => {
-      cy.get('#IntakeForm-Requester')
-        .type('Casey Doe')
-        .should('have.value', 'Casey Doe');
-
       cy.get('#IntakeForm-RequesterComponent')
         .select('Center for Medicare')
         .should('have.value', 'Center for Medicare');
