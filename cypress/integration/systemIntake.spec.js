@@ -25,6 +25,8 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
+    cy.wait(2000);
+
     cy.get('button')
       .contains('Next')
       .click();
