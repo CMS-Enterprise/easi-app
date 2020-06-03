@@ -58,6 +58,11 @@ function businessCaseReducer(
           ...prepareBusinessCaseForApp(action.payload)
         }
       };
+    case postBusinessCase.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
     case postBusinessCase.FULFILL:
       return {
         ...state,
@@ -94,12 +99,7 @@ function businessCaseReducer(
         isSubmitting: false
       };
     case clearBusinessCase.TRIGGER:
-      return {
-        ...state,
-        form: businessCaseInitialData,
-        isLoading: false,
-        error: null
-      };
+      return initialState;
     default:
       return state;
   }

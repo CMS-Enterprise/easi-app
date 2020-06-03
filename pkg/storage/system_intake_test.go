@@ -159,7 +159,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	})
 }
 
-func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
+func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 	// create a random year to avoid test collisions
 	// uses postgres max year minus 1000000
 	rand.Seed(time.Now().UnixNano())
@@ -184,7 +184,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 			err := s.store.SaveSystemIntake(&intake)
 			s.NoError(err)
 
-			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+			metrics, err := s.store.FetchSystemIntakeMetrics(startDate, endDate)
 
 			s.NoError(err)
 			s.Equal(tt.expectedCount, metrics.Started)
@@ -227,7 +227,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 			err := s.store.SaveSystemIntake(&intake)
 			s.NoError(err)
 
-			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+			metrics, err := s.store.FetchSystemIntakeMetrics(startDate, endDate)
 
 			s.NoError(err)
 			s.Equal(tt.expectedCount, metrics.CompletedOfStarted)
@@ -274,7 +274,7 @@ func (s StoreTestSuite) TestGetSystemIntakeMetrics() {
 			err := s.store.SaveSystemIntake(&intake)
 			s.NoError(err)
 
-			metrics, err := s.store.GetSystemIntakeMetrics(startDate, endDate)
+			metrics, err := s.store.FetchSystemIntakeMetrics(startDate, endDate)
 
 			s.NoError(err)
 			s.Equal(tt.completedCount, metrics.Completed)

@@ -96,9 +96,15 @@ func NewCreateBusinessCase(
 		if err != nil {
 			return &models.BusinessCase{}, err
 		}
+		// Autofill time and intake data
 		createAt := config.clock.Now()
 		businessCase.CreatedAt = &createAt
 		businessCase.UpdatedAt = &createAt
+		businessCase.Requester = intake.Requester
+		businessCase.BusinessOwner = intake.BusinessOwner
+		businessCase.ProjectName = intake.ProjectName
+		businessCase.BusinessNeed = intake.BusinessNeed
+
 		businessCase, err = create(businessCase)
 		if err != nil {
 			config.logger.Error("failed to create a business case")
