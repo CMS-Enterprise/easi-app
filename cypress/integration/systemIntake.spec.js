@@ -87,6 +87,95 @@ describe('The System Intake Form', () => {
 
     // Review
     cy.contains('h1', 'Check your answers before sending');
+
+    cy.contains('.easi-review-row dt', /^Requester$/)
+      .siblings('dd')
+      .contains('EASi Testing');
+
+    cy.contains('.easi-review-row dt', 'Requester Component')
+      .siblings('dd')
+      .contains('Center for Medicare');
+
+    cy.contains('.easi-review-row dt', "CMS Business/Product Owner's Name")
+      .siblings('dd')
+      .contains('Casey Doe');
+
+    cy.contains('.easi-review-row dt', 'Business Owner Component')
+      .siblings('dd')
+      .contains('Center for Medicare');
+
+    cy.contains('.easi-review-row dt', 'CMS Project/Product Manager or lead')
+      .siblings('dd')
+      .contains('Casey Doe');
+
+    cy.contains(
+      '.easi-review-row dt',
+      'CMS Project/Product manager or lead Component'
+    )
+      .siblings('dd')
+      .contains('Center for Medicare');
+
+    cy.contains(
+      '.easi-review-row dt',
+      'Does your project have an Information System Security Officer (ISSO)?'
+    )
+      .siblings('dd')
+      .contains('Yes, Taylor Smith');
+
+    cy.contains('.easi-review-row dt', 'I have started collaborating with')
+      .siblings('dd')
+      .eq(0)
+      .contains(
+        /^Technical Review Board, Technical Review Board Collaborator$/
+      );
+
+    cy.contains('.easi-review-row dt', 'I have started collaborating with')
+      .siblings('dd')
+      .eq(1)
+      .contains(
+        /^OIT's Security and Privacy Group, OIT's Security and Privacy Group Collaborator$/
+      );
+
+    cy.contains('.easi-review-row dt', 'I have started collaborating with')
+      .siblings('dd')
+      .eq(2)
+      .contains(
+        /^Enterprise Architecture, Enterprise Architecture Collaborator$/
+      );
+
+    cy.contains('.easi-review-row dt', 'Request Name')
+      .siblings('dd')
+      .contains('Request Name');
+
+    cy.contains('dt', 'What is your business need?')
+      .siblings('dd')
+      .contains('This is my business need.');
+
+    cy.contains('dt', 'How are you thinking of solving it?')
+      .siblings('dd')
+      .contains('This is my business solution');
+
+    cy.contains(
+      '.easi-review-row dt',
+      'Do you need Enterprise Architecture (EA) support?'
+    )
+      .siblings('dd')
+      .contains('No');
+
+    cy.contains('.easi-review-row dt', 'Where are you in the process?')
+      .siblings('dd')
+      .contains('Just an idea');
+
+    cy.contains(
+      '.easi-review-row dt',
+      'Do you currently have a contract in place?'
+    )
+      .siblings('dd')
+      .contains('No');
+
+    cy.contains('.easi-review-row dt', 'Does the project have funding')
+      .siblings('dd')
+      .contains('Yes, 111111');
   });
 
   it('displays contact details error messages', () => {
