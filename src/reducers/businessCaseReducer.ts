@@ -6,7 +6,9 @@ import {
 import {
   fetchBusinessCase,
   postBusinessCase,
-  storeBusinessCase
+  storeBusinessCase,
+  submitBusinessCase,
+  clearBusinessCase
 } from 'types/routines';
 import { Action } from 'redux-actions';
 
@@ -14,6 +16,7 @@ const initialState: BusinessCaseState = {
   form: businessCaseInitialData,
   isLoading: null,
   isSaving: false,
+  isSubmitting: false,
   error: null
 };
 
@@ -55,6 +58,11 @@ function businessCaseReducer(
           ...prepareBusinessCaseForApp(action.payload)
         }
       };
+    case postBusinessCase.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
     case postBusinessCase.FULFILL:
       return {
         ...state,
@@ -69,6 +77,29 @@ function businessCaseReducer(
         },
         isLoading: false
       };
+    case submitBusinessCase.REQUEST:
+      return {
+        ...state,
+        isSubmitting: true,
+        error: null
+      };
+    case submitBusinessCase.SUCCESS:
+      return {
+        ...state,
+        form: businessCaseInitialData
+      };
+    case submitBusinessCase.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case submitBusinessCase.FULFILL:
+      return {
+        ...state,
+        isSubmitting: false
+      };
+    case clearBusinessCase.TRIGGER:
+      return initialState;
     default:
       return state;
   }

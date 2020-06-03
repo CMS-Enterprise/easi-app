@@ -5,6 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s ValidateTestSuite) TestRequireNullBool() {
@@ -52,6 +54,17 @@ func (s ValidateTestSuite) TestRequireUUID() {
 	})
 }
 
+func (s ValidateTestSuite) TestRequireInt() {
+	s.Run("int pointer is nil", func() {
+		var x *int
+		s.True(RequireInt(x))
+	})
+	s.Run("int pointer is not nil", func() {
+		x := 5
+		s.False(RequireInt(&x))
+	})
+}
+
 func (s ValidateTestSuite) TestFundingNumberInvalid() {
 	s.Run("funding number has letters", func() {
 		s.True(FundingNumberInvalid("AAAAAA"))
@@ -64,5 +77,16 @@ func (s ValidateTestSuite) TestFundingNumberInvalid() {
 	})
 	s.Run("funding number is valid", func() {
 		s.False(FundingNumberInvalid("123456"))
+	})
+}
+
+func (s ValidateTestSuite) TestRequireCostPhase() {
+	s.Run("cost phase pointer is nil", func() {
+		var p *models.LifecycleCostPhase
+		s.True(RequireCostPhase(p))
+	})
+	s.Run("int pointer is nil", func() {
+		p := models.LifecycleCostPhaseOPERATIONMAINTENANCE
+		s.False(RequireCostPhase(&p))
 	})
 }
