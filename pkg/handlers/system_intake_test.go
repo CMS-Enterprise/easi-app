@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/guregu/null"
 	"net/http"
 	"net/http/httptest"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"github.com/guregu/null"
 	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -96,15 +96,15 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 
 	s.Run("golden path POST passes", func() {
 		body, err := json.Marshal(map[string]string{
-			"status":     "DRAFT",
-			"requester":  requester,
+			"status":    "DRAFT",
+			"requester": requester,
 		})
 		s.NoError(err)
 		rr := httptest.NewRecorder()
 		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		SystemIntakeHandler{
-			CreateSystemIntake:    newMockCreateSystemIntake(requester,nil),
+			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
 			SaveSystemIntake:      nil,
 			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
@@ -113,19 +113,18 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.Equal(http.StatusCreated, rr.Code)
 	})
 
-
 	s.Run("POST fails if there is no eua ID in the context", func() {
 		badContext := context.Background()
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
-			"status":     "DRAFT",
-			"requester":  requester,
+			"status":    "DRAFT",
+			"requester": requester,
 		})
 		s.NoError(err)
 		req, err := http.NewRequestWithContext(badContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		SystemIntakeHandler{
-			CreateSystemIntake:    newMockCreateSystemIntake(requester,nil),
+			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
 			SaveSystemIntake:      nil,
 			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
@@ -135,8 +134,8 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 
 	s.Run("POST fails if a validation error is thrown", func() {
 		body, err := json.Marshal(map[string]string{
-			"status":     "DRAFT",
-			"requester":  requester,
+			"status":    "DRAFT",
+			"requester": requester,
 		})
 		s.NoError(err)
 		rr := httptest.NewRecorder()
@@ -159,8 +158,8 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 
 	s.Run("POST fails if business case isn't created", func() {
 		body, err := json.Marshal(map[string]string{
-			"status":     "DRAFT",
-			"requester":  requester,
+			"status":    "DRAFT",
+			"requester": requester,
 		})
 		s.NoError(err)
 		rr := httptest.NewRecorder()
@@ -174,7 +173,6 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		}.Handle()(rr, req)
 		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
-
 
 	s.Run("golden path PUT passes", func() {
 		rr := httptest.NewRecorder()

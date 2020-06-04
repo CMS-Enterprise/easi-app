@@ -22,7 +22,7 @@ type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
 	Logger                *zap.Logger
-	CreateSystemIntake	  createSystemIntake
+	CreateSystemIntake    createSystemIntake
 	SaveSystemIntake      saveSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
 }

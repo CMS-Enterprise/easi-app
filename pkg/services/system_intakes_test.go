@@ -61,7 +61,7 @@ func (s ServicesTestSuite) TestSystemIntakeCreator() {
 			return &models.SystemIntake{
 				EUAUserID: intake.EUAUserID,
 				Requester: null.StringFrom(requester),
-				Status: models.SystemIntakeStatusDRAFT,
+				Status:    models.SystemIntakeStatusDRAFT,
 				CreatedAt: intake.CreatedAt,
 				UpdatedAt: intake.UpdatedAt,
 			}, nil
@@ -69,7 +69,7 @@ func (s ServicesTestSuite) TestSystemIntakeCreator() {
 		createIntake := NewCreateSystemIntake(serviceConfig, create)
 		intake, err := createIntake(ctx, &models.SystemIntake{
 			Requester: null.StringFrom(requester),
-			Status: models.SystemIntakeStatusDRAFT,
+			Status:    models.SystemIntakeStatusDRAFT,
 		})
 		s.NoError(err)
 		s.Equal(fakeEuaID, intake.EUAUserID)
@@ -84,7 +84,7 @@ func (s ServicesTestSuite) TestSystemIntakeCreator() {
 		createIntake := NewCreateSystemIntake(serviceConfig, create)
 		intake, err := createIntake(ctx, &models.SystemIntake{
 			Requester: null.StringFrom(requester),
-			Status: models.SystemIntakeStatusDRAFT,
+			Status:    models.SystemIntakeStatusDRAFT,
 		})
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
