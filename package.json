@@ -69,7 +69,7 @@
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:ci-run": "start wait-on http://localhost:3000 cypress:run"
+    "cypress:ci-run": "wait-on http://localhost:3000 cypress:run"
   },
   "eslintConfig": {
     "extends": "react-app"
