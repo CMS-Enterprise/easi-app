@@ -357,4 +357,4 @@ workflows:
                 master
     jobs:
       - restart_impl_ecs_app_service
-      - restart_prod_ecs_app_service
+      # - restart_prod_ecs_app_service
