@@ -6,6 +6,18 @@ references:
   postgres: &postgres postgres:11.6
   db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}
 jobs:
+  restart_ecs_services:
+    docker:
+      - image: *circleci_docker_primary
+    steps:
+      - checkout
+      - run:
+          name: Restart IMPL service
+          command: APP_ENV="impl" ./scripts/restart_ecs
+      - run:
+          name: Restart PROD service
+          command: APP_ENV="prod" ./scripts/restart_ecs
+
   build_db_migrate_image:
     docker:
       - image: *circleci_docker_primary
@@ -302,3 +314,14 @@ workflows:
                 - master
     jobs:
       - build_db_clean_image
+
+  daily:
+    triggers:
+      - schedule:
+          cron: "0 22 * * *"   # 1500 Pacific time, 1800 Eastern time
+          filters:
+            branches:
+              only:
+                master
+    jobs:
+      - restart_ecs_services
