@@ -9,7 +9,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"github.com/guregu/null"
 	"golang.org/x/net/context"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -39,7 +38,7 @@ func newMockCreateSystemIntake(requester string, err error) createSystemIntake {
 			ID:        uuid.New(),
 			EUAUserID: "FAKE",
 			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: null.StringFrom(requester),
+			Requester: requester,
 		}
 		return &newIntake, err
 	}

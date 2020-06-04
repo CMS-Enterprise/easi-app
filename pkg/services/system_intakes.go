@@ -164,7 +164,7 @@ func NewSaveSystemIntake(
 		}
 		// only send an email when everything went ok
 		if intake.Status == models.SystemIntakeStatusSUBMITTED {
-			err = sendEmail(intake.Requester.ValueOrZero(), intake.ID)
+			err = sendEmail(intake.Requester, intake.ID)
 			if err != nil {
 				return err
 			}
