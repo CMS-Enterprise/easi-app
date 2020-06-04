@@ -80,7 +80,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.Info("Returning unauthorized response from handler", zap.Error(appErr))
 		code = http.StatusUnauthorized
 		response = newErrorResponse(
-			http.StatusUnauthorized,
+			code,
 			"Unauthorized",
 			traceID,
 		)
@@ -88,7 +88,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
 		code = http.StatusInternalServerError
 		response = newErrorResponse(
-			http.StatusInternalServerError,
+			code,
 			"Something went wrong",
 			traceID,
 		)
@@ -96,7 +96,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
 		code = http.StatusInternalServerError
 		response = newErrorResponse(
-			http.StatusInternalServerError,
+			code,
 			"Failed to send notification",
 			traceID,
 		)
@@ -104,7 +104,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
 		code = http.StatusInternalServerError
 		response = newErrorResponse(
-			http.StatusInternalServerError,
+			code,
 			"Something went wrong",
 			traceID,
 		)
@@ -112,7 +112,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
 		code = http.StatusInternalServerError
 		response = newErrorResponse(
-			http.StatusInternalServerError,
+			code,
 			"Something went wrong",
 			traceID,
 		)
@@ -120,7 +120,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.Info("Returning bad request error from handler", zap.Error(appErr))
 		code = http.StatusBadRequest
 		response = newErrorResponse(
-			http.StatusBadRequest,
+			code,
 			"Bad request",
 			traceID,
 		)
@@ -129,7 +129,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.Info("Returning method not allowed error from handler", zap.Error(appErr))
 		code = http.StatusMethodNotAllowed
 		response = newErrorResponse(
-			http.StatusMethodNotAllowed,
+			code,
 			"Method not allowed",
 			traceID,
 		)
@@ -137,7 +137,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.Info("Returning resource conflict error from handler", zap.Error(appErr))
 		code = http.StatusConflict
 		response = newErrorResponse(
-			http.StatusConflict,
+			code,
 			"Resource conflict",
 			traceID,
 		)
@@ -145,7 +145,7 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
 		code = http.StatusInternalServerError
 		response = newErrorResponse(
-			http.StatusInternalServerError,
+			code,
 			"Something went wrong",
 			traceID,
 		)
