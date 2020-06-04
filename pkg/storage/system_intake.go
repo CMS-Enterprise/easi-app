@@ -11,10 +11,10 @@ import (
 )
 
 // CreateSystemIntake creates a system intake
-func(s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemIntake, error) {
+func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemIntake, error) {
 	id := uuid.New()
 	intake.ID = id
-	const createIntakeSQL = `		
+	const createIntakeSQL = `	
 		INSERT INTO system_intake (
 			id,
 			eua_user_id,
@@ -77,6 +77,50 @@ func(s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemIn
 		return &models.SystemIntake{}, err
 	}
 	return intake, nil
+}
+
+// UpdateSystemIntake does an upsert for a system intake
+func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemIntake, error) {
+	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
+	const updateSystemIntakeSQL = `
+		UPDATE system_intake 
+		SET
+		    status = :status,
+			requester = :requester,
+			component = :component,
+			business_owner = :business_owner,
+			business_owner_component = :business_owner_component,
+			product_manager = :product_manager,
+			product_manager_component = :product_manager_component,
+			isso = :isso,
+			trb_collaborator = :trb_collaborator,
+			oit_security_collaborator = :oit_security_collaborator,
+			ea_collaborator = :ea_collaborator,
+			project_name = :project_name,
+			existing_funding = :existing_funding,
+			funding_source = :funding_source,
+			business_need = :business_need,
+			solution = :solution,
+			process_status = :process_status,
+			ea_support_request = :ea_support_request,
+			existing_contract = :existing_contract,
+			updated_at = :updated_at,
+			submitted_at = :submitted_at,
+			alfabet_id = :alfabet_id
+		WHERE system_intake.id = :id
+	`
+	_, err := s.DB.NamedExec(
+		updateSystemIntakeSQL,
+		intake,
+	)
+	if err != nil {
+		s.logger.Error(
+			fmt.Sprintf("Failed to update system intake %s", err),
+			zap.String("id", intake.ID.String()),
+			zap.String("user", intake.EUAUserID),
+		)
+	}
+	return intake, err
 }
 
 // SaveSystemIntake does an upsert for a system intake

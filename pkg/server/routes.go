@@ -95,7 +95,7 @@ func (s *Server) routes(
 		Logger: s.logger,
 		CreateSystemIntake: services.NewCreateSystemIntake(
 			serviceConfig,
-			nil,
+			store.CreateSystemIntake,
 		),
 		SaveSystemIntake: services.NewSaveSystemIntake(
 			serviceConfig,
