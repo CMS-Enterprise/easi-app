@@ -2,12 +2,20 @@ import React from 'react';
 import { FormikProps } from 'formik';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
+import Button from 'components/shared/Button';
+import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from 'reducers/rootReducer';
 
 type ReviewProps = {
   formikProps: FormikProps<SystemIntakeForm>;
 };
 
 const Review = ({ formikProps }: ReviewProps) => {
+  const history = useHistory();
+  const isSubmitting = useSelector(
+    (state: AppState) => state.systemIntake.isSubmitting
+  );
   const { values } = formikProps;
   return (
     <div className="system-intake__review margin-bottom-7">
@@ -26,6 +34,21 @@ const Review = ({ formikProps }: ReviewProps) => {
         <li>or decide there is no further governance needed</li>
       </ul>
       <p>They will get back to you in two business days.</p>
+      <Button
+        type="button"
+        outline
+        onClick={() => {
+          formikProps.setErrors({});
+          const newUrl = 'request-details';
+          history.push(newUrl);
+          window.scrollTo(0, 0);
+        }}
+      >
+        Back
+      </Button>
+      <Button type="submit" disabled={isSubmitting}>
+        Send my intake request
+      </Button>
     </div>
   );
 };
