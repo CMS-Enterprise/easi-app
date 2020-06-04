@@ -101,11 +101,11 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			traceID,
 		)
 	case *apperrors.ExternalAPIError:
-		logger.Error("Returning server error response from handler", zap.Error(appErr))
-		code = http.StatusInternalServerError
+		logger.Error("Returning service unavailable error response from handler", zap.Error(appErr))
+		code = http.StatusServiceUnavailable
 		response = newErrorResponse(
 			code,
-			"Something went wrong",
+			"Service unavailable",
 			traceID,
 		)
 	case *apperrors.ContextError:
@@ -117,11 +117,11 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			traceID,
 		)
 	case *apperrors.ValidationError:
-		logger.Info("Returning bad request error from handler", zap.Error(appErr))
-		code = http.StatusBadRequest
+		logger.Info("Returning unprocessable entity error from handler", zap.Error(appErr))
+		code = http.StatusUnprocessableEntity
 		response = newErrorResponse(
 			code,
-			"Bad request",
+			"Entity unprocessable",
 			traceID,
 		)
 		response.withMap(appErr.Validations.Map())
@@ -139,6 +139,14 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		response = newErrorResponse(
 			code,
 			"Resource conflict",
+			traceID,
+		)
+	case *apperrors.BadRequestError:
+		logger.Info("Returning bad request error from handler", zap.Error(appErr))
+		code = http.StatusBadRequest
+		response = newErrorResponse(
+			code,
+			"Bad request",
 			traceID,
 		)
 	default:

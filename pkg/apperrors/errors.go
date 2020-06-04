@@ -187,7 +187,7 @@ func (e *NotificationError) Error() string {
 	return fmt.Sprintf("Email error '%s' on destination %s", e.Err, e.DestinationType)
 }
 
-// MethodNotAllowedError is a typed error for query issues
+// MethodNotAllowedError is a typed error for an unsupported method
 type MethodNotAllowedError struct {
 	Method string
 }
@@ -198,4 +198,22 @@ func (e *MethodNotAllowedError) Error() string {
 		"Method %s not allowed",
 		e.Method,
 	)
+}
+
+// BadRequestError is a typed error for bad request content
+type BadRequestError struct {
+	Err error
+}
+
+// Error provides the error as a string
+func (e *BadRequestError) Error() string {
+	return fmt.Sprintf(
+		"Request could not understood: %v",
+		e.Err,
+	)
+}
+
+// Unwrap provides the underlying error
+func (e *BadRequestError) Unwrap() error {
+	return e.Err
 }
