@@ -6,6 +6,44 @@ references:
   postgres: &postgres postgres:11.6
   db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}
 jobs:
+  restart_impl_ecs_app_service:
+    docker:
+      - image: *circleci_docker_primary
+    steps:
+      - checkout
+      - run:
+          name: Setup custom environment variables
+          command: |
+            temp_role=$(aws sts assume-role \
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_IMPL:role/circleci \
+                    --role-session-name circleci)
+            echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
+      - run:
+          name: Restart ECS app service
+          command: |
+            ./scripts/deploy_service "easi-app" ""
+
+  restart_prod_ecs_app_service:
+    docker:
+      - image: *circleci_docker_primary
+    steps:
+      - checkout
+      - run:
+          name: Setup custom environment variables
+          command: |
+            temp_role=$(aws sts assume-role \
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_PROD:role/circleci \
+                    --role-session-name circleci)
+            echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
+      - run:
+          name: Restart ECS app service
+          command: |
+            ./scripts/deploy_service "easi-app" ""
+
   build_db_migrate_image:
     docker:
       - image: *circleci_docker_primary
@@ -302,3 +340,15 @@ workflows:
                 - master
     jobs:
       - build_db_clean_image
+
+  daily:
+    triggers:
+      - schedule:
+          cron: "0 22 * * *"   # 1500 Pacific time, 1800 Eastern time
+          filters:
+            branches:
+              only:
+                master
+    jobs:
+      - restart_impl_ecs_app_service
+      - restart_prod_ecs_app_service
