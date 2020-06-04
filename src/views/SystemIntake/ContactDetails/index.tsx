@@ -12,16 +12,45 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import flattenErrors from 'utils/flattenErrors';
 import { SystemIntakeForm } from 'types/systemIntake';
+import Button from 'components/shared/Button';
+import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchSystemIntake,
+  saveSystemIntake,
+  storeSystemIntake,
+  submitSystemIntake,
+  clearSystemIntake
+} from 'types/routines';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
+  formikRef: any;
+  systemId: any;
 };
 
-const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
+const ContactDetails = ({
+  formikProps,
+  formikRef,
+  systemId
+}: ContactDetailsProps) => {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const { values, setFieldValue, errors } = formikProps;
   const flatErrors = flattenErrors(errors);
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
+
+  const dispatchSave = () => {
+    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
+    if (current && current.dirty && current.values.id) {
+      dispatch(saveSystemIntake(current.values));
+      current.resetForm({ values: current.values, errors: current.errors });
+      if (systemId === 'new') {
+        history.replace(`/system/${current.values.id}/contact-details`);
+      }
+    }
+  };
 
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
     cmsDivisionsAndOffices.map((office: any) => (
@@ -334,6 +363,34 @@ const ContactDetails = ({ formikProps }: ContactDetailsProps) => {
             />
           </fieldset>
         </FieldGroup>
+        <Button
+          type="button"
+          onClick={() => {
+            formikProps.validateForm().then(err => {
+              if (Object.keys(err).length === 0) {
+                const newUrl = 'request-details';
+                history.push(newUrl);
+              }
+              window.scrollTo(0, 0);
+            });
+          }}
+        >
+          Next
+        </Button>
+        <div className="margin-y-3">
+          <Button
+            type="button"
+            unstyled
+            onClick={() => {
+              dispatchSave();
+              history.push('/');
+            }}
+          >
+            <span>
+              <i className="fa fa-angle-left" /> Save & Exit
+            </span>
+          </Button>
+        </div>
       </div>
     </>
   );
