@@ -69,6 +69,11 @@ func (e *ResourceConflictError) Unwrap() error {
 // Validations maps attributes to validation messages
 type Validations map[string]string
 
+// Map directly returns a map in case implementation of Validations changes
+func (v Validations) Map() map[string]string {
+	return v
+}
+
 // NewValidationError returns a validation error with fields instantiated
 func NewValidationError(err error, model interface{}, modelID string) ValidationError {
 	return ValidationError{
@@ -180,4 +185,17 @@ type NotificationError struct {
 // Error is the error message for a notification error
 func (e *NotificationError) Error() string {
 	return fmt.Sprintf("Email error '%s' on destination %s", e.Err, e.DestinationType)
+}
+
+// MethodNotAllowedError is a typed error for query issues
+type MethodNotAllowedError struct {
+	Method string
+}
+
+// Error provides the error as a string
+func (e *MethodNotAllowedError) Error() string {
+	return fmt.Sprintf(
+		"Method %s not allowed",
+		e.Method,
+	)
 }
