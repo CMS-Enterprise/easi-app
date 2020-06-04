@@ -18,10 +18,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchSystemIntake,
   saveSystemIntake,
+  postSystemIntake,
   storeSystemIntake,
   submitSystemIntake,
   clearSystemIntake
 } from 'types/routines';
+import AutoSave from 'components/shared/AutoSave';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
@@ -44,11 +46,12 @@ const ContactDetails = ({
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
     if (current && current.dirty && current.values.id) {
-      dispatch(saveSystemIntake(current.values));
-      current.resetForm({ values: current.values, errors: current.errors });
       if (systemId === 'new') {
-        history.replace(`/system/${current.values.id}/contact-details`);
+        dispatch(postSystemIntake(current.values));
+      } else if (current.values.id) {
+        dispatch(saveSystemIntake(current.values));
       }
+      current.resetForm({ values: current.values, errors: current.errors });
     }
   };
 
@@ -391,6 +394,7 @@ const ContactDetails = ({
             </span>
           </Button>
         </div>
+        <AutoSave values={values} onSave={dispatchSave} debounceDelay={1000} />
       </div>
     </>
   );
