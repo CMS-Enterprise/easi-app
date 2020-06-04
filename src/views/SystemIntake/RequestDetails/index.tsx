@@ -14,14 +14,43 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import CharacterCounter from 'components/CharacterCounter';
 import flattenErrors from 'utils/flattenErrors';
+import Button from 'components/shared/Button';
+import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchSystemIntake,
+  saveSystemIntake,
+  storeSystemIntake,
+  submitSystemIntake,
+  clearSystemIntake
+} from 'types/routines';
 
 type RequestDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
+  formikRef: any;
+  systemId: any;
 };
 
-const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
+const RequestDetails = ({
+  formikProps,
+  formikRef,
+  systemId
+}: RequestDetailsProps) => {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const { values, errors, setFieldValue } = formikProps;
   const flatErrors = flattenErrors(errors);
+
+  const dispatchSave = () => {
+    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
+    if (current && current.dirty && current.values.id) {
+      dispatch(saveSystemIntake(current.values));
+      current.resetForm({ values: current.values, errors: current.errors });
+      if (systemId === 'new') {
+        history.replace(`/system/${current.values.id}/contact-details`);
+      }
+    }
+  };
 
   return (
     <>
@@ -334,6 +363,46 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             />
           </fieldset>
         </FieldGroup>
+        <Button
+          type="button"
+          outline
+          onClick={() => {
+            formikProps.setErrors({});
+            const newUrl = 'contact-details';
+            history.push(newUrl);
+            window.scrollTo(0, 0);
+          }}
+        >
+          Back
+        </Button>
+        <Button
+          type="button"
+          onClick={() => {
+            formikProps.validateForm().then(err => {
+              if (Object.keys(err).length === 0) {
+                const newUrl = 'review';
+                history.push(newUrl);
+              }
+              window.scrollTo(0, 0);
+            });
+          }}
+        >
+          Next
+        </Button>
+        <div className="margin-y-3">
+          <Button
+            type="button"
+            unstyled
+            onClick={() => {
+              dispatchSave();
+              history.push('/');
+            }}
+          >
+            <span>
+              <i className="fa fa-angle-left" /> Save & Exit
+            </span>
+          </Button>
+        </div>
       </div>
     </>
   );
