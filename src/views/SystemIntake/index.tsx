@@ -10,12 +10,9 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import flattenErrors from 'utils/flattenErrors';
-import AutoSave from 'components/shared/AutoSave';
 import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
-  saveSystemIntake,
-  postSystemIntake,
   storeSystemIntake,
   submitSystemIntake,
   clearSystemIntake
@@ -67,18 +64,6 @@ export const SystemIntake = () => {
 
   const error = useSelector((state: AppState) => state.systemIntake.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
-
-  const dispatchSave = () => {
-    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && !isSaving) {
-      if (systemId === 'new') {
-        dispatch(postSystemIntake(current.values));
-      } else if (current.values.id) {
-        dispatch(saveSystemIntake(current.values));
-      }
-      current.resetForm({ values: current.values, errors: current.errors });
-    }
-  };
 
   useEffect(() => {
     if (systemIntake.id) {
@@ -144,7 +129,7 @@ export const SystemIntake = () => {
             innerRef={formikRef}
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
-              const { values, errors } = formikProps;
+              const { errors } = formikProps;
               const flatErrors: any = flattenErrors(errors);
 
               return (
@@ -197,11 +182,6 @@ export const SystemIntake = () => {
                     <SecureRoute
                       path="/system/:systemId/review"
                       render={() => <Review formikProps={formikProps} />}
-                    />
-                    <AutoSave
-                      values={values}
-                      onSave={dispatchSave}
-                      debounceDelay={1000}
                     />
                   </Form>
                 </>

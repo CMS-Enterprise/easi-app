@@ -23,6 +23,7 @@ import {
   submitSystemIntake,
   clearSystemIntake
 } from 'types/routines';
+import AutoSave from 'components/shared/AutoSave';
 
 type RequestDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
@@ -394,6 +395,7 @@ const RequestDetails = ({
           </Button>
         </div>
       </div>
+      <AutoSave values={values} onSave={dispatchSave} debounceDelay={1000} />
     </>
   );
 };
