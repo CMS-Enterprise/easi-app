@@ -5,7 +5,6 @@ import { Form, Formik, FormikProps } from 'formik';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
-import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -145,7 +144,7 @@ export const SystemIntake = () => {
             innerRef={formikRef}
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
-              const { values, errors, setErrors, validateForm } = formikProps;
+              const { values, errors } = formikProps;
               const flatErrors: any = flattenErrors(errors);
 
               return (
@@ -199,62 +198,6 @@ export const SystemIntake = () => {
                       path="/system/:systemId/review"
                       render={() => <Review formikProps={formikProps} />}
                     />
-
-                    {pageIndex > 0 && (
-                      <Button
-                        type="button"
-                        outline
-                        onClick={() => {
-                          setErrors({});
-                          const newUrl = pages[pageIndex - 1].slug;
-                          history.push(newUrl);
-                          window.scrollTo(0, 0);
-                        }}
-                      >
-                        Back
-                      </Button>
-                    )}
-                    {pageIndex < pages.length - 1 && (
-                      <Button
-                        type="button"
-                        onClick={() => {
-                          if (pageObj.validation) {
-                            validateForm().then(err => {
-                              if (Object.keys(err).length === 0) {
-                                const newUrl = pages[pageIndex + 1].slug;
-                                history.push(newUrl);
-                              }
-                              window.scrollTo(0, 0);
-                            });
-                          }
-                        }}
-                      >
-                        Next
-                      </Button>
-                    )}
-                    {pageIndex === pages.length - 1 && (
-                      <Button type="submit" disabled={isSubmitting}>
-                        Send my intake request
-                      </Button>
-                    )}
-
-                    {pageObj.type === 'FORM' && (
-                      <div className="margin-y-3">
-                        <Button
-                          type="button"
-                          unstyled
-                          onClick={() => {
-                            dispatchSave();
-                            history.push('/');
-                          }}
-                        >
-                          <span>
-                            <i className="fa fa-angle-left" /> Save & Exit
-                          </span>
-                        </Button>
-                      </div>
-                    )}
-
                     <AutoSave
                       values={values}
                       onSave={dispatchSave}
