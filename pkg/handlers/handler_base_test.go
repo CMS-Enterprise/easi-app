@@ -65,11 +65,11 @@ func (s HandlerTestSuite) TestWriteErrorResponse() {
 		},
 		{
 			&apperrors.ExternalAPIError{},
-			http.StatusInternalServerError,
+			http.StatusServiceUnavailable,
 			errorResponse{
 				Errors:  []errorItem{},
-				Code:    http.StatusInternalServerError,
-				Message: "Something went wrong",
+				Code:    http.StatusServiceUnavailable,
+				Message: "Service unavailable",
 				TraceID: traceID,
 			},
 		},
@@ -97,11 +97,11 @@ func (s HandlerTestSuite) TestWriteErrorResponse() {
 			&apperrors.ValidationError{
 				Validations: map[string]string{"key": "required"},
 			},
-			http.StatusBadRequest,
+			http.StatusUnprocessableEntity,
 			errorResponse{
 				Errors:  []errorItem{{Field: "key", Message: "required"}},
-				Code:    http.StatusBadRequest,
-				Message: "Bad request",
+				Code:    http.StatusUnprocessableEntity,
+				Message: "Entity unprocessable",
 				TraceID: traceID,
 			},
 		},
@@ -122,6 +122,16 @@ func (s HandlerTestSuite) TestWriteErrorResponse() {
 				Errors:  []errorItem{},
 				Code:    http.StatusConflict,
 				Message: "Resource conflict",
+				TraceID: traceID,
+			},
+		},
+		{
+			&apperrors.BadRequestError{},
+			http.StatusBadRequest,
+			errorResponse{
+				Errors:  []errorItem{},
+				Code:    http.StatusBadRequest,
+				Message: "Bad request",
 				TraceID: traceID,
 			},
 		},
