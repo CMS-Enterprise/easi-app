@@ -188,7 +188,11 @@ export const SystemIntake = () => {
                     <SecureRoute
                       path="/system/:systemId/request-details"
                       render={() => (
-                        <RequestDetails formikProps={formikProps} />
+                        <RequestDetails
+                          formikProps={formikProps}
+                          formikRef={formikRef}
+                          systemId={systemId}
+                        />
                       )}
                     />
                     <SecureRoute
