@@ -125,7 +125,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		intake := models.SystemIntake{
 			ID:                      id,
 			EUAUserID:               "FAKE",
-			Requester:               null.StringFrom("Test Requester"),
+			Requester:               "Test Requester",
 			Component:               null.StringFrom("Test Requester"),
 			BusinessOwner:           null.StringFrom("Test Requester"),
 			BusinessOwnerComponent:  null.StringFrom("Test Requester"),
@@ -191,6 +191,6 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		err = json.Unmarshal(actualBody, &actualIntake)
 		s.NoError(err)
 		s.Equal(id, actualIntake.ID)
-		s.Equal("Test Requester", actualIntake.Requester.String)
+		s.Equal("Test Requester", actualIntake.Requester)
 	})
 }

@@ -17,7 +17,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 		intake := models.SystemIntake{
 			EUAUserID: testhelpers.RandomEUAID(),
 			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: null.StringFrom("Test requester"),
+			Requester: "Test requester",
 		}
 
 		created, err := s.store.CreateSystemIntake(&intake)
@@ -63,7 +63,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 		partialIntake := models.SystemIntake{
 			EUAUserID: testhelpers.RandomEUAID(),
 			Status:    "fakeStatus",
-			Requester: null.StringFrom("Test requester"),
+			Requester: "Test requester",
 		}
 
 		created, err := s.store.CreateSystemIntake(&partialIntake)
@@ -79,7 +79,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		intake, err := s.store.CreateSystemIntake(&models.SystemIntake{
 			EUAUserID: testhelpers.RandomEUAID(),
 			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: null.StringFrom("Test requester"),
+			Requester: "Test requester",
 		})
 		s.NoError(err)
 		now := time.Now()
@@ -96,7 +96,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		originalIntake := models.SystemIntake{
 			EUAUserID: testhelpers.RandomEUAID(),
 			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: null.StringFrom("Test requester"),
+			Requester: "Test requester",
 		}
 		_, err := s.store.CreateSystemIntake(&originalIntake)
 		s.NoError(err)
@@ -105,7 +105,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 			ID:        originalIntake.ID,
 			EUAUserID: testhelpers.RandomEUAID(),
 			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: null.StringFrom("Test requester"),
+			Requester: "Test requester",
 		}
 		partialIntake.EUAUserID = "NEWS"
 
@@ -173,7 +173,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 
 	s.Run("save a partial system intake", func() {
 		partialIntake.Status = models.SystemIntakeStatusDRAFT
-		partialIntake.Requester = null.StringFrom("Test Requester")
+		partialIntake.Requester = "Test Requester"
 
 		err := s.store.SaveSystemIntake(&partialIntake)
 
@@ -185,7 +185,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 	})
 
 	s.Run("update a partial system intake", func() {
-		partialIntake.Requester = null.StringFrom("Fix Requester")
+		partialIntake.Requester = "Fix Requester"
 
 		err := s.store.SaveSystemIntake(&partialIntake)
 
@@ -215,7 +215,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
 		tx := s.db.MustBegin()
-		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake)
 		s.NoError(err)
 		err = tx.Commit()
 		s.NoError(err)
