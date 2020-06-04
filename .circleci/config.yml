@@ -9,6 +9,9 @@ jobs:
   restart_impl_ecs_app_service:
     docker:
       - image: *circleci_docker_primary
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+          APP_ENV: impl
     steps:
       - checkout
       - run:
@@ -28,6 +31,9 @@ jobs:
   restart_prod_ecs_app_service:
     docker:
       - image: *circleci_docker_primary
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+          APP_ENV: prod
     steps:
       - checkout
       - run:
