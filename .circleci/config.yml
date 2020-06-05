@@ -319,9 +319,13 @@ workflows:
           requires:
             - lint
             - test
-      - deploy_dev:
+      - hold_dev:
+          type: approval
           requires:
             - build_tag_push
+      - deploy_dev:
+          requires:
+            - hold_dev
       - deploy_impl:
           filters:
             branches:
