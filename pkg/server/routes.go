@@ -106,7 +106,7 @@ func (s *Server) routes(
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			func(ctx context.Context, intake *models.SystemIntake) bool { return true },
+			func(ctx context.Context, intake *models.SystemIntake) (bool, error) { return true, nil },
 		),
 	}
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
