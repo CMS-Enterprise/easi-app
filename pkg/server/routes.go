@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/facebookgo/clock"
@@ -12,6 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -104,6 +106,7 @@ func (s *Server) routes(
 		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
+			func(ctx context.Context, intake *models.SystemIntake) bool { return true },
 		),
 	}
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
