@@ -22,8 +22,8 @@ func newMockSaveSystemIntake(err error) saveSystemIntake {
 	}
 }
 
-func newMockFetchSystemIntakeByID(err error) func(id uuid.UUID) (*models.SystemIntake, error) {
-	return func(id uuid.UUID) (*models.SystemIntake, error) {
+func newMockFetchSystemIntakeByID(err error) func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	return func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		intake := models.SystemIntake{
 			ID:        id,
 			EUAUserID: "FAKE",

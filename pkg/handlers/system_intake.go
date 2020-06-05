@@ -16,7 +16,7 @@ import (
 )
 
 type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
-type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
+type fetchSystemIntakeByID func(context context.Context, id uuid.UUID) (*models.SystemIntake, error)
 
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
@@ -47,7 +47,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
-			intake, err := h.FetchSystemIntakeByID(uuid)
+			intake, err := h.FetchSystemIntakeByID(r.Context(), uuid)
 			if err != nil {
 				logger.Error("Failed to fetch system intake")
 				http.Error(w, "Failed to GET system intake", http.StatusInternalServerError)
