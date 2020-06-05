@@ -55,7 +55,12 @@ const GovernanceOverview = () => {
   return (
     <div className="easi-governance-overview">
       <Header name="EASi Governance Overview" />
-      <main role="main" className="grid-container">
+      <main
+        id="main-content"
+        role="main"
+        className="grid-container"
+        tabIndex={-1}
+      >
         <p>
           <Link to="/">Home</Link>
           <i className="fa fa-angle-right margin-x-05" />

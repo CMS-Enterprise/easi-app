@@ -19,7 +19,12 @@ export const GRTSystemIntakeReview = () => {
   return (
     <div>
       <Header />
-      <div className="grid-container">
+      <main
+        id="main-content"
+        className="grid-container"
+        role="main"
+        tabIndex={-1}
+      >
         <div className="system-intake__review margin-bottom-7">
           <h1 className="font-heading-xl margin-top-4">CMS System Request</h1>
           {!systemIntake && (
@@ -39,7 +44,7 @@ export const GRTSystemIntakeReview = () => {
             <li>And how to get in touch if they have any questions.</li>
           </ul>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

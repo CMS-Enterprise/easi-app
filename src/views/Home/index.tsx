@@ -129,10 +129,15 @@ const Home = ({ history }: HomeProps) => {
   return (
     <div>
       <Header />
-      <div role="main" className="grid-container margin-y-6">
+      <main
+        id="main-content"
+        role="main"
+        className="grid-container"
+        tabIndex={-1}
+      >
         {getSystemIntakeBanners()}
         {getBusinessCaseBanners()}
-        <div className="tablet:grid-col-9">
+        <div className="tablet:grid-col-9 margin-y-6">
           <h1 className="margin-top-6">Welcome to EASi</h1>
           <p className="line-height-body-5 font-body-lg text-light">
             You can use EASi to go through the set of steps needed for Lifecycle
@@ -162,7 +167,7 @@ const Home = ({ history }: HomeProps) => {
             <Button to="/login">Sign in to start</Button>
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 };
