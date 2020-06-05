@@ -9,17 +9,24 @@ const Login = () => {
   return (
     <div>
       <Header />
-      <OktaSignInWidget
-        onSuccess={response => {
-          authService.getTokenManager().then((tokenManager: any) => {
-            tokenManager.add('idToken', response);
-            tokenManager.add('accessToken', response);
-          });
-        }}
-        onError={() => {
-          console.log('error');
-        }}
-      />
+      <main
+        id="main-content"
+        role="main"
+        className="grid-container"
+        tabIndex={-1}
+      >
+        <OktaSignInWidget
+          onSuccess={response => {
+            authService.getTokenManager().then((tokenManager: any) => {
+              tokenManager.add('idToken', response);
+              tokenManager.add('accessToken', response);
+            });
+          }}
+          onError={() => {
+            console.log('error');
+          }}
+        />
+      </main>
     </div>
   );
 };

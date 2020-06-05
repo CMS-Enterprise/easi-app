@@ -120,7 +120,12 @@ export const SystemIntake = () => {
   return (
     <div className="system-intake margin-bottom-5">
       <Header name="EASi System Intake" />
-      <main className="grid-container" role="main">
+      <main
+        id="main-content"
+        className="grid-container"
+        role="main"
+        tabIndex={-1}
+      >
         {isLoading === false && (
           <Formik
             initialValues={systemIntake}
