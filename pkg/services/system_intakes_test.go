@@ -277,7 +277,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
-	isAuthorized := func(context context.Context, intake *models.SystemIntake) bool { return true }
+	authorize := func(context context.Context, intake *models.SystemIntake) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches System Intake by ID without an error", func() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
@@ -285,7 +285,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 				ID: fakeID,
 			}, nil
 		}
-		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch, isAuthorized)
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch, authorize)
 		intake, err := fetchSystemIntakeByID(context.Background(), fakeID)
 		s.NoError(err)
 
@@ -296,7 +296,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("save failed")
 		}
-		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch, isAuthorized)
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch, authorize)
 
 		intake, err := fetchSystemIntakeByID(context.Background(), uuid.New())
 

@@ -145,7 +145,7 @@ func NewSaveSystemIntake(
 func NewFetchSystemIntakeByID(
 	config Config,
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
-	isAuthorized func(context context.Context, intake *models.SystemIntake) bool,
+	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 ) func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	return func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		intake, err := fetch(id)
@@ -157,8 +157,13 @@ func NewFetchSystemIntakeByID(
 				Operation: apperrors.QueryFetch,
 			}
 		}
-		if !isAuthorized(context, intake) {
-			return nil, &apperrors.UnauthorizedError{Err: err}
+		ok, err := authorize(context, intake)
+		if err != nil {
+			config.logger.Error("failed to authorize fetch system intake")
+			return &models.SystemIntake{}, err
+		}
+		if !ok {
+			return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
 		}
 		return intake, nil
 	}
