@@ -133,6 +133,7 @@ func (s *Server) routes(
 		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
+			func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) { return true, nil },
 		),
 		UpdateBusinessCase: services.NewUpdateBusinessCase(
 			serviceConfig,

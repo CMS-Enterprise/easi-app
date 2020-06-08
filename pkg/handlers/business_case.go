@@ -16,7 +16,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchBusinessCaseByID func(id uuid.UUID) (*models.BusinessCase, error)
+type fetchBusinessCaseByID func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error)
 type createBusinessCase func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error)
 type updateBusinessCase func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error)
 
@@ -58,7 +58,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			businessCase, err := h.FetchBusinessCaseByID(businessCaseID)
+			businessCase, err := h.FetchBusinessCaseByID(r.Context(), businessCaseID)
 			if err != nil {
 				logger.Error("Failed to fetch business case")
 				http.Error(w, "Failed to GET business case", http.StatusInternalServerError)
