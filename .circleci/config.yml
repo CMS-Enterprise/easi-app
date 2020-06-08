@@ -335,6 +335,8 @@ workflows:
             branches:
               only:
                 - master
+          requires:
+            - build_tag_push
       - hold_prod:
           type: approval
           requires:
