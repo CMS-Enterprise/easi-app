@@ -131,8 +131,17 @@ func NewCreateBusinessCase(
 func NewFetchBusinessCasesByEuaID(
 	config Config,
 	fetch func(euaID string) (models.BusinessCases, error),
-) func(euaID string) (models.BusinessCases, error) {
-	return func(euaID string) (models.BusinessCases, error) {
+	authorize func(context context.Context, euaID string) (bool, error),
+) func(ctx context.Context, euaID string) (models.BusinessCases, error) {
+	return func(ctx context.Context, euaID string) (models.BusinessCases, error) {
+		ok, err := authorize(ctx, euaID)
+		if err != nil {
+			config.logger.Error("failed to authorize fetch system intakes")
+			return models.BusinessCases{}, err
+		}
+		if !ok {
+			return models.BusinessCases{}, &apperrors.UnauthorizedError{Err: err}
+		}
 		businessCases, err := fetch(euaID)
 		if err != nil {
 			config.logger.Error("failed to fetch business cases")

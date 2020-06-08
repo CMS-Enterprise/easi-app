@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,7 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchBusinessCases func(string) (models.BusinessCases, error)
+type fetchBusinessCases func(context.Context, string) (models.BusinessCases, error)
 
 // BusinessCasesHandler is the handler for CRUD operations on business cases
 type BusinessCasesHandler struct {
@@ -37,7 +38,7 @@ func (h BusinessCasesHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			businessCases, err := h.FetchBusinessCases(user.EUAUserID)
+			businessCases, err := h.FetchBusinessCases(r.Context(), user.EUAUserID)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to fetch business cases: %v", err))
 				http.Error(w, "failed to fetch business cases", http.StatusInternalServerError)
