@@ -6,7 +6,7 @@
 dockerfile="$1"
 repo_name="$2"
 ecr_backend="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/$repo_name"
-tag="${ecr_backend}:${CIRCLE_SHA1}"
+tag="${ecr_backend}:${3:-${CIRCLE_SHA1}}"
 
 builddir="$(git rev-parse --show-toplevel)"
 
