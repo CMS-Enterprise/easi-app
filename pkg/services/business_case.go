@@ -17,8 +17,9 @@ import (
 func NewFetchBusinessCaseByID(
 	config Config,
 	fetch func(id uuid.UUID) (*models.BusinessCase, error),
-) func(id uuid.UUID) (*models.BusinessCase, error) {
-	return func(id uuid.UUID) (*models.BusinessCase, error) {
+	authorize func(context context.Context, businessCase *models.BusinessCase) (bool, error),
+) func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 		businessCase, err := fetch(id)
 		if err != nil {
 			config.logger.Error("failed to fetch business case")
@@ -27,6 +28,14 @@ func NewFetchBusinessCaseByID(
 				Model:     businessCase,
 				Operation: apperrors.QueryFetch,
 			}
+		}
+		ok, err := authorize(ctx, businessCase)
+		if err != nil {
+			config.logger.Error("failed to authorize fetch business case")
+			return &models.BusinessCase{}, err
+		}
+		if !ok {
+			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: err}
 		}
 		return businessCase, nil
 	}

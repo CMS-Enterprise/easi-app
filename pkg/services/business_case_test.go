@@ -20,6 +20,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
+	authorize := func(context context.Context, intake *models.BusinessCase) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches Business Case by ID without an error", func() {
 		fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
@@ -27,8 +28,8 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 				ID: fakeID,
 			}, nil
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch)
-		businessCase, err := fetchBusinessCaseByID(fakeID)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorize)
+		businessCase, err := fetchBusinessCaseByID(context.Background(), fakeID)
 		s.NoError(err)
 
 		s.Equal(fakeID, businessCase.ID)
@@ -38,9 +39,9 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 		fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("fetch failed")
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorize)
 
-		businessCase, err := fetchBusinessCaseByID(uuid.New())
+		businessCase, err := fetchBusinessCaseByID(context.Background(), uuid.New())
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.BusinessCase{}, businessCase)
