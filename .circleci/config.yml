@@ -323,6 +323,10 @@ workflows:
           type: approval
           requires:
             - build_tag_push
+          filters:
+            branches:
+              ignore:
+                - master
       - deploy_dev:
           requires:
             - hold_dev
