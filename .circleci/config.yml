@@ -331,8 +331,6 @@ workflows:
             branches:
               only:
                 - master
-          requires:
-            - deploy_dev
       - hold_prod:
           type: approval
           requires:
