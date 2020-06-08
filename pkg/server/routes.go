@@ -151,6 +151,7 @@ func (s *Server) routes(
 		FetchBusinessCases: services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
+			func(ctx context.Context, euaID string) (bool, error) { return true, nil },
 		),
 	}
 	api.Handle("/business_cases", businessCasesHandler.Handle())
