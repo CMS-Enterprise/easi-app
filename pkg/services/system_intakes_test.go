@@ -19,6 +19,7 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 	fakeEuaID := "FAKE"
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
+	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches System Intakes by EUA ID without an error", func() {
 		fetch := func(euaID string) (models.SystemIntakes, error) {
@@ -28,8 +29,8 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 				},
 			}, nil
 		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch)
-		intakes, err := fetchSystemIntakesByEuaID(fakeEuaID)
+		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch, authorize)
+		intakes, err := fetchSystemIntakesByEuaID(context.Background(), fakeEuaID)
 		s.NoError(err)
 		s.Equal(fakeEuaID, intakes[0].EUAUserID)
 	})
@@ -38,8 +39,8 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 		fetch := func(euaID string) (models.SystemIntakes, error) {
 			return models.SystemIntakes{}, errors.New("fetch failed")
 		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch)
-		intakes, err := fetchSystemIntakesByEuaID("FAKE")
+		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch, authorize)
+		intakes, err := fetchSystemIntakesByEuaID(context.Background(), "FAKE")
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(models.SystemIntakes{}, intakes)
