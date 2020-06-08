@@ -17,8 +17,17 @@ import (
 func NewFetchSystemIntakesByEuaID(
 	config Config,
 	fetch func(euaID string) (models.SystemIntakes, error),
-) func(euaID string) (models.SystemIntakes, error) {
-	return func(euaID string) (models.SystemIntakes, error) {
+	authorize func(context context.Context, euaID string) (bool, error),
+) func(context context.Context, euaID string) (models.SystemIntakes, error) {
+	return func(context context.Context, euaID string) (models.SystemIntakes, error) {
+		ok, err := authorize(context, euaID)
+		if err != nil {
+			config.logger.Error("failed to authorize fetch system intakes")
+			return models.SystemIntakes{}, err
+		}
+		if !ok {
+			return models.SystemIntakes{}, &apperrors.UnauthorizedError{Err: err}
+		}
 		intakes, err := fetch(euaID)
 		if err != nil {
 			config.logger.Error("failed to fetch system intakes")

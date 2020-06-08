@@ -117,6 +117,7 @@ func (s *Server) routes(
 		FetchSystemIntakes: services.NewFetchSystemIntakesByEuaID(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
+			func(ctx context.Context, euaID string) (bool, error) { return true, nil },
 		),
 	}
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())

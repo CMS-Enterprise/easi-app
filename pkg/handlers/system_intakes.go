@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,7 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchSystemIntakes func(string) (models.SystemIntakes, error)
+type fetchSystemIntakes func(context.Context, string) (models.SystemIntakes, error)
 
 // SystemIntakesHandler is the handler for CRUD operations on system intakes
 type SystemIntakesHandler struct {
@@ -37,7 +38,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			systemIntakes, err := h.FetchSystemIntakes(user.EUAUserID)
+			systemIntakes, err := h.FetchSystemIntakes(r.Context(), user.EUAUserID)
 			if err != nil {
 				logger.Error(fmt.Sprintf("Failed to fetch system intakes: %v", err))
 				http.Error(w, "failed to fetch system intakes", http.StatusInternalServerError)
