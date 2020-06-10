@@ -144,13 +144,13 @@ func (s *Server) routes(
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
 
-	businessCasesHandler := handlers.BusinessCasesHandler{
-		Logger: s.logger,
-		FetchBusinessCases: services.NewFetchBusinessCasesByEuaID(
+	businessCasesHandler := handlers.NewBusinessCasesHandler(
+		base,
+		services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
 		),
-	}
+	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
 
 	handlerClock := clock.New()
