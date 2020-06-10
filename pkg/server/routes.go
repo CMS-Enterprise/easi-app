@@ -112,13 +112,13 @@ func (s *Server) routes(
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
 
-	systemIntakesHandler := handlers.SystemIntakesHandler{
-		Logger: s.logger,
-		FetchSystemIntakes: services.NewFetchSystemIntakesByEuaID(
+	systemIntakesHandler := handlers.NewSystemIntakesHandler(
+		base,
+		services.NewFetchSystemIntakesByEuaID(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
 		),
-	}
+	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 
 	businessCaseHandler := handlers.NewBusinessCaseHandler(

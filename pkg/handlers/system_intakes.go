@@ -5,17 +5,23 @@ import (
 	"fmt"
 	"net/http"
 
-	"go.uber.org/zap"
-
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type fetchSystemIntakes func(string) (models.SystemIntakes, error)
 
+// NewSystemIntakesHandler is a constructor for SystemIntakesHandler
+func NewSystemIntakesHandler(base HandlerBase, fetch fetchSystemIntakes) SystemIntakesHandler {
+	return SystemIntakesHandler{
+		HandlerBase:        base,
+		FetchSystemIntakes: fetch,
+	}
+}
+
 // SystemIntakesHandler is the handler for CRUD operations on system intakes
 type SystemIntakesHandler struct {
-	Logger             *zap.Logger
+	HandlerBase
 	FetchSystemIntakes fetchSystemIntakes
 }
 
@@ -24,15 +30,15 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			h.Logger.Error("Failed to get logger from context in system intakes handler")
-			logger = h.Logger
+			h.logger.Error("Failed to get logger from context in system intakes handler")
+			logger = h.logger
 		}
 
 		switch r.Method {
 		case "GET":
 			user, ok := appcontext.User(r.Context())
 			if !ok {
-				h.Logger.Error("Failed to get EUA ID from context in system intakes handler")
+				h.logger.Error("Failed to get EUA ID from context in system intakes handler")
 				http.Error(w, "Failed to fetch System Intakes", http.StatusInternalServerError)
 				return
 			}
