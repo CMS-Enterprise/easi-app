@@ -94,9 +94,9 @@ func (s *Server) routes(
 	}
 	api.Handle("/systems", systemHandler.Handle())
 
-	systemIntakeHandler := handlers.SystemIntakeHandler{
-		Logger: s.logger,
-		SaveSystemIntake: services.NewSaveSystemIntake(
+	systemIntakeHandler := handlers.NewSystemIntakeHandler(
+		base,
+		services.NewSaveSystemIntake(
 			serviceConfig,
 			store.SaveSystemIntake,
 			store.FetchSystemIntakeByID,
@@ -104,11 +104,11 @@ func (s *Server) routes(
 			cedarClient.ValidateAndSubmitSystemIntake,
 			emailClient.SendSystemIntakeSubmissionEmail,
 		),
-		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
+		services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 		),
-	}
+	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
 

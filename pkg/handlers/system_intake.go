@@ -18,9 +18,18 @@ import (
 type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
 type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
 
+// NewSystemIntakeHandler is a constructor for SystemIntakeHandler
+func NewSystemIntakeHandler(base HandlerBase, save saveSystemIntake, fetch fetchSystemIntakeByID) SystemIntakeHandler {
+	return SystemIntakeHandler{
+		HandlerBase:           base,
+		SaveSystemIntake:      save,
+		FetchSystemIntakeByID: fetch,
+	}
+}
+
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
-	Logger                *zap.Logger
+	HandlerBase
 	SaveSystemIntake      saveSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
 }
@@ -30,8 +39,8 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			h.Logger.Error("Failed to get logger from context in system intake handler")
-			logger = h.Logger
+			h.logger.Error("Failed to get logger from context in system intake handler")
+			logger = h.logger
 		}
 
 		switch r.Method {
@@ -63,7 +72,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to write system intake to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to write system intake to response: %v", err))
 				http.Error(w, "Failed to get system intake by id", http.StatusInternalServerError)
 				return
 			}
