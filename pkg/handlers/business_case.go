@@ -20,9 +20,24 @@ type fetchBusinessCaseByID func(id uuid.UUID) (*models.BusinessCase, error)
 type createBusinessCase func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error)
 type updateBusinessCase func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error)
 
+// NewBusinessCaseHandler is a constructor for BusinessCaseHandler
+func NewBusinessCaseHandler(
+	base HandlerBase,
+	fetch fetchBusinessCaseByID,
+	create createBusinessCase,
+	update updateBusinessCase,
+) BusinessCaseHandler {
+	return BusinessCaseHandler{
+		HandlerBase:           base,
+		FetchBusinessCaseByID: fetch,
+		CreateBusinessCase:    create,
+		UpdateBusinessCase:    update,
+	}
+}
+
 // BusinessCaseHandler is the handler for CRUD operations on business case
 type BusinessCaseHandler struct {
-	Logger                *zap.Logger
+	HandlerBase
 	FetchBusinessCaseByID fetchBusinessCaseByID
 	CreateBusinessCase    createBusinessCase
 	UpdateBusinessCase    updateBusinessCase
@@ -46,8 +61,8 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			h.Logger.Error("Failed to get logger from context in business case handler")
-			logger = h.Logger
+			h.logger.Error("Failed to get logger from context in business case handler")
+			logger = h.logger
 		}
 
 		switch r.Method {
@@ -74,7 +89,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to write business case to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to write business case to response: %v", err))
 				http.Error(w, "Failed to get business case by id", http.StatusInternalServerError)
 				return
 			}
@@ -106,7 +121,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 
 			businessCase, err := h.CreateBusinessCase(r.Context(), &businessCaseToCreate)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
 
 				switch err.(type) {
 				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
@@ -127,7 +142,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
 				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
 				return
 			}
@@ -164,7 +179,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			businessCaseToUpdate.EUAUserID = user.EUAUserID
 			updatedBusinessCase, err := h.UpdateBusinessCase(r.Context(), &businessCaseToUpdate)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))
 
 				switch err.(type) {
 				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
@@ -185,7 +200,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to write updated business case to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to write updated business case to response: %v", err))
 				http.Error(w, "Failed to update business case", http.StatusInternalServerError)
 				return
 			}

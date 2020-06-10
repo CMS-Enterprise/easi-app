@@ -25,6 +25,9 @@ func (s *Server) routes(
 	// trace all requests with an ID
 	s.router.Use(traceMiddleware)
 
+	// set up handler base
+	base := handlers.NewHandlerBase(s.logger)
+
 	// health check goes directly on the main router to avoid auth
 	healthCheckHandler := handlers.HealthCheckHandler{
 		Config: s.Config,
@@ -118,26 +121,26 @@ func (s *Server) routes(
 	}
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 
-	businessCaseHandler := handlers.BusinessCaseHandler{
-		Logger: s.logger,
-		CreateBusinessCase: services.NewCreateBusinessCase(
+	businessCaseHandler := handlers.NewBusinessCaseHandler(
+		base,
+		services.NewFetchBusinessCaseByID(
+			serviceConfig,
+			store.FetchBusinessCaseByID,
+		),
+		services.NewCreateBusinessCase(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeCreateBusinessCase(s.logger),
 			store.CreateBusinessCase,
 		),
-		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
-			serviceConfig,
-			store.FetchBusinessCaseByID,
-		),
-		UpdateBusinessCase: services.NewUpdateBusinessCase(
+		services.NewUpdateBusinessCase(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
 			services.NewAuthorizeUpdateBusinessCase(s.logger),
 			store.UpdateBusinessCase,
 			emailClient.SendBusinessCaseSubmissionEmail,
 		),
-	}
+	)
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
 
