@@ -25,6 +25,9 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 		s.Equal(intake.EUAUserID, created.EUAUserID)
 		s.Equal(intake.Status, created.Status)
 		s.Equal(intake.Requester, created.Requester)
+		epochTime := time.Unix(0, 0)
+		s.Equal(intake.CreatedAt, &epochTime)
+		s.Equal(intake.UpdatedAt, &epochTime)
 		s.False(created.ID == uuid.Nil)
 	})
 
