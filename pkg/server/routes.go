@@ -3,7 +3,6 @@ package server
 import (
 	"net/http"
 
-	"github.com/facebookgo/clock"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
@@ -154,12 +153,10 @@ func (s *Server) routes(
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
 
-	handlerClock := clock.New()
-	metricsHandler := handlers.MetricsHandler{
-		FetchMetrics: services.NewFetchMetrics(serviceConfig, store.FetchSystemIntakeMetrics),
-		Logger:       s.logger,
-		Clock:        handlerClock,
-	}
+	metricsHandler := handlers.NewMetricsHandler(
+		base,
+		services.NewFetchMetrics(serviceConfig, store.FetchSystemIntakeMetrics),
+	)
 	api.Handle("/metrics", metricsHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
