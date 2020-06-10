@@ -56,14 +56,11 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 	ctx = appcontext.WithUser(ctx, models.User{EUAUserID: fakeEuaID})
 
 	s.Run("successfully creates a system intake without an error", func() {
-		time := serviceConfig.clock.Now()
 		create := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{
 				EUAUserID: intake.EUAUserID,
 				Requester: requester,
 				Status:    models.SystemIntakeStatusDRAFT,
-				CreatedAt: intake.CreatedAt,
-				UpdatedAt: intake.UpdatedAt,
 			}, nil
 		}
 		createIntake := NewCreateSystemIntake(serviceConfig, create)
@@ -73,8 +70,6 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 		})
 		s.NoError(err)
 		s.Equal(fakeEuaID, intake.EUAUserID)
-		s.Equal(&time, intake.CreatedAt)
-		s.Equal(&time, intake.UpdatedAt)
 	})
 
 	s.Run("returns query error when create fails", func() {
