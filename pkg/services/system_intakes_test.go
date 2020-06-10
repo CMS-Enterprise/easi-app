@@ -46,7 +46,7 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 	})
 }
 
-func (s ServicesTestSuite) TestSystemIntakeCreator() {
+func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 	logger := zap.NewNop()
 	fakeEuaID := "FAKE"
 	requester := "Test Requester"

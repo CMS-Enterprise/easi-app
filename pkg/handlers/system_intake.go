@@ -85,13 +85,6 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				http.Error(w, "Bad system intake request", http.StatusBadRequest)
 				return
 			}
-			user, ok := appcontext.User(r.Context())
-			if !ok {
-				logger.Error("Failed to get EUA ID from context")
-				http.Error(w, "Failed to PUT system intake", http.StatusUnauthorized)
-				return
-			}
-			intake.EUAUserID = user.EUAUserID
 			createdIntake, err := h.CreateSystemIntake(r.Context(), &intake)
 			if err != nil {
 				h.Logger.Error(fmt.Sprintf("Failed to create a system intake to response: %v", err))

@@ -20,10 +20,9 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	apiURL, err := url.Parse(s.server.URL)
 	s.NoError(err, "failed to parse URL")
 	apiURL.Path = path.Join(apiURL.Path, "/api/v1")
-	postURL, err := url.Parse(apiURL.String())
+	systemIntakeURL, err := url.Parse(apiURL.String())
 	s.NoError(err, "failed to parse URL")
-	postURL.Path = path.Join(postURL.Path, "/system_intake")
-	putURL := postURL
+	systemIntakeURL.Path = path.Join(systemIntakeURL.Path, "/system_intake")
 
 	id, _ := uuid.NewUUID()
 	body, err := json.Marshal(map[string]string{
@@ -32,14 +31,14 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	})
 	s.NoError(err)
 
-	getURL, err := url.Parse(postURL.String())
+	getURL, err := url.Parse(systemIntakeURL.String())
 	s.NoError(err, "failed to parse URL")
 	getURL.Path = path.Join(getURL.Path, id.String())
 
 	client := &http.Client{}
 
 	s.Run("POST will fail with no Authorization", func() {
-		req, err := http.NewRequest(http.MethodPut, postURL.String(), bytes.NewBuffer(body))
+		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)
 		resp, err := client.Do(req)
 
@@ -48,7 +47,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	})
 
 	s.Run("POST will succeed with a token", func() {
-		req, err := http.NewRequest(http.MethodPut, postURL.String(), bytes.NewBuffer(body))
+		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
 
@@ -65,7 +64,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 			"status":    "DRAFT",
 		})
 		s.NoError(err)
-		req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
+		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
 
@@ -101,7 +100,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 			"requester": "Test Requester",
 		})
 		s.NoError(err)
-		req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
+		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
 
@@ -143,7 +142,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		}
 		body, err := json.Marshal(intake)
 		s.NoError(err)
-		req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
+		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
 
@@ -164,7 +163,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 			"requester": "Test Requester",
 		})
 		s.NoError(err)
-		req, err := http.NewRequest(http.MethodPut, putURL.String(), bytes.NewBuffer(body))
+		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
 		s.NoError(err)
 		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
 
