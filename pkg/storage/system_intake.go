@@ -14,6 +14,9 @@ import (
 func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemIntake, error) {
 	id := uuid.New()
 	intake.ID = id
+	createAt := s.clock.Now()
+	intake.CreatedAt = &createAt
+	intake.UpdatedAt = &createAt
 	const createIntakeSQL = `	
 		INSERT INTO system_intake (
 			id,

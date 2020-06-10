@@ -48,9 +48,6 @@ func NewCreateSystemIntake(
 		}
 		intake.EUAUserID = user.EUAUserID
 		// app validation belongs here
-		createAt := config.clock.Now()
-		intake.CreatedAt = &createAt
-		intake.UpdatedAt = &createAt
 		createdIntake, err := create(intake)
 		if err != nil {
 			config.logger.Error("failed to create a system intake")
@@ -122,7 +119,7 @@ func NewSaveSystemIntake(
 		if !ok {
 			return &apperrors.UnauthorizedError{Err: err}
 		}
-		updatedTime := config.clock.Now().UTC()
+		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
 		if existingIntake == nil {
 			intake.CreatedAt = &updatedTime
