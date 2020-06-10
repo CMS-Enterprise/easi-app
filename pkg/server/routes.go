@@ -88,10 +88,10 @@ func (s *Server) routes(
 	}
 
 	// endpoint for system list
-	systemHandler := handlers.SystemsListHandler{
-		FetchSystems: cedarClient.FetchSystems,
-		Logger:       s.logger,
-	}
+	systemHandler := handlers.NewSystemsListHandler(
+		base,
+		cedarClient.FetchSystems,
+	)
 	api.Handle("/systems", systemHandler.Handle())
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
