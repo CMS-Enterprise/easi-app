@@ -161,7 +161,7 @@ func (s *Server) routes(
 	}
 	api.Handle("/metrics", metricsHandler.Handle())
 
-	s.router.PathPrefix("/").Handler(handlers.CatchAllHandler{
-		Logger: s.logger,
-	}.Handle())
+	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
+		base,
+	).Handle())
 }
