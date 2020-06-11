@@ -149,6 +149,14 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 			"Bad request",
 			traceID,
 		)
+	case *apperrors.UnknownRouteError:
+		logger.Info("Returning status not found error from handler", zap.Error(appErr))
+		code = http.StatusNotFound
+		response = newErrorResponse(
+			code,
+			"Not found",
+			traceID,
+		)
 	default:
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
 		code = http.StatusInternalServerError

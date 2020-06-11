@@ -217,3 +217,16 @@ func (e *BadRequestError) Error() string {
 func (e *BadRequestError) Unwrap() error {
 	return e.Err
 }
+
+// UnknownRouteError is an error for unknown routes
+type UnknownRouteError struct {
+	Path string
+}
+
+// Error provides the error as a string
+func (e *UnknownRouteError) Error() string {
+	return fmt.Sprintf(
+		"Route %s unknown",
+		e.Path,
+	)
+}
