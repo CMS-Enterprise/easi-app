@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useOktaAuth } from '@okta/okta-react';
-
+import { useTranslation } from 'react-i18next';
 import Header from 'components/Header';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
@@ -16,6 +15,7 @@ import Button from 'components/shared/Button';
 type HomeProps = RouteComponentProps;
 
 const Home = ({ history }: HomeProps) => {
+  const { t } = useTranslation();
   const { authState } = useOktaAuth();
   const dispatch = useDispatch();
   const systemIntakes = useSelector(
@@ -133,7 +133,7 @@ const Home = ({ history }: HomeProps) => {
         {getSystemIntakeBanners()}
         {getBusinessCaseBanners()}
         <div className="tablet:grid-col-9">
-          <h1 className="margin-top-6">Welcome to EASi</h1>
+          <h1 className="margin-top-6">{t('general:welcome')}</h1>
           <p className="line-height-body-5 font-body-lg text-light">
             You can use EASi to go through the set of steps needed for Lifecycle
             ID approval by the Governance Review Board (GRB).
