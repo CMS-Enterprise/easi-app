@@ -30,15 +30,15 @@ func (h BusinessCasesHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			h.logger.Error("Failed to get logger from context in business cases handler")
-			logger = h.logger
+			h.Logger.Error("Failed to get logger from context in business cases handler")
+			logger = h.Logger
 		}
 
 		switch r.Method {
 		case "GET":
 			user, ok := appcontext.User(r.Context())
 			if !ok {
-				h.logger.Error("Failed to get EUA ID from context in business cases handler")
+				h.Logger.Error("Failed to get EUA ID from context in business cases handler")
 				http.Error(w, "Failed to fetch business cases", http.StatusInternalServerError)
 				return
 			}
