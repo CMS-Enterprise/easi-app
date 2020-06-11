@@ -24,6 +24,7 @@ import {
   clearSystemIntake
 } from 'types/routines';
 import AutoSave from 'components/shared/AutoSave';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
@@ -69,6 +70,30 @@ const ContactDetails = ({
 
   return (
     <>
+      {Object.keys(formikProps.errors).length > 0 && (
+        <ErrorAlert
+          classNames="margin-top-3"
+          heading="Please check and fix the following"
+        >
+          {Object.keys(flatErrors).map(key => {
+            return (
+              <ErrorAlertMessage
+                key={`Error.${key}`}
+                message={flatErrors[key]}
+                onClick={() => {
+                  const field = document.querySelector(
+                    `[data-scroll="${key}"]`
+                  );
+
+                  if (field) {
+                    field.scrollIntoView();
+                  }
+                }}
+              />
+            );
+          })}
+        </ErrorAlert>
+      )}
       <p className="line-height-body-5">
         The EASi System Intake process can guide you through all stages of your
         project, connecting you with the resources, people and services that you

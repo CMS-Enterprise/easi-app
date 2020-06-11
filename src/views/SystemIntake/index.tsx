@@ -6,10 +6,8 @@ import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import PageNumber from 'components/PageNumber';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
-import flattenErrors from 'utils/flattenErrors';
 import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
@@ -129,35 +127,8 @@ export const SystemIntake = () => {
             innerRef={formikRef}
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
-              const { errors } = formikProps;
-              const flatErrors: any = flattenErrors(errors);
-
               return (
                 <>
-                  {Object.keys(errors).length > 0 && (
-                    <ErrorAlert
-                      classNames="margin-top-3"
-                      heading="Please check and fix the following"
-                    >
-                      {Object.keys(flatErrors).map(key => {
-                        return (
-                          <ErrorAlertMessage
-                            key={`Error.${key}`}
-                            message={flatErrors[key]}
-                            onClick={() => {
-                              const field = document.querySelector(
-                                `[data-scroll="${key}"]`
-                              );
-
-                              if (field) {
-                                field.scrollIntoView();
-                              }
-                            }}
-                          />
-                        );
-                      })}
-                    </ErrorAlert>
-                  )}
                   <SecureRoute
                     path="/system/:systemId/contact-details"
                     render={() => (
