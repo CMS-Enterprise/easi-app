@@ -27,6 +27,7 @@ import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { AppState } from 'reducers/rootReducer';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
+import PageNumber from 'components/PageNumber';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
@@ -484,6 +485,7 @@ const ContactDetails = ({ formikRef, systemId }: ContactDetailsProps) => {
           }}
         </Formik>
       )}
+      <PageNumber currentPage={1} totalPages={2} />
     </>
   );
 };

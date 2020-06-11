@@ -4,7 +4,6 @@ import { useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
-import PageNumber from 'components/PageNumber';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import { AppState } from 'reducers/rootReducer';
 import {
@@ -121,12 +120,6 @@ export const SystemIntake = () => {
           path="/system/:systemId/review"
           render={() => <Review />}
         />
-        {pageObj.type === 'FORM' && (
-          <PageNumber
-            currentPage={pageIndex + 1}
-            totalPages={pages.filter(p => p.type === 'FORM').length}
-          />
-        )}
       </MainContent>
     </div>
   );
