@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -70,8 +69,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to write system intake to response: %v", err))
-				http.Error(w, "Failed to get system intake by id", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 

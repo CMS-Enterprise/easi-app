@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/spf13/viper"
@@ -46,8 +45,7 @@ func (h HealthCheckHandler) Handle() http.HandlerFunc {
 		}
 		js, err := json.Marshal(statusReport)
 		if err != nil {
-			h.logger.Error(fmt.Sprintf("Failed to marshal health check: %v", err))
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			h.WriteErrorResponse(r.Context(), w, err)
 			return
 		}
 
@@ -55,8 +53,7 @@ func (h HealthCheckHandler) Handle() http.HandlerFunc {
 
 		_, err = w.Write(js)
 		if err != nil {
-			h.logger.Error(fmt.Sprintf("Failed to write health check to response: %v", err))
-			http.Error(w, "Failed to get health check", http.StatusInternalServerError)
+			h.WriteErrorResponse(r.Context(), w, err)
 			return
 		}
 	}
