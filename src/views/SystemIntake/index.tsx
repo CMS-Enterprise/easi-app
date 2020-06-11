@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 <<<<<<< HEAD
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
@@ -15,7 +15,6 @@ import './index.scss';
 export const SystemIntake = () => {
   const history = useHistory();
   const { systemId, formPage } = useParams();
-  const formikRef: any = useRef();
 
   useEffect(() => {
     // If a user tries to visit a form page we don't have, send them to contact details
@@ -33,11 +32,11 @@ export const SystemIntake = () => {
       <MainContent className="grid-container">
         <SecureRoute
           path="/system/:systemId/contact-details"
-          render={() => <ContactDetails formikRef={formikRef} />}
+          render={() => <ContactDetails />}
         />
         <SecureRoute
           path="/system/:systemId/request-details"
-          render={() => <RequestDetails formikRef={formikRef} />}
+          render={() => <RequestDetails />}
         />
         <SecureRoute
           path="/system/:systemId/review"

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Formik, Field, FormikProps, Form } from 'formik';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { RadioField } from 'components/shared/RadioField';
@@ -28,14 +28,11 @@ import { AppState } from 'reducers/rootReducer';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import PageNumber from 'components/PageNumber';
 
-type RequestDetailsProps = {
-  formikRef: any;
-};
-
-const RequestDetails = ({ formikRef }: RequestDetailsProps) => {
+const RequestDetails = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { systemId } = useParams();
+  const formikRef: any = useRef();
 
   const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Formik, Field, FormikProps, Form } from 'formik';
 import TextField from 'components/shared/TextField';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -32,15 +32,12 @@ import { useOktaAuth } from '@okta/okta-react';
 import { v4 as uuidv4 } from 'uuid';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
-type ContactDetailsProps = {
-  formikRef: any;
-};
-
-const ContactDetails = ({ formikRef }: ContactDetailsProps) => {
+const ContactDetails = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { authService } = useOktaAuth();
   const { systemId } = useParams();
+  const formikRef: any = useRef();
 
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
 
