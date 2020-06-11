@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
-import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
@@ -18,30 +17,11 @@ import Review from './Review';
 import './index.scss';
 
 export const SystemIntake = () => {
-  const pages = [
-    {
-      type: 'FORM',
-      slug: 'contact-details',
-      validation: SystemIntakeValidationSchema.contactDetails
-    },
-    {
-      type: 'FORM',
-      slug: 'request-details',
-      validation: SystemIntakeValidationSchema.requestDetails
-    },
-    {
-      type: 'REVIEW',
-      slug: 'review'
-    }
-  ];
-
   const history = useHistory();
   const { systemId, formPage } = useParams();
   const { authService } = useOktaAuth();
-  const [pageIndex, setPageIndex] = useState(0);
   const dispatch = useDispatch();
   const formikRef: any = useRef();
-  const pageObj = pages[pageIndex];
 
   const isSubmitting = useSelector(
     (state: AppState) => state.systemIntake.isSubmitting
@@ -82,15 +62,14 @@ export const SystemIntake = () => {
   }, []);
 
   useEffect(() => {
-    const pageSlugs: any[] = pages.map(p => p.slug);
-    if (pageSlugs.includes(formPage)) {
-      setPageIndex(pageSlugs.indexOf(formPage));
-    } else {
+    // If a user tries to visit a form page we don't have, send them to contact details
+    const currentPage = String(formPage);
+    const pageSlugs = ['contact-details', 'request-details', 'review'];
+    if (!pageSlugs.includes(currentPage)) {
       history.replace(`/system/${systemId}/contact-details`);
-      setPageIndex(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pages, systemId, formPage]);
+  }, [systemId, formPage]);
 
   useEffect(() => {
     if (prevIsSubmitting && !isSubmitting && !error) {
