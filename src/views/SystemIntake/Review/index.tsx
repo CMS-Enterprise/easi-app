@@ -16,6 +16,8 @@ import usePrevious from 'hooks/usePrevious';
 const Review = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const { systemId } = useParams();
+
   const isSubmitting = useSelector(
     (state: AppState) => state.systemIntake.isSubmitting
   );
@@ -38,6 +40,15 @@ const Review = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitting]);
+
+  useEffect(() => {
+    dispatch(fetchSystemIntake(systemId));
+    // This return will clear system intake from store when component is unmounted
+    return () => {
+      dispatch(clearSystemIntake());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

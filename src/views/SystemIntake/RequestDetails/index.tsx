@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, Field, FormikProps, Form } from 'formik';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { RadioField } from 'components/shared/RadioField';
@@ -19,7 +19,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchSystemIntake,
   saveSystemIntake,
-  storeSystemIntake,
   submitSystemIntake,
   clearSystemIntake
 } from 'types/routines';
@@ -31,12 +30,13 @@ import PageNumber from 'components/PageNumber';
 
 type RequestDetailsProps = {
   formikRef: any;
-  systemId: any;
 };
 
-const RequestDetails = ({ formikRef, systemId }: RequestDetailsProps) => {
+const RequestDetails = ({ formikRef }: RequestDetailsProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const { systemId } = useParams();
+
   const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
@@ -44,6 +44,15 @@ const RequestDetails = ({ formikRef, systemId }: RequestDetailsProps) => {
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
+
+  useEffect(() => {
+    dispatch(fetchSystemIntake(systemId));
+    // This return will clear system intake from store when component is unmounted
+    return () => {
+      dispatch(clearSystemIntake());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;

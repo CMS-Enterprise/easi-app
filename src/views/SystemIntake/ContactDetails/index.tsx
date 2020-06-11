@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Field, FormikProps, Form } from 'formik';
 import TextField from 'components/shared/TextField';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -28,16 +28,20 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { AppState } from 'reducers/rootReducer';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import PageNumber from 'components/PageNumber';
+import { useOktaAuth } from '@okta/okta-react';
+import { v4 as uuidv4 } from 'uuid';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
   formikRef: any;
-  systemId: any;
 };
 
-const ContactDetails = ({ formikRef, systemId }: ContactDetailsProps) => {
+const ContactDetails = ({ formikRef }: ContactDetailsProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const { authService } = useOktaAuth();
+  const { systemId } = useParams();
+
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
 
   const isLoading = useSelector(
@@ -47,6 +51,29 @@ const ContactDetails = ({ formikRef, systemId }: ContactDetailsProps) => {
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
+
+  useEffect(() => {
+    if (systemId === 'new') {
+      authService.getUser().then((user: any) => {
+        dispatch(
+          storeSystemIntake({
+            id: uuidv4(),
+            requester: {
+              name: user.name,
+              component: ''
+            }
+          })
+        );
+      });
+    } else {
+      dispatch(fetchSystemIntake(systemId));
+    }
+    // This return will clear system intake from store when component is unmounted
+    return () => {
+      dispatch(clearSystemIntake());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
