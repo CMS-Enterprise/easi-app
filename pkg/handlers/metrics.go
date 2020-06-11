@@ -83,7 +83,7 @@ func (h MetricsHandler) Handle() http.HandlerFunc {
 				return
 			}
 		default:
-			http.Error(w, "Method not allowed for metrics", http.StatusMethodNotAllowed)
+			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
 			return
 		}
 	}
