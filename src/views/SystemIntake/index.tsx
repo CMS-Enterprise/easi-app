@@ -1,18 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { Formik, FormikProps } from 'formik';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import PageNumber from 'components/PageNumber';
-import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
   storeSystemIntake,
-  submitSystemIntake,
   clearSystemIntake
 } from 'types/routines';
 import usePrevious from 'hooks/usePrevious';
@@ -47,12 +44,6 @@ export const SystemIntake = () => {
   const formikRef: any = useRef();
   const pageObj = pages[pageIndex];
 
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
-  const isLoading = useSelector(
-    (state: AppState) => state.systemIntake.isLoading
-  );
   const isSubmitting = useSelector(
     (state: AppState) => state.systemIntake.isSubmitting
   );
@@ -114,50 +105,22 @@ export const SystemIntake = () => {
     <div className="system-intake margin-bottom-5">
       <Header name="EASi System Intake" />
       <MainContent className="grid-container">
-        {isLoading === false && (
-          <Formik
-            initialValues={systemIntake}
-            onSubmit={values => {
-              dispatch(submitSystemIntake(values));
-            }}
-            validationSchema={pageObj.validation}
-            validateOnBlur={false}
-            validateOnChange={false}
-            validateOnMount={false}
-            innerRef={formikRef}
-          >
-            {(formikProps: FormikProps<SystemIntakeForm>) => {
-              return (
-                <>
-                  <SecureRoute
-                    path="/system/:systemId/contact-details"
-                    render={() => (
-                      <ContactDetails
-                        formikProps={formikProps}
-                        formikRef={formikRef}
-                        systemId={systemId}
-                      />
-                    )}
-                  />
-                  <SecureRoute
-                    path="/system/:systemId/request-details"
-                    render={() => (
-                      <RequestDetails
-                        formikProps={formikProps}
-                        formikRef={formikRef}
-                        systemId={systemId}
-                      />
-                    )}
-                  />
-                  <SecureRoute
-                    path="/system/:systemId/review"
-                    render={() => <Review formikProps={formikProps} />}
-                  />
-                </>
-              );
-            }}
-          </Formik>
-        )}
+        <SecureRoute
+          path="/system/:systemId/contact-details"
+          render={() => (
+            <ContactDetails formikRef={formikRef} systemId={systemId} />
+          )}
+        />
+        <SecureRoute
+          path="/system/:systemId/request-details"
+          render={() => (
+            <RequestDetails formikRef={formikRef} systemId={systemId} />
+          )}
+        />
+        <SecureRoute
+          path="/system/:systemId/review"
+          render={() => <Review />}
+        />
         {pageObj.type === 'FORM' && (
           <PageNumber
             currentPage={pageIndex + 1}
