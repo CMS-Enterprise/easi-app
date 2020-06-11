@@ -61,8 +61,8 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			h.logger.Error("Failed to get logger from context in business case handler")
-			logger = h.logger
+			h.Logger.Error("Failed to get logger from context in business case handler")
+			logger = h.Logger
 		}
 
 		switch r.Method {
@@ -125,7 +125,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 
 			businessCase, err := h.CreateBusinessCase(r.Context(), &businessCaseToCreate)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
+				h.Logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
 			}
 
 			responseBody, err := json.Marshal(businessCase)
@@ -174,7 +174,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			businessCaseToUpdate.EUAUserID = user.EUAUserID
 			updatedBusinessCase, err := h.UpdateBusinessCase(r.Context(), &businessCaseToUpdate)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))
+				h.Logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))
 
 				h.WriteErrorResponse(r.Context(), w, err)
 			}

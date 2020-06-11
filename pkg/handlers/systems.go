@@ -31,8 +31,8 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			h.logger.Error("Failed to logger from context in systems list handler")
-			logger = h.logger
+			h.Logger.Error("Failed to logger from context in systems list handler")
+			logger = h.Logger
 		}
 
 		systems, err := h.FetchSystems(logger)
