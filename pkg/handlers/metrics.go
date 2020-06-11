@@ -3,13 +3,11 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net/http"
 	"time"
 
-	"go.uber.org/zap"
-
-	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -32,23 +30,26 @@ type MetricsHandler struct {
 // Handle handles a web request and returns a metrics digest
 func (h MetricsHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := appcontext.Logger(r.Context())
-		if !ok {
-			h.logger.Error("Failed to logger from context in metrics handler")
-			logger = h.logger
-		}
 		switch r.Method {
 		case "GET":
 			// get our time params
 			startTimeParam, ok := r.URL.Query()["startTime"]
+			valErr := apperrors.NewValidationError(
+				errors.New("metrics failed validation"),
+				models.MetricsDigest{},
+				"",
+			)
 			if !ok || len(startTimeParam[0]) < 1 {
-				http.Error(w, "startTime is required", http.StatusBadRequest)
+				valErr.Err = errors.New("no startTime")
+				valErr.WithValidation("startTime", "is required")
+				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
 			startTime, err := time.Parse(time.RFC3339, startTimeParam[0])
 			if err != nil {
-				logger.Info("failed to parse starTime", zap.Error(err))
-				http.Error(w, "startTime must adhere to RFC 339", http.StatusBadRequest)
+				valErr.Err = err
+				valErr.WithValidation("startTime", "must be RFC339")
+				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
 			endTime := h.clock.Now()
@@ -56,22 +57,21 @@ func (h MetricsHandler) Handle() http.HandlerFunc {
 			if ok {
 				endTime, err = time.Parse(time.RFC3339, endTimeParam[0])
 				if err != nil {
-					logger.Info("failed to parse endTime", zap.Error(err))
-					http.Error(w, "endTime must adhere to RFC 339", http.StatusBadRequest)
+					valErr.Err = err
+					valErr.WithValidation("endTime", "must be RFC339")
+					h.WriteErrorResponse(r.Context(), w, &valErr)
 					return
 				}
 			}
 			metricsDigest, err := h.FetchMetrics(r.Context(), startTime, endTime)
 			if err != nil {
-				logger.Error(fmt.Sprintf("Failed to fetch metrics: %v", err))
-				http.Error(w, "failed to fetch metrics", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			js, err := json.Marshal(metricsDigest)
 			if err != nil {
-				logger.Error(fmt.Sprintf("Failed to marshal metrics: %v", err))
-				http.Error(w, "failed to fetch metrics", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
@@ -79,13 +79,11 @@ func (h MetricsHandler) Handle() http.HandlerFunc {
 
 			_, err = w.Write(js)
 			if err != nil {
-				logger.Error(fmt.Sprintf("Failed to write metrics response: %v", err))
-				http.Error(w, "failed to fetch metrics", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 		default:
-			logger.Info("Unsupported method requested")
-			http.Error(w, "Method not allowed for system intake", http.StatusMethodNotAllowed)
+			http.Error(w, "Method not allowed for metrics", http.StatusMethodNotAllowed)
 			return
 		}
 	}
