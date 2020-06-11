@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, FormikProps, Form } from 'formik';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
@@ -11,6 +11,7 @@ import {
   submitSystemIntake,
   clearSystemIntake
 } from 'types/routines';
+import usePrevious from 'hooks/usePrevious';
 
 const Review = () => {
   const history = useHistory();
@@ -26,6 +27,18 @@ const Review = () => {
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
+
+  const error = useSelector((state: AppState) => state.systemIntake.error);
+  const prevIsSubmitting = usePrevious(isSubmitting);
+
+  useEffect(() => {
+    if (prevIsSubmitting && !isSubmitting && !error) {
+      history.push('/');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitting]);
+
   return (
     <>
       {isLoading === false && (

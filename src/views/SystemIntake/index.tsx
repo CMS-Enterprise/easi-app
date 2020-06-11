@@ -1,16 +1,14 @@
 import React, { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
-import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
   storeSystemIntake,
   clearSystemIntake
 } from 'types/routines';
-import usePrevious from 'hooks/usePrevious';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -22,16 +20,6 @@ export const SystemIntake = () => {
   const { authService } = useOktaAuth();
   const dispatch = useDispatch();
   const formikRef: any = useRef();
-
-  const isSubmitting = useSelector(
-    (state: AppState) => state.systemIntake.isSubmitting
-  );
-  const isSaving = useSelector(
-    (state: AppState) => state.systemIntake.isSaving
-  );
-
-  const error = useSelector((state: AppState) => state.systemIntake.error);
-  const prevIsSubmitting = usePrevious(isSubmitting);
 
   useEffect(() => {
     if (systemIntake.id) {
@@ -70,14 +58,6 @@ export const SystemIntake = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [systemId, formPage]);
-
-  useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !error) {
-      history.push('/');
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
 
   return (
     <div className="system-intake margin-bottom-5">
