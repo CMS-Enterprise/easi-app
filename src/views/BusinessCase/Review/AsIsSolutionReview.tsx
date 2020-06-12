@@ -34,19 +34,28 @@ const AsIsSolutionReview = ({ solution }: ReviewProps) => (
       <ReviewRow>
         <div className="line-height-body-3">
           <DescriptionTerm term="“As is” solution: Summary" />
-          <DescriptionDefinition definition={solution.summary} />
+          <DescriptionDefinition
+            className="text-pre"
+            definition={solution.summary}
+          />
         </div>
       </ReviewRow>
       <ReviewRow>
         <div className="line-height-body-3">
           <DescriptionTerm term="“As is” solution: Pros" />
-          <DescriptionDefinition definition={solution.pros} />
+          <DescriptionDefinition
+            className="text-pre"
+            definition={solution.pros}
+          />
         </div>
       </ReviewRow>
       <ReviewRow>
         <div className="line-height-body-3">
           <DescriptionTerm term="“As is” solution: Cons" />
-          <DescriptionDefinition definition={solution.cons} />
+          <DescriptionDefinition
+            className="text-pre"
+            definition={solution.cons}
+          />
         </div>
       </ReviewRow>
     </DescriptionList>
@@ -57,7 +66,10 @@ const AsIsSolutionReview = ({ solution }: ReviewProps) => (
     <ReviewRow>
       <div className="line-height-body-3">
         <DescriptionTerm term="What is the cost savings or avoidance associated with this solution?" />
-        <DescriptionDefinition definition={solution.costSavings} />
+        <DescriptionDefinition
+          className="text-pre"
+          definition={solution.costSavings}
+        />
       </div>
     </ReviewRow>
   </div>
