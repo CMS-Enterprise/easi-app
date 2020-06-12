@@ -358,11 +358,11 @@ workflows:
   daily:
     triggers:
       - schedule:
-          cron: "0 22 * * *"   # 1500 Pacific time, 1800 Eastern time
+          cron: "0 7 * * *"   # 2300 PST, 0200 EST
           filters:
             branches:
               only:
                 master
     jobs:
       - restart_impl_ecs_app_service
-      # - restart_prod_ecs_app_service
+      - restart_prod_ecs_app_service
