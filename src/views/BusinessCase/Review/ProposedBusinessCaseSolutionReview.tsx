@@ -34,25 +34,37 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
     <ReviewRow>
       <div className="line-height-body-3">
         <DescriptionTerm term={`${name}: Summary`} />
-        <DescriptionDefinition definition={solution.summary} />
+        <DescriptionDefinition
+          className="text-pre"
+          definition={solution.summary}
+        />
       </div>
     </ReviewRow>
     <ReviewRow>
       <div className="line-height-body-3">
         <DescriptionTerm term={`${name}: Acquisition approach`} />
-        <DescriptionDefinition definition={solution.acquisitionApproach} />
+        <DescriptionDefinition
+          className="text-pre"
+          definition={solution.acquisitionApproach}
+        />
       </div>
     </ReviewRow>
     <ReviewRow>
       <div className="line-height-body-3">
         <DescriptionTerm term={`${name}: Pros`} />
-        <DescriptionDefinition definition={solution.pros} />
+        <DescriptionDefinition
+          className="text-pre"
+          definition={solution.pros}
+        />
       </div>
     </ReviewRow>
     <ReviewRow>
       <div className="line-height-body-3">
         <DescriptionTerm term={`${name}: Cons`} />
-        <DescriptionDefinition definition={solution.cons} />
+        <DescriptionDefinition
+          className="text-pre"
+          definition={solution.cons}
+        />
       </div>
     </ReviewRow>
     <ReviewRow>
@@ -61,7 +73,10 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
     <ReviewRow>
       <div className="line-height-body-3">
         <DescriptionTerm term="What is the cost savings or avoidance associated with this solution?" />
-        <DescriptionDefinition definition={solution.costSavings} />
+        <DescriptionDefinition
+          className="text-pre"
+          definition={solution.costSavings}
+        />
       </div>
     </ReviewRow>
   </DescriptionList>
