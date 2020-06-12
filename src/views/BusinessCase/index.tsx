@@ -131,7 +131,7 @@ export const BusinessCase = () => {
     history.push(newUrl);
   };
 
-  // Resume existing business case
+  // Start new business case or resume existing business case
   useEffect(() => {
     if (businessCaseId === 'new') {
       const systemIntakeId =
