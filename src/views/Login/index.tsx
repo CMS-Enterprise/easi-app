@@ -1,4 +1,5 @@
 import React from 'react';
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import { useOktaAuth } from '@okta/okta-react';
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
@@ -9,12 +10,7 @@ const Login = () => {
   return (
     <div>
       <Header />
-      <main
-        id="main-content"
-        role="main"
-        className="grid-container"
-        tabIndex={-1}
-      >
+      <MainContent className="grid-container">
         <OktaSignInWidget
           onSuccess={response => {
             authService.getTokenManager().then((tokenManager: any) => {
@@ -26,7 +22,7 @@ const Login = () => {
             console.log('error');
           }}
         />
-      </main>
+      </MainContent>
     </div>
   );
 };
