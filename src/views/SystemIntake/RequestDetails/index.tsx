@@ -89,7 +89,6 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            className="system-intake__textarea"
             error={!!flatErrors.businessNeed}
             id="IntakeForm-BusinessNeed"
             maxLength={2000}
@@ -112,7 +111,6 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            className="system-intake__textarea"
             error={!!flatErrors.businessSolution}
             id="IntakeForm-BusinessSolution"
             maxLength={2000}
