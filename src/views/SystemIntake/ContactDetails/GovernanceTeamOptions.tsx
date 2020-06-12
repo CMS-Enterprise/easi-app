@@ -58,7 +58,10 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                           scrollElement={`governanceTeams.teams.${idx}.collaborator`}
                           error={false}
                         >
-                          <Label htmlFor={`IntakeForm-${key}-Collaborator`}>
+                          <Label
+                            htmlFor={`IntakeForm-${key}-Collaborator`}
+                            ariaLabel={`Enter ${team.acronym} Collaborator Name`}
+                          >
                             {`${team.acronym} Collaborator Name`}
                           </Label>
                           {errors.governanceTeams &&
