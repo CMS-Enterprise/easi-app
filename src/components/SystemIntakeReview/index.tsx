@@ -120,13 +120,19 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
         <div className="margin-bottom-205 line-height-body-3">
           <div>
             <DescriptionTerm term="What is your business need?" />
-            <DescriptionDefinition definition={systemIntake.businessNeed} />
+            <DescriptionDefinition
+              className="text-pre"
+              definition={systemIntake.businessNeed}
+            />
           </div>
         </div>
         <div className="margin-bottom-205 line-height-body-3">
           <div>
             <DescriptionTerm term="How are you thinking of solving it?" />
-            <DescriptionDefinition definition={systemIntake.businessSolution} />
+            <DescriptionDefinition
+              className="text-pre"
+              definition={systemIntake.businessSolution}
+            />
           </div>
         </div>
         <ReviewRow>
