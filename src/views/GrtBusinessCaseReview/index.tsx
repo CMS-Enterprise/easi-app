@@ -28,19 +28,16 @@ export const GrtBusinessCaseReview = () => {
   return (
     <div>
       <Header />
-      <MainContent>
-        <div className="margin-bottom-7">
-          <div className="grid-container">
-            <h1 className="font-heading-xl margin-top-4">CMS Business Case</h1>
-            {!businessCase && (
-              <h2 className="font-heading-xl">
-                Business Case with ID: {businessCaseId} was not found
-              </h2>
-            )}
-          </div>
-          {businessCase && <BusinessCaseReview values={businessCase} />}
-          <hr className="opacity-30" />
+      <MainContent className="margin-bottom-7">
+        <div className="grid-container">
+          <h1 className="font-heading-xl margin-top-4">CMS Business Case</h1>
+          {!businessCase && (
+            <h2 className="font-heading-xl">
+              Business Case with ID: {businessCaseId} was not found
+            </h2>
+          )}
         </div>
+        {businessCase && <BusinessCaseReview values={businessCase} />}
       </MainContent>
     </div>
   );
