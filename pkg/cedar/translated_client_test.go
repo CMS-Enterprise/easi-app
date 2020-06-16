@@ -21,7 +21,7 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 		ID:                      id,
 		EUAUserID:               "FAKE",
 		Status:                  "SUBMITTED",
-		Requester:               null.StringFrom("Fake Requester"),
+		Requester:               "Fake Requester",
 		Component:               null.StringFrom("Fake Component"),
 		BusinessOwner:           null.StringFrom("Fake Business Owner"),
 		BusinessOwnerComponent:  null.StringFrom("Fake Business Owner Component"),
@@ -49,16 +49,16 @@ func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
 	})
 
 	s.Run("An intake without a required null string fails", func() {
-		intake.Requester = null.String{}
+		intake.Component = null.String{}
 		err := ValidateSystemIntakeForCedar(&intake, logger)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate *models.SystemIntake %s: {\"Requester\":\"is required\"}",
+			"Could not validate *models.SystemIntake %s: {\"Component\":\"is required\"}",
 			id.String(),
 		)
 		s.EqualError(err, expectedErrString)
 		// Reset intake fields
-		intake.Requester = null.StringFrom("Fake Requester")
+		intake.Component = null.StringFrom("Fake Component")
 	})
 
 	s.Run("An intake without a required null bool fails", func() {

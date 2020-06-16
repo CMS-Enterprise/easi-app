@@ -15,12 +15,14 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+type createSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
 type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
 type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
 
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
 	Logger                *zap.Logger
+	CreateSystemIntake    createSystemIntake
 	SaveSystemIntake      saveSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
 }
@@ -68,6 +70,49 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
+			return
+		case "POST":
+			if r.Body == nil {
+				http.Error(w, "Empty request not allowed", http.StatusBadRequest)
+				return
+			}
+			defer r.Body.Close()
+			decoder := json.NewDecoder(r.Body)
+			intake := models.SystemIntake{}
+			err := decoder.Decode(&intake)
+			if err != nil {
+				logger.Error("Failed to decode system intake body", zap.Error(err))
+				http.Error(w, "Bad system intake request", http.StatusBadRequest)
+				return
+			}
+			createdIntake, err := h.CreateSystemIntake(r.Context(), &intake)
+			if err != nil {
+				h.Logger.Error(fmt.Sprintf("Failed to create a system intake to response: %v", err))
+
+				switch err.(type) {
+				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
+					http.Error(w, "Failed to create a system intake", http.StatusBadRequest)
+					return
+				default:
+					http.Error(w, "Failed to create a system intake", http.StatusInternalServerError)
+					return
+				}
+			}
+
+			responseBody, err := json.Marshal(createdIntake)
+			if err != nil {
+				logger.Error("Failed to marshal business case")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			w.WriteHeader(http.StatusCreated)
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.Logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
+				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
+				return
+			}
 			return
 
 		case "PUT":
