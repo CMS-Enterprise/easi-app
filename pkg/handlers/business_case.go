@@ -125,13 +125,13 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				return
 			}
 
+			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
 				h.Logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
 				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
 				return
 			}
-
 			return
 		case "PUT":
 			if r.Body == nil {

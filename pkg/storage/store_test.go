@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // required for postgres driver in sqlx
 	"github.com/stretchr/testify/suite"
@@ -37,6 +38,7 @@ func TestStoreTestSuite(t *testing.T) {
 		fmt.Printf("Failed to get new database: %v", err)
 		t.Fail()
 	}
+	store.clock = clock.NewMock()
 
 	storeTestSuite := &StoreTestSuite{
 		Suite:  suite.Suite{},

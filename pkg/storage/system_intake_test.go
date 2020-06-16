@@ -12,6 +12,116 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
+func (s StoreTestSuite) TestCreateSystemIntake() {
+	s.Run("create a new system intake", func() {
+		intake := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+		}
+
+		created, err := s.store.CreateSystemIntake(&intake)
+		s.NoError(err)
+		s.Equal(intake.EUAUserID, created.EUAUserID)
+		s.Equal(intake.Status, created.Status)
+		s.Equal(intake.Requester, created.Requester)
+		epochTime := time.Unix(0, 0)
+		s.Equal(intake.CreatedAt, &epochTime)
+		s.Equal(intake.UpdatedAt, &epochTime)
+		s.False(created.ID == uuid.Nil)
+	})
+
+	s.Run("cannot save without EUA ID", func() {
+		partialIntake := models.SystemIntake{
+			Status: models.SystemIntakeStatusDRAFT,
+		}
+
+		_, err := s.store.CreateSystemIntake(&partialIntake)
+
+		s.Error(err)
+		s.Equal("pq: new row for relation \"system_intake\" violates check constraint \"eua_id_check\"", err.Error())
+	})
+
+	euaTests := []string{
+		"f",
+		"F",
+		"5CHAR",
+		"$BAD",
+	}
+	for _, tc := range euaTests {
+		s.Run(fmt.Sprintf("cannot save with invalid EUA ID: %s", tc), func() {
+			partialIntake := models.SystemIntake{
+				Status: models.SystemIntakeStatusDRAFT,
+			}
+			partialIntake.EUAUserID = "F"
+
+			_, err := s.store.CreateSystemIntake(&partialIntake)
+
+			s.Error(err)
+			s.Equal("pq: new row for relation \"system_intake\" violates check constraint \"eua_id_check\"", err.Error())
+		})
+	}
+
+	s.Run("cannot create with invalid status", func() {
+		partialIntake := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    "fakeStatus",
+			Requester: "Test requester",
+		}
+
+		created, err := s.store.CreateSystemIntake(&partialIntake)
+
+		s.Error(err)
+		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
+		s.Equal(&models.SystemIntake{}, created)
+	})
+}
+
+func (s StoreTestSuite) TestUpdateSystemIntake() {
+	s.Run("update an existing system intake", func() {
+		intake, err := s.store.CreateSystemIntake(&models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+		})
+		s.NoError(err)
+		now := time.Now()
+
+		intake.UpdatedAt = &now
+		intake.ISSO = null.StringFrom("test isso")
+
+		updated, err := s.store.UpdateSystemIntake(intake)
+		s.NoError(err, "failed to update system intake")
+		s.Equal(intake, updated)
+	})
+
+	s.Run("EUA ID will not update", func() {
+		originalIntake := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+		}
+		_, err := s.store.CreateSystemIntake(&originalIntake)
+		s.NoError(err)
+		originalEUA := originalIntake.EUAUserID
+		partialIntake := models.SystemIntake{
+			ID:        originalIntake.ID,
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+		}
+		partialIntake.EUAUserID = "NEWS"
+
+		_, err = s.store.UpdateSystemIntake(&partialIntake)
+		s.NoError(err, "failed to update system intake")
+
+		updated, err := s.store.FetchSystemIntakeByID(originalIntake.ID)
+		s.NoError(err)
+
+		s.Equal(originalEUA, updated.EUAUserID)
+	})
+}
+
 func (s StoreTestSuite) TestSaveSystemIntake() {
 	s.Run("save a new system intake", func() {
 		intake := testhelpers.NewSystemIntake()
@@ -66,7 +176,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 
 	s.Run("save a partial system intake", func() {
 		partialIntake.Status = models.SystemIntakeStatusDRAFT
-		partialIntake.Requester = null.StringFrom("Test Requester")
+		partialIntake.Requester = "Test Requester"
 
 		err := s.store.SaveSystemIntake(&partialIntake)
 
@@ -78,7 +188,7 @@ func (s StoreTestSuite) TestSaveSystemIntake() {
 	})
 
 	s.Run("update a partial system intake", func() {
-		partialIntake.Requester = null.StringFrom("Fix Requester")
+		partialIntake.Requester = "Fix Requester"
 
 		err := s.store.SaveSystemIntake(&partialIntake)
 
@@ -108,7 +218,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
 		tx := s.db.MustBegin()
-		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake)
 		s.NoError(err)
 		err = tx.Commit()
 		s.NoError(err)
@@ -136,9 +246,9 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 		tx := s.db.MustBegin()
-		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake)
+		_, err := tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake)
 		s.NoError(err)
-		_, err = tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status) VALUES (:id, :eua_user_id, :status)", &intake2)
+		_, err = tx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake2)
 		s.NoError(err)
 		err = tx.Commit()
 		s.NoError(err)
