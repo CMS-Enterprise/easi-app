@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
@@ -126,7 +127,7 @@ export const SystemIntake = () => {
   return (
     <div className="system-intake margin-bottom-5">
       <Header name="EASi System Intake" />
-      <main className="grid-container" role="main">
+      <MainContent className="grid-container">
         {isLoading === false && (
           <Formik
             initialValues={systemIntake}
@@ -259,7 +260,7 @@ export const SystemIntake = () => {
             totalPages={pages.filter(p => p.type === 'FORM').length}
           />
         )}
-      </main>
+      </MainContent>
     </div>
   );
 };
