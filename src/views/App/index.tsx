@@ -4,6 +4,8 @@ import { SecureRoute, LoginCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import Home from 'views/Home';
 import Login from 'views/Login';
+import GovernanceOverview from 'views/GovernanceOverview';
+import GovernanceTaskList from 'views/GovernanceTaskList';
 import BusinessCase from 'views/BusinessCase';
 import GRTSystemIntakeReview from 'views/GRTSystemIntakeReview';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
@@ -12,7 +14,6 @@ import Sandbox from 'views/Sandbox';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 
 import './index.scss';
-import GovernanceOverview from 'views/GovernanceOverview';
 
 type MainState = {};
 
@@ -47,6 +48,11 @@ class App extends React.Component<MainProps, MainState> {
                   path="/governance-overview"
                   exact
                   component={GovernanceOverview}
+                />
+                <Route
+                  path="/governance-task-list"
+                  exact
+                  component={GovernanceTaskList}
                 />
                 <SecureRoute
                   exact
