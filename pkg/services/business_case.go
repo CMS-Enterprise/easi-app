@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -100,7 +101,7 @@ func NewCreateBusinessCase(
 		createAt := config.clock.Now()
 		businessCase.CreatedAt = &createAt
 		businessCase.UpdatedAt = &createAt
-		businessCase.Requester = intake.Requester
+		businessCase.Requester = null.StringFrom(intake.Requester)
 		businessCase.BusinessOwner = intake.BusinessOwner
 		businessCase.ProjectName = intake.ProjectName
 		businessCase.BusinessNeed = intake.BusinessNeed

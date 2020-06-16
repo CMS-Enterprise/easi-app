@@ -5,13 +5,14 @@ type LabelProps = {
   children: React.ReactNode;
   htmlFor: string;
   className?: string;
+  ariaLabel?: string;
 };
 
-const Label = ({ children, htmlFor, className }: LabelProps) => {
+const Label = ({ children, htmlFor, className, ariaLabel }: LabelProps) => {
   const classes = classnames('usa-label', className);
 
   return (
-    <label className={classes} htmlFor={htmlFor}>
+    <label className={classes} htmlFor={htmlFor} aria-label={ariaLabel}>
       {children}
     </label>
   );
