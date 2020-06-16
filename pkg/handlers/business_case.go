@@ -134,12 +134,12 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				return
 			}
 
+			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
-
 			return
 		case "PUT":
 			if r.Body == nil {
