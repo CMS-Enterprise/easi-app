@@ -3,7 +3,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useOktaAuth } from '@okta/okta-react';
-
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
@@ -129,7 +129,7 @@ const Home = ({ history }: HomeProps) => {
   return (
     <div>
       <Header />
-      <div role="main" className="grid-container margin-y-6">
+      <MainContent className="grid-container margin-y-6">
         {getSystemIntakeBanners()}
         {getBusinessCaseBanners()}
         <div className="tablet:grid-col-9">
@@ -162,7 +162,7 @@ const Home = ({ history }: HomeProps) => {
             <Button to="/login">Sign in to start</Button>
           )}
         </div>
-      </div>
+      </MainContent>
     </div>
   );
 };

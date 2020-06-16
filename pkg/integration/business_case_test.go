@@ -64,7 +64,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
-		s.Equal(http.StatusOK, resp.StatusCode)
+		s.Equal(http.StatusCreated, resp.StatusCode)
 		actualBody, err := ioutil.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualBusinessCase models.BusinessCase

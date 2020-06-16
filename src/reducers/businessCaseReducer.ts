@@ -58,6 +58,11 @@ function businessCaseReducer(
           ...prepareBusinessCaseForApp(action.payload)
         }
       };
+    case postBusinessCase.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
     case postBusinessCase.FULFILL:
       return {
         ...state,

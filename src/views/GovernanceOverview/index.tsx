@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import './index.scss';
@@ -55,7 +56,7 @@ const GovernanceOverview = () => {
   return (
     <div className="easi-governance-overview">
       <Header name="EASi Governance Overview" />
-      <main role="main" className="grid-container">
+      <MainContent className="grid-container">
         <p>
           <Link to="/">Home</Link>
           <i className="fa fa-angle-right margin-x-05" />
@@ -152,7 +153,7 @@ const GovernanceOverview = () => {
           </CollapsableLink>
         </div>
         <Button to="/system/new">Get started</Button>
-      </main>
+      </MainContent>
     </div>
   );
 };
