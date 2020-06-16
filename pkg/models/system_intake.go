@@ -26,7 +26,7 @@ type SystemIntake struct {
 	ID                      uuid.UUID          `json:"id"`
 	EUAUserID               string             `json:"euaUserId" db:"eua_user_id"`
 	Status                  SystemIntakeStatus `json:"status"`
-	Requester               null.String        `json:"requester"`
+	Requester               string             `json:"requester"`
 	Component               null.String        `json:"component"`
 	BusinessOwner           null.String        `json:"businessOwner" db:"business_owner"`
 	BusinessOwnerComponent  null.String        `json:"businessOwnerComponent" db:"business_owner_component"`
