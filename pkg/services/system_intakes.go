@@ -32,6 +32,35 @@ func NewFetchSystemIntakesByEuaID(
 	}
 }
 
+// NewCreateSystemIntake is a service to create a business case
+func NewCreateSystemIntake(
+	config Config,
+	create func(intake *models.SystemIntake) (*models.SystemIntake, error),
+) func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+		user, ok := appcontext.User(context)
+		if !ok {
+			// Default to failure to authorize and create a quick audit log
+			config.logger.With(zap.Bool("Authorized", false)).
+				With(zap.String("Operation", "CreateSystemIntake")).
+				Info("something went wrong fetching the eua id from the context")
+			return &models.SystemIntake{}, &apperrors.UnauthorizedError{}
+		}
+		intake.EUAUserID = user.EUAUserID
+		// app validation belongs here
+		createdIntake, err := create(intake)
+		if err != nil {
+			config.logger.Error("failed to create a system intake")
+			return &models.SystemIntake{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QueryPost,
+			}
+		}
+		return createdIntake, nil
+	}
+}
+
 // NewAuthorizeSaveSystemIntake returns a function
 // that authorizes a user for saving a system intake
 func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
@@ -90,7 +119,7 @@ func NewSaveSystemIntake(
 		if !ok {
 			return &apperrors.UnauthorizedError{Err: err}
 		}
-		updatedTime := config.clock.Now().UTC()
+		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
 		if existingIntake == nil {
 			intake.CreatedAt = &updatedTime
@@ -132,7 +161,7 @@ func NewSaveSystemIntake(
 		}
 		// only send an email when everything went ok
 		if intake.Status == models.SystemIntakeStatusSUBMITTED {
-			err = sendEmail(intake.Requester.ValueOrZero(), intake.ID)
+			err = sendEmail(intake.Requester, intake.ID)
 			if err != nil {
 				return err
 			}
