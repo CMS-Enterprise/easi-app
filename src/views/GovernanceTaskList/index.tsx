@@ -113,6 +113,7 @@ const GovernanceTaskList = () => {
             </ol>
           )}
         </div>
+        <div className="tablet:grid-col-3">{/* ADD SIDE NAV HERE */}</div>
       </MainContent>
     </div>
   );
