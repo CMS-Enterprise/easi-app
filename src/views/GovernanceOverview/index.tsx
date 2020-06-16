@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
+import BreadcrumbNav from 'components/BreadcrumbNav';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import './index.scss';
 import Button from 'components/shared/Button';
@@ -57,19 +58,21 @@ const GovernanceOverview = () => {
     <div className="easi-governance-overview">
       <Header name="EASi Governance Overview" />
       <MainContent className="grid-container">
-        <p>
-          <Link to="/">Home</Link>
-          <i className="fa fa-angle-right margin-x-05" />
-          Add a new system or service
-        </p>
-        <p>
-          <Link to="/">
-            <div className="text-no-underline display-inline-block">
-              <i className="fa fa-angle-left margin-right-05" />
-            </div>
-            Back
-          </Link>
-        </p>
+        <BreadcrumbNav className="margin-y-2">
+          <li>
+            <Link to="/">Home</Link>
+            <i className="fa fa-angle-right margin-x-05" aria-hidden />
+          </li>
+          <li>
+            <Link to="/governance-overview" aria-current="location">
+              Add a new system or service
+            </Link>
+          </li>
+        </BreadcrumbNav>
+        <Link to="/">
+          <i className="fa fa-angle-left margin-right-05 text-no-underline" />
+          <span>Back</span>
+        </Link>
         <h1 className="font-heading-2xl margin-top-4">
           Add a new system or service
         </h1>
