@@ -93,6 +93,10 @@ func (s *Server) routes(
 
 	systemIntakeHandler := handlers.SystemIntakeHandler{
 		Logger: s.logger,
+		CreateSystemIntake: services.NewCreateSystemIntake(
+			serviceConfig,
+			store.CreateSystemIntake,
+		),
 		SaveSystemIntake: services.NewSaveSystemIntake(
 			serviceConfig,
 			store.SaveSystemIntake,
