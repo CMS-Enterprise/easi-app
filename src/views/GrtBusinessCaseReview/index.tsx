@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import BusinessCaseReview from 'components/BusinessCaseReview';
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import { fetchBusinessCase } from 'types/routines';
 import { AppState } from '../../reducers/rootReducer';
@@ -27,7 +28,7 @@ export const GrtBusinessCaseReview = () => {
   return (
     <div>
       <Header />
-      <div className="margin-bottom-7">
+      <MainContent className="margin-bottom-7">
         <div className="grid-container">
           <h1 className="font-heading-xl margin-top-4">CMS Business Case</h1>
           {!businessCase && (
@@ -37,8 +38,7 @@ export const GrtBusinessCaseReview = () => {
           )}
         </div>
         {businessCase && <BusinessCaseReview values={businessCase} />}
-        <hr className="opacity-30" />
-      </div>
+      </MainContent>
     </div>
   );
 };
