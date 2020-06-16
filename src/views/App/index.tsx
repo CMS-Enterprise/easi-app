@@ -49,7 +49,7 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   component={GovernanceOverview}
                 />
-                <Route
+                <SecureRoute
                   path="/governance-task-list"
                   exact
                   component={GovernanceTaskList}
