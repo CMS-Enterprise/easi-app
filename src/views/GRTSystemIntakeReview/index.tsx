@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntake } from 'types/routines';
@@ -19,7 +20,7 @@ export const GRTSystemIntakeReview = () => {
   return (
     <div>
       <Header />
-      <div className="grid-container">
+      <MainContent className="grid-container">
         <div className="system-intake__review margin-bottom-7">
           <h1 className="font-heading-xl margin-top-4">CMS System Request</h1>
           {!systemIntake && (
@@ -39,7 +40,7 @@ export const GRTSystemIntakeReview = () => {
             <li>And how to get in touch if they have any questions.</li>
           </ul>
         </div>
-      </div>
+      </MainContent>
     </div>
   );
 };

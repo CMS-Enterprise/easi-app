@@ -102,7 +102,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(nil),
 		}.Handle()(rr, req)
-		s.Equal(http.StatusOK, rr.Code)
+		s.Equal(http.StatusCreated, rr.Code)
 	})
 
 	s.Run("POST fails if there is no eua ID in the context", func() {
