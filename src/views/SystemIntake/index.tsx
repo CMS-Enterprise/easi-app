@@ -61,15 +61,19 @@ export const SystemIntake = () => {
   const isSubmitting = useSelector(
     (state: AppState) => state.systemIntake.isSubmitting
   );
+  const isSaving = useSelector(
+    (state: AppState) => state.systemIntake.isSaving
+  );
+
   const error = useSelector((state: AppState) => state.systemIntake.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty) {
+    if (current && current.dirty && !isSaving) {
       if (systemId === 'new') {
         dispatch(postSystemIntake(current.values));
-      } else {
+      } else if (current.values.id) {
         dispatch(saveSystemIntake(current.values));
       }
       current.resetForm({ values: current.values, errors: current.errors });
