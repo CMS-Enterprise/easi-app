@@ -44,3 +44,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.skipnav {
+  top: 0;
+  left: 0;
+  position: absolute;
+  padding: 1rem 1.5rem;
+  transform: translateY(-100%);
+  transition: all 0.2s ease-in-out;
+  background-color: #fff;
+  color: #000;
+  z-index: 100;
+
+  &:focus {
+    transform: translateY(0%);
+  }
+}
+
+#main-content {
+  outline: none;
+}

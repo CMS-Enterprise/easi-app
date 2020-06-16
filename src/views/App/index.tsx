@@ -20,10 +20,20 @@ type MainProps = {};
 
 // eslint-disable-next-line react/prefer-stateless-function
 class App extends React.Component<MainProps, MainState> {
+  handleSkipNav = () => {
+    const mainContent = document.getElementById('main-content')!;
+    if (mainContent) {
+      mainContent.focus();
+    }
+  };
+
   render() {
     return (
       <div>
         <div className="usa-overlay" />
+        <button type="button" className="skipnav" onClick={this.handleSkipNav}>
+          Skip to main content
+        </button>
         <BrowserRouter>
           <AuthenticationWrapper>
             <TimeOutWrapper>
