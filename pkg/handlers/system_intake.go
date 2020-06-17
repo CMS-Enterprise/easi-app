@@ -16,14 +16,14 @@ import (
 )
 
 type createSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
-type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
+type updateSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
 type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
 
 // SystemIntakeHandler is the handler for CRUD operations on system intake
 type SystemIntakeHandler struct {
 	Logger                *zap.Logger
 	CreateSystemIntake    createSystemIntake
-	SaveSystemIntake      saveSystemIntake
+	UpdateSystemIntake    updateSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
 }
 
@@ -101,7 +101,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 
 			responseBody, err := json.Marshal(createdIntake)
 			if err != nil {
-				logger.Error("Failed to marshal business case")
+				logger.Error("Failed to marshal system intake")
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -109,8 +109,8 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
-				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
+				h.Logger.Error(fmt.Sprintf("Failed to write newly created system intake to response: %v", err))
+				http.Error(w, "Failed to create system intake", http.StatusInternalServerError)
 				return
 			}
 			return
@@ -138,7 +138,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			}
 			intake.EUAUserID = user.EUAUserID
 
-			err = h.SaveSystemIntake(r.Context(), &intake)
+			updatedIntake, err := h.UpdateSystemIntake(r.Context(), &intake)
 			if err != nil {
 				switch err.(type) {
 				case *apperrors.ResourceConflictError:
@@ -162,6 +162,22 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				}
 				return
 			}
+
+			responseBody, err := json.Marshal(updatedIntake)
+			if err != nil {
+				logger.Error("Failed to marshal system intake")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			w.WriteHeader(http.StatusCreated)
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.Logger.Error(fmt.Sprintf("Failed to write newly created system intake to response: %v", err))
+				http.Error(w, "Failed to create system intake", http.StatusInternalServerError)
+				return
+			}
+			return
 		default:
 			logger.Info("Unsupported method requested")
 			http.Error(w, "Method not allowed for system intake", http.StatusMethodNotAllowed)
