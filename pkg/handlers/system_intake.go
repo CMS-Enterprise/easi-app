@@ -4,12 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -86,7 +84,11 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			return
 		case "POST":
 			if r.Body == nil {
-				http.Error(w, "Empty request not allowed", http.StatusBadRequest)
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
+				)
 				return
 			}
 			defer r.Body.Close()
@@ -94,36 +96,25 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			intake := models.SystemIntake{}
 			err := decoder.Decode(&intake)
 			if err != nil {
-				h.Logger.Error("Failed to decode system intake body", zap.Error(err))
-				http.Error(w, "Bad system intake request", http.StatusBadRequest)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 			createdIntake, err := h.CreateSystemIntake(r.Context(), &intake)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to create a system intake to response: %v", err))
-
-				switch err.(type) {
-				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
-					http.Error(w, "Failed to create a system intake", http.StatusBadRequest)
-					return
-				default:
-					http.Error(w, "Failed to create a system intake", http.StatusInternalServerError)
-					return
-				}
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
 			}
 
 			responseBody, err := json.Marshal(createdIntake)
 			if err != nil {
-				h.Logger.Error("Failed to marshal business case")
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
-				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 			return
