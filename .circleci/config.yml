@@ -31,7 +31,6 @@ jobs:
           APP_ENV: test
           AWS_REGION: us-west-2
           AWS_SES_SOURCE: "\"EASi Test\" <no-reply-test@info.easi.cms.gov>"
-          CI: true #https://github.com/facebook/create-react-app/issues/8688
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
