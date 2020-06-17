@@ -1,0 +1,88 @@
+.governance-task-list {
+  // Keep heading and order numbers the same
+  &__task-heading,
+  &__item:before {
+    font-size: 1.375em;
+  }
+
+  &__task-list {
+    padding-left: 0;
+    counter-reset: primaryList secondaryList 3;
+
+    &--primary {
+      .governance-task-list__item:before {
+        counter-increment: primaryList;
+        content: counter(primaryList) '. ';
+      }
+    }
+
+    &--secondary {
+      .governance-task-list__item:before {
+        counter-increment: secondaryList;
+        content: counter(secondaryList) '. ';
+      }
+    }
+  }
+
+  &__item {
+    display: flex;
+
+    &--na {
+      color: #585c62;
+    }
+
+    &:before {
+      font-weight: bold;
+      white-space: pre;
+    }
+  }
+
+  &__item + &__item {
+    border-top: 1px solid #000;
+    padding-top: 2em;
+  }
+
+  &__task-content {
+    width: 100%;
+  }
+
+  &__task-heading-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    @media screen and (max-width: $mobile) {
+      flex-direction: column;
+    }
+  }
+
+  &__task-tag {
+    padding: 5px 10px;
+    font-size: 1em;
+    line-height: 1.625em;
+    font-weight: bold;
+    &--na {
+      border: 2px solid #626a6e;
+      color: #626a6e;
+    }
+
+    &--completed {
+      background-color: #1d8461;
+      color: #fff;
+    }
+  }
+
+  &__task-description {
+    max-width: 600px;
+    margin-right: auto;
+  }
+
+  &__remaining-steps-btn {
+    margin: 1em 0;
+    padding: 0;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    color: #005ea2;
+  }
+}
