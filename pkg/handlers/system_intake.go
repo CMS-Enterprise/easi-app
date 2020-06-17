@@ -100,7 +100,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			}
 			createdIntake, err := h.CreateSystemIntake(r.Context(), &intake)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to create a system intake to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to create a system intake to response: %v", err))
 
 				switch err.(type) {
 				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
@@ -122,7 +122,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
 				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
 				return
 			}
