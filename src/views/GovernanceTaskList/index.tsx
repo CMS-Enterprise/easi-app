@@ -66,7 +66,7 @@ const GovernanceTaskList = () => {
             className="governance-task-list__remaining-steps-btn"
             onClick={() => setDisplayRemainingSteps(prev => !prev)}
           >
-            Hide remaining steps
+            {displayRemainingSteps ? 'Hide' : 'Show'} remaining steps
           </button>
 
           {displayRemainingSteps && (
