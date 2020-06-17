@@ -65,25 +65,37 @@ const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
           <ReviewRow>
             <div className="margin-bottom-205 line-height-body-3">
               <DescriptionTerm term="What is your business or user need?" />
-              <DescriptionDefinition definition={values.businessNeed} />
+              <DescriptionDefinition
+                className="text-pre"
+                definition={values.businessNeed}
+              />
             </div>
           </ReviewRow>
           <ReviewRow>
             <div className="margin-bottom-205 line-height-body-3">
               <DescriptionTerm term="How will CMS benefit from this effort?" />
-              <DescriptionDefinition definition={values.cmsBenefit} />
+              <DescriptionDefinition
+                className="text-pre"
+                definition={values.cmsBenefit}
+              />
             </div>
           </ReviewRow>
           <ReviewRow>
             <div className="margin-bottom-205 line-height-body-3">
               <DescriptionTerm term="How does this effort align with organizational priorities?" />
-              <DescriptionDefinition definition={values.priorityAlignment} />
+              <DescriptionDefinition
+                className="text-pre"
+                definition={values.priorityAlignment}
+              />
             </div>
           </ReviewRow>
           <ReviewRow>
             <div className="margin-bottom-205 line-height-body-3">
               <DescriptionTerm term="How will you determine whether or not this effort is successful?" />
-              <DescriptionDefinition definition={values.successIndicators} />
+              <DescriptionDefinition
+                className="text-pre"
+                definition={values.successIndicators}
+              />
             </div>
           </ReviewRow>
         </DescriptionList>
