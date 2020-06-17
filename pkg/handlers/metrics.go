@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/facebookgo/clock"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -16,11 +15,18 @@ import (
 
 type fetchMetrics func(context context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error)
 
+// NewMetricsHandler is a constructor for MetricsHandler
+func NewMetricsHandler(base HandlerBase, fetch fetchMetrics) MetricsHandler {
+	return MetricsHandler{
+		FetchMetrics: fetch,
+		HandlerBase:  base,
+	}
+}
+
 // MetricsHandler is the handler for retrieving metrics
 type MetricsHandler struct {
+	HandlerBase
 	FetchMetrics fetchMetrics
-	Logger       *zap.Logger
-	Clock        clock.Clock
 }
 
 // Handle handles a web request and returns a metrics digest
@@ -28,8 +34,8 @@ func (h MetricsHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			h.Logger.Error("Failed to logger from context in metrics handler")
-			logger = h.Logger
+			h.logger.Error("Failed to logger from context in metrics handler")
+			logger = h.logger
 		}
 		switch r.Method {
 		case "GET":
@@ -45,7 +51,7 @@ func (h MetricsHandler) Handle() http.HandlerFunc {
 				http.Error(w, "startTime must adhere to RFC 339", http.StatusBadRequest)
 				return
 			}
-			endTime := h.Clock.Now()
+			endTime := h.clock.Now()
 			endTimeParam, ok := r.URL.Query()["endTime"]
 			if ok {
 				endTime, err = time.Parse(time.RFC3339, endTimeParam[0])
