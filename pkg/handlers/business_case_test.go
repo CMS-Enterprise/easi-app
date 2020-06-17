@@ -52,7 +52,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(nil),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
@@ -65,7 +65,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": "NON_EXISTENT"})
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to parse business case id to uuid")),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
@@ -80,7 +80,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": nonexistentID.String()})
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to fetch business case")),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
@@ -98,7 +98,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "POST", "/business_case/", bytes.NewBuffer(body))
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(nil),
 		}.Handle()(rr, req)
@@ -115,7 +115,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req, err := http.NewRequestWithContext(badContext, "POST", "/business_case/", bytes.NewBuffer(body))
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(nil),
 		}.Handle()(rr, req)
@@ -137,7 +137,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			Err:     fmt.Errorf("failed validations"),
 		}
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(&expectedErr),
 		}.Handle()(rr, req)
@@ -154,7 +154,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(fmt.Errorf("failed to create business case")),
 		}.Handle()(rr, req)
@@ -171,7 +171,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
@@ -185,7 +185,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
@@ -202,7 +202,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", "3"), bytes.NewBuffer(body))
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
@@ -222,7 +222,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
@@ -241,7 +241,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(&apperrors.ValidationError{}),
 			CreateBusinessCase:    nil,
@@ -260,7 +260,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(&apperrors.ResourceConflictError{}),
 			CreateBusinessCase:    nil,
@@ -279,7 +279,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(fmt.Errorf("failed to update business case")),
 			CreateBusinessCase:    nil,

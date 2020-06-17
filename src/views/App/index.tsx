@@ -4,6 +4,8 @@ import { SecureRoute, LoginCallback } from '@okta/okta-react';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import Home from 'views/Home';
 import Login from 'views/Login';
+import GovernanceOverview from 'views/GovernanceOverview';
+import GovernanceTaskList from 'views/GovernanceTaskList';
 import BusinessCase from 'views/BusinessCase';
 import GRTSystemIntakeReview from 'views/GRTSystemIntakeReview';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
@@ -12,7 +14,6 @@ import Sandbox from 'views/Sandbox';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 
 import './index.scss';
-import GovernanceOverview from 'views/GovernanceOverview';
 
 type MainState = {};
 
@@ -20,10 +21,20 @@ type MainProps = {};
 
 // eslint-disable-next-line react/prefer-stateless-function
 class App extends React.Component<MainProps, MainState> {
+  handleSkipNav = () => {
+    const mainContent = document.getElementById('main-content')!;
+    if (mainContent) {
+      mainContent.focus();
+    }
+  };
+
   render() {
     return (
       <div>
         <div className="usa-overlay" />
+        <button type="button" className="skipnav" onClick={this.handleSkipNav}>
+          Skip to main content
+        </button>
         <BrowserRouter>
           <AuthenticationWrapper>
             <TimeOutWrapper>
@@ -38,6 +49,15 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   component={GovernanceOverview}
                 />
+                {['local', 'dev', 'impl'].includes(
+                  process.env.REACT_APP_APP_ENV || ''
+                ) && (
+                  <SecureRoute
+                    path="/governance-task-list"
+                    exact
+                    component={GovernanceTaskList}
+                  />
+                )}
                 <SecureRoute
                   exact
                   path="/system/:systemId/grt-review"
