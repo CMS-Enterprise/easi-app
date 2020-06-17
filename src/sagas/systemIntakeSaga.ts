@@ -4,6 +4,7 @@ import { SystemIntakeForm } from 'types/systemIntake';
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
 import {
   fetchSystemIntake,
+  postSystemIntake,
   saveSystemIntake,
   submitSystemIntake
 } from 'types/routines';
@@ -14,6 +15,23 @@ function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
   const data = prepareSystemIntakeForApi(formData);
   return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
+}
+
+function postSystemIntakeRequest(formData: SystemIntakeForm) {
+  const data = prepareSystemIntakeForApi(formData);
+  return axios.post(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
+}
+
+function* createSystemIntake(action: Action<any>) {
+  try {
+    yield put(postSystemIntake.request());
+    const response = yield call(postSystemIntakeRequest, action.payload);
+    yield put(postSystemIntake.success(response.data));
+  } catch (error) {
+    yield put(postSystemIntake.failure(error.message));
+  } finally {
+    yield put(postSystemIntake.fulfill());
+  }
 }
 
 function* putSystemIntake(action: Action<any>) {
@@ -65,4 +83,5 @@ export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
   yield takeLatest(submitSystemIntake.TRIGGER, completeSystemIntake);
+  yield takeLatest(postSystemIntake.TRIGGER, createSystemIntake);
 }
