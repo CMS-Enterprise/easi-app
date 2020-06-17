@@ -12,7 +12,7 @@ func (s HandlerTestSuite) TestCatchAllHandler() {
 		req, err := http.NewRequest("GET", "/notAURL", bytes.NewBufferString(""))
 		s.NoError(err)
 		CatchAllHandler{
-			Logger: s.logger,
+			HandlerBase: s.base,
 		}.Handle()(rr, req)
 		s.Equal(http.StatusNotFound, rr.Code)
 	})

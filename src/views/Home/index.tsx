@@ -135,8 +135,8 @@ const Home = ({ history }: HomeProps) => {
         <div className="tablet:grid-col-9">
           <h1 className="margin-top-6">Welcome to EASi</h1>
           <p className="line-height-body-5 font-body-lg text-light">
-            You can use EASi to go through the set of steps needed for Lifecycle
-            ID approval by the Governance Review Board (GRB).
+            You can use EASi to go through the set of steps needed to get a
+            Lifecycle ID from the Governance Review Board (GRB).
           </p>
           <div className="easi-home__info-wrapper">
             <div className="easi-home__info-icon">
