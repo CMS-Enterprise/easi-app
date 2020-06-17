@@ -17,7 +17,8 @@ func (s HandlerTestSuite) TestHealthcheckHandler() {
 	mockViper.SetDefault("APPLICATION_VERSION", "mockversion")
 
 	mockHealthCheckHandler := HealthCheckHandler{
-		Config: mockViper,
+		HandlerBase: s.base,
+		Config:      mockViper,
 	}
 	mockHealthCheckHandler.Handle()(rr, nil)
 
