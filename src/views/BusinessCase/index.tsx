@@ -220,16 +220,8 @@ export const BusinessCase = () => {
                           return (
                             <ErrorAlertMessage
                               key={`Error.${key}`}
+                              errorKey={key}
                               message={flatErrors[key]}
-                              onClick={() => {
-                                const field = document.querySelector(
-                                  `[data-scroll="${key}"]`
-                                );
-
-                                if (field) {
-                                  field.scrollIntoView();
-                                }
-                              }}
                             />
                           );
                         })}

@@ -137,7 +137,6 @@ export const SystemIntake = () => {
             {(formikProps: FormikProps<SystemIntakeForm>) => {
               const { values, errors, setErrors, validateForm } = formikProps;
               const flatErrors: any = flattenErrors(errors);
-
               return (
                 <>
                   {Object.keys(errors).length > 0 && (
@@ -149,16 +148,8 @@ export const SystemIntake = () => {
                         return (
                           <ErrorAlertMessage
                             key={`Error.${key}`}
+                            errorKey={key}
                             message={flatErrors[key]}
-                            onClick={() => {
-                              const field = document.querySelector(
-                                `[data-scroll="${key}"]`
-                              );
-
-                              if (field) {
-                                field.scrollIntoView();
-                              }
-                            }}
                           />
                         );
                       })}
