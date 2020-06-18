@@ -44,14 +44,20 @@ type BusinessCaseHandler struct {
 }
 
 func requireBusinessCaseID(reqVars map[string]string, logger *zap.Logger) (uuid.UUID, error) {
+	valErr := apperrors.NewValidationError(
+		errors.New("business case failed validation"),
+		models.SystemIntake{},
+		"",
+	)
 	id := reqVars["business_case_id"]
 	if id == "" {
-		return uuid.UUID{}, errors.New("business Case ID required")
+		valErr.WithValidation("businessCaseId", "is required")
+		return uuid.UUID{}, &valErr
 	}
 	businessCaseID, err := uuid.Parse(id)
 	if err != nil {
-		logger.Error("Failed to parse business case id to uuid")
-		return uuid.UUID{}, err
+		valErr.WithValidation("businessCaseId", "must be UUID")
+		return uuid.UUID{}, &valErr
 	}
 	return businessCaseID, nil
 }
