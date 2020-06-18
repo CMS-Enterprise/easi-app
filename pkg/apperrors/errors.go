@@ -230,3 +230,23 @@ func (e *UnknownRouteError) Error() string {
 		e.Path,
 	)
 }
+
+// ResourceNotFoundError is a typed error non-existent resources
+type ResourceNotFoundError struct {
+	Err      error
+	Resource interface{}
+}
+
+// Error provides the error as a string
+func (e *ResourceNotFoundError) Error() string {
+	return fmt.Sprintf(
+		"Could not not find resource %T with error: %v",
+		e.Resource,
+		e.Err,
+	)
+}
+
+// Unwrap provides the underlying error
+func (e *ResourceNotFoundError) Unwrap() error {
+	return e.Err
+}

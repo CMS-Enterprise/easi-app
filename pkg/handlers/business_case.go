@@ -110,9 +110,8 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			decoder := json.NewDecoder(r.Body)
 			businessCaseToCreate := models.BusinessCase{}
 			err := decoder.Decode(&businessCaseToCreate)
-
 			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
 
@@ -131,7 +130,8 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 
 			businessCase, err := h.CreateBusinessCase(r.Context(), &businessCaseToCreate)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
 			}
 
 			responseBody, err := json.Marshal(businessCase)
@@ -161,7 +161,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			businessCaseToUpdate := models.BusinessCase{}
 			err := decoder.Decode(&businessCaseToUpdate)
 			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
 

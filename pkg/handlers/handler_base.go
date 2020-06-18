@@ -86,12 +86,22 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		)
 	case *apperrors.QueryError:
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
-		code = http.StatusInternalServerError
-		response = newErrorResponse(
-			code,
-			"Something went wrong",
-			traceID,
-		)
+		switch appErr.Unwrap().(type) {
+		case *apperrors.ResourceNotFoundError:
+			code = http.StatusNotFound
+			response = newErrorResponse(
+				code,
+				"Resource not found",
+				traceID,
+			)
+		default:
+			code = http.StatusInternalServerError
+			response = newErrorResponse(
+				code,
+				"Something went wrong",
+				traceID,
+			)
+		}
 	case *apperrors.NotificationError:
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
 		code = http.StatusInternalServerError
@@ -155,6 +165,13 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		response = newErrorResponse(
 			code,
 			"Not found",
+			traceID,
+		)
+	case *apperrors.ResourceNotFoundError:
+		code = http.StatusNotFound
+		response = newErrorResponse(
+			code,
+			"Resource not found",
 			traceID,
 		)
 	default:
