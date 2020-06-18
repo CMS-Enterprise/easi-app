@@ -23,13 +23,13 @@ type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
 func NewSystemIntakeHandler(
 	base HandlerBase,
 	create createSystemIntake,
-	save saveSystemIntake,
+	update updateSystemIntake,
 	fetch fetchSystemIntakeByID,
 ) SystemIntakeHandler {
 	return SystemIntakeHandler{
 		HandlerBase:           base,
 		CreateSystemIntake:    create,
-		SaveSystemIntake:      save,
+		UpdateSystemIntake:    update,
 		FetchSystemIntakeByID: fetch,
 	}
 }
@@ -124,7 +124,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to write newly created system intake to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to write newly created system intake to response: %v", err))
 				http.Error(w, "Failed to create system intake", http.StatusInternalServerError)
 				return
 			}
@@ -188,7 +188,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.Logger.Error(fmt.Sprintf("Failed to write newly created system intake to response: %v", err))
+				h.logger.Error(fmt.Sprintf("Failed to write newly created system intake to response: %v", err))
 				http.Error(w, "Failed to create system intake", http.StatusInternalServerError)
 				return
 			}
