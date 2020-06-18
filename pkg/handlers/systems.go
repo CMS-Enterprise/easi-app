@@ -13,10 +13,18 @@ import (
 
 type fetchSystems func(logger *zap.Logger) (models.SystemShorts, error)
 
+// NewSystemsListHandler is a constructor for SystemListHandler
+func NewSystemsListHandler(base HandlerBase, fetch fetchSystems) SystemsListHandler {
+	return SystemsListHandler{
+		HandlerBase:  base,
+		FetchSystems: fetch,
+	}
+}
+
 // SystemsListHandler is the handler for listing systems
 type SystemsListHandler struct {
+	HandlerBase
 	FetchSystems fetchSystems
-	Logger       *zap.Logger
 }
 
 // Handle handles a web request and returns a list of systems
@@ -24,8 +32,8 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			h.Logger.Error("Failed to logger from context in systems list handler")
-			logger = h.Logger
+			h.logger.Error("Failed to logger from context in systems list handler")
+			logger = h.logger
 		}
 
 		systems, err := h.FetchSystems(logger)
