@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
-import { v4 as uuidv4 } from 'uuid';
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
@@ -16,6 +16,7 @@ import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
   saveSystemIntake,
+  postSystemIntake,
   storeSystemIntake,
   submitSystemIntake,
   clearSystemIntake
@@ -61,26 +62,36 @@ export const SystemIntake = () => {
   const isSubmitting = useSelector(
     (state: AppState) => state.systemIntake.isSubmitting
   );
+  const isSaving = useSelector(
+    (state: AppState) => state.systemIntake.isSaving
+  );
+
   const error = useSelector((state: AppState) => state.systemIntake.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && current.values.id) {
-      dispatch(saveSystemIntake(current.values));
-      current.resetForm({ values: current.values, errors: current.errors });
+    if (current && current.dirty && !isSaving) {
       if (systemId === 'new') {
-        history.replace(`/system/${current.values.id}/${pageObj.slug}`);
+        dispatch(postSystemIntake(current.values));
+      } else if (current.values.id) {
+        dispatch(saveSystemIntake(current.values));
       }
+      current.resetForm({ values: current.values, errors: current.errors });
     }
   };
+
+  useEffect(() => {
+    if (systemIntake.id) {
+      history.replace(`/system/${systemIntake.id}/${formPage}`);
+    }
+  }, [history, systemIntake.id, formPage]);
 
   useEffect(() => {
     if (systemId === 'new') {
       authService.getUser().then((user: any) => {
         dispatch(
           storeSystemIntake({
-            id: uuidv4(),
             requester: {
               name: user.name,
               component: ''
@@ -120,7 +131,7 @@ export const SystemIntake = () => {
   return (
     <div className="system-intake margin-bottom-5">
       <Header name="EASi System Intake" />
-      <main className="grid-container" role="main">
+      <MainContent className="grid-container">
         {isLoading === false && (
           <Formik
             initialValues={systemIntake}
@@ -253,7 +264,7 @@ export const SystemIntake = () => {
             totalPages={pages.filter(p => p.type === 'FORM').length}
           />
         )}
-      </main>
+      </MainContent>
     </div>
   );
 };

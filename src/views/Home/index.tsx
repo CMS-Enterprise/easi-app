@@ -3,7 +3,7 @@ import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useOktaAuth } from '@okta/okta-react';
-
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
@@ -129,14 +129,14 @@ const Home = ({ history }: HomeProps) => {
   return (
     <div>
       <Header />
-      <div role="main" className="grid-container margin-y-6">
+      <MainContent className="grid-container margin-y-6">
         {getSystemIntakeBanners()}
         {getBusinessCaseBanners()}
         <div className="tablet:grid-col-9">
           <h1 className="margin-top-6">Welcome to EASi</h1>
           <p className="line-height-body-5 font-body-lg text-light">
-            You can use EASi to go through the set of steps needed for Lifecycle
-            ID approval by the Governance Review Board (GRB).
+            You can use EASi to go through the set of steps needed to get a
+            Lifecycle ID from the Governance Review Board (GRB).
           </p>
           <div className="easi-home__info-wrapper">
             <div className="easi-home__info-icon">
@@ -166,7 +166,7 @@ const Home = ({ history }: HomeProps) => {
             </Button>
           )}
         </div>
-      </div>
+      </MainContent>
     </div>
   );
 };

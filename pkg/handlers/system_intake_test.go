@@ -32,9 +32,22 @@ func newMockFetchSystemIntakeByID(err error) func(id uuid.UUID) (*models.SystemI
 	}
 }
 
+func newMockCreateSystemIntake(requester string, err error) createSystemIntake {
+	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+		newIntake := models.SystemIntake{
+			ID:        uuid.New(),
+			EUAUserID: "FAKE",
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: requester,
+		}
+		return &newIntake, err
+	}
+}
+
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
 	requestContext = appcontext.WithUser(requestContext, models.User{EUAUserID: "FAKE"})
+	requester := "Test Requester"
 	id, err := uuid.NewUUID()
 	s.NoError(err)
 	s.Run("golden path GET passes", func() {
@@ -44,7 +57,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
 		SystemIntakeHandler{
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(nil),
 		}.Handle()(rr, req)
 		s.Equal(http.StatusOK, rr.Code)
@@ -57,7 +70,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req = mux.SetURLVars(req, map[string]string{"intake_id": "NON_EXISTENT"})
 		SystemIntakeHandler{
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to parse system intake id to uuid")),
 		}.Handle()(rr, req)
 
@@ -72,12 +85,92 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req = mux.SetURLVars(req, map[string]string{"intake_id": nonexistentID.String()})
 		SystemIntakeHandler{
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to fetch system intake")),
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
 		s.Equal("Failed to GET system intake\n", rr.Body.String())
+	})
+
+	s.Run("golden path POST passes", func() {
+		body, err := json.Marshal(map[string]string{
+			"status":    "DRAFT",
+			"requester": requester,
+		})
+		s.NoError(err)
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
+		s.NoError(err)
+		SystemIntakeHandler{
+			HandlerBase:           s.base,
+			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
+			SaveSystemIntake:      nil,
+			FetchSystemIntakeByID: nil,
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusCreated, rr.Code)
+	})
+
+	s.Run("POST fails if there is no eua ID in the context", func() {
+		badContext := context.Background()
+		rr := httptest.NewRecorder()
+		body, err := json.Marshal(map[string]string{
+			"status":    "DRAFT",
+			"requester": requester,
+		})
+		s.NoError(err)
+		req, err := http.NewRequestWithContext(badContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
+		s.NoError(err)
+		SystemIntakeHandler{
+			HandlerBase:           s.base,
+			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
+			SaveSystemIntake:      nil,
+			FetchSystemIntakeByID: nil,
+		}.Handle()(rr, req)
+		s.Equal(http.StatusUnauthorized, rr.Code)
+	})
+
+	s.Run("POST fails if a validation error is thrown", func() {
+		body, err := json.Marshal(map[string]string{
+			"status":    "DRAFT",
+			"requester": requester,
+		})
+		s.NoError(err)
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
+		s.NoError(err)
+		expectedErr := apperrors.ValidationError{
+			Model:   models.BusinessCase{},
+			ModelID: "",
+			Err:     fmt.Errorf("failed validations"),
+		}
+		SystemIntakeHandler{
+			HandlerBase:           s.base,
+			CreateSystemIntake:    newMockCreateSystemIntake(requester, &expectedErr),
+			SaveSystemIntake:      nil,
+			FetchSystemIntakeByID: nil,
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusBadRequest, rr.Code)
+	})
+
+	s.Run("POST fails if business case isn't created", func() {
+		body, err := json.Marshal(map[string]string{
+			"status":    "DRAFT",
+			"requester": requester,
+		})
+		s.NoError(err)
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
+		s.NoError(err)
+		SystemIntakeHandler{
+			HandlerBase:           s.base,
+			CreateSystemIntake:    newMockCreateSystemIntake(requester, fmt.Errorf("failed to create intake")),
+			SaveSystemIntake:      nil,
+			FetchSystemIntakeByID: nil,
+		}.Handle()(rr, req)
+		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
 
 	s.Run("golden path PUT passes", func() {
@@ -86,7 +179,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -99,7 +192,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -113,7 +206,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(fmt.Errorf("failed to save")),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -135,7 +228,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String()}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -156,7 +249,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String()}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -177,7 +270,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		expectedErr := &apperrors.ExternalAPIError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String(), Operation: apperrors.Submit, Source: "CEDAR"}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -201,7 +294,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 

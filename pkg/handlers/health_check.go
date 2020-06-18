@@ -3,18 +3,23 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-
 	"net/http"
 
 	"github.com/spf13/viper"
-
-	"go.uber.org/zap"
 )
+
+// NewHealthCheckHandler is a constructor for HealthCheckHandler
+func NewHealthCheckHandler(base HandlerBase, config *viper.Viper) HealthCheckHandler {
+	return HealthCheckHandler{
+		HandlerBase: base,
+		Config:      config,
+	}
+}
 
 // HealthCheckHandler returns the API status
 type HealthCheckHandler struct {
+	HandlerBase
 	Config *viper.Viper
-	Logger *zap.Logger
 }
 
 type status string
@@ -41,7 +46,7 @@ func (h HealthCheckHandler) Handle() http.HandlerFunc {
 		}
 		js, err := json.Marshal(statusReport)
 		if err != nil {
-			h.Logger.Error(fmt.Sprintf("Failed to marshal health check: %v", err))
+			h.logger.Error(fmt.Sprintf("Failed to marshal health check: %v", err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -50,7 +55,7 @@ func (h HealthCheckHandler) Handle() http.HandlerFunc {
 
 		_, err = w.Write(js)
 		if err != nil {
-			h.Logger.Error(fmt.Sprintf("Failed to write health check to response: %v", err))
+			h.logger.Error(fmt.Sprintf("Failed to write health check to response: %v", err))
 			http.Error(w, "Failed to get health check", http.StatusInternalServerError)
 			return
 		}

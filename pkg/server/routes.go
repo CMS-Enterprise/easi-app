@@ -3,7 +3,6 @@ package server
 import (
 	"net/http"
 
-	"github.com/facebookgo/clock"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
@@ -25,10 +24,14 @@ func (s *Server) routes(
 	// trace all requests with an ID
 	s.router.Use(traceMiddleware)
 
+	// set up handler base
+	base := handlers.NewHandlerBase(s.logger)
+
 	// health check goes directly on the main router to avoid auth
-	healthCheckHandler := handlers.HealthCheckHandler{
-		Config: s.Config,
-	}
+	healthCheckHandler := handlers.NewHealthCheckHandler(
+		base,
+		s.Config,
+	)
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up CEDAR client
@@ -85,15 +88,19 @@ func (s *Server) routes(
 	}
 
 	// endpoint for system list
-	systemHandler := handlers.SystemsListHandler{
-		FetchSystems: cedarClient.FetchSystems,
-		Logger:       s.logger,
-	}
+	systemHandler := handlers.NewSystemsListHandler(
+		base,
+		cedarClient.FetchSystems,
+	)
 	api.Handle("/systems", systemHandler.Handle())
 
-	systemIntakeHandler := handlers.SystemIntakeHandler{
-		Logger: s.logger,
-		SaveSystemIntake: services.NewSaveSystemIntake(
+	systemIntakeHandler := handlers.NewSystemIntakeHandler(
+		base,
+		services.NewCreateSystemIntake(
+			serviceConfig,
+			store.CreateSystemIntake,
+		),
+		services.NewSaveSystemIntake(
 			serviceConfig,
 			store.SaveSystemIntake,
 			store.FetchSystemIntakeByID,
@@ -101,64 +108,62 @@ func (s *Server) routes(
 			cedarClient.ValidateAndSubmitSystemIntake,
 			emailClient.SendSystemIntakeSubmissionEmail,
 		),
-		FetchSystemIntakeByID: services.NewFetchSystemIntakeByID(
+		services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 		),
-	}
+	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
 
-	systemIntakesHandler := handlers.SystemIntakesHandler{
-		Logger: s.logger,
-		FetchSystemIntakes: services.NewFetchSystemIntakesByEuaID(
+	systemIntakesHandler := handlers.NewSystemIntakesHandler(
+		base,
+		services.NewFetchSystemIntakesByEuaID(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
 		),
-	}
+	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
 
-	businessCaseHandler := handlers.BusinessCaseHandler{
-		Logger: s.logger,
-		CreateBusinessCase: services.NewCreateBusinessCase(
+	businessCaseHandler := handlers.NewBusinessCaseHandler(
+		base,
+		services.NewFetchBusinessCaseByID(
+			serviceConfig,
+			store.FetchBusinessCaseByID,
+		),
+		services.NewCreateBusinessCase(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeCreateBusinessCase(s.logger),
 			store.CreateBusinessCase,
 		),
-		FetchBusinessCaseByID: services.NewFetchBusinessCaseByID(
-			serviceConfig,
-			store.FetchBusinessCaseByID,
-		),
-		UpdateBusinessCase: services.NewUpdateBusinessCase(
+		services.NewUpdateBusinessCase(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
 			services.NewAuthorizeUpdateBusinessCase(s.logger),
 			store.UpdateBusinessCase,
 			emailClient.SendBusinessCaseSubmissionEmail,
 		),
-	}
+	)
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
 
-	businessCasesHandler := handlers.BusinessCasesHandler{
-		Logger: s.logger,
-		FetchBusinessCases: services.NewFetchBusinessCasesByEuaID(
+	businessCasesHandler := handlers.NewBusinessCasesHandler(
+		base,
+		services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
 		),
-	}
+	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
 
-	handlerClock := clock.New()
-	metricsHandler := handlers.MetricsHandler{
-		FetchMetrics: services.NewFetchMetrics(serviceConfig, store.FetchSystemIntakeMetrics),
-		Logger:       s.logger,
-		Clock:        handlerClock,
-	}
+	metricsHandler := handlers.NewMetricsHandler(
+		base,
+		services.NewFetchMetrics(serviceConfig, store.FetchSystemIntakeMetrics),
+	)
 	api.Handle("/metrics", metricsHandler.Handle())
 
-	s.router.PathPrefix("/").Handler(handlers.CatchAllHandler{
-		Logger: s.logger,
-	}.Handle())
+	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
+		base,
+	).Handle())
 }

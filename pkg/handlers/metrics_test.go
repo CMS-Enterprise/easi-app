@@ -10,14 +10,11 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/facebookgo/clock"
-
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s HandlerTestSuite) TestMetricsHandler() {
 
-	handlerClock := clock.NewMock()
 	expectedMetrics := models.MetricsDigest{
 		SystemIntakeMetrics: models.SystemIntakeMetrics{
 			Started:            5,
@@ -35,7 +32,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 
 	s.Run("golden path passes", func() {
 		q := metricsURL.Query()
-		q.Add("startTime", handlerClock.Now().Add(time.Hour).Format(time.RFC3339))
+		q.Add("startTime", s.base.clock.Now().Add(time.Hour).Format(time.RFC3339))
 		u := url.URL{
 			RawQuery: q.Encode(),
 		}
@@ -45,8 +42,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 
 		MetricsHandler{
 			FetchMetrics: fetchMetrics,
-			Logger:       s.logger,
-			Clock:        handlerClock,
+			HandlerBase:  s.base,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusOK, rr.Code)
@@ -73,22 +69,22 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 		{
 			name: "non RFC3339 format startTime",
 			params: map[string]string{
-				"startTime": handlerClock.Now().Format(time.RFC822),
+				"startTime": s.base.clock.Now().Format(time.RFC822),
 			},
 			status: http.StatusBadRequest,
 		},
 		{
 			name: "non RFC3339 format endTime",
 			params: map[string]string{
-				"startTime": handlerClock.Now().Format(time.RFC3339),
-				"endTime":   handlerClock.Now().Format(time.RFC822),
+				"startTime": s.base.clock.Now().Format(time.RFC3339),
+				"endTime":   s.base.clock.Now().Format(time.RFC822),
 			},
 			status: http.StatusBadRequest,
 		},
 		{
 			name: "bad endTime",
 			params: map[string]string{
-				"startTime": handlerClock.Now().Format(time.RFC3339),
+				"startTime": s.base.clock.Now().Format(time.RFC3339),
 				"endTime":   "badTime",
 			},
 			status: http.StatusBadRequest,
@@ -96,15 +92,15 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 		{
 			name: "startTime no endTime",
 			params: map[string]string{
-				"startTime": handlerClock.Now().Format(time.RFC3339),
+				"startTime": s.base.clock.Now().Format(time.RFC3339),
 			},
 			status: http.StatusOK,
 		},
 		{
 			name: "startTime and endTime",
 			params: map[string]string{
-				"startTime": handlerClock.Now().Format(time.RFC3339),
-				"endTime":   handlerClock.Now().Format(time.RFC3339),
+				"startTime": s.base.clock.Now().Format(time.RFC3339),
+				"endTime":   s.base.clock.Now().Format(time.RFC3339),
 			},
 			status: http.StatusOK,
 		},
@@ -124,8 +120,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 
 			MetricsHandler{
 				FetchMetrics: fetchMetrics,
-				Logger:       s.logger,
-				Clock:        handlerClock,
+				HandlerBase:  s.base,
 			}.Handle()(rr, req)
 
 			s.Equal(t.status, rr.Code)
@@ -144,7 +139,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 			return models.MetricsDigest{}, errors.New("failed to fetch metrics")
 		}
 		q := metricsURL.Query()
-		q.Add("startTime", handlerClock.Now().Format(time.RFC3339))
+		q.Add("startTime", s.base.clock.Now().Format(time.RFC3339))
 		u := url.URL{
 			RawQuery: q.Encode(),
 		}
@@ -154,8 +149,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 
 		MetricsHandler{
 			FetchMetrics: failFetchMetrics,
-			Logger:       s.logger,
-			Clock:        handlerClock,
+			HandlerBase:  s.base,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
@@ -168,8 +162,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 
 		MetricsHandler{
 			FetchMetrics: fetchMetrics,
-			Logger:       s.logger,
-			Clock:        handlerClock,
+			HandlerBase:  s.base,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusMethodNotAllowed, rr.Code)

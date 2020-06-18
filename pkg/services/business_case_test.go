@@ -178,7 +178,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 				BusinessNeed:  businessCase.BusinessNeed,
 			}, nil
 		}
-		intake.Requester = null.StringFrom("Charlie Chaplin")
+		intake.Requester = "Charlie Chaplin"
 		intake.BusinessOwner = null.StringFrom("Aretha Franklin")
 		intake.ProjectName = null.StringFrom("Sitting on the dock of the bay")
 		intake.BusinessNeed = null.StringFrom("To be or not to be, that is the question")
@@ -189,7 +189,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 
 		businessCase, err := createBusinessCase(ctx, &input)
 		s.NoError(err)
-		s.Equal(intake.Requester, businessCase.Requester)
+		s.Equal(intake.Requester, businessCase.Requester.String)
 		s.Equal(intake.BusinessOwner, businessCase.BusinessOwner)
 		s.Equal(intake.ProjectName, businessCase.ProjectName)
 		s.Equal(intake.BusinessNeed, businessCase.BusinessNeed)
