@@ -4,6 +4,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -30,7 +31,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		fetched, err := s.store.FetchBusinessCaseByID(badUUID)
 
 		s.Error(err)
-		s.Equal("sql: no rows in result set", err.Error())
+		s.IsType(&apperrors.ResourceNotFoundError{}, err)
 		s.Equal(&models.BusinessCase{}, fetched)
 	})
 }
