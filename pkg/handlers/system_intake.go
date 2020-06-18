@@ -96,7 +96,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			intake := models.SystemIntake{}
 			err := decoder.Decode(&intake)
 			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
 			createdIntake, err := h.CreateSystemIntake(r.Context(), &intake)
@@ -133,7 +133,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			intake := models.SystemIntake{}
 			err := decoder.Decode(&intake)
 			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
 
