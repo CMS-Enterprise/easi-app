@@ -29,7 +29,6 @@ import { AppState } from 'reducers/rootReducer';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import PageNumber from 'components/PageNumber';
 import { useOktaAuth } from '@okta/okta-react';
-import { v4 as uuidv4 } from 'uuid';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 const ContactDetails = () => {
@@ -45,6 +44,10 @@ const ContactDetails = () => {
     (state: AppState) => state.systemIntake.isLoading
   );
 
+  const isSaving = useSelector(
+    (state: AppState) => state.systemIntake.isSaving
+  );
+
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
@@ -54,7 +57,6 @@ const ContactDetails = () => {
       authService.getUser().then((user: any) => {
         dispatch(
           storeSystemIntake({
-            id: uuidv4(),
             requester: {
               name: user.name,
               component: ''
@@ -72,9 +74,15 @@ const ContactDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (systemIntake.id) {
+      history.replace(`/system/${systemIntake.id}/contact-details`);
+    }
+  }, [history, systemIntake.id]);
+
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && current.values.id) {
+    if (current && current.dirty && !isSaving) {
       if (systemId === 'new') {
         dispatch(postSystemIntake(current.values));
       } else if (current.values.id) {
