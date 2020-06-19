@@ -185,7 +185,6 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
 				h.logger.Error(fmt.Sprintf("Failed to write newly created system intake to response: %v", err))
