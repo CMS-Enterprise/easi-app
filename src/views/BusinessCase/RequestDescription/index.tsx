@@ -8,6 +8,7 @@ import HelpText from 'components/shared/HelpText';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import CharacterCounter from 'components/CharacterCounter';
 
 type RequestDescriptionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -60,9 +61,12 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
             id="BusinessCase-BusinessNeed"
             maxLength={2000}
             name="businessNeed"
+            aria-describedby="BusinessCase-BusinessNeedCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.businessNeed.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-BusinessNeedCounter"
+            characterCount={2000 - values.businessNeed.length}
+          />
         </FieldGroup>
 
         <FieldGroup scrollElement="cmsBenefit" error={!!flatErrors.cmsBenefit}>
@@ -81,9 +85,12 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
             id="BusinessCase-CmsBenefit"
             maxLength={2000}
             name="cmsBenefit"
+            aria-describedby="BusinessCase-CmsBenefitCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.cmsBenefit.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-CmsBenefitCounter"
+            characterCount={2000 - values.cmsBenefit.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -105,9 +112,12 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
             id="BusinessCase-PriorityAlignment"
             maxLength={2000}
             name="priorityAlignment"
+            aria-describedby="BusinessCase-PriorityAlignmentCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.priorityAlignment.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-PriorityAlignmentCounter"
+            characterCount={2000 - values.priorityAlignment.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -127,6 +137,11 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
             id="BusinessCase-SuccessIndicators"
             maxLength={2000}
             name="successIndicators"
+            aria-describedby="BusinessCase-SuccessIndicatorsCounter"
+          />
+          <CharacterCounter
+            id="BusinessCase-SuccessIndicatorsCounter"
+            characterCount={2000 - values.successIndicators.length}
           />
           <HelpText className="margin-top-1">{`${2000 -
             values.successIndicators.length} characters left`}</HelpText>
