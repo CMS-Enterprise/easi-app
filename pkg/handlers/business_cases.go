@@ -6,17 +6,23 @@ import (
 	"fmt"
 	"net/http"
 
-	"go.uber.org/zap"
-
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type fetchBusinessCases func(context.Context, string) (models.BusinessCases, error)
 
+// NewBusinessCasesHandler is a constructor for BusinessCasesHandler
+func NewBusinessCasesHandler(base HandlerBase, fetch fetchBusinessCases) BusinessCasesHandler {
+	return BusinessCasesHandler{
+		HandlerBase:        base,
+		FetchBusinessCases: fetch,
+	}
+}
+
 // BusinessCasesHandler is the handler for CRUD operations on business cases
 type BusinessCasesHandler struct {
-	Logger             *zap.Logger
+	HandlerBase
 	FetchBusinessCases fetchBusinessCases
 }
 
@@ -25,15 +31,15 @@ func (h BusinessCasesHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			h.Logger.Error("Failed to get logger from context in business cases handler")
-			logger = h.Logger
+			h.logger.Error("Failed to get logger from context in business cases handler")
+			logger = h.logger
 		}
 
 		switch r.Method {
 		case "GET":
 			user, ok := appcontext.User(r.Context())
 			if !ok {
-				h.Logger.Error("Failed to get EUA ID from context in business cases handler")
+				h.logger.Error("Failed to get EUA ID from context in business cases handler")
 				http.Error(w, "Failed to fetch business cases", http.StatusInternalServerError)
 				return
 			}

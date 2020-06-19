@@ -52,7 +52,9 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
   };
 
   return {
-    id: systemIntake.id,
+    ...(systemIntake.id && {
+      id: systemIntake.id
+    }),
     status: systemIntake.status,
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,

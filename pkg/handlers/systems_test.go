@@ -18,7 +18,7 @@ func (s HandlerTestSuite) TestSystemsHandler() {
 		s.NoError(err)
 		SystemsListHandler{
 			FetchSystems: makeFakeSystemShorts,
-			Logger:       s.logger,
+			HandlerBase:  s.base,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusOK, rr.Code)
