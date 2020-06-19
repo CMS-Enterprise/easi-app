@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-<<<<<<< HEAD
-import { SecureRoute, useOktaAuth } from '@okta/okta-react';
-import MainContent from 'components/MainContent';
-=======
 import { SecureRoute } from '@okta/okta-react';
->>>>>>> Move system intake fetch logic to individual pages.
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
