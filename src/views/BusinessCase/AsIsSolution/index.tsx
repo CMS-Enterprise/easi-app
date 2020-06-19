@@ -10,6 +10,7 @@ import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import CharacterCounter from 'components/CharacterCounter';
 
 type AsIsSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -82,9 +83,12 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             id="BusinessCase-AsIsSolutionSummary"
             maxLength={2000}
             name="asIsSolution.summary"
+            aria-describedby="BusinessCase-AsIsSolutionSummaryCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.asIsSolution.summary.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-AsIsSolutionSummaryCounter"
+            characterCount={2000 - values.asIsSolution.summary.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -105,9 +109,12 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             id="BusinessCase-AsIsSolutionPros"
             maxLength={2000}
             name="asIsSolution.pros"
+            aria-describedby="BusinessCase-AsIsSolutionProsCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.asIsSolution.pros.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-AsIsSolutionProsCounter"
+            characterCount={2000 - values.asIsSolution.pros.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -128,9 +135,12 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             id="BusinessCase-AsIsSolutionCons"
             maxLength={2000}
             name="asIsSolution.cons"
+            aria-describedby="BusinessCase-AsIsSolutionConsCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.asIsSolution.cons.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-AsIsSolutionConsCounter"
+            characterCount={2000 - values.asIsSolution.cons.length}
+          />
         </FieldGroup>
       </div>
       <div className="tablet:grid-col-9 margin-top-2">
@@ -182,9 +192,12 @@ const AsIsSolution = ({ formikProps }: AsIsSolutionProps) => {
             id="BusinessCase-AsIsSolutionCostSavings"
             maxLength={2000}
             name="asIsSolution.costSavings"
+            aria-describedby="BusinessCase-AsIsSolutionCostSavingsCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.asIsSolution.costSavings.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-AsIsSolutionCostSavingsCounter"
+            characterCount={2000 - values.asIsSolution.costSavings.length}
+          />
         </FieldGroup>
       </div>
     </div>
