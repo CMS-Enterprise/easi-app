@@ -12,6 +12,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import processStages from 'constants/enums/processStages';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import CharacterCounter from 'components/CharacterCounter';
 import flattenErrors from 'utils/flattenErrors';
 
 type RequestDetailsProps = {
@@ -93,9 +94,12 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             id="IntakeForm-BusinessNeed"
             maxLength={2000}
             name="businessNeed"
+            aria-describedby="IntakeForm-BusinessNeedCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.businessNeed.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="IntakeForm-BusinessNeedCounter"
+            characterCount={2000 - values.businessNeed.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -115,9 +119,12 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
             id="IntakeForm-BusinessSolution"
             maxLength={2000}
             name="businessSolution"
+            aria-describedby="IntakeForm-BusinessSolutionCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.businessSolution.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="IntakeForm-BusinessSolutionCounter"
+            characterCount={2000 - values.businessSolution.length}
+          />
         </FieldGroup>
 
         <FieldGroup
