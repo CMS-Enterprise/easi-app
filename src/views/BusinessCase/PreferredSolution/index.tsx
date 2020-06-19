@@ -10,6 +10,7 @@ import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import CharacterCounter from 'components/CharacterCounter';
 
 type PreferredSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -94,10 +95,12 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             id="BusinessCase-PreferredSolutionSummary"
             maxLength={2000}
             name="preferredSolution.summary"
+            aria-describedby="BusinessCase-PreferredSolutionSummaryCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.summary
-              .length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-PreferredSolutionSummaryCounter"
+            characterCount={2000 - values.preferredSolution.summary.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -121,10 +124,14 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             id="BusinessCase-PreferredSolutionAcquisitionApproach"
             maxLength={2000}
             name="preferredSolution.acquisitionApproach"
+            aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.acquisitionApproach
-              .length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-PreferredSolutionAcquisitionApproachCounter"
+            characterCount={
+              2000 - values.preferredSolution.acquisitionApproach.length
+            }
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -145,9 +152,12 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             id="BusinessCase-PreferredSolutionPros"
             maxLength={2000}
             name="preferredSolution.pros"
+            aria-describedby="BusinessCase-PreferredSolutionProsCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.pros.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-PreferredSolutionProsCounter"
+            characterCount={2000 - values.preferredSolution.pros.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -168,9 +178,12 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             id="BusinessCase-PreferredSolutionCons"
             maxLength={2000}
             name="preferredSolution.cons"
+            aria-describedby="BusinessCase-PreferredSolutionConsCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.cons.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-PreferredSolutionConsCounter"
+            characterCount={2000 - values.preferredSolution.cons.length}
+          />
         </FieldGroup>
       </div>
       <div className="tablet:grid-col-9 margin-top-2">
@@ -221,10 +234,12 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             id="BusinessCase-PreferredSolutionCostSavings"
             maxLength={2000}
             name="preferredSolution.costSavings"
+            aria-describedby="BusinessCase-PreferredSolutionCostSavingsCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.preferredSolution.costSavings
-              .length} characters left`}</HelpText>
+          <CharacterCounter
+            id="BusinessCase-PreferredSolutionCostSavingsCounter"
+            characterCount={2000 - values.preferredSolution.costSavings.length}
+          />
         </FieldGroup>
       </div>
     </div>
