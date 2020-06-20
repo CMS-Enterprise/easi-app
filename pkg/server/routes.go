@@ -1,7 +1,6 @@
 package server
 
 import (
-	"context"
 	"net/http"
 
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
@@ -12,7 +11,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
-	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -113,7 +111,7 @@ func (s *Server) routes(
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			func(ctx context.Context, intake *models.SystemIntake) (bool, error) { return true, nil },
+			services.NewAuthorizeFetchSystemIntakeByID(),
 		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
@@ -124,7 +122,7 @@ func (s *Server) routes(
 		services.NewFetchSystemIntakesByEuaID(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
-			func(ctx context.Context, euaID string) (bool, error) { return true, nil },
+			services.NewAuthorizeFetchSystemIntakesByEuaID(),
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
@@ -134,7 +132,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCaseByID(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-      func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) { return true, nil },
+			services.NewAuthorizeFetchBusinessCaseByID(),
 		),
 		services.NewCreateBusinessCase(
 			serviceConfig,
@@ -158,7 +156,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
-			func(ctx context.Context, euaID string) (bool, error) { return true, nil },
+			services.NewAuthorizeFetchBusinessCasesByEuaID(),
 		),
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())

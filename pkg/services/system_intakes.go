@@ -13,6 +13,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// NewAuthorizeFetchSystemIntakesByEuaID is a service to authorize FetchSystemIntakesByEuaID
+func NewAuthorizeFetchSystemIntakesByEuaID() func(ctx context.Context, euaID string) (bool, error) {
+	return func(ctx context.Context, euaID string) (bool, error) {
+		return true, nil
+	}
+}
+
 // NewFetchSystemIntakesByEuaID is a service to fetch system intakes by EUA id
 func NewFetchSystemIntakesByEuaID(
 	config Config,
@@ -176,6 +183,13 @@ func NewSaveSystemIntake(
 			}
 		}
 		return nil
+	}
+}
+
+// NewAuthorizeFetchSystemIntakeByID is a service to authorize FetchSystemIntakeByID
+func NewAuthorizeFetchSystemIntakeByID() func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		return true, nil
 	}
 }
 
