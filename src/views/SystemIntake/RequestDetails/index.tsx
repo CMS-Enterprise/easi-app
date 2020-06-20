@@ -164,8 +164,11 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
               value={false}
             />
 
-            <CollapsableLink label="How can the Enterprise Architecture team help me?">
-              <div>
+            <CollapsableLink
+              id="SystemIntake-WhatsEA"
+              label="How can the Enterprise Architecture team help me?"
+            >
+              <>
                 CMS&apos; Enterprise Architecture (EA) function will help you
                 build your Business Case by addressing the following:
                 <ul className="margin-bottom-0">
@@ -183,7 +186,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
                   </li>
                   <li>Model your business processes and document workflows</li>
                 </ul>
-              </div>
+              </>
             </CollapsableLink>
           </fieldset>
         </FieldGroup>
