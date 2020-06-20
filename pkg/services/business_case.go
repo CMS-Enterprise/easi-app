@@ -14,6 +14,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// NewAuthorizeFetchBusinessCaseByID is a service to authorize FetchBusinessCaseByID
+func NewAuthorizeFetchBusinessCaseByID() func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) {
+	return func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) {
+		return true, nil
+	}
+}
+
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
 func NewFetchBusinessCaseByID(
 	config Config,
@@ -125,6 +132,13 @@ func NewCreateBusinessCase(
 			}
 		}
 		return businessCase, nil
+	}
+}
+
+// NewAuthorizeFetchBusinessCasesByEuaID is a service to authorize FetchBusinessCasesByEuaID
+func NewAuthorizeFetchBusinessCasesByEuaID() func(ctx context.Context, euaID string) (bool, error) {
+	return func(ctx context.Context, euaID string) (bool, error) {
+		return true, nil
 	}
 }
 
