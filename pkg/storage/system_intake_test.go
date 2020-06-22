@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
@@ -179,6 +180,10 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
+	mockClock := clock.NewMock()
+	settableClock := testhelpers.SettableClock{Mock: mockClock}
+	s.store.clock = &settableClock
+
 	// create a random year to avoid test collisions
 	// uses postgres max year minus 1000000
 	rand.Seed(time.Now().UnixNano())
@@ -198,7 +203,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 	}
 	for _, tt := range startedTests {
 		s.Run(fmt.Sprintf("%s for started count", tt.name), func() {
-			s.store.clock = testhelpers.NewMockClock(tt.createdAt)
+			settableClock.Set(tt.createdAt)
 			intake := testhelpers.NewSystemIntake()
 			_, err := s.store.CreateSystemIntake(&intake)
 			s.NoError(err)
@@ -241,7 +246,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 	for _, tt := range completedTests {
 		s.Run(fmt.Sprintf("%s for completed count", tt.name), func() {
 			intake := testhelpers.NewSystemIntake()
-			s.store.clock = testhelpers.NewMockClock(tt.createdAt)
+			settableClock.Set(tt.createdAt)
 			intake.SubmittedAt = &tt.submittedAt
 			_, err := s.store.CreateSystemIntake(&intake)
 			s.NoError(err)
@@ -288,7 +293,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 	for _, tt := range fundedTests {
 		s.Run(tt.name, func() {
 			intake := testhelpers.NewSystemIntake()
-			s.store.clock = testhelpers.NewMockClock(tt.submittedAt)
+			settableClock.Set(tt.submittedAt)
 			intake.SubmittedAt = &tt.submittedAt
 			intake.ExistingFunding = null.BoolFrom(tt.funded)
 			_, err := s.store.CreateSystemIntake(&intake)

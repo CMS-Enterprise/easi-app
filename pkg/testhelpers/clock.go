@@ -6,11 +6,14 @@ import (
 	"github.com/facebookgo/clock"
 )
 
-// NewMockClock returns a mock clock that returns the given time for Now()
-func NewMockClock(now time.Time) *clock.Mock {
-	newClock := clock.NewMock()
-	for !newClock.Now().Equal(now) {
-		newClock.Add(now.Sub(newClock.Now()))
+// SettableClock is a mock clock that can be set
+type SettableClock struct {
+	*clock.Mock
+}
+
+// Set sets the clock's Now() to the given time
+func (c *SettableClock) Set(now time.Time) {
+	for !c.Now().Equal(now) {
+		c.Add(now.Sub(c.Now()))
 	}
-	return newClock
 }
