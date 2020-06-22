@@ -15,6 +15,7 @@ import {
 } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import CharacterCounter from 'components/CharacterCounter';
 
 type AlternativeSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
@@ -139,9 +140,12 @@ const AlternativeSolution = ({
             id={`BusinessCase-${altId}Summary`}
             maxLength={2000}
             name={`${altId}.summary`}
+            aria-describedby={`BusinessCase-${altId}SummmaryCounter`}
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            altValues.summary.length} characters left`}</HelpText>
+          <CharacterCounter
+            id={`BusinessCase-${altId}SummmaryCounter`}
+            characterCount={2000 - altValues.summary.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -165,9 +169,12 @@ const AlternativeSolution = ({
             id={`BusinessCase-${altId}AcquisitionApproach`}
             maxLength={2000}
             name={`${altId}.acquisitionApproach`}
+            aria-describedby={`BusinessCase-${altId}AcquisitionApproachCounter`}
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            altValues.acquisitionApproach.length} characters left`}</HelpText>
+          <CharacterCounter
+            id={`BusinessCase-${altId}AcquisitionApproachCounter`}
+            characterCount={2000 - altValues.acquisitionApproach.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -188,9 +195,12 @@ const AlternativeSolution = ({
             id={`BusinessCase-${altId}Pros`}
             maxLength={2000}
             name={`${altId}.pros`}
+            aria-describedby={`BusinessCase-${altId}ProsCounter`}
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            altValues.pros.length} characters left`}</HelpText>
+          <CharacterCounter
+            id={`BusinessCase-${altId}ProsCounter`}
+            characterCount={2000 - altValues.pros.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -211,9 +221,12 @@ const AlternativeSolution = ({
             id={`BusinessCase-${altId}Cons`}
             maxLength={2000}
             name={`${altId}.cons`}
+            aria-describedby={`BusinessCase-${altId}ConsCounter`}
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            altValues.cons.length} characters left`}</HelpText>
+          <CharacterCounter
+            id={`BusinessCase-${altId}ConsCounter`}
+            characterCount={2000 - altValues.cons.length}
+          />
         </FieldGroup>
       </div>
       <div className="tablet:grid-col-9 margin-top-2">
@@ -259,9 +272,12 @@ const AlternativeSolution = ({
             id={`BusinessCase-${altId}CostSavings`}
             maxLength={2000}
             name={`${altId}.costSavings`}
+            aria-describedby={`BusinessCase-${altId}CostSavingsCounter`}
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            altValues.costSavings.length} characters left`}</HelpText>
+          <CharacterCounter
+            id={`BusinessCase-${altId}CostSavingsCounter`}
+            characterCount={2000 - altValues.costSavings.length}
+          />
         </FieldGroup>
 
         {altLetter === 'A' && !values.alternativeB && (
