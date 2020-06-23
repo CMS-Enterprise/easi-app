@@ -71,9 +71,10 @@ jobs:
       - run:
           name: Start frontend app
           command: yarn cypress:app-start
+          background: true
       - run:
           name: Run Cypress integration tests
-          command: yarn cypress:ci-run
+          command: yarn cypress:run
       - run:
           name: Announce failure
           command: |
