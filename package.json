@@ -67,6 +67,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
+    "cypress:app-start": "yarn start & wait-on http://localhost:3000",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:ci-run": "cypress:run"
