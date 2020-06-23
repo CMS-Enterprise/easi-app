@@ -70,7 +70,7 @@ jobs:
             - ~/.cache/yarn
       - run:
           name: Start frontend app
-          command: yarn start & wait-on http://localhost:3000
+          command: yarn cypress:app-start
       - run:
           name: Run Cypress integration tests
           command: yarn cypress:ci-run
