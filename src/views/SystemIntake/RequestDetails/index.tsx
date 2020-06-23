@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Formik, Field, FormikProps, Form } from 'formik';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { RadioField } from 'components/shared/RadioField';
@@ -16,19 +16,17 @@ import flattenErrors from 'utils/flattenErrors';
 import Button from 'components/shared/Button';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchSystemIntake,
-  saveSystemIntake,
-  submitSystemIntake,
-  clearSystemIntake
-} from 'types/routines';
+import { saveSystemIntake, submitSystemIntake } from 'types/routines';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { AppState } from 'reducers/rootReducer';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import PageNumber from 'components/PageNumber';
 
-const RequestDetails = () => {
+type RequestDetailsProps = {
+  initialValues: SystemIntakeForm;
+};
+const RequestDetails = ({ initialValues }: RequestDetailsProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { systemId } = useParams();
@@ -37,19 +35,6 @@ const RequestDetails = () => {
   const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
-
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
-
-  useEffect(() => {
-    dispatch(fetchSystemIntake(systemId));
-    // This return will clear system intake from store when component is unmounted
-    return () => {
-      dispatch(clearSystemIntake());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
@@ -66,7 +51,7 @@ const RequestDetails = () => {
     <>
       {isLoading === false && (
         <Formik
-          initialValues={systemIntake}
+          initialValues={initialValues}
           onSubmit={values => {
             dispatch(submitSystemIntake(values));
           }}

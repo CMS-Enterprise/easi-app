@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Formik, Field, FormikProps, Form } from 'formik';
 import TextField from 'components/shared/TextField';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -16,25 +16,23 @@ import Button from 'components/shared/Button';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  fetchSystemIntake,
   saveSystemIntake,
   postSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake,
-  clearSystemIntake
+  submitSystemIntake
 } from 'types/routines';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { AppState } from 'reducers/rootReducer';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import PageNumber from 'components/PageNumber';
-import { useOktaAuth } from '@okta/okta-react';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
-const ContactDetails = () => {
+type ContactDetailsProps = {
+  initialValues: SystemIntakeForm;
+};
+const ContactDetails = ({ initialValues }: ContactDetailsProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { authService } = useOktaAuth();
   const { systemId } = useParams();
   const formikRef: any = useRef();
 
@@ -47,38 +45,6 @@ const ContactDetails = () => {
   const isSaving = useSelector(
     (state: AppState) => state.systemIntake.isSaving
   );
-
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
-
-  useEffect(() => {
-    if (systemId === 'new') {
-      authService.getUser().then((user: any) => {
-        dispatch(
-          storeSystemIntake({
-            requester: {
-              name: user.name,
-              component: ''
-            }
-          })
-        );
-      });
-    } else {
-      dispatch(fetchSystemIntake(systemId));
-    }
-    // This return will clear system intake from store when component is unmounted
-    return () => {
-      dispatch(clearSystemIntake());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (systemIntake.id) {
-      history.replace(`/system/${systemIntake.id}/contact-details`);
-    }
-  }, [history, systemIntake.id]);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
@@ -108,7 +74,7 @@ const ContactDetails = () => {
     <>
       {isLoading === false && (
         <Formik
-          initialValues={systemIntake}
+          initialValues={initialValues}
           onSubmit={values => {
             dispatch(submitSystemIntake(values));
           }}
