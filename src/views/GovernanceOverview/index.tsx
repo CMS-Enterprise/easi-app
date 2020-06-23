@@ -143,8 +143,11 @@ const GovernanceOverview = () => {
           />
         </div>
         <div className="margin-top-6 margin-bottom-7">
-          <CollapsableLink label="Why does the governance process exist?">
-            <div>
+          <CollapsableLink
+            id="GovernanceOverview-WhyGovernanceExists"
+            label="Why does the governance process exist?"
+          >
+            <>
               These steps make sure
               <ul className="margin-bottom-0 margin-top-1 padding-left-205 line-height-body-5">
                 <li>your request fits into current CMS IT strategy</li>
@@ -152,7 +155,7 @@ const GovernanceOverview = () => {
                 <li>you have considered various solutions</li>
                 <li>CMS meets various policies and remains compliant</li>
               </ul>
-            </div>
+            </>
           </CollapsableLink>
         </div>
         <Button to="/system/new">Get started</Button>

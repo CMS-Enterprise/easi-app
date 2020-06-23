@@ -27,7 +27,7 @@ func (s HandlerTestSuite) TestSystemIntakesHandler() {
 		s.NoError(err)
 		SystemIntakesHandler{
 			FetchSystemIntakes: newMockFetchSystemIntakes(models.SystemIntakes{}, nil),
-			Logger:             s.logger,
+			HandlerBase:        s.base,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusOK, rr.Code)
@@ -39,7 +39,7 @@ func (s HandlerTestSuite) TestSystemIntakesHandler() {
 		s.NoError(err)
 		SystemIntakesHandler{
 			FetchSystemIntakes: newMockFetchSystemIntakes(models.SystemIntakes{}, fmt.Errorf("failed to save")),
-			Logger:             s.logger,
+			HandlerBase:        s.base,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)

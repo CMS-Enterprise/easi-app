@@ -57,7 +57,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
 		SystemIntakeHandler{
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(nil),
 		}.Handle()(rr, req)
 		s.Equal(http.StatusOK, rr.Code)
@@ -70,7 +70,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req = mux.SetURLVars(req, map[string]string{"intake_id": "NON_EXISTENT"})
 		SystemIntakeHandler{
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to parse system intake id to uuid")),
 		}.Handle()(rr, req)
 
@@ -85,7 +85,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req = mux.SetURLVars(req, map[string]string{"intake_id": nonexistentID.String()})
 		SystemIntakeHandler{
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to fetch system intake")),
 		}.Handle()(rr, req)
 
@@ -103,9 +103,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		SystemIntakeHandler{
+			HandlerBase:           s.base,
 			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -123,9 +123,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(badContext, "PUT", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		SystemIntakeHandler{
+			HandlerBase:           s.base,
 			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 		s.Equal(http.StatusUnauthorized, rr.Code)
@@ -146,9 +146,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			Err:     fmt.Errorf("failed validations"),
 		}
 		SystemIntakeHandler{
+			HandlerBase:           s.base,
 			CreateSystemIntake:    newMockCreateSystemIntake(requester, &expectedErr),
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -165,9 +165,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		SystemIntakeHandler{
+			HandlerBase:           s.base,
 			CreateSystemIntake:    newMockCreateSystemIntake(requester, fmt.Errorf("failed to create intake")),
 			SaveSystemIntake:      nil,
-			Logger:                s.logger,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 		s.Equal(http.StatusInternalServerError, rr.Code)
@@ -179,7 +179,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -192,7 +192,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(nil),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -206,7 +206,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(fmt.Errorf("failed to save")),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -228,7 +228,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String()}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -249,7 +249,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String()}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -270,7 +270,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		expectedErr := &apperrors.ExternalAPIError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String(), Operation: apperrors.Submit, Source: "CEDAR"}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -294,7 +294,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		}
 		SystemIntakeHandler{
 			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
