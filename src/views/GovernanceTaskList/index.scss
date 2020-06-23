@@ -86,3 +86,9 @@
     color: #005ea2;
   }
 }
+
+.grid-row {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
