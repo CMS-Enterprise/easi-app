@@ -6,9 +6,10 @@ import {
   fetchSystemIntake,
   storeSystemIntake,
   submitSystemIntake,
-  clearSystemIntake
+  clearSystemIntake,
+  postSystemIntake
 } from 'types/routines';
-import systemIntakeReducer from './systemIntakeReducer';
+import systemIntakeReducer from 'reducers/systemIntakeReducer';
 
 describe('The system intake reducer', () => {
   const mockApiSystemIntake = {
@@ -38,6 +39,7 @@ describe('The system intake reducer', () => {
     expect(systemIntakeReducer(undefined, {})).toEqual({
       systemIntake: initialSystemIntakeForm,
       isLoading: null,
+      isSaving: false,
       isSubmitting: false,
       error: null
     });
@@ -53,6 +55,7 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: true,
+        isSaving: false,
         isSubmitting: false,
         error: null
       });
@@ -73,6 +76,7 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockSuccessAction)).toEqual({
         systemIntake: prepareSystemIntakeForApp(mockPayload),
         isLoading: null,
+        isSaving: false,
         isSubmitting: false,
         error: null
       });
@@ -87,6 +91,7 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
+        isSaving: false,
         isSubmitting: false,
         error: null
       });
@@ -113,6 +118,7 @@ describe('The system intake reducer', () => {
           ...payload
         },
         isLoading: false,
+        isSaving: false,
         isSubmitting: false,
         error: null
       });
@@ -126,6 +132,7 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockFailureAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
+        isSaving: false,
         isSubmitting: false,
         error: 'Error'
       });
@@ -139,6 +146,7 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
+        isSaving: false,
         isSubmitting: false,
         error: null
       });
@@ -155,6 +163,7 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
+        isSaving: false,
         isSubmitting: true,
         error: null
       });
@@ -169,6 +178,7 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockFailureAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
+        isSaving: false,
         isSubmitting: false,
         error: 'Error Error'
       });
@@ -183,6 +193,75 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
+        isSaving: false,
+        isSubmitting: false,
+        error: null
+      });
+    });
+  });
+
+  describe('postSystemIntake', () => {
+    it('handles postSystemIntake.REQUEST', () => {
+      const mockRequestAction = {
+        type: postSystemIntake.REQUEST,
+        payload: undefined
+      };
+
+      expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
+        systemIntake: initialSystemIntakeForm,
+        isLoading: null,
+        isSaving: true,
+        isSubmitting: false,
+        error: null
+      });
+    });
+    it('handles postSystemIntake.SUCCESS', () => {
+      const mockSuccessAction = {
+        type: postSystemIntake.SUCCESS,
+        payload: mockApiSystemIntake
+      };
+
+      expect(systemIntakeReducer(undefined, mockSuccessAction)).toEqual({
+        systemIntake: prepareSystemIntakeForApp(mockSuccessAction.payload),
+        isLoading: null,
+        isSaving: false,
+        isSubmitting: false,
+        error: null
+      });
+    });
+
+    it('handles postSystemIntake.FAILURE', () => {
+      const initialState = {
+        systemIntake: initialSystemIntakeForm,
+        isLoading: false,
+        isSaving: true,
+        isSubmitting: false,
+        error: null
+      };
+      const mockFailureAction = {
+        type: postSystemIntake.FAILURE,
+        payload: 'Error'
+      };
+
+      expect(systemIntakeReducer(initialState, mockFailureAction)).toEqual({
+        systemIntake: initialSystemIntakeForm,
+        isLoading: false,
+        isSaving: true,
+        isSubmitting: false,
+        error: 'Error'
+      });
+    });
+
+    it('handles postSystemIntake.FULFILL', () => {
+      const mockFulfillAction = {
+        type: postSystemIntake.FULFILL,
+        payload: undefined
+      };
+
+      expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
+        systemIntake: initialSystemIntakeForm,
+        isLoading: null,
+        isSaving: false,
         isSubmitting: false,
         error: null
       });
@@ -199,6 +278,7 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
+        isSaving: false,
         isSubmitting: false,
         error: null
       });
