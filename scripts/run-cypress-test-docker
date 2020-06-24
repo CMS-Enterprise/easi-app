@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -eu -o pipefail
+
+CONTAINER_FRONTEND=easi-app_easilocal
+CONTAINER_CYPRESS=easi-app_cypress
+
+# Build the frontend and cypress images
+docker-compose build easilocal cypress
+
+# Run the frontend container
+docker container run -d --entrypoint /usr/local/bin/serve --name ${CONTAINER_FRONTEND} ${CONTAINER_FRONTEND}:latest -s -l 3000
+
+# Run the cypress container. Connect to frontend container network so cypress can communicate with it using localhost.
+docker container run -e OKTA_TEST_USERNAME -e OKTA_TEST_PASSWORD -e OKTA_TEST_SECRET --network container:${CONTAINER_FRONTEND} --name ${CONTAINER_CYPRESS} ${CONTAINER_CYPRESS}:latest
+
+# Stop the frontend container
+docker container stop ${CONTAINER_FRONTEND}
+
+# Grab the exit code from the test container
+EXIT_STATUS=$(docker inspect ${CONTAINER_CYPRESS} --format='{{.State.ExitCode}}')
+
+# Exit with the status from tests
+exit "${EXIT_STATUS}"

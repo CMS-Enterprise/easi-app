@@ -69,12 +69,9 @@ jobs:
           paths:
             - ~/.cache/yarn
       - run:
-          name: Start frontend app
-          command: yarn cypress:app-start
-          background: true
-      - run:
           name: Run Cypress integration tests
-          command: yarn cypress:run
+          command: |
+            ./scripts/run-cypress-test-docker
       - run:
           name: Announce failure
           command: |

@@ -45,7 +45,7 @@
     "react-modal": "^3.11.2",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.0",
+    "react-scripts": "3.4.1",
     "redux": "^4.0.4",
     "redux-actions": "^2.6.5",
     "redux-devtools-extension": "^2.13.8",
@@ -67,10 +67,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
-    "cypress:app-start": "yarn start & wait-on http://localhost:3000",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
-    "cypress:ci-run": "cypress:run"
+    "cypress:run": "cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"

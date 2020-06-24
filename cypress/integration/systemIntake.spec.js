@@ -6,11 +6,11 @@ describe('The System Intake Form', () => {
     // TODO HACK
     cy.wait(1000);
     cy.saveLocalStorage();
-
-    cy.route('PUT', 'api/v1/system_intake').as('putSystemIntake');
   });
 
   beforeEach(() => {
+    cy.server()
+    cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
     cy.restoreLocalStorage();
     cy.visit('/system/new');
   });
