@@ -2,8 +2,13 @@
 
 set -eu -o pipefail
 
-CONTAINER_FRONTEND=easi-app_easilocal
-CONTAINER_CYPRESS=easi-app_cypress
+PREFIX="easi-app"
+if [ -n "${CIRCLECI+x}" ]; then
+  PREFIX="project"
+fi
+
+CONTAINER_FRONTEND="${PREFIX}_easilocal"
+CONTAINER_CYPRESS="${PREFIX}_cypress"
 
 # Build the frontend and cypress images
 docker-compose build \
