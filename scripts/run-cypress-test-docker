@@ -6,19 +6,24 @@ CONTAINER_FRONTEND=easi-app_easilocal
 CONTAINER_CYPRESS=easi-app_cypress
 
 # Build the frontend and cypress images
-docker-compose build easilocal cypress
+docker-compose build easilocal \
+  --build-arg REACT_APP_OKTA_DOMAIN="$OKTA_DOMAIN" \
+  --build-arg REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV" \
+  --build-arg REACT_APP_OKTA_ISSUER="$OKTA_ISSUER"
+
+docker-compose build cypress
 
 # Run the frontend container
-docker container run -d --entrypoint /usr/local/bin/serve --name ${CONTAINER_FRONTEND} ${CONTAINER_FRONTEND}:latest -s -l 3000
+docker container run -d --entrypoint /usr/local/bin/serve --name "$CONTAINER_FRONTEND" "$CONTAINER_FRONTEND":latest -s -l 3000
 
 # Run the cypress container. Connect to frontend container network so cypress can communicate with it using localhost.
-docker container run -e OKTA_TEST_USERNAME -e OKTA_TEST_PASSWORD -e OKTA_TEST_SECRET --network container:${CONTAINER_FRONTEND} --name ${CONTAINER_CYPRESS} ${CONTAINER_CYPRESS}:latest
+docker container run -e OKTA_TEST_USERNAME -e OKTA_TEST_PASSWORD -e OKTA_TEST_SECRET --network container:"$CONTAINER_FRONTEND" --name "$CONTAINER_CYPRESS" "$CONTAINER_CYPRESS":latest
 
 # Stop the frontend container
-docker container stop ${CONTAINER_FRONTEND}
+docker container stop "$CONTAINER_FRONTEND"
 
 # Grab the exit code from the test container
-EXIT_STATUS=$(docker inspect ${CONTAINER_CYPRESS} --format='{{.State.ExitCode}}')
+EXIT_STATUS=$(docker inspect "$CONTAINER_CYPRESS" --format='{{.State.ExitCode}}')
 
 # Exit with the status from tests
-exit "${EXIT_STATUS}"
+exit "$EXIT_STATUS"
