@@ -3,20 +3,15 @@ import { Formik, FormikProps, Form } from 'formik';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import Button from 'components/shared/Button';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'reducers/rootReducer';
-import {
-  fetchSystemIntake,
-  submitSystemIntake,
-  clearSystemIntake
-} from 'types/routines';
+import { submitSystemIntake } from 'types/routines';
 import usePrevious from 'hooks/usePrevious';
 
 const Review = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { systemId } = useParams();
 
   const isSubmitting = useSelector(
     (state: AppState) => state.systemIntake.isSubmitting
@@ -40,15 +35,6 @@ const Review = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubmitting]);
-
-  useEffect(() => {
-    dispatch(fetchSystemIntake(systemId));
-    // This return will clear system intake from store when component is unmounted
-    return () => {
-      dispatch(clearSystemIntake());
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>

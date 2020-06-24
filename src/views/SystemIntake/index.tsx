@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { FormikProps } from 'formik';
 import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
@@ -7,9 +8,12 @@ import Header from 'components/Header';
 import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
+  saveSystemIntake,
+  postSystemIntake,
   storeSystemIntake,
   clearSystemIntake
 } from 'types/routines';
+import { SystemIntakeForm } from 'types/systemIntake';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -24,6 +28,22 @@ export const SystemIntake = () => {
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
+
+  const isSaving = useSelector(
+    (state: AppState) => state.systemIntake.isSaving
+  );
+
+  const dispatchSave = (formikRef: any) => {
+    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
+    if (current && current.dirty && !isSaving) {
+      if (systemId === 'new') {
+        dispatch(postSystemIntake(current.values));
+      } else if (current.values.id) {
+        dispatch(saveSystemIntake(current.values));
+      }
+      current.resetForm({ values: current.values, errors: current.errors });
+    }
+  };
 
   useEffect(() => {
     if (systemId === 'new') {
@@ -69,11 +89,21 @@ export const SystemIntake = () => {
       <MainContent className="grid-container">
         <SecureRoute
           path="/system/:systemId/contact-details"
-          render={() => <ContactDetails initialValues={systemIntake} />}
+          render={() => (
+            <ContactDetails
+              initialValues={systemIntake}
+              handleSave={dispatchSave}
+            />
+          )}
         />
         <SecureRoute
           path="/system/:systemId/request-details"
-          render={() => <RequestDetails initialValues={systemIntake} />}
+          render={() => (
+            <RequestDetails
+              initialValues={systemIntake}
+              handleSave={dispatchSave}
+            />
+          )}
         />
         <SecureRoute
           path="/system/:systemId/review"

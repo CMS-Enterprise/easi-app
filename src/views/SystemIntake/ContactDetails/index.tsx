@@ -13,13 +13,8 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import flattenErrors from 'utils/flattenErrors';
 import { SystemIntakeForm } from 'types/systemIntake';
 import Button from 'components/shared/Button';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  saveSystemIntake,
-  postSystemIntake,
-  submitSystemIntake
-} from 'types/routines';
+import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { AppState } from 'reducers/rootReducer';
@@ -29,11 +24,10 @@ import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
   initialValues: SystemIntakeForm;
+  handleSave: (ref: any) => void;
 };
-const ContactDetails = ({ initialValues }: ContactDetailsProps) => {
+const ContactDetails = ({ initialValues, handleSave }: ContactDetailsProps) => {
   const history = useHistory();
-  const dispatch = useDispatch();
-  const { systemId } = useParams();
   const formikRef: any = useRef();
 
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
@@ -42,20 +36,9 @@ const ContactDetails = ({ initialValues }: ContactDetailsProps) => {
     (state: AppState) => state.systemIntake.isLoading
   );
 
-  const isSaving = useSelector(
-    (state: AppState) => state.systemIntake.isSaving
-  );
-
-  const dispatchSave = () => {
-    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && !isSaving) {
-      if (systemId === 'new') {
-        dispatch(postSystemIntake(current.values));
-      } else if (current.values.id) {
-        dispatch(saveSystemIntake(current.values));
-      }
-      current.resetForm({ values: current.values, errors: current.errors });
-    }
+  // Put into a function so react hooks don't get spun in a loop
+  const handleAutoSave = () => {
+    handleSave(formikRef);
   };
 
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
@@ -75,14 +58,13 @@ const ContactDetails = ({ initialValues }: ContactDetailsProps) => {
       {isLoading === false && (
         <Formik
           initialValues={initialValues}
-          onSubmit={values => {
-            dispatch(submitSystemIntake(values));
-          }}
+          onSubmit={() => {}}
           validationSchema={SystemIntakeValidationSchema.contactDetails}
           validateOnBlur={false}
           validateOnChange={false}
           validateOnMount={false}
           innerRef={formikRef}
+          enableReinitialize
         >
           {(formikProps: FormikProps<SystemIntakeForm>) => {
             const { values, setFieldValue, errors } = formikProps;
@@ -462,7 +444,7 @@ const ContactDetails = ({ initialValues }: ContactDetailsProps) => {
                         type="button"
                         unstyled
                         onClick={() => {
-                          dispatchSave();
+                          handleSave(formikRef);
                           history.push('/');
                         }}
                       >
@@ -475,7 +457,7 @@ const ContactDetails = ({ initialValues }: ContactDetailsProps) => {
                 </div>
                 <AutoSave
                   values={values}
-                  onSave={dispatchSave}
+                  onSave={handleAutoSave}
                   debounceDelay={1000}
                 />
               </>

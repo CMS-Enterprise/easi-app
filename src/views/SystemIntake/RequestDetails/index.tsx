@@ -14,9 +14,8 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import flattenErrors from 'utils/flattenErrors';
 import Button from 'components/shared/Button';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { saveSystemIntake, submitSystemIntake } from 'types/routines';
+import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { AppState } from 'reducers/rootReducer';
@@ -25,26 +24,18 @@ import PageNumber from 'components/PageNumber';
 
 type RequestDetailsProps = {
   initialValues: SystemIntakeForm;
+  handleSave: (ref: any) => void;
 };
-const RequestDetails = ({ initialValues }: RequestDetailsProps) => {
+const RequestDetails = ({ initialValues, handleSave }: RequestDetailsProps) => {
   const history = useHistory();
-  const dispatch = useDispatch();
-  const { systemId } = useParams();
   const formikRef: any = useRef();
 
   const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
 
-  const dispatchSave = () => {
-    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && current.values.id) {
-      dispatch(saveSystemIntake(current.values));
-      current.resetForm({ values: current.values, errors: current.errors });
-      if (systemId === 'new') {
-        history.replace(`/system/${current.values.id}/contact-details`);
-      }
-    }
+  const handleAutoSave = () => {
+    handleSave(formikRef);
   };
 
   return (
@@ -52,14 +43,13 @@ const RequestDetails = ({ initialValues }: RequestDetailsProps) => {
       {isLoading === false && (
         <Formik
           initialValues={initialValues}
-          onSubmit={values => {
-            dispatch(submitSystemIntake(values));
-          }}
+          onSubmit={() => {}}
           validationSchema={SystemIntakeValidationSchema.requestDetails}
           validateOnBlur={false}
           validateOnChange={false}
           validateOnMount={false}
           innerRef={formikRef}
+          enableReinitialize
         >
           {(formikProps: FormikProps<SystemIntakeForm>) => {
             const { values, errors, setFieldValue } = formikProps;
@@ -448,7 +438,7 @@ const RequestDetails = ({ initialValues }: RequestDetailsProps) => {
                         type="button"
                         unstyled
                         onClick={() => {
-                          dispatchSave();
+                          handleSave(formikRef);
                           history.push('/');
                         }}
                       >
@@ -461,7 +451,7 @@ const RequestDetails = ({ initialValues }: RequestDetailsProps) => {
                 </div>
                 <AutoSave
                   values={values}
-                  onSave={dispatchSave}
+                  onSave={handleAutoSave}
                   debounceDelay={1000}
                 />
               </>
