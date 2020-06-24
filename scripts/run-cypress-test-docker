@@ -12,9 +12,11 @@ CONTAINER_CYPRESS="${PREFIX}_cypress"
 
 # Build the frontend and cypress images
 docker-compose build \
+  --build-arg REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_DEV" \
   --build-arg REACT_APP_OKTA_DOMAIN="$OKTA_DOMAIN" \
-  --build-arg REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV" \
   --build-arg REACT_APP_OKTA_ISSUER="$OKTA_ISSUER" \
+  --build-arg REACT_APP_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback \
+  --build-arg REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV" \
   easilocal
 
 docker-compose build cypress
