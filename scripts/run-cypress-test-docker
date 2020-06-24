@@ -6,10 +6,11 @@ CONTAINER_FRONTEND=easi-app_easilocal
 CONTAINER_CYPRESS=easi-app_cypress
 
 # Build the frontend and cypress images
-docker-compose build easilocal \
+docker-compose build \
   --build-arg REACT_APP_OKTA_DOMAIN="$OKTA_DOMAIN" \
   --build-arg REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV" \
-  --build-arg REACT_APP_OKTA_ISSUER="$OKTA_ISSUER"
+  --build-arg REACT_APP_OKTA_ISSUER="$OKTA_ISSUER" \
+  easilocal
 
 docker-compose build cypress
 
