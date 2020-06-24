@@ -54,6 +54,7 @@ jobs:
           FLYWAY_URL: jdbc:postgresql://localhost/postgres
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Run easi app tests
           command: |
