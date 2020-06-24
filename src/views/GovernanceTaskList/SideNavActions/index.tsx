@@ -1,22 +1,14 @@
 import React from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import './index.scss';
 import Button from 'components/shared/Button';
 
-type SideNavActionsProps = RouteComponentProps;
-
-const SideNavActions = ({ history }: SideNavActionsProps) => {
-  const returnHome = () => history.push('/');
+const SideNavActions = () => {
   const openTabOverview = () => window.open('/governance-overview');
   return (
     <div className="sidenav-actions margin-top-4">
       <div className="sidenav-actions__main">
-        <Button
-          className="sidenav-actions__action"
-          type="button"
-          unstyled
-          onClick={returnHome}
-        >
+        <Button className="sidenav-actions__action" unstyled to="/">
           <span>Save & Exit</span>
         </Button>
         <Button
