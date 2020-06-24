@@ -22,9 +22,9 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - APPLICATION_VERSION=APPLICATION_VERSION
-      - APPLICATION_DATETIME=APPLICATION_DATETIME
-      - APPLICATION_TS=APPLICATION_TS
+      - APPLICATION_VERSION
+      - APPLICATION_DATETIME
+      - APPLICATION_TS
       - APP_ENV=local
       - CLIENT_PROTOCOL=http
       - CLIENT_DOMAIN=localhost
@@ -58,3 +58,34 @@ services:
       - 8080:8080
     depends_on:
       - db_migrate
+  easilocal:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+      args:
+        - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
+        - REACT_APP_OKTA_CLIENT_ID
+        - REACT_APP_OKTA_DOMAIN
+        - REACT_APP_OKTA_ISSUER
+        - REACT_APP_OKTA_REDIRECT_URI
+        - REACT_APP_OKTA_SERVER_ID
+    environment:
+      - CI=true #https://github.com/facebook/create-react-app/issues/8688
+    ports:
+      - 3000:3000
+    entrypoint: ["serve", "-s", "-l", "3000"]
+  cypress:
+    build:
+      context: .
+      dockerfile: Dockerfile.cypress
+    environment:
+      - CYPRESS_BASE_URL=http://easilocal:3000
+      - OKTA_TEST_USERNAME
+      - OKTA_TEST_PASSWORD
+      - OKTA_TEST_SECRET
+    volumes:
+      - ./cypress:/cypress
+      - ./cypress.json:/cypress.json
+      - ./tsconfig.json:/tsconfig.json
+    depends_on:
+      - easilocal
