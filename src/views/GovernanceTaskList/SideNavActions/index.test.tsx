@@ -1,37 +1,65 @@
 import React from 'react';
-import { mount } from 'enzyme';
-import { MemoryRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
+import { shallow } from 'enzyme';
 import SideNavActions from './index';
 
 const renderComponent = () => {
-  const mockStore = configureMockStore();
-  const store = mockStore({});
-  return mount(
-    <MemoryRouter initialEntries={['/']} initialIndex={0}>
-      <Provider store={store}>
-        <SideNavActions />
-      </Provider>
-    </MemoryRouter>
-  );
+  return shallow(<SideNavActions />);
 };
 
 describe('The TaskListSideNavActions', () => {
   it('renders without crashing', () => {
-    const component = renderComponent();
-    expect(component.find(SideNavActions).exists()).toBe(true);
+    expect(renderComponent).not.toThrow();
   });
 
-  it('displays 3 actions', () => {
-    const component = renderComponent();
-    expect(component.find('Button.sidenav-actions__action').length).toBe(3);
+  describe('save and exit', () => {
+    it('displays text', () => {
+      const component = renderComponent();
+      expect(component.find('Link').text()).toEqual('Save & Exit');
+    });
+
+    it('goes to home', () => {
+      const component = renderComponent();
+      expect(component.find('Link').prop('to')).toEqual('/');
+    });
   });
 
-  it('displays related content', () => {
-    const component = renderComponent();
-    expect(
-      component.find('.sidenav-actions__related-content').text()
-    ).toContain('Related Content');
+  describe('remove your request to add a new system', () => {
+    it('displays text', () => {
+      const component = renderComponent();
+      expect(
+        component
+          .find('Button')
+          .dive()
+          .text()
+      ).toEqual('Remove your request to add a new system');
+    });
+  });
+
+  describe('Related Content', () => {
+    it('displays h4', () => {
+      const component = renderComponent();
+      expect(component.find('h4').text()).toEqual('Related Content');
+    });
+
+    describe('overview for adding a system', () => {
+      it('displays text', () => {
+        const component = renderComponent();
+        expect(component.find('a').text()).toEqual(
+          'Overview for adding a system'
+        );
+      });
+
+      it('goes to governence overview', () => {
+        const component = renderComponent();
+        expect(component.find('a').prop('href')).toEqual(
+          '/governance-overview'
+        );
+      });
+
+      it('opens in a new tab', () => {
+        const component = renderComponent();
+        expect(component.find('a').prop('target')).toEqual('_blank');
+      });
+    });
   });
 });
