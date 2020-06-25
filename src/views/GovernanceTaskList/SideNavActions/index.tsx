@@ -1,39 +1,29 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
-import './index.scss';
+import { Link } from 'react-router-dom';
 import Button from 'components/shared/Button';
+import './index.scss';
 
 const SideNavActions = () => {
-  const openTabOverview = () => window.open('/governance-overview');
   return (
-    <div className="sidenav-actions margin-top-4">
-      <div className="sidenav-actions__main">
-        <Button className="sidenav-actions__action" unstyled to="/">
-          <span>Save & Exit</span>
-        </Button>
-        <Button
-          className="sidenav-actions__action"
-          type="button"
-          unstyled
-          onClick={() => {}}
-        >
-          <span>Remove your request to add a new system</span>
+    <div className="sidenav-actions grid-row flex-column">
+      <div className="grid-col margin-top-105">
+        <Link to="/">Save & Exit</Link>
+      </div>
+      <div className="grid-col margin-top-2">
+        {/* Leaving this a button as it will likely do more than redirect the user */}
+        <Button type="button" unstyled onClick={() => {}}>
+          Remove your request to add a new system
         </Button>
       </div>
-      <div className="sidenav-actions__related-content">
-        <span>Related Content</span>
-        <Button
-          className="sidenav-actions__action"
-          type="button"
-          unstyled
-          onClick={openTabOverview}
-        >
-          <span>Overview for adding a system</span>
-        </Button>
+      <div className="grid-col margin-top-5">
+        <h4>Related Content</h4>
+        <a href="/governance-overview" target="_blank">
+          Overview for adding a system
+        </a>
         <p>(opens in a new tab)</p>
       </div>
     </div>
   );
 };
 
-export default withRouter(SideNavActions);
+export default SideNavActions;
