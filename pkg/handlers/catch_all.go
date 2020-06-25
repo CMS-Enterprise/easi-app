@@ -3,19 +3,22 @@ package handlers
 import (
 	"fmt"
 	"net/http"
-
-	"go.uber.org/zap"
 )
+
+// NewCatchAllHandler is a constructor for CatchAllHanlder
+func NewCatchAllHandler(base HandlerBase) CatchAllHandler {
+	return CatchAllHandler{HandlerBase: base}
+}
 
 // CatchAllHandler returns 404
 type CatchAllHandler struct {
-	Logger *zap.Logger
+	HandlerBase
 }
 
 // Handle returns 404 on unexpected routes
 func (h CatchAllHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		h.Logger.Info(fmt.Sprintf("Unexpected route hit: %v", r.URL))
+		h.logger.Info(fmt.Sprintf("Unexpected route hit: %v", r.URL))
 		http.Error(w, "Not Found", http.StatusNotFound)
 		return
 	}

@@ -28,7 +28,7 @@ const UsGovBanner = () => {
             <button
               type="button"
               className="usa-accordion__button usa-banner__button"
-              aria-expanded="false"
+              aria-expanded={displayContent}
               aria-controls="gov-banner"
               onClick={() => setDisplayContent(prev => !prev)}
             >

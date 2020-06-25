@@ -3,6 +3,7 @@ package storage
 import (
 	"fmt"
 
+	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
@@ -11,6 +12,7 @@ import (
 type Store struct {
 	DB     *sqlx.DB // temporarily export until SystemIntakesHandler doesn't take db
 	logger *zap.Logger
+	clock  clock.Clock
 }
 
 // DBConfig holds the configurations for a database connection
@@ -41,5 +43,5 @@ func NewStore(
 	if err != nil {
 		return nil, err
 	}
-	return &Store{DB: db, logger: logger}, nil
+	return &Store{DB: db, logger: logger, clock: clock.New()}, nil
 }

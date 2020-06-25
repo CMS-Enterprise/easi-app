@@ -14,6 +14,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/server"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -33,6 +34,7 @@ type IntegrationTestSuite struct {
 	server      *httptest.Server
 	user        user
 	store       *storage.Store
+	base        handlers.HandlerBase
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
@@ -78,6 +80,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 			server:      testServer,
 			user:        user{euaID: config.GetString("OKTA_TEST_USERNAME"), accessToken: accessToken},
 			store:       store,
+			base:        handlers.NewHandlerBase(logger),
 		}
 
 		suite.Run(t, testSuite)
