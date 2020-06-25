@@ -16,20 +16,20 @@ import (
 )
 
 type createSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
-type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
+type updateSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
 type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
 
 // NewSystemIntakeHandler is a constructor for SystemIntakeHandler
 func NewSystemIntakeHandler(
 	base HandlerBase,
 	create createSystemIntake,
-	save saveSystemIntake,
+	update updateSystemIntake,
 	fetch fetchSystemIntakeByID,
 ) SystemIntakeHandler {
 	return SystemIntakeHandler{
 		HandlerBase:           base,
 		CreateSystemIntake:    create,
-		SaveSystemIntake:      save,
+		UpdateSystemIntake:    update,
 		FetchSystemIntakeByID: fetch,
 	}
 }
@@ -38,7 +38,7 @@ func NewSystemIntakeHandler(
 type SystemIntakeHandler struct {
 	HandlerBase
 	CreateSystemIntake    createSystemIntake
-	SaveSystemIntake      saveSystemIntake
+	UpdateSystemIntake    updateSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
 }
 
@@ -116,7 +116,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 
 			responseBody, err := json.Marshal(createdIntake)
 			if err != nil {
-				logger.Error("Failed to marshal business case")
+				logger.Error("Failed to marshal system intake")
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -124,8 +124,8 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
-				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
+				h.logger.Error(fmt.Sprintf("Failed to write newly created system intake to response: %v", err))
+				http.Error(w, "Failed to create system intake", http.StatusInternalServerError)
 				return
 			}
 			return
@@ -153,7 +153,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			}
 			intake.EUAUserID = user.EUAUserID
 
-			err = h.SaveSystemIntake(r.Context(), &intake)
+			updatedIntake, err := h.UpdateSystemIntake(r.Context(), &intake)
 			if err != nil {
 				switch err.(type) {
 				case *apperrors.ResourceConflictError:
@@ -177,6 +177,21 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				}
 				return
 			}
+
+			responseBody, err := json.Marshal(updatedIntake)
+			if err != nil {
+				logger.Error("Failed to marshal system intake")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.logger.Error(fmt.Sprintf("Failed to write newly created system intake to response: %v", err))
+				http.Error(w, "Failed to create system intake", http.StatusInternalServerError)
+				return
+			}
+			return
 		default:
 			logger.Info("Unsupported method requested")
 			http.Error(w, "Method not allowed for system intake", http.StatusMethodNotAllowed)
