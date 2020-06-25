@@ -124,21 +124,19 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
-	intakeID := uuid.New()
-	intake := models.SystemIntake{
+	intake := &models.SystemIntake{
 		EUAUserID: euaID,
-		ID:        intakeID,
 		Status:    models.SystemIntakeStatusSUBMITTED,
 	}
-	err := s.store.SaveSystemIntake(&intake)
+	intake, err := s.store.CreateSystemIntake(intake)
 	s.NoError(err)
 
 	input := models.BusinessCase{
 		EUAUserID:      euaID,
-		SystemIntakeID: intakeID,
+		SystemIntakeID: intake.ID,
 	}
 	fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
-		return &intake, nil
+		return intake, nil
 	}
 	create := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		return &models.BusinessCase{
@@ -178,18 +176,18 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 				BusinessNeed:  businessCase.BusinessNeed,
 			}, nil
 		}
-		intake.Requester = null.StringFrom("Charlie Chaplin")
+		intake.Requester = "Charlie Chaplin"
 		intake.BusinessOwner = null.StringFrom("Aretha Franklin")
 		intake.ProjectName = null.StringFrom("Sitting on the dock of the bay")
 		intake.BusinessNeed = null.StringFrom("To be or not to be, that is the question")
-		err := s.store.SaveSystemIntake(&intake)
+		_, err := s.store.UpdateSystemIntake(intake)
 		s.NoError(err)
 
 		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, create)
 
 		businessCase, err := createBusinessCase(ctx, &input)
 		s.NoError(err)
-		s.Equal(intake.Requester, businessCase.Requester)
+		s.Equal(intake.Requester, businessCase.Requester.String)
 		s.Equal(intake.BusinessOwner, businessCase.BusinessOwner)
 		s.Equal(intake.ProjectName, businessCase.ProjectName)
 		s.Equal(intake.BusinessNeed, businessCase.BusinessNeed)
@@ -254,13 +252,11 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
-	intakeID := uuid.New()
-	intake := models.SystemIntake{
+	intake := &models.SystemIntake{
 		EUAUserID: euaID,
-		ID:        intakeID,
 		Status:    models.SystemIntakeStatusSUBMITTED,
 	}
-	err := s.store.SaveSystemIntake(&intake)
+	_, err := s.store.CreateSystemIntake(intake)
 	s.NoError(err)
 
 	existingBusinessCase := testhelpers.NewBusinessCase()

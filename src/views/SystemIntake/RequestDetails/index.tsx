@@ -12,6 +12,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import processStages from 'constants/enums/processStages';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import CharacterCounter from 'components/CharacterCounter';
 import flattenErrors from 'utils/flattenErrors';
 
 type RequestDetailsProps = {
@@ -89,14 +90,16 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <FieldErrorMsg>{flatErrors.businessNeed}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            className="system-intake__textarea"
             error={!!flatErrors.businessNeed}
             id="IntakeForm-BusinessNeed"
             maxLength={2000}
             name="businessNeed"
+            aria-describedby="IntakeForm-BusinessNeedCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.businessNeed.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="IntakeForm-BusinessNeedCounter"
+            characterCount={2000 - values.businessNeed.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -112,14 +115,16 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
           <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
           <Field
             as={TextAreaField}
-            className="system-intake__textarea"
             error={!!flatErrors.businessSolution}
             id="IntakeForm-BusinessSolution"
             maxLength={2000}
             name="businessSolution"
+            aria-describedby="IntakeForm-BusinessSolutionCounter"
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.businessSolution.length} characters left`}</HelpText>
+          <CharacterCounter
+            id="IntakeForm-BusinessSolutionCounter"
+            characterCount={2000 - values.businessSolution.length}
+          />
         </FieldGroup>
 
         <FieldGroup
@@ -159,8 +164,11 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
               value={false}
             />
 
-            <CollapsableLink label="How can the Enterprise Architecture team help me?">
-              <div>
+            <CollapsableLink
+              id="SystemIntake-WhatsEA"
+              label="How can the Enterprise Architecture team help me?"
+            >
+              <>
                 CMS&apos; Enterprise Architecture (EA) function will help you
                 build your Business Case by addressing the following:
                 <ul className="margin-bottom-0">
@@ -178,7 +186,7 @@ const RequestDetails = ({ formikProps }: RequestDetailsProps) => {
                   </li>
                   <li>Model your business processes and document workflows</li>
                 </ul>
-              </div>
+              </>
             </CollapsableLink>
           </fieldset>
         </FieldGroup>

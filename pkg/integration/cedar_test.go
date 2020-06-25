@@ -31,10 +31,10 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 		s.config.GetString("CEDAR_API_KEY"),
 	)
 
-	handlers.SystemsListHandler{
-		FetchSystems: cedarClient.FetchSystems,
-		Logger:       s.logger,
-	}.Handle()(rr, req)
+	handlers.NewSystemsListHandler(
+		s.base,
+		cedarClient.FetchSystems,
+	).Handle()(rr, req)
 
 	s.Equal(http.StatusOK, rr.Code)
 

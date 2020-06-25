@@ -23,13 +23,12 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	s.NoError(err, "failed to parse URL")
 	businessCaseURL.Path = path.Join(businessCaseURL.Path, "/business_case")
 
-	intakeID := uuid.New()
 	intake := testhelpers.NewSystemIntake()
-	intake.ID = intakeID
 	intake.Status = models.SystemIntakeStatusSUBMITTED
 	intake.EUAUserID = s.user.euaID
 
-	err = s.store.SaveSystemIntake(&intake)
+	createdIntake, err := s.store.CreateSystemIntake(&intake)
+	intakeID := createdIntake.ID
 	s.NoError(err)
 
 	body, err := json.Marshal(map[string]string{
@@ -64,7 +63,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		resp, err := client.Do(req)
 
 		s.NoError(err)
-		s.Equal(http.StatusOK, resp.StatusCode)
+		s.Equal(http.StatusCreated, resp.StatusCode)
 		actualBody, err := ioutil.ReadAll(resp.Body)
 		s.NoError(err)
 		var actualBusinessCase models.BusinessCase

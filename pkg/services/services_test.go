@@ -37,6 +37,7 @@ func TestServicesTestSuite(t *testing.T) {
 	if err != nil {
 		t.Fail()
 		fmt.Printf("Failed to connect to database: %v", err)
+		return
 	}
 	servicesTestSuite := &ServicesTestSuite{
 		Suite:  suite.Suite{},
