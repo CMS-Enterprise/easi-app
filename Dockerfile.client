@@ -1,4 +1,6 @@
-FROM node:10 AS builder
+FROM trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb AS builder
+USER root
+
 WORKDIR /app
 COPY . .
 
@@ -12,7 +14,9 @@ ARG REACT_APP_OKTA_SERVER_ID
 RUN yarn install
 RUN yarn run build
 
-FROM node:10
+FROM trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+USER root
+
 RUN yarn global add serve
 WORKDIR /app
 COPY --from=builder /app/build .
