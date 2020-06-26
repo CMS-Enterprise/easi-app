@@ -10,7 +10,7 @@ describe('The System Intake Form', () => {
 
   beforeEach(() => {
     cy.server()
-    cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
+    cy.route('POST', '/api/v1/system_intake').as('postSystemIntake');
     cy.restoreLocalStorage();
     cy.visit('/system/new');
   });
@@ -28,7 +28,7 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     // Allow autosave
-    cy.wait('@putSystemIntake');
+    cy.wait('@postSystemIntake');
 
     cy.contains('button', 'Next').click();
 
@@ -71,7 +71,7 @@ describe('The System Intake Form', () => {
         .should('have.value', `${team.value} Collaborator`);
     });
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@postSystemIntake');
 
     cy.contains('button', 'Next').click();
 
@@ -198,7 +198,7 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.wait('@putSystemIntake');
+    cy.wait('@postSystemIntake');
 
     cy.contains('button', 'Next').click();
 
