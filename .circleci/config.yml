@@ -143,7 +143,7 @@ jobs:
 
   cypress_tests:
     docker:
-      - image: cypress/base:10
+      - image: cypress/base:10.18.0
         environment:
           APP_ENV: test
     steps:
