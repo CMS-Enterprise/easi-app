@@ -1,5 +1,4 @@
-FROM circleci/node:10 AS builder
-USER root
+FROM node:10 AS builder
 
 WORKDIR /app
 COPY . .
@@ -14,8 +13,7 @@ ARG REACT_APP_OKTA_SERVER_ID
 RUN yarn install
 RUN yarn run build
 
-FROM circleci/node:10
-USER root
+FROM node:10
 
 RUN yarn global add serve
 WORKDIR /app
