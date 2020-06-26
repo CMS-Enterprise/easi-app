@@ -141,6 +141,37 @@ jobs:
             ./scripts/circleci-announce-broken-branch
           when: on_fail
 
+  cypress_tests:
+    docker:
+      - image: cypress/base:10
+        environment:
+          APP_ENV: test
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install
+          command: yarn install
+      - run:
+          name: Verify Cypress
+          command: npx cypress verify
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - run:
+          name: Start
+          command: yarn start
+          background: true
+      - run:
+          name: Wait-on http://localhost:3000
+          command: npx wait-on http://localhost:3000
+      - run:
+          name: Run Cypress tests
+          command: npx cypress run
+
   lint:
     docker:
       - image: *circleci_docker_primary
@@ -342,6 +373,9 @@ workflows:
       - build_db_migrate_image
       - lint
       - client_test:
+          requires:
+            - lint
+      - cypress_tests:
           requires:
             - lint
       - test:
