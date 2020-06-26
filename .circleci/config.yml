@@ -105,9 +105,34 @@ jobs:
             ./scripts/build_app
             ./scripts/testsuite
       - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
+
+  client_test:
+    docker:
+      - image: *circleci_docker_primary
+        environment:
+          APP_ENV: test
+          AWS_REGION: us-west-2
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Run Frontend Tests
+          command: yarn test
+      - run:
           name: Run Cypress integration tests
           command: |
             ./scripts/run-cypress-test-docker
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
       - run:
           name: Announce failure
           command: |
@@ -131,9 +156,6 @@ jobs:
       - run:
           name: Run pre-commit checks
           command: pre-commit run --all-files --show-diff-on-failure
-      - run:
-          name: Run Frontend Tests
-          command: yarn test
       - save_cache:
           key: pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
           paths:
@@ -317,12 +339,15 @@ workflows:
     jobs:
       - build_db_migrate_image
       - lint
+      - client_test:
+          requires:
+            - lint
       - test:
           requires:
             - build_db_migrate_image
       - build_tag_push:
           requires:
-            - lint
+            - client_test
             - test
       - hold_dev:
           type: approval
