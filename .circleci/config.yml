@@ -98,7 +98,6 @@ jobs:
           FLYWAY_URL: jdbc:postgresql://localhost/postgres
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: Run easi app tests
           command: |
@@ -122,6 +121,9 @@ jobs:
       - restore_cache:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
       - run:
           name: Run Frontend Tests
           command: yarn test
