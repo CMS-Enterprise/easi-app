@@ -12,7 +12,7 @@ import (
 func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 	s.Run("golden path to fetch a business case", func() {
 		intake := testhelpers.NewSystemIntake()
-		err := s.store.SaveSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(&intake)
 		s.NoError(err)
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.SystemIntakeID = intake.ID
@@ -40,13 +40,13 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 	s.Run("golden path to fetch business cases", func() {
 		intake := testhelpers.NewSystemIntake()
 		intake.Status = models.SystemIntakeStatusSUBMITTED
-		err := s.store.SaveSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(&intake)
 		s.NoError(err)
 
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 		intake2.Status = models.SystemIntakeStatusSUBMITTED
-		err = s.store.SaveSystemIntake(&intake2)
+		_, err = s.store.CreateSystemIntake(&intake2)
 		s.NoError(err)
 
 		businessCase := testhelpers.NewBusinessCase()
@@ -83,7 +83,7 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 func (s StoreTestSuite) TestCreateBusinessCase() {
 	s.Run("golden path to create a business case", func() {
 		intake := testhelpers.NewSystemIntake()
-		err := s.store.SaveSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(&intake)
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
@@ -129,7 +129,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 
 	s.Run("requires an eua user id", func() {
 		intake := testhelpers.NewSystemIntake()
-		err := s.store.SaveSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(&intake)
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
@@ -143,7 +143,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 
 	s.Run("requires a status", func() {
 		intake := testhelpers.NewSystemIntake()
-		err := s.store.SaveSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(&intake)
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
@@ -158,7 +158,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 
 func (s StoreTestSuite) TestUpdateBusinessCase() {
 	intake := testhelpers.NewSystemIntake()
-	err := s.store.SaveSystemIntake(&intake)
+	_, err := s.store.CreateSystemIntake(&intake)
 	s.NoError(err)
 	euaID := intake.EUAUserID
 	businessCaseOriginal := testhelpers.NewBusinessCase()

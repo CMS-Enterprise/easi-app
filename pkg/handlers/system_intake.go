@@ -15,20 +15,20 @@ import (
 )
 
 type createSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
-type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
+type updateSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
 type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
 
 // NewSystemIntakeHandler is a constructor for SystemIntakeHandler
 func NewSystemIntakeHandler(
 	base HandlerBase,
 	create createSystemIntake,
-	save saveSystemIntake,
+	update updateSystemIntake,
 	fetch fetchSystemIntakeByID,
 ) SystemIntakeHandler {
 	return SystemIntakeHandler{
 		HandlerBase:           base,
 		CreateSystemIntake:    create,
-		SaveSystemIntake:      save,
+		UpdateSystemIntake:    update,
 		FetchSystemIntakeByID: fetch,
 	}
 }
@@ -37,7 +37,7 @@ func NewSystemIntakeHandler(
 type SystemIntakeHandler struct {
 	HandlerBase
 	CreateSystemIntake    createSystemIntake
-	SaveSystemIntake      saveSystemIntake
+	UpdateSystemIntake    updateSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
 }
 
@@ -150,11 +150,24 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			}
 			intake.EUAUserID = user.EUAUserID
 
-			err = h.SaveSystemIntake(r.Context(), &intake)
+			updatedIntake, err := h.UpdateSystemIntake(r.Context(), &intake)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
+
+			responseBody, err := json.Marshal(updatedIntake)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+			return
 		default:
 			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
 			return
