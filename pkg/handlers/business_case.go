@@ -9,7 +9,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -43,7 +42,7 @@ type BusinessCaseHandler struct {
 	UpdateBusinessCase    updateBusinessCase
 }
 
-func requireBusinessCaseID(reqVars map[string]string, logger *zap.Logger) (uuid.UUID, error) {
+func requireBusinessCaseID(reqVars map[string]string) (uuid.UUID, error) {
 	valErr := apperrors.NewValidationError(
 		errors.New("business case failed validation"),
 		models.SystemIntake{},
@@ -65,15 +64,9 @@ func requireBusinessCaseID(reqVars map[string]string, logger *zap.Logger) (uuid.
 // Handle handles a request for the business case form
 func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := appcontext.Logger(r.Context())
-		if !ok {
-			h.Logger.Error("Failed to get logger from context in business case handler")
-			logger = h.Logger
-		}
-
 		switch r.Method {
 		case "GET":
-			businessCaseID, err := requireBusinessCaseID(mux.Vars(r), logger)
+			businessCaseID, err := requireBusinessCaseID(mux.Vars(r))
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
@@ -165,7 +158,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			businessCaseID, err := requireBusinessCaseID(mux.Vars(r), logger)
+			businessCaseID, err := requireBusinessCaseID(mux.Vars(r))
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
