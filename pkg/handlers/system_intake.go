@@ -53,13 +53,13 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				"",
 			)
 			if id == "" {
-				valErr.WithValidation("intakeID", "is required")
+				valErr.WithValidation("path.intakeID", "is required")
 				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
 			uuid, err := uuid.Parse(id)
 			if err != nil {
-				valErr.WithValidation("intakeID", "must be UUID")
+				valErr.WithValidation("path.intakeID", "must be UUID")
 				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}

@@ -51,12 +51,12 @@ func requireBusinessCaseID(reqVars map[string]string, logger *zap.Logger) (uuid.
 	)
 	id := reqVars["business_case_id"]
 	if id == "" {
-		valErr.WithValidation("businessCaseId", "is required")
+		valErr.WithValidation("path.businessCaseId", "is required")
 		return uuid.UUID{}, &valErr
 	}
 	businessCaseID, err := uuid.Parse(id)
 	if err != nil {
-		valErr.WithValidation("businessCaseId", "must be UUID")
+		valErr.WithValidation("path.businessCaseId", "must be UUID")
 		return uuid.UUID{}, &valErr
 	}
 	return businessCaseID, nil
