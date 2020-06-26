@@ -349,11 +349,11 @@ workflows:
             - build_db_migrate_image
       - build_tag_push:
           requires:
-            - client_test
             - test
       - hold_dev:
           type: approval
           requires:
+            - client_test
             - build_tag_push
           filters:
             branches:
