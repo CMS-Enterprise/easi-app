@@ -1,16 +1,64 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { useOktaAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Alert from 'components/shared/Alert';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntakes } from 'types/routines';
+import { SystemIntakeForm } from 'types/systemIntake';
 import TaskListItem from './TaskListItem';
 import SideNavActions from './SideNavActions';
-
 import './index.scss';
 
 const GovernanceTaskList = () => {
+  const { authState } = useOktaAuth();
+  const dispatch = useDispatch();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
+  const systemIntake =
+    // Later this should be changed to get state.systemIntake.systemIntake
+    useSelector((state: AppState) => state.systemIntakes.systemIntakes[0]) ||
+    null;
+
+  const calculateIntakeStatus = (intake: SystemIntakeForm) => {
+    if (intake === null) {
+      return 'START';
+    }
+    if (intake.status === 'DRAFT') {
+      return 'CONTINUE';
+    }
+    return 'COMPLETED';
+  };
+  const intakeState = calculateIntakeStatus(systemIntake);
+  const chooseIntakeLink = (intake: SystemIntakeForm, status: string) => {
+    const newIntakeLink = '/system/new';
+    if (intake === null) {
+      return newIntakeLink;
+    }
+    let link: string;
+    switch (status) {
+      case 'CONTINUE':
+        link = `/system/${intake.id}/contact-details`;
+        break;
+      case 'COMPLETED':
+        link = '/';
+        break;
+      default:
+        link = newIntakeLink;
+    }
+    return link;
+  };
+  const intakeLink = chooseIntakeLink(systemIntake, intakeState);
+
+  // This is a hack to get a system intake into the state, but it will be changed later
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      dispatch(fetchSystemIntakes());
+    }
+  }, [dispatch, authState.isAuthenticated]);
   return (
     <div className="governance-task-list">
       <Header />
@@ -41,8 +89,8 @@ const GovernanceTaskList = () => {
                 heading="Fill in the request form"
                 description="Tell the Governance Admin Team about your idea. This step lets CMS build
               context about your request and start preparing for discussions with your team."
-                status="START"
-                link="/system/new"
+                status={intakeState}
+                link={intakeLink}
               />
               <TaskListItem
                 heading="Feedback from initial review"
