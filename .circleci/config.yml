@@ -154,11 +154,11 @@ jobs:
           name: Install dependencies for pre-commit in yarn (temporary?)
           command: yarn install
       - run:
-          name: Run Frontend Tests
-          command: yarn test
-      - run:
           name: Run pre-commit checks
           command: pre-commit run --all-files --show-diff-on-failure
+      - run:
+          name: Run Frontend Tests
+          command: yarn test
       - save_cache:
           key: pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
           paths:
