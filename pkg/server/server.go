@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/okta"
 )
@@ -46,7 +47,7 @@ func NewServer(config *viper.Viper) *Server {
 	// TODO: We should add some sort of config verifier to make sure these configs exist
 	// They may live in /cmd, but should fail quick on startup
 	authMiddleware := okta.NewOktaAuthorizeMiddleware(
-		zapLogger,
+		handlers.NewHandlerBase(zapLogger),
 		config.GetString("OKTA_CLIENT_ID"),
 		config.GetString("OKTA_ISSUER"),
 	)

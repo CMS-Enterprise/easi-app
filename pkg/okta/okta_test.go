@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -39,7 +40,7 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 	s.NoError(err, "couldn't get access token")
 	s.NotEmpty(accessToken, "empty access token")
 	authMiddleware := NewOktaAuthorizeMiddleware(
-		s.logger,
+		handlers.NewHandlerBase(s.logger),
 		s.config.GetString("OKTA_CLIENT_ID"),
 		s.config.GetString("OKTA_ISSUER"),
 	)
