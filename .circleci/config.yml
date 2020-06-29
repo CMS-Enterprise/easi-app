@@ -109,7 +109,7 @@ jobs:
             ./scripts/circleci-announce-broken-branch
           when: on_fail
 
-  client_test:
+  integration_tests:
     docker:
       - image: *circleci_docker_primary
         environment:
@@ -125,9 +125,6 @@ jobs:
       - run:
           name: Install dependencies
           command: yarn install
-      - run:
-          name: Run Frontend Tests
-          command: yarn test
       - run:
           name: Run Cypress integration tests
           command: |
@@ -156,6 +153,9 @@ jobs:
       - run:
           name: Install dependencies for pre-commit in yarn (temporary?)
           command: yarn install
+      - run:
+          name: Run Frontend Tests
+          command: yarn test
       - run:
           name: Run pre-commit checks
           command: pre-commit run --all-files --show-diff-on-failure
