@@ -1,10 +1,11 @@
 ---
-version: '3'
+version: '3.7'
 services:
   db:
     image: postgres:11.6
     ports:
       - 5432:5432
+    network_mode: host
   db_migrate:
     build:
       context: .
@@ -12,9 +13,10 @@ services:
     environment:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=
-      - FLYWAY_URL=jdbc:postgresql://db/postgres
-    volumes:
-      - ./migrations:/flyway/sql
+      - FLYWAY_URL=jdbc:postgresql://localhost/postgres
+        # volumes:
+        #   - ./migrations:/flyway/sql
+    network_mode: host
     depends_on:
       - db
   easi:
@@ -47,7 +49,7 @@ services:
       - AWS_SESSION_TOKEN
       - AWS_SES_SOURCE=no-reply-$APP_ENV@info.easi.cms.gov
       - AWS_SES_SOURCE_ARN
-      - PGHOST=db
+      - PGHOST=localhost
       - PGPORT=5432
       - PGDATABASE=postgres
       - PGUSER=postgres
@@ -56,6 +58,7 @@ services:
     entrypoint: ["/easi/easi", "serve"]
     ports:
       - 8080:8080
+    network_mode: host
     depends_on:
       - db_migrate
   easilocal:
@@ -63,12 +66,12 @@ services:
       context: .
       dockerfile: Dockerfile.client
       args:
-        - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
-        - REACT_APP_OKTA_CLIENT_ID
-        - REACT_APP_OKTA_DOMAIN
-        - REACT_APP_OKTA_ISSUER
-        - REACT_APP_OKTA_REDIRECT_URI
-        - REACT_APP_OKTA_SERVER_ID
+        - REACT_APP_API_ADDRESS=http://localhost:8080/api/v1
+        - REACT_APP_OKTA_CLIENT_ID=$OKTA_CLIENT_ID_DEV
+        - REACT_APP_OKTA_DOMAIN=$OKTA_DOMAIN
+        - REACT_APP_OKTA_ISSUER=$OKTA_ISSUER
+        - REACT_APP_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
+        - REACT_APP_OKTA_SERVER_ID=$OKTA_SERVER_ID_DEV
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
     ports:
@@ -79,13 +82,13 @@ services:
       context: .
       dockerfile: Dockerfile.cypress
     environment:
-      - CYPRESS_BASE_URL=http://easilocal:3000
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET
-    volumes:
-      - ./cypress:/cypress
-      - ./cypress.json:/cypress.json
-      - ./tsconfig.json:/tsconfig.json
+        # volumes:
+        #   - ./cypress:/cypress
+        #   - ./cypress.json:/cypress.json
+        #   - ./tsconfig.json:/tsconfig.json
+    network_mode: host
     depends_on:
       - easilocal

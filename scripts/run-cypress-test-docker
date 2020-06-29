@@ -2,40 +2,14 @@
 
 set -eu -o pipefail
 
-PREFIX="easi-app"
-if [ -n "${CIRCLECI+x}" ]; then
-  PREFIX="project"
-fi
+docker-compose build --parallel
 
-CONTAINER_FRONTEND="${PREFIX}_easilocal"
-CONTAINER_CYPRESS="${PREFIX}_cypress"
+docker-compose up -d db
+sleep 5
+docker-compose up --exit-code-from db_migrate db_migrate
+docker-compose up -d easi easilocal
+docker-compose up --exit-code-from cypress cypress
 
-# Build the frontend and cypress images
-docker-compose build \
-  --parallel \
-  --build-arg REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_DEV" \
-  --build-arg REACT_APP_OKTA_DOMAIN="$OKTA_DOMAIN" \
-  --build-arg REACT_APP_OKTA_ISSUER="$OKTA_ISSUER" \
-  --build-arg REACT_APP_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback \
-  --build-arg REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV" \
-  easilocal \
-  cypress
+# docker container cp easi-app_cypress_1:/cypress/videos cypress/
 
-# Run the frontend container
-docker container run -d --entrypoint /usr/local/bin/serve --name "$CONTAINER_FRONTEND" "$CONTAINER_FRONTEND":latest -s -l 3000
-
-# Run the cypress container. Connect to frontend container network so cypress can communicate with it using localhost.
-docker container run -e OKTA_TEST_USERNAME -e OKTA_TEST_PASSWORD -e OKTA_TEST_SECRET --network container:"$CONTAINER_FRONTEND" --name "$CONTAINER_CYPRESS" "$CONTAINER_CYPRESS":latest
-
-# Cleanup the frontend container
-docker container stop "$CONTAINER_FRONTEND"
-docker container rm "$CONTAINER_FRONTEND"
-
-# Grab the exit code from the test container
-EXIT_STATUS=$(docker inspect "$CONTAINER_CYPRESS" --format='{{.State.ExitCode}}')
-
-# Cleanup the cypress container
-docker container rm "$CONTAINER_CYPRESS"
-
-# Exit with the status from tests
-exit "$EXIT_STATUS"
+echo "done!"
