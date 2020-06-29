@@ -42,6 +42,7 @@ function* createBusinessCase(action: Action<any>) {
     yield put(postBusinessCase.failure(error.message));
   } finally {
     yield put(postBusinessCase.fulfill());
+    yield put(updateLastActiveAt);
   }
 }
 
@@ -63,6 +64,7 @@ function* updateBusinessCase(action: Action<any>) {
     yield put(putBusinessCase.failure(error.message));
   } finally {
     yield put(putBusinessCase.fulfill());
+    yield put(updateLastActiveAt);
   }
 }
 
@@ -78,6 +80,7 @@ function* completeBusinessCase(action: Action<any>) {
     yield put(submitBusinessCase.failure(error.message));
   } finally {
     yield put(submitBusinessCase.fulfill());
+    yield put(updateLastActiveAt);
   }
 }
 
