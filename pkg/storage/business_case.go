@@ -8,6 +8,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -31,6 +32,9 @@ func (s *Store) FetchBusinessCaseByID(id uuid.UUID) (*models.BusinessCase, error
 			fmt.Sprintf("Failed to fetch business case %s", err),
 			zap.String("id", id.String()),
 		)
+		if err.Error() == "sql: no rows in result set" {
+			return &models.BusinessCase{}, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
+		}
 		return &models.BusinessCase{}, err
 	}
 	return &businessCase, nil

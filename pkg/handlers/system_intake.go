@@ -3,12 +3,11 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net/http"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -16,20 +15,20 @@ import (
 )
 
 type createSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
-type saveSystemIntake func(context context.Context, intake *models.SystemIntake) error
+type updateSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
 type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
 
 // NewSystemIntakeHandler is a constructor for SystemIntakeHandler
 func NewSystemIntakeHandler(
 	base HandlerBase,
 	create createSystemIntake,
-	save saveSystemIntake,
+	update updateSystemIntake,
 	fetch fetchSystemIntakeByID,
 ) SystemIntakeHandler {
 	return SystemIntakeHandler{
 		HandlerBase:           base,
 		CreateSystemIntake:    create,
-		SaveSystemIntake:      save,
+		UpdateSystemIntake:    update,
 		FetchSystemIntakeByID: fetch,
 	}
 }
@@ -38,57 +37,58 @@ func NewSystemIntakeHandler(
 type SystemIntakeHandler struct {
 	HandlerBase
 	CreateSystemIntake    createSystemIntake
-	SaveSystemIntake      saveSystemIntake
+	UpdateSystemIntake    updateSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
 }
 
 // Handle handles a request for the system intake form
 func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := appcontext.Logger(r.Context())
-		if !ok {
-			h.logger.Error("Failed to get logger from context in system intake handler")
-			logger = h.logger
-		}
-
 		switch r.Method {
 		case "GET":
 			id := mux.Vars(r)["intake_id"]
+			valErr := apperrors.NewValidationError(
+				errors.New("system intake failed validation"),
+				models.SystemIntake{},
+				"",
+			)
 			if id == "" {
-				http.Error(w, "Intake ID required", http.StatusBadRequest)
+				valErr.WithValidation("path.intakeID", "is required")
+				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
 			uuid, err := uuid.Parse(id)
 			if err != nil {
-				logger.Error("Failed to parse system intake id to uuid")
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				valErr.WithValidation("path.intakeID", "must be UUID")
+				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
 			intake, err := h.FetchSystemIntakeByID(uuid)
 			if err != nil {
-				logger.Error("Failed to fetch system intake")
-				http.Error(w, "Failed to GET system intake", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			responseBody, err := json.Marshal(intake)
 			if err != nil {
-				logger.Error("Failed to marshal system intake")
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to write system intake to response: %v", err))
-				http.Error(w, "Failed to get system intake by id", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			return
 		case "POST":
 			if r.Body == nil {
-				http.Error(w, "Empty request not allowed", http.StatusBadRequest)
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
+				)
 				return
 			}
 			defer r.Body.Close()
@@ -96,43 +96,36 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			intake := models.SystemIntake{}
 			err := decoder.Decode(&intake)
 			if err != nil {
-				logger.Error("Failed to decode system intake body", zap.Error(err))
-				http.Error(w, "Bad system intake request", http.StatusBadRequest)
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
 			createdIntake, err := h.CreateSystemIntake(r.Context(), &intake)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to create a system intake to response: %v", err))
-
-				switch err.(type) {
-				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
-					http.Error(w, "Failed to create a system intake", http.StatusBadRequest)
-					return
-				default:
-					http.Error(w, "Failed to create a system intake", http.StatusInternalServerError)
-					return
-				}
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
 			}
 
 			responseBody, err := json.Marshal(createdIntake)
 			if err != nil {
-				logger.Error("Failed to marshal business case")
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
-				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 			return
 
 		case "PUT":
 			if r.Body == nil {
-				http.Error(w, "Empty request not allowed", http.StatusBadRequest)
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
+				)
 				return
 			}
 			defer r.Body.Close()
@@ -140,46 +133,43 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			intake := models.SystemIntake{}
 			err := decoder.Decode(&intake)
 			if err != nil {
-				logger.Error("Failed to decode system intake body", zap.Error(err))
-				http.Error(w, "Bad system intake request", http.StatusBadRequest)
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
 
 			user, ok := appcontext.User(r.Context())
 			if !ok {
-				logger.Error("Failed to get EUA ID from context")
-				http.Error(w, "Failed to PUT system intake", http.StatusUnauthorized)
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.ContextError{
+						Operation: apperrors.ContextGet,
+						Object:    "User",
+					})
 				return
 			}
 			intake.EUAUserID = user.EUAUserID
 
-			err = h.SaveSystemIntake(r.Context(), &intake)
+			updatedIntake, err := h.UpdateSystemIntake(r.Context(), &intake)
 			if err != nil {
-				switch err.(type) {
-				case *apperrors.ResourceConflictError:
-					logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
-					// TODO: Replace with more helpful errors
-					http.Error(w, "System has already been submitted", http.StatusConflict)
-				case *apperrors.ValidationError:
-					logger.Error(fmt.Sprintf("Failed to validate system intake: %v", err))
-					http.Error(w, "Failed to validate system intake", http.StatusBadRequest)
-				case *apperrors.ExternalAPIError:
-					logger.Error(fmt.Sprintf("Failed to submit system intake: %v", err))
-					// TODO: Replace with more helpful errors
-					http.Error(w, "Failed to submit system intake", http.StatusInternalServerError)
-				case *apperrors.NotificationError:
-					logger.Error("Failed to send notification", zap.Error(err))
-					http.Error(w, "Failed to send notification", http.StatusInternalServerError)
-				default:
-					logger.Error(fmt.Sprintf("Failed to save system intake: %v", err))
-					// TODO: Replace with more helpful errors
-					http.Error(w, "Failed to save system intake", http.StatusInternalServerError)
-				}
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
+
+			responseBody, err := json.Marshal(updatedIntake)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+			return
 		default:
-			logger.Info("Unsupported method requested")
-			http.Error(w, "Method not allowed for system intake", http.StatusMethodNotAllowed)
+			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
 			return
 		}
 	}

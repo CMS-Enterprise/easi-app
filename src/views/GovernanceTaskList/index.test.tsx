@@ -91,6 +91,26 @@ describe('The Goveranance Task List', () => {
     });
   });
 
+  it('renders the side nav actions', async done => {
+    const mockStore = configureMockStore();
+    const store = mockStore({});
+    let component;
+    await act(async () => {
+      component = mount(
+        <MemoryRouter initialEntries={['/']} initialIndex={0}>
+          <Provider store={store}>
+            <GovernanceTaskList />
+          </Provider>
+        </MemoryRouter>
+      );
+    });
+    setImmediate(() => {
+      component.update();
+      expect(component.find('.sidenav-actions').length).toEqual(1);
+      done();
+    });
+  });
+
   describe('Governance Task List Accessibility', () => {
     const mockStore = configureMockStore();
     const store = mockStore({});
