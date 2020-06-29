@@ -117,7 +117,8 @@ jobs:
           AWS_REGION: us-west-2
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: true
       - restore_cache:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
