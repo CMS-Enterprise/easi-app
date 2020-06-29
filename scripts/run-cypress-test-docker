@@ -2,14 +2,17 @@
 
 set -eu -o pipefail
 
-docker-compose build --parallel
+if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")" ; then
+  docker-compose pull
 
-docker-compose up -d db
-sleep 5
-docker-compose up --exit-code-from db_migrate db_migrate
-docker-compose up -d easi easilocal
-docker-compose up --exit-code-from cypress cypress
+  docker-compose build --parallel easilocal cypress
 
-# docker container cp easi-app_cypress_1:/cypress/videos cypress/
-
-echo "done!"
+  docker-compose up -d db
+  sleep 5
+  docker-compose up --exit-code-from db_migrate db_migrate
+  docker-compose up -d easi easilocal
+  docker-compose up --exit-code-from cypress cypress
+  echo "done!"
+else
+  exit 1
+fi

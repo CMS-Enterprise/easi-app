@@ -341,20 +341,20 @@ workflows:
     jobs:
       - build_db_migrate_image
       - lint
-      - client_test:
-          requires:
-            - lint
       - test:
           requires:
             - build_db_migrate_image
+            - lint
       - build_tag_push:
           requires:
             - test
+      - client_test:
+          requires:
+            - build_tag_push
       - hold_dev:
           type: approval
           requires:
             - client_test
-            - build_tag_push
           filters:
             branches:
               ignore:
