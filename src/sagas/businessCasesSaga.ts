@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
+import { updateLastActiveAt } from 'reducers/authReducer';
 import { fetchBusinessCases } from 'types/routines';
 
 function fetchBusinessCasesRequest() {
@@ -15,6 +16,7 @@ function* getBusinessCases() {
     yield put(fetchBusinessCases.failure(error.message));
   } finally {
     yield put(fetchBusinessCases.fulfill());
+    yield put(updateLastActiveAt);
   }
 }
 

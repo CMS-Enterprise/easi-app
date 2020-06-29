@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { takeLatest, call, put } from 'redux-saga/effects';
+import { updateLastActiveAt } from 'reducers/authReducer';
 import { fetchSystemShorts } from 'types/routines';
 
 function requestSystemShorts() {
@@ -15,6 +16,7 @@ function* getSystemShorts() {
     yield put(fetchSystemShorts.failure(error.message));
   } finally {
     yield put(fetchSystemShorts.fulfill());
+    yield put(updateLastActiveAt);
   }
 }
 
