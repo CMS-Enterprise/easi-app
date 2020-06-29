@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -41,7 +42,8 @@ func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 			ea_support_request,
 			existing_contract,
 			created_at,
-			updated_at
+			updated_at,
+		    submitted_at
 		) 
 		VALUES (
 			:id,
@@ -66,7 +68,8 @@ func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 			:ea_support_request,
 			:existing_contract,
 		    :created_at,
-		    :updated_at
+		    :updated_at,
+			:submitted_at
 		)`
 	_, err := s.DB.NamedExec(
 		createIntakeSQL,
@@ -126,101 +129,6 @@ func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 	return intake, err
 }
 
-// SaveSystemIntake does an upsert for a system intake
-func (s *Store) SaveSystemIntake(intake *models.SystemIntake) error {
-	const SystemIntakeInsertSQL = `
-		INSERT INTO system_intake (
-			id,
-			eua_user_id,
-		    status,
-			requester,
-			component,
-			business_owner,
-			business_owner_component,
-			product_manager,
-			product_manager_component,
-			isso,
-			trb_collaborator,
-			oit_security_collaborator,
-			ea_collaborator,
-			project_name,
-			existing_funding,
-			funding_source,
-			business_need,
-			solution,
-			process_status,
-			ea_support_request,
-			existing_contract,
-			created_at,
-			updated_at,
-		    submitted_at,
-		    alfabet_id
-		) 
-		VALUES (
-			:id,
-			:eua_user_id,
-		    :status,
-			:requester,
-			:component,
-			:business_owner,
-			:business_owner_component,
-			:product_manager,
-			:product_manager_component,
-			:isso,
-			:trb_collaborator,
-			:oit_security_collaborator,
-			:ea_collaborator,
-			:project_name,
-			:existing_funding,
-			:funding_source,
-			:business_need,
-			:solution,
-			:process_status,
-			:ea_support_request,
-			:existing_contract,
-		    :created_at,
-		    :updated_at,
-		    :submitted_at,
-		    :alfabet_id
-		)
-		ON CONFLICT (id) DO UPDATE SET
-		    status=:status,
-			requester=:requester,
-			component=:component,
-			business_owner=:business_owner,
-			business_owner_component=:business_owner_component,
-			product_manager=:product_manager,
-			product_manager_component=:product_manager_component,
-			isso=:isso,
-			trb_collaborator=:trb_collaborator,
-			oit_security_collaborator=:oit_security_collaborator,
-			ea_collaborator=:ea_collaborator,
-			project_name=:project_name,
-			existing_funding=:existing_funding,
-			funding_source=:funding_source,
-			business_need=:business_need,
-			solution=:solution,
-			process_status=:process_status,
-			ea_support_request=:ea_support_request,
-			existing_contract=:existing_contract,
-			updated_at=:updated_at,
-			submitted_at=:submitted_at,
-		    alfabet_id=:alfabet_id
-	`
-	_, err := s.DB.NamedExec(
-		SystemIntakeInsertSQL,
-		intake,
-	)
-	if err != nil {
-		s.logger.Error(
-			fmt.Sprintf("Failed to save system intake %s", err),
-			zap.String("id", intake.ID.String()),
-			zap.String("user", intake.EUAUserID),
-		)
-	}
-	return err
-}
-
 // FetchSystemIntakeByID queries the DB for a system intake matching the given ID
 func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
@@ -230,6 +138,9 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 			fmt.Sprintf("Failed to fetch system intake %s", err),
 			zap.String("id", id.String()),
 		)
+		if err.Error() == "sql: no rows in result set" {
+			return &models.SystemIntake{}, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
+		}
 		return &models.SystemIntake{}, err
 	}
 	return &intake, nil
