@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -137,6 +138,9 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 			fmt.Sprintf("Failed to fetch system intake %s", err),
 			zap.String("id", id.String()),
 		)
+		if err.Error() == "sql: no rows in result set" {
+			return &models.SystemIntake{}, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
+		}
 		return &models.SystemIntake{}, err
 	}
 	return &intake, nil

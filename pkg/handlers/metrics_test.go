@@ -57,21 +57,21 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 		{
 			name:   "no params",
 			params: map[string]string{},
-			status: http.StatusBadRequest,
+			status: http.StatusUnprocessableEntity,
 		},
 		{
 			name: "bad startTime",
 			params: map[string]string{
 				"startTime": "bad time",
 			},
-			status: http.StatusBadRequest,
+			status: http.StatusUnprocessableEntity,
 		},
 		{
 			name: "non RFC3339 format startTime",
 			params: map[string]string{
 				"startTime": s.base.clock.Now().Format(time.RFC822),
 			},
-			status: http.StatusBadRequest,
+			status: http.StatusUnprocessableEntity,
 		},
 		{
 			name: "non RFC3339 format endTime",
@@ -79,7 +79,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 				"startTime": s.base.clock.Now().Format(time.RFC3339),
 				"endTime":   s.base.clock.Now().Format(time.RFC822),
 			},
-			status: http.StatusBadRequest,
+			status: http.StatusUnprocessableEntity,
 		},
 		{
 			name: "bad endTime",
@@ -87,7 +87,7 @@ func (s HandlerTestSuite) TestMetricsHandler() {
 				"startTime": s.base.clock.Now().Format(time.RFC3339),
 				"endTime":   "badTime",
 			},
-			status: http.StatusBadRequest,
+			status: http.StatusUnprocessableEntity,
 		},
 		{
 			name: "startTime no endTime",

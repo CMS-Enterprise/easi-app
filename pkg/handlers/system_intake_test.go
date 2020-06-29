@@ -74,7 +74,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to parse system intake id to uuid")),
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("GET returns an error if the uuid doesn't exist", func() {
@@ -86,11 +86,14 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		SystemIntakeHandler{
 			UpdateSystemIntake:    nil,
 			HandlerBase:           s.base,
-			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to fetch system intake")),
+			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(&apperrors.ResourceNotFoundError{}),
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to GET system intake\n", rr.Body.String())
+		s.Equal(http.StatusNotFound, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Resource not found", responseErr.Message)
 	})
 
 	s.Run("golden path POST passes", func() {
@@ -128,7 +131,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			UpdateSystemIntake:    nil,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusUnauthorized, rr.Code)
+		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
 
 	s.Run("POST fails if a validation error is thrown", func() {
@@ -152,7 +155,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("POST fails if business case isn't created", func() {
@@ -197,7 +200,10 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusBadRequest, rr.Code)
-		s.Equal("Bad system intake request\n", rr.Body.String())
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Bad request", responseErr.Message)
 	})
 
 	s.Run("PUT fails with bad save", func() {
@@ -211,7 +217,10 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to save system intake\n", rr.Body.String())
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Something went wrong", responseErr.Message)
 	})
 
 	s.Run("PUT fails with already submitted intake", func() {
@@ -232,8 +241,11 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
-		s.Equal("Failed to validate system intake\n", rr.Body.String())
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Entity unprocessable", responseErr.Message)
 	})
 
 	s.Run("PUT fails with failed validation", func() {
@@ -253,8 +265,11 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
-		s.Equal("Failed to validate system intake\n", rr.Body.String())
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Entity unprocessable", responseErr.Message)
 	})
 
 	s.Run("PUT fails with failed submit", func() {
@@ -274,8 +289,11 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to submit system intake\n", rr.Body.String())
+		s.Equal(http.StatusServiceUnavailable, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Service unavailable", responseErr.Message)
 	})
 
 	s.Run("PUT fails with failed email", func() {
@@ -299,6 +317,9 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to send notification\n", rr.Body.String())
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Failed to send notification", responseErr.Message)
 	})
 }
