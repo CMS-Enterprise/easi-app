@@ -3,7 +3,7 @@ version: '3.7'
 services:
   db:
     image: postgres:11.6
-    network_mode: host
+    network_mode: "service:easilocal"
   db_migrate:
     build:
       context: .
