@@ -16,14 +16,14 @@ import (
 // NewHandlerBase is a constructor for HandlerBase
 func NewHandlerBase(logger *zap.Logger) HandlerBase {
 	return HandlerBase{
-		logger: logger,
+		Logger: logger,
 		clock:  clock.New(),
 	}
 }
 
 // HandlerBase is for shared handler utilities
 type HandlerBase struct {
-	logger *zap.Logger
+	Logger *zap.Logger
 	clock  clock.Clock
 }
 
@@ -62,7 +62,7 @@ func (r *errorResponse) withMap(errMap map[string]string) {
 func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWriter, appErr error) {
 	logger, ok := appcontext.Logger(ctx)
 	if !ok {
-		logger = b.logger
+		logger = b.Logger
 	}
 
 	traceID, ok := appcontext.Trace(ctx)
@@ -86,12 +86,22 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		)
 	case *apperrors.QueryError:
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
-		code = http.StatusInternalServerError
-		response = newErrorResponse(
-			code,
-			"Something went wrong",
-			traceID,
-		)
+		switch appErr.Unwrap().(type) {
+		case *apperrors.ResourceNotFoundError:
+			code = http.StatusNotFound
+			response = newErrorResponse(
+				code,
+				"Resource not found",
+				traceID,
+			)
+		default:
+			code = http.StatusInternalServerError
+			response = newErrorResponse(
+				code,
+				"Something went wrong",
+				traceID,
+			)
+		}
 	case *apperrors.NotificationError:
 		logger.Error("Returning server error response from handler", zap.Error(appErr))
 		code = http.StatusInternalServerError
@@ -147,6 +157,21 @@ func (b HandlerBase) WriteErrorResponse(ctx context.Context, w http.ResponseWrit
 		response = newErrorResponse(
 			code,
 			"Bad request",
+			traceID,
+		)
+	case *apperrors.UnknownRouteError:
+		logger.Info("Returning status not found error from handler", zap.Error(appErr))
+		code = http.StatusNotFound
+		response = newErrorResponse(
+			code,
+			"Not found",
+			traceID,
+		)
+	case *apperrors.ResourceNotFoundError:
+		code = http.StatusNotFound
+		response = newErrorResponse(
+			code,
+			"Resource not found",
 			traceID,
 		)
 	default:
