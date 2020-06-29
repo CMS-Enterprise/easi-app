@@ -1,12 +1,14 @@
 import React from 'react';
 import classnames from 'classnames';
 import './index.scss';
+import HelpText from 'components/shared/HelpText';
 
 type RadioFieldProps = {
   id: string;
   inline: boolean;
   checked?: boolean;
   label: string;
+  helpText?: string;
   name: string;
   onBlur?: () => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -19,6 +21,7 @@ export const RadioField = ({
   id,
   inline,
   label,
+  helpText,
   name,
   onBlur,
   onChange,
@@ -43,9 +46,16 @@ export const RadioField = ({
         type="radio"
         value={value}
       />
-      <label className={radioLabelClasses} htmlFor={id}>
-        {label}
-      </label>
+      <div className={radioLabelClasses}>
+        <div className="display-inline-block text-indent-0">
+          <label className="display-block" htmlFor={id}>
+            {label}
+          </label>
+          {helpText && (
+            <HelpText className="display-block">{helpText}</HelpText>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
