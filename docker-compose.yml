@@ -3,8 +3,6 @@ version: '3.7'
 services:
   db:
     image: postgres:11.6
-    ports:
-      - 5432:5432
     network_mode: host
   db_migrate:
     build:
@@ -16,7 +14,7 @@ services:
       - FLYWAY_URL=jdbc:postgresql://localhost/postgres
         # volumes:
         #   - ./migrations:/flyway/sql
-    network_mode: host
+    network_mode: "service:easilocal"
     depends_on:
       - db
   easi:
@@ -56,9 +54,7 @@ services:
       - PGPASS=""
       - PGSSLMODE=disable
     entrypoint: ["/easi/easi", "serve"]
-    ports:
-      - 8080:8080
-    network_mode: host
+    network_mode: "service:easilocal"
     depends_on:
       - db_migrate
   easilocal:
@@ -74,8 +70,6 @@ services:
         - REACT_APP_OKTA_SERVER_ID=$OKTA_SERVER_ID_DEV
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
-    ports:
-      - 3000:3000
     entrypoint: ["serve", "-s", "-l", "3000"]
   cypress:
     build:
@@ -89,6 +83,6 @@ services:
         #   - ./cypress:/cypress
         #   - ./cypress.json:/cypress.json
         #   - ./tsconfig.json:/tsconfig.json
-    network_mode: host
+    network_mode: "service:easilocal"
     depends_on:
       - easilocal
