@@ -5,22 +5,16 @@ services:
     image: postgres:11.6
     network_mode: "service:easilocal"
   db_migrate:
-    build:
-      context: .
-      dockerfile: Dockerfile.db_migrations
+    image: "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}"
     environment:
       - FLYWAY_USER=postgres
       - FLYWAY_PASSWORD=
       - FLYWAY_URL=jdbc:postgresql://localhost/postgres
-        # volumes:
-        #   - ./migrations:/flyway/sql
     network_mode: "service:easilocal"
     depends_on:
       - db
   easi:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}"
     environment:
       - APPLICATION_VERSION
       - APPLICATION_DATETIME
@@ -79,10 +73,6 @@ services:
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET
-        # volumes:
-        #   - ./cypress:/cypress
-        #   - ./cypress.json:/cypress.json
-        #   - ./tsconfig.json:/tsconfig.json
     network_mode: "service:easilocal"
     depends_on:
       - easilocal
