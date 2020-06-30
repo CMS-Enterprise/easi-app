@@ -9,7 +9,7 @@ type LabelProps = {
 };
 
 const Label = ({ children, htmlFor, className, ariaLabel }: LabelProps) => {
-  const classes = classnames('usa-label', className);
+  const classes = classnames(className, 'usa-label');
 
   return (
     <label className={classes} htmlFor={htmlFor} aria-label={ariaLabel}>

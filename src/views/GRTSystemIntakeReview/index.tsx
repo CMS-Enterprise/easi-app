@@ -9,6 +9,10 @@ import { fetchSystemIntake } from 'types/routines';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { RadioField } from 'components/shared/RadioField';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import TextAreaField from 'components/shared/TextAreaField';
+import Button from 'components/shared/Button';
 
 type GRTSystemIntakeReviewResponse = {
   decision:
@@ -48,7 +52,7 @@ export const GRTSystemIntakeReview = () => {
           {systemIntake && <SystemIntakeReview systemIntake={systemIntake} />}
         </div>
       </MainContent>
-      <div className="bg-gray-5">
+      <div className="bg-gray-5 padding-top-6 padding-bottom-5">
         <MainContent className="grid-container">
           <Formik
             initialValues={initialValues}
@@ -58,12 +62,12 @@ export const GRTSystemIntakeReview = () => {
               const { values, setFieldValue } = formikProps;
               return (
                 <Form>
-                  <h1 className="font-heading-xl">Next steps</h1>
-                  <div>
-                    <div className="grid-col-6">
+                  <h1 className="font-heading-xl margin-top-0">Next steps</h1>
+                  <div className="grid-row">
+                    <div className="grid-col-4">
                       <FieldGroup>
-                        <fieldset className="usa-fieldset margin-top-4">
-                          <legend className="usa-label margin-bottom-1">
+                        <fieldset className="usa-fieldset">
+                          <legend className="usa-label margin-bottom-2">
                             How to proceed?
                           </legend>
                           <Field
@@ -114,6 +118,33 @@ export const GRTSystemIntakeReview = () => {
                           />
                         </fieldset>
                       </FieldGroup>
+                      <hr className="border-black border-bottom-0" />
+                      <HelpText>
+                        If there isn&apos;t enough info on this request, please
+                        get in touch with the requester over email
+                      </HelpText>
+                    </div>
+                    <div className="grid-col-2" />
+                    <div className="grid-col-6">
+                      <FieldGroup scrollElement="emailText">
+                        <Label
+                          className="margin-bottom-2 margin-top-0"
+                          htmlFor="GrtIntakeReviewForm-EmailText"
+                        >
+                          This email will be sent to the requester
+                        </Label>
+                        <Field
+                          as={TextAreaField}
+                          id="GrtIntakeReviewForm-EmailText"
+                          maxLength={2000}
+                          name="emailText"
+                          aria-describedby="GrtIntakeReviewForm-EmailText"
+                          className="maxw-full"
+                        />
+                      </FieldGroup>
+                      <Button className="margin-top-3" type="submit">
+                        Email Decision and Progress to next step
+                      </Button>
                     </div>
                   </div>
                 </Form>
