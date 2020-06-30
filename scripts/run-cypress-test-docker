@@ -8,7 +8,6 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   docker-compose build --parallel easilocal cypress
 
   docker-compose up -d db
-  sleep 5
   docker-compose up --exit-code-from db_migrate db_migrate
   docker-compose up -d easi easilocal
   docker-compose up --exit-code-from cypress cypress
