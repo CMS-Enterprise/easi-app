@@ -345,9 +345,9 @@ workflows:
       - test:
           requires:
             - build_db_migrate_image
-            - lint
       - build_tag_push:
           requires:
+            - lint
             - test
       - integration_tests:
           requires:
@@ -380,7 +380,7 @@ workflows:
   weekly:
     triggers:
       - schedule:
-          cron: '0 2 * * 6'
+          cron: "0 2 * * 6"
           filters:
             branches:
               only:
