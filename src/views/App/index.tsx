@@ -29,6 +29,7 @@ class App extends React.Component<MainProps, MainState> {
   };
 
   render() {
+    console.log('App Env', process.env.REACT_APP_APP_ENV);
     return (
       <div>
         <div className="usa-overlay" />
