@@ -12,7 +12,7 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   docker-compose up --exit-code-from db_migrate db_migrate
   docker-compose up -d easi easilocal
   docker-compose up --exit-code-from cypress cypress
-  echo "done!"
+  echo "done"
 else
   exit 1
 fi
