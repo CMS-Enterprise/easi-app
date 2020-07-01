@@ -160,6 +160,7 @@ func (s *Server) routes(
 	intakeReviewHandler := handlers.NewIntakeReviewHandler(
 		base,
 		services.NewReviewIntake(
+			services.NewAuthorizeReviewIntake(),
 			services.NewFetchSystemIntakeByID(
 				serviceConfig,
 				store.FetchSystemIntakeByID,

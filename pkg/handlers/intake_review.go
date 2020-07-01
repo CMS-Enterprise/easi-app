@@ -3,12 +3,9 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net/http"
 
-	"go.uber.org/zap"
-
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -35,16 +32,14 @@ type IntakeReviewHandler struct {
 // Handle handles a request to submit intake feedback
 func (h IntakeReviewHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := appcontext.Logger(r.Context())
-		if !ok {
-			h.logger.Error("Failed to get logger from context in intake review handler")
-			logger = h.logger
-		}
-
 		switch r.Method {
 		case "POST":
 			if r.Body == nil {
-				http.Error(w, "Empty request not allowed", http.StatusBadRequest)
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
+				)
 				return
 			}
 			defer r.Body.Close()
@@ -52,29 +47,19 @@ func (h IntakeReviewHandler) Handle() http.HandlerFunc {
 			review := models.IntakeReview{}
 			err := decoder.Decode(&review)
 			if err != nil {
-				logger.Error("Failed to decode intake review body", zap.Error(err))
-				http.Error(w, "Bad intake review request", http.StatusBadRequest)
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
 			err = h.ReviewIntake(r.Context(), &review)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to create a system intake to response: %v", err))
-
-				switch err.(type) {
-				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
-					http.Error(w, "Failed to create a system intake", http.StatusBadRequest)
-					return
-				default:
-					http.Error(w, "Failed to create a system intake", http.StatusInternalServerError)
-					return
-				}
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
 			}
 
-			w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusCreated)
 			return
 		default:
-			logger.Info("Unsupported method requested")
-			http.Error(w, "Method not allowed for intake review", http.StatusMethodNotAllowed)
+			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
 			return
 		}
 
