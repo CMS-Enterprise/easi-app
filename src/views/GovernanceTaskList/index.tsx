@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useOktaAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import BreadcrumbNav from 'components/BreadcrumbNav';
@@ -16,20 +15,16 @@ import './index.scss';
 
 const GovernanceTaskList = () => {
   const { systemId } = useParams();
-  const { authState } = useOktaAuth();
   const dispatch = useDispatch();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
 
   useEffect(() => {
-    if (systemId === 'new') {
-      return;
-    }
-    if (authState.isAuthenticated) {
+    if (systemId !== 'new') {
       dispatch(fetchSystemIntake(systemId));
     }
-  }, [dispatch, systemId, authState.isAuthenticated]);
+  }, [dispatch, systemId]);
   const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake || null
+    (state: AppState) => state.systemIntake.systemIntake
   );
 
   const calculateIntakeStatus = (intake: SystemIntakeForm) => {
@@ -41,7 +36,7 @@ const GovernanceTaskList = () => {
     }
     return 'COMPLETED';
   };
-  const intakeState = calculateIntakeStatus(systemIntake);
+  const intakeStatus = calculateIntakeStatus(systemIntake);
   const chooseIntakeLink = (intake: SystemIntakeForm, status: string) => {
     const newIntakeLink = '/system/new';
     if (intake.id === '') {
@@ -53,6 +48,7 @@ const GovernanceTaskList = () => {
         link = `/system/${intake.id}/contact-details`;
         break;
       case 'COMPLETED':
+        // This will need to be changed once we have an intake review page
         link = '/';
         break;
       default:
@@ -60,7 +56,7 @@ const GovernanceTaskList = () => {
     }
     return link;
   };
-  const intakeLink = chooseIntakeLink(systemIntake, intakeState);
+  const intakeLink = chooseIntakeLink(systemIntake, intakeStatus);
 
   return (
     <div className="governance-task-list">
@@ -92,7 +88,7 @@ const GovernanceTaskList = () => {
                 heading="Fill in the request form"
                 description="Tell the Governance Admin Team about your idea. This step lets CMS build
               context about your request and start preparing for discussions with your team."
-                status={intakeState}
+                status={intakeStatus}
                 link={intakeLink}
               />
               <TaskListItem
