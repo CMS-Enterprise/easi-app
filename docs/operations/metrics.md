@@ -5,7 +5,7 @@ project to understand the impact EASi is making.
 
 ## Steps
 
-1) Visit [EASi Production](https://cms.easi.gov)
+1) Visit [EASi Production](https://easi.cms.gov)
 2) Login with your EUA credentials
 3) Open up the browser console
 
