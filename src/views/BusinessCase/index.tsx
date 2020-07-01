@@ -4,6 +4,7 @@ import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { SecureRoute } from '@okta/okta-react';
 import { ObjectSchema } from 'yup';
+import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
@@ -131,7 +132,7 @@ export const BusinessCase = () => {
     history.push(newUrl);
   };
 
-  // Resume existing business case
+  // Start new business case or resume existing business case
   useEffect(() => {
     if (businessCaseId === 'new') {
       const systemIntakeId =
@@ -190,7 +191,7 @@ export const BusinessCase = () => {
   return (
     <div className="business-case margin-bottom-5">
       <Header name="CMS Business Case" />
-      <main role="main">
+      <MainContent>
         {businessCase.id && (
           <Formik
             initialValues={businessCase}
@@ -398,7 +399,7 @@ export const BusinessCase = () => {
             />
           )}
         </div>
-      </main>
+      </MainContent>
     </div>
   );
 };

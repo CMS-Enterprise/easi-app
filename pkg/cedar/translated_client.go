@@ -71,7 +71,7 @@ func ValidateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logge
 	if validate.RequireString(intake.EUAUserID) {
 		expectedError.WithValidation("EUAUserID", validationMessage)
 	}
-	if validate.RequireNullString(intake.Requester) {
+	if validate.RequireString(intake.Requester) {
 		expectedError.WithValidation("Requester", validationMessage)
 	}
 	if validate.RequireNullString(intake.Component) {
@@ -147,7 +147,7 @@ func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient
 		ProcessStatus:           &validatedIntake.ProcessStatus.String,
 		ProductManager:          &validatedIntake.ProductManager.String,
 		ProductManagerComponent: &validatedIntake.ProductManagerComponent.String,
-		Requester:               &validatedIntake.Requester.String,
+		Requester:               &validatedIntake.Requester,
 		RequesterComponent:      &validatedIntake.Component.String,
 		Solution:                &validatedIntake.Solution.String,
 		SubmittedTime:           &submissionTime,

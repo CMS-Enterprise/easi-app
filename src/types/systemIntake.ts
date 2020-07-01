@@ -51,6 +51,7 @@ export type SystemIntakeForm = {
 export type SystemIntakeState = {
   systemIntake: SystemIntakeForm;
   isLoading: boolean | null;
+  isSaving: boolean;
   isSubmitting: boolean;
   error?: any;
 };
