@@ -110,4 +110,71 @@ describe('The Goveranance Task List', () => {
       done();
     });
   });
+
+  describe('Governance Task List Accessibility', () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({});
+    let component;
+    it('button expansion is tied to the secondary ordered list', async done => {
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+
+        const id = 'GovernanceTaskList-SecondaryList';
+        component
+          .find('.governance-task-list__remaining-steps-btn')
+          .simulate('click');
+        setImmediate(() => {
+          component.update();
+          expect(
+            component.find(`button[aria-controls="${id}"]`).exists()
+          ).toEqual(true);
+          expect(component.find(`ol#${id}`).exists()).toEqual(true);
+          done();
+        });
+      });
+    });
+
+    it('renders aria-expanded/label correctly', async done => {
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+
+        expect(
+          component.find('.governance-task-list__remaining-steps-btn').text()
+        ).toEqual('Show remaining steps');
+        expect(
+          component
+            .find('.governance-task-list__remaining-steps-btn')
+            .prop('aria-expanded')
+        ).toEqual(false);
+        component
+          .find('.governance-task-list__remaining-steps-btn')
+          .simulate('click');
+
+        setImmediate(() => {
+          component.update();
+          expect(
+            component.find('.governance-task-list__remaining-steps-btn').text()
+          ).toEqual('Hide remaining steps');
+          expect(
+            component
+              .find('.governance-task-list__remaining-steps-btn')
+              .prop('aria-expanded')
+          ).toEqual(true);
+          done();
+        });
+      });
+    });
+  });
 });

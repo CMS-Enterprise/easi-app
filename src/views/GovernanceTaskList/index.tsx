@@ -117,12 +117,15 @@ const GovernanceTaskList = () => {
               type="button"
               className="governance-task-list__remaining-steps-btn"
               onClick={() => setDisplayRemainingSteps(prev => !prev)}
+              aria-expanded={displayRemainingSteps}
+              aria-controls="GovernanceTaskList-SecondaryList"
             >
               {displayRemainingSteps ? 'Hide' : 'Show'} remaining steps
             </button>
 
             {displayRemainingSteps && (
               <ol
+                id="GovernanceTaskList-SecondaryList"
                 className="governance-task-list__task-list governance-task-list__task-list--secondary"
                 start={4}
               >
