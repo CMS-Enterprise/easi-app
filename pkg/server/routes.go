@@ -157,7 +157,15 @@ func (s *Server) routes(
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
 
-	intakeReviewHandler := handlers.NewIntakeReviewHandler(base)
+	intakeReviewHandler := handlers.NewIntakeReviewHandler(
+		base,
+		services.NewReviewIntake(
+			services.NewFetchSystemIntakeByID(
+				serviceConfig,
+				store.FetchSystemIntakeByID,
+			),
+		),
+	)
 	api.Handle("/intake_review", intakeReviewHandler.Handle())
 
 	metricsHandler := handlers.NewMetricsHandler(
