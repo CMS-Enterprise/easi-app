@@ -69,6 +69,11 @@ func (e *ResourceConflictError) Unwrap() error {
 // Validations maps attributes to validation messages
 type Validations map[string]string
 
+// Map directly returns a map in case implementation of Validations changes
+func (v Validations) Map() map[string]string {
+	return v
+}
+
 // NewValidationError returns a validation error with fields instantiated
 func NewValidationError(err error, model interface{}, modelID string) ValidationError {
 	return ValidationError{
@@ -180,4 +185,68 @@ type NotificationError struct {
 // Error is the error message for a notification error
 func (e *NotificationError) Error() string {
 	return fmt.Sprintf("Email error '%s' on destination %s", e.Err, e.DestinationType)
+}
+
+// MethodNotAllowedError is a typed error for an unsupported method
+type MethodNotAllowedError struct {
+	Method string
+}
+
+// Error provides the error as a string
+func (e *MethodNotAllowedError) Error() string {
+	return fmt.Sprintf(
+		"Method %s not allowed",
+		e.Method,
+	)
+}
+
+// BadRequestError is a typed error for bad request content
+type BadRequestError struct {
+	Err error
+}
+
+// Error provides the error as a string
+func (e *BadRequestError) Error() string {
+	return fmt.Sprintf(
+		"Request could not understood: %v",
+		e.Err,
+	)
+}
+
+// Unwrap provides the underlying error
+func (e *BadRequestError) Unwrap() error {
+	return e.Err
+}
+
+// UnknownRouteError is an error for unknown routes
+type UnknownRouteError struct {
+	Path string
+}
+
+// Error provides the error as a string
+func (e *UnknownRouteError) Error() string {
+	return fmt.Sprintf(
+		"Route %s unknown",
+		e.Path,
+	)
+}
+
+// ResourceNotFoundError is a typed error non-existent resources
+type ResourceNotFoundError struct {
+	Err      error
+	Resource interface{}
+}
+
+// Error provides the error as a string
+func (e *ResourceNotFoundError) Error() string {
+	return fmt.Sprintf(
+		"Could not not find resource %T with error: %v",
+		e.Resource,
+		e.Err,
+	)
+}
+
+// Unwrap provides the underlying error
+func (e *ResourceNotFoundError) Unwrap() error {
+	return e.Err
 }

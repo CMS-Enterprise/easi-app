@@ -32,6 +32,35 @@ func NewFetchSystemIntakesByEuaID(
 	}
 }
 
+// NewCreateSystemIntake is a service to create a business case
+func NewCreateSystemIntake(
+	config Config,
+	create func(intake *models.SystemIntake) (*models.SystemIntake, error),
+) func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+		user, ok := appcontext.User(context)
+		if !ok {
+			// Default to failure to authorize and create a quick audit log
+			config.logger.With(zap.Bool("Authorized", false)).
+				With(zap.String("Operation", "CreateSystemIntake")).
+				Info("something went wrong fetching the eua id from the context")
+			return &models.SystemIntake{}, &apperrors.UnauthorizedError{}
+		}
+		intake.EUAUserID = user.EUAUserID
+		// app validation belongs here
+		createdIntake, err := create(intake)
+		if err != nil {
+			config.logger.Error("failed to create a system intake")
+			return &models.SystemIntake{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QueryPost,
+			}
+		}
+		return createdIntake, nil
+	}
+}
+
 // NewAuthorizeSaveSystemIntake returns a function
 // that authorizes a user for saving a system intake
 func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
@@ -51,33 +80,31 @@ func NewAuthorizeSaveSystemIntake(logger *zap.Logger) func(
 		// If intake doesn't exist or owned by user, authorize
 		if intake == nil || user.EUAUserID == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
-				With(zap.String("Operation", "SaveSystemIntake")).
+				With(zap.String("Operation", "UpdateSystemIntake")).
 				Info("user authorized to save system intake")
 			return true, nil
 		}
 		// Default to failure to authorize and create a quick audit log
 		logger.With(zap.Bool("Authorized", false)).
-			With(zap.String("Operation", "SaveSystemIntake")).
+			With(zap.String("Operation", "UpdateSystemIntake")).
 			Info("unauthorized attempt to save system intake")
 		return false, nil
 	}
 }
 
-// NewSaveSystemIntake is a service to save the system intake
-func NewSaveSystemIntake(
+// NewUpdateSystemIntake is a service to update a system intake
+func NewUpdateSystemIntake(
 	config Config,
-	save func(intake *models.SystemIntake) error,
+	update func(intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 	sendEmail func(requester string, intakeID uuid.UUID) error,
-) func(context context.Context, intake *models.SystemIntake) error {
-	return func(ctx context.Context, intake *models.SystemIntake) error {
+) func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		existingIntake, fetchErr := fetch(intake.ID)
-		if fetchErr != nil && fetchErr.Error() == "sql: no rows in result set" {
-			existingIntake = nil
-		} else if fetchErr != nil {
-			return &apperrors.QueryError{
+		if fetchErr != nil {
+			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       fetchErr,
 				Operation: apperrors.QueryFetch,
 				Model:     existingIntake,
@@ -85,16 +112,13 @@ func NewSaveSystemIntake(
 		}
 		ok, err := authorize(ctx, existingIntake)
 		if err != nil {
-			return err
+			return &models.SystemIntake{}, err
 		}
 		if !ok {
-			return &apperrors.UnauthorizedError{Err: err}
+			return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
 		}
-		updatedTime := config.clock.Now().UTC()
+		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		if existingIntake == nil {
-			intake.CreatedAt = &updatedTime
-		}
 
 		if intake.Status == models.SystemIntakeStatusSUBMITTED {
 			if intake.AlfabetID.Valid {
@@ -103,16 +127,16 @@ func NewSaveSystemIntake(
 					ResourceID: intake.ID.String(),
 					Resource:   intake,
 				}
-				return err
+				return &models.SystemIntake{}, err
 			}
 
 			intake.SubmittedAt = &updatedTime
 			alfabetID, validateAndSubmitErr := validateAndSubmit(intake, config.logger)
 			if validateAndSubmitErr != nil {
-				return validateAndSubmitErr
+				return &models.SystemIntake{}, validateAndSubmitErr
 			}
 			if alfabetID == "" {
-				return &apperrors.ExternalAPIError{
+				return &models.SystemIntake{}, &apperrors.ExternalAPIError{
 					Err:       errors.New("submission was not successful"),
 					Model:     intake,
 					ModelID:   intake.ID.String(),
@@ -122,9 +146,9 @@ func NewSaveSystemIntake(
 			}
 			intake.AlfabetID = null.StringFrom(alfabetID)
 		}
-		err = save(intake)
+		intake, err = update(intake)
 		if err != nil {
-			return &apperrors.QueryError{
+			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     intake,
 				Operation: apperrors.QuerySave,
@@ -132,12 +156,12 @@ func NewSaveSystemIntake(
 		}
 		// only send an email when everything went ok
 		if intake.Status == models.SystemIntakeStatusSUBMITTED {
-			err = sendEmail(intake.Requester.ValueOrZero(), intake.ID)
+			err = sendEmail(intake.Requester, intake.ID)
 			if err != nil {
-				return err
+				return &models.SystemIntake{}, err
 			}
 		}
-		return nil
+		return intake, nil
 	}
 }
 

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"go.uber.org/zap"
@@ -13,10 +12,18 @@ import (
 
 type fetchSystems func(logger *zap.Logger) (models.SystemShorts, error)
 
+// NewSystemsListHandler is a constructor for SystemListHandler
+func NewSystemsListHandler(base HandlerBase, fetch fetchSystems) SystemsListHandler {
+	return SystemsListHandler{
+		HandlerBase:  base,
+		FetchSystems: fetch,
+	}
+}
+
 // SystemsListHandler is the handler for listing systems
 type SystemsListHandler struct {
+	HandlerBase
 	FetchSystems fetchSystems
-	Logger       *zap.Logger
 }
 
 // Handle handles a web request and returns a list of systems
@@ -30,15 +37,13 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 
 		systems, err := h.FetchSystems(logger)
 		if err != nil {
-			logger.Error(fmt.Sprintf("Failed to fetch system: %v", err))
-			http.Error(w, "failed to fetch systems", http.StatusInternalServerError)
+			h.WriteErrorResponse(r.Context(), w, err)
 			return
 		}
 
 		js, err := json.Marshal(systems)
 		if err != nil {
-			logger.Error(fmt.Sprintf("Failed to marshal system: %v", err))
-			http.Error(w, "failed to fetch systems", http.StatusInternalServerError)
+			h.WriteErrorResponse(r.Context(), w, err)
 			return
 		}
 
@@ -46,8 +51,7 @@ func (h SystemsListHandler) Handle() http.HandlerFunc {
 
 		_, err = w.Write(js)
 		if err != nil {
-			logger.Error(fmt.Sprintf("Failed to write systems response: %v", err))
-			http.Error(w, "failed to fetch systems", http.StatusInternalServerError)
+			h.WriteErrorResponse(r.Context(), w, err)
 			return
 		}
 	}

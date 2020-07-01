@@ -52,7 +52,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(nil),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
@@ -65,12 +65,12 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": "NON_EXISTENT"})
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to parse business case id to uuid")),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("GET returns an error if the uuid doesn't exist", func() {
@@ -80,13 +80,16 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": nonexistentID.String()})
 		BusinessCaseHandler{
-			Logger:                s.logger,
-			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to fetch business case")),
+			HandlerBase:           s.base,
+			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(&apperrors.ResourceNotFoundError{}),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to GET business case\n", rr.Body.String())
+		s.Equal(http.StatusNotFound, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Resource not found", responseErr.Message)
 	})
 
 	s.Run("golden path POST passes", func() {
@@ -98,11 +101,11 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "POST", "/business_case/", bytes.NewBuffer(body))
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(nil),
 		}.Handle()(rr, req)
-		s.Equal(http.StatusOK, rr.Code)
+		s.Equal(http.StatusCreated, rr.Code)
 	})
 
 	s.Run("POST fails if there is no eua ID in the context", func() {
@@ -115,11 +118,11 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req, err := http.NewRequestWithContext(badContext, "POST", "/business_case/", bytes.NewBuffer(body))
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(nil),
 		}.Handle()(rr, req)
-		s.Equal(http.StatusUnauthorized, rr.Code)
+		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
 
 	s.Run("POST fails if a validation error is thrown", func() {
@@ -137,11 +140,11 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			Err:     fmt.Errorf("failed validations"),
 		}
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(&expectedErr),
 		}.Handle()(rr, req)
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("POST fails if business case isn't created", func() {
@@ -154,7 +157,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(fmt.Errorf("failed to create business case")),
 		}.Handle()(rr, req)
@@ -171,7 +174,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
@@ -185,7 +188,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
@@ -202,12 +205,12 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", fmt.Sprintf("/business_case/%s", "3"), bytes.NewBuffer(body))
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("PUT fails if there is no eua ID in the context", func() {
@@ -222,12 +225,12 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusUnauthorized, rr.Code)
+		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
 
 	s.Run("returns an error if there updating fails with a validation error", func() {
@@ -241,12 +244,12 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(&apperrors.ValidationError{}),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("returns an error if there updating fails with a resource conflict error", func() {
@@ -260,12 +263,12 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(&apperrors.ResourceConflictError{}),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusConflict, rr.Code)
 	})
 
 	s.Run("returns an error if there updating fails in another way", func() {
@@ -279,7 +282,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": id.String()})
 		s.NoError(err)
 		BusinessCaseHandler{
-			Logger:                s.logger,
+			HandlerBase:           s.base,
 			FetchBusinessCaseByID: nil,
 			UpdateBusinessCase:    newMockUpdateBusinessCase(fmt.Errorf("failed to update business case")),
 			CreateBusinessCase:    nil,
