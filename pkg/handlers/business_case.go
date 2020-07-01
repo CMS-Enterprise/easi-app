@@ -9,7 +9,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -43,15 +42,21 @@ type BusinessCaseHandler struct {
 	UpdateBusinessCase    updateBusinessCase
 }
 
-func requireBusinessCaseID(reqVars map[string]string, logger *zap.Logger) (uuid.UUID, error) {
+func requireBusinessCaseID(reqVars map[string]string) (uuid.UUID, error) {
+	valErr := apperrors.NewValidationError(
+		errors.New("business case failed validation"),
+		models.SystemIntake{},
+		"",
+	)
 	id := reqVars["business_case_id"]
 	if id == "" {
-		return uuid.UUID{}, errors.New("business Case ID required")
+		valErr.WithValidation("path.businessCaseId", "is required")
+		return uuid.UUID{}, &valErr
 	}
 	businessCaseID, err := uuid.Parse(id)
 	if err != nil {
-		logger.Error("Failed to parse business case id to uuid")
-		return uuid.UUID{}, err
+		valErr.WithValidation("path.businessCaseId", "must be UUID")
+		return uuid.UUID{}, &valErr
 	}
 	return businessCaseID, nil
 }
@@ -59,98 +64,89 @@ func requireBusinessCaseID(reqVars map[string]string, logger *zap.Logger) (uuid.
 // Handle handles a request for the business case form
 func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := appcontext.Logger(r.Context())
-		if !ok {
-			h.logger.Error("Failed to get logger from context in business case handler")
-			logger = h.logger
-		}
-
 		switch r.Method {
 		case "GET":
-			businessCaseID, err := requireBusinessCaseID(mux.Vars(r), logger)
+			businessCaseID, err := requireBusinessCaseID(mux.Vars(r))
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			businessCase, err := h.FetchBusinessCaseByID(r.Context(), businessCaseID)
 			if err != nil {
-				logger.Error("Failed to fetch business case")
-				http.Error(w, "Failed to GET business case", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			responseBody, err := json.Marshal(businessCase)
 			if err != nil {
-				logger.Error("Failed to marshal business case")
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to write business case to response: %v", err))
-				http.Error(w, "Failed to get business case by id", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			return
 		case "POST":
 			if r.Body == nil {
-				http.Error(w, "Empty request not allowed", http.StatusBadRequest)
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")})
 				return
 			}
 			defer r.Body.Close()
 			decoder := json.NewDecoder(r.Body)
 			businessCaseToCreate := models.BusinessCase{}
 			err := decoder.Decode(&businessCaseToCreate)
-
 			if err != nil {
-				logger.Error("Failed to decode business case body", zap.Error(err))
-				http.Error(w, "Bad business case request", http.StatusBadRequest)
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
 
 			user, ok := appcontext.User(r.Context())
 			if !ok {
-				logger.Error("Failed to get EUA ID from context")
-				http.Error(w, "Failed to POST business case", http.StatusUnauthorized)
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.ContextError{
+						Operation: apperrors.ContextGet,
+						Object:    "User",
+					})
 				return
 			}
 			businessCaseToCreate.EUAUserID = user.EUAUserID
 
 			businessCase, err := h.CreateBusinessCase(r.Context(), &businessCaseToCreate)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to create a business case to response: %v", err))
-
-				switch err.(type) {
-				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
-					http.Error(w, "Failed to create a business case", http.StatusBadRequest)
-					return
-				default:
-					http.Error(w, "Failed to create a business case", http.StatusInternalServerError)
-					return
-				}
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
 			}
 
 			responseBody, err := json.Marshal(businessCase)
 			if err != nil {
-				logger.Error("Failed to marshal business case")
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			w.WriteHeader(http.StatusCreated)
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to write newly created business case to response: %v", err))
-				http.Error(w, "Failed to create business case", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 			return
 		case "PUT":
 			if r.Body == nil {
-				http.Error(w, "Empty request not allowed", http.StatusBadRequest)
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
+				)
 				return
 			}
 			defer r.Body.Close()
@@ -158,57 +154,45 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			businessCaseToUpdate := models.BusinessCase{}
 			err := decoder.Decode(&businessCaseToUpdate)
 			if err != nil {
-				logger.Error("Failed to decode business case body")
-				http.Error(w, "Bad business case request", http.StatusBadRequest)
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
 
-			businessCaseID, err := requireBusinessCaseID(mux.Vars(r), logger)
+			businessCaseID, err := requireBusinessCaseID(mux.Vars(r))
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusBadRequest)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 			businessCaseToUpdate.ID = businessCaseID
 
 			user, ok := appcontext.User(r.Context())
 			if !ok {
-				logger.Error("Failed to get EUA ID from context")
-				http.Error(w, "Failed to PUT business case", http.StatusUnauthorized)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 			businessCaseToUpdate.EUAUserID = user.EUAUserID
 			updatedBusinessCase, err := h.UpdateBusinessCase(r.Context(), &businessCaseToUpdate)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))
+				h.Logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))
 
-				switch err.(type) {
-				case *apperrors.ValidationError, *apperrors.ResourceConflictError:
-					http.Error(w, "failed to update business case.\n"+err.Error(), http.StatusBadRequest)
-					return
-				default:
-					http.Error(w, "Failed to update business case", http.StatusInternalServerError)
-					return
-				}
+				h.WriteErrorResponse(r.Context(), w, err)
 			}
 
 			responseBody, err := json.Marshal(updatedBusinessCase)
 			if err != nil {
-				logger.Error("Failed to marshal business case")
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			_, err = w.Write(responseBody)
 			if err != nil {
-				h.logger.Error(fmt.Sprintf("Failed to write updated business case to response: %v", err))
-				http.Error(w, "Failed to update business case", http.StatusInternalServerError)
+				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
 			return
 		default:
-			logger.Info("Unsupported method requested")
-			http.Error(w, "Method not allowed for business case", http.StatusMethodNotAllowed)
+			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
 			return
 		}
 	}
