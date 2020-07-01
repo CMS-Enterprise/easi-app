@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useOktaAuth } from '@okta/okta-react';
@@ -8,23 +8,32 @@ import MainContent from 'components/MainContent';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Alert from 'components/shared/Alert';
 import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntakes } from 'types/routines';
+import { fetchSystemIntake } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import TaskListItem from './TaskListItem';
 import SideNavActions from './SideNavActions';
 import './index.scss';
 
 const GovernanceTaskList = () => {
+  const { systemId } = useParams();
   const { authState } = useOktaAuth();
   const dispatch = useDispatch();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
-  const systemIntake =
-    // Later this should be changed to get state.systemIntake.systemIntake
-    useSelector((state: AppState) => state.systemIntakes.systemIntakes[0]) ||
-    null;
+
+  useEffect(() => {
+    if (systemId === 'new') {
+      return;
+    }
+    if (authState.isAuthenticated) {
+      dispatch(fetchSystemIntake(systemId));
+    }
+  }, [dispatch, systemId, authState.isAuthenticated]);
+  const systemIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake || null
+  );
 
   const calculateIntakeStatus = (intake: SystemIntakeForm) => {
-    if (intake === null) {
+    if (intake.id === '') {
       return 'START';
     }
     if (intake.status === 'DRAFT') {
@@ -35,7 +44,7 @@ const GovernanceTaskList = () => {
   const intakeState = calculateIntakeStatus(systemIntake);
   const chooseIntakeLink = (intake: SystemIntakeForm, status: string) => {
     const newIntakeLink = '/system/new';
-    if (intake === null) {
+    if (intake.id === '') {
       return newIntakeLink;
     }
     let link: string;
@@ -53,12 +62,6 @@ const GovernanceTaskList = () => {
   };
   const intakeLink = chooseIntakeLink(systemIntake, intakeState);
 
-  // This is a hack to get a system intake into the state, but it will be changed later
-  useEffect(() => {
-    if (authState.isAuthenticated) {
-      dispatch(fetchSystemIntakes());
-    }
-  }, [dispatch, authState.isAuthenticated]);
   return (
     <div className="governance-task-list">
       <Header />

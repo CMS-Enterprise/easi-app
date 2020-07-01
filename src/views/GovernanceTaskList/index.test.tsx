@@ -38,7 +38,7 @@ describe('The Goveranance Task List', () => {
 
   it('displays only the initial governance steps', async done => {
     const mockStore = configureMockStore();
-    const store = mockStore({ systemIntakes: { systemIntakes: [] } });
+    const store = mockStore({ systemIntake: { systemIntake: {} } });
     let component;
     await act(async () => {
       component = mount(
@@ -63,7 +63,7 @@ describe('The Goveranance Task List', () => {
 
   it('displays all governance steps', async done => {
     const mockStore = configureMockStore();
-    const store = mockStore({ systemIntakes: { systemIntakes: [] } });
+    const store = mockStore({ systemIntake: { systemIntake: {} } });
     let component;
     await act(async () => {
       component = mount(
@@ -93,7 +93,7 @@ describe('The Goveranance Task List', () => {
 
   it('renders the side nav actions', async done => {
     const mockStore = configureMockStore();
-    const store = mockStore({ systemIntakes: { systemIntakes: [] } });
+    const store = mockStore({ systemIntake: { systemIntake: {} } });
     let component;
     await act(async () => {
       component = mount(
@@ -113,7 +113,7 @@ describe('The Goveranance Task List', () => {
 
   describe('Governance Task List Accessibility', () => {
     const mockStore = configureMockStore();
-    const store = mockStore({});
+    const store = mockStore({ systemIntake: { systemIntake: {} } });
     let component;
     it('button expansion is tied to the secondary ordered list', async done => {
       await act(async () => {
