@@ -126,21 +126,19 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
-	intakeID := uuid.New()
-	intake := models.SystemIntake{
+	intake := &models.SystemIntake{
 		EUAUserID: euaID,
-		ID:        intakeID,
 		Status:    models.SystemIntakeStatusSUBMITTED,
 	}
-	err := s.store.SaveSystemIntake(&intake)
+	intake, err := s.store.CreateSystemIntake(intake)
 	s.NoError(err)
 
 	input := models.BusinessCase{
 		EUAUserID:      euaID,
-		SystemIntakeID: intakeID,
+		SystemIntakeID: intake.ID,
 	}
 	fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
-		return &intake, nil
+		return intake, nil
 	}
 	create := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		return &models.BusinessCase{
@@ -184,7 +182,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 		intake.BusinessOwner = null.StringFrom("Aretha Franklin")
 		intake.ProjectName = null.StringFrom("Sitting on the dock of the bay")
 		intake.BusinessNeed = null.StringFrom("To be or not to be, that is the question")
-		err := s.store.SaveSystemIntake(&intake)
+		_, err := s.store.UpdateSystemIntake(intake)
 		s.NoError(err)
 
 		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, create)
@@ -256,13 +254,11 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
-	intakeID := uuid.New()
-	intake := models.SystemIntake{
+	intake := &models.SystemIntake{
 		EUAUserID: euaID,
-		ID:        intakeID,
 		Status:    models.SystemIntakeStatusSUBMITTED,
 	}
-	err := s.store.SaveSystemIntake(&intake)
+	_, err := s.store.CreateSystemIntake(intake)
 	s.NoError(err)
 
 	existingBusinessCase := testhelpers.NewBusinessCase()

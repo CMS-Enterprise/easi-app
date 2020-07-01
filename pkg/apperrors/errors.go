@@ -217,3 +217,36 @@ func (e *BadRequestError) Error() string {
 func (e *BadRequestError) Unwrap() error {
 	return e.Err
 }
+
+// UnknownRouteError is an error for unknown routes
+type UnknownRouteError struct {
+	Path string
+}
+
+// Error provides the error as a string
+func (e *UnknownRouteError) Error() string {
+	return fmt.Sprintf(
+		"Route %s unknown",
+		e.Path,
+	)
+}
+
+// ResourceNotFoundError is a typed error non-existent resources
+type ResourceNotFoundError struct {
+	Err      error
+	Resource interface{}
+}
+
+// Error provides the error as a string
+func (e *ResourceNotFoundError) Error() string {
+	return fmt.Sprintf(
+		"Could not not find resource %T with error: %v",
+		e.Resource,
+		e.Err,
+	)
+}
+
+// Unwrap provides the underlying error
+func (e *ResourceNotFoundError) Unwrap() error {
+	return e.Err
+}

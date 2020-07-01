@@ -100,9 +100,9 @@ func (s *Server) routes(
 			serviceConfig,
 			store.CreateSystemIntake,
 		),
-		services.NewSaveSystemIntake(
+		services.NewUpdateSystemIntake(
 			serviceConfig,
-			store.SaveSystemIntake,
+			store.UpdateSystemIntake,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeSaveSystemIntake(s.logger),
 			cedarClient.ValidateAndSubmitSystemIntake,

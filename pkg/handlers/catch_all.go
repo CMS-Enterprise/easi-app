@@ -1,8 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
+
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 )
 
 // NewCatchAllHandler is a constructor for CatchAllHanlder
@@ -18,8 +19,7 @@ type CatchAllHandler struct {
 // Handle returns 404 on unexpected routes
 func (h CatchAllHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		h.logger.Info(fmt.Sprintf("Unexpected route hit: %v", r.URL))
-		http.Error(w, "Not Found", http.StatusNotFound)
+		h.WriteErrorResponse(r.Context(), w, &apperrors.UnknownRouteError{Path: r.URL.Path})
 		return
 	}
 }
