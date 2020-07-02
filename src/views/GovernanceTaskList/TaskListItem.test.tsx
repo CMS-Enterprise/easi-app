@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+import { Link } from 'react-router-dom';
 import Button from 'components/shared/Button';
 
 import TaskListItem from './TaskListItem';
@@ -56,7 +57,50 @@ describe('The TaskListItem', () => {
       />
     );
 
-    // TODO: very brittle; insert data-testid when Button refactor is complete
-    expect(component.find(Button).exists()).toEqual(true);
+    expect(
+      component
+        .find(Button)
+        .dive()
+        .text()
+    ).toEqual('Start');
+  });
+
+  it('displays continue button', () => {
+    const component = shallow(
+      <TaskListItem
+        heading="Test Heading"
+        description="Test Description"
+        status="CONTINUE"
+        link="/"
+      />
+    );
+
+    expect(
+      component
+        .find(Button)
+        .dive()
+        .text()
+    ).toEqual('Continue');
+  });
+
+  describe('submitted request link', () => {
+    const component = shallow(
+      <TaskListItem
+        heading="Test Heading"
+        description="Test Description"
+        status="COMPLETED"
+        link="/system-intake/FOO"
+      />
+    );
+
+    it('displays the right text', () => {
+      expect(component.find(Link).text()).toEqual(
+        'View Submitted Request Form'
+      );
+    });
+
+    it('displays the right link', () => {
+      expect(component.find(Link).prop('to')).toEqual('/system-intake/FOO');
+    });
   });
 });
