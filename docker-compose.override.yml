@@ -8,7 +8,5 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db_migrations
-    environment:
-      - FLYWAY_URL=jdbc:postgresql://db/postgres
     volumes:
       - ./migrations:/flyway/sql
