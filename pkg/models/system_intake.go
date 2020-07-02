@@ -15,10 +15,12 @@ const (
 	SystemIntakeStatusDRAFT SystemIntakeStatus = "DRAFT"
 	// SystemIntakeStatusSUBMITTED captures enum value "SUBMITTED"
 	SystemIntakeStatusSUBMITTED SystemIntakeStatus = "SUBMITTED"
-	// SystemIntakeStatusREVIEWED captures enum value "REVIEWED"
-	SystemIntakeStatusREVIEWED SystemIntakeStatus = "REVIEWED"
-	// SystemIntakeStatusREJECTED captures enum value "REJECTED"
-	SystemIntakeStatusREJECTED SystemIntakeStatus = "REJECTED"
+	// SystemIntakeStatusACCEPTED captures enum value "ACCEPTED"
+	SystemIntakeStatusACCEPTED SystemIntakeStatus = "ACCEPTED"
+	// SystemIntakeStatusCLOSED captures enum value "CLOSED"
+	SystemIntakeStatusCLOSED SystemIntakeStatus = "CLOSED"
+	// SystemIntakeStatusAPPROVED captures enum value "APPROVED"
+	SystemIntakeStatusAPPROVED SystemIntakeStatus = "APPROVED"
 )
 
 // SystemIntake is the model for the system intake form
