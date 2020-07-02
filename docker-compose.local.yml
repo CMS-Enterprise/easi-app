@@ -11,13 +11,13 @@ services:
     image: easi-db-migrate:latest
     volumes:
       - ./migrations:/flyway/sql
-  backend:
+  easi:
     build:
       context: .
       dockerfile: Dockerfile
     image: easi-backend:latest
     ports:
       - 8080:8080
-  frontend:
+  easi_client:
     ports:
       - 3000:3000
