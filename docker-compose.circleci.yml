@@ -2,15 +2,15 @@
 version: '3.7'
 services:
   db:
-    network_mode: "service:easilocal"
+    network_mode: "service:frontend"
   db_migrate:
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}"
-    network_mode: "service:easilocal"
+    network_mode: "service:frontend"
     environment:
       - FLYWAY_URL=jdbc:postgresql://localhost/postgres
-  easi:
+  backend:
     image: "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}"
-    network_mode: "service:easilocal"
+    network_mode: "service:frontend"
     environment:
       - APPLICATION_VERSION
       - APPLICATION_DATETIME
@@ -40,10 +40,10 @@ services:
     entrypoint: ["/easi/easi", "serve"]
     depends_on:
       - db_migrate
-  easilocal:
+  frontend:
     build:
       context: .
-      dockerfile: Dockerfile.client
+      dockerfile: Dockerfile.frontend
       args:
         - REACT_APP_APP_ENV=$APP_ENV
         - REACT_APP_API_ADDRESS=http://localhost:8080/api/v1
@@ -65,6 +65,6 @@ services:
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET
-    network_mode: "service:easilocal"
+    network_mode: "service:frontend"
     depends_on:
-      - easilocal
+      - frontend
