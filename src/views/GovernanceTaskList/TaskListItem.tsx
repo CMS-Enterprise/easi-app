@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import { Link } from 'react-router-dom';
 import Button from 'components/shared/Button';
 
 type TaskListItemProps = {
@@ -45,6 +46,10 @@ const TaskListItem = ({
         </p>
 
         {status === 'START' && <Button to={link}>Start</Button>}
+        {status === 'CONTINUE' && <Button to={link}>Continue</Button>}
+        {status === 'COMPLETED' && (
+          <Link to={link}>View Submitted Request Form</Link>
+        )}
       </div>
     </li>
   );
