@@ -1,0 +1,14 @@
+---
+version: '3.7'
+services:
+  db:
+    ports:
+      - 5432:5432
+  db_migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.db_migrations
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://db/postgres
+    volumes:
+      - ./migrations:/flyway/sql
