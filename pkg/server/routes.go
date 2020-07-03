@@ -104,9 +104,10 @@ func (s *Server) routes(
 			serviceConfig,
 			store.UpdateSystemIntake,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeSaveSystemIntake(s.logger),
+			services.NewAuthorizeUpdateSystemIntake(s.logger),
 			cedarClient.ValidateAndSubmitSystemIntake,
 			emailClient.SendSystemIntakeSubmissionEmail,
+			emailClient.SendSystemIntakeReviewEmail,
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
@@ -156,18 +157,6 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
-
-	intakeReviewHandler := handlers.NewIntakeReviewHandler(
-		base,
-		services.NewReviewIntake(
-			services.NewAuthorizeReviewIntake(),
-			services.NewFetchSystemIntakeByID(
-				serviceConfig,
-				store.FetchSystemIntakeByID,
-			),
-		),
-	)
-	api.Handle("/intake_review", intakeReviewHandler.Handle())
 
 	metricsHandler := handlers.NewMetricsHandler(
 		base,
