@@ -5,7 +5,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0, 0, 0, 0.6);
     z-index: 10;
   }
 
@@ -19,8 +19,7 @@
     transform: translate(-50%, -50%);
     z-index: 1;
     font-size: 22px;
-    display: flex;
-    flex-direction: column;
+    line-height: 36px;
 
     @media screen and (min-width: $tablet) {
       width: 668px;
@@ -47,6 +46,5 @@
 
   &__body {
     padding: 35px;
-    overflow-y: scroll;
   }
 }
