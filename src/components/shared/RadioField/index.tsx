@@ -7,7 +7,6 @@ type RadioFieldProps = {
   inline: boolean;
   checked?: boolean;
   label: string;
-  helpText?: string;
   name: string;
   onBlur?: () => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
