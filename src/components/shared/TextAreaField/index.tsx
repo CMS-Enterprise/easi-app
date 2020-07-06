@@ -24,9 +24,13 @@ const TextAreaField = ({
   onBlur,
   value
 }: TextAreaFieldProps) => {
-  const textAreaClasses = classnames(className, 'usa-textarea', {
-    'usa-input--error': error
-  });
+  const textAreaClasses = classnames(
+    'usa-textarea',
+    {
+      'usa-input--error': error
+    },
+    className
+  );
   return (
     <>
       {label && (

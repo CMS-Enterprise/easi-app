@@ -106,8 +106,7 @@ export const GRTSystemIntakeReview = () => {
                             }
                             id="GrtIntakeReviewForm-DecisionGovernanceNotNeeded"
                             name="decision"
-                            label="Governance not needed"
-                            helpText="Close this request"
+                            label="Governance not needed (close this request)"
                             onChange={() => {
                               setFieldValue(
                                 'decision',
