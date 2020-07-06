@@ -7,8 +7,13 @@ import MainContent from 'components/MainContent';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Alert from 'components/shared/Alert';
 import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntake } from 'types/routines';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import {
+  calculateIntakeStatus,
+  chooseIntakeLink,
+  calculateIntakeFeedbackStatus,
+  calculateBusinessCaseStatus
+} from 'data/taskList';
 import TaskListItem from './TaskListItem';
 import SideNavActions from './SideNavActions';
 import './index.scss';
@@ -27,36 +32,24 @@ const GovernanceTaskList = () => {
     (state: AppState) => state.systemIntake.systemIntake
   );
 
-  const calculateIntakeStatus = (intake: SystemIntakeForm) => {
-    if (intake.id === '') {
-      return 'START';
+  useEffect(() => {
+    if (systemIntake.id !== '' && systemIntake.businessCaseId !== '') {
+      dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
-    if (intake.status === 'DRAFT') {
-      return 'CONTINUE';
-    }
-    return 'COMPLETED';
-  };
+  });
+  const businessCase = useSelector(
+    (state: AppState) => state.businessCase.form
+  );
+
   const intakeStatus = calculateIntakeStatus(systemIntake);
-  const chooseIntakeLink = (intake: SystemIntakeForm, status: string) => {
-    const newIntakeLink = '/system/new';
-    if (intake.id === '') {
-      return newIntakeLink;
-    }
-    let link: string;
-    switch (status) {
-      case 'CONTINUE':
-        link = `/system/${intake.id}/contact-details`;
-        break;
-      case 'COMPLETED':
-        // This will need to be changed once we have an intake review page
-        link = '/';
-        break;
-      default:
-        link = newIntakeLink;
-    }
-    return link;
-  };
   const intakeLink = chooseIntakeLink(systemIntake, intakeStatus);
+  const intakeFeedbackStatus = calculateIntakeFeedbackStatus(
+    systemIntake.status
+  );
+  const businessCaseStatus = calculateBusinessCaseStatus(
+    intakeStatus,
+    businessCase
+  );
 
   return (
     <div className="governance-task-list">
@@ -96,13 +89,13 @@ const GovernanceTaskList = () => {
                 description="The Governance Admin Team will review your request and decide if it
               needs further governance. If it does, they’ll direct you to go through
               the remaining steps."
-                status="CANNOT_START"
-                link="/"
+                status={intakeFeedbackStatus}
+                link="/" // link is unused for this item
               />
               <TaskListItem
                 heading="Prepare your Business Case"
                 description="Draft different solutions and the corresponding costs involved."
-                status="CANNOT_START"
+                status={businessCaseStatus}
                 link="/"
               />
             </ol>

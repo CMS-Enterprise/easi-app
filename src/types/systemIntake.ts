@@ -45,6 +45,7 @@ export type SystemIntakeForm = {
   currentStage: string;
   needsEaSupport: boolean | null;
   hasContract: string;
+  businessCaseId?: string | null;
 };
 
 // Redux store type for a system intake
