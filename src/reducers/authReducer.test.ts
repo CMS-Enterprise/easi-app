@@ -18,7 +18,7 @@ describe('The auth reducer', () => {
   it('returns the initial state', () => {
     expect(authReducer(undefined, {})).toEqual({
       lastActiveAt: expect.any(Number),
-      lastSessionRenew: null
+      lastSessionRenew: 0
     });
   });
 
@@ -27,14 +27,14 @@ describe('The auth reducer', () => {
 
     expect(authReducer(undefined, mockAction)).toEqual({
       lastActiveAt: fakeTime,
-      lastSessionRenew: null
+      lastSessionRenew: 0
     });
   });
 
   it('handles updateSessionRenew', () => {
     const initialState = {
       lastActiveAt: fakeTime,
-      lastSessionRenew: null
+      lastSessionRenew: 0
     };
     const mockAction = updateLastSessionRenew;
     expect(authReducer(initialState, mockAction)).toEqual({
