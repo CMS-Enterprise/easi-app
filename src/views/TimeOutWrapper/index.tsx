@@ -55,18 +55,21 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     dispatch(updateLastSessionRenew(expiresAt));
   };
 
-  const calculateSessionTimeRemaining = () => {
+  const formatSessionTimeRemaining = () => {
     if (sessionExpiration) {
       const currentTime = Date.now();
       const timeRemaining = sessionExpiration - currentTime;
       const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
       const oneMinute = Duration.fromObject({ minutes: 1 }).as('milliseconds');
 
+      // If over a minute remaining, displays X minutes
       if (timeRemaining >= oneMinute) {
         return Duration.fromMillis(timeRemaining).toFormat(
           `m 'minute${timeRemaining > oneMinute * 2 ? 's' : ''}'`
         );
       }
+
+      // If less than a minute remaining, display X second(s)
       return Duration.fromMillis(timeRemaining).toFormat(
         `${timeRemaining >= oneSecond * 10 ? 'ss' : 's'} 'second${
           timeRemaining >= oneSecond * 2 || timeRemaining < oneSecond ? 's' : ''
@@ -76,16 +79,10 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     return '';
   };
 
-  // useEffect(() => {
-  //   const currentTime = Date.now();
-  //   const renewThreshold = 30 * 1000;
-  //   // Don't renew session if modal is open
-  //   if (!isModalOpen) {
-  //     if (lastSessionRenew && currentTime > lastSessionRenew + renewThreshold) {
-  //       storeSession();
-  //     }
-  //   }
-  // });
+  const handleModalExit = async () => {
+    await setIsModalOpen(false);
+    await storeSession();
+  };
 
   useEffect(() => {
     const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
@@ -97,16 +94,20 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     if (sessionExpiration) {
       sessionInterval = setInterval(() => {
         const currentTime = Date.now();
+
+        // If the session expires in 5 minutes or less
         if (currentTime + fiveMinutes > sessionExpiration) {
-          setTimeRemainingString(calculateSessionTimeRemaining());
+          setTimeRemainingString(formatSessionTimeRemaining());
           if (!isModalOpen) {
             setIsModalOpen(true);
           }
         }
 
+        // If the session expired
         if (currentTime + oneSecond >= sessionExpiration) {
           clearInterval(sessionInterval);
-          authService.logout('/');
+          setIsModalOpen(false);
+          authService.logout('/login');
         }
       }, 1000);
     }
@@ -118,25 +119,20 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   useEffect(() => {
     if (authState.isAuthenticated) {
+      registerExpire(authService, lastActiveAt);
       storeSession();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authState.isAuthenticated]);
 
-  if (authState.isAuthenticated) {
-    registerExpire(authService, lastActiveAt);
-  }
-
   return (
     <>
       <Modal
         title="EASi"
         isOpen={isModalOpen}
-        closeModal={() => {
-          storeSession();
-          setIsModalOpen(false);
-        }}
+        closeModal={handleModalExit}
+        shouldCloseOnOverlayClick={false}
       >
         <h3 className="margin-top-0">
           Your access to EASi will expire in {timeRemainingString}
@@ -147,13 +143,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
           {timeRemainingString} and will need to sign back in. We do this to
           keep your information secure.
         </p>
-        <Button
-          type="button"
-          onClick={() => {
-            storeSession();
-            setIsModalOpen(false);
-          }}
-        >
+        <Button type="button" onClick={handleModalExit}>
           Return to EASi
         </Button>
       </Modal>
@@ -163,4 +153,3 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 };
 
 export default TimeOutWrapper;
-//
