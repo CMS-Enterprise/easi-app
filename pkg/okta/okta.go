@@ -60,7 +60,7 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 			f.WriteErrorResponse(
 				r.Context(),
 				w,
-				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to parse jwt: %s", err)},
+				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to parse jwt: %w", err)},
 			)
 			return
 		}
@@ -70,7 +70,7 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 			f.WriteErrorResponse(
 				r.Context(),
 				w,
-				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to get User from jwt: %s", err)},
+				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to get User from jwt: %w", err)},
 			)
 			return
 		}
