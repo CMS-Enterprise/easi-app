@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import ActionBanner from 'components/shared/ActionBanner';
@@ -136,33 +136,31 @@ const Home = ({ history }: HomeProps) => {
           {getBusinessCaseBanners()}
         </div>
         <div className="tablet:grid-col-9">
-          <h1 className="margin-top-6">{t('general:welcome')}</h1>
+          <h1 className="margin-top-6">{t('home:title')}</h1>
           <p className="line-height-body-5 font-body-lg text-light">
-            You can use EASi to go through the set of steps needed to get a
-            Lifecycle ID from the Governance Review Board (GRB).
+            {t('home:subtitle')}
           </p>
           <div className="easi-home__info-wrapper">
             <div className="easi-home__info-icon">
               <i className="fa fa-info" />
             </div>
             <p className="line-height-body-5">
-              Use this process only if you&apos;d like to add a new system,
-              service or make major changes and upgrades to an existing one. For
-              all other requests, please use the{' '}
-              <a
-                href="https://share.cms.gov/Office/OIT/CIOCorner/Lists/Intake/NewForm.aspx"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                alternative request form
-              </a>
-              .
+              <Trans i18nKey="home:easiInfo">
+                zeroIndex
+                <a
+                  href="https://share.cms.gov/Office/OIT/CIOCorner/Lists/Intake/NewForm.aspx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  localeLink
+                </a>
+              </Trans>
             </p>
           </div>
           {authState.isAuthenticated ? (
-            <Button to="/governance-overview">Start now</Button>
+            <Button to="/governance-overview">{t('home:startNow')}</Button>
           ) : (
-            <Button to="/login">Sign in to start</Button>
+            <Button to="/login">{t('home:signIn')}</Button>
           )}
         </div>
       </MainContent>
