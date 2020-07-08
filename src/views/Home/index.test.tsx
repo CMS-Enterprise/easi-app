@@ -63,6 +63,7 @@ describe('The home page', () => {
 
         setImmediate(() => {
           component.update();
+
           expect(component.find('a[children="Start now"]').exists()).toEqual(
             true
           );
