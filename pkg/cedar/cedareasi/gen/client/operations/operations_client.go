@@ -9,11 +9,12 @@ import (
 	"fmt"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+
+	strfmt "github.com/go-openapi/strfmt"
 )
 
 // New creates a new operations API client.
-func New(transport runtime.ClientTransport, formats strfmt.Registry) ClientService {
+func New(transport runtime.ClientTransport, formats strfmt.Registry) *Client {
 	return &Client{transport: transport, formats: formats}
 }
 
@@ -25,23 +26,8 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientService is the interface for Client methods
-type ClientService interface {
-	IntakegovernancePOST4(params *IntakegovernancePOST4Params, authInfo runtime.ClientAuthInfoWriter) (*IntakegovernancePOST4OK, error)
-
-	IntakegovernanceidGET5(params *IntakegovernanceidGET5Params, authInfo runtime.ClientAuthInfoWriter) (*IntakegovernanceidGET5OK, error)
-
-	SystemidGET3(params *SystemidGET3Params, authInfo runtime.ClientAuthInfoWriter) (*SystemidGET3OK, error)
-
-	SystemsGET1(params *SystemsGET1Params, authInfo runtime.ClientAuthInfoWriter) (*SystemsGET1OK, error)
-
-	SystemsidGET2(params *SystemsidGET2Params, authInfo runtime.ClientAuthInfoWriter) (*SystemsidGET2OK, error)
-
-	SetTransport(transport runtime.ClientTransport)
-}
-
 /*
-  IntakegovernancePOST4 intakegovernance p o s t 4 API
+IntakegovernancePOST4 intakegovernance p o s t 4 API
 */
 func (a *Client) IntakegovernancePOST4(params *IntakegovernancePOST4Params, authInfo runtime.ClientAuthInfoWriter) (*IntakegovernancePOST4OK, error) {
 	// TODO: Validate the params before sending
@@ -76,7 +62,7 @@ func (a *Client) IntakegovernancePOST4(params *IntakegovernancePOST4Params, auth
 }
 
 /*
-  IntakegovernanceidGET5 intakegovernanceid g e t 5 API
+IntakegovernanceidGET5 intakegovernanceid g e t 5 API
 */
 func (a *Client) IntakegovernanceidGET5(params *IntakegovernanceidGET5Params, authInfo runtime.ClientAuthInfoWriter) (*IntakegovernanceidGET5OK, error) {
 	// TODO: Validate the params before sending
@@ -111,7 +97,7 @@ func (a *Client) IntakegovernanceidGET5(params *IntakegovernanceidGET5Params, au
 }
 
 /*
-  SystemidGET3 systemid g e t 3 API
+SystemidGET3 systemid g e t 3 API
 */
 func (a *Client) SystemidGET3(params *SystemidGET3Params, authInfo runtime.ClientAuthInfoWriter) (*SystemidGET3OK, error) {
 	// TODO: Validate the params before sending
@@ -146,7 +132,7 @@ func (a *Client) SystemidGET3(params *SystemidGET3Params, authInfo runtime.Clien
 }
 
 /*
-  SystemsGET1 systems g e t 1 API
+SystemsGET1 systems g e t 1 API
 */
 func (a *Client) SystemsGET1(params *SystemsGET1Params, authInfo runtime.ClientAuthInfoWriter) (*SystemsGET1OK, error) {
 	// TODO: Validate the params before sending
@@ -181,7 +167,7 @@ func (a *Client) SystemsGET1(params *SystemsGET1Params, authInfo runtime.ClientA
 }
 
 /*
-  SystemsidGET2 systemsid g e t 2 API
+SystemsidGET2 systemsid g e t 2 API
 */
 func (a *Client) SystemsidGET2(params *SystemsidGET2Params, authInfo runtime.ClientAuthInfoWriter) (*SystemsidGET2OK, error) {
 	// TODO: Validate the params before sending

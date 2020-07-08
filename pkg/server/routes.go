@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appses"
-	"github.com/cmsgov/easi-app/pkg/cedar"
+	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
@@ -35,7 +35,7 @@ func (s *Server) routes(
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up CEDAR client
-	cedarClient := cedar.NewTranslatedClient(
+	cedarClient := cedareasi.NewTranslatedClient(
 		s.Config.GetString("CEDAR_API_URL"),
 		s.Config.GetString("CEDAR_API_KEY"),
 	)

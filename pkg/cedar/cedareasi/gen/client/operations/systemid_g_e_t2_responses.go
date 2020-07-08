@@ -13,7 +13,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	models "github.com/cmsgov/easi-app/pkg/cedar/gen/models"
+	models2 "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/models"
 )
 
 // SystemidGET2Reader is a Reader for the SystemidGET2 structure.
@@ -52,20 +52,20 @@ func NewSystemidGET2OK() *SystemidGET2OK {
 OK
 */
 type SystemidGET2OK struct {
-	Payload *models.SystemidGETResponse
+	Payload *models2.SystemidGETResponse
 }
 
 func (o *SystemidGET2OK) Error() string {
 	return fmt.Sprintf("[GET /system/{id}][%d] systemidGET2OK  %+v", 200, o.Payload)
 }
 
-func (o *SystemidGET2OK) GetPayload() *models.SystemidGETResponse {
+func (o *SystemidGET2OK) GetPayload() *models2.SystemidGETResponse {
 	return o.Payload
 }
 
 func (o *SystemidGET2OK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.SystemidGETResponse)
+	o.Payload = new(models2.SystemidGETResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
