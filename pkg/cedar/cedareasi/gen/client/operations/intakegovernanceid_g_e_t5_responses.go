@@ -13,7 +13,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/gen/models"
+	models "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/models"
 )
 
 // IntakegovernanceidGET5Reader is a Reader for the IntakegovernanceidGET5 structure.

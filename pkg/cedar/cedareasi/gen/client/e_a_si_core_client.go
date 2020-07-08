@@ -6,11 +6,12 @@ package client
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"github.com/cmsgov/easi-app/pkg/cedar/gen/client/operations"
+	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 
-	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
+	strfmt "github.com/go-openapi/strfmt"
+
+	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/client/operations"
 )
 
 // Default e a si core HTTP client.
@@ -55,7 +56,9 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *EASiCore {
 
 	cli := new(EASiCore)
 	cli.Transport = transport
+
 	cli.Operations = operations.New(transport, formats)
+
 	return cli
 }
 
@@ -100,7 +103,7 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // EASiCore is a client for e a si core
 type EASiCore struct {
-	Operations operations.ClientService
+	Operations *operations.Client
 
 	Transport runtime.ClientTransport
 }
@@ -108,5 +111,7 @@ type EASiCore struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *EASiCore) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
+
 	c.Operations.SetTransport(transport)
+
 }

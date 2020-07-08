@@ -16,7 +16,7 @@ import (
 
 	strfmt "github.com/go-openapi/strfmt"
 
-	"github.com/cmsgov/easi-app/pkg/cedar/gen/models"
+	models "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/models"
 )
 
 // NewIntakegovernancePOST4Params creates a new IntakegovernancePOST4Params object

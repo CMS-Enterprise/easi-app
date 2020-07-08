@@ -8,14 +8,15 @@ package models
 import (
 	"strconv"
 
-	"github.com/go-openapi/errors"
 	strfmt "github.com/go-openapi/strfmt"
+
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
 )
 
-// SystemsGETResponse systems g e t response
-// swagger:model systems_GET_response
-type SystemsGETResponse struct {
+// SystemsidGETResponse systemsid g e t response
+// swagger:model systemsid_GET_response
+type SystemsidGETResponse struct {
 
 	// response
 	Response *Response `json:"Response,omitempty"`
@@ -24,8 +25,8 @@ type SystemsGETResponse struct {
 	Systems []*System `json:"Systems"`
 }
 
-// Validate validates this systems g e t response
-func (m *SystemsGETResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this systemsid g e t response
+func (m *SystemsidGETResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateResponse(formats); err != nil {
@@ -42,7 +43,7 @@ func (m *SystemsGETResponse) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *SystemsGETResponse) validateResponse(formats strfmt.Registry) error {
+func (m *SystemsidGETResponse) validateResponse(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Response) { // not required
 		return nil
@@ -60,7 +61,7 @@ func (m *SystemsGETResponse) validateResponse(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *SystemsGETResponse) validateSystems(formats strfmt.Registry) error {
+func (m *SystemsidGETResponse) validateSystems(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Systems) { // not required
 		return nil
@@ -86,7 +87,7 @@ func (m *SystemsGETResponse) validateSystems(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *SystemsGETResponse) MarshalBinary() ([]byte, error) {
+func (m *SystemsidGETResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -94,8 +95,8 @@ func (m *SystemsGETResponse) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *SystemsGETResponse) UnmarshalBinary(b []byte) error {
-	var res SystemsGETResponse
+func (m *SystemsidGETResponse) UnmarshalBinary(b []byte) error {
+	var res SystemsidGETResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

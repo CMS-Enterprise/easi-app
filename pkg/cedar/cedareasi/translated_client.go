@@ -1,4 +1,4 @@
-package cedar
+package cedareasi
 
 import (
 	"errors"
@@ -10,9 +10,9 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	apiclient "github.com/cmsgov/easi-app/pkg/cedar/gen/client"
-	apioperations "github.com/cmsgov/easi-app/pkg/cedar/gen/client/operations"
-	apimodels "github.com/cmsgov/easi-app/pkg/cedar/gen/models"
+	apiclient "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/client"
+	apioperations "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/client/operations"
+	apimodels "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/validate"
 )

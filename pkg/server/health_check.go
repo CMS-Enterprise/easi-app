@@ -3,13 +3,13 @@ package server
 import (
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/cedar"
+	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/email"
 )
 
 // CheckCEDARClientConnection makes a call to CEDAR to test it is configured properly
 // this method will panic on failures
-func (s Server) CheckCEDARClientConnection(client cedar.TranslatedClient) {
+func (s Server) CheckCEDARClientConnection(client cedareasi.TranslatedClient) {
 	s.logger.Info("Testing CEDAR Connection")
 	// FetchSystems is agnostic to user, doesn't modify state,
 	// and tests that we're authorized to retrieve information

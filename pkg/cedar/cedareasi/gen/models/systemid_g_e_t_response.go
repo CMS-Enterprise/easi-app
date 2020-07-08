@@ -6,33 +6,32 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"strconv"
+	strfmt "github.com/go-openapi/strfmt"
 
 	"github.com/go-openapi/errors"
-	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
-// SystemsidGETResponse systemsid g e t response
-// swagger:model systemsid_GET_response
-type SystemsidGETResponse struct {
+// SystemidGETResponse systemid g e t response
+// swagger:model systemid_GET_response
+type SystemidGETResponse struct {
 
 	// response
 	Response *Response `json:"Response,omitempty"`
 
-	// systems
-	Systems []*System `json:"Systems"`
+	// system detail
+	SystemDetail *SystemDetail `json:"SystemDetail,omitempty"`
 }
 
-// Validate validates this systemsid g e t response
-func (m *SystemsidGETResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this systemid g e t response
+func (m *SystemidGETResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateResponse(formats); err != nil {
 		res = append(res, err)
 	}
 
-	if err := m.validateSystems(formats); err != nil {
+	if err := m.validateSystemDetail(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -42,7 +41,7 @@ func (m *SystemsidGETResponse) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *SystemsidGETResponse) validateResponse(formats strfmt.Registry) error {
+func (m *SystemidGETResponse) validateResponse(formats strfmt.Registry) error {
 
 	if swag.IsZero(m.Response) { // not required
 		return nil
@@ -60,33 +59,26 @@ func (m *SystemsidGETResponse) validateResponse(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *SystemsidGETResponse) validateSystems(formats strfmt.Registry) error {
+func (m *SystemidGETResponse) validateSystemDetail(formats strfmt.Registry) error {
 
-	if swag.IsZero(m.Systems) { // not required
+	if swag.IsZero(m.SystemDetail) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(m.Systems); i++ {
-		if swag.IsZero(m.Systems[i]) { // not required
-			continue
-		}
-
-		if m.Systems[i] != nil {
-			if err := m.Systems[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("Systems" + "." + strconv.Itoa(i))
-				}
-				return err
+	if m.SystemDetail != nil {
+		if err := m.SystemDetail.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("SystemDetail")
 			}
+			return err
 		}
-
 	}
 
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *SystemsidGETResponse) MarshalBinary() ([]byte, error) {
+func (m *SystemidGETResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -94,8 +86,8 @@ func (m *SystemsidGETResponse) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *SystemsidGETResponse) UnmarshalBinary(b []byte) error {
-	var res SystemsidGETResponse
+func (m *SystemidGETResponse) UnmarshalBinary(b []byte) error {
+	var res SystemidGETResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
