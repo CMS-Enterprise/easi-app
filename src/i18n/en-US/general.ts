@@ -1,5 +1,3 @@
-const general = {
-  welcome: 'Welcome to EASi'
-};
+const general = {};
 
 export default general;
