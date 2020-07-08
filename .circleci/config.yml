@@ -369,7 +369,7 @@ workflows:
               only:
                 - master
           requires:
-            - build_tag_push
+            - integration_tests
       - hold_prod:
           type: approval
           requires:
