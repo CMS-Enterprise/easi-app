@@ -109,6 +109,36 @@ jobs:
             ./scripts/circleci-announce-broken-branch
           when: on_fail
 
+  integration_tests:
+    docker:
+      - image: *circleci_docker_primary
+        environment:
+          APP_ENV: test
+          AWS_REGION: us-west-2
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - run:
+          name: Run Cypress integration tests
+          command: |
+            ./scripts/run-cypress-test-docker
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
+
   lint:
     docker:
       - image: *circleci_docker_primary
@@ -319,10 +349,13 @@ workflows:
           requires:
             - lint
             - test
+      - integration_tests:
+          requires:
+            - build_tag_push
       - hold_dev:
           type: approval
           requires:
-            - build_tag_push
+            - integration_tests
           filters:
             branches:
               ignore:
@@ -336,7 +369,7 @@ workflows:
               only:
                 - master
           requires:
-            - build_tag_push
+            - integration_tests
       - hold_prod:
           type: approval
           requires:

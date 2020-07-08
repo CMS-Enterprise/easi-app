@@ -1,0 +1,23 @@
+---
+version: '3.7'
+services:
+  db:
+    ports:
+      - 5432:5432
+  db_migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.db_migrations
+    image: easi-db-migrate:latest
+    volumes:
+      - ./migrations:/flyway/sql
+  easi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: easi-backend:latest
+    ports:
+      - 8080:8080
+  easi_client:
+    ports:
+      - 3000:3000

@@ -1,0 +1,12 @@
+---
+version: '3.7'
+services:
+  db:
+    ports:
+      - 5432:5432
+  db_migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.db_migrations
+    volumes:
+      - ./migrations:/flyway/sql
