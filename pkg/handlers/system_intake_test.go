@@ -22,7 +22,6 @@ func newMockUpdateSystemIntake(err error) updateSystemIntake {
 	}
 }
 
-
 func newMockFetchSystemIntakeByID(err error) fetchSystemIntakeByID {
 	return func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		intake := models.SystemIntake{
