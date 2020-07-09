@@ -26,8 +26,9 @@ func (s Server) CheckCEDARLdapClientConnection(client cedarldap.TranslatedClient
 	s.logger.Info("Testing CEDAR LDAP Connection")
 	// Authenticate is agnostic to user, doesn't modify state,
 	// and tests that we're authorized to retrieve information
-	isAuthenticated, err := client.Authenticate()
-	if err != nil || !isAuthenticated {
+	//TODO standardize this in some way that doesn't use a specific EUAID
+	_, err := client.FetchUserEmailAddress(s.logger, "GZVA")
+	if err != nil {
 		s.logger.Fatal("Failed to connect to CEDAR LDAP on startup", zap.Error(err))
 	}
 }

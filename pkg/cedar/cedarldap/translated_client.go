@@ -1,11 +1,15 @@
 package cedarldap
 
 import (
+	"fmt"
+
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"go.uber.org/zap"
 
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client"
+	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client/operations"
 )
 
 // TranslatedClient is an API client for CEDAR using EASi language
@@ -28,7 +32,13 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	return TranslatedClient{client, apiKeyHeaderAuth}
 }
 
-// Authenticate checks that the user is authenticated
-func (c TranslatedClient) Authenticate() (bool, error) {
-	return true, nil
+// FetchUserEmailAddress checks that the user is authenticated
+func (c TranslatedClient) FetchUserEmailAddress(logger *zap.Logger, euaID string) (string, error) {
+	resp, err := c.client.Operations.PersonID(&operations.PersonIDParams{ID: euaID})
+	if err != nil {
+		logger.Error(fmt.Sprintf("Failed to fetch system from CEDAR with error: %v", err))
+		return "", err
+	}
+
+	return resp.Payload.Person.Email, nil
 }
