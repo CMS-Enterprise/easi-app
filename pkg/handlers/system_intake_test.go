@@ -23,7 +23,7 @@ func newMockUpdateSystemIntake(err error) updateSystemIntake {
 }
 
 func newMockFetchSystemIntakeByID(err error) fetchSystemIntakeByID {
-	return func(id uuid.UUID) (*models.SystemIntake, error) {
+	return func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		intake := models.SystemIntake{
 			ID:        id,
 			EUAUserID: "FAKE",

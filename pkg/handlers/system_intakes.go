@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchSystemIntakes func(string) (models.SystemIntakes, error)
+type fetchSystemIntakes func(context.Context, string) (models.SystemIntakes, error)
 
 // NewSystemIntakesHandler is a constructor for SystemIntakesHandler
 func NewSystemIntakesHandler(base HandlerBase, fetch fetchSystemIntakes) SystemIntakesHandler {
@@ -39,7 +40,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			systemIntakes, err := h.FetchSystemIntakes(user.EUAUserID)
+			systemIntakes, err := h.FetchSystemIntakes(r.Context(), user.EUAUserID)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return

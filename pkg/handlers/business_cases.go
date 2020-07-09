@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchBusinessCases func(string) (models.BusinessCases, error)
+type fetchBusinessCases func(context.Context, string) (models.BusinessCases, error)
 
 // NewBusinessCasesHandler is a constructor for BusinessCasesHandler
 func NewBusinessCasesHandler(base HandlerBase, fetch fetchBusinessCases) BusinessCasesHandler {
@@ -42,7 +43,7 @@ func (h BusinessCasesHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			businessCases, err := h.FetchBusinessCases(user.EUAUserID)
+			businessCases, err := h.FetchBusinessCases(r.Context(), user.EUAUserID)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
