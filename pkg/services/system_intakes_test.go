@@ -129,7 +129,9 @@ func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	logger := zap.NewNop()
 	fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
-		return nil, nil
+		return &models.SystemIntake{
+			Status: models.SystemIntakeStatusDRAFT,
+		}, nil
 	}
 
 	requester := "Test Requester"
@@ -164,7 +166,9 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		ctx := context.Background()
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, sendReviewEmail)
 
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{})
+		intake, err := updateSystemIntake(ctx, &models.SystemIntake{
+			Status: models.SystemIntakeStatusDRAFT,
+		})
 
 		s.NoError(err)
 		s.Equal(requester, intake.Requester)
@@ -204,7 +208,9 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		}
 		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, failSave, fetch, authorize, submit, sendSubmitEmail, sendReviewEmail)
 
-		intake, err := saveSystemIntake(ctx, &models.SystemIntake{})
+		intake, err := saveSystemIntake(ctx, &models.SystemIntake{
+			Status: models.SystemIntakeStatusDRAFT,
+		})
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
