@@ -311,26 +311,32 @@ You can edit the config [here](.air.conf)
 ### Swagger Generation
 
 The EASi server uses Swagger generation
-to access the CEDAR (data source) API.
-Swagger specs can be downloaded from webMethods:
+to access APIs from CEDAR (the data source).
+Swagger specs (EASi and LDAP) can be downloaded from webMethods:
 
-* [IMPL](webmethods-apigw.cedarimpl.cms.gov)
+* [IMPL](https://webmethods-apigw.cedarimpl.cms.gov)
 
-Put this file in ️`$CEDAR_DIRECTORY`
-and name it `swagger-<env>.yaml` respectively.
+Put these files in ️`$CEDAR_EASI_DIRECTORY` and `$CEDAR_LDAP_DIRECTORY`, respectively,
+and name them `swagger-<env>.yaml` respectively per environment.
 
 If you haven't run go-swagger before,
 you'll need to install it.
 Run:
 
-```go
+```shell script
 go build -o bin/swagger github.com/go-swagger/go-swagger/cmd/swagger
 ```
 
-Then, to generate the client run:
+Then, to generate the clients run:
 
-```go
-swagger generate client -f $CEDAR_SWAGGER_FILE -c $CEDAR_DIRECTORY/gen/client -m $CEDAR_DIRECTORY/gen/models
+```shell script
+swagger generate client -f $CEDAR_EASI_SWAGGER_FILE -c $CEDAR_EASI_DIRECTORY/gen/client -m $CEDAR_EASI_DIRECTORY/gen/models
+```
+
+and
+
+```shell script
+swagger generate client -f $CEDAR_LDAP_SWAGGER_FILE -c $CEDAR_LDAP_DIRECTORY/gen/client -m $CEDAR_LDAP_DIRECTORY/gen/models
 ```
 
 ### Golang cli app

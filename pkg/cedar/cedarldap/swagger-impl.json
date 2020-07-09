@@ -1,0 +1,203 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "API's supporting the LDAP API Access to user information",
+    "version" : "1.0",
+    "title" : "LDAP"
+  },
+  "host" : "webmethods-apigw.cedarimpl.cms.gov",
+  "basePath" : "/gateway/LDAP/1.0",
+  "schemes" : [ "https" ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/authenticate" : {
+      "get" : {
+        "summary" : "Return success or failure based on if the passed credentials are valid",
+        "description" : "Return success or failure based on if the passed credentials are valid",
+        "operationId" : "authenticate",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "credentials",
+          "in" : "query",
+          "description" : "",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "principal",
+          "in" : "query",
+          "description" : "",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "401" : {
+            "description" : "Access Denied"
+          }
+        }
+      }
+    },
+    "/person/{id}" : {
+      "get" : {
+        "summary" : "",
+        "description" : "",
+        "operationId" : "personId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/PersonResponse"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Access Denied"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/person" : {
+      "get" : {
+        "summary" : "Retrieve person information for a given EUA ID",
+        "description" : "Retrieve person information for a given EUA ID",
+        "operationId" : "person",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "return_attributes",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "last_name",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "count_limit",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "telephone",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "first_name",
+          "in" : "query",
+          "description" : "",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Access Denied"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Person" : {
+      "type" : "object",
+      "properties" : {
+        "CommonName" : {
+          "type" : "string"
+        },
+        "Email" : {
+          "type" : "string"
+        },
+        "GivenName" : {
+          "type" : "string"
+        },
+        "SurName" : {
+          "type" : "string"
+        },
+        "TelephoneNumber" : {
+          "type" : "string"
+        },
+        "UserName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Response" : {
+      "type" : "object",
+      "required" : [ "message", "result" ],
+      "properties" : {
+        "message" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "result" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AuthenticateResponse" : {
+      "type" : "object",
+      "required" : [ "Result" ],
+      "properties" : {
+        "Result" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PersonList" : {
+      "type" : "object",
+      "properties" : {
+        "Person_List" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Person"
+          }
+        }
+      }
+    },
+    "PersonResponse" : {
+      "type" : "object",
+      "properties" : {
+        "Person" : {
+          "$ref" : "#/definitions/Person"
+        }
+      }
+    }
+  }
+}
