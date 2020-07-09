@@ -7,10 +7,13 @@ package operations
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	models "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 )
 
 // PersonIDReader is a Reader for the PersonID structure.
@@ -61,13 +64,25 @@ func NewPersonIDOK() *PersonIDOK {
 OK
 */
 type PersonIDOK struct {
+	Payload *models.PersonResponse
 }
 
 func (o *PersonIDOK) Error() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personIdOK ", 200)
+	return fmt.Sprintf("[GET /person/{id}][%d] personIdOK  %+v", 200, o.Payload)
+}
+
+func (o *PersonIDOK) GetPayload() *models.PersonResponse {
+	return o.Payload
 }
 
 func (o *PersonIDOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.PersonResponse)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

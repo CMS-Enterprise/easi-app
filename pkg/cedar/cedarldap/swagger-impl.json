@@ -55,7 +55,10 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "OK"
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/PersonResponse"
+            }
           },
           "400" : {
             "description" : "Bad Request"
