@@ -17,8 +17,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func newMockFetchBusinessCaseByID(err error) func(id uuid.UUID) (*models.BusinessCase, error) {
-	return func(id uuid.UUID) (*models.BusinessCase, error) {
+func newMockFetchBusinessCaseByID(err error) func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 		businessCase := models.BusinessCase{
 			ID:        id,
 			EUAUserID: "FAKE",
