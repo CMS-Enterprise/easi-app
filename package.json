@@ -32,6 +32,8 @@
     "font-awesome": "^4.7.0",
     "formik": "^2.1.4",
     "history": "^4.10.1",
+    "i18next": "^19.4.5",
+    "i18next-browser-languagedetector": "^5.0.0",
     "istanbul-lib-coverage": "^3.0.0",
     "lodash": "^4.17.15",
     "luxon": "^1.22.0",
@@ -41,6 +43,7 @@
     "react": "^16.10.2",
     "react-autosuggest": "^9.4.3",
     "react-dom": "^16.10.2",
+    "react-i18next": "^11.5.0",
     "react-media": "^1.10.0",
     "react-modal": "^3.11.2",
     "react-redux": "^7.1.1",
@@ -56,6 +59,7 @@
     "typescript": "3.6.4",
     "uswds": "^2.2.1",
     "uuid": "^7.0.3",
+    "wait-on": "^5.0.0",
     "yup": "^0.28.1"
   },
   "scripts": {
@@ -66,7 +70,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -85,7 +90,8 @@
   },
   "devDependencies": {
     "@cypress/instrument-cra": "^1.1.0",
-    "cypress": "^3.5.0",
+    "@cypress/webpack-preprocessor": "^5.4.1",
+    "cypress": "4.5.0",
     "cypress-otp": "^1.0.2",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
@@ -104,6 +110,8 @@
     "react-axe": "^3.3.0",
     "react-test-renderer": "^16.12.0",
     "redux-mock-store": "^1.5.3",
-    "text-encoding": "^0.7.0"
+    "start-server-and-test": "^1.11.0",
+    "text-encoding": "^0.7.0",
+    "ts-loader": "^7.0.5"
   }
 }

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -13,7 +14,7 @@ import (
 )
 
 func newMockFetchBusinessCases(businessCases models.BusinessCases, err error) fetchBusinessCases {
-	return func(euaID string) (models.BusinessCases, error) {
+	return func(ctx context.Context, euaID string) (models.BusinessCases, error) {
 		return businessCases, err
 	}
 }
@@ -43,6 +44,9 @@ func (s HandlerTestSuite) TestBusinessCasesHandler() {
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to fetch business cases\n", rr.Body.String())
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Something went wrong", responseErr.Message)
 	})
 }

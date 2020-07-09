@@ -16,14 +16,14 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func newMockSaveSystemIntake(err error) saveSystemIntake {
-	return func(ctx context.Context, intake *models.SystemIntake) error {
-		return err
+func newMockUpdateSystemIntake(err error) updateSystemIntake {
+	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+		return &models.SystemIntake{}, err
 	}
 }
 
-func newMockFetchSystemIntakeByID(err error) func(id uuid.UUID) (*models.SystemIntake, error) {
-	return func(id uuid.UUID) (*models.SystemIntake, error) {
+func newMockFetchSystemIntakeByID(err error) fetchSystemIntakeByID {
+	return func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		intake := models.SystemIntake{
 			ID:        id,
 			EUAUserID: "FAKE",
@@ -56,7 +56,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
 		SystemIntakeHandler{
-			SaveSystemIntake:      nil,
+			UpdateSystemIntake:    nil,
 			HandlerBase:           s.base,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(nil),
 		}.Handle()(rr, req)
@@ -69,12 +69,12 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"intake_id": "NON_EXISTENT"})
 		SystemIntakeHandler{
-			SaveSystemIntake:      nil,
+			UpdateSystemIntake:    nil,
 			HandlerBase:           s.base,
 			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to parse system intake id to uuid")),
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("GET returns an error if the uuid doesn't exist", func() {
@@ -84,13 +84,16 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"intake_id": nonexistentID.String()})
 		SystemIntakeHandler{
-			SaveSystemIntake:      nil,
+			UpdateSystemIntake:    nil,
 			HandlerBase:           s.base,
-			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(fmt.Errorf("failed to fetch system intake")),
+			FetchSystemIntakeByID: newMockFetchSystemIntakeByID(&apperrors.ResourceNotFoundError{}),
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to GET system intake\n", rr.Body.String())
+		s.Equal(http.StatusNotFound, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Resource not found", responseErr.Message)
 	})
 
 	s.Run("golden path POST passes", func() {
@@ -105,7 +108,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		SystemIntakeHandler{
 			HandlerBase:           s.base,
 			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
-			SaveSystemIntake:      nil,
+			UpdateSystemIntake:    nil,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
@@ -125,10 +128,10 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		SystemIntakeHandler{
 			HandlerBase:           s.base,
 			CreateSystemIntake:    newMockCreateSystemIntake(requester, nil),
-			SaveSystemIntake:      nil,
+			UpdateSystemIntake:    nil,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusUnauthorized, rr.Code)
+		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
 
 	s.Run("POST fails if a validation error is thrown", func() {
@@ -148,11 +151,11 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		SystemIntakeHandler{
 			HandlerBase:           s.base,
 			CreateSystemIntake:    newMockCreateSystemIntake(requester, &expectedErr),
-			SaveSystemIntake:      nil,
+			UpdateSystemIntake:    nil,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("POST fails if business case isn't created", func() {
@@ -167,7 +170,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		SystemIntakeHandler{
 			HandlerBase:           s.base,
 			CreateSystemIntake:    newMockCreateSystemIntake(requester, fmt.Errorf("failed to create intake")),
-			SaveSystemIntake:      nil,
+			UpdateSystemIntake:    nil,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 		s.Equal(http.StatusInternalServerError, rr.Code)
@@ -178,7 +181,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString("{}"))
 		s.NoError(err)
 		SystemIntakeHandler{
-			SaveSystemIntake:      newMockSaveSystemIntake(nil),
+			UpdateSystemIntake:    newMockUpdateSystemIntake(nil),
 			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
@@ -191,13 +194,16 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString(""))
 		s.NoError(err)
 		SystemIntakeHandler{
-			SaveSystemIntake:      newMockSaveSystemIntake(nil),
+			UpdateSystemIntake:    newMockUpdateSystemIntake(nil),
 			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusBadRequest, rr.Code)
-		s.Equal("Bad system intake request\n", rr.Body.String())
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Bad request", responseErr.Message)
 	})
 
 	s.Run("PUT fails with bad save", func() {
@@ -205,13 +211,16 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "PUT", "/system_intake/", bytes.NewBufferString("{}"))
 		s.NoError(err)
 		SystemIntakeHandler{
-			SaveSystemIntake:      newMockSaveSystemIntake(fmt.Errorf("failed to save")),
+			UpdateSystemIntake:    newMockUpdateSystemIntake(fmt.Errorf("failed to save")),
 			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to save system intake\n", rr.Body.String())
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Something went wrong", responseErr.Message)
 	})
 
 	s.Run("PUT fails with already submitted intake", func() {
@@ -227,13 +236,16 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		expectedErrMessage := fmt.Errorf("failed to validate")
 		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String()}
 		SystemIntakeHandler{
-			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
+			UpdateSystemIntake:    newMockUpdateSystemIntake(expectedErr),
 			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
-		s.Equal("Failed to validate system intake\n", rr.Body.String())
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Entity unprocessable", responseErr.Message)
 	})
 
 	s.Run("PUT fails with failed validation", func() {
@@ -248,13 +260,16 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		expectedErrMessage := fmt.Errorf("failed to validate")
 		expectedErr := &apperrors.ValidationError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String()}
 		SystemIntakeHandler{
-			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
+			UpdateSystemIntake:    newMockUpdateSystemIntake(expectedErr),
 			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
-		s.Equal("Failed to validate system intake\n", rr.Body.String())
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Entity unprocessable", responseErr.Message)
 	})
 
 	s.Run("PUT fails with failed submit", func() {
@@ -269,13 +284,16 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		expectedErrMessage := fmt.Errorf("failed to submit")
 		expectedErr := &apperrors.ExternalAPIError{Err: expectedErrMessage, Model: models.SystemIntake{}, ModelID: id.String(), Operation: apperrors.Submit, Source: "CEDAR"}
 		SystemIntakeHandler{
-			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
+			UpdateSystemIntake:    newMockUpdateSystemIntake(expectedErr),
 			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to submit system intake\n", rr.Body.String())
+		s.Equal(http.StatusServiceUnavailable, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Service unavailable", responseErr.Message)
 	})
 
 	s.Run("PUT fails with failed email", func() {
@@ -293,12 +311,15 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 			DestinationType: apperrors.DestinationTypeEmail,
 		}
 		SystemIntakeHandler{
-			SaveSystemIntake:      newMockSaveSystemIntake(expectedErr),
+			UpdateSystemIntake:    newMockUpdateSystemIntake(expectedErr),
 			HandlerBase:           s.base,
 			FetchSystemIntakeByID: nil,
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to send notification\n", rr.Body.String())
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Failed to send notification", responseErr.Message)
 	})
 }

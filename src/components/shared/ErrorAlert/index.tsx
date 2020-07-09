@@ -6,11 +6,13 @@ type ErrorAlertProps = {
   heading: string;
   children: React.ReactNode | React.ReactNodeArray;
   classNames?: string;
+  testId?: string;
 };
 export const ErrorAlert = ({
   heading,
   children,
-  classNames
+  classNames,
+  testId
 }: ErrorAlertProps) => {
   const errorAlertClasses = classnames(
     'usa-alert',
@@ -28,7 +30,7 @@ export const ErrorAlert = ({
   }, []);
 
   return (
-    <div className={errorAlertClasses} role="alert">
+    <div className={errorAlertClasses} role="alert" data-testid={testId}>
       <div className="usa-alert__body">
         <h3 className="usa-alert__heading" tabIndex={-1} ref={headingEl}>
           {heading}

@@ -10,12 +10,41 @@
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
+const cypressOTP = require('cypress-otp');
+const cypressCodeCovTask = require('@cypress/code-coverage/task');
+const wp = require('@cypress/webpack-preprocessor');
 
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
   on('task', {
-    generateOTP: require('cypress-otp')
+    generateOTP: cypressOTP
   });
-  on('task', require('@cypress/code-coverage/task'));
+  on('task', cypressCodeCovTask);
+
+  const options = {
+    webpackOptions: {
+      resolve: {
+        extensions: ['.ts', '.js']
+      },
+      module: {
+        rules: [
+          {
+            test: /\.tsx?$/,
+            loader: 'ts-loader',
+            options: { transpileOnly: true }
+          }
+        ]
+      }
+    }
+  };
+  on('file:preprocessor', wp(options));
+
+  const newConfig = config;
+  newConfig.env.oktaDomain = process.env.OKTA_DOMAIN;
+  newConfig.env.username = process.env.OKTA_TEST_USERNAME;
+  newConfig.env.password = process.env.OKTA_TEST_PASSWORD;
+  newConfig.env.otpSecret = process.env.OKTA_TEST_SECRET;
+
+  return config;
 };
