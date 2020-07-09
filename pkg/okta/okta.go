@@ -2,6 +2,7 @@ package okta
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -59,7 +60,7 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 			f.WriteErrorResponse(
 				r.Context(),
 				w,
-				&apperrors.UnauthorizedError{Err: errors.New("unable to parse jwt")},
+				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to parse jwt: %w", err)},
 			)
 			return
 		}
@@ -69,7 +70,7 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 			f.WriteErrorResponse(
 				r.Context(),
 				w,
-				&apperrors.UnauthorizedError{Err: errors.New("unable to get User from jwt")},
+				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to get User from jwt: %w", err)},
 			)
 			return
 		}

@@ -1,16 +1,63 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Alert from 'components/shared/Alert';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntake } from 'types/routines';
+import { SystemIntakeForm } from 'types/systemIntake';
 import TaskListItem from './TaskListItem';
 import SideNavActions from './SideNavActions';
-
 import './index.scss';
 
 const GovernanceTaskList = () => {
+  const { systemId } = useParams();
+  const dispatch = useDispatch();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
+
+  useEffect(() => {
+    if (systemId !== 'new') {
+      dispatch(fetchSystemIntake(systemId));
+    }
+  }, [dispatch, systemId]);
+  const systemIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake
+  );
+
+  const calculateIntakeStatus = (intake: SystemIntakeForm) => {
+    if (intake.id === '') {
+      return 'START';
+    }
+    if (intake.status === 'DRAFT') {
+      return 'CONTINUE';
+    }
+    return 'COMPLETED';
+  };
+  const intakeStatus = calculateIntakeStatus(systemIntake);
+  const chooseIntakeLink = (intake: SystemIntakeForm, status: string) => {
+    const newIntakeLink = '/system/new';
+    if (intake.id === '') {
+      return newIntakeLink;
+    }
+    let link: string;
+    switch (status) {
+      case 'CONTINUE':
+        link = `/system/${intake.id}/contact-details`;
+        break;
+      case 'COMPLETED':
+        // This will need to be changed once we have an intake review page
+        link = '/';
+        break;
+      default:
+        link = newIntakeLink;
+    }
+    return link;
+  };
+  const intakeLink = chooseIntakeLink(systemIntake, intakeStatus);
+
   return (
     <div className="governance-task-list">
       <Header />
@@ -41,8 +88,8 @@ const GovernanceTaskList = () => {
                 heading="Fill in the request form"
                 description="Tell the Governance Admin Team about your idea. This step lets CMS build
               context about your request and start preparing for discussions with your team."
-                status="START"
-                link="/system/new"
+                status={intakeStatus}
+                link={intakeLink}
               />
               <TaskListItem
                 heading="Feedback from initial review"
@@ -69,12 +116,15 @@ const GovernanceTaskList = () => {
               type="button"
               className="governance-task-list__remaining-steps-btn"
               onClick={() => setDisplayRemainingSteps(prev => !prev)}
+              aria-expanded={displayRemainingSteps}
+              aria-controls="GovernanceTaskList-SecondaryList"
             >
               {displayRemainingSteps ? 'Hide' : 'Show'} remaining steps
             </button>
 
             {displayRemainingSteps && (
               <ol
+                id="GovernanceTaskList-SecondaryList"
                 className="governance-task-list__task-list governance-task-list__task-list--secondary"
                 start={4}
               >
