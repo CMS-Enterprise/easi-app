@@ -2,6 +2,7 @@ package okta
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -9,6 +10,8 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -38,26 +41,37 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger, ok := appcontext.Logger(r.Context())
 		if !ok {
-			f.logger.Error("failed to get logger from context")
-			logger = f.logger
+			f.HandlerBase.Logger.Error("failed to get logger from context")
+			logger = f.Logger
 		}
 
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
-			logger.Info("Unauthorized request with empty Authorization header")
-			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			f.WriteErrorResponse(
+				r.Context(),
+				w,
+				&apperrors.UnauthorizedError{Err: errors.New("empty authorization header")},
+			)
 			return
 		}
 
 		jwt, err := f.jwt(logger, authHeader)
 		if err != nil {
-			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			f.WriteErrorResponse(
+				r.Context(),
+				w,
+				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to parse jwt: %w", err)},
+			)
 			return
 		}
 
 		user, err := f.newUser(logger, jwt)
 		if err != nil {
-			http.Error(w, http.StatusText(401), http.StatusUnauthorized)
+			f.WriteErrorResponse(
+				r.Context(),
+				w,
+				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to get User from jwt: %w", err)},
+			)
 			return
 		}
 		logger = logger.With(zap.String("user", user.EUAUserID))
@@ -81,14 +95,14 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 }
 
 type oktaMiddlewareFactory struct {
-	logger   *zap.Logger
+	handlers.HandlerBase
 	verifier *jwtverifier.JwtVerifier
 }
 
 // NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthorizeMiddleware(logger *zap.Logger, clientID string, issuer string) func(http.Handler) http.Handler {
+func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issuer string) func(http.Handler) http.Handler {
 	verifier := newJwtVerifier(clientID, issuer)
-	middlewareFactory := oktaMiddlewareFactory{logger: logger, verifier: verifier}
+	middlewareFactory := oktaMiddlewareFactory{HandlerBase: base, verifier: verifier}
 	return func(next http.Handler) http.Handler {
 		return middlewareFactory.newAuthorizeMiddleware(next)
 	}

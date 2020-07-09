@@ -53,7 +53,7 @@ class App extends React.Component<MainProps, MainState> {
                   process.env.REACT_APP_APP_ENV || ''
                 ) && (
                   <SecureRoute
-                    path="/governance-task-list"
+                    path="/governance-task-list/:systemId"
                     exact
                     component={GovernanceTaskList}
                   />

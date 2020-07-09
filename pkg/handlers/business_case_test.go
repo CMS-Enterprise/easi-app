@@ -17,8 +17,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func newMockFetchBusinessCaseByID(err error) func(id uuid.UUID) (*models.BusinessCase, error) {
-	return func(id uuid.UUID) (*models.BusinessCase, error) {
+func newMockFetchBusinessCaseByID(err error) func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 		businessCase := models.BusinessCase{
 			ID:        id,
 			EUAUserID: "FAKE",
@@ -70,7 +70,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("GET returns an error if the uuid doesn't exist", func() {
@@ -81,12 +81,15 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 		req = mux.SetURLVars(req, map[string]string{"business_case_id": nonexistentID.String()})
 		BusinessCaseHandler{
 			HandlerBase:           s.base,
-			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(fmt.Errorf("failed to fetch business case")),
+			FetchBusinessCaseByID: newMockFetchBusinessCaseByID(&apperrors.ResourceNotFoundError{}),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
 
-		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to GET business case\n", rr.Body.String())
+		s.Equal(http.StatusNotFound, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Resource not found", responseErr.Message)
 	})
 
 	s.Run("golden path POST passes", func() {
@@ -119,7 +122,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(nil),
 		}.Handle()(rr, req)
-		s.Equal(http.StatusUnauthorized, rr.Code)
+		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
 
 	s.Run("POST fails if a validation error is thrown", func() {
@@ -141,7 +144,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(&expectedErr),
 		}.Handle()(rr, req)
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("POST fails if business case isn't created", func() {
@@ -207,7 +210,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("PUT fails if there is no eua ID in the context", func() {
@@ -227,7 +230,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusUnauthorized, rr.Code)
+		s.Equal(http.StatusInternalServerError, rr.Code)
 	})
 
 	s.Run("returns an error if there updating fails with a validation error", func() {
@@ -246,7 +249,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			UpdateBusinessCase:    newMockUpdateBusinessCase(&apperrors.ValidationError{}),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
 	s.Run("returns an error if there updating fails with a resource conflict error", func() {
@@ -265,7 +268,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			UpdateBusinessCase:    newMockUpdateBusinessCase(&apperrors.ResourceConflictError{}),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusBadRequest, rr.Code)
+		s.Equal(http.StatusConflict, rr.Code)
 	})
 
 	s.Run("returns an error if there updating fails in another way", func() {

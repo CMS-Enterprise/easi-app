@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -13,7 +14,7 @@ import (
 )
 
 func newMockFetchSystemIntakes(systemIntakes models.SystemIntakes, err error) fetchSystemIntakes {
-	return func(euaID string) (models.SystemIntakes, error) {
+	return func(context context.Context, euaID string) (models.SystemIntakes, error) {
 		return systemIntakes, err
 	}
 }
@@ -43,6 +44,9 @@ func (s HandlerTestSuite) TestSystemIntakesHandler() {
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusInternalServerError, rr.Code)
-		s.Equal("Failed to fetch System Intakes\n", rr.Body.String())
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Something went wrong", responseErr.Message)
 	})
 }

@@ -40,7 +40,7 @@ describe('The home page', () => {
   });
 
   describe('User is logged in', () => {
-    xit('displays login button', async done => {
+    it('displays login button', async done => {
       const mockStore = configureMockStore();
       const store = mockStore({
         systemIntakes: {
@@ -63,9 +63,10 @@ describe('The home page', () => {
 
         setImmediate(() => {
           component.update();
-          expect(
-            component.find('button[children="Start now"]').exists()
-          ).toEqual(true);
+
+          expect(component.find('a[children="Start now"]').exists()).toEqual(
+            true
+          );
           done();
         });
       });
