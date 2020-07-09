@@ -149,13 +149,16 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	submit := func(intake *models.SystemIntake, logger2 *zap.Logger) (string, error) {
 		return "ALFABET-ID", nil
 	}
+	fetchEmailAddress := func(logger2 *zap.Logger, euaID string) (string, error) {
+		return "sample@sample.com", nil
+	}
 	submitEmailCount := 0
 	sendSubmitEmail := func(requester string, intakeID uuid.UUID) error {
 		submitEmailCount++
 		return nil
 	}
 	reviewEmailCount := 0
-	sendReviewEmail := func(emailText string) error {
+	sendReviewEmail := func(emailText string, recipientAddress string) error {
 		reviewEmailCount++
 		return nil
 	}
@@ -164,7 +167,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns no error when successful on update", func() {
 		ctx := context.Background()
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, sendReviewEmail)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{
 			Status: models.SystemIntakeStatusDRAFT,
@@ -176,7 +179,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns no error when successful on submit and update", func() {
 		ctx := context.Background()
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, sendReviewEmail)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 		s.Equal(0, submitEmailCount)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
@@ -193,7 +196,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("failed to fetch system intake")
 		}
-		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendSubmitEmail, sendReviewEmail)
+		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -206,7 +209,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		failSave := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("save failed")
 		}
-		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, failSave, fetch, authorize, submit, sendSubmitEmail, sendReviewEmail)
+		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, failSave, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, err := saveSystemIntake(ctx, &models.SystemIntake{
 			Status: models.SystemIntakeStatusDRAFT,
@@ -222,7 +225,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, err
 		}
-		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, failAuthorize, submit, sendSubmitEmail, sendReviewEmail)
+		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, failAuthorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, actualError := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -236,7 +239,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		notOKAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, notOKAuthorize, submit, sendSubmitEmail, sendReviewEmail)
+		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, notOKAuthorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -249,7 +252,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		failFetch := func(id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("fetch failed")
 		}
-		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendSubmitEmail, sendReviewEmail)
+		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, err := saveSystemIntake(ctx, &models.SystemIntake{})
 
@@ -266,7 +269,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 				Model:   intake,
 			}
 		}
-		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendSubmitEmail, sendReviewEmail)
+		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
@@ -286,7 +289,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 				Source:    "CEDAR",
 			}
 		}
-		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendSubmitEmail, sendReviewEmail)
+		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
@@ -303,7 +306,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 			Status:    models.SystemIntakeStatusSUBMITTED,
 			EUAUserID: "EUAI",
 		}
-		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, sendReviewEmail)
+		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, err := saveSystemIntake(ctx, &alreadySubmittedIntake)
 
@@ -320,7 +323,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 				DestinationType: apperrors.DestinationTypeEmail,
 			}
 		}
-		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, failSendEmail, sendReviewEmail)
+		saveSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, failSendEmail, fetchEmailAddress, sendReviewEmail)
 
 		intake, err := saveSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 

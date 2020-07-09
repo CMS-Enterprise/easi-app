@@ -27,15 +27,15 @@ func (c Client) systemIntakeReviewBody(EmailText string) (string, error) {
 }
 
 // SendSystemIntakeReviewEmail sends an email for a submitted system intake
-func (c Client) SendSystemIntakeReviewEmail(emailText string) error {
+func (c Client) SendSystemIntakeReviewEmail(emailText string, recipientAddress string) error {
+	// TODO: change this subject line
 	subject := "CHANGE THIS SUBJECT LINE"
 	body, err := c.systemIntakeReviewBody(emailText)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 	err = c.sender.Send(
-		// TODO: this needs to be the user's email
-		c.config.GRTEmail,
+		recipientAddress,
 		subject,
 		body,
 	)
