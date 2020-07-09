@@ -100,7 +100,8 @@ func NewUpdateSystemIntake(
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 	sendSubmitEmail func(requester string, intakeID uuid.UUID) error,
-	sendReviewEmail func(requester string) error,
+	fetchRequesterEmail func(logger *zap.Logger, euaID string) (string, error),
+	sendReviewEmail func(emailText string, recipientAddress string) error,
 ) func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		existingIntake, fetchErr := fetch(intake.ID)
@@ -153,7 +154,7 @@ func NewUpdateSystemIntake(
 					Model:     intake,
 					ModelID:   intake.ID.String(),
 					Operation: apperrors.Submit,
-					Source:    "CEDAR",
+					Source:    "CEDAR EASi",
 				}
 			}
 			intake.AlfabetID = null.StringFrom(alfabetID)
@@ -190,7 +191,21 @@ func NewUpdateSystemIntake(
 				}
 			}
 
-			err = sendReviewEmail(intake.GrtReviewEmailText.String)
+			recipientAddress, err := fetchRequesterEmail(config.logger, existingIntake.EUAUserID)
+			if err != nil {
+				return &models.SystemIntake{}, err
+			}
+			if recipientAddress == "" {
+				return &models.SystemIntake{}, &apperrors.ExternalAPIError{
+					Err:       errors.New("email address fetch was not successful"),
+					Model:     existingIntake,
+					ModelID:   intake.ID.String(),
+					Operation: apperrors.Fetch,
+					Source:    "CEDAR LDAP",
+				}
+			}
+
+			err = sendReviewEmail(intake.GrtReviewEmailText.String, recipientAddress)
 			if err != nil {
 				return &models.SystemIntake{}, err
 			}

@@ -114,6 +114,7 @@ func (s *Server) routes(
 			services.NewAuthorizeUpdateSystemIntake(s.logger),
 			cedarEasiClient.ValidateAndSubmitSystemIntake,
 			emailClient.SendSystemIntakeSubmissionEmail,
+			cedarLdapClient.FetchUserEmailAddress,
 			emailClient.SendSystemIntakeReviewEmail,
 		),
 		services.NewFetchSystemIntakeByID(
