@@ -48,6 +48,10 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     (state: AppState) => state.auth.sessionExpiration
   );
 
+  const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
+  const oneMinute = Duration.fromObject({ minutes: 1 }).as('milliseconds');
+  const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('milliseconds');
+
   const storeSession = async () => {
     // eslint-disable-next-line no-underscore-dangle
     const session = await authService._oktaAuth.session.get();
@@ -59,14 +63,18 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     if (sessionExpiration) {
       const currentTime = Date.now();
       const timeRemaining = sessionExpiration - currentTime;
-      const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
-      const oneMinute = Duration.fromObject({ minutes: 1 }).as('milliseconds');
 
       // If over a minute remaining, displays X minutes
-      if (timeRemaining >= oneMinute) {
-        return Duration.fromMillis(timeRemaining).toFormat(
-          `m 'minute${timeRemaining > oneMinute * 2 ? 's' : ''}'`
+      if (timeRemaining > oneMinute + oneSecond) {
+        // We need to add a minute to make sure the correct number of minutes displays
+        // e.g. 4 minutes 59 seconds shows 4 minutes; add a minute to display 5 minutes
+        return Duration.fromMillis(timeRemaining + oneMinute).toFormat(
+          "m 'minutes'"
         );
+      }
+
+      if (timeRemaining > oneMinute) {
+        return '1 minute';
       }
 
       // If less than a minute remaining, display X second(s)
@@ -80,16 +88,11 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   };
 
   const handleModalExit = async () => {
-    await setIsModalOpen(false);
     await storeSession();
+    await setIsModalOpen(false);
   };
 
   useEffect(() => {
-    const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
-    // has extra 59 seconds so that 5 doesn't immediately turn into 4
-    const fiveMinutes = Duration.fromObject({ minutes: 5, seconds: 59 }).as(
-      'milliseconds'
-    );
     let sessionInterval: ReturnType<typeof setInterval>;
     if (sessionExpiration) {
       sessionInterval = setInterval(() => {
@@ -134,7 +137,12 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         closeModal={handleModalExit}
         shouldCloseOnOverlayClick={false}
       >
-        <h3 className="margin-top-0">
+        <h3
+          className="margin-top-0"
+          role="timer"
+          aria-live={timeRemainingString.includes('minute') ? 'polite' : 'off'}
+          aria-atomic="true"
+        >
           Your access to EASi will expire in {timeRemainingString}
         </h3>
         <p>Your data has been saved.</p>
