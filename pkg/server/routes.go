@@ -111,6 +111,7 @@ func (s *Server) routes(
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
+			services.NewAuthorizeFetchSystemIntakeByID(),
 		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
@@ -121,6 +122,7 @@ func (s *Server) routes(
 		services.NewFetchSystemIntakesByEuaID(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
+			services.NewAuthorizeFetchSystemIntakesByEuaID(),
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
@@ -130,6 +132,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCaseByID(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
+			services.NewAuthorizeFetchBusinessCaseByID(),
 		),
 		services.NewCreateBusinessCase(
 			serviceConfig,
@@ -153,6 +156,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
+			services.NewAuthorizeFetchBusinessCasesByEuaID(),
 		),
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
