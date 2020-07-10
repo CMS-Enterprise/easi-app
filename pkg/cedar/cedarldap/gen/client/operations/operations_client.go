@@ -31,7 +31,7 @@ Authenticate returns success or failure based on if the passed credentials are v
 
 Return success or failure based on if the passed credentials are valid
 */
-func (a *Client) Authenticate(params *AuthenticateParams) (*AuthenticateOK, error) {
+func (a *Client) Authenticate(params *AuthenticateParams, authInfo runtime.ClientAuthInfoWriter) (*AuthenticateOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewAuthenticateParams()
@@ -46,6 +46,7 @@ func (a *Client) Authenticate(params *AuthenticateParams) (*AuthenticateOK, erro
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &AuthenticateReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -67,7 +68,7 @@ Person retrieves person information for a given e u a ID
 
 Retrieve person information for a given EUA ID
 */
-func (a *Client) Person(params *PersonParams) (*PersonOK, error) {
+func (a *Client) Person(params *PersonParams, authInfo runtime.ClientAuthInfoWriter) (*PersonOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPersonParams()
@@ -82,6 +83,7 @@ func (a *Client) Person(params *PersonParams) (*PersonOK, error) {
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PersonReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
@@ -101,7 +103,7 @@ func (a *Client) Person(params *PersonParams) (*PersonOK, error) {
 /*
 PersonID person Id API
 */
-func (a *Client) PersonID(params *PersonIDParams) (*PersonIDOK, error) {
+func (a *Client) PersonID(params *PersonIDParams, authInfo runtime.ClientAuthInfoWriter) (*PersonIDOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewPersonIDParams()
@@ -111,11 +113,12 @@ func (a *Client) PersonID(params *PersonIDParams) (*PersonIDOK, error) {
 		ID:                 "personId",
 		Method:             "GET",
 		PathPattern:        "/person/{id}",
-		ProducesMediaTypes: []string{"application/json"},
+		ProducesMediaTypes: []string{"text/html"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &PersonIDReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})

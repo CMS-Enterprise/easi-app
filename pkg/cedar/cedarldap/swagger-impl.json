@@ -10,6 +10,9 @@
   "schemes" : [ "https" ],
   "consumes" : [ "application/json" ],
   "produces" : [ "application/json" ],
+  "security" : [ {
+    "apiKey" : [ ]
+  } ],
   "paths" : {
     "/authenticate" : {
       "get" : {
@@ -45,7 +48,7 @@
         "summary" : "",
         "description" : "",
         "operationId" : "personId",
-        "produces" : [ "application/json" ],
+        "produces" : [ "text/html" ],
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
@@ -130,6 +133,13 @@
           }
         }
       }
+    }
+  },
+  "securityDefinitions" : {
+    "apiKey" : {
+      "type" : "apiKey",
+      "name" : "x-Gateway-APIKey",
+      "in" : "header"
     }
   },
   "definitions" : {

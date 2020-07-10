@@ -5,7 +5,12 @@ export type GovernanceCollaborationTeam = {
   name: string;
 };
 
-type SystemIntakeStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
+type SystemIntakeStatus =
+  | 'DRAFT'
+  | 'SUBMITTED'
+  | 'ACCEPTED'
+  | 'APPROVED'
+  | 'CLOSED';
 
 /**
  * Type for SystemIntakeForm

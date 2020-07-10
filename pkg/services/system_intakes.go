@@ -178,19 +178,6 @@ func NewUpdateSystemIntake(
 				intake.Status == models.SystemIntakeStatusACCEPTED ||
 				intake.Status == models.SystemIntakeStatusCLOSED) {
 
-			existingIntake.Status = intake.Status
-			existingIntake.GrtReviewEmailText = intake.GrtReviewEmailText
-			existingIntake.UpdatedAt = &updatedTime
-			// This ensures only status and email text is modified.
-			intake, err = update(existingIntake)
-			if err != nil {
-				return &models.SystemIntake{}, &apperrors.QueryError{
-					Err:       err,
-					Model:     intake,
-					Operation: apperrors.QuerySave,
-				}
-			}
-
 			recipientAddress, err := fetchRequesterEmail(config.logger, existingIntake.EUAUserID)
 			if err != nil {
 				return &models.SystemIntake{}, err
@@ -202,6 +189,19 @@ func NewUpdateSystemIntake(
 					ModelID:   intake.ID.String(),
 					Operation: apperrors.Fetch,
 					Source:    "CEDAR LDAP",
+				}
+			}
+
+			existingIntake.Status = intake.Status
+			existingIntake.GrtReviewEmailText = intake.GrtReviewEmailText
+			existingIntake.UpdatedAt = &updatedTime
+			// This ensures only status and email text is modified.
+			intake, err = update(existingIntake)
+			if err != nil {
+				return &models.SystemIntake{}, &apperrors.QueryError{
+					Err:       err,
+					Model:     intake,
+					Operation: apperrors.QuerySave,
 				}
 			}
 
