@@ -9,7 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-const testEUAID = "ABCD"
+const testEUAID = "GZVA"
 
 func authorizeMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
