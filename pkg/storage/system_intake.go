@@ -1,10 +1,12 @@
 package storage
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -228,4 +230,31 @@ func (s *Store) FetchSystemIntakeMetrics(startTime time.Time, endTime time.Time)
 	metrics.Funded = fundedResponse.FundedCount
 
 	return metrics, nil
+}
+
+// UpdateSystemIntakeWithBusinessCaseID updates the system intake with a business case id
+// when the business case is first created
+func updateSystemIntakeWithBusinessCaseID(tx *sqlx.Tx, businessCase *models.BusinessCase) error {
+	const updateSystemIntakeWithBusinessCaseSQL = `
+		UPDATE system_intake 
+		SET
+		    business_case = :id
+		WHERE system_intake.id = :system_intake
+	`
+	result, err := tx.NamedExec(
+		updateSystemIntakeWithBusinessCaseSQL,
+		businessCase,
+	)
+	affectedRows, resultErr := result.RowsAffected()
+	if resultErr != nil {
+		return resultErr
+	}
+	if err == nil && affectedRows < 1 {
+		return &apperrors.QueryError{
+			Err:       errors.New("no system intake was updated"),
+			Model:     models.SystemIntake{},
+			Operation: apperrors.QueryUpdate,
+		}
+	}
+	return err
 }

@@ -110,7 +110,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err := s.store.CreateBusinessCase(&businessCase)
 
 		s.Error(err)
-		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+		s.Equal(IntakeExistsMsg, err.Error())
 	})
 
 	s.Run("requires a system intake ID that exists in the db", func() {
@@ -124,7 +124,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err := s.store.CreateBusinessCase(&businessCase)
 
 		s.Error(err)
-		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+		s.Equal(IntakeExistsMsg, err.Error())
 	})
 
 	s.Run("requires an eua user id", func() {
@@ -138,7 +138,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err = s.store.CreateBusinessCase(&businessCase)
 
 		s.Error(err)
-		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+		s.Equal(EuaIDMsg, err.Error())
 	})
 
 	s.Run("requires a status", func() {
@@ -152,7 +152,30 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err = s.store.CreateBusinessCase(&businessCase)
 
 		s.Error(err)
-		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+		s.Contains(err.Error(), ValidStatusMsg)
+	})
+
+	s.Run("doesn't allow more than one business case on a system intake", func() {
+		intake := testhelpers.NewSystemIntake()
+		_, err := s.store.CreateSystemIntake(&intake)
+		s.NoError(err)
+		businessCase1 := models.BusinessCase{
+			SystemIntakeID: intake.ID,
+			EUAUserID:      intake.EUAUserID,
+			Status:         models.BusinessCaseStatusDRAFT,
+		}
+		_, err = s.store.CreateBusinessCase(&businessCase1)
+		s.NoError(err)
+
+		businessCase2 := models.BusinessCase{
+			SystemIntakeID: intake.ID,
+			EUAUserID:      intake.EUAUserID,
+			Status:         models.BusinessCaseStatusDRAFT,
+		}
+		_, err = s.store.CreateBusinessCase(&businessCase2)
+		s.Error(err)
+		s.IsType(&apperrors.ResourceConflictError{}, err)
+		s.Contains(err.Error(), UniqueIntakeMsg)
 	})
 }
 
