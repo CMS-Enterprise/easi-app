@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 import { DateTime, Duration } from 'luxon';
+import { useTranslation } from 'react-i18next';
 import Modal from 'components/Modal';
 import Button from 'components/shared/Button';
 import { updateLastSessionRenew } from 'reducers/authReducer';
@@ -38,8 +39,9 @@ const registerExpire = async (authService: any, lastActiveAt: number) => {
 const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const dispatch = useDispatch();
   const { authState, authService } = useOktaAuth();
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [timeRemainingString, setTimeRemainingString] = useState('');
+  const [timeRemainingArr, setTimeRemainingArr] = useState([0, 'second']);
   const lastActiveAt = useSelector(
     (state: AppState) => state.auth.lastActiveAt
   );
@@ -59,7 +61,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     dispatch(updateLastSessionRenew(expiresAt));
   };
 
-  const formatSessionTimeRemaining = () => {
+  const formatSessionTimeRemaining = (): [number, string] => {
     if (sessionExpiration) {
       const currentTime = Date.now();
       const timeRemaining = sessionExpiration - currentTime;
@@ -68,23 +70,21 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       if (timeRemaining > oneMinute + oneSecond) {
         // We need to add a minute to make sure the correct number of minutes displays
         // e.g. 4 minutes 59 seconds shows 4 minutes; add a minute to display 5 minutes
-        return Duration.fromMillis(timeRemaining + oneMinute).toFormat(
-          "m 'minutes'"
+        const minutes = Duration.fromMillis(timeRemaining + oneMinute).as(
+          'minutes'
         );
+        return [Math.floor(minutes), 'minute'];
       }
 
-      if (timeRemaining > oneMinute) {
-        return '1 minute';
+      if (timeRemaining >= oneMinute) {
+        return [1, 'minute'];
       }
 
       // If less than a minute remaining, display X second(s)
-      return Duration.fromMillis(timeRemaining).toFormat(
-        `${timeRemaining >= oneSecond * 10 ? 'ss' : 's'} 'second${
-          timeRemaining >= oneSecond * 2 || timeRemaining < oneSecond ? 's' : ''
-        }' `
-      );
+      const seconds = Duration.fromMillis(timeRemaining).as('seconds');
+      return [Math.floor(seconds), 'second'];
     }
-    return '';
+    return [0, 'second'];
   };
 
   const handleModalExit = async () => {
@@ -100,7 +100,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
         // If the session expires in 5 minutes or less
         if (currentTime + fiveMinutes > sessionExpiration) {
-          setTimeRemainingString(formatSessionTimeRemaining());
+          setTimeRemainingArr(formatSessionTimeRemaining());
           if (!isModalOpen) {
             setIsModalOpen(true);
           }
@@ -140,19 +140,23 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         <h3
           className="margin-top-0"
           role="timer"
-          aria-live={timeRemainingString.includes('minute') ? 'polite' : 'off'}
+          aria-live={timeRemainingArr[1] === 'minute' ? 'polite' : 'off'}
           aria-atomic="true"
         >
-          Your access to EASi will expire in {timeRemainingString}
+          {t('auth:modal.title', {
+            count: Number(timeRemainingArr[0]),
+            context: String(timeRemainingArr[1])
+          })}
         </h3>
-        <p>Your data has been saved.</p>
+        <p>{t('auth:modal.dataSaved')}</p>
         <p>
-          If you do not do anything on this page, you will be signed out in{' '}
-          {timeRemainingString} and will need to sign back in. We do this to
-          keep your information secure.
+          {t('auth:modal.inactivityWarning', {
+            count: Number(timeRemainingArr[0]),
+            context: String(timeRemainingArr[1])
+          })}
         </p>
         <Button type="button" onClick={handleModalExit}>
-          Return to EASi
+          {t('auth:modal.cta')}
         </Button>
       </Modal>
       {children}
