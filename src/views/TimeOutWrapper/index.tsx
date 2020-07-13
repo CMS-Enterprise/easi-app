@@ -7,6 +7,7 @@ import Modal from 'components/Modal';
 import Button from 'components/shared/Button';
 import { updateLastSessionRenew } from 'reducers/authReducer';
 import { AppState } from 'reducers/rootReducer';
+import useInterval from 'hooks/useInterval';
 
 type TimeOutWrapperProps = {
   children: React.ReactNode;
@@ -94,54 +95,42 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     storeSession();
   };
 
-  useEffect(() => {
-    if (sessionExpiration) {
-      sessionInterval.current = setInterval(() => {
-        const currentTime = Date.now();
+  useInterval(
+    () => {
+      const currentTime = Date.now();
 
-        // If the session expires in 5 minutes or less
-        if (currentTime + fiveMinutes > sessionExpiration) {
-          setTimeRemainingArr(formatSessionTimeRemaining());
-          if (!isModalOpen) {
-            console.log('Set modal open');
-            setIsModalOpen(true);
-          }
-        }
+      if (currentTime <= sessionExpiration) {
+        setTimeRemainingArr(formatSessionTimeRemaining());
+      }
+    },
+    isModalOpen ? 1000 : null
+  );
 
-        // If the session expired
-        if (currentTime + oneSecond >= sessionExpiration) {
-          clearInterval(sessionInterval.current);
-          setIsModalOpen(false);
-          authService.logout('/login');
-        }
-      }, 1000);
-    }
+  // If the session expires in 5 minutes or less
+  useInterval(
+    () => {
+      const currentTime = Date.now();
+      if (currentTime + fiveMinutes > sessionExpiration) {
+        setTimeRemainingArr(formatSessionTimeRemaining());
+        setIsModalOpen(true);
+      }
+    },
+    sessionExpiration && !isModalOpen ? 1000 : null
+  );
 
-    return () => clearInterval(sessionInterval.current);
+  useInterval(
+    () => {
+      const currentTime = Date.now();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionExpiration]);
-
-  // useInterval(() => {
-  //   if (sessionExpiration) {
-  //     const currentTime = Date.now();
-
-  //     // If the session expires in 5 minutes or less
-  //     if (currentTime + fiveMinutes > sessionExpiration) {
-  //       setTimeRemainingArr(formatSessionTimeRemaining());
-  //       if (!isModalOpen) {
-  //         console.log('Set modal open');
-  //         setIsModalOpen(true);
-  //       }
-  //     }
-
-  //     // If the session expired
-  //     if (currentTime + oneSecond >= sessionExpiration) {
-  //       setIsModalOpen(false);
-  //       authService.logout('/login');
-  //     }
-  //   }
-  // }, 1000);
+      // If the session expired
+      if (currentTime >= sessionExpiration) {
+        clearInterval(sessionInterval.current);
+        setIsModalOpen(false);
+        authService.logout('/login');
+      }
+    },
+    sessionExpiration && isModalOpen ? 1000 : null
+  );
 
   useEffect(() => {
     if (authState.isAuthenticated) {
