@@ -50,7 +50,7 @@ type SystemIntake struct {
 	UpdatedAt               *time.Time         `json:"updatedAt" db:"updated_at"`
 	SubmittedAt             *time.Time         `json:"submittedAt" db:"submitted_at"`
 	AlfabetID               null.String        `json:"alfabetID" db:"alfabet_id"`
-	GrtReviewEmailText      null.String        `json:"GrtReviewEmailText" db:"grt_review_email_text"`
+	GrtReviewEmailBody      null.String        `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 }
 
 // SystemIntakes is a list of System Intakes

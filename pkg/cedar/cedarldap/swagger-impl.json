@@ -1,13 +1,13 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "API's supporting the LDAP API Access to user information",
+    "description" : "Application for LDAP authentication and Person info\n",
     "version" : "1.0",
     "title" : "LDAP"
   },
   "host" : "webmethods-apigw.cedarimpl.cms.gov",
   "basePath" : "/gateway/LDAP/1.0",
-  "schemes" : [ "https" ],
+  "schemes" : [ "http" ],
   "consumes" : [ "application/json" ],
   "produces" : [ "application/json" ],
   "security" : [ {
@@ -16,26 +16,26 @@
   "paths" : {
     "/authenticate" : {
       "get" : {
-        "summary" : "Return success or failure based on if the passed credentials are valid",
-        "description" : "Return success or failure based on if the passed credentials are valid",
+        "description" : "Retturn success or failure based on if the passed credentials are valid",
         "operationId" : "authenticate",
         "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "credentials",
+          "name" : "principal",
           "in" : "query",
-          "description" : "",
           "required" : true,
           "type" : "string"
         }, {
-          "name" : "principal",
+          "name" : "credentials",
           "in" : "query",
-          "description" : "",
           "required" : true,
           "type" : "string"
         } ],
         "responses" : {
           "200" : {
-            "description" : "OK"
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AuthenticateResponse"
+            }
           },
           "401" : {
             "description" : "Access Denied"
@@ -45,14 +45,11 @@
     },
     "/person/{id}" : {
       "get" : {
-        "summary" : "",
-        "description" : "",
         "operationId" : "personId",
-        "produces" : [ "text/html" ],
+        "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
           "in" : "path",
-          "description" : "",
           "required" : true,
           "type" : "string"
         } ],
@@ -60,76 +57,90 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "$ref" : "#/definitions/PersonResponse"
+              "$ref" : "#/definitions/PersonIdResponseWrapper"
             }
           },
           "400" : {
-            "description" : "Bad Request"
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
           },
           "401" : {
-            "description" : "Access Denied"
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
           },
           "500" : {
-            "description" : "Internal Server Error"
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
           }
         }
       }
     },
     "/person" : {
       "get" : {
-        "summary" : "Retrieve person information for a given EUA ID",
         "description" : "Retrieve person information for a given EUA ID",
         "operationId" : "person",
         "produces" : [ "application/json" ],
         "parameters" : [ {
-          "name" : "return_attributes",
+          "name" : "first_name",
           "in" : "query",
-          "description" : "",
           "required" : false,
           "type" : "string"
         }, {
           "name" : "last_name",
           "in" : "query",
-          "description" : "",
-          "required" : false,
-          "type" : "string"
-        }, {
-          "name" : "count_limit",
-          "in" : "query",
-          "description" : "",
-          "required" : false,
-          "type" : "string"
-        }, {
-          "name" : "telephone",
-          "in" : "query",
-          "description" : "",
           "required" : false,
           "type" : "string"
         }, {
           "name" : "email",
           "in" : "query",
-          "description" : "",
           "required" : false,
           "type" : "string"
         }, {
-          "name" : "first_name",
+          "name" : "telephone",
           "in" : "query",
-          "description" : "",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "count_limit",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "return_attributes",
+          "in" : "query",
           "required" : false,
           "type" : "string"
         } ],
         "responses" : {
           "200" : {
-            "description" : "OK"
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/PersonList"
+            }
           },
           "400" : {
-            "description" : "Bad Request"
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
           },
           "401" : {
-            "description" : "Access Denied"
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
           },
           "500" : {
-            "description" : "Internal Server Error"
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
           }
         }
       }
@@ -143,41 +154,18 @@
     }
   },
   "definitions" : {
-    "Person" : {
-      "type" : "object",
-      "properties" : {
-        "CommonName" : {
-          "type" : "string"
-        },
-        "Email" : {
-          "type" : "string"
-        },
-        "GivenName" : {
-          "type" : "string"
-        },
-        "SurName" : {
-          "type" : "string"
-        },
-        "TelephoneNumber" : {
-          "type" : "string"
-        },
-        "UserName" : {
-          "type" : "string"
-        }
-      }
-    },
     "Response" : {
       "type" : "object",
       "required" : [ "message", "result" ],
       "properties" : {
+        "result" : {
+          "type" : "string"
+        },
         "message" : {
           "type" : "array",
           "items" : {
             "type" : "string"
           }
-        },
-        "result" : {
-          "type" : "string"
         }
       }
     },
@@ -201,11 +189,42 @@
         }
       }
     },
-    "PersonResponse" : {
+    "Person" : {
+      "type" : "object",
+      "properties" : {
+        "commonName" : {
+          "type" : "string"
+        },
+        "telephoneNumber" : {
+          "type" : "string"
+        },
+        "surName" : {
+          "type" : "string"
+        },
+        "givenName" : {
+          "type" : "string"
+        },
+        "userName" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PersonIdResponse" : {
       "type" : "object",
       "properties" : {
         "Person" : {
           "$ref" : "#/definitions/Person"
+        }
+      }
+    },
+    "PersonIdResponseWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "PersonIdResponse" : {
+          "$ref" : "#/definitions/PersonIdResponse"
         }
       }
     }

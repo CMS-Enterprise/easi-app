@@ -14,6 +14,7 @@ import { updateLastActiveAt } from 'reducers/authReducer';
 
 function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
+  console.log(formData);
   const data = prepareSystemIntakeForApi(formData);
   return axios.put(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }

@@ -64,20 +64,20 @@ func NewPersonIDOK() *PersonIDOK {
 OK
 */
 type PersonIDOK struct {
-	Payload *models.PersonResponse
+	Payload *models.PersonIDResponseType
 }
 
 func (o *PersonIDOK) Error() string {
 	return fmt.Sprintf("[GET /person/{id}][%d] personIdOK  %+v", 200, o.Payload)
 }
 
-func (o *PersonIDOK) GetPayload() *models.PersonResponse {
+func (o *PersonIDOK) GetPayload() *models.PersonIDResponseType {
 	return o.Payload
 }
 
 func (o *PersonIDOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.PersonResponse)
+	o.Payload = new(models.PersonIDResponseType)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -97,13 +97,25 @@ func NewPersonIDBadRequest() *PersonIDBadRequest {
 Bad Request
 */
 type PersonIDBadRequest struct {
+	Payload *models.Response
 }
 
 func (o *PersonIDBadRequest) Error() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personIdBadRequest ", 400)
+	return fmt.Sprintf("[GET /person/{id}][%d] personIdBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *PersonIDBadRequest) GetPayload() *models.Response {
+	return o.Payload
 }
 
 func (o *PersonIDBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Response)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -118,13 +130,25 @@ func NewPersonIDUnauthorized() *PersonIDUnauthorized {
 Access Denied
 */
 type PersonIDUnauthorized struct {
+	Payload *models.Response
 }
 
 func (o *PersonIDUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personIdUnauthorized ", 401)
+	return fmt.Sprintf("[GET /person/{id}][%d] personIdUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *PersonIDUnauthorized) GetPayload() *models.Response {
+	return o.Payload
 }
 
 func (o *PersonIDUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Response)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -139,13 +163,25 @@ func NewPersonIDInternalServerError() *PersonIDInternalServerError {
 Internal Server Error
 */
 type PersonIDInternalServerError struct {
+	Payload *models.Response
 }
 
 func (o *PersonIDInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /person/{id}][%d] personIdInternalServerError ", 500)
+	return fmt.Sprintf("[GET /person/{id}][%d] personIdInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *PersonIDInternalServerError) GetPayload() *models.Response {
+	return o.Payload
 }
 
 func (o *PersonIDInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Response)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

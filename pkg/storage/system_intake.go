@@ -41,6 +41,7 @@ func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 			process_status,
 			ea_support_request,
 			existing_contract,
+		    grt_review_email_body,
 			created_at,
 			updated_at,
 		    submitted_at
@@ -67,6 +68,7 @@ func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 			:process_status,
 			:ea_support_request,
 			:existing_contract,
+		    :grt_review_email_body,
 		    :created_at,
 		    :updated_at,
 			:submitted_at
@@ -110,6 +112,7 @@ func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 			process_status = :process_status,
 			ea_support_request = :ea_support_request,
 			existing_contract = :existing_contract,
+		    grt_review_email_body = :grt_review_email_body,
 			updated_at = :updated_at,
 			submitted_at = :submitted_at,
 			alfabet_id = :alfabet_id

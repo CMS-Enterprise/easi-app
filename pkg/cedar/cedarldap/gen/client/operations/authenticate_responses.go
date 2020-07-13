@@ -7,10 +7,13 @@ package operations
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	models "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 )
 
 // AuthenticateReader is a Reader for the Authenticate structure.
@@ -49,13 +52,25 @@ func NewAuthenticateOK() *AuthenticateOK {
 OK
 */
 type AuthenticateOK struct {
+	Payload *models.AuthenticateResponse
 }
 
 func (o *AuthenticateOK) Error() string {
-	return fmt.Sprintf("[GET /authenticate][%d] authenticateOK ", 200)
+	return fmt.Sprintf("[GET /authenticate][%d] authenticateOK  %+v", 200, o.Payload)
+}
+
+func (o *AuthenticateOK) GetPayload() *models.AuthenticateResponse {
+	return o.Payload
 }
 
 func (o *AuthenticateOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.AuthenticateResponse)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

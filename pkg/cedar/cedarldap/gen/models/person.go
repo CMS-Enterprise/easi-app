@@ -16,22 +16,22 @@ import (
 type Person struct {
 
 	// common name
-	CommonName string `json:"CommonName,omitempty"`
+	CommonName string `json:"commonName,omitempty"`
 
 	// email
-	Email string `json:"Email,omitempty"`
+	Email string `json:"email,omitempty"`
 
 	// given name
-	GivenName string `json:"GivenName,omitempty"`
+	GivenName string `json:"givenName,omitempty"`
 
 	// sur name
-	SurName string `json:"SurName,omitempty"`
+	SurName string `json:"surName,omitempty"`
 
 	// telephone number
-	TelephoneNumber string `json:"TelephoneNumber,omitempty"`
+	TelephoneNumber string `json:"telephoneNumber,omitempty"`
 
 	// user name
-	UserName string `json:"UserName,omitempty"`
+	UserName string `json:"userName,omitempty"`
 }
 
 // Validate validates this person
