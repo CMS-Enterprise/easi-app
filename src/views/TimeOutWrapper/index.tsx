@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 import { DateTime, Duration } from 'luxon';
@@ -41,6 +41,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const { authState, authService } = useOktaAuth();
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const sessionInterval = useRef<any>();
   const [timeRemainingArr, setTimeRemainingArr] = useState([0, 'second']);
   const lastActiveAt = useSelector(
     (state: AppState) => state.auth.lastActiveAt
@@ -87,38 +88,60 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     return [0, 'second'];
   };
 
-  const handleModalExit = async () => {
-    await storeSession();
-    await setIsModalOpen(false);
+  const handleModalExit = () => {
+    clearTimeout(sessionInterval.current);
+    setIsModalOpen(false);
+    storeSession();
   };
 
   useEffect(() => {
-    let sessionInterval: ReturnType<typeof setInterval>;
     if (sessionExpiration) {
-      sessionInterval = setInterval(() => {
+      sessionInterval.current = setInterval(() => {
         const currentTime = Date.now();
 
         // If the session expires in 5 minutes or less
         if (currentTime + fiveMinutes > sessionExpiration) {
           setTimeRemainingArr(formatSessionTimeRemaining());
           if (!isModalOpen) {
+            console.log('Set modal open');
             setIsModalOpen(true);
           }
         }
 
         // If the session expired
         if (currentTime + oneSecond >= sessionExpiration) {
-          clearInterval(sessionInterval);
+          clearInterval(sessionInterval.current);
           setIsModalOpen(false);
           authService.logout('/login');
         }
       }, 1000);
     }
 
-    return () => clearInterval(sessionInterval);
+    return () => clearInterval(sessionInterval.current);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionExpiration]);
+
+  // useInterval(() => {
+  //   if (sessionExpiration) {
+  //     const currentTime = Date.now();
+
+  //     // If the session expires in 5 minutes or less
+  //     if (currentTime + fiveMinutes > sessionExpiration) {
+  //       setTimeRemainingArr(formatSessionTimeRemaining());
+  //       if (!isModalOpen) {
+  //         console.log('Set modal open');
+  //         setIsModalOpen(true);
+  //       }
+  //     }
+
+  //     // If the session expired
+  //     if (currentTime + oneSecond >= sessionExpiration) {
+  //       setIsModalOpen(false);
+  //       authService.logout('/login');
+  //     }
+  //   }
+  // }, 1000);
 
   useEffect(() => {
     if (authState.isAuthenticated) {
