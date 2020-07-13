@@ -7,10 +7,13 @@ package operations
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 
 	strfmt "github.com/go-openapi/strfmt"
+
+	models "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 )
 
 // PersonReader is a Reader for the Person structure.
@@ -61,13 +64,25 @@ func NewPersonOK() *PersonOK {
 OK
 */
 type PersonOK struct {
+	Payload *models.PersonList
 }
 
 func (o *PersonOK) Error() string {
-	return fmt.Sprintf("[GET /person][%d] personOK ", 200)
+	return fmt.Sprintf("[GET /person][%d] personOK  %+v", 200, o.Payload)
+}
+
+func (o *PersonOK) GetPayload() *models.PersonList {
+	return o.Payload
 }
 
 func (o *PersonOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.PersonList)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -82,13 +97,25 @@ func NewPersonBadRequest() *PersonBadRequest {
 Bad Request
 */
 type PersonBadRequest struct {
+	Payload *models.Response
 }
 
 func (o *PersonBadRequest) Error() string {
-	return fmt.Sprintf("[GET /person][%d] personBadRequest ", 400)
+	return fmt.Sprintf("[GET /person][%d] personBadRequest  %+v", 400, o.Payload)
+}
+
+func (o *PersonBadRequest) GetPayload() *models.Response {
+	return o.Payload
 }
 
 func (o *PersonBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Response)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -103,13 +130,25 @@ func NewPersonUnauthorized() *PersonUnauthorized {
 Access Denied
 */
 type PersonUnauthorized struct {
+	Payload *models.Response
 }
 
 func (o *PersonUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /person][%d] personUnauthorized ", 401)
+	return fmt.Sprintf("[GET /person][%d] personUnauthorized  %+v", 401, o.Payload)
+}
+
+func (o *PersonUnauthorized) GetPayload() *models.Response {
+	return o.Payload
 }
 
 func (o *PersonUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Response)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -124,13 +163,25 @@ func NewPersonInternalServerError() *PersonInternalServerError {
 Internal Server Error
 */
 type PersonInternalServerError struct {
+	Payload *models.Response
 }
 
 func (o *PersonInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /person][%d] personInternalServerError ", 500)
+	return fmt.Sprintf("[GET /person][%d] personInternalServerError  %+v", 500, o.Payload)
+}
+
+func (o *PersonInternalServerError) GetPayload() *models.Response {
+	return o.Payload
 }
 
 func (o *PersonInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.Response)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }

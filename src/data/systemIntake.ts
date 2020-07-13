@@ -39,7 +39,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   businessSolution: '',
   currentStage: '',
   needsEaSupport: null,
-  hasContract: ''
+  hasContract: '',
+  grtReviewEmailBody: ''
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -75,7 +76,8 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     solution: systemIntake.businessSolution,
     processStatus: systemIntake.currentStage,
     eaSupportRequest: systemIntake.needsEaSupport,
-    existingContract: systemIntake.hasContract
+    existingContract: systemIntake.hasContract,
+    grtReviewEmailBody: systemIntake.grtReviewEmailBody
   };
 };
 
@@ -134,6 +136,7 @@ export const prepareSystemIntakeForApp = (
       systemIntake.eaSupportRequest === null
         ? null
         : systemIntake.eaSupportRequest,
-    hasContract: systemIntake.existingContract || ''
+    hasContract: systemIntake.existingContract || '',
+    grtReviewEmailBody: systemIntake.grtReviewEmailBody || ''
   };
 };

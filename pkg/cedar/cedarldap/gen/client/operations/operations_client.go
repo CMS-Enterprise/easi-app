@@ -27,9 +27,7 @@ type Client struct {
 }
 
 /*
-Authenticate returns success or failure based on if the passed credentials are valid
-
-Return success or failure based on if the passed credentials are valid
+Authenticate Retturn success or failure based on if the passed credentials are valid
 */
 func (a *Client) Authenticate(params *AuthenticateParams, authInfo runtime.ClientAuthInfoWriter) (*AuthenticateOK, error) {
 	// TODO: Validate the params before sending
@@ -43,7 +41,7 @@ func (a *Client) Authenticate(params *AuthenticateParams, authInfo runtime.Clien
 		PathPattern:        "/authenticate",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
+		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &AuthenticateReader{formats: a.formats},
 		AuthInfo:           authInfo,
@@ -64,9 +62,7 @@ func (a *Client) Authenticate(params *AuthenticateParams, authInfo runtime.Clien
 }
 
 /*
-Person retrieves person information for a given e u a ID
-
-Retrieve person information for a given EUA ID
+Person Retrieve person information for a given EUA ID
 */
 func (a *Client) Person(params *PersonParams, authInfo runtime.ClientAuthInfoWriter) (*PersonOK, error) {
 	// TODO: Validate the params before sending
@@ -80,7 +76,7 @@ func (a *Client) Person(params *PersonParams, authInfo runtime.ClientAuthInfoWri
 		PathPattern:        "/person",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
+		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &PersonReader{formats: a.formats},
 		AuthInfo:           authInfo,
@@ -113,9 +109,9 @@ func (a *Client) PersonID(params *PersonIDParams, authInfo runtime.ClientAuthInf
 		ID:                 "personId",
 		Method:             "GET",
 		PathPattern:        "/person/{id}",
-		ProducesMediaTypes: []string{"text/html"},
+		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"https"},
+		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &PersonIDReader{formats: a.formats},
 		AuthInfo:           authInfo,

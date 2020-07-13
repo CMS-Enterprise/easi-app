@@ -193,7 +193,7 @@ func NewUpdateSystemIntake(
 			}
 
 			existingIntake.Status = intake.Status
-			existingIntake.GrtReviewEmailText = intake.GrtReviewEmailText
+			existingIntake.GrtReviewEmailBody = intake.GrtReviewEmailBody
 			existingIntake.UpdatedAt = &updatedTime
 			// This ensures only status and email text is modified.
 			intake, err = update(existingIntake)
@@ -205,7 +205,7 @@ func NewUpdateSystemIntake(
 				}
 			}
 
-			err = sendReviewEmail(intake.GrtReviewEmailText.String, recipientAddress)
+			err = sendReviewEmail(intake.GrtReviewEmailBody.String, recipientAddress)
 			if err != nil {
 				return &models.SystemIntake{}, err
 			}

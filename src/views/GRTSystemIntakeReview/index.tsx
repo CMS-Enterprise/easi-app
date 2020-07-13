@@ -118,10 +118,10 @@ export const GRTSystemIntakeReview = () => {
                           </Label>
                           <Field
                             as={TextAreaField}
-                            id="GrtIntakeReviewForm-EmailText"
+                            id="GrtIntakeReviewForm-GrtReviewEmailBody"
                             maxLength={2000}
-                            name="emailText"
-                            aria-describedby="GrtIntakeReviewForm-EmailText"
+                            name="grtReviewEmailBody"
+                            aria-describedby="GrtIntakeReviewForm-GrtReviewEmailBody"
                             className="maxw-full"
                           />
                         </FieldGroup>
