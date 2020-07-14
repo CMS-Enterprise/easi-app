@@ -64,20 +64,20 @@ func NewPersonIDOK() *PersonIDOK {
 OK
 */
 type PersonIDOK struct {
-	Payload *models.PersonIDResponseType
+	Payload *models.PersonIDResponse
 }
 
 func (o *PersonIDOK) Error() string {
 	return fmt.Sprintf("[GET /person/{id}][%d] personIdOK  %+v", 200, o.Payload)
 }
 
-func (o *PersonIDOK) GetPayload() *models.PersonIDResponseType {
+func (o *PersonIDOK) GetPayload() *models.PersonIDResponse {
 	return o.Payload
 }
 
 func (o *PersonIDOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.PersonIDResponseType)
+	o.Payload = new(models.PersonIDResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

@@ -57,7 +57,7 @@
           "200" : {
             "description" : "OK",
             "schema" : {
-              "$ref" : "#/definitions/PersonIdResponseWrapper"
+              "$ref" : "#/definitions/PersonIdResponse"
             }
           },
           "400" : {
@@ -217,14 +217,6 @@
       "properties" : {
         "Person" : {
           "$ref" : "#/definitions/Person"
-        }
-      }
-    },
-    "PersonIdResponseWrapper" : {
-      "type" : "object",
-      "properties" : {
-        "PersonIdResponse" : {
-          "$ref" : "#/definitions/PersonIdResponse"
         }
       }
     }
