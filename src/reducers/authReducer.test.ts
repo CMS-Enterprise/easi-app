@@ -35,13 +35,13 @@ describe('The auth reducer', () => {
 
   it('handles updateSessionRenew', () => {
     const initialState = {
-      lastActiveAt: fakeTime,
+      lastActiveAt: 12345,
       lastSessionRenew: 0,
       sessionExpiration: 0
     };
     const mockAction = updateLastSessionRenew(234567890);
     expect(authReducer(initialState, mockAction)).toEqual({
-      lastActiveAt: fakeTime,
+      lastActiveAt: 12345,
       lastSessionRenew: fakeTime,
       sessionExpiration: 234567890
     });
