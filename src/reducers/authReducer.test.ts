@@ -1,6 +1,6 @@
 import authReducer, {
   updateLastActiveAt,
-  updateLastSessionRenew
+  updateSessionExpiration
 } from './authReducer';
 
 const RealDate = Date.now;
@@ -18,7 +18,6 @@ describe('The auth reducer', () => {
   it('returns the initial state', () => {
     expect(authReducer(undefined, {})).toEqual({
       lastActiveAt: expect.any(Number),
-      lastSessionRenew: 0,
       sessionExpiration: 0
     });
   });
@@ -28,7 +27,6 @@ describe('The auth reducer', () => {
 
     expect(authReducer(undefined, mockAction)).toEqual({
       lastActiveAt: fakeTime,
-      lastSessionRenew: 0,
       sessionExpiration: 0
     });
   });
@@ -36,13 +34,11 @@ describe('The auth reducer', () => {
   it('handles updateSessionRenew', () => {
     const initialState = {
       lastActiveAt: 12345,
-      lastSessionRenew: 0,
       sessionExpiration: 0
     };
-    const mockAction = updateLastSessionRenew(234567890);
+    const mockAction = updateSessionExpiration(234567890);
     expect(authReducer(initialState, mockAction)).toEqual({
       lastActiveAt: 12345,
-      lastSessionRenew: fakeTime,
       sessionExpiration: 234567890
     });
   });
