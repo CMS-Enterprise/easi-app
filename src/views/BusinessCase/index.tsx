@@ -88,8 +88,6 @@ export const BusinessCase = () => {
     }
   ]);
 
-  const numOfFormPages = pages.filter(p => p.type === 'FORM').length;
-
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
   );
@@ -404,7 +402,7 @@ export const BusinessCase = () => {
           {pageObj.type === 'FORM' && (
             <PageNumber
               currentPage={pageIndex + 1}
-              totalPages={numOfFormPages}
+              totalPages={pages.filter(p => p.type === 'FORM').length}
             />
           )}
         </div>

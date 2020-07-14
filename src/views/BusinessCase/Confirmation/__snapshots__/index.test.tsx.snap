@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The Business Case Confirmation page matches the snapshot 1`] = `
+<div
+  className="margin-bottom-7"
+>
+  <div
+    className="grid-container"
+  >
+    <h1
+      className="font-heading-xl margin-top-4"
+    >
+      Your Business Case has been submitted
+    </h1>
+    <h2
+      className="margin-bottom-8 text-normal"
+    >
+      Your reference ID is 
+    </h2>
+    <p
+      className="margin-y-8"
+    >
+      Help us improve EASi. 
+      <a
+        aria-label="Open EASi survey in a new tab"
+        href="https://www.surveymonkey.com/r/JNYSMZP"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Tell us what you think of this service (opens in a new tab)
+      </a>
+    </p>
+    <div>
+      <a
+        href="/"
+        onClick={[Function]}
+      >
+        <i
+          aria-hidden={true}
+          className="fa fa-angle-left margin-x-05"
+        />
+        Go back to EASi homepage
+      </a>
+    </div>
+  </div>
+</div>
+`;
