@@ -103,7 +103,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         setTimeRemainingArr(formatSessionTimeRemaining());
       }
     },
-    isModalOpen ? 1000 : null
+    isModalOpen ? oneSecond : null
   );
 
   // If the session expires in 5 minutes or less
@@ -115,7 +115,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         setIsModalOpen(true);
       }
     },
-    sessionExpiration && !isModalOpen ? 1000 : null
+    sessionExpiration && !isModalOpen ? oneSecond : null
   );
 
   useInterval(
@@ -129,7 +129,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         authService.logout('/login');
       }
     },
-    sessionExpiration && isModalOpen ? 1000 : null
+    sessionExpiration && isModalOpen ? oneSecond : null
   );
 
   useEffect(() => {
