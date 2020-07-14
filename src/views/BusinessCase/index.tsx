@@ -29,6 +29,7 @@ import AsIsSolution from './AsIsSolution';
 import PreferredSolution from './PreferredSolution';
 import AlternativeSolution from './AlternativeSolution';
 import Review from './Review';
+import Confirmation from './Confirmation';
 import './index.scss';
 
 type Page = {
@@ -79,8 +80,15 @@ export const BusinessCase = () => {
       name: 'Review',
       type: 'REVIEW',
       slug: 'review'
+    },
+    {
+      name: 'Confirmation',
+      type: 'CONFIRMATION',
+      slug: 'confirmation'
     }
   ]);
+
+  const numOfFormPages = pages.filter(p => p.type === 'FORM').length;
 
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
@@ -114,7 +122,7 @@ export const BusinessCase = () => {
   };
 
   const updateAvailablePages = () => {
-    const updatedPages = pages.slice(0, pages.length - 1).concat([
+    const updatedPages = pages.slice(0, pages.length - 2).concat([
       {
         name: 'AlternativeSolutionB',
         type: 'FORM',
@@ -123,8 +131,13 @@ export const BusinessCase = () => {
       },
       {
         name: 'Review',
-        type: 'Review',
+        type: 'REVIEW',
         slug: 'review'
+      },
+      {
+        name: 'Confirmation',
+        type: 'CONFIRMATION',
+        slug: 'confirmation'
       }
     ]);
     setPages(updatedPages);
@@ -182,7 +195,7 @@ export const BusinessCase = () => {
   // Handle submit
   useEffect(() => {
     if (prevIsSubmitting && !isSubmitting && !error) {
-      history.push('/');
+      history.push(`/business/${businessCaseId}/confirmation`);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -313,23 +326,27 @@ export const BusinessCase = () => {
                       path="/business/:businessCaseId/review"
                       render={() => <Review formikProps={formikProps} />}
                     />
-
+                    <SecureRoute
+                      path="/business/:businessCaseId/confirmation"
+                      render={() => <Confirmation />}
+                    />
                     <div className="grid-container">
-                      {pageIndex > 0 && (
-                        <Button
-                          type="button"
-                          outline
-                          onClick={() => {
-                            setErrors({});
-                            const newUrl = pages[pageIndex - 1].slug;
-                            history.push(newUrl);
-                            window.scrollTo(0, 0);
-                          }}
-                        >
-                          Back
-                        </Button>
-                      )}
-                      {pageIndex < pages.length - 1 && (
+                      {pageIndex > 0 &&
+                        pages[pageIndex].type !== 'CONFIRMATION' && (
+                          <Button
+                            type="button"
+                            outline
+                            onClick={() => {
+                              setErrors({});
+                              const newUrl = pages[pageIndex - 1].slug;
+                              history.push(newUrl);
+                              window.scrollTo(0, 0);
+                            }}
+                          >
+                            Back
+                          </Button>
+                        )}
+                      {pageIndex < pages.length - 2 && (
                         <Button
                           type="button"
                           onClick={() => {
@@ -348,7 +365,7 @@ export const BusinessCase = () => {
                           Next
                         </Button>
                       )}
-                      {pageIndex === pages.length - 1 && (
+                      {pages[pageIndex].type === 'REVIEW' && (
                         <Button type="submit" disabled={isSubmitting}>
                           Send my business case
                         </Button>
@@ -387,7 +404,7 @@ export const BusinessCase = () => {
           {pageObj.type === 'FORM' && (
             <PageNumber
               currentPage={pageIndex + 1}
-              totalPages={pages.filter(p => p.type === 'FORM').length}
+              totalPages={numOfFormPages}
             />
           )}
         </div>

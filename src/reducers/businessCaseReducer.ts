@@ -85,8 +85,7 @@ function businessCaseReducer(
       };
     case submitBusinessCase.SUCCESS:
       return {
-        ...state,
-        form: businessCaseInitialData
+        ...state
       };
     case submitBusinessCase.FAILURE:
       return {
