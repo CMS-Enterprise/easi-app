@@ -4,7 +4,6 @@ const newTimeStamp = () => Date.now();
 
 type authReducerState = {
   lastActiveAt: number;
-  lastSessionRenew: number;
   sessionExpiration: number;
 };
 
@@ -15,7 +14,7 @@ export const updateLastActiveAt = {
   type: UPDATE_LAST_ACTIVE_AT
 };
 
-export const updateLastSessionRenew = (expiresAt: number) => {
+export const updateSessionExpiration = (expiresAt: number) => {
   return {
     type: UPDATE_LAST_SESSION_RENEW,
     payload: expiresAt
@@ -24,7 +23,6 @@ export const updateLastSessionRenew = (expiresAt: number) => {
 
 const initialState: authReducerState = {
   lastActiveAt: newTimeStamp(),
-  lastSessionRenew: 0,
   sessionExpiration: 0
 };
 
@@ -41,7 +39,6 @@ function authReducer(
     case UPDATE_LAST_SESSION_RENEW:
       return {
         ...state,
-        lastSessionRenew: newTimeStamp(),
         sessionExpiration: action.payload
       };
     default:
