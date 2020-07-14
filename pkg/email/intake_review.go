@@ -28,8 +28,7 @@ func (c Client) systemIntakeReviewBody(EmailText string) (string, error) {
 
 // SendSystemIntakeReviewEmail sends an email for a submitted system intake
 func (c Client) SendSystemIntakeReviewEmail(emailText string, recipientAddress string) error {
-	// TODO: change this subject line
-	subject := "CHANGE THIS SUBJECT LINE"
+	subject := "Feedback on your intake request"
 	body, err := c.systemIntakeReviewBody(emailText)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}

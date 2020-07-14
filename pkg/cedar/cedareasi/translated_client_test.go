@@ -13,7 +13,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s CedarTestSuite) TestValidateSystemIntakeForCedar() {
+func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 	logger := zap.NewNop()
 	clockTime := clock.NewMock().Now()
 	id := uuid.New()
