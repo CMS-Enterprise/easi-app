@@ -7,15 +7,15 @@ import (
 	"go.uber.org/zap"
 )
 
-type CedarTestSuite struct {
+type CedarEasiTestSuite struct {
 	suite.Suite
 	logger *zap.Logger
 }
 
-func TestCedarTestSuite(t *testing.T) {
-	cedarTestSuite := &CedarTestSuite{
+func TestCedarEasiTestSuite(t *testing.T) {
+	cedarEasiTestSuite := &CedarEasiTestSuite{
 		Suite:  suite.Suite{},
 		logger: zap.NewNop(),
 	}
-	suite.Run(t, cedarTestSuite)
+	suite.Run(t, cedarEasiTestSuite)
 }
