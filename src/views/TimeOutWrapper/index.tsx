@@ -38,11 +38,17 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       const activeSessionWindow = DateTime.local()
         .minus({ minutes: 14 })
         .toMillis();
+      console.log('---');
+      console.log('lastActiveAt', lastActiveAt);
+      console.log('activeSessionWindow', activeSessionWindow);
       if (lastActiveAt > activeSessionWindow) {
+        console.log('renewing', key);
         tokenManager.renew(key);
       } else {
+        console.log('registerExpire: logging out');
         authService.logout('/login');
       }
+      console.log('---');
     });
   };
 
