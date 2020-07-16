@@ -28,6 +28,7 @@ export const GRTSystemIntakeReview = () => {
   const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
+  const error = useSelector((state: AppState) => state.systemIntake.error);
   return (
     <div>
       <Header />
@@ -35,15 +36,17 @@ export const GRTSystemIntakeReview = () => {
         <div className="system-intake__review margin-bottom-7">
           <h1 className="font-heading-xl margin-top-4">CMS System Request</h1>
           {/* TODO: systemIntake is always truthy */}
-          {!systemIntake && (
+          {error && (
             <h2 className="font-heading-xl">
               System intake with ID: {systemId} was not found
             </h2>
           )}
-          {!isLoading && <SystemIntakeReview systemIntake={systemIntake} />}
+          {!isLoading && !error && (
+            <SystemIntakeReview systemIntake={systemIntake} />
+          )}
         </div>
       </MainContent>
-      {!isLoading && (
+      {!isLoading && !error && (
         <div className="bg-gray-5 padding-top-6 padding-bottom-5">
           <MainContent className="grid-container">
             <Formik
