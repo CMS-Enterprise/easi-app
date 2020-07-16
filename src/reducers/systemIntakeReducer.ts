@@ -37,6 +37,11 @@ function systemIntakeReducer(
         ...state,
         systemIntake: prepareSystemIntakeForApp(action.payload)
       };
+    case fetchSystemIntake.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
     case fetchSystemIntake.FULFILL:
       return {
         ...state,
