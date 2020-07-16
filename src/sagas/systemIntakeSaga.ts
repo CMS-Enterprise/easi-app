@@ -31,6 +31,7 @@ function* createSystemIntake(action: Action<any>) {
     yield put(postSystemIntake.failure(error.message));
   } finally {
     yield put(postSystemIntake.fulfill());
+    yield put(updateLastActiveAt);
   }
 }
 
@@ -39,11 +40,11 @@ function* putSystemIntake(action: Action<any>) {
     yield put(saveSystemIntake.request());
     const response = yield call(putSystemIntakeRequest, action.payload);
     yield put(saveSystemIntake.success(response.data));
-    yield put(updateLastActiveAt);
   } catch (error) {
     yield put(saveSystemIntake.failure(error.message));
   } finally {
     yield put(saveSystemIntake.fulfill());
+    yield put(updateLastActiveAt);
   }
 }
 
@@ -56,11 +57,11 @@ function* getSystemIntake(action: Action<any>) {
     yield put(fetchSystemIntake.request());
     const response = yield call(getSystemIntakeRequest, action.payload);
     yield put(fetchSystemIntake.success(response.data));
-    yield put(updateLastActiveAt);
   } catch (error) {
     yield put(fetchSystemIntake.failure(error.message));
   } finally {
     yield put(fetchSystemIntake.fulfill());
+    yield put(updateLastActiveAt);
   }
 }
 
@@ -76,6 +77,7 @@ function* completeSystemIntake(action: Action<any>) {
     yield put(submitSystemIntake.failure(error.message));
   } finally {
     yield put(submitSystemIntake.fulfill());
+    yield put(updateLastActiveAt);
   }
 }
 
