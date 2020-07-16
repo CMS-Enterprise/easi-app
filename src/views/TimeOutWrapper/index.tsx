@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { DateTime, Duration } from 'luxon';
 import { useTranslation } from 'react-i18next';
@@ -14,26 +13,6 @@ type TimeOutWrapperProps = {
   children: React.ReactNode;
 };
 
-const sessionTimeout = { minutes: 14 };
-
-const registerExpire = async (authService: any, lastActiveAt: number) => {
-  const tokenManager = await authService.getTokenManager();
-  // clear the old listener so we don't register millions of them
-  tokenManager.off('expired');
-  tokenManager.on('expired', (key: any) => {
-    console.log("TimeoutWrapper: tokenManager.on('expired')");
-    const activeSessionWindow = DateTime.local()
-      .minus(sessionTimeout)
-      .toMillis();
-    if (
-      lastActiveAt > activeSessionWindow &&
-      ['idToken', 'accessToken'].includes(key)
-    ) {
-      tokenManager.renew(key);
-    }
-  });
-};
-
 /**
  * As of okta-react 3.0.1, autoRenew on the Security component does
  * not work. We need to manually renew the session and access token.
@@ -41,7 +20,6 @@ const registerExpire = async (authService: any, lastActiveAt: number) => {
 const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const dispatch = useDispatch();
   const { authState, authService } = useOktaAuth();
-  const history = useHistory();
   const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [timeRemainingArr, setTimeRemainingArr] = useState([0, 'second']);
@@ -50,36 +28,48 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   );
 
   const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
-  const oneMinute = Duration.fromObject({ minutes: 1 }).as('milliseconds');
   const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('milliseconds');
-  const modalDisplayIdleTime = Duration.fromObject({ minutes: 10 }).as(
-    'milliseconds'
-  );
-  const idleTimeMax = Duration.fromObject({ minutes: 15 }).as('milliseconds');
+
+  const registerExpire = async () => {
+    const tokenManager = await authService.getTokenManager();
+    // clear the old listener so we don't register millions of them
+    tokenManager.off('expired');
+    tokenManager.on('expired', (key: any) => {
+      const activeSessionWindow = DateTime.local()
+        .minus({ minutes: 14 })
+        .toMillis();
+      if (lastActiveAt > activeSessionWindow) {
+        tokenManager.renew(key);
+      } else {
+        authService.logout('/login');
+      }
+    });
+  };
 
   const formatSessionTimeRemaining = (
     timeRemaining: number
   ): [number, string] => {
-    // If over a minute remaining, displays X minutes
-    if (timeRemaining > oneMinute + oneSecond) {
-      // We need to add a minute to make sure the correct number of minutes displays
-      // e.g. 4 minutes 59 seconds shows 4 minutes; add a minute to display 5 minutes
-      const minutes = Duration.fromMillis(timeRemaining).as('minutes');
-      return [Math.ceil(minutes), 'minute'];
-    }
+    const seconds = Math.floor(
+      Duration.fromMillis(timeRemaining).as('seconds')
+    );
 
-    if (timeRemaining >= oneMinute) {
-      return [1, 'minute'];
-    }
+    const minutes = seconds / 60;
+    // Using Math.ceil() for greater than one minute
+    // 299 seconds = 4.983 minutes, but should still display 5 minutes
+    // Using Math.floor() for less than one minute
+    // 59 seconds = .983 minutes, Using floor so minutes is 0 to display 59 secounds
+    const wholeMinutes = minutes > 1 ? Math.ceil(minutes) : Math.floor(minutes);
 
-    // If less than a minute remaining, display X second(s)
-    const seconds = Duration.fromMillis(timeRemaining).as('seconds');
-    return [Math.floor(seconds), 'second'];
+    return wholeMinutes > 0
+      ? [wholeMinutes, 'minute']
+      : [Math.floor(seconds), 'second'];
   };
 
-  const handleModalExit = () => {
+  const handleModalExit = async () => {
     setIsModalOpen(false);
-    authService._oktaAuth.session.refresh();
+    const tokenManager = await authService.getTokenManager();
+    await tokenManager.renew('accessToken');
+    await tokenManager.renew('idToken');
     dispatch(updateLastActiveAt);
   };
 
@@ -88,11 +78,15 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       const currentTime = Date.now();
       const tokenManager = await authService.getTokenManager();
       const accessToken = await tokenManager.get('accessToken');
-      const tokenExp = DateTime.fromSeconds(accessToken.expiresAt).toMillis();
+      if (accessToken) {
+        const tokenExp = DateTime.fromSeconds(accessToken.expiresAt).toMillis();
 
-      // if (idleTimeMax - idleTime > 0) {
-      setTimeRemainingArr(formatSessionTimeRemaining(tokenExp - currentTime));
-      // }
+        if (tokenExp - currentTime >= 0) {
+          setTimeRemainingArr(
+            formatSessionTimeRemaining(tokenExp - currentTime)
+          );
+        }
+      }
     },
     isModalOpen ? oneSecond : null
   );
@@ -114,7 +108,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   useEffect(() => {
     if (authState.isAuthenticated) {
-      registerExpire(authService, lastActiveAt);
+      registerExpire();
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
