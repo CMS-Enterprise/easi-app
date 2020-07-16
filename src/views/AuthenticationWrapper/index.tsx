@@ -21,7 +21,8 @@ const AuthenticationWrapper = ({ children }: AuthenticationWrapperProps) => {
       onAuthRequired={handleAuthRequiredRedirect}
       responseType={['code']}
       tokenManager={{
-        expireEarlySeconds: 0
+        expireEarlySeconds: 0,
+        autoRenew: false
       }}
       pkce
     >
