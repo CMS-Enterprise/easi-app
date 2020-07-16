@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from 'components/Header';
-import Modal from 'components/Modal';
-import Button from 'components/shared/Button';
 import { useOktaAuth } from '@okta/okta-react';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
@@ -18,7 +16,7 @@ const shortenTimeout = async (authService: any) => {
     ...idToken,
     expiresAt: Math.round(
       DateTime.local()
-        .plus({ minutes: 1 })
+        .plus({ seconds: 15 })
         .toSeconds()
     )
   };
@@ -29,10 +27,11 @@ const shortenTimeout = async (authService: any) => {
     ...accessToken,
     expiresAt: Math.round(
       DateTime.local()
-        .plus({ minutes: 1 })
+        .plus({ seconds: 15 })
         .toSeconds()
     )
   };
+  console.log(newAccessToken);
   tokenManager.add('accessToken', newAccessToken);
 
   console.log('I shortened the thing');
@@ -44,11 +43,11 @@ const logInfo = async (authService: any) => {
   console.log('idToken expires at ', idToken.expiresAt);
 
   const accessToken = await tokenManager.get('accessToken');
+  console.log('accessToken expires at ', accessToken.value);
   console.log('accessToken expires at ', accessToken.expiresAt);
 };
 
 const Sandbox = () => {
-  const [isModalOpen, setModalOpen] = useState(false);
   const { authService }: { authService: any } = useOktaAuth();
   const dispatch = useDispatch();
 
@@ -56,45 +55,6 @@ const Sandbox = () => {
     <div>
       <Header />
       <div className="grid-container">
-        <button type="button" onClick={() => setModalOpen(true)}>
-          Open modal
-        </button>
-        {/* So we can test that it doesn't scroll when modal open */}
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <h1>Sandbox</h1>
-        <Modal
-          title="EASi"
-          isOpen={isModalOpen}
-          closeModal={() => setModalOpen(false)}
-        >
-          <h1 style={{ margin: 0 }}>
-            Your access to EASi is about to expire in 5 minutes
-          </h1>
-          <p>Your data has already been saved.</p>
-          <p>
-            If you do not do anything on this page you will be signed out in 5
-            minutes and will need to sign back in. We do this to keep your
-            information secure.
-          </p>
-          <Button type="button" onClick={() => setModalOpen(false)}>
-            Return to EASi
-          </Button>
-        </Modal>
         <ActionBanner
           title="Shorten the life of your token"
           helpfulText="Change expiration to a minute from now"
