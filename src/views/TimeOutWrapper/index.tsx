@@ -73,6 +73,8 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     dispatch(updateLastActiveAt);
   };
 
+  // useInterval starts once the modal is open and stops when it's closed
+  // Updates the minutes/seconds in the message
   useInterval(
     async () => {
       const currentTime = Date.now();
@@ -91,6 +93,9 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     isModalOpen ? oneSecond : null
   );
 
+  // useInterval starts when a user is logged in AND the modal is not open
+  // useInterval stops/pauses, when a use is logged out or the modal is open
+  // Calculates the user's inactivity to display the modal
   useInterval(
     async () => {
       const currentTime = Date.now();

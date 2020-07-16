@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from 'components/Header';
-import Modal from 'components/Modal';
-import Button from 'components/shared/Button';
 import { useOktaAuth } from '@okta/okta-react';
 import { DateTime } from 'luxon';
 import { useDispatch } from 'react-redux';
@@ -14,8 +12,6 @@ import ActionBanner from '../../components/shared/ActionBanner/index';
 const shortenTimeout = async (authService: any) => {
   const tokenManager = await authService.getTokenManager();
   const idToken = await tokenManager.get('idToken');
-  // idToken.value
-  // jwtDecode(idToken.value).exp
   const newIdToken = {
     ...idToken,
     expiresAt: Math.round(

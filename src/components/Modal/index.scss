@@ -18,8 +18,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
-    font-size: 22px;
-    line-height: 36px;
+    font-size: 1.375em;
+    line-height: 2.25em;
 
     @media screen and (min-width: $tablet) {
       width: 668px;
