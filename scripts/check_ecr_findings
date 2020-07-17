@@ -5,10 +5,16 @@ set -eu -o pipefail
 payload="{\"repository\": \"$1\", \"imageTag\": \"$2\"}"
 aws lambda invoke --function-name ecr-scan-findings --payload "$payload" scan_response.json
 jq < scan_response.json
-totalFindings="$(jq "fromjson | .totalFindings" scan_response.json)"
-if [[ "$totalFindings" != 0 ]]; then
-  echo "Scan found $totalFindings findings!"
+parsed_response=$(jq fromjson scan_response.json)
+if [[ $(jq 'has("errorMessage")' <<< "$parsed_response") == "true" ]]; then
+  echo "Scan generated error"
   exit 1
 else
-  echo "Scan found no findings"
+  totalFindings="$(jq .totalFindings <<< "$parsed_response")"
+  if [[ "$totalFindings" != 0 ]]; then
+    echo "Scan found $totalFindings findings!"
+    exit 1
+  else
+    echo "Scan found no findings"
+  fi
 fi
