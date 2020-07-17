@@ -284,7 +284,7 @@ describe('The business case reducer', () => {
       };
 
       expect(businessCaseReducer(initialState, mockSuccessAction)).toEqual({
-        form: businessCaseInitialData,
+        form: initialState.form,
         isLoading: null,
         isSaving: false,
         isSubmitting: true,
