@@ -2,7 +2,7 @@ import { SystemIntakeForm } from 'types/systemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 import { businessCaseInitialData } from 'data/businessCase';
 
-export const calculateIntakeStatus = (intake: SystemIntakeForm) => {
+export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   if (intake.id === '') {
     return 'START';
   }
@@ -13,10 +13,6 @@ export const calculateIntakeStatus = (intake: SystemIntakeForm) => {
 };
 
 export const chooseIntakeLink = (intake: SystemIntakeForm, status: string) => {
-  const newIntakeLink = '/system/new';
-  if (intake.id === '') {
-    return newIntakeLink;
-  }
   let link: string;
   switch (status) {
     case 'CONTINUE':
@@ -27,12 +23,12 @@ export const chooseIntakeLink = (intake: SystemIntakeForm, status: string) => {
       link = '/';
       break;
     default:
-      link = newIntakeLink;
+      link = '/system/new';
   }
   return link;
 };
 
-export const calculateIntakeFeedbackStatus = (intakeStatus: string) => {
+export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   switch (intakeStatus) {
     case 'SUBMITTED':
       return 'SUBMITTED';
@@ -45,7 +41,7 @@ export const calculateIntakeFeedbackStatus = (intakeStatus: string) => {
   }
 };
 
-export const calculateBusinessCaseStatus = (
+export const bizCaseStatus = (
   intakeStatus: string,
   businessCase: BusinessCaseModel
   // eslint-disable-next-line consistent-return
