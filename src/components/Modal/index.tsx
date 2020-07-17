@@ -19,6 +19,8 @@ const Modal = ({ title, children, isOpen, closeModal }: ModalProps) => {
       onAfterOpen={noScroll.on}
       onAfterClose={noScroll.off}
       onRequestClose={closeModal}
+      shouldCloseOnOverlayClick={false}
+      appElement={document.getElementById('root')!}
     >
       <div className="easi-modal__header">
         <div className="easi-modal__title">{title}</div>
