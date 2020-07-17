@@ -50,7 +50,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         tokenManager.renew(key);
       } else {
         console.log('logging out');
-        authService.logout();
+        authService.logout('/login');
       }
       console.log('---');
     });
@@ -93,20 +93,6 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     },
     isModalOpen ? oneSecond : null
   );
-
-  // When a user is authenticated, this useInterval checks to see if they are
-  // inactive. If they are inactive for too long, they are logged out.
-  // useInterval(
-  //   () => {
-  //     const activeSessionWindow = DateTime.local()
-  //       .minus(TIMEOUT_WINDOW)
-  //       .toMillis();
-  //     if (lastActiveAt < activeSessionWindow) {
-  //       authService.logout();
-  //     }
-  //   },
-  //   authState.isAuthenticated ? oneSecond : null
-  // );
 
   // useInterval starts when a user is logged in AND the modal is not open
   // useInterval stops/pauses, when a use is logged out or the modal is open
