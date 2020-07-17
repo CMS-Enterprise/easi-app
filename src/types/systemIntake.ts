@@ -5,7 +5,7 @@ export type GovernanceCollaborationTeam = {
   name: string;
 };
 
-type SystemIntakeStatus =
+export type SystemIntakeStatus =
   | 'DRAFT'
   | 'SUBMITTED'
   | 'ACCEPTED'
@@ -51,6 +51,8 @@ export type SystemIntakeForm = {
   needsEaSupport: boolean | null;
   hasContract: string;
   grtReviewEmailBody: string;
+  requesterEmailAddress: string;
+  reviewedAt?: DateTime;
 };
 
 // Redux store type for a system intake

@@ -194,8 +194,10 @@ func NewUpdateSystemIntake(
 
 			existingIntake.Status = intake.Status
 			existingIntake.GrtReviewEmailBody = intake.GrtReviewEmailBody
+			existingIntake.RequesterEmailAddress = null.StringFrom(recipientAddress)
+			existingIntake.ReviewedAt = &updatedTime
 			existingIntake.UpdatedAt = &updatedTime
-			// This ensures only status and email text is modified.
+			// This ensures only certain fields can be modified.
 			intake, err = update(existingIntake)
 			if err != nil {
 				return &models.SystemIntake{}, &apperrors.QueryError{
