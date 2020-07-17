@@ -50,7 +50,7 @@ func (c TranslatedClient) FetchUserEmailAddress(logger *zap.Logger, euaID string
 			Source:    "CEDAR LDAP",
 		}
 	}
-	if resp.Payload.Person == nil {
+	if resp.Payload == nil {
 		return "", &apperrors.ExternalAPIError{
 			Err:       errors.New("failed to return person from CEDAR LDAP"),
 			ModelID:   euaID,
@@ -60,5 +60,5 @@ func (c TranslatedClient) FetchUserEmailAddress(logger *zap.Logger, euaID string
 		}
 	}
 
-	return resp.Payload.Person.Email, nil
+	return resp.Payload.Email, nil
 }

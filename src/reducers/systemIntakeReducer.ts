@@ -114,6 +114,14 @@ function systemIntakeReducer(
         isSubmitting: true,
         error: null
       };
+    case reviewSystemIntake.SUCCESS:
+      return {
+        ...state,
+        systemIntake: {
+          ...state.systemIntake,
+          ...prepareSystemIntakeForApp(action.payload)
+        }
+      };
     case reviewSystemIntake.FAILURE:
       return {
         ...state,

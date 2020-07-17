@@ -2,6 +2,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
+import { DateTime } from 'luxon';
 import cmsGovernanceTeams from '../constants/enums/cmsGovernanceTeams';
 
 // On the frontend, the field is now "requestName", but the backend API
@@ -40,7 +41,9 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   currentStage: '',
   needsEaSupport: null,
   hasContract: '',
-  grtReviewEmailBody: ''
+  grtReviewEmailBody: '',
+  requesterEmailAddress: '',
+  reviewedAt: undefined
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -137,6 +140,8 @@ export const prepareSystemIntakeForApp = (
         ? null
         : systemIntake.eaSupportRequest,
     hasContract: systemIntake.existingContract || '',
-    grtReviewEmailBody: systemIntake.grtReviewEmailBody || ''
+    grtReviewEmailBody: systemIntake.grtReviewEmailBody || '',
+    requesterEmailAddress: systemIntake.requesterEmailAddress || '',
+    reviewedAt: DateTime.fromISO(systemIntake.reviewedAt) || ''
   };
 };
