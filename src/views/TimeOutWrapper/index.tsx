@@ -27,6 +27,10 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     (state: AppState) => state.auth.lastActiveAt
   );
 
+  const TIMEOUT_WINDOW = { minutes: 14 };
+  const timeoutTime = DateTime.fromMillis(lastActiveAt)
+    .plus(TIMEOUT_WINDOW)
+    .toMillis();
   const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
   const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('milliseconds');
 
@@ -36,7 +40,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     tokenManager.off('expired');
     tokenManager.on('expired', (key: any) => {
       const activeSessionWindow = DateTime.local()
-        .minus({ minutes: 14 })
+        .minus(TIMEOUT_WINDOW)
         .toMillis();
       console.log('---');
       console.log('lastActiveAt', lastActiveAt);
@@ -73,9 +77,6 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   const handleModalExit = async () => {
     setIsModalOpen(false);
-    const tokenManager = await authService.getTokenManager();
-    await tokenManager.renew('accessToken');
-    await tokenManager.renew('idToken');
     dispatch(updateLastActiveAt);
   };
 
@@ -86,13 +87,18 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       const currentTime = Date.now();
       const tokenManager = await authService.getTokenManager();
       const accessToken = await tokenManager.get('accessToken');
+      const activeSessionWindow = DateTime.local()
+        .minus(TIMEOUT_WINDOW)
+        .toMillis();
       if (accessToken) {
-        const tokenExp = DateTime.fromSeconds(accessToken.expiresAt).toMillis();
-
-        if (tokenExp - currentTime >= 0) {
+        if (timeoutTime - currentTime >= 0) {
           setTimeRemainingArr(
-            formatSessionTimeRemaining(tokenExp - currentTime)
+            formatSessionTimeRemaining(timeoutTime - currentTime)
           );
+        }
+
+        if (lastActiveAt < activeSessionWindow) {
+          authService.logout();
         }
       }
     },
@@ -105,12 +111,10 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   useInterval(
     async () => {
       const currentTime = Date.now();
-      const tokenManager = await authService.getTokenManager();
-      const accessToken = await tokenManager.get('accessToken');
-      const tokenExp = DateTime.fromSeconds(accessToken.expiresAt).toMillis();
-
-      if (tokenExp - currentTime < fiveMinutes) {
-        setTimeRemainingArr(formatSessionTimeRemaining(tokenExp - currentTime));
+      if (timeoutTime - currentTime < fiveMinutes) {
+        setTimeRemainingArr(
+          formatSessionTimeRemaining(timeoutTime - currentTime)
+        );
         setIsModalOpen(true);
       }
     },
