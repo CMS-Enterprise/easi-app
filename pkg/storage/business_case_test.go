@@ -3,6 +3,7 @@ package storage
 import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -154,29 +155,6 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		s.Error(err)
 		s.Contains(err.Error(), ValidStatusMsg)
 	})
-
-	s.Run("doesn't allow more than one business case on a system intake", func() {
-		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(&intake)
-		s.NoError(err)
-		businessCase1 := models.BusinessCase{
-			SystemIntakeID: intake.ID,
-			EUAUserID:      intake.EUAUserID,
-			Status:         models.BusinessCaseStatusDRAFT,
-		}
-		_, err = s.store.CreateBusinessCase(&businessCase1)
-		s.NoError(err)
-
-		businessCase2 := models.BusinessCase{
-			SystemIntakeID: intake.ID,
-			EUAUserID:      intake.EUAUserID,
-			Status:         models.BusinessCaseStatusDRAFT,
-		}
-		_, err = s.store.CreateBusinessCase(&businessCase2)
-		s.Error(err)
-		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Contains(err.Error(), UniqueIntakeMsg)
-	})
 }
 
 func (s StoreTestSuite) TestUpdateBusinessCase() {
@@ -288,5 +266,37 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
 		s.Error(err)
 		s.Equal("business case not found", err.Error())
+	})
+}
+
+func (s StoreTestSuite) TestFetchBusinessCaseByIntakeID() {
+	s.Run("golden path to fetching a business case id by intake id", func() {
+		businessCase := testhelpers.NewBusinessCase()
+		intake := testhelpers.NewSystemIntake()
+		businessCase.SystemIntakeID = intake.ID
+		intake.Status = models.SystemIntakeStatusACCEPTED
+		setupTx := s.db.MustBegin()
+		_, err := setupTx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake)
+		s.NoError(err)
+		_, err = setupTx.NamedExec("INSERT INTO business_case (id, eua_user_id, status, requester, system_intake) VALUES (:id, :eua_user_id, :status, :requester, :system_intake)", &businessCase)
+		s.NoError(err)
+		err = setupTx.Commit()
+		s.NoError(err)
+
+		tx := s.db.MustBegin()
+		fetchedBizCaseID, err := FetchBusinessCaseIDByIntakeID(intake.ID, tx, zap.NewNop())
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+		s.Equal(&businessCase.ID, fetchedBizCaseID)
+	})
+
+	s.Run("doesn't error when no records are found", func() {
+		tx := s.db.MustBegin()
+		fetchedBizCaseID, err := FetchBusinessCaseIDByIntakeID(uuid.New(), tx, zap.NewNop())
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+		s.Equal(&uuid.Nil, fetchedBizCaseID)
 	})
 }

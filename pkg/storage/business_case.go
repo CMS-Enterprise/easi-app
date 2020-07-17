@@ -52,6 +52,32 @@ func (s *Store) FetchBusinessCaseByID(id uuid.UUID) (*models.BusinessCase, error
 	return &businessCase, nil
 }
 
+// FetchBusinessCaseIDByIntakeID queries the DB for a business case matching the given intake ID
+func FetchBusinessCaseIDByIntakeID(intakeID uuid.UUID, tx *sqlx.Tx, logger *zap.Logger) (*uuid.UUID, error) {
+	businessCaseID := uuid.UUID{}
+	const fetchBusinessCaseIDSQL = `
+		SELECT
+			id
+		FROM
+			business_case
+		WHERE
+			business_case.system_intake = $1`
+
+	err := tx.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			return &businessCaseID, nil
+		}
+
+		logger.Error(
+			fmt.Sprintf("Failed to fetch business case id for intake %s", err),
+			zap.String("System Intake", intakeID.String()),
+		)
+		return &businessCaseID, err
+	}
+	return &businessCaseID, nil
+}
+
 // FetchBusinessCasesByEuaID queries the DB for a list of business case matching the given EUA ID
 func (s *Store) FetchBusinessCasesByEuaID(euaID string) (models.BusinessCases, error) {
 	businessCases := []models.BusinessCase{}
@@ -219,16 +245,6 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 					ResourceID: businessCase.SystemIntakeID.String(),
 				}
 		}
-		return &models.BusinessCase{}, err
-	}
-	err = updateSystemIntakeWithBusinessCaseID(tx, businessCase)
-	if err != nil {
-		s.logger.Error(
-			fmt.Sprintf("Failed to add business case to system intake with error %s", err),
-			zap.String("EUAUserID", businessCase.EUAUserID),
-			zap.String("BusinessCaseID", businessCase.ID.String()),
-			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
-		)
 		return &models.BusinessCase{}, err
 	}
 	err = createEstimatedLifecycleCosts(tx, businessCase, s.logger)
