@@ -48,9 +48,6 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       if (lastActiveAt > activeSessionWindow) {
         console.log('renewing', key);
         tokenManager.renew(key);
-      } else {
-        console.log('registerExpire: logging out');
-        authService.logout('/login');
       }
       console.log('---');
     });
@@ -83,26 +80,29 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   // useInterval starts once the modal is open and stops when it's closed
   // Updates the minutes/seconds in the message
   useInterval(
-    async () => {
+    () => {
       const currentTime = Date.now();
-      const tokenManager = await authService.getTokenManager();
-      const accessToken = await tokenManager.get('accessToken');
-      const activeSessionWindow = DateTime.local()
-        .minus(TIMEOUT_WINDOW)
-        .toMillis();
-      if (accessToken) {
-        if (timeoutTime - currentTime >= 0) {
-          setTimeRemainingArr(
-            formatSessionTimeRemaining(timeoutTime - currentTime)
-          );
-        }
-
-        if (lastActiveAt < activeSessionWindow) {
-          authService.logout();
-        }
+      if (timeoutTime - currentTime >= 0) {
+        setTimeRemainingArr(
+          formatSessionTimeRemaining(timeoutTime - currentTime)
+        );
       }
     },
     isModalOpen ? oneSecond : null
+  );
+
+  // When a user is authenticated, this useInterval checks to see if they are
+  // inactive. If they are inactive for too long, they are logged out.
+  useInterval(
+    () => {
+      const activeSessionWindow = DateTime.local()
+        .minus(TIMEOUT_WINDOW)
+        .toMillis();
+      if (lastActiveAt < activeSessionWindow) {
+        authService.logout();
+      }
+    },
+    authState.isAuthenticated ? oneSecond : null
   );
 
   // useInterval starts when a user is logged in AND the modal is not open
@@ -127,7 +127,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState.isAuthenticated]);
+  }, [authState.isAuthenticated, lastActiveAt]);
 
   return (
     <>
