@@ -308,36 +308,3 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 		})
 	}
 }
-
-func (s StoreTestSuite) TestUpdateSystemIntakeWithBusinessCaseID() {
-	s.Run("golden path to update a system intake", func() {
-		businessCase := testhelpers.NewBusinessCase()
-		intake := testhelpers.NewSystemIntake()
-		intake.ID = businessCase.SystemIntakeID
-		setupTx := s.db.MustBegin()
-		_, err := setupTx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake)
-		s.NoError(err)
-		err = setupTx.Commit()
-		s.NoError(err)
-
-		tx := s.db.MustBegin()
-		err = updateSystemIntakeWithBusinessCaseID(tx, &businessCase)
-		s.NoError(err)
-		err = tx.Commit()
-		s.NoError(err)
-		fetched, err := s.store.FetchSystemIntakeByID(intake.ID)
-
-		s.NoError(err)
-		s.Equal(businessCase.SystemIntakeID, fetched.ID)
-		s.Equal(&businessCase.ID, fetched.BusinessCaseID)
-	})
-
-	s.Run("cannot without an ID that exists in the db", func() {
-		businessCase := testhelpers.NewBusinessCase()
-
-		tx := s.db.MustBegin()
-		err := updateSystemIntakeWithBusinessCaseID(tx, &businessCase)
-		s.Error(err)
-		s.IsType(&apperrors.QueryError{}, err)
-	})
-}
