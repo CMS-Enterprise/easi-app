@@ -9,10 +9,10 @@ import Alert from 'components/shared/Alert';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import {
-  calculateIntakeStatus,
+  intakeStatusFromIntake,
   chooseIntakeLink,
-  calculateIntakeFeedbackStatus,
-  calculateBusinessCaseStatus
+  feedbackStatusFromIntakeStatus,
+  bizCaseStatus
 } from 'data/taskList';
 import TaskListItem from './TaskListItem';
 import SideNavActions from './SideNavActions';
@@ -36,20 +36,17 @@ const GovernanceTaskList = () => {
     if (systemIntake.id !== '' && systemIntake.businessCaseId !== '') {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
-  });
+  }, [dispatch, systemIntake]);
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
   );
 
-  const intakeStatus = calculateIntakeStatus(systemIntake);
+  const intakeStatus = intakeStatusFromIntake(systemIntake);
   const intakeLink = chooseIntakeLink(systemIntake, intakeStatus);
-  const intakeFeedbackStatus = calculateIntakeFeedbackStatus(
+  const intakeFeedbackStatus = feedbackStatusFromIntakeStatus(
     systemIntake.status
   );
-  const businessCaseStatus = calculateBusinessCaseStatus(
-    intakeStatus,
-    businessCase
-  );
+  const businessCaseStatus = bizCaseStatus(intakeStatus, businessCase);
 
   return (
     <div className="governance-task-list">
