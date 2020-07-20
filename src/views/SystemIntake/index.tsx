@@ -57,9 +57,6 @@ export const SystemIntake = () => {
   const isSubmitting = useSelector(
     (state: AppState) => state.systemIntake.isSubmitting
   );
-  const isSaving = useSelector(
-    (state: AppState) => state.systemIntake.isSaving
-  );
 
   const error = useSelector((state: AppState) => state.systemIntake.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
