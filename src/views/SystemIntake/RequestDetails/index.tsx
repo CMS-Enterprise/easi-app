@@ -25,6 +25,7 @@ import {
   clearSystemIntake
 } from 'types/routines';
 import AutoSave from 'components/shared/AutoSave';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 
 type RequestDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
@@ -55,6 +56,23 @@ const RequestDetails = ({
 
   return (
     <>
+      {Object.keys(errors).length > 0 && (
+        <ErrorAlert
+          testId="system-intake-errors"
+          classNames="margin-top-3"
+          heading="Please check and fix the following"
+        >
+          {Object.keys(flatErrors).map(key => {
+            return (
+              <ErrorAlertMessage
+                key={`Error.${key}`}
+                errorKey={key}
+                message={flatErrors[key]}
+              />
+            );
+          })}
+        </ErrorAlert>
+      )}
       <h1 className="font-heading-xl margin-top-4">Request details</h1>
       <p className="line-height-body-6">
         Provide a detailed explanation of the business need/issue/problem that
