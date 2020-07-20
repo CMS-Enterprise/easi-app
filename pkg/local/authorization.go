@@ -9,7 +9,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-const testEUAID = "GZVA"
+// If your developing interfaces with LDAP, you may need to change this to your own EUA ID for testing purposes
+const testEUAID = "ABCD"
 
 func authorizeMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
