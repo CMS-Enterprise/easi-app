@@ -166,12 +166,35 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1", euaID)
+	tx := s.DB.MustBegin()
+	//Rollback only happens if transaction isn't committed
+	defer tx.Rollback()
+	err := tx.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1", euaID)
 	if err != nil {
 		s.logger.Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
 			zap.String("euaID", euaID),
 		)
+		return models.SystemIntakes{}, err
+	}
+	fetchErrors := []error{}
+	for _, intake := range intakes {
+		if intake.Status != models.SystemIntakeStatusDRAFT {
+			bizCaseID, fetchErr := FetchBusinessCaseIDByIntakeID(intake.ID, tx, s.logger)
+			if fetchErr != nil {
+				fetchErrors = append(fetchErrors, fetchErr)
+			}
+			if bizCaseID != &uuid.Nil {
+				intake.BusinessCaseID = bizCaseID
+			}
+		}
+	}
+	if len(fetchErrors) > 0 {
+		return models.SystemIntakes{}, err
+	}
+
+	err = tx.Commit()
+	if err != nil {
 		return models.SystemIntakes{}, err
 	}
 	return intakes, nil
