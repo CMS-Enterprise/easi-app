@@ -132,7 +132,10 @@ func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 // FetchSystemIntakeByID queries the DB for a system intake matching the given ID
 func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
-	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+	tx := s.DB.MustBegin()
+	//Rollback only happens if transaction isn't committed
+	defer tx.Rollback()
+	err := tx.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
 	if err != nil {
 		s.logger.Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
@@ -143,6 +146,20 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 		}
 		return &models.SystemIntake{}, err
 	}
+	// This should cover all statuses that might have a related business case on it.
+	// In the future submitted will also need to be checked.
+	if intake.Status != models.SystemIntakeStatusDRAFT {
+		bizCaseID, fetchErr := FetchBusinessCaseIDByIntakeID(intake.ID, tx, s.logger)
+		if fetchErr != nil {
+			return &intake, nil
+		}
+		intake.BusinessCaseID = bizCaseID
+	}
+	err = tx.Commit()
+	if err != nil {
+		return &models.SystemIntake{}, err
+	}
+
 	return &intake, nil
 }
 
