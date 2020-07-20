@@ -7,10 +7,8 @@ import { Button } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import PageNumber from 'components/PageNumber';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
-import flattenErrors from 'utils/flattenErrors';
 import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
@@ -131,27 +129,8 @@ export const SystemIntake = () => {
             enableReinitialize
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
-              const { errors } = formikProps;
-              const flatErrors: any = flattenErrors(errors);
               return (
                 <>
-                  {Object.keys(errors).length > 0 && (
-                    <ErrorAlert
-                      testId="system-intake-errors"
-                      classNames="margin-top-3"
-                      heading="Please check and fix the following"
-                    >
-                      {Object.keys(flatErrors).map(key => {
-                        return (
-                          <ErrorAlertMessage
-                            key={`Error.${key}`}
-                            errorKey={key}
-                            message={flatErrors[key]}
-                          />
-                        );
-                      })}
-                    </ErrorAlert>
-                  )}
                   <SecureRoute
                     path="/system/:systemId/contact-details"
                     render={() => (
