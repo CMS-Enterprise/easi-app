@@ -33,7 +33,7 @@ const GovernanceTaskList = () => {
   );
 
   useEffect(() => {
-    if (systemIntake.id !== '' && systemIntake.businessCaseId !== '') {
+    if (systemIntake.id && systemIntake.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
   }, [dispatch, systemIntake.id, systemIntake.businessCaseId]);
