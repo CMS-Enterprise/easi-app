@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
-import { Form, Formik, FormikProps } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { Button } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
@@ -152,32 +152,30 @@ export const SystemIntake = () => {
                       })}
                     </ErrorAlert>
                   )}
-                  <Form>
-                    <SecureRoute
-                      path="/system/:systemId/contact-details"
-                      render={() => (
-                        <ContactDetails
-                          formikProps={formikProps}
-                          formikRef={formikRef}
-                          systemId={systemId}
-                        />
-                      )}
-                    />
-                    <SecureRoute
-                      path="/system/:systemId/request-details"
-                      render={() => (
-                        <RequestDetails
-                          formikProps={formikProps}
-                          formikRef={formikRef}
-                          systemId={systemId}
-                        />
-                      )}
-                    />
-                    <SecureRoute
-                      path="/system/:systemId/review"
-                      render={() => <Review formikProps={formikProps} />}
-                    />
-                  </Form>
+                  <SecureRoute
+                    path="/system/:systemId/contact-details"
+                    render={() => (
+                      <ContactDetails
+                        formikProps={formikProps}
+                        formikRef={formikRef}
+                        systemId={systemId}
+                      />
+                    )}
+                  />
+                  <SecureRoute
+                    path="/system/:systemId/request-details"
+                    render={() => (
+                      <RequestDetails
+                        formikProps={formikProps}
+                        formikRef={formikRef}
+                        systemId={systemId}
+                      />
+                    )}
+                  />
+                  <SecureRoute
+                    path="/system/:systemId/review"
+                    render={() => <Review formikProps={formikProps} />}
+                  />
                 </>
               );
             }}
