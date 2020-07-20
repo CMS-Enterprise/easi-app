@@ -15,58 +15,28 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import CharacterCounter from 'components/CharacterCounter';
 import flattenErrors from 'utils/flattenErrors';
 import Button from 'components/shared/Button';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchSystemIntake,
-  saveSystemIntake,
-  postSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake,
-  clearSystemIntake
-} from 'types/routines';
+import { useHistory } from 'react-router-dom';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import { AppState } from 'reducers/rootReducer';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import PageNumber from 'components/PageNumber';
 
 type RequestDetailsProps = {
   formikRef: any;
-  systemId: any;
   systemIntake: any;
+  dispatchSave: any;
 };
 
 const RequestDetails = ({
   formikRef,
-  systemId,
-  systemIntake
+  systemIntake,
+  dispatchSave
 }: RequestDetailsProps) => {
   const history = useHistory();
-  const dispatch = useDispatch();
-
-  const isSaving = useSelector(
-    (state: AppState) => state.systemIntake.isSaving
-  );
-
-  const dispatchSave = () => {
-    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && !isSaving) {
-      if (systemId === 'new') {
-        dispatch(postSystemIntake(current.values));
-      } else if (current.values.id) {
-        dispatch(saveSystemIntake(current.values));
-      }
-      current.resetForm({ values: current.values, errors: current.errors });
-    }
-  };
-
   return (
     <Formik
       initialValues={systemIntake}
-      onSubmit={values => {
-        dispatch(submitSystemIntake(values));
-      }}
+      onSubmit={dispatchSave}
       validationSchema={SystemIntakeValidationSchema.requestDetails}
       validateOnBlur={false}
       validateOnChange={false}
