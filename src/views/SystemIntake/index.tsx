@@ -11,7 +11,6 @@ import {
   storeSystemIntake,
   clearSystemIntake
 } from 'types/routines';
-import usePrevious from 'hooks/usePrevious';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -30,12 +29,6 @@ export const SystemIntake = () => {
   const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
-  const isSubmitting = useSelector(
-    (state: AppState) => state.systemIntake.isSubmitting
-  );
-
-  const error = useSelector((state: AppState) => state.systemIntake.error);
-  const prevIsSubmitting = usePrevious(isSubmitting);
 
   useEffect(() => {
     if (systemIntake.id) {
@@ -72,14 +65,6 @@ export const SystemIntake = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [systemId, formPage]);
-
-  useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !error) {
-      history.push('/');
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
 
   return (
     <div className="system-intake margin-bottom-5">
