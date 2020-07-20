@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, FormikProps, Form } from 'formik';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
@@ -7,6 +7,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'reducers/rootReducer';
 import { submitSystemIntake } from 'types/routines';
+import usePrevious from 'hooks/usePrevious';
 
 type ReviewProps = {
   formikRef: any;
@@ -15,10 +16,21 @@ type ReviewProps = {
 
 const Review = ({ formikRef, systemIntake }: ReviewProps) => {
   const history = useHistory();
+  const dispatch = useDispatch();
+
   const isSubmitting = useSelector(
     (state: AppState) => state.systemIntake.isSubmitting
   );
-  const dispatch = useDispatch();
+  const error = useSelector((state: AppState) => state.systemIntake.error);
+  const prevIsSubmitting = usePrevious(isSubmitting);
+
+  useEffect(() => {
+    if (prevIsSubmitting && !isSubmitting && !error) {
+      history.push('/');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitting]);
 
   return (
     <Formik
