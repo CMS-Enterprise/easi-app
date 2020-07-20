@@ -9,8 +9,12 @@ import { AppState } from 'reducers/rootReducer';
 import {
   fetchSystemIntake,
   storeSystemIntake,
-  clearSystemIntake
+  clearSystemIntake,
+  postSystemIntake,
+  saveSystemIntake
 } from 'types/routines';
+import { FormikProps } from 'formik';
+import { SystemIntakeForm } from 'types/systemIntake';
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
@@ -29,6 +33,22 @@ export const SystemIntake = () => {
   const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
+
+  const isSaving = useSelector(
+    (state: AppState) => state.systemIntake.isSaving
+  );
+
+  const dispatchSave = () => {
+    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
+    if (current && current.dirty && !isSaving) {
+      if (systemId === 'new') {
+        dispatch(postSystemIntake(current.values));
+      } else if (current.values.id) {
+        dispatch(saveSystemIntake(current.values));
+      }
+      current.resetForm({ values: current.values, errors: current.errors });
+    }
+  };
 
   useEffect(() => {
     if (systemIntake.id) {
@@ -77,8 +97,8 @@ export const SystemIntake = () => {
               render={() => (
                 <ContactDetails
                   formikRef={formikRef}
-                  systemId={systemId}
                   systemIntake={systemIntake}
+                  dispatchSave={dispatchSave}
                 />
               )}
             />
@@ -87,8 +107,8 @@ export const SystemIntake = () => {
               render={() => (
                 <RequestDetails
                   formikRef={formikRef}
-                  systemId={systemId}
                   systemIntake={systemIntake}
+                  dispatchSave={dispatchSave}
                 />
               )}
             />

@@ -13,54 +13,26 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import flattenErrors from 'utils/flattenErrors';
 import { SystemIntakeForm } from 'types/systemIntake';
 import Button from 'components/shared/Button';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchSystemIntake,
-  saveSystemIntake,
-  postSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake,
-  clearSystemIntake
-} from 'types/routines';
+import { useHistory } from 'react-router-dom';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import { AppState } from 'reducers/rootReducer';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import PageNumber from 'components/PageNumber';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
   formikRef: any;
-  systemId: any;
   systemIntake: any;
+  dispatchSave: any;
 };
 
 const ContactDetails = ({
   formikRef,
-  systemId,
-  systemIntake
+  systemIntake,
+  dispatchSave
 }: ContactDetailsProps) => {
   const history = useHistory();
-  const dispatch = useDispatch();
-
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
-
-  const isSaving = useSelector(
-    (state: AppState) => state.systemIntake.isSaving
-  );
-
-  const dispatchSave = () => {
-    const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && !isSaving) {
-      if (systemId === 'new') {
-        dispatch(postSystemIntake(current.values));
-      } else if (current.values.id) {
-        dispatch(saveSystemIntake(current.values));
-      }
-      current.resetForm({ values: current.values, errors: current.errors });
-    }
-  };
 
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
     cmsDivisionsAndOffices.map((office: any) => (
@@ -77,9 +49,7 @@ const ContactDetails = ({
   return (
     <Formik
       initialValues={systemIntake}
-      onSubmit={values => {
-        dispatch(submitSystemIntake(values));
-      }}
+      onSubmit={dispatchSave}
       validationSchema={SystemIntakeValidationSchema.contactDetails}
       validateOnBlur={false}
       validateOnChange={false}
