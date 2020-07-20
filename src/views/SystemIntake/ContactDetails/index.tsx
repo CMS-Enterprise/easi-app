@@ -25,6 +25,7 @@ import {
 } from 'types/routines';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import { AppState } from 'reducers/rootReducer';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
@@ -44,9 +45,13 @@ const ContactDetails = ({
   const flatErrors = flattenErrors(errors);
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
 
+  const isSaving = useSelector(
+    (state: AppState) => state.systemIntake.isSaving
+  );
+
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && current.values.id) {
+    if (current && current.dirty && !isSaving) {
       if (systemId === 'new') {
         dispatch(postSystemIntake(current.values));
       } else if (current.values.id) {

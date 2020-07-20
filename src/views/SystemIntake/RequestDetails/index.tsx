@@ -20,12 +20,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchSystemIntake,
   saveSystemIntake,
+  postSystemIntake,
   storeSystemIntake,
   submitSystemIntake,
   clearSystemIntake
 } from 'types/routines';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import { AppState } from 'reducers/rootReducer';
 
 type RequestDetailsProps = {
   formikProps: FormikProps<SystemIntakeForm>;
@@ -43,14 +45,19 @@ const RequestDetails = ({
   const { values, errors, setFieldValue } = formikProps;
   const flatErrors = flattenErrors(errors);
 
+  const isSaving = useSelector(
+    (state: AppState) => state.systemIntake.isSaving
+  );
+
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && current.values.id) {
-      dispatch(saveSystemIntake(current.values));
-      current.resetForm({ values: current.values, errors: current.errors });
+    if (current && current.dirty && !isSaving) {
       if (systemId === 'new') {
-        history.replace(`/system/${current.values.id}/contact-details`);
+        dispatch(postSystemIntake(current.values));
+      } else if (current.values.id) {
+        dispatch(saveSystemIntake(current.values));
       }
+      current.resetForm({ values: current.values, errors: current.errors });
     }
   };
 
