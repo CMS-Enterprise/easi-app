@@ -36,7 +36,7 @@ const GovernanceTaskList = () => {
     if (systemIntake.id !== '' && systemIntake.businessCaseId !== '') {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
-  }, [dispatch, systemIntake]);
+  }, [dispatch, systemIntake.id, systemIntake.businessCaseId]);
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
   );
