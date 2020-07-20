@@ -29,6 +29,7 @@ import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { AppState } from 'reducers/rootReducer';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
+import PageNumber from 'components/PageNumber';
 
 type RequestDetailsProps = {
   formikRef: any;
@@ -459,6 +460,7 @@ const RequestDetails = ({
               onSave={dispatchSave}
               debounceDelay={1000}
             />
+            <PageNumber currentPage={2} totalPages={2} />
           </>
         );
       }}
