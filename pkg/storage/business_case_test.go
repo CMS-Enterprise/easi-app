@@ -3,6 +3,7 @@ package storage
 import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -110,7 +111,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err := s.store.CreateBusinessCase(&businessCase)
 
 		s.Error(err)
-		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+		s.Equal(IntakeExistsMsg, err.Error())
 	})
 
 	s.Run("requires a system intake ID that exists in the db", func() {
@@ -124,7 +125,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err := s.store.CreateBusinessCase(&businessCase)
 
 		s.Error(err)
-		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+		s.Equal(IntakeExistsMsg, err.Error())
 	})
 
 	s.Run("requires an eua user id", func() {
@@ -138,7 +139,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err = s.store.CreateBusinessCase(&businessCase)
 
 		s.Error(err)
-		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+		s.Equal(EuaIDMsg, err.Error())
 	})
 
 	s.Run("requires a status", func() {
@@ -152,7 +153,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err = s.store.CreateBusinessCase(&businessCase)
 
 		s.Error(err)
-		s.Equal("pq: Could not complete operation in a failed transaction", err.Error())
+		s.Contains(err.Error(), ValidStatusMsg)
 	})
 }
 
@@ -265,5 +266,37 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
 		s.Error(err)
 		s.Equal("business case not found", err.Error())
+	})
+}
+
+func (s StoreTestSuite) TestFetchBusinessCaseByIntakeID() {
+	s.Run("golden path to fetching a business case id by intake id", func() {
+		businessCase := testhelpers.NewBusinessCase()
+		intake := testhelpers.NewSystemIntake()
+		businessCase.SystemIntakeID = intake.ID
+		intake.Status = models.SystemIntakeStatusACCEPTED
+		setupTx := s.db.MustBegin()
+		_, err := setupTx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake)
+		s.NoError(err)
+		_, err = setupTx.NamedExec("INSERT INTO business_case (id, eua_user_id, status, requester, system_intake) VALUES (:id, :eua_user_id, :status, :requester, :system_intake)", &businessCase)
+		s.NoError(err)
+		err = setupTx.Commit()
+		s.NoError(err)
+
+		tx := s.db.MustBegin()
+		fetchedBizCaseID, err := FetchBusinessCaseIDByIntakeID(intake.ID, tx, zap.NewNop())
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+		s.Equal(&businessCase.ID, fetchedBizCaseID)
+	})
+
+	s.Run("doesn't error when no records are found", func() {
+		tx := s.db.MustBegin()
+		fetchedBizCaseID, err := FetchBusinessCaseIDByIntakeID(uuid.New(), tx, zap.NewNop())
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+		s.Equal(&uuid.Nil, fetchedBizCaseID)
 	})
 }

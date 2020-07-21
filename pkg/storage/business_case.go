@@ -12,6 +12,18 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// IntakeExistsMsg is the error we see when there is no valid system intake
+const IntakeExistsMsg = "pq: insert or update on table \"business_case\" violates foreign key constraint \"business_case_system_intake_fkey\""
+
+// EuaIDMsg is the error we see when EUA doesn't meet EUA ID constraints
+const EuaIDMsg = "pq: new row for relation \"business_case\" violates check constraint \"eua_id_check\""
+
+// ValidStatusMsg is a match for an error we see when there is no valid status
+const ValidStatusMsg = "pq: invalid input value for enum business_case_status: "
+
+// UniqueIntakeMsg is a match for an error we see when the system intake already has a biz case
+const UniqueIntakeMsg = "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\""
+
 // FetchBusinessCaseByID queries the DB for a business case matching the given ID
 func (s *Store) FetchBusinessCaseByID(id uuid.UUID) (*models.BusinessCase, error) {
 	businessCase := models.BusinessCase{}
@@ -38,6 +50,32 @@ func (s *Store) FetchBusinessCaseByID(id uuid.UUID) (*models.BusinessCase, error
 		return &models.BusinessCase{}, err
 	}
 	return &businessCase, nil
+}
+
+// FetchBusinessCaseIDByIntakeID queries the DB for a business case matching the given intake ID
+func FetchBusinessCaseIDByIntakeID(intakeID uuid.UUID, tx *sqlx.Tx, logger *zap.Logger) (*uuid.UUID, error) {
+	businessCaseID := uuid.UUID{}
+	const fetchBusinessCaseIDSQL = `
+		SELECT
+			id
+		FROM
+			business_case
+		WHERE
+			business_case.system_intake = $1`
+
+	err := tx.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			return &businessCaseID, nil
+		}
+
+		logger.Error(
+			fmt.Sprintf("Failed to fetch business case id for intake %s", err),
+			zap.String("System Intake", intakeID.String()),
+		)
+		return &businessCaseID, err
+	}
+	return &businessCaseID, nil
 }
 
 // FetchBusinessCasesByEuaID queries the DB for a list of business case matching the given EUA ID
@@ -199,10 +237,23 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 		)
+		if err.Error() == "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\"" {
+			return &models.BusinessCase{},
+				&apperrors.ResourceConflictError{
+					Err:        err,
+					Resource:   models.BusinessCase{},
+					ResourceID: businessCase.SystemIntakeID.String(),
+				}
+		}
+		return &models.BusinessCase{}, err
 	}
-
 	err = createEstimatedLifecycleCosts(tx, businessCase, s.logger)
 	if err != nil {
+		s.logger.Error(
+			fmt.Sprintf("Failed to create business case with lifecycle costs with error %s", err),
+			zap.String("EUAUserID", businessCase.EUAUserID),
+			zap.String("BusinessCaseID", businessCase.ID.String()),
+		)
 		return &models.BusinessCase{}, err
 	}
 	err = tx.Commit()
