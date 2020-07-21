@@ -134,6 +134,7 @@ export const prepareSystemIntakeForApp = (
       systemIntake.eaSupportRequest === null
         ? null
         : systemIntake.eaSupportRequest,
-    hasContract: systemIntake.existingContract || ''
+    hasContract: systemIntake.existingContract || '',
+    businessCaseId: systemIntake.businessCaseId || null
   };
 };
