@@ -7,6 +7,7 @@
     "@cypress/code-coverage": "^1.12.2",
     "@okta/okta-react": "^3.0.1",
     "@okta/okta-signin-widget": "^4.0.2",
+    "@trussworks/react-uswds": "^1.7.0",
     "@types/classnames": "^2.2.9",
     "@types/enzyme": "^3.10.3",
     "@types/jest": "24.0.19",
@@ -87,6 +88,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": ">=12.16.1 < 13.0"
   },
   "devDependencies": {
     "@cypress/instrument-cra": "^1.1.0",
