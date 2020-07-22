@@ -148,7 +148,7 @@ export const GRTSystemIntakeReview = () => {
               <div>
                 <h1 className="font-heading-xl margin-top-0">Next steps</h1>
                 <Alert type="success" heading="Email sent">
-                  An email has been sent to {systemIntake.requesterEmailAddress}
+                  An email has been sent to {systemIntake.requester.email}
                 </Alert>
                 <p className="margin-bottom-3">
                   Decision:{' '}
