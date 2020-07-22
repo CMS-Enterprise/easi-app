@@ -120,7 +120,7 @@ describe('The home page', () => {
 
         setImmediate(() => {
           component.update();
-          expect(component.find(ActionBanner).length).toEqual(4);
+          expect(component.find(ActionBanner).length).toEqual(3);
           done();
         });
       });
