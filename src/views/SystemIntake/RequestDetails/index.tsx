@@ -23,7 +23,7 @@ import PageNumber from 'components/PageNumber';
 
 type RequestDetailsProps = {
   formikRef: any;
-  systemIntake: any;
+  systemIntake: SystemIntakeForm;
   dispatchSave: any;
 };
 

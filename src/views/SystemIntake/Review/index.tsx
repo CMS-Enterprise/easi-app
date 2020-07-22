@@ -11,7 +11,7 @@ import usePrevious from 'hooks/usePrevious';
 
 type ReviewProps = {
   formikRef: any;
-  systemIntake: any;
+  systemIntake: SystemIntakeForm;
 };
 
 const Review = ({ formikRef, systemIntake }: ReviewProps) => {
