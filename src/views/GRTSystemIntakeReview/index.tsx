@@ -65,7 +65,7 @@ export const GRTSystemIntakeReview = () => {
                         <h1 className="font-heading-xl margin-top-0">
                           Next steps
                         </h1>
-                        <div className="grid-row">
+                        <div className="grid-row flex-justify">
                           <div className="grid-col-4">
                             <FieldGroup>
                               <fieldset className="usa-fieldset">
@@ -115,7 +115,6 @@ export const GRTSystemIntakeReview = () => {
                               please get in touch with the requester over email
                             </HelpText>
                           </div>
-                          <div className="grid-col-2" />
                           <div className="grid-col-6">
                             <FieldGroup scrollElement="emailText">
                               <Label
