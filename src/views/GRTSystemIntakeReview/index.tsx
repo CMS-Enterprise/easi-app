@@ -37,7 +37,6 @@ export const GRTSystemIntakeReview = () => {
       <MainContent className="grid-container">
         <div className="system-intake__review margin-bottom-7">
           <h1 className="font-heading-xl margin-top-4">CMS System Request</h1>
-          {/* TODO: systemIntake is always truthy */}
           {error && (
             <h2 className="font-heading-xl">
               System intake with ID: {systemId} was not found
