@@ -24,6 +24,7 @@ export type SystemIntakeForm = {
   requester: {
     name: string;
     component: string;
+    email: string;
   };
   businessOwner: {
     name: string;
@@ -51,7 +52,6 @@ export type SystemIntakeForm = {
   needsEaSupport: boolean | null;
   hasContract: string;
   grtReviewEmailBody: string;
-  requesterEmailAddress: string;
   reviewedAt?: DateTime;
 };
 

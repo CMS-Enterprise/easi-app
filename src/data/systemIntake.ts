@@ -14,7 +14,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   status: 'DRAFT',
   requester: {
     name: '',
-    component: ''
+    component: '',
+    email: ''
   },
   businessOwner: {
     name: '',
@@ -42,7 +43,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   needsEaSupport: null,
   hasContract: '',
   grtReviewEmailBody: '',
-  requesterEmailAddress: '',
   reviewedAt: undefined
 };
 
@@ -107,7 +107,8 @@ export const prepareSystemIntakeForApp = (
     status: systemIntake.status || 'DRAFT',
     requester: {
       name: systemIntake.requester || '',
-      component: systemIntake.component || ''
+      component: systemIntake.component || '',
+      email: systemIntake.requesterEmailAddress || ''
     },
     businessOwner: {
       name: systemIntake.businessOwner || '',
@@ -141,7 +142,6 @@ export const prepareSystemIntakeForApp = (
         : systemIntake.eaSupportRequest,
     hasContract: systemIntake.existingContract || '',
     grtReviewEmailBody: systemIntake.grtReviewEmailBody || '',
-    requesterEmailAddress: systemIntake.requesterEmailAddress || '',
     reviewedAt: DateTime.fromISO(systemIntake.reviewedAt) || ''
   };
 };
