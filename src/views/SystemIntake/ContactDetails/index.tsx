@@ -22,7 +22,7 @@ import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 type ContactDetailsProps = {
   formikRef: any;
-  systemIntake: any;
+  systemIntake: SystemIntakeForm;
   dispatchSave: any;
 };
 
