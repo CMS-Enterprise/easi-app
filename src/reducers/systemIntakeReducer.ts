@@ -7,6 +7,7 @@ import {
   fetchSystemIntake,
   storeSystemIntake,
   submitSystemIntake,
+  saveSystemIntake,
   clearSystemIntake,
   postSystemIntake,
   reviewSystemIntake
@@ -68,6 +69,29 @@ function systemIntakeReducer(
         error: action.payload
       };
     case postSystemIntake.FULFILL:
+      return {
+        ...state,
+        isSaving: false
+      };
+    case saveSystemIntake.REQUEST:
+      return {
+        ...state,
+        isSaving: true
+      };
+    case saveSystemIntake.SUCCESS:
+      return {
+        ...state,
+        systemIntake: {
+          ...state.systemIntake,
+          ...prepareSystemIntakeForApp(action.payload)
+        }
+      };
+    case saveSystemIntake.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case saveSystemIntake.FULFILL:
       return {
         ...state,
         isSaving: false
