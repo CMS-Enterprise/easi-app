@@ -168,11 +168,11 @@ export const GRTSystemIntakeReview = () => {
                   <p className="text-pre-wrap line-height-body-3 margin-bottom-4">
                     {systemIntake.grtReviewEmailBody}
                   </p>
-                  {systemIntake.reviewedAt && (
+                  {systemIntake.decidedAt && (
                     <i>
                       An email was sent to the requester on{' '}
-                      {systemIntake.reviewedAt &&
-                        systemIntake.reviewedAt.toLocaleString(
+                      {systemIntake.decidedAt &&
+                        systemIntake.decidedAt.toLocaleString(
                           DateTime.DATETIME_FULL
                         )}
                     </i>

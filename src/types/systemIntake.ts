@@ -52,7 +52,7 @@ export type SystemIntakeForm = {
   needsEaSupport: boolean | null;
   hasContract: string;
   grtReviewEmailBody: string;
-  reviewedAt?: DateTime;
+  decidedAt?: DateTime;
 };
 
 // Redux store type for a system intake
