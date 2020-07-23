@@ -195,7 +195,7 @@ func NewUpdateSystemIntake(
 			existingIntake.Status = intake.Status
 			existingIntake.GrtReviewEmailBody = intake.GrtReviewEmailBody
 			existingIntake.RequesterEmailAddress = null.StringFrom(recipientAddress)
-			existingIntake.ReviewedAt = &updatedTime
+			existingIntake.DecidedAt = &updatedTime
 			existingIntake.UpdatedAt = &updatedTime
 			// This ensures only certain fields can be modified.
 			intake, err = update(existingIntake)
