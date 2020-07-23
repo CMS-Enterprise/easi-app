@@ -132,10 +132,8 @@ func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 // FetchSystemIntakeByID queries the DB for a system intake matching the given ID
 func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
-	tx := s.DB.MustBegin()
-	//Rollback only happens if transaction isn't committed
-	defer tx.Rollback()
-	err := tx.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+
+	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
 	if err != nil {
 		s.logger.Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
@@ -149,27 +147,19 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 	// This should cover all statuses that might have a related business case on it.
 	// In the future submitted will also need to be checked.
 	if intake.Status != models.SystemIntakeStatusDRAFT {
-		bizCaseID, fetchErr := FetchBusinessCaseIDByIntakeID(intake.ID, tx, s.logger)
+		bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(intake.ID)
 		if fetchErr != nil {
 			return &intake, nil
 		}
 		intake.BusinessCaseID = bizCaseID
 	}
-	err = tx.Commit()
-	if err != nil {
-		return &models.SystemIntake{}, err
-	}
-
 	return &intake, nil
 }
 
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	tx := s.DB.MustBegin()
-	//Rollback only happens if transaction isn't committed
-	defer tx.Rollback()
-	err := tx.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1", euaID)
+	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1", euaID)
 	if err != nil {
 		s.logger.Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
@@ -177,25 +167,16 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 		)
 		return models.SystemIntakes{}, err
 	}
-	fetchErrors := []error{}
 	for _, intake := range intakes {
 		if intake.Status != models.SystemIntakeStatusDRAFT {
-			bizCaseID, fetchErr := FetchBusinessCaseIDByIntakeID(intake.ID, tx, s.logger)
+			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(intake.ID)
 			if fetchErr != nil {
-				fetchErrors = append(fetchErrors, fetchErr)
+				return models.SystemIntakes{}, fetchErr
 			}
 			if bizCaseID != &uuid.Nil {
 				intake.BusinessCaseID = bizCaseID
 			}
 		}
-	}
-	if len(fetchErrors) > 0 {
-		return models.SystemIntakes{}, err
-	}
-
-	err = tx.Commit()
-	if err != nil {
-		return models.SystemIntakes{}, err
 	}
 	return intakes, nil
 }
