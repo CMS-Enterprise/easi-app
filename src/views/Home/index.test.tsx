@@ -72,7 +72,7 @@ describe('The home page', () => {
       });
     });
 
-    it('displays banners for system intakes in draft', async done => {
+    it('displays banners for intakes and biz cases', async done => {
       const mockStore = configureMockStore();
       const store = mockStore({
         systemIntakes: {
@@ -93,7 +93,8 @@ describe('The home page', () => {
             {
               ...initialSystemIntakeForm,
               id: '4',
-              status: 'SUBMITTED'
+              status: 'SUBMITTED',
+              businessCaseId: '1'
             }
           ]
         },
@@ -120,7 +121,7 @@ describe('The home page', () => {
 
         setImmediate(() => {
           component.update();
-          expect(component.find(ActionBanner).length).toEqual(3);
+          expect(component.find(ActionBanner).length).toEqual(4);
           done();
         });
       });
