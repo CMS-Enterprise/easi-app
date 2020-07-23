@@ -26,14 +26,14 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 	s.NoError(err)
 	rr := httptest.NewRecorder()
 
-	cedarClient := cedareasi.NewTranslatedClient(
+	cedarEasiClient := cedareasi.NewTranslatedClient(
 		s.config.GetString("CEDAR_API_URL"),
 		s.config.GetString("CEDAR_EASI_API_KEY"),
 	)
 
 	handlers.NewSystemsListHandler(
 		s.base,
-		cedarClient.FetchSystems,
+		cedarEasiClient.FetchSystems,
 	).Handle()(rr, req)
 
 	s.Equal(http.StatusOK, rr.Code)
