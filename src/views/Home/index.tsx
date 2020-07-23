@@ -53,11 +53,7 @@ const Home = ({ history }: HomeProps) => {
             />
           );
         case 'SUBMITTED':
-          if (
-            businessCases.some(
-              businessCase => businessCase.systemIntakeId === intake.id
-            )
-          ) {
+          if (intake.businessCaseId !== null) {
             return null;
           }
           return (

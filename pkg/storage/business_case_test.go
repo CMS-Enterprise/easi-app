@@ -3,7 +3,6 @@ package storage
 import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -283,19 +282,13 @@ func (s StoreTestSuite) TestFetchBusinessCaseByIntakeID() {
 		err = setupTx.Commit()
 		s.NoError(err)
 
-		tx := s.db.MustBegin()
-		fetchedBizCaseID, err := FetchBusinessCaseIDByIntakeID(intake.ID, tx, zap.NewNop())
-		s.NoError(err)
-		err = tx.Commit()
+		fetchedBizCaseID, err := s.store.FetchBusinessCaseIDByIntakeID(intake.ID)
 		s.NoError(err)
 		s.Equal(&businessCase.ID, fetchedBizCaseID)
 	})
 
 	s.Run("doesn't error when no records are found", func() {
-		tx := s.db.MustBegin()
-		fetchedBizCaseID, err := FetchBusinessCaseIDByIntakeID(uuid.New(), tx, zap.NewNop())
-		s.NoError(err)
-		err = tx.Commit()
+		fetchedBizCaseID, err := s.store.FetchBusinessCaseIDByIntakeID(uuid.New())
 		s.NoError(err)
 		s.Equal(&uuid.Nil, fetchedBizCaseID)
 	})
