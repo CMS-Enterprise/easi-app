@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 #
 
+set -u
+
 function_name="$1"
-payload='{ "command": "" }'
+lambda_version="$2"
+service_id="$3"
+
+cluster_id="$APP_ENV-easi-app"
+payload="$(jq --null-input ".command = \"runtask\" | .body.cluster_id = \"$cluster_id\" | .body.service_id = \"$service_id\"")"
 cli_read_timeout=240
-lambda_version="master"
 
 if (set -x ; aws lambda invoke --qualifier "$lambda_version" --cli-read-timeout "$cli_read_timeout" --function "$function_name" --payload "$payload" lambda_response.json) ; then
   jq < lambda_response.json
