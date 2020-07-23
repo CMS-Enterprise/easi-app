@@ -17,13 +17,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
-// TranslatedClient is an API client for CEDAR using EASi language
+// TranslatedClient is an API client for CEDAR EASi using EASi language
 type TranslatedClient struct {
 	client        *apiclient.EASiCore
 	apiAuthHeader runtime.ClientAuthInfoWriter
 }
 
-// NewTranslatedClient returns an API client for CEDAR using EASi language
+// NewTranslatedClient returns an API client for CEDAR EASi using EASi language
 func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
