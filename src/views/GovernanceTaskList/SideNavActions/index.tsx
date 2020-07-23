@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
+
 import Button from 'components/shared/Button';
 import './index.scss';
 
@@ -17,9 +19,13 @@ const SideNavActions = () => {
       </div>
       <div className="grid-col margin-top-5">
         <h4>Related Content</h4>
-        <a href="/governance-overview" target="_blank">
+        <UswdsLink
+          href="/governance-overview"
+          variant="external"
+          target="_blank"
+        >
           Overview for adding a system
-        </a>
+        </UswdsLink>
         <p>(opens in a new tab)</p>
       </div>
     </div>

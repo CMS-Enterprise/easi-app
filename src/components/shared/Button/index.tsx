@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
 
 type ButtonProps = {
   type?: 'button' | 'submit' | 'reset';
@@ -14,8 +13,6 @@ type ButtonProps = {
   big?: boolean;
   unstyled?: boolean;
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  to?: string;
-  href?: string;
   className?: string;
 };
 
@@ -32,8 +29,6 @@ export const Button = (props: ButtonProps): React.ReactElement => {
     big,
     unstyled,
     onClick,
-    to,
-    href,
     className
   } = props;
 
@@ -50,22 +45,6 @@ export const Button = (props: ButtonProps): React.ReactElement => {
     },
     className
   );
-
-  if (to) {
-    return (
-      <Link className={classes} to={to}>
-        {children}
-      </Link>
-    );
-  }
-
-  if (href) {
-    return (
-      <a href={href} className={classes}>
-        {children}
-      </a>
-    );
-  }
 
   return (
     // eslint-disable-next-line react/button-has-type
