@@ -8,6 +8,13 @@ live APIs? The main driver behind this ADR is CEDAR integration tests, and a
 desire to sufficiently test EASI-CEDAR integration while providing fast feedback
 in CI. Okta tests are out of scope.
 
+In this context, "integration test" refers to either: (1) a Cypress test
+(frontend/backend integration test); or (2) the backend [integration
+tests](https://github.com/CMSgov/easi-app/tree/master/pkg/integration) that run
+when invoking `easi test`. "CI environment" means the network in which our
+CircleCI containers run. "Deployed environment" means one of our AWS
+environments (development, implementation, production).
+
 ## Considered Alternatives
 
 * Do not mock the API calls
@@ -16,9 +23,12 @@ in CI. Okta tests are out of scope.
 ## Decision Outcome
 
 * Chosen Alternative: Mock the API calls, as this will speed up the tests and
-  reduce operational and networking overhead from the CI environment.
-Additionally, the health check tests that run on server startup already provide a
-base level of integration test for the deployed environments.
+  reduce operational and networking overhead from the CI environment.  Since a
+successful deployment to the development AWS environment is required before
+merging code, we can use the [health
+check](https://github.com/CMSgov/easi-app/blob/master/pkg/server/health_check.go)
+that runs on server start in a deployed environment as a test to prevent
+breaking changes to the CEDAR API client from being merged.
 
 ## Pros and Cons of the Alternatives <!-- optional -->
 
