@@ -15,13 +15,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 )
 
-// TranslatedClient is an API client for CEDAR using EASi language
+// TranslatedClient is an API client for CEDAR LDAP using EASi language
 type TranslatedClient struct {
 	client        *apiclient.LDAP
 	apiAuthHeader runtime.ClientAuthInfoWriter
 }
 
-// NewTranslatedClient returns an API client for CEDAR using EASi language
+// NewTranslatedClient returns an API client for CEDAR LDAP using EASi language
 func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
