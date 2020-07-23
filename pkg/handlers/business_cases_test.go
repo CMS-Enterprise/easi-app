@@ -14,7 +14,7 @@ import (
 )
 
 func newMockFetchBusinessCases(businessCases models.BusinessCases, err error) fetchBusinessCases {
-	return func(euaID string) (models.BusinessCases, error) {
+	return func(ctx context.Context, euaID string) (models.BusinessCases, error) {
 		return businessCases, err
 	}
 }

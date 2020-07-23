@@ -13,12 +13,28 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// NewAuthorizeFetchSystemIntakesByEuaID is a service to authorize FetchSystemIntakesByEuaID
+func NewAuthorizeFetchSystemIntakesByEuaID() func(ctx context.Context, euaID string) (bool, error) {
+	return func(ctx context.Context, euaID string) (bool, error) {
+		return true, nil
+	}
+}
+
 // NewFetchSystemIntakesByEuaID is a service to fetch system intakes by EUA id
 func NewFetchSystemIntakesByEuaID(
 	config Config,
 	fetch func(euaID string) (models.SystemIntakes, error),
-) func(euaID string) (models.SystemIntakes, error) {
-	return func(euaID string) (models.SystemIntakes, error) {
+	authorize func(context context.Context, euaID string) (bool, error),
+) func(context context.Context, euaID string) (models.SystemIntakes, error) {
+	return func(context context.Context, euaID string) (models.SystemIntakes, error) {
+		ok, err := authorize(context, euaID)
+		if err != nil {
+			config.logger.Error("failed to authorize fetch system intakes")
+			return models.SystemIntakes{}, err
+		}
+		if !ok {
+			return models.SystemIntakes{}, &apperrors.UnauthorizedError{Err: err}
+		}
 		intakes, err := fetch(euaID)
 		if err != nil {
 			config.logger.Error("failed to fetch system intakes")
@@ -223,12 +239,20 @@ func NewUpdateSystemIntake(
 	}
 }
 
+// NewAuthorizeFetchSystemIntakeByID is a service to authorize FetchSystemIntakeByID
+func NewAuthorizeFetchSystemIntakeByID() func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		return true, nil
+	}
+}
+
 // NewFetchSystemIntakeByID is a service to fetch the system intake by intake id
 func NewFetchSystemIntakeByID(
 	config Config,
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
-) func(id uuid.UUID) (*models.SystemIntake, error) {
-	return func(id uuid.UUID) (*models.SystemIntake, error) {
+	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
+) func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	return func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		intake, err := fetch(id)
 		if err != nil {
 			config.logger.Error("failed to fetch system intake")
@@ -237,6 +261,14 @@ func NewFetchSystemIntakeByID(
 				Model:     intake,
 				Operation: apperrors.QueryFetch,
 			}
+		}
+		ok, err := authorize(context, intake)
+		if err != nil {
+			config.logger.Error("failed to authorize fetch system intake")
+			return &models.SystemIntake{}, err
+		}
+		if !ok {
+			return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
 		}
 		return intake, nil
 	}

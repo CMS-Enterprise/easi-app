@@ -15,8 +15,8 @@ import (
 )
 
 type createSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
+type fetchSystemIntakeByID func(context context.Context, id uuid.UUID) (*models.SystemIntake, error)
 type updateSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
-type fetchSystemIntakeByID func(id uuid.UUID) (*models.SystemIntake, error)
 
 // NewSystemIntakeHandler is a constructor for SystemIntakeHandler
 func NewSystemIntakeHandler(
@@ -63,7 +63,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
-			intake, err := h.FetchSystemIntakeByID(uuid)
+			intake, err := h.FetchSystemIntakeByID(r.Context(), uuid)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return

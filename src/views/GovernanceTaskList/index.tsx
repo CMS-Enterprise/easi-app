@@ -1,64 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useOktaAuth } from '@okta/okta-react';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Alert from 'components/shared/Alert';
 import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntakes } from 'types/routines';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import {
+  intakeStatusFromIntake,
+  chooseIntakeLink,
+  feedbackStatusFromIntakeStatus,
+  bizCaseStatus
+} from 'data/taskList';
 import TaskListItem from './TaskListItem';
 import SideNavActions from './SideNavActions';
 import './index.scss';
 
 const GovernanceTaskList = () => {
-  const { authState } = useOktaAuth();
+  const { systemId } = useParams();
   const dispatch = useDispatch();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
-  const systemIntake =
-    // Later this should be changed to get state.systemIntake.systemIntake
-    useSelector((state: AppState) => state.systemIntakes.systemIntakes[0]) ||
-    null;
 
-  const calculateIntakeStatus = (intake: SystemIntakeForm) => {
-    if (intake === null) {
-      return 'START';
-    }
-    if (intake.status === 'DRAFT') {
-      return 'CONTINUE';
-    }
-    return 'COMPLETED';
-  };
-  const intakeState = calculateIntakeStatus(systemIntake);
-  const chooseIntakeLink = (intake: SystemIntakeForm, status: string) => {
-    const newIntakeLink = '/system/new';
-    if (intake === null) {
-      return newIntakeLink;
-    }
-    let link: string;
-    switch (status) {
-      case 'CONTINUE':
-        link = `/system/${intake.id}/contact-details`;
-        break;
-      case 'COMPLETED':
-        link = '/';
-        break;
-      default:
-        link = newIntakeLink;
-    }
-    return link;
-  };
-  const intakeLink = chooseIntakeLink(systemIntake, intakeState);
-
-  // This is a hack to get a system intake into the state, but it will be changed later
   useEffect(() => {
-    if (authState.isAuthenticated) {
-      dispatch(fetchSystemIntakes());
+    if (systemId !== 'new') {
+      dispatch(fetchSystemIntake(systemId));
     }
-  }, [dispatch, authState.isAuthenticated]);
+  }, [dispatch, systemId]);
+  const systemIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake
+  );
+
+  useEffect(() => {
+    if (systemIntake.id && systemIntake.businessCaseId) {
+      dispatch(fetchBusinessCase(systemIntake.businessCaseId));
+    }
+  }, [dispatch, systemIntake.id, systemIntake.businessCaseId]);
+  const businessCase = useSelector(
+    (state: AppState) => state.businessCase.form
+  );
+
+  const intakeStatus = intakeStatusFromIntake(systemIntake);
+  const intakeLink = chooseIntakeLink(systemIntake, intakeStatus);
+  const intakeFeedbackStatus = feedbackStatusFromIntakeStatus(
+    systemIntake.status
+  );
+  const businessCaseStatus = bizCaseStatus(intakeStatus, businessCase);
+
   return (
     <div className="governance-task-list">
       <Header />
@@ -89,7 +78,7 @@ const GovernanceTaskList = () => {
                 heading="Fill in the request form"
                 description="Tell the Governance Admin Team about your idea. This step lets CMS build
               context about your request and start preparing for discussions with your team."
-                status={intakeState}
+                status={intakeStatus}
                 link={intakeLink}
               />
               <TaskListItem
@@ -97,13 +86,13 @@ const GovernanceTaskList = () => {
                 description="The Governance Admin Team will review your request and decide if it
               needs further governance. If it does, they’ll direct you to go through
               the remaining steps."
-                status="CANNOT_START"
-                link="/"
+                status={intakeFeedbackStatus}
+                link="/" // link is unused for this item
               />
               <TaskListItem
                 heading="Prepare your Business Case"
                 description="Draft different solutions and the corresponding costs involved."
-                status="CANNOT_START"
+                status={businessCaseStatus}
                 link="/"
               />
             </ol>
@@ -117,12 +106,15 @@ const GovernanceTaskList = () => {
               type="button"
               className="governance-task-list__remaining-steps-btn"
               onClick={() => setDisplayRemainingSteps(prev => !prev)}
+              aria-expanded={displayRemainingSteps}
+              aria-controls="GovernanceTaskList-SecondaryList"
             >
               {displayRemainingSteps ? 'Hide' : 'Show'} remaining steps
             </button>
 
             {displayRemainingSteps && (
               <ol
+                id="GovernanceTaskList-SecondaryList"
                 className="governance-task-list__task-list governance-task-list__task-list--secondary"
                 start={4}
               >

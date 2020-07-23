@@ -8,6 +8,7 @@ import 'uswds';
 import App from './views/App';
 import UnsupportedBrowser from './views/UnsupportedBrowser';
 import store from './store';
+import './i18n';
 import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
