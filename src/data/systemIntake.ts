@@ -39,7 +39,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   businessSolution: '',
   currentStage: '',
   needsEaSupport: null,
-  hasContract: ''
+  hasContract: '',
+  businessCaseId: null
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
