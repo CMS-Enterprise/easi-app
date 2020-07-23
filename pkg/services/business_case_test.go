@@ -20,6 +20,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
+	authorize := func(context context.Context, intake *models.BusinessCase) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches Business Case by ID without an error", func() {
 		fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
@@ -27,8 +28,8 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 				ID: fakeID,
 			}, nil
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch)
-		businessCase, err := fetchBusinessCaseByID(fakeID)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorize)
+		businessCase, err := fetchBusinessCaseByID(context.Background(), fakeID)
 		s.NoError(err)
 
 		s.Equal(fakeID, businessCase.ID)
@@ -38,9 +39,9 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 		fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("fetch failed")
 		}
-		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch)
+		fetchBusinessCaseByID := NewFetchBusinessCaseByID(serviceConfig, fetch, authorize)
 
-		businessCase, err := fetchBusinessCaseByID(uuid.New())
+		businessCase, err := fetchBusinessCaseByID(context.Background(), uuid.New())
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.BusinessCase{}, businessCase)
@@ -52,6 +53,7 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 	fakeEuaID := "FAKE"
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
+	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches Business Cases by EUA ID without an error", func() {
 		fetch := func(euaID string) (models.BusinessCases, error) {
@@ -61,8 +63,8 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 				},
 			}, nil
 		}
-		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(serviceConfig, fetch)
-		businessCases, err := fetchBusinessCasesByEuaID(fakeEuaID)
+		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(serviceConfig, fetch, authorize)
+		businessCases, err := fetchBusinessCasesByEuaID(context.Background(), fakeEuaID)
 		s.NoError(err)
 		s.Equal(fakeEuaID, businessCases[0].EUAUserID)
 	})
@@ -71,8 +73,8 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 		fetch := func(euaID string) (models.BusinessCases, error) {
 			return models.BusinessCases{}, errors.New("fetch failed")
 		}
-		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(serviceConfig, fetch)
-		businessCases, err := fetchBusinessCasesByEuaID("FAKE")
+		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(serviceConfig, fetch, authorize)
+		businessCases, err := fetchBusinessCasesByEuaID(context.Background(), "FAKE")
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(models.BusinessCases{}, businessCases)

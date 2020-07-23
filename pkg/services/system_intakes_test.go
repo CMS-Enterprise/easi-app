@@ -20,6 +20,7 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 	fakeEuaID := "FAKE"
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
+	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches System Intakes by EUA ID without an error", func() {
 		fetch := func(euaID string) (models.SystemIntakes, error) {
@@ -29,8 +30,8 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 				},
 			}, nil
 		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch)
-		intakes, err := fetchSystemIntakesByEuaID(fakeEuaID)
+		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch, authorize)
+		intakes, err := fetchSystemIntakesByEuaID(context.Background(), fakeEuaID)
 		s.NoError(err)
 		s.Equal(fakeEuaID, intakes[0].EUAUserID)
 	})
@@ -39,8 +40,8 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 		fetch := func(euaID string) (models.SystemIntakes, error) {
 			return models.SystemIntakes{}, errors.New("fetch failed")
 		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch)
-		intakes, err := fetchSystemIntakesByEuaID("FAKE")
+		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch, authorize)
+		intakes, err := fetchSystemIntakesByEuaID(context.Background(), "FAKE")
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(models.SystemIntakes{}, intakes)
@@ -392,6 +393,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
+	authorize := func(context context.Context, intake *models.SystemIntake) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches System Intake by ID without an error", func() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
@@ -399,8 +401,8 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 				ID: fakeID,
 			}, nil
 		}
-		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch)
-		intake, err := fetchSystemIntakeByID(fakeID)
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch, authorize)
+		intake, err := fetchSystemIntakeByID(context.Background(), fakeID)
 		s.NoError(err)
 
 		s.Equal(fakeID, intake.ID)
@@ -410,9 +412,9 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("save failed")
 		}
-		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch)
+		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch, authorize)
 
-		intake, err := fetchSystemIntakeByID(uuid.New())
+		intake, err := fetchSystemIntakeByID(context.Background(), uuid.New())
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)

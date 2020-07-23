@@ -14,12 +14,20 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// NewAuthorizeFetchBusinessCaseByID is a service to authorize FetchBusinessCaseByID
+func NewAuthorizeFetchBusinessCaseByID() func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) {
+	return func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) {
+		return true, nil
+	}
+}
+
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
 func NewFetchBusinessCaseByID(
 	config Config,
 	fetch func(id uuid.UUID) (*models.BusinessCase, error),
-) func(id uuid.UUID) (*models.BusinessCase, error) {
-	return func(id uuid.UUID) (*models.BusinessCase, error) {
+	authorize func(context context.Context, businessCase *models.BusinessCase) (bool, error),
+) func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 		businessCase, err := fetch(id)
 		if err != nil {
 			config.logger.Error("failed to fetch business case")
@@ -28,6 +36,14 @@ func NewFetchBusinessCaseByID(
 				Model:     businessCase,
 				Operation: apperrors.QueryFetch,
 			}
+		}
+		ok, err := authorize(ctx, businessCase)
+		if err != nil {
+			config.logger.Error("failed to authorize fetch business case")
+			return &models.BusinessCase{}, err
+		}
+		if !ok {
+			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: err}
 		}
 		return businessCase, nil
 	}
@@ -119,12 +135,28 @@ func NewCreateBusinessCase(
 	}
 }
 
+// NewAuthorizeFetchBusinessCasesByEuaID is a service to authorize FetchBusinessCasesByEuaID
+func NewAuthorizeFetchBusinessCasesByEuaID() func(ctx context.Context, euaID string) (bool, error) {
+	return func(ctx context.Context, euaID string) (bool, error) {
+		return true, nil
+	}
+}
+
 // NewFetchBusinessCasesByEuaID is a service to fetch a list of business cases by EUA ID
 func NewFetchBusinessCasesByEuaID(
 	config Config,
 	fetch func(euaID string) (models.BusinessCases, error),
-) func(euaID string) (models.BusinessCases, error) {
-	return func(euaID string) (models.BusinessCases, error) {
+	authorize func(context context.Context, euaID string) (bool, error),
+) func(ctx context.Context, euaID string) (models.BusinessCases, error) {
+	return func(ctx context.Context, euaID string) (models.BusinessCases, error) {
+		ok, err := authorize(ctx, euaID)
+		if err != nil {
+			config.logger.Error("failed to authorize fetch system intakes")
+			return models.BusinessCases{}, err
+		}
+		if !ok {
+			return models.BusinessCases{}, &apperrors.UnauthorizedError{Err: err}
+		}
 		businessCases, err := fetch(euaID)
 		if err != nil {
 			config.logger.Error("failed to fetch business cases")

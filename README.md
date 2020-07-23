@@ -203,7 +203,7 @@ Now you will need to start the Docker service: run Spotlight and type in
 
 #### docker-compose
 
-To run the app in Docker locally, we are using
+One option for running the app and its dependencies is to use
 [`docker-compose`](https://docs.docker.com/compose/):
 
 ```console
@@ -211,19 +211,30 @@ brew install docker-compose
 brew install docker-compose-completion  # optional
 ```
 
-Now, you can stand up the app & database locally in containers.  The app server
-will stand up and migrations from your local filesystem will be run against the
-db automatically:
+Multiple docker-compose files exist to support different use cases and
+environments.
+
+| File | Description |
+| ---- | ----------- |
+| docker-compose.yml | Base configuration for `db` and `db_migrate` service |
+| docker-compose.override.yml | Additional configuration for running `db` and `db_migrate` locally. Intended to simplify the use case where someone uses docker-compose only to run `db` and `db_migrate` |
+| docker-compose.circleci.yml | Additional configuration for running all services in CircleCI |
+| docker-compose.local.yml | Additional configuration for running all services locally |
+
+##### Use case: Run database and database migrations locally
+
+Use the following command if you only intend to run the database and database
+migration containers locally:
 
 ```console
 $ docker-compose up --detach
-Starting app_db_1 ... done
-Starting app_db_clean_1 ... done
-Starting app_db_migrate_1 ... done
-Starting app_easi_1       ... done
-$ curl http://localhost:8080/api/v1/healthcheck
-{"status":"pass","datetime":"APPLICATION_DATETIME","version":"APPLICATION_VERSION","timestamp":"APPLICATION_TS"}
+Creating easi-app_db_1 ... done
+Creating easi-app_db_migrate_1 ... done
 ```
+
+By default, Docker Compose reads two files, a docker-compose.yml and an optional
+docker-compose.override.yml file. That's why, for the above command, you don't
+need to specify which compose files to use.
 
 Two options to take it down:
 
@@ -258,6 +269,36 @@ postgres@localhost:postgres> SHOW server_version;
 SHOW
 Time: 0.016s
 postgres@localhost:postgres>
+```
+
+##### Use case: Run additional services locally
+
+Use the following command to run all services locally, *including* cypress tests:
+
+```console
+docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up --detach
+```
+
+Note: you can modify the command above to run only some of the services. For
+example, use the following command to run all services locally, *except* cypress
+tests:
+
+```console
+docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up db db_migrate easi easi_client --detach
+```
+
+Docker Compose merges files in the order they're specified on the command line.
+Due to the way the configurations are currently set for each environment, you
+need to include the CircleCI file as indicated above to run the services
+locally. The values in the local file will take precedence over the
+CircleCI-specific configurations.
+
+The full list of compose files will also need to be provided when running other
+docker-compose commands, e.g.:
+
+```console
+docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml kill
+docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml down
 ```
 
 ### Setup: Cloud Services

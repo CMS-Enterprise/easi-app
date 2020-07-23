@@ -6,8 +6,10 @@ type authReducerState = {
   lastActiveAt: number;
 };
 
+const UPDATE_LAST_ACTIVE_AT = 'AUTH_REDUCER_UPDATE_LAST_ACTIVE_AT';
+
 export const updateLastActiveAt = {
-  type: 'AUTH_REDUCER_UPDATE_LAST_ACTIVE_AT'
+  type: UPDATE_LAST_ACTIVE_AT
 };
 
 const initialState: authReducerState = {
@@ -19,7 +21,7 @@ function authReducer(
   action: Action<any>
 ): authReducerState {
   switch (action.type) {
-    case updateLastActiveAt.type:
+    case UPDATE_LAST_ACTIVE_AT:
       return {
         ...state,
         lastActiveAt: newTimeStamp()

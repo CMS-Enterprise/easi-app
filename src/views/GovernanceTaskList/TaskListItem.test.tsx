@@ -57,8 +57,6 @@ describe('The TaskListItem', () => {
       />
     );
 
-    // TODO: very brittle; insert data-testid when Button refactor is complete
-    expect(component.find(Button).exists()).toEqual(true);
     expect(
       component
         .find(Button)
@@ -77,8 +75,6 @@ describe('The TaskListItem', () => {
       />
     );
 
-    // TODO: very brittle; insert data-testid when Button refactor is complete
-    expect(component.find(Button).exists()).toEqual(true);
     expect(
       component
         .find(Button)
@@ -87,7 +83,7 @@ describe('The TaskListItem', () => {
     ).toEqual('Continue');
   });
 
-  it('displays a submitted request link', () => {
+  describe('submitted request link', () => {
     const component = shallow(
       <TaskListItem
         heading="Test Heading"
@@ -97,9 +93,14 @@ describe('The TaskListItem', () => {
       />
     );
 
-    // TODO: very brittle; insert data-testid when Button refactor is complete
-    expect(component.find(Link).exists()).toEqual(true);
-    expect(component.find(Link).text()).toEqual('View Submitted Request Form');
-    expect(component.find(Link).prop('to')).toEqual('/system-intake/FOO');
+    it('displays the right text', () => {
+      expect(component.find(Link).text()).toEqual(
+        'View Submitted Request Form'
+      );
+    });
+
+    it('displays the right link', () => {
+      expect(component.find(Link).prop('to')).toEqual('/system-intake/FOO');
+    });
   });
 });

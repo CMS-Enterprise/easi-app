@@ -30,6 +30,8 @@ const (
 	QuerySave QueryOperation = "Save"
 	// QueryFetch is for failures when getting a resource
 	QueryFetch QueryOperation = "Fetch"
+	// QueryUpdate is for failures when updating a resource
+	QueryUpdate QueryOperation = "Update"
 )
 
 // QueryError is a typed error for query issues

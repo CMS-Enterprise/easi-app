@@ -53,6 +53,7 @@ type SystemIntake struct {
 	AlfabetID               null.String        `json:"alfabetID" db:"alfabet_id"`
 	GrtReviewEmailBody      null.String        `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 	RequesterEmailAddress   null.String        `json:"requesterEmailAddress" db:"requester_email_address"`
+	BusinessCaseID          *uuid.UUID         `json:"businessCase"`
 }
 
 // SystemIntakes is a list of System Intakes
