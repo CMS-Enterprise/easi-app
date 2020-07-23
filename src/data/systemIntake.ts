@@ -43,7 +43,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   needsEaSupport: null,
   hasContract: '',
   grtReviewEmailBody: '',
-  decidedAt: undefined,
+  decidedAt: null,
   businessCaseId: null
 };
 
@@ -143,7 +143,9 @@ export const prepareSystemIntakeForApp = (
         : systemIntake.eaSupportRequest,
     hasContract: systemIntake.existingContract || '',
     grtReviewEmailBody: systemIntake.grtReviewEmailBody || '',
-    decidedAt: DateTime.fromISO(systemIntake.decidedAt) || '',
+    decidedAt: systemIntake.decidedAt
+      ? DateTime.fromISO(systemIntake.decidedAt)
+      : null,
     businessCaseId: systemIntake.businessCaseId || null
   };
 };
