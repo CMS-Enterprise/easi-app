@@ -6,7 +6,7 @@ const auth = {
     title_second_plural: 'Your access to EASi will expire in {{count}} seconds',
     dataSaved: 'Your data has been saved.',
     inactivityWarning_minute:
-      'If you do not do anything on this page, you will be signed out in {{count}} minute and will need to sign back in. We do this to keep your information secure.',
+      'If you do not click the button below, you will be signed out in {{count}} minute and will need to sign back in. We do this to keep your information secure.',
     inactivityWarning_minute_plural:
       'If you do not do anything on this page, you will be signed out in {{count}} minutes and will need to sign back in. We do this to keep your information secure.',
     inactivityWarning_second:
