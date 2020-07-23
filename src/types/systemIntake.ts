@@ -52,7 +52,7 @@ export type SystemIntakeForm = {
   needsEaSupport: boolean | null;
   hasContract: string;
   grtReviewEmailBody: string;
-  decidedAt?: DateTime;
+  decidedAt: DateTime | null;
   businessCaseId?: string | null;
 };
 
