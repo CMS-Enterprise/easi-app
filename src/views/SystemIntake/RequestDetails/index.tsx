@@ -24,7 +24,7 @@ import PageNumber from 'components/PageNumber';
 type RequestDetailsProps = {
   formikRef: any;
   systemIntake: SystemIntakeForm;
-  dispatchSave: any;
+  dispatchSave: () => void;
 };
 
 const RequestDetails = ({
