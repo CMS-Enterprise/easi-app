@@ -300,8 +300,10 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 		s.Run(fmt.Sprintf("%s for completed count", tt.name), func() {
 			intake := testhelpers.NewSystemIntake()
 			settableClock.Set(tt.createdAt)
-			intake.SubmittedAt = &tt.submittedAt
 			_, err := s.store.CreateSystemIntake(&intake)
+			s.NoError(err)
+			intake.SubmittedAt = &tt.submittedAt
+			_, err = s.store.UpdateSystemIntake(&intake)
 			s.NoError(err)
 
 			metrics, err := s.store.FetchSystemIntakeMetrics(startDate, endDate)
@@ -347,9 +349,11 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 		s.Run(tt.name, func() {
 			intake := testhelpers.NewSystemIntake()
 			settableClock.Set(tt.submittedAt)
-			intake.SubmittedAt = &tt.submittedAt
 			intake.ExistingFunding = null.BoolFrom(tt.funded)
 			_, err := s.store.CreateSystemIntake(&intake)
+			s.NoError(err)
+			intake.SubmittedAt = &tt.submittedAt
+			_, err = s.store.UpdateSystemIntake(&intake)
 			s.NoError(err)
 
 			metrics, err := s.store.FetchSystemIntakeMetrics(startDate, endDate)
