@@ -1,5 +1,5 @@
 const home = {
-  title: 'Welcome to EASi',
+  title: 'Welcome to EASiiii',
   subtitle:
     'You can use EASi to go through the set of steps needed to get a Lifecycle ID from the Governance Review Board (GRB).',
   easiInfo:
