@@ -81,7 +81,7 @@ describe('The Goveranance Task List', () => {
       );
 
       component
-        .find('.governance-task-list__remaining-steps-btn')
+        .find('button[data-testid="remaining-steps-btn"]')
         .simulate('click');
       setImmediate(() => {
         component.update();
@@ -139,7 +139,7 @@ describe('The Goveranance Task List', () => {
 
         const id = 'GovernanceTaskList-SecondaryList';
         component
-          .find('.governance-task-list__remaining-steps-btn')
+          .find('button[data-testid="remaining-steps-btn"]')
           .simulate('click');
         setImmediate(() => {
           component.update();
@@ -163,25 +163,25 @@ describe('The Goveranance Task List', () => {
         );
 
         expect(
-          component.find('.governance-task-list__remaining-steps-btn').text()
+          component.find('button[data-testid="remaining-steps-btn"]').text()
         ).toEqual('Show remaining steps');
         expect(
           component
-            .find('.governance-task-list__remaining-steps-btn')
+            .find('button[data-testid="remaining-steps-btn"]')
             .prop('aria-expanded')
         ).toEqual(false);
         component
-          .find('.governance-task-list__remaining-steps-btn')
+          .find('button[data-testid="remaining-steps-btn"]')
           .simulate('click');
 
         setImmediate(() => {
           component.update();
           expect(
-            component.find('.governance-task-list__remaining-steps-btn').text()
+            component.find('button[data-testid="remaining-steps-btn"]').text()
           ).toEqual('Hide remaining steps');
           expect(
             component
-              .find('.governance-task-list__remaining-steps-btn')
+              .find('button[data-testid="remaining-steps-btn"]')
               .prop('aria-expanded')
           ).toEqual(true);
           done();
