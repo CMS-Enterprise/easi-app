@@ -12,6 +12,46 @@ import {
 import businessCaseReducer from './businessCaseReducer';
 
 describe('The business case reducer', () => {
+  const mockApiBusinessCase = {
+    id: 'c8e9fe76-e9bc-4a0c-b5c3-29b7bfa856d7',
+    euaUserId: 'ABCD',
+    systemIntake: 'a84f7cc3-75e1-4686-aaac-68af95455ae8',
+    status: 'DRAFT',
+    projectName: '',
+    requester: '',
+    requesterPhoneNumber: '',
+    businessOwner: '',
+    businessNeed: '',
+    cmsBenefit: '',
+    priorityAlignment: '',
+    successIndicators: '',
+    asIsTitle: '',
+    asIsSummary: '',
+    asIsPros: '',
+    asIsCons: '',
+    asIsCostSavings: '',
+    preferredTitle: '',
+    preferredSummary: '',
+    preferredAcquisitionApproach: '',
+    preferredPros: '',
+    preferredCons: '',
+    preferredCostSavings: '',
+    alternativeATitle: '',
+    alternativeASummary: '',
+    alternativeAAcquisitionApproach: '',
+    alternativeAPros: '',
+    alternativeACons: '',
+    alternativeACostSavings: '',
+    alternativeBTitle: null,
+    alternativeBSummary: null,
+    alternativeBAcquisitionApproach: null,
+    alternativeBPros: null,
+    alternativeBCons: null,
+    alternativeBCostSavings: null,
+    lifecycleCostLines: [],
+    createdAt: '2020-05-22T23:42:18.626594-07:00',
+    updatedAt: '2020-05-22T23:42:18.626594-07:00'
+  };
   it('returns the initial state', () => {
     expect(businessCaseReducer(undefined, {})).toEqual({
       form: businessCaseInitialData,
@@ -278,13 +318,17 @@ describe('The business case reducer', () => {
     });
 
     it('handles submitBusinessCase.SUCCESS', () => {
+      const mockResponse = {
+        ...mockApiBusinessCase,
+        status: 'SUBMITTED'
+      };
       const mockSuccessAction = {
         type: submitBusinessCase.SUCCESS,
-        payload: undefined
+        payload: mockResponse
       };
 
       expect(businessCaseReducer(initialState, mockSuccessAction)).toEqual({
-        form: businessCaseInitialData,
+        form: prepareBusinessCaseForApp(mockResponse),
         isLoading: null,
         isSaving: false,
         isSubmitting: true,
