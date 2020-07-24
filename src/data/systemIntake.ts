@@ -39,7 +39,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   businessSolution: '',
   currentStage: '',
   needsEaSupport: null,
-  hasContract: ''
+  hasContract: '',
+  businessCaseId: null
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -134,6 +135,7 @@ export const prepareSystemIntakeForApp = (
       systemIntake.eaSupportRequest === null
         ? null
         : systemIntake.eaSupportRequest,
-    hasContract: systemIntake.existingContract || ''
+    hasContract: systemIntake.existingContract || '',
+    businessCaseId: systemIntake.businessCaseId || null
   };
 };
