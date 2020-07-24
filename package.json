@@ -89,9 +89,6 @@
       "last 1 safari version"
     ]
   },
-  "engines": {
-    "node": ">=12.16.1 < 13.0"
-  },
   "devDependencies": {
     "@cypress/instrument-cra": "^1.1.0",
     "@cypress/webpack-preprocessor": "^5.4.1",
