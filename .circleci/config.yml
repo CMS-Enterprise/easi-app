@@ -5,9 +5,9 @@ references:
   circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
   postgres: &postgres postgres:11.6
   db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}
-  dev_ecs_manager_rev: 16
-  impl_ecs_manager_rev: 4
-  prod_ecs_manager_rev: 4
+  dev_ecs_manager_rev: &dev_ecs_manager_rev 16
+  impl_ecs_manager_rev: &impl_ecs_manager_Rev  4
+  prod_ecs_manager_rev: &prod_ecs_manager_Rev  4
 jobs:
   restart_impl_ecs_app_service:
     docker:
@@ -241,7 +241,7 @@ jobs:
           name: Run migrations
           command: |
             ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "dev-ecs-manager" &dev_ecs_manager_rev "easi-app-db-migrate"
+            ./scripts/db_lambda_invoke "dev-ecs-manager" *dev_ecs_manager_rev "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
