@@ -41,12 +41,8 @@ func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 			process_status,
 			ea_support_request,
 			existing_contract,
-		    grt_review_email_body,
-			requester_email_address,
 			created_at,
-			updated_at,
-		    submitted_at,
-			decided_at
+			updated_at
 		) 
 		VALUES (
 			:id,
@@ -70,12 +66,8 @@ func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 			:process_status,
 			:ea_support_request,
 			:existing_contract,
-		    :grt_review_email_body,
-			:requester_email_address,
 		    :created_at,
-		    :updated_at,
-			:submitted_at,
-			:decided_at
+		    :updated_at
 		)`
 	_, err := s.DB.NamedExec(
 		createIntakeSQL,
