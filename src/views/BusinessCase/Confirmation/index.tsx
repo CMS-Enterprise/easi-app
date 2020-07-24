@@ -9,15 +9,15 @@ const Confirmation = () => {
     <div className="margin-bottom-7">
       <div className="grid-container">
         <h1 className="font-heading-xl margin-top-4">
-          {t('businessCase:confirmation.heading')}
+          {t('businessCase:submission.confirmation.heading')}
         </h1>
         <h2 className="margin-bottom-8 text-normal">
-          {t('businessCase:confirmation.subheading', {
+          {t('businessCase:submission.confirmation.subheading', {
             referenceId: businessCaseId
           })}
         </h2>
         <p className="margin-y-8">
-          <Trans i18nKey="businessCase:confirmation.improveEasi">
+          <Trans i18nKey="businessCase:submission.confirmation.improveEasi">
             helpUsImproveEasi
             <a
               href="https://www.surveymonkey.com/r/JNYSMZP"
@@ -32,7 +32,7 @@ const Confirmation = () => {
         <div>
           <Link to="/">
             <i className="fa fa-angle-left margin-x-05" aria-hidden />
-            {t('businessCase:confirmation.homeCta')}
+            {t('businessCase:submission.confirmation.homeCta')}
           </Link>
         </div>
       </div>
