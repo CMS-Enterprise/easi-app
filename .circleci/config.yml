@@ -233,12 +233,12 @@ jobs:
       - run:
           name: Nuke the database
           command: |
-            ./scripts/db_lambda_invoke "easi-app-db-clean"
+            ./scripts/db_lambda_invoke "easi-app-db-clean-tmp" "2" "easi-app-db-clean"
       - run:
           name: Run migrations
           command: |
             ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "easi-app-db-migrate"
+            ./scripts/db_lambda_invoke "dev-ecs-manager" "16" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
@@ -279,7 +279,7 @@ jobs:
           name: Run migrations
           command: |
             ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "easi-app-db-migrate"
+            ./scripts/db_lambda_invoke "impl-ecs-manager" "4" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
@@ -320,7 +320,7 @@ jobs:
           name: Run migrations
           command: |
             ./scripts/deploy_service "easi-app-db-migrate" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "easi-app-db-migrate"
+            ./scripts/db_lambda_invoke "prod-ecs-manager" "4" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
