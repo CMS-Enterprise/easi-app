@@ -4,7 +4,7 @@ import configureMockStore from 'redux-mock-store';
 import { createMemoryHistory, createLocation } from 'history';
 import { Provider } from 'react-redux';
 import { match } from 'react-router-dom';
-import { GRTSystemIntakeReview, SystemIDRouterProps } from './index';
+import { GrtSystemIntakeReview, SystemIDRouterProps } from './index';
 
 describe('The GRT Review view', () => {
   it('renders without crashing', () => {
@@ -30,7 +30,7 @@ describe('The GRT Review view', () => {
 
     shallow(
       <Provider store={store}>
-        <GRTSystemIntakeReview
+        <GrtSystemIntakeReview
           match={mockMatch}
           history={mockHistory}
           location={mockLocation}
