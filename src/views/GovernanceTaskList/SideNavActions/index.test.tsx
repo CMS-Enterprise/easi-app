@@ -50,7 +50,7 @@ describe('The TaskListSideNavActions', () => {
             .find(Link)
             .dive()
             .text()
-        ).toEqual('Overview for adding a system');
+        ).toEqual('Overview for adding a system (opens in a new tab)');
       });
 
       it('goes to governence overview', () => {
