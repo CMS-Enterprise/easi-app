@@ -18,7 +18,7 @@ import Alert from 'components/shared/Alert';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
 
-export const GRTSystemIntakeReview = () => {
+export const GrtSystemIntakeReview = () => {
   const { systemId } = useParams();
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -205,4 +205,4 @@ export const GRTSystemIntakeReview = () => {
   );
 };
 
-export default GRTSystemIntakeReview;
+export default GrtSystemIntakeReview;
