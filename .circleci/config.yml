@@ -360,6 +360,7 @@ workflows:
                 - master
       - deploy_dev:
           requires:
+            - integration_tests
             - hold_dev
       - deploy_impl:
           filters:
