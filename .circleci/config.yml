@@ -354,8 +354,6 @@ workflows:
             - build_tag_push
       - hold_dev:
           type: approval
-          requires:
-            - integration_tests
           filters:
             branches:
               ignore:
