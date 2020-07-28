@@ -1,12 +1,12 @@
 import React from 'react';
 import { Field, FormikProps } from 'formik';
+import { Button } from '@trussworks/react-uswds';
 import Label from 'components/shared/Label';
 import HelpText from 'components/shared/HelpText';
 import TextField from 'components/shared/TextField';
 import TextAreaField from 'components/shared/TextAreaField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import Button from 'components/shared/Button';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { defaultProposedSolution } from 'data/businessCase';
 import {

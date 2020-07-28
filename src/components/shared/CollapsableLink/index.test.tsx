@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+import { Button } from '@trussworks/react-uswds';
 import CollapsableLink from './index';
 
 describe('The Collapsable Link componnet', () => {
@@ -19,7 +20,7 @@ describe('The Collapsable Link componnet', () => {
     );
 
     expect(component.find('[data-testid="children"]').exists()).toEqual(false);
-    expect(component.find('button').prop('aria-expanded')).toEqual(false);
+    expect(component.find(Button).prop('aria-expanded')).toEqual(false);
   });
 
   it('renders children content when expanded', () => {
@@ -29,9 +30,9 @@ describe('The Collapsable Link componnet', () => {
       </CollapsableLink>
     );
 
-    component.find('button').simulate('click');
+    component.find(Button).simulate('click');
 
     expect(component.find('[data-testid="children"]').exists()).toEqual(true);
-    expect(component.find('button').prop('aria-expanded')).toEqual(true);
+    expect(component.find(Button).prop('aria-expanded')).toEqual(true);
   });
 });
