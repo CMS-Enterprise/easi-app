@@ -1,6 +1,6 @@
 import React from 'react';
+import { Button } from '@trussworks/react-uswds';
 import './index.scss';
-import Button from 'components/shared/Button';
 
 type ActionBannerProps = {
   title: string;

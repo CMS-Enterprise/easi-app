@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import classnames from 'classnames';
+import { Button } from '@trussworks/react-uswds';
 import './index.scss';
 
 type CollapsableLinkProps = {
@@ -20,16 +21,16 @@ const CollapsableLink = ({ id, children, label }: CollapsableLinkProps) => {
   );
   return (
     <div>
-      <button
+      <Button
         type="button"
-        className="easi-collapsable-link__button"
         onClick={() => setOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-controls={id}
+        unstyled
       >
         <span className={arrowClassNames} />
         {label}
-      </button>
+      </Button>
       {isOpen && (
         <div id={id} className="easi-collapsable-link__content">
           {children}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { Link } from 'react-router-dom';
-import Button from 'components/shared/Button';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import TaskListItem from './TaskListItem';
 
@@ -59,7 +59,7 @@ describe('The TaskListItem', () => {
 
     expect(
       component
-        .find(Button)
+        .find(UswdsLink)
         .dive()
         .text()
     ).toEqual('Start');
@@ -77,7 +77,7 @@ describe('The TaskListItem', () => {
 
     expect(
       component
-        .find(Button)
+        .find(UswdsLink)
         .dive()
         .text()
     ).toEqual('Continue');
