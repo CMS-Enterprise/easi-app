@@ -1,12 +1,12 @@
 import React from 'react';
 import classnames from 'classnames';
 import { Field, FieldArray } from 'formik';
+import { Button } from '@trussworks/react-uswds';
 import Label from 'components/shared/Label';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import TextField from 'components/shared/TextField';
 import { RadioGroup, RadioField } from 'components/shared/RadioField';
-import Button from 'components/shared/Button';
 import {
   DescriptionList,
   DescriptionTerm,
