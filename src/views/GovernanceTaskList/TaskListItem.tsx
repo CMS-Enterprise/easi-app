@@ -40,6 +40,11 @@ const TaskListItem = ({
               Completed
             </span>
           )}
+          {status === 'NOT_NEEDED' && (
+            <span className="governance-task-list__task-tag governance-task-list__task-tag--na">
+              Not needed
+            </span>
+          )}
         </div>
         <p className="governance-task-list__task-description line-height-body-4 margin-bottom-4">
           {description}

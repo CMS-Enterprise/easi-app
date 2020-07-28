@@ -86,7 +86,10 @@ function businessCaseReducer(
     case submitBusinessCase.SUCCESS:
       return {
         ...state,
-        form: businessCaseInitialData
+        form: {
+          ...state.form,
+          ...prepareBusinessCaseForApp(action.payload)
+        }
       };
     case submitBusinessCase.FAILURE:
       return {
