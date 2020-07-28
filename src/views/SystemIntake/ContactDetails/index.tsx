@@ -12,7 +12,7 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import flattenErrors from 'utils/flattenErrors';
 import { SystemIntakeForm } from 'types/systemIntake';
-import Button from 'components/shared/Button';
+import { Button } from '@trussworks/react-uswds';
 import { useHistory } from 'react-router-dom';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';

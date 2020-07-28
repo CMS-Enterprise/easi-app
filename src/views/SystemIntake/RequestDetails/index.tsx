@@ -14,7 +14,7 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import CharacterCounter from 'components/CharacterCounter';
 import flattenErrors from 'utils/flattenErrors';
-import Button from 'components/shared/Button';
+import { Button } from '@trussworks/react-uswds';
 import { useHistory } from 'react-router-dom';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';

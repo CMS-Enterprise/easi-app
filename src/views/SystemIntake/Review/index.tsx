@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Formik, FormikProps, Form } from 'formik';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
-import Button from 'components/shared/Button';
+import { Button } from '@trussworks/react-uswds';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from 'reducers/rootReducer';
