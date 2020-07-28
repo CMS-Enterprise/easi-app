@@ -9,11 +9,13 @@ desire to sufficiently test EASI-CEDAR integration while providing fast feedback
 in CI. Okta tests are out of scope.
 
 In this context, "integration test" refers to either: (1) a Cypress test
-(frontend/backend integration test); or (2) the backend [integration
+(frontend/backend integration/end-to-end test); or (2) the backend [integration
 tests](https://github.com/CMSgov/easi-app/tree/master/pkg/integration) that run
 when invoking `easi test`. "CI environment" means the network in which our
 CircleCI containers run. "Deployed environment" means one of our AWS
-environments (development, implementation, production).
+environments (development, implementation, production). The term "mock" is being
+used loosely here, and is meant to be inclusive of other testing terms such as
+stub, fake, spy, etc.
 
 ## Considered Alternatives
 
@@ -24,11 +26,11 @@ environments (development, implementation, production).
 
 * Chosen Alternative: Mock the API calls, as this will speed up the tests and
   reduce operational and networking overhead from the CI environment.  Since a
-successful deployment to the development AWS environment is required before
-merging code, we can use the [health
-check](https://github.com/CMSgov/easi-app/blob/master/pkg/server/health_check.go)
-that runs on server start in a deployed environment as a test to prevent
-breaking changes to the CEDAR API client from being merged.
+  successful deployment to the development AWS environment is required before
+  merging code, we can use the [health
+  check](https://github.com/CMSgov/easi-app/blob/master/pkg/server/health_check.go)
+  that runs on server start in a deployed environment as a test to prevent
+  breaking changes to the CEDAR API client from being merged.
 
 ## Pros and Cons of the Alternatives <!-- optional -->
 
@@ -37,17 +39,17 @@ breaking changes to the CEDAR API client from being merged.
 * `+` Tests the code as it will run in deployed environments
 * `+` Eliminates need to write additional mock code
 * `-` Tests take longer to run
-* `-` Sending and storing the same test data to the third-party API in each
-  test run would likely require a solution to clear out or reset the test data
-before each test run
+* `-` Sending and storing the same test data to the third-party API in each test
+  run would likely require a solution to clear out or reset the test data before
+  each test run
 * `-` Adds traffic load on the third-party API
 * `-` Adds networking dependencies to the CI test environment
 
 ### Mock the API calls
 
 * `+` Health check tests that run on server startup in deployed environments
-  already test that the deployed environment is successfully integrated
-with the external API
+  already test that the deployed environment is successfully integrated with the
+  external API
 * `+` Tests run faster
 * `+` Tests would run in a clean environment on each run; no extra steps needed
   to delete previous test data
