@@ -71,11 +71,11 @@ function* updateBusinessCase(action: Action<any>) {
 function* completeBusinessCase(action: Action<any>) {
   try {
     yield put(submitBusinessCase.request());
-    yield call(putBusinessCaseRequest, {
+    const response = yield call(putBusinessCaseRequest, {
       ...action.payload,
       status: 'SUBMITTED'
     });
-    yield put(submitBusinessCase.success());
+    yield put(submitBusinessCase.success(response.data));
   } catch (error) {
     yield put(submitBusinessCase.failure(error.message));
   } finally {
