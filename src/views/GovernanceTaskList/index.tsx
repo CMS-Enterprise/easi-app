@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
+import { Button } from '@trussworks/react-uswds';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import BreadcrumbNav from 'components/BreadcrumbNav';
@@ -102,15 +102,18 @@ const GovernanceTaskList = () => {
               Please get in touch with the governance admin team [email] if you
               have any questions about your process.
             </Alert>
-            <button
+
+            <Button
               type="button"
-              className="governance-task-list__remaining-steps-btn"
+              className="margin-y-2"
               onClick={() => setDisplayRemainingSteps(prev => !prev)}
               aria-expanded={displayRemainingSteps}
               aria-controls="GovernanceTaskList-SecondaryList"
+              data-testid="remaining-steps-btn"
+              unstyled
             >
               {displayRemainingSteps ? 'Hide' : 'Show'} remaining steps
-            </button>
+            </Button>
 
             {displayRemainingSteps && (
               <ol

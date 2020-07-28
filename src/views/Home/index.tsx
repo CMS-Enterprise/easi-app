@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 import { Trans, useTranslation } from 'react-i18next';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
+
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import ActionBanner from 'components/shared/ActionBanner';
@@ -11,7 +13,6 @@ import { fetchBusinessCases, fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import { BusinessCaseModel } from 'types/businessCase';
 import './index.scss';
-import Button from 'components/shared/Button';
 
 type HomeProps = RouteComponentProps;
 
@@ -154,9 +155,23 @@ const Home = ({ history }: HomeProps) => {
             </p>
           </div>
           {authState.isAuthenticated ? (
-            <Button to="/governance-overview">{t('home:startNow')}</Button>
+            <UswdsLink
+              className="usa-button"
+              asCustom={Link}
+              variant="unstyled"
+              to="/governance-overview"
+            >
+              {t('home:startNow')}
+            </UswdsLink>
           ) : (
-            <Button to="/login">{t('home:signIn')}</Button>
+            <UswdsLink
+              className="usa-button"
+              asCustom={Link}
+              variant="unstyled"
+              to="/login"
+            >
+              {t('home:signIn')}
+            </UswdsLink>
           )}
         </div>
       </MainContent>
