@@ -12,7 +12,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import Button from 'components/shared/Button';
+import { Button } from '@trussworks/react-uswds';
 import { SystemIntakeForm, SystemIntakeStatus } from 'types/systemIntake';
 import Alert from 'components/shared/Alert';
 import { DateTime } from 'luxon';
