@@ -118,6 +118,7 @@ func NewUpdateSystemIntake(
 	sendSubmitEmail func(requester string, intakeID uuid.UUID) error,
 	fetchRequesterEmail func(logger *zap.Logger, euaID string) (string, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
+	canDecideIntake bool,
 ) func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		existingIntake, fetchErr := fetch(intake.ID)
@@ -192,7 +193,7 @@ func NewUpdateSystemIntake(
 		} else if existingIntake.Status == models.SystemIntakeStatusSUBMITTED &&
 			(intake.Status == models.SystemIntakeStatusAPPROVED ||
 				intake.Status == models.SystemIntakeStatusACCEPTED ||
-				intake.Status == models.SystemIntakeStatusCLOSED) {
+				intake.Status == models.SystemIntakeStatusCLOSED) && canDecideIntake {
 
 			recipientAddress, err := fetchRequesterEmail(config.logger, existingIntake.EUAUserID)
 			if err != nil {

@@ -116,6 +116,7 @@ func (s *Server) routes(
 			emailClient.SendSystemIntakeSubmissionEmail,
 			cedarLdapClient.FetchUserEmailAddress,
 			emailClient.SendSystemIntakeReviewEmail,
+			!s.environment.Prod(),
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
