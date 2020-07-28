@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
-import { Button } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import { AppState } from 'reducers/rootReducer';
