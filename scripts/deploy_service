@@ -19,7 +19,7 @@ _payload() {
   local image_tag="${1:-}"
   local cluster_id="${3:-$APP_ENV-easi-app}"
 
-  secrets_regex="^/$APP_ENV/easi-app/\\S+$"
+  secrets_regex="^/$APP_ENV/easi-app/\\\S+$"
 
   result=$(jq --null-input '.command = "deploy" | .body.cluster_id = "'"$cluster_id"'" | .body.service_ids = ["'"$service_id"'"] | .body.secrets = ["'"$secrets_regex"'"]') || return
 
