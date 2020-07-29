@@ -42,8 +42,8 @@ export const SystemIntake = () => {
     if (current && current.dirty && !isSaving) {
       if (systemId === 'new') {
         dispatch(postSystemIntake(current.values));
-      } else if (current.values.id) {
-        dispatch(saveSystemIntake(current.values));
+      } else {
+        dispatch(saveSystemIntake({ ...current.values, id: systemId }));
       }
       current.resetForm({ values: current.values, errors: current.errors });
     }
