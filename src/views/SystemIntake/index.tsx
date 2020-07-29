@@ -143,6 +143,7 @@ export const SystemIntake = () => {
             validateOnChange={false}
             validateOnMount={false}
             innerRef={formikRef}
+            enableReinitialize
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
               const { values, errors, setErrors, validateForm } = formikProps;
