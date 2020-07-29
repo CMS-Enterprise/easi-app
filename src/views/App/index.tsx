@@ -7,7 +7,7 @@ import Login from 'views/Login';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import BusinessCase from 'views/BusinessCase';
-import GRTSystemIntakeReview from 'views/GRTSystemIntakeReview';
+import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import SystemIntake from 'views/SystemIntake';
 import Sandbox from 'views/Sandbox';
@@ -62,7 +62,7 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   path="/system/:systemId/grt-review"
                   render={({ component }: any) => component()}
-                  component={GRTSystemIntakeReview}
+                  component={GrtSystemIntakeReview}
                 />
                 <Redirect
                   exact
