@@ -29,10 +29,6 @@
   height: 300px;
   max-width: 830px;
   width: 100%;
-
-  @media (min-width: $desktop) {
-    width: 830px;
-  }
 }
 
 // The default font for this project should be Public Sans

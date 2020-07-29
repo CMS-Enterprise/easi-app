@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Form, Formik, FormikProps } from 'formik';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
+import { Button } from '@trussworks/react-uswds';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
-import Button from 'components/shared/Button';
 import PageNumber from 'components/PageNumber';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -143,6 +143,7 @@ export const SystemIntake = () => {
             validateOnChange={false}
             validateOnMount={false}
             innerRef={formikRef}
+            enableReinitialize
           >
             {(formikProps: FormikProps<SystemIntakeForm>) => {
               const { values, errors, setErrors, validateForm } = formikProps;

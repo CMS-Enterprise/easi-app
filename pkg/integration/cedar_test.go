@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/cmsgov/easi-app/pkg/cedar"
+	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -26,14 +26,14 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 	s.NoError(err)
 	rr := httptest.NewRecorder()
 
-	cedarClient := cedar.NewTranslatedClient(
+	cedarEasiClient := cedareasi.NewTranslatedClient(
 		s.config.GetString("CEDAR_API_URL"),
-		s.config.GetString("CEDAR_API_KEY"),
+		s.config.GetString("CEDAR_EASI_API_KEY"),
 	)
 
 	handlers.NewSystemsListHandler(
 		s.base,
-		cedarClient.FetchSystems,
+		cedarEasiClient.FetchSystems,
 	).Handle()(rr, req)
 
 	s.Equal(http.StatusOK, rr.Code)

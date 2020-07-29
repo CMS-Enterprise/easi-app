@@ -6,7 +6,8 @@ import {
   fetchSystemIntake,
   postSystemIntake,
   saveSystemIntake,
-  submitSystemIntake
+  submitSystemIntake,
+  reviewSystemIntake
 } from 'types/routines';
 import { Action } from 'redux-actions';
 import { updateLastActiveAt } from 'reducers/authReducer';
@@ -81,9 +82,22 @@ function* completeSystemIntake(action: Action<any>) {
   }
 }
 
+function* submitSystemIntakeReview(action: Action<any>) {
+  try {
+    yield put(reviewSystemIntake.request());
+    const response = yield call(putSystemIntakeRequest, action.payload);
+    yield put(reviewSystemIntake.success(response.data));
+  } catch (error) {
+    yield put(reviewSystemIntake.failure(error.message));
+  } finally {
+    yield put(reviewSystemIntake.fulfill());
+  }
+}
+
 export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
   yield takeLatest(submitSystemIntake.TRIGGER, completeSystemIntake);
   yield takeLatest(postSystemIntake.TRIGGER, createSystemIntake);
+  yield takeLatest(reviewSystemIntake.TRIGGER, submitSystemIntakeReview);
 }

@@ -5,7 +5,12 @@ export type GovernanceCollaborationTeam = {
   name: string;
 };
 
-type SystemIntakeStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
+export type SystemIntakeStatus =
+  | 'DRAFT'
+  | 'SUBMITTED'
+  | 'ACCEPTED'
+  | 'APPROVED'
+  | 'CLOSED';
 
 /**
  * Type for SystemIntakeForm
@@ -19,6 +24,7 @@ export type SystemIntakeForm = {
   requester: {
     name: string;
     component: string;
+    email: string;
   };
   businessOwner: {
     name: string;
@@ -45,6 +51,8 @@ export type SystemIntakeForm = {
   currentStage: string;
   needsEaSupport: boolean | null;
   hasContract: string;
+  grtReviewEmailBody: string;
+  decidedAt: DateTime | null;
   businessCaseId?: string | null;
 };
 

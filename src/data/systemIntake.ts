@@ -2,6 +2,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
+import { DateTime } from 'luxon';
 import cmsGovernanceTeams from '../constants/enums/cmsGovernanceTeams';
 
 // On the frontend, the field is now "requestName", but the backend API
@@ -13,7 +14,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   status: 'DRAFT',
   requester: {
     name: '',
-    component: ''
+    component: '',
+    email: ''
   },
   businessOwner: {
     name: '',
@@ -40,6 +42,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   currentStage: '',
   needsEaSupport: null,
   hasContract: '',
+  grtReviewEmailBody: '',
+  decidedAt: null,
   businessCaseId: null
 };
 
@@ -76,7 +80,8 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     solution: systemIntake.businessSolution,
     processStatus: systemIntake.currentStage,
     eaSupportRequest: systemIntake.needsEaSupport,
-    existingContract: systemIntake.hasContract
+    existingContract: systemIntake.hasContract,
+    grtReviewEmailBody: systemIntake.grtReviewEmailBody
   };
 };
 
@@ -103,7 +108,8 @@ export const prepareSystemIntakeForApp = (
     status: systemIntake.status || 'DRAFT',
     requester: {
       name: systemIntake.requester || '',
-      component: systemIntake.component || ''
+      component: systemIntake.component || '',
+      email: systemIntake.requesterEmailAddress || ''
     },
     businessOwner: {
       name: systemIntake.businessOwner || '',
@@ -136,6 +142,10 @@ export const prepareSystemIntakeForApp = (
         ? null
         : systemIntake.eaSupportRequest,
     hasContract: systemIntake.existingContract || '',
+    grtReviewEmailBody: systemIntake.grtReviewEmailBody || '',
+    decidedAt: systemIntake.decidedAt
+      ? DateTime.fromISO(systemIntake.decidedAt)
+      : null,
     businessCaseId: systemIntake.businessCaseId || null
   };
 };
