@@ -4,6 +4,7 @@ import Label from 'components/shared/Label';
 import HelpText from 'components/shared/HelpText';
 import TextField from 'components/shared/TextField';
 import TextAreaField from 'components/shared/TextAreaField';
+import { RadioField } from 'components/shared/RadioField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
@@ -131,6 +132,45 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             characterCount={
               2000 - values.preferredSolution.acquisitionApproach.length
             }
+          />
+        </FieldGroup>
+
+        <FieldGroup
+          scrollElement="preferredSolution.hosting.type"
+          error={!!flatErrors['preferredSolution.hosting.type']}
+        >
+          <fieldset className="usa-fieldset margin-top-4">
+            <legend className="usa-label margin-bottom-1">
+              Do you need to host your solution?
+            </legend>
+          </fieldset>
+          <FieldErrorMsg>
+            {flatErrors['preferredSolution.hosting.type']}
+          </FieldErrorMsg>
+
+          <Field
+            as={RadioField}
+            checked={values.preferredSolution.hosting.type === 'cloud'}
+            id="BusinessCase-HostingCloud"
+            name="preferredSolution.hosting.type"
+            label="Yes, in the cloud (e.g. AWS, Azure, etc.)"
+            value="cloud"
+          />
+          <Field
+            as={RadioField}
+            checked={values.preferredSolution.hosting.type === 'dataCenter'}
+            id="BusinessCase-dataCenter"
+            name="preferredSolution.hosting.type"
+            label="Yes, at a data center"
+            value="dataCenter"
+          />
+          <Field
+            as={RadioField}
+            checked={values.preferredSolution.hosting.type === 'none'}
+            id="BusinessCase-dataCenter"
+            name="preferredSolution.hosting.type"
+            label="No, hosting is not needed"
+            value="none"
           />
         </FieldGroup>
 
