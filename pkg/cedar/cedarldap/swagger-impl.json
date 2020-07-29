@@ -1,0 +1,219 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Application to lookup Person info and Authenticate\n",
+    "version" : "1.0",
+    "title" : "LDAP"
+  },
+  "host" : "webmethods-apigw.cedarimpl.cms.gov",
+  "basePath" : "/gateway/LDAP/1.0",
+  "schemes" : [ "http" ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "security" : [ {
+    "apiKey" : [ ]
+  } ],
+  "paths" : {
+    "/authenticate" : {
+      "get" : {
+        "description" : "Retturn success or failure based on if the passed credentials are valid",
+        "operationId" : "authenticate",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "principal",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "credentials",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AuthenticateResponse"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied"
+          }
+        }
+      }
+    },
+    "/person" : {
+      "get" : {
+        "description" : "Retrieve person information for a given EUA ID",
+        "operationId" : "person",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "first_name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "last_name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "telephone",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "count_limit",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "return_attributes",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/PersonList"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          }
+        }
+      }
+    },
+    "/person/{id}" : {
+      "get" : {
+        "operationId" : "personId",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Person"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/Response"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "apiKey" : {
+      "type" : "apiKey",
+      "name" : "x-Gateway-APIKey",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "Response" : {
+      "type" : "object",
+      "required" : [ "message", "result" ],
+      "properties" : {
+        "message" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "result" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AuthenticateResponse" : {
+      "type" : "object",
+      "required" : [ "Result" ],
+      "properties" : {
+        "Result" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PersonList" : {
+      "type" : "object",
+      "properties" : {
+        "Person_List" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Person"
+          }
+        }
+      }
+    },
+    "Person" : {
+      "type" : "object",
+      "properties" : {
+        "commonName" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "givenName" : {
+          "type" : "string"
+        },
+        "surName" : {
+          "type" : "string"
+        },
+        "telephoneNumber" : {
+          "type" : "string"
+        },
+        "userName" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

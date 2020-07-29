@@ -8,7 +8,8 @@ import {
   storeSystemIntake,
   submitSystemIntake,
   clearSystemIntake,
-  postSystemIntake
+  postSystemIntake,
+  reviewSystemIntake
 } from 'types/routines';
 import { Action } from 'redux-actions';
 
@@ -35,6 +36,11 @@ function systemIntakeReducer(
       return {
         ...state,
         systemIntake: prepareSystemIntakeForApp(action.payload)
+      };
+    case fetchSystemIntake.FAILURE:
+      return {
+        ...state,
+        error: action.payload
       };
     case fetchSystemIntake.FULFILL:
       return {
@@ -98,6 +104,30 @@ function systemIntakeReducer(
         error: action.payload
       };
     case submitSystemIntake.FULFILL:
+      return {
+        ...state,
+        isSubmitting: false
+      };
+    case reviewSystemIntake.REQUEST:
+      return {
+        ...state,
+        isSubmitting: true,
+        error: null
+      };
+    case reviewSystemIntake.SUCCESS:
+      return {
+        ...state,
+        systemIntake: {
+          ...state.systemIntake,
+          ...prepareSystemIntakeForApp(action.payload)
+        }
+      };
+    case reviewSystemIntake.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case reviewSystemIntake.FULFILL:
       return {
         ...state,
         isSubmitting: false
