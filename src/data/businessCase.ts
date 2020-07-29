@@ -20,7 +20,13 @@ export const defaultProposedSolution = {
   pros: '',
   cons: '',
   estimatedLifecycleCost: defaultEstimatedLifecycle,
-  costSavings: ''
+  costSavings: '',
+  hosting: {
+    type: '',
+    location: '',
+    cloudServiceType: ''
+  },
+  hasUserInterface: ''
 };
 
 export const businessCaseInitialData: BusinessCaseModel = {
@@ -136,7 +142,13 @@ export const prepareBusinessCaseForApp = (
       pros: businessCase.preferredPros,
       cons: businessCase.preferredCons,
       costSavings: businessCase.preferredCostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.Preferred
+      estimatedLifecycleCost: lifecycleCostLines.Preferred,
+      hosting: {
+        type: businessCase.preferredHostingType,
+        location: businessCase.preferredHostingLocation,
+        cloudServiceType: businessCase.preferredCloudServiceType
+      },
+      hasUserInterface: businessCase.preferredHasUserInterface
     },
     alternativeA: {
       title: businessCase.alternativeATitle,
@@ -145,11 +157,21 @@ export const prepareBusinessCaseForApp = (
       pros: businessCase.alternativeAPros,
       cons: businessCase.alternativeACons,
       costSavings: businessCase.alternativeACostSavings,
-      estimatedLifecycleCost: lifecycleCostLines.A
+      estimatedLifecycleCost: lifecycleCostLines.A,
+      hosting: {
+        type: businessCase.alternativeAHostingType,
+        location: businessCase.alternativeAHostingLocation,
+        cloudServiceType: businessCase.alternativeACloudServiceType
+      },
+      hasUserInterface: businessCase.alternativeAHasUserInterface
     },
     ...(businessCase.alternativeBTitle ||
     businessCase.alternativeBSummary ||
     businessCase.alternativeBAcquisitionApproach ||
+    businessCase.alternativeBHostingType ||
+    businessCase.alternativeBHostingLocation ||
+    businessCase.alternativeBCloudServiceType ||
+    businessCase.alternativeBHasUserInterface ||
     businessCase.alternativeBPros ||
     businessCase.alternativeBCons ||
     businessCase.alternativeBCostSavings ||
@@ -163,7 +185,13 @@ export const prepareBusinessCaseForApp = (
             pros: businessCase.alternativeBPros || '',
             cons: businessCase.alternativeBCons || '',
             costSavings: businessCase.alternativeBCostSavings || '',
-            estimatedLifecycleCost: lifecycleCostLines.B
+            estimatedLifecycleCost: lifecycleCostLines.B,
+            hosting: {
+              type: businessCase.alternativeBHostingType,
+              location: businessCase.alternativeBHostingLocation,
+              cloudServiceType: businessCase.alternativeBCloudServiceType
+            },
+            hasUserInterface: businessCase.alternativeBHasUserInterface
           }
         }
       : {})
