@@ -354,14 +354,13 @@ workflows:
             - build_tag_push
       - hold_dev:
           type: approval
-          requires:
-            - integration_tests
           filters:
             branches:
               ignore:
                 - master
       - deploy_dev:
           requires:
+            - integration_tests
             - hold_dev
       - deploy_impl:
           filters:
