@@ -49,7 +49,10 @@ type SystemIntake struct {
 	CreatedAt               *time.Time         `json:"createdAt" db:"created_at"`
 	UpdatedAt               *time.Time         `json:"updatedAt" db:"updated_at"`
 	SubmittedAt             *time.Time         `json:"submittedAt" db:"submitted_at"`
+	DecidedAt               *time.Time         `json:"decidedAt" db:"decided_at"`
 	AlfabetID               null.String        `json:"alfabetID" db:"alfabet_id"`
+	GrtReviewEmailBody      null.String        `json:"grtReviewEmailBody" db:"grt_review_email_body"`
+	RequesterEmailAddress   null.String        `json:"requesterEmailAddress" db:"requester_email_address"`
 	BusinessCaseID          *uuid.UUID         `json:"businessCase"`
 }
 

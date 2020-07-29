@@ -7,7 +7,8 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appses"
-	"github.com/cmsgov/easi-app/pkg/cedar"
+	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
+	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
@@ -35,13 +36,19 @@ func (s *Server) routes(
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up CEDAR client
-	cedarClient := cedar.NewTranslatedClient(
+	cedarEasiClient := cedareasi.NewTranslatedClient(
 		s.Config.GetString("CEDAR_API_URL"),
-		s.Config.GetString("CEDAR_API_KEY"),
+		s.Config.GetString("CEDAR_EASI_API_KEY"),
+	)
+
+	cedarLdapClient := cedarldap.NewTranslatedClient(
+		s.Config.GetString("CEDAR_API_URL"),
+		s.Config.GetString("CEDAR_LDAP_API_KEY"),
 	)
 
 	if s.environment.Deployed() {
-		s.CheckCEDARClientConnection(cedarClient)
+		s.CheckCEDAREasiClientConnection(cedarEasiClient)
+		s.CheckCEDARLdapClientConnection(cedarLdapClient)
 	}
 
 	// set up Email Client
@@ -90,7 +97,7 @@ func (s *Server) routes(
 	// endpoint for system list
 	systemHandler := handlers.NewSystemsListHandler(
 		base,
-		cedarClient.FetchSystems,
+		cedarEasiClient.FetchSystems,
 	)
 	api.Handle("/systems", systemHandler.Handle())
 
@@ -104,9 +111,12 @@ func (s *Server) routes(
 			serviceConfig,
 			store.UpdateSystemIntake,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeSaveSystemIntake(s.logger),
-			cedarClient.ValidateAndSubmitSystemIntake,
+			services.NewAuthorizeUpdateSystemIntake(s.logger),
+			cedarEasiClient.ValidateAndSubmitSystemIntake,
 			emailClient.SendSystemIntakeSubmissionEmail,
+			cedarLdapClient.FetchUserEmailAddress,
+			emailClient.SendSystemIntakeReviewEmail,
+			!s.environment.Prod(),
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
