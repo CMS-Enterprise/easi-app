@@ -42,7 +42,6 @@ const Review = ({ formikRef, systemIntake }: ReviewProps) => {
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
-      enableReinitialize
     >
       {(formikProps: FormikProps<SystemIntakeForm>) => {
         const { values } = formikProps;

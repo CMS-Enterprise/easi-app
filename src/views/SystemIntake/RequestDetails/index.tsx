@@ -42,7 +42,6 @@ const RequestDetails = ({
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
-      enableReinitialize
     >
       {(formikProps: FormikProps<SystemIntakeForm>) => {
         const { values, errors, setFieldValue } = formikProps;
