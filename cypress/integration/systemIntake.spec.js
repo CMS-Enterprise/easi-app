@@ -11,6 +11,7 @@ describe('The System Intake Form', () => {
   beforeEach(() => {
     cy.server()
     cy.route('POST', '/api/v1/system_intake').as('postSystemIntake');
+    cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
     cy.restoreLocalStorage();
     cy.visit('/system/new');
   });
@@ -85,6 +86,8 @@ describe('The System Intake Form', () => {
     cy.get('#IntakeForm-FundingNumber')
       .type('111111')
       .should('have.value', '111111');
+
+    cy.wait('@putSystemIntake');
 
     cy.contains('button', 'Next').click();
 
