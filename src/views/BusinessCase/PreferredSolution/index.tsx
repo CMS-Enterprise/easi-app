@@ -18,6 +18,7 @@ type PreferredSolutionProps = {
 };
 const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
   const { values, errors } = formikProps;
+  console.log(values);
   const flatErrors = flattenErrors(errors);
 
   return (
@@ -143,35 +144,140 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             <legend className="usa-label margin-bottom-1">
               Do you need to host your solution?
             </legend>
-          </fieldset>
-          <FieldErrorMsg>
-            {flatErrors['preferredSolution.hosting.type']}
-          </FieldErrorMsg>
+            <FieldErrorMsg>
+              {flatErrors['preferredSolution.hosting.type']}
+            </FieldErrorMsg>
 
-          <Field
-            as={RadioField}
-            checked={values.preferredSolution.hosting.type === 'cloud'}
-            id="BusinessCase-HostingCloud"
-            name="preferredSolution.hosting.type"
-            label="Yes, in the cloud (e.g. AWS, Azure, etc.)"
-            value="cloud"
-          />
-          <Field
-            as={RadioField}
-            checked={values.preferredSolution.hosting.type === 'dataCenter'}
-            id="BusinessCase-dataCenter"
-            name="preferredSolution.hosting.type"
-            label="Yes, at a data center"
-            value="dataCenter"
-          />
-          <Field
-            as={RadioField}
-            checked={values.preferredSolution.hosting.type === 'none'}
-            id="BusinessCase-dataCenter"
-            name="preferredSolution.hosting.type"
-            label="No, hosting is not needed"
-            value="none"
-          />
+            <Field
+              as={RadioField}
+              checked={values.preferredSolution.hosting.type === 'cloud'}
+              id="BusinessCase-PreferredSolutionHostingCloud"
+              name="preferredSolution.hosting.type"
+              label="Yes, in the cloud (AWS, Azure, etc.)"
+              value="cloud"
+            />
+            {values.preferredSolution.hosting.type === 'cloud' && (
+              <>
+                <FieldGroup
+                  scrollElement="preferredSolution.hosting.location"
+                  error={!!flatErrors['preferredSolution.hosting.location']}
+                >
+                  <Label htmlFor="BusinessCase-PreferredSolutiohnCloudLocation">
+                    Where are you planning to host?
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors['preferredSolution.hosting.location']}
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextField}
+                    error={!!flatErrors['preferredSolution.hosting.location']}
+                    id="BusinessCase-PreferredSolutionCloudLocation"
+                    maxLength={50}
+                    name="preferredSolution.hosting.location"
+                  />
+                </FieldGroup>
+                <FieldGroup
+                  scrollElement="preferredSolution.hosting.cloudServiceType"
+                  error={
+                    !!flatErrors['preferredSolution.hosting.cloudServiceType']
+                  }
+                >
+                  <Label htmlFor="BusinessCase-PreferredSolutionCloudServiceType">
+                    What, if any, type of cloud service are you planning to use
+                    for this solution (Iaas, PaaS, SaaS, etc.)?
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors['preferredSolution.hosting.cloudServiceType']}
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextField}
+                    error={
+                      !!flatErrors['preferredSolution.hosting.cloudServiceType']
+                    }
+                    id="BusinessCase-PreferredSolutionCloudServiceType"
+                    maxLength={50}
+                    name="preferredSolution.hosting.cloudServiceType"
+                  />
+                </FieldGroup>
+              </>
+            )}
+            <Field
+              as={RadioField}
+              checked={values.preferredSolution.hosting.type === 'dataCenter'}
+              id="BusinessCase-PreferredSolutionHostingDataCenter"
+              name="preferredSolution.hosting.type"
+              label="Yes, at a data center"
+              value="dataCenter"
+            />
+            {values.preferredSolution.hosting.type === 'dataCenter' && (
+              <FieldGroup
+                scrollElement="preferredSolution.hosting.location"
+                error={!!flatErrors['preferredSolution.hosting.location']}
+              >
+                <Label htmlFor="BusinessCase-PreferredSolutionDataCenterLocation">
+                  Which data center do you plan to host it at?
+                </Label>
+                <FieldErrorMsg>
+                  {flatErrors['preferredSolution.hosting.location']}
+                </FieldErrorMsg>
+                <Field
+                  as={TextField}
+                  error={!!flatErrors['preferredSolution.hosting.location']}
+                  id="BusinessCase-PreferredSolutionDataCenterLocation"
+                  maxLength={50}
+                  name="preferredSolution.hosting.location"
+                />
+              </FieldGroup>
+            )}
+            <Field
+              as={RadioField}
+              checked={values.preferredSolution.hosting.type === 'none'}
+              id="BusinessCase-PreferredSolutionHostingNone"
+              name="preferredSolution.hosting.type"
+              label="No, hosting is not needed"
+              value="none"
+            />
+          </fieldset>
+        </FieldGroup>
+
+        <FieldGroup
+          scrollElement="preferredSolution.hasUserInterface"
+          error={!!flatErrors['preferredSolution.hasUserInterface']}
+        >
+          <fieldset className="usa-fieldset margin-top-4">
+            <legend className="usa-label margin-bottom-1">
+              Will your solution have a User Interface?
+            </legend>
+            <FieldErrorMsg>
+              {flatErrors['preferredSolution.hasUserInterface']}
+            </FieldErrorMsg>
+
+            <Field
+              as={RadioField}
+              checked={values.preferredSolution.hasUserInterface === 'yes'}
+              id="BusinessCase-HasUserInferfaceYes"
+              name="preferredSolution.hasUserInterface"
+              label="Yes"
+              value="yes"
+            />
+            <Field
+              as={RadioField}
+              checked={values.preferredSolution.hasUserInterface === 'no'}
+              id="BusinessCase-HasUserInferfaceNo"
+              name="preferredSolution.hasUserInterface"
+              label="No"
+              value="no"
+            />
+
+            <Field
+              as={RadioField}
+              checked={values.preferredSolution.hasUserInterface === 'notSure'}
+              id="BusinessCase-HasUserInferfaceNotSure"
+              name="preferredSolution.hasUserInterface"
+              label="I'm not sure"
+              value="notSUre"
+            />
+          </fieldset>
         </FieldGroup>
 
         <FieldGroup
