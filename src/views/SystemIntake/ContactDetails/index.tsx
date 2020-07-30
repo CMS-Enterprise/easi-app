@@ -55,6 +55,7 @@ const ContactDetails = ({
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
+      enableReinitialize
     >
       {(formikProps: FormikProps<SystemIntakeForm>) => {
         const { values, setFieldValue, errors } = formikProps;

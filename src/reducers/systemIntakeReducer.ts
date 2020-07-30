@@ -73,24 +73,24 @@ function systemIntakeReducer(
         ...state,
         isSaving: false
       };
-    case saveSystemIntake.REQUEST:
-      return {
-        ...state,
-        isSaving: true
-      };
-    case saveSystemIntake.SUCCESS:
-      return {
-        ...state,
-        systemIntake: {
-          ...state.systemIntake,
-          ...prepareSystemIntakeForApp(action.payload)
-        }
-      };
-    case saveSystemIntake.FAILURE:
-      return {
-        ...state,
-        error: action.payload
-      };
+    // case saveSystemIntake.REQUEST:
+    //   return {
+    //     ...state,
+    //     isSaving: true
+    //   };
+    // case saveSystemIntake.SUCCESS:
+    //   return {
+    //     ...state,
+    //     systemIntake: {
+    //       ...state.systemIntake,
+    //       ...prepareSystemIntakeForApp(action.payload)
+    //     }
+    //   };
+    // case saveSystemIntake.FAILURE:
+    //   return {
+    //     ...state,
+    //     error: action.payload
+    //   };
     case saveSystemIntake.FULFILL:
       return {
         ...state,
