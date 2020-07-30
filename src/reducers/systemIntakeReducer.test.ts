@@ -269,7 +269,7 @@ describe('The system intake reducer', () => {
     });
   });
 
-  describe('saveSystemIntake', () => {
+  describe.skip('saveSystemIntake', () => {
     it('handles saveSystemIntake.REQUEST', () => {
       const mockRequestAction = {
         type: saveSystemIntake.REQUEST,
