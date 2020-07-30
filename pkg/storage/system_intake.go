@@ -174,9 +174,7 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 			if fetchErr != nil {
 				return models.SystemIntakes{}, fetchErr
 			}
-			if bizCaseID != &uuid.Nil {
-				intakes[k].BusinessCaseID = bizCaseID
-			}
+			intakes[k].BusinessCaseID = bizCaseID
 		}
 	}
 	return intakes, nil
