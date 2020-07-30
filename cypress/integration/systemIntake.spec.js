@@ -11,6 +11,7 @@ describe('The System Intake Form', () => {
   beforeEach(() => {
     cy.server()
     cy.route('POST', '/api/v1/system_intake').as('postSystemIntake');
+    cy.route('PUT', '/api/v1/system_intake/**').as('putSystemIntake');
     cy.restoreLocalStorage();
     cy.visit('/system/new');
   });
@@ -71,7 +72,7 @@ describe('The System Intake Form', () => {
         .should('have.value', `${team.value} Collaborator`);
     });
 
-    cy.wait('@postSystemIntake');
+    cy.wait('@putSystemIntake');
 
     cy.contains('button', 'Next').click();
 
@@ -95,9 +96,9 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('EASi Testing');
 
-    // cy.contains('.easi-review-row dt', 'Requester Component')
-    //   .siblings('dd')
-    //   .contains('Center for Medicare');
+    cy.contains('.easi-review-row dt', 'Requester Component')
+      .siblings('dd')
+      .contains('Center for Medicare');
 
     // cy.contains('.easi-review-row dt', "CMS Business/Product Owner's Name")
     //   .siblings('dd')
