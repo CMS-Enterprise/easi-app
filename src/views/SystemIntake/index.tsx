@@ -62,7 +62,8 @@ export const SystemIntake = () => {
           storeSystemIntake({
             requester: {
               name: user.name,
-              component: ''
+              component: '',
+              email: user.email
             }
           })
         );

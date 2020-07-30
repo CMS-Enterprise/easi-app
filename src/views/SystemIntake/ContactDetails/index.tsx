@@ -48,11 +48,7 @@ const ContactDetails = ({
 
   return (
     <Formik
-      initialValues={{
-        ...systemIntake,
-        id: '',
-        requester: { ...systemIntake.requester, email: '' }
-      }}
+      initialValues={systemIntake}
       onSubmit={dispatchSave}
       validationSchema={SystemIntakeValidationSchema.contactDetails}
       validateOnBlur={false}

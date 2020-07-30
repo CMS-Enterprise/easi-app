@@ -9,9 +9,9 @@ describe('The System Intake Form', () => {
   });
 
   beforeEach(() => {
-    cy.server()
+    cy.server();
     cy.route('POST', '/api/v1/system_intake').as('postSystemIntake');
-    cy.route('PUT', '/api/v1/system_intake/**').as('putSystemIntake');
+    cy.route('PUT', '/api/v1/system_intake').as('putSystemIntake');
     cy.restoreLocalStorage();
     cy.visit('/system/new');
   });
@@ -19,6 +19,10 @@ describe('The System Intake Form', () => {
   it('fills out minimum required fields (smoke test)', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
+
+    // WAIT for autosave POST to kick in
+    cy.wait(2000);
+    cy.wait('@postSystemIntake');
 
     cy.get('#IntakeForm-HasIssoNo')
       .check({ force: true })
@@ -29,7 +33,7 @@ describe('The System Intake Form', () => {
       .should('be.checked');
 
     // Allow autosave
-    cy.wait('@postSystemIntake');
+    cy.wait('@putSystemIntake');
 
     cy.contains('button', 'Next').click();
 
@@ -49,6 +53,9 @@ describe('The System Intake Form', () => {
   it('displays and fills conditional fields', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
+    // WAIT for autosave POST to kick in
+    cy.wait(2000);
+    cy.wait('@postSystemIntake');
 
     cy.get('#IntakeForm-HasIssoYes')
       .check({ force: true })
@@ -190,6 +197,9 @@ describe('The System Intake Form', () => {
 
   it('displays request details error messages', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
+    // WAIT for autosave POST to kick in
+    cy.wait(2000);
+    cy.wait('@postSystemIntake');
 
     cy.get('#IntakeForm-HasIssoNo')
       .check({ force: true })
@@ -199,7 +209,7 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.wait('@postSystemIntake');
+    cy.wait('@putSystemIntake');
 
     cy.contains('button', 'Next').click();
 
