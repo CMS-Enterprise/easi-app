@@ -229,6 +229,15 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Len(fetched, 2)
+		fetchedIntakeWithBizCase := func(fetched models.SystemIntakes) models.SystemIntake {
+			for _, intake := range fetched {
+				if intake.ID == id {
+					return intake
+				}
+			}
+			return models.SystemIntake{}
+		}
+		s.Equal(&bizCase.ID, fetchedIntakeWithBizCase(fetched).BusinessCaseID)
 	})
 }
 

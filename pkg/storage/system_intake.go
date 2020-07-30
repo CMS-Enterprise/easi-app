@@ -168,14 +168,14 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 		)
 		return models.SystemIntakes{}, err
 	}
-	for _, intake := range intakes {
+	for k, intake := range intakes {
 		if intake.Status != models.SystemIntakeStatusDRAFT {
 			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(intake.ID)
 			if fetchErr != nil {
 				return models.SystemIntakes{}, fetchErr
 			}
 			if bizCaseID != &uuid.Nil {
-				intake.BusinessCaseID = bizCaseID
+				intakes[k].BusinessCaseID = bizCaseID
 			}
 		}
 	}

@@ -146,6 +146,6 @@ export const prepareSystemIntakeForApp = (
     decidedAt: systemIntake.decidedAt
       ? DateTime.fromISO(systemIntake.decidedAt)
       : null,
-    businessCaseId: systemIntake.businessCaseId || null
+    businessCaseId: systemIntake.businessCase || null
   };
 };
