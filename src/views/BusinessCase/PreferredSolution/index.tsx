@@ -159,6 +159,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             {values.preferredSolution.hosting.type === 'cloud' && (
               <>
                 <FieldGroup
+                  className="margin-top-neg-2 margin-bottom-1 margin-left-4"
                   scrollElement="preferredSolution.hosting.location"
                   error={!!flatErrors['preferredSolution.hosting.location']}
                 >
@@ -177,6 +178,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
                   />
                 </FieldGroup>
                 <FieldGroup
+                  className="margin-top-neg-2 margin-bottom-1 margin-left-4"
                   scrollElement="preferredSolution.hosting.cloudServiceType"
                   error={
                     !!flatErrors['preferredSolution.hosting.cloudServiceType']
@@ -211,6 +213,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             />
             {values.preferredSolution.hosting.type === 'dataCenter' && (
               <FieldGroup
+                className="margin-top-neg-2 margin-bottom-1 margin-left-4"
                 scrollElement="preferredSolution.hosting.location"
                 error={!!flatErrors['preferredSolution.hosting.location']}
               >
@@ -275,7 +278,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
               id="BusinessCase-HasUserInferfaceNotSure"
               name="preferredSolution.hasUserInterface"
               label="I'm not sure"
-              value="notSUre"
+              value="notSure"
             />
           </fieldset>
         </FieldGroup>
