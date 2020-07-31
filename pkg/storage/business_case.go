@@ -54,7 +54,7 @@ func (s *Store) FetchBusinessCaseByID(id uuid.UUID) (*models.BusinessCase, error
 
 // FetchBusinessCaseIDByIntakeID queries the DB for a business case matching the given intake ID
 func (s *Store) FetchBusinessCaseIDByIntakeID(intakeID uuid.UUID) (*uuid.UUID, error) {
-	businessCaseID := uuid.UUID{}
+	var businessCaseID *uuid.UUID = nil
 	const fetchBusinessCaseIDSQL = `
 		SELECT
 			id
@@ -66,16 +66,16 @@ func (s *Store) FetchBusinessCaseIDByIntakeID(intakeID uuid.UUID) (*uuid.UUID, e
 	err := s.DB.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
 	if err != nil {
 		if err.Error() == "sql: no rows in result set" {
-			return &businessCaseID, nil
+			return businessCaseID, nil
 		}
 
 		s.logger.Error(
 			fmt.Sprintf("Failed to fetch business case id for intake %s", err),
 			zap.String("System Intake", intakeID.String()),
 		)
-		return &businessCaseID, err
+		return businessCaseID, err
 	}
-	return &businessCaseID, nil
+	return businessCaseID, nil
 }
 
 // FetchBusinessCasesByEuaID queries the DB for a list of business case matching the given EUA ID
