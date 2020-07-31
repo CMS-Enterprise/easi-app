@@ -290,6 +290,6 @@ func (s StoreTestSuite) TestFetchBusinessCaseByIntakeID() {
 	s.Run("doesn't error when no records are found", func() {
 		fetchedBizCaseID, err := s.store.FetchBusinessCaseIDByIntakeID(uuid.New())
 		s.NoError(err)
-		s.Equal(&uuid.Nil, fetchedBizCaseID)
+		s.Equal((*uuid.UUID)(nil), fetchedBizCaseID)
 	})
 }
