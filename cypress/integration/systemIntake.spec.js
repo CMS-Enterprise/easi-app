@@ -95,6 +95,9 @@ describe('The System Intake Form', () => {
       .should('have.value', '111111');
 
     cy.wait('@putSystemIntake');
+    
+    // WAIT for autosave PUT to kick in
+    cy.wait(2000);
 
     cy.contains('button', 'Next').click();
 
