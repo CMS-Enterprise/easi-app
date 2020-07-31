@@ -79,7 +79,7 @@ describe('The System Intake Form', () => {
         .should('have.value', `${team.value} Collaborator`);
     });
 
-    cy.wait('@postSystemIntake');
+    cy.wait('@putSystemIntake');
 
     cy.contains('button', 'Next').click();
 
