@@ -16,7 +16,7 @@ describe('The System Intake Form', () => {
     cy.visit('/system/new');
   });
 
-  it('fills out minimum required fields (smoke test)', () => {
+  it.skip('fills out minimum required fields (smoke test)', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
@@ -50,7 +50,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Check your answers before sending');
   });
 
-  it('displays and fills conditional fields', () => {
+  it.skip('displays and fills conditional fields', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
     // WAIT for autosave POST to kick in
@@ -194,13 +194,13 @@ describe('The System Intake Form', () => {
       .contains('Yes, 111111');
   });
 
-  it('displays contact details error messages', () => {
+  it.skip('displays contact details error messages', () => {
     cy.contains('button', 'Next').click();
 
     cy.get('[data-testid="system-intake-errors"]');
   });
 
-  it('displays request details error messages', () => {
+  it.skip('displays request details error messages', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
     // WAIT for autosave POST to kick in
     cy.wait(2000);
