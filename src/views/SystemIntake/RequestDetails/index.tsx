@@ -1,6 +1,5 @@
 import React from 'react';
 import { Formik, Field, FormikProps, Form } from 'formik';
-import { SystemIntakeForm } from 'types/systemIntake';
 import { RadioField } from 'components/shared/RadioField';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import Label from 'components/shared/Label';
@@ -20,6 +19,20 @@ import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import PageNumber from 'components/PageNumber';
+import { SystemIntakeForm } from 'types/systemIntake';
+
+type RequestDetailsForm = {
+  requestName: string;
+  fundingSource: {
+    isFunded: boolean | null;
+    fundingNumber: string;
+  };
+  businessNeed: string;
+  businessSolution: string;
+  currentStage: string;
+  needsEaSupport: boolean | null;
+  hasContract: string;
+};
 
 type RequestDetailsProps = {
   formikRef: any;
@@ -33,9 +46,18 @@ const RequestDetails = ({
   dispatchSave
 }: RequestDetailsProps) => {
   const history = useHistory();
+  const initialValues: RequestDetailsForm = {
+    requestName: systemIntake.requestName,
+    fundingSource: systemIntake.fundingSource,
+    businessNeed: systemIntake.businessNeed,
+    businessSolution: systemIntake.businessSolution,
+    currentStage: systemIntake.currentStage,
+    needsEaSupport: systemIntake.needsEaSupport,
+    hasContract: systemIntake.hasContract
+  };
   return (
     <Formik
-      initialValues={systemIntake}
+      initialValues={initialValues}
       onSubmit={dispatchSave}
       validationSchema={SystemIntakeValidationSchema.requestDetails}
       validateOnBlur={false}
@@ -43,7 +65,7 @@ const RequestDetails = ({
       validateOnMount={false}
       innerRef={formikRef}
     >
-      {(formikProps: FormikProps<SystemIntakeForm>) => {
+      {(formikProps: FormikProps<RequestDetailsForm>) => {
         const { values, errors, setFieldValue } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
