@@ -11,7 +11,10 @@ import Label from 'components/shared/Label';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import flattenErrors from 'utils/flattenErrors';
-import { SystemIntakeForm } from 'types/systemIntake';
+import {
+  SystemIntakeForm,
+  GovernanceCollaborationTeam
+} from 'types/systemIntake';
 import { Button } from '@trussworks/react-uswds';
 import { useHistory } from 'react-router-dom';
 import AutoSave from 'components/shared/AutoSave';
@@ -19,6 +22,31 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 import PageNumber from 'components/PageNumber';
 import GovernanceTeamOptions from './GovernanceTeamOptions';
+
+export type ContactDetailsForm = {
+  requestName: string;
+  requester: {
+    name: string;
+    component: string;
+    email: string;
+  };
+  businessOwner: {
+    name: string;
+    component: string;
+  };
+  productManager: {
+    name: string;
+    component: string;
+  };
+  isso: {
+    isPresent: boolean | null;
+    name: string;
+  };
+  governanceTeams: {
+    isPresent: boolean | null;
+    teams: GovernanceCollaborationTeam[];
+  };
+};
 
 type ContactDetailsProps = {
   formikRef: any;
@@ -34,6 +62,15 @@ const ContactDetails = ({
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
 
+  const initialValues: ContactDetailsForm = {
+    requestName: systemIntake.requestName,
+    requester: systemIntake.requester,
+    businessOwner: systemIntake.businessOwner,
+    productManager: systemIntake.productManager,
+    isso: systemIntake.isso,
+    governanceTeams: systemIntake.governanceTeams
+  };
+
   const cmsDivionsAndOfficesOptions = (fieldId: string) =>
     cmsDivisionsAndOffices.map((office: any) => (
       <Field
@@ -48,7 +85,7 @@ const ContactDetails = ({
 
   return (
     <Formik
-      initialValues={systemIntake}
+      initialValues={initialValues}
       onSubmit={dispatchSave}
       validationSchema={SystemIntakeValidationSchema.contactDetails}
       validateOnBlur={false}
@@ -56,7 +93,7 @@ const ContactDetails = ({
       validateOnMount={false}
       innerRef={formikRef}
     >
-      {(formikProps: FormikProps<SystemIntakeForm>) => {
+      {(formikProps: FormikProps<ContactDetailsForm>) => {
         const { values, setFieldValue, errors } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
