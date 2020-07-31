@@ -1,3 +1,4 @@
+import taskList from 'i18n/en-US/taskList';
 import auth from './auth';
 import general from './general';
 import header from './header';
@@ -13,7 +14,8 @@ const enUS = {
   home,
   systemIntake,
   businessCase,
-  grtReview
+  grtReview,
+  taskList
 };
 
 export default enUS;
