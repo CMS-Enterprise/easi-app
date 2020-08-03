@@ -161,7 +161,29 @@ So this is customization that is up to you.
 
 ### Setup: direnv
 
-TODO: Need direnv setup
+Run `brew install direnv` to install.
+Add the following line at the very end of your `~/.bashrc`
+file: `eval "$(direnv hook bash)"`, and then restart your shell.
+(Here are [instructions for other shells](https://direnv.net/docs/hook.html).)
+To allow direnv in the project directory `direnv allow .`.
+
+Once this is setup, you should see `direnv` loading/unloading
+environment variables as you enter or depart from the
+project directory:
+
+```console
+$ cd easi-app
+direnv: loading ~/Project/easi-app/.envrc
+direnv: export +EXAMPLE_ENV +EXAMPLE_ENV_ADDITIONAL +EXAMPLE_ENV_MORE ... ~PATH
+$ cd ..
+direnv: unloading
+$
+```
+
+For additional documentation of this tool, see also:
+
+* The [official site](https://direnv.net/)
+* Truss' [Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/tree/master/developing/direnv)
 
 ### Setup: Yarn (temporary)
 
