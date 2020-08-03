@@ -174,11 +174,16 @@ project directory:
 ```console
 $ cd easi-app
 direnv: loading ~/Project/easi-app/.envrc
-direnv: export +API_PORT +APP_ENV +AWS_REGION +AWS_SES_SOURCE +CEDAR_API_URL +CEDAR_DIRECTORY +CEDAR_EASI_DIRECTORY +CEDAR_EASI_SWAGGER_FILE +CEDAR_ENV +CEDAR_LDAP_DIRECTORY +CEDAR_LDAP_SWAGGER_FILE +CLIENT_ADDRESS +CLIENT_DOMAIN +CLIENT_HOSTNAME +CLIENT_PORT +CLIENT_PROTOCOL +EMAIL_TEMPLATE_DIR +GRT_EMAIL +OKTA_CLIENT_ID +OKTA_CLIENT_ID_DEV +OKTA_DOMAIN +OKTA_ISSUER +OKTA_REDIRECT_URI +OKTA_SERVER_ID +OKTA_SERVER_ID_DEV +PGDATABASE +PGHOST +PGPASS +PGPORT +PGSSLMODE +PGUSER +REACT_APP_API_ADDRESS +REACT_APP_APP_ENV +REACT_APP_OKTA_CLIENT_ID +REACT_APP_OKTA_DOMAIN +REACT_APP_OKTA_ISSUER +REACT_APP_OKTA_REDIRECT_URI +REACT_APP_OKTA_SERVER_ID ~PATH
+direnv: export +EXAMPLE_ENV +EXAMPLE_ENV_ADDITIONAL +EXAMPLE_ENV_MORE ... ~PATH
 $ cd ..
 direnv: unloading
 $
 ```
+
+For additional documentation of this tool, see also:
+
+* The [official site](https://direnv.net/)
+* Truss' [Engineering Playbook](https://github.com/trussworks/Engineering-Playbook/tree/master/developing/direnv)
 
 ### Setup: Yarn (temporary)
 
