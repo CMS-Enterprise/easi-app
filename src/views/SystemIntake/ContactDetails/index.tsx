@@ -469,7 +469,7 @@ const ContactDetails = ({
             <AutoSave
               values={values}
               onSave={dispatchSave}
-              debounceDelay={1000}
+              debounceDelay={1000 * 30}
             />
             <PageNumber currentPage={1} totalPages={2} />
           </>
