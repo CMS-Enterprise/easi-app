@@ -20,10 +20,6 @@ describe('The System Intake Form', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
-    // WAIT for autosave POST to kick in
-    cy.wait(2000);
-    cy.wait('@postSystemIntake');
-
     cy.get('#IntakeForm-HasIssoNo')
       .check({ force: true })
       .should('be.checked');
@@ -32,10 +28,9 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    // Allow autosave
-    cy.wait('@putSystemIntake');
-
     cy.contains('button', 'Next').click();
+
+    cy.wait('@postSystemIntake');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -46,6 +41,8 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
+    cy.wait('@putSystemIntake');
+
     // Review
     cy.contains('h1', 'Check your answers before sending');
   });
@@ -53,9 +50,6 @@ describe('The System Intake Form', () => {
   it('displays and fills conditional fields', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
-    // WAIT for autosave POST to kick in
-    cy.wait(2000);
-    cy.wait('@postSystemIntake');
 
     cy.get('#IntakeForm-HasIssoYes')
       .check({ force: true })
@@ -79,9 +73,9 @@ describe('The System Intake Form', () => {
         .should('have.value', `${team.value} Collaborator`);
     });
 
-    cy.wait('@putSystemIntake');
-
     cy.contains('button', 'Next').click();
+
+    cy.wait('@postSystemIntake');
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
@@ -94,12 +88,9 @@ describe('The System Intake Form', () => {
       .type('111111')
       .should('have.value', '111111');
 
-    cy.wait('@putSystemIntake');
-
-    // WAIT for autosave PUT to kick in
-    cy.wait(2000);
-
     cy.contains('button', 'Next').click();
+
+    cy.wait('@putSystemIntake');
 
     // Review
     cy.contains('h1', 'Check your answers before sending');
@@ -202,9 +193,6 @@ describe('The System Intake Form', () => {
 
   it('displays request details error messages', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
-    // WAIT for autosave POST to kick in
-    cy.wait(2000);
-    cy.wait('@postSystemIntake');
 
     cy.get('#IntakeForm-HasIssoNo')
       .check({ force: true })
@@ -213,8 +201,6 @@ describe('The System Intake Form', () => {
     cy.get('#IntakeForm-NoGovernanceTeam')
       .check({ force: true })
       .should('be.checked');
-
-    cy.wait('@putSystemIntake');
 
     cy.contains('button', 'Next').click();
 
