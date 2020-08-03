@@ -449,7 +449,7 @@ const RequestDetails = ({
             <AutoSave
               values={values}
               onSave={dispatchSave}
-              debounceDelay={1000}
+              debounceDelay={1000 * 30}
             />
             <PageNumber currentPage={2} totalPages={2} />
           </>
