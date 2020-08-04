@@ -146,7 +146,7 @@ export const prepareBusinessCaseForApp = (
       hosting: {
         type: businessCase.preferredHostingType,
         location: businessCase.preferredHostingLocation,
-        cloudServiceType: businessCase.preferredCloudServiceType
+        cloudServiceType: businessCase.preferredHostingCloudServiceType
       },
       hasUserInterface: businessCase.preferredHasUserInterface
     },
@@ -161,7 +161,7 @@ export const prepareBusinessCaseForApp = (
       hosting: {
         type: businessCase.alternativeAHostingType,
         location: businessCase.alternativeAHostingLocation,
-        cloudServiceType: businessCase.alternativeACloudServiceType
+        cloudServiceType: businessCase.alternativeAHostingCloudServiceType
       },
       hasUserInterface: businessCase.alternativeAHasUserInterface
     },
@@ -189,7 +189,7 @@ export const prepareBusinessCaseForApp = (
             hosting: {
               type: businessCase.alternativeBHostingType,
               location: businessCase.alternativeBHostingLocation,
-              cloudServiceType: businessCase.alternativeBCloudServiceType
+              cloudServiceType: businessCase.alternativeBHostingCloudServiceType
             },
             hasUserInterface: businessCase.alternativeBHasUserInterface
           }
@@ -288,6 +288,11 @@ export const prepareBusinessCaseForApi = (
     preferredSummary: businessCase.preferredSolution.summary,
     preferredAcquisitionApproach:
       businessCase.preferredSolution.acquisitionApproach,
+    preferredHostingType: businessCase.preferredSolution.hosting.type,
+    preferredHostingLocation: businessCase.preferredSolution.hosting.location,
+    preferredHostingCloudServiceType:
+      businessCase.preferredSolution.hosting.cloudServiceType,
+    preferredHasUserInterface: businessCase.preferredSolution.hasUserInterface,
     preferredPros: businessCase.preferredSolution.pros,
     preferredCons: businessCase.preferredSolution.cons,
     preferredCostSavings: businessCase.preferredSolution.costSavings,
@@ -295,6 +300,11 @@ export const prepareBusinessCaseForApi = (
     alternativeASummary: businessCase.alternativeA.summary,
     alternativeAAcquisitionApproach:
       businessCase.alternativeA.acquisitionApproach,
+    alternativeAHostingType: businessCase.alternativeA.hosting.type,
+    alternativeAHostingLocation: businessCase.alternativeA.hosting.location,
+    alternativeAHostingCloudServiceType:
+      businessCase.alternativeA.hosting.cloudServiceType,
+    alternativeAHasUserInterface: businessCase.alternativeA.hasUserInterface,
     alternativeAPros: businessCase.alternativeA.pros,
     alternativeACons: businessCase.alternativeA.cons,
     alternativeACostSavings: businessCase.alternativeA.costSavings,
@@ -306,6 +316,18 @@ export const prepareBusinessCaseForApi = (
       : null,
     alternativeBAcquisitionApproach: businessCase.alternativeB
       ? businessCase.alternativeB.acquisitionApproach
+      : null,
+    alternativeBHostingType: businessCase.alternativeB
+      ? businessCase.alternativeB.hosting.type
+      : null,
+    alternativeBHostingLocation: businessCase.alternativeB
+      ? businessCase.alternativeB.hosting.location
+      : null,
+    alternativeBHostingCloudServiceType: businessCase.alternativeB
+      ? businessCase.alternativeB.hosting.cloudServiceType
+      : null,
+    alternativeBHasUserInterface: businessCase.alternativeB
+      ? businessCase.alternativeB.hasUserInterface
       : null,
     alternativeBPros: businessCase.alternativeB
       ? businessCase.alternativeB.pros
