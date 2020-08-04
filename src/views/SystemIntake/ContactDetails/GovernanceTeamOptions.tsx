@@ -6,10 +6,10 @@ import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import CheckboxField from 'components/shared/CheckboxField';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { ContactDetailsForm } from './index';
 
 type GovernanceTeamOptionsProps = {
-  formikProps: FormikProps<SystemIntakeForm>;
+  formikProps: FormikProps<ContactDetailsForm>;
 };
 
 const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
