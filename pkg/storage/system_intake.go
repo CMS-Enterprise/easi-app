@@ -113,6 +113,7 @@ func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 			updated_at = :updated_at,
 			submitted_at = :submitted_at,
 		    decided_at = :decided_at,
+		    archived_at = :archived_at,
 			alfabet_id = :alfabet_id
 		WHERE system_intake.id = :id
 	`
