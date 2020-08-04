@@ -197,6 +197,26 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
 	})
 
+	s.Run("does not fetch archived intake", func() {
+		intake := testhelpers.NewSystemIntake()
+		intake2 := testhelpers.NewSystemIntake()
+		intake2.EUAUserID = intake.EUAUserID
+		intake2.Status = models.SystemIntakeStatusARCHIVED
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		_, err = tx.NamedExec(insertBasicIntakeSQL, &intake2)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		fetched, err := s.store.FetchSystemIntakesByEuaID(intake.EUAUserID)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Len(fetched, 1)
+		s.Equal(intake.EUAUserID, fetched[0].EUAUserID)
+	})
+
 	s.Run("fetches no results with other EUA ID", func() {
 		fetched, err := s.store.FetchSystemIntakesByEuaID(testhelpers.RandomEUAID())
 
@@ -212,6 +232,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake2.EUAUserID = intake.EUAUserID
 		intake.Status = models.SystemIntakeStatusAPPROVED
 		intake2.Status = models.SystemIntakeStatusSUBMITTED
+
 		bizCase := testhelpers.NewBusinessCase()
 		bizCase.SystemIntakeID = id
 
