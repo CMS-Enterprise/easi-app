@@ -43,7 +43,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake', { timeout: 10 * oneSecond });
+    cy.wait('@putSystemIntake', { timeout: 60 * oneSecond });
 
     // Review
     cy.contains('h1', 'Check your answers before sending');
@@ -92,7 +92,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.wait('@putSystemIntake', { timeout: 10 * oneSecond });
+    cy.wait('@putSystemIntake', { timeout: 60 * oneSecond });
 
     // Review
     cy.contains('h1', 'Check your answers before sending');
