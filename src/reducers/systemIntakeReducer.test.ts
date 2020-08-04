@@ -6,6 +6,7 @@ import {
   fetchSystemIntake,
   storeSystemIntake,
   submitSystemIntake,
+  saveSystemIntake,
   clearSystemIntake,
   postSystemIntake
 } from 'types/routines';
@@ -261,6 +262,82 @@ describe('The system intake reducer', () => {
       expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
+        isSaving: false,
+        isSubmitting: false,
+        error: null
+      });
+    });
+  });
+
+  describe('saveSystemIntake', () => {
+    it('handles saveSystemIntake.REQUEST', () => {
+      const mockRequestAction = {
+        type: saveSystemIntake.REQUEST,
+        payload: undefined
+      };
+
+      expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
+        systemIntake: initialSystemIntakeForm,
+        isLoading: null,
+        isSaving: true,
+        isSubmitting: false,
+        error: null
+      });
+    });
+    it('handles saveSystemIntake.SUCCESS', () => {
+      const mockSuccessAction = {
+        type: saveSystemIntake.SUCCESS,
+        payload: mockApiSystemIntake
+      };
+
+      expect(systemIntakeReducer(undefined, mockSuccessAction)).toEqual({
+        systemIntake: prepareSystemIntakeForApp(mockSuccessAction.payload),
+        isLoading: null,
+        isSaving: false,
+        isSubmitting: false,
+        error: null
+      });
+    });
+
+    it('handles saveSystemIntake.FAILURE', () => {
+      const initialState = {
+        systemIntake: initialSystemIntakeForm,
+        isLoading: false,
+        isSaving: true,
+        isSubmitting: false,
+        error: null
+      };
+      const mockFailureAction = {
+        type: saveSystemIntake.FAILURE,
+        payload: 'Error'
+      };
+
+      expect(systemIntakeReducer(initialState, mockFailureAction)).toEqual({
+        systemIntake: initialSystemIntakeForm,
+        isLoading: false,
+        isSaving: true,
+        isSubmitting: false,
+        error: 'Error'
+      });
+    });
+
+    it('handles saveSystemIntake.FULFILL', () => {
+      const initialState = {
+        systemIntake: initialSystemIntakeForm,
+        isLoading: false,
+        isSaving: true,
+        isSubmitting: false,
+        error: null
+      };
+
+      const mockFulfillAction = {
+        type: saveSystemIntake.FULFILL,
+        payload: undefined
+      };
+
+      expect(systemIntakeReducer(initialState, mockFulfillAction)).toEqual({
+        systemIntake: initialSystemIntakeForm,
+        isLoading: false,
         isSaving: false,
         isSubmitting: false,
         error: null
