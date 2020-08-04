@@ -94,7 +94,7 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // cy.wait('@putSystemIntake', { timeout: 60 * oneSecond });
-    cy.wait(2000)
+    cy.wait(10 * 1000)
 
     // Review
     cy.contains('h1', 'Check your answers before sending');
