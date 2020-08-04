@@ -17,7 +17,7 @@ type PreferredSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
 };
 const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
-  const { values, errors } = formikProps;
+  const { values, errors, setFieldValue } = formikProps;
   console.log(values);
   const flatErrors = flattenErrors(errors);
 
@@ -155,6 +155,11 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
               name="preferredSolution.hosting.type"
               label="Yes, in the cloud (AWS, Azure, etc.)"
               value="cloud"
+              onChange={() => {
+                setFieldValue('preferredSolution.hosting.type', 'cloud');
+                setFieldValue('preferredSolution.hosting.location', '');
+                setFieldValue('preferredSolution.hosting.cloudServiceType', '');
+              }}
             />
             {values.preferredSolution.hosting.type === 'cloud' && (
               <>
@@ -210,6 +215,11 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
               name="preferredSolution.hosting.type"
               label="Yes, at a data center"
               value="dataCenter"
+              onChange={() => {
+                setFieldValue('preferredSolution.hosting.type', 'dataCenter');
+                setFieldValue('preferredSolution.hosting.location', '');
+                setFieldValue('preferredSolution.hosting.cloudServiceType', '');
+              }}
             />
             {values.preferredSolution.hosting.type === 'dataCenter' && (
               <FieldGroup
@@ -239,6 +249,11 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
               name="preferredSolution.hosting.type"
               label="No, hosting is not needed"
               value="none"
+              onChange={() => {
+                setFieldValue('preferredSolution.hosting.type', 'none');
+                setFieldValue('preferredSolution.hosting.location', '');
+                setFieldValue('preferredSolution.hosting.cloudServiceType', '');
+              }}
             />
           </fieldset>
         </FieldGroup>
@@ -257,28 +272,28 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
 
             <Field
               as={RadioField}
-              checked={values.preferredSolution.hasUserInterface === 'yes'}
+              checked={values.preferredSolution.hasUserInterface === 'YES'}
               id="BusinessCase-HasUserInferfaceYes"
               name="preferredSolution.hasUserInterface"
               label="Yes"
-              value="yes"
+              value="YES"
             />
             <Field
               as={RadioField}
-              checked={values.preferredSolution.hasUserInterface === 'no'}
+              checked={values.preferredSolution.hasUserInterface === 'NO'}
               id="BusinessCase-HasUserInferfaceNo"
               name="preferredSolution.hasUserInterface"
               label="No"
-              value="no"
+              value="NO"
             />
 
             <Field
               as={RadioField}
-              checked={values.preferredSolution.hasUserInterface === 'notSure'}
+              checked={values.preferredSolution.hasUserInterface === 'NOT_SURE'}
               id="BusinessCase-HasUserInferfaceNotSure"
               name="preferredSolution.hasUserInterface"
               label="I'm not sure"
-              value="notSure"
+              value="NOT_SURE"
             />
           </fieldset>
         </FieldGroup>
