@@ -148,7 +148,7 @@ export const prepareBusinessCaseForApp = (
         location: businessCase.preferredHostingLocation,
         cloudServiceType: businessCase.preferredHostingCloudServiceType
       },
-      hasUserInterface: businessCase.preferredHasUserInterface
+      hasUserInterface: businessCase.preferredHasUI
     },
     alternativeA: {
       title: businessCase.alternativeATitle,
@@ -163,7 +163,7 @@ export const prepareBusinessCaseForApp = (
         location: businessCase.alternativeAHostingLocation,
         cloudServiceType: businessCase.alternativeAHostingCloudServiceType
       },
-      hasUserInterface: businessCase.alternativeAHasUserInterface
+      hasUserInterface: businessCase.alternativeAHasUI
     },
     ...(businessCase.alternativeBTitle ||
     businessCase.alternativeBSummary ||
@@ -191,7 +191,7 @@ export const prepareBusinessCaseForApp = (
               location: businessCase.alternativeBHostingLocation,
               cloudServiceType: businessCase.alternativeBHostingCloudServiceType
             },
-            hasUserInterface: businessCase.alternativeBHasUserInterface
+            hasUserInterface: businessCase.alternativeBhasUI
           }
         }
       : {})
@@ -292,7 +292,7 @@ export const prepareBusinessCaseForApi = (
     preferredHostingLocation: businessCase.preferredSolution.hosting.location,
     preferredHostingCloudServiceType:
       businessCase.preferredSolution.hosting.cloudServiceType,
-    preferredHasUserInterface: businessCase.preferredSolution.hasUserInterface,
+    preferredHasUI: businessCase.preferredSolution.hasUserInterface,
     preferredPros: businessCase.preferredSolution.pros,
     preferredCons: businessCase.preferredSolution.cons,
     preferredCostSavings: businessCase.preferredSolution.costSavings,
@@ -304,7 +304,7 @@ export const prepareBusinessCaseForApi = (
     alternativeAHostingLocation: businessCase.alternativeA.hosting.location,
     alternativeAHostingCloudServiceType:
       businessCase.alternativeA.hosting.cloudServiceType,
-    alternativeAHasUserInterface: businessCase.alternativeA.hasUserInterface,
+    alternativeAHasUI: businessCase.alternativeA.hasUserInterface,
     alternativeAPros: businessCase.alternativeA.pros,
     alternativeACons: businessCase.alternativeA.cons,
     alternativeACostSavings: businessCase.alternativeA.costSavings,
@@ -326,7 +326,7 @@ export const prepareBusinessCaseForApi = (
     alternativeBHostingCloudServiceType: businessCase.alternativeB
       ? businessCase.alternativeB.hosting.cloudServiceType
       : null,
-    alternativeBHasUserInterface: businessCase.alternativeB
+    alternativeBHasUI: businessCase.alternativeB
       ? businessCase.alternativeB.hasUserInterface
       : null,
     alternativeBPros: businessCase.alternativeB
