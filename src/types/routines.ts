@@ -11,6 +11,7 @@ export const storeSystemIntake = createRoutine('STORE_SYSTEM_INTAKE');
 export const submitSystemIntake = createRoutine('SUBMIT_SYSTEM_INTAKE');
 export const clearSystemIntake = createRoutine('CLEAR_SYSTEM_INTAKE');
 export const reviewSystemIntake = createRoutine('REVIEW_SYSTEM_INTAKE');
+export const archiveSystemIntake = createRoutine('ARCHIVE_SYSTEM_INTAKE');
 
 // SystemShorts routines
 export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');

@@ -7,7 +7,11 @@ import MainContent from 'components/MainContent';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Alert from 'components/shared/Alert';
 import { AppState } from 'reducers/rootReducer';
-import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import {
+  archiveSystemIntake,
+  fetchBusinessCase,
+  fetchSystemIntake
+} from 'types/routines';
 import {
   intakeStatusFromIntake,
   chooseIntakeLink,
@@ -162,7 +166,9 @@ const GovernanceTaskList = () => {
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">
-            <SideNavActions />
+            <SideNavActions
+              archiveIntake={() => dispatch(archiveSystemIntake(systemId))}
+            />
           </div>
         </div>
       </MainContent>

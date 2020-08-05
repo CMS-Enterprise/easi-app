@@ -6,7 +6,11 @@ import './index.scss';
 import Modal from 'components/Modal';
 import { useTranslation } from 'react-i18next';
 
-const SideNavActions = () => {
+type SideNavActionsProps = {
+  archiveIntake: () => void;
+};
+
+const SideNavActions = ({ archiveIntake }: SideNavActionsProps) => {
   const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
   return (
@@ -32,10 +36,14 @@ const SideNavActions = () => {
             {t('taskList:withdraw_modal:header')}
           </h1>
           <p>{t('taskList:withdraw_modal:warning')}</p>
-          <Button type="button" className="margin-right-4">
+          <Button
+            type="button"
+            className="margin-right-4"
+            onClick={archiveIntake}
+          >
             {t('taskList:withdraw_modal:confirm')}
           </Button>
-          <Button type="button" unstyled>
+          <Button type="button" unstyled onClick={() => setModalOpen(false)}>
             {t('taskList:withdraw_modal:cancel')}
           </Button>
         </Modal>
