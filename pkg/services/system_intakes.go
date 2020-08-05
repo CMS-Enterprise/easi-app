@@ -276,6 +276,7 @@ func NewDeleteSystemIntake(
 	config Config,
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
 	update func(intake *models.SystemIntake) (*models.SystemIntake, error),
+	archiveBusinessCase func(context.Context, uuid.UUID) error,
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 ) func(context.Context, uuid.UUID) error {
 	return func(ctx context.Context, id uuid.UUID) error {
@@ -293,6 +294,14 @@ func NewDeleteSystemIntake(
 		}
 		if !ok {
 			return &apperrors.UnauthorizedError{Err: err}
+		}
+
+		// We need to archive any associated business case
+		if intake.BusinessCaseID != nil {
+			err = archiveBusinessCase(ctx, *intake.BusinessCaseID)
+			if err != nil {
+				return err
+			}
 		}
 
 		updatedTime := config.clock.Now()

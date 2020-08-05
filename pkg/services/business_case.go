@@ -272,3 +272,37 @@ func NewUpdateBusinessCase(
 		return businessCase, nil
 	}
 }
+
+// NewDeleteBusinessCase is a service to archive a businessCase
+func NewDeleteBusinessCase(
+	config Config,
+	fetch func(id uuid.UUID) (*models.BusinessCase, error),
+	update func(intake *models.BusinessCase) (*models.BusinessCase, error),
+) func(context.Context, uuid.UUID) error {
+	return func(ctx context.Context, id uuid.UUID) error {
+		businessCase, fetchErr := fetch(id)
+		if fetchErr != nil {
+			return &apperrors.QueryError{
+				Err:       fetchErr,
+				Operation: apperrors.QueryFetch,
+				Model:     businessCase,
+			}
+		}
+
+		updatedTime := config.clock.Now()
+		businessCase.UpdatedAt = &updatedTime
+		businessCase.Status = models.BusinessCaseStatusARCHIVED
+		businessCase.ArchivedAt = &updatedTime
+
+		businessCase, err := update(businessCase)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     businessCase,
+				Operation: apperrors.QuerySave,
+			}
+		}
+
+		return nil
+	}
+}
