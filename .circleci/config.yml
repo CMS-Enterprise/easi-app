@@ -133,6 +133,9 @@ jobs:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - store_artifacts:
+          path: cypress/videos
+          destination: videos
       - run:
           name: Announce failure
           command: |
