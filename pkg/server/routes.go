@@ -127,6 +127,11 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
+			services.NewDeleteBusinessCase(
+				serviceConfig,
+				store.FetchBusinessCaseByID,
+				store.UpdateBusinessCase,
+			),
 			services.NewAuthorizeDeleteSystemIntake(s.logger),
 		),
 	)
