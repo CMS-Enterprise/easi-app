@@ -6,12 +6,18 @@ import {
   DescriptionTerm,
   DescriptionDefinition
 } from 'components/shared/DescriptionGroup';
+import { hostingTypeMap } from 'data/businessCase';
+import { yesNoMap } from 'data/common';
 import { ProposedBusinessCaseSolution } from 'types/businessCase';
 
 /**
  * Title
  * Summary
  * Acquisition Approach
+ * Hosting Type
+ * Hosting Location
+ * Hosting Service Type (optional)
+ * Has User Interface
  * Pros
  * Cons
  * Estimated Lifecycle
@@ -46,6 +52,44 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
         <DescriptionDefinition
           className="text-pre"
           definition={solution.acquisitionApproach}
+        />
+      </div>
+    </ReviewRow>
+    <ReviewRow>
+      <div className="line-height-body-3">
+        <DescriptionTerm term="Do you need to host your solution?" />
+        <DescriptionDefinition
+          className="text-pre"
+          definition={hostingTypeMap[solution.hosting.type]}
+        />
+      </div>
+    </ReviewRow>
+    {['cloud', 'dataCenter'].includes(solution.hosting.type) && (
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="Where are you planning to host?" />
+          <DescriptionDefinition
+            className="text-pre"
+            definition={solution.hosting.location}
+          />
+        </div>
+        {solution.hosting.cloudServiceType && (
+          <div className="line-height-body-3">
+            <DescriptionTerm term="What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?" />
+            <DescriptionDefinition
+              className="text-pre"
+              definition={solution.hosting.cloudServiceType}
+            />
+          </div>
+        )}
+      </ReviewRow>
+    )}
+    <ReviewRow>
+      <div className="line-height-body-3">
+        <DescriptionTerm term="Will your solution have a User Interface?" />
+        <DescriptionDefinition
+          className="text-pre"
+          definition={yesNoMap[solution.hasUserInterface]}
         />
       </div>
     </ReviewRow>

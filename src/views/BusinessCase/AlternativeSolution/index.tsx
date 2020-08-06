@@ -10,6 +10,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import { defaultProposedSolution } from 'data/businessCase';
+import { yesNoMap } from 'data/common';
 import {
   BusinessCaseModel,
   ProposedBusinessCaseSolution
@@ -311,7 +312,7 @@ const AlternativeSolution = ({
               checked={altValues.hasUserInterface === 'YES'}
               id={`BusinessCase-${altId}HasUserInferfaceYes`}
               name={`${altId}.hasUserInterface`}
-              label="Yes"
+              label={yesNoMap.YES}
               value="YES"
             />
             <Field
@@ -319,7 +320,7 @@ const AlternativeSolution = ({
               checked={altValues.hasUserInterface === 'NO'}
               id={`BusinessCase-${altId}HasUserInferfaceNo`}
               name={`${altId}.hasUserInterface`}
-              label="No"
+              label={yesNoMap.NO}
               value="NO"
             />
 
@@ -328,7 +329,7 @@ const AlternativeSolution = ({
               checked={altValues.hasUserInterface === 'NOT_SURE'}
               id={`BusinessCase-${altId}HasUserInferfaceNotSure`}
               name={`${altId}.hasUserInterface`}
-              label="I'm not sure"
+              label={yesNoMap.NOT_SURE}
               value="NOT_SURE"
             />
           </fieldset>
