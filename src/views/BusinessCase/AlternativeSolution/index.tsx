@@ -5,6 +5,7 @@ import Label from 'components/shared/Label';
 import HelpText from 'components/shared/HelpText';
 import TextField from 'components/shared/TextField';
 import TextAreaField from 'components/shared/TextAreaField';
+import { RadioField } from 'components/shared/RadioField';
 import FieldGroup from 'components/shared/FieldGroup';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
@@ -28,7 +29,7 @@ const AlternativeSolution = ({
   altLetter,
   handleToggleAlternative
 }: AlternativeSolutionProps) => {
-  const { values, errors } = formikProps;
+  const { values, errors, setFieldValue } = formikProps;
   const flatErrors = flattenErrors(errors);
   const altLabel = `Alternative ${altLetter}`;
   const altId = `alternative${altLetter}`;
@@ -175,6 +176,162 @@ const AlternativeSolution = ({
             id={`BusinessCase-${altId}AcquisitionApproachCounter`}
             characterCount={2000 - altValues.acquisitionApproach.length}
           />
+        </FieldGroup>
+
+        <FieldGroup
+          scrollElement={`${altId}.hosting.type`}
+          error={!!flatErrors[`${altId}.hosting.type`]}
+        >
+          <fieldset className="usa-fieldset margin-top-4">
+            <legend className="usa-label margin-bottom-1">
+              Do you need to host your solution?
+            </legend>
+            <FieldErrorMsg>{flatErrors[`${altId}.hosting.type`]}</FieldErrorMsg>
+
+            <Field
+              as={RadioField}
+              checked={altValues.hosting.type === 'cloud'}
+              id={`BusinessCase-${altId}SolutionHostingCloud`}
+              name={`${altId}.hosting.type`}
+              label="Yes, in the cloud (AWS, Azure, etc.)"
+              value="cloud"
+              onChange={() => {
+                setFieldValue(`${altId}.hosting.type`, 'cloud');
+                setFieldValue(`${altId}.hosting.location`, '');
+                setFieldValue(`${altId}.hosting.cloudServiceType`, '');
+              }}
+            />
+            {altValues.hosting.type === 'cloud' && (
+              <>
+                <FieldGroup
+                  className="margin-top-neg-2 margin-bottom-1 margin-left-4"
+                  scrollElement={`{${altId}.hosting.location`}
+                  error={!!flatErrors[`${altId}.hosting.location`]}
+                >
+                  <Label htmlFor={`BusinessCase-${altId}CloudLocation`}>
+                    Where are you planning to host?
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors[`${altId}.hosting.location`]}
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextField}
+                    error={!!flatErrors[`${altId}.hosting.location`]}
+                    id={`BusinessCase-${altId}CloudLocation`}
+                    maxLength={50}
+                    name={`${altId}.hosting.location`}
+                  />
+                </FieldGroup>
+                <FieldGroup
+                  className="margin-top-neg-2 margin-bottom-1 margin-left-4"
+                  scrollElement={`${altId}.hosting.cloudServiceType`}
+                  error={!!flatErrors[`${altId}.hosting.cloudServiceType`]}
+                >
+                  <Label htmlFor={`BusinessCase-${altId}CloudServiceType`}>
+                    What, if any, type of cloud service are you planning to use
+                    for this solution (Iaas, PaaS, SaaS, etc.)?
+                  </Label>
+                  <FieldErrorMsg>
+                    {flatErrors[`${altId}.hosting.cloudServiceType`]}
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextField}
+                    error={!!flatErrors[`${altId}.hosting.cloudServiceType`]}
+                    id={`BusinessCase-${altId}CloudServiceType`}
+                    maxLength={50}
+                    name={`${altId}.hosting.cloudServiceType`}
+                  />
+                </FieldGroup>
+              </>
+            )}
+            <Field
+              as={RadioField}
+              checked={altValues.hosting.type === 'dataCenter'}
+              id={`BusinessCase-${altId}HostingDataCenter`}
+              name={`${altId}.hosting.type`}
+              label="Yes, at a data center"
+              value="dataCenter"
+              onChange={() => {
+                setFieldValue(`${altId}.hosting.type`, 'dataCenter');
+                setFieldValue(`${altId}.hosting.location`, '');
+                setFieldValue(`${altId}.hosting.cloudServiceType`, '');
+              }}
+            />
+            {altValues.hosting.type === 'dataCenter' && (
+              <FieldGroup
+                className="margin-top-neg-2 margin-bottom-1 margin-left-4"
+                scrollElement={`${altId}.hosting.location`}
+                error={!!flatErrors[`${altId}.hosting.location`]}
+              >
+                <Label htmlFor={`BusinessCase-${altId}DataCenterLocation`}>
+                  Which data center do you plan to host it at?
+                </Label>
+                <FieldErrorMsg>
+                  {flatErrors[`${altId}.hosting.location`]}
+                </FieldErrorMsg>
+                <Field
+                  as={TextField}
+                  error={!!flatErrors[`${altId}.hosting.location`]}
+                  id={`BusinessCase-${altId}DataCenterLocation`}
+                  maxLength={50}
+                  name={`${altId}.hosting.location`}
+                />
+              </FieldGroup>
+            )}
+            <Field
+              as={RadioField}
+              checked={altValues.hosting.type === 'none'}
+              id={`BusinessCase-${altId}HostingNone`}
+              name={`${altId}.hosting.type`}
+              label="No, hosting is not needed"
+              value="none"
+              onChange={() => {
+                setFieldValue(`${altId}.hosting.type`, 'none');
+                setFieldValue(`${altId}.hosting.location`, '');
+                setFieldValue(`${altId}.hosting.cloudServiceType`, '');
+              }}
+            />
+          </fieldset>
+        </FieldGroup>
+
+        <FieldGroup
+          scrollElement={`${altId}.hasUserInterface`}
+          error={!!flatErrors[`${altId}.hasUserInterface`]}
+        >
+          <fieldset className="usa-fieldset margin-top-4">
+            <legend className="usa-label margin-bottom-1">
+              Will your solution have a User Interface?
+            </legend>
+            <FieldErrorMsg>
+              {flatErrors[`${altId}.hasUserInterface`]}
+            </FieldErrorMsg>
+
+            <Field
+              as={RadioField}
+              checked={altValues.hasUserInterface === 'YES'}
+              id={`BusinessCase-${altId}HasUserInferfaceYes`}
+              name={`${altId}.hasUserInterface`}
+              label="Yes"
+              value="YES"
+            />
+            <Field
+              as={RadioField}
+              checked={altValues.hasUserInterface === 'NO'}
+              id={`BusinessCase-${altId}HasUserInferfaceNo`}
+              name={`${altId}.hasUserInterface`}
+              label="No"
+              value="NO"
+            />
+
+            <Field
+              as={RadioField}
+              checked={altValues.hasUserInterface === 'NOT_SURE'}
+              id={`BusinessCase-${altId}HasUserInferfaceNotSure`}
+              name={`${altId}.hasUserInterface`}
+              label="I'm not sure"
+              value="NOT_SURE"
+            />
+          </fieldset>
         </FieldGroup>
 
         <FieldGroup
