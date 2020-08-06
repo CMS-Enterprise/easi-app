@@ -1,7 +1,5 @@
 import cmsGovernanceTeams from '../../src/constants/enums/cmsGovernanceTeams';
 
-const oneSecond = 1000
-
 describe('The System Intake Form', () => {
   before(() => {
     cy.login();
