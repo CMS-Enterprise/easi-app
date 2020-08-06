@@ -101,9 +101,9 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('EASi Testing');
 
-    // cy.contains('.easi-review-row dt', 'Requester Component')
-    //   .siblings('dd')
-    //   .contains('Center for Medicare');
+    cy.contains('.easi-review-row dt', 'Requester Component')
+      .siblings('dd')
+      .contains('Center for Medicare');
 
     cy.contains('.easi-review-row dt', "CMS Business/Product Owner's Name")
       .siblings('dd')
