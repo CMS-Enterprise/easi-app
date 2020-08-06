@@ -1,9 +1,6 @@
 ---
 version: '3.7'
 services:
-  db:
-    ports:
-      - 5432:5432
   db_migrate:
     build:
       context: .
@@ -16,8 +13,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: easi-backend:latest
-    ports:
-      - 8080:8080
-  easi_client:
-    ports:
-      - 3000:3000
+  cypress:
+    volumes:
+      - ./cypress/videos:/cypress/videos
+      - ./cypress/screenshots:/cypress/screenshots
