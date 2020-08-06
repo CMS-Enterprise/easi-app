@@ -341,3 +341,9 @@ export const prepareBusinessCaseForApi = (
     lifecycleCostLines
   };
 };
+
+export const hostingTypeMap: any = {
+  cloud: 'Yes, in the cloud (AWS, Azure, etc.)',
+  dataCenter: 'Yes, at a data center',
+  none: 'No, hosting is not needed'
+};
