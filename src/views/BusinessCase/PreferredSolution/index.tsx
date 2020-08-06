@@ -273,7 +273,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             <Field
               as={RadioField}
               checked={values.preferredSolution.hasUserInterface === 'YES'}
-              id="BusinessCase-HasUserInferfaceYes"
+              id="BusinessCase-PreferredHasUserInferfaceYes"
               name="preferredSolution.hasUserInterface"
               label="Yes"
               value="YES"
@@ -281,7 +281,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             <Field
               as={RadioField}
               checked={values.preferredSolution.hasUserInterface === 'NO'}
-              id="BusinessCase-HasUserInferfaceNo"
+              id="BusinessCase-PreferredHasUserInferfaceNo"
               name="preferredSolution.hasUserInterface"
               label="No"
               value="NO"
@@ -290,7 +290,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
             <Field
               as={RadioField}
               checked={values.preferredSolution.hasUserInterface === 'NOT_SURE'}
-              id="BusinessCase-HasUserInferfaceNotSure"
+              id="BusinessCase-PreferredHasUserInferfaceNotSure"
               name="preferredSolution.hasUserInterface"
               label="I'm not sure"
               value="NOT_SURE"
