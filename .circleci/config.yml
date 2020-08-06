@@ -128,6 +128,7 @@ jobs:
       - run:
           name: Run Cypress integration tests
           command: |
+            mkdir -p /home/circleci/project/cypress/videos
             ./scripts/run-cypress-test-docker
       - save_cache:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
