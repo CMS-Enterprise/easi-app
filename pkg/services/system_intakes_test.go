@@ -420,3 +420,123 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 		s.Equal(&models.SystemIntake{}, intake)
 	})
 }
+
+func (s ServicesTestSuite) TestAuthorizeArchiveSystemIntake() {
+	logger := zap.NewNop()
+	authorizeArchiveSystemIntake := NewAuthorizeArchiveSystemIntake(logger)
+
+	s.Run("No EUA ID fails auth", func() {
+		ctx := context.Background()
+
+		ok, err := authorizeArchiveSystemIntake(ctx, &models.SystemIntake{})
+
+		s.False(ok)
+		s.IsType(&apperrors.ContextError{}, err)
+	})
+
+	s.Run("Mismatched EUA ID fails auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ZYXW"})
+		intake := models.SystemIntake{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeArchiveSystemIntake(ctx, &intake)
+
+		s.False(ok)
+		s.NoError(err)
+	})
+
+	s.Run("Matched EUA ID passes auth", func() {
+		ctx := context.Background()
+		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ABCD"})
+		intake := models.SystemIntake{
+			EUAUserID: "ABCD",
+		}
+
+		ok, err := authorizeArchiveSystemIntake(ctx, &intake)
+
+		s.True(ok)
+		s.NoError(err)
+	})
+}
+
+func (s ServicesTestSuite) TestSystemIntakeArchiver() {
+	logger := zap.NewNop()
+	fakeID := uuid.New()
+	businessCaseID := uuid.New()
+	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
+	ctx := context.Background()
+
+	fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{
+			ID:             id,
+			BusinessCaseID: &businessCaseID,
+		}, nil
+	}
+	update := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
+		return intake, nil
+	}
+	archiveBusinessCase := func(ctx context.Context, id uuid.UUID) error {
+		return nil
+	}
+	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		return true, nil
+	}
+
+	s.Run("golden path archive system intake", func() {
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, authorize)
+		err := archiveSystemIntake(ctx, fakeID)
+		s.NoError(err)
+	})
+
+	s.Run("returns query error when fetch fails", func() {
+		failFetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+			return &models.SystemIntake{}, errors.New("fetch failed")
+		}
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, failFetch, update, archiveBusinessCase, authorize)
+		err := archiveSystemIntake(ctx, fakeID)
+		s.IsType(&apperrors.QueryError{}, err)
+	})
+
+	s.Run("returns error when authorization errors", func() {
+		actualError := errors.New("authorize failed")
+		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+			return false, actualError
+		}
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, failAuthorize)
+		err := archiveSystemIntake(ctx, fakeID)
+		s.Error(err)
+		s.Equal(actualError, err)
+	})
+
+	s.Run("returns unauthorized error when authorization not ok", func() {
+		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+			return false, nil
+		}
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, failAuthorize)
+		err := archiveSystemIntake(ctx, fakeID)
+		s.IsType(&apperrors.UnauthorizedError{}, err)
+	})
+
+	s.Run("returns error from archive business case", func() {
+		actualError := errors.New("failed to archive business case")
+		failArchiveBusinessCase := func(ctx context.Context, id uuid.UUID) error {
+			return actualError
+		}
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, failArchiveBusinessCase, authorize)
+		err := archiveSystemIntake(ctx, fakeID)
+		s.Error(err)
+		s.Equal(actualError, err)
+	})
+
+	s.Run("returns query error when update fails", func() {
+		failUpdate := func(businessCase *models.SystemIntake) (*models.SystemIntake, error) {
+			return &models.SystemIntake{}, errors.New("update failed")
+		}
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, failUpdate, archiveBusinessCase, authorize)
+		err := archiveSystemIntake(ctx, fakeID)
+		s.IsType(&apperrors.QueryError{}, err)
+	})
+}

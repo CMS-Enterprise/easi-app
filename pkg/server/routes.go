@@ -123,7 +123,7 @@ func (s *Server) routes(
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeFetchSystemIntakeByID(),
 		),
-		services.NewDeleteSystemIntake(
+		services.NewArchiveSystemIntake(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
@@ -132,7 +132,7 @@ func (s *Server) routes(
 				store.FetchBusinessCaseByID,
 				store.UpdateBusinessCase,
 			),
-			services.NewAuthorizeDeleteSystemIntake(s.logger),
+			services.NewAuthorizeArchiveSystemIntake(s.logger),
 		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())

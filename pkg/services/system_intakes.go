@@ -240,9 +240,9 @@ func NewUpdateSystemIntake(
 	}
 }
 
-// NewAuthorizeDeleteSystemIntake returns a function
+// NewAuthorizeArchiveSystemIntake returns a function
 // that authorizes a user for archiving a system intake
-func NewAuthorizeDeleteSystemIntake(logger *zap.Logger) func(
+func NewAuthorizeArchiveSystemIntake(logger *zap.Logger) func(
 	context context.Context,
 	intake *models.SystemIntake,
 ) (bool, error) {
@@ -271,8 +271,8 @@ func NewAuthorizeDeleteSystemIntake(logger *zap.Logger) func(
 	}
 }
 
-// NewDeleteSystemIntake is a service to archive a system intake
-func NewDeleteSystemIntake(
+// NewArchiveSystemIntake is a service to archive a system intake
+func NewArchiveSystemIntake(
 	config Config,
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
 	update func(intake *models.SystemIntake) (*models.SystemIntake, error),
