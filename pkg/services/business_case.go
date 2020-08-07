@@ -273,11 +273,11 @@ func NewUpdateBusinessCase(
 	}
 }
 
-// NewDeleteBusinessCase is a service to archive a businessCase
-func NewDeleteBusinessCase(
+// NewArchiveBusinessCase is a service to archive a businessCase
+func NewArchiveBusinessCase(
 	config Config,
 	fetch func(id uuid.UUID) (*models.BusinessCase, error),
-	update func(intake *models.BusinessCase) (*models.BusinessCase, error),
+	update func(*models.BusinessCase) (*models.BusinessCase, error),
 ) func(context.Context, uuid.UUID) error {
 	return func(ctx context.Context, id uuid.UUID) error {
 		businessCase, fetchErr := fetch(id)
@@ -294,7 +294,7 @@ func NewDeleteBusinessCase(
 		businessCase.Status = models.BusinessCaseStatusARCHIVED
 		businessCase.ArchivedAt = &updatedTime
 
-		businessCase, err := update(businessCase)
+		_, err := update(businessCase)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
