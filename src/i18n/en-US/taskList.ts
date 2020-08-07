@@ -4,7 +4,8 @@ const taskList = {
     header: 'Are you sure you want to remove your request?',
     warning: 'You will lose any information you have filled in.',
     confirm: 'Remove request',
-    cancel: 'Cancel'
+    cancel: 'Cancel',
+    confirmationText: 'The request for {{requestName}} has been removed'
   }
 };
 

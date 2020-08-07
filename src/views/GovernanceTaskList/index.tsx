@@ -18,6 +18,7 @@ import {
   feedbackStatusFromIntakeStatus,
   bizCaseStatus
 } from 'data/taskList';
+import { useTranslation } from 'react-i18next';
 import TaskListItem from './TaskListItem';
 import SideNavActions from './SideNavActions';
 import './index.scss';
@@ -27,6 +28,7 @@ const GovernanceTaskList = () => {
   const dispatch = useDispatch();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
   const history = useHistory();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (systemId !== 'new') {
@@ -55,7 +57,11 @@ const GovernanceTaskList = () => {
 
   const archiveIntake = () => {
     const redirect = () => {
-      history.push('/', { data: 'test' });
+      history.push('/', {
+        confirmationText: t('taskList:withdraw_modal:confirmationText', {
+          requestName: systemIntake.requestName
+        })
+      });
     };
     dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
   };
