@@ -104,8 +104,12 @@ function deleteSystemIntakeRequest(id: string) {
 function* deleteSystemIntake(action: Action<any>) {
   try {
     yield put(archiveSystemIntake.request());
-    const response = yield call(deleteSystemIntakeRequest, action.payload);
+    const response = yield call(
+      deleteSystemIntakeRequest,
+      action.payload.intakeId
+    );
     yield put(archiveSystemIntake.success(response.data));
+    action.payload.redirect();
   } catch (error) {
     yield put(archiveSystemIntake.failure(error.message));
   } finally {
