@@ -17,7 +17,7 @@ import (
 type createSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
 type fetchSystemIntakeByID func(context context.Context, id uuid.UUID) (*models.SystemIntake, error)
 type updateSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
-type deleteSystemIntake func(context context.Context, id uuid.UUID) error
+type archiveSystemIntake func(context context.Context, id uuid.UUID) error
 
 // NewSystemIntakeHandler is a constructor for SystemIntakeHandler
 func NewSystemIntakeHandler(
@@ -25,14 +25,14 @@ func NewSystemIntakeHandler(
 	create createSystemIntake,
 	update updateSystemIntake,
 	fetch fetchSystemIntakeByID,
-	delete deleteSystemIntake,
+	delete archiveSystemIntake,
 ) SystemIntakeHandler {
 	return SystemIntakeHandler{
 		HandlerBase:           base,
 		CreateSystemIntake:    create,
 		UpdateSystemIntake:    update,
 		FetchSystemIntakeByID: fetch,
-		DeleteSystemIntake:    delete,
+		ArchiveSystemIntake:   delete,
 	}
 }
 
@@ -42,7 +42,7 @@ type SystemIntakeHandler struct {
 	CreateSystemIntake    createSystemIntake
 	UpdateSystemIntake    updateSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
-	DeleteSystemIntake    deleteSystemIntake
+	ArchiveSystemIntake   archiveSystemIntake
 }
 
 // Handle handles a request for the system intake form
@@ -190,7 +190,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			err = h.DeleteSystemIntake(r.Context(), uuid)
+			err = h.ArchiveSystemIntake(r.Context(), uuid)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
