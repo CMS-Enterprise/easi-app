@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@trussworks/react-uswds';
 import Header from 'components/Header';
@@ -26,6 +26,7 @@ const GovernanceTaskList = () => {
   const { systemId } = useParams();
   const dispatch = useDispatch();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     if (systemId !== 'new') {
@@ -51,6 +52,13 @@ const GovernanceTaskList = () => {
     systemIntake.status
   );
   const businessCaseStatus = bizCaseStatus(intakeStatus, businessCase);
+
+  const archiveIntake = () => {
+    const redirect = () => {
+      history.push('/', { data: 'test' });
+    };
+    dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
+  };
 
   return (
     <div className="governance-task-list">
@@ -166,9 +174,7 @@ const GovernanceTaskList = () => {
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">
-            <SideNavActions
-              archiveIntake={() => dispatch(archiveSystemIntake(systemId))}
-            />
+            <SideNavActions archiveIntake={archiveIntake} />
           </div>
         </div>
       </MainContent>
