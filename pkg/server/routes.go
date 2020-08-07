@@ -127,7 +127,7 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
-			services.NewDeleteBusinessCase(
+			services.NewArchiveBusinessCase(
 				serviceConfig,
 				store.FetchBusinessCaseByID,
 				store.UpdateBusinessCase,
