@@ -249,6 +249,12 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 		if validate.RequireNullString(businessCase.PreferredAcquisitionApproach) {
 			expectedErr.WithValidation("PreferredAcquisitionApproach", "is required")
 		}
+		if validate.RequireNullString(businessCase.PreferredHostingType) {
+			expectedErr.WithValidation("PreferredHostingType", "is required")
+		}
+		if validate.RequireNullString(businessCase.PreferredHasUI) {
+			expectedErr.WithValidation("PreferredHasUI", "is required")
+		}
 		if validate.RequireNullString(businessCase.PreferredPros) {
 			expectedErr.WithValidation("PreferredPros", "is required")
 		}
@@ -266,6 +272,12 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 		}
 		if validate.RequireNullString(businessCase.AlternativeAAcquisitionApproach) {
 			expectedErr.WithValidation("AlternativeAAcquisitionApproach", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeAHostingType) {
+			expectedErr.WithValidation("AlternativeAHostingType", "is required")
+		}
+		if validate.RequireNullString(businessCase.AlternativeAHasUI) {
+			expectedErr.WithValidation("AlternativeAHasUI", "is required")
 		}
 		if validate.RequireNullString(businessCase.AlternativeAPros) {
 			expectedErr.WithValidation("AlternativeAPros", "is required")
@@ -290,6 +302,12 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 			}
 			if validate.RequireNullString(businessCase.AlternativeBAcquisitionApproach) {
 				expectedErr.WithValidation("AlternativeBAcquisitionApproach", "is required")
+			}
+			if validate.RequireNullString(businessCase.AlternativeBHostingType) {
+				expectedErr.WithValidation("AlternativeBHostingType", "is required")
+			}
+			if validate.RequireNullString(businessCase.AlternativeBHasUI) {
+				expectedErr.WithValidation("AlternativeBHasUI", "is required")
 			}
 			if validate.RequireNullString(businessCase.AlternativeBPros) {
 				expectedErr.WithValidation("AlternativeBPros", "is required")

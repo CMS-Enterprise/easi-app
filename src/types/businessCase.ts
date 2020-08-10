@@ -22,6 +22,12 @@ export type BusinessCaseSolution = {
 // Proposed Solution
 export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
   acquisitionApproach: string;
+  hosting: {
+    type: string;
+    location: string;
+    cloudServiceType?: string;
+  };
+  hasUserInterface: string;
 };
 
 type BusinessCaseStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';

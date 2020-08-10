@@ -84,6 +84,33 @@ const BusinessCaseValidationSchema = {
       acquisitionApproach: Yup.string().required(
         'Tell us about the acquisition approach for the Preferred solution'
       ),
+      hosting: Yup.object().shape({
+        type: Yup.string().required(
+          'Tell us how Preferred solution will be hosted'
+        ),
+        location: Yup.string()
+          .when('type', {
+            is: 'cloud',
+            then: Yup.string().required(
+              'Tell us where Preferred solution will be hosted'
+            )
+          })
+          .when('type', {
+            is: 'dataCenter',
+            then: Yup.string().required(
+              'Tell us where Preferred solution will be hosted'
+            )
+          }),
+        cloudServiceType: Yup.string().when('type', {
+          is: 'cloud',
+          then: Yup.string().required(
+            'Tell us about the cloud service that will be used for the Preferred solution'
+          )
+        })
+      }),
+      hasUserInterface: Yup.string().required(
+        'Tell us whether the Preferred solution will have user interface'
+      ),
       pros: Yup.string().required(
         'Tell us about the pros of Preferred solution'
       ),
@@ -138,6 +165,33 @@ const BusinessCaseValidationSchema = {
       acquisitionApproach: Yup.string().required(
         'Tell us about the acquisition approach for the Alternative A solution'
       ),
+      hosting: Yup.object().shape({
+        type: Yup.string().required(
+          'Tell us how Alternative A solution will be hosted'
+        ),
+        location: Yup.string()
+          .when('type', {
+            is: 'cloud',
+            then: Yup.string().required(
+              'Tell us where Alternative A solution will be hosted'
+            )
+          })
+          .when('type', {
+            is: 'dataCenter',
+            then: Yup.string().required(
+              'Tell us where Alternative A solution will be hosted'
+            )
+          }),
+        cloudServiceType: Yup.string().when('type', {
+          is: 'cloud',
+          then: Yup.string().required(
+            'Tell us about the cloud service that will be used for the Alternative A solution'
+          )
+        })
+      }),
+      hasUserInterface: Yup.string().required(
+        'Tell us whether the Alternative A solution will have user interface'
+      ),
       pros: Yup.string().required(
         'Tell us about the pros of Alternative A solution'
       ),
@@ -191,6 +245,33 @@ const BusinessCaseValidationSchema = {
       ),
       acquisitionApproach: Yup.string().required(
         'Tell us about the acquisition approach for the Alternative B solution'
+      ),
+      hosting: Yup.object().shape({
+        type: Yup.string().required(
+          'Tell us how Alternative B solution will be hosted'
+        ),
+        location: Yup.string()
+          .when('type', {
+            is: 'cloud',
+            then: Yup.string().required(
+              'Tell us where Alternative B solution will be hosted'
+            )
+          })
+          .when('type', {
+            is: 'dataCenter',
+            then: Yup.string().required(
+              'Tell us where Alternative B solution will be hosted'
+            )
+          }),
+        cloudServiceType: Yup.string().when('type', {
+          is: 'cloud',
+          then: Yup.string().required(
+            'Tell us about the cloud service that will be used for the Alternative B solution'
+          )
+        })
+      }),
+      hasUserInterface: Yup.string().required(
+        'Tell us whether the Alternative B solution will have user interface'
       ),
       pros: Yup.string().required(
         'Tell us about the pros of Alternative B solution'
