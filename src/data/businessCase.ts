@@ -194,7 +194,9 @@ export const prepareBusinessCaseForApp = (
             hasUserInterface: businessCase.alternativeBhasUI
           }
         }
-      : {})
+      : {}),
+    initialSubmittedAt: businessCase.initialSubmittedAt,
+    lastSubmittedAt: businessCase.lastSubmittedAt
   };
 };
 
