@@ -270,6 +270,8 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`{"AlternativeAAcquisitionApproach":"is required",` +
 			`"AlternativeACons":"is required",` +
 			`"AlternativeACostSavings":"is required",` +
+			`"AlternativeAHasUI":"is required",` +
+			`"AlternativeAHostingType":"is required",` +
 			`"AlternativeAPros":"is required",` +
 			`"AlternativeASummary":"is required",` +
 			`"AlternativeATitle":"is required",` +
@@ -287,6 +289,8 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"PreferredAcquisitionApproach":"is required",` +
 			`"PreferredCons":"is required",` +
 			`"PreferredCostSavings":"is required",` +
+			`"PreferredHasUI":"is required",` +
+			`"PreferredHostingType":"is required",` +
 			`"PreferredPros":"is required",` +
 			`"PreferredSummary":"is required",` +
 			`"PreferredTitle":"is required",` +
@@ -317,6 +321,8 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		businessCase.SubmittedAt = &submittedAt
 		businessCase.AlternativeBTitle = null.NewString("B Title", true)
 		businessCase.AlternativeBSummary = null.NewString("", false)
+		businessCase.AlternativeBHostingType = null.NewString("", false)
+		businessCase.AlternativeBHasUI = null.NewString("", false)
 		businessCase.AlternativeBPros = null.NewString("", false)
 		businessCase.AlternativeBCons = null.NewString("", false)
 		businessCase.AlternativeBAcquisitionApproach = null.NewString("", false)
@@ -326,6 +332,8 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`{"AlternativeBAcquisitionApproach":"is required",` +
 			`"AlternativeBCons":"is required",` +
 			`"AlternativeBCostSavings":"is required",` +
+			`"AlternativeBHasUI":"is required",` +
+			`"AlternativeBHostingType":"is required",` +
 			`"AlternativeBPros":"is required",` +
 			`"AlternativeBSummary":"is required"}`
 
