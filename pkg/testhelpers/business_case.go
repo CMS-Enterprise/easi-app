@@ -263,6 +263,8 @@ func NewBusinessCase() models.BusinessCase {
 		AlternativeBTitle:               null.StringFrom("Test Alternative B Title"),
 		AlternativeBSummary:             null.StringFrom("Test Alternative B Summary"),
 		AlternativeBAcquisitionApproach: null.StringFrom("Test Alternative B Acquisition Approach"),
+		AlternativeBHostingType:         null.StringFrom("none"),
+		AlternativeBHasUI:               null.StringFrom("YES"),
 		AlternativeBPros:                null.StringFrom("Test Alternative B Pros"),
 		AlternativeBCons:                null.StringFrom("Test Alternative B Cons"),
 		AlternativeBCostSavings:         null.StringFrom("Test Alternative B Cost Savings"),
