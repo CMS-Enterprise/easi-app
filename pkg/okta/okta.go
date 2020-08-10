@@ -11,6 +11,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -77,6 +78,19 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 		logger = logger.With(zap.String("user", user.EUAUserID))
 
 		ctx := appcontext.WithUser(r.Context(), user)
+
+		// also add the authn.Principal to the context... since
+		// we don't yet have access to the Job Codes in the JWT, this builds
+		// on the current assumption that anyone with an appropriate
+		// JWT provided by Okta for EASi is allowed to use EASi
+		// as a viewer/submitter. Effectively, this is just a new
+		// way to re-state the same things the User type does, but
+		// it gives a foward path for eventually empowering GRT users.
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{
+			EUAID:       user.EUAUserID,
+			JobCodeEASi: true,
+			JobCodeGRT:  false})
+
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
