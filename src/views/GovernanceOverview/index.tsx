@@ -56,7 +56,7 @@ const NumberedListTerminalItem = ({
 const GovernanceOverview = () => {
   return (
     <div className="easi-governance-overview">
-      <Header name="EASi Governance Overview" />
+      <Header />
       <MainContent className="grid-container">
         <BreadcrumbNav className="margin-y-2">
           <li>

@@ -201,7 +201,7 @@ export const BusinessCase = () => {
 
   return (
     <div className="business-case margin-bottom-5">
-      <Header name="CMS Business Case" />
+      <Header />
       <MainContent>
         {businessCase.id && (
           <Formik
