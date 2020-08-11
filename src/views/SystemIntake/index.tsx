@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
+import isUUID from 'validator/lib/isUUID';
 import MainContent from 'components/MainContent';
 import Header from 'components/Header';
 import { AppState } from 'reducers/rootReducer';
@@ -74,8 +75,18 @@ export const SystemIntake = () => {
     } else {
       dispatch(fetchSystemIntake(systemId));
     }
-    // This return will clear system intake from store when component is unmounted
     return () => {
+      // If has valid uuid, save it's current data before unmounting
+      if (isUUID(systemId)) {
+        const {
+          current
+        }: { current: FormikProps<SystemIntakeForm> } = formikRef;
+        dispatch(
+          saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
+        );
+      }
+
+      // clear system intake from store when component is unmounting
       dispatch(clearSystemIntake());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

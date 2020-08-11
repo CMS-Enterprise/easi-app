@@ -25,6 +25,7 @@
     "@types/redux-saga-routines": "^3.1.0",
     "@types/text-encoding": "^0.0.35",
     "@types/uuid": "^7.0.2",
+    "@types/validator": "^13.1.0",
     "@types/yup": "^0.26.32",
     "axios": "^0.19.0",
     "classnames": "^2.2.6",
@@ -60,6 +61,7 @@
     "typescript": "3.6.4",
     "uswds": "^2.2.1",
     "uuid": "^7.0.3",
+    "validator": "^13.1.1",
     "wait-on": "^5.0.0",
     "yup": "^0.28.1"
   },
