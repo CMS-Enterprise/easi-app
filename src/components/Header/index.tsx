@@ -96,14 +96,14 @@ export const Header = ({ children }: HeaderProps) => {
                       authService.logout();
                     }}
                   >
-                    {t('header:logout')}
+                    {t('header:signOut')}
                   </UserAction>
                 </UserActionList>
               )}
             </div>
           ) : (
-            <Link className="easi-header__nav-link" to="/login">
-              {t('header:login')}
+            <Link className="easi-header__nav-link" to="/signin">
+              {t('header:signIn')}
             </Link>
           )}
         </div>
@@ -126,11 +126,11 @@ export const Header = ({ children }: HeaderProps) => {
                 authService.logout();
               }}
             >
-              {t('header:logout')}
+              {t('header:signOut')}
             </button>
           ) : (
-            <a className="easi-header__nav-link" href="/login">
-              {t('header:login')}
+            <a className="easi-header__nav-link" href="/signin">
+              {t('header:signIn')}
             </a>
           )}
         </div>

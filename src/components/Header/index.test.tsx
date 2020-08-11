@@ -31,8 +31,8 @@ describe('The Header component', () => {
   describe('When logged in', () => {
     it('displays a login button', () => {
       const component = shallow(<Header />);
-      expect(component.text().includes('Logout')).toBe(true);
-      expect(component.text().includes('Login')).toBe(false);
+      expect(component.text().includes('Sign Out')).toBe(true);
+      expect(component.text().includes('Sign In')).toBe(false);
     });
 
     xit('displays the users name', async done => {
