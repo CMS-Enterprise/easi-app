@@ -128,9 +128,7 @@ export const SystemIntake = () => {
             />
             <SecureRoute
               path="/system/:systemId/review"
-              render={() => (
-                <Review formikRef={formikRef} systemIntake={systemIntake} />
-              )}
+              render={() => <Review systemIntake={systemIntake} />}
             />
           </>
         )}
