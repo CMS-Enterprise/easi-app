@@ -15,7 +15,7 @@ import (
 func NewFetchMetrics(
 	config Config,
 	fetchSystemIntakeMetrics func(time.Time, time.Time) (models.SystemIntakeMetrics, error),
-) func(ctx context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error) {
+) func(c context.Context, st time.Time, et time.Time) (models.MetricsDigest, error) {
 	return func(ctx context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error) {
 		systemIntakeMetrics, err := fetchSystemIntakeMetrics(startTime, endTime)
 		if err != nil {
