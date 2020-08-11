@@ -24,11 +24,11 @@ func NewAuthorizeFetchSystemIntakesByEuaID() func(ctx context.Context, euaID str
 func NewFetchSystemIntakesByEuaID(
 	config Config,
 	fetch func(euaID string) (models.SystemIntakes, error),
-	authorize func(context context.Context, euaID string) (bool, error),
-) func(context context.Context, euaID string) (models.SystemIntakes, error) {
-	return func(context context.Context, euaID string) (models.SystemIntakes, error) {
-		logger := appcontext.ZLogger(context)
-		ok, err := authorize(context, euaID)
+	authorize func(c context.Context, euaID string) (bool, error),
+) func(c context.Context, e string) (models.SystemIntakes, error) {
+	return func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
+		logger := appcontext.ZLogger(ctx)
+		ok, err := authorize(ctx, euaID)
 		if err != nil {
 			logger.Error("failed to authorize fetch system intakes")
 			return models.SystemIntakes{}, err
@@ -53,10 +53,10 @@ func NewFetchSystemIntakesByEuaID(
 func NewCreateSystemIntake(
 	config Config,
 	create func(intake *models.SystemIntake) (*models.SystemIntake, error),
-) func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-	return func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-		logger := appcontext.ZLogger(context)
-		user, ok := appcontext.User(context)
+) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+		logger := appcontext.ZLogger(ctx)
+		user, ok := appcontext.User(ctx)
 		if !ok {
 			// Default to failure to authorize and create a quick audit log
 			logger.With(zap.Bool("Authorized", false)).
@@ -82,12 +82,12 @@ func NewCreateSystemIntake(
 // NewAuthorizeUpdateSystemIntake returns a function
 // that authorizes a user for updating a system intake
 func NewAuthorizeUpdateSystemIntake(_ *zap.Logger) func(
-	context context.Context,
-	intake *models.SystemIntake,
+	c context.Context,
+	i *models.SystemIntake,
 ) (bool, error) {
-	return func(context context.Context, intake *models.SystemIntake) (bool, error) {
-		logger := appcontext.ZLogger(context)
-		user, ok := appcontext.User(context)
+	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		logger := appcontext.ZLogger(ctx)
+		user, ok := appcontext.User(ctx)
 		if !ok {
 			logger.Error("unable to get EUA ID from context")
 			return false, &apperrors.ContextError{
@@ -116,13 +116,13 @@ func NewUpdateSystemIntake(
 	config Config,
 	update func(intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
-	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
+	authorize func(context.Context, *models.SystemIntake) (bool, error),
 	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 	sendSubmitEmail func(requester string, intakeID uuid.UUID) error,
 	fetchRequesterEmail func(logger *zap.Logger, euaID string) (string, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 	canDecideIntake bool,
-) func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		existingIntake, fetchErr := fetch(intake.ID)
 		if fetchErr != nil {
@@ -254,10 +254,10 @@ func NewAuthorizeFetchSystemIntakeByID() func(ctx context.Context, intake *model
 func NewFetchSystemIntakeByID(
 	config Config,
 	fetch func(id uuid.UUID) (*models.SystemIntake, error),
-	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
-) func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	return func(context context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-		logger := appcontext.ZLogger(context)
+	authorize func(c context.Context, i *models.SystemIntake) (bool, error),
+) func(c context.Context, u uuid.UUID) (*models.SystemIntake, error) {
+	return func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		logger := appcontext.ZLogger(ctx)
 		intake, err := fetch(id)
 		if err != nil {
 			logger.Error("failed to fetch system intake")
@@ -267,7 +267,7 @@ func NewFetchSystemIntakeByID(
 				Operation: apperrors.QueryFetch,
 			}
 		}
-		ok, err := authorize(context, intake)
+		ok, err := authorize(ctx, intake)
 		if err != nil {
 			logger.Error("failed to authorize fetch system intake")
 			return &models.SystemIntake{}, err
