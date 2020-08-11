@@ -7,7 +7,7 @@ Cypress.Commands.add('login', () => {
   cy.route('POST', '/oauth2/*').as('oauthPost');
   cy.route('GET', '/oauth2/*').as('oauthGet');
 
-  cy.visit('/login');
+  cy.visit('/signin');
 
   cy.get('#okta-signin-username').type(Cypress.env('username'));
   cy.get('#okta-signin-password').type(Cypress.env('password'));
