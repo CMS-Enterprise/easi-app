@@ -28,9 +28,10 @@ func NewFetchBusinessCaseByID(
 	authorize func(context context.Context, businessCase *models.BusinessCase) (bool, error),
 ) func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+		logger := appcontext.ZLogger(ctx)
 		businessCase, err := fetch(id)
 		if err != nil {
-			config.logger.Error("failed to fetch business case")
+			logger.Error("failed to fetch business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -39,7 +40,7 @@ func NewFetchBusinessCaseByID(
 		}
 		ok, err := authorize(ctx, businessCase)
 		if err != nil {
-			config.logger.Error("failed to authorize fetch business case")
+			logger.Error("failed to authorize fetch business case")
 			return &models.BusinessCase{}, err
 		}
 		if !ok {
@@ -51,11 +52,12 @@ func NewFetchBusinessCaseByID(
 
 // NewAuthorizeCreateBusinessCase returns a function
 // that authorizes a user for creating a business case
-func NewAuthorizeCreateBusinessCase(logger *zap.Logger) func(
+func NewAuthorizeCreateBusinessCase(_ *zap.Logger) func(
 	context context.Context,
 	intake *models.SystemIntake,
 ) (bool, error) {
 	return func(context context.Context, intake *models.SystemIntake) (bool, error) {
+		logger := appcontext.ZLogger(context)
 		if intake == nil {
 			logger.With(zap.Bool("Authorized", false)).
 				With(zap.String("Operation", "CreateBusinessCase")).
@@ -124,7 +126,7 @@ func NewCreateBusinessCase(
 
 		businessCase, err = create(businessCase)
 		if err != nil {
-			config.logger.Error("failed to create a business case")
+			appcontext.ZLogger(context).Error("failed to create a business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -151,7 +153,7 @@ func NewFetchBusinessCasesByEuaID(
 	return func(ctx context.Context, euaID string) (models.BusinessCases, error) {
 		ok, err := authorize(ctx, euaID)
 		if err != nil {
-			config.logger.Error("failed to authorize fetch system intakes")
+			appcontext.ZLogger(ctx).Error("failed to authorize fetch system intakes")
 			return models.BusinessCases{}, err
 		}
 		if !ok {
@@ -159,7 +161,7 @@ func NewFetchBusinessCasesByEuaID(
 		}
 		businessCases, err := fetch(euaID)
 		if err != nil {
-			config.logger.Error("failed to fetch business cases")
+			appcontext.ZLogger(ctx).Error("failed to fetch business cases")
 			return models.BusinessCases{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     "business cases",
@@ -172,11 +174,12 @@ func NewFetchBusinessCasesByEuaID(
 
 // NewAuthorizeUpdateBusinessCase returns a function
 // that authorizes a user for updating an existing business case
-func NewAuthorizeUpdateBusinessCase(logger *zap.Logger) func(
+func NewAuthorizeUpdateBusinessCase(_ *zap.Logger) func(
 	context context.Context,
 	businessCase *models.BusinessCase,
 ) (bool, error) {
 	return func(context context.Context, businessCase *models.BusinessCase) (bool, error) {
+		logger := appcontext.ZLogger(context)
 		if businessCase == nil {
 			logger.With(zap.Bool("Authorized", false)).
 				With(zap.String("Operation", "UpdateBusinessCase")).
@@ -215,6 +218,7 @@ func NewUpdateBusinessCase(
 	sendEmail func(requester string, intakeID uuid.UUID) error,
 ) func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(context context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+		logger := appcontext.ZLogger(context)
 		existingBusinessCase, err := fetchBusinessCase(businessCase.ID)
 		if err != nil {
 			return &models.BusinessCase{}, &apperrors.ResourceConflictError{
@@ -245,14 +249,14 @@ func NewUpdateBusinessCase(
 			businessCase.SubmittedAt = businessCase.UpdatedAt
 			err = appvalidation.BusinessCaseForSubmit(businessCase, existingBusinessCase)
 			if err != nil {
-				config.logger.Error("Failed to validate", zap.Error(err))
+				logger.Error("Failed to validate", zap.Error(err))
 				return businessCase, err
 			}
 		}
 
 		businessCase, err = update(businessCase)
 		if err != nil {
-			config.logger.Error("failed to update business case")
+			logger.Error("failed to update business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     businessCase,
@@ -265,7 +269,7 @@ func NewUpdateBusinessCase(
 			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
 			err = sendEmail(businessCase.Requester.String, businessCase.ID)
 			if err != nil {
-				config.logger.Error("Failed to send email", zap.Error(err))
+				logger.Error("Failed to send email", zap.Error(err))
 				return businessCase, err
 			}
 		}
