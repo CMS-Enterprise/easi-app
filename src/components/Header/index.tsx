@@ -60,7 +60,9 @@ export const Header = ({ children }: HeaderProps) => {
       <div className="grid-container easi-header__basic">
         <div className="usa-logo site-logo" id="logo">
           <Link to="/">
-            <em className="usa-logo__text">{t('general:appName')}</em>
+            <em className="usa-logo__text" aria-label={t('header:returnHome')}>
+              {t('general:appName')}
+            </em>
           </Link>
         </div>
         <button type="button" className="usa-menu-btn">
@@ -87,21 +89,21 @@ export const Header = ({ children }: HeaderProps) => {
               {displayDropdown && (
                 <UserActionList id="Header-UserActionsList">
                   <UserAction link="/governance-overview">
-                    Add New System
+                    {t('header:addSystem')}
                   </UserAction>
                   <UserAction
                     onClick={() => {
                       authService.logout();
                     }}
                   >
-                    Log Out
+                    {t('header:logout')}
                   </UserAction>
                 </UserActionList>
               )}
             </div>
           ) : (
             <Link className="easi-header__nav-link" to="/login">
-              Login
+              {t('header:login')}
             </Link>
           )}
         </div>
@@ -124,11 +126,11 @@ export const Header = ({ children }: HeaderProps) => {
                 authService.logout();
               }}
             >
-              Logout
+              {t('header:logout')}
             </button>
           ) : (
             <a className="easi-header__nav-link" href="/login">
-              Login
+              {t('header:login')}
             </a>
           )}
         </div>
