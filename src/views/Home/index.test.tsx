@@ -1,12 +1,14 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
-import { initialSystemIntakeForm } from 'data/systemIntake';
-import ActionBanner from 'components/shared/ActionBanner';
-import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import { mount, shallow } from 'enzyme';
+import configureMockStore from 'redux-mock-store';
+
+import ActionBanner from 'components/shared/ActionBanner';
 import { businessCaseInitialData } from 'data/businessCase';
+import { initialSystemIntakeForm } from 'data/systemIntake';
+
 import Home from './index';
 
 jest.mock('@okta/okta-react', () => ({

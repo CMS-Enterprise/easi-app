@@ -1,10 +1,11 @@
 import React from 'react';
-import classnames from 'classnames';
 import Media from 'react-media';
+import classnames from 'classnames';
+
 import {
+  DescriptionDefinition,
   DescriptionList,
-  DescriptionTerm,
-  DescriptionDefinition
+  DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import { LifecyclePhase } from 'types/estimatedLifecycle';
 import formatDollars from 'utils/formatDollars';
@@ -245,7 +246,7 @@ const TableHead = ({
   children
 }: {
   scope: 'row' | 'col';
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }) => (
   <th
     scope={scope}

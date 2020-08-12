@@ -1,12 +1,13 @@
 import React from 'react';
 import { Field, FormikProps } from 'formik';
+
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
-import FieldGroup from 'components/shared/FieldGroup';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 
 type GeneralRequestInfoProps = {
   formikProps: FormikProps<BusinessCaseModel>;

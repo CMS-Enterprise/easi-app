@@ -1,5 +1,6 @@
 import React, { ReactNode, ReactNodeArray } from 'react';
 import classnames from 'classnames';
+
 import './index.scss';
 
 type DescriptionListProps = {

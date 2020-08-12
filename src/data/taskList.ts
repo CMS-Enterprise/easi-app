@@ -1,6 +1,6 @@
-import { SystemIntakeForm } from 'types/systemIntake';
-import { BusinessCaseModel } from 'types/businessCase';
 import { businessCaseInitialData } from 'data/businessCase';
+import { BusinessCaseModel } from 'types/businessCase';
+import { SystemIntakeForm } from 'types/systemIntake';
 
 export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   if (intake.id === '') {

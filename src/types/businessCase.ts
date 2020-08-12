@@ -1,5 +1,6 @@
-import { LifecyclePhase } from 'types/estimatedLifecycle';
 import { DateTime } from 'luxon';
+
+import { LifecyclePhase } from 'types/estimatedLifecycle';
 
 export type EstimatedLifecycleCostLines = {
   year1: LifecyclePhase[];

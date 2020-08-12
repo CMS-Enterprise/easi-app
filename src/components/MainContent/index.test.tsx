@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import MainContent from './index';
 
 describe('The MainContent component', () => {

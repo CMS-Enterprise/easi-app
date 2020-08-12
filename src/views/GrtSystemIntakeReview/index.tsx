@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { SystemIntakeReview } from 'components/SystemIntakeReview';
-import MainContent from 'components/MainContent';
-import Header from 'components/Header';
-import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntake, reviewSystemIntake } from 'types/routines';
+import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { RadioField } from 'components/shared/RadioField';
+import { DateTime } from 'luxon';
+
+import Header from 'components/Header';
+import MainContent from 'components/MainContent';
+import Alert from 'components/shared/Alert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
-import { Button } from '@trussworks/react-uswds';
+import { SystemIntakeReview } from 'components/SystemIntakeReview';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntake, reviewSystemIntake } from 'types/routines';
 import { SystemIntakeForm, SystemIntakeStatus } from 'types/systemIntake';
-import Alert from 'components/shared/Alert';
-import { DateTime } from 'luxon';
-import { useTranslation } from 'react-i18next';
 
 export const GrtSystemIntakeReview = () => {
   const { systemId } = useParams();

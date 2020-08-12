@@ -1,8 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { AppState } from 'reducers/rootReducer';
 import { useOktaAuth } from '@okta/okta-react';
 import { DateTime } from 'luxon';
+
+import { AppState } from 'reducers/rootReducer';
 
 type TimeOutWrapperProps = {
   children: React.ReactNode;

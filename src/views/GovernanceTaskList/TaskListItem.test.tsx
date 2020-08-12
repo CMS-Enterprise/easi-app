@@ -1,7 +1,7 @@
 import React from 'react';
-import { shallow } from 'enzyme';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { shallow } from 'enzyme';
 
 import TaskListItem from './TaskListItem';
 

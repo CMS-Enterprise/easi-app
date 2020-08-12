@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import flagImg from 'uswds/src/img/us_flag_small.png';
 import dotGovSvg from 'uswds/src/img/icon-dot-gov.svg';
 import httpsSvg from 'uswds/src/img/icon-https.svg';
+import flagImg from 'uswds/src/img/us_flag_small.png';
 
 const UsGovBanner = () => {
   const [displayContent, setDisplayContent] = useState(false);

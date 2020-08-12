@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import PageNumber from './index';
 
 describe('The Page Number component', () => {

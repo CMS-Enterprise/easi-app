@@ -1,13 +1,14 @@
 import React from 'react';
 import { DateTime } from 'luxon';
+
+import ReviewRow from 'components/ReviewRow';
 import {
   DescriptionDefinition,
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import ReviewRow from 'components/ReviewRow';
-import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 import { SystemIntakeForm } from 'types/systemIntake';
+import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
 type SystemIntakeReview = {
   systemIntake: SystemIntakeForm;

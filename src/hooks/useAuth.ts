@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const useAuth = (auth: any): [boolean, any, () => Promise<void>] => {
   const [authenticated, setAuthenticated] = useState(false);

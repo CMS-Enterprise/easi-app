@@ -1,9 +1,10 @@
 import React from 'react';
-import { shallow } from 'enzyme';
-import configureMockStore from 'redux-mock-store';
-import { createMemoryHistory, createLocation } from 'history';
 import { Provider } from 'react-redux';
 import { match } from 'react-router-dom';
+import { shallow } from 'enzyme';
+import { createLocation, createMemoryHistory } from 'history';
+import configureMockStore from 'redux-mock-store';
+
 import { GrtSystemIntakeReview, SystemIDRouterProps } from './index';
 
 describe('The GRT Review view', () => {

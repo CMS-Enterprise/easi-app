@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
+
 import './index.scss';
 
 type ResponsiveTabsProps = {

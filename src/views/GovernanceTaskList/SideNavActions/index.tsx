@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Link as UswdsLink, Button } from '@trussworks/react-uswds';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import './index.scss';
 

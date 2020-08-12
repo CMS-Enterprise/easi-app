@@ -1,8 +1,9 @@
-import { SystemIntakesState } from 'types/systemIntake';
-import { prepareSystemIntakeForApp } from 'data/systemIntake';
-import { fetchSystemIntakes } from 'types/routines';
 import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
+
+import { prepareSystemIntakeForApp } from 'data/systemIntake';
+import { fetchSystemIntakes } from 'types/routines';
+import { SystemIntakesState } from 'types/systemIntake';
 
 const initialState: SystemIntakesState = {
   systemIntakes: [],
