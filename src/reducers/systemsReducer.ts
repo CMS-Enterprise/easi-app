@@ -1,6 +1,7 @@
-import { SystemState } from 'types/system';
 import { Action } from 'redux-actions';
+
 import { fetchSystemShorts } from 'types/routines';
+import { SystemState } from 'types/system';
 
 const initialState: SystemState = {
   systemShorts: []

@@ -2,15 +2,15 @@ import {
   initialSystemIntakeForm,
   prepareSystemIntakeForApp
 } from 'data/systemIntake';
-import {
-  fetchSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake,
-  saveSystemIntake,
-  clearSystemIntake,
-  postSystemIntake
-} from 'types/routines';
 import systemIntakeReducer from 'reducers/systemIntakeReducer';
+import {
+  clearSystemIntake,
+  fetchSystemIntake,
+  postSystemIntake,
+  saveSystemIntake,
+  storeSystemIntake,
+  submitSystemIntake
+} from 'types/routines';
 
 describe('The system intake reducer', () => {
   const mockApiSystemIntake = {

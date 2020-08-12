@@ -1,9 +1,10 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import {
+  DescriptionDefinition,
   DescriptionList,
-  DescriptionTerm,
-  DescriptionDefinition
+  DescriptionTerm
 } from './index';
 
 describe('The Description List component', () => {

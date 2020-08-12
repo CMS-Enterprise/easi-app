@@ -1,6 +1,8 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
+
 import Login from './index';
 
 jest.mock('@okta/okta-react', () => ({

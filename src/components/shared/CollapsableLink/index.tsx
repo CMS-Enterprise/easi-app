@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import classnames from 'classnames';
 import { Button } from '@trussworks/react-uswds';
+import classnames from 'classnames';
+
 import './index.scss';
 
 type CollapsableLinkProps = {

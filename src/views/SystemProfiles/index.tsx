@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Header from 'components/Header';
+import ActionBanner from 'components/shared/ActionBanner';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppState } from 'reducers/rootReducer';
 import UpcomingActions from 'components/shared/UpcomingActions';
-import ActionBanner from 'components/shared/ActionBanner';
+import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes, fetchSystemShorts } from 'types/routines';
 
 const mockSystems: any[] = [

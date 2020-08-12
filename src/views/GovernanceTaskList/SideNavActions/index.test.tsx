@@ -1,6 +1,7 @@
 import React from 'react';
-import { shallow } from 'enzyme';
 import { Button, Link } from '@trussworks/react-uswds';
+import { shallow } from 'enzyme';
+
 import SideNavActions from './index';
 
 const renderComponent = () => {

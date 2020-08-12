@@ -1,10 +1,11 @@
 import React from 'react';
+
 import EstimatedLifecycleCostReview from 'components/EstimatedLifecycleCost/Review';
 import ReviewRow from 'components/ReviewRow';
 import {
+  DescriptionDefinition,
   DescriptionList,
-  DescriptionTerm,
-  DescriptionDefinition
+  DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import { hostingTypeMap } from 'data/businessCase';
 import { yesNoMap } from 'data/common';

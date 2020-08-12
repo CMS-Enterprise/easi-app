@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import HelpText from './index';
 
 describe('The Help Text componnet', () => {

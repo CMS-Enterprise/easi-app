@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import classnames from 'classnames';
+
 import './index.scss';
 
 type HelpTextProps = {

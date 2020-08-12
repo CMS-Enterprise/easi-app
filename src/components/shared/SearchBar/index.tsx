@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Autosuggest from 'react-autosuggest';
+
 import './index.scss';
 
 type SearchBarProps = {

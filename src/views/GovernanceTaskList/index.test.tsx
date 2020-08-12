@@ -1,9 +1,10 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import { mount, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
+
 import GovernanceTaskList from './index';
 
 jest.mock('@okta/okta-react', () => ({

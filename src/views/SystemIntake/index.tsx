@@ -2,22 +2,25 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
+import { FormikProps } from 'formik';
 import isUUID from 'validator/lib/isUUID';
-import MainContent from 'components/MainContent';
+
 import Header from 'components/Header';
+import MainContent from 'components/MainContent';
 import { AppState } from 'reducers/rootReducer';
 import {
-  fetchSystemIntake,
-  storeSystemIntake,
   clearSystemIntake,
+  fetchSystemIntake,
   postSystemIntake,
-  saveSystemIntake
+  saveSystemIntake,
+  storeSystemIntake
 } from 'types/routines';
-import { FormikProps } from 'formik';
 import { SystemIntakeForm } from 'types/systemIntake';
+
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
+
 import './index.scss';
 
 export const SystemIntake = () => {

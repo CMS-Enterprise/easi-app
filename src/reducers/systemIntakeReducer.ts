@@ -1,18 +1,19 @@
-import { SystemIntakeState } from 'types/systemIntake';
+import { Action } from 'redux-actions';
+
 import {
   initialSystemIntakeForm,
   prepareSystemIntakeForApp
 } from 'data/systemIntake';
 import {
-  fetchSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake,
-  saveSystemIntake,
   clearSystemIntake,
+  fetchSystemIntake,
   postSystemIntake,
-  reviewSystemIntake
+  reviewSystemIntake,
+  saveSystemIntake,
+  storeSystemIntake,
+  submitSystemIntake
 } from 'types/routines';
-import { Action } from 'redux-actions';
+import { SystemIntakeState } from 'types/systemIntake';
 
 const initialState: SystemIntakeState = {
   systemIntake: initialSystemIntakeForm,

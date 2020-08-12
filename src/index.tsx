@@ -2,15 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import axios from 'axios';
-import { TextEncoder } from 'text-encoding';
 import { detect } from 'detect-browser';
+import { TextEncoder } from 'text-encoding';
+
 import 'uswds';
+import './i18n';
+
 import App from './views/App';
 import UnsupportedBrowser from './views/UnsupportedBrowser';
-import store from './store';
-import './i18n';
-import './index.scss';
 import * as serviceWorker from './serviceWorker';
+import store from './store';
+
+import './index.scss';
 
 /**
  * Enables react axe accessibility tooling in development environments

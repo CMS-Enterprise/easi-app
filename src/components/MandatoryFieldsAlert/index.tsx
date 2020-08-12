@@ -1,5 +1,7 @@
 import React from 'react';
+
 import Alert from 'components/shared/Alert';
+
 import './index.scss';
 
 const MandatoryFieldsAlert = () => (

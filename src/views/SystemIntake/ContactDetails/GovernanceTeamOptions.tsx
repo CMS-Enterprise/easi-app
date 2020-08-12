@@ -1,11 +1,13 @@
 import React, { Fragment } from 'react';
 import { Field, FieldArray, FormikProps, getIn } from 'formik';
+
+import CheckboxField from 'components/shared/CheckboxField';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
-import FieldGroup from 'components/shared/FieldGroup';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import CheckboxField from 'components/shared/CheckboxField';
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
+
 import { ContactDetailsForm } from './index';
 
 type GovernanceTeamOptionsProps = {

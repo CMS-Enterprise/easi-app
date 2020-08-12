@@ -1,9 +1,11 @@
 import React from 'react';
-import Header from 'components/Header';
+import { useDispatch } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 import { DateTime } from 'luxon';
-import { useDispatch } from 'react-redux';
+
+import Header from 'components/Header';
 import { updateLastActiveAt } from 'reducers/authReducer';
+
 import ActionBanner from '../../components/shared/ActionBanner/index';
 
 // This view can be deleted whenever we're ready

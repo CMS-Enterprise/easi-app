@@ -1,15 +1,16 @@
 import axios from 'axios';
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { Action } from 'redux-actions';
+import { call, put, takeLatest } from 'redux-saga/effects';
+
+import { prepareBusinessCaseForApi } from 'data/businessCase';
+import { updateLastActiveAt } from 'reducers/authReducer';
+import { BusinessCaseModel } from 'types/businessCase';
 import {
   fetchBusinessCase,
   postBusinessCase,
   putBusinessCase,
   submitBusinessCase
 } from 'types/routines';
-import { BusinessCaseModel } from 'types/businessCase';
-import { prepareBusinessCaseForApi } from 'data/businessCase';
-import { Action } from 'redux-actions';
-import { updateLastActiveAt } from 'reducers/authReducer';
 
 function getBusinessCaseRequest(id: string) {
   return axios.get(`${process.env.REACT_APP_API_ADDRESS}/business_case/${id}`);

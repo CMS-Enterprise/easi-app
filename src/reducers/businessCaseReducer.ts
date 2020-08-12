@@ -1,16 +1,17 @@
-import { BusinessCaseState } from 'types/businessCase';
+import { Action } from 'redux-actions';
+
 import {
   businessCaseInitialData,
   prepareBusinessCaseForApp
 } from 'data/businessCase';
+import { BusinessCaseState } from 'types/businessCase';
 import {
+  clearBusinessCase,
   fetchBusinessCase,
   postBusinessCase,
   storeBusinessCase,
-  submitBusinessCase,
-  clearBusinessCase
+  submitBusinessCase
 } from 'types/routines';
-import { Action } from 'redux-actions';
 
 const initialState: BusinessCaseState = {
   form: businessCaseInitialData,

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import classnames from 'classnames';
+
 import './index.scss';
 
 type ErrorAlertProps = {
