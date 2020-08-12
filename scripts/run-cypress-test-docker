@@ -15,7 +15,6 @@ if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-we
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up -d easi easi_client
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up cypress cypress
 
-  docker container cp "${CYPRESS_CONTAINER}":/cypress/videos/systemIntake.spec.js.mp4 cypress/videos/systemIntake.spec.js.mp4
   EXIT_STATUS=$(docker container inspect "${CYPRESS_CONTAINER}" --format='{{.State.ExitCode}}')
   echo "done"
   exit "${EXIT_STATUS}"
