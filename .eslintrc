@@ -6,7 +6,7 @@
     "prettier",
     "prettier/react"
   ],
-  "plugins": ["jsx-a11y", "prettier", "cypress"],
+  "plugins": ["jsx-a11y", "prettier", "cypress", "simple-import-sort"],
   "rules": {
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "jsx-a11y/label-has-associated-control": [
@@ -33,7 +33,28 @@
         "singleQuote": true
       }
     ],
-    "import/extensions": ["error", "never"]
+    "import/extensions": ["error", "never"],
+    "simple-import-sort/sort": [
+      "error",
+      {
+        "groups": [
+          // Packages. `react` related packages come first.
+          ["^react", "^@?\\w"],
+          // Internal packages.
+          [
+            "^(components|constants|data|hooks|i18n|reducers|sagas|types|utils|validations|views)(/.*|$)"
+          ],
+          // Side effect imports.
+          ["^\\u0000"],
+          // Parent imports. Put `..` last.
+          ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+          // Other relative imports. Put same-folder imports and `.` last.
+          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+          // Style imports.
+          ["^.+\\.s?css$"]
+        ]
+      }
+    ]
   },
   "settings": {
     "import/resolver": {
