@@ -40,6 +40,7 @@ class App extends React.Component<MainProps, MainState> {
             <TimeOutWrapper>
               <Switch>
                 <Route path="/" exact component={Home} />
+                <Redirect exact from="/login" to="/signin" />
                 <Route path="/signin" exact component={Login} />
                 {process.env.NODE_ENV === 'development' && (
                   <Route path="/sandbox" exact component={Sandbox} />
