@@ -66,3 +66,20 @@ export const bizCaseStatus = (
       return 'CANNOT_START';
   }
 };
+
+export const chooseBusinessCaseLink = (
+  bizCase: BusinessCaseModel,
+  status: string
+) => {
+  switch (status) {
+    case 'START':
+      return '/business/new/general-request-info';
+    case 'NOT_NEEDED':
+      return '/';
+    case 'CONTINUE':
+    case 'COMPLETED':
+      return `/business/${bizCase.id}/general-project-info`;
+    default:
+      return null;
+  }
+};

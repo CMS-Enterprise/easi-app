@@ -1,20 +1,18 @@
 import React from 'react';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 type TaskListItemProps = {
   heading: string;
   description: string;
   status: string;
-  link: string;
+  children?: React.ReactNode | React.ReactNodeArray;
 };
 
 const TaskListItem = ({
   heading,
   description,
   status,
-  link
+  children
 }: TaskListItemProps) => {
   const taskListItemClasses = classnames(
     'governance-task-list__item',
@@ -49,20 +47,7 @@ const TaskListItem = ({
         <p className="governance-task-list__task-description line-height-body-4 margin-bottom-4">
           {description}
         </p>
-
-        {status === 'START' && (
-          <UswdsLink className="usa-button" variant="unstyled" href={link}>
-            Start
-          </UswdsLink>
-        )}
-        {status === 'CONTINUE' && (
-          <UswdsLink className="usa-button" variant="unstyled" href={link}>
-            Continue
-          </UswdsLink>
-        )}
-        {status === 'COMPLETED' && (
-          <Link to={link}>View Submitted Request Form</Link>
-        )}
+        {children}
       </div>
     </li>
   );
