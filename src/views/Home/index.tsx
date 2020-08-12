@@ -168,7 +168,7 @@ const Home = ({ history }: HomeProps) => {
               className="usa-button"
               asCustom={Link}
               variant="unstyled"
-              to="/login"
+              to="/signin"
             >
               {t('home:signIn')}
             </UswdsLink>

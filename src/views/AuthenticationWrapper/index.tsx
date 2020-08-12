@@ -10,7 +10,7 @@ const AuthenticationWrapper = ({ children }: AuthenticationWrapperProps) => {
   const history = useHistory();
 
   const handleAuthRequiredRedirect = () => {
-    history.push('/login');
+    history.push('/signin');
   };
 
   return (
