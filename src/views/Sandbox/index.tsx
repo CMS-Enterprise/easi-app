@@ -27,7 +27,7 @@ const shortenTimeout = async (authService: any) => {
     ...accessToken,
     expiresAt: Math.round(
       DateTime.local()
-        .plus({ seconds: 15 })
+        .plus({ seconds: 5 })
         .toSeconds()
     )
   };
