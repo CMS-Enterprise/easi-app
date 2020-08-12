@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -15,6 +16,7 @@ const (
 	loggerKey contextKey = iota
 	traceKey
 	userKey
+	principalKey
 )
 
 // WithLogger returns a context with the given logger
@@ -49,4 +51,18 @@ func WithUser(ctx context.Context, user models.User) context.Context {
 func User(ctx context.Context) (models.User, bool) {
 	user, ok := ctx.Value(userKey).(models.User)
 	return user, ok
+}
+
+// WithPrincipal decorates the context with the given security principal
+func WithPrincipal(c context.Context, p authn.Principal) context.Context {
+	return context.WithValue(c, principalKey, p)
+}
+
+// Principal returns the security principal, defaulting to
+// an Anonymous user if not assigned.
+func Principal(c context.Context) authn.Principal {
+	if p, ok := c.Value(principalKey).(authn.Principal); ok {
+		return p
+	}
+	return authn.ANON
 }
