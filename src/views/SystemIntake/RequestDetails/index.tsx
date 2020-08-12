@@ -421,6 +421,7 @@ const RequestDetails = ({
                   onClick={() => {
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
+                        dispatchSave();
                         const newUrl = 'review';
                         history.push(newUrl);
                       }
@@ -449,7 +450,7 @@ const RequestDetails = ({
             <AutoSave
               values={values}
               onSave={dispatchSave}
-              debounceDelay={1000}
+              debounceDelay={1000 * 30}
             />
             <PageNumber currentPage={2} totalPages={2} />
           </>
