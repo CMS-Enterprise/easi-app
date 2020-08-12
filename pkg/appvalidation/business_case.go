@@ -288,14 +288,15 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 		if validate.RequireNullString(businessCase.AlternativeACostSavings) {
 			expectedErr.WithValidation("AlternativeACostSavings", "is required")
 		}
-		if businessCase.InitialSubmittedAt == nil {
-			expectedErr.WithValidation("InitialSubmittedAt", "is required")
-		} else if validate.RequireTime(*businessCase.InitialSubmittedAt) {
+		if businessCase.SubmittedAt == nil {
+			expectedErr.WithValidation("SubmittedAt", "is required")
+		} else if validate.RequireTime(*businessCase.SubmittedAt) {
+			expectedErr.WithValidation("SubmittedAt", "cannot be zero")
+		}
+		if businessCase.InitialSubmittedAt != nil && validate.RequireTime(*businessCase.InitialSubmittedAt) {
 			expectedErr.WithValidation("InitialSubmittedAt", "cannot be zero")
 		}
-		if businessCase.LastSubmittedAt == nil {
-			expectedErr.WithValidation("LastSubmittedAt", "is required")
-		} else if validate.RequireTime(*businessCase.LastSubmittedAt) {
+		if businessCase.LastSubmittedAt != nil && validate.RequireTime(*businessCase.LastSubmittedAt) {
 			expectedErr.WithValidation("LastSubmittedAt", "cannot be zero")
 		}
 		if alternativeBRequired(businessCase) {

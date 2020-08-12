@@ -358,7 +358,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		s.NoError(err)
 		s.Equal(businessCase, *actualBusinessCase)
 		s.Equal(1, emailCount)
-		s.Equal(serviceConfig.clock.Now(), *actualBusinessCase.SubmittedAt)
+		s.Equal(serviceConfig.clock.Now(), *actualBusinessCase.LastSubmittedAt)
 	})
 
 	s.Run("returns notification error when email fails", func() {
