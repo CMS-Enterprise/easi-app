@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
-import { DateTime, Duration } from 'luxon';
+import { Duration } from 'luxon';
 import { useTranslation } from 'react-i18next';
 import Modal from 'components/Modal';
-import Button from 'components/shared/Button';
-import { updateLastActiveAt } from 'reducers/authReducer';
+import { Button } from '@trussworks/react-uswds';
+import { updateLastActiveAt, updateLastRenewAt } from 'reducers/authReducer';
 import { AppState } from 'reducers/rootReducer';
 import useInterval from 'hooks/useInterval';
 
@@ -26,11 +26,9 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const lastActiveAt = useSelector(
     (state: AppState) => state.auth.lastActiveAt
   );
+  const lastRenewAt = useSelector((state: AppState) => state.auth.lastRenewAt);
 
-  const TIMEOUT_WINDOW = { minutes: 15 };
-  const timeoutTime = DateTime.fromMillis(lastActiveAt)
-    .plus(TIMEOUT_WINDOW)
-    .toMillis();
+  const activeSinceLastRenew = lastActiveAt > lastRenewAt;
   const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
   const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('milliseconds');
 
@@ -39,7 +37,12 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     // clear the old listener so we don't register millions of them
     tokenManager.off('expired');
     tokenManager.on('expired', (key: any) => {
-      tokenManager.renew(key);
+      if (activeSinceLastRenew) {
+        tokenManager.renew(key);
+        dispatch(updateLastRenewAt);
+      } else {
+        authService.logout('/login');
+      }
     });
   };
 
@@ -70,29 +73,19 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   // useInterval starts once the modal is open and stops when it's closed
   // Updates the minutes/seconds in the message
   useInterval(
-    () => {
+    async () => {
       const currentTime = Date.now();
-      if (timeoutTime - currentTime >= 0) {
+      const tokenManager = await authService.getTokenManager();
+      const accessToken = await tokenManager.get('accessToken');
+      // convert from seconds to miliseconds
+      const accessTokenExpires = accessToken.expiresAt * oneSecond;
+      if (accessTokenExpires - currentTime >= 0) {
         setTimeRemainingArr(
-          formatSessionTimeRemaining(timeoutTime - currentTime)
+          formatSessionTimeRemaining(accessTokenExpires - currentTime)
         );
       }
     },
     isModalOpen ? oneSecond : null
-  );
-
-  // When a user is authenticated, this useInterval checks to see if they are
-  // inactive. If they are inactive for too long, they are logged out.
-  useInterval(
-    () => {
-      const activeSessionWindow = DateTime.local()
-        .minus(TIMEOUT_WINDOW)
-        .toMillis();
-      if (lastActiveAt < activeSessionWindow) {
-        authService.logout();
-      }
-    },
-    authState.isAuthenticated ? oneSecond : null
   );
 
   // useInterval starts when a user is logged in AND the modal is not open
@@ -101,9 +94,18 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   useInterval(
     async () => {
       const currentTime = Date.now();
-      if (timeoutTime - currentTime < fiveMinutes) {
+      const tokenManager = await authService.getTokenManager();
+      const accessToken = await tokenManager.get('accessToken');
+
+      // convert from seconds to miliseconds
+      const accessTokenExpires =
+        accessToken && accessToken.expiresAt * oneSecond;
+      if (
+        !activeSinceLastRenew &&
+        accessTokenExpires - currentTime < fiveMinutes
+      ) {
         setTimeRemainingArr(
-          formatSessionTimeRemaining(timeoutTime - currentTime)
+          formatSessionTimeRemaining(accessTokenExpires - currentTime)
         );
         setIsModalOpen(true);
       }
