@@ -56,7 +56,6 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
 	ctx := context.Background()
-	ctx = appcontext.WithUser(ctx, models.User{EUAUserID: fakeEuaID}) // deprecated
 	ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: fakeEuaID, JobCodeEASi: true})
 
 	s.Run("successfully creates a system intake without an error", func() {
@@ -105,7 +104,6 @@ func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 
 	s.Run("Mismatched EUA ID fails auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ZYXW"}) // deprecated
 		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
 
 		intake := models.SystemIntake{
@@ -120,7 +118,6 @@ func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 
 	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ABCD"}) // deprecated
 		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
 
 		intake := models.SystemIntake{

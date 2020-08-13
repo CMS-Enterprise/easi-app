@@ -57,8 +57,7 @@ func NewCreateSystemIntake(
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		logger := appcontext.ZLogger(ctx)
 		principal := appcontext.Principal(ctx)
-		user, ok := appcontext.User(ctx)
-		if !ok || !principal.AllowEASi() {
+		if !principal.AllowEASi() {
 			// Default to failure to authorize and create a quick audit log
 			logger.With(zap.Bool("Authorized", false)).
 				With(zap.String("Operation", "CreateSystemIntake")).
@@ -66,7 +65,6 @@ func NewCreateSystemIntake(
 			return &models.SystemIntake{}, &apperrors.UnauthorizedError{}
 		}
 		intake.EUAUserID = principal.ID()
-		intake.EUAUserID = user.EUAUserID // deprecated
 		// app validation belongs here
 		createdIntake, err := create(intake)
 		if err != nil {
@@ -90,8 +88,7 @@ func NewAuthorizeUpdateSystemIntake(_ *zap.Logger) func(
 	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		logger := appcontext.ZLogger(ctx)
 		principal := appcontext.Principal(ctx)
-		user, ok := appcontext.User(ctx) // deprecated
-		if !ok || !principal.AllowEASi() {
+		if !principal.AllowEASi() {
 			logger.Error("unable to get EUA ID from context")
 			return false, &apperrors.ContextError{
 				Operation: apperrors.ContextGet,
@@ -100,7 +97,7 @@ func NewAuthorizeUpdateSystemIntake(_ *zap.Logger) func(
 		}
 
 		// If intake doesn't exist or owned by user, authorize
-		if intake == nil || (user.EUAUserID == intake.EUAUserID && principal.ID() == intake.EUAUserID) {
+		if principal.AllowEASi() && (intake == nil || principal.ID() == intake.EUAUserID) {
 			logger.With(zap.Bool("Authorized", true)).
 				With(zap.String("Operation", "UpdateSystemIntake")).
 				Info("user authorized to save system intake")

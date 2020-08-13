@@ -13,6 +13,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -52,7 +53,7 @@ func newMockArchiveSystemIntake(err error) archiveSystemIntake {
 
 func (s HandlerTestSuite) TestSystemIntakeHandler() {
 	requestContext := context.Background()
-	requestContext = appcontext.WithUser(requestContext, models.User{EUAUserID: "FAKE"})
+	requestContext = appcontext.WithPrincipal(requestContext, &authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
 	requester := "Test Requester"
 	id, err := uuid.NewUUID()
 	s.NoError(err)

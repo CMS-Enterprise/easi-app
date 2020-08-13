@@ -109,8 +109,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			}
 
 			principal := appcontext.Principal(r.Context())
-			user, ok := appcontext.User(r.Context()) // deprecated
-			if !ok {
+			if !principal.AllowEASi() {
 				h.WriteErrorResponse(
 					r.Context(),
 					w,
@@ -121,7 +120,6 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				return
 			}
 			businessCaseToCreate.EUAUserID = principal.ID()
-			businessCaseToCreate.EUAUserID = user.EUAUserID
 
 			businessCase, err := h.CreateBusinessCase(r.Context(), &businessCaseToCreate)
 			if err != nil {
@@ -168,13 +166,11 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			businessCaseToUpdate.ID = businessCaseID
 
 			principal := appcontext.Principal(r.Context())
-			user, ok := appcontext.User(r.Context()) // deprecated
-			if !ok {
+			if !principal.AllowEASi() {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 			businessCaseToUpdate.EUAUserID = principal.ID()
-			businessCaseToUpdate.EUAUserID = user.EUAUserID
 
 			updatedBusinessCase, err := h.UpdateBusinessCase(r.Context(), &businessCaseToUpdate)
 			if err != nil {

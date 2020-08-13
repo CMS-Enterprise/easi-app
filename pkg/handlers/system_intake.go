@@ -141,8 +141,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 			}
 
 			principal := appcontext.Principal(r.Context())
-			user, ok := appcontext.User(r.Context()) // deprecated
-			if !ok {
+			if !principal.AllowEASi() {
 				h.WriteErrorResponse(
 					r.Context(),
 					w,
@@ -153,7 +152,6 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 			intake.EUAUserID = principal.ID()
-			intake.EUAUserID = user.EUAUserID
 
 			updatedIntake, err := h.UpdateSystemIntake(r.Context(), &intake)
 			if err != nil {
