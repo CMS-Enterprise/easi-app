@@ -5,7 +5,7 @@
   "dependencies": {
     "@craco/craco": "^5.6.1",
     "@cypress/code-coverage": "^1.12.2",
-    "@okta/okta-react": "^3.0.1",
+    "@okta/okta-react": "^3.0.4",
     "@okta/okta-signin-widget": "^4.0.2",
     "@trussworks/react-uswds": "^1.7.0",
     "@types/classnames": "^2.2.9",
