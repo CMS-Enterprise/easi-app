@@ -11,6 +11,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -96,6 +97,7 @@ func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
 	s.Run("Mismatched EUA ID fails auth", func() {
 		ctx := context.Background()
 		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ZYXW"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
 
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
@@ -110,6 +112,7 @@ func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
 	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
 		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ABCD"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
 		}
@@ -224,6 +227,7 @@ func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
 	s.Run("Mismatched EUA ID fails auth", func() {
 		ctx := context.Background()
 		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ZYXW"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
 
 		businessCase := models.BusinessCase{
 			EUAUserID: "ABCD",
@@ -238,6 +242,7 @@ func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
 	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
 		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ABCD"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
 		businessCase := models.BusinessCase{
 			EUAUserID: "ABCD",
 		}

@@ -31,7 +31,8 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
-			user, ok := appcontext.User(r.Context())
+			principal := appcontext.Principal(r.Context())
+			user, ok := appcontext.User(r.Context()) // deprecated
 			if !ok {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.ContextError{
 					Operation: apperrors.ContextGet,
@@ -40,7 +41,9 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			systemIntakes, err := h.FetchSystemIntakes(r.Context(), user.EUAUserID)
+			fetchID := principal.ID()
+			fetchID = user.EUAUserID
+			systemIntakes, err := h.FetchSystemIntakes(r.Context(), fetchID)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return

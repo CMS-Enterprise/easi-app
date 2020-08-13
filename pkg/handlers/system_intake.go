@@ -140,7 +140,8 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			user, ok := appcontext.User(r.Context())
+			principal := appcontext.Principal(r.Context())
+			user, ok := appcontext.User(r.Context()) // deprecated
 			if !ok {
 				h.WriteErrorResponse(
 					r.Context(),
@@ -151,6 +152,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 					})
 				return
 			}
+			intake.EUAUserID = principal.ID()
 			intake.EUAUserID = user.EUAUserID
 
 			updatedIntake, err := h.UpdateSystemIntake(r.Context(), &intake)

@@ -31,7 +31,8 @@ func (h BusinessCasesHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
-			user, ok := appcontext.User(r.Context())
+			principal := appcontext.Principal(r.Context())
+			user, ok := appcontext.User(r.Context()) // deprecated
 			if !ok {
 				h.WriteErrorResponse(
 					r.Context(),
@@ -43,7 +44,9 @@ func (h BusinessCasesHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			businessCases, err := h.FetchBusinessCases(r.Context(), user.EUAUserID)
+			fetchID := principal.ID()
+			fetchID = user.EUAUserID
+			businessCases, err := h.FetchBusinessCases(r.Context(), fetchID)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
