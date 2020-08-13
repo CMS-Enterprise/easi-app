@@ -32,8 +32,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 		switch r.Method {
 		case "GET":
 			principal := appcontext.Principal(r.Context())
-			user, ok := appcontext.User(r.Context()) // deprecated
-			if !ok {
+			if !principal.AllowEASi() {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.ContextError{
 					Operation: apperrors.ContextGet,
 					Object:    "User",
@@ -41,9 +40,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			fetchID := principal.ID()
-			fetchID = user.EUAUserID
-			systemIntakes, err := h.FetchSystemIntakes(r.Context(), fetchID)
+			systemIntakes, err := h.FetchSystemIntakes(r.Context(), principal.ID())
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
