@@ -378,7 +378,9 @@ export const BusinessCase = () => {
                               dispatchSave();
                               // TODO: We probably want to check whether save was sucessful
                               // then redirect.
-                              history.push('/');
+                              history.push(
+                                `/governance-task-list/${businessCase.systemIntakeId}`
+                              );
                             }}
                           >
                             <span>

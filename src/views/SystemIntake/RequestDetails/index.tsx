@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 import { Formik, Field, FormikProps, Form } from 'formik';
 import { RadioField } from 'components/shared/RadioField';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
@@ -14,7 +15,7 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import CharacterCounter from 'components/CharacterCounter';
 import flattenErrors from 'utils/flattenErrors';
 import { Button } from '@trussworks/react-uswds';
-import { useHistory } from 'react-router-dom';
+
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -46,6 +47,8 @@ const RequestDetails = ({
   dispatchSave
 }: RequestDetailsProps) => {
   const history = useHistory();
+  const { systemId } = useParams();
+
   const initialValues: RequestDetailsForm = {
     requestName: systemIntake.requestName,
     fundingSource: systemIntake.fundingSource,
@@ -437,7 +440,7 @@ const RequestDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push('/');
+                      history.push(`/governance-task-list/${systemId}`);
                     }}
                   >
                     <span>

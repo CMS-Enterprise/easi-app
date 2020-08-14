@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
 import { Formik, Field, FormikProps, Form } from 'formik';
 import TextField from 'components/shared/TextField';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -16,7 +17,7 @@ import {
   GovernanceCollaborationTeam
 } from 'types/systemIntake';
 import { Button } from '@trussworks/react-uswds';
-import { useHistory } from 'react-router-dom';
+
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -60,6 +61,7 @@ const ContactDetails = ({
   dispatchSave
 }: ContactDetailsProps) => {
   const history = useHistory();
+  const { systemId } = useParams();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
 
   const initialValues: ContactDetailsForm = {
@@ -457,7 +459,7 @@ const ContactDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push('/');
+                      history.push(`/governance-task-list/${systemId}`);
                     }}
                   >
                     <span>
