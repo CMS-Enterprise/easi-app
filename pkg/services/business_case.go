@@ -245,8 +245,12 @@ func NewUpdateBusinessCase(
 		// Once CEDAR endpoint exists, we should be doing validations and submissions in the CEDAR package
 		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
 			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
-			// Set submitted at time before validations as it is one of the fields that is validated
-			businessCase.SubmittedAt = businessCase.UpdatedAt
+			// Set submitted at times before validations as it is one of the fields that is validated
+			businessCase.SubmittedAt = &updatedAt
+			if businessCase.InitialSubmittedAt == nil {
+				businessCase.InitialSubmittedAt = &updatedAt
+			}
+			businessCase.LastSubmittedAt = &updatedAt
 			err = appvalidation.BusinessCaseForSubmit(businessCase, existingBusinessCase)
 			if err != nil {
 				logger.Error("Failed to validate", zap.Error(err))
