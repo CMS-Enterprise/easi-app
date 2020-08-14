@@ -46,6 +46,18 @@ func (s ContextTestSuite) TestLogger() {
 	s.Equal(expectedLogger, logger)
 }
 
+func TestZLogger(t *testing.T) {
+	// functional logger returned even when not set
+	fallback := ZLogger(context.Background())
+	fallback.Info("silently succeeds") // not nil
+
+	// Also ensure it retrieves a set logger
+	expectedLogger := zap.NewExample()
+	ctx := WithLogger(context.Background(), expectedLogger)
+	logger := ZLogger(ctx)
+	assert.Equal(t, expectedLogger, logger)
+}
+
 func (s ContextTestSuite) TestWithTrace() {
 	ctx := context.Background()
 
