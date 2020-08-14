@@ -246,7 +246,6 @@ func NewUpdateBusinessCase(
 		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
 			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
 			// Set submitted at times before validations as it is one of the fields that is validated
-			businessCase.SubmittedAt = &updatedAt
 			if businessCase.InitialSubmittedAt == nil {
 				businessCase.InitialSubmittedAt = &updatedAt
 			}

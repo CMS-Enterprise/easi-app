@@ -248,7 +248,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 		submittedTime := time.Now()
-		businessCase.SubmittedAt = &submittedTime
+		businessCase.LastSubmittedAt = &submittedTime
 		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
 		s.NoError(err)
 	})
@@ -299,7 +299,6 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"Requester":"is required",` +
 			`"RequesterPhoneNumber":"is required",` +
 			`"Status":"cannot be SUBMITTED",` +
-			`"SubmittedAt":"is required",` +
 			`"SuccessIndicators":"is required",` +
 			`"SystemIntakeID":"is required",` +
 			`"alternativeASolution":"years 1, 2, 3, 4, 5 are required",` +
@@ -318,7 +317,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 		businessCase.Status = models.BusinessCaseStatusSUBMITTED
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 		submittedAt := time.Now()
-		businessCase.SubmittedAt = &submittedAt
+		businessCase.LastSubmittedAt = &submittedAt
 		businessCase.AlternativeBTitle = null.NewString("B Title", true)
 		businessCase.AlternativeBSummary = null.NewString("", false)
 		businessCase.AlternativeBHostingType = null.NewString("", false)
