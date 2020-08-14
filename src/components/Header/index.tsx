@@ -2,17 +2,18 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 import { useOktaAuth } from '@okta/okta-react';
+import { useTranslation } from 'react-i18next';
 import UsGovBanner from 'components/UsGovBanner';
 import { UserActionList, UserAction } from './UserActionList';
 import './index.scss';
 
 type HeaderProps = {
   children?: React.ReactNode | React.ReactNodeArray;
-  name?: string;
 };
 
-export const Header = ({ children, name }: HeaderProps) => {
+export const Header = ({ children }: HeaderProps) => {
   const { authState, authService } = useOktaAuth();
+  const { t } = useTranslation();
   const [userName, setUserName] = useState('');
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const dropdownNode = useRef<any>();
@@ -58,7 +59,11 @@ export const Header = ({ children, name }: HeaderProps) => {
       <UsGovBanner />
       <div className="grid-container easi-header__basic">
         <div className="usa-logo site-logo" id="logo">
-          <em className="usa-logo__text">{name || 'EASi'}</em>
+          <Link to="/">
+            <em className="usa-logo__text" aria-label={t('header:returnHome')}>
+              {t('general:appName')}
+            </em>
+          </Link>
         </div>
         <button type="button" className="usa-menu-btn">
           <span className="fa fa-bars" />
@@ -84,21 +89,21 @@ export const Header = ({ children, name }: HeaderProps) => {
               {displayDropdown && (
                 <UserActionList id="Header-UserActionsList">
                   <UserAction link="/governance-overview">
-                    Add New System
+                    {t('header:addSystem')}
                   </UserAction>
                   <UserAction
                     onClick={() => {
                       authService.logout();
                     }}
                   >
-                    Log Out
+                    {t('header:signOut')}
                   </UserAction>
                 </UserActionList>
               )}
             </div>
           ) : (
-            <Link className="easi-header__nav-link" to="/login">
-              Login
+            <Link className="easi-header__nav-link" to="/signin">
+              {t('header:signIn')}
             </Link>
           )}
         </div>
@@ -121,11 +126,11 @@ export const Header = ({ children, name }: HeaderProps) => {
                 authService.logout();
               }}
             >
-              Logout
+              {t('header:signOut')}
             </button>
           ) : (
-            <a className="easi-header__nav-link" href="/login">
-              Login
+            <a className="easi-header__nav-link" href="/signin">
+              {t('header:signIn')}
             </a>
           )}
         </div>

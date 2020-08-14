@@ -94,6 +94,11 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 			user, ok := appcontext.User(r.Context())
 			s.True(ok)
 			s.Equal(s.config.GetString("OKTA_TEST_USERNAME"), user.EUAUserID)
+
+			// ensure the Principal is currently piggy-backing off the User
+			principal := appcontext.Principal(r.Context())
+			s.True(principal.AllowEASi(), "AllowEASi()")
+			s.Equal(user.EUAUserID, principal.ID(), "ID()")
 		})
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)

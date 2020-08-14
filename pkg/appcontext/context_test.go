@@ -5,8 +5,11 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/authn"
 )
 
 type ContextTestSuite struct {
@@ -61,4 +64,56 @@ func (s ContextTestSuite) TestTrace() {
 
 	s.True(ok)
 	s.Equal(expectedID, traceID)
+}
+
+func TestContextPrincipal(t *testing.T) {
+	// Arrange (of AAA)
+	submitterID := "submitter"
+	reviewerID := "reviewer"
+
+	testCases := map[string]struct {
+		ctx        context.Context
+		expectID   string
+		expectEASi bool
+		expectGRT  bool
+	}{
+		"unassigned returns anonymous": {
+			ctx:        context.Background(),
+			expectID:   "ANON",
+			expectEASi: false,
+			expectGRT:  false,
+		},
+		"regular user": {
+			ctx: WithPrincipal(context.Background(), &authn.EUAPrincipal{
+				EUAID:       submitterID,
+				JobCodeEASi: true,
+				JobCodeGRT:  false,
+			}),
+			expectID:   submitterID,
+			expectEASi: true,
+			expectGRT:  false,
+		},
+		"GRT reviewer": {
+			ctx: WithPrincipal(context.Background(), &authn.EUAPrincipal{
+				EUAID:       reviewerID,
+				JobCodeEASi: true,
+				JobCodeGRT:  true,
+			}),
+			expectID:   reviewerID,
+			expectEASi: true,
+			expectGRT:  true,
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			// Act (of AAA)
+			p := Principal(tc.ctx)
+
+			// Assert (of AAA)
+			assert.Equal(t, tc.expectID, p.ID(), "ID")
+			assert.Equal(t, tc.expectEASi, p.AllowEASi(), "EASi")
+			assert.Equal(t, tc.expectGRT, p.AllowGRT(), "GRT")
+		})
+	}
 }
