@@ -2,10 +2,12 @@ import React from 'react';
 import { Button, Link } from '@trussworks/react-uswds';
 import { shallow } from 'enzyme';
 
+import Modal from 'components/Modal';
+
 import SideNavActions from './index';
 
 const renderComponent = () => {
-  return shallow(<SideNavActions />);
+  return shallow(<SideNavActions archiveIntake={() => {}} />);
 };
 
 describe('The TaskListSideNavActions', () => {
@@ -30,10 +32,24 @@ describe('The TaskListSideNavActions', () => {
       const component = renderComponent();
       expect(
         component
-          .find(Button)
+          .find('.test-withdraw-request')
           .dive()
           .text()
       ).toEqual('Remove your request to add a new system');
+    });
+    it('has a closed modal by default', () => {
+      const component = renderComponent();
+      expect(component.find(Modal).prop('isOpen')).toEqual(false);
+    });
+    it('opens a modal', () => {
+      const component = renderComponent();
+      component.find('.test-withdraw-request').simulate('click');
+      expect(component.find(Modal).prop('isOpen')).toEqual(true);
+    });
+    it('has 2 buttons in the modal', () => {
+      const component = renderComponent();
+      component.find('.test-withdraw-request').simulate('click');
+      expect(component.find(Modal).find(Button).length).toEqual(2);
     });
   });
 

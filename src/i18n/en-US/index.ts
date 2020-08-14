@@ -1,3 +1,5 @@
+import taskList from 'i18n/en-US/taskList';
+
 import auth from './auth';
 import businessCase from './businessCase';
 import general from './general';
@@ -13,7 +15,8 @@ const enUS = {
   home,
   systemIntake,
   businessCase,
-  grtReview
+  grtReview,
+  taskList
 };
 
 export default enUS;

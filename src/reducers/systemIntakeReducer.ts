@@ -5,6 +5,7 @@ import {
   prepareSystemIntakeForApp
 } from 'data/systemIntake';
 import {
+  archiveSystemIntake,
   clearSystemIntake,
   fetchSystemIntake,
   postSystemIntake,
@@ -157,6 +158,8 @@ function systemIntakeReducer(
         ...state,
         isSubmitting: false
       };
+    case archiveSystemIntake.SUCCESS:
+      return initialState;
     default:
       return state;
   }
