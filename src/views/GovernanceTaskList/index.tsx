@@ -194,7 +194,7 @@ const GovernanceTaskList = () => {
             <h1 className="font-heading-2xl margin-top-4">
               Get governance approval
               <span className="display-block line-height-body-5 font-body-lg text-light">
-                for adding a new system or service
+                {`for ${systemIntake.requestName}`}
               </span>
             </h1>
             <ol className="governance-task-list__task-list governance-task-list__task-list--primary">

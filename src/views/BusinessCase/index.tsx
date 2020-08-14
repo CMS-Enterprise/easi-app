@@ -159,6 +159,7 @@ export const BusinessCase = () => {
     }
 
     return () => {
+      // clear business case when unmounting
       dispatch(clearBusinessCase());
     };
 
@@ -201,7 +202,7 @@ export const BusinessCase = () => {
 
   return (
     <div className="business-case margin-bottom-5">
-      <Header name="CMS Business Case" />
+      <Header />
       <MainContent>
         {businessCase.id && (
           <Formik

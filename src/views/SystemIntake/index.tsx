@@ -39,7 +39,6 @@ export const SystemIntake = () => {
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-
     if (current && current.dirty && !isSaving) {
       if (systemId === 'new') {
         dispatch(postSystemIntake({ ...systemIntake, ...current.values }));
@@ -74,8 +73,8 @@ export const SystemIntake = () => {
     } else {
       dispatch(fetchSystemIntake(systemId));
     }
-    // This return will clear system intake from store when component is unmounted
     return () => {
+      // clear system intake from store when component is unmounting
       dispatch(clearSystemIntake());
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -91,7 +90,7 @@ export const SystemIntake = () => {
 
   return (
     <div className="system-intake margin-bottom-5">
-      <Header name="EASi System Intake" />
+      <Header />
       <MainContent className="grid-container">
         {isLoading === false && (
           <>
