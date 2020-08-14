@@ -10,7 +10,8 @@ import {
   saveSystemIntake,
   clearSystemIntake,
   postSystemIntake,
-  reviewSystemIntake
+  reviewSystemIntake,
+  archiveSystemIntake
 } from 'types/routines';
 import { Action } from 'redux-actions';
 
@@ -156,6 +157,8 @@ function systemIntakeReducer(
         ...state,
         isSubmitting: false
       };
+    case archiveSystemIntake.SUCCESS:
+      return initialState;
     default:
       return state;
   }

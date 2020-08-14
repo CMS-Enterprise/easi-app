@@ -34,6 +34,22 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
 		s.Equal(&models.BusinessCase{}, fetched)
 	})
+
+	s.Run("does not fetch archived business case", func() {
+		intake := testhelpers.NewSystemIntake()
+		_, err := s.store.CreateSystemIntake(&intake)
+		s.NoError(err)
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.SystemIntakeID = intake.ID
+		businessCase.Status = models.BusinessCaseStatusARCHIVED
+		created, err := s.store.CreateBusinessCase(&businessCase)
+		s.NoError(err)
+		fetched, err := s.store.FetchBusinessCaseByID(created.ID)
+
+		s.Error(err)
+		s.IsType(&apperrors.ResourceNotFoundError{}, err)
+		s.Equal(&models.BusinessCase{}, fetched)
+	})
 }
 
 func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
@@ -77,6 +93,39 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 		s.NoError(err)
 		s.Len(fetched, 0)
 		s.Equal(models.BusinessCases{}, fetched)
+	})
+
+	s.Run("does not fetch archived business case", func() {
+		intake := testhelpers.NewSystemIntake()
+		intake.Status = models.SystemIntakeStatusSUBMITTED
+		_, err := s.store.CreateSystemIntake(&intake)
+		s.NoError(err)
+
+		intake2 := testhelpers.NewSystemIntake()
+		intake2.EUAUserID = intake.EUAUserID
+		intake2.Status = models.SystemIntakeStatusARCHIVED
+		_, err = s.store.CreateSystemIntake(&intake2)
+		s.NoError(err)
+
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.EUAUserID = intake.EUAUserID
+		businessCase.SystemIntakeID = intake.ID
+
+		businessCase2 := testhelpers.NewBusinessCase()
+		businessCase2.EUAUserID = intake.EUAUserID
+		businessCase2.SystemIntakeID = intake2.ID
+		businessCase2.Status = models.BusinessCaseStatusARCHIVED
+
+		_, err = s.store.CreateBusinessCase(&businessCase)
+		s.NoError(err)
+
+		_, err = s.store.CreateBusinessCase(&businessCase2)
+		s.NoError(err)
+
+		fetched, err := s.store.FetchBusinessCasesByEuaID(businessCase.EUAUserID)
+
+		s.NoError(err, "failed to fetch business cases")
+		s.Len(fetched, 1)
 	})
 }
 

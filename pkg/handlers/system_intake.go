@@ -17,6 +17,7 @@ import (
 type createSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
 type fetchSystemIntakeByID func(context context.Context, id uuid.UUID) (*models.SystemIntake, error)
 type updateSystemIntake func(context context.Context, intake *models.SystemIntake) (*models.SystemIntake, error)
+type archiveSystemIntake func(context context.Context, id uuid.UUID) error
 
 // NewSystemIntakeHandler is a constructor for SystemIntakeHandler
 func NewSystemIntakeHandler(
@@ -24,12 +25,14 @@ func NewSystemIntakeHandler(
 	create createSystemIntake,
 	update updateSystemIntake,
 	fetch fetchSystemIntakeByID,
+	delete archiveSystemIntake,
 ) SystemIntakeHandler {
 	return SystemIntakeHandler{
 		HandlerBase:           base,
 		CreateSystemIntake:    create,
 		UpdateSystemIntake:    update,
 		FetchSystemIntakeByID: fetch,
+		ArchiveSystemIntake:   delete,
 	}
 }
 
@@ -39,6 +42,7 @@ type SystemIntakeHandler struct {
 	CreateSystemIntake    createSystemIntake
 	UpdateSystemIntake    updateSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
+	ArchiveSystemIntake   archiveSystemIntake
 }
 
 // Handle handles a request for the system intake form
@@ -118,7 +122,6 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 			return
-
 		case "PUT":
 			if r.Body == nil {
 				h.WriteErrorResponse(
@@ -167,6 +170,32 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
+			return
+		case "DELETE":
+			id := mux.Vars(r)["intake_id"]
+			valErr := apperrors.NewValidationError(
+				errors.New("system intake failed validation"),
+				models.SystemIntake{},
+				"",
+			)
+			if id == "" {
+				valErr.WithValidation("path.intakeID", "is required")
+				h.WriteErrorResponse(r.Context(), w, &valErr)
+				return
+			}
+			uuid, err := uuid.Parse(id)
+			if err != nil {
+				valErr.WithValidation("path.intakeID", "must be UUID")
+				h.WriteErrorResponse(r.Context(), w, &valErr)
+				return
+			}
+
+			err = h.ArchiveSystemIntake(r.Context(), uuid)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
 			return
 		default:
 			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})

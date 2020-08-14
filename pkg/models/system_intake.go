@@ -21,6 +21,8 @@ const (
 	SystemIntakeStatusCLOSED SystemIntakeStatus = "CLOSED"
 	// SystemIntakeStatusAPPROVED captures enum value "APPROVED"
 	SystemIntakeStatusAPPROVED SystemIntakeStatus = "APPROVED"
+	// SystemIntakeStatusARCHIVED captures enum value "ARCHIVED"
+	SystemIntakeStatusARCHIVED SystemIntakeStatus = "ARCHIVED"
 )
 
 // SystemIntake is the model for the system intake form
@@ -50,6 +52,7 @@ type SystemIntake struct {
 	UpdatedAt               *time.Time         `json:"updatedAt" db:"updated_at"`
 	SubmittedAt             *time.Time         `json:"submittedAt" db:"submitted_at"`
 	DecidedAt               *time.Time         `json:"decidedAt" db:"decided_at"`
+	ArchivedAt              *time.Time         `db:"archived_at"`
 	AlfabetID               null.String        `json:"alfabetID" db:"alfabet_id"`
 	GrtReviewEmailBody      null.String        `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 	RequesterEmailAddress   null.String        `json:"requesterEmailAddress" db:"requester_email_address"`
