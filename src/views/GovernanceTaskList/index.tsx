@@ -140,7 +140,6 @@ const GovernanceTaskList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
-  const history = useHistory();
   const { t } = useTranslation();
 
   useEffect(() => {
