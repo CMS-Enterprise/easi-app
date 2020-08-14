@@ -12,7 +12,7 @@ export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   return 'COMPLETED';
 };
 
-export const chooseIntakeLink = (intake: SystemIntakeForm, status: string) => {
+export const chooseIntakePath = (intake: SystemIntakeForm, status: string) => {
   let link: string;
   switch (status) {
     case 'CONTINUE':
@@ -67,18 +67,18 @@ export const bizCaseStatus = (
   }
 };
 
-export const chooseBusinessCaseLink = (
-  bizCase: BusinessCaseModel,
-  status: string
+// chooseBusinessCasePath won't return a link if the business case
+// status is NOT_NEEDED or CANNOT_START
+export const chooseBusinessCasePath = (
+  businessCaseStatus: string,
+  bizCaseId?: string
 ) => {
-  switch (status) {
+  switch (businessCaseStatus) {
     case 'START':
       return '/business/new/general-request-info';
-    case 'NOT_NEEDED':
-      return '/';
     case 'CONTINUE':
     case 'COMPLETED':
-      return `/business/${bizCase.id}/general-project-info`;
+      return `/business/${bizCaseId}/general-project-info`;
     default:
       return null;
   }

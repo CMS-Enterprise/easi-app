@@ -344,7 +344,7 @@ func (s *Store) UpdateBusinessCase(businessCase *models.BusinessCase) (*models.B
 			alternative_b_cost_savings = :alternative_b_cost_savings,
 			updated_at = :updated_at,
 		    status = :status,
-			initial_submitted_at = :submitted_at,
+			initial_submitted_at = :initial_submitted_at,
 		    last_submitted_at = :last_submitted_at
 		WHERE business_case.id = :id
 	`
