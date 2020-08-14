@@ -123,6 +123,17 @@ func (s *Server) routes(
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeFetchSystemIntakeByID(),
 		),
+		services.NewArchiveSystemIntake(
+			serviceConfig,
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
+			services.NewArchiveBusinessCase(
+				serviceConfig,
+				store.FetchBusinessCaseByID,
+				store.UpdateBusinessCase,
+			),
+			services.NewAuthorizeArchiveSystemIntake(s.logger),
+		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
 	api.Handle("/system_intake", systemIntakeHandler.Handle())

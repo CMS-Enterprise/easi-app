@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useParams, useHistory } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Link as UswdsLink, Alert } from '@trussworks/react-uswds';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import { AppState } from 'reducers/rootReducer';
+import {
+  archiveSystemIntake,
+  fetchBusinessCase,
+  fetchSystemIntake
+} from 'types/routines';
 import { BusinessCaseModel } from 'types/businessCase';
-import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import {
   intakeStatusFromIntake,
@@ -16,6 +20,7 @@ import {
   bizCaseStatus,
   chooseBusinessCasePath
 } from 'data/taskList';
+import { useTranslation } from 'react-i18next';
 import TaskListItem from './TaskListItem';
 import SideNavActions from './SideNavActions';
 import './index.scss';
@@ -135,6 +140,7 @@ const GovernanceTaskList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (systemId !== 'new') {
@@ -171,6 +177,17 @@ const GovernanceTaskList = () => {
     businessCaseStatus,
     history
   });
+
+  const archiveIntake = () => {
+    const redirect = () => {
+      history.push('/', {
+        confirmationText: t('taskList:withdraw_modal:confirmationText', {
+          requestName: systemIntake.requestName
+        })
+      });
+    };
+    dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
+  };
 
   return (
     <div className="governance-task-list">
@@ -286,7 +303,7 @@ const GovernanceTaskList = () => {
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">
-            <SideNavActions />
+            <SideNavActions archiveIntake={archiveIntake} />
           </div>
         </div>
       </MainContent>
