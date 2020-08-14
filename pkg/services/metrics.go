@@ -15,15 +15,11 @@ import (
 func NewFetchMetrics(
 	config Config,
 	fetchSystemIntakeMetrics func(time.Time, time.Time) (models.SystemIntakeMetrics, error),
-) func(ctx context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error) {
+) func(c context.Context, st time.Time, et time.Time) (models.MetricsDigest, error) {
 	return func(ctx context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error) {
-		localLogger, ok := appcontext.Logger(ctx)
-		if !ok {
-			localLogger = config.logger
-		}
 		systemIntakeMetrics, err := fetchSystemIntakeMetrics(startTime, endTime)
 		if err != nil {
-			localLogger.Error("failed to query system intake metrics", zap.Error(err))
+			appcontext.ZLogger(ctx).Error("failed to query system intake metrics", zap.Error(err))
 			return models.MetricsDigest{}, &apperrors.QueryError{
 				Err:       err,
 				Model:     models.SystemIntakeMetrics{},

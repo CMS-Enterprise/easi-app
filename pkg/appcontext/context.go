@@ -2,6 +2,8 @@ package appcontext
 
 import (
 	"context"
+	"fmt"
+	"os"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -25,9 +27,21 @@ func WithLogger(ctx context.Context, logger *zap.Logger) context.Context {
 }
 
 // Logger returns the context's logger
+// DEPRECATED - prefer ZLogger going forward
 func Logger(ctx context.Context) (*zap.Logger, bool) {
 	logger, ok := ctx.Value(loggerKey).(*zap.Logger)
 	return logger, ok
+}
+
+// ZLogger will always return something that functions
+// as a zap.Logger, even if it wasn't already placed
+// on the context
+func ZLogger(ctx context.Context) *zap.Logger {
+	if logger, ok := ctx.Value(loggerKey).(*zap.Logger); ok {
+		return logger
+	}
+	fmt.Fprintln(os.Stderr, "Logger not found on context.")
+	return zap.NewNop()
 }
 
 // WithTrace returns a context with request trace
