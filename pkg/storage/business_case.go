@@ -35,7 +35,7 @@ func (s *Store) FetchBusinessCaseByID(id uuid.UUID) (*models.BusinessCase, error
 			business_case
 			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
 		WHERE
-			business_case.id = $1
+			business_case.id = $1 AND business_case.status != 'ARCHIVED'
 		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
 
 	err := s.DB.Get(&businessCase, fetchBusinessCaseSQL, id)
@@ -61,7 +61,7 @@ func (s *Store) FetchBusinessCaseIDByIntakeID(intakeID uuid.UUID) (*uuid.UUID, e
 		FROM
 			business_case
 		WHERE
-			business_case.system_intake = $1`
+			business_case.system_intake = $1 AND business_case.status != 'ARCHIVED'`
 
 	err := s.DB.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
 	if err != nil {
@@ -89,7 +89,7 @@ func (s *Store) FetchBusinessCasesByEuaID(euaID string) (models.BusinessCases, e
 			business_case
 			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
 		WHERE
-			business_case.eua_user_id = $1
+			business_case.eua_user_id = $1 AND business_case.status != 'ARCHIVED'
 		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
 
 	err := s.DB.Select(&businessCases, fetchBusinessCaseSQL, euaID)
@@ -343,9 +343,10 @@ func (s *Store) UpdateBusinessCase(businessCase *models.BusinessCase) (*models.B
 			alternative_b_cons = :alternative_b_cons,
 			alternative_b_cost_savings = :alternative_b_cost_savings,
 			updated_at = :updated_at,
-		    status = :status,
+		  archived_at = :archived_at,
+		  status = :status,
 			initial_submitted_at = :initial_submitted_at,
-		    last_submitted_at = :last_submitted_at
+		  last_submitted_at = :last_submitted_at
 		WHERE business_case.id = :id
 	`
 	const deleteLifecycleCostsSQL = `
