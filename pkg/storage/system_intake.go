@@ -113,6 +113,7 @@ func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 			updated_at = :updated_at,
 			submitted_at = :submitted_at,
 		    decided_at = :decided_at,
+		    archived_at = :archived_at,
 			alfabet_id = :alfabet_id
 		WHERE system_intake.id = :id
 	`
@@ -134,7 +135,7 @@ func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
 
-	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1 AND status != 'ARCHIVED'", id)
 	if err != nil {
 		s.logger.Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
@@ -160,7 +161,7 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1", euaID)
+	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'ARCHIVED'", euaID)
 	if err != nil {
 		s.logger.Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),

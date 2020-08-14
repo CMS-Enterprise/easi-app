@@ -381,3 +381,44 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		s.Equal(businessCase, *actualBusinessCase)
 	})
 }
+
+func (s ServicesTestSuite) TestBusinessCaseArchiver() {
+	logger := zap.NewNop()
+	fakeID := uuid.New()
+	serviceConfig := NewConfig(logger)
+	serviceConfig.clock = clock.NewMock()
+	ctx := context.Background()
+
+	fetch := func(id uuid.UUID) (*models.BusinessCase, error) {
+		return &models.BusinessCase{
+			ID: id,
+		}, nil
+	}
+	update := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+		return businessCase, nil
+	}
+
+	s.Run("golden path archive business case", func() {
+		archiveBusinessCase := NewArchiveBusinessCase(serviceConfig, fetch, update)
+		err := archiveBusinessCase(ctx, fakeID)
+		s.NoError(err)
+	})
+
+	s.Run("returns query error when fetch fails", func() {
+		failFetch := func(id uuid.UUID) (*models.BusinessCase, error) {
+			return &models.BusinessCase{}, errors.New("fetch failed")
+		}
+		archiveBusinessCase := NewArchiveBusinessCase(serviceConfig, failFetch, update)
+		err := archiveBusinessCase(ctx, fakeID)
+		s.IsType(&apperrors.QueryError{}, err)
+	})
+
+	s.Run("returns query error when update fails", func() {
+		failUpdate := func(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+			return &models.BusinessCase{}, errors.New("update failed")
+		}
+		archiveBusinessCase := NewArchiveBusinessCase(serviceConfig, fetch, failUpdate)
+		err := archiveBusinessCase(ctx, fakeID)
+		s.IsType(&apperrors.QueryError{}, err)
+	})
+}
