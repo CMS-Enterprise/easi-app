@@ -20,7 +20,7 @@ const SideNavActions = ({ archiveIntake }: SideNavActionsProps) => {
       </div>
       <div className="grid-col margin-top-2">
         <Button
-          className="line-height-body-5"
+          className="line-height-body-5 test-withdraw-request"
           type="button"
           unstyled
           onClick={() => setModalOpen(true)}
