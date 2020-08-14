@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
-import isUUID from 'validator/lib/isUUID';
 
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -43,7 +42,6 @@ export const SystemIntake = () => {
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-
     if (current && current.dirty && !isSaving) {
       if (systemId === 'new') {
         dispatch(postSystemIntake({ ...systemIntake, ...current.values }));
@@ -79,16 +77,6 @@ export const SystemIntake = () => {
       dispatch(fetchSystemIntake(systemId));
     }
     return () => {
-      // If has valid uuid, save it's current data before unmounting
-      if (isUUID(systemId)) {
-        const {
-          current
-        }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-        dispatch(
-          saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
-        );
-      }
-
       // clear system intake from store when component is unmounting
       dispatch(clearSystemIntake());
     };

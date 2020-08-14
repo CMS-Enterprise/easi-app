@@ -1,6 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { shallow } from 'enzyme';
 
 import TaskListItem from './TaskListItem';
@@ -12,7 +10,6 @@ describe('The TaskListItem', () => {
         heading="Test Heading"
         description="Test Description"
         status="CANNOT_START"
-        link="/"
       />
     );
   });
@@ -23,7 +20,6 @@ describe('The TaskListItem', () => {
         heading="Test Heading"
         description="Test Description"
         status="CANNOT_START"
-        link="/"
       />
     );
 
@@ -38,7 +34,6 @@ describe('The TaskListItem', () => {
         heading="Test Heading"
         description="Test Description"
         status="COMPLETED"
-        link="/"
       />
     );
 
@@ -47,60 +42,17 @@ describe('The TaskListItem', () => {
     ).toEqual(true);
   });
 
-  it('displays start button', () => {
+  it('displays children', () => {
     const component = shallow(
       <TaskListItem
         heading="Test Heading"
         description="Test Description"
         status="START"
-        link="/"
-      />
+      >
+        <div id="test-div">Test</div>
+      </TaskListItem>
     );
 
-    expect(
-      component
-        .find(UswdsLink)
-        .dive()
-        .text()
-    ).toEqual('Start');
-  });
-
-  it('displays continue button', () => {
-    const component = shallow(
-      <TaskListItem
-        heading="Test Heading"
-        description="Test Description"
-        status="CONTINUE"
-        link="/"
-      />
-    );
-
-    expect(
-      component
-        .find(UswdsLink)
-        .dive()
-        .text()
-    ).toEqual('Continue');
-  });
-
-  describe('submitted request link', () => {
-    const component = shallow(
-      <TaskListItem
-        heading="Test Heading"
-        description="Test Description"
-        status="COMPLETED"
-        link="/system-intake/FOO"
-      />
-    );
-
-    it('displays the right text', () => {
-      expect(component.find(Link).text()).toEqual(
-        'View Submitted Request Form'
-      );
-    });
-
-    it('displays the right link', () => {
-      expect(component.find(Link).prop('to')).toEqual('/system-intake/FOO');
-    });
+    expect(component.find('#test-div').text()).toEqual('Test');
   });
 });
