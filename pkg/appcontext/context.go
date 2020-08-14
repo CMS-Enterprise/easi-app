@@ -9,7 +9,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/authn"
-	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type contextKey int
@@ -17,7 +16,6 @@ type contextKey int
 const (
 	loggerKey contextKey = iota
 	traceKey
-	userKey
 	principalKey
 )
 
@@ -54,17 +52,6 @@ func WithTrace(ctx context.Context) context.Context {
 func Trace(ctx context.Context) (uuid.UUID, bool) {
 	traceID, ok := ctx.Value(traceKey).(uuid.UUID)
 	return traceID, ok
-}
-
-// WithUser returns a context with the request User
-func WithUser(ctx context.Context, user models.User) context.Context {
-	return context.WithValue(ctx, userKey, user)
-}
-
-// User returns the context's User
-func User(ctx context.Context) (models.User, bool) {
-	user, ok := ctx.Value(userKey).(models.User)
-	return user, ok
 }
 
 // WithPrincipal decorates the context with the given security principal
