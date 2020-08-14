@@ -243,6 +243,88 @@ func NewUpdateSystemIntake(
 	}
 }
 
+// NewAuthorizeArchiveSystemIntake returns a function
+// that authorizes a user for archiving a system intake
+func NewAuthorizeArchiveSystemIntake(logger *zap.Logger) func(
+	context context.Context,
+	intake *models.SystemIntake,
+) (bool, error) {
+	return func(context context.Context, intake *models.SystemIntake) (bool, error) {
+		user, ok := appcontext.User(context)
+		if !ok {
+			logger.Error("unable to get EUA ID from context")
+			return false, &apperrors.ContextError{
+				Operation: apperrors.ContextGet,
+				Object:    "EUA ID",
+			}
+		}
+
+		// If intake doesn't exist or owned by user, authorize
+		if intake == nil || user.EUAUserID == intake.EUAUserID {
+			logger.With(zap.Bool("Authorized", true)).
+				With(zap.String("Operation", "UpdateSystemIntake")).
+				Info("user authorized to save system intake")
+			return true, nil
+		}
+		// Default to failure to authorize and create a quick audit log
+		logger.With(zap.Bool("Authorized", false)).
+			With(zap.String("Operation", "UpdateSystemIntake")).
+			Info("unauthorized attempt to save system intake")
+		return false, nil
+	}
+}
+
+// NewArchiveSystemIntake is a service to archive a system intake
+func NewArchiveSystemIntake(
+	config Config,
+	fetch func(id uuid.UUID) (*models.SystemIntake, error),
+	update func(intake *models.SystemIntake) (*models.SystemIntake, error),
+	archiveBusinessCase func(context.Context, uuid.UUID) error,
+	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
+) func(context.Context, uuid.UUID) error {
+	return func(ctx context.Context, id uuid.UUID) error {
+		intake, fetchErr := fetch(id)
+		if fetchErr != nil {
+			return &apperrors.QueryError{
+				Err:       fetchErr,
+				Operation: apperrors.QueryFetch,
+				Model:     intake,
+			}
+		}
+		ok, err := authorize(ctx, intake)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return &apperrors.UnauthorizedError{Err: err}
+		}
+
+		// We need to archive any associated business case
+		if intake.BusinessCaseID != nil {
+			err = archiveBusinessCase(ctx, *intake.BusinessCaseID)
+			if err != nil {
+				return err
+			}
+		}
+
+		updatedTime := config.clock.Now()
+		intake.UpdatedAt = &updatedTime
+		intake.Status = models.SystemIntakeStatusARCHIVED
+		intake.ArchivedAt = &updatedTime
+
+		intake, err = update(intake)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
+			}
+		}
+
+		return nil
+	}
+}
+
 // NewAuthorizeFetchSystemIntakeByID is a service to authorize FetchSystemIntakeByID
 func NewAuthorizeFetchSystemIntakeByID() func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
