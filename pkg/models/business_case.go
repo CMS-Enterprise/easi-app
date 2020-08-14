@@ -127,6 +127,8 @@ type BusinessCase struct {
 	CreatedAt                           *time.Time              `json:"createdAt" db:"created_at"`
 	UpdatedAt                           *time.Time              `json:"updatedAt" db:"updated_at"`
 	SubmittedAt                         *time.Time              `json:"submittedAt" db:"submitted_at"`
+	InitialSubmittedAt                  *time.Time              `json:"initialSubmittedAt" db:"initial_submitted_at"`
+	LastSubmittedAt                     *time.Time              `json:"lastSubmittedAt" db:"last_submitted_at"`
 }
 
 // BusinessCases is the model for a list of business cases

@@ -55,6 +55,8 @@ export type BusinessCaseModel = {
   preferredSolution: ProposedBusinessCaseSolution;
   alternativeA: ProposedBusinessCaseSolution;
   alternativeB?: ProposedBusinessCaseSolution;
+  initialSubmittedAt?: string;
+  lastSubmittedAt?: string;
 };
 
 export type BusinessCasesState = {

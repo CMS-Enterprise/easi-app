@@ -1,29 +1,142 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { Alert, Button, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
-import Alert from 'components/shared/Alert';
 import {
   bizCaseStatus,
-  chooseIntakeLink,
+  chooseBusinessCasePath,
+  chooseIntakePath,
   feedbackStatusFromIntakeStatus,
   intakeStatusFromIntake
 } from 'data/taskList';
 import { AppState } from 'reducers/rootReducer';
+import { BusinessCaseModel } from 'types/businessCase';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import { SystemIntakeForm } from 'types/systemIntake';
 
 import SideNavActions from './SideNavActions';
 import TaskListItem from './TaskListItem';
 
 import './index.scss';
 
+const intakeLinkComponent = (
+  intakeStatus: string,
+  systemIntake: SystemIntakeForm
+) => {
+  const path = chooseIntakePath(systemIntake, intakeStatus);
+  switch (intakeStatus) {
+    case 'COMPLETED':
+      return (
+        <UswdsLink variant="unstyled" asCustom={Link} to={path}>
+          View Submitted Request Form
+        </UswdsLink>
+      );
+    case 'CONTINUE':
+      return (
+        <UswdsLink
+          className="usa-button"
+          variant="unstyled"
+          asCustom={Link}
+          to={path}
+        >
+          Continue
+        </UswdsLink>
+      );
+    case 'START':
+      return (
+        <UswdsLink
+          className="usa-button"
+          variant="unstyled"
+          asCustom={Link}
+          to={path}
+        >
+          Start
+        </UswdsLink>
+      );
+    default:
+      return null;
+  }
+};
+
+const intakeFeedbackBannerComponent = (systemIntakeStatus: string) => {
+  if (systemIntakeStatus === 'CLOSED' || systemIntakeStatus === 'APPROVED') {
+    return (
+      <Alert type="info" slim>
+        Please check your email for feedback and next steps.
+      </Alert>
+    );
+  }
+  return null;
+};
+
+type businessCaseLinkComponentProps = {
+  businessCase: BusinessCaseModel;
+  systemIntakeId: string;
+  businessCaseStatus: string;
+  history: any;
+};
+
+/* eslint-disable react/prop-types */
+const businessCaseLinkComponent = ({
+  businessCase,
+  systemIntakeId,
+  businessCaseStatus,
+  history
+}: businessCaseLinkComponentProps) => {
+  const path = chooseBusinessCasePath(businessCaseStatus, businessCase.id);
+  // if path is null, there's nothing to render here
+  if (!path) {
+    return null;
+  }
+  switch (businessCaseStatus) {
+    case 'COMPLETED':
+      return (
+        <UswdsLink variant="unstyled" asCustom={Link} to={path}>
+          Update the business case
+        </UswdsLink>
+      );
+    case 'START':
+      return (
+        <Button
+          type="button"
+          onClick={() => {
+            history.push({
+              pathname: `/business/new/general-request-info`,
+              state: {
+                systemIntakeId
+              }
+            });
+          }}
+          className="usa-button"
+        >
+          Start
+        </Button>
+      );
+    case 'CONTINUE':
+      return (
+        <UswdsLink
+          className="usa-button"
+          variant="unstyled"
+          asCustom={Link}
+          to={path}
+        >
+          Continue
+        </UswdsLink>
+      );
+    default:
+      return null;
+  }
+};
+/* eslint-enable react/prop-types */
+
 const GovernanceTaskList = () => {
   const { systemId } = useParams();
   const dispatch = useDispatch();
+  const history = useHistory();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
 
   useEffect(() => {
@@ -45,11 +158,22 @@ const GovernanceTaskList = () => {
   );
 
   const intakeStatus = intakeStatusFromIntake(systemIntake);
-  const intakeLink = chooseIntakeLink(systemIntake, intakeStatus);
+  const intakeLink = intakeLinkComponent(intakeStatus, systemIntake);
+
   const intakeFeedbackStatus = feedbackStatusFromIntakeStatus(
     systemIntake.status
   );
-  const businessCaseStatus = bizCaseStatus(intakeStatus, businessCase);
+  const intakeFeedbackBanner = intakeFeedbackBannerComponent(
+    systemIntake.status
+  );
+
+  const businessCaseStatus = bizCaseStatus(systemIntake.status, businessCase);
+  const businessCaseLink = businessCaseLinkComponent({
+    businessCase,
+    systemIntakeId: systemIntake.id,
+    businessCaseStatus,
+    history
+  });
 
   return (
     <div className="governance-task-list">
@@ -82,22 +206,25 @@ const GovernanceTaskList = () => {
                 description="Tell the Governance Admin Team about your idea. This step lets CMS build
               context about your request and start preparing for discussions with your team."
                 status={intakeStatus}
-                link={intakeLink}
-              />
+              >
+                {intakeLink}
+              </TaskListItem>
               <TaskListItem
                 heading="Feedback from initial review"
                 description="The Governance Admin Team will review your request and decide if it
               needs further governance. If it does, they’ll direct you to go through
               the remaining steps."
                 status={intakeFeedbackStatus}
-                link="/" // link is unused for this item
-              />
+              >
+                {intakeFeedbackBanner}
+              </TaskListItem>
               <TaskListItem
                 heading="Prepare your Business Case"
                 description="Draft different solutions and the corresponding costs involved."
                 status={businessCaseStatus}
-                link="/"
-              />
+              >
+                {businessCaseLink}
+              </TaskListItem>
             </ol>
 
             <Alert type="info">
@@ -129,28 +256,24 @@ const GovernanceTaskList = () => {
                   description="Discuss your draft Business Case with Governance Review Team. They will
               help you refine and make your business case in the best shape possible."
                   status="CANNOT_START"
-                  link="/"
                 />
                 <TaskListItem
                   heading="Feedback from the Review Team"
                   description="If the Review Team has any additional comments, they will ask you to
               update your business case before it’s submitted to the Review Board."
                   status="CANNOT_START"
-                  link="/"
                 />
                 <TaskListItem
                   heading="Submit the business case for final approval"
                   description="Update the Business Case based on feedback from the review meeting and
               submit it to the Governance Review Board."
                   status="CANNOT_START"
-                  link="/"
                 />
                 <TaskListItem
                   heading="Attend the board meeting"
                   description="The Governance Review Board will discuss and make decisions based on the
               Business Case and recommendations from the Review Team."
                   status="CANNOT_START"
-                  link="/"
                 />
                 <TaskListItem
                   heading="Decision and next steps"
@@ -158,7 +281,6 @@ const GovernanceTaskList = () => {
               ID. If it is not approved, you would need address the concerns to
               proceed."
                   status="CANNOT_START"
-                  link="/"
                 />
               </ol>
             )}

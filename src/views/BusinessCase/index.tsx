@@ -4,7 +4,6 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 import { Button } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
-import isUUID from 'validator/lib/isUUID';
 import { ObjectSchema } from 'yup';
 
 import Header from 'components/Header';
@@ -163,19 +162,6 @@ export const BusinessCase = () => {
     }
 
     return () => {
-      // if has valid uuid, autosave business case when unmounting
-      if (isUUID(businessCaseId)) {
-        const {
-          current
-        }: { current: FormikProps<BusinessCaseModel> } = formikRef;
-        dispatch(
-          putBusinessCase({
-            businessCase,
-            ...current.values
-          })
-        );
-      }
-
       // clear business case when unmounting
       dispatch(clearBusinessCase());
     };
