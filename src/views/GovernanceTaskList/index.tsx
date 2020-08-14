@@ -193,9 +193,11 @@ const GovernanceTaskList = () => {
           <div className="tablet:grid-col-9">
             <h1 className="font-heading-2xl margin-top-4">
               Get governance approval
-              <span className="display-block line-height-body-5 font-body-lg text-light">
-                {`for ${systemIntake.requestName}`}
-              </span>
+              {systemIntake.requestName && (
+                <span className="display-block line-height-body-5 font-body-lg text-light">
+                  {`for ${systemIntake.requestName}`}
+                </span>
+              )}
             </h1>
             <ol className="governance-task-list__task-list governance-task-list__task-list--primary">
               <TaskListItem
