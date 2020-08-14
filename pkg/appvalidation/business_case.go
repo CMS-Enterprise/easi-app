@@ -27,7 +27,7 @@ func checkUniqLifecycleCosts(costs models.EstimatedLifecycleCosts) (string, stri
 
 // check the system intake status is submitted
 func checkSystemIntakeSubmitted(intake *models.SystemIntake) (string, string) {
-	if intake.Status != models.SystemIntakeStatusSUBMITTED {
+	if intake.Status == models.SystemIntakeStatusDRAFT {
 		return "SystemIntake", "must have already been submitted"
 	}
 	return "", ""
@@ -291,7 +291,13 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 		if businessCase.SubmittedAt == nil {
 			expectedErr.WithValidation("SubmittedAt", "is required")
 		} else if validate.RequireTime(*businessCase.SubmittedAt) {
-			expectedErr.WithValidation("SubmittedAt", "is cannot be zero")
+			expectedErr.WithValidation("SubmittedAt", "cannot be zero")
+		}
+		if businessCase.InitialSubmittedAt != nil && validate.RequireTime(*businessCase.InitialSubmittedAt) {
+			expectedErr.WithValidation("InitialSubmittedAt", "cannot be zero")
+		}
+		if businessCase.LastSubmittedAt != nil && validate.RequireTime(*businessCase.LastSubmittedAt) {
+			expectedErr.WithValidation("LastSubmittedAt", "cannot be zero")
 		}
 		if alternativeBRequired(businessCase) {
 			if validate.RequireNullString(businessCase.AlternativeBTitle) {
