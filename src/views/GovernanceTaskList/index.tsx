@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { Alert, Button, Link as UswdsLink } from '@trussworks/react-uswds';
@@ -15,7 +16,11 @@ import {
 } from 'data/taskList';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
-import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import {
+  archiveSystemIntake,
+  fetchBusinessCase,
+  fetchSystemIntake
+} from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 import SideNavActions from './SideNavActions';
@@ -138,6 +143,7 @@ const GovernanceTaskList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (systemId !== 'new') {
@@ -175,6 +181,17 @@ const GovernanceTaskList = () => {
     history
   });
 
+  const archiveIntake = () => {
+    const redirect = () => {
+      history.push('/', {
+        confirmationText: t('taskList:withdraw_modal:confirmationText', {
+          requestName: systemIntake.requestName
+        })
+      });
+    };
+    dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
+  };
+
   return (
     <div className="governance-task-list">
       <Header />
@@ -196,9 +213,11 @@ const GovernanceTaskList = () => {
           <div className="tablet:grid-col-9">
             <h1 className="font-heading-2xl margin-top-4">
               Get governance approval
-              <span className="display-block line-height-body-5 font-body-lg text-light">
-                {`for ${systemIntake.requestName}`}
-              </span>
+              {systemIntake.requestName && (
+                <span className="display-block line-height-body-5 font-body-lg text-light">
+                  {`for ${systemIntake.requestName}`}
+                </span>
+              )}
             </h1>
             <ol className="governance-task-list__task-list governance-task-list__task-list--primary">
               <TaskListItem
@@ -287,7 +306,7 @@ const GovernanceTaskList = () => {
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">
-            <SideNavActions />
+            <SideNavActions archiveIntake={archiveIntake} />
           </div>
         </div>
       </MainContent>

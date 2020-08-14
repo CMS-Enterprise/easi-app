@@ -29,6 +29,8 @@ const (
 	BusinessCaseStatusREVIEWED BusinessCaseStatus = "REVIEWED"
 	// BusinessCaseStatusREJECTED captures enum value "REJECTED"
 	BusinessCaseStatusREJECTED BusinessCaseStatus = "REJECTED"
+	// BusinessCaseStatusARCHIVED captures enum value "ARCHIVED"
+	BusinessCaseStatusARCHIVED BusinessCaseStatus = "ARCHIVED"
 
 	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
@@ -127,6 +129,7 @@ type BusinessCase struct {
 	CreatedAt                           *time.Time              `json:"createdAt" db:"created_at"`
 	UpdatedAt                           *time.Time              `json:"updatedAt" db:"updated_at"`
 	SubmittedAt                         *time.Time              `json:"submittedAt" db:"submitted_at"`
+	ArchivedAt                          *time.Time              `db:"archived_at"`
 	InitialSubmittedAt                  *time.Time              `json:"initialSubmittedAt" db:"initial_submitted_at"`
 	LastSubmittedAt                     *time.Time              `json:"lastSubmittedAt" db:"last_submitted_at"`
 }

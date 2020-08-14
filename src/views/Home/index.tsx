@@ -1,7 +1,12 @@
 import React, { useEffect } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import {
+  Link,
+  RouteComponentProps,
+  useLocation,
+  withRouter
+} from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
@@ -21,6 +26,7 @@ const Home = ({ history }: HomeProps) => {
   const { t } = useTranslation();
   const { authState } = useOktaAuth();
   const dispatch = useDispatch();
+  const location = useLocation<any>();
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
@@ -130,6 +136,14 @@ const Home = ({ history }: HomeProps) => {
       <Header />
       <MainContent className="grid-container">
         <div className="margin-y-6">
+          {location.state && location.state.confirmationText && (
+            <div className="border-05 border-green">
+              <div className="fa fa-check fa-2x display-inline-block text-middle text-green margin-left-1 margin-right-2" />
+              <p className="display-inline-block text-middle margin-y-105">
+                {location.state.confirmationText}
+              </p>
+            </div>
+          )}
           {getSystemIntakeBanners()}
           {getBusinessCaseBanners()}
         </div>

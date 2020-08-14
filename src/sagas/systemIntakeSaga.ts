@@ -5,6 +5,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
 import { updateLastActiveAt } from 'reducers/authReducer';
 import {
+  archiveSystemIntake,
   fetchSystemIntake,
   postSystemIntake,
   reviewSystemIntake,
@@ -95,10 +96,34 @@ function* submitSystemIntakeReview(action: Action<any>) {
   }
 }
 
+function deleteSystemIntakeRequest(id: string) {
+  return axios.delete(
+    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}`
+  );
+}
+
+function* deleteSystemIntake(action: Action<any>) {
+  try {
+    yield put(archiveSystemIntake.request());
+    const response = yield call(
+      deleteSystemIntakeRequest,
+      action.payload.intakeId
+    );
+    yield put(archiveSystemIntake.success(response.data));
+    action.payload.redirect();
+  } catch (error) {
+    yield put(archiveSystemIntake.failure(error.message));
+  } finally {
+    yield put(archiveSystemIntake.fulfill());
+    yield put(updateLastActiveAt);
+  }
+}
+
 export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
   yield takeLatest(submitSystemIntake.TRIGGER, completeSystemIntake);
   yield takeLatest(postSystemIntake.TRIGGER, createSystemIntake);
   yield takeLatest(reviewSystemIntake.TRIGGER, submitSystemIntakeReview);
+  yield takeLatest(archiveSystemIntake.TRIGGER, deleteSystemIntake);
 }
