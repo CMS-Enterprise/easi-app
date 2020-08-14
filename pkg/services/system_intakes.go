@@ -246,12 +246,12 @@ func NewUpdateSystemIntake(
 // NewAuthorizeArchiveSystemIntake returns a function
 // that authorizes a user for archiving a system intake
 func NewAuthorizeArchiveSystemIntake(logger *zap.Logger) func(
-	context context.Context,
-	intake *models.SystemIntake,
+	c context.Context,
+	i *models.SystemIntake,
 ) (bool, error) {
-	return func(context context.Context, intake *models.SystemIntake) (bool, error) {
-		user, ok := appcontext.User(context)
-		if !ok {
+	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		principal := appcontext.Principal(ctx)
+		if !principal.AllowEASi() {
 			logger.Error("unable to get EUA ID from context")
 			return false, &apperrors.ContextError{
 				Operation: apperrors.ContextGet,
@@ -260,7 +260,7 @@ func NewAuthorizeArchiveSystemIntake(logger *zap.Logger) func(
 		}
 
 		// If intake doesn't exist or owned by user, authorize
-		if intake == nil || user.EUAUserID == intake.EUAUserID {
+		if intake == nil || principal.ID() == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
 				With(zap.String("Operation", "UpdateSystemIntake")).
 				Info("user authorized to save system intake")

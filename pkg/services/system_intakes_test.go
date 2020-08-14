@@ -439,7 +439,7 @@ func (s ServicesTestSuite) TestAuthorizeArchiveSystemIntake() {
 
 	s.Run("Mismatched EUA ID fails auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ZYXW"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
 		}
@@ -452,7 +452,7 @@ func (s ServicesTestSuite) TestAuthorizeArchiveSystemIntake() {
 
 	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ABCD"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
 		}
