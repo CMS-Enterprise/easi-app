@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import configureMockStore from 'redux-mock-store';
 import { shallow } from 'enzyme';
+import configureMockStore from 'redux-mock-store';
 
 import App from './index';
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { mount, shallow } from 'enzyme';
+
 import AutoSave from './index';
 
 describe('The Autosave component', () => {

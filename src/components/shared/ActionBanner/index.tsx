@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@trussworks/react-uswds';
+
 import './index.scss';
 
 type ActionBannerProps = {

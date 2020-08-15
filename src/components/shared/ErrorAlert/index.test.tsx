@@ -1,5 +1,6 @@
 import React from 'react';
 import { mount } from 'enzyme';
+
 import { ErrorAlert, ErrorAlertMessage } from './index';
 
 describe('The ErrorAlert component', () => {

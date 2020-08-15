@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+
 import ReviewRow from 'components/ReviewRow';
 import {
+  DescriptionDefinition,
   DescriptionList,
-  DescriptionTerm,
-  DescriptionDefinition
+  DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import ResponsiveTabs from 'components/shared/ResponsiveTabs';
 import { BusinessCaseModel } from 'types/businessCase';

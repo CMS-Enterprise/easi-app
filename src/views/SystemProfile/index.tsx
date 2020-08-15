@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+
 import Header from 'components/Header';
 import SearchBar from 'components/shared/SearchBar';
 import SecondaryNav from 'components/shared/SecondaryNav';
-import './index.scss';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemShorts } from 'types/routines';
+
+import './index.scss';
 
 const mockSystems: any[] = [
   { id: 'All', name: 'All', slug: 'all', link: '/system/all' },

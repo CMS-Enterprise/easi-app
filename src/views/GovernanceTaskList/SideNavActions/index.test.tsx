@@ -1,7 +1,9 @@
 import React from 'react';
-import { shallow } from 'enzyme';
 import { Button, Link } from '@trussworks/react-uswds';
+import { shallow } from 'enzyme';
+
 import Modal from 'components/Modal';
+
 import SideNavActions from './index';
 
 const renderComponent = () => {
