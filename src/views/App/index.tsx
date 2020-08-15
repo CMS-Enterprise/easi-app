@@ -1,16 +1,17 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import { SecureRoute, LoginCallback } from '@okta/okta-react';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { LoginCallback, SecureRoute } from '@okta/okta-react';
+
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
-import Home from 'views/Home';
-import Login from 'views/Login';
+import BusinessCase from 'views/BusinessCase';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskList';
-import BusinessCase from 'views/BusinessCase';
-import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
-import SystemIntake from 'views/SystemIntake';
+import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
+import Home from 'views/Home';
+import Login from 'views/Login';
 import Sandbox from 'views/Sandbox';
+import SystemIntake from 'views/SystemIntake';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 
 import './index.scss';

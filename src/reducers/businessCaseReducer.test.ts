@@ -3,12 +3,13 @@ import {
   prepareBusinessCaseForApp
 } from 'data/businessCase';
 import {
+  clearBusinessCase,
   fetchBusinessCase,
   postBusinessCase,
   storeBusinessCase,
-  submitBusinessCase,
-  clearBusinessCase
+  submitBusinessCase
 } from 'types/routines';
+
 import businessCaseReducer from './businessCaseReducer';
 
 describe('The business case reducer', () => {

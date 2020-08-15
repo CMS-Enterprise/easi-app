@@ -1,17 +1,18 @@
 import React from 'react';
 import { Field, FormikProps } from 'formik';
-import Label from 'components/shared/Label';
-import HelpText from 'components/shared/HelpText';
-import TextField from 'components/shared/TextField';
-import TextAreaField from 'components/shared/TextAreaField';
-import { RadioField } from 'components/shared/RadioField';
-import FieldGroup from 'components/shared/FieldGroup';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+
+import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import { RadioField } from 'components/shared/RadioField';
+import TextAreaField from 'components/shared/TextAreaField';
+import TextField from 'components/shared/TextField';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
-import CharacterCounter from 'components/CharacterCounter';
 
 type PreferredSolutionProps = {
   formikProps: FormikProps<BusinessCaseModel>;

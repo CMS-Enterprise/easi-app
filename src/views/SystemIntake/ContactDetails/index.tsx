@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
-import { Formik, Field, FormikProps, Form } from 'formik';
-import TextField from 'components/shared/TextField';
+import { useHistory } from 'react-router-dom';
+import { Button } from '@trussworks/react-uswds';
+import { Field, Form, Formik, FormikProps } from 'formik';
+
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageNumber from 'components/PageNumber';
+import AutoSave from 'components/shared/AutoSave';
 import CheckboxField from 'components/shared/CheckboxField';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
-import HelpText from 'components/shared/HelpText';
-import { RadioField } from 'components/shared/RadioField';
-import FieldGroup from 'components/shared/FieldGroup';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import Label from 'components/shared/Label';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import flattenErrors from 'utils/flattenErrors';
-import {
-  SystemIntakeForm,
-  GovernanceCollaborationTeam
-} from 'types/systemIntake';
-import { Button } from '@trussworks/react-uswds';
-import { useHistory } from 'react-router-dom';
-import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
+import Label from 'components/shared/Label';
+import { RadioField } from 'components/shared/RadioField';
+import TextField from 'components/shared/TextField';
+import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import {
+  GovernanceCollaborationTeam,
+  SystemIntakeForm
+} from 'types/systemIntake';
+import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
-import PageNumber from 'components/PageNumber';
+
 import GovernanceTeamOptions from './GovernanceTeamOptions';
 
 export type ContactDetailsForm = {

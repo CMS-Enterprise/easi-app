@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
+
 import Confirmation from './index';
 
 describe('The Business Case Confirmation page', () => {

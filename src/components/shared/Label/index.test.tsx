@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import Label from './index';
 
 describe('The Link component', () => {

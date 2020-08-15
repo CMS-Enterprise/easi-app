@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Link as UswdsLink, Alert } from '@trussworks/react-uswds';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { Alert, Button, Link as UswdsLink } from '@trussworks/react-uswds';
+
+import BreadcrumbNav from 'components/BreadcrumbNav';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
-import BreadcrumbNav from 'components/BreadcrumbNav';
+import {
+  bizCaseStatus,
+  chooseBusinessCasePath,
+  chooseIntakePath,
+  feedbackStatusFromIntakeStatus,
+  intakeStatusFromIntake
+} from 'data/taskList';
 import { AppState } from 'reducers/rootReducer';
+import { BusinessCaseModel } from 'types/businessCase';
 import {
   archiveSystemIntake,
   fetchBusinessCase,
   fetchSystemIntake
 } from 'types/routines';
-import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeForm } from 'types/systemIntake';
-import {
-  intakeStatusFromIntake,
-  chooseIntakePath,
-  feedbackStatusFromIntakeStatus,
-  bizCaseStatus,
-  chooseBusinessCasePath
-} from 'data/taskList';
-import { useTranslation } from 'react-i18next';
-import TaskListItem from './TaskListItem';
+
 import SideNavActions from './SideNavActions';
+import TaskListItem from './TaskListItem';
+
 import './index.scss';
 
 const intakeLinkComponent = (

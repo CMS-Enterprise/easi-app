@@ -1,6 +1,7 @@
 import React, { ReactNode, ReactNodeArray } from 'react';
 import ReactModal from 'react-modal';
 import noScroll from 'no-scroll';
+
 import './index.scss';
 
 type ModalProps = {

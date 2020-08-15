@@ -1,14 +1,15 @@
 import React from 'react';
 import { Field, FormikProps } from 'formik';
+
+import CharacterCounter from 'components/CharacterCounter';
+import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import FieldGroup from 'components/shared/FieldGroup';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import HelpText from 'components/shared/HelpText';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
-import CharacterCounter from 'components/CharacterCounter';
 
 type RequestDescriptionProps = {
   formikProps: FormikProps<BusinessCaseModel>;
