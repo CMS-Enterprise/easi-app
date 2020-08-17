@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { SystemIntakeForm } from 'types/systemIntake';
-import { SystemIntakeReview } from 'components/SystemIntakeReview';
-import { Button } from '@trussworks/react-uswds';
-import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { Button } from '@trussworks/react-uswds';
+
+import { SystemIntakeReview } from 'components/SystemIntakeReview';
+import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
 import { submitSystemIntake } from 'types/routines';
-import usePrevious from 'hooks/usePrevious';
+import { SystemIntakeForm } from 'types/systemIntake';
 
 type ReviewProps = {
   systemIntake: SystemIntakeForm;

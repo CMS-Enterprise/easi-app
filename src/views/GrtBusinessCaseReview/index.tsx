@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+
 import BusinessCaseReview from 'components/BusinessCaseReview';
-import MainContent from 'components/MainContent';
 import Header from 'components/Header';
+import MainContent from 'components/MainContent';
 import { fetchBusinessCase } from 'types/routines';
+
 import { AppState } from '../../reducers/rootReducer';
 
 export type BusinessCaseRouterProps = {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { UserActionList, UserAction } from './index';
+
+import { UserAction, UserActionList } from './index';
 
 describe('The UserActionLst component', () => {
   it('renders without crashing', () => {

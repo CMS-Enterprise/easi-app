@@ -1,10 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import classnames from 'classnames';
-import { useOktaAuth } from '@okta/okta-react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
+import classnames from 'classnames';
+
 import UsGovBanner from 'components/UsGovBanner';
-import { UserActionList, UserAction } from './UserActionList';
+
+import { UserAction, UserActionList } from './UserActionList';
+
 import './index.scss';
 
 type HeaderProps = {

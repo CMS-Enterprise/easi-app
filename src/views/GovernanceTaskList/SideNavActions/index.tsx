@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Link as UswdsLink, Button } from '@trussworks/react-uswds';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+
+import Modal from 'components/Modal';
 
 import './index.scss';
-import Modal from 'components/Modal';
-import { useTranslation } from 'react-i18next';
 
 type SideNavActionsProps = {
   archiveIntake: () => void;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import { DropdownField, DropdownItem } from './index';
 
 describe('The Dropdown Field component', () => {
