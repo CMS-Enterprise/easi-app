@@ -1,8 +1,9 @@
-import { BusinessCasesState } from 'types/businessCase';
-import { prepareBusinessCaseForApp } from 'data/businessCase';
-import { fetchBusinessCases } from 'types/routines';
 import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
+
+import { prepareBusinessCaseForApp } from 'data/businessCase';
+import { BusinessCasesState } from 'types/businessCase';
+import { fetchBusinessCases } from 'types/routines';
 
 const initialState: BusinessCasesState = {
   businessCases: [],

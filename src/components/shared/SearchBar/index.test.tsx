@@ -1,6 +1,7 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
 import Autosuggest from 'react-autosuggest';
+import { mount, shallow } from 'enzyme';
+
 import SearchBar from './index';
 
 describe('The Search Bar component', () => {

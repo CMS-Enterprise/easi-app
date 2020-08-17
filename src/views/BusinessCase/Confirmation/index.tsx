@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
 import { Trans, useTranslation } from 'react-i18next';
+import { Link, useParams } from 'react-router-dom';
 
 const Confirmation = () => {
   const { businessCaseId } = useParams();

@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import SecondaryNav from './index';
 
 describe('The Secondary Nav component', () => {

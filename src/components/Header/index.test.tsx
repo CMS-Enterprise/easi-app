@@ -1,7 +1,7 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
+import { MemoryRouter } from 'react-router-dom';
+import { mount, shallow } from 'enzyme';
 
 import { Header } from './index';
 
