@@ -35,18 +35,21 @@ func (s *Server) routes(
 	)
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
+	// check we have all of the configs for CEDAR clients
+	s.NewCEDARClientCheck()
+
 	// set up CEDAR client
 	cedarEasiClient := cedareasi.NewTranslatedClient(
 		s.Config.GetString("CEDAR_API_URL"),
-		s.Config.GetString("CEDAR_EASI_API_KEY"),
+		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
 	cedarLdapClient := cedarldap.NewTranslatedClient(
 		s.Config.GetString("CEDAR_API_URL"),
-		s.Config.GetString("CEDAR_LDAP_API_KEY"),
+		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
-	if s.environment.Deployed() {
+	if s.environment.Prod() {
 		s.CheckCEDAREasiClientConnection(cedarEasiClient)
 		s.CheckCEDARLdapClientConnection(cedarLdapClient)
 	}
