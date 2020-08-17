@@ -1,6 +1,7 @@
 import React from 'react';
-import { shallow } from 'enzyme';
 import { Button } from '@trussworks/react-uswds';
+import { shallow } from 'enzyme';
+
 import CollapsableLink from './index';
 
 describe('The Collapsable Link componnet', () => {

@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
+
 import { updateLastActiveAt } from 'reducers/authReducer';
 import { fetchSystemIntakes } from 'types/routines';
 

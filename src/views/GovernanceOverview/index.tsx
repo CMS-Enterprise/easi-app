@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
-import MainContent from 'components/MainContent';
-import Header from 'components/Header';
+
 import BreadcrumbNav from 'components/BreadcrumbNav';
+import Header from 'components/Header';
+import MainContent from 'components/MainContent';
 import CollapsableLink from 'components/shared/CollapsableLink';
+
 import './index.scss';
 
 type NumberedListItemProps = {

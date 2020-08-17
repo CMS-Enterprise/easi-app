@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Link,
-  withRouter,
+  RouteComponentProps,
   useLocation,
-  RouteComponentProps
+  withRouter
 } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
-import { Trans, useTranslation } from 'react-i18next';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
-import MainContent from 'components/MainContent';
 import Header from 'components/Header';
+import MainContent from 'components/MainContent';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
+import { BusinessCaseModel } from 'types/businessCase';
 import { fetchBusinessCases, fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
-import { BusinessCaseModel } from 'types/businessCase';
+
 import './index.scss';
 
 type HomeProps = RouteComponentProps;

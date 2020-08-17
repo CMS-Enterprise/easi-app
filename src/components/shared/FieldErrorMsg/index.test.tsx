@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+
 import FieldErrorMsg from './index';
 
 describe('The FieldErrorMsg componnet', () => {

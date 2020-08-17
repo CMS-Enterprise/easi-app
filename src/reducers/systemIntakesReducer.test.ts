@@ -1,5 +1,6 @@
 import { prepareSystemIntakeForApp } from 'data/systemIntake';
 import { fetchSystemIntakes } from 'types/routines';
+
 import systemIntakesReducer from './systemIntakesReducer';
 
 describe('The system intakes reducer', () => {

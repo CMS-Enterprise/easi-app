@@ -1,9 +1,12 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
 import { act } from 'react-dom/test-utils';
-import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
+import { mount, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
+
+import { initialSystemIntakeForm } from 'data/systemIntake';
+
 import GovernanceTaskList from './index';
 
 jest.mock('@okta/okta-react', () => ({
@@ -94,6 +97,54 @@ describe('The Goveranance Task List', () => {
         ).toEqual(8);
         done();
       });
+    });
+  });
+
+  describe('Heading', () => {
+    it('displays the request name', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            requestName: 'Easy Access to System Information'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component;
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      expect(component.find('h1').text()).toContain(
+        'for Easy Access to System Information'
+      );
+    });
+    it('hides the request name', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: { systemIntake: initialSystemIntakeForm },
+        businessCase: { form: {} }
+      });
+      let component;
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      expect(component.find('h1').text()).toEqual('Get governance approval');
     });
   });
 

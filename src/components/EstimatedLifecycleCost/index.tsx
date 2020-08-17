@@ -1,20 +1,21 @@
 import React from 'react';
+import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { Field, FieldArray } from 'formik';
-import { Button } from '@trussworks/react-uswds';
-import Label from 'components/shared/Label';
-import FieldGroup from 'components/shared/FieldGroup';
-import FieldErrorMsg from 'components/shared/FieldErrorMsg';
-import TextField from 'components/shared/TextField';
-import { RadioGroup, RadioField } from 'components/shared/RadioField';
-import {
-  DescriptionList,
-  DescriptionTerm,
-  DescriptionDefinition
-} from 'components/shared/DescriptionGroup';
-import { LifecyclePhase } from 'types/estimatedLifecycle';
 
+import {
+  DescriptionDefinition,
+  DescriptionList,
+  DescriptionTerm
+} from 'components/shared/DescriptionGroup';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
+import Label from 'components/shared/Label';
+import { RadioField, RadioGroup } from 'components/shared/RadioField';
+import TextField from 'components/shared/TextField';
+import { LifecyclePhase } from 'types/estimatedLifecycle';
 import formatDollars from 'utils/formatDollars';
+
 import './index.scss';
 
 type PhaseProps = {

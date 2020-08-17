@@ -1,35 +1,38 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Formik, Form, FormikProps } from 'formik';
-import { useHistory, useParams, useLocation } from 'react-router-dom';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 import { Button } from '@trussworks/react-uswds';
+import { Form, Formik, FormikProps } from 'formik';
 import { ObjectSchema } from 'yup';
-import MainContent from 'components/MainContent';
+
 import Header from 'components/Header';
+import MainContent from 'components/MainContent';
 import PageNumber from 'components/PageNumber';
-import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import AutoSave from 'components/shared/AutoSave';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import { defaultProposedSolution } from 'data/businessCase';
+import usePrevious from 'hooks/usePrevious';
+import { AppState } from 'reducers/rootReducer';
+import { BusinessCaseModel } from 'types/businessCase';
 import {
+  clearBusinessCase,
   fetchBusinessCase,
   postBusinessCase,
   putBusinessCase,
-  submitBusinessCase,
-  clearBusinessCase
+  submitBusinessCase
 } from 'types/routines';
-import { BusinessCaseModel } from 'types/businessCase';
-import { defaultProposedSolution } from 'data/businessCase';
-import { AppState } from 'reducers/rootReducer';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 import flattenErrors from 'utils/flattenErrors';
-import usePrevious from 'hooks/usePrevious';
-import GeneralRequestInfo from './GeneralRequestInfo';
-import RequestDescription from './RequestDescription';
-import AsIsSolution from './AsIsSolution';
-import PreferredSolution from './PreferredSolution';
+import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+
 import AlternativeSolution from './AlternativeSolution';
-import Review from './Review';
+import AsIsSolution from './AsIsSolution';
 import Confirmation from './Confirmation';
+import GeneralRequestInfo from './GeneralRequestInfo';
+import PreferredSolution from './PreferredSolution';
+import RequestDescription from './RequestDescription';
+import Review from './Review';
+
 import './index.scss';
 
 type Page = {
