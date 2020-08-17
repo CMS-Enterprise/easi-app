@@ -36,7 +36,9 @@ func (s *Server) routes(
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// check we have all of the configs for CEDAR clients
-	s.NewCEDARClientCheck()
+	if s.environment.Deployed() {
+		s.NewCEDARClientCheck()
+	}
 
 	// set up CEDAR client
 	cedarEasiClient := cedareasi.NewTranslatedClient(
