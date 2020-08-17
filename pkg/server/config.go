@@ -62,3 +62,9 @@ func (s Server) NewSESConfig() appses.Config {
 		Source:    s.Config.GetString(appconfig.AWSSESSourceKey),
 	}
 }
+
+// NewCEDARClientCheck checks if CEDAR clients are not connectable
+func (s Server) NewCEDARClientCheck() {
+	s.checkRequiredConfig(appconfig.CEDARAPIURL)
+	s.checkRequiredConfig(appconfig.CEDARAPIKey)
+}

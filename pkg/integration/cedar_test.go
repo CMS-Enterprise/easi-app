@@ -28,7 +28,7 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 
 	cedarEasiClient := cedareasi.NewTranslatedClient(
 		s.config.GetString("CEDAR_API_URL"),
-		s.config.GetString("CEDAR_EASI_API_KEY"),
+		s.config.GetString("CEDAR_API_KEY"),
 	)
 
 	handlers.NewSystemsListHandler(

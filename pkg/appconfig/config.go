@@ -146,3 +146,9 @@ const ClientProtocolKey = "CLIENT_PROTOCOL"
 
 // EmailTemplateDirectoryKey is the key for getting the email template directory
 const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
+
+// CEDARAPIURL is the key for the CEDAR base url
+const CEDARAPIURL = "CEDAR_API_URL"
+
+// CEDARAPIKey is the key for accessing CEDAR
+const CEDARAPIKey = "CEDAR_API_KEY"
