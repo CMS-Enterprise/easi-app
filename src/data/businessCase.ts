@@ -1,4 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep';
+
 import {
   BusinessCaseModel,
   EstimatedLifecycleCostLines

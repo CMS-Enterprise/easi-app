@@ -1,17 +1,18 @@
 import axios from 'axios';
-import { takeLatest, call, put } from 'redux-saga/effects';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { Action } from 'redux-actions';
+import { call, put, takeLatest } from 'redux-saga/effects';
+
 import { prepareSystemIntakeForApi } from 'data/systemIntake';
+import { updateLastActiveAt } from 'reducers/authReducer';
 import {
+  archiveSystemIntake,
   fetchSystemIntake,
   postSystemIntake,
-  saveSystemIntake,
-  submitSystemIntake,
   reviewSystemIntake,
-  archiveSystemIntake
+  saveSystemIntake,
+  submitSystemIntake
 } from 'types/routines';
-import { Action } from 'redux-actions';
-import { updateLastActiveAt } from 'reducers/authReducer';
+import { SystemIntakeForm } from 'types/systemIntake';
 
 function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request

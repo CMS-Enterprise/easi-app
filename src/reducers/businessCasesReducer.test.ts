@@ -1,5 +1,6 @@
 import { prepareBusinessCaseForApp } from 'data/businessCase';
 import { fetchBusinessCases } from 'types/routines';
+
 import businessCasesReducer from './businessCasesReducer';
 
 describe('The business cases reducer', () => {
