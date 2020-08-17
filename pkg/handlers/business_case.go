@@ -108,8 +108,8 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			user, ok := appcontext.User(r.Context())
-			if !ok {
+			principal := appcontext.Principal(r.Context())
+			if !principal.AllowEASi() {
 				h.WriteErrorResponse(
 					r.Context(),
 					w,
@@ -119,7 +119,7 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 					})
 				return
 			}
-			businessCaseToCreate.EUAUserID = user.EUAUserID
+			businessCaseToCreate.EUAUserID = principal.ID()
 
 			businessCase, err := h.CreateBusinessCase(r.Context(), &businessCaseToCreate)
 			if err != nil {
@@ -165,12 +165,13 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			}
 			businessCaseToUpdate.ID = businessCaseID
 
-			user, ok := appcontext.User(r.Context())
-			if !ok {
+			principal := appcontext.Principal(r.Context())
+			if !principal.AllowEASi() {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
-			businessCaseToUpdate.EUAUserID = user.EUAUserID
+			businessCaseToUpdate.EUAUserID = principal.ID()
+
 			updatedBusinessCase, err := h.UpdateBusinessCase(r.Context(), &businessCaseToUpdate)
 			if err != nil {
 				h.Logger.Error(fmt.Sprintf("Failed to update business case to response: %v", err))

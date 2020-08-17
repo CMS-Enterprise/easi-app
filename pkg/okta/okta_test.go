@@ -91,14 +91,10 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		req.Header.Set("AUTHORIZATION", fmt.Sprintf("Bearer %s", accessToken))
 		rr := httptest.NewRecorder()
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			user, ok := appcontext.User(r.Context())
-			s.True(ok)
-			s.Equal(s.config.GetString("OKTA_TEST_USERNAME"), user.EUAUserID)
-
-			// ensure the Principal is currently piggy-backing off the User
+			// ensure the Principal is has replaced the User
 			principal := appcontext.Principal(r.Context())
 			s.True(principal.AllowEASi(), "AllowEASi()")
-			s.Equal(user.EUAUserID, principal.ID(), "ID()")
+			s.Equal(s.config.GetString("OKTA_TEST_USERNAME"), principal.ID(), "ID()")
 		})
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)

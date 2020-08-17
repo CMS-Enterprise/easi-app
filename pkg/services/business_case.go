@@ -64,8 +64,8 @@ func NewAuthorizeCreateBusinessCase(_ *zap.Logger) func(
 				Info("intake does not exist")
 			return false, nil
 		}
-		user, ok := appcontext.User(ctx)
-		if !ok {
+		principal := appcontext.Principal(ctx)
+		if !principal.AllowEASi() {
 			// Default to failure to authorize and create a quick audit log
 			logger.With(zap.Bool("Authorized", false)).
 				With(zap.String("Operation", "CreateBusinessCase")).
@@ -73,7 +73,7 @@ func NewAuthorizeCreateBusinessCase(_ *zap.Logger) func(
 			return false, nil
 		}
 		// If business case is owned by user, authorize
-		if user.EUAUserID == intake.EUAUserID {
+		if principal.ID() == intake.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
 				With(zap.String("Operation", "CreateBusinessCase")).
 				Info("user authorized to create business case")
@@ -186,8 +186,8 @@ func NewAuthorizeUpdateBusinessCase(_ *zap.Logger) func(
 				Info("business case does not exist")
 			return false, nil
 		}
-		user, ok := appcontext.User(ctx)
-		if !ok {
+		principal := appcontext.Principal(ctx)
+		if !principal.AllowEASi() {
 			// Default to failure to authorize and create a quick audit log
 			logger.With(zap.Bool("Authorized", false)).
 				With(zap.String("Operation", "UpdateBusinessCase")).
@@ -195,7 +195,7 @@ func NewAuthorizeUpdateBusinessCase(_ *zap.Logger) func(
 			return false, nil
 		}
 		// If intake is owned by user, authorize
-		if user.EUAUserID == businessCase.EUAUserID {
+		if principal.ID() == businessCase.EUAUserID {
 			logger.With(zap.Bool("Authorized", true)).
 				With(zap.String("Operation", "UpdateBusinessCase")).
 				Info("user authorized to update business case")

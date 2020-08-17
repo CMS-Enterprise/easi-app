@@ -11,6 +11,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/authn"
 	models2 "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -55,7 +56,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
 	ctx := context.Background()
-	ctx = appcontext.WithUser(ctx, models.User{EUAUserID: fakeEuaID})
+	ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: fakeEuaID, JobCodeEASi: true})
 
 	s.Run("successfully creates a system intake without an error", func() {
 		create := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
@@ -103,7 +104,8 @@ func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 
 	s.Run("Mismatched EUA ID fails auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ZYXW"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
+
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
 		}
@@ -116,7 +118,8 @@ func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 
 	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ABCD"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
+
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
 		}
@@ -436,7 +439,7 @@ func (s ServicesTestSuite) TestAuthorizeArchiveSystemIntake() {
 
 	s.Run("Mismatched EUA ID fails auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ZYXW"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
 		}
@@ -449,7 +452,7 @@ func (s ServicesTestSuite) TestAuthorizeArchiveSystemIntake() {
 
 	s.Run("Matched EUA ID passes auth", func() {
 		ctx := context.Background()
-		ctx = appcontext.WithUser(ctx, models.User{EUAUserID: "ABCD"})
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
 		intake := models.SystemIntake{
 			EUAUserID: "ABCD",
 		}
