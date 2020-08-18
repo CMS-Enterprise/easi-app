@@ -12,7 +12,7 @@ APPLICATION_DATETIME="$(date --rfc-3339='seconds' --utc)"
 APPLICATION_TS="$(date --date="$APPLICATION_DATETIME" '+%s')"
 
 # log in to ECR
-if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")" ; then
+if (set +x -o nounset; aws ecr get-login-password --region "${AWS_DEFAULT_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_DEFAULT_REGION}".amazonaws.com) ; then
   # build & tag the app image, then push to ECR
   if (set -x ; docker build --quiet --build-arg ARG_APPLICATION_VERSION="$APPLICATION_VERSION" --build-arg ARG_APPLICATION_DATETIME="$APPLICATION_DATETIME" --build-arg ARG_APPLICATION_TS="$APPLICATION_TS" --no-cache --tag "easi" "$builddir") ; then
     tag="${ecr_backend}:${APPLICATION_VERSION}"
