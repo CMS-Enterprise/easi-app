@@ -1,4 +1,4 @@
-FROM golang:1.13.4 AS builder
+FROM golang:1.14.6 AS builder
 WORKDIR /easi/
 COPY . .
 RUN  CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
