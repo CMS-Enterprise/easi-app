@@ -20,6 +20,10 @@ const AuthenticationWrapper = ({ children }: AuthenticationWrapperProps) => {
       redirectUri={process.env.REACT_APP_OKTA_REDIRECT_URI}
       onAuthRequired={handleAuthRequiredRedirect}
       responseType={['code']}
+      tokenManager={{
+        expireEarlySeconds: 0,
+        autoRenew: false
+      }}
       pkce
     >
       {children}
