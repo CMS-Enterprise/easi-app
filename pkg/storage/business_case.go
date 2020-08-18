@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -25,7 +27,7 @@ const ValidStatusMsg = "pq: invalid input value for enum business_case_status: "
 const UniqueIntakeMsg = "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\""
 
 // FetchBusinessCaseByID queries the DB for a business case matching the given ID
-func (s *Store) FetchBusinessCaseByID(id uuid.UUID) (*models.BusinessCase, error) {
+func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 	businessCase := models.BusinessCase{}
 	const fetchBusinessCaseSQL = `
 		SELECT
@@ -40,7 +42,7 @@ func (s *Store) FetchBusinessCaseByID(id uuid.UUID) (*models.BusinessCase, error
 
 	err := s.DB.Get(&businessCase, fetchBusinessCaseSQL, id)
 	if err != nil {
-		s.logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case %s", err),
 			zap.String("id", id.String()),
 		)
@@ -53,7 +55,7 @@ func (s *Store) FetchBusinessCaseByID(id uuid.UUID) (*models.BusinessCase, error
 }
 
 // FetchBusinessCaseIDByIntakeID queries the DB for a business case matching the given intake ID
-func (s *Store) FetchBusinessCaseIDByIntakeID(intakeID uuid.UUID) (*uuid.UUID, error) {
+func (s *Store) FetchBusinessCaseIDByIntakeID(ctx context.Context, intakeID uuid.UUID) (*uuid.UUID, error) {
 	var businessCaseID *uuid.UUID = nil
 	const fetchBusinessCaseIDSQL = `
 		SELECT
@@ -69,7 +71,7 @@ func (s *Store) FetchBusinessCaseIDByIntakeID(intakeID uuid.UUID) (*uuid.UUID, e
 			return businessCaseID, nil
 		}
 
-		s.logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case id for intake %s", err),
 			zap.String("System Intake", intakeID.String()),
 		)
@@ -79,7 +81,7 @@ func (s *Store) FetchBusinessCaseIDByIntakeID(intakeID uuid.UUID) (*uuid.UUID, e
 }
 
 // FetchBusinessCasesByEuaID queries the DB for a list of business case matching the given EUA ID
-func (s *Store) FetchBusinessCasesByEuaID(euaID string) (models.BusinessCases, error) {
+func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (models.BusinessCases, error) {
 	businessCases := []models.BusinessCase{}
 	const fetchBusinessCaseSQL = `
 		SELECT
@@ -94,7 +96,7 @@ func (s *Store) FetchBusinessCasesByEuaID(euaID string) (models.BusinessCases, e
 
 	err := s.DB.Select(&businessCases, fetchBusinessCaseSQL, euaID)
 	if err != nil {
-		s.logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business cases %s", err),
 			zap.String("euaID", euaID),
 		)
@@ -122,13 +124,13 @@ const createEstimatedLifecycleCostSQL = `
 	)
 `
 
-func createEstimatedLifecycleCosts(tx *sqlx.Tx, businessCase *models.BusinessCase, logger *zap.Logger) error {
+func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCase *models.BusinessCase) error {
 	for _, cost := range businessCase.LifecycleCostLines {
 		cost.ID = uuid.New()
 		cost.BusinessCaseID = businessCase.ID
 		_, err := tx.NamedExec(createEstimatedLifecycleCostSQL, &cost)
 		if err != nil {
-			logger.Error(
+			appcontext.ZLogger(ctx).Error(
 				fmt.Sprintf(
 					"Failed to create cost %s %s with error %s",
 					cost.Solution,
@@ -145,7 +147,7 @@ func createEstimatedLifecycleCosts(tx *sqlx.Tx, businessCase *models.BusinessCas
 }
 
 // CreateBusinessCase creates a business case
-func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	id := uuid.New()
 	businessCase.ID = id
 	const createBusinessCaseSQL = `
@@ -251,12 +253,13 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 		    :created_at,
 		    :updated_at
 		)`
+	logger := appcontext.ZLogger(ctx)
 	tx := s.DB.MustBegin()
 	//Rollback only happens if transaction isn't committed
 	defer tx.Rollback()
 	_, err := tx.NamedExec(createBusinessCaseSQL, &businessCase)
 	if err != nil {
-		s.logger.Error(
+		logger.Error(
 			fmt.Sprintf("Failed to create business case with error %s", err),
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
@@ -271,9 +274,9 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 		}
 		return &models.BusinessCase{}, err
 	}
-	err = createEstimatedLifecycleCosts(tx, businessCase, s.logger)
+	err = createEstimatedLifecycleCosts(ctx, tx, businessCase)
 	if err != nil {
-		s.logger.Error(
+		logger.Error(
 			fmt.Sprintf("Failed to create business case with lifecycle costs with error %s", err),
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("BusinessCaseID", businessCase.ID.String()),
@@ -282,7 +285,7 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 	}
 	err = tx.Commit()
 	if err != nil {
-		s.logger.Error(
+		logger.Error(
 			fmt.Sprintf("Failed to create business case %s", err),
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
@@ -294,7 +297,7 @@ func (s *Store) CreateBusinessCase(businessCase *models.BusinessCase) (*models.B
 }
 
 // UpdateBusinessCase creates a business case
-func (s *Store) UpdateBusinessCase(businessCase *models.BusinessCase) (*models.BusinessCase, error) {
+func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 	const updateBusinessCaseSQL = `
 		UPDATE business_case
@@ -354,12 +357,13 @@ func (s *Store) UpdateBusinessCase(businessCase *models.BusinessCase) (*models.B
 		WHERE business_case = :id
 	`
 
+	logger := appcontext.ZLogger(ctx)
 	tx := s.DB.MustBegin()
 	//Rollback only happens if transaction isn't committed
 	defer tx.Rollback()
 	result, err := tx.NamedExec(updateBusinessCaseSQL, &businessCase)
 	if err != nil {
-		s.logger.Error(
+		logger.Error(
 			fmt.Sprintf("Failed to update business case %s", err),
 			zap.String("id", businessCase.ID.String()),
 		)
@@ -367,7 +371,7 @@ func (s *Store) UpdateBusinessCase(businessCase *models.BusinessCase) (*models.B
 	}
 	affectedRows, rowsAffectedErr := result.RowsAffected()
 	if affectedRows == 0 || rowsAffectedErr != nil {
-		s.logger.Error(
+		logger.Error(
 			fmt.Sprintf("Failed to update business case %s", err),
 			zap.String("id", businessCase.ID.String()),
 		)
@@ -376,21 +380,21 @@ func (s *Store) UpdateBusinessCase(businessCase *models.BusinessCase) (*models.B
 
 	_, err = tx.NamedExec(deleteLifecycleCostsSQL, &businessCase)
 	if err != nil {
-		s.logger.Error(
+		logger.Error(
 			fmt.Sprintf("Failed to update pre-existing business case costs %s", err),
 			zap.String("id", businessCase.ID.String()),
 		)
 		return businessCase, err
 	}
 
-	err = createEstimatedLifecycleCosts(tx, businessCase, s.logger)
+	err = createEstimatedLifecycleCosts(ctx, tx, businessCase)
 	if err != nil {
 		return businessCase, err
 	}
 
 	err = tx.Commit()
 	if err != nil {
-		s.logger.Error(
+		logger.Error(
 			fmt.Sprintf("Failed to update business case %s", err),
 			zap.String("id", businessCase.ID.String()),
 		)

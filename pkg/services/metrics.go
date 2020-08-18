@@ -14,10 +14,10 @@ import (
 // NewFetchMetrics returns a service for fetching a metrics digest
 func NewFetchMetrics(
 	config Config,
-	fetchSystemIntakeMetrics func(time.Time, time.Time) (models.SystemIntakeMetrics, error),
+	fetchSystemIntakeMetrics func(context.Context, time.Time, time.Time) (models.SystemIntakeMetrics, error),
 ) func(c context.Context, st time.Time, et time.Time) (models.MetricsDigest, error) {
 	return func(ctx context.Context, startTime time.Time, endTime time.Time) (models.MetricsDigest, error) {
-		systemIntakeMetrics, err := fetchSystemIntakeMetrics(startTime, endTime)
+		systemIntakeMetrics, err := fetchSystemIntakeMetrics(ctx, startTime, endTime)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("failed to query system intake metrics", zap.Error(err))
 			return models.MetricsDigest{}, &apperrors.QueryError{
