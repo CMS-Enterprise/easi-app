@@ -17,7 +17,7 @@ func (s ServicesTestSuite) TestNewFetchMetrics() {
 	serviceConfig := NewConfig(zap.NewNop())
 	serviceConfig.clock = serviceClock
 	systemIntakeMetrics := models.SystemIntakeMetrics{}
-	fetchSystemIntakeMetrics := func(time.Time, time.Time) (models.SystemIntakeMetrics, error) {
+	fetchSystemIntakeMetrics := func(context.Context, time.Time, time.Time) (models.SystemIntakeMetrics, error) {
 		return systemIntakeMetrics, nil
 	}
 
@@ -35,7 +35,7 @@ func (s ServicesTestSuite) TestNewFetchMetrics() {
 	})
 
 	s.Run("returns error if service fails", func() {
-		failFetchSystemIntakeMetrics := func(time.Time, time.Time) (models.SystemIntakeMetrics, error) {
+		failFetchSystemIntakeMetrics := func(context.Context, time.Time, time.Time) (models.SystemIntakeMetrics, error) {
 			return systemIntakeMetrics, errors.New("failed to fetch system intake metrics")
 		}
 		fetchMetrics := NewFetchMetrics(serviceConfig, failFetchSystemIntakeMetrics)
