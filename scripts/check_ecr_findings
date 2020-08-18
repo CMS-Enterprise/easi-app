@@ -2,7 +2,7 @@
 
 set -eu -o pipefail
 
-payload="{\"repository\": \"$1\", \"imageTag\": \"$2\"}"
+payload="$(jq --null-input ".repository= \"$1\" | .imageTag = \"$2\"")"
 aws lambda invoke --function-name ecr-scan-findings --payload "$payload" scan_response.json
 jq < scan_response.json
 totalFindings="$(jq "fromjson | .totalFindings" scan_response.json)"
