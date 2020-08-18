@@ -11,7 +11,7 @@ tag="${ecr_backend}:${3:-${CIRCLE_SHA1}}"
 builddir="$(git rev-parse --show-toplevel)"
 
 # log in to ECR
-if bash +x -o nounset -c "$(aws ecr get-login-password --region "${AWS_DEFAULT_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_DEFAULT_REGION}".amazonaws.com)" ; then
+if (set +x -o nounset; aws ecr get-login-password --region "${AWS_DEFAULT_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_DEFAULT_REGION}".amazonaws.com) ; then
   if (set -x ; docker build --quiet --no-cache --tag "$repo_name" "$builddir" --file "$dockerfile") ; then
     ( set -x ; docker tag "$repo_name" "$tag" && docker push "$tag" )
   else
