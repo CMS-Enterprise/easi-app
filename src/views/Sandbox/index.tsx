@@ -18,7 +18,7 @@ const shortenTimeout = async (authService: any) => {
     ...idToken,
     expiresAt: Math.round(
       DateTime.local()
-        .plus({ seconds: 15 })
+        .plus({ seconds: 5 })
         .toSeconds()
     )
   };
@@ -29,7 +29,7 @@ const shortenTimeout = async (authService: any) => {
     ...accessToken,
     expiresAt: Math.round(
       DateTime.local()
-        .plus({ seconds: 15 })
+        .plus({ seconds: 5 })
         .toSeconds()
     )
   };
@@ -57,6 +57,12 @@ const Sandbox = () => {
     <div>
       <Header />
       <div className="grid-container">
+        <ActionBanner
+          title="Update activeAt timestamp"
+          helpfulText="Do something to be active"
+          label="Activate!"
+          onClick={() => dispatch(updateLastActiveAt)}
+        />
         <ActionBanner
           title="Shorten the life of your token"
           helpfulText="Change expiration to a minute from now"
