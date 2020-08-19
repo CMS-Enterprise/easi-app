@@ -1,18 +1,20 @@
 package storage
 
 import (
+	"context"
 	"fmt"
 	"time"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // CreateSystemIntake creates a system intake
-func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemIntake, error) {
+func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	id := uuid.New()
 	intake.ID = id
 	createAt := s.clock.Now()
@@ -74,7 +76,7 @@ func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 		intake,
 	)
 	if err != nil {
-		s.logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create system intake with error %s", err),
 			zap.String("user", intake.EUAUserID),
 		)
@@ -84,7 +86,7 @@ func (s *Store) CreateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 }
 
 // UpdateSystemIntake does an upsert for a system intake
-func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemIntake, error) {
+func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 	const updateSystemIntakeSQL = `
 		UPDATE system_intake 
@@ -122,7 +124,7 @@ func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 		intake,
 	)
 	if err != nil {
-		s.logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update system intake %s", err),
 			zap.String("id", intake.ID.String()),
 			zap.String("user", intake.EUAUserID),
@@ -132,12 +134,12 @@ func (s *Store) UpdateSystemIntake(intake *models.SystemIntake) (*models.SystemI
 }
 
 // FetchSystemIntakeByID queries the DB for a system intake matching the given ID
-func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error) {
+func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
 
 	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1 AND status != 'ARCHIVED'", id)
 	if err != nil {
-		s.logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
 			zap.String("id", id.String()),
 		)
@@ -149,7 +151,7 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 	// This should cover all statuses that might have a related business case on it.
 	// In the future submitted will also need to be checked.
 	if intake.Status != models.SystemIntakeStatusDRAFT {
-		bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(intake.ID)
+		bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 		if fetchErr != nil {
 			return &intake, nil
 		}
@@ -159,11 +161,11 @@ func (s *Store) FetchSystemIntakeByID(id uuid.UUID) (*models.SystemIntake, error
 }
 
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
-func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, error) {
+func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
 	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'ARCHIVED'", euaID)
 	if err != nil {
-		s.logger.Error(
+		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
 			zap.String("euaID", euaID),
 		)
@@ -171,7 +173,7 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 	}
 	for k, intake := range intakes {
 		if intake.Status != models.SystemIntakeStatusDRAFT {
-			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(intake.ID)
+			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 			if fetchErr != nil {
 				return models.SystemIntakes{}, fetchErr
 			}
@@ -182,7 +184,7 @@ func (s *Store) FetchSystemIntakesByEuaID(euaID string) (models.SystemIntakes, e
 }
 
 // FetchSystemIntakeMetrics gets a metrics digest for system intake
-func (s *Store) FetchSystemIntakeMetrics(startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
+func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
 	type startedQueryResponse struct {
 		StartedCount   int `db:"started_count"`
 		CompletedCount int `db:"completed_count"`

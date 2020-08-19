@@ -2,6 +2,7 @@ package integration
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -27,7 +28,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	intake.Status = models.SystemIntakeStatusSUBMITTED
 	intake.EUAUserID = s.user.euaID
 
-	createdIntake, err := s.store.CreateSystemIntake(&intake)
+	createdIntake, err := s.store.CreateSystemIntake(context.Background(), &intake)
 	intakeID := createdIntake.ID
 	s.NoError(err)
 

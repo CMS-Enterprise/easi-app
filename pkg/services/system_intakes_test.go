@@ -24,7 +24,7 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches System Intakes by EUA ID without an error", func() {
-		fetch := func(euaID string) (models.SystemIntakes, error) {
+		fetch := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 			return models.SystemIntakes{
 				models.SystemIntake{
 					EUAUserID: fakeEuaID,
@@ -38,7 +38,7 @@ func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 	})
 
 	s.Run("returns query error when fetch fails", func() {
-		fetch := func(euaID string) (models.SystemIntakes, error) {
+		fetch := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 			return models.SystemIntakes{}, errors.New("fetch failed")
 		}
 		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch, authorize)
@@ -59,7 +59,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 	ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: fakeEuaID, JobCodeEASi: true})
 
 	s.Run("successfully creates a system intake without an error", func() {
-		create := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
+		create := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{
 				EUAUserID: intake.EUAUserID,
 				Requester: requester,
@@ -76,7 +76,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 	})
 
 	s.Run("returns query error when create fails", func() {
-		create := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
+		create := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("creation failed")
 		}
 		createIntake := NewCreateSystemIntake(serviceConfig, create)
@@ -133,14 +133,14 @@ func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
 
 func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	logger := zap.NewNop()
-	fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{
 			Status: models.SystemIntakeStatusDRAFT,
 		}, nil
 	}
 
 	requester := "Test Requester"
-	save := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
+	save := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		return &models.SystemIntake{
 			EUAUserID: intake.EUAUserID,
 			Requester: requester,
@@ -151,7 +151,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
-	submit := func(intake *models.SystemIntake, logger2 *zap.Logger) (string, error) {
+	submit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
 		return "ALFABET-ID", nil
 	}
 	fetchEmailAddress := func(logger2 *zap.Logger, euaID string) (string, error) {
@@ -198,7 +198,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns query error when fetch fails", func() {
 		ctx := context.Background()
-		failFetch := func(uuid uuid.UUID) (*models.SystemIntake, error) {
+		failFetch := func(ctx context.Context, uuid uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("failed to fetch system intake")
 		}
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
@@ -211,7 +211,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns query error when save fails in draft", func() {
 		ctx := context.Background()
-		failSave := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
+		failSave := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("save failed")
 		}
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, failSave, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
@@ -323,7 +323,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		s.Equal(&models.SystemIntake{}, intake)
 	})
 
-	fetch = func(id uuid.UUID) (*models.SystemIntake, error) {
+	fetch = func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{
 			Status: models.SystemIntakeStatusSUBMITTED,
 		}, nil
@@ -399,7 +399,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	authorize := func(context context.Context, intake *models.SystemIntake) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches System Intake by ID without an error", func() {
-		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+		fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{
 				ID: fakeID,
 			}, nil
@@ -412,7 +412,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	})
 
 	s.Run("returns query error when save fails", func() {
-		fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+		fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("save failed")
 		}
 		fetchSystemIntakeByID := NewFetchSystemIntakeByID(serviceConfig, fetch, authorize)
@@ -472,13 +472,13 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 	serviceConfig.clock = clock.NewMock()
 	ctx := context.Background()
 
-	fetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{
 			ID:             id,
 			BusinessCaseID: &businessCaseID,
 		}, nil
 	}
-	update := func(intake *models.SystemIntake) (*models.SystemIntake, error) {
+	update := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		return intake, nil
 	}
 	archiveBusinessCase := func(ctx context.Context, id uuid.UUID) error {
@@ -495,7 +495,7 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 	})
 
 	s.Run("returns query error when fetch fails", func() {
-		failFetch := func(id uuid.UUID) (*models.SystemIntake, error) {
+		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("fetch failed")
 		}
 		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, failFetch, update, archiveBusinessCase, authorize)
@@ -535,7 +535,7 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 	})
 
 	s.Run("returns query error when update fails", func() {
-		failUpdate := func(businessCase *models.SystemIntake) (*models.SystemIntake, error) {
+		failUpdate := func(ctx context.Context, businessCase *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("update failed")
 		}
 		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, failUpdate, archiveBusinessCase, authorize)

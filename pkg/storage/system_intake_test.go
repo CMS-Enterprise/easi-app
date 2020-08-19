@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"time"
@@ -19,6 +20,8 @@ const insertRelatedBizCaseSQL = `INSERT INTO business_case (id, eua_user_id, sta
 		VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
 
 func (s StoreTestSuite) TestCreateSystemIntake() {
+	ctx := context.Background()
+
 	s.Run("create a new system intake", func() {
 		intake := models.SystemIntake{
 			EUAUserID: testhelpers.RandomEUAID(),
@@ -26,7 +29,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 			Requester: "Test requester",
 		}
 
-		created, err := s.store.CreateSystemIntake(&intake)
+		created, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 		s.Equal(intake.EUAUserID, created.EUAUserID)
 		s.Equal(intake.Status, created.Status)
@@ -42,7 +45,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 			Status: models.SystemIntakeStatusDRAFT,
 		}
 
-		_, err := s.store.CreateSystemIntake(&partialIntake)
+		_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
 
 		s.Error(err)
 		s.Equal("pq: new row for relation \"system_intake\" violates check constraint \"eua_id_check\"", err.Error())
@@ -61,7 +64,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 			}
 			partialIntake.EUAUserID = "F"
 
-			_, err := s.store.CreateSystemIntake(&partialIntake)
+			_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
 
 			s.Error(err)
 			s.Equal("pq: new row for relation \"system_intake\" violates check constraint \"eua_id_check\"", err.Error())
@@ -75,7 +78,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 			Requester: "Test requester",
 		}
 
-		created, err := s.store.CreateSystemIntake(&partialIntake)
+		created, err := s.store.CreateSystemIntake(ctx, &partialIntake)
 
 		s.Error(err)
 		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
@@ -84,8 +87,10 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 }
 
 func (s StoreTestSuite) TestUpdateSystemIntake() {
+	ctx := context.Background()
+
 	s.Run("update an existing system intake", func() {
-		intake, err := s.store.CreateSystemIntake(&models.SystemIntake{
+		intake, err := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 			EUAUserID: testhelpers.RandomEUAID(),
 			Status:    models.SystemIntakeStatusDRAFT,
 			Requester: "Test requester",
@@ -96,7 +101,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		intake.UpdatedAt = &now
 		intake.ISSO = null.StringFrom("test isso")
 
-		updated, err := s.store.UpdateSystemIntake(intake)
+		updated, err := s.store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err, "failed to update system intake")
 		s.Equal(intake, updated)
 	})
@@ -107,7 +112,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 			Status:    models.SystemIntakeStatusDRAFT,
 			Requester: "Test requester",
 		}
-		_, err := s.store.CreateSystemIntake(&originalIntake)
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
 		s.NoError(err)
 		originalEUA := originalIntake.EUAUserID
 		partialIntake := models.SystemIntake{
@@ -118,10 +123,10 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		}
 		partialIntake.EUAUserID = "NEWS"
 
-		_, err = s.store.UpdateSystemIntake(&partialIntake)
+		_, err = s.store.UpdateSystemIntake(ctx, &partialIntake)
 		s.NoError(err, "failed to update system intake")
 
-		updated, err := s.store.FetchSystemIntakeByID(originalIntake.ID)
+		updated, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
 		s.NoError(err)
 
 		s.Equal(originalEUA, updated.EUAUserID)
@@ -129,6 +134,8 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {
+	ctx := context.Background()
+
 	s.Run("golden path to fetch a system intake", func() {
 		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
@@ -138,7 +145,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakeByID(id)
+		fetched, err := s.store.FetchSystemIntakeByID(ctx, id)
 
 		s.NoError(err, "failed to fetch system intake")
 		s.Equal(intake.ID, fetched.ID)
@@ -147,7 +154,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 	s.Run("cannot without an ID that exists in the db", func() {
 		badUUID, _ := uuid.Parse("")
-		fetched, err := s.store.FetchSystemIntakeByID(badUUID)
+		fetched, err := s.store.FetchSystemIntakeByID(ctx, badUUID)
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
@@ -169,7 +176,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakeByID(id)
+		fetched, err := s.store.FetchSystemIntakeByID(ctx, id)
 
 		s.NoError(err, "failed to fetch system intake")
 		s.Equal(intake.ID, fetched.ID)
@@ -186,7 +193,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakeByID(id)
+		fetched, err := s.store.FetchSystemIntakeByID(ctx, id)
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
@@ -195,6 +202,8 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
+	ctx := context.Background()
+
 	s.Run("golden path to fetch system intakes", func() {
 		intake := testhelpers.NewSystemIntake()
 		intake2 := testhelpers.NewSystemIntake()
@@ -207,7 +216,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakesByEuaID(intake.EUAUserID)
+		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID)
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Len(fetched, 2)
@@ -227,7 +236,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakesByEuaID(intake.EUAUserID)
+		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID)
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Len(fetched, 1)
@@ -235,7 +244,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	})
 
 	s.Run("fetches no results with other EUA ID", func() {
-		fetched, err := s.store.FetchSystemIntakesByEuaID(testhelpers.RandomEUAID())
+		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, testhelpers.RandomEUAID())
 
 		s.NoError(err)
 		s.Len(fetched, 0)
@@ -263,7 +272,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakesByEuaID(intake.EUAUserID)
+		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID)
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Len(fetched, 2)
@@ -289,6 +298,8 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
+	ctx := context.Background()
+
 	mockClock := clock.NewMock()
 	settableClock := testhelpers.SettableClock{Mock: mockClock}
 	s.store.clock = &settableClock
@@ -314,10 +325,10 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 		s.Run(fmt.Sprintf("%s for started count", tt.name), func() {
 			settableClock.Set(tt.createdAt)
 			intake := testhelpers.NewSystemIntake()
-			_, err := s.store.CreateSystemIntake(&intake)
+			_, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
 
-			metrics, err := s.store.FetchSystemIntakeMetrics(startDate, endDate)
+			metrics, err := s.store.FetchSystemIntakeMetrics(ctx, startDate, endDate)
 
 			s.NoError(err)
 			s.Equal(tt.expectedCount, metrics.Started)
@@ -356,13 +367,13 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 		s.Run(fmt.Sprintf("%s for completed count", tt.name), func() {
 			intake := testhelpers.NewSystemIntake()
 			settableClock.Set(tt.createdAt)
-			_, err := s.store.CreateSystemIntake(&intake)
+			_, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
 			intake.SubmittedAt = &tt.submittedAt
-			_, err = s.store.UpdateSystemIntake(&intake)
+			_, err = s.store.UpdateSystemIntake(ctx, &intake)
 			s.NoError(err)
 
-			metrics, err := s.store.FetchSystemIntakeMetrics(startDate, endDate)
+			metrics, err := s.store.FetchSystemIntakeMetrics(ctx, startDate, endDate)
 
 			s.NoError(err)
 			s.Equal(tt.expectedCount, metrics.CompletedOfStarted)
@@ -406,13 +417,13 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 			intake := testhelpers.NewSystemIntake()
 			settableClock.Set(tt.submittedAt)
 			intake.ExistingFunding = null.BoolFrom(tt.funded)
-			_, err := s.store.CreateSystemIntake(&intake)
+			_, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
 			intake.SubmittedAt = &tt.submittedAt
-			_, err = s.store.UpdateSystemIntake(&intake)
+			_, err = s.store.UpdateSystemIntake(ctx, &intake)
 			s.NoError(err)
 
-			metrics, err := s.store.FetchSystemIntakeMetrics(startDate, endDate)
+			metrics, err := s.store.FetchSystemIntakeMetrics(ctx, startDate, endDate)
 
 			s.NoError(err)
 			s.Equal(tt.completedCount, metrics.Completed)
