@@ -1,20 +1,22 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
-import { DateTime } from 'luxon';
 
+import { updateLastRenewAt } from 'reducers/authReducer';
 import { AppState } from 'reducers/rootReducer';
 
 type TimeOutWrapperProps = {
   children: React.ReactNode;
 };
 
-const sessionTimeout = { minutes: 14 };
-
 const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const lastActiveAt = useSelector(
     (state: AppState) => state.auth.lastActiveAt
   );
+  const lastRenewAt = useSelector((state: AppState) => state.auth.lastRenewAt);
+  const activeSinceLastRenew = lastActiveAt > lastRenewAt;
+
+  const dispatch = useDispatch();
   const { authState, authService } = useOktaAuth();
 
   const registerExpire = async () => {
@@ -22,11 +24,9 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     // clear the old listener so we don't register millions of them
     tokenManager.off('expired');
     tokenManager.on('expired', (key: any) => {
-      const activeSessionWindow = DateTime.local()
-        .minus(sessionTimeout)
-        .toMillis();
-      if (lastActiveAt > activeSessionWindow) {
+      if (activeSinceLastRenew) {
         tokenManager.renew(key);
+        dispatch(updateLastRenewAt);
       } else {
         authService.logout('/login');
       }
@@ -38,7 +38,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       registerExpire();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState.isAuthenticated, lastActiveAt]);
+  }, [authState.isAuthenticated, activeSinceLastRenew]);
 
   return <>{children}</>;
 };
