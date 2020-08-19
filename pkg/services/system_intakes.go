@@ -23,7 +23,7 @@ func NewAuthorizeFetchSystemIntakesByEuaID() func(ctx context.Context, euaID str
 // NewFetchSystemIntakesByEuaID is a service to fetch system intakes by EUA id
 func NewFetchSystemIntakesByEuaID(
 	config Config,
-	fetch func(euaID string) (models.SystemIntakes, error),
+	fetch func(c context.Context, euaID string) (models.SystemIntakes, error),
 	authorize func(c context.Context, euaID string) (bool, error),
 ) func(c context.Context, e string) (models.SystemIntakes, error) {
 	return func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
@@ -36,7 +36,7 @@ func NewFetchSystemIntakesByEuaID(
 		if !ok {
 			return models.SystemIntakes{}, &apperrors.UnauthorizedError{Err: err}
 		}
-		intakes, err := fetch(euaID)
+		intakes, err := fetch(ctx, euaID)
 		if err != nil {
 			logger.Error("failed to fetch system intakes")
 			return models.SystemIntakes{}, &apperrors.QueryError{
@@ -52,7 +52,7 @@ func NewFetchSystemIntakesByEuaID(
 // NewCreateSystemIntake is a service to create a business case
 func NewCreateSystemIntake(
 	config Config,
-	create func(intake *models.SystemIntake) (*models.SystemIntake, error),
+	create func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 ) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		logger := appcontext.ZLogger(ctx)
@@ -66,7 +66,7 @@ func NewCreateSystemIntake(
 		}
 		intake.EUAUserID = principal.ID()
 		// app validation belongs here
-		createdIntake, err := create(intake)
+		createdIntake, err := create(ctx, intake)
 		if err != nil {
 			logger.Error("failed to create a system intake")
 			return &models.SystemIntake{}, &apperrors.QueryError{
@@ -114,8 +114,8 @@ func NewAuthorizeUpdateSystemIntake(_ *zap.Logger) func(
 // NewUpdateSystemIntake is a service to update a system intake
 func NewUpdateSystemIntake(
 	config Config,
-	update func(intake *models.SystemIntake) (*models.SystemIntake, error),
-	fetch func(id uuid.UUID) (*models.SystemIntake, error),
+	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
 	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
 	sendSubmitEmail func(requester string, intakeID uuid.UUID) error,
@@ -124,7 +124,7 @@ func NewUpdateSystemIntake(
 	canDecideIntake bool,
 ) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-		existingIntake, fetchErr := fetch(intake.ID)
+		existingIntake, fetchErr := fetch(ctx, intake.ID)
 		if fetchErr != nil {
 			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       fetchErr,
@@ -144,7 +144,7 @@ func NewUpdateSystemIntake(
 		intake.UpdatedAt = &updatedTime
 
 		if existingIntake.Status == models.SystemIntakeStatusDRAFT && intake.Status == models.SystemIntakeStatusDRAFT {
-			intake, err = update(intake)
+			intake, err = update(ctx, intake)
 			if err != nil {
 				return &models.SystemIntake{}, &apperrors.QueryError{
 					Err:       err,
@@ -178,7 +178,7 @@ func NewUpdateSystemIntake(
 				}
 			}
 			intake.AlfabetID = null.StringFrom(alfabetID)
-			intake, err = update(intake)
+			intake, err = update(ctx, intake)
 			if err != nil {
 				return &models.SystemIntake{}, &apperrors.QueryError{
 					Err:       err,
@@ -218,7 +218,7 @@ func NewUpdateSystemIntake(
 			existingIntake.DecidedAt = &updatedTime
 			existingIntake.UpdatedAt = &updatedTime
 			// This ensures only certain fields can be modified.
-			intake, err = update(existingIntake)
+			intake, err = update(ctx, existingIntake)
 			if err != nil {
 				return &models.SystemIntake{}, &apperrors.QueryError{
 					Err:       err,
@@ -277,13 +277,13 @@ func NewAuthorizeArchiveSystemIntake(logger *zap.Logger) func(
 // NewArchiveSystemIntake is a service to archive a system intake
 func NewArchiveSystemIntake(
 	config Config,
-	fetch func(id uuid.UUID) (*models.SystemIntake, error),
-	update func(intake *models.SystemIntake) (*models.SystemIntake, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	archiveBusinessCase func(context.Context, uuid.UUID) error,
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 ) func(context.Context, uuid.UUID) error {
 	return func(ctx context.Context, id uuid.UUID) error {
-		intake, fetchErr := fetch(id)
+		intake, fetchErr := fetch(ctx, id)
 		if fetchErr != nil {
 			return &apperrors.QueryError{
 				Err:       fetchErr,
@@ -312,7 +312,7 @@ func NewArchiveSystemIntake(
 		intake.Status = models.SystemIntakeStatusARCHIVED
 		intake.ArchivedAt = &updatedTime
 
-		intake, err = update(intake)
+		intake, err = update(ctx, intake)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
@@ -335,12 +335,12 @@ func NewAuthorizeFetchSystemIntakeByID() func(ctx context.Context, intake *model
 // NewFetchSystemIntakeByID is a service to fetch the system intake by intake id
 func NewFetchSystemIntakeByID(
 	config Config,
-	fetch func(id uuid.UUID) (*models.SystemIntake, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(c context.Context, i *models.SystemIntake) (bool, error),
 ) func(c context.Context, u uuid.UUID) (*models.SystemIntake, error) {
 	return func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		logger := appcontext.ZLogger(ctx)
-		intake, err := fetch(id)
+		intake, err := fetch(ctx, id)
 		if err != nil {
 			logger.Error("failed to fetch system intake")
 			return &models.SystemIntake{}, &apperrors.QueryError{
