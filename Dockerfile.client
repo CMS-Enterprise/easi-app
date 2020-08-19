@@ -1,4 +1,4 @@
-FROM node:10 AS builder
+FROM node:10.22.0 AS builder
 
 WORKDIR /app
 COPY . .
@@ -14,7 +14,7 @@ ARG REACT_APP_OKTA_SERVER_ID
 RUN yarn install
 RUN yarn run build
 
-FROM node:10
+FROM node:10.22.0
 
 RUN yarn global add serve
 WORKDIR /app

@@ -5,7 +5,7 @@ set -eu -o pipefail
 PROJECT_NAME=easi-app
 CYPRESS_CONTAINER="${PROJECT_NAME}"_cypress_1
 
-if bash +x -o nounset -c "$(aws ecr get-login --no-include-email --region "us-west-2" --registry-ids "${AWS_ACCOUNT_ID}")" ; then
+if (set +x -o nounset; aws ecr get-login-password --region "${AWS_DEFAULT_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_DEFAULT_REGION}".amazonaws.com) ; then
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml pull db_migrate easi
 
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml build --parallel easi_client cypress
