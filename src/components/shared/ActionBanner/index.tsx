@@ -16,10 +16,12 @@ const ActionBanner = ({
   helpfulText,
   label,
   buttonUnstyled,
-  onClick
+  onClick,
+  ...remainingProps
 }: ActionBannerProps) => {
   return (
-    <div className="action-banner usa-alert">
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <div className="action-banner usa-alert" {...remainingProps}>
       <div className="action-banner__icon">
         <i className="fa fa-clock-o fa-3x" />
       </div>
