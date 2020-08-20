@@ -14,9 +14,9 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+import './businessCase';
 import './commands';
 import '@cypress/code-coverage/support';
-
 import './login';
 import './systemIntake';
 

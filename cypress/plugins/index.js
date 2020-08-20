@@ -45,6 +45,7 @@ module.exports = (on, config) => {
   newConfig.env.username = process.env.OKTA_TEST_USERNAME;
   newConfig.env.password = process.env.OKTA_TEST_PASSWORD;
   newConfig.env.otpSecret = process.env.OKTA_TEST_SECRET;
+  newConfig.env.systemIntakeApi = `${process.env.REACT_APP_API_ADDRESS}/system_intake`;
 
   return config;
 };
