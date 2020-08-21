@@ -18,7 +18,7 @@ Cypress.Commands.add('login', () => {
   cy.get('body').then($body => {
     if ($body.find('input[name="answer"]').length) {
       cy.get('input[name="answer"]').then(() => {
-        cy.task('generateOTP', Cypress.env('otpSecret')).then(token => {
+        cy.task('generateOTP', Cypress.env('otpSecret'), { log: false }).then(token => {
           cy.get('input[name="answer"]').type(token, { log: false });
           cy.get('input[name="rememberDevice"]').check({ force: true });
           cy.get('input[value="Verify"').click();
