@@ -26,13 +26,15 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const { t } = useTranslation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [timeRemainingArr, setTimeRemainingArr] = useState([0, 'second']);
+
+  const [accessTokenExpiresIn, setAccessTokenExpiresIn] = useState(0);
 
   const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
-  const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('milliseconds');
+  const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('seconds');
 
-  const registerExpire = async () => {
+  const setTokenExpirationListeners = async () => {
     const tokenManager = await authService.getTokenManager();
+
     // clear the old listener so we don't register millions of them
     tokenManager.off('expired');
     tokenManager.on('expired', (key: any) => {
@@ -45,14 +47,51 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     });
   };
 
+  const handleModalExit = async () => {
+    setIsModalOpen(false);
+    dispatch(updateLastActiveAt);
+  };
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      const token = localStorage.getItem('okta-token-storage') || '';
+      const accessTokenExpiresAt = JSON.parse(token).accessToken.expiresAt;
+
+      const currentTime = Math.floor(Date.now() / 1000);
+      const expiresIn = accessTokenExpiresAt - currentTime;
+
+      setAccessTokenExpiresIn(expiresIn);
+      setTokenExpirationListeners();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authState.isAuthenticated, activeSinceLastRenew]);
+
+  // useInterval starts once the modal is open and stops when it's closed
+  // Updates the minutes/seconds in the message
+  useInterval(() => {
+    setAccessTokenExpiresIn(accessTokenExpiresIn - 1);
+  }, oneSecond);
+
+  // useInterval starts when a user is logged in AND the modal is not open
+  // useInterval stops/pauses, when a use is logged out or the modal is open
+  // Calculates the user's inactivity to display the modal
+  useInterval(
+    () => {
+      if (
+        !activeSinceLastRenew &&
+        accessTokenExpiresIn > 0 &&
+        accessTokenExpiresIn < fiveMinutes
+      ) {
+        setIsModalOpen(true);
+      }
+    },
+    authState.isAuthenticated && !isModalOpen ? oneSecond : null
+  );
+
   const formatSessionTimeRemaining = (
     timeRemaining: number
   ): [number, string] => {
-    const seconds = Math.floor(
-      Duration.fromMillis(timeRemaining).as('seconds')
-    );
-
-    const minutes = seconds / 60;
+    const minutes = timeRemaining / 60;
     // Using Math.ceil() for greater than one minute
     // 299 seconds = 4.983 minutes, but should still display 5 minutes
     // Using Math.floor() for less than one minute
@@ -61,82 +100,12 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
     return wholeMinutes > 0
       ? [wholeMinutes, 'minute']
-      : [Math.floor(seconds), 'second'];
+      : [Math.floor(timeRemaining), 'second'];
   };
 
-  const handleModalExit = async () => {
-    setIsModalOpen(false);
-    dispatch(updateLastActiveAt);
-  };
-
-  useEffect(() => {
-    if (authState.isAuthenticated) {
-      registerExpire();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState.isAuthenticated, activeSinceLastRenew]);
-
-  // useInterval starts once the modal is open and stops when it's closed
-  // Updates the minutes/seconds in the message
-  // useInterval(
-  //   async () => {
-  //     const currentTime = Date.now();
-  //     const tokenManager = await authService.getTokenManager();
-  //     const accessToken = await tokenManager.get('accessToken');
-  //     // convert from seconds to miliseconds
-  //     const accessTokenExpires = accessToken.expiresAt * oneSecond;
-  //     if (accessTokenExpires - currentTime >= 0) {
-  //       setTimeRemainingArr(
-  //         formatSessionTimeRemaining(accessTokenExpires - currentTime)
-  //       );
-  //     }
-  //   },
-  //   isModalOpen ? oneSecond : null
-  // );
-
-  // useInterval starts when a user is logged in AND the modal is not open
-  // useInterval stops/pauses, when a use is logged out or the modal is open
-  // Calculates the user's inactivity to display the modal
-  useInterval(
-    async () => {
-      const currentTime = Date.now();
-      const tokenManager = await authService.getTokenManager();
-      const accessToken = await tokenManager.get('accessToken');
-      // convert from seconds to miliseconds
-      const accessTokenExpires =
-        accessToken && accessToken.expiresAt * oneSecond;
-      // const accessTokenExpires =
-      //   Date.now() - Duration.fromObject({ minutes: 5 }).as('milliseconds');
-      if (
-        !activeSinceLastRenew &&
-        accessTokenExpires - currentTime < fiveMinutes
-      ) {
-        setTimeRemainingArr(
-          formatSessionTimeRemaining(accessTokenExpires - currentTime)
-        );
-        setIsModalOpen(true);
-      }
-    },
-    authState.isAuthenticated && !isModalOpen ? oneSecond : null
+  const timeRemainingArr: any = formatSessionTimeRemaining(
+    accessTokenExpiresIn
   );
-
-  // useInterval(
-  //   () => {
-  //     const currentTime = Date.now();
-  //     const accessTokenExpires =
-  //       Date.now() + Duration.fromObject({ minutes: 4 }).as('milliseconds');
-  //     if (
-  //       !activeSinceLastRenew &&
-  //       accessTokenExpires - currentTime < fiveMinutes
-  //     ) {
-  //       setTimeRemainingArr(
-  //         formatSessionTimeRemaining(accessTokenExpires - currentTime)
-  //       );
-  //       setIsModalOpen(true);
-  //     }
-  //   },
-  //   authState.isAuthenticated && !isModalOpen ? oneSecond : null
-  // );
 
   return (
     <>
