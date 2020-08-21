@@ -41,8 +41,7 @@ Cypress.Commands.add('restoreLocalStorage', () => {
 Cypress.Commands.add('getAccessToken', () => {
   if (LOCAL_STORAGE_MEMORY['okta-token-storage']) {
     const tokenObj = JSON.parse(LOCAL_STORAGE_MEMORY['okta-token-storage']);
-    cy.log(`tokenObj: ${tokenObj}`);
-    return cy.wrap(tokenObj.accessToken.value);
+    return cy.wrap(tokenObj.accessToken.value, { log: false });
   }
   return cy.wrap('');
 });
