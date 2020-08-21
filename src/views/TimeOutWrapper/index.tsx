@@ -10,6 +10,16 @@ import useInterval from 'hooks/useInterval';
 import { updateLastActiveAt, updateLastRenewAt } from 'reducers/authReducer';
 import { AppState } from 'reducers/rootReducer';
 
+const accessTokenExpires = () => {
+  const token = localStorage.getItem('okta-token-storage') || '';
+  return JSON.parse(token).accessToken.expiresAt;
+};
+
+const calculcateTokenExpiration = () => {
+  const currentTime = Math.floor(Date.now() / 1000);
+  return accessTokenExpires() - currentTime;
+};
+
 type TimeOutWrapperProps = {
   children: React.ReactNode;
 };
@@ -26,13 +36,12 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const { t } = useTranslation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const [accessTokenExpiresIn, setAccessTokenExpiresIn] = useState(0);
+  const [timeRemainingArr, setTimeRemainingArr] = useState([0, 'second']);
 
   const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
   const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('seconds');
 
-  const setTokenExpirationListeners = async () => {
+  const registerExpire = async () => {
     const tokenManager = await authService.getTokenManager();
 
     // clear the old listener so we don't register millions of them
@@ -46,47 +55,6 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       }
     });
   };
-
-  const handleModalExit = async () => {
-    setIsModalOpen(false);
-    dispatch(updateLastActiveAt);
-  };
-
-  useEffect(() => {
-    if (authState.isAuthenticated) {
-      const token = localStorage.getItem('okta-token-storage') || '';
-      const accessTokenExpiresAt = JSON.parse(token).accessToken.expiresAt;
-
-      const currentTime = Math.floor(Date.now() / 1000);
-      const expiresIn = accessTokenExpiresAt - currentTime;
-
-      setAccessTokenExpiresIn(expiresIn);
-      setTokenExpirationListeners();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authState.isAuthenticated, activeSinceLastRenew]);
-
-  // useInterval starts once the modal is open and stops when it's closed
-  // Updates the minutes/seconds in the message
-  useInterval(() => {
-    setAccessTokenExpiresIn(accessTokenExpiresIn - 1);
-  }, oneSecond);
-
-  // useInterval starts when a user is logged in AND the modal is not open
-  // useInterval stops/pauses, when a use is logged out or the modal is open
-  // Calculates the user's inactivity to display the modal
-  useInterval(
-    () => {
-      if (
-        !activeSinceLastRenew &&
-        accessTokenExpiresIn > 0 &&
-        accessTokenExpiresIn < fiveMinutes
-      ) {
-        setIsModalOpen(true);
-      }
-    },
-    authState.isAuthenticated && !isModalOpen ? oneSecond : null
-  );
 
   const formatSessionTimeRemaining = (
     timeRemaining: number
@@ -103,8 +71,43 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
       : [Math.floor(timeRemaining), 'second'];
   };
 
-  const timeRemainingArr: any = formatSessionTimeRemaining(
-    accessTokenExpiresIn
+  const handleModalExit = async () => {
+    setIsModalOpen(false);
+    dispatch(updateLastActiveAt);
+  };
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      registerExpire();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authState.isAuthenticated, activeSinceLastRenew]);
+
+  // useInterval starts once the modal is open and stops when it's closed
+  // Updates the minutes/seconds in the message
+  useInterval(
+    () => {
+      const tokenExpiresIn = calculcateTokenExpiration();
+      setTimeRemainingArr(formatSessionTimeRemaining(tokenExpiresIn));
+    },
+    authState.isAuthenticated && isModalOpen ? oneSecond : null
+  );
+
+  // useInterval starts when a user is logged in AND the modal is not open
+  // useInterval stops/pauses, when a use is logged out or the modal is open
+  // Calculates the user's inactivity to display the modal
+  useInterval(
+    () => {
+      const tokenExpiresIn = calculcateTokenExpiration();
+      if (
+        !activeSinceLastRenew &&
+        tokenExpiresIn > 0 &&
+        tokenExpiresIn < fiveMinutes
+      ) {
+        setIsModalOpen(true);
+      }
+    },
+    authState.isAuthenticated && !isModalOpen ? oneSecond : null
   );
 
   return (
