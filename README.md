@@ -298,7 +298,14 @@ postgres@localhost:postgres>
 Use the following command to run all services locally, *including* cypress tests:
 
 ```console
+# build the images
+docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml build --parallel
+
+# run the services in the background
 docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up --detach
+
+# watch the logs
+docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml logs -f
 ```
 
 Note: you can modify the command above to run only some of the services. For
