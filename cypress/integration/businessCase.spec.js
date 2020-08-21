@@ -5,10 +5,8 @@ describe('The Business Case Form', () => {
     cy.login();
     cy.wait(1000);
     cy.saveLocalStorage();
-    cy.window().then(window => {
-      accessToken = JSON.parse(
-        window.localStorage.getItem('okta-token-storage')
-      ).accessToken.value;
+    cy.getAccessToken(token => {
+      accessToken = token;
     });
     cy.request({
       method: 'POST',
