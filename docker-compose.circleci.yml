@@ -59,6 +59,7 @@ services:
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET
+      - REACT_APP_API_ADDRESS
     network_mode: "service:easi_client"
     depends_on:
      - easi_client
