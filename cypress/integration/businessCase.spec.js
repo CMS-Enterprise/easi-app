@@ -1,46 +1,44 @@
 describe('The Business Case Form', () => {
   let intakeId;
   before(() => {
-    let accessToken;
     cy.login();
     cy.wait(1000);
     cy.saveLocalStorage();
-    cy.getAccessToken(token => {
-      accessToken = token;
-    });
-    cy.request({
-      method: 'POST',
-      url: Cypress.env('systemIntakeApi'),
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      },
-      body: {
-        status: 'SUBMITTED',
-        requester: 'John Requester',
-        component: 'Center for Consumer Information and Insurance Oversight',
-        businessOwner: 'John BusinessOwner',
-        businessOwnerComponent:
-          'Center for Consumer Information and Insurance Oversight',
-        productManager: 'John ProductManager',
-        productManagerComponent:
-          'Center for Consumer Information and Insurance Oversight',
-        isso: '',
-        trbCollaborator: '',
-        oitSecurityCollaborator: '',
-        eaCollaborator: '',
-        projectName: 'Easy Access to System Information',
-        existingFunding: false,
-        fundingSource: '',
-        businessNeed:
-          'Business Need: The quick brown fox jumps over the lazy dog.',
-        solution: 'The quick brown fox jumps over the lazy dog.',
-        processStatus: 'The project is already funded',
-        eaSupportRequest: false,
-        existingContract: 'No',
-        grtReviewEmailBody: ''
-      }
-    }).then(response => {
-      intakeId = response.body.id;
+    cy.getAccessToken().then(accessToken => {
+      cy.request({
+        method: 'POST',
+        url: Cypress.env('systemIntakeApi'),
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: {
+          status: 'SUBMITTED',
+          requester: 'John Requester',
+          component: 'Center for Consumer Information and Insurance Oversight',
+          businessOwner: 'John BusinessOwner',
+          businessOwnerComponent:
+            'Center for Consumer Information and Insurance Oversight',
+          productManager: 'John ProductManager',
+          productManagerComponent:
+            'Center for Consumer Information and Insurance Oversight',
+          isso: '',
+          trbCollaborator: '',
+          oitSecurityCollaborator: '',
+          eaCollaborator: '',
+          projectName: 'Easy Access to System Information',
+          existingFunding: false,
+          fundingSource: '',
+          businessNeed:
+            'Business Need: The quick brown fox jumps over the lazy dog.',
+          solution: 'The quick brown fox jumps over the lazy dog.',
+          processStatus: 'The project is already funded',
+          eaSupportRequest: false,
+          existingContract: 'No',
+          grtReviewEmailBody: ''
+        }
+      }).then(response => {
+        intakeId = response.body.id;
+      });
     });
   });
 
