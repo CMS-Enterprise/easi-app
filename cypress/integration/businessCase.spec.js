@@ -1,5 +1,29 @@
 describe('The Business Case Form', () => {
   let intakeId;
+  const systemIntake = {
+    status: 'SUBMITTED',
+    requester: 'John Requester',
+    component: 'Center for Consumer Information and Insurance Oversight',
+    businessOwner: 'John BusinessOwner',
+    businessOwnerComponent:
+      'Center for Consumer Information and Insurance Oversight',
+    productManager: 'John ProductManager',
+    productManagerComponent:
+      'Center for Consumer Information and Insurance Oversight',
+    isso: '',
+    trbCollaborator: '',
+    oitSecurityCollaborator: '',
+    eaCollaborator: '',
+    projectName: 'Easy Access to System Information',
+    existingFunding: false,
+    fundingSource: '',
+    businessNeed: 'Business Need: The quick brown fox jumps over the lazy dog.',
+    solution: 'The quick brown fox jumps over the lazy dog.',
+    processStatus: 'The project is already funded',
+    eaSupportRequest: false,
+    existingContract: 'No',
+    grtReviewEmailBody: ''
+  };
   before(() => {
     cy.login();
     cy.wait(1000);
@@ -11,31 +35,7 @@ describe('The Business Case Form', () => {
         headers: {
           Authorization: `Bearer ${accessToken}`
         },
-        body: {
-          status: 'SUBMITTED',
-          requester: 'John Requester',
-          component: 'Center for Consumer Information and Insurance Oversight',
-          businessOwner: 'John BusinessOwner',
-          businessOwnerComponent:
-            'Center for Consumer Information and Insurance Oversight',
-          productManager: 'John ProductManager',
-          productManagerComponent:
-            'Center for Consumer Information and Insurance Oversight',
-          isso: '',
-          trbCollaborator: '',
-          oitSecurityCollaborator: '',
-          eaCollaborator: '',
-          projectName: 'Easy Access to System Information',
-          existingFunding: false,
-          fundingSource: '',
-          businessNeed:
-            'Business Need: The quick brown fox jumps over the lazy dog.',
-          solution: 'The quick brown fox jumps over the lazy dog.',
-          processStatus: 'The project is already funded',
-          eaSupportRequest: false,
-          existingContract: 'No',
-          grtReviewEmailBody: ''
-        }
+        body: systemIntake
       }).then(response => {
         intakeId = response.body.id;
       });
@@ -57,17 +57,17 @@ describe('The Business Case Form', () => {
     // Autofilled Fields from System Intake
     cy.get('#BusinessCase-RequestName').should(
       'have.value',
-      'Easy Access to System Information'
+      systemIntake.projectName
     );
 
     cy.get('#BusinessCase-RequesterName').should(
       'have.value',
-      'John Requester'
+      systemIntake.requester
     );
 
     cy.get('#BusinessCase-BusinessOwnerName').should(
       'have.value',
-      'John BusinessOwner'
+      systemIntake.businessOwner
     );
 
     cy.get('#BusinessCase-RequesterPhoneNumber')
@@ -80,7 +80,7 @@ describe('The Business Case Form', () => {
     // Autofilled Field from System Intake
     cy.get('#BusinessCase-BusinessNeed').should(
       'have.value',
-      'Business Need: The quick brown fox jumps over the lazy dog.'
+      systemIntake.businessNeed
     );
 
     cy.get('#BusinessCase-CmsBenefit')
