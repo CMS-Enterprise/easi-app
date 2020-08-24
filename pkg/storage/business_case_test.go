@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"context"
+
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
@@ -10,15 +12,17 @@ import (
 )
 
 func (s StoreTestSuite) TestFetchBusinessCaseByID() {
+	ctx := context.Background()
+
 	s.Run("golden path to fetch a business case", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.SystemIntakeID = intake.ID
-		created, err := s.store.CreateBusinessCase(&businessCase)
+		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
 		s.NoError(err)
-		fetched, err := s.store.FetchBusinessCaseByID(created.ID)
+		fetched, err := s.store.FetchBusinessCaseByID(ctx, created.ID)
 
 		s.NoError(err, "failed to fetch business case")
 		s.Equal(created.ID, fetched.ID)
@@ -28,7 +32,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 
 	s.Run("cannot without an ID that exists in the db", func() {
 		badUUID, _ := uuid.Parse("")
-		fetched, err := s.store.FetchBusinessCaseByID(badUUID)
+		fetched, err := s.store.FetchBusinessCaseByID(ctx, badUUID)
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
@@ -37,14 +41,14 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 
 	s.Run("does not fetch archived business case", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.SystemIntakeID = intake.ID
 		businessCase.Status = models.BusinessCaseStatusARCHIVED
-		created, err := s.store.CreateBusinessCase(&businessCase)
+		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
 		s.NoError(err)
-		fetched, err := s.store.FetchBusinessCaseByID(created.ID)
+		fetched, err := s.store.FetchBusinessCaseByID(ctx, created.ID)
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
@@ -53,16 +57,18 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 }
 
 func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
+	ctx := context.Background()
+
 	s.Run("golden path to fetch business cases", func() {
 		intake := testhelpers.NewSystemIntake()
 		intake.Status = models.SystemIntakeStatusSUBMITTED
-		_, err := s.store.CreateSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 		intake2.Status = models.SystemIntakeStatusSUBMITTED
-		_, err = s.store.CreateSystemIntake(&intake2)
+		_, err = s.store.CreateSystemIntake(ctx, &intake2)
 		s.NoError(err)
 
 		businessCase := testhelpers.NewBusinessCase()
@@ -73,13 +79,13 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 		businessCase2.EUAUserID = intake.EUAUserID
 		businessCase2.SystemIntakeID = intake2.ID
 
-		_, err = s.store.CreateBusinessCase(&businessCase)
+		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 		s.NoError(err)
 
-		_, err = s.store.CreateBusinessCase(&businessCase2)
+		_, err = s.store.CreateBusinessCase(ctx, &businessCase2)
 		s.NoError(err)
 
-		fetched, err := s.store.FetchBusinessCasesByEuaID(businessCase.EUAUserID)
+		fetched, err := s.store.FetchBusinessCasesByEuaID(ctx, businessCase.EUAUserID)
 
 		s.NoError(err, "failed to fetch business cases")
 		s.Len(fetched, 2)
@@ -88,7 +94,7 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 	})
 
 	s.Run("fetches no results with other EUA ID", func() {
-		fetched, err := s.store.FetchBusinessCasesByEuaID(testhelpers.RandomEUAID())
+		fetched, err := s.store.FetchBusinessCasesByEuaID(ctx, testhelpers.RandomEUAID())
 
 		s.NoError(err)
 		s.Len(fetched, 0)
@@ -98,13 +104,13 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 	s.Run("does not fetch archived business case", func() {
 		intake := testhelpers.NewSystemIntake()
 		intake.Status = models.SystemIntakeStatusSUBMITTED
-		_, err := s.store.CreateSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
 		intake2.Status = models.SystemIntakeStatusARCHIVED
-		_, err = s.store.CreateSystemIntake(&intake2)
+		_, err = s.store.CreateSystemIntake(ctx, &intake2)
 		s.NoError(err)
 
 		businessCase := testhelpers.NewBusinessCase()
@@ -116,13 +122,13 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 		businessCase2.SystemIntakeID = intake2.ID
 		businessCase2.Status = models.BusinessCaseStatusARCHIVED
 
-		_, err = s.store.CreateBusinessCase(&businessCase)
+		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 		s.NoError(err)
 
-		_, err = s.store.CreateBusinessCase(&businessCase2)
+		_, err = s.store.CreateBusinessCase(ctx, &businessCase2)
 		s.NoError(err)
 
-		fetched, err := s.store.FetchBusinessCasesByEuaID(businessCase.EUAUserID)
+		fetched, err := s.store.FetchBusinessCasesByEuaID(ctx, businessCase.EUAUserID)
 
 		s.NoError(err, "failed to fetch business cases")
 		s.Len(fetched, 1)
@@ -130,9 +136,11 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 }
 
 func (s StoreTestSuite) TestCreateBusinessCase() {
+	ctx := context.Background()
+
 	s.Run("golden path to create a business case", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
@@ -142,7 +150,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			},
 		}
-		created, err := s.store.CreateBusinessCase(&businessCase)
+		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.NoError(err, "failed to create a business case")
 		s.NotNil(created.ID)
@@ -156,7 +164,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 			Status:    models.BusinessCaseStatusDRAFT,
 		}
 
-		_, err := s.store.CreateBusinessCase(&businessCase)
+		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
 		s.Equal(IntakeExistsMsg, err.Error())
@@ -170,7 +178,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 			Status:         models.BusinessCaseStatusDRAFT,
 		}
 
-		_, err := s.store.CreateBusinessCase(&businessCase)
+		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
 		s.Equal(IntakeExistsMsg, err.Error())
@@ -178,13 +186,13 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 
 	s.Run("requires an eua user id", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
 			Status:         models.BusinessCaseStatusDRAFT,
 		}
-		_, err = s.store.CreateBusinessCase(&businessCase)
+		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
 		s.Equal(EuaIDMsg, err.Error())
@@ -192,13 +200,13 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 
 	s.Run("requires a status", func() {
 		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(&intake)
+		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
 			EUAUserID:      testhelpers.RandomEUAID(),
 		}
-		_, err = s.store.CreateBusinessCase(&businessCase)
+		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
 		s.Contains(err.Error(), ValidStatusMsg)
@@ -206,14 +214,16 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 }
 
 func (s StoreTestSuite) TestUpdateBusinessCase() {
+	ctx := context.Background()
+
 	intake := testhelpers.NewSystemIntake()
-	_, err := s.store.CreateSystemIntake(&intake)
+	_, err := s.store.CreateSystemIntake(ctx, &intake)
 	s.NoError(err)
 	euaID := intake.EUAUserID
 	businessCaseOriginal := testhelpers.NewBusinessCase()
 	businessCaseOriginal.EUAUserID = euaID
 	businessCaseOriginal.SystemIntakeID = intake.ID
-	createdBusinessCase, err := s.store.CreateBusinessCase(&businessCaseOriginal)
+	createdBusinessCase, err := s.store.CreateBusinessCase(ctx, &businessCaseOriginal)
 	s.NoError(err)
 	id := createdBusinessCase.ID
 	year2 := models.LifecycleCostYear2
@@ -239,10 +249,10 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 				}),
 			},
 		}
-		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
+		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)
 		s.NoError(err)
 		//	fetch the newly updated business case
-		updated, err := s.store.FetchBusinessCaseByID(id)
+		updated, err := s.store.FetchBusinessCaseByID(context.Background(), id)
 		s.NoError(err)
 		s.Equal(expectedPhoneNumber, updated.RequesterPhoneNumber)
 		s.Equal(expectedProjectName, updated.ProjectName)
@@ -276,10 +286,10 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 				}),
 			},
 		}
-		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
+		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)
 		s.NoError(err)
 		//	fetch the newly updated business case
-		updated, err := s.store.FetchBusinessCaseByID(id)
+		updated, err := s.store.FetchBusinessCaseByID(context.Background(), id)
 		s.NoError(err)
 		s.Equal(7, len(updated.LifecycleCostLines))
 	})
@@ -293,10 +303,10 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 			SystemIntakeID: unwantedSystemIntakeID,
 			EUAUserID:      unwantedEUAUserID,
 		}
-		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
+		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)
 		s.NoError(err)
 		//	fetch the newly updated business case
-		updated, err := s.store.FetchBusinessCaseByID(id)
+		updated, err := s.store.FetchBusinessCaseByID(context.Background(), id)
 		s.NoError(err)
 		s.NotEqual(unwantedSystemIntakeID, updated.SystemIntakeID)
 		s.Equal(intake.ID, updated.SystemIntakeID)
@@ -311,13 +321,15 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 			Status:             models.BusinessCaseStatusDRAFT,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{},
 		}
-		_, err := s.store.UpdateBusinessCase(&businessCaseToUpdate)
+		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)
 		s.Error(err)
 		s.Equal("business case not found", err.Error())
 	})
 }
 
 func (s StoreTestSuite) TestFetchBusinessCaseByIntakeID() {
+	ctx := context.Background()
+
 	s.Run("golden path to fetching a business case id by intake id", func() {
 		businessCase := testhelpers.NewBusinessCase()
 		intake := testhelpers.NewSystemIntake()
@@ -331,13 +343,13 @@ func (s StoreTestSuite) TestFetchBusinessCaseByIntakeID() {
 		err = setupTx.Commit()
 		s.NoError(err)
 
-		fetchedBizCaseID, err := s.store.FetchBusinessCaseIDByIntakeID(intake.ID)
+		fetchedBizCaseID, err := s.store.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 		s.NoError(err)
 		s.Equal(&businessCase.ID, fetchedBizCaseID)
 	})
 
 	s.Run("doesn't error when no records are found", func() {
-		fetchedBizCaseID, err := s.store.FetchBusinessCaseIDByIntakeID(uuid.New())
+		fetchedBizCaseID, err := s.store.FetchBusinessCaseIDByIntakeID(ctx, uuid.New())
 		s.NoError(err)
 		s.Equal((*uuid.UUID)(nil), fetchedBizCaseID)
 	})

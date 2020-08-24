@@ -2,7 +2,7 @@
 version: 2
 
 references:
-  circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:tf12-5ee2cb35bc081dbc91da46afc3904ef0e1c111fb
+  circleci_docker_primary: &circleci_docker_primary trussworks/circleci-docker-primary:822fac1c30f3bb7d5d595bed5d2dc86265c4f2f0
   postgres: &postgres postgres:11.6
   db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}
 jobs:
@@ -73,7 +73,7 @@ jobs:
       - image: *circleci_docker_primary
         environment:
           APP_ENV: test
-          AWS_REGION: us-west-2
+          AWS_REGION: us-west-2 # easi app tests expect AWS_REGION instead of AWS_DEFAULT_REGION
           AWS_SES_SOURCE: "\"EASi Test\" <no-reply-test@info.easi.cms.gov>"
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
@@ -114,7 +114,7 @@ jobs:
       - image: *circleci_docker_primary
         environment:
           APP_ENV: test
-          AWS_REGION: us-west-2
+          AWS_DEFAULT_REGION: us-west-2
     steps:
       - checkout
       - setup_remote_docker:

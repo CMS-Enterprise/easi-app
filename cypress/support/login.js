@@ -9,8 +9,8 @@ Cypress.Commands.add('login', () => {
 
   cy.visit('/signin');
 
-  cy.get('#okta-signin-username').type(Cypress.env('username'));
-  cy.get('#okta-signin-password').type(Cypress.env('password'));
+  cy.get('#okta-signin-username').type(Cypress.env('username'), { log: false });
+  cy.get('#okta-signin-password').type(Cypress.env('password'), { log: false });
   cy.get('#okta-signin-submit').click();
 
   cy.wait(['@authn']);
@@ -18,8 +18,8 @@ Cypress.Commands.add('login', () => {
   cy.get('body').then($body => {
     if ($body.find('input[name="answer"]').length) {
       cy.get('input[name="answer"]').then(() => {
-        cy.task('generateOTP', Cypress.env('otpSecret')).then(token => {
-          cy.get('input[name="answer"]').type(token);
+        cy.task('generateOTP', Cypress.env('otpSecret'), { log: false }).then(token => {
+          cy.get('input[name="answer"]').type(token, { log: false });
           cy.get('input[name="rememberDevice"]').check({ force: true });
           cy.get('input[value="Verify"').click();
           cy.wait('@oidcConfig');

@@ -27,7 +27,6 @@
 const LOCAL_STORAGE_MEMORY = {};
 
 Cypress.Commands.add('saveLocalStorage', () => {
-  console.log(localStorage);
   Object.keys(localStorage).forEach(key => {
     LOCAL_STORAGE_MEMORY[key] = localStorage[key];
   });
@@ -37,4 +36,12 @@ Cypress.Commands.add('restoreLocalStorage', () => {
   Object.keys(LOCAL_STORAGE_MEMORY).forEach(key => {
     localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
   });
+});
+
+Cypress.Commands.add('getAccessToken', () => {
+  if (LOCAL_STORAGE_MEMORY['okta-token-storage']) {
+    const tokenObj = JSON.parse(LOCAL_STORAGE_MEMORY['okta-token-storage']);
+    return cy.wrap(tokenObj.accessToken.value, { log: false });
+  }
+  return cy.wrap('');
 });

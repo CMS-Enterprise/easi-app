@@ -24,12 +24,12 @@ func NewAuthorizeFetchBusinessCaseByID() func(ctx context.Context, businessCase 
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
 func NewFetchBusinessCaseByID(
 	config Config,
-	fetch func(id uuid.UUID) (*models.BusinessCase, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
 	authorize func(c context.Context, b *models.BusinessCase) (bool, error),
 ) func(c context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 		logger := appcontext.ZLogger(ctx)
-		businessCase, err := fetch(id)
+		businessCase, err := fetch(ctx, id)
 		if err != nil {
 			logger.Error("failed to fetch business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
@@ -90,12 +90,12 @@ func NewAuthorizeCreateBusinessCase(_ *zap.Logger) func(
 // NewCreateBusinessCase is a service to create a business case
 func NewCreateBusinessCase(
 	config Config,
-	fetchIntake func(id uuid.UUID) (*models.SystemIntake, error),
+	fetchIntake func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(c context.Context, i *models.SystemIntake) (bool, error),
-	create func(b *models.BusinessCase) (*models.BusinessCase, error),
+	create func(c context.Context, b *models.BusinessCase) (*models.BusinessCase, error),
 ) func(c context.Context, b *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
-		intake, err := fetchIntake(businessCase.SystemIntakeID)
+		intake, err := fetchIntake(ctx, businessCase.SystemIntakeID)
 		if err != nil {
 			// We return an empty id in this error because the business case hasn't been created
 			return &models.BusinessCase{}, &apperrors.ResourceConflictError{
@@ -124,7 +124,7 @@ func NewCreateBusinessCase(
 		businessCase.ProjectName = intake.ProjectName
 		businessCase.BusinessNeed = intake.BusinessNeed
 
-		businessCase, err = create(businessCase)
+		businessCase, err = create(ctx, businessCase)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("failed to create a business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
@@ -147,7 +147,7 @@ func NewAuthorizeFetchBusinessCasesByEuaID() func(ctx context.Context, euaID str
 // NewFetchBusinessCasesByEuaID is a service to fetch a list of business cases by EUA ID
 func NewFetchBusinessCasesByEuaID(
 	config Config,
-	fetch func(euaID string) (models.BusinessCases, error),
+	fetch func(c context.Context, euaID string) (models.BusinessCases, error),
 	authorize func(c context.Context, euaID string) (bool, error),
 ) func(c context.Context, euaID string) (models.BusinessCases, error) {
 	return func(ctx context.Context, euaID string) (models.BusinessCases, error) {
@@ -159,7 +159,7 @@ func NewFetchBusinessCasesByEuaID(
 		if !ok {
 			return models.BusinessCases{}, &apperrors.UnauthorizedError{Err: err}
 		}
-		businessCases, err := fetch(euaID)
+		businessCases, err := fetch(ctx, euaID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("failed to fetch business cases")
 			return models.BusinessCases{}, &apperrors.QueryError{
@@ -212,14 +212,14 @@ func NewAuthorizeUpdateBusinessCase(_ *zap.Logger) func(
 // NewUpdateBusinessCase is a service to create a business case
 func NewUpdateBusinessCase(
 	config Config,
-	fetchBusinessCase func(id uuid.UUID) (*models.BusinessCase, error),
+	fetchBusinessCase func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
 	authorize func(c context.Context, b *models.BusinessCase) (bool, error),
-	update func(businessCase *models.BusinessCase) (*models.BusinessCase, error),
+	update func(c context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error),
 	sendEmail func(requester string, intakeID uuid.UUID) error,
 ) func(c context.Context, b *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		logger := appcontext.ZLogger(ctx)
-		existingBusinessCase, err := fetchBusinessCase(businessCase.ID)
+		existingBusinessCase, err := fetchBusinessCase(ctx, businessCase.ID)
 		if err != nil {
 			return &models.BusinessCase{}, &apperrors.ResourceConflictError{
 				Err:        errors.New("business case does not exist"),
@@ -257,7 +257,7 @@ func NewUpdateBusinessCase(
 			}
 		}
 
-		businessCase, err = update(businessCase)
+		businessCase, err = update(ctx, businessCase)
 		if err != nil {
 			logger.Error("failed to update business case")
 			return &models.BusinessCase{}, &apperrors.QueryError{
@@ -283,11 +283,11 @@ func NewUpdateBusinessCase(
 // NewArchiveBusinessCase is a service to archive a businessCase
 func NewArchiveBusinessCase(
 	config Config,
-	fetch func(id uuid.UUID) (*models.BusinessCase, error),
-	update func(*models.BusinessCase) (*models.BusinessCase, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
+	update func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
 ) func(context.Context, uuid.UUID) error {
 	return func(ctx context.Context, id uuid.UUID) error {
-		businessCase, fetchErr := fetch(id)
+		businessCase, fetchErr := fetch(ctx, id)
 		if fetchErr != nil {
 			return &apperrors.QueryError{
 				Err:       fetchErr,
@@ -301,7 +301,7 @@ func NewArchiveBusinessCase(
 		businessCase.Status = models.BusinessCaseStatusARCHIVED
 		businessCase.ArchivedAt = &updatedTime
 
-		_, err := update(businessCase)
+		_, err := update(ctx, businessCase)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,

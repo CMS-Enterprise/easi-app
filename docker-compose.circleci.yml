@@ -59,6 +59,7 @@ services:
       - OKTA_TEST_USERNAME
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET
+      - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
     network_mode: "service:easi_client"
     depends_on:
      - easi_client
