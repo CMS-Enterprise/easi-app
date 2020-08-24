@@ -71,6 +71,15 @@ if (typeof (window as any).TextEncoder === 'undefined') {
   (window as any).TextEncoder = TextEncoder;
 }
 
+/**
+ * Exposes Redux store to Cypress for testing
+ */
+// @ts-ignore
+if (window.Cypress) {
+  // @ts-ignore
+  window.store = store;
+}
+
 ReactDOM.render(app, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
