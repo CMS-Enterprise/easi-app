@@ -33,12 +33,7 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
 
 type BusinessCaseStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
 
-// Business Case Form Model
-export type BusinessCaseModel = {
-  id?: string;
-  euaUserId?: string;
-  status: BusinessCaseStatus;
-  systemIntakeId: string;
+export type GeneralRequestInfoForm = {
   requestName: string;
   requester: {
     name: string;
@@ -47,6 +42,13 @@ export type BusinessCaseModel = {
   businessOwner: {
     name: string;
   };
+};
+// Business Case Form Model
+export type BusinessCaseModel = GeneralRequestInfoForm & {
+  id?: string;
+  euaUserId?: string;
+  status: BusinessCaseStatus;
+  systemIntakeId: string;
   businessNeed: string;
   cmsBenefit: string;
   priorityAlignment: string;
