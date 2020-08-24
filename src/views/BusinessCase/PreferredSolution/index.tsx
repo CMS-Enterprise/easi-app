@@ -19,7 +19,6 @@ type PreferredSolutionProps = {
 };
 const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
   const { values, errors, setFieldValue } = formikProps;
-  console.log(values);
   const flatErrors = flattenErrors(errors);
 
   return (

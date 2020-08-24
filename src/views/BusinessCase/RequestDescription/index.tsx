@@ -144,8 +144,6 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
             id="BusinessCase-SuccessIndicatorsCounter"
             characterCount={2000 - values.successIndicators.length}
           />
-          <HelpText className="margin-top-1">{`${2000 -
-            values.successIndicators.length} characters left`}</HelpText>
         </FieldGroup>
       </div>
     </div>
