@@ -9,6 +9,7 @@ import {
   clearBusinessCase,
   fetchBusinessCase,
   postBusinessCase,
+  putBusinessCase,
   storeBusinessCase,
   submitBusinessCase
 } from 'types/routines';
@@ -65,6 +66,29 @@ function businessCaseReducer(
         error: action.payload
       };
     case postBusinessCase.FULFILL:
+      return {
+        ...state,
+        isSaving: false
+      };
+    case putBusinessCase.REQUEST:
+      return {
+        ...state,
+        isSaving: true
+      };
+    case putBusinessCase.SUCCESS:
+      return {
+        ...state,
+        form: {
+          ...state.form,
+          ...prepareBusinessCaseForApp(action.payload)
+        }
+      };
+    case putBusinessCase.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case putBusinessCase.FULFILL:
       return {
         ...state,
         isSaving: false
