@@ -58,6 +58,7 @@ const Home = ({ history }: HomeProps) => {
                 history.push(`/system/${intake.id}`);
               }}
               label="Go to Intake Request"
+              data-intakeid={intake.id}
             />
           );
         case 'SUBMITTED':
@@ -82,6 +83,7 @@ const Home = ({ history }: HomeProps) => {
                 });
               }}
               label="Start my Business Case"
+              data-intakeid={intake.id}
             />
           );
         default:
