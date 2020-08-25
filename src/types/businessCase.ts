@@ -43,23 +43,40 @@ export type GeneralRequestInfoForm = {
     name: string;
   };
 };
-// Business Case Form Model
-export type BusinessCaseModel = GeneralRequestInfoForm & {
-  id?: string;
-  euaUserId?: string;
-  status: BusinessCaseStatus;
-  systemIntakeId: string;
+
+export type RequestDescriptionForm = {
   businessNeed: string;
   cmsBenefit: string;
   priorityAlignment: string;
   successIndicators: string;
-  asIsSolution: BusinessCaseSolution;
-  preferredSolution: ProposedBusinessCaseSolution;
-  alternativeA: ProposedBusinessCaseSolution;
-  alternativeB?: ProposedBusinessCaseSolution;
-  initialSubmittedAt?: string;
-  lastSubmittedAt?: string;
 };
+
+export type AsIsSolutionForm = {
+  asIsSolution: BusinessCaseSolution;
+};
+
+export type PreferredSolutionForm = {
+  preferredSolution: ProposedBusinessCaseSolution;
+};
+
+export type AlternativeASolutionForm = {
+  alternativeA: ProposedBusinessCaseSolution;
+};
+
+// Business Case Form Model
+export type BusinessCaseModel = GeneralRequestInfoForm &
+  RequestDescriptionForm &
+  AsIsSolutionForm &
+  PreferredSolutionForm &
+  AlternativeASolutionForm & {
+    id?: string;
+    euaUserId?: string;
+    status: BusinessCaseStatus;
+    systemIntakeId: string;
+    alternativeB?: ProposedBusinessCaseSolution;
+    initialSubmittedAt?: string;
+    lastSubmittedAt?: string;
+  };
 
 export type BusinessCasesState = {
   businessCases: BusinessCaseModel[];

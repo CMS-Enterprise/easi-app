@@ -1,16 +1,13 @@
 import React from 'react';
-import { FormikProps } from 'formik';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
 import { BusinessCaseModel } from 'types/businessCase';
 
 type ReviewProps = {
-  formikProps: FormikProps<BusinessCaseModel>;
+  businessCase: BusinessCaseModel;
 };
 
-const Review = ({ formikProps }: ReviewProps) => {
-  const { values } = formikProps;
-
+const Review = ({ businessCase }: ReviewProps) => {
   return (
     <div className="margin-bottom-7">
       <div className="grid-container">
@@ -19,7 +16,7 @@ const Review = ({ formikProps }: ReviewProps) => {
         </h1>
       </div>
 
-      <BusinessCaseReview values={values} />
+      <BusinessCaseReview values={businessCase} />
     </div>
   );
 };
