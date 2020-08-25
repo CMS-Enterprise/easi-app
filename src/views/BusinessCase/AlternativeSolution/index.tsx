@@ -30,7 +30,7 @@ type AlternativeSolutionProps = {
   formikRef: any;
   dispatchSave: () => void;
   altLetter: string;
-  handleToggleAlternative?: () => void;
+  handleToggleAlternative: () => void;
 };
 
 const AlternativeSolution = ({
@@ -61,20 +61,22 @@ const AlternativeSolution = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.asIsSolution}
+      validationSchema={
+        altLetter === 'A'
+          ? BusinessCaseValidationSchema.alternativeA
+          : BusinessCaseValidationSchema.alternativeB
+      }
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<any>) => {
-        const {
-          values,
-          errors,
-          setErrors,
-          setFieldValue,
-          validateForm
-        } = formikProps;
+        const { errors, setErrors, setFieldValue, validateForm } = formikProps;
+        const values =
+          altLetter === 'A'
+            ? formikProps.values.alternativeA
+            : formikProps.values.alternativeB;
 
         const altErrors = ((letter: string): any => {
           switch (letter) {
@@ -197,7 +199,7 @@ const AlternativeSolution = ({
                   />
                   <CharacterCounter
                     id={`BusinessCase-${altId}SummmaryCounter`}
-                    characterCount={2000 - altValues.summary.length}
+                    characterCount={2000 - values.summary.length}
                   />
                 </FieldGroup>
 
@@ -226,7 +228,7 @@ const AlternativeSolution = ({
                   />
                   <CharacterCounter
                     id={`BusinessCase-${altId}AcquisitionApproachCounter`}
-                    characterCount={2000 - altValues.acquisitionApproach.length}
+                    characterCount={2000 - values.acquisitionApproach.length}
                   />
                 </FieldGroup>
 
@@ -244,7 +246,7 @@ const AlternativeSolution = ({
 
                     <Field
                       as={RadioField}
-                      checked={altValues.hosting.type === 'cloud'}
+                      checked={values.hosting.type === 'cloud'}
                       id={`BusinessCase-${altId}SolutionHostingCloud`}
                       name={`${altId}.hosting.type`}
                       label="Yes, in the cloud (AWS, Azure, etc.)"
@@ -255,7 +257,7 @@ const AlternativeSolution = ({
                         setFieldValue(`${altId}.hosting.cloudServiceType`, '');
                       }}
                     />
-                    {altValues.hosting.type === 'cloud' && (
+                    {values.hosting.type === 'cloud' && (
                       <>
                         <FieldGroup
                           className="margin-top-neg-2 margin-bottom-1 margin-left-4"
@@ -306,7 +308,7 @@ const AlternativeSolution = ({
                     )}
                     <Field
                       as={RadioField}
-                      checked={altValues.hosting.type === 'dataCenter'}
+                      checked={values.hosting.type === 'dataCenter'}
                       id={`BusinessCase-${altId}HostingDataCenter`}
                       name={`${altId}.hosting.type`}
                       label="Yes, at a data center"
@@ -317,7 +319,7 @@ const AlternativeSolution = ({
                         setFieldValue(`${altId}.hosting.cloudServiceType`, '');
                       }}
                     />
-                    {altValues.hosting.type === 'dataCenter' && (
+                    {values.hosting.type === 'dataCenter' && (
                       <FieldGroup
                         className="margin-top-neg-2 margin-bottom-1 margin-left-4"
                         scrollElement={`${altId}.hosting.location`}
@@ -342,7 +344,7 @@ const AlternativeSolution = ({
                     )}
                     <Field
                       as={RadioField}
-                      checked={altValues.hosting.type === 'none'}
+                      checked={values.hosting.type === 'none'}
                       id={`BusinessCase-${altId}HostingNone`}
                       name={`${altId}.hosting.type`}
                       label="No, hosting is not needed"
@@ -370,7 +372,7 @@ const AlternativeSolution = ({
 
                     <Field
                       as={RadioField}
-                      checked={altValues.hasUserInterface === 'YES'}
+                      checked={values.hasUserInterface === 'YES'}
                       id={`BusinessCase-${altId}HasUserInferfaceYes`}
                       name={`${altId}.hasUserInterface`}
                       label={yesNoMap.YES}
@@ -378,7 +380,7 @@ const AlternativeSolution = ({
                     />
                     <Field
                       as={RadioField}
-                      checked={altValues.hasUserInterface === 'NO'}
+                      checked={values.hasUserInterface === 'NO'}
                       id={`BusinessCase-${altId}HasUserInferfaceNo`}
                       name={`${altId}.hasUserInterface`}
                       label={yesNoMap.NO}
@@ -387,7 +389,7 @@ const AlternativeSolution = ({
 
                     <Field
                       as={RadioField}
-                      checked={altValues.hasUserInterface === 'NOT_SURE'}
+                      checked={values.hasUserInterface === 'NOT_SURE'}
                       id={`BusinessCase-${altId}HasUserInferfaceNotSure`}
                       name={`${altId}.hasUserInterface`}
                       label={yesNoMap.NOT_SURE}
@@ -418,7 +420,7 @@ const AlternativeSolution = ({
                   />
                   <CharacterCounter
                     id={`BusinessCase-${altId}ProsCounter`}
-                    characterCount={2000 - altValues.pros.length}
+                    characterCount={2000 - values.pros.length}
                   />
                 </FieldGroup>
 
@@ -444,7 +446,7 @@ const AlternativeSolution = ({
                   />
                   <CharacterCounter
                     id={`BusinessCase-${altId}ConsCounter`}
-                    characterCount={2000 - altValues.cons.length}
+                    characterCount={2000 - values.cons.length}
                   />
                 </FieldGroup>
               </div>
@@ -470,7 +472,7 @@ const AlternativeSolution = ({
                 </HelpText>
                 <EstimatedLifecycleCost
                   formikKey={`${altId}.estimatedLifecycleCost`}
-                  years={altValues.estimatedLifecycleCost}
+                  years={values.estimatedLifecycleCost}
                   errors={altErrors && altErrors.estimatedLifecycleCost}
                 />
               </div>
@@ -501,7 +503,7 @@ const AlternativeSolution = ({
                   />
                   <CharacterCounter
                     id={`BusinessCase-${altId}CostSavingsCounter`}
-                    characterCount={2000 - altValues.costSavings.length}
+                    characterCount={2000 - values.costSavings.length}
                   />
                 </FieldGroup>
 
@@ -519,7 +521,10 @@ const AlternativeSolution = ({
                       <Button
                         type="button"
                         base
-                        onClick={handleToggleAlternative}
+                        onClick={() => {
+                          dispatchSave();
+                          handleToggleAlternative();
+                        }}
                       >
                         + Alternative B
                       </Button>
