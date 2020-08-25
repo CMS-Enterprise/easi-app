@@ -5,6 +5,7 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
+import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -43,7 +44,7 @@ const GeneralRequestInfo = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<GeneralRequestInfoForm>) => {
-        const { errors, validateForm } = formikProps;
+        const { errors, values, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <div className="grid-container">
@@ -153,6 +154,7 @@ const GeneralRequestInfo = ({
               onClick={() => {
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {
+                    dispatchSave();
                     const newUrl = 'request-description';
                     history.push(newUrl);
                   }
@@ -162,7 +164,16 @@ const GeneralRequestInfo = ({
             >
               Next
             </Button>
-            <PageNumber currentPage={1} totalPages={6} />
+
+            <PageNumber
+              currentPage={1}
+              totalPages={businessCase.alternativeB ? 6 : 5}
+            />
+            <AutoSave
+              values={values}
+              onSave={dispatchSave}
+              debounceDelay={1000 * 3}
+            />
           </div>
         );
       }}
