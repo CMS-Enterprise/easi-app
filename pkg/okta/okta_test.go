@@ -43,6 +43,7 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		handlers.NewHandlerBase(s.logger),
 		s.config.GetString("OKTA_CLIENT_ID"),
 		s.config.GetString("OKTA_ISSUER"),
+		false,
 	)
 
 	s.Run("a valid token executes the handler", func() {

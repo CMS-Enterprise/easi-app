@@ -50,6 +50,7 @@ func NewServer(config *viper.Viper) *Server {
 		handlers.NewHandlerBase(zapLogger),
 		config.GetString("OKTA_CLIENT_ID"),
 		config.GetString("OKTA_ISSUER"),
+		!environment.Prod(),
 	)
 
 	// If we're local use override with local auth middleware
