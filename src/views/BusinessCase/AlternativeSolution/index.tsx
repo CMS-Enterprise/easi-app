@@ -507,7 +507,7 @@ const AlternativeSolution = ({
                   />
                 </FieldGroup>
 
-                {altLetter === 'A' && !values.alternativeB && (
+                {altLetter === 'A' && !businessCase.alternativeB && (
                   <>
                     <h2 className="margin-bottom-1">Additional alternatives</h2>
                     <HelpText>
@@ -555,7 +555,10 @@ const AlternativeSolution = ({
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {
                     dispatchSave();
-                    const newUrl = 'review';
+                    const newUrl =
+                      altLetter === 'A' && businessCase.alternativeB
+                        ? 'alternative-solution-b'
+                        : 'review';
                     history.push(newUrl);
                   }
                 });

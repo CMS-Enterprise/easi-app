@@ -167,37 +167,35 @@ export const BusinessCase = () => {
                 />
               )}
             />
-            {businessCase.alternativeB && (
-              <SecureRoute
-                path="/business/:businessCaseId/alternative-solution-b"
-                render={() => (
-                  <AlternativeSolution
-                    formikRef={formikRef}
-                    dispatchSave={dispatchSave}
-                    businessCase={businessCase}
-                    altLetter="B"
-                    handleToggleAlternative={() => {
-                      if (
-                        window.confirm(
-                          'Are you sure you want to remove Alternative B?'
-                        )
-                      ) {
-                        history.replace(
-                          `/business/${businessCaseId}/alternative-solution-a`
-                        );
-                        dispatch(
-                          putBusinessCase({
-                            ...businessCase,
-                            alternativeB: undefined
-                          })
-                        );
-                        window.scrollTo(0, 0);
-                      }
-                    }}
-                  />
-                )}
-              />
-            )}
+            <SecureRoute
+              path="/business/:businessCaseId/alternative-solution-b"
+              render={() => (
+                <AlternativeSolution
+                  formikRef={formikRef}
+                  dispatchSave={dispatchSave}
+                  businessCase={businessCase}
+                  altLetter="B"
+                  handleToggleAlternative={() => {
+                    if (
+                      window.confirm(
+                        'Are you sure you want to remove Alternative B?'
+                      )
+                    ) {
+                      history.replace(
+                        `/business/${businessCaseId}/alternative-solution-a`
+                      );
+                      dispatch(
+                        putBusinessCase({
+                          ...businessCase,
+                          alternativeB: undefined
+                        })
+                      );
+                      window.scrollTo(0, 0);
+                    }
+                  }}
+                />
+              )}
+            />
             <SecureRoute
               path="/business/:businessCaseId/review"
               render={() => <Review businessCase={businessCase} />}
