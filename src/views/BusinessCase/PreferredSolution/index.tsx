@@ -541,6 +541,20 @@ const PreferredSolution = ({
             >
               Next
             </Button>
+            <div className="margin-y-3">
+              <Button
+                type="button"
+                unstyled
+                onClick={() => {
+                  dispatchSave();
+                  history.push('/');
+                }}
+              >
+                <span>
+                  <i className="fa fa-angle-left" /> Save & Exit
+                </span>
+              </Button>
+            </div>
             <PageNumber
               currentPage={4}
               totalPages={businessCase.alternativeB ? 6 : 5}
