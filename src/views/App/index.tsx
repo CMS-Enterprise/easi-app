@@ -13,6 +13,8 @@ import Login from 'views/Login';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TimeOutWrapper from 'views/TimeOutWrapper';
+import Cookies from 'views/Cookies/index';
+import AccessibilityStatement from 'views/AccessibilityStatement';
 
 import './index.scss';
 
@@ -50,6 +52,16 @@ class App extends React.Component<MainProps, MainState> {
                   path="/governance-overview"
                   exact
                   component={GovernanceOverview}
+                />
+                <Route
+                  path="/cookies"
+                  exact
+                  component={Cookies}
+                />
+                <Route
+                  path="/accessibility-statement"
+                  exact
+                  component={AccessibilityStatement}
                 />
                 {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
