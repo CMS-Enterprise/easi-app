@@ -6,7 +6,6 @@ import { FormikProps } from 'formik';
 
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
-import { defaultProposedSolution } from 'data/businessCase';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -17,7 +16,10 @@ import {
   putBusinessCase
 } from 'types/routines';
 
-import AlternativeSolution from './AlternativeSolution';
+import {
+  AlternativeSolutionA,
+  AlternativeSolutionB
+} from './AlternativeSolution';
 import AsIsSolution from './AsIsSolution';
 import Confirmation from './Confirmation';
 import GeneralRequestInfo from './GeneralRequestInfo';
@@ -149,50 +151,20 @@ export const BusinessCase = () => {
             <SecureRoute
               path="/business/:businessCaseId/alternative-solution-a"
               render={() => (
-                <AlternativeSolution
+                <AlternativeSolutionA
                   formikRef={formikRef}
                   dispatchSave={dispatchSave}
                   businessCase={businessCase}
-                  altLetter="A"
-                  handleToggleAlternative={() => {
-                    dispatch(
-                      putBusinessCase({
-                        ...businessCase,
-                        alternativeB: defaultProposedSolution
-                      })
-                    );
-                    history.push('alternative-solution-b');
-                    window.scrollTo(0, 0);
-                  }}
                 />
               )}
             />
             <SecureRoute
               path="/business/:businessCaseId/alternative-solution-b"
               render={() => (
-                <AlternativeSolution
+                <AlternativeSolutionB
                   formikRef={formikRef}
                   dispatchSave={dispatchSave}
                   businessCase={businessCase}
-                  altLetter="B"
-                  handleToggleAlternative={() => {
-                    if (
-                      window.confirm(
-                        'Are you sure you want to remove Alternative B?'
-                      )
-                    ) {
-                      history.replace(
-                        `/business/${businessCaseId}/alternative-solution-a`
-                      );
-                      dispatch(
-                        putBusinessCase({
-                          ...businessCase,
-                          alternativeB: undefined
-                        })
-                      );
-                      window.scrollTo(0, 0);
-                    }
-                  }}
                 />
               )}
             />
