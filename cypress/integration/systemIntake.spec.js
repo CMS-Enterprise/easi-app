@@ -16,7 +16,7 @@ describe('The System Intake Form', () => {
     cy.visit('/system/new');
   });
 
-  xit('fills out minimum required fields (smoke test)', () => {
+  it('fills out minimum required fields (smoke test)', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
@@ -47,7 +47,7 @@ describe('The System Intake Form', () => {
     cy.contains('h1', 'Check your answers before sending');
   });
 
-  xit('displays and fills conditional fields', () => {
+  it('displays and fills conditional fields', () => {
     // Contact Details
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
@@ -185,13 +185,13 @@ describe('The System Intake Form', () => {
       .contains('Yes, 111111');
   });
 
-  xit('displays contact details error messages', () => {
+  it('displays contact details error messages', () => {
     cy.contains('button', 'Next').click();
 
     cy.get('[data-testid="system-intake-errors"]');
   });
 
-  xit('displays request details error messages', () => {
+  it('displays request details error messages', () => {
     cy.systemIntake.contactDetails.fillNonBranchingFields();
 
     cy.get('#IntakeForm-HasIssoNo')
