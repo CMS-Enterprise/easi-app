@@ -8,8 +8,9 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import { defaultProposedSolution } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
-import { storeBusinessCase } from 'types/routines';
+import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 
@@ -46,7 +47,6 @@ const AlternativeSolutionB = ({
       {(formikProps: FormikProps<any>) => {
         const { errors, setErrors, validateForm } = formikProps;
         const values = formikProps.values.alternativeB;
-
         const flatErrors = flattenErrors(errors);
         return (
           <div className="grid-container">
@@ -103,8 +103,9 @@ const AlternativeSolutionB = ({
                         )
                       ) {
                         dispatch(
-                          storeBusinessCase({
-                            alternativeB: undefined
+                          putBusinessCase({
+                            ...businessCase,
+                            alternativeB: defaultProposedSolution
                           })
                         );
                         history.replace(

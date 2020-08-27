@@ -11,14 +11,11 @@ import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import { yesNoMap } from 'data/common';
-import { ProposedBusinessCaseSolution } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 
 type AlternativeSolutionFields = {
   altLetter: string;
-  formikProps: FormikProps<{
-    [altCase: string]: ProposedBusinessCaseSolution;
-  }>;
+  formikProps: FormikProps<any>;
 };
 
 const AlternativeSolutionFields = ({
