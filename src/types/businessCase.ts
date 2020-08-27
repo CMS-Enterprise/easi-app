@@ -63,6 +63,10 @@ export type AlternativeASolutionForm = {
   alternativeA: ProposedBusinessCaseSolution;
 };
 
+export type AlternativeBSolutionForm = {
+  alternativeB: ProposedBusinessCaseSolution;
+};
+
 // Business Case Form Model
 export type BusinessCaseModel = GeneralRequestInfoForm &
   RequestDescriptionForm &
