@@ -11,6 +11,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
+import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
@@ -180,7 +181,7 @@ const GeneralRequestInfo = ({
             </div>
             <PageNumber
               currentPage={1}
-              totalPages={businessCase.alternativeB ? 6 : 5}
+              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
             />
             <AutoSave
               values={values}

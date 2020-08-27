@@ -1,5 +1,4 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
@@ -9,9 +8,8 @@ import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
-import { defaultProposedSolution } from 'data/businessCase';
+import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
-import { storeBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
 
@@ -29,7 +27,6 @@ const AlternativeSolutionA = ({
   dispatchSave
 }: AlternativeSolutionProps) => {
   const history = useHistory();
-  const dispatch = useDispatch();
   const initialValues = {
     alternativeA: businessCase.alternativeA
   };
@@ -97,7 +94,7 @@ const AlternativeSolutionA = ({
                   formikProps={formikProps}
                 />
 
-                {!businessCase.alternativeB && (
+                {!hasAlternativeB(businessCase.alternativeB) && (
                   <div className="margin-bottom-7">
                     <h2 className="margin-bottom-1">Additional alternatives</h2>
                     <HelpText>
@@ -112,11 +109,6 @@ const AlternativeSolutionA = ({
                         type="button"
                         base
                         onClick={() => {
-                          dispatch(
-                            storeBusinessCase({
-                              alternativeB: defaultProposedSolution
-                            })
-                          );
                           dispatchSave();
                           history.push('alternative-solution-b');
                           window.scrollTo(0, 0);
@@ -175,7 +167,7 @@ const AlternativeSolutionA = ({
             </div>
             <PageNumber
               currentPage={5}
-              totalPages={businessCase.alternativeB ? 6 : 5}
+              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
             />
             <AutoSave
               values={values}

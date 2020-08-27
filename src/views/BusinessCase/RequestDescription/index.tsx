@@ -13,6 +13,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
@@ -247,7 +248,7 @@ const RequestDescription = ({
             </div>
             <PageNumber
               currentPage={2}
-              totalPages={businessCase.alternativeB ? 6 : 5}
+              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
             />
             <AutoSave
               values={values}

@@ -72,12 +72,12 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
   RequestDescriptionForm &
   AsIsSolutionForm &
   PreferredSolutionForm &
-  AlternativeASolutionForm & {
+  AlternativeASolutionForm &
+  AlternativeBSolutionForm & {
     id?: string;
     euaUserId?: string;
     status: BusinessCaseStatus;
     systemIntakeId: string;
-    alternativeB?: ProposedBusinessCaseSolution;
     initialSubmittedAt?: string;
     lastSubmittedAt?: string;
   };
