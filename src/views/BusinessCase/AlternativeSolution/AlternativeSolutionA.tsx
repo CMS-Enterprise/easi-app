@@ -140,7 +140,7 @@ const AlternativeSolutionA = ({
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {
                     dispatchSave();
-                    const newUrl = businessCase.alternativeB
+                    const newUrl = hasAlternativeB(businessCase.alternativeB)
                       ? 'alternative-solution-b'
                       : 'review';
                     history.push(newUrl);
