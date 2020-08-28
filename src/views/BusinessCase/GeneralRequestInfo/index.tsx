@@ -18,7 +18,7 @@ const GeneralRequestInfo = ({ formikProps }: GeneralRequestInfoProps) => {
   const allowedPhoneNumberCharacters = /[\d- ]+/g;
 
   return (
-    <div className="grid-container">
+    <div>
       <h1 className="font-heading-xl">General request information</h1>
       <p className="line-height-body-6">
         Make a first draft of the various solutions you’ve thought of and the

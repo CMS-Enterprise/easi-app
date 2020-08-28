@@ -19,7 +19,7 @@ const RequestDescription = ({ formikProps }: RequestDescriptionProps) => {
   const { values, errors } = formikProps;
   const flatErrors = flattenErrors(errors);
   return (
-    <div className="grid-container">
+    <div>
       <h1 className="font-heading-xl">Request description</h1>
       <div className="tablet:grid-col-5">
         <MandatoryFieldsAlert />
