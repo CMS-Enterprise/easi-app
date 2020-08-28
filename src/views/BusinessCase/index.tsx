@@ -361,7 +361,7 @@ export const BusinessCase = () => {
                       path="/business/:businessCaseId/confirmation"
                       render={() => <Confirmation />}
                     />
-                    <div className="grid-container">
+                    <div>
                       {pageIndex > 0 &&
                         pages[pageIndex].type !== 'CONFIRMATION' && (
                           <Button
