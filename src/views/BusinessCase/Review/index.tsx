@@ -13,11 +13,9 @@ const Review = ({ formikProps }: ReviewProps) => {
 
   return (
     <div className="margin-bottom-7">
-      <div className="grid-container">
-        <h1 className="font-heading-xl margin-top-4">
-          Check your answers before sending
-        </h1>
-      </div>
+      <h1 className="font-heading-xl margin-top-4">
+        Check your answers before sending
+      </h1>
 
       <BusinessCaseReview values={values} />
     </div>
