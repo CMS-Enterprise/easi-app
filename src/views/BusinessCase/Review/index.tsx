@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
+import { hasAlternativeB } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import { submitBusinessCase } from 'types/routines';
@@ -28,28 +29,30 @@ const Review = ({ businessCase }: ReviewProps) => {
       </div>
 
       <BusinessCaseReview values={businessCase} />
-      <Button
-        type="button"
-        outline
-        onClick={() => {
-          const newUrl = businessCase.alternativeB
-            ? 'alternative-solution-b'
-            : 'alternative-solution-a';
-          history.push(newUrl);
-          window.scrollTo(0, 0);
-        }}
-      >
-        Back
-      </Button>
-      <Button
-        type="submit"
-        disabled={isSubmitting}
-        onClick={() => {
-          dispatch(submitBusinessCase(businessCase));
-        }}
-      >
-        Send my business case
-      </Button>
+      <div className="grid-container margin-top-6">
+        <Button
+          type="button"
+          outline
+          onClick={() => {
+            const newUrl = hasAlternativeB(businessCase.alternativeB)
+              ? 'alternative-solution-b'
+              : 'alternative-solution-a';
+            history.push(newUrl);
+            window.scrollTo(0, 0);
+          }}
+        >
+          Back
+        </Button>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          onClick={() => {
+            dispatch(submitBusinessCase(businessCase));
+          }}
+        >
+          Send my business case
+        </Button>
+      </div>
     </div>
   );
 };

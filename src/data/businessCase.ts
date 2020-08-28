@@ -176,7 +176,7 @@ export const prepareBusinessCaseForApp = (
         location: businessCase.alternativeBHostingLocation,
         cloudServiceType: businessCase.alternativeBHostingCloudServiceType
       },
-      hasUserInterface: businessCase.alternativeBhasUI
+      hasUserInterface: businessCase.alternativeBHasUI
     },
     initialSubmittedAt: businessCase.initialSubmittedAt,
     lastSubmittedAt: businessCase.lastSubmittedAt
