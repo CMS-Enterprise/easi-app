@@ -95,3 +95,7 @@ yml
 override.yml
 circleci.yml
 local.yml
+ParameterStore
+CloudTamer
+DMs
+1Password
