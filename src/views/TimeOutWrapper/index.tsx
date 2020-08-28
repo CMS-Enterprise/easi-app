@@ -66,9 +66,13 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     // 59 seconds = .983 minutes, Using floor so minutes is 0 to display 59 secounds
     const wholeMinutes = minutes > 1 ? Math.ceil(minutes) : Math.floor(minutes);
 
-    return wholeMinutes > 0
-      ? [wholeMinutes, 'minute']
-      : [Math.floor(timeRemaining), 'second'];
+    if (timeRemaining > 0) {
+      if (wholeMinutes > 0) {
+        return [wholeMinutes, 'minute'];
+      }
+      return [Math.floor(timeRemaining), 'second'];
+    }
+    return [0, 'second'];
   };
 
   const handleModalExit = async () => {
@@ -104,6 +108,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         tokenExpiresIn > 0 &&
         tokenExpiresIn < fiveMinutes
       ) {
+        setTimeRemainingArr(formatSessionTimeRemaining(tokenExpiresIn));
         setIsModalOpen(true);
       }
     },
