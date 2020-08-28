@@ -2,7 +2,8 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import {
   BusinessCaseModel,
-  EstimatedLifecycleCostLines
+  EstimatedLifecycleCostLines,
+  ProposedBusinessCaseSolution
 } from 'types/businessCase';
 import { LifecyclePhase } from 'types/estimatedLifecycle';
 
@@ -54,7 +55,8 @@ export const businessCaseInitialData: BusinessCaseModel = {
     costSavings: ''
   },
   preferredSolution: defaultProposedSolution,
-  alternativeA: defaultProposedSolution
+  alternativeA: defaultProposedSolution,
+  alternativeB: defaultProposedSolution
 };
 
 const emptyEstimatedLifecycle = {
@@ -75,7 +77,6 @@ type lifecycleCostLinesType = {
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
-  let hasAlternativeBLifecycleCostLines = false;
   const lifecycleCostLines: lifecycleCostLinesType = {
     'As Is': cloneDeep(emptyEstimatedLifecycle),
     Preferred: cloneDeep(emptyEstimatedLifecycle),
@@ -104,10 +105,6 @@ export const prepareBusinessCaseForApp = (
         phase: line.phase || '',
         cost: line.cost === null ? '' : line.cost.toString()
       });
-
-      if (line.solution === 'B' && (line.phase || line.cost)) {
-        hasAlternativeBLifecycleCostLines = true;
-      }
     }
   });
 
@@ -166,36 +163,21 @@ export const prepareBusinessCaseForApp = (
       },
       hasUserInterface: businessCase.alternativeAHasUI
     },
-    ...(businessCase.alternativeBTitle ||
-    businessCase.alternativeBSummary ||
-    businessCase.alternativeBAcquisitionApproach ||
-    businessCase.alternativeBHostingType ||
-    businessCase.alternativeBHostingLocation ||
-    businessCase.alternativeBCloudServiceType ||
-    businessCase.alternativeBHasUserInterface ||
-    businessCase.alternativeBPros ||
-    businessCase.alternativeBCons ||
-    businessCase.alternativeBCostSavings ||
-    hasAlternativeBLifecycleCostLines
-      ? {
-          alternativeB: {
-            title: businessCase.alternativeBTitle || '',
-            summary: businessCase.alternativeBSummary || '',
-            acquisitionApproach:
-              businessCase.alternativeBAcquisitionApproach || '',
-            pros: businessCase.alternativeBPros || '',
-            cons: businessCase.alternativeBCons || '',
-            costSavings: businessCase.alternativeBCostSavings || '',
-            estimatedLifecycleCost: lifecycleCostLines.B,
-            hosting: {
-              type: businessCase.alternativeBHostingType,
-              location: businessCase.alternativeBHostingLocation,
-              cloudServiceType: businessCase.alternativeBHostingCloudServiceType
-            },
-            hasUserInterface: businessCase.alternativeBhasUI
-          }
-        }
-      : {}),
+    alternativeB: {
+      title: businessCase.alternativeBTitle || '',
+      summary: businessCase.alternativeBSummary || '',
+      acquisitionApproach: businessCase.alternativeBAcquisitionApproach || '',
+      pros: businessCase.alternativeBPros || '',
+      cons: businessCase.alternativeBCons || '',
+      costSavings: businessCase.alternativeBCostSavings || '',
+      estimatedLifecycleCost: lifecycleCostLines.B,
+      hosting: {
+        type: businessCase.alternativeBHostingType,
+        location: businessCase.alternativeBHostingLocation,
+        cloudServiceType: businessCase.alternativeBHostingCloudServiceType
+      },
+      hasUserInterface: businessCase.alternativeBHasUI
+    },
     initialSubmittedAt: businessCase.initialSubmittedAt,
     lastSubmittedAt: businessCase.lastSubmittedAt
   };
@@ -343,6 +325,47 @@ export const prepareBusinessCaseForApi = (
       : null,
     lifecycleCostLines
   };
+};
+
+export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
+  if (!alternativeB) {
+    return false;
+  }
+
+  const {
+    title,
+    summary,
+    acquisitionApproach,
+    hosting,
+    hasUserInterface,
+    pros,
+    cons,
+    costSavings,
+    estimatedLifecycleCost
+  } = alternativeB;
+
+  let hasLineItem;
+  Object.values(estimatedLifecycleCost).forEach(phaseCost => {
+    phaseCost.forEach(lineItem => {
+      if (lineItem.phase || lineItem.cost) {
+        hasLineItem = true;
+      }
+    });
+  });
+
+  return (
+    title ||
+    summary ||
+    acquisitionApproach ||
+    hosting.type ||
+    hosting.location ||
+    hosting.cloudServiceType ||
+    hasUserInterface ||
+    pros ||
+    cons ||
+    costSavings ||
+    hasLineItem
+  );
 };
 
 export const hostingTypeMap: any = {
