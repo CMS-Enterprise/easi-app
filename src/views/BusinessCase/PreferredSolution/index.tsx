@@ -22,7 +22,7 @@ const PreferredSolution = ({ formikProps }: PreferredSolutionProps) => {
   const flatErrors = flattenErrors(errors);
 
   return (
-    <div className="grid-container">
+    <div>
       <h1 className="font-heading-xl">Alternatives Analysis</h1>
       <div className="tablet:grid-col-9">
         <div className="line-height-body-6">

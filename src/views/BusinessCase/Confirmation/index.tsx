@@ -7,7 +7,7 @@ const Confirmation = () => {
   const { t } = useTranslation();
   return (
     <div className="margin-bottom-7">
-      <div className="grid-container">
+      <div>
         <h1 className="font-heading-xl margin-top-4">
           {t('businessCase:submission.confirmation.heading')}
         </h1>
