@@ -96,7 +96,6 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 			return
 		}
 		logger = logger.With(zap.String("user", principal.ID())).With(zap.Bool("grt", principal.AllowGRT()))
-		logger.Info("Principal Found!") // debugging only
 
 		ctx := r.Context()
 		ctx = appcontext.WithPrincipal(ctx, principal)
