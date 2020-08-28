@@ -409,6 +409,7 @@ const RequestDetails = ({
                   type="button"
                   outline
                   onClick={() => {
+                    dispatchSave();
                     formikProps.setErrors({});
                     const newUrl = 'contact-details';
                     history.push(newUrl);
