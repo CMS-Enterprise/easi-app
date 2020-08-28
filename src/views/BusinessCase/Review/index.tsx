@@ -22,9 +22,11 @@ const Review = ({ businessCase }: ReviewProps) => {
 
   return (
     <div className="margin-bottom-7">
-      <h1 className="font-heading-xl margin-top-4">
-        Check your answers before sending
-      </h1>
+      <div className="grid-container">
+        <h1 className="font-heading-xl margin-top-4">
+          Check your answers before sending
+        </h1>
+      </div>
 
       <BusinessCaseReview values={businessCase} />
       <div className="grid-container margin-top-6">
