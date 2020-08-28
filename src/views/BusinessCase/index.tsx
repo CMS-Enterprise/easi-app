@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
+import BreadcrumbNav from 'components/BreadcrumbNav';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import usePrevious from 'hooks/usePrevious';
@@ -105,7 +106,35 @@ export const BusinessCase = () => {
   return (
     <div className="business-case margin-bottom-5">
       <Header />
-      <MainContent>
+      <MainContent className="grid-container">
+        {!['local', 'dev', 'impl'].includes(
+          process.env.REACT_APP_APP_ENV || ''
+        ) && (
+          <BreadcrumbNav className="margin-y-2">
+            <li>
+              <Link to="/">Home</Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>Business Case</li>
+          </BreadcrumbNav>
+        )}
+        {['local', 'dev', 'impl'].includes(
+          process.env.REACT_APP_APP_ENV || ''
+        ) && (
+          <BreadcrumbNav className="margin-y-2">
+            <li>
+              <Link to="/">Home</Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>
+              <Link to={`/governance-task-list/${businessCase.systemIntakeId}`}>
+                Get governance approval
+              </Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>Business Case</li>
+          </BreadcrumbNav>
+        )}
         {businessCase.id && (
           <>
             <SecureRoute
