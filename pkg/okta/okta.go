@@ -46,16 +46,16 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPri
 
 	// need to check the claims for empowerment as a reviewer
 	jcGRT := false
-
-	// TODO: this is a placeholder implementation that will
-	// be updated when we know what the actual JWT claims
-	// will look like when they have the JobCodes included
 	if list, ok := jwt.Claims["replace_me"]; ok {
-		codes := strings.Split(list.(string), ";")
-		for _, code := range codes {
-			if strings.EqualFold(code, f.codeGRT) {
-				jcGRT = true
-				break
+		// json arrays decode to `[]interface{}`
+		if codes, ok := list.([]interface{}); ok {
+			for _, code := range codes {
+				if c, ok := code.(string); ok {
+					if strings.EqualFold(c, f.codeGRT) {
+						jcGRT = true
+						break
+					}
+				}
 			}
 		}
 	}
@@ -95,9 +95,12 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 			)
 			return
 		}
+		logger = logger.With(zap.String("user", principal.ID()))
+		logger.With(zap.Bool("grt", principal.AllowGRT())).Info("Principal Found!")
+
 		ctx := r.Context()
 		ctx = appcontext.WithPrincipal(ctx, principal)
-		ctx = appcontext.WithLogger(ctx, logger.With(zap.String("user", principal.ID())))
+		ctx = appcontext.WithLogger(ctx, logger)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
