@@ -73,6 +73,9 @@ Consequences:
 ### 1Password
 
 * `+` Per-user access controls.
+* `+` Since 1Password is specifically designed for the purpose of securely
+  storing and sharing secrets, it provides a good user experience and is
+  already in wide use.
 * `+` We can restrict the vault to project engineers according to the principle
   of least access.
 * `+` The 1Password vault is a central source of truth on secrets.
