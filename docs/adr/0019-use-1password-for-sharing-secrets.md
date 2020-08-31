@@ -1,11 +1,10 @@
 # Use 1Password for sharing secrets
 
-* EASi engineers occasionally need access to secret information to test the app
-  locally. For example, API keys connect to CEDAR, or other services the app
-  depends upon. These secrets rotate periodically, sometimes outside of our
-  control, and sometimes without warning. This creates a challenge: how can we
-  share an updated secret in a secure way with minimal interruption to ongoing
-  app engineering work?
+* EASi engineers occasionally need access to secrets to test the app locally.
+  For example, API keys for services the app depends upon. These secrets rotate
+  periodically, sometimes outside of our control, and sometimes without
+  warning. This creates a challenge: how can we share an updated secret in a
+  secure way with minimal interruption to ongoing app engineering work?
 
 * Decision drivers:
   1. EASi engineers need to be able to stay up-to-date on secret values that
