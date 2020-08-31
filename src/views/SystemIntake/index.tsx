@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
+import BreadcrumbNav from 'components/BreadcrumbNav';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import { AppState } from 'reducers/rootReducer';
@@ -95,6 +96,34 @@ export const SystemIntake = () => {
     <div className="system-intake margin-bottom-5">
       <Header />
       <MainContent className="grid-container">
+        {!['local', 'dev', 'impl'].includes(
+          process.env.REACT_APP_APP_ENV || ''
+        ) && (
+          <BreadcrumbNav className="margin-y-2">
+            <li>
+              <Link to="/">Home</Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>Intake Request</li>
+          </BreadcrumbNav>
+        )}
+        {['local', 'dev', 'impl'].includes(
+          process.env.REACT_APP_APP_ENV || ''
+        ) && (
+          <BreadcrumbNav className="margin-y-2">
+            <li>
+              <Link to="/">Home</Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>
+              <Link to={`/governance-task-list/${systemIntake.id || 'new'}`}>
+                Get governance approval
+              </Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>Intake Request</li>
+          </BreadcrumbNav>
+        )}
         {isLoading === false && (
           <>
             <SecureRoute
