@@ -7,6 +7,7 @@ import grtReview from './grtReview';
 import header from './header';
 import home from './home';
 import systemIntake from './systemIntake';
+import privacyPolicy from './privacyPolicy';
 import cookies from './cookies';
 import accessibilityStatement from './accessibilityStatement';
 
@@ -18,6 +19,7 @@ const enUS = {
   systemIntake,
   businessCase,
   grtReview,
+  privacyPolicy,
   cookies,
   accessibilityStatement,
   taskList
