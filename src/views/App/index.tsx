@@ -13,6 +13,7 @@ import Login from 'views/Login';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TimeOutWrapper from 'views/TimeOutWrapper';
+import PrivacyPolicy from 'views/PrivacyPolicy/index';
 import Cookies from 'views/Cookies/index';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 
@@ -52,6 +53,11 @@ class App extends React.Component<MainProps, MainState> {
                   path="/governance-overview"
                   exact
                   component={GovernanceOverview}
+                />
+                <Route
+                  path="/privacy-policy"
+                  exact
+                  component={PrivacyPolicy}
                 />
                 <Route
                   path="/cookies"
