@@ -164,7 +164,7 @@ const GovernanceOverview = () => {
           className="usa-button"
           asCustom={Link}
           variant="unstyled"
-          to="/system/new"
+          to="/governance-task-list/new"
         >
           Get started
         </UswdsLink>

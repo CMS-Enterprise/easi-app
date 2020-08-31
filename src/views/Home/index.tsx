@@ -55,7 +55,7 @@ const Home = ({ history }: HomeProps) => {
               }
               helpfulText="Your Intake Request is incomplete, please submit it when you are ready so that we can move you to the next phase"
               onClick={() => {
-                history.push(`/system/${intake.id}`);
+                history.push(`/governance-task-list/${intake.id}`);
               }}
               label="Go to Intake Request"
               data-intakeid={intake.id}
@@ -76,10 +76,7 @@ const Home = ({ history }: HomeProps) => {
               helpfulText="Your intake form has been submitted. The admin team will be in touch with you to fill out a Business Case"
               onClick={() => {
                 history.push({
-                  pathname: `/business/new/general-request-info`,
-                  state: {
-                    systemIntakeId: intake.id
-                  }
+                  pathname: `/governance-task-list/${intake.id}`
                 });
               }}
               label="Start my Business Case"
@@ -106,7 +103,7 @@ const Home = ({ history }: HomeProps) => {
               }
               helpfulText="Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next phase"
               onClick={() => {
-                history.push(`/business/${busCase.id}/general-request-info`);
+                history.push(`/governance-task-list/${busCase.systemIntakeId}`);
               }}
               label="Go to Business Case"
             />
@@ -122,7 +119,7 @@ const Home = ({ history }: HomeProps) => {
               }
               helpfulText="The form has been submitted for review. You can update it and re-submit it any time in the process"
               onClick={() => {
-                history.push(`/business/${busCase.id}/general-request-info`);
+                history.push(`/governance-task-list/${busCase.systemIntakeId}`);
               }}
               label="Update Business Case"
             />
