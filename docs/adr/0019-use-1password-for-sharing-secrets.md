@@ -49,8 +49,6 @@ Consequences:
 ### Email
 
 * `+` Fast.
-* `+` Some of our peers share secrets with us using email, so forwarding the
-  emails is an easy and straightforward way to distribute secrets.
 * `-` Poor access controls: once an email is sent, its contents cannot be recalled.
 * `-` Emails can be easily shared with a wide audience inadvertently, resulting
   in a pervasive risk of uncontrolled disclosure.
