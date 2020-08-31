@@ -1,7 +1,7 @@
 describe('The Business Case Form', () => {
   let intakeId;
   const systemIntake = {
-    status: 'SUBMITTED',
+    status: 'ACCEPTED',
     requester: 'John Requester',
     component: 'Center for Consumer Information and Insurance Oversight',
     businessOwner: 'John BusinessOwner',
@@ -44,11 +44,12 @@ describe('The Business Case Form', () => {
 
   beforeEach(() => {
     cy.restoreLocalStorage();
-
-    cy.visit('/');
-    cy.get(`[data-intakeid="${intakeId}"]`)
+    cy.route('GET', '/api/v1/system_intake/**').as('getSystemIntake');
+    cy.visit(`/governance-task-list/${intakeId}`);
+    cy.wait('@getSystemIntake');
+    cy.get('[data-testid="prepare-bus-case-item"')
       .get('button')
-      .contains('Start my Business Case')
+      .contains('Start')
       .click();
   });
 
