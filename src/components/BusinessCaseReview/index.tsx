@@ -7,6 +7,7 @@ import {
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
 import ResponsiveTabs from 'components/shared/ResponsiveTabs';
+import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import AsIsSolutionReview from 'views/BusinessCase/Review/AsIsSolutionReview';
 import ProposedBusinessCaseSolutionReview from 'views/BusinessCase/Review/ProposedBusinessCaseSolutionReview';
@@ -26,7 +27,7 @@ const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
       'Preferred solution',
       'Alternative A'
     ];
-    if (values.alternativeB) {
+    if (hasAlternativeB(values.alternativeB)) {
       solutions.push('Alternative B');
     }
     return solutions;
@@ -141,7 +142,7 @@ const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
                       />
                     );
                   case 'Alternative B':
-                    if (values.alternativeB) {
+                    if (hasAlternativeB(values.alternativeB)) {
                       return (
                         <ProposedBusinessCaseSolutionReview
                           name="Alternative B"
