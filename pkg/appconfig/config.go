@@ -152,3 +152,9 @@ const CEDARAPIURL = "CEDAR_API_URL"
 
 // CEDARAPIKey is the key for accessing CEDAR
 const CEDARAPIKey = "CEDAR_API_KEY"
+
+// LDKey is the key for accessing LaunchDarkly
+const LDKey = "LD_SDK_KEY"
+
+// LDTimeout is the key for accessing LaunchDarkly
+const LDTimeout = "LD_TIMEOUT_SECONDS"
