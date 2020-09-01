@@ -44,7 +44,10 @@ describe('The Business Case Form', () => {
 
   beforeEach(() => {
     cy.restoreLocalStorage();
-    cy.route('GET', '/api/v1/system_intake/*').as('getSystemIntake');
+    cy.server()
+      .route('GET', '/api/v1/system_intake/*')
+      .as('getSystemIntake');
+
     cy.visit(`/governance-task-list/${intakeId}`);
     cy.wait('@getSystemIntake');
     cy.get('[data-testid="prepare-bus-case-item"')
