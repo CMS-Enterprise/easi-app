@@ -16,8 +16,8 @@ import (
 )
 
 const (
-	grtStandard = "EASI_P_GOVTEAM"
-	grtOverride = "EASI_D_GOVTEAM"
+	prodGRTJobCode = "EASI_P_GOVTEAM"
+	testGRTJobCode = "EASI_D_GOVTEAM"
 )
 
 func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtverifier.Jwt, error) {
@@ -33,6 +33,28 @@ func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtv
 	return f.verifier.VerifyAccessToken(bearerToken)
 }
 
+func jwtGroupsContainsJobCode(jwt *jwtverifier.Jwt, jobCode string) bool {
+	list, ok := jwt.Claims["groups"]
+	if !ok {
+		return false
+	}
+
+	// json arrays decode to `[]interface{}`
+	codes, ok := list.([]interface{})
+	if !ok {
+		return false
+	}
+
+	for _, code := range codes {
+		if c, ok := code.(string); ok {
+			if strings.EqualFold(c, jobCode) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPrincipal, error) {
 	euaID := jwt.Claims["sub"].(string)
 	if euaID == "" {
@@ -45,20 +67,7 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPri
 	jcEASi := true
 
 	// need to check the claims for empowerment as a reviewer
-	jcGRT := false
-	if list, ok := jwt.Claims["groups"]; ok {
-		// json arrays decode to `[]interface{}`
-		if codes, ok := list.([]interface{}); ok {
-			for _, code := range codes {
-				if c, ok := code.(string); ok {
-					if strings.EqualFold(c, f.codeGRT) {
-						jcGRT = true
-						break
-					}
-				}
-			}
-		}
-	}
+	jcGRT := jwtGroupsContainsJobCode(jwt, f.codeGRT)
 
 	return &authn.EUAPrincipal{EUAID: euaID, JobCodeEASi: jcEASi, JobCodeGRT: jcGRT}, nil
 }
@@ -124,13 +133,17 @@ type oktaMiddlewareFactory struct {
 }
 
 // NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issuer string, ovrdGRT bool) func(http.Handler) http.Handler {
+func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issuer string, testGRT bool) func(http.Handler) http.Handler {
 	verifier := newJwtVerifier(clientID, issuer)
 
-	jobCodeGRT := grtStandard
-	if ovrdGRT {
-		jobCodeGRT = grtOverride
+	// by default we want to use the PROD job code, and only in
+	// pre-PROD environments do we want to empower the
+	// alternate job code.
+	jobCodeGRT := prodGRTJobCode
+	if testGRT {
+		jobCodeGRT = testGRTJobCode
 	}
+
 	middlewareFactory := oktaMiddlewareFactory{HandlerBase: base, verifier: verifier, codeGRT: jobCodeGRT}
 	return func(next http.Handler) http.Handler {
 		return middlewareFactory.newAuthorizeMiddleware(next)
