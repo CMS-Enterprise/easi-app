@@ -80,6 +80,7 @@ Consequences:
 * `-` We have to create a vault, which costs money.
 * `-` Some secrets will have to be updated in 1Password and SSM when they
   change, such as API keys.
+* `-` We have to grant and revoke everyone's access individually.
 
 ### AWS SSM / ParameterStore
 
