@@ -65,7 +65,7 @@ Consequences:
 * `+` Only two people are in a DM thread. Unlike email, it is not easy to share
   contents of a DM inadvertently.
 * `-` Due to CMS record-keeping policies, DMs cannot be deleted and may be
-  subject to subpoena or FOIA requests, which makes them public records.
+  subject to subpoena or FOIA requests.
 * `-` There is no central source of truth.
 
 ### 1Password
