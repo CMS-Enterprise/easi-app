@@ -117,6 +117,7 @@ const businessCaseLinkComponent = ({
             });
           }}
           className="usa-button"
+          data-testid="start-business-case-btn"
         >
           Start
         </Button>
@@ -241,7 +242,6 @@ const GovernanceTaskList = () => {
                 heading="Prepare your Business Case"
                 description="Draft different solutions and the corresponding costs involved."
                 status={businessCaseStatus}
-                data-testid="prepare-bus-case-item"
               >
                 {businessCaseLink}
               </TaskListItem>

@@ -12,8 +12,7 @@ const TaskListItem = ({
   heading,
   description,
   status,
-  children,
-  ...props
+  children
 }: TaskListItemProps) => {
   const taskListItemClasses = classnames(
     'governance-task-list__item',
@@ -23,8 +22,7 @@ const TaskListItem = ({
     }
   );
   return (
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    <li className={taskListItemClasses} {...props}>
+    <li className={taskListItemClasses}>
       <div className="governance-task-list__task-content">
         <div className="governance-task-list__task-heading-row">
           <h3 className="governance-task-list__task-heading margin-top-0">
