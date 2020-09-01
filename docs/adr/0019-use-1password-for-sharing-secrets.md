@@ -93,5 +93,4 @@ _See also:_ [Use AWS SSM Parameter Store for Config/Secrets management](./0008-s
 * `-` Spin-up for a new engineer on gaining access to SSM is time consuming and
   complex.
 * `-` Neither the web console nor the cli interface are user-friendly and
-  intuitive to the uninitiated, especially since both require authentication
-  via CloudTamer.
+  intuitive to the uninitiated.
