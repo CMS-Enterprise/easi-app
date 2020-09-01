@@ -52,15 +52,15 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   component={GovernanceOverview}
                 />
-                {['local', 'dev', 'impl'].includes(
+                {/* {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
-                ) && (
-                  <SecureRoute
-                    path="/governance-task-list/:systemId"
-                    exact
-                    component={GovernanceTaskList}
-                  />
-                )}
+                ) && ( */}
+                <SecureRoute
+                  path="/governance-task-list/:systemId"
+                  exact
+                  component={GovernanceTaskList}
+                />
+                {/* )} */}
                 <SecureRoute
                   exact
                   path="/system/:systemId/grt-review"
