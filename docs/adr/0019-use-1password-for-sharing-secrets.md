@@ -76,7 +76,7 @@ Consequences:
   already in wide use.
 * `+` We can restrict the vault to project engineers according to the principle
   of least access.
-* `+` The 1Password vault is a central source of truth on secrets.
+* `+` The 1Password vault is a secure, centralized secret store.
 * `-` We have to create a vault, which costs money.
 * `-` Some secrets will have to be updated in 1Password and SSM when they
   change, such as API keys.
