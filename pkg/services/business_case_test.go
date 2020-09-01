@@ -19,7 +19,7 @@ import (
 func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	authorize := func(context context.Context, intake *models.BusinessCase) (bool, error) { return true, nil }
 
@@ -52,7 +52,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 	logger := zap.NewNop()
 	fakeEuaID := "FAKE"
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
 
@@ -125,7 +125,7 @@ func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
 func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	ctx := context.Background()
 	logger := zap.NewNop()
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intake := &models.SystemIntake{
@@ -253,7 +253,7 @@ func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
 func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	ctx := context.Background()
 	logger := zap.NewNop()
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intake := &models.SystemIntake{
@@ -386,7 +386,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 func (s ServicesTestSuite) TestBusinessCaseArchiver() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	ctx := context.Background()
 

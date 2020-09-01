@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
 	"github.com/cmsgov/easi-app/pkg/authn"
 )
@@ -17,6 +18,7 @@ const (
 	loggerKey contextKey = iota
 	traceKey
 	principalKey
+	ldUserKey
 )
 
 // WithLogger returns a context with the given logger
@@ -66,4 +68,15 @@ func Principal(c context.Context) authn.Principal {
 		return p
 	}
 	return authn.ANON
+}
+
+// WithLDAppEnvUser decorates the context with the app env user
+func WithLDAppEnvUser(c context.Context, u ld.User) context.Context {
+	return context.WithValue(c, ldUserKey, u)
+}
+
+// LDAppEnvUser returns the default user for the LD Api
+func LDAppEnvUser(c context.Context) (ld.User, bool) {
+	ldUser, ok := c.Value(ldUserKey).(ld.User)
+	return ldUser, ok
 }

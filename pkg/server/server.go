@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/okta"
@@ -72,7 +73,8 @@ func NewServer(config *viper.Viper) *Server {
 		authMiddleware,
 		newCORSMiddleware(clientAddress),
 		NewTraceMiddleware(zapLogger),
-		NewLoggerMiddleware(zapLogger))
+		NewLoggerMiddleware(zapLogger),
+		flags.NewFlagMiddleware(config.GetString("LD_ENV_USER")))
 
 	return s
 }
