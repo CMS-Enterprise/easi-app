@@ -46,7 +46,7 @@ describe('The Business Case Form', () => {
     cy.restoreLocalStorage();
 
     cy.visit(`/governance-task-list/${intakeId}`);
-    cy.get('[data-testid="prepare-bus-case-item"')
+    cy.get('[data-testid="prepare-bus-case-item"]')
       .get('button')
       .contains('Start')
       .click();
