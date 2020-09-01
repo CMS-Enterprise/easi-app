@@ -1,12 +1,15 @@
 package okta
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	jwtverifier "github.com/okta/okta-jwt-verifier-golang"
 	"github.com/spf13/viper"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
 
@@ -101,4 +104,43 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		authMiddleware(testHandler).ServeHTTP(rr, req)
 	})
 
+}
+
+func TestJobCodes(t *testing.T) {
+	payload := `
+	{
+		"sub":"NASA",
+		"groups":[
+			"EX_SPACE",
+			"EX_HOUSTON",
+			"EX_MARS"
+		]
+	}
+	`
+	claims := map[string]interface{}{}
+	if err := json.Unmarshal([]byte(payload), &claims); err != nil {
+		t.Fatalf("incorrect data: %v\n", err)
+	}
+	jwt := &jwtverifier.Jwt{Claims: claims}
+
+	testCases := map[string]struct {
+		jobCode  string
+		expected bool
+	}{
+		"success": {
+			jobCode:  "EX_HOUSTON",
+			expected: true,
+		},
+		"failure": {
+			jobCode:  "MARIANA_TRENCH",
+			expected: false,
+		},
+	}
+
+	for name, tc := range testCases {
+		t.Run(name, func(t *testing.T) {
+			result := jwtGroupsContainsJobCode(jwt, tc.jobCode)
+			assert.Equal(t, tc.expected, result)
+		})
+	}
 }
