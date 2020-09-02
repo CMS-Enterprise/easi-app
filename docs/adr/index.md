@@ -24,5 +24,6 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0017](0017-go-orm.md) - *Use [sqlx](https://github.com/jmoiron/sqlx) for Go Database Access*
 - [ADR-0018](0018-integration-tests-third-party-apis.md) - Mock third-party APIs in CI/CD integration tests
 - [ADR-0019](0019-do-not-implement-state-machine.md) -
+- [ADR-0019](0019-use-1password-for-sharing-secrets.md) - Use 1Password for sharing secrets
 
 <!-- adrlogstop -->
