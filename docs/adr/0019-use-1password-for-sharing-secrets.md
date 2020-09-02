@@ -62,8 +62,9 @@ Consequences:
 ### Slack DMs
 
 * `+` It's easy to find people in Slack, and we all use it.
-* `+` Only two people are in a DM thread. Unlike email, it is not easy to share
-  contents of a DM inadvertently.
+* `+` Only two people are in a DM thread. Although it is possible to share
+  contents of a DM conversation, it is not as easy to do so inadvertently as
+  with email.
 * `-` Due to CMS record-keeping policies, DMs cannot be deleted and may be
   subject to subpoena or FOIA requests.
 * `-` There is no central source of truth.
