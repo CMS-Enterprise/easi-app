@@ -10,6 +10,7 @@ import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
+import NotFound from 'views/NotFound';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TimeOutWrapper from 'views/TimeOutWrapper';
@@ -100,6 +101,7 @@ class App extends React.Component<MainProps, MainState> {
                   component={BusinessCase}
                 />
                 <Route path="/implicit/callback" component={LoginCallback} />
+                <Route path="*" component={NotFound} />
               </Switch>
             </TimeOutWrapper>
           </AuthenticationWrapper>
