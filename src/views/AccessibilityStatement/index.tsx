@@ -1,5 +1,6 @@
 import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { Link } from '@trussworks/react-uswds';
 
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -43,9 +44,9 @@ const AccesibilityStatement = () => {
                 {t('accessibilityStatement:communications.email.label')}
               </strong>
               &nbsp;
-              <a href="mailto:altformatrequest@cms.hhs.gov">
+              <Link href="mailto:altformatrequest@cms.hhs.gov">
                 {t('accessibilityStatement:communications.email.address')}
-              </a>
+              </Link>
             </li>
             <li>
               <strong>
@@ -107,13 +108,15 @@ const AccesibilityStatement = () => {
 
           <ol>
             <li>
-              <a
+              <Link
+                aria-label="Open a new tab to file a complaint"
                 href="https://www.hhs.gov/civil-rights/filing-a-complaint/complaint-process/index.html"
                 target="_blank"
                 rel="noopener noreferrer"
+                variant="external"
               >
                 {t('accessibilityStatement:complaintFiling.online')}
-              </a>
+              </Link>
             </li>
             <li>
               <strong>
@@ -154,7 +157,7 @@ const AccesibilityStatement = () => {
           <h2>{t('accessibilityStatement:compliance.heading')}</h2>
           <Trans i18nKey="accessibilityStatement:compliance.description">
             indexZero
-            <a href="mailto:508Feedback@cms.hhs.gov">localeLink</a>
+            <Link href="mailto:508Feedback@cms.hhs.gov">localeLink</Link>
             indexTwo
           </Trans>
         </div>
@@ -164,22 +167,26 @@ const AccesibilityStatement = () => {
 
           <ul>
             <li>
-              <a
+              <Link
+                aria-label="Open 'What is 504' in a new tab"
                 href="https://www.hhs.gov/web/section-508/what-is-section-504/index.html"
                 target="_blank"
                 rel="noopener noreferrer"
+                variant="external"
               >
                 {t('accessibilityStatement:additionalInformation508')}
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
+                aria-label="Open Civil Rights for Individuals and Advocates in a new tab"
                 href="https://www.hhs.gov/civil-rights/for-individuals/index.html"
                 target="_blank"
                 rel="noopener noreferrer"
+                variant="external"
               >
                 {t('accessibilityStatement:additionalInformationCivilRights')}
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
