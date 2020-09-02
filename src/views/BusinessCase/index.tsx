@@ -16,6 +16,7 @@ import {
   postBusinessCase,
   putBusinessCase
 } from 'types/routines';
+import { NotFoundPartial } from 'views/NotFound';
 
 import {
   AlternativeSolutionA,
@@ -211,6 +212,9 @@ export const BusinessCase = () => {
             />
           </>
         )}
+        <div className="grid-container">
+          <SecureRoute path="*" render={() => <NotFoundPartial />} />
+        </div>
       </MainContent>
     </div>
   );
