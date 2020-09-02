@@ -1,6 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import {
+  Link,
+  Switch,
+  useHistory,
+  useLocation,
+  useParams
+} from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
@@ -141,80 +147,82 @@ export const BusinessCase = () => {
           )}
         </div>
         {businessCase.id && (
-          <>
-            <SecureRoute
-              path="/business/:businessCaseId/general-request-info"
-              render={() => (
-                <GeneralRequestInfo
-                  formikRef={formikRef}
-                  dispatchSave={dispatchSave}
-                  businessCase={businessCase}
-                />
-              )}
-            />
-            <SecureRoute
-              path="/business/:businessCaseId/request-description"
-              render={() => (
-                <RequestDescription
-                  formikRef={formikRef}
-                  dispatchSave={dispatchSave}
-                  businessCase={businessCase}
-                />
-              )}
-            />
-            <SecureRoute
-              path="/business/:businessCaseId/as-is-solution"
-              render={() => (
-                <AsIsSolution
-                  formikRef={formikRef}
-                  dispatchSave={dispatchSave}
-                  businessCase={businessCase}
-                />
-              )}
-            />
-            <SecureRoute
-              path="/business/:businessCaseId/preferred-solution"
-              render={() => (
-                <PreferredSolution
-                  formikRef={formikRef}
-                  dispatchSave={dispatchSave}
-                  businessCase={businessCase}
-                />
-              )}
-            />
-            <SecureRoute
-              path="/business/:businessCaseId/alternative-solution-a"
-              render={() => (
-                <AlternativeSolutionA
-                  formikRef={formikRef}
-                  dispatchSave={dispatchSave}
-                  businessCase={businessCase}
-                />
-              )}
-            />
-            <SecureRoute
-              path="/business/:businessCaseId/alternative-solution-b"
-              render={() => (
-                <AlternativeSolutionB
-                  formikRef={formikRef}
-                  dispatchSave={dispatchSave}
-                  businessCase={businessCase}
-                />
-              )}
-            />
-            <SecureRoute
-              path="/business/:businessCaseId/review"
-              render={() => <Review businessCase={businessCase} />}
-            />
-            <SecureRoute
-              path="/business/:businessCaseId/confirmation"
-              render={() => <Confirmation />}
-            />
-          </>
+          <Switch>
+            <>
+              <SecureRoute
+                path="/business/:businessCaseId/general-request-info"
+                render={() => (
+                  <GeneralRequestInfo
+                    formikRef={formikRef}
+                    dispatchSave={dispatchSave}
+                    businessCase={businessCase}
+                  />
+                )}
+              />
+              <SecureRoute
+                path="/business/:businessCaseId/request-description"
+                render={() => (
+                  <RequestDescription
+                    formikRef={formikRef}
+                    dispatchSave={dispatchSave}
+                    businessCase={businessCase}
+                  />
+                )}
+              />
+              <SecureRoute
+                path="/business/:businessCaseId/as-is-solution"
+                render={() => (
+                  <AsIsSolution
+                    formikRef={formikRef}
+                    dispatchSave={dispatchSave}
+                    businessCase={businessCase}
+                  />
+                )}
+              />
+              <SecureRoute
+                path="/business/:businessCaseId/preferred-solution"
+                render={() => (
+                  <PreferredSolution
+                    formikRef={formikRef}
+                    dispatchSave={dispatchSave}
+                    businessCase={businessCase}
+                  />
+                )}
+              />
+              <SecureRoute
+                path="/business/:businessCaseId/alternative-solution-a"
+                render={() => (
+                  <AlternativeSolutionA
+                    formikRef={formikRef}
+                    dispatchSave={dispatchSave}
+                    businessCase={businessCase}
+                  />
+                )}
+              />
+              <SecureRoute
+                path="/business/:businessCaseId/alternative-solution-b"
+                render={() => (
+                  <AlternativeSolutionB
+                    formikRef={formikRef}
+                    dispatchSave={dispatchSave}
+                    businessCase={businessCase}
+                  />
+                )}
+              />
+              <SecureRoute
+                path="/business/:businessCaseId/review"
+                render={() => <Review businessCase={businessCase} />}
+              />
+              <SecureRoute
+                path="/business/:businessCaseId/confirmation"
+                render={() => <Confirmation />}
+              />
+              <div className="grid-container">
+                <SecureRoute path="*" render={() => <NotFoundPartial />} />
+              </div>
+            </>
+          </Switch>
         )}
-        <div className="grid-container">
-          <SecureRoute path="*" render={() => <NotFoundPartial />} />
-        </div>
       </MainContent>
     </div>
   );
