@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, Switch, useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
@@ -118,7 +118,7 @@ export const SystemIntake = () => {
           </BreadcrumbNav>
         )}
         {isLoading === false && (
-          <>
+          <Switch>
             <SecureRoute
               path="/system/:systemId/contact-details"
               render={() => (
@@ -144,7 +144,7 @@ export const SystemIntake = () => {
               render={() => <Review systemIntake={systemIntake} />}
             />
             <SecureRoute path="*" render={() => <NotFoundPartial />} />
-          </>
+          </Switch>
         )}
       </MainContent>
     </div>
