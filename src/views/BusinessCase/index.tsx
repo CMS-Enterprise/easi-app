@@ -1,6 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import {
+  Link,
+  Switch,
+  useHistory,
+  useLocation,
+  useParams
+} from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
@@ -141,7 +147,7 @@ export const BusinessCase = () => {
           )}
         </div>
         {businessCase.id && (
-          <>
+          <Switch>
             <SecureRoute
               path="/business/:businessCaseId/general-request-info"
               render={() => (
@@ -210,11 +216,16 @@ export const BusinessCase = () => {
               path="/business/:businessCaseId/confirmation"
               render={() => <Confirmation />}
             />
-          </>
+            <SecureRoute
+              path="*"
+              render={() => (
+                <div className="grid-container">
+                  <NotFoundPartial />
+                </div>
+              )}
+            />
+          </Switch>
         )}
-        <div className="grid-container">
-          <SecureRoute path="*" render={() => <NotFoundPartial />} />
-        </div>
       </MainContent>
     </div>
   );
