@@ -13,7 +13,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/handlers"
-	"github.com/cmsgov/easi-app/pkg/models"
+)
+
+const (
+	prodGRTJobCode = "EASI_P_GOVTEAM"
+	testGRTJobCode = "EASI_D_GOVTEAM"
 )
 
 func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtverifier.Jwt, error) {
@@ -29,23 +33,48 @@ func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtv
 	return f.verifier.VerifyAccessToken(bearerToken)
 }
 
-func (f oktaMiddlewareFactory) newUser(logger *zap.Logger, jwt *jwtverifier.Jwt) (models.User, error) {
-	euaID := jwt.Claims["sub"].(string)
-	if euaID == "" {
-		return models.User{}, errors.New("unable to retrieve EUA ID from JWT")
+func jwtGroupsContainsJobCode(jwt *jwtverifier.Jwt, jobCode string) bool {
+	list, ok := jwt.Claims["groups"]
+	if !ok {
+		return false
 	}
 
-	return models.User{EUAUserID: euaID}, nil
+	// json arrays decode to `[]interface{}`
+	codes, ok := list.([]interface{})
+	if !ok {
+		return false
+	}
+
+	for _, code := range codes {
+		if c, ok := code.(string); ok {
+			if strings.EqualFold(c, jobCode) {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPrincipal, error) {
+	euaID := jwt.Claims["sub"].(string)
+	if euaID == "" {
+		return nil, errors.New("unable to retrieve EUA ID from JWT")
+	}
+
+	// the current assumption is that anyone with an appropriate
+	// JWT provided by Okta for EASi is allowed to use EASi
+	// as a viewer/submitter
+	jcEASi := true
+
+	// need to check the claims for empowerment as a reviewer
+	jcGRT := jwtGroupsContainsJobCode(jwt, f.codeGRT)
+
+	return &authn.EUAPrincipal{EUAID: euaID, JobCodeEASi: jcEASi, JobCodeGRT: jcGRT}, nil
 }
 
 func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := appcontext.Logger(r.Context())
-		if !ok {
-			f.HandlerBase.Logger.Error("failed to get logger from context")
-			logger = f.Logger
-		}
-
+		logger := appcontext.ZLogger(r.Context())
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
 			f.WriteErrorResponse(
@@ -66,29 +95,20 @@ func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Ha
 			return
 		}
 
-		user, err := f.newUser(logger, jwt)
+		principal, err := f.newPrincipal(jwt)
 		if err != nil {
 			f.WriteErrorResponse(
 				r.Context(),
 				w,
-				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to get User from jwt: %w", err)},
+				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to get Principal from jwt: %w", err)},
 			)
 			return
 		}
-		logger = logger.With(zap.String("user", user.EUAUserID))
+		logger = logger.With(zap.String("user", principal.ID())).With(zap.Bool("grt", principal.AllowGRT()))
 
-		// also add the authn.Principal to the context... since
-		// we don't yet have access to the Job Codes in the JWT, this builds
-		// on the current assumption that anyone with an appropriate
-		// JWT provided by Okta for EASi is allowed to use EASi
-		// as a viewer/submitter. Effectively, this is just a new
-		// way to re-state the same things the User type does, but
-		// it gives a foward path for eventually empowering GRT users.
-		ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{
-			EUAID:       user.EUAUserID,
-			JobCodeEASi: true,
-			JobCodeGRT:  false})
-
+		ctx := r.Context()
+		ctx = appcontext.WithPrincipal(ctx, principal)
+		ctx = appcontext.WithLogger(ctx, logger)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
@@ -109,12 +129,22 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 type oktaMiddlewareFactory struct {
 	handlers.HandlerBase
 	verifier *jwtverifier.JwtVerifier
+	codeGRT  string
 }
 
 // NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issuer string) func(http.Handler) http.Handler {
+func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issuer string, testGRT bool) func(http.Handler) http.Handler {
 	verifier := newJwtVerifier(clientID, issuer)
-	middlewareFactory := oktaMiddlewareFactory{HandlerBase: base, verifier: verifier}
+
+	// by default we want to use the PROD job code, and only in
+	// pre-PROD environments do we want to empower the
+	// alternate job code.
+	jobCodeGRT := prodGRTJobCode
+	if testGRT {
+		jobCodeGRT = testGRTJobCode
+	}
+
+	middlewareFactory := oktaMiddlewareFactory{HandlerBase: base, verifier: verifier, codeGRT: jobCodeGRT}
 	return func(next http.Handler) http.Handler {
 		return middlewareFactory.newAuthorizeMiddleware(next)
 	}
