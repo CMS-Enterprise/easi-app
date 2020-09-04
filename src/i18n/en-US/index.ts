@@ -8,6 +8,7 @@ import grtReview from './grtReview';
 import header from './header';
 import home from './home';
 import systemIntake from './systemIntake';
+import termsAndConditions from './termsAndConditions';
 
 const enUS = {
   auth,
@@ -18,7 +19,8 @@ const enUS = {
   systemIntake,
   businessCase,
   grtReview,
-  taskList
+  taskList,
+  termsAndConditions
 };
 
 export default enUS;
