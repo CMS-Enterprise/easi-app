@@ -50,6 +50,9 @@ describe('The home page', () => {
         },
         businessCases: {
           businessCases: []
+        },
+        flags: {
+          taskListLite: true
         }
       });
       let component: any;
@@ -108,6 +111,9 @@ describe('The home page', () => {
               systemIntakeId: '4'
             }
           ]
+        },
+        flags: {
+          taskListLite: true
         }
       });
       let component: any;

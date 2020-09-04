@@ -15,7 +15,11 @@ import MainContent from 'components/MainContent';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
-import { fetchBusinessCases, fetchSystemIntakes } from 'types/routines';
+import {
+  fetchBusinessCases,
+  fetchClientFlags,
+  fetchSystemIntakes
+} from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 import './index.scss';
@@ -34,10 +38,46 @@ const Home = ({ history }: HomeProps) => {
     (state: AppState) => state.businessCases.businessCases
   );
 
+  const taskListLiteFlag = useSelector(
+    (state: AppState) => state.flags.taskListLite
+  );
+
+  // I think there's a better way to do this without a param,
+  // but can't recall exactly how at the moment.
+  const draftIntakeOnClick = (intake: SystemIntakeForm) => {
+    if (taskListLiteFlag) {
+      return () => history.push(`/governance-task-list/${intake.id}`);
+    }
+    return () => history.push(`/system/${intake.id}`);
+  };
+
+  const submittedIntakeOnClick = (intake: SystemIntakeForm) => {
+    if (taskListLiteFlag) {
+      return () => history.push(`/governance-task-list/${intake.id}`);
+    }
+    return () =>
+      history.push({
+        pathname: `/business/new/general-request-info`,
+        state: {
+          systemIntakeId: intake.id
+        }
+      });
+  };
+
+  const businessCaseOnClick = (businessCase: BusinessCaseModel) => {
+    if (taskListLiteFlag) {
+      return () =>
+        history.push(`/governance-task-list/${businessCase.systemIntakeId}`);
+    }
+    return () =>
+      history.push(`/business/${businessCase.id}/general-request-info`);
+  };
+
   useEffect(() => {
     if (authState.isAuthenticated) {
       dispatch(fetchSystemIntakes());
       dispatch(fetchBusinessCases());
+      dispatch(fetchClientFlags());
     }
   }, [dispatch, authState.isAuthenticated]);
 
@@ -54,9 +94,7 @@ const Home = ({ history }: HomeProps) => {
                   : 'Intake Request'
               }
               helpfulText="Your Intake Request is incomplete, please submit it when you are ready so that we can move you to the next phase"
-              onClick={() => {
-                history.push(`/governance-task-list/${intake.id}`);
-              }}
+              onClick={draftIntakeOnClick(intake)}
               label="Go to Intake Request"
               data-intakeid={intake.id}
             />
@@ -74,11 +112,7 @@ const Home = ({ history }: HomeProps) => {
                   : 'Business Case'
               }
               helpfulText="Your intake form has been submitted. The admin team will be in touch with you to fill out a Business Case"
-              onClick={() => {
-                history.push({
-                  pathname: `/governance-task-list/${intake.id}`
-                });
-              }}
+              onClick={submittedIntakeOnClick(intake)}
               label="Start my Business Case"
               data-intakeid={intake.id}
             />
@@ -102,9 +136,7 @@ const Home = ({ history }: HomeProps) => {
                   : 'Business Case'
               }
               helpfulText="Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next phase"
-              onClick={() => {
-                history.push(`/governance-task-list/${busCase.systemIntakeId}`);
-              }}
+              onClick={businessCaseOnClick(busCase)}
               label="Go to Business Case"
             />
           );
@@ -118,9 +150,7 @@ const Home = ({ history }: HomeProps) => {
                   : 'Business Case'
               }
               helpfulText="The form has been submitted for review. You can update it and re-submit it any time in the process"
-              onClick={() => {
-                history.push(`/governance-task-list/${busCase.systemIntakeId}`);
-              }}
+              onClick={businessCaseOnClick(busCase)}
               label="Update Business Case"
             />
           );

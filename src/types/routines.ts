@@ -24,3 +24,6 @@ export const putBusinessCase = createRoutine('PUT_BUSINESS_CASE');
 export const storeBusinessCase = createRoutine('STORE_BUSINESS_CASE');
 export const submitBusinessCase = createRoutine('SUBMIT_BUSINESS_CASE');
 export const clearBusinessCase = createRoutine('CLEAR_BUSINESS_CASE');
+
+// Flags routines
+export const fetchClientFlags = createRoutine('FETCH_CLIENT_FLAGS');

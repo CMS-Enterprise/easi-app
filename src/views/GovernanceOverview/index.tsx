@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
@@ -6,6 +7,8 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import CollapsableLink from 'components/shared/CollapsableLink';
+import { AppState } from 'reducers/rootReducer';
+import { fetchClientFlags } from 'types/routines';
 
 import './index.scss';
 
@@ -56,6 +59,17 @@ const NumberedListTerminalItem = ({
 };
 
 const GovernanceOverview = () => {
+  const dispatch = useDispatch();
+  const taskListLiteFlag = useSelector(
+    (state: AppState) => state.flags.taskListLite
+  );
+  const getStartedPath: string = taskListLiteFlag
+    ? '/governance-task-list/new'
+    : '/system/new';
+
+  useEffect(() => {
+    dispatch(fetchClientFlags());
+  }, [dispatch]);
   return (
     <div className="easi-governance-overview">
       <Header />
@@ -164,7 +178,7 @@ const GovernanceOverview = () => {
           className="usa-button"
           asCustom={Link}
           variant="unstyled"
-          to="/governance-task-list/new"
+          to={getStartedPath}
         >
           Get started
         </UswdsLink>

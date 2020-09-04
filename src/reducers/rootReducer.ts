@@ -5,6 +5,7 @@ import systemIntakesReducer from 'reducers/systemIntakesReducer';
 import authReducer from './authReducer';
 import businessCaseReducer from './businessCaseReducer';
 import businessCasesReducer from './businessCasesReducer';
+import flagsReducer from './flagsReducer';
 import systemIntakeReducer from './systemIntakeReducer';
 import systemsReducer from './systemsReducer';
 
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   systemIntakes: systemIntakesReducer,
   businessCase: businessCaseReducer,
   businessCases: businessCasesReducer,
-  auth: authReducer
+  auth: authReducer,
+  flags: flagsReducer
 });
 
 export default rootReducer;
