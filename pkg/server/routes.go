@@ -22,8 +22,7 @@ func (s *Server) routes(
 	authorizationMiddleware func(handler http.Handler) http.Handler,
 	corsMiddleware func(handler http.Handler) http.Handler,
 	traceMiddleware func(handler http.Handler) http.Handler,
-	loggerMiddleware func(handler http.Handler) http.Handler,
-	flagMiddleWare func(handler http.Handler) http.Handler) {
+	loggerMiddleware func(handler http.Handler) http.Handler) {
 
 	// trace all requests with an ID
 	s.router.Use(traceMiddleware)
@@ -82,12 +81,15 @@ func (s *Server) routes(
 
 	// set up LD Client
 	var ldClient *ld.LDClient
+	var ldUser *ld.User
 	if s.environment.Local() {
 		ldConfig := s.NewLDConfig()
 		ldClient, err = flags.NewLDClient(ldConfig)
 		if err != nil {
 			s.logger.Fatal("Failed to connect to launch darkly", zap.Error(err))
 		}
+		anonUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
+		ldUser = &anonUser
 	}
 
 	// API base path is versioned
@@ -102,9 +104,6 @@ func (s *Server) routes(
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
 
-	// wrap with flags middleware
-	api.Use(flagMiddleWare)
-
 	serviceConfig := services.NewConfig(s.logger, ldClient)
 
 	store, err := storage.NewStore(
@@ -117,7 +116,7 @@ func (s *Server) routes(
 
 	// endpoint for flags list
 	if ldClient != nil {
-		flagsHandler := handlers.NewFlagsHandler(base, flags.NewFetchFlags(), *ldClient)
+		flagsHandler := handlers.NewFlagsHandler(base, flags.NewFetchFlags(), *ldClient, *ldUser)
 		api.Handle("/flags", flagsHandler.Handle())
 	}
 
