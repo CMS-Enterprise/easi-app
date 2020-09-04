@@ -19,7 +19,7 @@ import (
 func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
 	logger := zap.NewNop()
 	fakeEuaID := "FAKE"
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
 
@@ -53,7 +53,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 	logger := zap.NewNop()
 	fakeEuaID := "FAKE"
 	requester := "Test Requester"
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	ctx := context.Background()
 	ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: fakeEuaID, JobCodeEASi: true})
@@ -167,7 +167,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		reviewEmailCount++
 		return nil
 	}
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 
 	s.Run("returns no error when successful on update draft", func() {
@@ -394,7 +394,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	authorize := func(context context.Context, intake *models.SystemIntake) (bool, error) { return true, nil }
 
@@ -468,7 +468,7 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
 	businessCaseID := uuid.New()
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
 	ctx := context.Background()
 
