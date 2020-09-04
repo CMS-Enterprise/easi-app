@@ -21,9 +21,9 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
       {arrayHelpers => (
         <fieldset className="margin-0 padding-0 border-0">
           <legend className="usa-sr-only">
-            For the checkboxes below, select all the team&apos;s you&apos;ve
-            collaborated with. Please disclose the name of the person on the
-            team you worked with.
+            For the checkboxes below, select all the teams you&apos;ve
+            collaborated with. Please disclose the name of the person on each
+            team you&apos;ve worked with.
           </legend>
           {cmsGovernanceTeams.map((team: any, index: number) => {
             return (
