@@ -89,9 +89,8 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 	})
 }
 
-func (s ServicesTestSuite) TestAuthorizeSaveSystemIntake() {
-	logger := zap.NewNop()
-	authorizeSaveSystemIntake := NewAuthorizeUpdateSystemIntake(logger)
+func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
+	authorizeSaveSystemIntake := NewAuthorizeUserIsIntakeRequester()
 
 	s.Run("No EUA ID fails auth", func() {
 		ctx := context.Background()
@@ -169,13 +168,17 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	}
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
+	updateDraftIntake := func(ctx context.Context, existingIntake *models.SystemIntake, updatingIntake *models.SystemIntake) (*models.SystemIntake, error) {
+		return updatingIntake, nil
+	}
 
 	s.Run("returns no error when successful on update draft", func() {
 		ctx := context.Background()
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{
-			Status: models.SystemIntakeStatusDRAFT,
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: requester,
 		})
 
 		s.NoError(err)
@@ -184,7 +187,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns no error when successful on submit and update", func() {
 		ctx := context.Background()
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 		s.Equal(0, submitEmailCount)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
@@ -201,7 +204,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		failFetch := func(ctx context.Context, uuid uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("failed to fetch system intake")
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, failFetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{})
 
@@ -209,18 +212,18 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		s.Equal(&models.SystemIntake{}, intake)
 	})
 
-	s.Run("returns query error when save fails in draft", func() {
+	s.Run("returns error from update draft", func() {
 		ctx := context.Background()
-		failSave := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-			return &models.SystemIntake{}, errors.New("save failed")
+		updateDraftError := errors.New("error")
+		failUpdateDraft := func(ctx context.Context, existingUpdate *models.SystemIntake, updatingIntake *models.SystemIntake) (*models.SystemIntake, error) {
+			return &models.SystemIntake{}, updateDraftError
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, failSave, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, failUpdateDraft, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{
 			Status: models.SystemIntakeStatusDRAFT,
 		})
-
-		s.IsType(&apperrors.QueryError{}, err)
+		s.Equal(updateDraftError, err)
 		s.Equal(&models.SystemIntake{}, intake)
 	})
 
@@ -230,9 +233,9 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, err
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, failAuthorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, failAuthorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
-		intake, actualError := updateSystemIntake(ctx, &models.SystemIntake{})
+		intake, actualError := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
 		s.Error(err)
 		s.Equal(err, actualError)
@@ -244,9 +247,9 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		notOKAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, notOKAuthorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, notOKAuthorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{})
+		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
@@ -261,7 +264,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 				Model:   intake,
 			}
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
@@ -281,7 +284,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 				Source:    "CEDAR",
 			}
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, failValidationSubmit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
@@ -298,7 +301,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 			Status:    models.SystemIntakeStatusSUBMITTED,
 			EUAUserID: "EUAI",
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &alreadySubmittedIntake)
 
@@ -315,7 +318,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 				DestinationType: apperrors.DestinationTypeEmail,
 			}
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, failSendEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, failSendEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED})
 
@@ -340,7 +343,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 				Source:    "CEDAR LDAP",
 			}
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, failFetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, failFetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusAPPROVED})
 
@@ -354,7 +357,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		failFetchEmailAddress := func(logger *zap.Logger, euaID string) (string, error) {
 			return "", nil
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, failFetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, failFetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusAPPROVED})
 
@@ -371,7 +374,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 				DestinationType: apperrors.DestinationTypeEmail,
 			}
 		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, failSendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, failSendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusAPPROVED})
 
@@ -381,12 +384,66 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns resource conflict error when making unauthorized status change", func() {
 		ctx := context.Background()
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, true)
+		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, submit, sendSubmitEmail, fetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
 		// In this case, saving a DRAFT intake against an existing SUBMITTED intake
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusDRAFT})
 
 		s.IsType(&apperrors.ResourceConflictError{}, err)
+		s.Equal(&models.SystemIntake{}, intake)
+	})
+}
+
+func (s ServicesTestSuite) TestNewUpdateDraftSystemIntake() {
+	logger := zap.NewNop()
+	serviceConfig := NewConfig(logger)
+	ctx := context.Background()
+
+	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) { return true, nil }
+	update := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+		return intake, nil
+	}
+	existingIntake := models.SystemIntake{Requester: "existingIntake"}
+	updatingIntake := models.SystemIntake{Requester: "updatingIntake"}
+	s.Run("golden path update draft intake", func() {
+		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, authorize, update)
+		intake, err := updateDraftSystemIntake(ctx, &existingIntake, &updatingIntake)
+
+		s.NoError(err)
+		s.Equal(&updatingIntake, intake)
+	})
+
+	s.Run("returns error from authorization if authorization fails", func() {
+		authorizationError := errors.New("authorization failed")
+		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+			return false, authorizationError
+		}
+		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, failAuthorize, update)
+		intake, err := updateDraftSystemIntake(ctx, &existingIntake, &updatingIntake)
+
+		s.Equal(authorizationError, err)
+		s.Equal(&models.SystemIntake{}, intake)
+	})
+
+	s.Run("returns unauthorized error if authorization denied", func() {
+		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+			return false, nil
+		}
+		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, unauthorize, update)
+		intake, err := updateDraftSystemIntake(ctx, &existingIntake, &updatingIntake)
+
+		s.IsType(&apperrors.UnauthorizedError{}, err)
+		s.Equal(&models.SystemIntake{}, intake)
+	})
+
+	s.Run("returns query error if update fails", func() {
+		failUpdate := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+			return &models.SystemIntake{}, errors.New("update error")
+		}
+		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, authorize, failUpdate)
+		intake, err := updateDraftSystemIntake(ctx, &existingIntake, &updatingIntake)
+
+		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
 	})
 }
