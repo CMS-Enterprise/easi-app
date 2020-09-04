@@ -8,7 +8,6 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
-	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
 	"github.com/cmsgov/easi-app/pkg/authn"
 )
@@ -129,21 +128,4 @@ func TestContextPrincipal(t *testing.T) {
 			assert.Equal(t, tc.expectGRT, p.AllowGRT(), "GRT")
 		})
 	}
-}
-
-func (s ContextTestSuite) TestWithLDAppEnvUser() {
-	ctx := context.Background()
-	ctx = WithLDAppEnvUser(ctx, ld.User{})
-	ldUser := ctx.Value(ldUserKey).(ld.User)
-
-	s.Equal(ld.User{}, ldUser)
-}
-
-func (s ContextTestSuite) TestLDAppEnvUser() {
-	ctx := context.Background()
-	ctx = WithLDAppEnvUser(ctx, ld.User{})
-	ldUser, ok := LDAppEnvUser(ctx)
-
-	s.True(ok)
-	s.Equal(ld.User{}, ldUser)
 }
