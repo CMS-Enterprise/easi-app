@@ -6,6 +6,7 @@ import general from './general';
 import grtReview from './grtReview';
 import header from './header';
 import home from './home';
+import prepareForGRT from './prepareForGRT';
 import systemIntake from './systemIntake';
 
 const enUS = {
@@ -16,6 +17,7 @@ const enUS = {
   systemIntake,
   businessCase,
   grtReview,
+  prepareForGRT,
   taskList
 };
 
