@@ -10,6 +10,7 @@ import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
+import PrepareForGRT from 'views/PrepareForGRT';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TimeOutWrapper from 'views/TimeOutWrapper';
@@ -50,6 +51,11 @@ class App extends React.Component<MainProps, MainState> {
                   path="/governance-overview"
                   exact
                   component={GovernanceOverview}
+                />
+                <Route
+                  path="/prepare-for-grt"
+                  exact
+                  component={PrepareForGRT}
                 />
                 {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
