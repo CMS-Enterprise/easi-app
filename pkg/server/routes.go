@@ -53,8 +53,10 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
-	s.CheckCEDAREasiClientConnection(cedarEasiClient)
-	s.CheckCEDARLdapClientConnection(cedarLdapClient)
+	if s.environment.Deployed() {
+		s.CheckCEDAREasiClientConnection(cedarEasiClient)
+		s.CheckCEDARLdapClientConnection(cedarLdapClient)
+	}
 
 	// set up Email Client
 	sesConfig := s.NewSESConfig()
