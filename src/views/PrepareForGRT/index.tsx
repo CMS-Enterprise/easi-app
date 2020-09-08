@@ -50,11 +50,15 @@ const PrepareForGRT = () => {
         <div className="grid-container">
           <BreadcrumbNav className="margin-y-2">
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/" className="text-ink">
+                Home
+              </Link>
               <i className="fa fa-angle-right margin-x-05" aria-hidden />
             </li>
             <li>
-              <Link to="/tbd">Get governance approval</Link>
+              <Link to="/tbd" className="text-ink">
+                Get governance approval
+              </Link>
               <i className="fa fa-angle-right margin-x-05" aria-hidden />
             </li>
             <li>
