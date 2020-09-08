@@ -12,7 +12,6 @@ const AccesibilityStatement = () => {
     <div>
       <Header />
       <MainContent className="grid-container line-height-body-5">
-        {/* Surround in Trans tags to properly format embedded HTML tags in i18n file */}
         <h1>{t('accessibilityStatement:mainTitle')}</h1>
 
         {/* Accessible Communications */}
