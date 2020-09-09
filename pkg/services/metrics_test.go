@@ -14,7 +14,7 @@ import (
 
 func (s ServicesTestSuite) TestNewFetchMetrics() {
 	serviceClock := clock.NewMock()
-	serviceConfig := NewConfig(zap.NewNop())
+	serviceConfig := NewConfig(zap.NewNop(), nil)
 	serviceConfig.clock = serviceClock
 	systemIntakeMetrics := models.SystemIntakeMetrics{}
 	fetchSystemIntakeMetrics := func(context.Context, time.Time, time.Time) (models.SystemIntakeMetrics, error) {
