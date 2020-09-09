@@ -2,38 +2,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as USWDSLink } from '@trussworks/react-uswds';
-import { kebabCase } from 'lodash';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
+import CollapsableList from 'components/CollapsableList';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
-import CollapsableLink from 'components/shared/CollapsableLink';
 
 import './index.scss';
-
-type CollapsibleListProps = {
-  items: string[];
-  label: string;
-};
-
-const CollapsibleList = (props: CollapsibleListProps) => {
-  const { label, items } = props;
-  const id = kebabCase(label);
-
-  return (
-    <div className="margin-top-3">
-      <CollapsableLink id={id} label={label}>
-        <ul className="margin-bottom-0 margin-top-1 padding-left-205 line-height-body-5">
-          {items.map(item => (
-            <li className="margin-bottom-1" key={item}>
-              {item}
-            </li>
-          ))}
-        </ul>
-      </CollapsableLink>
-    </div>
-  );
-};
 
 type NumberedListItemProps = {
   stepName: string;
@@ -114,28 +89,28 @@ const PrepareForGRT = () => {
                   {t('howToBestPrepare.body')}
                 </p>
 
-                <CollapsibleList
+                <CollapsableList
                   label={t('capitalPlanning.title')}
                   items={t<string[]>('capitalPlanning.items', {
                     returnObjects: true
                   })}
                 />
 
-                <CollapsibleList
+                <CollapsableList
                   label={t('enterpriseArchitecture.title')}
                   items={t<string[]>('enterpriseArchitecture.items', {
                     returnObjects: true
                   })}
                 />
 
-                <CollapsibleList
+                <CollapsableList
                   label={t('sharedServices.title')}
                   items={t<string[]>('sharedServices.items', {
                     returnObjects: true
                   })}
                 />
 
-                <CollapsibleList
+                <CollapsableList
                   label={t('itSecurityPrivacy.title')}
                   items={t<string[]>('itSecurityPrivacy.items', {
                     returnObjects: true
