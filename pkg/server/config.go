@@ -2,10 +2,12 @@ package server
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
@@ -67,4 +69,17 @@ func (s Server) NewSESConfig() appses.Config {
 func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIURL)
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
+}
+
+// NewLDConfig checks if CEDAR clients are not connectable
+func (s Server) NewLDConfig() flags.Config {
+	s.checkRequiredConfig(appconfig.LDKey)
+	s.checkRequiredConfig(appconfig.LDTimeout)
+
+	timeout := time.Duration(s.Config.GetInt(appconfig.LDTimeout)) * time.Second
+
+	return flags.Config{
+		Key:     s.Config.GetString(appconfig.LDKey),
+		Timeout: timeout,
+	}
 }
