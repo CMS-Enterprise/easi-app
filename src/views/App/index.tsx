@@ -10,6 +10,7 @@ import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
+import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
@@ -56,6 +57,11 @@ class App extends React.Component<MainProps, MainState> {
                   path="/prepare-for-grt"
                   exact
                   component={PrepareForGRT}
+                />
+                <Route
+                  path="/prepare-for-grb"
+                  exact
+                  component={PrepareForGRB}
                 />
                 {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
