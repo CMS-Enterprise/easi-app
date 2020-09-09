@@ -33,12 +33,7 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
 
 type BusinessCaseStatus = 'DRAFT' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
 
-// Business Case Form Model
-export type BusinessCaseModel = {
-  id?: string;
-  euaUserId?: string;
-  status: BusinessCaseStatus;
-  systemIntakeId: string;
+export type GeneralRequestInfoForm = {
   requestName: string;
   requester: {
     name: string;
@@ -47,17 +42,45 @@ export type BusinessCaseModel = {
   businessOwner: {
     name: string;
   };
+};
+
+export type RequestDescriptionForm = {
   businessNeed: string;
   cmsBenefit: string;
   priorityAlignment: string;
   successIndicators: string;
-  asIsSolution: BusinessCaseSolution;
-  preferredSolution: ProposedBusinessCaseSolution;
-  alternativeA: ProposedBusinessCaseSolution;
-  alternativeB?: ProposedBusinessCaseSolution;
-  initialSubmittedAt?: string;
-  lastSubmittedAt?: string;
 };
+
+export type AsIsSolutionForm = {
+  asIsSolution: BusinessCaseSolution;
+};
+
+export type PreferredSolutionForm = {
+  preferredSolution: ProposedBusinessCaseSolution;
+};
+
+export type AlternativeASolutionForm = {
+  alternativeA: ProposedBusinessCaseSolution;
+};
+
+export type AlternativeBSolutionForm = {
+  alternativeB: ProposedBusinessCaseSolution;
+};
+
+// Business Case Form Model
+export type BusinessCaseModel = GeneralRequestInfoForm &
+  RequestDescriptionForm &
+  AsIsSolutionForm &
+  PreferredSolutionForm &
+  AlternativeASolutionForm &
+  AlternativeBSolutionForm & {
+    id?: string;
+    euaUserId?: string;
+    status: BusinessCaseStatus;
+    systemIntakeId: string;
+    initialSubmittedAt?: string;
+    lastSubmittedAt?: string;
+  };
 
 export type BusinessCasesState = {
   businessCases: BusinessCaseModel[];
