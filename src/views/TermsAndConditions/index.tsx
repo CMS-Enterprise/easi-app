@@ -5,17 +5,17 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 
 const TermsAndConditions = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('termsAndConditions');
   return (
     <div>
       <Header />
       <MainContent className="grid-container line-height-body-5">
-        <h1 className="font-heading-xl">{t('termsAndConditions:heading')}</h1>
-        <h2>{t('termsAndConditions:subheading')}</h2>
-        <p className="margin-y-4">{t('termsAndConditions:unauthorizedUse')}</p>
-        <p className="margin-y-4">{t('termsAndConditions:socialMediaUse')}</p>
-        <p className="margin-y-4">{t('termsAndConditions:consent')}</p>
-        <p className="margin-y-4">{t('termsAndConditions:infoStorage')}</p>
+        <h1 className="font-heading-xl">{t('heading')}</h1>
+        <h2>{t('subheading')}</h2>
+        <p className="margin-y-4">{t('unauthorizedUse')}</p>
+        <p className="margin-y-4">{t('socialMediaUse')}</p>
+        <p className="margin-y-4">{t('consent')}</p>
+        <p className="margin-y-4">{t('infoStorage')}</p>
       </MainContent>
     </div>
   );
