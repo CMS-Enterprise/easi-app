@@ -8,9 +8,6 @@ import MainContent from 'components/MainContent';
 const Cookies = () => {
   const { t } = useTranslation();
 
-  const cookieTypeList: string[] = t('cookies:cookieUsage.cookieTypeList', {
-    returnObjects: true
-  });
   const informationStorage: string[] = t(
     'cookies:informationProtection.informationStorage',
     { returnObjects: true }
@@ -36,7 +33,6 @@ const Cookies = () => {
           <p>{t('cookies:informationUsage.analysis')}</p>
           <p>{t('cookies:informationUsage.survey')}</p>
           <p>{t('cookies:informationUsage.data')}</p>
-
         </div>
 
         {/* Cookie Usage */}
@@ -49,22 +45,16 @@ const Cookies = () => {
 
           <ul>
             <li>
-              <strong>
-                {t('cookies:cookieUsage.sessionCookies.label')}
-              </strong>
+              <strong>{t('cookies:cookieUsage.sessionCookies.label')}</strong>
               &nbsp;
-              <span>
-                {t('cookies:cookieUsage.sessionCookies.info')}
-              </span>
+              <span>{t('cookies:cookieUsage.sessionCookies.info')}</span>
             </li>
             <li>
               <strong>
                 {t('cookies:cookieUsage.persistentCookies.label')}
               </strong>
               &nbsp;
-              <span>
-                {t('cookies:cookieUsage.persistentCookies.info')}
-              </span>             
+              <span>{t('cookies:cookieUsage.persistentCookies.info')}</span>
             </li>
           </ul>
         </div>
@@ -75,11 +65,11 @@ const Cookies = () => {
           <p>
             {t('cookies:disableCookies.info')}
             <Link
-                aria-label="Open 'Cookies opt-out' in a new tab"
-                href="http://www.usa.gov/optout_instructions.shtml"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="external"
+              aria-label="Open 'Cookies opt-out' in a new tab"
+              href="http://www.usa.gov/optout_instructions.shtml"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="external"
             >
               {t('cookies:disableCookies.howToLink')}
             </Link>
@@ -107,7 +97,6 @@ const Cookies = () => {
             </Link>
           </p>
         </div>
-
       </MainContent>
     </div>
   );
