@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, Switch, useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
@@ -16,6 +16,7 @@ import {
   storeSystemIntake
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
+import { NotFoundPartial } from 'views/NotFound';
 
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
@@ -84,14 +85,6 @@ export const SystemIntake = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const pageSlugs = ['contact-details', 'request-details', 'review'];
-    if (!pageSlugs.includes(formPage)) {
-      history.replace(`/system/${systemId}/contact-details`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [systemId, formPage]);
-
   return (
     <div className="system-intake margin-bottom-5">
       <Header />
@@ -125,7 +118,7 @@ export const SystemIntake = () => {
           </BreadcrumbNav>
         )}
         {isLoading === false && (
-          <>
+          <Switch>
             <SecureRoute
               path="/system/:systemId/contact-details"
               render={() => (
@@ -150,7 +143,8 @@ export const SystemIntake = () => {
               path="/system/:systemId/review"
               render={() => <Review systemIntake={systemIntake} />}
             />
-          </>
+            <SecureRoute path="*" render={() => <NotFoundPartial />} />
+          </Switch>
         )}
       </MainContent>
     </div>
