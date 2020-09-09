@@ -5,11 +5,13 @@ import (
 
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/email"
+	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/services"
@@ -51,7 +53,7 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
-	if s.environment.Prod() {
+	if s.environment.Deployed() {
 		s.CheckCEDAREasiClientConnection(cedarEasiClient)
 		s.CheckCEDARLdapClientConnection(cedarLdapClient)
 	}
@@ -77,6 +79,19 @@ func (s *Server) routes(
 		s.CheckEmailClient(emailClient)
 	}
 
+	// set up LD Client
+	var ldClient *ld.LDClient
+	var ldUser *ld.User
+	if s.environment.Local() {
+		ldConfig := s.NewLDConfig()
+		ldClient, err = flags.NewLDClient(ldConfig)
+		if err != nil {
+			s.logger.Fatal("Failed to connect to launch darkly", zap.Error(err))
+		}
+		anonUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
+		ldUser = &anonUser
+	}
+
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 
@@ -89,7 +104,7 @@ func (s *Server) routes(
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
 
-	serviceConfig := services.NewConfig(s.logger)
+	serviceConfig := services.NewConfig(s.logger, ldClient)
 
 	store, err := storage.NewStore(
 		s.logger,
@@ -99,7 +114,13 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to connect to database", zap.Error(err))
 	}
 
-	// endpoint for system list
+	// endpoint for flags list
+	if ldClient != nil {
+		flagsHandler := handlers.NewFlagsHandler(base, flags.NewFetchFlags(), *ldClient, *ldUser)
+		api.Handle("/flags", flagsHandler.Handle())
+	}
+
+	// endpoint for systems list
 	systemHandler := handlers.NewSystemsListHandler(
 		base,
 		cedarEasiClient.FetchSystems,

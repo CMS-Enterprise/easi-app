@@ -16,7 +16,7 @@ func (s Server) CheckCEDAREasiClientConnection(client cedareasi.TranslatedClient
 	// and tests that we're authorized to retrieve information
 	_, err := client.FetchSystems(s.logger)
 	if err != nil {
-		s.logger.Fatal("Failed to connect to CEDAR EASi on startup", zap.Error(err))
+		s.logger.Error("Failed to connect to CEDAR EASi on startup", zap.Error(err))
 	}
 }
 
