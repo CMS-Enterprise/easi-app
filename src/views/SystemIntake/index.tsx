@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, Switch, useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
+import BreadcrumbNav from 'components/BreadcrumbNav';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import { AppState } from 'reducers/rootReducer';
@@ -15,6 +16,7 @@ import {
   storeSystemIntake
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
+import { NotFoundPartial } from 'views/NotFound';
 
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
@@ -83,20 +85,40 @@ export const SystemIntake = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const pageSlugs = ['contact-details', 'request-details', 'review'];
-    if (!pageSlugs.includes(formPage)) {
-      history.replace(`/system/${systemId}/contact-details`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [systemId, formPage]);
-
   return (
     <div className="system-intake margin-bottom-5">
       <Header />
       <MainContent className="grid-container">
+        {!['local', 'dev', 'impl'].includes(
+          process.env.REACT_APP_APP_ENV || ''
+        ) && (
+          <BreadcrumbNav className="margin-y-2">
+            <li>
+              <Link to="/">Home</Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>Intake Request</li>
+          </BreadcrumbNav>
+        )}
+        {['local', 'dev', 'impl'].includes(
+          process.env.REACT_APP_APP_ENV || ''
+        ) && (
+          <BreadcrumbNav className="margin-y-2">
+            <li>
+              <Link to="/">Home</Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>
+              <Link to={`/governance-task-list/${systemIntake.id || 'new'}`}>
+                Get governance approval
+              </Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>Intake Request</li>
+          </BreadcrumbNav>
+        )}
         {isLoading === false && (
-          <>
+          <Switch>
             <SecureRoute
               path="/system/:systemId/contact-details"
               render={() => (
@@ -121,7 +143,8 @@ export const SystemIntake = () => {
               path="/system/:systemId/review"
               render={() => <Review systemIntake={systemIntake} />}
             />
-          </>
+            <SecureRoute path="*" render={() => <NotFoundPartial />} />
+          </Switch>
         )}
       </MainContent>
     </div>
