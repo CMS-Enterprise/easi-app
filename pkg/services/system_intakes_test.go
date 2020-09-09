@@ -396,7 +396,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 func (s ServicesTestSuite) TestNewUpdateDraftSystemIntake() {
 	logger := zap.NewNop()
-	serviceConfig := NewConfig(logger)
+	serviceConfig := NewConfig(logger, nil)
 	ctx := context.Background()
 
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) { return true, nil }
