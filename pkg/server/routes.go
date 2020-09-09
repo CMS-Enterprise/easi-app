@@ -53,7 +53,7 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
-	if s.environment.Prod() {
+	if s.environment.Deployed() {
 		s.CheckCEDAREasiClientConnection(cedarEasiClient)
 		s.CheckCEDARLdapClientConnection(cedarLdapClient)
 	}
