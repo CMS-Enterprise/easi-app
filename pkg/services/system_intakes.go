@@ -121,7 +121,7 @@ func NewUpdateSystemIntake(
 	sendSubmitEmail func(requester string, intakeID uuid.UUID) error,
 	fetchRequesterEmail func(logger *zap.Logger, euaID string) (string, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
-	updateDraftIntake func(ctx context.Context, existingIntake *models.SystemIntake, updatingIntake *models.SystemIntake) (*models.SystemIntake, error),
+	updateDraftIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
 	canDecideIntake bool,
 ) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
@@ -255,8 +255,8 @@ func NewUpdateDraftSystemIntake(
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 ) func(context.Context, *models.SystemIntake, *models.SystemIntake) (*models.SystemIntake, error) {
-	return func(ctx context.Context, existingIntake *models.SystemIntake, updatingIntake *models.SystemIntake) (*models.SystemIntake, error) {
-		ok, err := authorize(ctx, existingIntake)
+	return func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error) {
+		ok, err := authorize(ctx, existing)
 		if err != nil {
 			return &models.SystemIntake{}, err
 		}
@@ -265,16 +265,16 @@ func NewUpdateDraftSystemIntake(
 		}
 
 		updatedTime := config.clock.Now()
-		updatingIntake.UpdatedAt = &updatedTime
-		updatingIntake, err = update(ctx, updatingIntake)
+		incoming.UpdatedAt = &updatedTime
+		incoming, err = update(ctx, incoming)
 		if err != nil {
 			return &models.SystemIntake{}, &apperrors.QueryError{
 				Err:       err,
-				Model:     updatingIntake,
+				Model:     incoming,
 				Operation: apperrors.QuerySave,
 			}
 		}
-		return updatingIntake, nil
+		return incoming, nil
 	}
 }
 

@@ -168,8 +168,8 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	}
 	serviceConfig := NewConfig(logger)
 	serviceConfig.clock = clock.NewMock()
-	updateDraftIntake := func(ctx context.Context, existingIntake *models.SystemIntake, updatingIntake *models.SystemIntake) (*models.SystemIntake, error) {
-		return updatingIntake, nil
+	updateDraftIntake := func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error) {
+		return incoming, nil
 	}
 
 	s.Run("returns no error when successful on update draft", func() {
@@ -403,14 +403,14 @@ func (s ServicesTestSuite) TestNewUpdateDraftSystemIntake() {
 	update := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		return intake, nil
 	}
-	existingIntake := models.SystemIntake{Requester: "existingIntake"}
-	updatingIntake := models.SystemIntake{Requester: "updatingIntake"}
+	existing := models.SystemIntake{Requester: "existing"}
+	incoming := models.SystemIntake{Requester: "incoming"}
 	s.Run("golden path update draft intake", func() {
 		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, authorize, update)
-		intake, err := updateDraftSystemIntake(ctx, &existingIntake, &updatingIntake)
+		intake, err := updateDraftSystemIntake(ctx, &existing, &incoming)
 
 		s.NoError(err)
-		s.Equal(&updatingIntake, intake)
+		s.Equal(&incoming, intake)
 	})
 
 	s.Run("returns error from authorization if authorization fails", func() {
@@ -419,7 +419,7 @@ func (s ServicesTestSuite) TestNewUpdateDraftSystemIntake() {
 			return false, authorizationError
 		}
 		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, failAuthorize, update)
-		intake, err := updateDraftSystemIntake(ctx, &existingIntake, &updatingIntake)
+		intake, err := updateDraftSystemIntake(ctx, &existing, &incoming)
 
 		s.Equal(authorizationError, err)
 		s.Equal(&models.SystemIntake{}, intake)
@@ -430,7 +430,7 @@ func (s ServicesTestSuite) TestNewUpdateDraftSystemIntake() {
 			return false, nil
 		}
 		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, unauthorize, update)
-		intake, err := updateDraftSystemIntake(ctx, &existingIntake, &updatingIntake)
+		intake, err := updateDraftSystemIntake(ctx, &existing, &incoming)
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
@@ -441,7 +441,7 @@ func (s ServicesTestSuite) TestNewUpdateDraftSystemIntake() {
 			return &models.SystemIntake{}, errors.New("update error")
 		}
 		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, authorize, failUpdate)
-		intake, err := updateDraftSystemIntake(ctx, &existingIntake, &updatingIntake)
+		intake, err := updateDraftSystemIntake(ctx, &existing, &incoming)
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
