@@ -2,8 +2,10 @@ import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 
+import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
+import Cookies from 'views/Cookies/index';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
@@ -13,6 +15,7 @@ import Login from 'views/Login';
 import NotFound from 'views/NotFound';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
+import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 
 import './index.scss';
@@ -51,6 +54,12 @@ class App extends React.Component<MainProps, MainState> {
                   path="/governance-overview"
                   exact
                   component={GovernanceOverview}
+                />
+                <Route path="/cookies" exact component={Cookies} />
+                <Route
+                  path="/accessibility-statement"
+                  exact
+                  component={AccessibilityStatement}
                 />
                 {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
@@ -101,6 +110,12 @@ class App extends React.Component<MainProps, MainState> {
                   component={BusinessCase}
                 />
                 <Route path="/implicit/callback" component={LoginCallback} />
+
+                <Route
+                  exact
+                  path="/terms-and-conditions"
+                  component={TermsAndConditions}
+                />
                 <Route path="*" component={NotFound} />
               </Switch>
             </TimeOutWrapper>
