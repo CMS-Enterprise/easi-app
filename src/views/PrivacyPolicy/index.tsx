@@ -9,33 +9,48 @@ const PrivacyPolicy = () => {
   const { t } = useTranslation();
 
   // store your i18n array into a variable, and use typescript to cast it as an array of strings
-  const infoCollectedWhenYouBrowseList: string[] = 
-    t('privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.infoList', { returnObjects: true });
-  const infoCollectedWhenYouBrowseUsageList: string[] = 
-    t('privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.usageList', { returnObjects: true });
+  const infoCollectedWhenYouBrowseList: string[] = t(
+    'privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.infoList',
+    { returnObjects: true }
+  );
+  const infoCollectedWhenYouBrowseUsageList: string[] = t(
+    'privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.usageList',
+    { returnObjects: true }
+  );
 
-  const thirdPartyAnalyticsUsageList: string[] = 
-    t('privacyPolicy:infoUsage:thirdPartyAnalytics.usageList', { returnObjects: true });
+  const thirdPartyAnalyticsUsageList: string[] = t(
+    'privacyPolicy:infoUsage:thirdPartyAnalytics.usageList',
+    { returnObjects: true }
+  );
 
-  const socialMediaUsageList: string[] = 
-    t('privacyPolicy:linksToOtherSites:socialMedia.usageList', { returnObjects: true });
+  const socialMediaUsageList: string[] = t(
+    'privacyPolicy:linksToOtherSites:socialMedia.usageList',
+    { returnObjects: true }
+  );
 
-  const personalInfoCriteriaList: string[] = 
-    t('privacyPolicy:personalInfo.criteriaList', { returnObjects: true });
+  const personalInfoCriteriaList: string[] = t(
+    'privacyPolicy:personalInfo.criteriaList',
+    { returnObjects: true }
+  );
 
-  const trackingInformationList: string[] = 
-    t('privacyPolicy:tracking.trackingDescription', { returnObjects: true });
+  const trackingInformationList: string[] = t(
+    'privacyPolicy:tracking.trackingDescription',
+    { returnObjects: true }
+  );
 
-  const webAnalyticsToolsInformationList: string[] = 
-    t('privacyPolicy:thirdParty:webAnalyticsTools.collectionList', { returnObjects: true });
-  const webAnalyticsToolsInformationUsageList: string[] = 
-    t('privacyPolicy:thirdParty:webAnalyticsTools.usageList', { returnObjects: true });
+  const webAnalyticsToolsInformationList: string[] = t(
+    'privacyPolicy:thirdParty:webAnalyticsTools.collectionList',
+    { returnObjects: true }
+  );
+  const webAnalyticsToolsInformationUsageList: string[] = t(
+    'privacyPolicy:thirdParty:webAnalyticsTools.usageList',
+    { returnObjects: true }
+  );
 
   return (
     <div>
       <Header />
       <MainContent className="grid-container line-height-body-5">
-
         <h1>{t('privacyPolicy:mainTitle')}</h1>
 
         {/* CMS.gov Privacy Policy */}
@@ -62,9 +77,7 @@ const PrivacyPolicy = () => {
             </Link>
           </p>
 
-          <p>
-            {t('privacyPolicy:policy.personallyIdentifiableInfo')}
-          </p>
+          <p>{t('privacyPolicy:policy.personallyIdentifiableInfo')}</p>
 
           <p>
             {t('privacyPolicy:policy.sellingInfo')}
@@ -76,28 +89,42 @@ const PrivacyPolicy = () => {
 
         {/* Types of information we collect */}
         <div>
-          <h2 id="info-we-collect">{t('privacyPolicy:infoWeCollect.heading')}</h2>
-          
+          <h2 id="info-we-collect">
+            {t('privacyPolicy:infoWeCollect.heading')}
+          </h2>
+
           {/* auto collect */}
           <h3>{t('privacyPolicy:infoWeCollect:autoCollect.heading')}</h3>
-          <h4>{t('privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.heading')}</h4>
-          
-          <p>{t('privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.description')}</p>
-          
+          <h4>
+            {t('privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.heading')}
+          </h4>
+
+          <p>
+            {t(
+              'privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.description'
+            )}
+          </p>
+
           <ul>
             {infoCollectedWhenYouBrowseList.map(k => (
-            <li key={k}>{k}</li>
+              <li key={k}>{k}</li>
             ))}
           </ul>
-          
+
           <p>
-            {t('privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.moreInfo')}
+            {t(
+              'privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.moreInfo'
+            )}
             <Link href="#third-party-sites-usage">
               {t('privacyPolicy:thirdParty.heading')}
             </Link>
           </p>
 
-          <p>{t('privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.usageDescription')}</p>
+          <p>
+            {t(
+              'privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.usageDescription'
+            )}
+          </p>
           <ul>
             {infoCollectedWhenYouBrowseUsageList.map(k => (
               <li key={k}>{k}</li>
@@ -105,7 +132,9 @@ const PrivacyPolicy = () => {
           </ul>
 
           <p>
-            {t('privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.additionalUsage')}
+            {t(
+              'privacyPolicy:infoWeCollect:autoCollect:whenYouBrowse.additionalUsage'
+            )}
             <Link href="#third-party-sites-usage">
               {t('privacyPolicy:thirdParty.heading')}
             </Link>
@@ -124,7 +153,9 @@ const PrivacyPolicy = () => {
               rel="noopener noreferrer"
               variant="external"
             >
-              {t('privacyPolicy:infoWeCollect:provided:requested.subscriptionPrefs')}
+              {t(
+                'privacyPolicy:infoWeCollect:provided:requested.subscriptionPrefs'
+              )}
             </Link>
           </p>
         </div>
@@ -132,7 +163,7 @@ const PrivacyPolicy = () => {
         {/* How CMS uses information collected on CMS.gov */}
         <div>
           <h2 id="info-usage">{t('privacyPolicy:infoUsage.heading')}</h2>
-          
+
           {/* sending you CMS messages */}
           <h3>{t('privacyPolicy:infoUsage:sendingYouMessages.heading')}</h3>
           <p>{t('privacyPolicy:infoUsage:sendingYouMessages.description')}</p>
@@ -168,7 +199,9 @@ const PrivacyPolicy = () => {
               {t('privacyPolicy:tracking.heading')}
             </Link>
           </p>
-          <p>{t('privacyPolicy:infoUsage:thirdPartyOutreach.aggregateReports')}</p>
+          <p>
+            {t('privacyPolicy:infoUsage:thirdPartyOutreach.aggregateReports')}
+          </p>
         </div>
 
         {/* How CMS uses cookies & other technologies on CMS.gov */}
@@ -241,9 +274,11 @@ const PrivacyPolicy = () => {
 
         {/* Your choices about tracking & data collection on CMS.gov */}
         <div>
-          <h2 id="tracking-and-data-collection">{t('privacyPolicy:tracking.heading')}</h2>
+          <h2 id="tracking-and-data-collection">
+            {t('privacyPolicy:tracking.heading')}
+          </h2>
           {trackingInformationList.map(k => (
-            <p>{k}</p>
+            <p key={k}>{k}</p>
           ))}
 
           <p>
@@ -278,7 +313,9 @@ const PrivacyPolicy = () => {
 
         {/* How CMS uses third-party websites & applications with CMS.gov */}
         <div>
-          <h2 id="third-party-sites-usage">{t('privacyPolicy:thirdParty.heading')}</h2>
+          <h2 id="third-party-sites-usage">
+            {t('privacyPolicy:thirdParty.heading')}
+          </h2>
           <p>{t('privacyPolicy:thirdParty.description')}</p>
 
           {/* third party websites */}
@@ -288,17 +325,23 @@ const PrivacyPolicy = () => {
           {/* web analytics tools */}
           <h3>{t('privacyPolicy:thirdParty:webAnalyticsTools.heading')}</h3>
 
-          <p>{t('privacyPolicy:thirdParty:webAnalyticsTools.informationCollection')}</p>
+          <p>
+            {t(
+              'privacyPolicy:thirdParty:webAnalyticsTools.informationCollection'
+            )}
+          </p>
           <ul>
             {webAnalyticsToolsInformationList.map(k => (
-                <li key={k}>{k}</li>
+              <li key={k}>{k}</li>
             ))}
           </ul>
 
-          <p>{t('privacyPolicy:thirdParty:webAnalyticsTools.informationUsage')}</p>
+          <p>
+            {t('privacyPolicy:thirdParty:webAnalyticsTools.informationUsage')}
+          </p>
           <ul>
             {webAnalyticsToolsInformationUsageList.map(k => (
-                <li key={k}>{k}</li>
+              <li key={k}>{k}</li>
             ))}
           </ul>
 
@@ -307,7 +350,9 @@ const PrivacyPolicy = () => {
           {/* digital advertising */}
           <h3>{t('privacyPolicy:thirdParty:digitalAdvertising.heading')}</h3>
 
-          <p>{t('privacyPolicy:thirdParty:digitalAdvertising.thirdPartyTools')}</p>
+          <p>
+            {t('privacyPolicy:thirdParty:digitalAdvertising.thirdPartyTools')}
+          </p>
 
           <p>
             <Trans i18nKey="privacyPolicy:thirdParty:digitalAdvertising.clickTracking">
@@ -319,14 +364,18 @@ const PrivacyPolicy = () => {
             <Trans i18nKey="privacyPolicy:thirdParty:digitalAdvertising.conversionTracking">
               <strong>indexZero</strong>&nbsp;indexOne
             </Trans>
-            <Link href="#tracking-and-data-collection">{t('privacyPolicy:tracking.heading')}</Link>
+            <Link href="#tracking-and-data-collection">
+              {t('privacyPolicy:tracking.heading')}
+            </Link>
           </p>
 
           <p>
             <Trans i18nKey="privacyPolicy:thirdParty:digitalAdvertising.retargeting">
               <strong>indexZero</strong>&nbsp;indexOne
             </Trans>
-            <Link href="#tracking-and-data-collection">{t('privacyPolicy:tracking.heading')}</Link>
+            <Link href="#tracking-and-data-collection">
+              {t('privacyPolicy:tracking.heading')}
+            </Link>
           </p>
 
           <p>
@@ -337,7 +386,9 @@ const PrivacyPolicy = () => {
 
           <p>
             {t('privacyPolicy:thirdParty:digitalAdvertising.vendors')}
-            <Link href="#tracking-and-data-collection">{t('privacyPolicy:tracking.heading')}</Link>
+            <Link href="#tracking-and-data-collection">
+              {t('privacyPolicy:tracking.heading')}
+            </Link>
           </p>
 
           <p>
@@ -369,7 +420,7 @@ const PrivacyPolicy = () => {
           <h2>{t('privacyPolicy:personalInfo.heading')}</h2>
           <p>{t('privacyPolicy:personalInfo.alertsOrNews')}</p>
           <p>{t('privacyPolicy:personalInfo.disclosure')}</p>
-          
+
           <p>
             {t('privacyPolicy:personalInfo.contact')}
             <Link
@@ -439,7 +490,7 @@ const PrivacyPolicy = () => {
         <div>
           <h2>{t('privacyPolicy:linksToOtherSites.heading')}</h2>
           <p>{t('privacyPolicy:linksToOtherSites.description')}</p>
-          
+
           <h3>{t('privacyPolicy:linksToOtherSites:socialMedia.heading')}</h3>
           <p>{t('privacyPolicy:linksToOtherSites:socialMedia.usage')}</p>
           <ul>
@@ -449,11 +500,11 @@ const PrivacyPolicy = () => {
           </ul>
 
           <Trans i18nKey="privacyPolicy:linksToOtherSites:socialMedia.disclaimer">
-           <strong>indexZero</strong>&nbsp;indexOne
+            <strong>indexZero</strong>&nbsp;indexOne
           </Trans>
           <p>{t('privacyPolicy:linksToOtherSites:socialMedia.infoStorage')}</p>
 
-          <u>
+          <ul>
             <li>
               <Link
                 aria-label="Open 'Facebook Privacy Policy' in a new tab"
@@ -466,7 +517,7 @@ const PrivacyPolicy = () => {
               </Link>
             </li>
             <li>
-            <Link
+              <Link
                 aria-label="Open 'Twitter Privacy Policy' in a new tab"
                 href="https://twitter.com/en/privacy"
                 target="_blank"
@@ -475,9 +526,9 @@ const PrivacyPolicy = () => {
               >
                 {t('privacyPolicy:linksToOtherSites:socialMedia.twitter')}
               </Link>
-\            </li>
+            </li>
             <li>
-            <Link
+              <Link
                 aria-label="Open 'YouTube Privacy Policy' in a new tab"
                 href="https://support.google.com/youtube/answer/7671399?p=privacy_guidelines&hl=en&visit_id=637341420338082975-3155661882&rd=1"
                 target="_blank"
@@ -488,7 +539,7 @@ const PrivacyPolicy = () => {
               </Link>
             </li>
             <li>
-            <Link
+              <Link
                 aria-label="Open 'LinkedIn Privacy Policy' in a new tab"
                 href="https://www.linkedin.com/legal/privacy-policy"
                 target="_blank"
@@ -498,7 +549,7 @@ const PrivacyPolicy = () => {
                 {t('privacyPolicy:linksToOtherSites:socialMedia.linkedIn')}
               </Link>
             </li>
-          </u>
+          </ul>
         </div>
 
         {/* Additional Privacy Information  */}
@@ -514,11 +565,9 @@ const PrivacyPolicy = () => {
             {t('privacyPolicy:additionalInformation.policies')}
           </Link>
         </div>
-
       </MainContent>
     </div>
   );
 };
 
 export default PrivacyPolicy;
-
