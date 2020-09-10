@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Footer as UswdsFooter, FooterNav } from '@trussworks/react-uswds';
 
 import cmsGovLogo from 'images/cmsGovLogo.png';
@@ -7,21 +8,22 @@ import hhsLogo from 'images/hhsLogo.png';
 import './index.scss';
 
 const Footer = () => {
+  const { t } = useTranslation('footer');
   const footerNavLinks = [
     {
-      label: 'Privacy policy',
+      label: t('labels.privacy'),
       link: '/privacy-policy'
     },
     {
-      label: 'Cookies',
+      label: t('labels.cookies'),
       link: '/cookies'
     },
     {
-      label: 'Terms and Conditions',
+      label: t('labels.terms'),
       link: '/terms-and-conditions'
     },
     {
-      label: 'Accessibility Statement',
+      label: t('labels.accessibility'),
       link: '/accessibility-statement'
     }
   ];
@@ -45,18 +47,14 @@ const Footer = () => {
       secondary={
         <div>
           <div className="easi-footer__secondary-logo-wrap">
-            <img alt="CMS.gov Logo" src={cmsGovLogo} />
+            <img alt={t('altText.cmsLogo')} src={cmsGovLogo} />
             <img
               className="margin-left-1"
-              alt="Department of Health and Human Services USA"
+              alt={t('altText.hhsLogo')}
               src={hhsLogo}
             />
           </div>
-          <span>
-            A federal government website managed and paid for by the U.S.
-            Centers for Medicare & Medicaid Services. 7500 Security Boulevard,
-            Baltimore, MD 2124
-          </span>
+          <span>{t('cmsTagline')}</span>
         </div>
       }
     />
