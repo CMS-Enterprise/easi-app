@@ -10,7 +10,7 @@ const Footer = () => {
   const footerNavLinks = [
     {
       label: 'Privacy policy',
-      link: '/privacy'
+      link: '/privacy-policy'
     },
     {
       label: 'Cookies',

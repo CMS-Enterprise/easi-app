@@ -49,7 +49,7 @@ const AlternativeSolutionB = ({
         const values = formikProps.values.alternativeB;
         const flatErrors = flattenErrors(errors);
         return (
-          <div className="grid-container margin-bottom-5">
+          <div className="grid-container">
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
                 classNames="margin-top-3"

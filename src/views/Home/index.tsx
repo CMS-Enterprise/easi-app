@@ -138,7 +138,7 @@ const Home = ({ history }: HomeProps) => {
   return (
     <PageWrapper>
       <Header />
-      <MainContent className="grid-container">
+      <MainContent className="grid-container margin-bottom-5">
         <div className="margin-y-6">
           {location.state && location.state.confirmationText && (
             <div className="border-05 border-green">
