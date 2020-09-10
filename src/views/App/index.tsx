@@ -15,6 +15,7 @@ import Login from 'views/Login';
 import NotFound from 'views/NotFound';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
+import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 
 import './index.scss';
@@ -109,6 +110,12 @@ class App extends React.Component<MainProps, MainState> {
                   component={BusinessCase}
                 />
                 <Route path="/implicit/callback" component={LoginCallback} />
+
+                <Route
+                  exact
+                  path="/terms-and-conditions"
+                  component={TermsAndConditions}
+                />
                 <Route path="*" component={NotFound} />
               </Switch>
             </TimeOutWrapper>
