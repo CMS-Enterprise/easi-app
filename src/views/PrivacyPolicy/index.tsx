@@ -2,8 +2,10 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from '@trussworks/react-uswds';
 
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 
 const PrivacyPolicy = () => {
   const { t } = useTranslation();
@@ -48,9 +50,9 @@ const PrivacyPolicy = () => {
   );
 
   return (
-    <div>
+    <PageWrapper>
       <Header />
-      <MainContent className="grid-container line-height-body-5">
+      <MainContent className="grid-container line-height-body-5 margin-bottom-5">
         <h1>{t('privacyPolicy:mainTitle')}</h1>
 
         {/* CMS.gov Privacy Policy */}
@@ -566,7 +568,8 @@ const PrivacyPolicy = () => {
           </Link>
         </div>
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 
