@@ -2,7 +2,7 @@
 
 exports[`The governance overview page matches the snapshot 1`] = `
 <div
-  className="easi-governance-overview"
+  className="easi-page-wrapper easi-governance-overview"
 >
   <header
     className="usa-header easi-header"
@@ -193,7 +193,7 @@ exports[`The governance overview page matches the snapshot 1`] = `
     </div>
   </header>
   <main
-    className="grid-container"
+    className="easi-main-content grid-container margin-bottom-5"
     id="main-content"
     role="main"
     tabIndex={-1}
@@ -468,5 +468,95 @@ exports[`The governance overview page matches the snapshot 1`] = `
       Get started
     </a>
   </main>
+  <footer
+    className="usa-footer usa-footer--slim"
+  >
+    <div
+      className="usa-footer__primary-section"
+    >
+      <div
+        className="usa-footer__primary-container grid-row"
+      >
+        <div
+          className="mobile-lg:grid-col-8"
+        >
+          <nav
+            className="usa-footer__nav"
+          >
+            <ul
+              className="grid-row grid-gap"
+            >
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/privacy"
+                >
+                  Privacy policy
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/cookies"
+                >
+                  Cookies
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/terms-and-conditions"
+                >
+                  Terms and Conditions
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/accessibility-statement"
+                >
+                  Accessibility Statement
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-footer__secondary-section"
+    >
+      <div
+        className="grid-container"
+      >
+        <div>
+          <div
+            className="easi-footer__secondary-logo-wrap"
+          >
+            <img
+              alt="CMS.gov Logo"
+              src="cmsGovLogo.png"
+            />
+            <img
+              alt="Department of Health and Human Services USA"
+              className="margin-left-1"
+              src="hhsLogo.png"
+            />
+          </div>
+          <span>
+            A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 2124
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
 </div>
 `;

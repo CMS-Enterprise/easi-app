@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The Terms & Conditions page matches the snapshot 1`] = `
-<div>
+<div
+  className="easi-page-wrapper"
+>
   <header
     className="usa-header easi-header"
     role="banner"
@@ -191,7 +193,7 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
     </div>
   </header>
   <main
-    className="grid-container line-height-body-5"
+    className="easi-main-content grid-container line-height-body-5"
     id="main-content"
     role="main"
     tabIndex={-1}
@@ -225,5 +227,95 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
       Any communication or data transiting or stored on this system may be disclosed or used for any lawful Government purpose.
     </p>
   </main>
+  <footer
+    className="usa-footer usa-footer--slim"
+  >
+    <div
+      className="usa-footer__primary-section"
+    >
+      <div
+        className="usa-footer__primary-container grid-row"
+      >
+        <div
+          className="mobile-lg:grid-col-8"
+        >
+          <nav
+            className="usa-footer__nav"
+          >
+            <ul
+              className="grid-row grid-gap"
+            >
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/privacy"
+                >
+                  Privacy policy
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/cookies"
+                >
+                  Cookies
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/terms-and-conditions"
+                >
+                  Terms and Conditions
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/accessibility-statement"
+                >
+                  Accessibility Statement
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-footer__secondary-section"
+    >
+      <div
+        className="grid-container"
+      >
+        <div>
+          <div
+            className="easi-footer__secondary-logo-wrap"
+          >
+            <img
+              alt="CMS.gov Logo"
+              src="cmsGovLogo.png"
+            />
+            <img
+              alt="Department of Health and Human Services USA"
+              className="margin-left-1"
+              src="hhsLogo.png"
+            />
+          </div>
+          <span>
+            A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 2124
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
 </div>
 `;

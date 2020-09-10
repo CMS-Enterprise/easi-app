@@ -11,8 +11,10 @@ import { SecureRoute } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -111,7 +113,7 @@ export const BusinessCase = () => {
   }, [isSubmitting]);
 
   return (
-    <div className="business-case margin-bottom-5">
+    <PageWrapper className="business-case">
       <Header />
       <MainContent>
         <div className="grid-container">
@@ -227,7 +229,8 @@ export const BusinessCase = () => {
           </Switch>
         )}
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 
