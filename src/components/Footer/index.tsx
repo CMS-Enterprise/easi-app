@@ -22,7 +22,7 @@ const Footer = () => {
     },
     {
       label: 'Accessibility Statement',
-      link: '/accessibility'
+      link: '/accessibility-statement'
     }
   ];
   return (
@@ -34,12 +34,7 @@ const Footer = () => {
             <FooterNav
               size="slim"
               links={footerNavLinks.map(item => (
-                <a
-                  className="usa-footer__primary-link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={item.link}
-                >
+                <a className="usa-footer__primary-link" href={item.link}>
                   {item.label}
                 </a>
               ))}

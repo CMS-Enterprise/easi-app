@@ -48,7 +48,7 @@ const GeneralRequestInfo = ({
         const { errors, values, validateForm } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
-          <div className="grid-container">
+          <div className="grid-container margin-bottom-5">
             {Object.keys(errors).length > 0 && (
               <ErrorAlert
                 classNames="margin-top-3"

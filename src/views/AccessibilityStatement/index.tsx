@@ -2,14 +2,16 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from '@trussworks/react-uswds';
 
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 
 const AccesibilityStatement = () => {
   const { t } = useTranslation();
 
   return (
-    <div>
+    <PageWrapper>
       <Header />
       <MainContent className="grid-container line-height-body-5">
         <h1>{t('accessibilityStatement:mainTitle')}</h1>
@@ -190,7 +192,8 @@ const AccesibilityStatement = () => {
           </ul>
         </div>
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 

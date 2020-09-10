@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
 
 import './index.scss';
@@ -29,9 +31,9 @@ const GovernanceStep = ({ header, body }: NumberedListItemProps) => {
 
 const GovernanceOverview = () => {
   return (
-    <div className="easi-governance-overview">
+    <PageWrapper className="easi-governance-overview">
       <Header />
-      <MainContent className="grid-container">
+      <MainContent className="grid-container margin-bottom-5">
         <BreadcrumbNav className="margin-y-2">
           <li>
             <Link to="/">Home</Link>
@@ -137,7 +139,8 @@ const GovernanceOverview = () => {
           Get started
         </UswdsLink>
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 
