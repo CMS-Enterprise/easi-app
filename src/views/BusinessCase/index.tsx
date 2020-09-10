@@ -115,7 +115,7 @@ export const BusinessCase = () => {
   return (
     <PageWrapper className="business-case">
       <Header />
-      <MainContent>
+      <MainContent className="margin-bottom-5">
         <div className="grid-container">
           {!['local', 'dev', 'impl'].includes(
             process.env.REACT_APP_APP_ENV || ''
