@@ -5,7 +5,7 @@ import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
-import Cookies from 'views/Cookies/index';
+import Cookies from 'views/Cookies';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
@@ -13,6 +13,7 @@ import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import NotFound from 'views/NotFound';
+import PrivacyPolicy from 'views/PrivacyPolicy';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TermsAndConditions from 'views/TermsAndConditions';
@@ -55,6 +56,7 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   component={GovernanceOverview}
                 />
+                <Route path="/privacy-policy" exact component={PrivacyPolicy} />
                 <Route path="/cookies" exact component={Cookies} />
                 <Route
                   path="/accessibility-statement"
