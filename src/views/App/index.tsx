@@ -2,8 +2,10 @@ import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 
+import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
+import Cookies from 'views/Cookies/index';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
@@ -52,6 +54,12 @@ class App extends React.Component<MainProps, MainState> {
                   path="/governance-overview"
                   exact
                   component={GovernanceOverview}
+                />
+                <Route path="/cookies" exact component={Cookies} />
+                <Route
+                  path="/accessibility-statement"
+                  exact
+                  component={AccessibilityStatement}
                 />
                 {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
