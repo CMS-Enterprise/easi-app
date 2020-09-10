@@ -2,7 +2,8 @@ import cloneDeep from 'lodash/cloneDeep';
 
 import {
   BusinessCaseModel,
-  EstimatedLifecycleCostLines
+  EstimatedLifecycleCostLines,
+  ProposedBusinessCaseSolution
 } from 'types/businessCase';
 import { LifecyclePhase } from 'types/estimatedLifecycle';
 
@@ -54,7 +55,8 @@ export const businessCaseInitialData: BusinessCaseModel = {
     costSavings: ''
   },
   preferredSolution: defaultProposedSolution,
-  alternativeA: defaultProposedSolution
+  alternativeA: defaultProposedSolution,
+  alternativeB: defaultProposedSolution
 };
 
 const emptyEstimatedLifecycle = {
@@ -72,10 +74,51 @@ type lifecycleCostLinesType = {
   B: EstimatedLifecycleCostLines;
 };
 
+// Function that lets us know if a user has filled out an alternative B
+export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
+  if (!alternativeB) {
+    return false;
+  }
+
+  const {
+    title,
+    summary,
+    acquisitionApproach,
+    hosting,
+    hasUserInterface,
+    pros,
+    cons,
+    costSavings,
+    estimatedLifecycleCost
+  } = alternativeB;
+
+  let hasLineItem;
+  Object.values(estimatedLifecycleCost).forEach(phaseCost => {
+    phaseCost.forEach(lineItem => {
+      if (lineItem.phase || lineItem.cost) {
+        hasLineItem = true;
+      }
+    });
+  });
+
+  return (
+    title ||
+    summary ||
+    acquisitionApproach ||
+    hosting.type ||
+    hosting.location ||
+    hosting.cloudServiceType ||
+    hasUserInterface ||
+    pros ||
+    cons ||
+    costSavings ||
+    hasLineItem
+  );
+};
+
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
-  let hasAlternativeBLifecycleCostLines = false;
   const lifecycleCostLines: lifecycleCostLinesType = {
     'As Is': cloneDeep(emptyEstimatedLifecycle),
     Preferred: cloneDeep(emptyEstimatedLifecycle),
@@ -104,10 +147,6 @@ export const prepareBusinessCaseForApp = (
         phase: line.phase || '',
         cost: line.cost === null ? '' : line.cost.toString()
       });
-
-      if (line.solution === 'B' && (line.phase || line.cost)) {
-        hasAlternativeBLifecycleCostLines = true;
-      }
     }
   });
 
@@ -166,36 +205,21 @@ export const prepareBusinessCaseForApp = (
       },
       hasUserInterface: businessCase.alternativeAHasUI
     },
-    ...(businessCase.alternativeBTitle ||
-    businessCase.alternativeBSummary ||
-    businessCase.alternativeBAcquisitionApproach ||
-    businessCase.alternativeBHostingType ||
-    businessCase.alternativeBHostingLocation ||
-    businessCase.alternativeBCloudServiceType ||
-    businessCase.alternativeBHasUserInterface ||
-    businessCase.alternativeBPros ||
-    businessCase.alternativeBCons ||
-    businessCase.alternativeBCostSavings ||
-    hasAlternativeBLifecycleCostLines
-      ? {
-          alternativeB: {
-            title: businessCase.alternativeBTitle || '',
-            summary: businessCase.alternativeBSummary || '',
-            acquisitionApproach:
-              businessCase.alternativeBAcquisitionApproach || '',
-            pros: businessCase.alternativeBPros || '',
-            cons: businessCase.alternativeBCons || '',
-            costSavings: businessCase.alternativeBCostSavings || '',
-            estimatedLifecycleCost: lifecycleCostLines.B,
-            hosting: {
-              type: businessCase.alternativeBHostingType,
-              location: businessCase.alternativeBHostingLocation,
-              cloudServiceType: businessCase.alternativeBHostingCloudServiceType
-            },
-            hasUserInterface: businessCase.alternativeBhasUI
-          }
-        }
-      : {}),
+    alternativeB: {
+      title: businessCase.alternativeBTitle || '',
+      summary: businessCase.alternativeBSummary || '',
+      acquisitionApproach: businessCase.alternativeBAcquisitionApproach || '',
+      pros: businessCase.alternativeBPros || '',
+      cons: businessCase.alternativeBCons || '',
+      costSavings: businessCase.alternativeBCostSavings || '',
+      estimatedLifecycleCost: lifecycleCostLines.B,
+      hosting: {
+        type: businessCase.alternativeBHostingType,
+        location: businessCase.alternativeBHostingLocation,
+        cloudServiceType: businessCase.alternativeBHostingCloudServiceType
+      },
+      hasUserInterface: businessCase.alternativeBHasUI
+    },
     initialSubmittedAt: businessCase.initialSubmittedAt,
     lastSubmittedAt: businessCase.lastSubmittedAt
   };
@@ -204,6 +228,7 @@ export const prepareBusinessCaseForApp = (
 export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
+  const alternativeBExists = hasAlternativeB(businessCase.alternativeB);
   const solutionNameMap: {
     solutionLifecycleCostLines: EstimatedLifecycleCostLines;
     solutionApiName: string;
@@ -223,7 +248,7 @@ export const prepareBusinessCaseForApi = (
         businessCase.alternativeA.estimatedLifecycleCost,
       solutionApiName: 'A'
     },
-    ...(businessCase.alternativeB
+    ...(alternativeBExists
       ? [
           {
             solutionLifecycleCostLines:
@@ -311,34 +336,34 @@ export const prepareBusinessCaseForApi = (
     alternativeAPros: businessCase.alternativeA.pros,
     alternativeACons: businessCase.alternativeA.cons,
     alternativeACostSavings: businessCase.alternativeA.costSavings,
-    alternativeBTitle: businessCase.alternativeB
+    alternativeBTitle: alternativeBExists
       ? businessCase.alternativeB.title
       : null,
-    alternativeBSummary: businessCase.alternativeB
+    alternativeBSummary: alternativeBExists
       ? businessCase.alternativeB.summary
       : null,
-    alternativeBAcquisitionApproach: businessCase.alternativeB
+    alternativeBAcquisitionApproach: alternativeBExists
       ? businessCase.alternativeB.acquisitionApproach
       : null,
-    alternativeBHostingType: businessCase.alternativeB
+    alternativeBHostingType: alternativeBExists
       ? businessCase.alternativeB.hosting.type
       : null,
-    alternativeBHostingLocation: businessCase.alternativeB
+    alternativeBHostingLocation: alternativeBExists
       ? businessCase.alternativeB.hosting.location
       : null,
-    alternativeBHostingCloudServiceType: businessCase.alternativeB
+    alternativeBHostingCloudServiceType: alternativeBExists
       ? businessCase.alternativeB.hosting.cloudServiceType
       : null,
-    alternativeBHasUI: businessCase.alternativeB
+    alternativeBHasUI: alternativeBExists
       ? businessCase.alternativeB.hasUserInterface
       : null,
-    alternativeBPros: businessCase.alternativeB
+    alternativeBPros: alternativeBExists
       ? businessCase.alternativeB.pros
       : null,
-    alternativeBCons: businessCase.alternativeB
+    alternativeBCons: alternativeBExists
       ? businessCase.alternativeB.cons
       : null,
-    alternativeBCostSavings: businessCase.alternativeB
+    alternativeBCostSavings: alternativeBExists
       ? businessCase.alternativeB.costSavings
       : null,
     lifecycleCostLines

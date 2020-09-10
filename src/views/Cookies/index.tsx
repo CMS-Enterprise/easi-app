@@ -1,78 +1,88 @@
 import React from 'react';
+import { Trans, useTranslation } from 'react-i18next';
+import { Link } from '@trussworks/react-uswds';
+
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
-import { Trans, useTranslation } from 'react-i18next';
 
 const Cookies = () => {
   const { t } = useTranslation();
 
-  const informationUsageParagraphs: string[] = t(
-    'cookies:informationUsageParagraphs',
-    { returnObjects: true }
-  );
-  const cookiesUsageParagraphs: string[] = t('cookies:cookiesUsageParagraphs', {
-    returnObjects: true
-  });
-  const cookieTypeList: string[] = t('cookies:cookieTypeList', {
-    returnObjects: true
-  });
-  const informationProtectionParagraphs: string[] = t(
-    'cookies:informationProtectionParagraphs',
+  const informationStorage: string[] = t(
+    'cookies:informationProtection.informationStorage',
     { returnObjects: true }
   );
   const informationNoticeCriteriaList: string[] = t(
-    'cookies:informationNoticeCriteriaList',
+    'cookies:informationProtection.informationNoticeCriteriaList',
     { returnObjects: true }
   );
 
   return (
     <div>
       <Header />
-      <MainContent className="grid-container">
-        {/* Surround in Trans tags to properly format embedded HTML tags in i18n file */}
-        <Trans>
-          <h1>{t('cookies:mainTitle')}</h1>
+      <MainContent className="grid-container line-height-body-5">
+        <h1>{t('cookies:mainTitle')}</h1>
 
-          {/* Information Usage */}
-          <h2>{t('cookies:informationUsageTitle')}</h2>
-          <p>
-            {informationUsageParagraphs.map(k => (
-              <p key={k}>{k}</p>
-            ))}
-          </p>
+        {/* Information Usage */}
+        <div>
+          <h2>{t('cookies:informationUsage.heading')}</h2>
+          <Trans i18nKey="cookies:informationUsage.tools">
+            <strong>indexZero</strong>&nbsp;indexOne
+          </Trans>
 
-          {/* Cookie Usage */}
-          <h2>{t('cookies:cookiesUsageTitle')}</h2>
-          <p>
-            {cookiesUsageParagraphs.map(k => (
-              <p key={k}>{k}</p>
-            ))}
-          </p>
+          <p>{t('cookies:informationUsage.analysis')}</p>
+          <p>{t('cookies:informationUsage.survey')}</p>
+          <p>{t('cookies:informationUsage.data')}</p>
+        </div>
+
+        {/* Cookie Usage */}
+        <div>
+          <h2>{t('cookies:cookieUsage.heading')}</h2>
+
+          <p>{t('cookies:cookieUsage.omBudgetMemo')}</p>
+          <p>{t('cookies:cookieUsage.generationOfCookies')}</p>
+          <p>{t('cookies:cookieUsage.typesOfCookies')}</p>
 
           <ul>
-            {cookieTypeList.map(k => (
-              <li key={k}>{k}</li>
-            ))}
+            <li>
+              <strong>{t('cookies:cookieUsage.sessionCookies.label')}</strong>
+              &nbsp;
+              <span>{t('cookies:cookieUsage.sessionCookies.info')}</span>
+            </li>
+            <li>
+              <strong>
+                {t('cookies:cookieUsage.persistentCookies.label')}
+              </strong>
+              &nbsp;
+              <span>{t('cookies:cookieUsage.persistentCookies.info')}</span>
+            </li>
           </ul>
+        </div>
 
-          {/* Disable Cookies */}
-          <h2>{t('cookies:disableCookiesTitle')}</h2>
+        {/* Disable Cookies */}
+        <div>
+          <h2>{t('cookies:disableCookies.heading')}</h2>
           <p>
-            {t('cookies:disableCookiesParagraph1')}
-            <a href="http://www.usa.gov/optout_instructions.shtml">
-              {t('cookies:disableCookiesLink')}
-            </a>
+            {t('cookies:disableCookies.info')}
+            <Link
+              aria-label="Open 'Cookies opt-out' in a new tab"
+              href="http://www.usa.gov/optout_instructions.shtml"
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="external"
+            >
+              {t('cookies:disableCookies.howToLink')}
+            </Link>
           </p>
+          <p>{t('cookies:disableCookies.notice')}</p>
+        </div>
 
-          <p>{t('cookies:disableCookiesParagraph2')}</p>
-
-          {/* Information Protection */}
-          <h2>{t('cookies:informationProtectionTitle')}</h2>
-          <p>
-            {informationProtectionParagraphs.map(k => (
-              <p key={k}>{k}</p>
-            ))}
-          </p>
+        {/* Information Protection */}
+        <div>
+          <h2>{t('cookies:informationProtection.heading')}</h2>
+          {informationStorage.map(k => (
+            <p key={k}>{k}</p>
+          ))}
 
           <ol>
             {informationNoticeCriteriaList.map(k => (
@@ -81,12 +91,12 @@ const Cookies = () => {
           </ol>
 
           <p>
-            {t('cookies:informationProtectionFurtherInfoParagraph')}
-            <a href="mailto:Privacy@cms.hhs.gov">
-              {t('informationProtectionFurtherInfoEmail')}
-            </a>
+            {t('cookies:informationProtection.furtherInfo')}
+            <Link href="mailto:Privacy@cms.hhs.gov">
+              {t('cookies:informationProtection.privacyEmail')}
+            </Link>
           </p>
-        </Trans>
+        </div>
       </MainContent>
     </div>
   );
