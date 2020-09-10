@@ -9,7 +9,7 @@ const cookies = {
     analysis:
       'CMS website staff analyze and report on the collected data from these tools. The reports are available only to CMS website managers, members of the CMS websites communications and web teams, and other designated staff who need this information to perform their duties.',
     survey:
-      'CMS websites may also use an online survey to collect opinions and feedback. This online survey appears on the bottom left of many pages on the site. You don\'t have to answer these questions. Please do not to include any personally identifiable information (PII) in comments you make. We analyze and use this information to improve the site\'s operation and content. The reports are available only to CMS website managers, members of the communications and Web teams, and other designated staff who require this information to perform their duties.',
+      "CMS websites may also use an online survey to collect opinions and feedback. This online survey appears on the bottom left of many pages on the site. You don't have to answer these questions. Please do not to include any personally identifiable information (PII) in comments you make. We analyze and use this information to improve the site's operation and content. The reports are available only to CMS website managers, members of the communications and Web teams, and other designated staff who require this information to perform their duties.",
     data:
       'CMS websites keep the data from our measurement tools as long as needed to support the mission of the website.'
   },
@@ -26,12 +26,14 @@ const cookies = {
 
     sessionCookies: {
       label: 'Session Cookies:',
-      info: 'We use session cookies for technical purposes such as to allow better navigation through our site. These cookies let our server know that you are continuing a visit to our site. The OMB Memo 10-22 Guidance defines our use of session cookies as "Usage Tier 1: Single Session.” The policy says, "This tier encompasses any use of single session web measurement and customization technologies."',
+      info:
+        'We use session cookies for technical purposes such as to allow better navigation through our site. These cookies let our server know that you are continuing a visit to our site. The OMB Memo 10-22 Guidance defines our use of session cookies as "Usage Tier 1: Single Session.” The policy says, "This tier encompasses any use of single session web measurement and customization technologies."'
     },
     persistentCookies: {
       label: 'Persistent Cookies:',
-      info: 'We use persistent cookies to understand the differences between new and returning CMS website visitors. Persistent cookies remain on your computer between visits to our site until they expire. The OMB Memo 10-22 Guidance defines our use of persistent cookies as "Usage Tier 2â€”Multi-session without Personally Identifiable Information (PII).â€ The policy says, "This tier encompasses any use of multi-session Web measurement and customization technologies when no PII is collected."'
-    },
+      info:
+        'We use persistent cookies to understand the differences between new and returning CMS website visitors. Persistent cookies remain on your computer between visits to our site until they expire. The OMB Memo 10-22 Guidance defines our use of persistent cookies as "Usage Tier 2â€”Multi-session without Personally Identifiable Information (PII).â€ The policy says, "This tier encompasses any use of multi-session Web measurement and customization technologies when no PII is collected."'
+    }
   },
 
   // How to opt out or disable cookies
@@ -42,10 +44,9 @@ const cookies = {
       'If you do not wish to have session or persistent cookies placed on your computer, you can disable them using your Web browser. If you opt out of cookies, you will still have access to all information and resources on CMS websites. Instructions for disabling or opting out of cookies in the most popular browsers are located at ',
     howToLink: 'http://www.usa.gov/optout_instructions.shtml',
     notice:
-      'Please note that by opting out of cookies, you will disable cookies from all sources, not just from CMS websites.',
-
+      'Please note that by opting out of cookies, you will disable cookies from all sources, not just from CMS websites.'
   },
-  
+
   // How we protect your personal information
   informationProtection: {
     heading: 'How we protect your personal information',
