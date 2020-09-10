@@ -250,9 +250,9 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
               >
                 <a
                   className="usa-footer__primary-link"
-                  href="/privacy"
+                  href="/privacy-policy"
                 >
-                  Privacy policy
+                  Privacy Policy
                 </a>
               </li>
               <li
