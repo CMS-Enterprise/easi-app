@@ -32,7 +32,7 @@ const Review = ({ systemIntake }: ReviewProps) => {
   }, [isSubmitting]);
 
   return (
-    <div className="system-intake__review margin-bottom-7">
+    <div className="system-intake__review">
       <h1 className="font-heading-xl margin-top-4">
         Check your answers before sending
       </h1>

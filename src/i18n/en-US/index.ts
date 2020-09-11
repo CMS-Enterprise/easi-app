@@ -5,6 +5,7 @@ import auth from './auth';
 import businessCase from './businessCase';
 import cookies from './cookies';
 import error from './error';
+import footer from './footer';
 import general from './general';
 import grtReview from './grtReview';
 import header from './header';
@@ -16,6 +17,7 @@ import termsAndConditions from './termsAndConditions';
 const enUS = {
   auth,
   error,
+  footer,
   general,
   header,
   home,

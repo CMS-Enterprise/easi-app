@@ -37,3 +37,14 @@
 .usa-header {
   font-family: 'Public Sans';
 }
+
+.usa-footer {
+  // Ideally, this width should be set in _settings.scss, alongside the other variables
+  // but I don't see a scss variable in the USWDS docs to set.
+  // We should investigate and see if USWDS has a variable they can support similarly
+  // to the header.
+  // e.g. $theme-footer-max-width: 'desktop-lg';
+  &__primary-container {
+    max-width: 75rem;
+  }
+}
