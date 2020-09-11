@@ -5,8 +5,10 @@ import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
 import {
   clearSystemIntake,
@@ -86,9 +88,9 @@ export const SystemIntake = () => {
   }, []);
 
   return (
-    <div className="system-intake margin-bottom-5">
+    <PageWrapper className="system-intake ">
       <Header />
-      <MainContent className="grid-container">
+      <MainContent className="grid-container margin-bottom-5">
         {!['local', 'dev', 'impl'].includes(
           process.env.REACT_APP_APP_ENV || ''
         ) && (
@@ -147,7 +149,8 @@ export const SystemIntake = () => {
           </Switch>
         )}
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 

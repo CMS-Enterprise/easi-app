@@ -36,7 +36,7 @@ class App extends React.Component<MainProps, MainState> {
 
   render() {
     return (
-      <div>
+      <>
         <div className="usa-overlay" />
         <button type="button" className="skipnav" onClick={this.handleSkipNav}>
           Skip to main content
@@ -123,7 +123,7 @@ class App extends React.Component<MainProps, MainState> {
             </TimeOutWrapper>
           </AuthenticationWrapper>
         </BrowserRouter>
-      </div>
+      </>
     );
   }
 }

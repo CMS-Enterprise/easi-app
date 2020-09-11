@@ -6,8 +6,10 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import Alert from 'components/shared/Alert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
@@ -35,7 +37,7 @@ export const GrtSystemIntakeReview = () => {
   );
   const error = useSelector((state: AppState) => state.systemIntake.error);
   return (
-    <div>
+    <PageWrapper>
       <Header />
       <MainContent>
         <div className="grid-container">
@@ -204,7 +206,8 @@ export const GrtSystemIntakeReview = () => {
             </div>
           )}
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 
