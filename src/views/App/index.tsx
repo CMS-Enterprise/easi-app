@@ -12,8 +12,8 @@ import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
-import PrepareForGRT from 'views/PrepareForGRT';
 import NotFound from 'views/NotFound';
+import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
@@ -61,6 +61,7 @@ class App extends React.Component<MainProps, MainState> {
                   path="/prepare-for-grt"
                   exact
                   component={PrepareForGRT}
+                />
                 <Route path="/privacy-policy" exact component={PrivacyPolicy} />
                 <Route path="/cookies" exact component={Cookies} />
                 <Route
