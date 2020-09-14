@@ -2,7 +2,7 @@
 
 exports[`The Business Case Confirmation page matches the snapshot 1`] = `
 <div
-  className="margin-bottom-7"
+  className="grid-container margin-bottom-7"
 >
   <div>
     <h1

@@ -1,12 +1,20 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import {
+  Link,
+  Switch,
+  useHistory,
+  useLocation,
+  useParams
+} from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -16,6 +24,7 @@ import {
   postBusinessCase,
   putBusinessCase
 } from 'types/routines';
+import { NotFoundPartial } from 'views/NotFound';
 
 import {
   AlternativeSolutionA,
@@ -104,9 +113,9 @@ export const BusinessCase = () => {
   }, [isSubmitting]);
 
   return (
-    <div className="business-case margin-bottom-5">
+    <PageWrapper className="business-case">
       <Header />
-      <MainContent>
+      <MainContent className="margin-bottom-5">
         <div className="grid-container">
           {!['local', 'dev', 'impl'].includes(
             process.env.REACT_APP_APP_ENV || ''
@@ -140,7 +149,7 @@ export const BusinessCase = () => {
           )}
         </div>
         {businessCase.id && (
-          <>
+          <Switch>
             <SecureRoute
               path="/business/:businessCaseId/general-request-info"
               render={() => (
@@ -209,10 +218,19 @@ export const BusinessCase = () => {
               path="/business/:businessCaseId/confirmation"
               render={() => <Confirmation />}
             />
-          </>
+            <SecureRoute
+              path="*"
+              render={() => (
+                <div className="grid-container">
+                  <NotFoundPartial />
+                </div>
+              )}
+            />
+          </Switch>
         )}
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 
