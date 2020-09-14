@@ -26,7 +26,6 @@ const enUS = {
   businessCase,
   grtReview,
   prepareForGRT,
-  taskList,
   privacyPolicy,
   taskList,
   termsAndConditions,
