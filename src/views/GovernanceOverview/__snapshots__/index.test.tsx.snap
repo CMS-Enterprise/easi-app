@@ -444,7 +444,9 @@ exports[`The governance overview page matches the snapshot 1`] = `
     <div
       className="margin-top-6 margin-bottom-7"
     >
-      <div>
+      <div
+        className="easi-collapsable-link"
+      >
         <button
           aria-controls="GovernanceOverview-WhyGovernanceExists"
           aria-expanded={false}
