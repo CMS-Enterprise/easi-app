@@ -2,18 +2,23 @@ import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 
+import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
+import Cookies from 'views/Cookies';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
+import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
+import PrivacyPolicy from 'views/PrivacyPolicy';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
+import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 
 import './index.scss';
@@ -33,7 +38,7 @@ class App extends React.Component<MainProps, MainState> {
 
   render() {
     return (
-      <div>
+      <>
         <div className="usa-overlay" />
         <button type="button" className="skipnav" onClick={this.handleSkipNav}>
           Skip to main content
@@ -62,6 +67,13 @@ class App extends React.Component<MainProps, MainState> {
                   path="/prepare-for-grb"
                   exact
                   component={PrepareForGRB}
+                />
+                <Route path="/privacy-policy" exact component={PrivacyPolicy} />
+                <Route path="/cookies" exact component={Cookies} />
+                <Route
+                  path="/accessibility-statement"
+                  exact
+                  component={AccessibilityStatement}
                 />
                 {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
@@ -112,11 +124,18 @@ class App extends React.Component<MainProps, MainState> {
                   component={BusinessCase}
                 />
                 <Route path="/implicit/callback" component={LoginCallback} />
+
+                <Route
+                  exact
+                  path="/terms-and-conditions"
+                  component={TermsAndConditions}
+                />
+                <Route path="*" component={NotFound} />
               </Switch>
             </TimeOutWrapper>
           </AuthenticationWrapper>
         </BrowserRouter>
-      </div>
+      </>
     );
   }
 }

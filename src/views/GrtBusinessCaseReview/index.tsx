@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import { fetchBusinessCase } from 'types/routines';
 
 import { AppState } from '../../reducers/rootReducer';
@@ -28,7 +30,7 @@ export const GrtBusinessCaseReview = () => {
   );
 
   return (
-    <div>
+    <PageWrapper>
       <Header />
       <MainContent className="margin-bottom-7">
         <div className="grid-container">
@@ -41,7 +43,8 @@ export const GrtBusinessCaseReview = () => {
         </div>
         {businessCase && <BusinessCaseReview values={businessCase} />}
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 

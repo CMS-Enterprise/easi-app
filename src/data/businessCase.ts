@@ -74,6 +74,48 @@ type lifecycleCostLinesType = {
   B: EstimatedLifecycleCostLines;
 };
 
+// Function that lets us know if a user has filled out an alternative B
+export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
+  if (!alternativeB) {
+    return false;
+  }
+
+  const {
+    title,
+    summary,
+    acquisitionApproach,
+    hosting,
+    hasUserInterface,
+    pros,
+    cons,
+    costSavings,
+    estimatedLifecycleCost
+  } = alternativeB;
+
+  let hasLineItem;
+  Object.values(estimatedLifecycleCost).forEach(phaseCost => {
+    phaseCost.forEach(lineItem => {
+      if (lineItem.phase || lineItem.cost) {
+        hasLineItem = true;
+      }
+    });
+  });
+
+  return (
+    title ||
+    summary ||
+    acquisitionApproach ||
+    hosting.type ||
+    hosting.location ||
+    hosting.cloudServiceType ||
+    hasUserInterface ||
+    pros ||
+    cons ||
+    costSavings ||
+    hasLineItem
+  );
+};
+
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
@@ -186,6 +228,7 @@ export const prepareBusinessCaseForApp = (
 export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
+  const alternativeBExists = hasAlternativeB(businessCase.alternativeB);
   const solutionNameMap: {
     solutionLifecycleCostLines: EstimatedLifecycleCostLines;
     solutionApiName: string;
@@ -205,7 +248,7 @@ export const prepareBusinessCaseForApi = (
         businessCase.alternativeA.estimatedLifecycleCost,
       solutionApiName: 'A'
     },
-    ...(businessCase.alternativeB
+    ...(alternativeBExists
       ? [
           {
             solutionLifecycleCostLines:
@@ -293,79 +336,38 @@ export const prepareBusinessCaseForApi = (
     alternativeAPros: businessCase.alternativeA.pros,
     alternativeACons: businessCase.alternativeA.cons,
     alternativeACostSavings: businessCase.alternativeA.costSavings,
-    alternativeBTitle: businessCase.alternativeB
+    alternativeBTitle: alternativeBExists
       ? businessCase.alternativeB.title
       : null,
-    alternativeBSummary: businessCase.alternativeB
+    alternativeBSummary: alternativeBExists
       ? businessCase.alternativeB.summary
       : null,
-    alternativeBAcquisitionApproach: businessCase.alternativeB
+    alternativeBAcquisitionApproach: alternativeBExists
       ? businessCase.alternativeB.acquisitionApproach
       : null,
-    alternativeBHostingType: businessCase.alternativeB
+    alternativeBHostingType: alternativeBExists
       ? businessCase.alternativeB.hosting.type
       : null,
-    alternativeBHostingLocation: businessCase.alternativeB
+    alternativeBHostingLocation: alternativeBExists
       ? businessCase.alternativeB.hosting.location
       : null,
-    alternativeBHostingCloudServiceType: businessCase.alternativeB
+    alternativeBHostingCloudServiceType: alternativeBExists
       ? businessCase.alternativeB.hosting.cloudServiceType
       : null,
-    alternativeBHasUI: businessCase.alternativeB
+    alternativeBHasUI: alternativeBExists
       ? businessCase.alternativeB.hasUserInterface
       : null,
-    alternativeBPros: businessCase.alternativeB
+    alternativeBPros: alternativeBExists
       ? businessCase.alternativeB.pros
       : null,
-    alternativeBCons: businessCase.alternativeB
+    alternativeBCons: alternativeBExists
       ? businessCase.alternativeB.cons
       : null,
-    alternativeBCostSavings: businessCase.alternativeB
+    alternativeBCostSavings: alternativeBExists
       ? businessCase.alternativeB.costSavings
       : null,
     lifecycleCostLines
   };
-};
-
-export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
-  if (!alternativeB) {
-    return false;
-  }
-
-  const {
-    title,
-    summary,
-    acquisitionApproach,
-    hosting,
-    hasUserInterface,
-    pros,
-    cons,
-    costSavings,
-    estimatedLifecycleCost
-  } = alternativeB;
-
-  let hasLineItem;
-  Object.values(estimatedLifecycleCost).forEach(phaseCost => {
-    phaseCost.forEach(lineItem => {
-      if (lineItem.phase || lineItem.cost) {
-        hasLineItem = true;
-      }
-    });
-  });
-
-  return (
-    title ||
-    summary ||
-    acquisitionApproach ||
-    hosting.type ||
-    hosting.location ||
-    hosting.cloudServiceType ||
-    hasUserInterface ||
-    pros ||
-    cons ||
-    costSavings ||
-    hasLineItem
-  );
 };
 
 export const hostingTypeMap: any = {

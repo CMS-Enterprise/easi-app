@@ -5,8 +5,10 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import { Alert, Button, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import {
   bizCaseStatus,
   chooseBusinessCasePath,
@@ -193,7 +195,7 @@ const GovernanceTaskList = () => {
   };
 
   return (
-    <div className="governance-task-list">
+    <PageWrapper className="governance-task-list">
       <Header />
       <MainContent className="grid-container margin-bottom-7">
         <div className="grid-row">
@@ -310,7 +312,8 @@ const GovernanceTaskList = () => {
           </div>
         </div>
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 

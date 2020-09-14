@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, Switch, useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
 import {
   clearSystemIntake,
@@ -16,6 +18,7 @@ import {
   storeSystemIntake
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
+import { NotFoundPartial } from 'views/NotFound';
 
 import ContactDetails from './ContactDetails';
 import RequestDetails from './RequestDetails';
@@ -84,18 +87,10 @@ export const SystemIntake = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const pageSlugs = ['contact-details', 'request-details', 'review'];
-    if (!pageSlugs.includes(formPage)) {
-      history.replace(`/system/${systemId}/contact-details`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [systemId, formPage]);
-
   return (
-    <div className="system-intake margin-bottom-5">
+    <PageWrapper className="system-intake ">
       <Header />
-      <MainContent className="grid-container">
+      <MainContent className="grid-container margin-bottom-5">
         {!['local', 'dev', 'impl'].includes(
           process.env.REACT_APP_APP_ENV || ''
         ) && (
@@ -125,7 +120,7 @@ export const SystemIntake = () => {
           </BreadcrumbNav>
         )}
         {isLoading === false && (
-          <>
+          <Switch>
             <SecureRoute
               path="/system/:systemId/contact-details"
               render={() => (
@@ -150,10 +145,12 @@ export const SystemIntake = () => {
               path="/system/:systemId/review"
               render={() => <Review systemIntake={systemIntake} />}
             />
-          </>
+            <SecureRoute path="*" render={() => <NotFoundPartial />} />
+          </Switch>
         )}
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 

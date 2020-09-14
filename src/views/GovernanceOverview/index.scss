@@ -1,6 +1,4 @@
 .easi-governance-overview {
-  margin-bottom: 36px;
-
   &__indented-wrapper {
     border-left: 4px solid #585C62;
     padding: 6px 0;
@@ -12,23 +10,37 @@
     font-weight: bold;
   }
 
-  &__dot {
-    height: 24px;
-    width: 24px;
-    background-color: #C4C4C4;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-    line-height: 24px;
+  &__governance-steps {
+    padding-left: 12px;
+    list-style: none;
+    counter-reset: step;
+
+    &[start="3"] {
+      counter-reset: step 2;
+    }
   }
 
-  &__numbered-list-item {
+  &__governance-step {
     display: flex;
-  }
+    align-items: baseline;
+    border-left: 2px solid #000;
+    counter-increment: step;
 
-  &__list-item-continuing {
-    background: linear-gradient(#000, #000) no-repeat center/2px 100%;
-    width: 24px;
-    vertical-align: top;
+
+    &:last-of-type {
+      border-left: none;
+    }
+
+    &:before {
+      flex: none;
+      content: counter(step);
+      background-color: #c4c4c4;
+      height: 24px;
+      width: 24px;
+      margin-left: -12px;
+      line-height: 24px;
+      text-align: center;
+      border-radius: 50%;
+    }
   }
 }

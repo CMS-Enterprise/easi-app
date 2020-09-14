@@ -10,8 +10,10 @@ import {
 import { useOktaAuth } from '@okta/okta-react';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -134,9 +136,9 @@ const Home = ({ history }: HomeProps) => {
   };
 
   return (
-    <div>
+    <PageWrapper>
       <Header />
-      <MainContent className="grid-container">
+      <MainContent className="grid-container margin-bottom-5">
         <div className="margin-y-6">
           {location.state && location.state.confirmationText && (
             <div className="border-05 border-green">
@@ -192,7 +194,8 @@ const Home = ({ history }: HomeProps) => {
           )}
         </div>
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 

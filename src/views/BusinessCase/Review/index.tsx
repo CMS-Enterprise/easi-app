@@ -21,7 +21,7 @@ const Review = ({ businessCase }: ReviewProps) => {
   );
 
   return (
-    <div className="margin-bottom-7">
+    <div>
       <div className="grid-container">
         <h1 className="font-heading-xl margin-top-4">
           Check your answers before sending
