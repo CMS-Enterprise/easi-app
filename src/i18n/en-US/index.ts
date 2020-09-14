@@ -7,10 +7,10 @@ import cookies from './cookies';
 import error from './error';
 import footer from './footer';
 import general from './general';
+import governanceReviewTeam from './governanceReviewTeam';
 import grtReview from './grtReview';
 import header from './header';
 import home from './home';
-import prepareForGRT from './prepareForGRT';
 import privacyPolicy from './privacyPolicy';
 import systemIntake from './systemIntake';
 import termsAndConditions from './termsAndConditions';
@@ -22,10 +22,10 @@ const enUS = {
   general,
   header,
   home,
+  governanceReviewTeam,
   systemIntake,
   businessCase,
   grtReview,
-  prepareForGRT,
   privacyPolicy,
   taskList,
   termsAndConditions,
