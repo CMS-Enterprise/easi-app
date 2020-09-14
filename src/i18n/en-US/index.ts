@@ -10,6 +10,7 @@ import general from './general';
 import grtReview from './grtReview';
 import header from './header';
 import home from './home';
+import prepareForGRT from './prepareForGRT';
 import privacyPolicy from './privacyPolicy';
 import systemIntake from './systemIntake';
 import termsAndConditions from './termsAndConditions';
@@ -24,6 +25,7 @@ const enUS = {
   systemIntake,
   businessCase,
   grtReview,
+  prepareForGRT,
   privacyPolicy,
   taskList,
   termsAndConditions,
