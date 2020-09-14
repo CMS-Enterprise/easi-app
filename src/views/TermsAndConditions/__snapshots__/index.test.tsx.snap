@@ -1,0 +1,321 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The Terms & Conditions page matches the snapshot 1`] = `
+<div
+  className="easi-page-wrapper"
+>
+  <header
+    className="usa-header easi-header"
+    role="banner"
+  >
+    <div
+      className="usa-banner"
+    >
+      <div
+        className="usa-accordion"
+      >
+        <div
+          className="usa-banner__header"
+        >
+          <div
+            className="usa-banner__inner"
+          >
+            <div
+              className="grid-col-auto"
+            >
+              <img
+                alt="U.S. flag"
+                className="usa-banner__header-flag"
+                src="us_flag_small.png"
+              />
+            </div>
+            <div
+              className="grid-col-fill tablet:grid-col-auto"
+            >
+              <p
+                className="usa-banner__header-text"
+              >
+                An official website of the United States government
+              </p>
+              <p
+                aria-hidden="true"
+                className="usa-banner__header-action"
+              >
+                Here’s how you know
+              </p>
+            </div>
+            <button
+              aria-controls="gov-banner"
+              aria-expanded={false}
+              className="usa-accordion__button usa-banner__button"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="usa-banner__button-text"
+              >
+                Here’s how you know
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          className="usa-banner__content usa-accordion__content"
+          hidden={true}
+          id="gov-banner"
+        >
+          <div
+            className="grid-row grid-gap-lg"
+          >
+            <div
+              className="usa-banner__guidance tablet:grid-col-6"
+            >
+              <img
+                alt="Dot gov"
+                className="usa-banner__icon usa-media-block__img"
+                src="icon-dot-gov.svg"
+              />
+              <div
+                className="usa-media-block__body"
+              >
+                <p>
+                  <strong>
+                    The .gov means it’s official.
+                  </strong>
+                  <br />
+                   Federal government websites often end in .gov or .mil. Before sharing sensitive information, make sure you’re on a federal government site.
+                </p>
+              </div>
+            </div>
+            <div
+              className="usa-banner__guidance tablet:grid-col-6"
+            >
+              <img
+                alt="Https"
+                className="usa-banner__icon usa-media-block__img"
+                src="icon-https.svg"
+              />
+              <div
+                className="usa-media-block__body"
+              >
+                <p>
+                  <strong>
+                    The site is secure.
+                  </strong>
+                  <br />
+                   The 
+                  <strong>
+                    https://
+                  </strong>
+                   ensures that you are connecting to the official website and that any information you provide is encrypted and transmitted securely.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="grid-container easi-header__basic"
+    >
+      <div
+        className="usa-logo site-logo"
+        id="logo"
+      >
+        <a
+          href="/"
+          onClick={[Function]}
+        >
+          <em
+            aria-label="EASi home"
+            className="usa-logo__text"
+          >
+            EASi
+          </em>
+        </a>
+      </div>
+      <button
+        className="usa-menu-btn"
+        type="button"
+      >
+        <span
+          className="fa fa-bars"
+        />
+      </button>
+      <div
+        className="navbar--container"
+      >
+        <div
+          className="easi-header__dropdown-wrapper"
+        >
+          <button
+            aria-controls="Header-UserActionsList"
+            aria-expanded={false}
+            aria-label="Expand User Menu"
+            className="easi-header__username"
+            onClick={[Function]}
+            type="button"
+          >
+            
+            <i
+              className="fa fa-angle-down easi-header__caret"
+            />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="grid-container easi-header--desktop "
+    />
+    <div
+      className="usa-nav sidenav-mobile"
+    >
+      <button
+        aria-label="Close"
+        className="usa-nav__close"
+        type="button"
+      >
+        <span
+          className="fa fa-close"
+        />
+      </button>
+      <div
+        className="usa-nav__inner"
+      >
+        <button
+          className="easi-header__nav-link"
+          onClick={[Function]}
+          type="button"
+        >
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </header>
+  <main
+    className="easi-main-content grid-container line-height-body-5"
+    id="main-content"
+    role="main"
+    tabIndex={-1}
+  >
+    <h1
+      className="font-heading-xl"
+    >
+      Terms & Conditions
+    </h1>
+    <h2>
+      This system is provided for Government authorized use only.
+    </h2>
+    <p
+      className="margin-y-4"
+    >
+      Unauthorized or improper use of this system is prohibited and may result in disciplinary action and/or civil and criminal penalties.
+    </p>
+    <p
+      className="margin-y-4"
+    >
+      Personal use of social media and networking sites on this system is limited as to not interfere with official work duties and is subject to monitoring.
+    </p>
+    <p
+      className="margin-y-4"
+    >
+      By using this system, you understand and consent to the following: The Government may monitor, record, and audit your system usage, including usage of personal devices and email systems for official reasonable expectation of privacy regarding any communication or data transiting or stored on this system. At any time, and for any lawful Government purpose, the government may monitor, intercept, and search and seize any communication or data transiting or stored on this system.
+    </p>
+    <p
+      className="margin-y-4"
+    >
+      Any communication or data transiting or stored on this system may be disclosed or used for any lawful Government purpose.
+    </p>
+  </main>
+  <footer
+    className="usa-footer usa-footer--slim"
+  >
+    <div
+      className="usa-footer__primary-section"
+    >
+      <div
+        className="usa-footer__primary-container grid-row"
+      >
+        <div
+          className="mobile-lg:grid-col-8"
+        >
+          <nav
+            className="usa-footer__nav"
+          >
+            <ul
+              className="grid-row grid-gap"
+            >
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/privacy-policy"
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/cookies"
+                >
+                  Cookies
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/terms-and-conditions"
+                >
+                  Terms and Conditions
+                </a>
+              </li>
+              <li
+                className="desktop:grid-col-auto usa-footer__primary-content mobile-lg:grid-col-6"
+              >
+                <a
+                  className="usa-footer__primary-link"
+                  href="/accessibility-statement"
+                >
+                  Accessibility Statement
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-footer__secondary-section"
+    >
+      <div
+        className="grid-container"
+      >
+        <div>
+          <div
+            className="easi-footer__secondary-logo-wrap"
+          >
+            <img
+              alt="CMS.gov Logo"
+              src="cmsGovLogo.png"
+            />
+            <img
+              alt="Department of Health and Human Services USA"
+              className="margin-left-1"
+              src="hhsLogo.png"
+            />
+          </div>
+          <span>
+            A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 2124
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+`;

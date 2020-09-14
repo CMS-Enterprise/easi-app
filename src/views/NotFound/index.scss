@@ -1,0 +1,9 @@
+.easi-not-found {
+  &__error_suggestions {
+    margin: 2em 0 4em;
+
+    li + li {
+      margin-top: 2em;
+    }
+  }
+}
