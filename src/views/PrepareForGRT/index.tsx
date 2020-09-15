@@ -12,12 +12,6 @@ import PageWrapper from 'components/PageWrapper';
 
 import './index.scss';
 
-type NumberedListItemProps = {
-  stepName: string;
-  header: string;
-  body: string;
-};
-
 const PrepareForGRT = () => {
   const history = useHistory();
   const { t } = useTranslation('governanceReviewTeam');
@@ -89,9 +83,6 @@ const PrepareForGRT = () => {
                 <h2 className="font-heading-xl">
                   {t('prepare.howToBestPrepare.title')}
                 </h2>
-                <h3 className="font-heading-lg">
-                  {t('prepare.howToBestPrepare.subtitle')}
-                </h3>
                 <p className="line-height-sans-6">
                   {t('prepare.howToBestPrepare.body')}
                 </p>
