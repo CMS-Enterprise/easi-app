@@ -13,6 +13,7 @@ import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import NotFound from 'views/NotFound';
+import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
@@ -56,13 +57,12 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   component={GovernanceOverview}
                 />
-                <Route path="/privacy-policy" exact component={PrivacyPolicy} />
-                <Route path="/cookies" exact component={Cookies} />
                 <Route
-                  path="/accessibility-statement"
+                  path="/prepare-for-grt"
                   exact
-                  component={AccessibilityStatement}
+                  component={PrepareForGRT}
                 />
+
                 {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
                 ) && (
@@ -88,15 +88,6 @@ class App extends React.Component<MainProps, MainState> {
                   render={({ component }: any) => component()}
                   component={SystemIntake}
                 />
-                {/* <SecureRoute
-                  path="/system/all"
-                  exact
-                  component={SystemProfiles}
-                /> */}
-                {/* <SecureRoute
-                  path="/system/:profileId"
-                  component={SystemProfile}
-                /> */}
                 <SecureRoute
                   path="/business/:businessCaseId/grt-review"
                   component={GrtBusinessCaseReview}
@@ -113,6 +104,13 @@ class App extends React.Component<MainProps, MainState> {
                 />
                 <Route path="/implicit/callback" component={LoginCallback} />
 
+                <Route path="/privacy-policy" exact component={PrivacyPolicy} />
+                <Route path="/cookies" exact component={Cookies} />
+                <Route
+                  path="/accessibility-statement"
+                  exact
+                  component={AccessibilityStatement}
+                />
                 <Route
                   exact
                   path="/terms-and-conditions"

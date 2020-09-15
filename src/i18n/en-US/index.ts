@@ -7,6 +7,7 @@ import cookies from './cookies';
 import error from './error';
 import footer from './footer';
 import general from './general';
+import governanceReviewTeam from './governanceReviewTeam';
 import grtReview from './grtReview';
 import header from './header';
 import home from './home';
@@ -21,6 +22,7 @@ const enUS = {
   general,
   header,
   home,
+  governanceReviewTeam,
   systemIntake,
   businessCase,
   grtReview,
