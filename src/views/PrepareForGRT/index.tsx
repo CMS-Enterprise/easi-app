@@ -34,9 +34,14 @@ const PrepareForGRT = () => {
               <i className="fa fa-angle-right margin-x-05" aria-hidden />
             </li>
             <li>
-              <Link to="/tbd" className="text-ink">
+              <Button
+                type="button"
+                onClick={() => history.goBack()}
+                className="text-ink"
+                unstyled
+              >
                 Get governance approval
-              </Link>
+              </Button>
               <i className="fa fa-angle-right margin-x-05" aria-hidden />
             </li>
             <li>
