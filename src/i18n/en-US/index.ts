@@ -9,7 +9,6 @@ import footer from './footer';
 import general from './general';
 import governanceReviewBoard from './governanceReviewBoard';
 import governanceReviewTeam from './governanceReviewTeam';
-import grtReview from './grtReview';
 import header from './header';
 import home from './home';
 import privacyPolicy from './privacyPolicy';
@@ -26,7 +25,6 @@ const enUS = {
   general,
   governanceReviewBoard,
   governanceReviewTeam,
-  grtReview,
   header,
   home,
   privacyPolicy,
