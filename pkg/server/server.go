@@ -29,16 +29,21 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 // NewServer sets up the dependencies for a server
 func NewServer(config *viper.Viper) *Server {
-	// Set up logger first so we can use it
-	zapLogger, err := zap.NewProduction()
-	if err != nil {
-		log.Fatal("Failed to initial logger.")
-	}
 
 	// Set environment from config
 	environment, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
 	if err != nil {
-		zapLogger.Fatal("Unable to set environment", zap.Error(err))
+		log.Fatalf("Unable to set environment: %v", err)
+	}
+
+	var zapLogger *zap.Logger
+	if environment.Dev() || environment.Local() {
+		zapLogger, err = zap.NewDevelopment()
+	} else {
+		zapLogger, err = zap.NewProduction()
+	}
+	if err != nil {
+		log.Fatalf("Failed to initial logger: %v", err)
 	}
 
 	// Set the router
