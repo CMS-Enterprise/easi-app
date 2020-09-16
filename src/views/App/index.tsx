@@ -7,6 +7,7 @@ import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
 import Cookies from 'views/Cookies';
 import GovernanceOverview from 'views/GovernanceOverview';
+import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
@@ -66,6 +67,15 @@ class App extends React.Component<MainProps, MainState> {
                     path="/governance-task-list/:systemId"
                     exact
                     component={GovernanceTaskList}
+                  />
+                )}
+
+                {['local', 'dev', 'impl'].includes(
+                  process.env.REACT_APP_APP_ENV || ''
+                ) && (
+                  <Route
+                    path="/governance-review-team/:systemId"
+                    component={GovernanceReviewTeam}
                   />
                 )}
                 <SecureRoute

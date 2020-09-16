@@ -1,0 +1,29 @@
+.easi-grt {
+  &__request-summary {
+    background-color: #0071bc;
+    color: #fff;
+  }
+
+  &__request-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+
+    dt {
+      margin-bottom: 0.25em;
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 600;
+    }
+  }
+
+  &__request-info-col {
+    display: flex;
+  }
+
+  &__description-group + &__description-group {
+    margin-left: 2em;
+  }
+}
