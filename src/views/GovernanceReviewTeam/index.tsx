@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
+import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -31,7 +32,7 @@ const GovernanceReviewTeam = () => {
     c => c.name === systemIntake.requester.component
   );
 
-  const requestNameAndComponent = component
+  const requesterNameAndComponent = component
     ? `${systemIntake.requester.name}, ${component.acronym}`
     : systemIntake.requester.name;
 
@@ -46,7 +47,7 @@ const GovernanceReviewTeam = () => {
                 <Link to="/">Home</Link>
                 <i className="fa fa-angle-right margin-x-05" aria-hidden />
               </li>
-              <li>Request 12345</li>
+              <li>{systemIntake.requestName}</li>
             </BreadcrumbNav>
             <dl className="easi-grt__request-info">
               <div>
@@ -56,11 +57,17 @@ const GovernanceReviewTeam = () => {
               <div className="easi-grt__request-info-col">
                 <div className="easi-grt__description-group">
                   <dt>{t('intake:fields.requester')}</dt>
-                  <dd>{requestNameAndComponent}</dd>
+                  <dd>{requesterNameAndComponent}</dd>
                 </div>
                 <div className="easi-grt__description-group">
                   <dt>{t('intake:fields.submissionDate')}</dt>
-                  <dd>May 26, 2020</dd>
+                  <dd>
+                    {systemIntake.submittedAt
+                      ? systemIntake.submittedAt.toLocaleString(
+                          DateTime.DATE_FULL
+                        )
+                      : 'N/A'}
+                  </dd>
                 </div>
                 <div className="easi-grt__description-group">
                   <dt>{t('intake:fields.requestFor')}</dt>
