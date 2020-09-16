@@ -5,9 +5,11 @@ import { Button, Link as USWDSLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import CollapsableList from 'components/CollapsableList';
+import Footer from 'components/Footer';
 import Header from 'components/Header';
 import InlineAlert from 'components/InlineAlert';
 import MainContent from 'components/MainContent';
+import PageWrapper from 'components/PageWrapper';
 
 import './index.scss';
 
@@ -15,9 +17,9 @@ const PrepareForGRB = () => {
   const history = useHistory();
   const { t } = useTranslation('governanceReviewBoard');
   return (
-    <div className="easi-prepare-for-grb">
+    <PageWrapper className="easi-prepare-for-grb">
       <Header />
-      <MainContent>
+      <MainContent className="margin-bottom-5">
         <div className="grid-container">
           <BreadcrumbNav className="margin-y-2">
             <li>
@@ -51,7 +53,7 @@ const PrepareForGRB = () => {
               <h2 className="font-heading-xl margin-top-6">
                 {t('prepare.whatIsIt.title')}
               </h2>
-              <p>{t('prepare.whatIsIt.body')}</p>
+              <p className="line-height-sans-6">{t('prepare.whatIsIt.body')}</p>
               <ul>
                 {t<string[]>('prepare.whatIsIt.items', {
                   returnObjects: true
@@ -130,7 +132,8 @@ const PrepareForGRB = () => {
           </Button>
         </div>
       </MainContent>
-    </div>
+      <Footer />
+    </PageWrapper>
   );
 };
 
