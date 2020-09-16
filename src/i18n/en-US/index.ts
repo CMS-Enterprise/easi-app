@@ -11,8 +11,8 @@ import governanceReviewTeam from './governanceReviewTeam';
 import grtReview from './grtReview';
 import header from './header';
 import home from './home';
+import intake from './intake';
 import privacyPolicy from './privacyPolicy';
-import systemIntake from './systemIntake';
 import termsAndConditions from './termsAndConditions';
 
 const enUS = {
@@ -23,7 +23,7 @@ const enUS = {
   header,
   home,
   governanceReviewTeam,
-  systemIntake,
+  intake,
   businessCase,
   grtReview,
   privacyPolicy,
