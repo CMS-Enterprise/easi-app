@@ -58,21 +58,6 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   component={GovernanceOverview}
                 />
-                <Route
-                  path="/prepare-for-grt"
-                  exact
-                  component={PrepareForGRT}
-                />
-                <Route
-                  path="/prepare-for-grb"
-                  exact
-                  component={PrepareForGRB}
-                />
-                <Route
-                  path="/prepare-for-grt"
-                  exact
-                  component={PrepareForGRT}
-                />
 
                 {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
@@ -83,6 +68,16 @@ class App extends React.Component<MainProps, MainState> {
                     component={GovernanceTaskList}
                   />
                 )}
+                <SecureRoute
+                  exact
+                  path="/governance-task-list/:systemId/prepare-for-grt"
+                  component={PrepareForGRT}
+                />
+                <SecureRoute
+                  exact
+                  path="/governance-task-list/:systemId/prepare-for-grb"
+                  component={PrepareForGRB}
+                />
                 <SecureRoute
                   exact
                   path="/system/:systemId/grt-review"
