@@ -8,13 +8,14 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
     className="usa-header easi-header"
     role="banner"
   >
-    <div
+    <section
+      aria-label="Official government website"
       className="usa-banner"
     >
       <div
         className="usa-accordion"
       >
-        <div
+        <header
           className="usa-banner__header"
         >
           <div
@@ -58,7 +59,7 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
               </span>
             </button>
           </div>
-        </div>
+        </header>
         <div
           className="usa-banner__content usa-accordion__content"
           hidden={true}
@@ -80,10 +81,14 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
               >
                 <p>
                   <strong>
-                    The .gov means it’s official.
+                    Official websites use .gov
                   </strong>
                   <br />
-                   Federal government websites often end in .gov or .mil. Before sharing sensitive information, make sure you’re on a federal government site.
+                  A 
+                  <strong>
+                    .gov
+                  </strong>
+                   website belongs to an official government organization in the United States.
                 </p>
               </div>
             </div>
@@ -100,21 +105,55 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
               >
                 <p>
                   <strong>
-                    The site is secure.
+                    Secure .gov websites use HTTPS
                   </strong>
                   <br />
-                   The 
+                  A 
+                  <strong>
+                    lock
+                  </strong>
+                   (
+                  <span
+                    className="icon-lock"
+                  >
+                    <svg
+                      aria-labelledby="banner-lock-title banner-lock-description"
+                      className="usa-banner__lock-image"
+                      height="64"
+                      role="img"
+                      viewBox="0 0 52 64"
+                      width="52"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <title
+                        id="banner-lock-title"
+                      >
+                        Lock
+                      </title>
+                      <desc
+                        id="banner-lock-description"
+                      >
+                        A locked padlock
+                      </desc>
+                      <path
+                        d="M26 0c10.493 0 19 8.507 19 19v9h3a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V32a4 4 0 0 1 4-4h3v-9C7 8.507 15.507 0 26 0zm0 8c-5.979 0-10.843 4.77-10.996 10.712L15 19v9h22v-9c0-6.075-4.925-11-11-11z"
+                        fill="#000000"
+                        fillRule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  ) or 
                   <strong>
                     https://
                   </strong>
-                   ensures that you are connecting to the official website and that any information you provide is encrypted and transmitted securely.
+                   means you’ve safely connected to the .gov website. Share sensitive information only on official, secure websites.
                 </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
     <div
       className="grid-container easi-header__basic"
     >
