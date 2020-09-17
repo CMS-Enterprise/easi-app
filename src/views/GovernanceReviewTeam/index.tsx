@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, Route, useParams } from 'react-router-dom';
+import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
@@ -16,9 +17,9 @@ import { fetchSystemIntake } from 'types/routines';
 import './index.scss';
 
 const GovernanceReviewTeam = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
-  const { systemId } = useParams();
+  const { systemId, activePage } = useParams();
 
   useEffect(() => {
     dispatch(fetchSystemIntake(systemId));
@@ -35,6 +36,11 @@ const GovernanceReviewTeam = () => {
   const requesterNameAndComponent = component
     ? `${systemIntake.requester.name}, ${component.acronym}`
     : systemIntake.requester.name;
+
+  const getNavLinkClasses = (page: string) =>
+    classnames('easi-grt__nav-link', {
+      'easi-grt__nav-link--active': page === activePage
+    });
 
   return (
     <PageWrapper className="easi-grt">
@@ -79,9 +85,62 @@ const GovernanceReviewTeam = () => {
             </dl>
           </div>
         </section>
-        <section>
-          <nav />
-          <section />
+        <section className="grid-container grid-row margin-y-5 ">
+          <nav className="tablet:grid-col-2 margin-right-2">
+            <ul className="easi-grt__nav-list">
+              <li>
+                <i className="fa fa-angle-left margin-x-05" aria-hidden />
+                <Link to="/">{t('back.allRequests')}</Link>
+              </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/system-intake`}
+                  aria-label={t('aria.openIntake')}
+                  className={getNavLinkClasses('system-intake')}
+                >
+                  {t('general:intake')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/business-case`}
+                  aria-label={t('aria.openBusiness')}
+                  className={getNavLinkClasses('business-case')}
+                >
+                  {t('general:businessCase')}
+                </Link>
+              </li>
+            </ul>
+            <hr />
+            <figure className="margin-0">
+              <figcaption>{t('actions')}</figcaption>
+              <ul className="easi-grt__nav-list">
+                <li>
+                  <Link
+                    to={`/governance-review-team/${systemId}/notes`}
+                    aria-label={t('aria.openNotes')}
+                    className={getNavLinkClasses('notes')}
+                  >
+                    {t('notes')}
+                  </Link>
+                </li>
+              </ul>
+            </figure>
+          </nav>
+          <section>
+            <Route
+              path="/governance-review-team/:systemId/system-intake"
+              render={() => <h1>{t('general:intake')}</h1>}
+            />
+            <Route
+              path="/governance-review-team/:systemId/business-case"
+              render={() => <h1>{t('general:businessCase')}</h1>}
+            />
+            <Route
+              path="/governance-review-team/:systemId/notes"
+              render={() => <h1>{t('notes')}</h1>}
+            />
+          </section>
         </section>
       </MainContent>
       <Footer />

@@ -71,7 +71,7 @@ class App extends React.Component<MainProps, MainState> {
                 )}
 
                 <SecureRoute
-                  path="/governance-review-team/:systemId"
+                  path="/governance-review-team/:systemId/:activePage"
                   component={GovernanceReviewTeam}
                 />
                 <SecureRoute
