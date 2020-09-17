@@ -68,7 +68,19 @@ const governanceReviewTeam = {
         'Additional materials that you’d like to talk through like a system concept diagram, etc.'
       ]
     }
-  }
+  },
+  intake: 'Intake Request',
+  businessCase: 'Business Case',
+  notes: 'Admin team notes',
+  aria: {
+    openIntake: 'Open intake request',
+    openBusiness: 'Open business case',
+    openNotes: 'Open admin team notes'
+  },
+  back: {
+    allRequests: 'Back to all requests'
+  },
+  actions: 'Actions'
 };
 
 export default governanceReviewTeam;
