@@ -14,6 +14,8 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntake } from 'types/routines';
 
+import IntakeReview from './IntakeReview';
+
 import './index.scss';
 
 const GovernanceReviewTeam = () => {
@@ -85,8 +87,8 @@ const GovernanceReviewTeam = () => {
             </dl>
           </div>
         </section>
-        <section className="grid-container grid-row margin-y-5 ">
-          <nav className="tablet:grid-col-2 margin-right-2">
+        <section className="grid-container grid-row flex-justify margin-y-5 ">
+          <nav className="tablet:grid-col-2">
             <ul className="easi-grt__nav-list">
               <li>
                 <i className="fa fa-angle-left margin-x-05" aria-hidden />
@@ -111,7 +113,7 @@ const GovernanceReviewTeam = () => {
                 </Link>
               </li>
             </ul>
-            <hr />
+            <hr className="opacity-30" />
             <figure className="margin-0">
               <figcaption>{t('actions')}</figcaption>
               <ul className="easi-grt__nav-list">
@@ -127,10 +129,10 @@ const GovernanceReviewTeam = () => {
               </ul>
             </figure>
           </nav>
-          <section>
+          <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/system-intake"
-              render={() => <h1>{t('general:intake')}</h1>}
+              render={() => <IntakeReview systemIntake={systemIntake} />}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
