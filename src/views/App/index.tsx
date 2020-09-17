@@ -74,7 +74,7 @@ class App extends React.Component<MainProps, MainState> {
                   />
                 )}
 
-                <Route
+                <SecureRoute
                   path="/governance-review-team/:systemId"
                   component={GovernanceReviewTeam}
                 />
