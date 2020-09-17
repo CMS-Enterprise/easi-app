@@ -85,7 +85,19 @@ const governanceReviewTeam = {
     alert_body: 'An email has been sent to {{address}}',
     alert_header: 'Email sent',
     email_time_notification: 'An email was sent to the requester on {{date}}'
-  }
+  },
+  intake: 'Intake Request',
+  businessCase: 'Business Case',
+  notes: 'Admin team notes',
+  aria: {
+    openIntake: 'Open intake request',
+    openBusiness: 'Open business case',
+    openNotes: 'Open admin team notes'
+  },
+  back: {
+    allRequests: 'Back to all requests'
+  },
+  actions: 'Actions'
 };
 
 export default governanceReviewTeam;
