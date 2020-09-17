@@ -74,14 +74,10 @@ class App extends React.Component<MainProps, MainState> {
                   />
                 )}
 
-                {['local', 'dev', 'impl'].includes(
-                  process.env.REACT_APP_APP_ENV || ''
-                ) && (
-                  <Route
-                    path="/governance-review-team/:systemId"
-                    component={GovernanceReviewTeam}
-                  />
-                )}
+                <Route
+                  path="/governance-review-team/:systemId"
+                  component={GovernanceReviewTeam}
+                />
                 <SecureRoute
                   exact
                   path="/system/:systemId/grt-review"
