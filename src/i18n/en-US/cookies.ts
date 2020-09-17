@@ -5,7 +5,7 @@ const cookies = {
   informationUsage: {
     heading: 'How CMS websites use information they collect',
     tools:
-      'CMS websites use a variety of Web measurement software tools. We use them to collect the information listed in the “Types of information collected” section above. The tools collect information automatically and continuously. <0>No personally identifiable information is collected by these tools.</0>',
+      'CMS websites use a variety of Web measurement software tools. We use them to collect the information listed in the “Types of information collected” section in Privacy Policy. The tools collect information automatically and continuously. <0>No personally identifiable information is collected by these tools.</0>',
     analysis:
       'CMS website staff analyze and report on the collected data from these tools. The reports are available only to CMS website managers, members of the CMS websites communications and web teams, and other designated staff who need this information to perform their duties.',
     survey:
