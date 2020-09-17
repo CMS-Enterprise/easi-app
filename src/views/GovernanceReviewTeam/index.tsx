@@ -44,7 +44,9 @@ const GovernanceReviewTeam = () => {
           <div className="grid-container padding-y-2">
             <BreadcrumbNav>
               <li>
-                <Link to="/">Home</Link>
+                <Link className="text-white" to="/">
+                  Home
+                </Link>
                 <i className="fa fa-angle-right margin-x-05" aria-hidden />
               </li>
               <li>{systemIntake.requestName}</li>
