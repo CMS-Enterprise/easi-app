@@ -69,8 +69,6 @@ const governanceReviewTeam = {
       ]
     }
   },
-  intake: 'Intake Request',
-  businessCase: 'Business Case',
   notes: 'Admin team notes',
   aria: {
     openIntake: 'Open intake request',
