@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
@@ -22,6 +22,7 @@ const GovernanceReviewTeam = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
+  const [grtIntakeDecision, setGrtIntakeDecision] = useState('');
 
   useEffect(() => {
     dispatch(fetchSystemIntake(systemId));
@@ -115,7 +116,7 @@ const GovernanceReviewTeam = () => {
             </ul>
             <hr className="opacity-30" />
             <figure className="margin-0">
-              <figcaption>{t('actions')}</figcaption>
+              <figcaption>{t('actions.label')}</figcaption>
               <ul className="easi-grt__nav-list">
                 <li>
                   <Link
@@ -132,7 +133,12 @@ const GovernanceReviewTeam = () => {
           <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/system-intake"
-              render={() => <IntakeReview systemIntake={systemIntake} />}
+              render={() => (
+                <IntakeReview
+                  systemIntake={systemIntake}
+                  handleSetDecision={setGrtIntakeDecision}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"

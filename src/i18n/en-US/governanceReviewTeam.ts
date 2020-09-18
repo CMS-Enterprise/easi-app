@@ -69,7 +69,6 @@ const governanceReviewTeam = {
       ]
     }
   },
-  notes: 'Admin team notes',
   aria: {
     openIntake: 'Open intake request',
     openBusiness: 'Open business case',
@@ -78,7 +77,17 @@ const governanceReviewTeam = {
   back: {
     allRequests: 'Back to all requests'
   },
-  actions: 'Actions'
+  actions: {
+    label: 'Actions',
+    notes: 'Admin team notes',
+    proceedHow: 'How to proceed?',
+    issueLCID: 'Issue Lifecycle ID with no further governance',
+    progressBusinessCase: 'Progress to business case',
+    notGovernance: 'Not an IT governance request',
+    readyForGrt: 'Mark as ready for GRT',
+    passWithFeedback: 'Provide GRT feedback and progress to business case',
+    readyForGrb: 'Mark as ready for GRB'
+  }
 };
 
 export default governanceReviewTeam;
