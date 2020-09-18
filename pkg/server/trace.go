@@ -8,10 +8,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
+const traceHeader = "X-TRACE-ID"
+
 func traceMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ctx := r.Context()
-		next.ServeHTTP(w, r.WithContext(appcontext.WithTrace(ctx)))
+		ctx, traceID := appcontext.WithTrace(r.Context())
+		w.Header().Add(traceHeader, traceID.String())
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
