@@ -112,20 +112,13 @@ const GovernanceReviewTeam = () => {
               </li>
             </ul>
             <hr />
-            <figure className="margin-0">
-              <figcaption>{t('actions')}</figcaption>
-              <ul className="easi-grt__nav-list">
-                <li>
-                  <Link
-                    to={`/governance-review-team/${systemId}/notes`}
-                    aria-label={t('aria.openNotes')}
-                    className={getNavLinkClasses('notes')}
-                  >
-                    {t('notes')}
-                  </Link>
-                </li>
-              </ul>
-            </figure>
+            <Link
+              to={`/governance-review-team/${systemId}/decision`}
+              aria-label={t('actions')}
+              className={getNavLinkClasses('decision')}
+            >
+              {t('actions')}
+            </Link>
           </nav>
           <section>
             <Route
@@ -137,8 +130,8 @@ const GovernanceReviewTeam = () => {
               render={() => <h1>{t('general:businessCase')}</h1>}
             />
             <Route
-              path="/governance-review-team/:systemId/notes"
-              render={() => <h1>{t('notes')}</h1>}
+              path="/governance-review-team/:systemId/decision"
+              render={() => <h1>Actions on intake request</h1>}
             />
           </section>
         </section>
