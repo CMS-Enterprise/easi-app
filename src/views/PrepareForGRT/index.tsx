@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
-import { Button, Link as USWDSLink } from '@trussworks/react-uswds';
+import { Link, useParams } from 'react-router-dom';
+import { Link as USWDSLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import CollapsableList from 'components/CollapsableList';
@@ -13,7 +13,7 @@ import PageWrapper from 'components/PageWrapper';
 import './index.scss';
 
 const PrepareForGRT = () => {
-  const history = useHistory();
+  const { systemId } = useParams();
   const { t } = useTranslation('governanceReviewTeam');
   return (
     <PageWrapper className="easi-prepare-for-grt">
@@ -28,14 +28,12 @@ const PrepareForGRT = () => {
               <i className="fa fa-angle-right margin-x-05" aria-hidden />
             </li>
             <li>
-              <Button
-                type="button"
-                onClick={() => history.goBack()}
+              <Link
+                to={`/governance-task-list/${systemId}`}
                 className="text-ink"
-                unstyled
               >
                 Get governance approval
-              </Button>
+              </Link>
               <i className="fa fa-angle-right margin-x-05" aria-hidden />
             </li>
             <li>
@@ -130,9 +128,9 @@ const PrepareForGRT = () => {
           </div>
         </div>
         <div className="grid-container">
-          <Button type="button" onClick={() => history.goBack()} unstyled>
+          <Link to={`/governance-task-list/${systemId}`} className="text-ink">
             Back
-          </Button>
+          </Link>
         </div>
       </MainContent>
       <Footer />

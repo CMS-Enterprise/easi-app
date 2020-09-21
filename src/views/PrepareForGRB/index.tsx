@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
-import { Button, Link as USWDSLink } from '@trussworks/react-uswds';
+import { Link, useParams } from 'react-router-dom';
+import { Link as USWDSLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import CollapsableList from 'components/CollapsableList';
@@ -14,7 +14,7 @@ import Alert from 'components/shared/Alert';
 import './index.scss';
 
 const PrepareForGRB = () => {
-  const history = useHistory();
+  const { systemId } = useParams();
   const { t } = useTranslation('governanceReviewBoard');
   return (
     <PageWrapper className="easi-prepare-for-grb">
@@ -29,18 +29,19 @@ const PrepareForGRB = () => {
               <i className="fa fa-angle-right margin-x-05" aria-hidden />
             </li>
             <li>
-              <Button
-                type="button"
-                onClick={() => history.goBack()}
+              <Link
+                to={`/governance-task-list/${systemId}`}
                 className="text-ink"
-                unstyled
               >
                 Get governance approval
-              </Button>
+              </Link>
               <i className="fa fa-angle-right margin-x-05" aria-hidden />
             </li>
             <li>
-              <Link to="/tbd" aria-current="location">
+              <Link
+                to={`/governance-task-list/${systemId}/prepare-for-grb`}
+                aria-current="location"
+              >
                 {t('prepare.title')}
               </Link>
             </li>
@@ -131,9 +132,9 @@ const PrepareForGRB = () => {
           </div>
         </div>
         <div className="grid-container">
-          <Button type="button" onClick={() => history.goBack()} unstyled>
+          <Link to={`/governance-task-list/${systemId}`} className="text-ink">
             Back
-          </Button>
+          </Link>
         </div>
       </MainContent>
       <Footer />
