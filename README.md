@@ -159,6 +159,17 @@ You will then find the code at `~/Projects/easi-app`.
 You can check the code out anywhere EXCEPT inside your `$GOPATH`.
 So this is customization that is up to you.
 
+### Setup: 1Password
+
+_See also: [ADR on how we share secrets](./docs/adr/0019-use-1password-for-sharing-secrets.md)_
+
+Truss have set up a [1Password vault](https://cmseasi.1password.com) for
+EASi engineers to securely share secrets, such as API keys. You will need to be
+invited to generate login credentials.
+
+If you need access to a secret that is not in the EASi vault, please ask for
+someone to add it to the vault.
+
 ### Setup: direnv
 
 Run `brew install direnv` to install.

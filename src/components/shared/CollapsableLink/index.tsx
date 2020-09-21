@@ -21,12 +21,13 @@ const CollapsableLink = ({ id, children, label }: CollapsableLinkProps) => {
     isOpen ? 'fa-caret-down' : 'fa-caret-right'
   );
   return (
-    <div>
+    <div className="easi-collapsable-link">
       <Button
         type="button"
         onClick={() => setOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-controls={id}
+        className={classnames({ 'text-bold': isOpen })}
         unstyled
       >
         <span className={arrowClassNames} />
