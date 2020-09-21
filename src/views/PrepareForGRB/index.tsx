@@ -7,9 +7,9 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import CollapsableList from 'components/CollapsableList';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
-import InlineAlert from 'components/InlineAlert';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import Alert from 'components/shared/Alert';
 
 import './index.scss';
 
@@ -64,9 +64,13 @@ const PrepareForGRB = () => {
                 ))}
               </ul>
 
-              <InlineAlert className="margin-top-4 margin-bottom-4">
+              <Alert
+                type="info"
+                inline
+                className="margin-top-4 margin-bottom-4"
+              >
                 {t('prepare.whatIsIt.alert')}
-              </InlineAlert>
+              </Alert>
               <h3 className="font-heading-lg">
                 {t('prepare.possibleOutcomes.title')}
               </h3>
