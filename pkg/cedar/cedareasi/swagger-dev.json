@@ -16,7 +16,7 @@
   "paths" : {
     "/system/{id}" : {
       "get" : {
-        "operationId" : "systemid_GET_3",
+        "operationId" : "systemid_GET_4",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
@@ -32,10 +32,16 @@
             }
           },
           "400" : {
-            "description" : "Bad Request"
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/systemid_GET_response"
+            }
           },
           "401" : {
-            "description" : "Access Denied"
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/systemid_GET_response"
+            }
           },
           "500" : {
             "description" : "Internal Server Error",
@@ -46,9 +52,27 @@
         }
       }
     },
+    "/healthCheck" : {
+      "get" : {
+        "operationId" : "healthCheck_GET_1",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/healthCheck_GET_response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied"
+          }
+        }
+      }
+    },
     "/systems" : {
       "get" : {
-        "operationId" : "systems_GET_1",
+        "operationId" : "systems_GET_2",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
@@ -64,20 +88,70 @@
             }
           },
           "400" : {
-            "description" : "Bad Request"
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/systems_GET_response"
+            }
           },
           "401" : {
-            "description" : "Access Denied"
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/systems_GET_response"
+            }
           },
           "500" : {
-            "description" : "Internal Server Error"
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/systems_GET_response"
+            }
+          }
+        }
+      }
+    },
+    "/intake/businessCase" : {
+      "post" : {
+        "operationId" : "intakebusinessCase_POST_7",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Intake_2"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/intakebusinessCase_POST_response"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/intakebusinessCase_POST_response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/intakebusinessCase_POST_response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/intakebusinessCase_POST_response"
+            }
           }
         }
       }
     },
     "/intake/governance" : {
       "post" : {
-        "operationId" : "intakegovernance_POST_4",
+        "operationId" : "intakegovernance_POST_5",
         "consumes" : [ "application/json" ],
         "produces" : [ "application/json" ],
         "parameters" : [ {
@@ -96,20 +170,29 @@
             }
           },
           "400" : {
-            "description" : "Bad Request"
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/intakegovernance_POST_response"
+            }
           },
           "401" : {
-            "description" : "Access Denied"
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/intakegovernance_POST_response"
+            }
           },
-          "501" : {
-            "description" : "Internal Server Error"
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/intakegovernance_POST_response"
+            }
           }
         }
       }
     },
     "/intake/governance/{id}" : {
       "get" : {
-        "operationId" : "intakegovernanceid_GET_5",
+        "operationId" : "intakegovernanceid_GET_6",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
@@ -125,20 +208,58 @@
             }
           },
           "400" : {
-            "description" : "Bad Request"
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/intakegovernanceid_GET_response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/intakegovernanceid_GET_response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/intakegovernanceid_GET_response"
+            }
+          }
+        }
+      },
+      "put" : {
+        "operationId" : "intakegovernanceid_PUT_6",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/IntakeUpdate"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/intakegovernanceid_PUT_response"
+            }
           },
           "401" : {
             "description" : "Access Denied"
-          },
-          "500" : {
-            "description" : "Internal Server Error"
           }
         }
       }
     },
     "/systems/{id}" : {
       "get" : {
-        "operationId" : "systemsid_GET_2",
+        "operationId" : "systemsid_GET_3",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "name" : "id",
@@ -154,16 +275,89 @@
             }
           },
           "400" : {
-            "description" : "Bad Request"
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/systemsid_GET_response"
+            }
           },
           "401" : {
-            "description" : "Access Denied"
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/systemsid_GET_response"
+            }
           },
           "500" : {
             "description" : "Internal Server Error",
             "schema" : {
               "$ref" : "#/definitions/systemsid_GET_response"
             }
+          }
+        }
+      }
+    },
+    "/intake/businessCase/{id}" : {
+      "get" : {
+        "operationId" : "intakebusinessCaseid_GET_8",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/intakebusinessCaseid_GET_response"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/intakebusinessCaseid_GET_response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied",
+            "schema" : {
+              "$ref" : "#/definitions/intakebusinessCaseid_GET_response"
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error",
+            "schema" : {
+              "$ref" : "#/definitions/intakebusinessCaseid_GET_response"
+            }
+          }
+        }
+      },
+      "put" : {
+        "operationId" : "intakebusinessCaseid_PUT_8",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Intake_3"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/intakebusinessCaseid_PUT_response"
+            }
+          },
+          "401" : {
+            "description" : "Access Denied"
           }
         }
       }
@@ -183,6 +377,15 @@
       "properties" : {
         "Governance" : {
           "$ref" : "#/definitions/GovernanceIntake"
+        }
+      }
+    },
+    "Intake_2" : {
+      "type" : "object",
+      "required" : [ "BusinessCase" ],
+      "properties" : {
+        "BusinessCase" : {
+          "$ref" : "#/definitions/BusinessCase"
         }
       }
     },
@@ -215,11 +418,20 @@
         }
       }
     },
+    "intakebusinessCase_POST_response" : {
+      "type" : "object",
+      "required" : [ "Response" ],
+      "properties" : {
+        "Response" : {
+          "$ref" : "#/definitions/Response_1"
+        }
+      }
+    },
     "systemsid_GET_response" : {
       "type" : "object",
       "properties" : {
         "Response" : {
-          "$ref" : "#/definitions/Response"
+          "$ref" : "#/definitions/Response_1"
         },
         "Systems" : {
           "type" : "array",
@@ -234,7 +446,25 @@
       "required" : [ "Response" ],
       "properties" : {
         "Response" : {
-          "$ref" : "#/definitions/Response"
+          "$ref" : "#/definitions/Response_1"
+        }
+      }
+    },
+    "healthCheck_GET_response" : {
+      "type" : "object",
+      "required" : [ "datetime", "status", "timestamp", "version" ],
+      "properties" : {
+        "datetime" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "string"
         }
       }
     },
@@ -242,10 +472,25 @@
       "type" : "object",
       "properties" : {
         "Response" : {
-          "$ref" : "#/definitions/Response"
+          "$ref" : "#/definitions/Response_1"
         },
         "SystemDetail" : {
           "$ref" : "#/definitions/SystemDetail"
+        }
+      }
+    },
+    "Response_1" : {
+      "type" : "object",
+      "required" : [ "message", "result" ],
+      "properties" : {
+        "result" : {
+          "type" : "string"
+        },
+        "message" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       }
     },
@@ -285,36 +530,72 @@
         }
       }
     },
+    "LifecycleCostLine" : {
+      "type" : "object",
+      "required" : [ "cost", "id", "phase", "year" ],
+      "properties" : {
+        "phase" : {
+          "type" : "string"
+        },
+        "cost" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "year" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "IntakeUpdate" : {
+      "type" : "object",
+      "required" : [ "Governance" ],
+      "properties" : {
+        "Governance" : {
+          "$ref" : "#/definitions/GovernanceIntake"
+        }
+      }
+    },
     "intakegovernanceid_GET_response" : {
       "type" : "object",
       "required" : [ "Intake" ],
       "properties" : {
         "Response" : {
-          "$ref" : "#/definitions/Response"
+          "$ref" : "#/definitions/Response_1"
         },
         "Intake" : {
           "$ref" : "#/definitions/Intake_1"
         }
       }
     },
-    "Response" : {
+    "intakebusinessCaseid_GET_response" : {
       "type" : "object",
-      "required" : [ "message", "result" ],
+      "required" : [ "BusinessCase" ],
       "properties" : {
-        "result" : {
-          "type" : "string"
+        "BusinessCase" : {
+          "$ref" : "#/definitions/BusinessCase"
+        }
+      }
+    },
+    "systems_GET_response" : {
+      "type" : "object",
+      "properties" : {
+        "Response" : {
+          "$ref" : "#/definitions/Response_1"
         },
-        "message" : {
+        "Systems" : {
           "type" : "array",
           "items" : {
-            "type" : "string"
+            "$ref" : "#/definitions/System"
           }
         }
       }
     },
     "GovernanceIntake" : {
       "type" : "object",
-      "required" : [ "business_needs", "business_owner", "business_owner_component", "ea_support_request", "eua_user_id", "existing_contract", "existing_funding", "id", "process_status", "product_manager", "product_manager_component", "requester", "requester_component", "solution", "submitted_time", "system_name" ],
+      "required" : [ "business_needs", "business_owner", "business_owner_component", "decided_at", "ea_support_request", "eua_user_id", "existing_contract", "existing_funding", "id", "process_status", "product_manager", "product_manager_component", "requester", "requester_component", "solution", "status", "submitted_at", "system_name", "withdrawn_at" ],
       "properties" : {
         "requester" : {
           "type" : "string"
@@ -331,8 +612,14 @@
         "product_manager" : {
           "type" : "string"
         },
+        "decided_at" : {
+          "type" : "string"
+        },
         "existing_funding" : {
           "type" : "boolean"
+        },
+        "submitted_at" : {
+          "type" : "string"
         },
         "system_name" : {
           "type" : "string"
@@ -344,9 +631,6 @@
           "type" : "string"
         },
         "existing_contract" : {
-          "type" : "string"
-        },
-        "submitted_time" : {
           "type" : "string"
         },
         "oit_security_collaborator" : {
@@ -370,6 +654,9 @@
         "ea_support_request" : {
           "type" : "boolean"
         },
+        "withdrawn_at" : {
+          "type" : "string"
+        },
         "id" : {
           "type" : "string"
         },
@@ -379,22 +666,17 @@
         "trb_collaborator" : {
           "type" : "string"
         },
-        "funding_number" : {
+        "status" : {
           "type" : "string"
         }
       }
     },
-    "systems_GET_response" : {
+    "intakebusinessCaseid_PUT_response" : {
       "type" : "object",
+      "required" : [ "Response" ],
       "properties" : {
         "Response" : {
-          "$ref" : "#/definitions/Response"
-        },
-        "Systems" : {
-          "type" : "array",
-          "items" : {
-            "$ref" : "#/definitions/System"
-          }
+          "$ref" : "#/definitions/Response_1"
         }
       }
     },
@@ -403,10 +685,129 @@
       "required" : [ "Governance" ],
       "properties" : {
         "Governance" : {
+          "$ref" : "#/definitions/GovernanceIntake"
+        }
+      }
+    },
+    "BusinessCase" : {
+      "type" : "object",
+      "required" : [ "business_need", "business_owner", "cms_benefit", "decided_at", "eua_user_id", "governance_id", "hosting_needs", "id", "lifecycle_id", "priority_alignment", "project_name", "requester", "requester_phone_number", "solutions", "status", "success_indicators", "user_interface" ],
+      "properties" : {
+        "requester" : {
+          "type" : "string"
+        },
+        "priority_alignment" : {
+          "type" : "string"
+        },
+        "eua_user_id" : {
+          "type" : "string"
+        },
+        "business_owner" : {
+          "type" : "string"
+        },
+        "requester_phone_number" : {
+          "type" : "string"
+        },
+        "decided_at" : {
+          "type" : "string"
+        },
+        "solutions" : {
           "type" : "array",
           "items" : {
-            "$ref" : "#/definitions/GovernanceIntake"
+            "$ref" : "#/definitions/BusinessCaseSolution"
           }
+        },
+        "governance_id" : {
+          "type" : "string",
+          "description" : "ID used to uniquely identify a system intake form"
+        },
+        "lifecycle_id" : {
+          "type" : "string"
+        },
+        "hosting_needs" : {
+          "type" : "string"
+        },
+        "project_name" : {
+          "type" : "string"
+        },
+        "initial_submitted_at" : {
+          "type" : "string"
+        },
+        "last_submitted_at" : {
+          "type" : "string"
+        },
+        "user_interface" : {
+          "type" : "string"
+        },
+        "withdrawn_at" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string",
+          "description" : "ID used to uniquely identify a business case"
+        },
+        "cms_benefit" : {
+          "type" : "string"
+        },
+        "business_need" : {
+          "type" : "string"
+        },
+        "success_indicators" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        }
+      }
+    },
+    "BusinessCaseSolution" : {
+      "type" : "object",
+      "required" : [ "cons", "id", "lifecycle_cost_lines", "pros", "summary", "title", "type" ],
+      "properties" : {
+        "summary" : {
+          "type" : "string"
+        },
+        "pros" : {
+          "type" : "string"
+        },
+        "cost_savings" : {
+          "type" : "string"
+        },
+        "lifecycle_cost_lines" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/LifecycleCostLine"
+          }
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "cons" : {
+          "type" : "string"
+        }
+      }
+    },
+    "intakegovernanceid_PUT_response" : {
+      "type" : "object",
+      "required" : [ "Response" ],
+      "properties" : {
+        "Response" : {
+          "$ref" : "#/definitions/Response_1"
+        }
+      }
+    },
+    "Intake_3" : {
+      "type" : "object",
+      "required" : [ "BusinessCase" ],
+      "properties" : {
+        "BusinessCase" : {
+          "$ref" : "#/definitions/BusinessCase"
         }
       }
     },
