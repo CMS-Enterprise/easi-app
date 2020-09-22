@@ -99,7 +99,14 @@ const AllRequests = () => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map(cell => {
+                  {row.cells.map((cell, i) => {
+                    if (i === 0) {
+                      return (
+                        <th {...cell.getCellProps()} scope="row">
+                          {cell.render('Cell')}
+                        </th>
+                      );
+                    }
                     return (
                       <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                     );
