@@ -659,6 +659,7 @@
         },
         "id" : {
           "type" : "string",
+          "minLength": 36,
           "description": "PRIMARY KEY, e.g. unique constraint"
         },
         "product_manager_component" : {
@@ -720,7 +721,8 @@
         },
         "governance_id" : {
           "type" : "string",
-          "description" : "ID used to uniquely identify a system intake form; FOREIGN KEY to GovernanceIntake.id field"
+          "minLength": 36,
+          "description" : "ID used to uniquely identify a system intake form"
         },
         "lifecycle_id" : {
           "type" : "string"
@@ -745,6 +747,7 @@
         },
         "id" : {
           "type" : "string",
+          "minLength": 36,
           "description" : "ID used to uniquely identify a business case; PRIMARY KEY, e.g. unique constraint"
         },
         "cms_benefit" : {
