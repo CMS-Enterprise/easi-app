@@ -13,6 +13,7 @@ import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import NotFound from 'views/NotFound';
+import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
 import Sandbox from 'views/Sandbox';
@@ -57,11 +58,6 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   component={GovernanceOverview}
                 />
-                <Route
-                  path="/prepare-for-grt"
-                  exact
-                  component={PrepareForGRT}
-                />
 
                 {['local', 'dev', 'impl'].includes(
                   process.env.REACT_APP_APP_ENV || ''
@@ -72,6 +68,16 @@ class App extends React.Component<MainProps, MainState> {
                     component={GovernanceTaskList}
                   />
                 )}
+                <SecureRoute
+                  exact
+                  path="/governance-task-list/:systemId/prepare-for-grt"
+                  component={PrepareForGRT}
+                />
+                <SecureRoute
+                  exact
+                  path="/governance-task-list/:systemId/prepare-for-grb"
+                  component={PrepareForGRB}
+                />
                 <SecureRoute
                   exact
                   path="/system/:systemId/grt-review"
