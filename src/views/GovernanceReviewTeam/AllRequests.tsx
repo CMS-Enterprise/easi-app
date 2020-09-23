@@ -39,28 +39,31 @@ const AllRequests = () => {
     []
   );
 
-  const data = [
-    {
-      id: 'addaa218-34d3-4dd8-a12f-38f6ff33b22d',
-      submittedAt: new Date().toISOString(),
-      requestName: 'Easy Access to System Information',
-      requester: {
-        name: 'Christopher Hui',
-        component: 'Division of Pop Corners'
+  const data = useMemo(
+    () => [
+      {
+        id: 'addaa218-34d3-4dd8-a12f-38f6ff33b22d',
+        submittedAt: new Date().toISOString(),
+        requestName: 'Easy Access to System Information',
+        requester: {
+          name: 'Christopher Hui',
+          component: 'Division of Pop Corners'
+        },
+        status: 'Submitted'
       },
-      status: 'Submitted'
-    },
-    {
-      id: '229f9b64-18fc-4ee1-95c4-9d4b143d215c',
-      submittedAt: new Date().toISOString(),
-      requestName: 'Hard Access to System Information',
-      requester: {
-        name: 'George Baukerton',
-        component: 'Office of Information Technology'
-      },
-      status: 'Submitted'
-    }
-  ];
+      {
+        id: '229f9b64-18fc-4ee1-95c4-9d4b143d215c',
+        submittedAt: new Date().toISOString(),
+        requestName: 'Hard Access to System Information',
+        requester: {
+          name: 'George Baukerton',
+          component: 'Office of Information Technology'
+        },
+        status: 'Submitted'
+      }
+    ],
+    []
+  );
 
   const {
     getTableProps,
