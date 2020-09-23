@@ -60,7 +60,7 @@ class App extends React.Component<MainProps, MainState> {
                   component={GovernanceOverview}
                 />
 
-                {['local', 'dev', 'impl'].includes(
+                {['local', 'dev', 'impl', 'test'].includes(
                   process.env.REACT_APP_APP_ENV || ''
                 ) && (
                   <SecureRoute

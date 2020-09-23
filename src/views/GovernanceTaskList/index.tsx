@@ -146,15 +146,21 @@ const GovernanceTaskList = () => {
   const history = useHistory();
   const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
   const { t } = useTranslation();
+  const systemIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake
+  );
 
   useEffect(() => {
     if (systemId !== 'new') {
       dispatch(fetchSystemIntake(systemId));
     }
   }, [dispatch, systemId]);
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
+
+  useEffect(() => {
+    if (systemId === 'new' && systemIntake.id) {
+      history.replace(`/governance-task-list/${systemIntake.id}`);
+    }
+  }, [history, systemIntake.id, systemId]);
 
   useEffect(() => {
     if (systemIntake.id && systemIntake.businessCaseId) {
