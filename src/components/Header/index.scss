@@ -1,4 +1,6 @@
 .easi-header {
+  // HACK: Remove mystery 1px space underneath the border
+  margin-bottom: -1px;
   border-bottom: 8px solid $turquoise;
 
   &__basic {

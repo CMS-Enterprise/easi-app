@@ -1,5 +1,7 @@
 const general = {
-  appName: 'EASi'
+  appName: 'EASi',
+  intake: 'Intake Request',
+  businessCase: 'Business Case'
 };
 
 export default general;
