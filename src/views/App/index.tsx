@@ -7,6 +7,7 @@ import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
 import Cookies from 'views/Cookies';
 import GovernanceOverview from 'views/GovernanceOverview';
+import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
@@ -68,6 +69,11 @@ class App extends React.Component<MainProps, MainState> {
                     component={GovernanceTaskList}
                   />
                 )}
+
+                <SecureRoute
+                  path="/governance-review-team/:systemId/:activePage"
+                  component={GovernanceReviewTeam}
+                />
                 <SecureRoute
                   exact
                   path="/governance-task-list/:systemId/prepare-for-grt"
