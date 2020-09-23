@@ -79,7 +79,7 @@ const AllRequests = () => {
       <Header />
       <MainContent className="grid-container">
         <Table bordered={false} {...getTableProps()} fullWidth>
-          <caption>
+          <caption className="usa-sr-only">
             Table of open requests currently managed by the admin team
           </caption>
           {/* TODO for closed tab: Table of closed requests */}
