@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useTable } from 'react-table';
 import { Table } from '@trussworks/react-uswds';
@@ -10,17 +11,18 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 
 const AllRequests = () => {
+  const { t } = useTranslation('governanceReviewTeam');
   const columns: any = useMemo(
     () => [
       {
-        Header: 'Submission date',
+        Header: t('intake:fields.submissionDate'),
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
         }
       },
       {
-        Header: 'Request name',
+        Header: t('intake:fields.requestName'),
         accessor: 'requestName',
         Cell: ({ row, value }: any) => {
           return (
@@ -31,14 +33,16 @@ const AllRequests = () => {
         }
       },
       {
-        Header: 'Component',
+        Header: t('intake:fields.component'),
         accessor: 'requester.component'
       },
-      { Header: 'Status', accessor: 'status' }
+      { Header: t('allRequests.table.requestType'), accessor: 'type' }
     ],
-    []
+    [t]
   );
 
+  // Mock Data
+  // EASI-789 will create an endpoint for getting all intake requests for GRT
   const data = useMemo(
     () => [
       {
@@ -49,7 +53,8 @@ const AllRequests = () => {
           name: 'Christopher Hui',
           component: 'Division of Pop Corners'
         },
-        status: 'Submitted'
+        status: 'Submitted',
+        type: 'Decomission a system'
       },
       {
         id: '229f9b64-18fc-4ee1-95c4-9d4b143d215c',
@@ -59,7 +64,8 @@ const AllRequests = () => {
           name: 'George Baukerton',
           component: 'Office of Information Technology'
         },
-        status: 'Submitted'
+        status: 'Submitted',
+        type: 'Re-compete'
       }
     ],
     []
@@ -83,9 +89,8 @@ const AllRequests = () => {
       <MainContent className="grid-container">
         <Table bordered={false} {...getTableProps()} fullWidth>
           <caption className="usa-sr-only">
-            Table of open requests currently managed by the admin team
+            {t('allRequests.aria.openRequestsTable')}
           </caption>
-          {/* TODO for closed tab: Table of closed requests */}
           <thead>
             {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>

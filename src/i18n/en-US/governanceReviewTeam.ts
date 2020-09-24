@@ -86,6 +86,16 @@ const governanceReviewTeam = {
     alert_header: 'Email sent',
     email_time_notification: 'An email was sent to the requester on {{date}}'
   },
+  allRequests: {
+    table: {
+      requestType: 'Type of request'
+    },
+    aria: {
+      openTableCaption:
+        'Table of open requests currently managed by the admin team',
+      closedTableCaption: 'Table of closed requests'
+    }
+  },
   notes: 'Admin team notes',
   aria: {
     openIntake: 'Open intake request',
