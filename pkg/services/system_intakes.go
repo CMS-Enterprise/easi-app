@@ -234,7 +234,7 @@ func NewSubmitSystemIntake(
 	config Config,
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
+	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
 	emailReviewer func(requester string, intakeID uuid.UUID) error,
 ) func(context.Context, *models.SystemIntake, *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error) {
@@ -259,7 +259,7 @@ func NewSubmitSystemIntake(
 		}
 
 		incoming.SubmittedAt = &updatedTime
-		alfabetID, validateAndSubmitErr := validateAndSubmit(incoming, appcontext.ZLogger(ctx))
+		alfabetID, validateAndSubmitErr := validateAndSubmit(ctx, incoming)
 		if validateAndSubmitErr != nil {
 			return &models.SystemIntake{}, validateAndSubmitErr
 		}

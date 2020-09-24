@@ -1,16 +1,14 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
-	"go.uber.org/zap"
-
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchSystems func(logger *zap.Logger) (models.SystemShorts, error)
+type fetchSystems func(context.Context) (models.SystemShorts, error)
 
 // NewSystemsListHandler is a constructor for SystemListHandler
 func NewSystemsListHandler(base HandlerBase, fetch fetchSystems) SystemsListHandler {
@@ -29,13 +27,7 @@ type SystemsListHandler struct {
 // Handle handles a web request and returns a list of systems
 func (h SystemsListHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		logger, ok := appcontext.Logger(r.Context())
-		if !ok {
-			h.Logger.Error("Failed to logger from context in systems list handler")
-			logger = h.Logger
-		}
-
-		systems, err := h.FetchSystems(logger)
+		systems, err := h.FetchSystems(r.Context())
 		if err != nil {
 			h.WriteErrorResponse(r.Context(), w, err)
 			return

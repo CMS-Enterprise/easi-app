@@ -1,7 +1,7 @@
 package services
 
 import (
-	"go.uber.org/zap"
+	"context"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -15,7 +15,7 @@ func makeDummySystemShort(id string, acronym string, name string) models.SystemS
 }
 
 // NewFetchFakeSystems creates some fake systems TODO: deprecate in favor of CEDAR
-func NewFetchFakeSystems() func(logger *zap.Logger) (models.SystemShorts, error) {
+func NewFetchFakeSystems() func(context.Context) (models.SystemShorts, error) {
 	systems := models.SystemShorts{
 		makeDummySystemShort("1", "GRPE", "Grape"),
 		makeDummySystemShort("2", "APPL", "Apple"),
@@ -28,7 +28,7 @@ func NewFetchFakeSystems() func(logger *zap.Logger) (models.SystemShorts, error)
 		makeDummySystemShort("9", "MNGO", "Mango"),
 		makeDummySystemShort("10", "MGST", "Mangosteen"),
 	}
-	return func(logger *zap.Logger) (models.SystemShorts, error) {
+	return func(_ context.Context) (models.SystemShorts, error) {
 		return systems, nil
 	}
 }

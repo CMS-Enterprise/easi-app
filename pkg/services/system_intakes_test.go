@@ -383,7 +383,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	update := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		return intake, nil
 	}
-	submit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+	submit := func(c context.Context, intake *models.SystemIntake) (string, error) {
 		return "ALFABET-ID", nil
 	}
 	submitEmailCount := 0
@@ -438,7 +438,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	s.Run("returns error when validation fails", func() {
 		existing := models.SystemIntake{Requester: "existing"}
 		incoming := models.SystemIntake{Requester: "incoming"}
-		failValidationSubmit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+		failValidationSubmit := func(_ context.Context, intake *models.SystemIntake) (string, error) {
 			return "", &apperrors.ValidationError{
 				Err:     errors.New("validation failed on these fields: ID"),
 				ModelID: intake.ID.String(),
@@ -456,7 +456,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	s.Run("returns error when submission fails", func() {
 		existing := models.SystemIntake{Requester: "existing"}
 		incoming := models.SystemIntake{Requester: "incoming"}
-		failValidationSubmit := func(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
+		failValidationSubmit := func(_ context.Context, intake *models.SystemIntake) (string, error) {
 			return "", &apperrors.ExternalAPIError{
 				Err:       errors.New("CEDAR return result: unexpected failure"),
 				ModelID:   intake.ID.String(),
