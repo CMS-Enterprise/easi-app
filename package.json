@@ -69,7 +69,7 @@
   },
   "scripts": {
     "start": "craco -r @cypress/instrument-cra start",
-    "build": "craco build",
+    "build": "CI=true craco build",
     "test": "craco test",
     "test:coverage": "craco test --coverage --watchAll=false",
     "eject": "react-scripts eject",

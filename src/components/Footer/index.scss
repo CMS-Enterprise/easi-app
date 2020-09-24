@@ -1,4 +1,10 @@
 .easi-footer {
+  // Since we don't have the "Return to top" enabled, there isn't padding by
+  // default to display the top outline when the link is focus.
+  &--slim {
+    padding-top: .25em;
+  }
+
   &__secondary-logo-wrap {
     display: flex;
     align-items: center;

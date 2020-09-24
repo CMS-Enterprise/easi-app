@@ -7,6 +7,7 @@ import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
 import Cookies from 'views/Cookies';
 import GovernanceOverview from 'views/GovernanceOverview';
+import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import AllRequests from 'views/GovernanceReviewTeam/AllRequests';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
@@ -14,6 +15,7 @@ import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import NotFound from 'views/NotFound';
+import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
 import Sandbox from 'views/Sandbox';
@@ -58,13 +60,7 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   component={GovernanceOverview}
                 />
-                <Route
-                  path="/prepare-for-grt"
-                  exact
-                  component={PrepareForGRT}
-                />
-
-                {['local', 'dev', 'impl'].includes(
+                {['local', 'dev', 'impl', 'test'].includes(
                   process.env.REACT_APP_APP_ENV || ''
                 ) && (
                   <SecureRoute
@@ -82,6 +78,20 @@ class App extends React.Component<MainProps, MainState> {
                     component={AllRequests}
                   />
                 )}
+                <SecureRoute
+                  path="/governance-review-team/:systemId/:activePage"
+                  component={GovernanceReviewTeam}
+                />
+                <SecureRoute
+                  exact
+                  path="/governance-task-list/:systemId/prepare-for-grt"
+                  component={PrepareForGRT}
+                />
+                <SecureRoute
+                  exact
+                  path="/governance-task-list/:systemId/prepare-for-grb"
+                  component={PrepareForGRB}
+                />
                 <SecureRoute
                   exact
                   path="/system/:systemId/grt-review"
@@ -113,7 +123,6 @@ class App extends React.Component<MainProps, MainState> {
                   component={BusinessCase}
                 />
                 <Route path="/implicit/callback" component={LoginCallback} />
-
                 <Route path="/privacy-policy" exact component={PrivacyPolicy} />
                 <Route path="/cookies" exact component={Cookies} />
                 <Route

@@ -164,7 +164,10 @@ jobs:
           command: pre-commit run --all-files --show-diff-on-failure
       - run:
           name: Run Frontend Tests
-          command: yarn test
+          command: yarn run test
+      - run:
+          name: Build Frontend Code
+          command: yarn run build
       - save_cache:
           key: pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
           paths:

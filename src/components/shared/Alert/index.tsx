@@ -7,6 +7,7 @@ interface AlertProps {
   children?: React.ReactNode;
   slim?: boolean;
   noIcon?: boolean;
+  inline?: boolean;
 }
 
 export const Alert = ({
@@ -15,7 +16,8 @@ export const Alert = ({
   children,
   slim,
   noIcon,
-  className
+  className,
+  inline
 }: AlertProps & React.HTMLAttributes<HTMLDivElement>): React.ReactElement => {
   const classes = classnames(
     'usa-alert',
@@ -25,7 +27,8 @@ export const Alert = ({
       'usa-alert--error': type === 'error',
       'usa-alert--info': type === 'info',
       'usa-alert--slim': slim,
-      'usa-alert--no-icon': noIcon
+      'usa-alert--no-icon': noIcon,
+      'easi-inline-alert': inline
     },
     className
   );
