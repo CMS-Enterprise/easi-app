@@ -238,7 +238,9 @@ const RequestDescription = ({
                 unstyled
                 onClick={() => {
                   dispatchSave();
-                  history.push('/');
+                  history.push(
+                    `/governance-task-list/${businessCase.systemIntakeId}`
+                  );
                 }}
               >
                 <span>

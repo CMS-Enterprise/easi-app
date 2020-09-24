@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -47,6 +47,7 @@ const RequestDetails = ({
   dispatchSave
 }: RequestDetailsProps) => {
   const history = useHistory();
+  const { systemId } = useParams();
   const initialValues: RequestDetailsForm = {
     requestName: systemIntake.requestName,
     fundingSource: systemIntake.fundingSource,
@@ -439,7 +440,7 @@ const RequestDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push('/');
+                      history.push(`/governance-task-list/${systemId}`);
                     }}
                   >
                     <span>

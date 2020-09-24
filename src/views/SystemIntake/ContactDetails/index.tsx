@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -62,6 +62,7 @@ const ContactDetails = ({
   dispatchSave
 }: ContactDetailsProps) => {
   const history = useHistory();
+  const { systemId } = useParams();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
 
   const initialValues: ContactDetailsForm = {
@@ -459,7 +460,7 @@ const ContactDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push('/');
+                      history.push(`/governance-task-list/${systemId}`);
                     }}
                   >
                     <span>
