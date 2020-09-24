@@ -329,6 +329,7 @@ func NewArchiveSystemIntake(
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	archiveBusinessCase func(context.Context, uuid.UUID) error,
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
+	sendWithdrawEmail func(requestName string) error,
 ) func(context.Context, uuid.UUID) error {
 	return func(ctx context.Context, id uuid.UUID) error {
 		intake, fetchErr := fetch(ctx, id)
@@ -367,6 +368,11 @@ func NewArchiveSystemIntake(
 				Model:     intake,
 				Operation: apperrors.QuerySave,
 			}
+		}
+
+		err = sendWithdrawEmail(intake.ProjectName.String)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error("Withdraw email failed to send: ", zap.Error(err))
 		}
 
 		return nil

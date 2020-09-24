@@ -169,6 +169,7 @@ func (s *Server) routes(
 				store.UpdateBusinessCase,
 			),
 			services.NewAuthorizeArchiveSystemIntake(s.logger),
+			emailClient.SendWithdrawRequestEmail,
 		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
