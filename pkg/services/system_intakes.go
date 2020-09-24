@@ -117,11 +117,10 @@ func NewUpdateSystemIntake(
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
-	sendSubmitEmail func(requester string, intakeID uuid.UUID) error,
 	fetchRequesterEmail func(logger *zap.Logger, euaID string) (string, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 	updateDraftIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
+	submitIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
 	canDecideIntake bool,
 ) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
@@ -137,56 +136,7 @@ func NewUpdateSystemIntake(
 		if existingIntake.Status == models.SystemIntakeStatusDRAFT && intake.Status == models.SystemIntakeStatusDRAFT {
 			return updateDraftIntake(ctx, existingIntake, intake)
 		} else if existingIntake.Status == models.SystemIntakeStatusDRAFT && intake.Status == models.SystemIntakeStatusSUBMITTED {
-			ok, err := authorize(ctx, existingIntake)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-			if !ok {
-				return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
-			}
-
-			updatedTime := config.clock.Now()
-			intake.UpdatedAt = &updatedTime
-
-			if intake.AlfabetID.Valid {
-				err := &apperrors.ResourceConflictError{
-					Err:        errors.New("intake has already been submitted to CEDAR"),
-					ResourceID: intake.ID.String(),
-					Resource:   intake,
-				}
-				return &models.SystemIntake{}, err
-			}
-
-			intake.SubmittedAt = &updatedTime
-			alfabetID, validateAndSubmitErr := validateAndSubmit(intake, appcontext.ZLogger(ctx))
-			if validateAndSubmitErr != nil {
-				return &models.SystemIntake{}, validateAndSubmitErr
-			}
-			if alfabetID == "" {
-				return &models.SystemIntake{}, &apperrors.ExternalAPIError{
-					Err:       errors.New("submission was not successful"),
-					Model:     intake,
-					ModelID:   intake.ID.String(),
-					Operation: apperrors.Submit,
-					Source:    "CEDAR EASi",
-				}
-			}
-			intake.AlfabetID = null.StringFrom(alfabetID)
-			intake, err = update(ctx, intake)
-			if err != nil {
-				return &models.SystemIntake{}, &apperrors.QueryError{
-					Err:       err,
-					Model:     intake,
-					Operation: apperrors.QuerySave,
-				}
-			}
-			// only send an email when everything went ok
-			err = sendSubmitEmail(intake.Requester, intake.ID)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-
-			return intake, nil
+			return submitIntake(ctx, existingIntake, intake)
 		} else if existingIntake.Status == models.SystemIntakeStatusSUBMITTED &&
 			(intake.Status == models.SystemIntakeStatusAPPROVED ||
 				intake.Status == models.SystemIntakeStatusACCEPTED ||
@@ -274,6 +224,69 @@ func NewUpdateDraftSystemIntake(
 				Operation: apperrors.QuerySave,
 			}
 		}
+		return incoming, nil
+	}
+}
+
+// NewSubmitSystemIntake returns a function that
+// executes submit of a system intake
+func NewSubmitSystemIntake(
+	config Config,
+	authorize func(context.Context, *models.SystemIntake) (bool, error),
+	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	validateAndSubmit func(intake *models.SystemIntake, logger *zap.Logger) (string, error),
+	emailReviewer func(requester string, intakeID uuid.UUID) error,
+) func(context.Context, *models.SystemIntake, *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error) {
+		ok, err := authorize(ctx, existing)
+		if err != nil {
+			return &models.SystemIntake{}, err
+		}
+		if !ok {
+			return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
+		}
+
+		updatedTime := config.clock.Now()
+		incoming.UpdatedAt = &updatedTime
+
+		if incoming.AlfabetID.Valid {
+			err := &apperrors.ResourceConflictError{
+				Err:        errors.New("intake has already been submitted to CEDAR"),
+				ResourceID: incoming.ID.String(),
+				Resource:   incoming,
+			}
+			return &models.SystemIntake{}, err
+		}
+
+		incoming.SubmittedAt = &updatedTime
+		alfabetID, validateAndSubmitErr := validateAndSubmit(incoming, appcontext.ZLogger(ctx))
+		if validateAndSubmitErr != nil {
+			return &models.SystemIntake{}, validateAndSubmitErr
+		}
+		if alfabetID == "" {
+			return &models.SystemIntake{}, &apperrors.ExternalAPIError{
+				Err:       errors.New("submission was not successful"),
+				Model:     incoming,
+				ModelID:   incoming.ID.String(),
+				Operation: apperrors.Submit,
+				Source:    "CEDAR EASi",
+			}
+		}
+		incoming.AlfabetID = null.StringFrom(alfabetID)
+		incoming, err = update(ctx, incoming)
+		if err != nil {
+			return &models.SystemIntake{}, &apperrors.QueryError{
+				Err:       err,
+				Model:     incoming,
+				Operation: apperrors.QuerySave,
+			}
+		}
+		// only send an email when everything went ok
+		err = emailReviewer(incoming.Requester, incoming.ID)
+		if err != nil {
+			return &models.SystemIntake{}, err
+		}
+
 		return incoming, nil
 	}
 }

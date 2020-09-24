@@ -7,30 +7,30 @@ import cookies from './cookies';
 import error from './error';
 import footer from './footer';
 import general from './general';
+import governanceReviewBoard from './governanceReviewBoard';
 import governanceReviewTeam from './governanceReviewTeam';
-import grtReview from './grtReview';
 import header from './header';
 import home from './home';
+import intake from './intake';
 import privacyPolicy from './privacyPolicy';
-import systemIntake from './systemIntake';
 import termsAndConditions from './termsAndConditions';
 
 const enUS = {
+  accessibilityStatement,
   auth,
+  businessCase,
+  cookies,
   error,
   footer,
   general,
+  governanceReviewBoard,
+  governanceReviewTeam,
   header,
   home,
-  governanceReviewTeam,
-  systemIntake,
-  businessCase,
-  grtReview,
+  intake,
   privacyPolicy,
   taskList,
-  termsAndConditions,
-  cookies,
-  accessibilityStatement
+  termsAndConditions
 };
 
 export default enUS;

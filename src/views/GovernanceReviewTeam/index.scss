@@ -1,0 +1,48 @@
+.easi-grt {
+  &__request-summary {
+    background-color: $easi-bright-blue;
+    color: #fff;
+  }
+
+  &__request-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+
+    dt {
+      margin-bottom: 0.25em;
+    }
+
+    dd {
+      margin: 0;
+      font-weight: 600;
+    }
+  }
+
+  &__request-info-col {
+    display: flex;
+  }
+
+  &__description-group + &__description-group {
+    margin-left: 2em;
+  }
+
+  &__nav-list {
+    padding: 0;
+    list-style-type: none;
+
+    li {
+      margin: 1em 0;
+    }
+  }
+
+  &__nav-link {
+    color: $black;
+    text-decoration: none;
+
+    &--active {
+      font-weight: bold;
+      color: $easi-bright-blue;
+    }
+  }
+}

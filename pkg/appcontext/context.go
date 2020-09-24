@@ -43,9 +43,9 @@ func ZLogger(ctx context.Context) *zap.Logger {
 }
 
 // WithTrace returns a context with request trace
-func WithTrace(ctx context.Context) context.Context {
+func WithTrace(ctx context.Context) (context.Context, uuid.UUID) {
 	traceID := uuid.New()
-	return context.WithValue(ctx, traceKey, traceID)
+	return context.WithValue(ctx, traceKey, traceID), traceID
 }
 
 // Trace returns the context's trace UUID
