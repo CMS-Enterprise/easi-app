@@ -603,13 +603,4 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
-	s.Run("returns error when email fails", func() {
-		emailError := errors.New("email failed")
-		failEmail := func(requestName string) error {
-			return emailError
-		}
-		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, authorize, failEmail)
-		err := archiveSystemIntake(ctx, fakeID)
-		s.Equal(emailError, err)
-	})
 }
