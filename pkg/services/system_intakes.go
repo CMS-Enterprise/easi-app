@@ -359,7 +359,7 @@ func NewArchiveSystemIntake(
 
 		err = sendWithdrawEmail(intake.ProjectName.String)
 		if err != nil {
-			return err
+			appcontext.ZLogger(ctx).Error("Withdraw email failed to send: ", zap.Error(err))
 		}
 
 		return nil
