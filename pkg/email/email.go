@@ -27,6 +27,8 @@ type templates struct {
 	systemIntakeSubmissionTemplate templateCaller
 	businessCaseSubmissionTemplate templateCaller
 	intakeReviewTemplate           templateCaller
+	namedRequestWithdrawTemplate   templateCaller
+	unnamedRequestWithdrawTemplate templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -74,6 +76,20 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(intakeReviewTemplateName)
 	}
 	appTemplates.intakeReviewTemplate = intakeReviewTemplate
+
+	namedRequestWithdrawTemplateName := "named_request_withdrawal.gohtml"
+	namedRequestWithdrawTemplate := rawTemplates.Lookup(namedRequestWithdrawTemplateName)
+	if namedRequestWithdrawTemplate == nil {
+		return Client{}, templateError(namedRequestWithdrawTemplateName)
+	}
+	appTemplates.namedRequestWithdrawTemplate = namedRequestWithdrawTemplate
+
+	unnamedRequestWithdrawTemplateName := "unnamed_request_withdrawal.gohtml"
+	unnamedRequestWithdrawTemplate := rawTemplates.Lookup(unnamedRequestWithdrawTemplateName)
+	if unnamedRequestWithdrawTemplate == nil {
+		return Client{}, templateError(unnamedRequestWithdrawTemplateName)
+	}
+	appTemplates.unnamedRequestWithdrawTemplate = unnamedRequestWithdrawTemplate
 
 	client := Client{
 		config:    config,
