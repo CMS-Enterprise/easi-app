@@ -27,6 +27,16 @@ it('falls back to default values without a provider', () => {
   expect(component.find('p').exists()).toEqual(false);
 });
 
+it('can specify what value to match', () => {
+  const component = mount(
+    <FlagToggle name="sandbox" is={false}>
+      <p>Sandbox</p>
+    </FlagToggle>
+  );
+
+  expect(component.find('p').exists()).toEqual(true);
+});
+
 it('loads flags into the provider', async () => {
   const getMock = mockedAxios.get.mockResolvedValue({
     data: {

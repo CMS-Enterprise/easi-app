@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { FlagToggle } from 'contexts/flagContext';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -40,9 +41,16 @@ const GovernanceOverview = () => {
             <i className="fa fa-angle-right margin-x-05" aria-hidden />
           </li>
           <li>
-            <Link to="/governance-overview" aria-current="location">
-              Add a new system or service
-            </Link>
+            <FlagToggle name="taskListLite">
+              <Link to="/governance-task-list/new" aria-current="location">
+                Add a new system or service
+              </Link>
+            </FlagToggle>
+            <FlagToggle name="taskListLite" is={false}>
+              <Link to="/governance-overview" aria-current="location">
+                Add a new system or service
+              </Link>
+            </FlagToggle>
           </li>
         </BreadcrumbNav>
         <Link to="/">

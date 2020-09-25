@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { useFlags } from 'contexts/flagContext';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -17,6 +18,7 @@ import PageWrapper from 'components/PageWrapper';
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
+import { Flags } from 'types/flags';
 import { fetchBusinessCases, fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
@@ -43,7 +45,8 @@ const Home = ({ history }: HomeProps) => {
     }
   }, [dispatch, authState.isAuthenticated]);
 
-  const getSystemIntakeBanners = () => {
+  const getSystemIntakeBanners = (flags: Flags) => {
+    const rootPath = flags.taskListLite ? '/governance-task-list' : '/system';
     return systemIntakes.map((intake: SystemIntakeForm) => {
       switch (intake.status) {
         case 'DRAFT':
@@ -57,7 +60,7 @@ const Home = ({ history }: HomeProps) => {
               }
               helpfulText="Your Intake Request is incomplete, please submit it when you are ready so that we can move you to the next phase"
               onClick={() => {
-                history.push(`/system/${intake.id}`);
+                history.push(`${rootPath}/${intake.id}`);
               }}
               label="Go to Intake Request"
               data-intakeid={intake.id}
@@ -94,8 +97,11 @@ const Home = ({ history }: HomeProps) => {
     });
   };
 
-  const getBusinessCaseBanners = () => {
+  const getBusinessCaseBanners = (flags: Flags) => {
     return businessCases.map((busCase: BusinessCaseModel) => {
+      const path = flags.taskListLite
+        ? `/governance-task-list/${busCase.id}`
+        : `/business/${busCase.id}/general-request-info`;
       switch (busCase.status) {
         case 'DRAFT':
           return (
@@ -108,7 +114,7 @@ const Home = ({ history }: HomeProps) => {
               }
               helpfulText="Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next phase"
               onClick={() => {
-                history.push(`/business/${busCase.id}/general-request-info`);
+                history.push(path);
               }}
               label="Go to Business Case"
             />
@@ -124,7 +130,7 @@ const Home = ({ history }: HomeProps) => {
               }
               helpfulText="The form has been submitted for review. You can update it and re-submit it any time in the process"
               onClick={() => {
-                history.push(`/business/${busCase.id}/general-request-info`);
+                history.push(path);
               }}
               label="Update Business Case"
             />
@@ -135,6 +141,7 @@ const Home = ({ history }: HomeProps) => {
     });
   };
 
+  const flags = useFlags();
   return (
     <PageWrapper>
       <Header />
@@ -148,8 +155,8 @@ const Home = ({ history }: HomeProps) => {
               </p>
             </div>
           )}
-          {getSystemIntakeBanners()}
-          {getBusinessCaseBanners()}
+          {getSystemIntakeBanners(flags)}
+          {getBusinessCaseBanners(flags)}
         </div>
         <div className="tablet:grid-col-9">
           <h1 className="margin-top-6">{t('home:title')}</h1>
