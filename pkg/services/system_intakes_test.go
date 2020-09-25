@@ -486,22 +486,6 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		s.Equal(&models.SystemIntake{}, intake)
 	})
 
-	s.Run("returns notification error when submit email fails", func() {
-		existing := models.SystemIntake{Requester: "existing"}
-		incoming := models.SystemIntake{Requester: "incoming"}
-		failSendEmail := func(requester string, intakeID uuid.UUID) error {
-			return &apperrors.NotificationError{
-				Err:             errors.New("failed to send Email"),
-				DestinationType: apperrors.DestinationTypeEmail,
-			}
-		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, failSendEmail)
-		intake, err := submitSystemIntake(ctx, &existing, &incoming)
-
-		s.IsType(&apperrors.NotificationError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-
 	s.Run("returns query error if update fails", func() {
 		existing := models.SystemIntake{Requester: "existing"}
 		incoming := models.SystemIntake{Requester: "incoming"}
