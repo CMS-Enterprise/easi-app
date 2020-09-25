@@ -4,6 +4,8 @@ import axios from 'axios';
 import { FlagProvider, FlagToggle, useFlags } from 'contexts/flagContext';
 import { mount } from 'enzyme';
 
+const flagsURL = `${process.env.REACT_APP_API_ADDRESS}/flags`;
+
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
@@ -58,9 +60,7 @@ it('loads flags into the provider', async () => {
 
   const printer = wrapper.find(FlagPrinter);
   expect(printer.text()).toEqual(`{"sandbox":true,"taskListLite":true}`);
-  expect(mockedAxios.get.mock.calls).toEqual([
-    ['http://localhost:8080/api/v1/flags']
-  ]);
+  expect(mockedAxios.get.mock.calls).toEqual([[flagsURL]]);
 });
 
 it('uses the defaults when flags fail to load', async () => {
@@ -81,7 +81,5 @@ it('uses the defaults when flags fail to load', async () => {
 
   const printer = wrapper.find(FlagPrinter);
   expect(printer.text()).toEqual(`{"sandbox":false,"taskListLite":false}`);
-  expect(mockedAxios.get.mock.calls).toEqual([
-    ['http://localhost:8080/api/v1/flags']
-  ]);
+  expect(mockedAxios.get.mock.calls).toEqual([[flagsURL]]);
 });
