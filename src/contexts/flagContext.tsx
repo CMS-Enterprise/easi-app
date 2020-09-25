@@ -18,7 +18,7 @@ type FlagProviderProps = {
 };
 
 export const FlagProvider = ({ children }: FlagProviderProps) => {
-  const [state, setState] = useState(initialState);
+  const [flagState, setFlagState] = useState(initialState);
 
   useEffect(() => {
     const fetchFlags = async () => {
@@ -26,9 +26,9 @@ export const FlagProvider = ({ children }: FlagProviderProps) => {
         const response = await axios.get(
           `${process.env.REACT_APP_API_ADDRESS}/flags`
         );
-        setState({ flags: response.data, isLoaded: true });
+        setFlagState({ flags: response.data, isLoaded: true });
       } catch (error) {
-        setState({ ...state, isLoaded: true });
+        setFlagState(state => ({ ...state, isLoaded: true }));
         if (process.env.NODE_ENV !== 'test') {
           // eslint-disable-next-line no-console
           console.error(`Failed to load flags! #{response}`);
@@ -37,11 +37,11 @@ export const FlagProvider = ({ children }: FlagProviderProps) => {
     };
 
     fetchFlags();
-  }, [state]);
+  }, []);
 
   return (
-    <FlagContext.Provider value={state}>
-      {state.isLoaded ? children : null}
+    <FlagContext.Provider value={flagState}>
+      {flagState.isLoaded ? children : null}
     </FlagContext.Provider>
   );
 };
