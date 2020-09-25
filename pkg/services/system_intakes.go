@@ -284,7 +284,7 @@ func NewSubmitSystemIntake(
 		// only send an email when everything went ok
 		err = emailReviewer(incoming.Requester, incoming.ID)
 		if err != nil {
-			return &models.SystemIntake{}, err
+			appcontext.ZLogger(ctx).Error("Submit Intake email failed to send: ", zap.Error(err))
 		}
 
 		return incoming, nil
