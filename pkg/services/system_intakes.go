@@ -65,6 +65,16 @@ func NewCreateSystemIntake(
 			return &models.SystemIntake{}, &apperrors.UnauthorizedError{}
 		}
 		intake.EUAUserID = principal.ID()
+
+		if intake.Status != models.SystemIntakeStatusDRAFT {
+			err := apperrors.NewValidationError(
+				errors.New("intake is not in DRAFT state"),
+				intake,
+				intake.ID.String(),
+			)
+			return &models.SystemIntake{}, &err
+		}
+
 		// app validation belongs here
 		createdIntake, err := create(ctx, intake)
 		if err != nil {
