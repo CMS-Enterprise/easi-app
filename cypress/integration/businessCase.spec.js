@@ -1,7 +1,7 @@
 describe('The Business Case Form', () => {
   let intakeId;
   const systemIntake = {
-    status: 'SUBMITTED',
+    status: 'DRAFT',
     requester: 'John Requester',
     component: 'Center for Consumer Information and Insurance Oversight',
     businessOwner: 'John BusinessOwner',
@@ -38,6 +38,15 @@ describe('The Business Case Form', () => {
         body: systemIntake
       }).then(response => {
         intakeId = response.body.id;
+        systemIntake.status = 'SUBMITTED';
+      });
+      cy.request({
+        method: 'PUT',
+        url: Cypress.env('systemIntakeApi'),
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: systemIntake
       });
     });
   });
