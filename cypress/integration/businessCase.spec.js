@@ -39,6 +39,7 @@ describe('The Business Case Form', () => {
       }).then(response => {
         intakeId = response.body.id;
         systemIntake.status = 'SUBMITTED';
+        systemIntake.id = intakeId;
       });
       cy.request({
         method: 'PUT',
