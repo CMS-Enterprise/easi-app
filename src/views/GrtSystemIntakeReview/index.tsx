@@ -43,11 +43,11 @@ export const GrtSystemIntakeReview = () => {
         <div className="grid-container">
           <div className="system-intake__review margin-bottom-7">
             <h1 className="font-heading-xl margin-top-4">
-              {t('review:page_title')}
+              {t('review.page_title')}
             </h1>
             {error && (
               <h2 className="font-heading-xl">
-                {t('review:intake_not_found', {
+                {t('review.intake_not_found', {
                   intakeId: systemId
                 })}
               </h2>
@@ -76,21 +76,21 @@ export const GrtSystemIntakeReview = () => {
                       return (
                         <Form>
                           <h1 className="font-heading-xl margin-top-0">
-                            {t('review:next_steps')}
+                            {t('review.next_steps')}
                           </h1>
                           <div className="grid-row flex-justify">
                             <div className="grid-col-4">
                               <FieldGroup>
                                 <fieldset className="usa-fieldset">
                                   <legend className="usa-label margin-bottom-2">
-                                    {t('review:how_to_proceed')}
+                                    {t('review.how_to_proceed')}
                                   </legend>
                                   <Field
                                     as={RadioField}
                                     checked={values.status === 'APPROVED'}
                                     id="GrtIntakeReviewForm-Approved"
                                     name="decision"
-                                    label={t('review:approved_label')}
+                                    label={t('review.approved_label')}
                                     onChange={() => {
                                       setFieldValue('status', 'APPROVED');
                                     }}
@@ -101,7 +101,7 @@ export const GrtSystemIntakeReview = () => {
                                     checked={values.status === 'ACCEPTED'}
                                     id="GrtIntakeReviewForm-Accepted"
                                     name="decision"
-                                    label={t('review:accepted_label')}
+                                    label={t('review.accepted_label')}
                                     onChange={() => {
                                       setFieldValue('status', 'ACCEPTED');
                                     }}
@@ -112,7 +112,7 @@ export const GrtSystemIntakeReview = () => {
                                     checked={values.status === 'CLOSED'}
                                     id="GrtIntakeReviewForm-Closed"
                                     name="decision"
-                                    label={t('review:closed_label')}
+                                    label={t('review.closed_label')}
                                     onChange={() => {
                                       setFieldValue('status', 'CLOSED');
                                     }}
@@ -121,7 +121,7 @@ export const GrtSystemIntakeReview = () => {
                                 </fieldset>
                               </FieldGroup>
                               <hr className="border-black border-bottom-0" />
-                              <HelpText>{t('review:radio_help')}</HelpText>
+                              <HelpText>{t('review.radio_help')}</HelpText>
                             </div>
                             <div className="grid-col-6">
                               <FieldGroup scrollElement="emailText">
@@ -129,7 +129,7 @@ export const GrtSystemIntakeReview = () => {
                                   className="margin-bottom-2 margin-top-0"
                                   htmlFor="GrtIntakeReviewForm-EmailText"
                                 >
-                                  {t('review:email_field_label')}
+                                  {t('review.email_field_label')}
                                 </Label>
                                 <Field
                                   as={TextAreaField}
@@ -141,7 +141,7 @@ export const GrtSystemIntakeReview = () => {
                                 />
                               </FieldGroup>
                               <Button className="margin-top-3" type="submit">
-                                {t('review:submit_button')}
+                                {t('review.submit_button')}
                               </Button>
                             </div>
                           </div>
@@ -155,10 +155,10 @@ export const GrtSystemIntakeReview = () => {
                 ) && (
                   <div>
                     <h1 className="font-heading-xl margin-top-0">
-                      {t('review:next_steps')}
+                      {t('review.next_steps')}
                     </h1>
-                    <Alert type="success" heading={t('review:alert_header')}>
-                      {t('review:alert_body', {
+                    <Alert type="success" heading={t('review.alert_header')}>
+                      {t('review.alert_body', {
                         address: systemIntake.requester.email
                       })}
                     </Alert>
@@ -166,13 +166,13 @@ export const GrtSystemIntakeReview = () => {
                       Decision:{' '}
                       {((status: SystemIntakeStatus) => {
                         if (status === 'APPROVED') {
-                          return t('review:approved_label');
+                          return t('review.approved_label');
                         }
                         if (status === 'ACCEPTED') {
-                          return t('review:accepted_label');
+                          return t('review.accepted_label');
                         }
                         if (status === 'CLOSED') {
-                          return t('review:closed_label');
+                          return t('review.closed_label');
                         }
                         return '';
                       })(systemIntake.status)}
@@ -182,7 +182,7 @@ export const GrtSystemIntakeReview = () => {
                     </p>
                     {systemIntake.decidedAt && (
                       <i>
-                        {t('review:closed_label', {
+                        {t('review.closed_label', {
                           date: systemIntake.decidedAt.toLocaleString(
                             DateTime.DATETIME_FULL
                           )
