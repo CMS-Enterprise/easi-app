@@ -2182,6 +2182,13 @@
     "@types/history" "*"
     "@types/react" "*"
 
+"@types/react-table@^7.0.23":
+  version "7.0.23"
+  resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.0.23.tgz#77d10ac36be759f6598f2b185865905425b47833"
+  integrity sha512-1L2wFQVm6QcrSUbAdTUpk2PTYX5Wqx11Kh+wuN/kYYRWNI4OGpj3sIn3QAQ1jOwXKpyLMTL6lpEcUfKw2ZEieQ==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*":
   version "16.9.43"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.43.tgz#c287f23f6189666ee3bebc2eb8d0f84bcb6cdb6b"
@@ -11873,6 +11880,11 @@ react-scripts@3.4.1:
     workbox-webpack-plugin "4.3.1"
   optionalDependencies:
     fsevents "2.1.2"
+
+react-table@^7.5.1:
+  version "7.5.1"
+  resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.5.1.tgz#b6a9b46e52c0f37ff91717ac478f430c6a357e41"
+  integrity sha512-rprrUElCqvj79lyY2XbUoYLzwA5Mm4CGS8ElQ8OyzocvmkvCcmunvvfbpIg9Jm9HnMBjVZcVyPFPZ1BFelIBKw==
 
 react-test-renderer@^16.0.0-0, react-test-renderer@^16.12.0:
   version "16.13.1"
