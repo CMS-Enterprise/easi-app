@@ -2,8 +2,9 @@ const intake = {
   fields: {
     requestName: 'Request name',
     requester: 'Requester',
-    submissionDate: 'Submission Date',
-    requestFor: 'Request for'
+    submissionDate: 'Submission date',
+    requestFor: 'Request for',
+    component: 'Component'
   }
 };
 

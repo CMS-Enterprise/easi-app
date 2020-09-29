@@ -8,6 +8,7 @@ import BusinessCase from 'views/BusinessCase';
 import Cookies from 'views/Cookies';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
+import AllRequests from 'views/GovernanceReviewTeam/AllRequests';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
@@ -59,7 +60,6 @@ class App extends React.Component<MainProps, MainState> {
                   exact
                   component={GovernanceOverview}
                 />
-
                 {['local', 'dev', 'impl', 'test'].includes(
                   process.env.REACT_APP_APP_ENV || ''
                 ) && (
@@ -69,7 +69,15 @@ class App extends React.Component<MainProps, MainState> {
                     component={GovernanceTaskList}
                   />
                 )}
-
+                {['local', 'dev', 'impl'].includes(
+                  process.env.REACT_APP_APP_ENV || ''
+                ) && (
+                  <SecureRoute
+                    path="/governance-review-team/all"
+                    exact
+                    component={AllRequests}
+                  />
+                )}
                 <SecureRoute
                   path="/governance-review-team/:systemId/:activePage"
                   component={GovernanceReviewTeam}
@@ -115,7 +123,6 @@ class App extends React.Component<MainProps, MainState> {
                   component={BusinessCase}
                 />
                 <Route path="/implicit/callback" component={LoginCallback} />
-
                 <Route path="/privacy-policy" exact component={PrivacyPolicy} />
                 <Route path="/cookies" exact component={Cookies} />
                 <Route
