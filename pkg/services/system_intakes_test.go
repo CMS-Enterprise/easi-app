@@ -486,22 +486,6 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		s.Equal(&models.SystemIntake{}, intake)
 	})
 
-	s.Run("returns notification error when submit email fails", func() {
-		existing := models.SystemIntake{Requester: "existing"}
-		incoming := models.SystemIntake{Requester: "incoming"}
-		failSendEmail := func(requester string, intakeID uuid.UUID) error {
-			return &apperrors.NotificationError{
-				Err:             errors.New("failed to send Email"),
-				DestinationType: apperrors.DestinationTypeEmail,
-			}
-		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, failSendEmail)
-		intake, err := submitSystemIntake(ctx, &existing, &incoming)
-
-		s.IsType(&apperrors.NotificationError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-
 	s.Run("returns query error if update fails", func() {
 		existing := models.SystemIntake{Requester: "existing"}
 		incoming := models.SystemIntake{Requester: "incoming"}
@@ -612,9 +596,12 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
+	sendWithdrawEmail := func(requestName string) error {
+		return nil
+	}
 
 	s.Run("golden path archive system intake", func() {
-		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, authorize)
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, authorize, sendWithdrawEmail)
 		err := archiveSystemIntake(ctx, fakeID)
 		s.NoError(err)
 	})
@@ -623,7 +610,7 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("fetch failed")
 		}
-		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, failFetch, update, archiveBusinessCase, authorize)
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, failFetch, update, archiveBusinessCase, authorize, sendWithdrawEmail)
 		err := archiveSystemIntake(ctx, fakeID)
 		s.IsType(&apperrors.QueryError{}, err)
 	})
@@ -633,7 +620,7 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, actualError
 		}
-		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, failAuthorize)
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, failAuthorize, sendWithdrawEmail)
 		err := archiveSystemIntake(ctx, fakeID)
 		s.Error(err)
 		s.Equal(actualError, err)
@@ -643,7 +630,7 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, failAuthorize)
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, archiveBusinessCase, failAuthorize, sendWithdrawEmail)
 		err := archiveSystemIntake(ctx, fakeID)
 		s.IsType(&apperrors.UnauthorizedError{}, err)
 	})
@@ -653,7 +640,7 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 		failArchiveBusinessCase := func(ctx context.Context, id uuid.UUID) error {
 			return actualError
 		}
-		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, failArchiveBusinessCase, authorize)
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, update, failArchiveBusinessCase, authorize, sendWithdrawEmail)
 		err := archiveSystemIntake(ctx, fakeID)
 		s.Error(err)
 		s.Equal(actualError, err)
@@ -663,8 +650,9 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 		failUpdate := func(ctx context.Context, businessCase *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("update failed")
 		}
-		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, failUpdate, archiveBusinessCase, authorize)
+		archiveSystemIntake := NewArchiveSystemIntake(serviceConfig, fetch, failUpdate, archiveBusinessCase, authorize, sendWithdrawEmail)
 		err := archiveSystemIntake(ctx, fakeID)
 		s.IsType(&apperrors.QueryError{}, err)
 	})
+
 }
