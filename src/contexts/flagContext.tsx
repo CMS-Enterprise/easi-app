@@ -41,7 +41,7 @@ export const FlagProvider = ({ children }: FlagProviderProps) => {
 
   return (
     <FlagContext.Provider value={flagState}>
-      {flagState.isLoaded ? children : null}
+      {flagState.isLoaded && children}
     </FlagContext.Provider>
   );
 };
