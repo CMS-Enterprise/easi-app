@@ -14,6 +14,8 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntake } from 'types/routines';
 
+import IntakeReview from './IntakeReview';
+
 import './index.scss';
 
 const GovernanceReviewTeam = () => {
@@ -94,9 +96,9 @@ const GovernanceReviewTeam = () => {
               </li>
               <li>
                 <Link
-                  to={`/governance-review-team/${systemId}/system-intake`}
+                  to={`/governance-review-team/${systemId}/intake-request`}
                   aria-label={t('aria.openIntake')}
-                  className={getNavLinkClasses('system-intake')}
+                  className={getNavLinkClasses('intake-request')}
                 >
                   {t('general:intake')}
                 </Link>
@@ -120,10 +122,10 @@ const GovernanceReviewTeam = () => {
               {t('actions')}
             </Link>
           </nav>
-          <section>
+          <section className="tablet:grid-col-9">
             <Route
-              path="/governance-review-team/:systemId/system-intake"
-              render={() => <h1>{t('general:intake')}</h1>}
+              path="/governance-review-team/:systemId/intake-request"
+              render={() => <IntakeReview systemIntake={systemIntake} />}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"

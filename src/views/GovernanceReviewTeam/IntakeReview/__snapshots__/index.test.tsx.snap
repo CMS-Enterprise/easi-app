@@ -1,0 +1,281 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The GRT intake review view matches the snapshot 1`] = `
+Array [
+  <div>
+    <h1
+      className="margin-top-0"
+    >
+      Intake Request
+    </h1>
+    <div>
+      <dl
+        title="System Request"
+      >
+        <div
+          className="easi-review-row"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Submission Date
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              Sep 30, 2020
+            </dd>
+          </div>
+        </div>
+      </dl>
+      <hr
+        className="system-intake__hr"
+      />
+      <h2
+        className="font-heading-xl"
+      >
+        Contact Details
+      </h2>
+      <dl
+        title="Contact Details"
+      >
+        <div
+          className="easi-review-row"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Requester
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              Jane Doe
+            </dd>
+          </div>
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Requester Component
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              OIT
+            </dd>
+          </div>
+        </div>
+        <div
+          className="easi-review-row"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              CMS Business/Product Owner's Name
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              Jane Doe
+            </dd>
+          </div>
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Business Owner Component
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              OIT
+            </dd>
+          </div>
+        </div>
+        <div
+          className="easi-review-row"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              CMS Project/Product Manager or lead
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              Jane Doe
+            </dd>
+          </div>
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              CMS Project/Product manager or lead Component
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              OIT
+            </dd>
+          </div>
+        </div>
+        <div
+          className="easi-review-row"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Does your project have an Information System Security Officer (ISSO)?
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              No
+            </dd>
+          </div>
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              I have started collaborating with
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              N/A
+            </dd>
+          </div>
+        </div>
+      </dl>
+      <hr
+        className="system-intake__hr"
+      />
+      <h2
+        className="font-heading-xl"
+      >
+        Request Details
+      </h2>
+      <dl
+        title="Request Details"
+      >
+        <div
+          className="easi-review-row"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Request Name
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            />
+          </div>
+        </div>
+        <div
+          className="margin-bottom-205 line-height-body-3"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              What is your business need?
+            </dt>
+            <dd
+              className="description-definition margin-0 text-pre"
+            >
+              The quick brown fox jumps over the lazy dog.
+            </dd>
+          </div>
+        </div>
+        <div
+          className="margin-bottom-205 line-height-body-3"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              How are you thinking of solving it?
+            </dt>
+            <dd
+              className="description-definition margin-0 text-pre"
+            >
+              The quick brown fox jumps over the lazy dog.
+            </dd>
+          </div>
+        </div>
+        <div
+          className="easi-review-row"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Do you need Enterprise Architecture (EA) support?
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              No
+            </dd>
+          </div>
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Where are you in the process?
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              The quick brown fox jumps over the lazy dog.
+            </dd>
+          </div>
+        </div>
+        <div
+          className="easi-review-row"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Do you currently have a contract in place?
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              The quick brown fox jumps over the lazy dog.
+            </dd>
+          </div>
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Does the project have funding
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            >
+              No
+            </dd>
+          </div>
+        </div>
+      </dl>
+    </div>
+    <a
+      className="usa-button margin-top-5"
+      href="/governance-review-team/53d762ea-0bc8-4af0-b24d-0b5844bacea5/actions"
+      onClick={[Function]}
+    >
+      Take an action
+    </a>
+  </div>,
+  " ",
+]
+`;
