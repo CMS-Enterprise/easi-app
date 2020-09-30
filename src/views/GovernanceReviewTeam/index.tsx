@@ -115,9 +115,9 @@ const GovernanceReviewTeam = () => {
             </ul>
             <hr />
             <Link
-              to={`/governance-review-team/${systemId}/decision`}
+              to={`/governance-review-team/${systemId}/actions`}
               aria-label={t('actions')}
-              className={getNavLinkClasses('decision')}
+              className={getNavLinkClasses('actions')}
             >
               {t('actions')}
             </Link>
@@ -132,7 +132,7 @@ const GovernanceReviewTeam = () => {
               render={() => <h1>{t('general:businessCase')}</h1>}
             />
             <Route
-              path="/governance-review-team/:systemId/decision"
+              path="/governance-review-team/:systemId/actions"
               render={() => <h1>Actions on intake request</h1>}
             />
           </section>
