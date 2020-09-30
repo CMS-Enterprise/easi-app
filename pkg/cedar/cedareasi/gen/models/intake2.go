@@ -13,20 +13,20 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Intake intake
-// swagger:model Intake
-type Intake struct {
+// Intake2 intake 2
+// swagger:model Intake_2
+type Intake2 struct {
 
-	// governance
+	// business case
 	// Required: true
-	Governance *GovernanceIntake `json:"Governance"`
+	BusinessCase *BusinessCase `json:"BusinessCase"`
 }
 
-// Validate validates this intake
-func (m *Intake) Validate(formats strfmt.Registry) error {
+// Validate validates this intake 2
+func (m *Intake2) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateGovernance(formats); err != nil {
+	if err := m.validateBusinessCase(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -36,16 +36,16 @@ func (m *Intake) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Intake) validateGovernance(formats strfmt.Registry) error {
+func (m *Intake2) validateBusinessCase(formats strfmt.Registry) error {
 
-	if err := validate.Required("Governance", "body", m.Governance); err != nil {
+	if err := validate.Required("BusinessCase", "body", m.BusinessCase); err != nil {
 		return err
 	}
 
-	if m.Governance != nil {
-		if err := m.Governance.Validate(formats); err != nil {
+	if m.BusinessCase != nil {
+		if err := m.BusinessCase.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("Governance")
+				return ve.ValidateName("BusinessCase")
 			}
 			return err
 		}
@@ -55,7 +55,7 @@ func (m *Intake) validateGovernance(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *Intake) MarshalBinary() ([]byte, error) {
+func (m *Intake2) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -63,8 +63,8 @@ func (m *Intake) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Intake) UnmarshalBinary(b []byte) error {
-	var res Intake
+func (m *Intake2) UnmarshalBinary(b []byte) error {
+	var res Intake2
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

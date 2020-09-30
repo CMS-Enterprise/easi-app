@@ -19,7 +19,7 @@ import (
 type SystemsidGETResponse struct {
 
 	// response
-	Response *Response `json:"Response,omitempty"`
+	Response *Response1 `json:"Response,omitempty"`
 
 	// systems
 	Systems []*System `json:"Systems"`

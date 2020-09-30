@@ -40,7 +40,7 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 
 // FetchSystems fetches a system list from CEDAR
 func (c TranslatedClient) FetchSystems(ctx context.Context) (models.SystemShorts, error) {
-	resp, err := c.client.Operations.SystemsGET1(nil, c.apiAuthHeader)
+	resp, err := c.client.Operations.SystemsGET2(nil, c.apiAuthHeader)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch system from CEDAR", zap.Error(err))
 		return models.SystemShorts{}, err
@@ -131,37 +131,34 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
 	id := validatedIntake.ID.String()
 	submissionTime := validatedIntake.SubmittedAt.String()
-	params := apioperations.NewIntakegovernancePOST4Params()
+	params := apioperations.NewIntakegovernancePOST5Params()
 	governanceIntake := apimodels.GovernanceIntake{
-		BusinessNeeds:           &validatedIntake.BusinessNeed.String,
-		BusinessOwner:           &validatedIntake.BusinessOwner.String,
-		BusinessOwnerComponent:  &validatedIntake.BusinessOwnerComponent.String,
+		BusinessNeeds:           validatedIntake.BusinessNeed.String,
+		BusinessOwner:           validatedIntake.BusinessOwner.String,
+		BusinessOwnerComponent:  validatedIntake.BusinessOwnerComponent.String,
 		EaCollaborator:          validatedIntake.EACollaborator.String,
-		EaSupportRequest:        &validatedIntake.EASupportRequest.Bool,
+		EaSupportRequest:        validatedIntake.EASupportRequest.Bool,
 		EuaUserID:               &validatedIntake.EUAUserID,
-		ExistingContract:        &validatedIntake.ExistingContract.String,
-		ExistingFunding:         &validatedIntake.ExistingFunding.Bool,
+		ExistingContract:        validatedIntake.ExistingContract.String,
+		ExistingFunding:         validatedIntake.ExistingFunding.Bool,
 		FundingSource:           validatedIntake.FundingSource.String,
 		ID:                      &id,
 		Isso:                    validatedIntake.ISSO.String,
 		OitSecurityCollaborator: validatedIntake.OITSecurityCollaborator.String,
-		ProcessStatus:           &validatedIntake.ProcessStatus.String,
-		ProductManager:          &validatedIntake.ProductManager.String,
-		ProductManagerComponent: &validatedIntake.ProductManagerComponent.String,
-		Requester:               &validatedIntake.Requester,
-		RequesterComponent:      &validatedIntake.Component.String,
-		Solution:                &validatedIntake.Solution.String,
-		SubmittedTime:           &submissionTime,
-		SystemName:              &validatedIntake.ProjectName.String,
+		ProcessStatus:           validatedIntake.ProcessStatus.String,
+		ProductManager:          validatedIntake.ProductManager.String,
+		ProductManagerComponent: validatedIntake.ProductManagerComponent.String,
+		Requester:               validatedIntake.Requester,
+		RequesterComponent:      validatedIntake.Component.String,
+		Solution:                validatedIntake.Solution.String,
+		SubmittedAt:             submissionTime,
+		SystemName:              validatedIntake.ProjectName.String,
 		TrbCollaborator:         validatedIntake.TRBCollaborator.String,
 	}
-	governanceConversion := []*apimodels.GovernanceIntake{
-		&governanceIntake,
-	}
 	params.Body = &apimodels.Intake{
-		Governance: governanceConversion,
+		Governance: &governanceIntake,
 	}
-	resp, err := c.client.Operations.IntakegovernancePOST4(params, c.apiAuthHeader)
+	resp, err := c.client.Operations.IntakegovernancePOST5(params, c.apiAuthHeader)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to submit intake for CEDAR", zap.Error(err))
 		return "", &apperrors.ExternalAPIError{

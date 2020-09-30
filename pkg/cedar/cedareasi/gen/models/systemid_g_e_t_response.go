@@ -17,7 +17,7 @@ import (
 type SystemidGETResponse struct {
 
 	// response
-	Response *Response `json:"Response,omitempty"`
+	Response *Response1 `json:"Response,omitempty"`
 
 	// system detail
 	SystemDetail *SystemDetail `json:"SystemDetail,omitempty"`

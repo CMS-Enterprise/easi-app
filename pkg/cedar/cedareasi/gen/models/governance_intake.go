@@ -18,44 +18,39 @@ import (
 type GovernanceIntake struct {
 
 	// business needs
-	// Required: true
-	BusinessNeeds *string `json:"business_needs"`
+	BusinessNeeds string `json:"business_needs,omitempty"`
 
 	// business owner
-	// Required: true
-	BusinessOwner *string `json:"business_owner"`
+	BusinessOwner string `json:"business_owner,omitempty"`
 
 	// business owner component
-	// Required: true
-	BusinessOwnerComponent *string `json:"business_owner_component"`
+	BusinessOwnerComponent string `json:"business_owner_component,omitempty"`
+
+	// decided at
+	DecidedAt string `json:"decided_at,omitempty"`
 
 	// ea collaborator
 	EaCollaborator string `json:"ea_collaborator,omitempty"`
 
 	// ea support request
-	// Required: true
-	EaSupportRequest *bool `json:"ea_support_request"`
+	EaSupportRequest bool `json:"ea_support_request,omitempty"`
 
 	// eua user id
 	// Required: true
 	EuaUserID *string `json:"eua_user_id"`
 
 	// existing contract
-	// Required: true
-	ExistingContract *string `json:"existing_contract"`
+	ExistingContract string `json:"existing_contract,omitempty"`
 
 	// existing funding
-	// Required: true
-	ExistingFunding *bool `json:"existing_funding"`
-
-	// funding number
-	FundingNumber string `json:"funding_number,omitempty"`
+	ExistingFunding bool `json:"existing_funding,omitempty"`
 
 	// funding source
 	FundingSource string `json:"funding_source,omitempty"`
 
-	// id
+	// PRIMARY KEY, e.g. unique constraint
 	// Required: true
+	// Min Length: 36
 	ID *string `json:"id"`
 
 	// isso
@@ -65,70 +60,45 @@ type GovernanceIntake struct {
 	OitSecurityCollaborator string `json:"oit_security_collaborator,omitempty"`
 
 	// process status
-	// Required: true
-	ProcessStatus *string `json:"process_status"`
+	ProcessStatus string `json:"process_status,omitempty"`
 
 	// product manager
-	// Required: true
-	ProductManager *string `json:"product_manager"`
+	ProductManager string `json:"product_manager,omitempty"`
 
 	// product manager component
-	// Required: true
-	ProductManagerComponent *string `json:"product_manager_component"`
+	ProductManagerComponent string `json:"product_manager_component,omitempty"`
 
 	// requester
-	// Required: true
-	Requester *string `json:"requester"`
+	Requester string `json:"requester,omitempty"`
 
 	// requester component
-	// Required: true
-	RequesterComponent *string `json:"requester_component"`
+	RequesterComponent string `json:"requester_component,omitempty"`
 
 	// solution
-	// Required: true
-	Solution *string `json:"solution"`
+	Solution string `json:"solution,omitempty"`
 
-	// submitted time
+	// status
 	// Required: true
-	SubmittedTime *string `json:"submitted_time"`
+	Status *string `json:"status"`
+
+	// submitted at
+	SubmittedAt string `json:"submitted_at,omitempty"`
 
 	// system name
-	// Required: true
-	SystemName *string `json:"system_name"`
+	SystemName string `json:"system_name,omitempty"`
 
 	// trb collaborator
 	TrbCollaborator string `json:"trb_collaborator,omitempty"`
+
+	// withdrawn at
+	WithdrawnAt string `json:"withdrawn_at,omitempty"`
 }
 
 // Validate validates this governance intake
 func (m *GovernanceIntake) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateBusinessNeeds(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateBusinessOwner(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateBusinessOwnerComponent(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateEaSupportRequest(formats); err != nil {
-		res = append(res, err)
-	}
-
 	if err := m.validateEuaUserID(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateExistingContract(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateExistingFunding(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -136,77 +106,13 @@ func (m *GovernanceIntake) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateProcessStatus(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateProductManager(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateProductManagerComponent(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateRequester(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateRequesterComponent(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSolution(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSubmittedTime(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSystemName(formats); err != nil {
+	if err := m.validateStatus(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
-	return nil
-}
-
-func (m *GovernanceIntake) validateBusinessNeeds(formats strfmt.Registry) error {
-
-	if err := validate.Required("business_needs", "body", m.BusinessNeeds); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateBusinessOwner(formats strfmt.Registry) error {
-
-	if err := validate.Required("business_owner", "body", m.BusinessOwner); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateBusinessOwnerComponent(formats strfmt.Registry) error {
-
-	if err := validate.Required("business_owner_component", "body", m.BusinessOwnerComponent); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateEaSupportRequest(formats strfmt.Registry) error {
-
-	if err := validate.Required("ea_support_request", "body", m.EaSupportRequest); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -219,99 +125,22 @@ func (m *GovernanceIntake) validateEuaUserID(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GovernanceIntake) validateExistingContract(formats strfmt.Registry) error {
-
-	if err := validate.Required("existing_contract", "body", m.ExistingContract); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateExistingFunding(formats strfmt.Registry) error {
-
-	if err := validate.Required("existing_funding", "body", m.ExistingFunding); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func (m *GovernanceIntake) validateID(formats strfmt.Registry) error {
 
 	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
 	}
 
-	return nil
-}
-
-func (m *GovernanceIntake) validateProcessStatus(formats strfmt.Registry) error {
-
-	if err := validate.Required("process_status", "body", m.ProcessStatus); err != nil {
+	if err := validate.MinLength("id", "body", string(*m.ID), 36); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *GovernanceIntake) validateProductManager(formats strfmt.Registry) error {
+func (m *GovernanceIntake) validateStatus(formats strfmt.Registry) error {
 
-	if err := validate.Required("product_manager", "body", m.ProductManager); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateProductManagerComponent(formats strfmt.Registry) error {
-
-	if err := validate.Required("product_manager_component", "body", m.ProductManagerComponent); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateRequester(formats strfmt.Registry) error {
-
-	if err := validate.Required("requester", "body", m.Requester); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateRequesterComponent(formats strfmt.Registry) error {
-
-	if err := validate.Required("requester_component", "body", m.RequesterComponent); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateSolution(formats strfmt.Registry) error {
-
-	if err := validate.Required("solution", "body", m.Solution); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateSubmittedTime(formats strfmt.Registry) error {
-
-	if err := validate.Required("submitted_time", "body", m.SubmittedTime); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *GovernanceIntake) validateSystemName(formats strfmt.Registry) error {
-
-	if err := validate.Required("system_name", "body", m.SystemName); err != nil {
+	if err := validate.Required("status", "body", m.Status); err != nil {
 		return err
 	}
 

@@ -22,7 +22,7 @@ type IntakegovernanceidGETResponse struct {
 	Intake *Intake1 `json:"Intake"`
 
 	// response
-	Response *Response `json:"Response,omitempty"`
+	Response *Response1 `json:"Response,omitempty"`
 }
 
 // Validate validates this intakegovernanceid g e t response
