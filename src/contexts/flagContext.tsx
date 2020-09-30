@@ -46,31 +46,13 @@ export const FlagProvider = ({ children }: FlagProviderProps) => {
   );
 };
 
+// useFlags is the main way to work with flags within the application
+//
+// const flags = useFlags();
 export const useFlags = (): Flags => {
   const context = React.useContext(FlagContext);
   if (context === undefined) {
     return initialState.flags;
   }
   return context.flags;
-};
-
-type FlagToggleProps = {
-  children: React.ReactNode;
-  name: keyof Flags;
-  is?: Boolean;
-};
-
-// Use FlagToggle to wrap a component that should conditionally appear based on
-// the value of a flag:
-//
-// <FlagToggle name="sandbox"><Sandbox /></FlagToggle>
-//
-// This will only render the <Sandbox> component if the "sandbox" flag has a value of true.
-//
-// To show something when a flag is set to false, pass the `is` prop to specify
-//
-// <FlagToggle name="sandbox" is={false}><Sandbox /></FlagToggle>
-export const FlagToggle = ({ children, name, is = true }: FlagToggleProps) => {
-  const { flags } = React.useContext(FlagContext) || initialState;
-  return <>{flags[name] === is ? children : null}</>;
 };
