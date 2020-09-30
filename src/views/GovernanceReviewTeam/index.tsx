@@ -12,7 +12,9 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntake } from 'types/routines';
+import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+
+import BusinessCaseReview from './BusinessCaseReview';
 
 import './index.scss';
 
@@ -21,13 +23,23 @@ const GovernanceReviewTeam = () => {
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
 
+  const systemIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake
+  );
+
+  const businessCase = useSelector(
+    (state: AppState) => state.businessCase.form
+  );
+
   useEffect(() => {
     dispatch(fetchSystemIntake(systemId));
   }, [dispatch, systemId]);
 
-  const systemIntake = useSelector(
-    (state: AppState) => state.systemIntake.systemIntake
-  );
+  useEffect(() => {
+    if (systemIntake.businessCaseId) {
+      dispatch(fetchBusinessCase(systemIntake.businessCaseId));
+    }
+  }, [dispatch, systemIntake]);
 
   const component = cmsDivisionsAndOffices.find(
     c => c.name === systemIntake.requester.component
@@ -120,14 +132,14 @@ const GovernanceReviewTeam = () => {
               {t('actions')}
             </Link>
           </nav>
-          <section>
+          <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/system-intake"
               render={() => <h1>{t('general:intake')}</h1>}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
-              render={() => <h1>{t('general:businessCase')}</h1>}
+              render={() => <BusinessCaseReview businessCase={businessCase} />}
             />
             <Route
               path="/governance-review-team/:systemId/decision"
