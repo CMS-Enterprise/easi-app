@@ -191,3 +191,128 @@ func (c TranslatedClient) ValidateAndSubmitSystemIntake(ctx context.Context, int
 	}
 	return submitSystemIntake(ctx, intake, c)
 }
+
+// SubmitBusinessCase submits a business case to CEDAR
+func SubmitBusinessCase(ctx context.Context, businessCase *models.BusinessCase, c TranslatedClient) (string, error) {
+	id := businessCase.ID.String()
+	systemIntakeID := businessCase.SystemIntakeID.String()
+	status := string(businessCase.Status)
+	params := apioperations.NewIntakebusinessCasePOST7Params()
+	var asIsLifecycleCostLines,
+		preferredLifecycleCostLines,
+		alternativeALifecycleCostLines,
+		alternativeBLifecycleCostLines []*apimodels.LifecycleCostLine
+	for _, line := range businessCase.LifecycleCostLines {
+		cost := int32(*line.Cost)
+		lifecycleCostLineID := line.ID.String()
+		year := string(line.Year)
+		lifecycleCostLine := apimodels.LifecycleCostLine{
+			Cost:  &cost,
+			ID:    &lifecycleCostLineID,
+			Phase: (*string)(line.Phase),
+			Year:  &year,
+		}
+		switch line.Solution {
+		case models.LifecycleCostSolutionASIS:
+			asIsLifecycleCostLines = append(asIsLifecycleCostLines, &lifecycleCostLine)
+			break
+		case models.LifecycleCostSolutionPREFERRED:
+			preferredLifecycleCostLines = append(preferredLifecycleCostLines, &lifecycleCostLine)
+			break
+		case models.LifecycleCostSolutionA:
+			alternativeALifecycleCostLines = append(alternativeALifecycleCostLines, &lifecycleCostLine)
+			break
+		case models.LifecycleCostSolutionB:
+			alternativeBLifecycleCostLines = append(alternativeBLifecycleCostLines, &lifecycleCostLine)
+		}
+	}
+	asIs := string(models.LifecycleCostSolutionASIS)
+	asIsSolution := apimodels.BusinessCaseSolution{
+		Cons:               &businessCase.AsIsCons.String,
+		CostSavings:        businessCase.AsIsCostSavings.String,
+		ID:                 nil,
+		LifecycleCostLines: asIsLifecycleCostLines,
+		Pros:               &businessCase.AsIsPros.String,
+		Summary:            &businessCase.AsIsSummary.String,
+		Title:              &businessCase.AsIsTitle.String,
+		Type:               &asIs,
+	}
+	preferred := string(models.LifecycleCostSolutionPREFERRED)
+	preferredSolution := apimodels.BusinessCaseSolution{
+		Cons:               &businessCase.PreferredCons.String,
+		CostSavings:        businessCase.PreferredCostSavings.String,
+		ID:                 nil,
+		LifecycleCostLines: preferredLifecycleCostLines,
+		Pros:               &businessCase.PreferredPros.String,
+		Summary:            &businessCase.PreferredSummary.String,
+		Title:              &businessCase.PreferredTitle.String,
+		Type:               &preferred,
+	}
+	a := string(models.LifecycleCostSolutionA)
+	alternativeA := apimodels.BusinessCaseSolution{
+		Cons:               &businessCase.AlternativeACons.String,
+		CostSavings:        businessCase.AlternativeACostSavings.String,
+		ID:                 nil,
+		LifecycleCostLines: alternativeALifecycleCostLines,
+		Pros:               &businessCase.AlternativeAPros.String,
+		Summary:            &businessCase.AlternativeASummary.String,
+		Title:              &businessCase.AlternativeATitle.String,
+		Type:               &a,
+	}
+	b := string(models.LifecycleCostSolutionB)
+	alternativeB := apimodels.BusinessCaseSolution{
+		Cons:               &businessCase.AlternativeBCons.String,
+		CostSavings:        businessCase.AlternativeBCostSavings.String,
+		ID:                 nil,
+		LifecycleCostLines: alternativeBLifecycleCostLines,
+		Pros:               &businessCase.AlternativeBPros.String,
+		Summary:            &businessCase.AlternativeBSummary.String,
+		Title:              &businessCase.AlternativeBTitle.String,
+		Type:               &b,
+	}
+	apiBusinessCase := apimodels.BusinessCase{
+		BusinessNeed:         businessCase.BusinessNeed.String,
+		BusinessOwner:        businessCase.BusinessOwner.String,
+		CmsBenefit:           businessCase.CMSBenefit.String,
+		EuaUserID:            &businessCase.EUAUserID,
+		GovernanceID:         &systemIntakeID,
+		HostingNeeds:         "",
+		ID:                   &id,
+		InitialSubmittedAt:   businessCase.InitialSubmittedAt.String(),
+		LastSubmittedAt:      businessCase.LastSubmittedAt.String(),
+		PriorityAlignment:    businessCase.PriorityAlignment.String,
+		ProjectName:          businessCase.ProjectName.String,
+		Requester:            businessCase.Requester.String,
+		RequesterPhoneNumber: businessCase.RequesterPhoneNumber.String,
+		Solutions:            []*apimodels.BusinessCaseSolution{&asIsSolution, &preferredSolution, &alternativeA, &alternativeB},
+		Status:               &status,
+		SuccessIndicators:    businessCase.SuccessIndicators.String,
+		UserInterface:        "",
+	}
+	params.Body = &apimodels.Intake2{
+		BusinessCase: &apiBusinessCase,
+	}
+	resp, err := c.client.Operations.IntakebusinessCasePOST7(params, c.apiAuthHeader)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to submit business case for CEDAR", zap.Error(err))
+		return "", &apperrors.ExternalAPIError{
+			Err:       err,
+			Model:     businessCase,
+			ModelID:   id,
+			Operation: apperrors.Submit,
+			Source:    "CEDAR",
+		}
+	}
+	alfabetID := ""
+	if *resp.Payload.Response.Result != "success" {
+		return "", &apperrors.ExternalAPIError{
+			Err:       errors.New("CEDAR return result: " + *resp.Payload.Response.Result),
+			ModelID:   id,
+			Model:     businessCase,
+			Operation: apperrors.Submit,
+			Source:    "CEDAR",
+		}
+	}
+	alfabetID = resp.Payload.Response.Message[0]
+	return alfabetID, nil
+}
