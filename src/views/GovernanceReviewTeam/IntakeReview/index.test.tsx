@@ -41,9 +41,9 @@ describe('The GRT intake review view', () => {
     needsEaSupport: false,
     hasContract: 'The quick brown fox jumps over the lazy dog.',
     grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
-    decidedAt: new Date().toISOString(),
+    decidedAt: new Date(2020, 8, 30).toISOString(),
     businessCaseId: null,
-    submittedAt: new Date().toISOString()
+    submittedAt: new Date(2020, 8, 30).toISOString()
   };
 
   it('renders without crashing', () => {
@@ -51,6 +51,7 @@ describe('The GRT intake review view', () => {
   });
 
   it('matches the snapshot', () => {
+    Date.now = jest.fn(() => new Date(2020, 8, 30).valueOf());
     const tree = renderer
       .create(
         <MemoryRouter>
