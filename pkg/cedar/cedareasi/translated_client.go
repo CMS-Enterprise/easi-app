@@ -1,14 +1,15 @@
 package cedareasi
 
 import (
+	"context"
 	"errors"
-	"fmt"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/client"
 	apioperations "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/client/operations"
@@ -38,10 +39,10 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 }
 
 // FetchSystems fetches a system list from CEDAR
-func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts, error) {
+func (c TranslatedClient) FetchSystems(ctx context.Context) (models.SystemShorts, error) {
 	resp, err := c.client.Operations.SystemsGET1(nil, c.apiAuthHeader)
 	if err != nil {
-		logger.Error(fmt.Sprintf("Failed to fetch system from CEDAR with error: %v", err))
+		appcontext.ZLogger(ctx).Error("Failed to fetch system from CEDAR", zap.Error(err))
 		return models.SystemShorts{}, err
 	}
 
@@ -57,7 +58,7 @@ func (c TranslatedClient) FetchSystems(logger *zap.Logger) (models.SystemShorts,
 }
 
 // ValidateSystemIntakeForCedar validates all required fields to ensure we won't get errors for contents of the request
-func ValidateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logger) error {
+func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemIntake) error {
 	expectedError := apperrors.ValidationError{
 		Err:         errors.New("validation failed"),
 		Validations: apperrors.Validations{},
@@ -127,7 +128,7 @@ func ValidateSystemIntakeForCedar(intake *models.SystemIntake, logger *zap.Logge
 	return nil
 }
 
-func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient, logger *zap.Logger) (string, error) {
+func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
 	id := validatedIntake.ID.String()
 	submissionTime := validatedIntake.SubmittedAt.String()
 	params := apioperations.NewIntakegovernancePOST4Params()
@@ -162,7 +163,7 @@ func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient
 	}
 	resp, err := c.client.Operations.IntakegovernancePOST4(params, c.apiAuthHeader)
 	if err != nil {
-		logger.Error(fmt.Sprintf("Failed to submit intake for CEDAR with error: %v", err))
+		appcontext.ZLogger(ctx).Error("Failed to submit intake for CEDAR", zap.Error(err))
 		return "", &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     validatedIntake,
@@ -186,10 +187,10 @@ func submitSystemIntake(validatedIntake *models.SystemIntake, c TranslatedClient
 }
 
 // ValidateAndSubmitSystemIntake submits a system intake to CEDAR
-func (c TranslatedClient) ValidateAndSubmitSystemIntake(intake *models.SystemIntake, logger *zap.Logger) (string, error) {
-	err := ValidateSystemIntakeForCedar(intake, logger)
+func (c TranslatedClient) ValidateAndSubmitSystemIntake(ctx context.Context, intake *models.SystemIntake) (string, error) {
+	err := ValidateSystemIntakeForCedar(ctx, intake)
 	if err != nil {
 		return "", err
 	}
-	return submitSystemIntake(intake, c, logger)
+	return submitSystemIntake(ctx, intake, c)
 }

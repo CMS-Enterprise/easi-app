@@ -1,11 +1,10 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -32,7 +31,7 @@ func (s HandlerTestSuite) TestSystemsHandler() {
 	})
 }
 
-func makeFakeSystemShorts(logger *zap.Logger) (models.SystemShorts, error) {
+func makeFakeSystemShorts(_ context.Context) (models.SystemShorts, error) {
 	system1 := models.SystemShort{Acronym: "CHSE", Name: "Cheese"}
 	system2 := models.SystemShort{Acronym: "PPRN", Name: "Pepperoni"}
 	system3 := models.SystemShort{Acronym: "MTLV", Name: "Meat Lovers"}
