@@ -1,8 +1,11 @@
 package server
 
 import (
+	"context"
+
 	"go.uber.org/zap"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -14,7 +17,7 @@ func (s Server) CheckCEDAREasiClientConnection(client cedareasi.TranslatedClient
 	s.logger.Info("Testing CEDAR EASi Connection")
 	// FetchSystems is agnostic to user, doesn't modify state,
 	// and tests that we're authorized to retrieve information
-	_, err := client.FetchSystems(s.logger)
+	_, err := client.FetchSystems(appcontext.WithLogger(context.Background(), s.logger))
 	if err != nil {
 		s.logger.Error("Failed to connect to CEDAR EASi on startup", zap.Error(err))
 	}
