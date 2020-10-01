@@ -6,6 +6,16 @@ import { shallow } from 'enzyme';
 import IntakeReview from './index';
 
 describe('The GRT intake review view', () => {
+  let dateSpy;
+  beforeAll(() => {
+    // September 30, 2020
+    dateSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1601449200000);
+  });
+
+  afterAll(() => {
+    dateSpy.mockRestore();
+  });
+
   const mockSystemIntake = {
     id: '53d762ea-0bc8-4af0-b24d-0b5844bacea5',
     euaUserID: 'ABCD',
@@ -41,9 +51,9 @@ describe('The GRT intake review view', () => {
     needsEaSupport: false,
     hasContract: 'The quick brown fox jumps over the lazy dog.',
     grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
-    decidedAt: new Date(2020, 8, 30).toISOString(),
+    decidedAt: new Date().toISOString(),
     businessCaseId: null,
-    submittedAt: new Date(2020, 8, 30).toISOString()
+    submittedAt: new Date().toISOString()
   };
 
   it('renders without crashing', () => {
@@ -51,7 +61,6 @@ describe('The GRT intake review view', () => {
   });
 
   it('matches the snapshot', () => {
-    Date.now = jest.fn(() => new Date(2020, 8, 30).valueOf());
     const tree = renderer
       .create(
         <MemoryRouter>
