@@ -14,6 +14,15 @@ type BusinessCaseReviewProps = {
 const BusinessCaseReview = ({ businessCase }: BusinessCaseReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
 
+  if (!businessCase.id) {
+    return (
+      <div>
+        <h1 className="margin-top-0">{t('general:businessCase')}</h1>
+        <p>Business Case has not been submitted</p>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h1 className="margin-top-0">{t('general:businessCase')}</h1>

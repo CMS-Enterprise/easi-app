@@ -39,7 +39,7 @@ const GovernanceReviewTeam = () => {
     if (systemIntake.businessCaseId) {
       dispatch(fetchBusinessCase(systemIntake.businessCaseId));
     }
-  }, [dispatch, systemIntake]);
+  }, [dispatch, systemIntake.businessCaseId]);
 
   const component = cmsDivisionsAndOffices.find(
     c => c.name === systemIntake.requester.component
