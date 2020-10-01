@@ -21,6 +21,7 @@ import { SystemIntakeForm } from 'types/systemIntake';
 import { NotFoundPartial } from 'views/NotFound';
 
 import ContactDetails from './ContactDetails';
+import ContractDetails from './ContractDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
 
@@ -135,6 +136,16 @@ export const SystemIntake = () => {
               path="/system/:systemId/request-details"
               render={() => (
                 <RequestDetails
+                  formikRef={formikRef}
+                  systemIntake={systemIntake}
+                  dispatchSave={dispatchSave}
+                />
+              )}
+            />
+            <SecureRoute
+              path="/system/:systemId/contract-details"
+              render={() => (
+                <ContractDetails
                   formikRef={formikRef}
                   systemIntake={systemIntake}
                   dispatchSave={dispatchSave}
