@@ -160,7 +160,7 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
             <DescriptionDefinition definition={systemIntake.hasContract} />
           </div>
           <div>
-            <DescriptionTerm term="Does the project have funding" />
+            <DescriptionTerm term="Does the project have funding?" />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>
