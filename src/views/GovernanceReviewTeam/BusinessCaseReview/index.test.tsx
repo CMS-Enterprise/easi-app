@@ -15,6 +15,7 @@ window.matchMedia = (): any => ({
 describe('The GRT business case review', () => {
   const mockBusinessCase = {
     ...businessCaseInitialData,
+    id: '54e829a9-6ce3-4b4b-81b0-7781b1e22821',
     requestName: 'Easy Access to System Information',
     requester: {
       name: 'Jane Doe',
