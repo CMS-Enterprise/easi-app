@@ -35,6 +35,13 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
+    cy.contains('button', 'Next').click();
+
+    // Contract Details
+    cy.get('#IntakeForm-HasContract')
+      .select('No')
+      .should('have.value', 'No');
+
     cy.get('#IntakeForm-HasFundingSourceNo')
       .check({ force: true })
       .should('be.checked');
@@ -79,6 +86,13 @@ describe('The System Intake Form', () => {
 
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
+
+    cy.contains('button', 'Next').click();
+
+    // Contract Details
+    cy.get('#IntakeForm-HasContract')
+      .select('No')
+      .should('have.value', 'No');
 
     cy.get('#IntakeForm-HasFundingSourceYes')
       .check({ force: true })

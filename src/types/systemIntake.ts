@@ -42,19 +42,22 @@ export type SystemIntakeForm = {
     isPresent: boolean | null;
     teams: GovernanceCollaborationTeam[];
   };
-  fundingSource: {
-    isFunded: boolean | null;
-    fundingNumber: string;
-  };
   businessNeed: string;
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
-  hasContract: string;
   grtReviewEmailBody: string;
   decidedAt: DateTime | null;
   businessCaseId?: string | null;
   submittedAt: DateTime | null;
+} & ContractDetailsForm;
+
+export type ContractDetailsForm = {
+  hasContract: string;
+  fundingSource: {
+    isFunded: boolean | null;
+    fundingNumber: string;
+  };
 };
 
 // Redux store type for a system intake
