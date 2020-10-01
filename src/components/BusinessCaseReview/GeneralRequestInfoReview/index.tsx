@@ -19,7 +19,7 @@ const GeneralRequestInfoReview = ({
     <DescriptionList title="General request information">
       <ReviewRow>
         <div>
-          <DescriptionTerm term="Request Name" />
+          <DescriptionTerm term="Project Name" />
           <DescriptionDefinition definition={values.requestName} />
         </div>
         <div>
