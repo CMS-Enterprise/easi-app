@@ -26,6 +26,8 @@ type TimeOutWrapperProps = {
 };
 
 const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
+  return <div>{children}</div>;
+
   const lastActiveAt = useSelector(
     (state: AppState) => state.auth.lastActiveAt
   );
