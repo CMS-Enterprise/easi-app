@@ -114,7 +114,7 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
       <DescriptionList title="Request Details">
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Request Name" />
+            <DescriptionTerm term="Project Name" />
             <DescriptionDefinition definition={systemIntake.requestName} />
           </div>
         </ReviewRow>
