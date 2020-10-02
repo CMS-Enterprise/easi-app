@@ -6,6 +6,16 @@ import { shallow } from 'enzyme';
 import IntakeReview from './index';
 
 describe('The GRT intake review view', () => {
+  let dateSpy;
+  beforeAll(() => {
+    // September 30, 2020
+    dateSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1601449200000);
+  });
+
+  afterAll(() => {
+    dateSpy.mockRestore();
+  });
+
   const mockSystemIntake = {
     id: '53d762ea-0bc8-4af0-b24d-0b5844bacea5',
     euaUserID: 'ABCD',
