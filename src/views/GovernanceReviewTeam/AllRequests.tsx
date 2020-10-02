@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useTable } from 'react-table';
+import { useSortBy, useTable } from 'react-table';
 import { Table } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
@@ -22,7 +23,7 @@ const AllRequests = () => {
         }
       },
       {
-        Header: t('intake:fields.requestName'),
+        Header: t('intake:fields.projectName'),
         accessor: 'requestName',
         Cell: ({ row, value }: any) => {
           return (
@@ -36,7 +37,10 @@ const AllRequests = () => {
         Header: t('intake:fields.component'),
         accessor: 'requester.component'
       },
-      { Header: t('allRequests.table.requestType'), accessor: 'type' }
+      {
+        Header: t('allRequests.table.requestType'),
+        accessor: 'type'
+      }
     ],
     [t]
   );
@@ -47,7 +51,7 @@ const AllRequests = () => {
     () => [
       {
         id: 'addaa218-34d3-4dd8-a12f-38f6ff33b22d',
-        submittedAt: new Date().toISOString(),
+        submittedAt: new Date(2020, 6, 26).toISOString(),
         requestName: 'Easy Access to System Information',
         requester: {
           name: 'Christopher Hui',
@@ -58,8 +62,30 @@ const AllRequests = () => {
       },
       {
         id: '229f9b64-18fc-4ee1-95c4-9d4b143d215c',
-        submittedAt: new Date().toISOString(),
+        submittedAt: new Date(2020, 9, 19).toISOString(),
         requestName: 'Hard Access to System Information',
+        requester: {
+          name: 'George Baukerton',
+          component: 'Office of Information Technology'
+        },
+        status: 'Submitted',
+        type: 'Re-compete'
+      },
+      {
+        id: '229f9b64-18fc-4ee1-95c4-9d4b143d215d',
+        submittedAt: new Date().toISOString(),
+        requestName: 'Super System',
+        requester: {
+          name: 'George Baukerton',
+          component: 'Office of Information Technology'
+        },
+        status: 'Submitted',
+        type: 'Re-compete'
+      },
+      {
+        id: '229f9b64-18fc-4ee1-95c4-9d4b143d215e',
+        submittedAt: new Date(2020, 8, 26).toISOString(),
+        requestName: 'Monster System',
         requester: {
           name: 'George Baukerton',
           component: 'Office of Information Technology'
@@ -77,10 +103,24 @@ const AllRequests = () => {
     headerGroups,
     rows,
     prepareRow
-  } = useTable({
-    columns,
-    data
-  });
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: {
+        // @ts-ignore
+        sortBy: [{ id: 'submittedAt', desc: true }]
+      }
+    },
+    useSortBy
+  );
+
+  const getHeaderSortIcon = (isDesc: boolean) => {
+    return classnames('margin-left-1', {
+      'fa fa-caret-down': isDesc,
+      'fa fa-caret-up': !isDesc
+    });
+  };
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
@@ -92,22 +132,27 @@ const AllRequests = () => {
             {t('allRequests.aria.openRequestsTable')}
           </caption>
           <thead>
-            {headerGroups.map(headerGroup => (
+            {headerGroups.map((headerGroup: any) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th {...column.getHeaderProps()}>
+                {headerGroup.headers.map((column: any) => (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render('Header')}
+                    {column.isSorted && (
+                      <span
+                        className={getHeaderSortIcon(column.isSortedDesc)}
+                      />
+                    )}
                   </th>
                 ))}
               </tr>
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map(row => {
+            {rows.map((row: any) => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map((cell, i) => {
+                  {row.cells.map((cell: any, i: number) => {
                     if (i === 0) {
                       return (
                         <th {...cell.getCellProps()} scope="row">
