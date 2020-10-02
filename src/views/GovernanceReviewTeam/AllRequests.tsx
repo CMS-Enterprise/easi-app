@@ -122,6 +122,19 @@ const AllRequests = () => {
     });
   };
 
+  const getColumnSortStatus = (
+    column: any
+  ): 'descending' | 'ascending' | 'none' => {
+    if (column.isSorted) {
+      if (column.isSortedDesc) {
+        return 'descending';
+      }
+      return 'ascending';
+    }
+
+    return 'none';
+  };
+
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <PageWrapper>
@@ -135,7 +148,10 @@ const AllRequests = () => {
             {headerGroups.map((headerGroup: any) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column: any) => (
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <th
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    aria-sort={getColumnSortStatus(column)}
+                  >
                     {column.render('Header')}
                     {column.isSorted && (
                       <span
