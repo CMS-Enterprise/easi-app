@@ -28,10 +28,7 @@ type HomeProps = RouteComponentProps;
 
 const Home = ({ history }: HomeProps) => {
   const { t } = useTranslation();
-  // const { authState } = useOktaAuth();
-  const authState = {
-    isAuthenticated: true
-  };
+  const { authState } = useOktaAuth();
   const dispatch = useDispatch();
   const location = useLocation<any>();
   const systemIntakes = useSelector(
