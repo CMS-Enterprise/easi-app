@@ -15,7 +15,6 @@ import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 
 import BusinessCaseReview from './BusinessCaseReview';
-
 import IntakeReview from './IntakeReview';
 
 import './index.scss';
@@ -73,7 +72,7 @@ const GovernanceReviewTeam = () => {
             </BreadcrumbNav>
             <dl className="easi-grt__request-info">
               <div>
-                <dt>{t('intake:fields.requestName')}</dt>
+                <dt>{t('intake:fields.projectName')}</dt>
                 <dd>{systemIntake.requestName}</dd>
               </div>
               <div className="easi-grt__request-info-col">
