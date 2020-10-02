@@ -20,7 +20,7 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 	intake := models.SystemIntake{
 		ID:                      id,
 		EUAUserID:               "FAKE",
-		Status:                  "SUBMITTED",
+		Status:                  models.SystemIntakeStatusSUBMITTED,
 		Requester:               "Fake Requester",
 		Component:               null.StringFrom("Fake Component"),
 		BusinessOwner:           null.StringFrom("Fake Business Owner"),

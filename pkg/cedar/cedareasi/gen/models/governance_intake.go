@@ -6,14 +6,14 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // GovernanceIntake governance intake
+//
 // swagger:model GovernanceIntake
 type GovernanceIntake struct {
 
@@ -28,6 +28,10 @@ type GovernanceIntake struct {
 	// business owner component
 	// Required: true
 	BusinessOwnerComponent *string `json:"business_owner_component"`
+
+	// decided at
+	// Required: true
+	DecidedAt *string `json:"decided_at"`
 
 	// ea collaborator
 	EaCollaborator string `json:"ea_collaborator,omitempty"`
@@ -47,9 +51,6 @@ type GovernanceIntake struct {
 	// existing funding
 	// Required: true
 	ExistingFunding *bool `json:"existing_funding"`
-
-	// funding number
-	FundingNumber string `json:"funding_number,omitempty"`
 
 	// funding source
 	FundingSource string `json:"funding_source,omitempty"`
@@ -88,9 +89,13 @@ type GovernanceIntake struct {
 	// Required: true
 	Solution *string `json:"solution"`
 
-	// submitted time
+	// status
 	// Required: true
-	SubmittedTime *string `json:"submitted_time"`
+	Status *string `json:"status"`
+
+	// submitted at
+	// Required: true
+	SubmittedAt *string `json:"submitted_at"`
 
 	// system name
 	// Required: true
@@ -98,6 +103,10 @@ type GovernanceIntake struct {
 
 	// trb collaborator
 	TrbCollaborator string `json:"trb_collaborator,omitempty"`
+
+	// withdrawn at
+	// Required: true
+	WithdrawnAt *string `json:"withdrawn_at"`
 }
 
 // Validate validates this governance intake
@@ -113,6 +122,10 @@ func (m *GovernanceIntake) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateBusinessOwnerComponent(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateDecidedAt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -160,11 +173,19 @@ func (m *GovernanceIntake) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
-	if err := m.validateSubmittedTime(formats); err != nil {
+	if err := m.validateStatus(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSubmittedAt(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateSystemName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateWithdrawnAt(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -195,6 +216,15 @@ func (m *GovernanceIntake) validateBusinessOwner(formats strfmt.Registry) error 
 func (m *GovernanceIntake) validateBusinessOwnerComponent(formats strfmt.Registry) error {
 
 	if err := validate.Required("business_owner_component", "body", m.BusinessOwnerComponent); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GovernanceIntake) validateDecidedAt(formats strfmt.Registry) error {
+
+	if err := validate.Required("decided_at", "body", m.DecidedAt); err != nil {
 		return err
 	}
 
@@ -300,9 +330,18 @@ func (m *GovernanceIntake) validateSolution(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *GovernanceIntake) validateSubmittedTime(formats strfmt.Registry) error {
+func (m *GovernanceIntake) validateStatus(formats strfmt.Registry) error {
 
-	if err := validate.Required("submitted_time", "body", m.SubmittedTime); err != nil {
+	if err := validate.Required("status", "body", m.Status); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GovernanceIntake) validateSubmittedAt(formats strfmt.Registry) error {
+
+	if err := validate.Required("submitted_at", "body", m.SubmittedAt); err != nil {
 		return err
 	}
 
@@ -312,6 +351,15 @@ func (m *GovernanceIntake) validateSubmittedTime(formats strfmt.Registry) error 
 func (m *GovernanceIntake) validateSystemName(formats strfmt.Registry) error {
 
 	if err := validate.Required("system_name", "body", m.SystemName); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *GovernanceIntake) validateWithdrawnAt(formats strfmt.Registry) error {
+
+	if err := validate.Required("withdrawn_at", "body", m.WithdrawnAt); err != nil {
 		return err
 	}
 

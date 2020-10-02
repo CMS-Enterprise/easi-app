@@ -12,18 +12,18 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Intake1 intake 1
+// IntakeUpdate intake update
 //
-// swagger:model Intake_1
-type Intake1 struct {
+// swagger:model IntakeUpdate
+type IntakeUpdate struct {
 
 	// governance
 	// Required: true
 	Governance *GovernanceIntake `json:"Governance"`
 }
 
-// Validate validates this intake 1
-func (m *Intake1) Validate(formats strfmt.Registry) error {
+// Validate validates this intake update
+func (m *IntakeUpdate) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateGovernance(formats); err != nil {
@@ -36,7 +36,7 @@ func (m *Intake1) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Intake1) validateGovernance(formats strfmt.Registry) error {
+func (m *IntakeUpdate) validateGovernance(formats strfmt.Registry) error {
 
 	if err := validate.Required("Governance", "body", m.Governance); err != nil {
 		return err
@@ -55,7 +55,7 @@ func (m *Intake1) validateGovernance(formats strfmt.Registry) error {
 }
 
 // MarshalBinary interface implementation
-func (m *Intake1) MarshalBinary() ([]byte, error) {
+func (m *IntakeUpdate) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -63,8 +63,8 @@ func (m *Intake1) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Intake1) UnmarshalBinary(b []byte) error {
-	var res Intake1
+func (m *IntakeUpdate) UnmarshalBinary(b []byte) error {
+	var res IntakeUpdate
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
