@@ -2,6 +2,7 @@ package cedareasi
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 
 	"github.com/go-openapi/runtime"
@@ -173,7 +174,8 @@ func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntak
 	}
 	resp, err := c.client.Operations.IntakegovernancePOST5(params, c.apiAuthHeader)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to submit intake for CEDAR", zap.Error(err))
+		body, _ := json.Marshal(params.Body)
+		appcontext.ZLogger(ctx).Error("Failed to submit intake for CEDAR", zap.Error(err), zap.ByteString("body", body))
 		return "", &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     validatedIntake,
