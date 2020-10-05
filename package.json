@@ -78,6 +78,9 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },
+  "nyc": {
+      "reporter": ["html"]
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
