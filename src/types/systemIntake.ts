@@ -58,6 +58,10 @@ export type ContractDetailsForm = {
     isFunded: boolean | null;
     fundingNumber: string;
   };
+  costs: {
+    isExpectingIncrease: string;
+    expectedIncreaseAmount: string;
+  };
 };
 
 // Redux store type for a system intake
