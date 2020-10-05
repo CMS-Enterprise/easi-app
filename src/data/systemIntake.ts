@@ -39,6 +39,10 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     isFunded: null,
     fundingNumber: ''
   },
+  costs: {
+    isExpectingIncrease: '',
+    expectedIncreaseAmount: ''
+  },
   businessNeed: '',
   businessSolution: '',
   currentStage: '',
@@ -136,6 +140,10 @@ export const prepareSystemIntakeForApp = (
           ? null
           : systemIntake.existingFunding,
       fundingNumber: systemIntake.fundingSource || ''
+    },
+    costs: {
+      isExpectingIncrease: systemIntake.expectingCostIncrease || '',
+      expectedIncreaseAmount: systemIntake.expectedIncreaseAmount || ''
     },
     businessNeed: systemIntake.businessNeed || '',
     businessSolution: systemIntake.solution || '',

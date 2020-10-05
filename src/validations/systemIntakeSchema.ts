@@ -91,6 +91,17 @@ const SystemIntakeValidationSchema: any = {
             'Tell us your funding number. This is a six digit number and starts with 00'
           )
       })
+    }),
+    costs: Yup.object().shape({
+      isExpectingIncrease: Yup.string().required(
+        'Tell us whether you are expecting costs for this request to increase'
+      ),
+      expectedIncreaseAmount: Yup.string().when('isExpectingIncrease', {
+        is: 'yes',
+        then: Yup.string().required(
+          'Tell us approximately how much do you expect the cost to increase'
+        )
+      })
     })
   })
 };
