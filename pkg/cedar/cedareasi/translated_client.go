@@ -19,6 +19,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
+const dateTimeLayout = "2006-01-02 15:04:05"
+
 // TranslatedClient is an API client for CEDAR EASi using EASi language
 type TranslatedClient struct {
 	client        *apiclient.EASiCoreAPI
@@ -129,49 +131,52 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 	return nil
 }
 
-func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
-	id := validatedIntake.ID.String()
-	status := string(validatedIntake.Status)
+func systemIntakeToWireRepresentation(i *models.SystemIntake) *apimodels.Intake {
+	id := i.ID.String()
+	status := string(i.Status)
 	governanceIntake := apimodels.GovernanceIntake{
-		BusinessNeeds:           &validatedIntake.BusinessNeed.String,
-		BusinessOwner:           &validatedIntake.BusinessOwner.String,
-		BusinessOwnerComponent:  &validatedIntake.BusinessOwnerComponent.String,
-		EaCollaborator:          validatedIntake.EACollaborator.String,
-		EaSupportRequest:        &validatedIntake.EASupportRequest.Bool,
-		EuaUserID:               &validatedIntake.EUAUserID,
-		ExistingContract:        &validatedIntake.ExistingContract.String,
-		ExistingFunding:         &validatedIntake.ExistingFunding.Bool,
-		FundingSource:           validatedIntake.FundingSource.String,
+		BusinessNeeds:           &i.BusinessNeed.String,
+		BusinessOwner:           &i.BusinessOwner.String,
+		BusinessOwnerComponent:  &i.BusinessOwnerComponent.String,
+		EaCollaborator:          i.EACollaborator.String,
+		EaSupportRequest:        &i.EASupportRequest.Bool,
+		EuaUserID:               &i.EUAUserID,
+		ExistingContract:        &i.ExistingContract.String,
+		ExistingFunding:         &i.ExistingFunding.Bool,
+		FundingSource:           i.FundingSource.String,
 		ID:                      &id,
-		Isso:                    validatedIntake.ISSO.String,
-		OitSecurityCollaborator: validatedIntake.OITSecurityCollaborator.String,
-		ProcessStatus:           &validatedIntake.ProcessStatus.String,
-		ProductManager:          &validatedIntake.ProductManager.String,
-		ProductManagerComponent: &validatedIntake.ProductManagerComponent.String,
-		Requester:               &validatedIntake.Requester,
-		RequesterComponent:      &validatedIntake.Component.String,
-		Solution:                &validatedIntake.Solution.String,
+		Isso:                    i.ISSO.String,
+		OitSecurityCollaborator: i.OITSecurityCollaborator.String,
+		ProcessStatus:           &i.ProcessStatus.String,
+		ProductManager:          &i.ProductManager.String,
+		ProductManagerComponent: &i.ProductManagerComponent.String,
+		Requester:               &i.Requester,
+		RequesterComponent:      &i.Component.String,
+		Solution:                &i.Solution.String,
 		Status:                  &status,
-		SystemName:              &validatedIntake.ProjectName.String,
-		TrbCollaborator:         validatedIntake.TRBCollaborator.String,
+		SystemName:              &i.ProjectName.String,
+		TrbCollaborator:         i.TRBCollaborator.String,
 	}
-	if validatedIntake.SubmittedAt != nil {
-		out := validatedIntake.SubmittedAt.String()
+	if i.SubmittedAt != nil {
+		out := i.SubmittedAt.Format(dateTimeLayout)
 		governanceIntake.SubmittedAt = &out
 	}
-	if validatedIntake.DecidedAt != nil {
-		out := validatedIntake.DecidedAt.String()
+	if i.DecidedAt != nil {
+		out := i.DecidedAt.Format(dateTimeLayout)
 		governanceIntake.DecidedAt = &out
 	}
-	if validatedIntake.ArchivedAt != nil {
-		out := validatedIntake.ArchivedAt.String()
+	if i.ArchivedAt != nil {
+		out := i.ArchivedAt.Format(dateTimeLayout)
 		governanceIntake.WithdrawnAt = &out
 	}
-
-	params := apioperations.NewIntakegovernancePOST5Params()
-	params.Body = &apimodels.Intake{
+	return &apimodels.Intake{
 		Governance: &governanceIntake,
 	}
+}
+
+func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
+	params := apioperations.NewIntakegovernancePOST5Params()
+	params.Body = systemIntakeToWireRepresentation(validatedIntake)
 	resp, err := c.client.Operations.IntakegovernancePOST5(params, c.apiAuthHeader)
 	if err != nil {
 		body, _ := json.Marshal(params.Body)
@@ -179,7 +184,7 @@ func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntak
 		return "", &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     validatedIntake,
-			ModelID:   id,
+			ModelID:   validatedIntake.ID.String(),
 			Operation: apperrors.Submit,
 			Source:    "CEDAR",
 		}
