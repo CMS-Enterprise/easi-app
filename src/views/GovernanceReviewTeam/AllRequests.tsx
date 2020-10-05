@@ -108,14 +108,13 @@ const AllRequests = () => {
       columns,
       data,
       initialState: {
-        // @ts-ignore
         sortBy: [{ id: 'submittedAt', desc: true }]
       }
     },
     useSortBy
   );
 
-  const getHeaderSortIcon = (isDesc: boolean) => {
+  const getHeaderSortIcon = (isDesc: boolean | undefined) => {
     return classnames('margin-left-1', {
       'fa fa-caret-down': isDesc,
       'fa fa-caret-up': !isDesc
@@ -145,9 +144,9 @@ const AllRequests = () => {
             {t('allRequests.aria.openRequestsTable')}
           </caption>
           <thead>
-            {headerGroups.map((headerGroup: any) => (
+            {headerGroups.map(headerGroup => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column: any) => (
+                {headerGroup.headers.map(column => (
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     aria-sort={getColumnSortStatus(column)}
@@ -164,11 +163,11 @@ const AllRequests = () => {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row: any) => {
+            {rows.map(row => {
               prepareRow(row);
               return (
                 <tr {...row.getRowProps()}>
-                  {row.cells.map((cell: any, i: number) => {
+                  {row.cells.map((cell, i) => {
                     if (i === 0) {
                       return (
                         <th {...cell.getCellProps()} scope="row">
