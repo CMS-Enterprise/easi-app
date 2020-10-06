@@ -46,7 +46,7 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
-    cy.get('IntakeForm-CostsExpectingIncreaseNo')
+    cy.get('#IntakeForm-CostsExpectingIncreaseNo')
       .check({ force: true })
       .should('be.checked');
 
