@@ -13,6 +13,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
+import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import { yesNoMap } from 'data/common';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
@@ -224,10 +225,12 @@ const ContractDetails = ({
                             {flatErrors['costs.expectedIncreaseAmount']}
                           </FieldErrorMsg>
                           <Field
-                            as={TextField}
+                            as={TextAreaField}
+                            className="system-intake__cost-amount"
                             error={!!flatErrors['costs.expectedIncreaseAmount']}
                             id="IntakeForm-CostsExpectedIncrease"
                             name="costs.expectedIncreaseAmount"
+                            maxLength={100}
                           />
                         </FieldGroup>
                       </div>
