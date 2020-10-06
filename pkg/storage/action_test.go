@@ -18,14 +18,13 @@ func (s StoreTestSuite) TestCreateAction() {
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
-		actorName := "name"
-		actorEmail := "email@site.com"
 		action := models.SystemIntakeAction{
-			ID:         uuid.New(),
-			IntakeID:   intake.ID,
-			ActionType: models.SystemIntakeActionTypeSUBMIT,
-			ActorName:  &actorName,
-			ActorEmail: &actorEmail,
+			ID:             uuid.New(),
+			IntakeID:       intake.ID,
+			ActionType:     models.SystemIntakeActionTypeSUBMIT,
+			ActorName:      "name",
+			ActorEmail:     "email@site.com",
+			ActorEUAUserID: testhelpers.RandomEUAID(),
 		}
 
 		created, err := s.store.CreateAction(ctx, &action)
@@ -44,13 +43,15 @@ func (s StoreTestSuite) TestCreateAction() {
 		s.NoError(err)
 
 		action := models.SystemIntakeAction{
-			ID:         uuid.New(),
-			IntakeID:   intake.ID,
-			ActionType: models.SystemIntakeActionTypeSUBMIT,
+			ID:             uuid.New(),
+			IntakeID:       intake.ID,
+			ActionType:     models.SystemIntakeActionTypeSUBMIT,
+			ActorEmail:     "email@site.com",
+			ActorEUAUserID: testhelpers.RandomEUAID(),
 		}
 
 		_, err = s.store.CreateAction(ctx, &action)
-		s.Equal("pq: null value in column \"actor_name\" violates not-null constraint", err.Error())
+		s.Equal("pq: new row for relation \"actions\" violates check constraint \"actions_actor_name_check\"", err.Error())
 	})
 
 	s.Run("cannot create with invalid type", func() {

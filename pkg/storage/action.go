@@ -23,6 +23,7 @@ func (s *Store) CreateAction(ctx context.Context, action *models.SystemIntakeAct
 			action_type,
 			actor_name,
 		    actor_email,
+		    actor_eua_user_id,
 			intake_id,
 			created_at
 		) 
@@ -31,6 +32,7 @@ func (s *Store) CreateAction(ctx context.Context, action *models.SystemIntakeAct
 			:action_type,
 		    :actor_name,
 		    :actor_email,
+			:actor_eua_user_id,
 		    :intake_id,    
 		    :created_at
 		)`
