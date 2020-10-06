@@ -150,9 +150,9 @@ describe('The System Intake Form', () => {
         /^Enterprise Architecture, Enterprise Architecture Collaborator$/
       );
 
-    cy.contains('.easi-review-row dt', 'Request Name')
+    cy.contains('.easi-review-row dt', 'Project Name')
       .siblings('dd')
-      .contains('Request Name');
+      .contains('Test Request Name');
 
     cy.contains('dt', 'What is your business need?')
       .siblings('dd')

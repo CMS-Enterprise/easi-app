@@ -171,7 +171,7 @@ Array [
             <dt
               className="text-bold margin-bottom-05"
             >
-              Request Name
+              Project Name
             </dt>
             <dd
               className="description-definition margin-0"
