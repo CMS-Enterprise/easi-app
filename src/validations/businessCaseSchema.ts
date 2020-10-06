@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 const phoneNumberRegex = /( *-*[0-9] *?){10,}/;
 const BusinessCaseValidationSchema = {
   generalRequestInfo: Yup.object().shape({
-    requestName: Yup.string().required('Enter the Request Name'),
+    requestName: Yup.string().required('Enter the Project Name'),
     requester: Yup.object().shape({
       name: Yup.string().required("Enter the Requester's name"),
       phoneNumber: Yup.string()

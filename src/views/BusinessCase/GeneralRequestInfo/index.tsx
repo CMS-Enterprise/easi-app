@@ -82,7 +82,7 @@ const GeneralRequestInfo = ({
                   scrollElement="requestName"
                   error={!!flatErrors.requestName}
                 >
-                  <Label htmlFor="BusinessCase-RequestName">Request Name</Label>
+                  <Label htmlFor="BusinessCase-RequestName">Project Name</Label>
                   <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                   <Field
                     as={TextField}
