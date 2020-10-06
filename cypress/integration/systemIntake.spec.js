@@ -102,6 +102,10 @@ describe('The System Intake Form', () => {
       .type('111111')
       .should('have.value', '111111');
 
+    cy.get('IntakeForm-CostsExpectingIncreaseNo')
+      .check({ force: true })
+      .should('be.checked');
+
     cy.contains('button', 'Next').click();
 
     cy.wait('@putSystemIntake');
