@@ -46,6 +46,10 @@ describe('The System Intake Form', () => {
       .check({ force: true })
       .should('be.checked');
 
+    cy.get('IntakeForm-CostsExpectingIncreaseNo')
+      .check({ force: true })
+      .should('be.checked');
+
     cy.contains('button', 'Next').click();
 
     cy.wait('@putSystemIntake');
@@ -102,9 +106,13 @@ describe('The System Intake Form', () => {
       .type('111111')
       .should('have.value', '111111');
 
-    cy.get('IntakeForm-CostsExpectingIncreaseNo')
+    cy.get('#IntakeForm-CostsExpectingIncreaseYes')
       .check({ force: true })
       .should('be.checked');
+
+    cy.get('#IntakeForm-CostsExpectedIncrease')
+      .type('99999')
+      .should('have.value', '99999');
 
     cy.contains('button', 'Next').click();
 
