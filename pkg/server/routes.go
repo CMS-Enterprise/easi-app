@@ -145,13 +145,6 @@ func (s *Server) routes(
 				services.NewAuthorizeUserIsIntakeRequester(),
 				store.UpdateSystemIntake,
 			),
-			services.NewSubmitSystemIntake(
-				serviceConfig,
-				services.NewAuthorizeUserIsIntakeRequester(),
-				store.UpdateSystemIntake,
-				cedarEasiClient.ValidateAndSubmitSystemIntake,
-				emailClient.SendSystemIntakeSubmissionEmail,
-			),
 			!s.environment.Prod(),
 		),
 		services.NewFetchSystemIntakeByID(
@@ -224,6 +217,21 @@ func (s *Server) routes(
 		services.NewFetchMetrics(serviceConfig, store.FetchSystemIntakeMetrics),
 	)
 	api.Handle("/metrics", metricsHandler.Handle())
+
+	systemIntakeActionHandler := handlers.NewSystemIntakeActionHandler(
+		base,
+		services.NewCreateSystemIntakeAction(
+			store.FetchSystemIntakeByID,
+			services.NewSubmitSystemIntake(
+				serviceConfig,
+				services.NewAuthorizeUserIsIntakeRequester(),
+				store.UpdateSystemIntake,
+				cedarEasiClient.ValidateAndSubmitSystemIntake,
+				emailClient.SendSystemIntakeSubmissionEmail,
+			),
+		),
+	)
+	api.Handle("/intake/{intake_id}/actions/", systemIntakeActionHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
