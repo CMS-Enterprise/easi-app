@@ -31,5 +31,7 @@ func NewSystemIntake() models.SystemIntake {
 		ProcessStatus:           null.StringFrom("Just an idea"),
 		EASupportRequest:        null.BoolFrom(false),
 		ExistingContract:        null.StringFrom("Yes"),
+		CostIncrease:            null.StringFrom("NO"),
+		CostIncreaseAmount:      null.StringFrom(""),
 	}
 }

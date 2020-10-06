@@ -122,6 +122,14 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 	if validate.RequireTime(*intake.SubmittedAt) {
 		expectedError.WithValidation("SubmittedAt", validationMessage)
 	}
+	if validate.RequireNullString(intake.CostIncrease) {
+		expectedError.WithValidation("CostIncrease", validationMessage)
+	}
+	if intake.CostIncrease.String == "YES" {
+		if validate.RequireNullString(intake.CostIncreaseAmount) {
+			expectedError.WithValidation("CostIncreaseAmount", validationMessage)
+		}
+	}
 	if len(expectedError.Validations) > 0 {
 		return &expectedError
 	}
