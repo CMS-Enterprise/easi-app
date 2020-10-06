@@ -1,4 +1,4 @@
-describe('The System Intake Form', () => {
+describe('The Task List', () => {
   before(() => {
     cy.login();
     // TODO HACK
