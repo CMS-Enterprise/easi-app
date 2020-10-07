@@ -13,7 +13,9 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
+import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import { yesNoMap } from 'data/common';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -33,7 +35,8 @@ const ContractDetails = ({
 
   const initialValues: ContractDetailsForm = {
     fundingSource: systemIntake.fundingSource,
-    hasContract: systemIntake.hasContract
+    hasContract: systemIntake.hasContract,
+    costs: systemIntake.costs
   };
 
   return (
@@ -184,6 +187,81 @@ const ContractDetails = ({
                     />
                   </fieldset>
                 </FieldGroup>
+
+                <FieldGroup
+                  scrollElement="conts.isExpectingIncrease"
+                  error={!!flatErrors['costs.isExpectingIncrease']}
+                >
+                  <fieldset className="usa-fieldset margin-top-4">
+                    <legend className="usa-label margin-bottom-1">
+                      Do you expect costs for this request to increase?
+                    </legend>
+                    <HelpText className="margin-bottom-1">
+                      This information helps the team decide on the right
+                      approval process for this request
+                    </HelpText>
+                    <FieldErrorMsg>
+                      {flatErrors['costs.isExpectingIncrease']}
+                    </FieldErrorMsg>
+                    <Field
+                      as={RadioField}
+                      checked={values.costs.isExpectingIncrease === 'YES'}
+                      id="IntakeForm-CostsExpectingIncreaseYes"
+                      name="costs.isExpectingIncrease"
+                      label={yesNoMap.YES}
+                      value="YES"
+                    />
+                    {values.costs.isExpectingIncrease === 'YES' && (
+                      <div className="width-mobile margin-top-neg-2 margin-left-3 margin-bottom-1">
+                        <FieldGroup
+                          scrollElement="costs.expectedIncreaseAmount"
+                          error={!!flatErrors['costs.expectedIncreaseAmount']}
+                        >
+                          <Label htmlFor="IntakeForm-CostsExpectedIncrease">
+                            Approximately how much do you expect the cost to
+                            increase?
+                          </Label>
+                          <FieldErrorMsg>
+                            {flatErrors['costs.expectedIncreaseAmount']}
+                          </FieldErrorMsg>
+                          <Field
+                            as={TextAreaField}
+                            className="system-intake__cost-amount"
+                            error={!!flatErrors['costs.expectedIncreaseAmount']}
+                            id="IntakeForm-CostsExpectedIncrease"
+                            name="costs.expectedIncreaseAmount"
+                            maxLength={100}
+                          />
+                        </FieldGroup>
+                      </div>
+                    )}
+                    <Field
+                      as={RadioField}
+                      checked={values.costs.isExpectingIncrease === 'NO'}
+                      id="IntakeForm-CostsExpectingIncreaseNo"
+                      name="costs.isExpectingIncrease"
+                      label={yesNoMap.NO}
+                      value="NO"
+                      onChange={() => {
+                        setFieldValue('costs.isExpectingIncrease', 'NO');
+                        setFieldValue('costs.expectedIncreaseAmount', '');
+                      }}
+                    />
+                    <Field
+                      as={RadioField}
+                      checked={values.costs.isExpectingIncrease === 'NOT_SURE'}
+                      id="IntakeForm-CostsExpectingIncreaseNotSure"
+                      name="costs.isExpectingIncrease"
+                      label={yesNoMap.NOT_SURE}
+                      value="NOT_SURE"
+                      onChange={() => {
+                        setFieldValue('costs.isExpectingIncrease', 'NOT_SURE');
+                        setFieldValue('costs.expectedIncreaseAmount', '');
+                      }}
+                    />
+                  </fieldset>
+                </FieldGroup>
+
                 <Button
                   type="button"
                   outline

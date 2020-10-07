@@ -3,6 +3,12 @@
     opacity: 0.3;
   }
 
+  &__cost-amount {
+    &.usa-textarea {
+      height: 5em;
+    }
+  }
+
   &__review-row {
     display: grid;
     grid-gap: 1.25rem;

@@ -7,6 +7,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
@@ -28,6 +29,15 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
       return `${hasIsso}, ${systemIntake.isso.name}`;
     }
     return hasIsso;
+  };
+  const expectedCosts = () => {
+    const {
+      costs: { expectedIncreaseAmount, isExpectingIncrease }
+    } = systemIntake;
+    if (expectedIncreaseAmount) {
+      return `${yesNoMap[isExpectingIncrease]}, ${expectedIncreaseAmount}`;
+    }
+    return yesNoMap[isExpectingIncrease];
   };
   return (
     <div>
@@ -162,6 +172,12 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
           <div>
             <DescriptionTerm term="Does the project have funding?" />
             <DescriptionDefinition definition={fundingDefinition()} />
+          </div>
+        </ReviewRow>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term="Do you expect costs for this request to increase?" />
+            <DescriptionDefinition definition={expectedCosts()} />
           </div>
         </ReviewRow>
       </DescriptionList>
