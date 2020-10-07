@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
@@ -282,22 +283,43 @@ const ContractDetails = ({
                           />
                         </FieldGroup>
 
-                        <fieldset className="usa-fieldset margin-top-4">
+                        <fieldset
+                          className={classnames(
+                            'usa-fieldset',
+                            'usa-form-group',
+                            'margin-top-4',
+                            {
+                              'usa-form-group--error':
+                                errors.contract &&
+                                (errors.contract.startDate ||
+                                  errors.contract.endDate)
+                            }
+                          )}
+                        >
                           <legend className="usa-label">
                             Period of performance
                           </legend>
                           <HelpText className="margin-bottom-1">
                             For example: 4/2020
                           </HelpText>
+                          <FieldErrorMsg>
+                            {flatErrors['contract.startDate.month']}
+                          </FieldErrorMsg>
+                          <FieldErrorMsg>
+                            {flatErrors['contract.startDate.year']}
+                          </FieldErrorMsg>
+                          <FieldErrorMsg>
+                            {flatErrors['contract.endDate.month']}
+                          </FieldErrorMsg>
+                          <FieldErrorMsg>
+                            {flatErrors['contract.endDate.year']}
+                          </FieldErrorMsg>
                           <div className="display-flex flex-align-center">
                             <div className="usa-memorable-date">
                               <div className="usa-form-group usa-form-group--month">
                                 <FieldGroup
                                   className="usa-form-group--month"
                                   scrollElement="contract.startDate.month"
-                                  error={
-                                    !!flatErrors['contract.startDate.month']
-                                  }
                                 >
                                   <Label
                                     className="system-intake__label-margin-top-0"
@@ -318,7 +340,6 @@ const ContractDetails = ({
                               <FieldGroup
                                 className="usa-form-group--year"
                                 scrollElement="contract.startDate.year"
-                                error={!!flatErrors['contract.startDate.year']}
                               >
                                 <Label
                                   className="system-intake__label-margin-top-0"
@@ -343,7 +364,6 @@ const ContractDetails = ({
                                 <FieldGroup
                                   className="usa-form-group--month"
                                   scrollElement="contract.endDate.month"
-                                  error={!!flatErrors['contract.endDate.month']}
                                 >
                                   <Label
                                     className="system-intake__label-margin-top-0"
@@ -364,7 +384,6 @@ const ContractDetails = ({
                               <FieldGroup
                                 className="usa-form-group--year"
                                 scrollElement="contract.endDate.year"
-                                error={!!flatErrors['contract.endDate.year']}
                               >
                                 <Label
                                   className="system-intake__label-margin-top-0"
@@ -434,22 +453,43 @@ const ContractDetails = ({
                           />
                         </FieldGroup>
 
-                        <fieldset className="usa-fieldset margin-top-4">
+                        <fieldset
+                          className={classnames(
+                            'usa-fieldset',
+                            'usa-form-group',
+                            'margin-top-4',
+                            {
+                              'usa-form-group--error':
+                                errors.contract &&
+                                (errors.contract.startDate ||
+                                  errors.contract.endDate)
+                            }
+                          )}
+                        >
                           <legend className="usa-label">
                             Period of performance
                           </legend>
                           <HelpText className="margin-bottom-1">
                             For example: 4/2020
                           </HelpText>
+                          <FieldErrorMsg>
+                            {flatErrors['contract.startDate.month']}
+                          </FieldErrorMsg>
+                          <FieldErrorMsg>
+                            {flatErrors['contract.startDate.year']}
+                          </FieldErrorMsg>
+                          <FieldErrorMsg>
+                            {flatErrors['contract.endDate.month']}
+                          </FieldErrorMsg>
+                          <FieldErrorMsg>
+                            {flatErrors['contract.endDate.year']}
+                          </FieldErrorMsg>
                           <div className="display-flex flex-align-center">
                             <div className="usa-memorable-date">
                               <div className="usa-form-group usa-form-group--month">
                                 <FieldGroup
                                   className="usa-form-group--month"
                                   scrollElement="contract.startDate.month"
-                                  error={
-                                    !!flatErrors['contract.startDate.month']
-                                  }
                                 >
                                   <Label
                                     className="system-intake__label-margin-top-0"
@@ -470,7 +510,6 @@ const ContractDetails = ({
                               <FieldGroup
                                 className="usa-form-group--year"
                                 scrollElement="contract.startDate.year"
-                                error={!!flatErrors['contract.startDate.year']}
                               >
                                 <Label
                                   className="system-intake__label-margin-top-0"
@@ -495,7 +534,6 @@ const ContractDetails = ({
                                 <FieldGroup
                                   className="usa-form-group--month"
                                   scrollElement="contract.endDate.month"
-                                  error={!!flatErrors['contract.endDate.month']}
                                 >
                                   <Label
                                     className="system-intake__label-margin-top-0"
@@ -506,7 +544,7 @@ const ContractDetails = ({
                                   <Field
                                     as={DateInputMonth}
                                     error={
-                                      !!flatErrors['contract.EndDate.month']
+                                      !!flatErrors['contract.endDate.month']
                                     }
                                     id="IntakeForm-ContractEndMonth"
                                     name="contract.endDate.month"
@@ -516,7 +554,6 @@ const ContractDetails = ({
                               <FieldGroup
                                 className="usa-form-group--year"
                                 scrollElement="contract.endDate.year"
-                                error={!!flatErrors['contract.endDate.year']}
                               >
                                 <Label
                                   className="system-intake__label-margin-top-0"
