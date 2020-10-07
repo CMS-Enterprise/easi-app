@@ -88,6 +88,7 @@ const governanceReviewTeam = {
   },
   allRequests: {
     header: 'Requests',
+    requestCount: 'There are {{count}} requests',
     table: {
       requestType: 'Type of request'
     },
