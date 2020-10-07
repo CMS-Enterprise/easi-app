@@ -238,6 +238,18 @@ Array [
             </dd>
           </div>
         </div>
+      </dl>
+      <hr
+        className="system-intake__hr"
+      />
+      <h2
+        className="font-heading-xl"
+      >
+        Contract Details
+      </h2>
+      <dl
+        title="Contract Details"
+      >
         <div
           className="easi-review-row"
         >
@@ -257,13 +269,27 @@ Array [
             <dt
               className="text-bold margin-bottom-05"
             >
-              Does the project have funding
+              Does the project have funding?
             </dt>
             <dd
               className="description-definition margin-0"
             >
               No
             </dd>
+          </div>
+        </div>
+        <div
+          className="easi-review-row"
+        >
+          <div>
+            <dt
+              className="text-bold margin-bottom-05"
+            >
+              Do you expect costs for this request to increase?
+            </dt>
+            <dd
+              className="description-definition margin-0"
+            />
           </div>
         </div>
       </dl>
