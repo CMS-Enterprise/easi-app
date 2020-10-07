@@ -87,6 +87,8 @@ const governanceReviewTeam = {
     email_time_notification: 'An email was sent to the requester on {{date}}'
   },
   allRequests: {
+    header: 'Requests',
+    requestCount: 'There are {{count}} requests',
     table: {
       requestType: 'Type of request'
     },

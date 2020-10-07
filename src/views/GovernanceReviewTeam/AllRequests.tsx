@@ -139,6 +139,8 @@ const AllRequests = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container">
+        <h1>{t('allRequests.header')}</h1>
+        <p>{t('allRequests.requestCount', { count: data.length })}</p>
         <Table bordered={false} {...getTableProps()} fullWidth>
           <caption className="usa-sr-only">
             {t('allRequests.aria.openRequestsTable')}
