@@ -474,7 +474,7 @@ const ContactDetails = ({
               onSave={dispatchSave}
               debounceDelay={1000 * 30}
             />
-            <PageNumber currentPage={1} totalPages={2} />
+            <PageNumber currentPage={1} totalPages={3} />
           </>
         );
       }}
