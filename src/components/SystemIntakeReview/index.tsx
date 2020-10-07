@@ -148,13 +148,19 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
             <DescriptionDefinition definition={systemIntake.currentStage} />
           </div>
         </ReviewRow>
+      </DescriptionList>
+
+      <hr className="system-intake__hr" />
+      <h2 className="font-heading-xl">Contract Details</h2>
+
+      <DescriptionList title="Contract Details">
         <ReviewRow>
           <div>
             <DescriptionTerm term="Do you currently have a contract in place?" />
             <DescriptionDefinition definition={systemIntake.hasContract} />
           </div>
           <div>
-            <DescriptionTerm term="Does the project have funding" />
+            <DescriptionTerm term="Does the project have funding?" />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>
