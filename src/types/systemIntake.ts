@@ -62,6 +62,19 @@ export type ContractDetailsForm = {
     isExpectingIncrease: string;
     expectedIncreaseAmount: string;
   };
+  contract: {
+    status: 'HAVE_CONTRACT' | 'IN_PROGRESS' | 'NOT_STARTED' | 'NOT_NEEDED' | '';
+    contractor: string;
+    vehicle: string;
+    startDate: {
+      month: string;
+      year: string;
+    };
+    endDate: {
+      month: string;
+      year: string;
+    };
+  };
 };
 
 // Redux store type for a system intake

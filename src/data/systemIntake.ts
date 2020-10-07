@@ -43,6 +43,19 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     isExpectingIncrease: '',
     expectedIncreaseAmount: ''
   },
+  contract: {
+    status: '',
+    contractor: '',
+    vehicle: '',
+    startDate: {
+      month: '',
+      year: ''
+    },
+    endDate: {
+      month: '',
+      year: ''
+    }
+  },
   businessNeed: '',
   businessSolution: '',
   currentStage: '',
@@ -146,6 +159,19 @@ export const prepareSystemIntakeForApp = (
     costs: {
       isExpectingIncrease: systemIntake.costIncrease || '',
       expectedIncreaseAmount: systemIntake.costIncreaseAmount || ''
+    },
+    contract: {
+      status: systemIntake.contractStatus || '',
+      contractor: systemIntake.contractor || '',
+      vehicle: systemIntake.contractVehicle || '',
+      startDate: {
+        month: systemIntake.contractStartMonth || '',
+        year: systemIntake.contractStartYear || ''
+      },
+      endDate: {
+        month: systemIntake.contractEndMonth || '',
+        year: systemIntake.contractEndYear || ''
+      }
     },
     businessNeed: systemIntake.businessNeed || '',
     businessSolution: systemIntake.solution || '',
