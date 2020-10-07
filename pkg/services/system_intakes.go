@@ -10,6 +10,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	models2 "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -117,7 +118,7 @@ func NewUpdateSystemIntake(
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchRequesterEmail func(logger *zap.Logger, euaID string) (string, error),
+	fetchRequesterInfo func(*zap.Logger, string) (*models2.Person, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 	updateDraftIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
 	canDecideIntake bool,
@@ -150,13 +151,13 @@ func NewUpdateSystemIntake(
 			updatedTime := config.clock.Now()
 			intake.UpdatedAt = &updatedTime
 
-			recipientAddress, err := fetchRequesterEmail(appcontext.ZLogger(ctx), existingIntake.EUAUserID)
+			requesterInfo, err := fetchRequesterInfo(appcontext.ZLogger(ctx), existingIntake.EUAUserID)
 			if err != nil {
 				return &models.SystemIntake{}, err
 			}
-			if recipientAddress == "" {
+			if requesterInfo == nil || requesterInfo.Email == "" {
 				return &models.SystemIntake{}, &apperrors.ExternalAPIError{
-					Err:       errors.New("email address fetch was not successful"),
+					Err:       errors.New("user info fetch was not successful"),
 					Model:     existingIntake,
 					ModelID:   intake.ID.String(),
 					Operation: apperrors.Fetch,
@@ -166,7 +167,7 @@ func NewUpdateSystemIntake(
 
 			existingIntake.Status = intake.Status
 			existingIntake.GrtReviewEmailBody = intake.GrtReviewEmailBody
-			existingIntake.RequesterEmailAddress = null.StringFrom(recipientAddress)
+			existingIntake.RequesterEmailAddress = null.StringFrom(requesterInfo.Email)
 			existingIntake.DecidedAt = &updatedTime
 			existingIntake.UpdatedAt = &updatedTime
 			// This ensures only certain fields can be modified.
@@ -179,7 +180,7 @@ func NewUpdateSystemIntake(
 				}
 			}
 
-			err = sendReviewEmail(intake.GrtReviewEmailBody.String, recipientAddress)
+			err = sendReviewEmail(intake.GrtReviewEmailBody.String, requesterInfo.Email)
 			if err != nil {
 				return &models.SystemIntake{}, err
 			}

@@ -138,7 +138,7 @@ func (s *Server) routes(
 			store.UpdateSystemIntake,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeUserIsIntakeRequester(),
-			cedarLdapClient.FetchUserEmailAddress,
+			cedarLdapClient.FetchUserInfo,
 			emailClient.SendSystemIntakeReviewEmail,
 			services.NewUpdateDraftSystemIntake(
 				serviceConfig,
@@ -227,6 +227,8 @@ func (s *Server) routes(
 				services.NewAuthorizeUserIsIntakeRequester(),
 				store.UpdateSystemIntake,
 				cedarEasiClient.ValidateAndSubmitSystemIntake,
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeSubmissionEmail,
 			),
 		),
