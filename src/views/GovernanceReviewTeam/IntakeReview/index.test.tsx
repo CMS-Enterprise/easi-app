@@ -47,7 +47,20 @@ describe('The GRT intake review view', () => {
     },
     costs: {
       expectedIncreaseAmount: '',
-      isExpectingIncrease: ''
+      isExpectingIncrease: 'NO'
+    },
+    contract: {
+      status: 'IN_PROGRESS',
+      contractor: 'TrussWorks, Inc.',
+      vehicle: 'Sole Source',
+      startDate: {
+        month: '1',
+        year: '2020'
+      },
+      endDate: {
+        month: '12',
+        year: '2020'
+      }
     },
     businessNeed: 'The quick brown fox jumps over the lazy dog.',
     businessSolution: 'The quick brown fox jumps over the lazy dog.',

@@ -102,6 +102,23 @@ const SystemIntakeValidationSchema: any = {
           'Tell us approximately how much do you expect the cost to increase'
         )
       })
+    }),
+    contract: Yup.object().shape({
+      status: Yup.string().required(
+        'Tell us whether you have a contract to support this effort'
+      ),
+      contractor: Yup.string().required(
+        'Tell us whether you have selected a contractor(s)'
+      ),
+      vehicle: Yup.string().required('Tell us about the contract vehicle'),
+      startDate: Yup.object().shape({
+        month: Yup.string().required('Tell us the contract start month'),
+        year: Yup.string().required('Tell us the contract start year')
+      }),
+      endDate: Yup.object().shape({
+        month: Yup.string().required('Tell us the contract end month'),
+        year: Yup.string().required('Tell us the contract end year')
+      })
     })
   })
 };

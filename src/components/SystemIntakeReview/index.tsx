@@ -16,6 +16,8 @@ type SystemIntakeReview = {
 };
 
 export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
+  const { contract } = systemIntake;
+
   const fundingDefinition = () => {
     const isFunded = convertBoolToYesNo(systemIntake.fundingSource.isFunded);
     if (systemIntake.fundingSource.isFunded) {
@@ -179,7 +181,39 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
             <DescriptionTerm term="Do you expect costs for this request to increase?" />
             <DescriptionDefinition definition={expectedCosts()} />
           </div>
+          <div>
+            <DescriptionTerm term="Do you already have a contract in place to support this effort?" />
+            <DescriptionDefinition definition={systemIntake.contract.status} />
+          </div>
         </ReviewRow>
+        {['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+          systemIntake.contract.status
+        ) && (
+          <>
+            <ReviewRow>
+              <div>
+                <DescriptionTerm term="Contractor(s)" />
+                <DescriptionDefinition
+                  definition={systemIntake.contract.contractor}
+                />
+              </div>
+              <div>
+                <DescriptionTerm term="Contract vehicle" />
+                <DescriptionDefinition
+                  definition={systemIntake.contract.vehicle}
+                />
+              </div>
+            </ReviewRow>
+            <ReviewRow>
+              <div>
+                <DescriptionTerm term="Period of performance" />
+                <DescriptionDefinition
+                  definition={`${contract.startDate.month}/${contract.startDate.year} to ${contract.endDate.month}/${contract.endDate.year}`}
+                />
+              </div>
+            </ReviewRow>
+          </>
+        )}
       </DescriptionList>
     </div>
   );
