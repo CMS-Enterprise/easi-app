@@ -39,6 +39,8 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 		ProcessStatus:           null.StringFrom("Just an idea"),
 		EASupportRequest:        null.BoolFrom(false),
 		ExistingContract:        null.StringFrom("No"),
+		CostIncrease:            null.StringFrom("NO"),
+		CostIncreaseAmount:      null.StringFrom(""),
 		UpdatedAt:               &clockTime,
 		SubmittedAt:             &clockTime,
 		AlfabetID:               null.String{},
