@@ -10,13 +10,14 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	models2 "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // NewCreateSystemIntakeAction is a service to create and execute a system intake action
 func NewCreateSystemIntakeAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
-	submit func(context.Context, *models.SystemIntake) error,
+	submit func(context.Context, *models.SystemIntake, *models.SystemIntakeAction) error,
 ) func(context.Context, *models.SystemIntakeAction) error {
 	return func(ctx context.Context, action *models.SystemIntakeAction) error {
 		intake, fetchErr := fetch(ctx, action.IntakeID)
@@ -30,7 +31,7 @@ func NewCreateSystemIntakeAction(
 
 		switch action.ActionType {
 		case models.SystemIntakeActionTypeSUBMIT:
-			return submit(ctx, intake)
+			return submit(ctx, intake, action)
 		default:
 			return &apperrors.ResourceConflictError{
 				Err:        errors.New("invalid system intake action type"),
@@ -48,9 +49,11 @@ func NewSubmitSystemIntake(
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
+	createAction func(context.Context, *models.SystemIntakeAction) (*models.SystemIntakeAction, error),
+	fetchUserInfo func(*zap.Logger, string) (*models2.Person, error),
 	emailReviewer func(requester string, intakeID uuid.UUID) error,
-) func(context.Context, *models.SystemIntake) error {
-	return func(ctx context.Context, intake *models.SystemIntake) error {
+) func(context.Context, *models.SystemIntake, *models.SystemIntakeAction) error {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.SystemIntakeAction) error {
 		ok, err := authorize(ctx, intake)
 		if err != nil {
 			return err
@@ -78,6 +81,32 @@ func NewSubmitSystemIntake(
 				Resource:   intake,
 			}
 			return err
+		}
+
+		userInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), appcontext.Principal(ctx).ID())
+		if err != nil {
+			return err
+		}
+		if userInfo == nil || userInfo.Email == "" || userInfo.CommonName == "" || userInfo.UserName == "" {
+			return &apperrors.ExternalAPIError{
+				Err:       errors.New("user info fetch was not successful"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		action.ActorName = userInfo.CommonName
+		action.ActorEmail = userInfo.Email
+		action.ActorEUAUserID = userInfo.UserName
+		_, err = createAction(ctx, action)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     action,
+				Operation: apperrors.QueryPost,
+			}
 		}
 
 		intake.SubmittedAt = &updatedTime

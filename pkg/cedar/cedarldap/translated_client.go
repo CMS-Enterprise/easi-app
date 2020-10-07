@@ -35,14 +35,14 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	return TranslatedClient{client, apiKeyHeaderAuth}
 }
 
-// FetchUserEmailAddress checks that the user is authenticated
-func (c TranslatedClient) FetchUserEmailAddress(logger *zap.Logger, euaID string) (string, error) {
+// FetchUserInfo checks that the user is authenticated
+func (c TranslatedClient) FetchUserInfo(logger *zap.Logger, euaID string) (*models.Person, error) {
 	params := operations.NewPersonIDParams()
 	params.ID = euaID
 	resp, err := c.client.Operations.PersonID(params, c.apiAuthHeader)
 	if err != nil {
 		logger.Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err))
-		return "", &apperrors.ExternalAPIError{
+		return nil, &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     models.Person{},
 			ModelID:   euaID,
@@ -51,7 +51,7 @@ func (c TranslatedClient) FetchUserEmailAddress(logger *zap.Logger, euaID string
 		}
 	}
 	if resp.Payload == nil {
-		return "", &apperrors.ExternalAPIError{
+		return nil, &apperrors.ExternalAPIError{
 			Err:       errors.New("failed to return person from CEDAR LDAP"),
 			ModelID:   euaID,
 			Model:     models.Person{},
@@ -60,5 +60,5 @@ func (c TranslatedClient) FetchUserEmailAddress(logger *zap.Logger, euaID string
 		}
 	}
 
-	return resp.Payload.Email, nil
+	return resp.Payload, nil
 }
