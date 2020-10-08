@@ -131,6 +131,76 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 		s.Equal(originalEUA, updated.EUAUserID)
 	})
+
+	s.Run("Lifecycle fields only upon update", func() {
+		now := time.Now()
+		originalIntake := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+
+			// These fields should NOT be written during a create
+			LifecycleID:    null.StringFrom("ABCDEF"),
+			ExpiresAt:      &now,
+			LifecycleScope: null.StringFrom("ABCDEF"),
+			NextSteps:      null.StringFrom("ABCDEF"),
+		}
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+		s.Empty(partial.LifecycleID)
+		s.Empty(partial.ExpiresAt)
+		s.Empty(partial.LifecycleScope)
+		s.Empty(partial.NextSteps)
+
+		// Update
+		lcid := "200110" // first LCID issued on 2020-01-11
+		content1 := "ABC"
+		content2 := "XYZ"
+		partial.LifecycleID = null.StringFrom(lcid)
+		partial.ExpiresAt = &now
+		partial.LifecycleScope = null.StringFrom(content1)
+		partial.NextSteps = null.StringFrom(content2)
+
+		_, err = s.store.UpdateSystemIntake(ctx, partial)
+		s.NoError(err, "failed to update system intake")
+
+		updated, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		s.Equal(lcid, updated.LifecycleID.String)
+		s.NotEmpty(updated.ExpiresAt)
+		s.Equal(content1, updated.LifecycleScope.String)
+		s.Equal(content2, updated.NextSteps.String)
+	})
+
+	s.Run("LifecycleID format", func() {
+		originalIntake := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+		}
+
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		fails := []string{
+			"20001",   // short
+			"2000110", // long
+			"20001A",  // non-numeric
+		}
+
+		for _, fail := range fails {
+			partial.LifecycleID = null.StringFrom(fail)
+			_, err = s.store.UpdateSystemIntake(ctx, partial)
+			s.Error(err, "expected lcid format error")
+		}
+	})
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {

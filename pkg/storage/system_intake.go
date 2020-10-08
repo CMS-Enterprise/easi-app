@@ -122,7 +122,11 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			submitted_at = :submitted_at,
 		    decided_at = :decided_at,
 		    archived_at = :archived_at,
-			alfabet_id = :alfabet_id
+			alfabet_id = :alfabet_id,
+			lcid = :lcid,
+			expires_at = :expires_at,
+			lifecycle_scope = :lifecycle_scope,
+			next_steps = :next_steps
 		WHERE system_intake.id = :id
 	`
 	_, err := s.DB.NamedExec(
