@@ -19,7 +19,6 @@ const initialState: SystemIntakeState = {
   systemIntake: initialSystemIntakeForm,
   isLoading: null,
   isSaving: false,
-  isSubmitting: false,
   error: null
 };
 
@@ -120,7 +119,6 @@ function systemIntakeReducer(
     case reviewSystemIntake.REQUEST:
       return {
         ...state,
-        isSubmitting: true,
         error: null
       };
     case reviewSystemIntake.SUCCESS:
@@ -135,11 +133,6 @@ function systemIntakeReducer(
       return {
         ...state,
         error: action.payload
-      };
-    case reviewSystemIntake.FULFILL:
-      return {
-        ...state,
-        isSubmitting: false
       };
     case archiveSystemIntake.SUCCESS:
       return initialState;
