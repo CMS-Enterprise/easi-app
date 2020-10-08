@@ -36,7 +36,6 @@ const ContractDetails = ({
 
   const initialValues: ContractDetailsForm = {
     fundingSource: systemIntake.fundingSource,
-    hasContract: systemIntake.hasContract,
     costs: systemIntake.costs,
     contract: systemIntake.contract
   };
@@ -218,8 +217,8 @@ const ContractDetails = ({
                 </FieldGroup>
 
                 <FieldGroup
-                  scrollElement="contract.status"
-                  error={!!flatErrors['contract.status']}
+                  scrollElement="contract.hasContract"
+                  error={!!flatErrors['contract.hasContract']}
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
@@ -231,17 +230,17 @@ const ContractDetails = ({
                       Grants Management (OAGM) track work
                     </HelpText>
                     <FieldErrorMsg>
-                      {flatErrors['contract.status']}
+                      {flatErrors['contract.hasContract']}
                     </FieldErrorMsg>
                     <Field
                       as={RadioField}
-                      checked={values.contract.status === 'HAVE_CONTRACT'}
+                      checked={values.contract.hasContract === 'HAVE_CONTRACT'}
                       id="IntakeForm-ContractHaveContract"
-                      name="contract.status"
+                      name="contract.hasContract"
                       label="I already have a contract/InterAgency Agreement (IAA) in place"
                       value="HAVE_CONTRACT"
                     />
-                    {values.contract.status === 'HAVE_CONTRACT' && (
+                    {values.contract.hasContract === 'HAVE_CONTRACT' && (
                       <div className="margin-top-neg-2 margin-left-4 margin-bottom-2">
                         <FieldGroup
                           scrollElement="contract.contractor"
@@ -405,13 +404,13 @@ const ContractDetails = ({
                     )}
                     <Field
                       as={RadioField}
-                      checked={values.contract.status === 'IN_PROGRESS'}
+                      checked={values.contract.hasContract === 'IN_PROGRESS'}
                       id="IntakeForm-ContractInProgress"
-                      name="contract.status"
+                      name="contract.hasContract"
                       label="I am currently working on my OAGM Acquisition Plan/IAA documents"
                       value="IN_PROGRESS"
                     />
-                    {values.contract.status === 'IN_PROGRESS' && (
+                    {values.contract.hasContract === 'IN_PROGRESS' && (
                       <div className="margin-top-neg-2 margin-left-4 margin-bottom-2">
                         <FieldGroup
                           scrollElement="contract.contractor"
@@ -575,13 +574,13 @@ const ContractDetails = ({
                     )}
                     <Field
                       as={RadioField}
-                      checked={values.contract.status === 'NOT_STARTED'}
+                      checked={values.contract.hasContract === 'NOT_STARTED'}
                       id="IntakeForm-ContractNotStarted"
                       name="contract.status"
                       label="I haven't started acquisiting planning yet"
                       value="NOT_STARTED"
                       onChange={() => {
-                        setFieldValue('contract.status', 'NOT_STARTED');
+                        setFieldValue('contract.hasContract', 'NOT_STARTED');
                         setFieldValue('contract.contractor', '');
                         setFieldValue('contract.vehicle', '');
                         setFieldValue('contract.startDate.month', '');
@@ -592,13 +591,13 @@ const ContractDetails = ({
                     />
                     <Field
                       as={RadioField}
-                      checked={values.contract.status === 'NOT_NEEDED'}
+                      checked={values.contract.hasContract === 'NOT_NEEDED'}
                       id="IntakeForm-ContractNotNeeded"
                       name="contract.status"
                       label="I don't anticipate needing contractor support"
                       value="NOT_NEEDED"
                       onChange={() => {
-                        setFieldValue('contract.status', 'NOT_NEEDED');
+                        setFieldValue('contract.hasContract', 'NOT_NEEDED');
                         setFieldValue('contract.contractor', '');
                         setFieldValue('contract.vehicle', '');
                         setFieldValue('contract.startDate.month', '');

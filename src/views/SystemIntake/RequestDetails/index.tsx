@@ -32,7 +32,6 @@ type RequestDetailsForm = {
   businessSolution: string;
   currentStage: string;
   needsEaSupport: boolean | null;
-  hasContract: string;
 };
 
 type RequestDetailsProps = {
@@ -53,8 +52,7 @@ const RequestDetails = ({
     businessNeed: systemIntake.businessNeed,
     businessSolution: systemIntake.businessSolution,
     currentStage: systemIntake.currentStage,
-    needsEaSupport: systemIntake.needsEaSupport,
-    hasContract: systemIntake.hasContract
+    needsEaSupport: systemIntake.needsEaSupport
   };
   return (
     <Formik

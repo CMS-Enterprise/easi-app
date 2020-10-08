@@ -168,10 +168,6 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
       <DescriptionList title="Contract Details">
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Do you currently have a contract in place?" />
-            <DescriptionDefinition definition={systemIntake.hasContract} />
-          </div>
-          <div>
             <DescriptionTerm term="Does the project have funding?" />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
@@ -183,11 +179,13 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
           </div>
           <div>
             <DescriptionTerm term="Do you already have a contract in place to support this effort?" />
-            <DescriptionDefinition definition={systemIntake.contract.status} />
+            <DescriptionDefinition
+              definition={systemIntake.contract.hasContract}
+            />
           </div>
         </ReviewRow>
         {['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-          systemIntake.contract.status
+          systemIntake.contract.hasContract
         ) && (
           <>
             <ReviewRow>
