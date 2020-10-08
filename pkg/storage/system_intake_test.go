@@ -140,10 +140,10 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 			Requester: "Test requester",
 
 			// These fields should NOT be written during a create
-			LifecycleID:    null.StringFrom("ABCDEF"),
-			ExpiresAt:      &now,
-			LifecycleScope: null.StringFrom("ABCDEF"),
-			NextSteps:      null.StringFrom("ABCDEF"),
+			LifecycleID:        null.StringFrom("ABCDEF"),
+			LifecycleExpiresAt: &now,
+			LifecycleScope:     null.StringFrom("ABCDEF"),
+			LifecycleNextSteps: null.StringFrom("ABCDEF"),
 		}
 		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
 		s.NoError(err)
@@ -151,18 +151,18 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
 		s.NoError(err)
 		s.Empty(partial.LifecycleID)
-		s.Empty(partial.ExpiresAt)
+		s.Empty(partial.LifecycleExpiresAt)
 		s.Empty(partial.LifecycleScope)
-		s.Empty(partial.NextSteps)
+		s.Empty(partial.LifecycleNextSteps)
 
 		// Update
 		lcid := "200110" // first LCID issued on 2020-01-11
 		content1 := "ABC"
 		content2 := "XYZ"
 		partial.LifecycleID = null.StringFrom(lcid)
-		partial.ExpiresAt = &now
+		partial.LifecycleExpiresAt = &now
 		partial.LifecycleScope = null.StringFrom(content1)
-		partial.NextSteps = null.StringFrom(content2)
+		partial.LifecycleNextSteps = null.StringFrom(content2)
 
 		_, err = s.store.UpdateSystemIntake(ctx, partial)
 		s.NoError(err, "failed to update system intake")
@@ -171,9 +171,9 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.NoError(err)
 
 		s.Equal(lcid, updated.LifecycleID.String)
-		s.NotEmpty(updated.ExpiresAt)
+		s.NotEmpty(updated.LifecycleExpiresAt)
 		s.Equal(content1, updated.LifecycleScope.String)
-		s.Equal(content2, updated.NextSteps.String)
+		s.Equal(content2, updated.LifecycleNextSteps.String)
 	})
 
 	s.Run("LifecycleID format", func() {
