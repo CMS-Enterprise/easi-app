@@ -77,7 +77,6 @@ const SystemIntakeValidationSchema: any = {
     currentStage: Yup.string().required('Tell us where you are in the process')
   }),
   contractDetails: Yup.object().shape({
-    hasContract: Yup.string().required('Tell us about your contract situation'),
     fundingSource: Yup.object().shape({
       isFunded: Yup.boolean()
         .nullable()
@@ -104,27 +103,27 @@ const SystemIntakeValidationSchema: any = {
       })
     }),
     contract: Yup.object().shape({
-      status: Yup.string().required(
+      hasContract: Yup.string().required(
         'Tell us whether you have a contract to support this effort'
       ),
-      contractor: Yup.string().when('status', {
+      contractor: Yup.string().when('hasContract', {
         is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string().required(
           'Tell us whether you have selected a contractor(s)'
         )
       }),
-      vehicle: Yup.string().when('status', {
+      vehicle: Yup.string().when('hasContract', {
         is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.string().required('Tell us about the contract vehicle')
       }),
-      startDate: Yup.string().when('status', {
+      startDate: Yup.mixed().when('hasContract', {
         is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.object().shape({
           month: Yup.string().required('Tell us the contract start month'),
           year: Yup.string().required('Tell us the contract start year')
         })
       }),
-      endDate: Yup.string().when('status', {
+      endDate: Yup.mixed().when('hasContract', {
         is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.object().shape({
           month: Yup.string().required('Tell us the contract end month'),

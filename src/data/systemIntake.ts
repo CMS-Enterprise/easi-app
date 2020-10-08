@@ -44,7 +44,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     expectedIncreaseAmount: ''
   },
   contract: {
-    status: '',
+    hasContract: '',
     contractor: '',
     vehicle: '',
     startDate: {
@@ -60,7 +60,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   businessSolution: '',
   currentStage: '',
   needsEaSupport: null,
-  hasContract: '',
   grtReviewEmailBody: '',
   decidedAt: null,
   businessCaseId: null,
@@ -100,10 +99,16 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     solution: systemIntake.businessSolution,
     processStatus: systemIntake.currentStage,
     eaSupportRequest: systemIntake.needsEaSupport,
-    existingContract: systemIntake.hasContract,
+    existingContract: systemIntake.contract.hasContract,
     grtReviewEmailBody: systemIntake.grtReviewEmailBody,
     costIncrease: systemIntake.costs.isExpectingIncrease,
-    costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount
+    costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
+    contractContractor: systemIntake.contract.contractor,
+    contractVehicle: systemIntake.contract.vehicle,
+    contractStartMonth: systemIntake.contract.startDate.month,
+    contractStartYear: systemIntake.contract.startDate.year,
+    contractEndMonth: systemIntake.contract.endDate.month,
+    contractEndYear: systemIntake.contract.endDate.year
   };
 };
 
@@ -161,7 +166,7 @@ export const prepareSystemIntakeForApp = (
       expectedIncreaseAmount: systemIntake.costIncreaseAmount || ''
     },
     contract: {
-      status: systemIntake.contractStatus || '',
+      hasContract: systemIntake.existingContract || '',
       contractor: systemIntake.contractor || '',
       vehicle: systemIntake.contractVehicle || '',
       startDate: {
@@ -180,7 +185,6 @@ export const prepareSystemIntakeForApp = (
       systemIntake.eaSupportRequest === null
         ? null
         : systemIntake.eaSupportRequest,
-    hasContract: systemIntake.existingContract || '',
     grtReviewEmailBody: systemIntake.grtReviewEmailBody || '',
     decidedAt: systemIntake.decidedAt
       ? DateTime.fromISO(systemIntake.decidedAt)
