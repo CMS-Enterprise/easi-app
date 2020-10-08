@@ -7,6 +7,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
@@ -180,7 +181,9 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
           <div>
             <DescriptionTerm term="Do you already have a contract in place to support this effort?" />
             <DescriptionDefinition
-              definition={systemIntake.contract.hasContract}
+              definition={
+                contractStatus[`${systemIntake.contract.hasContract}`]
+              }
             />
           </div>
         </ReviewRow>

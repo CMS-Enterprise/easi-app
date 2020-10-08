@@ -103,7 +103,7 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     grtReviewEmailBody: systemIntake.grtReviewEmailBody,
     costIncrease: systemIntake.costs.isExpectingIncrease,
     costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
-    contractContractor: systemIntake.contract.contractor,
+    contractor: systemIntake.contract.contractor,
     contractVehicle: systemIntake.contract.vehicle,
     contractStartMonth: systemIntake.contract.startDate.month,
     contractStartYear: systemIntake.contract.startDate.year,
