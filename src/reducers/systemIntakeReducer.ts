@@ -11,8 +11,7 @@ import {
   postSystemIntake,
   reviewSystemIntake,
   saveSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake
+  storeSystemIntake
 } from 'types/routines';
 import { SystemIntakeState } from 'types/systemIntake';
 
@@ -117,22 +116,6 @@ function systemIntakeReducer(
       return {
         ...state,
         isLoading: false
-      };
-    case submitSystemIntake.REQUEST:
-      return {
-        ...state,
-        isSubmitting: true,
-        error: null
-      };
-    case submitSystemIntake.FAILURE:
-      return {
-        ...state,
-        error: action.payload
-      };
-    case submitSystemIntake.FULFILL:
-      return {
-        ...state,
-        isSubmitting: false
       };
     case reviewSystemIntake.REQUEST:
       return {
