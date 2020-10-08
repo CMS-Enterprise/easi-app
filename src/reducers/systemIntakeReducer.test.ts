@@ -7,9 +7,9 @@ import {
   clearSystemIntake,
   fetchSystemIntake,
   postSystemIntake,
+  postSystemIntakeAction,
   saveSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake
+  storeSystemIntake
 } from 'types/routines';
 
 describe('The system intake reducer', () => {
@@ -155,9 +155,9 @@ describe('The system intake reducer', () => {
   });
 
   describe('submitSystemIntake', () => {
-    it('handles submitSystemIntake.REQUEST', () => {
+    it('handles postSystemIntakeAction.REQUEST', () => {
       const mockRequestAction = {
-        type: submitSystemIntake.REQUEST,
+        type: postSystemIntakeAction.REQUEST,
         payload: initialSystemIntakeForm
       };
 
@@ -170,9 +170,9 @@ describe('The system intake reducer', () => {
       });
     });
 
-    it('handles submitSystemIntake.FAILURE', () => {
+    it('handles postSystemIntakeAction.FAILURE', () => {
       const mockFailureAction = {
-        type: submitSystemIntake.FAILURE,
+        type: postSystemIntakeAction.FAILURE,
         payload: 'Error Error'
       };
 
@@ -185,9 +185,9 @@ describe('The system intake reducer', () => {
       });
     });
 
-    it('handles submitSystemIntake.FULFILL', () => {
+    it('handles postSystemIntakeAction.FULFILL', () => {
       const mockFulfillAction = {
-        type: submitSystemIntake.FULFILL,
+        type: postSystemIntakeAction.FULFILL,
         payload: undefined
       };
 
