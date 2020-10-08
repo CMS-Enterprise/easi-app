@@ -598,7 +598,7 @@ const ContractDetails = ({
                       label="I don't anticipate needing contractor support"
                       value="NOT_NEEDED"
                       onChange={() => {
-                        setFieldValue('contract.status', 'NOT_STARTED');
+                        setFieldValue('contract.status', 'NOT_NEEDED');
                         setFieldValue('contract.contractor', '');
                         setFieldValue('contract.vehicle', '');
                         setFieldValue('contract.startDate.month', '');
