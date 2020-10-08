@@ -86,7 +86,7 @@ func (s *Server) routes(
 
 	switch flagConfig.Source {
 	case appconfig.FlagSourceLocal:
-		defaultFlags := flags.FlagValues{}
+		defaultFlags := flags.FlagValues{"taskListLite": "true", "sandbox": "true"}
 		flagClient = flags.NewLocalClient(defaultFlags)
 
 	case appconfig.FlagSourceLaunchDarkly:
