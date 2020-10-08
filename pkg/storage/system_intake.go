@@ -2,6 +2,8 @@ package storage
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -86,7 +88,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		)
 		return &models.SystemIntake{}, err
 	}
-	return intake, nil
+	return s.FetchSystemIntakeByID(ctx, id)
 }
 
 // UpdateSystemIntake does an upsert for a system intake
@@ -140,34 +142,48 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			zap.String("user", intake.EUAUserID),
 		)
 	}
-	return intake, err
+	// the SystemIntake may have been updated to Archived, so we want to use
+	// the un-filtered fetch to return the saved object
+	return s.fetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
-func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+// fetchSystemIntakeByID queries the DB for a system intake matching the given ID, WITHOUT filtering based on status
+func (s *Store) fetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
-
-	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1 AND status != 'ARCHIVED'", id)
+	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
 			zap.String("id", id.String()),
 		)
-		if err.Error() == "sql: no rows in result set" {
-			return &models.SystemIntake{}, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
 		}
-		return &models.SystemIntake{}, err
+		return nil, err
 	}
 	// This should cover all statuses that might have a related business case on it.
 	// In the future submitted will also need to be checked.
 	if intake.Status != models.SystemIntakeStatusDRAFT {
-		bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
-		if fetchErr != nil {
-			return &intake, nil
-		}
+		bizCaseID, _ := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 		intake.BusinessCaseID = bizCaseID
 	}
 	return &intake, nil
+}
+
+// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
+func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	intake, err := s.fetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: consider making this filtering behavior part of the services layer, or alternately
+	// make this explicitly separate behavior in the data layer that the services layer
+	// opts into
+	if intake.Status == models.SystemIntakeStatusARCHIVED {
+		return nil, &apperrors.ResourceNotFoundError{Err: sql.ErrNoRows, Resource: models.SystemIntake{}}
+	}
+	return intake, nil
 }
 
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID

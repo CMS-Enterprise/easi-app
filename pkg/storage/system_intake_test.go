@@ -103,7 +103,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 		updated, err := s.store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err, "failed to update system intake")
-		s.Equal(intake, updated)
+		s.Equal(intake.ISSO, updated.ISSO)
 	})
 
 	s.Run("EUA ID will not update", func() {
@@ -228,7 +228,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.SystemIntake{}, fetched)
+		s.Nil(fetched)
 	})
 
 	s.Run("fetches biz case id if exists and intake is past draft status", func() {
@@ -267,7 +267,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.SystemIntake{}, fetched)
+		s.Nil(fetched)
 	})
 }
 
