@@ -158,3 +158,17 @@ const LDKey = "LD_SDK_KEY"
 
 // LDTimeout is the key for accessing LaunchDarkly
 const LDTimeout = "LD_TIMEOUT_SECONDS"
+
+// FlagSourceKey indicates where flags should be loaded from
+const FlagSourceKey = "FLAG_SOURCE"
+
+// FlagSourceOption represents an environment
+type FlagSourceOption string
+
+const (
+	// FlagSourceLocal is LOCAL
+	FlagSourceLocal FlagSourceOption = "LOCAL"
+
+	// FlagSourceLaunchDarkly is LAUNCH_DARKLY
+	FlagSourceLaunchDarkly FlagSourceOption = "LAUNCH_DARKLY"
+)
