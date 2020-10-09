@@ -15,6 +15,7 @@ services:
       - CLIENT_PORT=3000
       - CLIENT_HOSTNAME=localhost:3000
       - CLIENT_ADDRESS=http://localhost:3000
+      - FLAG_SOURCE
       - API_PORT=8080
       - OKTA_CLIENT_ID=0oa2e913coDQeG19S297
       - OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
@@ -40,7 +41,7 @@ services:
       dockerfile: Dockerfile.client
       args:
         - REACT_APP_APP_ENV=$APP_ENV
-        - REACT_APP_API_ADDRESS=http://localhost:8080/api/v1
+        - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
         - REACT_APP_OKTA_CLIENT_ID=$OKTA_CLIENT_ID_DEV
         - REACT_APP_OKTA_DOMAIN=$OKTA_DOMAIN
         - REACT_APP_OKTA_ISSUER=$OKTA_ISSUER
