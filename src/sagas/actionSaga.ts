@@ -8,8 +8,8 @@ import { postSystemIntakeAction } from 'types/routines';
 
 function postSystemIntakeActionRequest(formData: Action) {
   return axios.post(
-    `${process.env.REACT_APP_API_ADDRESS}/intake/actions`,
-    formData
+    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${formData.intakeId}/actions`,
+    `"${formData.actionType}"`
   );
 }
 

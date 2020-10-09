@@ -18,10 +18,10 @@ func (s StoreTestSuite) TestCreateAction() {
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
-		action := models.SystemIntakeAction{
+		action := models.Action{
 			ID:             uuid.New(),
 			IntakeID:       intake.ID,
-			ActionType:     models.SystemIntakeActionTypeSUBMIT,
+			ActionType:     models.ActionTypeSUBMIT,
 			ActorName:      "name",
 			ActorEmail:     "email@site.com",
 			ActorEUAUserID: testhelpers.RandomEUAID(),
@@ -42,10 +42,10 @@ func (s StoreTestSuite) TestCreateAction() {
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
-		action := models.SystemIntakeAction{
+		action := models.Action{
 			ID:             uuid.New(),
 			IntakeID:       intake.ID,
-			ActionType:     models.SystemIntakeActionTypeSUBMIT,
+			ActionType:     models.ActionTypeSUBMIT,
 			ActorEmail:     "email@site.com",
 			ActorEUAUserID: testhelpers.RandomEUAID(),
 		}
@@ -59,7 +59,7 @@ func (s StoreTestSuite) TestCreateAction() {
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
-		action := models.SystemIntakeAction{
+		action := models.Action{
 			ID:         uuid.New(),
 			IntakeID:   intake.ID,
 			ActionType: "fake_status",
