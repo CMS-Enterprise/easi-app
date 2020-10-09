@@ -38,15 +38,15 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract Details
-    cy.get('#IntakeForm-HasContract')
-      .select('No')
-      .should('have.value', 'No');
-
     cy.get('#IntakeForm-HasFundingSourceNo')
       .check({ force: true })
       .should('be.checked');
 
     cy.get('#IntakeForm-CostsExpectingIncreaseNo')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#IntakeForm-ContractNotNeeded')
       .check({ force: true })
       .should('be.checked');
 
@@ -94,10 +94,6 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract Details
-    cy.get('#IntakeForm-HasContract')
-      .select('No')
-      .should('have.value', 'No');
-
     cy.get('#IntakeForm-HasFundingSourceYes')
       .check({ force: true })
       .should('be.checked');
@@ -113,6 +109,34 @@ describe('The System Intake Form', () => {
     cy.get('#IntakeForm-CostsExpectedIncrease')
       .type('99999')
       .should('have.value', '99999');
+
+    cy.get('#IntakeForm-ContractHaveContract')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#IntakeForm-Contractor')
+      .type('TrussWorks, Inc.')
+      .should('have.value', 'TrussWorks, Inc.');
+
+    cy.get('#IntakeForm-Vehicle')
+      .type('Fixed Price Contract')
+      .should('have.value', 'Fixed Price Contract');
+
+    cy.get('#IntakeForm-ContractStartMonth')
+      .type('1')
+      .should('have.value', '1');
+
+    cy.get('#IntakeForm-ContractStartYear')
+      .type('2020')
+      .should('have.value', '2020');
+
+    cy.get('#IntakeForm-ContractEndMonth')
+      .type('12')
+      .should('have.value', '12');
+
+    cy.get('#IntakeForm-ContractEndYear')
+      .type('2021')
+      .should('have.value', '2021');
 
     cy.contains('button', 'Next').click();
 
@@ -198,13 +222,6 @@ describe('The System Intake Form', () => {
     cy.contains('.easi-review-row dt', 'Where are you in the process?')
       .siblings('dd')
       .contains('Just an idea');
-
-    cy.contains(
-      '.easi-review-row dt',
-      'Do you currently have a contract in place?'
-    )
-      .siblings('dd')
-      .contains('No');
 
     cy.contains('.easi-review-row dt', 'Does the project have funding')
       .siblings('dd')
