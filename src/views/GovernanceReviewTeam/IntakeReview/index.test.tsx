@@ -45,6 +45,10 @@ describe('The GRT intake review view', () => {
       isFunded: false,
       fundingNumber: ''
     },
+    costs: {
+      expectedIncreaseAmount: '',
+      isExpectingIncrease: ''
+    },
     businessNeed: 'The quick brown fox jumps over the lazy dog.',
     businessSolution: 'The quick brown fox jumps over the lazy dog.',
     currentStage: 'The quick brown fox jumps over the lazy dog.',

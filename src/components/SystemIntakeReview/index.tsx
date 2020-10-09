@@ -7,6 +7,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
@@ -28,6 +29,15 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
       return `${hasIsso}, ${systemIntake.isso.name}`;
     }
     return hasIsso;
+  };
+  const expectedCosts = () => {
+    const {
+      costs: { expectedIncreaseAmount, isExpectingIncrease }
+    } = systemIntake;
+    if (expectedIncreaseAmount) {
+      return `${yesNoMap[isExpectingIncrease]}, ${expectedIncreaseAmount}`;
+    }
+    return yesNoMap[isExpectingIncrease];
   };
   return (
     <div>
@@ -114,7 +124,7 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
       <DescriptionList title="Request Details">
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Request Name" />
+            <DescriptionTerm term="Project Name" />
             <DescriptionDefinition definition={systemIntake.requestName} />
           </div>
         </ReviewRow>
@@ -148,14 +158,26 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
             <DescriptionDefinition definition={systemIntake.currentStage} />
           </div>
         </ReviewRow>
+      </DescriptionList>
+
+      <hr className="system-intake__hr" />
+      <h2 className="font-heading-xl">Contract Details</h2>
+
+      <DescriptionList title="Contract Details">
         <ReviewRow>
           <div>
             <DescriptionTerm term="Do you currently have a contract in place?" />
             <DescriptionDefinition definition={systemIntake.hasContract} />
           </div>
           <div>
-            <DescriptionTerm term="Does the project have funding" />
+            <DescriptionTerm term="Does the project have funding?" />
             <DescriptionDefinition definition={fundingDefinition()} />
+          </div>
+        </ReviewRow>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term="Do you expect costs for this request to increase?" />
+            <DescriptionDefinition definition={expectedCosts()} />
           </div>
         </ReviewRow>
       </DescriptionList>
