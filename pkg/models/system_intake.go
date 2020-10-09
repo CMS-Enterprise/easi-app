@@ -48,6 +48,8 @@ type SystemIntake struct {
 	ProcessStatus           null.String        `json:"processStatus" db:"process_status"`
 	EASupportRequest        null.Bool          `json:"eaSupportRequest" db:"ea_support_request"`
 	ExistingContract        null.String        `json:"existingContract" db:"existing_contract"`
+	CostIncrease            null.String        `json:"costIncrease" db:"cost_increase"`
+	CostIncreaseAmount      null.String        `json:"costIncreaseAmount" db:"cost_increase_amount"`
 	CreatedAt               *time.Time         `json:"createdAt" db:"created_at"`
 	UpdatedAt               *time.Time         `json:"updatedAt" db:"updated_at"`
 	SubmittedAt             *time.Time         `json:"submittedAt" db:"submitted_at"`
@@ -57,6 +59,10 @@ type SystemIntake struct {
 	GrtReviewEmailBody      null.String        `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 	RequesterEmailAddress   null.String        `json:"requesterEmailAddress" db:"requester_email_address"`
 	BusinessCaseID          *uuid.UUID         `json:"businessCase"`
+	LifecycleID             null.String        `json:"lcid" db:"lcid"`
+	LifecycleExpiresAt      *time.Time         `json:"lcidExpiresAt" db:"lcid_expires_at"`
+	LifecycleScope          null.String        `json:"lcidScope" db:"lcid_scope"`
+	LifecycleNextSteps      null.String        `json:"lcidNextSteps" db:"lcid_next_steps"`
 }
 
 // SystemIntakes is a list of System Intakes

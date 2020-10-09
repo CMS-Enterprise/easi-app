@@ -74,7 +74,9 @@ const SystemIntakeValidationSchema: any = {
     needsEaSupport: Yup.boolean()
       .nullable()
       .required('Tell us if you need Enterprise Architecture (EA) support'),
-    currentStage: Yup.string().required('Tell us where you are in the process'),
+    currentStage: Yup.string().required('Tell us where you are in the process')
+  }),
+  contractDetails: Yup.object().shape({
     hasContract: Yup.string().required('Tell us about your contract situation'),
     fundingSource: Yup.object().shape({
       isFunded: Yup.boolean()
@@ -88,6 +90,17 @@ const SystemIntakeValidationSchema: any = {
           .required(
             'Tell us your funding number. This is a six digit number and starts with 00'
           )
+      })
+    }),
+    costs: Yup.object().shape({
+      isExpectingIncrease: Yup.string().required(
+        'Tell us whether you are expecting costs for this request to increase'
+      ),
+      expectedIncreaseAmount: Yup.string().when('isExpectingIncrease', {
+        is: 'yes',
+        then: Yup.string().required(
+          'Tell us approximately how much do you expect the cost to increase'
+        )
       })
     })
   })

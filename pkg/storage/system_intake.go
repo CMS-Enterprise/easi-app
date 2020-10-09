@@ -20,7 +20,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 	createAt := s.clock.Now()
 	intake.CreatedAt = &createAt
 	intake.UpdatedAt = &createAt
-	const createIntakeSQL = `	
+	const createIntakeSQL = `
 		INSERT INTO system_intake (
 			id,
 			eua_user_id,
@@ -43,9 +43,11 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			process_status,
 			ea_support_request,
 			existing_contract,
+			cost_increase,
+			cost_increase_amount,
 			created_at,
 			updated_at
-		) 
+		)
 		VALUES (
 			:id,
 			:eua_user_id,
@@ -68,6 +70,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:process_status,
 			:ea_support_request,
 			:existing_contract,
+			:cost_increase,
+			:cost_increase_amount,
 		    :created_at,
 		    :updated_at
 		)`
@@ -89,7 +93,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 	const updateSystemIntakeSQL = `
-		UPDATE system_intake 
+		UPDATE system_intake
 		SET
 		    status = :status,
 			requester = :requester,
@@ -111,12 +115,18 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			ea_support_request = :ea_support_request,
 			existing_contract = :existing_contract,
 		    grt_review_email_body = :grt_review_email_body,
-		    requester_email_address = :requester_email_address,
+			requester_email_address = :requester_email_address,
+			cost_increase = :cost_increase,
+			cost_increase_amount = :cost_increase_amount,
 			updated_at = :updated_at,
 			submitted_at = :submitted_at,
 		    decided_at = :decided_at,
 		    archived_at = :archived_at,
-			alfabet_id = :alfabet_id
+			alfabet_id = :alfabet_id,
+			lcid = :lcid,
+			lcid_expires_at = :lcid_expires_at,
+			lcid_scope = :lcid_scope,
+			lcid_next_steps = :lcid_next_steps
 		WHERE system_intake.id = :id
 	`
 	_, err := s.DB.NamedExec(
@@ -191,8 +201,8 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	}
 	const startedCountSQL = `
 		WITH "started" AS (
-		    SELECT * 
-		    FROM system_intake 
+		    SELECT *
+		    FROM system_intake
 		    WHERE created_at >=  $1
 		      AND created_at < $2
 		)
@@ -213,11 +223,11 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	const fundedCountSQL = `
 		WITH "completed" AS (
 		    SELECT existing_funding
-		    FROM system_intake 
-		    WHERE submitted_at >=  $1 
-		      AND submitted_at < $2    
-		) 
-		SELECT count(*) AS completed_count, 
+		    FROM system_intake
+		    WHERE submitted_at >=  $1
+		      AND submitted_at < $2
+		)
+		SELECT count(*) AS completed_count,
 		       coalesce(sum(CASE WHEN existing_funding IS true THEN 1 ELSE 0 END),0) AS funded_count
 		FROM completed
 	`

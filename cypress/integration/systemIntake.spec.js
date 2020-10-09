@@ -35,7 +35,18 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
+    cy.contains('button', 'Next').click();
+
+    // Contract Details
+    cy.get('#IntakeForm-HasContract')
+      .select('No')
+      .should('have.value', 'No');
+
     cy.get('#IntakeForm-HasFundingSourceNo')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#IntakeForm-CostsExpectingIncreaseNo')
       .check({ force: true })
       .should('be.checked');
 
@@ -80,6 +91,13 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
+    cy.contains('button', 'Next').click();
+
+    // Contract Details
+    cy.get('#IntakeForm-HasContract')
+      .select('No')
+      .should('have.value', 'No');
+
     cy.get('#IntakeForm-HasFundingSourceYes')
       .check({ force: true })
       .should('be.checked');
@@ -87,6 +105,14 @@ describe('The System Intake Form', () => {
     cy.get('#IntakeForm-FundingNumber')
       .type('111111')
       .should('have.value', '111111');
+
+    cy.get('#IntakeForm-CostsExpectingIncreaseYes')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#IntakeForm-CostsExpectedIncrease')
+      .type('99999')
+      .should('have.value', '99999');
 
     cy.contains('button', 'Next').click();
 
@@ -150,9 +176,9 @@ describe('The System Intake Form', () => {
         /^Enterprise Architecture, Enterprise Architecture Collaborator$/
       );
 
-    cy.contains('.easi-review-row dt', 'Request Name')
+    cy.contains('.easi-review-row dt', 'Project Name')
       .siblings('dd')
-      .contains('Request Name');
+      .contains('Test Request Name');
 
     cy.contains('dt', 'What is your business need?')
       .siblings('dd')

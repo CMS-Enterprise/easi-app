@@ -39,6 +39,10 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     isFunded: null,
     fundingNumber: ''
   },
+  costs: {
+    isExpectingIncrease: '',
+    expectedIncreaseAmount: ''
+  },
   businessNeed: '',
   businessSolution: '',
   currentStage: '',
@@ -84,7 +88,9 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     processStatus: systemIntake.currentStage,
     eaSupportRequest: systemIntake.needsEaSupport,
     existingContract: systemIntake.hasContract,
-    grtReviewEmailBody: systemIntake.grtReviewEmailBody
+    grtReviewEmailBody: systemIntake.grtReviewEmailBody,
+    costIncrease: systemIntake.costs.isExpectingIncrease,
+    costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount
   };
 };
 
@@ -136,6 +142,10 @@ export const prepareSystemIntakeForApp = (
           ? null
           : systemIntake.existingFunding,
       fundingNumber: systemIntake.fundingSource || ''
+    },
+    costs: {
+      isExpectingIncrease: systemIntake.costIncrease || '',
+      expectedIncreaseAmount: systemIntake.costIncreaseAmount || ''
     },
     businessNeed: systemIntake.businessNeed || '',
     businessSolution: systemIntake.solution || '',

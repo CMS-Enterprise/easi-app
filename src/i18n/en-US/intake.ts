@@ -1,6 +1,6 @@
 const intake = {
   fields: {
-    requestName: 'Request name',
+    projectName: 'Project name',
     requester: 'Requester',
     submissionDate: 'Submission date',
     requestFor: 'Request for',
