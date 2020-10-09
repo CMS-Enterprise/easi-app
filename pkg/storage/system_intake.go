@@ -50,7 +50,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			contract_start_month,
 			contract_start_year,
 			contract_end_month,
-			contract_end_year
+			contract_end_year,
 			created_at,
 			updated_at
 		)
@@ -83,7 +83,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:contract_start_month,
 			:contract_start_year,
 			:contract_end_month,
-			:contract_end_year
+			:contract_end_year,
 		    :created_at,
 		    :updated_at
 		)`
