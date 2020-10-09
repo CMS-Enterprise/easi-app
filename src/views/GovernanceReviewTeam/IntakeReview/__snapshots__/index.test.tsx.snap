@@ -257,18 +257,6 @@ Array [
             <dt
               className="text-bold margin-bottom-05"
             >
-              Do you currently have a contract in place?
-            </dt>
-            <dd
-              className="description-definition margin-0"
-            >
-              The quick brown fox jumps over the lazy dog.
-            </dd>
-          </div>
-          <div>
-            <dt
-              className="text-bold margin-bottom-05"
-            >
               Does the project have funding?
             </dt>
             <dd
@@ -302,7 +290,7 @@ Array [
             <dd
               className="description-definition margin-0"
             >
-              IN_PROGRESS
+              I am currently working on my OAGM Acquisition Plan/IAA documents
             </dd>
           </div>
         </div>
