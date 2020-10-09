@@ -233,7 +233,7 @@ func (s *Server) routes(
 			),
 		),
 	)
-	api.Handle("/system_intake/{intake_id}/actions", systemIntakeActionHandler.Handle())
+	api.Handle("/system_intake/{intake_id}/actions/{action_type}", systemIntakeActionHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,

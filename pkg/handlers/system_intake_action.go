@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -54,20 +53,10 @@ func (h SystemIntakeActionHandler) Handle() http.HandlerFunc {
 				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
-			if r.Body == nil {
-				h.WriteErrorResponse(
-					r.Context(),
-					w,
-					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
-				)
-				return
-			}
-			defer r.Body.Close()
-			decoder := json.NewDecoder(r.Body)
-			var actionType models.ActionType
-			err = decoder.Decode(&actionType)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
+			actionType := models.ActionType(mux.Vars(r)["action_type"])
+			if actionType == "" {
+				valErr.WithValidation("path.actionType", "is required")
+				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
 			err = h.CreateSystemIntakeAction(r.Context(), intakeID, &actionType)
