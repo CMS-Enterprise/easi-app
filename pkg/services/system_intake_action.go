@@ -98,6 +98,22 @@ func NewSubmitSystemIntake(
 			}
 		}
 
+		intake.SubmittedAt = &updatedTime
+		alfabetID, validateAndSubmitErr := validateAndSubmit(ctx, intake)
+		if validateAndSubmitErr != nil {
+			return validateAndSubmitErr
+		}
+		if alfabetID == "" {
+			return &apperrors.ExternalAPIError{
+				Err:       errors.New("submission was not successful"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Submit,
+				Source:    "CEDAR EASi",
+			}
+		}
+		intake.AlfabetID = null.StringFrom(alfabetID)
+
 		action := models.Action{
 			IntakeID:       &intake.ID,
 			ActionType:     models.ActionTypeSUBMIT,
@@ -114,21 +130,6 @@ func NewSubmitSystemIntake(
 			}
 		}
 
-		intake.SubmittedAt = &updatedTime
-		alfabetID, validateAndSubmitErr := validateAndSubmit(ctx, intake)
-		if validateAndSubmitErr != nil {
-			return validateAndSubmitErr
-		}
-		if alfabetID == "" {
-			return &apperrors.ExternalAPIError{
-				Err:       errors.New("submission was not successful"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Submit,
-				Source:    "CEDAR EASi",
-			}
-		}
-		intake.AlfabetID = null.StringFrom(alfabetID)
 		intake, err = update(ctx, intake)
 		if err != nil {
 			return &apperrors.QueryError{
