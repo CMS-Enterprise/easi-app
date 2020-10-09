@@ -99,7 +99,7 @@ func NewSubmitSystemIntake(
 		}
 
 		action := models.Action{
-			IntakeID:       intake.ID,
+			IntakeID:       &intake.ID,
 			ActionType:     models.ActionTypeSUBMIT,
 			ActorName:      userInfo.CommonName,
 			ActorEmail:     userInfo.Email,
