@@ -50,7 +50,7 @@ describe('The GRT intake review view', () => {
       isExpectingIncrease: 'NO'
     },
     contract: {
-      status: 'IN_PROGRESS',
+      hasContract: 'IN_PROGRESS',
       contractor: 'TrussWorks, Inc.',
       vehicle: 'Sole Source',
       startDate: {
@@ -66,7 +66,6 @@ describe('The GRT intake review view', () => {
     businessSolution: 'The quick brown fox jumps over the lazy dog.',
     currentStage: 'The quick brown fox jumps over the lazy dog.',
     needsEaSupport: false,
-    hasContract: 'The quick brown fox jumps over the lazy dog.',
     grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
     decidedAt: new Date().toISOString(),
     businessCaseId: null,
