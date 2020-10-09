@@ -15,6 +15,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import processStages from 'constants/enums/processStages';
 import { yesNoMap } from 'data/common';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
@@ -34,6 +35,7 @@ const ContractDetails = ({
   const history = useHistory();
 
   const initialValues: ContractDetailsForm = {
+    currentStage: systemIntake.currentStage,
     fundingSource: systemIntake.fundingSource,
     hasContract: systemIntake.hasContract,
     costs: systemIntake.costs
@@ -77,6 +79,42 @@ const ContractDetails = ({
                 <MandatoryFieldsAlert />
               </div>
               <Form>
+                <FieldGroup
+                  className="margin-bottom-4"
+                  scrollElement="currentStage"
+                  error={!!flatErrors.currentStage}
+                >
+                  <Label htmlFor="IntakeForm-CurrentStage">
+                    Where are you in the process?
+                  </Label>
+                  <HelpText className="margin-y-1">
+                    This helps the governance team provide the right type of
+                    guidance for your request
+                  </HelpText>
+                  <FieldErrorMsg>{flatErrors.CurrentStage}</FieldErrorMsg>
+                  <Field
+                    as={DropdownField}
+                    error={!!flatErrors.currentStage}
+                    id="IntakeForm-CurrentStage"
+                    name="currentStage"
+                  >
+                    <Field
+                      as={DropdownItem}
+                      name="Select an option"
+                      value=""
+                      disabled
+                    />
+                    {processStages.map(stage => (
+                      <Field
+                        as={DropdownItem}
+                        key={`ProcessStageComponent-${stage.value}`}
+                        name={stage.name}
+                        value={stage.name}
+                      />
+                    ))}
+                  </Field>
+                </FieldGroup>
+
                 <FieldGroup
                   scrollElement="hasContract"
                   error={!!flatErrors.hasContract}
