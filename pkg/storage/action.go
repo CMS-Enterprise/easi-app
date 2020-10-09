@@ -12,7 +12,7 @@ import (
 )
 
 // CreateAction creates an Action item in the database
-func (s *Store) CreateAction(ctx context.Context, action *models.SystemIntakeAction) (*models.SystemIntakeAction, error) {
+func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*models.Action, error) {
 	id := uuid.New()
 	action.ID = id
 	createAt := s.clock.Now()

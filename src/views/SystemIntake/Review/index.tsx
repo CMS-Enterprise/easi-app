@@ -18,7 +18,7 @@ const Review = ({ systemIntake }: ReviewProps) => {
   const dispatch = useDispatch();
 
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
-  const error = useSelector((state: AppState) => state.systemIntake.error);
+  const error = useSelector((state: AppState) => state.action.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
 
   useEffect(() => {

@@ -6,11 +6,14 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/google/uuid"
+	"github.com/gorilla/mux"
+
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type createSystemIntakeAction func(context.Context, *models.SystemIntakeAction) error
+type createSystemIntakeAction func(context.Context, uuid.UUID, *models.ActionType) error
 
 // NewSystemIntakeActionHandler is a constructor for SystemIntakeActionHandler
 func NewSystemIntakeActionHandler(
@@ -34,6 +37,23 @@ func (h SystemIntakeActionHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "POST":
+			id := mux.Vars(r)["intake_id"]
+			valErr := apperrors.NewValidationError(
+				errors.New("system intake failed validation"),
+				models.SystemIntake{},
+				"",
+			)
+			if id == "" {
+				valErr.WithValidation("path.intakeID", "is required")
+				h.WriteErrorResponse(r.Context(), w, &valErr)
+				return
+			}
+			intakeID, err := uuid.Parse(id)
+			if err != nil {
+				valErr.WithValidation("path.intakeID", "must be UUID")
+				h.WriteErrorResponse(r.Context(), w, &valErr)
+				return
+			}
 			if r.Body == nil {
 				h.WriteErrorResponse(
 					r.Context(),
@@ -44,13 +64,13 @@ func (h SystemIntakeActionHandler) Handle() http.HandlerFunc {
 			}
 			defer r.Body.Close()
 			decoder := json.NewDecoder(r.Body)
-			action := models.SystemIntakeAction{}
-			err := decoder.Decode(&action)
+			var actionType models.ActionType
+			err = decoder.Decode(&actionType)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
-			err = h.CreateSystemIntakeAction(r.Context(), &action)
+			err = h.CreateSystemIntakeAction(r.Context(), intakeID, &actionType)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
