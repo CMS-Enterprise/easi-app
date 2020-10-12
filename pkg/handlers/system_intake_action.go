@@ -12,7 +12,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type createSystemIntakeAction func(context.Context, uuid.UUID, *models.ActionType) error
+type createSystemIntakeAction func(context.Context, uuid.UUID, models.ActionType) error
 
 // NewSystemIntakeActionHandler is a constructor for SystemIntakeActionHandler
 func NewSystemIntakeActionHandler(
@@ -59,7 +59,7 @@ func (h SystemIntakeActionHandler) Handle() http.HandlerFunc {
 				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
-			err = h.CreateSystemIntakeAction(r.Context(), intakeID, &actionType)
+			err = h.CreateSystemIntakeAction(r.Context(), intakeID, actionType)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return

@@ -13,6 +13,41 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
+func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
+	ctx := context.Background()
+	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{ID: id}, nil
+	}
+	submit := func(ctx context.Context, intake *models.SystemIntake) error {
+		return nil
+	}
+
+	s.Run("returns QueryError if fetch fails", func() {
+		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+			return nil, errors.New("error")
+		}
+		createAction := NewCreateSystemIntakeAction(failFetch, submit)
+		err := createAction(ctx, uuid.New(), models.ActionTypeSUBMIT)
+		s.IsType(&apperrors.QueryError{}, err)
+	})
+
+	s.Run("returns error from submit", func() {
+		submitError := errors.New("test")
+		failSubmit := func(ctx context.Context, intake *models.SystemIntake) error {
+			return submitError
+		}
+		createAction := NewCreateSystemIntakeAction(fetch, failSubmit)
+		err := createAction(ctx, uuid.New(), models.ActionTypeSUBMIT)
+		s.Equal(submitError, err)
+	})
+
+	s.Run("returns ResourceConflictError if invalid action type", func() {
+		createAction := NewCreateSystemIntakeAction(fetch, submit)
+		err := createAction(ctx, uuid.New(), "INVALID")
+		s.IsType(&apperrors.ResourceConflictError{}, err)
+	})
+}
+
 func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger, nil)
