@@ -65,6 +65,10 @@ type SystemIntake struct {
 	GrtReviewEmailBody      null.String        `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 	RequesterEmailAddress   null.String        `json:"requesterEmailAddress" db:"requester_email_address"`
 	BusinessCaseID          *uuid.UUID         `json:"businessCase"`
+	LifecycleID             null.String        `json:"lcid" db:"lcid"`
+	LifecycleExpiresAt      *time.Time         `json:"lcidExpiresAt" db:"lcid_expires_at"`
+	LifecycleScope          null.String        `json:"lcidScope" db:"lcid_scope"`
+	LifecycleNextSteps      null.String        `json:"lcidNextSteps" db:"lcid_next_steps"`
 }
 
 // SystemIntakes is a list of System Intakes
