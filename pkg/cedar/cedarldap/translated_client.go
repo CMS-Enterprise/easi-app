@@ -13,6 +13,7 @@ import (
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client/operations"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
+	models2 "github.com/cmsgov/easi-app/pkg/models"
 )
 
 // TranslatedClient is an API client for CEDAR LDAP using EASi language
@@ -35,8 +36,8 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	return TranslatedClient{client, apiKeyHeaderAuth}
 }
 
-// FetchUserInfo checks that the user is authenticated
-func (c TranslatedClient) FetchUserInfo(logger *zap.Logger, euaID string) (*models.Person, error) {
+// FetchUserInfo fetches a user's personal details
+func (c TranslatedClient) FetchUserInfo(logger *zap.Logger, euaID string) (*models2.UserInfo, error) {
 	params := operations.NewPersonIDParams()
 	params.ID = euaID
 	resp, err := c.client.Operations.PersonID(params, c.apiAuthHeader)
@@ -50,7 +51,7 @@ func (c TranslatedClient) FetchUserInfo(logger *zap.Logger, euaID string) (*mode
 			Source:    "CEDAR LDAP",
 		}
 	}
-	if resp.Payload == nil {
+	if resp.Payload == nil || resp.Payload.UserName == "" {
 		return nil, &apperrors.ExternalAPIError{
 			Err:       errors.New("failed to return person from CEDAR LDAP"),
 			ModelID:   euaID,
@@ -60,5 +61,9 @@ func (c TranslatedClient) FetchUserInfo(logger *zap.Logger, euaID string) (*mode
 		}
 	}
 
-	return resp.Payload, nil
+	return &models2.UserInfo{
+		CommonName: resp.Payload.CommonName,
+		Email:      resp.Payload.Email,
+		EuaUserID:  resp.Payload.UserName,
+	}, nil
 }

@@ -9,7 +9,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	models2 "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -29,11 +28,11 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		createdAction = *action
 		return action, nil
 	}
-	fetchUserInfo := func(logger *zap.Logger, EUAUserID string) (*models2.Person, error) {
-		return &models2.Person{
+	fetchUserInfo := func(logger *zap.Logger, EUAUserID string) (*models.UserInfo, error) {
+		return &models.UserInfo{
 			CommonName: "Name",
 			Email:      "name@site.com",
-			UserName:   testhelpers.RandomEUAID(),
+			EuaUserID:  testhelpers.RandomEUAID(),
 		}, nil
 	}
 	submit := func(c context.Context, intake *models.SystemIntake) (string, error) {
@@ -96,7 +95,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	s.Run("returns error if fails to fetch user info", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
 		fetchUserInfoError := errors.New("error")
-		failFetchUserInfo := func(logger *zap.Logger, EUAUserID string) (*models2.Person, error) {
+		failFetchUserInfo := func(logger *zap.Logger, EUAUserID string) (*models.UserInfo, error) {
 			return nil, fetchUserInfoError
 		}
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, failFetchUserInfo, sendSubmitEmail)
@@ -107,8 +106,8 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 
 	s.Run("returns error if fetches bad user info", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
-		failFetchUserInfo := func(logger *zap.Logger, EUAUserID string) (*models2.Person, error) {
-			return &models2.Person{}, nil
+		failFetchUserInfo := func(logger *zap.Logger, EUAUserID string) (*models.UserInfo, error) {
+			return &models.UserInfo{}, nil
 		}
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, failFetchUserInfo, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake)

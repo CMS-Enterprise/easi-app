@@ -11,7 +11,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authn"
-	models2 "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -155,8 +154,8 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
-	fetchUserInfo := func(logger2 *zap.Logger, euaID string) (*models2.Person, error) {
-		return &models2.Person{Email: "name@site.com"}, nil
+	fetchUserInfo := func(logger2 *zap.Logger, euaID string) (*models.UserInfo, error) {
+		return &models.UserInfo{Email: "name@site.com"}, nil
 	}
 	reviewEmailCount := 0
 	sendReviewEmail := func(emailText string, recipientAddress string) error {
@@ -240,10 +239,10 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns error from fetching requester email", func() {
 		ctx := context.Background()
-		failFetchEmailAddress := func(logger *zap.Logger, euaID string) (*models2.Person, error) {
+		failFetchEmailAddress := func(logger *zap.Logger, euaID string) (*models.UserInfo, error) {
 			return nil, &apperrors.ExternalAPIError{
 				Err:       errors.New("sample error"),
-				Model:     models2.Person{},
+				Model:     models.UserInfo{},
 				ModelID:   euaID,
 				Operation: apperrors.Fetch,
 				Source:    "CEDAR LDAP",
@@ -260,8 +259,8 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns ExternalAPIError if requester email not returned", func() {
 		ctx := context.Background()
-		failFetchUserInfo := func(logger *zap.Logger, euaID string) (*models2.Person, error) {
-			return &models2.Person{}, nil
+		failFetchUserInfo := func(logger *zap.Logger, euaID string) (*models.UserInfo, error) {
+			return &models.UserInfo{}, nil
 		}
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, failFetchUserInfo, sendReviewEmail, updateDraftIntake, true)
 
