@@ -141,6 +141,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			zap.String("id", intake.ID.String()),
 			zap.String("user", intake.EUAUserID),
 		)
+		return nil, err
 	}
 	// the SystemIntake may have been updated to Archived, so we want to use
 	// the un-filtered fetch to return the saved object
