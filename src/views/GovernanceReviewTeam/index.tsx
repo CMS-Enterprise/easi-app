@@ -97,6 +97,27 @@ const GovernanceReviewTeam = () => {
               </div>
             </dl>
           </div>
+          {/* TODO: Statuses aren't solidified yet. Revisit this conditional */}
+          <div
+            className={classnames({
+              'bg-base-lightest': systemIntake.status === 'CLOSED',
+              'easi-grt__status--open': systemIntake.status !== 'CLOSED'
+            })}
+          >
+            <div className="grid-container overflow-auto">
+              <dl className="easi-grt__status-info text-gray-90">
+                <dt className="text-bold">{t('status.label')}</dt>
+                &nbsp;
+                <dd className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs">
+                  {systemIntake.status === 'CLOSED'
+                    ? t('status.closed')
+                    : t('status.open')}
+                </dd>
+                <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
+                <dd>X201122</dd>
+              </dl>
+            </div>
+          </div>
         </section>
         <section className="grid-container grid-row margin-y-5 ">
           <nav className="tablet:grid-col-2 margin-right-2">

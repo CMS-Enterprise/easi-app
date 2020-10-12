@@ -45,4 +45,20 @@
       color: $easi-bright-blue;
     }
   }
+
+  &__status {
+    &--open {
+      background-color: #faf3d1;
+    }
+  }
+
+  &__status-info {
+    dt, dd {
+      display: inline;
+    }
+
+    dd {
+      margin: 0 1em 0 0;
+    }
+  }
 }
