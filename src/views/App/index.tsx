@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
+import { FlagProvider, useFlags } from 'contexts/flagContext';
 
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
@@ -25,124 +26,121 @@ import TimeOutWrapper from 'views/TimeOutWrapper';
 
 import './index.scss';
 
-type MainState = {};
+const AppRoutes = () => {
+  const flags = useFlags();
+  return (
+    <Switch>
+      <Route path="/" exact component={Home} />
+      <Redirect exact from="/login" to="/signin" />
+      <Route path="/signin" exact component={Login} />
+      <Route path="/governance-overview" exact component={GovernanceOverview} />
 
-type MainProps = {};
+      {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+
+      {flags.taskListLite && (
+        <SecureRoute
+          path="/governance-task-list/:systemId"
+          exact
+          component={GovernanceTaskList}
+        />
+      )}
+
+      {['local', 'dev', 'impl'].includes(
+        process.env.REACT_APP_APP_ENV || ''
+      ) && (
+        <SecureRoute
+          path="/governance-review-team/all"
+          exact
+          component={AllRequests}
+        />
+      )}
+
+      <SecureRoute
+        path="/governance-review-team/:systemId/:activePage"
+        component={GovernanceReviewTeam}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/prepare-for-grt"
+        component={PrepareForGRT}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/prepare-for-grb"
+        component={PrepareForGRB}
+      />
+      <SecureRoute
+        exact
+        path="/system/:systemId/grt-review"
+        render={({ component }: any) => component()}
+        component={GrtSystemIntakeReview}
+      />
+      <Redirect
+        exact
+        from="/system/:systemId"
+        to="/system/:systemId/contact-details"
+      />
+      <SecureRoute
+        path="/system/:systemId/:formPage"
+        render={({ component }: any) => component()}
+        component={SystemIntake}
+      />
+      <SecureRoute
+        path="/business/:businessCaseId/grt-review"
+        component={GrtBusinessCaseReview}
+      />
+      <Redirect
+        exact
+        from="/business/:businessCaseId"
+        to="/business/:businessCaseId/general-project-info"
+      />
+      <SecureRoute
+        path="/business/:businessCaseId/:formPage"
+        render={({ component }: any) => component()}
+        component={BusinessCase}
+      />
+      <Route path="/implicit/callback" component={LoginCallback} />
+      <Route path="/privacy-policy" exact component={PrivacyPolicy} />
+      <Route path="/cookies" exact component={Cookies} />
+      <Route
+        path="/accessibility-statement"
+        exact
+        component={AccessibilityStatement}
+      />
+      <Route
+        exact
+        path="/terms-and-conditions"
+        component={TermsAndConditions}
+      />
+      <Route path="*" component={NotFound} />
+    </Switch>
+  );
+};
 
 // eslint-disable-next-line react/prefer-stateless-function
-class App extends React.Component<MainProps, MainState> {
-  handleSkipNav = () => {
+const App = () => {
+  const handleSkipNav = () => {
     const mainContent = document.getElementById('main-content')!;
     if (mainContent) {
       mainContent.focus();
     }
   };
 
-  render() {
-    return (
-      <>
-        <div className="usa-overlay" />
-        <button type="button" className="skipnav" onClick={this.handleSkipNav}>
-          Skip to main content
-        </button>
-        <BrowserRouter>
-          <AuthenticationWrapper>
-            <TimeOutWrapper>
-              <Switch>
-                <Route path="/" exact component={Home} />
-                <Redirect exact from="/login" to="/signin" />
-                <Route path="/signin" exact component={Login} />
-                {process.env.NODE_ENV === 'development' && (
-                  <Route path="/sandbox" exact component={Sandbox} />
-                )}
-                <Route
-                  path="/governance-overview"
-                  exact
-                  component={GovernanceOverview}
-                />
-                {['local', 'dev', 'impl', 'test'].includes(
-                  process.env.REACT_APP_APP_ENV || ''
-                ) && (
-                  <SecureRoute
-                    path="/governance-task-list/:systemId"
-                    exact
-                    component={GovernanceTaskList}
-                  />
-                )}
-                {['local', 'dev', 'impl'].includes(
-                  process.env.REACT_APP_APP_ENV || ''
-                ) && (
-                  <SecureRoute
-                    path="/governance-review-team/all"
-                    exact
-                    component={AllRequests}
-                  />
-                )}
-                <SecureRoute
-                  path="/governance-review-team/:systemId/:activePage"
-                  component={GovernanceReviewTeam}
-                />
-                <SecureRoute
-                  exact
-                  path="/governance-task-list/:systemId/prepare-for-grt"
-                  component={PrepareForGRT}
-                />
-                <SecureRoute
-                  exact
-                  path="/governance-task-list/:systemId/prepare-for-grb"
-                  component={PrepareForGRB}
-                />
-                <SecureRoute
-                  exact
-                  path="/system/:systemId/grt-review"
-                  render={({ component }: any) => component()}
-                  component={GrtSystemIntakeReview}
-                />
-                <Redirect
-                  exact
-                  from="/system/:systemId"
-                  to="/system/:systemId/contact-details"
-                />
-                <SecureRoute
-                  path="/system/:systemId/:formPage"
-                  render={({ component }: any) => component()}
-                  component={SystemIntake}
-                />
-                <SecureRoute
-                  path="/business/:businessCaseId/grt-review"
-                  component={GrtBusinessCaseReview}
-                />
-                <Redirect
-                  exact
-                  from="/business/:businessCaseId"
-                  to="/business/:businessCaseId/general-project-info"
-                />
-                <SecureRoute
-                  path="/business/:businessCaseId/:formPage"
-                  render={({ component }: any) => component()}
-                  component={BusinessCase}
-                />
-                <Route path="/implicit/callback" component={LoginCallback} />
-                <Route path="/privacy-policy" exact component={PrivacyPolicy} />
-                <Route path="/cookies" exact component={Cookies} />
-                <Route
-                  path="/accessibility-statement"
-                  exact
-                  component={AccessibilityStatement}
-                />
-                <Route
-                  exact
-                  path="/terms-and-conditions"
-                  component={TermsAndConditions}
-                />
-                <Route path="*" component={NotFound} />
-              </Switch>
-            </TimeOutWrapper>
-          </AuthenticationWrapper>
-        </BrowserRouter>
-      </>
-    );
-  }
-}
+  return (
+    <FlagProvider>
+      <div className="usa-overlay" />
+      <button type="button" className="skipnav" onClick={handleSkipNav}>
+        Skip to main content
+      </button>
+      <BrowserRouter>
+        <AuthenticationWrapper>
+          <TimeOutWrapper>
+            <AppRoutes />
+          </TimeOutWrapper>
+        </AuthenticationWrapper>
+      </BrowserRouter>
+    </FlagProvider>
+  );
+};
 
 export default App;

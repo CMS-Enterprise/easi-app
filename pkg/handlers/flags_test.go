@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"time"
 
 	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
@@ -16,19 +15,18 @@ func (s HandlerTestSuite) TestFlagsHandler() {
 		rr := httptest.NewRecorder()
 		req, err := http.NewRequest("GET", "/flags/", nil)
 		s.NoError(err)
-		mockFetch := func(client ld.LDClient, clientUser ld.User) flags.FlagValues {
+		mockFetch := func(FlagClient flags.FlagClient, clientUser ld.User) flags.FlagValues {
 			return flags.FlagValues{"fakeFlag": false}
 		}
 		config := ld.DefaultConfig
 		config.Offline = true
-		ldClient, err := ld.MakeCustomClient("foo", config, 5*time.Second)
+		flagClient := flags.NewLocalClient(flags.FlagValues{"foo": "bar"})
 		ldUser := ld.NewAnonymousUser("bar")
-		s.NoError(err)
 
 		FlagsHandler{
 			HandlerBase: s.base,
 			FetchFlags:  mockFetch,
-			LDClient:    *ldClient,
+			FlagClient:  *flagClient,
 			LDUser:      ldUser,
 		}.Handle()(rr, req)
 
