@@ -10,7 +10,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	models2 "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -118,7 +117,7 @@ func NewUpdateSystemIntake(
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchRequesterInfo func(*zap.Logger, string) (*models2.Person, error),
+	fetchRequesterInfo func(*zap.Logger, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 	updateDraftIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
 	canDecideIntake bool,

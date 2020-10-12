@@ -10,7 +10,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	models2 "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -50,7 +49,7 @@ func NewSubmitSystemIntake(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
 	createAction func(context.Context, *models.Action) (*models.Action, error),
-	fetchUserInfo func(*zap.Logger, string) (*models2.Person, error),
+	fetchUserInfo func(*zap.Logger, string) (*models.UserInfo, error),
 	emailReviewer func(requester string, intakeID uuid.UUID) error,
 ) func(context.Context, *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
@@ -88,7 +87,7 @@ func NewSubmitSystemIntake(
 		if err != nil {
 			return err
 		}
-		if userInfo == nil || userInfo.Email == "" || userInfo.CommonName == "" || userInfo.UserName == "" {
+		if userInfo == nil || userInfo.Email == "" || userInfo.CommonName == "" || userInfo.EuaUserID == "" {
 			return &apperrors.ExternalAPIError{
 				Err:       errors.New("user info fetch was not successful"),
 				Model:     intake,
@@ -119,7 +118,7 @@ func NewSubmitSystemIntake(
 			ActionType:     models.ActionTypeSUBMIT,
 			ActorName:      userInfo.CommonName,
 			ActorEmail:     userInfo.Email,
-			ActorEUAUserID: userInfo.UserName,
+			ActorEUAUserID: userInfo.EuaUserID,
 		}
 		_, err = createAction(ctx, &action)
 		if err != nil {
