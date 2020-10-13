@@ -38,6 +38,10 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract Details
+    cy.get('#IntakeForm-CurrentStage')
+      .select('Just an idea')
+      .should('have.value', 'Just an idea');
+
     cy.get('#IntakeForm-HasContract')
       .select('No')
       .should('have.value', 'No');
@@ -94,6 +98,9 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     // Contract Details
+    cy.get('#IntakeForm-CurrentStage')
+      .select('Just an idea')
+      .should('have.value', 'Just an idea');
     cy.get('#IntakeForm-HasContract')
       .select('No')
       .should('have.value', 'No');

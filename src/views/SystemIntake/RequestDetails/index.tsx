@@ -8,7 +8,6 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import CollapsableLink from 'components/shared/CollapsableLink';
-import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -17,7 +16,6 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import processStages from 'constants/enums/processStages';
 import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -30,9 +28,7 @@ type RequestDetailsForm = {
   };
   businessNeed: string;
   businessSolution: string;
-  currentStage: string;
   needsEaSupport: boolean | null;
-  hasContract: string;
 };
 
 type RequestDetailsProps = {
@@ -52,9 +48,7 @@ const RequestDetails = ({
     fundingSource: systemIntake.fundingSource,
     businessNeed: systemIntake.businessNeed,
     businessSolution: systemIntake.businessSolution,
-    currentStage: systemIntake.currentStage,
-    needsEaSupport: systemIntake.needsEaSupport,
-    hasContract: systemIntake.hasContract
+    needsEaSupport: systemIntake.needsEaSupport
   };
   return (
     <Formik
@@ -193,6 +187,7 @@ const RequestDetails = ({
                 </FieldGroup>
 
                 <FieldGroup
+                  className="margin-bottom-4"
                   scrollElement="needsEaSupport"
                   error={!!flatErrors.needsEaSupport}
                 >
@@ -258,42 +253,6 @@ const RequestDetails = ({
                       </>
                     </CollapsableLink>
                   </fieldset>
-                </FieldGroup>
-
-                <FieldGroup
-                  className="margin-bottom-4"
-                  scrollElement="currentStage"
-                  error={!!flatErrors.currentStage}
-                >
-                  <Label htmlFor="IntakeForm-CurrentStage">
-                    Where are you in the process?
-                  </Label>
-                  <HelpText className="margin-y-1">
-                    This helps the governance team provide the right type of
-                    guidance for your request
-                  </HelpText>
-                  <FieldErrorMsg>{flatErrors.CurrentStage}</FieldErrorMsg>
-                  <Field
-                    as={DropdownField}
-                    error={!!flatErrors.currentStage}
-                    id="IntakeForm-CurrentStage"
-                    name="currentStage"
-                  >
-                    <Field
-                      as={DropdownItem}
-                      name="Select an option"
-                      value=""
-                      disabled
-                    />
-                    {processStages.map(stage => (
-                      <Field
-                        as={DropdownItem}
-                        key={`ProcessStageComponent-${stage.value}`}
-                        name={stage.name}
-                        value={stage.name}
-                      />
-                    ))}
-                  </Field>
                 </FieldGroup>
 
                 <Button
