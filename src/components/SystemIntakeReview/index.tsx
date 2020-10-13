@@ -153,10 +153,6 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
               definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
             />
           </div>
-          <div>
-            <DescriptionTerm term="Where are you in the process?" />
-            <DescriptionDefinition definition={systemIntake.currentStage} />
-          </div>
         </ReviewRow>
       </DescriptionList>
 
@@ -166,15 +162,19 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
       <DescriptionList title="Contract Details">
         <ReviewRow>
           <div>
+            <DescriptionTerm term="Where are you in the process?" />
+            <DescriptionDefinition definition={systemIntake.currentStage} />
+          </div>
+          <div>
             <DescriptionTerm term="Do you currently have a contract in place?" />
             <DescriptionDefinition definition={systemIntake.hasContract} />
           </div>
+        </ReviewRow>
+        <ReviewRow>
           <div>
             <DescriptionTerm term="Does the project have funding?" />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
-        </ReviewRow>
-        <ReviewRow>
           <div>
             <DescriptionTerm term="Do you expect costs for this request to increase?" />
             <DescriptionDefinition definition={expectedCosts()} />
