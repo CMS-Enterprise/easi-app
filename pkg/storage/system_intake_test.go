@@ -215,7 +215,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		partial.ContractStartMonth = null.StringFrom(contractStartMonth)
 		partial.ContractStartYear = null.StringFrom(contractStartYear)
 		partial.ContractEndMonth = null.StringFrom(contractEndMonth)
-		partial.ContractStartYear = null.StringFrom(contractEndYear)
+		partial.ContractEndYear = null.StringFrom(contractEndYear)
 
 		_, err = s.store.UpdateSystemIntake(ctx, partial)
 		s.NoError(err, "failed to update system intake")
