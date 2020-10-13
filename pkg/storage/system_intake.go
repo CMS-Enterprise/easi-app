@@ -47,6 +47,12 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			existing_contract,
 			cost_increase,
 			cost_increase_amount,
+			contractor,
+			contract_vehicle,
+			contract_start_month,
+			contract_start_year,
+			contract_end_month,
+			contract_end_year,
 			created_at,
 			updated_at
 		)
@@ -74,6 +80,12 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:existing_contract,
 			:cost_increase,
 			:cost_increase_amount,
+			:contractor,
+			:contract_vehicle,
+			:contract_start_month,
+			:contract_start_year,
+			:contract_end_month,
+			:contract_end_year,
 		    :created_at,
 		    :updated_at
 		)`
@@ -120,6 +132,12 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			requester_email_address = :requester_email_address,
 			cost_increase = :cost_increase,
 			cost_increase_amount = :cost_increase_amount,
+			contractor = :contractor,
+			contract_vehicle = :contract_vehicle,
+			contract_start_month = :contract_start_month,
+			contract_start_year = :contract_start_year,
+			contract_end_month = :contract_end_month,
+			contract_end_year = :contract_end_year,
 			updated_at = :updated_at,
 			submitted_at = :submitted_at,
 		    decided_at = :decided_at,
