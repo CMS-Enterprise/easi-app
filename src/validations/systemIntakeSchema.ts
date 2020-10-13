@@ -96,7 +96,7 @@ const SystemIntakeValidationSchema: any = {
         'Tell us whether you are expecting costs for this request to increase'
       ),
       expectedIncreaseAmount: Yup.string().when('isExpectingIncrease', {
-        is: 'yes',
+        is: 'YES',
         then: Yup.string().required(
           'Tell us approximately how much do you expect the cost to increase'
         )
