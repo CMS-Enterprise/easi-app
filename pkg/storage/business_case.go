@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -46,7 +47,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 			fmt.Sprintf("Failed to fetch business case %s", err),
 			zap.String("id", id.String()),
 		)
-		if err.Error() == "sql: no rows in result set" {
+		if errors.Is(err, sql.ErrNoRows) {
 			return &models.BusinessCase{}, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
 		}
 		return &models.BusinessCase{}, err
@@ -67,7 +68,7 @@ func (s *Store) FetchBusinessCaseIDByIntakeID(ctx context.Context, intakeID uuid
 
 	err := s.DB.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
 	if err != nil {
-		if err.Error() == "sql: no rows in result set" {
+		if errors.Is(err, sql.ErrNoRows) {
 			return businessCaseID, nil
 		}
 
