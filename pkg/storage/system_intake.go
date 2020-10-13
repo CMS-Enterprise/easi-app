@@ -228,6 +228,22 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 	return intakes, nil
 }
 
+func generateLifecyclePrefix(t time.Time, loc *time.Location) string {
+	return t.In(loc).Format("06002")
+}
+
+// GenerateLifecycleID returns what the next LCID is expected to be for the given date
+func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
+	prefix := generateLifecyclePrefix(s.clock.Now(), s.easternTZ)
+
+	countSQL := `SELECT COUNT(*) FROM system_intake WHERE lcid ~ $1;`
+	var count int
+	if err := s.DB.Get(&count, countSQL, "^"+prefix); err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s%d", prefix, count), nil
+}
+
 // FetchSystemIntakeMetrics gets a metrics digest for system intake
 func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Time, endTime time.Time) (models.SystemIntakeMetrics, error) {
 	type startedQueryResponse struct {
