@@ -109,8 +109,11 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
-		intake2.Status = models.SystemIntakeStatusARCHIVED
+		intake2.Status = models.SystemIntakeStatusDRAFT
 		_, err = s.store.CreateSystemIntake(ctx, &intake2)
+		s.NoError(err)
+		intake2.Status = models.SystemIntakeStatusARCHIVED
+		_, err = s.store.UpdateSystemIntake(ctx, &intake2)
 		s.NoError(err)
 
 		businessCase := testhelpers.NewBusinessCase()

@@ -8,6 +8,7 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { DateInputMonth, DateInputYear } from 'components/shared/DateInput';
+import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -16,6 +17,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import processStages from 'constants/enums/processStages';
 import { yesNoMap } from 'data/common';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
@@ -35,6 +37,7 @@ const ContractDetails = ({
   const history = useHistory();
 
   const initialValues: ContractDetailsForm = {
+    currentStage: systemIntake.currentStage,
     fundingSource: systemIntake.fundingSource,
     costs: systemIntake.costs,
     contract: systemIntake.contract
@@ -78,6 +81,89 @@ const ContractDetails = ({
                 <MandatoryFieldsAlert />
               </div>
               <Form>
+                <FieldGroup
+                  className="margin-bottom-4"
+                  scrollElement="currentStage"
+                  error={!!flatErrors.currentStage}
+                >
+                  <Label htmlFor="IntakeForm-CurrentStage">
+                    Where are you in the process?
+                  </Label>
+                  <HelpText className="margin-y-1">
+                    This helps the governance team provide the right type of
+                    guidance for your request
+                  </HelpText>
+                  <FieldErrorMsg>{flatErrors.CurrentStage}</FieldErrorMsg>
+                  <Field
+                    as={DropdownField}
+                    error={!!flatErrors.currentStage}
+                    id="IntakeForm-CurrentStage"
+                    name="currentStage"
+                  >
+                    <Field
+                      as={DropdownItem}
+                      name="Select an option"
+                      value=""
+                      disabled
+                    />
+                    {processStages.map(stage => (
+                      <Field
+                        as={DropdownItem}
+                        key={`ProcessStageComponent-${stage.value}`}
+                        name={stage.name}
+                        value={stage.name}
+                      />
+                    ))}
+                  </Field>
+                </FieldGroup>
+
+                <FieldGroup
+                  scrollElement="hasContract"
+                  error={!!flatErrors.hasContract}
+                >
+                  <Label htmlFor="IntakeForm-HasContract">
+                    Do you already have a contract in place to support this
+                    effort?
+                  </Label>
+                  <HelpText className="margin-y-1">
+                    This information helps the Office of Acquisition and Grants
+                    Management (OAGM) track current work
+                  </HelpText>
+                  <FieldErrorMsg>{flatErrors.hasContract}</FieldErrorMsg>
+                  <Field
+                    as={DropdownField}
+                    error={!!flatErrors.hasContract}
+                    id="IntakeForm-HasContract"
+                    helpText="This information helps the Office of Acquisition and Grants Management (OAGM) track work"
+                    name="hasContract"
+                  >
+                    <Field
+                      as={DropdownItem}
+                      name="Select an option"
+                      value=""
+                      disabled
+                    />
+                    <Field
+                      as={DropdownItem}
+                      key="HasContract-Yes"
+                      name="Yes"
+                      value="Yes"
+                    />
+                    <Field
+                      as={DropdownItem}
+                      key="HasContract-No"
+                      name="No"
+                      value="No"
+                    />
+                    <Field
+                      as={DropdownItem}
+                      key="HasContract-StatementOfWork"
+                      name="No, but I have a Statement of Work/Objectives"
+                      value="No, but I have a Statement of Work/Objectives"
+                    />
+                  </Field>
+                </FieldGroup>
+
                 <FieldGroup
                   scrollElement="fundingSource.isFunded"
                   error={!!flatErrors['fundingSource.isFunded']}
