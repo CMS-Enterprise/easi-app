@@ -16,7 +16,7 @@ import (
 )
 
 const insertBasicIntakeSQL = "INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)"
-const insertRelatedBizCaseSQL = `INSERT INTO business_case (id, eua_user_id, status, requester, system_intake) 
+const insertRelatedBizCaseSQL = `INSERT INTO business_case (id, eua_user_id, status, requester, system_intake)
 		VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
 
 func (s StoreTestSuite) TestCreateSystemIntake() {
@@ -103,7 +103,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 		updated, err := s.store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err, "failed to update system intake")
-		s.Equal(intake, updated)
+		s.Equal(intake.ISSO, updated.ISSO)
 	})
 
 	s.Run("EUA ID will not update", func() {
@@ -176,6 +176,65 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Equal(content2, updated.LifecycleNextSteps.String)
 	})
 
+	s.Run("Update contract details information", func() {
+		originalIntake := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+
+			ProcessStatus:      null.StringFrom("ABCDEF"),
+			ExistingFunding:    null.BoolFrom(false),
+			FundingSource:      null.StringFrom(""),
+			CostIncrease:       null.StringFrom("YES"),
+			CostIncreaseAmount: null.StringFrom("$10 million"),
+			ExistingContract:   null.StringFrom("NOT_NEEDED"),
+		}
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		// Update
+		processStatus := "Just an idea"
+		existingFunding := true
+		fundingSource := "123456"
+		existingContract := "IN_PROGRESS"
+		contractor := "TrussWorks, Inc."
+		contractVehicle := "Fixed price contract"
+		contractStartMonth := "1"
+		contractStartYear := "2020"
+		contractEndMonth := "12"
+		contractEndYear := "2021"
+		partial.ProcessStatus = null.StringFrom(processStatus)
+		partial.ExistingFunding = null.BoolFrom(existingFunding)
+		partial.FundingSource = null.StringFrom(fundingSource)
+		partial.ExistingContract = null.StringFrom(existingContract)
+		partial.Contractor = null.StringFrom(contractor)
+		partial.ContractVehicle = null.StringFrom(contractVehicle)
+		partial.ContractStartMonth = null.StringFrom(contractStartMonth)
+		partial.ContractStartYear = null.StringFrom(contractStartYear)
+		partial.ContractEndMonth = null.StringFrom(contractEndMonth)
+		partial.ContractEndYear = null.StringFrom(contractEndYear)
+
+		_, err = s.store.UpdateSystemIntake(ctx, partial)
+		s.NoError(err, "failed to update system intake")
+
+		updated, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		s.Equal(processStatus, updated.ProcessStatus.String)
+		s.Equal(existingFunding, updated.ExistingFunding.Bool)
+		s.Equal(fundingSource, updated.FundingSource.String)
+		s.Equal(existingContract, updated.ExistingContract.String)
+		s.Equal(contractor, updated.Contractor.String)
+		s.Equal(contractVehicle, updated.ContractVehicle.String)
+		s.Equal(contractStartMonth, updated.ContractStartMonth.String)
+		s.Equal(contractStartYear, updated.ContractStartYear.String)
+		s.Equal(contractEndMonth, updated.ContractEndMonth.String)
+		s.Equal(contractEndYear, updated.ContractEndYear.String)
+	})
+
 	s.Run("LifecycleID format", func() {
 		originalIntake := models.SystemIntake{
 			EUAUserID: testhelpers.RandomEUAID(),
@@ -228,7 +287,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.SystemIntake{}, fetched)
+		s.Nil(fetched)
 	})
 
 	s.Run("fetches biz case id if exists and intake is past draft status", func() {
@@ -267,7 +326,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.SystemIntake{}, fetched)
+		s.Nil(fetched)
 	})
 }
 

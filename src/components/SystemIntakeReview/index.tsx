@@ -7,6 +7,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
@@ -16,6 +17,8 @@ type SystemIntakeReview = {
 };
 
 export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
+  const { contract } = systemIntake;
+
   const fundingDefinition = () => {
     const isFunded = convertBoolToYesNo(systemIntake.fundingSource.isFunded);
     if (systemIntake.fundingSource.isFunded) {
@@ -153,10 +156,6 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
               definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
             />
           </div>
-          <div>
-            <DescriptionTerm term="Where are you in the process?" />
-            <DescriptionDefinition definition={systemIntake.currentStage} />
-          </div>
         </ReviewRow>
       </DescriptionList>
 
@@ -166,8 +165,8 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
       <DescriptionList title="Contract Details">
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Do you currently have a contract in place?" />
-            <DescriptionDefinition definition={systemIntake.hasContract} />
+            <DescriptionTerm term="Where are you in the process?" />
+            <DescriptionDefinition definition={systemIntake.currentStage} />
           </div>
           <div>
             <DescriptionTerm term="Does the project have funding?" />
@@ -179,7 +178,43 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
             <DescriptionTerm term="Do you expect costs for this request to increase?" />
             <DescriptionDefinition definition={expectedCosts()} />
           </div>
+          <div>
+            <DescriptionTerm term="Do you already have a contract in place to support this effort?" />
+            <DescriptionDefinition
+              definition={
+                contractStatus[`${systemIntake.contract.hasContract}`]
+              }
+            />
+          </div>
         </ReviewRow>
+        {['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+          systemIntake.contract.hasContract
+        ) && (
+          <>
+            <ReviewRow>
+              <div>
+                <DescriptionTerm term="Contractor(s)" />
+                <DescriptionDefinition
+                  definition={systemIntake.contract.contractor}
+                />
+              </div>
+              <div>
+                <DescriptionTerm term="Contract vehicle" />
+                <DescriptionDefinition
+                  definition={systemIntake.contract.vehicle}
+                />
+              </div>
+            </ReviewRow>
+            <ReviewRow>
+              <div>
+                <DescriptionTerm term="Period of performance" />
+                <DescriptionDefinition
+                  definition={`${contract.startDate.month}/${contract.startDate.year} to ${contract.endDate.month}/${contract.endDate.year}`}
+                />
+              </div>
+            </ReviewRow>
+          </>
+        )}
       </DescriptionList>
     </div>
   );
