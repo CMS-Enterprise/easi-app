@@ -15,6 +15,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { AsIsSolutionForm, BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -30,6 +31,7 @@ const AsIsSolution = ({
   formikRef,
   dispatchSave
 }: AsIsSolutionProps) => {
+  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     asIsSolution: businessCase.asIsSolution
@@ -299,7 +301,11 @@ const AsIsSolution = ({
                 unstyled
                 onClick={() => {
                   dispatchSave();
-                  history.push('/');
+                  history.push(
+                    flags.taskListLite
+                      ? `/governance-task-list/${businessCase.systemIntakeId}`
+                      : '/'
+                  );
                 }}
               >
                 <span>
