@@ -232,7 +232,15 @@ func generateLifecyclePrefix(t time.Time, loc *time.Location) string {
 	return t.In(loc).Format("06002")
 }
 
-// GenerateLifecycleID returns what the next LCID is expected to be for the given date
+// GenerateLifecycleID returns what the next LCID is expected to be for the current date
+// 		The expected format is a 6-digit number in the form of "YYdddP" where
+// 			YY - the 2-digit YEAR
+// 			ddd - the 3-digit ORDINAL DATE, e.g. the number of days elapsed in the given year
+// 			P - the 1-digit count of how many LCIDs already generated for the given day
+// 		This routine assumes the LCIDs are being generated in Eastern Time Zone
+// 		(FYI - the "YYddd" construct is referred to as the "Julian Day" in mainframe
+// 		programmer circles, though this term seems to be a misappropriation of what
+// 		astronomers use to mean a count of days since 24 Nov in the year 4714 BC.)
 func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
 	prefix := generateLifecyclePrefix(s.clock.Now(), s.easternTZ)
 
