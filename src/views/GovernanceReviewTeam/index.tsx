@@ -124,7 +124,7 @@ const GovernanceReviewTeam = () => {
                 {systemIntake.lcid && (
                   <>
                     <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
-                    <dd data-testid="grt-lcid">X201122</dd>
+                    <dd data-testid="grt-lcid">{systemIntake.lcid}</dd>
                   </>
                 )}
               </dl>
