@@ -53,7 +53,7 @@ export type SystemIntakeForm = {
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
-  hasContract: string;
+  currentStage: string;
   fundingSource: {
     isFunded: boolean | null;
     fundingNumber: string;
@@ -61,6 +61,19 @@ export type ContractDetailsForm = {
   costs: {
     isExpectingIncrease: string;
     expectedIncreaseAmount: string;
+  };
+  contract: {
+    hasContract: string;
+    contractor: string;
+    vehicle: string;
+    startDate: {
+      month: string;
+      year: string;
+    };
+    endDate: {
+      month: string;
+      year: string;
+    };
   };
 };
 

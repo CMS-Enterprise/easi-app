@@ -30,8 +30,14 @@ func NewSystemIntake() models.SystemIntake {
 		Solution:                null.StringFrom("Test Solution"),
 		ProcessStatus:           null.StringFrom("Just an idea"),
 		EASupportRequest:        null.BoolFrom(false),
-		ExistingContract:        null.StringFrom("Yes"),
+		ExistingContract:        null.StringFrom("NOT_NEEDED"),
 		CostIncrease:            null.StringFrom("NO"),
 		CostIncreaseAmount:      null.StringFrom(""),
+		Contractor:              null.StringFrom(""),
+		ContractVehicle:         null.StringFrom(""),
+		ContractStartMonth:      null.StringFrom(""),
+		ContractStartYear:       null.StringFrom(""),
+		ContractEndMonth:        null.StringFrom(""),
+		ContractEndYear:         null.StringFrom(""),
 	}
 }
