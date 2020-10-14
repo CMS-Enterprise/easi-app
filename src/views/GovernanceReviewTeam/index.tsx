@@ -13,6 +13,7 @@ import PageWrapper from 'components/PageWrapper';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import { closedIntakeStatuses, openIntakeStatuses } from 'types/systemIntake';
 
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
@@ -97,24 +98,35 @@ const GovernanceReviewTeam = () => {
               </div>
             </dl>
           </div>
-          {/* TODO: Statuses aren't solidified yet. Revisit this conditional */}
+
           <div
             className={classnames({
-              'bg-base-lightest': systemIntake.status === 'CLOSED',
-              'easi-grt__status--open': systemIntake.status !== 'CLOSED'
+              'bg-base-lightest': closedIntakeStatuses.includes(
+                systemIntake.status
+              ),
+              'easi-grt__status--open': openIntakeStatuses.includes(
+                systemIntake.status
+              )
             })}
           >
             <div className="grid-container overflow-auto">
               <dl className="easi-grt__status-info text-gray-90">
                 <dt className="text-bold">{t('status.label')}</dt>
                 &nbsp;
-                <dd className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs">
-                  {systemIntake.status === 'CLOSED'
+                <dd
+                  className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                  data-testid="grt-status"
+                >
+                  {closedIntakeStatuses.includes(systemIntake.status)
                     ? t('status.closed')
                     : t('status.open')}
                 </dd>
-                <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
-                <dd>X201122</dd>
+                {systemIntake.lcid && (
+                  <>
+                    <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
+                    <dd data-testid="grt-lcid">X201122</dd>
+                  </>
+                )}
               </dl>
             </div>
           </div>
