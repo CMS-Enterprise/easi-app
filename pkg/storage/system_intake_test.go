@@ -82,7 +82,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 
 		s.Error(err)
 		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
-		s.Equal(&models.SystemIntake{}, created)
+		s.Nil(created)
 	})
 }
 

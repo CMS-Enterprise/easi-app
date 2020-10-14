@@ -36,7 +36,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.BusinessCase{}, fetched)
+		s.Nil(fetched)
 	})
 
 	s.Run("does not fetch archived business case", func() {
@@ -52,7 +52,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.BusinessCase{}, fetched)
+		s.Nil(fetched)
 	})
 }
 
