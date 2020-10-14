@@ -2,9 +2,9 @@
 version: '3.7'
 services:
   db_migrate:
-    image: "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}"
+    image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}'
   easi:
-    image: "${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}"
+    image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}'
     environment:
       - APPLICATION_VERSION
       - APPLICATION_DATETIME
@@ -15,6 +15,7 @@ services:
       - CLIENT_PORT=3000
       - CLIENT_HOSTNAME=localhost:3000
       - CLIENT_ADDRESS=http://localhost:3000
+      - FLAG_SOURCE
       - API_PORT=8080
       - OKTA_CLIENT_ID=0oa2e913coDQeG19S297
       - OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
@@ -31,7 +32,7 @@ services:
       - PGUSER=postgres
       - PGPASS=""
       - PGSSLMODE=disable
-    entrypoint: ["/easi/easi", "serve"]
+    entrypoint: ['/easi/easi', 'serve']
     depends_on:
       - db_migrate
   easi_client:
@@ -49,7 +50,7 @@ services:
     image: easi-frontend:latest
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
-    entrypoint: ["serve", "-s", "-l", "3000"]
+    entrypoint: ['serve', '-s', '-l', '3000']
   cypress:
     build:
       context: .
@@ -60,6 +61,6 @@ services:
       - OKTA_TEST_PASSWORD
       - OKTA_TEST_SECRET
       - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
-    network_mode: "service:easi_client"
+    network_mode: 'service:easi_client'
     depends_on:
-     - easi_client
+      - easi_client
