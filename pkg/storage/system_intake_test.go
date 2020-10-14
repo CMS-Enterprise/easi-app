@@ -62,7 +62,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 			partialIntake := models.SystemIntake{
 				Status: models.SystemIntakeStatusDRAFT,
 			}
-			partialIntake.EUAUserID = "F"
+			partialIntake.EUAUserID = tc
 
 			_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
 
