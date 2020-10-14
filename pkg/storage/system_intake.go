@@ -98,7 +98,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			fmt.Sprintf("Failed to create system intake with error %s", err),
 			zap.String("user", intake.EUAUserID),
 		)
-		return &models.SystemIntake{}, err
+		return nil, err
 	}
 	return s.FetchSystemIntakeByID(ctx, id)
 }
