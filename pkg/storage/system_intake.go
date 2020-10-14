@@ -89,7 +89,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		    :created_at,
 		    :updated_at
 		)`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		createIntakeSQL,
 		intake,
 	)
@@ -149,7 +149,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			lcid_next_steps = :lcid_next_steps
 		WHERE system_intake.id = :id
 	`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		updateSystemIntakeSQL,
 		intake,
 	)
@@ -169,7 +169,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 // fetchSystemIntakeByID queries the DB for a system intake matching the given ID, WITHOUT filtering based on status
 func (s *Store) fetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
-	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+	err := s.db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
@@ -208,7 +208,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'ARCHIVED'", euaID)
+	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'ARCHIVED'", euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
@@ -238,7 +238,7 @@ func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
 
 	countSQL := `SELECT COUNT(*) FROM system_intake WHERE lcid ~ $1;`
 	var count int
-	if err := s.DB.Get(&count, countSQL, "^"+prefix); err != nil {
+	if err := s.db.Get(&count, countSQL, "^"+prefix); err != nil {
 		return "", err
 	}
 	return fmt.Sprintf("%s%d", prefix, count), nil
@@ -286,7 +286,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	metrics := models.SystemIntakeMetrics{}
 
 	var startedResponse startedQueryResponse
-	err := s.DB.Get(
+	err := s.db.Get(
 		&startedResponse,
 		startedCountSQL,
 		&startTime,
@@ -299,7 +299,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	metrics.CompletedOfStarted = startedResponse.CompletedCount
 
 	var fundedResponse fundedQueryResponse
-	err = s.DB.Get(
+	err = s.db.Get(
 		&fundedResponse,
 		fundedCountSQL,
 		&startTime,

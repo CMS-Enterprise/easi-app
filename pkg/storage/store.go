@@ -11,7 +11,7 @@ import (
 
 // Store performs database operations for EASi
 type Store struct {
-	DB        *sqlx.DB // temporarily export until SystemIntakesHandler doesn't take db
+	db        *sqlx.DB
 	logger    *zap.Logger
 	clock     clock.Clock
 	easternTZ *time.Location
@@ -51,5 +51,5 @@ func NewStore(
 	if err != nil {
 		return nil, err
 	}
-	return &Store{DB: db, logger: logger, clock: clock.New(), easternTZ: tz}, nil
+	return &Store{db: db, logger: logger, clock: clock.New(), easternTZ: tz}, nil
 }
