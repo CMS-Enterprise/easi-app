@@ -151,7 +151,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		req, err := http.NewRequestWithContext(requestContext, "POST", "/system_intake/", bytes.NewBuffer(body))
 		s.NoError(err)
 		expectedErr := apperrors.ValidationError{
-			Model:   models.BusinessCase{},
+			Model:   models.SystemIntake{},
 			ModelID: "",
 			Err:     fmt.Errorf("failed validations"),
 		}
@@ -165,7 +165,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.Equal(http.StatusUnprocessableEntity, rr.Code)
 	})
 
-	s.Run("POST fails if business case isn't created", func() {
+	s.Run("POST fails if system intake isn't created", func() {
 		body, err := json.Marshal(map[string]string{
 			"status":    "DRAFT",
 			"requester": requester,
