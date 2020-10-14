@@ -16,6 +16,7 @@ import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import processStages from 'constants/enums/processStages';
+import { useFlags } from 'contexts/flagContext';
 import { yesNoMap } from 'data/common';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
@@ -32,6 +33,7 @@ const ContractDetails = ({
   systemIntake,
   dispatchSave
 }: ContractDetailsProps) => {
+  const flags = useFlags();
   const history = useHistory();
 
   const initialValues: ContractDetailsForm = {
@@ -334,7 +336,11 @@ const ContractDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push('/');
+                      history.push(
+                        flags.taskListLite
+                          ? `/governance-task-list/${systemIntake.id}`
+                          : '/'
+                      );
                     }}
                   >
                     <span>
