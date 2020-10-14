@@ -74,7 +74,7 @@ jobs:
         environment:
           APP_ENV: test
           AWS_REGION: us-west-2 # easi app tests expect AWS_REGION instead of AWS_DEFAULT_REGION
-          AWS_SES_SOURCE: "\"EASi Test\" <no-reply-test@info.easi.cms.gov>"
+          AWS_SES_SOURCE: '"EASi Test" <no-reply-test@info.easi.cms.gov>'
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
@@ -85,6 +85,7 @@ jobs:
           PGUSER: postgres
           PGPASS: easirox
           PGSSLMODE: disable
+          FLAG_SOURCE: LOCAL
       - image: *postgres
         environment:
           POSTGRES_DB: postgres
@@ -115,6 +116,7 @@ jobs:
         environment:
           APP_ENV: test
           AWS_DEFAULT_REGION: us-west-2
+          FLAG_SOURCE: LOCAL
     steps:
       - checkout
       - setup_remote_docker:
@@ -400,7 +402,7 @@ workflows:
   weekly:
     triggers:
       - schedule:
-          cron: "0 2 * * 6"
+          cron: '0 2 * * 6'
           filters:
             branches:
               only:
@@ -411,11 +413,10 @@ workflows:
   daily:
     triggers:
       - schedule:
-          cron: "0 7 * * *"   # 2300 PST, 0200 EST
+          cron: '0 7 * * *' # 2300 PST, 0200 EST
           filters:
             branches:
-              only:
-                master
+              only: master
     jobs:
       - restart_impl_ecs_app_service
       - restart_prod_ecs_app_service
