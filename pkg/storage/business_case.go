@@ -41,7 +41,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 			business_case.id = $1 AND business_case.status != 'ARCHIVED'
 		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
 
-	err := s.DB.Get(&businessCase, fetchBusinessCaseSQL, id)
+	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case %s", err),
@@ -66,7 +66,7 @@ func (s *Store) FetchBusinessCaseIDByIntakeID(ctx context.Context, intakeID uuid
 		WHERE
 			business_case.system_intake = $1 AND business_case.status != 'ARCHIVED'`
 
-	err := s.DB.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
+	err := s.db.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return businessCaseID, nil
@@ -95,7 +95,7 @@ func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (mo
 			business_case.eua_user_id = $1 AND business_case.status != 'ARCHIVED'
 		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
 
-	err := s.DB.Select(&businessCases, fetchBusinessCaseSQL, euaID)
+	err := s.db.Select(&businessCases, fetchBusinessCaseSQL, euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business cases %s", err),
@@ -255,7 +255,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 		    :updated_at
 		)`
 	logger := appcontext.ZLogger(ctx)
-	tx := s.DB.MustBegin()
+	tx := s.db.MustBegin()
 	//Rollback only happens if transaction isn't committed
 	defer tx.Rollback()
 	_, err := tx.NamedExec(createBusinessCaseSQL, &businessCase)
@@ -359,7 +359,7 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 	`
 
 	logger := appcontext.ZLogger(ctx)
-	tx := s.DB.MustBegin()
+	tx := s.db.MustBegin()
 	//Rollback only happens if transaction isn't committed
 	defer tx.Rollback()
 	result, err := tx.NamedExec(updateBusinessCaseSQL, &businessCase)

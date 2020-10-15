@@ -8,8 +8,7 @@ import {
   fetchSystemIntake,
   postSystemIntake,
   saveSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake
+  storeSystemIntake
 } from 'types/routines';
 
 describe('The system intake reducer', () => {
@@ -41,7 +40,6 @@ describe('The system intake reducer', () => {
       systemIntake: initialSystemIntakeForm,
       isLoading: null,
       isSaving: false,
-      isSubmitting: false,
       error: null
     });
   });
@@ -57,7 +55,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: true,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -78,7 +75,6 @@ describe('The system intake reducer', () => {
         systemIntake: prepareSystemIntakeForApp(mockPayload),
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -93,7 +89,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -120,7 +115,6 @@ describe('The system intake reducer', () => {
         },
         isLoading: false,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -134,7 +128,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: 'Error'
       });
     });
@@ -148,54 +141,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: false,
-        isSubmitting: false,
-        error: null
-      });
-    });
-  });
-
-  describe('submitSystemIntake', () => {
-    it('handles submitSystemIntake.REQUEST', () => {
-      const mockRequestAction = {
-        type: submitSystemIntake.REQUEST,
-        payload: initialSystemIntakeForm
-      };
-
-      expect(systemIntakeReducer(undefined, mockRequestAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: null,
-        isSaving: false,
-        isSubmitting: true,
-        error: null
-      });
-    });
-
-    it('handles submitSystemIntake.FAILURE', () => {
-      const mockFailureAction = {
-        type: submitSystemIntake.FAILURE,
-        payload: 'Error Error'
-      };
-
-      expect(systemIntakeReducer(undefined, mockFailureAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: null,
-        isSaving: false,
-        isSubmitting: false,
-        error: 'Error Error'
-      });
-    });
-
-    it('handles submitSystemIntake.FULFILL', () => {
-      const mockFulfillAction = {
-        type: submitSystemIntake.FULFILL,
-        payload: undefined
-      };
-
-      expect(systemIntakeReducer(undefined, mockFulfillAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: null,
-        isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -212,7 +157,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: true,
-        isSubmitting: false,
         error: null
       });
     });
@@ -226,7 +170,6 @@ describe('The system intake reducer', () => {
         systemIntake: prepareSystemIntakeForApp(mockSuccessAction.payload),
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -236,7 +179,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
-        isSubmitting: false,
         error: null
       };
       const mockFailureAction = {
@@ -248,7 +190,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
-        isSubmitting: false,
         error: 'Error'
       });
     });
@@ -263,7 +204,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -280,7 +220,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: true,
-        isSubmitting: false,
         error: null
       });
     });
@@ -294,7 +233,6 @@ describe('The system intake reducer', () => {
         systemIntake: prepareSystemIntakeForApp(mockSuccessAction.payload),
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -304,7 +242,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
-        isSubmitting: false,
         error: null
       };
       const mockFailureAction = {
@@ -316,7 +253,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
-        isSubmitting: false,
         error: 'Error'
       });
     });
@@ -326,7 +262,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
-        isSubmitting: false,
         error: null
       };
 
@@ -339,7 +274,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -356,7 +290,6 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
