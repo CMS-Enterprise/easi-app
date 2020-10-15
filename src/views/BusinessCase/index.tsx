@@ -50,10 +50,6 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  const isSaving = useSelector(
-    (state: AppState) => state.businessCase.isSaving
-  );
-
   const isSubmitting = useSelector(
     (state: AppState) => state.businessCase.isSubmitting
   );
@@ -63,15 +59,13 @@ export const BusinessCase = () => {
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
-    if (current && current.dirty && !isSaving) {
-      dispatch(
-        putBusinessCase({
-          ...businessCase,
-          ...current.values
-        })
-      );
-      current.resetForm({ values: current.values, errors: current.errors });
-    }
+    dispatch(
+      putBusinessCase({
+        ...businessCase,
+        ...current.values
+      })
+    );
+    current.resetForm({ values: current.values, errors: current.errors });
   };
 
   // Start new business case or resume existing business case
