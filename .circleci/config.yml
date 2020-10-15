@@ -124,6 +124,9 @@ jobs:
       - restore_cache:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - node-modules-cache-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
           command: yarn install
@@ -135,6 +138,10 @@ jobs:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - save_cache:
+          key: node-modules-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/easi-app/node_modules
       - store_artifacts:
           path: cypress/videos
           destination: videos
@@ -166,8 +173,11 @@ jobs:
       - restore_cache:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - node-modules-cache-{{ checksum "yarn.lock" }}
       - run:
-          name: Install dependencies for pre-commit in yarn (temporary?)
+          name: Install yarn dependencies
           command: yarn install
       - run:
           name: Run pre-commit checks
@@ -186,6 +196,10 @@ jobs:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - save_cache:
+          key: node-modules-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/easi-app/node_modules
       - run:
           name: Announce failure
           command: |
@@ -240,6 +254,12 @@ jobs:
           APP_ENV: dev
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - node-modules-cache-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -267,6 +287,14 @@ jobs:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: node-modules-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/easi-app/node_modules
       - run:
           name: Announce failure
           command: |
