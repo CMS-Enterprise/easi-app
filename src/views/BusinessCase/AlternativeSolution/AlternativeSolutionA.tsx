@@ -8,6 +8,7 @@ import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
+import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -26,6 +27,7 @@ const AlternativeSolutionA = ({
   formikRef,
   dispatchSave
 }: AlternativeSolutionProps) => {
+  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     alternativeA: businessCase.alternativeA
@@ -157,7 +159,11 @@ const AlternativeSolutionA = ({
                 unstyled
                 onClick={() => {
                   dispatchSave();
-                  history.push('/');
+                  history.push(
+                    flags.taskListLite
+                      ? `/governance-task-list/${businessCase.systemIntakeId}`
+                      : '/'
+                  );
                 }}
               >
                 <span>

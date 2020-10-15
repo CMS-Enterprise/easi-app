@@ -62,7 +62,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 			partialIntake := models.SystemIntake{
 				Status: models.SystemIntakeStatusDRAFT,
 			}
-			partialIntake.EUAUserID = "F"
+			partialIntake.EUAUserID = tc
 
 			_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
 
@@ -82,7 +82,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 
 		s.Error(err)
 		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
-		s.Equal(&models.SystemIntake{}, created)
+		s.Nil(created)
 	})
 }
 
@@ -260,6 +260,87 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 			s.Error(err, "expected lcid format error")
 		}
 	})
+
+	s.Run("exhaust lifecycleID generation", func() {
+		for ix := 0; ix < 10; ix++ {
+			original := models.SystemIntake{
+				EUAUserID: testhelpers.RandomEUAID(),
+				Status:    models.SystemIntakeStatusDRAFT,
+				Requester: fmt.Sprintf("LCID Exhaust %d", ix),
+			}
+
+			_, err := s.store.CreateSystemIntake(ctx, &original)
+			s.NoError(err)
+
+			partial, err := s.store.FetchSystemIntakeByID(ctx, original.ID)
+			s.NoError(err)
+
+			lcid, err := s.store.GenerateLifecycleID(ctx)
+			s.NoError(err)
+
+			partial.LifecycleID = null.StringFrom(lcid)
+			_, err = s.store.UpdateSystemIntake(ctx, partial)
+			s.NoError(err)
+		}
+
+		// the 11th attempt should generate an LCID that looks like "2136510" (~"YYddd10"),
+		// and this should violate the db constraint of a 6-digit LCID
+		original := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "LCID Exhaust 10",
+		}
+
+		_, err := s.store.CreateSystemIntake(ctx, &original)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, original.ID)
+		s.NoError(err)
+
+		lcid, err := s.store.GenerateLifecycleID(ctx)
+		s.NoError(err)
+
+		partial.LifecycleID = null.StringFrom(lcid)
+		_, err = s.store.UpdateSystemIntake(ctx, partial)
+		s.Error(err)
+	})
+
+}
+
+func (s StoreTestSuite) TestLifecyclePrefixBoundaries() {
+	easternTZ, err := time.LoadLocation("America/New_York")
+	if err != nil {
+		s.Fail("couldn't load EST: %v\n", err)
+	}
+
+	testCases := map[string]struct {
+		ts       time.Time
+		expected string
+	}{
+		"still previous year": {
+			ts:       time.Date(2011, time.January, 1, 0, 1, 0, 0, time.UTC),
+			expected: "10365",
+		},
+		"very beginning of year": {
+			ts:       time.Date(2013, time.January, 1, 0, 0, 1, 0, easternTZ),
+			expected: "13001",
+		},
+		"very end of year": {
+			ts:       time.Date(2013, time.December, 31, 23, 59, 0, 0, easternTZ),
+			expected: "13365",
+		},
+		"acceptance criteria": {
+			ts:       time.Date(2020, time.September, 29, 12, 1, 0, 0, easternTZ),
+			expected: "20273",
+		},
+	}
+
+	for name, tc := range testCases {
+		s.Run(fmt.Sprintf("%s %s", name, tc.ts), func() {
+			out := generateLifecyclePrefix(tc.ts, easternTZ)
+			s.Equal(tc.expected, out, tc.ts)
+		})
+	}
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {

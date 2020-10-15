@@ -42,10 +42,6 @@ describe('The System Intake Form', () => {
       .select('Just an idea')
       .should('have.value', 'Just an idea');
 
-    cy.get('#IntakeForm-HasContract')
-      .select('No')
-      .should('have.value', 'No');
-
     cy.get('#IntakeForm-HasFundingSourceNo')
       .check({ force: true })
       .should('be.checked');
@@ -105,9 +101,6 @@ describe('The System Intake Form', () => {
     cy.get('#IntakeForm-CurrentStage')
       .select('Just an idea')
       .should('have.value', 'Just an idea');
-    cy.get('#IntakeForm-HasContract')
-      .select('No')
-      .should('have.value', 'No');
 
     cy.get('#IntakeForm-HasFundingSourceYes')
       .check({ force: true })

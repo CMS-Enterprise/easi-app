@@ -4,7 +4,7 @@ COPY . .
 RUN  CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
 
 FROM alpine:3.11
-RUN apk --no-cache add ca-certificates
+RUN apk --no-cache add ca-certificates tzdata
 WORKDIR /easi/
 COPY --from=builder /easi/bin/easi .
 COPY --from=builder /easi/pkg/email/templates ./templates

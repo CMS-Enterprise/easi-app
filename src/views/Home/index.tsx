@@ -9,13 +9,13 @@ import {
 } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
-import { useFlags } from 'contexts/flagContext';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import ActionBanner from 'components/shared/ActionBanner';
+import { useFlags } from 'contexts/flagContext';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import { Flags } from 'types/flags';
