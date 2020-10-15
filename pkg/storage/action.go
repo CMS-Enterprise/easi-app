@@ -36,7 +36,7 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 		    :intake_id,    
 		    :created_at
 		)`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		createActionSQL,
 		action,
 	)
