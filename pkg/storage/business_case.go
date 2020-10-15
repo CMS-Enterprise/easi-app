@@ -48,9 +48,9 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 			zap.String("id", id.String()),
 		)
 		if errors.Is(err, sql.ErrNoRows) {
-			return &models.BusinessCase{}, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
 		}
-		return &models.BusinessCase{}, err
+		return nil, err
 	}
 	return &businessCase, nil
 }
@@ -69,14 +69,14 @@ func (s *Store) FetchBusinessCaseIDByIntakeID(ctx context.Context, intakeID uuid
 	err := s.db.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return businessCaseID, nil
+			return nil, nil
 		}
 
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case id for intake %s", err),
 			zap.String("System Intake", intakeID.String()),
 		)
-		return businessCaseID, err
+		return nil, err
 	}
 	return businessCaseID, nil
 }
@@ -101,7 +101,7 @@ func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (mo
 			fmt.Sprintf("Failed to fetch business cases %s", err),
 			zap.String("euaID", euaID),
 		)
-		return models.BusinessCases{}, err
+		return nil, err
 	}
 	return businessCases, nil
 }
@@ -266,14 +266,14 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 		)
 		if err.Error() == "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\"" {
-			return &models.BusinessCase{},
+			return nil,
 				&apperrors.ResourceConflictError{
 					Err:        err,
 					Resource:   models.BusinessCase{},
 					ResourceID: businessCase.SystemIntakeID.String(),
 				}
 		}
-		return &models.BusinessCase{}, err
+		return nil, err
 	}
 	err = createEstimatedLifecycleCosts(ctx, tx, businessCase)
 	if err != nil {
@@ -282,7 +282,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("BusinessCaseID", businessCase.ID.String()),
 		)
-		return &models.BusinessCase{}, err
+		return nil, err
 	}
 	err = tx.Commit()
 	if err != nil {
@@ -291,7 +291,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 		)
-		return &models.BusinessCase{}, err
+		return nil, err
 	}
 
 	return businessCase, nil
