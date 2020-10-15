@@ -13,6 +13,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -29,6 +30,7 @@ const RequestDescription = ({
   formikRef,
   dispatchSave
 }: RequestDescriptionProps) => {
+  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     businessNeed: businessCase.businessNeed,
@@ -238,7 +240,11 @@ const RequestDescription = ({
                 unstyled
                 onClick={() => {
                   dispatchSave();
-                  history.push('/');
+                  history.push(
+                    flags.taskListLite
+                      ? `/governance-task-list/${businessCase.systemIntakeId}`
+                      : '/'
+                  );
                 }}
               >
                 <span>

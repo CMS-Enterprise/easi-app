@@ -1,8 +1,9 @@
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import axios from 'axios';
-import { FlagProvider, useFlags } from 'contexts/flagContext';
 import { mount } from 'enzyme';
+
+import { FlagProvider, useFlags } from 'contexts/flagContext';
 
 const flagsURL = `${process.env.REACT_APP_API_ADDRESS}/flags`;
 
