@@ -16,6 +16,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import { useFlags } from 'contexts/flagContext';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
@@ -61,6 +62,7 @@ const ContactDetails = ({
   systemIntake,
   dispatchSave
 }: ContactDetailsProps) => {
+  const flags = useFlags();
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
 
@@ -459,7 +461,11 @@ const ContactDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push('/');
+                      history.push(
+                        flags.taskListLite
+                          ? `/governance-task-list/${systemIntake.id}`
+                          : '/'
+                      );
                     }}
                   >
                     <span>

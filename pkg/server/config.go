@@ -71,15 +71,32 @@ func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
 }
 
-// NewLDConfig checks if CEDAR clients are not connectable
-func (s Server) NewLDConfig() flags.Config {
-	s.checkRequiredConfig(appconfig.LDKey)
-	s.checkRequiredConfig(appconfig.LDTimeout)
+// NewFlagConfig checks if Launch Darkly config exists
+func (s Server) NewFlagConfig() flags.Config {
+	s.checkRequiredConfig(appconfig.FlagSourceKey)
 
-	timeout := time.Duration(s.Config.GetInt(appconfig.LDTimeout)) * time.Second
+	flagSource := appconfig.FlagSourceOption(s.Config.GetString(appconfig.FlagSourceKey))
+
+	var timeout time.Duration
+	var key string
+
+	switch flagSource {
+	case appconfig.FlagSourceLocal:
+		timeout = 0
+		key = "local-has-no-key"
+	case appconfig.FlagSourceLaunchDarkly:
+		s.checkRequiredConfig(appconfig.LDKey)
+		s.checkRequiredConfig(appconfig.LDTimeout)
+		timeout = time.Duration(s.Config.GetInt(appconfig.LDTimeout)) * time.Second
+		key = s.Config.GetString(appconfig.LDKey)
+	default:
+		opts := []appconfig.FlagSourceOption{appconfig.FlagSourceLocal, appconfig.FlagSourceLaunchDarkly}
+		s.logger.Fatal(fmt.Sprintf("%s must be set to one of %v", appconfig.FlagSourceKey, opts))
+	}
 
 	return flags.Config{
-		Key:     s.Config.GetString(appconfig.LDKey),
+		Source:  flagSource,
+		Key:     key,
 		Timeout: timeout,
 	}
 }

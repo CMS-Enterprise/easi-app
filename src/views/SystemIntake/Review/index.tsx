@@ -6,7 +6,7 @@ import { Button } from '@trussworks/react-uswds';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
-import { submitSystemIntake } from 'types/routines';
+import { postSystemIntakeAction } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 type ReviewProps = {
@@ -17,10 +17,8 @@ const Review = ({ systemIntake }: ReviewProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const isSubmitting = useSelector(
-    (state: AppState) => state.systemIntake.isSubmitting
-  );
-  const error = useSelector((state: AppState) => state.systemIntake.error);
+  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
+  const error = useSelector((state: AppState) => state.action.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
 
   useEffect(() => {
@@ -62,7 +60,14 @@ const Review = ({ systemIntake }: ReviewProps) => {
       <Button
         type="submit"
         disabled={isSubmitting}
-        onClick={() => dispatch(submitSystemIntake(systemIntake))}
+        onClick={() =>
+          dispatch(
+            postSystemIntakeAction({
+              actionType: 'SUBMIT',
+              intakeId: systemIntake.id
+            })
+          )
+        }
       >
         Send my intake request
       </Button>

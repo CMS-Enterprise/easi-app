@@ -8,6 +8,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
+import { useFlags } from 'contexts/flagContext';
 
 import './index.scss';
 
@@ -30,6 +31,7 @@ const GovernanceStep = ({ header, body }: NumberedListItemProps) => {
 };
 
 const GovernanceOverview = () => {
+  const flags = useFlags();
   return (
     <PageWrapper className="easi-governance-overview">
       <Header />
@@ -39,11 +41,7 @@ const GovernanceOverview = () => {
             <Link to="/">Home</Link>
             <i className="fa fa-angle-right margin-x-05" aria-hidden />
           </li>
-          <li>
-            <Link to="/governance-overview" aria-current="location">
-              Add a new system or service
-            </Link>
-          </li>
+          <li aria-current="location">Add a new system or service</li>
         </BreadcrumbNav>
         <Link to="/">
           <i className="fa fa-angle-left margin-right-05 text-no-underline" />
@@ -134,7 +132,7 @@ const GovernanceOverview = () => {
           className="usa-button"
           asCustom={Link}
           variant="unstyled"
-          to="/system/new"
+          to={flags.taskListLite ? '/governance-task-list/new' : '/system/new'}
         >
           Get started
         </UswdsLink>

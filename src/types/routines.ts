@@ -1,5 +1,7 @@
 import { createRoutine } from 'redux-saga-routines';
 
+import { Action } from 'types/action';
+
 // SystemIntakes routines
 export const fetchSystemIntakes = createRoutine('FETCH_SYSTEM_INTAKES');
 
@@ -8,7 +10,6 @@ export const fetchSystemIntake = createRoutine('FETCH_SYSTEM_INTAKE');
 export const postSystemIntake = createRoutine('POST_SYSTEM_INTAKE');
 export const saveSystemIntake = createRoutine('PUT_SYSTEM_INTAKE');
 export const storeSystemIntake = createRoutine('STORE_SYSTEM_INTAKE');
-export const submitSystemIntake = createRoutine('SUBMIT_SYSTEM_INTAKE');
 export const clearSystemIntake = createRoutine('CLEAR_SYSTEM_INTAKE');
 export const reviewSystemIntake = createRoutine('REVIEW_SYSTEM_INTAKE');
 export const archiveSystemIntake = createRoutine('ARCHIVE_SYSTEM_INTAKE');
@@ -24,3 +25,8 @@ export const putBusinessCase = createRoutine('PUT_BUSINESS_CASE');
 export const storeBusinessCase = createRoutine('STORE_BUSINESS_CASE');
 export const submitBusinessCase = createRoutine('SUBMIT_BUSINESS_CASE');
 export const clearBusinessCase = createRoutine('CLEAR_BUSINESS_CASE');
+
+// Action routines
+export const postSystemIntakeAction = createRoutine<Action>(
+  'POST_SYSTEM_INTAKE_ACTION'
+);
