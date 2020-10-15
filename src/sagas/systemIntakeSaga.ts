@@ -9,8 +9,7 @@ import {
   fetchSystemIntake,
   postSystemIntake,
   reviewSystemIntake,
-  saveSystemIntake,
-  submitSystemIntake
+  saveSystemIntake
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
@@ -68,22 +67,6 @@ function* getSystemIntake(action: Action<any>) {
   }
 }
 
-function* completeSystemIntake(action: Action<any>) {
-  try {
-    yield put(submitSystemIntake.request());
-    const response = yield call(putSystemIntakeRequest, {
-      ...action.payload,
-      status: 'SUBMITTED'
-    });
-    yield put(submitSystemIntake.success(response.data));
-  } catch (error) {
-    yield put(submitSystemIntake.failure(error.message));
-  } finally {
-    yield put(submitSystemIntake.fulfill());
-    yield put(updateLastActiveAt);
-  }
-}
-
 function* submitSystemIntakeReview(action: Action<any>) {
   try {
     yield put(reviewSystemIntake.request());
@@ -122,7 +105,6 @@ function* deleteSystemIntake(action: Action<any>) {
 export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
-  yield takeLatest(submitSystemIntake.TRIGGER, completeSystemIntake);
   yield takeLatest(postSystemIntake.TRIGGER, createSystemIntake);
   yield takeLatest(reviewSystemIntake.TRIGGER, submitSystemIntakeReview);
   yield takeLatest(archiveSystemIntake.TRIGGER, deleteSystemIntake);

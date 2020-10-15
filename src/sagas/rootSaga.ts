@@ -1,5 +1,6 @@
 import { all } from 'redux-saga/effects';
 
+import actionSaga from 'sagas/actionSaga';
 import businessCaseSaga from 'sagas/businessCaseSaga';
 import businessCasesSaga from 'sagas/businessCasesSaga';
 import searchSaga from 'sagas/searchSaga';
@@ -12,6 +13,7 @@ export default function* rootSaga() {
     systemIntakesSaga(),
     systemIntakeSaga(),
     businessCaseSaga(),
-    businessCasesSaga()
+    businessCasesSaga(),
+    actionSaga()
   ]);
 }
