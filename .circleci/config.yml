@@ -129,7 +129,11 @@ jobs:
             - node-modules-cache-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
-          command: yarn install
+          command: |
+            pwd
+            ls -la
+            yarn install
+            ls -la
       - run:
           name: Run Cypress integration tests
           command: |
