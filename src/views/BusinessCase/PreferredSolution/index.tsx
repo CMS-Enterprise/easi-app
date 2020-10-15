@@ -16,6 +16,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -31,6 +32,7 @@ const PreferredSolution = ({
   formikRef,
   dispatchSave
 }: PreferredSolutionProps) => {
+  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     preferredSolution: businessCase.preferredSolution
@@ -548,7 +550,11 @@ const PreferredSolution = ({
                 unstyled
                 onClick={() => {
                   dispatchSave();
-                  history.push('/');
+                  history.push(
+                    flags.taskListLite
+                      ? `/governance-task-list/${businessCase.systemIntakeId}`
+                      : '/'
+                  );
                 }}
               >
                 <span>

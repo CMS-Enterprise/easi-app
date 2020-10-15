@@ -18,6 +18,7 @@ import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import processStages from 'constants/enums/processStages';
+import { useFlags } from 'contexts/flagContext';
 import { yesNoMap } from 'data/common';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
@@ -34,6 +35,7 @@ const ContractDetails = ({
   systemIntake,
   dispatchSave
 }: ContractDetailsProps) => {
+  const flags = useFlags();
   const history = useHistory();
 
   const initialValues: ContractDetailsForm = {
@@ -114,53 +116,6 @@ const ContractDetails = ({
                         value={stage.name}
                       />
                     ))}
-                  </Field>
-                </FieldGroup>
-
-                <FieldGroup
-                  scrollElement="hasContract"
-                  error={!!flatErrors.hasContract}
-                >
-                  <Label htmlFor="IntakeForm-HasContract">
-                    Do you already have a contract in place to support this
-                    effort?
-                  </Label>
-                  <HelpText className="margin-y-1">
-                    This information helps the Office of Acquisition and Grants
-                    Management (OAGM) track current work
-                  </HelpText>
-                  <FieldErrorMsg>{flatErrors.hasContract}</FieldErrorMsg>
-                  <Field
-                    as={DropdownField}
-                    error={!!flatErrors.hasContract}
-                    id="IntakeForm-HasContract"
-                    helpText="This information helps the Office of Acquisition and Grants Management (OAGM) track work"
-                    name="hasContract"
-                  >
-                    <Field
-                      as={DropdownItem}
-                      name="Select an option"
-                      value=""
-                      disabled
-                    />
-                    <Field
-                      as={DropdownItem}
-                      key="HasContract-Yes"
-                      name="Yes"
-                      value="Yes"
-                    />
-                    <Field
-                      as={DropdownItem}
-                      key="HasContract-No"
-                      name="No"
-                      value="No"
-                    />
-                    <Field
-                      as={DropdownItem}
-                      key="HasContract-StatementOfWork"
-                      name="No, but I have a Statement of Work/Objectives"
-                      value="No, but I have a Statement of Work/Objectives"
-                    />
                   </Field>
                 </FieldGroup>
 
@@ -729,7 +684,11 @@ const ContractDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push('/');
+                      history.push(
+                        flags.taskListLite
+                          ? `/governance-task-list/${systemIntake.id}`
+                          : '/'
+                      );
                     }}
                   >
                     <span>

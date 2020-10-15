@@ -2,6 +2,7 @@ package storage
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
@@ -10,9 +11,10 @@ import (
 
 // Store performs database operations for EASi
 type Store struct {
-	DB     *sqlx.DB // temporarily export until SystemIntakesHandler doesn't take db
-	logger *zap.Logger
-	clock  clock.Clock
+	db        *sqlx.DB
+	logger    *zap.Logger
+	clock     clock.Clock
+	easternTZ *time.Location
 }
 
 // DBConfig holds the configurations for a database connection
@@ -30,6 +32,12 @@ func NewStore(
 	logger *zap.Logger,
 	config DBConfig,
 ) (*Store, error) {
+	// LifecycleIDs are generated based on Eastern Time
+	tz, err := time.LoadLocation("America/New_York")
+	if err != nil {
+		return nil, err
+	}
+
 	dataSourceName := fmt.Sprintf(
 		"host=%s port=%s user=%s "+
 			"password=%s dbname=%s sslmode=disable",
@@ -43,5 +51,5 @@ func NewStore(
 	if err != nil {
 		return nil, err
 	}
-	return &Store{DB: db, logger: logger, clock: clock.New()}, nil
+	return &Store{db: db, logger: logger, clock: clock.New(), easternTZ: tz}, nil
 }

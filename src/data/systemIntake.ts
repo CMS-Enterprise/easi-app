@@ -63,7 +63,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   grtReviewEmailBody: '',
   decidedAt: null,
   businessCaseId: null,
-  submittedAt: null
+  submittedAt: null,
+  lcid: ''
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -192,6 +193,7 @@ export const prepareSystemIntakeForApp = (
     businessCaseId: systemIntake.businessCase || null,
     submittedAt: systemIntake.submittedAt
       ? DateTime.fromISO(systemIntake.submittedAt)
-      : null
+      : null,
+    lcid: systemIntake.lcid || ''
   };
 };

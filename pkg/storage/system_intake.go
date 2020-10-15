@@ -89,7 +89,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		    :created_at,
 		    :updated_at
 		)`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		createIntakeSQL,
 		intake,
 	)
@@ -98,7 +98,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			fmt.Sprintf("Failed to create system intake with error %s", err),
 			zap.String("user", intake.EUAUserID),
 		)
-		return &models.SystemIntake{}, err
+		return nil, err
 	}
 	return s.FetchSystemIntakeByID(ctx, id)
 }
@@ -149,7 +149,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			lcid_next_steps = :lcid_next_steps
 		WHERE system_intake.id = :id
 	`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		updateSystemIntakeSQL,
 		intake,
 	)
@@ -169,7 +169,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 // fetchSystemIntakeByID queries the DB for a system intake matching the given ID, WITHOUT filtering based on status
 func (s *Store) fetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
-	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+	err := s.db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
@@ -208,7 +208,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'ARCHIVED'", euaID)
+	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'ARCHIVED'", euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
@@ -226,6 +226,30 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 		}
 	}
 	return intakes, nil
+}
+
+func generateLifecyclePrefix(t time.Time, loc *time.Location) string {
+	return t.In(loc).Format("06002")
+}
+
+// GenerateLifecycleID returns what the next LCID is expected to be for the current date
+// 		The expected format is a 6-digit number in the form of "YYdddP" where
+// 			YY - the 2-digit YEAR
+// 			ddd - the 3-digit ORDINAL DATE, e.g. the number of days elapsed in the given year
+// 			P - the 1-digit count of how many LCIDs already generated for the given day
+// 		This routine assumes the LCIDs are being generated in Eastern Time Zone
+// 		(FYI - the "YYddd" construct is referred to as the "Julian Day" in mainframe
+// 		programmer circles, though this term seems to be a misappropriation of what
+// 		astronomers use to mean a count of days since 24 Nov in the year 4714 BC.)
+func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
+	prefix := generateLifecyclePrefix(s.clock.Now(), s.easternTZ)
+
+	countSQL := `SELECT COUNT(*) FROM system_intake WHERE lcid ~ $1;`
+	var count int
+	if err := s.db.Get(&count, countSQL, "^"+prefix); err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s%d", prefix, count), nil
 }
 
 // FetchSystemIntakeMetrics gets a metrics digest for system intake
@@ -270,7 +294,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	metrics := models.SystemIntakeMetrics{}
 
 	var startedResponse startedQueryResponse
-	err := s.DB.Get(
+	err := s.db.Get(
 		&startedResponse,
 		startedCountSQL,
 		&startTime,
@@ -283,7 +307,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	metrics.CompletedOfStarted = startedResponse.CompletedCount
 
 	var fundedResponse fundedQueryResponse
-	err = s.DB.Get(
+	err = s.db.Get(
 		&fundedResponse,
 		fundedCountSQL,
 		&startTime,
