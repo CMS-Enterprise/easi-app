@@ -107,7 +107,12 @@ const governanceReviewTeam = {
   back: {
     allRequests: 'Back to all requests'
   },
-  actions: 'Actions'
+  actions: 'Actions',
+  status: {
+    label: 'Status',
+    open: 'Open',
+    closed: 'Closed'
+  }
 };
 
 export default governanceReviewTeam;
