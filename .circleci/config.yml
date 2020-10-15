@@ -129,11 +129,7 @@ jobs:
             - node-modules-cache-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
-          command: |
-            pwd
-            ls -la
-            yarn install
-            ls -la
+          command: yarn install
       - run:
           name: Run Cypress integration tests
           command: |
@@ -145,7 +141,7 @@ jobs:
       - save_cache:
           key: node-modules-cache-{{ checksum "yarn.lock" }}
           paths:
-            - ~/project/easi-app/node_modules
+            - ~/project/node_modules
       - store_artifacts:
           path: cypress/videos
           destination: videos
@@ -182,11 +178,7 @@ jobs:
             - node-modules-cache-{{ checksum "yarn.lock" }}
       - run:
           name: Install yarn dependencies
-          command: |
-            pwd
-            ls -la
-            yarn install
-            ls -la
+          command: yarn install
       - run:
           name: Run pre-commit checks
           command: pre-commit run --all-files --show-diff-on-failure
@@ -207,7 +199,7 @@ jobs:
       - save_cache:
           key: node-modules-cache-{{ checksum "yarn.lock" }}
           paths:
-            - ~/project/easi-app/node_modules
+            - ~/project/node_modules
       - run:
           name: Announce failure
           command: |
@@ -302,7 +294,7 @@ jobs:
       - save_cache:
           key: node-modules-cache-{{ checksum "yarn.lock" }}
           paths:
-            - ~/project/easi-app/node_modules
+            - ~/project/node_modules
       - run:
           name: Announce failure
           command: |
