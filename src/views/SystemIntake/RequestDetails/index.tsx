@@ -16,6 +16,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import { useFlags } from 'contexts/flagContext';
 import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -42,6 +43,7 @@ const RequestDetails = ({
   systemIntake,
   dispatchSave
 }: RequestDetailsProps) => {
+  const flags = useFlags();
   const history = useHistory();
   const initialValues: RequestDetailsForm = {
     requestName: systemIntake.requestName,
@@ -289,7 +291,11 @@ const RequestDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push('/');
+                      history.push(
+                        flags.taskListLite
+                          ? `/governance-task-list/${systemIntake.id}`
+                          : '/'
+                      );
                     }}
                   >
                     <span>

@@ -255,14 +255,10 @@ exports[`The governance overview page matches the snapshot 1`] = `
             className="fa fa-angle-right margin-x-05"
           />
         </li>
-        <li>
-          <a
-            aria-current="location"
-            href="/governance-overview"
-            onClick={[Function]}
-          >
-            Add a new system or service
-          </a>
+        <li
+          aria-current="location"
+        >
+          Add a new system or service
         </li>
       </ol>
     </nav>
