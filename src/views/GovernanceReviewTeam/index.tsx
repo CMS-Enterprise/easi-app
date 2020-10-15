@@ -13,6 +13,7 @@ import PageWrapper from 'components/PageWrapper';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
 
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
@@ -96,6 +97,34 @@ const GovernanceReviewTeam = () => {
                 </div>
               </div>
             </dl>
+          </div>
+
+          <div
+            className={classnames({
+              'bg-base-lightest': isIntakeClosed(systemIntake.status),
+              'easi-grt__status--open': isIntakeOpen(systemIntake.status)
+            })}
+          >
+            <div className="grid-container overflow-auto">
+              <dl className="easi-grt__status-info text-gray-90">
+                <dt className="text-bold">{t('status.label')}</dt>
+                &nbsp;
+                <dd
+                  className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                  data-testid="grt-status"
+                >
+                  {isIntakeClosed(systemIntake.status)
+                    ? t('status.closed')
+                    : t('status.open')}
+                </dd>
+                {systemIntake.lcid && (
+                  <>
+                    <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
+                    <dd data-testid="grt-lcid">{systemIntake.lcid}</dd>
+                  </>
+                )}
+              </dl>
+            </div>
           </div>
         </section>
         <section className="grid-container grid-row margin-y-5 ">
