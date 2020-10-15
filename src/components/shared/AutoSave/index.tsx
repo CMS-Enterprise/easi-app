@@ -8,24 +8,28 @@ type AutoSaveProps = {
 };
 
 const AutoSave = ({ values, onSave, debounceDelay }: AutoSaveProps) => {
-  // We don't want autosave to to run on initial render because it can
-  // potentially create an empty record or update nothing.
   // We also don't want to save when the component is unmounted, but a
   // save had already been invoked and pending the debounce delay.
   const isMounted = useRef(false);
   const debouncedSave = useCallback(
     debounce(() => {
+      // We also don't want to save when the component is unmounted, but a
+      // debounceSave had already been invoked and ispending the debounce delay.
       if (isMounted.current) {
         onSave();
-      } else {
-        isMounted.current = true;
       }
     }, debounceDelay),
     []
   );
 
   useEffect(() => {
-    debouncedSave();
+    // We don't want autosave to to run on initial render because it can
+    // potentially create an empty record or update nothing.
+    if (isMounted.current) {
+      debouncedSave();
+    } else {
+      isMounted.current = true;
+    }
   }, [values, debouncedSave]);
 
   useEffect(() => {
