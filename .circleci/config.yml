@@ -126,7 +126,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - node-modules-cache-{{ checksum "yarn.lock" }}
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
           command: yarn install
@@ -139,7 +139,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: node-modules-cache-{{ checksum "yarn.lock" }}
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - store_artifacts:
@@ -175,7 +175,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - node-modules-cache-{{ checksum "yarn.lock" }}
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Install yarn dependencies
           command: yarn install
@@ -197,7 +197,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: node-modules-cache-{{ checksum "yarn.lock" }}
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
@@ -259,7 +259,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - node-modules-cache-{{ checksum "yarn.lock" }}
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -292,7 +292,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: node-modules-cache-{{ checksum "yarn.lock" }}
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
