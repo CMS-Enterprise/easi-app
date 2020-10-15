@@ -13,7 +13,7 @@ import PageWrapper from 'components/PageWrapper';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
-import { closedIntakeStatuses, openIntakeStatuses } from 'types/systemIntake';
+import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
 
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
@@ -101,12 +101,8 @@ const GovernanceReviewTeam = () => {
 
           <div
             className={classnames({
-              'bg-base-lightest': closedIntakeStatuses.includes(
-                systemIntake.status
-              ),
-              'easi-grt__status--open': openIntakeStatuses.includes(
-                systemIntake.status
-              )
+              'bg-base-lightest': isIntakeClosed(systemIntake.status),
+              'easi-grt__status--open': isIntakeOpen(systemIntake.status)
             })}
           >
             <div className="grid-container overflow-auto">
@@ -117,7 +113,7 @@ const GovernanceReviewTeam = () => {
                   className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
                   data-testid="grt-status"
                 >
-                  {closedIntakeStatuses.includes(systemIntake.status)
+                  {isIntakeClosed(systemIntake.status)
                     ? t('status.closed')
                     : t('status.open')}
                 </dd>
