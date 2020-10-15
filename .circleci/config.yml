@@ -182,7 +182,11 @@ jobs:
             - node-modules-cache-{{ checksum "yarn.lock" }}
       - run:
           name: Install yarn dependencies
-          command: yarn install
+          command: |
+            pwd
+            ls -la
+            yarn install
+            ls -la
       - run:
           name: Run pre-commit checks
           command: pre-commit run --all-files --show-diff-on-failure
