@@ -5,12 +5,43 @@ export type GovernanceCollaborationTeam = {
   name: string;
 };
 
-export type SystemIntakeStatus =
-  | 'DRAFT'
-  | 'SUBMITTED'
-  | 'ACCEPTED'
-  | 'APPROVED'
-  | 'CLOSED';
+export const openIntakeStatuses = [
+  'INTAKE_DRAFT',
+  'INTAKE_SUBMITTED',
+  'NEED_BIZ_CASE',
+  'BIZ_CASE_DRAFT',
+  'BIZ_CASE_DRAFT_SUBMITTED',
+  'BIZ_CASE_CHANGES_NEEDED',
+  'BIZ_CASE_FINAL_NEEDED',
+  'BIZ_CASE_FINAL_SUBMITTED',
+  'READY_FOR_GRT',
+  'READY_FOR_GRB'
+];
+
+export const closedIntakeStatuses = [
+  'LCID_ISSUED',
+  'WITHDRAWN',
+  'NOT_IT_REQUEST',
+  'NOT_APPROVED',
+  'NO_GOVERNANCE'
+];
+
+export const oldIntakeStatuses = [
+  'DRAFT',
+  'SUBMITTED',
+  'ACCEPTED',
+  'APPROVED',
+  'CLOSED'
+];
+
+export const intakeStatuses = [
+  ...openIntakeStatuses,
+  ...closedIntakeStatuses,
+  ...oldIntakeStatuses
+] as const;
+
+// TODO: Remove old intake statuses once they're deprecated
+export type SystemIntakeStatus = typeof intakeStatuses[number];
 
 /**
  * Type for SystemIntakeForm
@@ -50,10 +81,11 @@ export type SystemIntakeForm = {
   decidedAt: DateTime | null;
   businessCaseId?: string | null;
   submittedAt: DateTime | null;
+  lcid: string;
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
-  hasContract: string;
+  currentStage: string;
   fundingSource: {
     isFunded: boolean | null;
     fundingNumber: string;
@@ -62,6 +94,19 @@ export type ContractDetailsForm = {
     isExpectingIncrease: string;
     expectedIncreaseAmount: string;
   };
+  contract: {
+    hasContract: string;
+    contractor: string;
+    vehicle: string;
+    startDate: {
+      month: string;
+      year: string;
+    };
+    endDate: {
+      month: string;
+      year: string;
+    };
+  };
 };
 
 // Redux store type for a system intake
@@ -69,7 +114,6 @@ export type SystemIntakeState = {
   systemIntake: SystemIntakeForm;
   isLoading: boolean | null;
   isSaving: boolean;
-  isSubmitting: boolean;
   error?: any;
 };
 

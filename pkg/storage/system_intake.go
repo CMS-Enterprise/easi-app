@@ -2,6 +2,8 @@ package storage
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -45,6 +47,12 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			existing_contract,
 			cost_increase,
 			cost_increase_amount,
+			contractor,
+			contract_vehicle,
+			contract_start_month,
+			contract_start_year,
+			contract_end_month,
+			contract_end_year,
 			created_at,
 			updated_at
 		)
@@ -72,10 +80,16 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:existing_contract,
 			:cost_increase,
 			:cost_increase_amount,
+			:contractor,
+			:contract_vehicle,
+			:contract_start_month,
+			:contract_start_year,
+			:contract_end_month,
+			:contract_end_year,
 		    :created_at,
 		    :updated_at
 		)`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		createIntakeSQL,
 		intake,
 	)
@@ -84,9 +98,9 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			fmt.Sprintf("Failed to create system intake with error %s", err),
 			zap.String("user", intake.EUAUserID),
 		)
-		return &models.SystemIntake{}, err
+		return nil, err
 	}
-	return intake, nil
+	return s.FetchSystemIntakeByID(ctx, id)
 }
 
 // UpdateSystemIntake does an upsert for a system intake
@@ -118,14 +132,24 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			requester_email_address = :requester_email_address,
 			cost_increase = :cost_increase,
 			cost_increase_amount = :cost_increase_amount,
+			contractor = :contractor,
+			contract_vehicle = :contract_vehicle,
+			contract_start_month = :contract_start_month,
+			contract_start_year = :contract_start_year,
+			contract_end_month = :contract_end_month,
+			contract_end_year = :contract_end_year,
 			updated_at = :updated_at,
 			submitted_at = :submitted_at,
 		    decided_at = :decided_at,
 		    archived_at = :archived_at,
-			alfabet_id = :alfabet_id
+			alfabet_id = :alfabet_id,
+			lcid = :lcid,
+			lcid_expires_at = :lcid_expires_at,
+			lcid_scope = :lcid_scope,
+			lcid_next_steps = :lcid_next_steps
 		WHERE system_intake.id = :id
 	`
-	_, err := s.DB.NamedExec(
+	_, err := s.db.NamedExec(
 		updateSystemIntakeSQL,
 		intake,
 	)
@@ -135,41 +159,56 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			zap.String("id", intake.ID.String()),
 			zap.String("user", intake.EUAUserID),
 		)
+		return nil, err
 	}
-	return intake, err
+	// the SystemIntake may have been updated to Archived, so we want to use
+	// the un-filtered fetch to return the saved object
+	return s.fetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
-func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+// fetchSystemIntakeByID queries the DB for a system intake matching the given ID, WITHOUT filtering based on status
+func (s *Store) fetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
-
-	err := s.DB.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1 AND status != 'ARCHIVED'", id)
+	err := s.db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
 			zap.String("id", id.String()),
 		)
-		if err.Error() == "sql: no rows in result set" {
-			return &models.SystemIntake{}, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
 		}
-		return &models.SystemIntake{}, err
+		return nil, err
 	}
 	// This should cover all statuses that might have a related business case on it.
 	// In the future submitted will also need to be checked.
 	if intake.Status != models.SystemIntakeStatusDRAFT {
-		bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
-		if fetchErr != nil {
-			return &intake, nil
-		}
+		bizCaseID, _ := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 		intake.BusinessCaseID = bizCaseID
 	}
 	return &intake, nil
 }
 
+// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
+func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	intake, err := s.fetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: consider making this filtering behavior part of the services layer, or alternately
+	// make this explicitly separate behavior in the data layer that the services layer
+	// opts into
+	if intake.Status == models.SystemIntakeStatusARCHIVED {
+		return nil, &apperrors.ResourceNotFoundError{Err: sql.ErrNoRows, Resource: models.SystemIntake{}}
+	}
+	return intake, nil
+}
+
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.DB.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'ARCHIVED'", euaID)
+	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'ARCHIVED'", euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
@@ -187,6 +226,30 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 		}
 	}
 	return intakes, nil
+}
+
+func generateLifecyclePrefix(t time.Time, loc *time.Location) string {
+	return t.In(loc).Format("06002")
+}
+
+// GenerateLifecycleID returns what the next LCID is expected to be for the current date
+// 		The expected format is a 6-digit number in the form of "YYdddP" where
+// 			YY - the 2-digit YEAR
+// 			ddd - the 3-digit ORDINAL DATE, e.g. the number of days elapsed in the given year
+// 			P - the 1-digit count of how many LCIDs already generated for the given day
+// 		This routine assumes the LCIDs are being generated in Eastern Time Zone
+// 		(FYI - the "YYddd" construct is referred to as the "Julian Day" in mainframe
+// 		programmer circles, though this term seems to be a misappropriation of what
+// 		astronomers use to mean a count of days since 24 Nov in the year 4714 BC.)
+func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
+	prefix := generateLifecyclePrefix(s.clock.Now(), s.easternTZ)
+
+	countSQL := `SELECT COUNT(*) FROM system_intake WHERE lcid ~ $1;`
+	var count int
+	if err := s.db.Get(&count, countSQL, "^"+prefix); err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("%s%d", prefix, count), nil
 }
 
 // FetchSystemIntakeMetrics gets a metrics digest for system intake
@@ -231,7 +294,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	metrics := models.SystemIntakeMetrics{}
 
 	var startedResponse startedQueryResponse
-	err := s.DB.Get(
+	err := s.db.Get(
 		&startedResponse,
 		startedCountSQL,
 		&startTime,
@@ -244,7 +307,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	metrics.CompletedOfStarted = startedResponse.CompletedCount
 
 	var fundedResponse fundedQueryResponse
-	err = s.DB.Get(
+	err = s.db.Get(
 		&fundedResponse,
 		fundedCountSQL,
 		&startTime,

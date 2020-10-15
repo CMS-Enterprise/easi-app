@@ -11,8 +11,7 @@ import {
   postSystemIntake,
   reviewSystemIntake,
   saveSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake
+  storeSystemIntake
 } from 'types/routines';
 import { SystemIntakeState } from 'types/systemIntake';
 
@@ -20,7 +19,6 @@ const initialState: SystemIntakeState = {
   systemIntake: initialSystemIntakeForm,
   isLoading: null,
   isSaving: false,
-  isSubmitting: false,
   error: null
 };
 
@@ -118,26 +116,9 @@ function systemIntakeReducer(
         ...state,
         isLoading: false
       };
-    case submitSystemIntake.REQUEST:
-      return {
-        ...state,
-        isSubmitting: true,
-        error: null
-      };
-    case submitSystemIntake.FAILURE:
-      return {
-        ...state,
-        error: action.payload
-      };
-    case submitSystemIntake.FULFILL:
-      return {
-        ...state,
-        isSubmitting: false
-      };
     case reviewSystemIntake.REQUEST:
       return {
         ...state,
-        isSubmitting: true,
         error: null
       };
     case reviewSystemIntake.SUCCESS:
@@ -152,11 +133,6 @@ function systemIntakeReducer(
       return {
         ...state,
         error: action.payload
-      };
-    case reviewSystemIntake.FULFILL:
-      return {
-        ...state,
-        isSubmitting: false
       };
     case archiveSystemIntake.SUCCESS:
       return initialState;

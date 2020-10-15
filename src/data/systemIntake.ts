@@ -43,15 +43,28 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     isExpectingIncrease: '',
     expectedIncreaseAmount: ''
   },
+  contract: {
+    hasContract: '',
+    contractor: '',
+    vehicle: '',
+    startDate: {
+      month: '',
+      year: ''
+    },
+    endDate: {
+      month: '',
+      year: ''
+    }
+  },
   businessNeed: '',
   businessSolution: '',
   currentStage: '',
   needsEaSupport: null,
-  hasContract: '',
   grtReviewEmailBody: '',
   decidedAt: null,
   businessCaseId: null,
-  submittedAt: null
+  submittedAt: null,
+  lcid: ''
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -87,10 +100,16 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     solution: systemIntake.businessSolution,
     processStatus: systemIntake.currentStage,
     eaSupportRequest: systemIntake.needsEaSupport,
-    existingContract: systemIntake.hasContract,
+    existingContract: systemIntake.contract.hasContract,
     grtReviewEmailBody: systemIntake.grtReviewEmailBody,
     costIncrease: systemIntake.costs.isExpectingIncrease,
-    costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount
+    costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
+    contractor: systemIntake.contract.contractor,
+    contractVehicle: systemIntake.contract.vehicle,
+    contractStartMonth: systemIntake.contract.startDate.month,
+    contractStartYear: systemIntake.contract.startDate.year,
+    contractEndMonth: systemIntake.contract.endDate.month,
+    contractEndYear: systemIntake.contract.endDate.year
   };
 };
 
@@ -147,6 +166,19 @@ export const prepareSystemIntakeForApp = (
       isExpectingIncrease: systemIntake.costIncrease || '',
       expectedIncreaseAmount: systemIntake.costIncreaseAmount || ''
     },
+    contract: {
+      hasContract: systemIntake.existingContract || '',
+      contractor: systemIntake.contractor || '',
+      vehicle: systemIntake.contractVehicle || '',
+      startDate: {
+        month: systemIntake.contractStartMonth || '',
+        year: systemIntake.contractStartYear || ''
+      },
+      endDate: {
+        month: systemIntake.contractEndMonth || '',
+        year: systemIntake.contractEndYear || ''
+      }
+    },
     businessNeed: systemIntake.businessNeed || '',
     businessSolution: systemIntake.solution || '',
     currentStage: systemIntake.processStatus || '',
@@ -154,7 +186,6 @@ export const prepareSystemIntakeForApp = (
       systemIntake.eaSupportRequest === null
         ? null
         : systemIntake.eaSupportRequest,
-    hasContract: systemIntake.existingContract || '',
     grtReviewEmailBody: systemIntake.grtReviewEmailBody || '',
     decidedAt: systemIntake.decidedAt
       ? DateTime.fromISO(systemIntake.decidedAt)
@@ -162,6 +193,7 @@ export const prepareSystemIntakeForApp = (
     businessCaseId: systemIntake.businessCase || null,
     submittedAt: systemIntake.submittedAt
       ? DateTime.fromISO(systemIntake.submittedAt)
-      : null
+      : null,
+    lcid: systemIntake.lcid || ''
   };
 };

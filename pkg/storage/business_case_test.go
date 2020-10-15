@@ -36,7 +36,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.BusinessCase{}, fetched)
+		s.Nil(fetched)
 	})
 
 	s.Run("does not fetch archived business case", func() {
@@ -52,7 +52,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.BusinessCase{}, fetched)
+		s.Nil(fetched)
 	})
 }
 
@@ -109,8 +109,11 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
-		intake2.Status = models.SystemIntakeStatusARCHIVED
+		intake2.Status = models.SystemIntakeStatusDRAFT
 		_, err = s.store.CreateSystemIntake(ctx, &intake2)
+		s.NoError(err)
+		intake2.Status = models.SystemIntakeStatusARCHIVED
+		_, err = s.store.UpdateSystemIntake(ctx, &intake2)
 		s.NoError(err)
 
 		businessCase := testhelpers.NewBusinessCase()

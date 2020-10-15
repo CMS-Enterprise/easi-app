@@ -16,7 +16,7 @@ import (
 )
 
 const insertBasicIntakeSQL = "INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)"
-const insertRelatedBizCaseSQL = `INSERT INTO business_case (id, eua_user_id, status, requester, system_intake) 
+const insertRelatedBizCaseSQL = `INSERT INTO business_case (id, eua_user_id, status, requester, system_intake)
 		VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
 
 func (s StoreTestSuite) TestCreateSystemIntake() {
@@ -62,7 +62,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 			partialIntake := models.SystemIntake{
 				Status: models.SystemIntakeStatusDRAFT,
 			}
-			partialIntake.EUAUserID = "F"
+			partialIntake.EUAUserID = tc
 
 			_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
 
@@ -82,7 +82,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 
 		s.Error(err)
 		s.Equal("pq: invalid input value for enum system_intake_status: \"fakeStatus\"", err.Error())
-		s.Equal(&models.SystemIntake{}, created)
+		s.Nil(created)
 	})
 }
 
@@ -103,7 +103,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 		updated, err := s.store.UpdateSystemIntake(ctx, intake)
 		s.NoError(err, "failed to update system intake")
-		s.Equal(intake, updated)
+		s.Equal(intake.ISSO, updated.ISSO)
 	})
 
 	s.Run("EUA ID will not update", func() {
@@ -131,6 +131,216 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 		s.Equal(originalEUA, updated.EUAUserID)
 	})
+
+	s.Run("Lifecycle fields only upon update", func() {
+		now := time.Now()
+		originalIntake := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+
+			// These fields should NOT be written during a create
+			LifecycleID:        null.StringFrom("ABCDEF"),
+			LifecycleExpiresAt: &now,
+			LifecycleScope:     null.StringFrom("ABCDEF"),
+			LifecycleNextSteps: null.StringFrom("ABCDEF"),
+		}
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+		s.Empty(partial.LifecycleID)
+		s.Empty(partial.LifecycleExpiresAt)
+		s.Empty(partial.LifecycleScope)
+		s.Empty(partial.LifecycleNextSteps)
+
+		// Update
+		lcid := "200110" // first LCID issued on 2020-01-11
+		content1 := "ABC"
+		content2 := "XYZ"
+		partial.LifecycleID = null.StringFrom(lcid)
+		partial.LifecycleExpiresAt = &now
+		partial.LifecycleScope = null.StringFrom(content1)
+		partial.LifecycleNextSteps = null.StringFrom(content2)
+
+		_, err = s.store.UpdateSystemIntake(ctx, partial)
+		s.NoError(err, "failed to update system intake")
+
+		updated, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		s.Equal(lcid, updated.LifecycleID.String)
+		s.NotEmpty(updated.LifecycleExpiresAt)
+		s.Equal(content1, updated.LifecycleScope.String)
+		s.Equal(content2, updated.LifecycleNextSteps.String)
+	})
+
+	s.Run("Update contract details information", func() {
+		originalIntake := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+
+			ProcessStatus:      null.StringFrom("ABCDEF"),
+			ExistingFunding:    null.BoolFrom(false),
+			FundingSource:      null.StringFrom(""),
+			CostIncrease:       null.StringFrom("YES"),
+			CostIncreaseAmount: null.StringFrom("$10 million"),
+			ExistingContract:   null.StringFrom("NOT_NEEDED"),
+		}
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		// Update
+		processStatus := "Just an idea"
+		existingFunding := true
+		fundingSource := "123456"
+		existingContract := "IN_PROGRESS"
+		contractor := "TrussWorks, Inc."
+		contractVehicle := "Fixed price contract"
+		contractStartMonth := "1"
+		contractStartYear := "2020"
+		contractEndMonth := "12"
+		contractEndYear := "2021"
+		partial.ProcessStatus = null.StringFrom(processStatus)
+		partial.ExistingFunding = null.BoolFrom(existingFunding)
+		partial.FundingSource = null.StringFrom(fundingSource)
+		partial.ExistingContract = null.StringFrom(existingContract)
+		partial.Contractor = null.StringFrom(contractor)
+		partial.ContractVehicle = null.StringFrom(contractVehicle)
+		partial.ContractStartMonth = null.StringFrom(contractStartMonth)
+		partial.ContractStartYear = null.StringFrom(contractStartYear)
+		partial.ContractEndMonth = null.StringFrom(contractEndMonth)
+		partial.ContractEndYear = null.StringFrom(contractEndYear)
+
+		_, err = s.store.UpdateSystemIntake(ctx, partial)
+		s.NoError(err, "failed to update system intake")
+
+		updated, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		s.Equal(processStatus, updated.ProcessStatus.String)
+		s.Equal(existingFunding, updated.ExistingFunding.Bool)
+		s.Equal(fundingSource, updated.FundingSource.String)
+		s.Equal(existingContract, updated.ExistingContract.String)
+		s.Equal(contractor, updated.Contractor.String)
+		s.Equal(contractVehicle, updated.ContractVehicle.String)
+		s.Equal(contractStartMonth, updated.ContractStartMonth.String)
+		s.Equal(contractStartYear, updated.ContractStartYear.String)
+		s.Equal(contractEndMonth, updated.ContractEndMonth.String)
+		s.Equal(contractEndYear, updated.ContractEndYear.String)
+	})
+
+	s.Run("LifecycleID format", func() {
+		originalIntake := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "Test requester",
+		}
+
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		fails := []string{
+			"20001",   // short
+			"2000110", // long
+			"20001A",  // non-numeric
+		}
+
+		for _, fail := range fails {
+			partial.LifecycleID = null.StringFrom(fail)
+			_, err = s.store.UpdateSystemIntake(ctx, partial)
+			s.Error(err, "expected lcid format error")
+		}
+	})
+
+	s.Run("exhaust lifecycleID generation", func() {
+		for ix := 0; ix < 10; ix++ {
+			original := models.SystemIntake{
+				EUAUserID: testhelpers.RandomEUAID(),
+				Status:    models.SystemIntakeStatusDRAFT,
+				Requester: fmt.Sprintf("LCID Exhaust %d", ix),
+			}
+
+			_, err := s.store.CreateSystemIntake(ctx, &original)
+			s.NoError(err)
+
+			partial, err := s.store.FetchSystemIntakeByID(ctx, original.ID)
+			s.NoError(err)
+
+			lcid, err := s.store.GenerateLifecycleID(ctx)
+			s.NoError(err)
+
+			partial.LifecycleID = null.StringFrom(lcid)
+			_, err = s.store.UpdateSystemIntake(ctx, partial)
+			s.NoError(err)
+		}
+
+		// the 11th attempt should generate an LCID that looks like "2136510" (~"YYddd10"),
+		// and this should violate the db constraint of a 6-digit LCID
+		original := models.SystemIntake{
+			EUAUserID: testhelpers.RandomEUAID(),
+			Status:    models.SystemIntakeStatusDRAFT,
+			Requester: "LCID Exhaust 10",
+		}
+
+		_, err := s.store.CreateSystemIntake(ctx, &original)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, original.ID)
+		s.NoError(err)
+
+		lcid, err := s.store.GenerateLifecycleID(ctx)
+		s.NoError(err)
+
+		partial.LifecycleID = null.StringFrom(lcid)
+		_, err = s.store.UpdateSystemIntake(ctx, partial)
+		s.Error(err)
+	})
+
+}
+
+func (s StoreTestSuite) TestLifecyclePrefixBoundaries() {
+	easternTZ, err := time.LoadLocation("America/New_York")
+	if err != nil {
+		s.Fail("couldn't load EST: %v\n", err)
+	}
+
+	testCases := map[string]struct {
+		ts       time.Time
+		expected string
+	}{
+		"still previous year": {
+			ts:       time.Date(2011, time.January, 1, 0, 1, 0, 0, time.UTC),
+			expected: "10365",
+		},
+		"very beginning of year": {
+			ts:       time.Date(2013, time.January, 1, 0, 0, 1, 0, easternTZ),
+			expected: "13001",
+		},
+		"very end of year": {
+			ts:       time.Date(2013, time.December, 31, 23, 59, 0, 0, easternTZ),
+			expected: "13365",
+		},
+		"acceptance criteria": {
+			ts:       time.Date(2020, time.September, 29, 12, 1, 0, 0, easternTZ),
+			expected: "20273",
+		},
+	}
+
+	for name, tc := range testCases {
+		s.Run(fmt.Sprintf("%s %s", name, tc.ts), func() {
+			out := generateLifecyclePrefix(tc.ts, easternTZ)
+			s.Equal(tc.expected, out, tc.ts)
+		})
+	}
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakeByID() {
@@ -158,7 +368,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.SystemIntake{}, fetched)
+		s.Nil(fetched)
 	})
 
 	s.Run("fetches biz case id if exists and intake is past draft status", func() {
@@ -197,7 +407,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Equal(&models.SystemIntake{}, fetched)
+		s.Nil(fetched)
 	})
 }
 

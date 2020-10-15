@@ -50,6 +50,12 @@ type SystemIntake struct {
 	ExistingContract        null.String        `json:"existingContract" db:"existing_contract"`
 	CostIncrease            null.String        `json:"costIncrease" db:"cost_increase"`
 	CostIncreaseAmount      null.String        `json:"costIncreaseAmount" db:"cost_increase_amount"`
+	Contractor              null.String        `json:"contractor" db:"contractor"`
+	ContractVehicle         null.String        `json:"contractVehicle" db:"contract_vehicle"`
+	ContractStartMonth      null.String        `json:"contractStartMonth" db:"contract_start_month"`
+	ContractStartYear       null.String        `json:"contractStartYear" db:"contract_start_year"`
+	ContractEndMonth        null.String        `json:"contractEndMonth" db:"contract_end_month"`
+	ContractEndYear         null.String        `json:"contractEndYear" db:"contract_end_year"`
 	CreatedAt               *time.Time         `json:"createdAt" db:"created_at"`
 	UpdatedAt               *time.Time         `json:"updatedAt" db:"updated_at"`
 	SubmittedAt             *time.Time         `json:"submittedAt" db:"submitted_at"`
@@ -59,6 +65,10 @@ type SystemIntake struct {
 	GrtReviewEmailBody      null.String        `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 	RequesterEmailAddress   null.String        `json:"requesterEmailAddress" db:"requester_email_address"`
 	BusinessCaseID          *uuid.UUID         `json:"businessCase"`
+	LifecycleID             null.String        `json:"lcid" db:"lcid"`
+	LifecycleExpiresAt      *time.Time         `json:"lcidExpiresAt" db:"lcid_expires_at"`
+	LifecycleScope          null.String        `json:"lcidScope" db:"lcid_scope"`
+	LifecycleNextSteps      null.String        `json:"lcidNextSteps" db:"lcid_next_steps"`
 }
 
 // SystemIntakes is a list of System Intakes

@@ -27,17 +27,18 @@ describe('The Business Case Form', () => {
   before(() => {
     cy.login();
     cy.wait(1000);
-    cy.saveLocalStorage();
-    cy.getAccessToken().then(accessToken => {
-      cy.request({
-        method: 'POST',
-        url: Cypress.env('systemIntakeApi'),
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: systemIntake
-      }).then(response => {
-        intakeId = response.body.id;
+    cy.saveLocalStorage().then(() => {
+      cy.getAccessToken().then(accessToken => {
+        cy.request({
+          method: 'POST',
+          url: Cypress.env('systemIntakeApi'),
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          },
+          body: systemIntake
+        }).then(response => {
+          intakeId = response.body.id;
+        });
       });
     });
   });
