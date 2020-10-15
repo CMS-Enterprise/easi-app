@@ -11,7 +11,7 @@ export const openIntakeStatuses = [
   'NEED_BIZ_CASE',
   'BIZ_CASE_DRAFT',
   'BIZ_CASE_DRAFT_SUBMITTED',
-  'BIZ_CASE_CHANGES_NEDED',
+  'BIZ_CASE_CHANGES_NEEDED',
   'BIZ_CASE_FINAL_NEEDED',
   'BIZ_CASE_FINAL_SUBMITTED',
   'READY_FOR_GRT',
@@ -19,11 +19,11 @@ export const openIntakeStatuses = [
 ];
 
 export const closedIntakeStatuses = [
-  'DRAFT',
-  'SUBMITTED',
-  'ACCEPTED',
-  'APPROVED',
-  'CLOSED'
+  'LCID_ISSUED',
+  'WITHDRAWN',
+  'NOT_IT_REQUEST',
+  'NOT_APPROVED',
+  'NO_GOVERNANCE'
 ];
 
 export const oldIntakeStatuses = [

@@ -5,7 +5,6 @@ import { mount } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
-import { closedIntakeStatuses, openIntakeStatuses } from 'types/systemIntake';
 
 import GovernanceReviewTeam from './index';
 
@@ -33,10 +32,7 @@ describe('The GRT Review page', () => {
       systemIntake: {
         systemIntake: {
           ...initialSystemIntakeForm,
-          status:
-            openIntakeStatuses[
-              Math.floor(Math.random() * openIntakeStatuses.length)
-            ]
+          status: 'INTAKE_SUBMITTED'
         }
       },
       businessCase: {
@@ -60,10 +56,7 @@ describe('The GRT Review page', () => {
       systemIntake: {
         systemIntake: {
           ...initialSystemIntakeForm,
-          status:
-            closedIntakeStatuses[
-              Math.floor(Math.random() * closedIntakeStatuses.length)
-            ]
+          status: 'LCID_ISSUED'
         }
       },
       businessCase: {
@@ -89,10 +82,6 @@ describe('The GRT Review page', () => {
       systemIntake: {
         systemIntake: {
           ...initialSystemIntakeForm,
-          status:
-            closedIntakeStatuses[
-              Math.floor(Math.random() * closedIntakeStatuses.length)
-            ],
           lcid: '12345'
         }
       },
