@@ -348,3 +348,84 @@ func NewFetchSystemIntakeByID(
 		return intake, nil
 	}
 }
+
+// NewAuthorizeRequireGRTJobCode returns a function
+// that authorizes a user as being a member of the
+// GRT (Governance Review Team)
+func NewAuthorizeRequireGRTJobCode() func(context.Context, *models.SystemIntake) (bool, error) {
+	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		logger := appcontext.ZLogger(ctx)
+		principal := appcontext.Principal(ctx)
+		if !principal.AllowGRT() {
+			logger.Error("not a member of the GRT")
+			return false, nil
+		}
+		return true, nil
+	}
+}
+
+// NewUpdateLifecycleFields provides a way to update several of the fields
+// associated with assigning a LifecycleID
+func NewUpdateLifecycleFields(
+	config Config,
+	authorize func(context.Context, *models.SystemIntake) (bool, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	generateLCID func(context.Context) (string, error),
+) func(context.Context, *models.SystemIntake) error {
+	return func(ctx context.Context, intake *models.SystemIntake) error {
+		existing, err := fetch(ctx, intake.ID)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Operation: apperrors.QueryFetch,
+				Model:     existing,
+			}
+		}
+
+		ok, err := authorize(ctx, existing)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return &apperrors.UnauthorizedError{Err: err}
+		}
+
+		// don't allow overwriting an existing LCID
+		if existing.LifecycleID.ValueOrZero() != "" {
+			return &apperrors.ResourceConflictError{
+				Err:        errors.New("lifecycle id already exists"),
+				Resource:   models.SystemIntake{},
+				ResourceID: intake.ID.String(),
+			}
+		}
+
+		// we only want to bring over the fields specifically
+		// dealing with lifecycleID information
+		updatedTime := config.clock.Now()
+		existing.UpdatedAt = &updatedTime
+		existing.LifecycleID = intake.LifecycleID
+		existing.LifecycleExpiresAt = intake.LifecycleExpiresAt
+		existing.LifecycleScope = intake.LifecycleScope
+		existing.LifecycleNextSteps = intake.LifecycleNextSteps
+
+		// if a LCID wasn't passed in, we generate one
+		if existing.LifecycleID.ValueOrZero() == "" {
+			lcid, gErr := generateLCID(ctx)
+			if gErr != nil {
+				return gErr
+			}
+			existing.LifecycleID = null.StringFrom(lcid)
+		}
+
+		_, err = update(ctx, existing)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
+			}
+		}
+		return nil
+	}
+}
