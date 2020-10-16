@@ -99,11 +99,18 @@ jobs:
           FLYWAY_URL: jdbc:postgresql://localhost/postgres
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v1-go-mod-sources-{{ checksum "go.sum" }}
       - run:
           name: Run easi app tests
           command: |
             ./scripts/build_app
             ./scripts/testsuite
+      - save_cache:
+          key: v1-go-mod-sources-{{ checksum "go.sum" }}
+          paths:
+            - /go/pkg/mod
       - run:
           name: Announce failure
           command: |
