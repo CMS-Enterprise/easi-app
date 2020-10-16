@@ -23,6 +23,7 @@ import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
+import UserInfoWrapper from 'views/UserInfoWrapper';
 
 import './index.scss';
 
@@ -134,9 +135,11 @@ const App = () => {
       </button>
       <BrowserRouter>
         <AuthenticationWrapper>
-          <TimeOutWrapper>
-            <AppRoutes />
-          </TimeOutWrapper>
+          <UserInfoWrapper>
+            <TimeOutWrapper>
+              <AppRoutes />
+            </TimeOutWrapper>
+          </UserInfoWrapper>
         </AuthenticationWrapper>
       </BrowserRouter>
     </FlagProvider>
