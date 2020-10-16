@@ -57,7 +57,6 @@ jobs:
           AWS_DEFAULT_REGION: us-west-2
     steps:
       - checkout
-      - setup_remote_docker
       - run:
           name: Build the flyway migrations for testing
           command: |
@@ -101,16 +100,18 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-go-mod-sources-{{ checksum "go.sum" }}
+            - v2-go-mod-sources-{{ checksum "go.sum" }}
       - run:
           name: Run easi app tests
           command: |
+            ls -la ~/go/
+            ls -la /go/
             ./scripts/build_app
             ./scripts/testsuite
       - save_cache:
-          key: v1-go-mod-sources-{{ checksum "go.sum" }}
+          key: v2-go-mod-sources-{{ checksum "go.sum" }}
           paths:
-            - /go/pkg/mod
+            - ~/go/pkg/mod
       - run:
           name: Announce failure
           command: |
@@ -241,7 +242,7 @@ jobs:
       - setup_remote_docker
       - restore_cache:
           keys:
-            - v1-go-mod-sources-{{ checksum "go.sum" }}
+            - v2-go-mod-sources-{{ checksum "go.sum" }}
       - run:
           name: Build the app and push to ECR
           command: |
@@ -251,9 +252,9 @@ jobs:
           command: |
             ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1"
       - save_cache:
-          key: v1-go-mod-sources-{{ checksum "go.sum" }}
+          key: v2-go-mod-sources-{{ checksum "go.sum" }}
           paths:
-            - /go/pkg/mod
+            - ~/go/pkg/mod
       - run:
           name: Announce failure
           command: |
