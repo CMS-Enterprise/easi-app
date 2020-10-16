@@ -15,22 +15,22 @@ type HeaderProps = {
 };
 
 export const Header = ({ children }: HeaderProps) => {
-  // const { authState, authService } = useOktaAuth();
-  const authState = {
-    isAuthenticated: true
-  };
+  const { authState, authService } = useOktaAuth();
+  // const authState = {
+  //   isAuthenticated: true
+  // };
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const dropdownNode = useRef<any>();
 
-  // useEffect(() => {
-  //   if (authState.isAuthenticated) {
-  //     authService.getUser().then((info: any) => {
-  //       setUserName(info.name);
-  //     });
-  //   }
-  // }, [authState, authService]);
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      authService.getUser().then((info: any) => {
+        setUserName(info.name);
+      });
+    }
+  }, [authState, authService]);
 
   const handleClick = (e: Event) => {
     if (
@@ -99,7 +99,7 @@ export const Header = ({ children }: HeaderProps) => {
                   </UserAction>
                   <UserAction
                     onClick={() => {
-                      // authService.logout();
+                      authService.logout();
                     }}
                   >
                     {t('header:signOut')}
