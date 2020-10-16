@@ -462,8 +462,10 @@ workflows:
   compile:
     jobs:
       - pre_deps
-      - lint
       - build_db_migrate_image
+      - lint:
+          requires:
+            - pre_deps
       - client_test:
           requires:
             - pre_deps
