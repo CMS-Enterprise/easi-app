@@ -47,12 +47,15 @@ axios.interceptors.request.use(
     if (
       newConfig &&
       newConfig.url &&
-      newConfig.url.includes(process.env.REACT_APP_API_ADDRESS || ' ') &&
-      window.localStorage['okta-token-storage']
+      newConfig.url.includes(process.env.REACT_APP_API_ADDRESS || ' ')
     ) {
-      const json = JSON.parse(window.localStorage['okta-token-storage']);
-      if (json.accessToken) {
-        newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
+      if (window.localStorage['okta-token-storage']) {
+        const json = JSON.parse(window.localStorage['okta-token-storage']);
+        if (json.accessToken) {
+          newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
+        }
+      } else if (window.localStorage['dev-user-config']) {
+        newConfig.headers.Authorization = `Bearer ${window.localStorage['dev-user-config']}`;
       }
     }
     return newConfig;
