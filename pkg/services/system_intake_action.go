@@ -17,9 +17,9 @@ import (
 func NewCreateSystemIntakeAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	submit func(context.Context, *models.SystemIntake) error,
-) func(context.Context, uuid.UUID, models.ActionType) error {
-	return func(ctx context.Context, intakeID uuid.UUID, actionType models.ActionType) error {
-		intake, fetchErr := fetch(ctx, intakeID)
+) func(context.Context, *models.Action) error {
+	return func(ctx context.Context, action *models.Action) error {
+		intake, fetchErr := fetch(ctx, *action.IntakeID)
 		if fetchErr != nil {
 			return &apperrors.QueryError{
 				Err:       fetchErr,
@@ -28,7 +28,7 @@ func NewCreateSystemIntakeAction(
 			}
 		}
 
-		switch actionType {
+		switch action.ActionType {
 		case models.ActionTypeSUBMIT:
 			return submit(ctx, intake)
 		default:
