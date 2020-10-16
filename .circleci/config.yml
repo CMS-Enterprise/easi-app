@@ -168,9 +168,6 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
-      - restore_cache:
-          keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
@@ -184,10 +181,6 @@ jobs:
       - run:
           name: Install go modules
           command: go mod download
-      - save_cache:
-          key: pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
-          paths:
-            - ~/.cache/pre-commit
       - save_cache:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
