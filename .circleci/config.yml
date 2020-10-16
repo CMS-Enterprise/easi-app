@@ -68,7 +68,7 @@ jobs:
             ./scripts/circleci-announce-broken-branch
           when: on_fail
 
-  test:
+  server_test:
     docker:
       - image: *circleci_docker_primary
         environment:
@@ -161,17 +161,9 @@ jobs:
             ./scripts/circleci-announce-broken-branch
           when: on_fail
 
-  lint:
+  pre_deps:
     docker:
       - image: *circleci_docker_primary
-        environment:
-          REACT_APP_API_ADDRESS: http://localhost:8080/api/v1
-          REACT_APP_APP_ENV: test
-          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
-          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
-          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
-          REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
     steps:
       - checkout
       - restore_cache:
@@ -190,14 +182,11 @@ jobs:
           name: Install yarn dependencies
           command: yarn install
       - run:
+          name: Install go modules
+          command: go mod download
+      - run:
           name: Run pre-commit checks
           command: pre-commit run --all-files --show-diff-on-failure
-      - run:
-          name: Run Frontend Tests
-          command: yarn run test
-      - run:
-          name: Build Frontend Code
-          command: yarn run build
       - save_cache:
           key: pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
           paths:
@@ -214,6 +203,45 @@ jobs:
           key: v2-go-mod-sources-{{ checksum "go.sum" }}
           paths:
             - ~/go/pkg/mod
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
+
+  client_test:
+    docker:
+      - image: *circleci_docker_primary
+        environment:
+          REACT_APP_API_ADDRESS: http://localhost:8080/api/v1
+          REACT_APP_APP_ENV: test
+          REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
+          REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
+          REACT_APP_OKTA_SERVER_ID: aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_ISSUER: https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
+          REACT_APP_OKTA_REDIRECT_URI: http://localhost:3000/implicit/callback
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Run Frontend Tests
+          command: yarn run test
+      - run:
+          name: Build Frontend Code
+          command: yarn run build
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
       - run:
           name: Announce failure
           command: |
@@ -401,15 +429,18 @@ workflows:
   version: 2
   compile:
     jobs:
+      - pre_deps
       - build_db_migrate_image
-      - lint
-      - test:
+      - client_test:
           requires:
+            - pre_deps
+      - server_test:
+          requires:
+            - pre_deps
             - build_db_migrate_image
       - build_tag_push:
           requires:
-            - lint
-            - test
+            - server_test
       - integration_tests:
           requires:
             - build_tag_push
