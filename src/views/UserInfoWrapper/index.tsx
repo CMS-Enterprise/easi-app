@@ -15,7 +15,7 @@ const UserInfoWrapper = ({ children }: UserInfoWrapper) => {
   const storeUserInfo = async () => {
     const tokenManager = await authService.getTokenManager();
     const accessToken = await tokenManager.get('accessToken');
-    const groups = (accessToken && accessToken.groups) || ['sara-test-token'];
+    const groups = (accessToken && accessToken.groups) || [];
     dispatch(setUserGroups(groups));
   };
 
