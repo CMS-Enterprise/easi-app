@@ -1,7 +1,9 @@
 package local
 
 import (
+	"encoding/json"
 	"net/http"
+	"strings"
 
 	"go.uber.org/zap"
 
@@ -9,14 +11,39 @@ import (
 	"github.com/cmsgov/easi-app/pkg/authn"
 )
 
-// If you're developing interfaces with LDAP, you may need to change this to your own EUA ID for testing purposes
-const testEUAID = "ABCD"
+// DevUserConfig is the set of values that can be passed in a request header
+type DevUserConfig struct {
+	EUA      string   `json:"eua"`
+	JobCodes []string `json:"jobCodes"`
+}
 
 func authorizeMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logger.Info("Using local authorization middleware and populating EUA ID")
-		ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{EUAID: testEUAID, JobCodeEASi: true})
-		next.ServeHTTP(w, r.WithContext(ctx))
+		logger.Info("Using local authorization middleware")
+
+		if len(r.Header["Authorization"]) == 0 {
+			logger.Info("No Authentication header present")
+			next.ServeHTTP(w, r)
+		} else {
+			tokenParts := strings.Split(r.Header["Authorization"][0], "Bearer ")
+			if len(tokenParts) < 2 {
+				logger.Fatal("invalid Bearer in auth header")
+			}
+			devUserConfigJSON := tokenParts[1]
+			if devUserConfigJSON == "" {
+				logger.Fatal("empty dev user config JSON")
+			}
+
+			config := DevUserConfig{}
+			if parseErr := json.Unmarshal([]byte(devUserConfigJSON), &config); parseErr != nil {
+				logger.Fatal("could not parse dev user config")
+
+			}
+
+			logger.Info("using dev user config", zap.Any("config", config))
+			ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{EUAID: config.EUA, JobCodeEASi: true})
+			next.ServeHTTP(w, r.WithContext(ctx))
+		}
 	})
 }
 
