@@ -57,6 +57,7 @@ jobs:
           AWS_DEFAULT_REGION: us-west-2
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: Build the flyway migrations for testing
           command: |
@@ -104,8 +105,6 @@ jobs:
       - run:
           name: Run easi app tests
           command: |
-            ls -la ~/go/
-            ls -la /go/
             ./scripts/build_app
             ./scripts/testsuite
       - save_cache:
