@@ -23,5 +23,6 @@ type Action struct {
 	ActorName      string     `json:"actorName" db:"actor_name"`
 	ActorEmail     string     `json:"actorEmail" db:"actor_email"`
 	ActorEUAUserID string     `json:"actorEuaUserId" db:"actor_eua_user_id"`
+	Feedback       string
 	CreatedAt      *time.Time `json:"createdAt" db:"created_at"`
 }
