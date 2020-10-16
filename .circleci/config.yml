@@ -183,6 +183,9 @@ jobs:
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v2-go-mod-sources-{{ checksum "go.sum" }}
       - run:
           name: Install yarn dependencies
           command: yarn install
@@ -207,6 +210,10 @@ jobs:
           key: v1-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
+      - save_cache:
+          key: v2-go-mod-sources-{{ checksum "go.sum" }}
+          paths:
+            - ~/go/pkg/mod
       - run:
           name: Announce failure
           command: |
