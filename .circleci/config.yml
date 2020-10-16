@@ -443,6 +443,7 @@ workflows:
             - server_test
       - integration_tests:
           requires:
+            - client_test
             - build_tag_push
       - hold_dev:
           type: approval
