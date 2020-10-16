@@ -15,6 +15,8 @@ import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
 
+import ActionTypes from './Actions/ActionTypes';
+import Actions from './Actions';
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
 
@@ -173,7 +175,12 @@ const GovernanceReviewTeam = () => {
             />
             <Route
               path="/governance-review-team/:systemId/actions"
-              render={() => <h1>Actions on intake request</h1>}
+              exact
+              render={() => <Actions businessCase={businessCase} />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/:actionType"
+              render={() => <ActionTypes />}
             />
           </section>
         </section>
