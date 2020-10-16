@@ -37,7 +37,9 @@ const GovernanceReviewTeam = () => {
   );
 
   const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const authorizedToView = userGroups.includes('EASI_D_GOVTEAM');
+  const authorizedToView =
+    userGroups.includes('EASI_D_GOVTEAM') ||
+    userGroups.includes('EASI_P_GOVTEAM');
 
   const userGroupsSet = useSelector(
     (state: AppState) => state.auth.userGroupsSet
