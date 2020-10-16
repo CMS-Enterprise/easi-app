@@ -383,6 +383,12 @@ jobs:
           APP_ENV: impl
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -410,6 +416,14 @@ jobs:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
       - run:
           name: Announce failure
           command: |
@@ -424,6 +438,12 @@ jobs:
           APP_ENV: prod
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -451,6 +471,14 @@ jobs:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
       - run:
           name: Announce failure
           command: |
