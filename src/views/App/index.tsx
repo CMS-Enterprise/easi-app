@@ -9,7 +9,6 @@ import BusinessCase from 'views/BusinessCase';
 import Cookies from 'views/Cookies';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
-import AllRequests from 'views/GovernanceReviewTeam/AllRequests';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
@@ -19,6 +18,7 @@ import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
+import RequestRepository from 'views/RequestRepository';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TermsAndConditions from 'views/TermsAndConditions';
@@ -51,7 +51,7 @@ const AppRoutes = () => {
         <SecureRoute
           path="/governance-review-team/all"
           exact
-          component={AllRequests}
+          component={RequestRepository}
         />
       )}
 
