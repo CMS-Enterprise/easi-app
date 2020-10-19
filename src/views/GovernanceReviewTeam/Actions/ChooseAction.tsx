@@ -5,11 +5,11 @@ import { Button } from '@trussworks/react-uswds';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import { BusinessCaseModel } from 'types/businessCase';
 
-type ActionsProps = {
+type ChooseActionProps = {
   businessCase: BusinessCaseModel;
 };
 
-const Actions = ({ businessCase }: ActionsProps) => {
+const ChooseAction = ({ businessCase }: ChooseActionProps) => {
   const history = useHistory();
 
   const businessCaseExists = !!businessCase.id;
@@ -68,4 +68,4 @@ const Actions = ({ businessCase }: ActionsProps) => {
   );
 };
 
-export default Actions;
+export default ChooseAction;
