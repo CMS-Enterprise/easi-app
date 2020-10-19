@@ -20,13 +20,15 @@ const Actions = ({ businessCase }: ActionsProps) => {
 
   const onSubmit = () => history.push(`actions/${actionRoute}`);
 
+  const radioGroupName = 'Available Actions';
+
   const NotAnITRequest = (
     <RadioField
       key="not-an-it-request"
       id="not-an-it-request"
       inline={false}
       label="Not an IT request"
-      name="Not an IT request"
+      name={radioGroupName}
       value="not-an-it-request"
       onChange={onChange}
       checked={actionRoute === 'not-an-it-request'}
@@ -39,7 +41,7 @@ const Actions = ({ businessCase }: ActionsProps) => {
       id="test-route"
       inline={false}
       label="Test Action"
-      name="Test Action"
+      name={radioGroupName}
       value="test-route"
       onChange={onChange}
       checked={actionRoute === 'test-route'}
