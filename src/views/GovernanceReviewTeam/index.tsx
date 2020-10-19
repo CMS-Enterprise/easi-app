@@ -15,8 +15,8 @@ import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
 
-import ActionTypes from './Actions/ActionTypes';
-import Actions from './Actions';
+import ChooseAction from './Actions/ChooseAction';
+import SubmitAction from './Actions/SubmitAction';
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
 
@@ -176,11 +176,22 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/actions"
               exact
-              render={() => <Actions businessCase={businessCase} />}
+              render={() => <ChooseAction businessCase={businessCase} />}
             />
             <Route
-              path="/governance-review-team/:systemId/actions/:actionType"
-              render={() => <ActionTypes />}
+              path="/governance-review-team/:systemId/actions/not-an-it-request"
+              render={() => (
+                <SubmitAction
+                  action="not-an-it-request"
+                  actionName="Not and IT Request"
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/test-route"
+              render={() => (
+                <SubmitAction action="test-action" actionName="Test Action" />
+              )}
             />
           </section>
         </section>
