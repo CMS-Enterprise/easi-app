@@ -25,5 +25,6 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0018](0018-integration-tests-third-party-apis.md) - Mock third-party APIs in CI/CD integration tests
 - [ADR-0019](0019-use-1password-for-sharing-secrets.md) - Use 1Password for sharing secrets
 - [ADR-0020](0020-do-not-implement-state-machine.md) - Do not implement state machine to handle transitions in Services
+- [ADR-0021](0021-audit-logging.md) - Audit Logging
 
 <!-- adrlogstop -->
