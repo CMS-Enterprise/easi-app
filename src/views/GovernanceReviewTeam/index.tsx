@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Route, useHistory, useParams } from 'react-router-dom';
+import { Link, Route, useParams } from 'react-router-dom';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
@@ -14,6 +14,7 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
+import NotFoundPartial from 'views/NotFound';
 
 import ChooseAction from './Actions/ChooseAction';
 import SubmitAction from './Actions/SubmitAction';
@@ -25,7 +26,6 @@ import './index.scss';
 const GovernanceReviewTeam = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
-  const history = useHistory();
   const { systemId, activePage } = useParams();
 
   const systemIntake = useSelector(
@@ -44,12 +44,6 @@ const GovernanceReviewTeam = () => {
   const userGroupsSet = useSelector(
     (state: AppState) => state.auth.userGroupsSet
   );
-
-  useEffect(() => {
-    if (userGroupsSet && !authorizedToView) {
-      history.push('/404');
-    }
-  }, [history, userGroupsSet, authorizedToView]);
 
   useEffect(() => {
     dispatch(fetchSystemIntake(systemId));
@@ -74,135 +68,156 @@ const GovernanceReviewTeam = () => {
       'easi-grt__nav-link--active': page === activePage
     });
 
+  if (!userGroupsSet) {
+    // TODO: Use some kind of loading indicator
+    // Don't show anything until we can do a check of permissions
+    return null;
+  }
+
+  if (userGroupsSet && !authorizedToView) {
+    return <NotFoundPartial />;
+  }
+
   return (
-    userGroupsSet &&
-    authorizedToView && (
-      <PageWrapper className="easi-grt">
-        <Header />
-        <MainContent>
-          <section className="easi-grt__request-summary">
-            <div className="grid-container padding-y-2">
-              <BreadcrumbNav>
-                <li>
-                  <Link className="text-white" to="/">
-                    Home
-                  </Link>
-                  <i className="fa fa-angle-right margin-x-05" aria-hidden />
-                </li>
-                <li>{systemIntake.requestName}</li>
-              </BreadcrumbNav>
-              <dl className="easi-grt__request-info">
-                <div>
-                  <dt>{t('intake:fields.projectName')}</dt>
-                  <dd>{systemIntake.requestName}</dd>
+    <PageWrapper className="easi-grt">
+      <Header />
+      <MainContent>
+        <section className="easi-grt__request-summary">
+          <div className="grid-container padding-y-2">
+            <BreadcrumbNav>
+              <li>
+                <Link className="text-white" to="/">
+                  Home
+                </Link>
+                <i className="fa fa-angle-right margin-x-05" aria-hidden />
+              </li>
+              <li>{systemIntake.requestName}</li>
+            </BreadcrumbNav>
+            <dl className="easi-grt__request-info">
+              <div>
+                <dt>{t('intake:fields.projectName')}</dt>
+                <dd>{systemIntake.requestName}</dd>
+              </div>
+              <div className="easi-grt__request-info-col">
+                <div className="easi-grt__description-group">
+                  <dt>{t('intake:fields.requester')}</dt>
+                  <dd>{requesterNameAndComponent}</dd>
                 </div>
-                <div className="easi-grt__request-info-col">
-                  <div className="easi-grt__description-group">
-                    <dt>{t('intake:fields.requester')}</dt>
-                    <dd>{requesterNameAndComponent}</dd>
-                  </div>
-                  <div className="easi-grt__description-group">
-                    <dt>{t('intake:fields.submissionDate')}</dt>
-                    <dd>
-                      {systemIntake.submittedAt
-                        ? systemIntake.submittedAt.toLocaleString(
-                            DateTime.DATE_FULL
-                          )
-                        : 'N/A'}
-                    </dd>
-                  </div>
-                  <div className="easi-grt__description-group">
-                    <dt>{t('intake:fields.requestFor')}</dt>
-                    <dd>N/A</dd>
-                  </div>
+                <div className="easi-grt__description-group">
+                  <dt>{t('intake:fields.submissionDate')}</dt>
+                  <dd>
+                    {systemIntake.submittedAt
+                      ? systemIntake.submittedAt.toLocaleString(
+                          DateTime.DATE_FULL
+                        )
+                      : 'N/A'}
+                  </dd>
                 </div>
+                <div className="easi-grt__description-group">
+                  <dt>{t('intake:fields.requestFor')}</dt>
+                  <dd>N/A</dd>
+                </div>
+              </div>
+            </dl>
+          </div>
+
+          <div
+            className={classnames({
+              'bg-base-lightest': isIntakeClosed(systemIntake.status),
+              'easi-grt__status--open': isIntakeOpen(systemIntake.status)
+            })}
+          >
+            <div className="grid-container overflow-auto">
+              <dl className="easi-grt__status-info text-gray-90">
+                <dt className="text-bold">{t('status.label')}</dt>
+                &nbsp;
+                <dd
+                  className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                  data-testid="grt-status"
+                >
+                  {isIntakeClosed(systemIntake.status)
+                    ? t('status.closed')
+                    : t('status.open')}
+                </dd>
+                {systemIntake.lcid && (
+                  <>
+                    <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
+                    <dd data-testid="grt-lcid">{systemIntake.lcid}</dd>
+                  </>
+                )}
               </dl>
             </div>
-
-            <div
-              className={classnames({
-                'bg-base-lightest': isIntakeClosed(systemIntake.status),
-                'easi-grt__status--open': isIntakeOpen(systemIntake.status)
-              })}
+          </div>
+        </section>
+        <section className="grid-container grid-row margin-y-5 ">
+          <nav className="tablet:grid-col-2 margin-right-2">
+            <ul className="easi-grt__nav-list">
+              <li>
+                <i className="fa fa-angle-left margin-x-05" aria-hidden />
+                <Link to="/">{t('back.allRequests')}</Link>
+              </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/intake-request`}
+                  aria-label={t('aria.openIntake')}
+                  className={getNavLinkClasses('intake-request')}
+                >
+                  {t('general:intake')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/business-case`}
+                  aria-label={t('aria.openBusiness')}
+                  className={getNavLinkClasses('business-case')}
+                >
+                  {t('general:businessCase')}
+                </Link>
+              </li>
+            </ul>
+            <hr />
+            <Link
+              to={`/governance-review-team/${systemId}/actions`}
+              aria-label={t('actions')}
+              className={getNavLinkClasses('actions')}
             >
-              <div className="grid-container overflow-auto">
-                <dl className="easi-grt__status-info text-gray-90">
-                  <dt className="text-bold">{t('status.label')}</dt>
-                  &nbsp;
-                  <dd
-                    className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
-                    data-testid="grt-status"
-                  >
-                    {isIntakeClosed(systemIntake.status)
-                      ? t('status.closed')
-                      : t('status.open')}
-                  </dd>
-                  {systemIntake.lcid && (
-                    <>
-                      <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
-                      <dd data-testid="grt-lcid">{systemIntake.lcid}</dd>
-                    </>
-                  )}
-                </dl>
-              </div>
-            </div>
+              {t('actions')}
+            </Link>
+          </nav>
+          <section className="tablet:grid-col-9">
+            <Route
+              path="/governance-review-team/:systemId/intake-request"
+              render={() => <IntakeReview systemIntake={systemIntake} />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/business-case"
+              render={() => <BusinessCaseReview businessCase={businessCase} />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions"
+              exact
+              render={() => <ChooseAction businessCase={businessCase} />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/not-an-it-request"
+              render={() => (
+                <SubmitAction
+                  action="not-an-it-request"
+                  actionName="Not and IT Request"
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/test-route"
+              render={() => (
+                <SubmitAction action="test-action" actionName="Test Action" />
+              )}
+            />
           </section>
-          <section className="grid-container grid-row margin-y-5 ">
-            <nav className="tablet:grid-col-2 margin-right-2">
-              <ul className="easi-grt__nav-list">
-                <li>
-                  <i className="fa fa-angle-left margin-x-05" aria-hidden />
-                  <Link to="/">{t('back.allRequests')}</Link>
-                </li>
-                <li>
-                  <Link
-                    to={`/governance-review-team/${systemId}/intake-request`}
-                    aria-label={t('aria.openIntake')}
-                    className={getNavLinkClasses('intake-request')}
-                  >
-                    {t('general:intake')}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to={`/governance-review-team/${systemId}/business-case`}
-                    aria-label={t('aria.openBusiness')}
-                    className={getNavLinkClasses('business-case')}
-                  >
-                    {t('general:businessCase')}
-                  </Link>
-                </li>
-              </ul>
-              <hr />
-              <Link
-                to={`/governance-review-team/${systemId}/actions`}
-                aria-label={t('actions')}
-                className={getNavLinkClasses('actions')}
-              >
-                {t('actions')}
-              </Link>
-            </nav>
-            <section className="tablet:grid-col-9">
-              <Route
-                path="/governance-review-team/:systemId/intake-request"
-                render={() => <IntakeReview systemIntake={systemIntake} />}
-              />
-              <Route
-                path="/governance-review-team/:systemId/business-case"
-                render={() => (
-                  <BusinessCaseReview businessCase={businessCase} />
-                )}
-              />
-              <Route
-                path="/governance-review-team/:systemId/actions"
-                render={() => <h1>Actions on intake request</h1>}
-              />
-            </section>
-          </section>
-        </MainContent>
-        <Footer />
-      </PageWrapper>
-    )
+        </section>
+      </MainContent>
+      <Footer />
+    </PageWrapper>
   );
 };
 
