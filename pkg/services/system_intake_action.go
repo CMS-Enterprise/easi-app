@@ -17,6 +17,7 @@ import (
 func NewCreateSystemIntakeAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	submit func(context.Context, *models.SystemIntake) error,
+	reviewNotITRequest func(context.Context, *models.SystemIntake, *models.Action) error,
 ) func(context.Context, *models.Action) error {
 	return func(ctx context.Context, action *models.Action) error {
 		intake, fetchErr := fetch(ctx, *action.IntakeID)
@@ -31,6 +32,8 @@ func NewCreateSystemIntakeAction(
 		switch action.ActionType {
 		case models.ActionTypeSUBMIT:
 			return submit(ctx, intake)
+		case models.ActionTypeNOTITREQUEST:
+			return reviewNotITRequest(ctx, intake, action)
 		default:
 			return &apperrors.ResourceConflictError{
 				Err:        errors.New("invalid system intake action type"),
@@ -153,13 +156,13 @@ func NewGRTReviewSystemIntake(
 	config Config,
 	newStatus models.SystemIntakeStatus,
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
-	authorize func(context.Context, *models.SystemIntake) (bool, error),
+	authorize func(context.Context) (bool, error),
 	createAction func(context.Context, *models.Action) (*models.Action, error),
 	fetchUserInfo func(*zap.Logger, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 ) func(context.Context, *models.SystemIntake, *models.Action) error {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
-		ok, err := authorize(ctx, intake)
+		ok, err := authorize(ctx)
 		if err != nil {
 			return err
 		}

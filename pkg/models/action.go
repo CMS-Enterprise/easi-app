@@ -12,6 +12,8 @@ type ActionType string
 const (
 	// ActionTypeSUBMIT captures enum value SUBMIT
 	ActionTypeSUBMIT ActionType = "SUBMIT"
+	// ActionTypeNOTITREQUEST captures enum value NOT_IT_REQUEST
+	ActionTypeNOTITREQUEST ActionType = "NOT_IT_REQUEST"
 )
 
 // Action is the model for an action on a system intake

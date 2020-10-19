@@ -15,6 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -235,6 +236,15 @@ func (s *Server) routes(
 				store.CreateAction,
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeSubmissionEmail,
+			),
+			services.NewGRTReviewSystemIntake(
+				serviceConfig,
+				models.SystemIntakeStatusNOTITREQUEST,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeHasGRTRole(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
 			),
 		),
 	)
