@@ -1,4 +1,3 @@
-
 # Do not implement state machine to handle transitions in Services
 
 **User Story:** [EASi 670](https://jiraent.cms.gov/browse/EASI-670)
