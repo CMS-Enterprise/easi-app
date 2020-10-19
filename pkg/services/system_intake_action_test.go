@@ -21,12 +21,15 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 	submit := func(ctx context.Context, intake *models.SystemIntake) error {
 		return nil
 	}
+	reviewNotITRequest := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
+		return nil
+	}
 
 	s.Run("returns QueryError if fetch fails", func() {
 		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("error")
 		}
-		createAction := NewCreateSystemIntakeAction(failFetch, submit)
+		createAction := NewCreateSystemIntakeAction(failFetch, submit, reviewNotITRequest)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -41,7 +44,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 		failSubmit := func(ctx context.Context, intake *models.SystemIntake) error {
 			return submitError
 		}
-		createAction := NewCreateSystemIntakeAction(fetch, failSubmit)
+		createAction := NewCreateSystemIntakeAction(fetch, failSubmit, reviewNotITRequest)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -52,7 +55,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 	})
 
 	s.Run("returns ResourceConflictError if invalid action type", func() {
-		createAction := NewCreateSystemIntakeAction(fetch, submit)
+		createAction := NewCreateSystemIntakeAction(fetch, submit, reviewNotITRequest)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,

@@ -79,38 +79,6 @@ func NewCreateSystemIntake(
 	}
 }
 
-// NewAuthorizeUserIsIntakeRequester returns a function
-// that authorizes a user as being the requester of the given System Intake
-func NewAuthorizeUserIsIntakeRequester() func(
-	context.Context,
-	*models.SystemIntake,
-) (bool, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowEASi() {
-			logger.Error("unable to get EUA ID from context")
-			return false, &apperrors.ContextError{
-				Operation: apperrors.ContextGet,
-				Object:    "EUA ID",
-			}
-		}
-
-		// If intake is owned by user, authorize
-		if principal.AllowEASi() && principal.ID() == intake.EUAUserID {
-			logger.With(zap.Bool("Authorized", true)).
-				With(zap.String("Operation", "UpdateSystemIntake")).
-				Info("user authorized to save system intake")
-			return true, nil
-		}
-		// Default to failure to authorize and create a quick audit log
-		logger.With(zap.Bool("Authorized", false)).
-			With(zap.String("Operation", "UpdateSystemIntake")).
-			Info("unauthorized attempt to save system intake")
-		return false, nil
-	}
-}
-
 // NewUpdateSystemIntake is a service to update a system intake
 func NewUpdateSystemIntake(
 	config Config,
