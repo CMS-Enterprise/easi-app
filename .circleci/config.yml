@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Restart ECS app service
           command: |
-            ./scripts/deploy_service "easi-app" "4" ""
+            ./scripts/deploy_service "easi-app" "5" ""
 
   restart_prod_ecs_app_service:
     docker:
@@ -48,7 +48,7 @@ jobs:
       - run:
           name: Restart ECS app service
           command: |
-            ./scripts/deploy_service "easi-app" "4" ""
+            ./scripts/deploy_service "easi-app" "5" ""
 
   build_db_migrate_image:
     docker:
