@@ -154,7 +154,8 @@ func NewGRTReviewSystemIntake(
 	newStatus models.SystemIntakeStatus,
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchRequesterInfo func(*zap.Logger, string) (*models.UserInfo, error),
+	createAction func(context.Context, *models.Action) (*models.Action, error),
+	fetchUserInfo func(*zap.Logger, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 ) func(context.Context, *models.SystemIntake, *models.Action) error {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -166,7 +167,7 @@ func NewGRTReviewSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
-		requesterInfo, err := fetchRequesterInfo(appcontext.ZLogger(ctx), intake.EUAUserID)
+		requesterInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), intake.EUAUserID)
 		if err != nil {
 			return err
 		}
@@ -177,6 +178,32 @@ func NewGRTReviewSystemIntake(
 				ModelID:   intake.ID.String(),
 				Operation: apperrors.Fetch,
 				Source:    "CEDAR LDAP",
+			}
+		}
+
+		actorInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), appcontext.Principal(ctx).ID())
+		if err != nil {
+			return err
+		}
+		if actorInfo == nil || actorInfo.Email == "" || actorInfo.CommonName == "" || actorInfo.EuaUserID == "" {
+			return &apperrors.ExternalAPIError{
+				Err:       errors.New("user info fetch was not successful"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		action.ActorName = actorInfo.CommonName
+		action.ActorEmail = actorInfo.Email
+		action.ActorEUAUserID = actorInfo.EuaUserID
+		_, err = createAction(ctx, action)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     action,
+				Operation: apperrors.QueryPost,
 			}
 		}
 
