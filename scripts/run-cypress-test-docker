@@ -4,6 +4,7 @@ set -eu -o pipefail
 
 PROJECT_NAME=easi-app
 CYPRESS_CONTAINER="${PROJECT_NAME}"_cypress_1
+EASI_CONTAINER="${PROJECT_NAME}"_easi_1
 
 if (set +x -o nounset; aws ecr get-login-password --region "${AWS_DEFAULT_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_DEFAULT_REGION}".amazonaws.com) ; then
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml pull db_migrate easi
@@ -13,13 +14,22 @@ if (set +x -o nounset; aws ecr get-login-password --region "${AWS_DEFAULT_REGION
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up -d db
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up --exit-code-from db_migrate db_migrate
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up -d easi easi_client
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up cypress cypress
+
+  EASI_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${EASI_CONTAINER}")
+
+  if [[ "${EASI_EXIT_CODE}" -ne 0 ]]; then
+    echo "Docker container ${EASI_CONTAINER} exited unexpectedly. No tests will be run."
+    docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml logs --tail="all" easi
+    exit 1
+  fi
+
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml up cypress
 
   docker container cp "${CYPRESS_CONTAINER}":/cypress/screenshots cypress/ || echo "No cypress screenshots copied"
   docker container cp "${CYPRESS_CONTAINER}":/cypress/videos cypress/ || echo "No cypress videos copied"
-  EXIT_STATUS=$(docker container inspect "${CYPRESS_CONTAINER}" --format='{{.State.ExitCode}}')
+  CYPRESS_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${CYPRESS_CONTAINER}")
   echo "done"
-  exit "${EXIT_STATUS}"
+  exit "${CYPRESS_EXIT_CODE}"
 else
   exit 1
 fi
