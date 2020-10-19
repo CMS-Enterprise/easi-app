@@ -146,3 +146,62 @@ func NewSubmitSystemIntake(
 		return nil
 	}
 }
+
+// NewGRTReviewSystemIntake returns a function that
+// reviews a system intake
+func NewGRTReviewSystemIntake(
+	config Config,
+	newStatus models.SystemIntakeStatus,
+	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
+	authorize func(context.Context, *models.SystemIntake) (bool, error),
+	fetchRequesterInfo func(*zap.Logger, string) (*models.UserInfo, error),
+	sendReviewEmail func(emailText string, recipientAddress string) error,
+) func(context.Context, *models.SystemIntake, *models.Action) error {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
+		ok, err := authorize(ctx, intake)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return &apperrors.UnauthorizedError{Err: err}
+		}
+
+		requesterInfo, err := fetchRequesterInfo(appcontext.ZLogger(ctx), intake.EUAUserID)
+		if err != nil {
+			return err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return &apperrors.ExternalAPIError{
+				Err:       errors.New("user info fetch was not successful"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		updatedTime := config.clock.Now()
+		intake.UpdatedAt = &updatedTime
+		intake.Status = newStatus
+		intake.GrtReviewEmailBody = null.StringFrom(action.Feedback)
+		intake.RequesterEmailAddress = null.StringFrom(requesterInfo.Email)
+		intake.DecidedAt = &updatedTime
+		intake.UpdatedAt = &updatedTime
+
+		intake, err = update(ctx, intake)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
+			}
+		}
+
+		err = sendReviewEmail(intake.GrtReviewEmailBody.String, requesterInfo.Email)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}
+}
