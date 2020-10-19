@@ -26,7 +26,6 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     <RadioField
       key="not-an-it-request"
       id="not-an-it-request"
-      inline={false}
       label="Not an IT request"
       name={radioGroupName}
       value="not-an-it-request"
@@ -39,7 +38,6 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     <RadioField
       key="test-route"
       id="test-route"
-      inline={false}
       label="Test Action"
       name={radioGroupName}
       value="test-route"
