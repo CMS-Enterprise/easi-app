@@ -1,0 +1,1 @@
+ALTER TYPE system_intake_status RENAME VALUE 'CLOSED' TO 'NOT_IT_REQUEST';
