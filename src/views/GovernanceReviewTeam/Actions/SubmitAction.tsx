@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -19,6 +20,7 @@ type SubmitActionProps = {
 
 const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
   const { systemId } = useParams();
+  const { t } = useTranslation('action');
 
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
@@ -63,10 +65,11 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
                 })}
               </ErrorAlert>
             )}
-            <h1>Actions on intake request</h1>
-            <h2>How to proceed?</h2>
+            <h1>{t('submitAction.heading')}</h1>
+            <h2>{t('submitAction.subheading')}</h2>
             <p>
-              {actionName} <Link to={backLink}>Change</Link>
+              {actionName} &nbsp;
+              <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>
@@ -75,7 +78,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
                   error={!!flatErrors.businessSolution}
                 >
                   <Label htmlFor="SubmitActionForm-Feedback">
-                    This email will be sent to the requester
+                    {t('action:submitAction.feedbackLabel')}
                   </Label>
                   <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
                   <Field
@@ -91,7 +94,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
                   type="submit"
                   // disabled={isSubmitting}
                 >
-                  Send email
+                  {t('submitAction.submit')}
                 </Button>
               </Form>
             </div>
