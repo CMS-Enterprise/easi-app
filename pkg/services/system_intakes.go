@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -81,14 +80,8 @@ func NewCreateSystemIntake(
 
 // NewUpdateSystemIntake is a service to update a system intake
 func NewUpdateSystemIntake(
-	config Config,
-	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
-	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchRequesterInfo func(*zap.Logger, string) (*models.UserInfo, error),
-	sendReviewEmail func(emailText string, recipientAddress string) error,
 	updateDraftIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
-	canDecideIntake bool,
 ) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		existingIntake, fetchErr := fetch(ctx, intake.ID)
@@ -102,63 +95,11 @@ func NewUpdateSystemIntake(
 
 		if existingIntake.Status == models.SystemIntakeStatusDRAFT && intake.Status == models.SystemIntakeStatusDRAFT {
 			return updateDraftIntake(ctx, existingIntake, intake)
-		} else if existingIntake.Status == models.SystemIntakeStatusSUBMITTED &&
-			(intake.Status == models.SystemIntakeStatusAPPROVED ||
-				intake.Status == models.SystemIntakeStatusACCEPTED ||
-				intake.Status == models.SystemIntakeStatusCLOSED) && canDecideIntake {
-
-			ok, err := authorize(ctx, existingIntake)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-			if !ok {
-				return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
-			}
-
-			updatedTime := config.clock.Now()
-			intake.UpdatedAt = &updatedTime
-
-			requesterInfo, err := fetchRequesterInfo(appcontext.ZLogger(ctx), existingIntake.EUAUserID)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-			if requesterInfo == nil || requesterInfo.Email == "" {
-				return &models.SystemIntake{}, &apperrors.ExternalAPIError{
-					Err:       errors.New("user info fetch was not successful"),
-					Model:     existingIntake,
-					ModelID:   intake.ID.String(),
-					Operation: apperrors.Fetch,
-					Source:    "CEDAR LDAP",
-				}
-			}
-
-			existingIntake.Status = intake.Status
-			existingIntake.GrtReviewEmailBody = intake.GrtReviewEmailBody
-			existingIntake.RequesterEmailAddress = null.StringFrom(requesterInfo.Email)
-			existingIntake.DecidedAt = &updatedTime
-			existingIntake.UpdatedAt = &updatedTime
-			// This ensures only certain fields can be modified.
-			intake, err = update(ctx, existingIntake)
-			if err != nil {
-				return &models.SystemIntake{}, &apperrors.QueryError{
-					Err:       err,
-					Model:     intake,
-					Operation: apperrors.QuerySave,
-				}
-			}
-
-			err = sendReviewEmail(intake.GrtReviewEmailBody.String, requesterInfo.Email)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-
-			return intake, nil
-		} else {
-			return &models.SystemIntake{}, &apperrors.ResourceConflictError{
-				Err:        errors.New("invalid intake status change"),
-				Resource:   intake,
-				ResourceID: intake.ID.String(),
-			}
+		}
+		return &models.SystemIntake{}, &apperrors.ResourceConflictError{
+			Err:        errors.New("invalid intake status change"),
+			Resource:   intake,
+			ResourceID: intake.ID.String(),
 		}
 	}
 }
