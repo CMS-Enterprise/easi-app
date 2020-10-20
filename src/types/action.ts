@@ -9,3 +9,7 @@ export type ActionState = {
   isPosting: boolean;
   error?: any;
 };
+
+export type ActionForm = {
+  feedback: string;
+};
