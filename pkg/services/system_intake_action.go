@@ -170,6 +170,15 @@ func NewGRTReviewSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
+		if intake.Status != models.SystemIntakeStatusSUBMITTED {
+			err := &apperrors.ResourceConflictError{
+				Err:        errors.New("intake is not in SUBMITTED state"),
+				ResourceID: intake.ID.String(),
+				Resource:   intake,
+			}
+			return err
+		}
+
 		requesterInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), intake.EUAUserID)
 		if err != nil {
 			return err
