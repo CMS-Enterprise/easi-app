@@ -513,38 +513,6 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 	})
 }
 
-func (s ServicesTestSuite) TestAuthorizeRequireGRTJobCode() {
-	fnAuth := NewAuthorizeRequireGRTJobCode()
-	nonGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
-	yesGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
-
-	testCases := map[string]struct {
-		ctx     context.Context
-		allowed bool
-	}{
-		"anonymous": {
-			ctx:     context.Background(),
-			allowed: false,
-		},
-		"non grt": {
-			ctx:     appcontext.WithPrincipal(context.Background(), &nonGRT),
-			allowed: false,
-		},
-		"has grt": {
-			ctx:     appcontext.WithPrincipal(context.Background(), &yesGRT),
-			allowed: true,
-		},
-	}
-
-	for name, tc := range testCases {
-		s.Run(name, func() {
-			ok, err := fnAuth(tc.ctx, nil)
-			s.NoError(err)
-			s.Equal(tc.allowed, ok)
-		})
-	}
-}
-
 func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	today := time.Now()
 	input := &models.SystemIntake{
@@ -555,7 +523,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		LifecycleScope:     null.StringFrom(fmt.Sprintf("scope %s", today)),
 	}
 
-	fnAuthorize := func(context.Context, *models.SystemIntake) (bool, error) { return true, nil }
+	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
 	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{ID: id}, nil
 	}
@@ -592,8 +560,8 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	})
 
 	// build the error-generating pieces
-	fnAuthorizeErr := func(context.Context, *models.SystemIntake) (bool, error) { return false, errors.New("auth error") }
-	fnAuthorizeFail := func(context.Context, *models.SystemIntake) (bool, error) { return false, nil }
+	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
+	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
 	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return nil, errors.New("fetch error")
 	}
