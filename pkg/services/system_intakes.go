@@ -349,26 +349,11 @@ func NewFetchSystemIntakeByID(
 	}
 }
 
-// NewAuthorizeRequireGRTJobCode returns a function
-// that authorizes a user as being a member of the
-// GRT (Governance Review Team)
-func NewAuthorizeRequireGRTJobCode() func(context.Context, *models.SystemIntake) (bool, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowGRT() {
-			logger.Error("not a member of the GRT")
-			return false, nil
-		}
-		return true, nil
-	}
-}
-
 // NewUpdateLifecycleFields provides a way to update several of the fields
 // associated with assigning a LifecycleID
 func NewUpdateLifecycleFields(
 	config Config,
-	authorize func(context.Context, *models.SystemIntake) (bool, error),
+	authorize func(context.Context) (bool, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	generateLCID func(context.Context) (string, error),
@@ -383,7 +368,7 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		ok, err := authorize(ctx, existing)
+		ok, err := authorize(ctx)
 		if err != nil {
 			return err
 		}
