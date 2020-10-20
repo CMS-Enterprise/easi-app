@@ -14,7 +14,6 @@ import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
-import NotFoundPartial from 'views/NotFound';
 
 import ChooseAction from './Actions/ChooseAction';
 import SubmitAction from './Actions/SubmitAction';
@@ -34,15 +33,6 @@ const GovernanceReviewTeam = () => {
 
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
-  );
-
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const authorizedToView =
-    userGroups.includes('EASI_D_GOVTEAM') ||
-    userGroups.includes('EASI_P_GOVTEAM');
-
-  const userGroupsSet = useSelector(
-    (state: AppState) => state.auth.userGroupsSet
   );
 
   useEffect(() => {
@@ -67,16 +57,6 @@ const GovernanceReviewTeam = () => {
     classnames('easi-grt__nav-link', {
       'easi-grt__nav-link--active': page === activePage
     });
-
-  if (!userGroupsSet) {
-    // TODO: Use some kind of loading indicator
-    // Don't show anything until we can do a check of permissions
-    return null;
-  }
-
-  if (userGroupsSet && !authorizedToView) {
-    return <NotFoundPartial />;
-  }
 
   return (
     <PageWrapper className="easi-grt">
