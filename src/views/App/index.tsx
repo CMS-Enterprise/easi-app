@@ -1,8 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 
 import { FlagProvider, useFlags } from 'contexts/flagContext';
+import { AppState } from 'reducers/rootReducer';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -29,6 +31,15 @@ import './index.scss';
 
 const AppRoutes = () => {
   const flags = useFlags();
+  const userGroups = useSelector((state: AppState) => state.auth.groups);
+  const isGrtReviewer =
+    userGroups.includes('EASI_D_GOVTEAM') ||
+    userGroups.includes('EASI_P_GOVTEAM');
+
+  const userGroupsSet = useSelector(
+    (state: AppState) => state.auth.userGroupsSet
+  );
+
   return (
     <Switch>
       <Route path="/" exact component={Home} />
@@ -56,10 +67,12 @@ const AppRoutes = () => {
         />
       )}
 
-      <SecureRoute
-        path="/governance-review-team/:systemId/:activePage"
-        component={GovernanceReviewTeam}
-      />
+      {userGroupsSet && isGrtReviewer && (
+        <SecureRoute
+          path="/governance-review-team/:systemId/:activePage"
+          component={GovernanceReviewTeam}
+        />
+      )}
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grt"
