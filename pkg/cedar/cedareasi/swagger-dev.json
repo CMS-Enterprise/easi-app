@@ -639,7 +639,7 @@
         "solution" : {
           "type" : "string"
         },
-        "funding_source" : {
+        "funding_number" : {
           "type" : "string"
         },
         "isso" : {

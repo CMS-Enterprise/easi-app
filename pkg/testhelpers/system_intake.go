@@ -25,7 +25,7 @@ func NewSystemIntake() models.SystemIntake {
 		EACollaborator:          null.StringFrom("Test EA Collaborator"),
 		ProjectName:             null.StringFrom("Test Project Name"),
 		ExistingFunding:         null.BoolFrom(true),
-		FundingSource:           null.StringFrom("123456"),
+		FundingNumber:           null.StringFrom("123456"),
 		BusinessNeed:            null.StringFrom("Test Business Need"),
 		Solution:                null.StringFrom("Test Solution"),
 		ProcessStatus:           null.StringFrom("Just an idea"),

@@ -355,7 +355,7 @@
         "solution" : {
           "type" : "string"
         },
-        "funding_source" : {
+        "funding_number" : {
           "type" : "string"
         },
         "isso" : {
@@ -377,9 +377,6 @@
           "type" : "string"
         },
         "trb_collaborator" : {
-          "type" : "string"
-        },
-        "funding_number" : {
           "type" : "string"
         }
       }

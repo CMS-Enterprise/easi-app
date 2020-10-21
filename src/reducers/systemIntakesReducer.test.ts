@@ -41,7 +41,7 @@ describe('The system intakes reducer', () => {
       eaCollaborator: '',
       projectName: '',
       existingFunding: null,
-      fundingSource: '',
+      fundingNUmber: '',
       businessNeed: '',
       solution: '',
       processStatus: '',
