@@ -92,7 +92,7 @@ const AppRoutes = () => {
       <Redirect
         exact
         from="/business/:businessCaseId"
-        to="/business/:businessCaseId/general-project-info"
+        to="/business/:businessCaseId/general-request-info"
       />
       <SecureRoute
         path="/business/:businessCaseId/:formPage"
