@@ -235,7 +235,7 @@ func (s *Server) routes(
 				serviceConfig,
 				models.SystemIntakeStatusNOTITREQUEST,
 				store.UpdateSystemIntake,
-				services.NewAuthorizeHasGRTRole(),
+				services.NewAuthorizeRequireGRTJobCode(),
 				store.CreateAction,
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
