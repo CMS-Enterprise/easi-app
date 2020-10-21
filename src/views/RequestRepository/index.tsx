@@ -11,7 +11,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 
-const AllRequests = () => {
+const RequestRepository = () => {
   const { t } = useTranslation('governanceReviewTeam');
   const columns: any = useMemo(
     () => [
@@ -38,7 +38,7 @@ const AllRequests = () => {
         accessor: 'requester.component'
       },
       {
-        Header: t('allRequests.table.requestType'),
+        Header: t('requestRepository.table.requestType'),
         accessor: 'type'
       }
     ],
@@ -139,11 +139,11 @@ const AllRequests = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container">
-        <h1>{t('allRequests.header')}</h1>
-        <p>{t('allRequests.requestCount', { count: data.length })}</p>
+        <h1>{t('requestRepository.header')}</h1>
+        <p>{t('requestRepository.requestCount', { count: data.length })}</p>
         <Table bordered={false} {...getTableProps()} fullWidth>
           <caption className="usa-sr-only">
-            {t('allRequests.aria.openRequestsTable')}
+            {t('requestRepository.aria.openRequestsTable')}
           </caption>
           <thead>
             {headerGroups.map(headerGroup => (
@@ -192,4 +192,4 @@ const AllRequests = () => {
   );
 };
 
-export default AllRequests;
+export default RequestRepository;

@@ -63,21 +63,18 @@ func NewAuthorizeHasEASiRole() func(
 	}
 }
 
-// NewAuthorizeHasGRTRole creates an authorizer that a request's user is GRT
-func NewAuthorizeHasGRTRole() func(
-	context.Context,
-) (bool, error) {
+// NewAuthorizeRequireGRTJobCode returns a function
+// that authorizes a user as being a member of the
+// GRT (Governance Review Team)
+func NewAuthorizeRequireGRTJobCode() func(context.Context) (bool, error) {
+
 	return func(ctx context.Context) (bool, error) {
 		logger := appcontext.ZLogger(ctx)
 		principal := appcontext.Principal(ctx)
 		if !principal.AllowGRT() {
-			logger.Info("user unauthorized as GRT")
+			logger.Info("not a member of the GRT")
 			return false, nil
 		}
-		logger.With(zap.Bool("Authorized", true)).
-			// TODO: what should the log be here? What info is relevant?
-			With(zap.String("Operation", "UpdateSystemIntake")).
-			Info("user authorized as GRT")
 		return true, nil
 	}
 }
