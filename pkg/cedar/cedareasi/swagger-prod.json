@@ -347,6 +347,9 @@
         "funding_number" : {
           "type" : "string"
         },
+        "funding_source" : {
+          "type" : "string"
+        },
         "id" : {
           "type" : "string"
         },
