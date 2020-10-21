@@ -5,7 +5,7 @@ import './index.scss';
 
 type RadioFieldProps = {
   id: string;
-  inline: boolean;
+  inline?: boolean;
   checked?: boolean;
   label: string;
   name: string;
