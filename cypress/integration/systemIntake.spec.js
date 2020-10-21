@@ -57,9 +57,66 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     cy.wait('@putSystemIntake');
-
+    cy.wait(1000);
     // Review
     cy.contains('h1', 'Check your answers before sending');
+
+    cy.window()
+      .its('store')
+      .invoke('getState')
+      .its('systemIntake')
+      .its('systemIntake')
+      .should('deep.include', {
+        requestName: 'Test Request Name',
+        requester: {
+          name: 'EASi Testing',
+          component: 'Center for Medicare',
+          email: ''
+        },
+        businessOwner: {
+          name: 'Casey Doe',
+          component: 'Center for Medicare'
+        },
+        productManager: {
+          name: 'Casey Doe',
+          component: 'Center for Medicare'
+        },
+        // DB doesn't properly save the radio button value
+        isso: {
+          isPresent: null,
+          name: ''
+        },
+        // DB doesn't properly save the radio button value
+        governanceTeams: {
+          isPresent: null,
+          teams: []
+        },
+        fundingSource: {
+          isFunded: false,
+          fundingNumber: ''
+        },
+        costs: {
+          isExpectingIncrease: 'NO',
+          expectedIncreaseAmount: ''
+        },
+        contract: {
+          hasContract: 'NOT_NEEDED',
+          contractor: '',
+          vehicle: '',
+          startDate: {
+            month: '',
+            year: ''
+          },
+          endDate: {
+            month: '',
+            year: ''
+          }
+        },
+        businessNeed: 'This is my business need.',
+        businessSolution: 'This is my business solution.',
+        currentStage: 'Just an idea',
+        needsEaSupport: false
+      });
   });
 
   it('displays and fills conditional fields', () => {
