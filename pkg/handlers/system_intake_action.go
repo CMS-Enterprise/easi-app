@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -64,7 +65,7 @@ func (h SystemIntakeActionHandler) Handle() http.HandlerFunc {
 			decoder := json.NewDecoder(r.Body)
 			action := models.Action{}
 			err = decoder.Decode(&action)
-			if err != nil {
+			if err != nil && err != io.EOF {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
