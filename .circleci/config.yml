@@ -9,6 +9,9 @@ jobs:
   restart_impl_ecs_app_service:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           AWS_DEFAULT_REGION: us-west-2
           APP_ENV: impl
@@ -31,6 +34,9 @@ jobs:
   restart_prod_ecs_app_service:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           AWS_DEFAULT_REGION: us-west-2
           APP_ENV: prod
@@ -53,11 +59,18 @@ jobs:
   build_db_migrate_image:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           AWS_DEFAULT_REGION: us-west-2
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Docker Hub login
+          command: |
+            ./scripts/dockerhub-login
       - run:
           name: Build the flyway migrations for testing
           command: |
@@ -71,6 +84,9 @@ jobs:
   test:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           APP_ENV: test
           AWS_REGION: us-west-2 # easi app tests expect AWS_REGION instead of AWS_DEFAULT_REGION
@@ -87,6 +103,9 @@ jobs:
           PGSSLMODE: disable
           FLAG_SOURCE: LOCAL
       - image: *postgres
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           POSTGRES_DB: postgres
           POSTGRES_PASSWORD: easirox
@@ -120,6 +139,9 @@ jobs:
   integration_tests:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           APP_ENV: test
           AWS_DEFAULT_REGION: us-west-2
@@ -137,6 +159,10 @@ jobs:
       - run:
           name: Install dependencies
           command: yarn install
+      - run:
+          name: Docker Hub login
+          command: |
+            ./scripts/dockerhub-login
       - run:
           name: Run Cypress integration tests
           command: |
@@ -164,6 +190,9 @@ jobs:
   pre_deps:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
       - restore_cache:
@@ -202,6 +231,9 @@ jobs:
   lint:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
       - restore_cache:
@@ -244,6 +276,9 @@ jobs:
   client_test:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           REACT_APP_API_ADDRESS: http://localhost:8080/api/v1
           REACT_APP_APP_ENV: test
@@ -283,11 +318,18 @@ jobs:
   build_db_clean_image:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           AWS_DEFAULT_REGION: us-west-2
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Docker Hub login
+          command: |
+            ./scripts/dockerhub-login
       - run:
           name: Build the db cleaner image and push to ECR
           command: |
@@ -301,11 +343,18 @@ jobs:
   build_tag_push:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           AWS_DEFAULT_REGION: us-west-2
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Docker Hub login
+          command: |
+            ./scripts/dockerhub-login
       - run:
           name: Build the app and push to ECR
           command: |
@@ -323,6 +372,9 @@ jobs:
   deploy_dev:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           AWS_DEFAULT_REGION: us-west-2
           APP_ENV: dev
@@ -378,6 +430,9 @@ jobs:
   deploy_impl:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           AWS_DEFAULT_REGION: us-west-2
           APP_ENV: impl
@@ -433,6 +488,9 @@ jobs:
   deploy_prod:
     docker:
       - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
           AWS_DEFAULT_REGION: us-west-2
           APP_ENV: prod
