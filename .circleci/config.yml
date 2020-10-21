@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Restart ECS app service
           command: |
-            ./scripts/deploy_service "easi-app" "4" ""
+            ./scripts/deploy_service "easi-app" "5" ""
 
   restart_prod_ecs_app_service:
     docker:
@@ -48,7 +48,7 @@ jobs:
       - run:
           name: Restart ECS app service
           command: |
-            ./scripts/deploy_service "easi-app" "4" ""
+            ./scripts/deploy_service "easi-app" "5" ""
 
   build_db_migrate_image:
     docker:
@@ -99,11 +99,18 @@ jobs:
           FLYWAY_URL: jdbc:postgresql://localhost/postgres
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - v2-go-mod-sources-{{ checksum "go.sum" }}
       - run:
           name: Run easi app tests
           command: |
             ./scripts/build_app
             ./scripts/testsuite
+      - save_cache:
+          key: v2-go-mod-sources-{{ checksum "go.sum" }}
+          paths:
+            - ~/go/pkg/mod
       - run:
           name: Announce failure
           command: |
@@ -124,6 +131,9 @@ jobs:
       - restore_cache:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Install dependencies
           command: yarn install
@@ -135,6 +145,10 @@ jobs:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
       - store_artifacts:
           path: cypress/videos
           destination: videos
@@ -147,7 +161,87 @@ jobs:
             ./scripts/circleci-announce-broken-branch
           when: on_fail
 
+  pre_deps:
+    docker:
+      - image: *circleci_docker_primary
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v2-go-mod-sources-{{ checksum "go.sum" }}
+      - run:
+          name: Install yarn dependencies
+          command: yarn install
+      - run:
+          name: Install go modules
+          command: go mod download
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
+      - save_cache:
+          key: v2-go-mod-sources-{{ checksum "go.sum" }}
+          paths:
+            - ~/go/pkg/mod
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
+
   lint:
+    docker:
+      - image: *circleci_docker_primary
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v2-go-mod-sources-{{ checksum "go.sum" }}
+      - run:
+          name: Run pre-commit checks
+          command: pre-commit run --all-files --show-diff-on-failure
+      - save_cache:
+          key: pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
+          paths:
+            - ~/.cache/pre-commit
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
+      - save_cache:
+          key: v2-go-mod-sources-{{ checksum "go.sum" }}
+          paths:
+            - ~/go/pkg/mod
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
+
+  client_test:
     docker:
       - image: *circleci_docker_primary
         environment:
@@ -162,16 +256,10 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - yarn-deps-cache-{{ checksum "yarn.lock" }}
-      - run:
-          name: Install dependencies for pre-commit in yarn (temporary?)
-          command: yarn install
-      - run:
-          name: Run pre-commit checks
-          command: pre-commit run --all-files --show-diff-on-failure
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Run Frontend Tests
           command: yarn run test
@@ -179,13 +267,13 @@ jobs:
           name: Build Frontend Code
           command: yarn run build
       - save_cache:
-          key: pre-commit-dot-cache-{{ checksum ".pre-commit-config.yaml" }}
-          paths:
-            - ~/.cache/pre-commit
-      - save_cache:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
             - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
       - run:
           name: Announce failure
           command: |
@@ -240,6 +328,12 @@ jobs:
           APP_ENV: dev
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -256,17 +350,25 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "16" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "dev-ecs-manager" "16" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "17" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "dev-ecs-manager" "17" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "16" "easi-backend"
+            ./scripts/deploy_service "easi-app" "17" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
       - run:
           name: Announce failure
           command: |
@@ -281,6 +383,12 @@ jobs:
           APP_ENV: impl
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -297,17 +405,25 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "4" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "impl-ecs-manager" "4" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "5" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "impl-ecs-manager" "5" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "4" "easi-backend"
+            ./scripts/deploy_service "easi-app" "5" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
       - run:
           name: Announce failure
           command: |
@@ -322,6 +438,12 @@ jobs:
           APP_ENV: prod
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -338,17 +460,25 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "4" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "prod-ecs-manager" "4" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "5" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "prod-ecs-manager" "5" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "4" "easi-backend"
+            ./scripts/deploy_service "easi-app" "5" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
           command: |
             ./scripts/release_static
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
       - run:
           name: Announce failure
           command: |
@@ -359,17 +489,25 @@ workflows:
   version: 2
   compile:
     jobs:
+      - pre_deps
       - build_db_migrate_image
-      - lint
+      - lint:
+          requires:
+            - pre_deps
+      - client_test:
+          requires:
+            - pre_deps
       - test:
           requires:
+            - pre_deps
             - build_db_migrate_image
       - build_tag_push:
           requires:
-            - lint
             - test
       - integration_tests:
           requires:
+            - lint
+            - client_test
             - build_tag_push
       - hold_dev:
           type: approval
