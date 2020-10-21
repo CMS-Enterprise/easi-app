@@ -100,7 +100,7 @@ const Home = ({ history }: HomeProps) => {
   const getBusinessCaseBanners = (flags: Flags) => {
     return businessCases.map((busCase: BusinessCaseModel) => {
       const path = flags.taskListLite
-        ? `/governance-task-list/${busCase.id}`
+        ? `/governance-task-list/${busCase.systemIntakeId}`
         : `/business/${busCase.id}/general-request-info`;
       switch (busCase.status) {
         case 'DRAFT':

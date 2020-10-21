@@ -78,7 +78,7 @@ export const chooseBusinessCasePath = (
       return '/business/new/general-request-info';
     case 'CONTINUE':
     case 'COMPLETED':
-      return `/business/${bizCaseId}/general-project-info`;
+      return `/business/${bizCaseId}/general-request-info`;
     default:
       return null;
   }
