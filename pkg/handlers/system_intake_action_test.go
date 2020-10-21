@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -29,12 +30,14 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 	s.NoError(err)
 
 	s.Run("golden path POST passes", func() {
+		body, err := json.Marshal(map[string]string{})
+		s.NoError(err)
 		rr := httptest.NewRecorder()
 		req, reqErr := http.NewRequestWithContext(
 			requestContext,
 			"POST",
 			fmt.Sprintf("/system_intake/%s/action/SUBMIT", id.String()),
-			bytes.NewBufferString(""),
+			bytes.NewBuffer(body),
 		)
 		s.NoError(reqErr)
 		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String(), "action_type": "SUBMIT"})
@@ -47,13 +50,15 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 	})
 
 	s.Run("POST fails if a error is thrown by service", func() {
+		body, err := json.Marshal(map[string]string{})
+		s.NoError(err)
 		s.NoError(err)
 		rr := httptest.NewRecorder()
 		req, err := http.NewRequestWithContext(
 			requestContext,
 			"POST",
 			fmt.Sprintf("/system_intake/%s/action/SUBMIT", id.String()),
-			bytes.NewBufferString(""),
+			bytes.NewBuffer(body),
 		)
 		s.NoError(err)
 		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String(), "action_type": "SUBMIT"})
