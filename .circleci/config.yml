@@ -68,6 +68,10 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Docker Hub login
+          command: |
+            ./scripts/dockerhub-login
+      - run:
           name: Build the flyway migrations for testing
           command: |
             ./scripts/build_db_image "Dockerfile.db_migrations" "easi-db-migrate"
@@ -155,6 +159,10 @@ jobs:
       - run:
           name: Install dependencies
           command: yarn install
+      - run:
+          name: Docker Hub login
+          command: |
+            ./scripts/dockerhub-login
       - run:
           name: Run Cypress integration tests
           command: |
@@ -319,6 +327,10 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: Docker Hub login
+          command: |
+            ./scripts/dockerhub-login
+      - run:
           name: Build the db cleaner image and push to ECR
           command: |
             ./scripts/build_db_image "Dockerfile.db_clean" "easi-db-clean" "latest"
@@ -339,6 +351,10 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: Docker Hub login
+          command: |
+            ./scripts/dockerhub-login
       - run:
           name: Build the app and push to ECR
           command: |
