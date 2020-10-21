@@ -140,12 +140,18 @@ func (s *Server) routes(
 			store.CreateSystemIntake,
 		),
 		services.NewUpdateSystemIntake(
+			serviceConfig,
+			store.UpdateSystemIntake,
 			store.FetchSystemIntakeByID,
+			services.NewAuthorizeUserIsIntakeRequester(),
+			cedarLdapClient.FetchUserInfo,
+			emailClient.SendSystemIntakeReviewEmail,
 			services.NewUpdateDraftSystemIntake(
 				serviceConfig,
 				services.NewAuthorizeUserIsIntakeRequester(),
 				store.UpdateSystemIntake,
 			),
+			!s.environment.Prod(),
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
