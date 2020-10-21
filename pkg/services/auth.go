@@ -67,7 +67,6 @@ func NewAuthorizeHasEASiRole() func(
 // that authorizes a user as being a member of the
 // GRT (Governance Review Team)
 func NewAuthorizeRequireGRTJobCode() func(context.Context) (bool, error) {
-
 	return func(ctx context.Context) (bool, error) {
 		logger := appcontext.ZLogger(ctx)
 		principal := appcontext.Principal(ctx)

@@ -48,7 +48,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 		s.True(ok)
 		s.NoError(err)
 	})
-}  
+}
 
 func (s ServicesTestSuite) TestAuthorizeRequireGRTJobCode() {
 	fnAuth := NewAuthorizeRequireGRTJobCode()
