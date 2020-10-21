@@ -26,6 +26,7 @@ func NewSystemIntake() models.SystemIntake {
 		ProjectName:             null.StringFrom("Test Project Name"),
 		ExistingFunding:         null.BoolFrom(true),
 		FundingNumber:           null.StringFrom("123456"),
+		FundingSource:           null.StringFrom("CLIA"),
 		BusinessNeed:            null.StringFrom("Test Business Need"),
 		Solution:                null.StringFrom("Test Solution"),
 		ProcessStatus:           null.StringFrom("Just an idea"),
