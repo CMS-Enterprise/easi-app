@@ -167,7 +167,7 @@ func NewGRTReviewSystemIntake(
 			return err
 		}
 		if !ok {
-			return &apperrors.UnauthorizedError{Err: err}
+			return &apperrors.UnauthorizedError{}
 		}
 
 		if intake.Status != models.SystemIntakeStatusSUBMITTED {
