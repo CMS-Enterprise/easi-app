@@ -17,6 +17,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import fundingSources from 'constants/enums/fundingSources';
 import processStages from 'constants/enums/processStages';
 import { useFlags } from 'contexts/flagContext';
 import { yesNoMap } from 'data/common';
@@ -148,6 +149,38 @@ const ContractDetails = ({
                     />
                     {values.fundingSource.isFunded && (
                       <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
+                        <FieldGroup
+                          scrollElement="fundingSource.source"
+                          error={!!flatErrors['fundingSource.source']}
+                        >
+                          <Label htmlFor="IntakeForm-FundingSource">
+                            Funding Source
+                          </Label>
+                          <FieldErrorMsg>
+                            {flatErrors['fundingSource.source']}
+                          </FieldErrorMsg>
+                          <Field
+                            as={DropdownField}
+                            error={!!flatErrors['fundingSource.source']}
+                            id="IntakeForm-FundingSource"
+                            name="fundingSource.source"
+                          >
+                            <Field
+                              as={DropdownItem}
+                              name="Select an option"
+                              value=""
+                              disabled
+                            />
+                            {fundingSources.map(source => (
+                              <Field
+                                as={DropdownItem}
+                                key={source.split(' ').join('-')}
+                                name={source}
+                                value={source}
+                              />
+                            ))}
+                          </Field>
+                        </FieldGroup>
                         <FieldGroup
                           scrollElement="fundingSource.fundingNumber"
                           error={!!flatErrors['fundingSource.fundingNumber']}
