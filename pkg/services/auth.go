@@ -24,7 +24,7 @@ func NewAuthorizeUserIsIntakeRequester() func(
 		}
 
 		// If intake is owned by user, authorize
-		if principal.AllowEASi() && principal.ID() == intake.EUAUserID {
+		if principal.ID() == intake.EUAUserID {
 			return true, nil
 		}
 		// Default to failure to authorize and create a quick audit log
