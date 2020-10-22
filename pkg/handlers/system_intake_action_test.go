@@ -17,7 +17,7 @@ import (
 )
 
 func newMockCreateSystemIntakeAction(err error) createSystemIntakeAction {
-	return func(ctx context.Context, id uuid.UUID, actionType models.ActionType) error {
+	return func(ctx context.Context, action *models.Action) error {
 		return err
 	}
 }

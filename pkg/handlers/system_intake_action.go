@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -12,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type createSystemIntakeAction func(context.Context, uuid.UUID, models.ActionType) error
+type createSystemIntakeAction func(context.Context, *models.Action) error
 
 // NewSystemIntakeActionHandler is a constructor for SystemIntakeActionHandler
 func NewSystemIntakeActionHandler(
@@ -59,7 +61,17 @@ func (h SystemIntakeActionHandler) Handle() http.HandlerFunc {
 				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
-			err = h.CreateSystemIntakeAction(r.Context(), intakeID, actionType)
+			defer r.Body.Close()
+			decoder := json.NewDecoder(r.Body)
+			action := models.Action{}
+			err = decoder.Decode(&action)
+			if err != nil && err != io.EOF {
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
+				return
+			}
+			action.ActionType = actionType
+			action.IntakeID = &intakeID
+			err = h.CreateSystemIntakeAction(r.Context(), &action)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
