@@ -5,6 +5,7 @@ import { LoginCallback, SecureRoute } from '@okta/okta-react';
 
 import { FlagProvider, useFlags } from 'contexts/flagContext';
 import { AppState } from 'reducers/rootReducer';
+import user from 'utils/user';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -32,10 +33,6 @@ import './index.scss';
 const AppRoutes = () => {
   const flags = useFlags();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isGrtReviewer =
-    userGroups.includes('EASI_D_GOVTEAM') ||
-    userGroups.includes('EASI_P_GOVTEAM');
-
   const userGroupsSet = useSelector(
     (state: AppState) => state.auth.userGroupsSet
   );
@@ -67,7 +64,7 @@ const AppRoutes = () => {
         />
       )}
 
-      {userGroupsSet && isGrtReviewer && (
+      {userGroupsSet && user.isGrtReviewer(userGroups) && (
         <SecureRoute
           path="/governance-review-team/:systemId/:activePage"
           component={GovernanceReviewTeam}
