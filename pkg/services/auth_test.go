@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -12,13 +11,14 @@ import (
 func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 	authorizeSaveSystemIntake := NewAuthorizeUserIsIntakeRequester()
 
-	s.Run("No EUA ID fails auth", func() {
+	s.Run("No EASi job code fails auth", func() {
 		ctx := context.Background()
+		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{JobCodeEASi: false})
 
 		ok, err := authorizeSaveSystemIntake(ctx, &models.SystemIntake{})
 
 		s.False(ok)
-		s.IsType(&apperrors.ContextError{}, err)
+		s.NoError(err)
 	})
 
 	s.Run("Mismatched EUA ID fails auth", func() {
