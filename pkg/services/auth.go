@@ -29,15 +29,11 @@ func NewAuthorizeUserIsIntakeRequester() func(
 
 		// If intake is owned by user, authorize
 		if principal.AllowEASi() && principal.ID() == intake.EUAUserID {
-			logger.With(zap.Bool("Authorized", true)).
-				With(zap.String("Operation", "UpdateSystemIntake")).
-				Info("user authorized to save system intake")
 			return true, nil
 		}
 		// Default to failure to authorize and create a quick audit log
 		logger.With(zap.Bool("Authorized", false)).
-			With(zap.String("Operation", "UpdateSystemIntake")).
-			Info("unauthorized attempt to save system intake")
+			Info("user unauthorized as owning the system intake")
 		return false, nil
 	}
 }
@@ -57,8 +53,7 @@ func NewAuthorizeHasEASiRole() func(
 			}
 		}
 		logger.With(zap.Bool("Authorized", true)).
-			With(zap.String("Operation", "UpdateSystemIntake")).
-			Info("user authorized to save system intake")
+			Info("user authorized as EASi user")
 		return true, nil
 	}
 }
