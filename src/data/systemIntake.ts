@@ -37,7 +37,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   },
   fundingSource: {
     isFunded: null,
-    fundingNumber: ''
+    fundingNumber: '',
+    source: ''
   },
   costs: {
     isExpectingIncrease: '',
@@ -96,6 +97,7 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     projectName: systemIntake.requestName,
     existingFunding: systemIntake.fundingSource.isFunded,
     fundingNumber: systemIntake.fundingSource.fundingNumber,
+    fundingSource: systemIntake.fundingSource.source,
     businessNeed: systemIntake.businessNeed,
     solution: systemIntake.businessSolution,
     processStatus: systemIntake.currentStage,
@@ -160,7 +162,8 @@ export const prepareSystemIntakeForApp = (
         systemIntake.existingFunding === null
           ? null
           : systemIntake.existingFunding,
-      fundingNumber: systemIntake.fundingNumber || ''
+      fundingNumber: systemIntake.fundingNumber || '',
+      source: systemIntake.fundingSource || ''
     },
     costs: {
       isExpectingIncrease: systemIntake.costIncrease || '',
