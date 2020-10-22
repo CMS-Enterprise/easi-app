@@ -30,7 +30,7 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 
 	s.Run("golden path POST passes", func() {
 		body, err := json.Marshal(map[string]string{
-			"action_type": "SUBMIT",
+			"actionType": "SUBMIT",
 		})
 		s.NoError(err)
 		rr := httptest.NewRecorder()
@@ -70,7 +70,7 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 
 	s.Run("POST fails if a error is thrown by service", func() {
 		body, err := json.Marshal(map[string]string{
-			"action_type": "SUBMIT",
+			"actionType": "SUBMIT",
 		})
 		s.NoError(err)
 		rr := httptest.NewRecorder()
