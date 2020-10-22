@@ -26,35 +26,6 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The GRT Review page', () => {
-  it('renders nothing if the user does not have the proper group', () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
-      auth: {
-        groups: [],
-        userGroupsSet: true
-      },
-      systemIntake: {
-        systemIntake: {
-          ...initialSystemIntakeForm,
-          lcid: '12345'
-        }
-      },
-      businessCase: {
-        form: {}
-      }
-    });
-
-    const component = mount(
-      <MemoryRouter>
-        <Provider store={store}>
-          <GovernanceReviewTeam />
-        </Provider>
-      </MemoryRouter>
-    );
-
-    expect(component.text()).toEqual('');
-  });
-
   it('shows open status', () => {
     const mockStore = configureMockStore();
     const store = mockStore({
@@ -86,10 +57,6 @@ describe('The GRT Review page', () => {
   it('shows closed status', () => {
     const mockStore = configureMockStore();
     const store = mockStore({
-      auth: {
-        groups: ['EASI_D_GOVTEAM'],
-        userGroupsSet: true
-      },
       systemIntake: {
         systemIntake: {
           ...initialSystemIntakeForm,
@@ -116,10 +83,6 @@ describe('The GRT Review page', () => {
   it('shows lifecycle id if it exists', () => {
     const mockStore = configureMockStore();
     const store = mockStore({
-      auth: {
-        groups: ['EASI_D_GOVTEAM'],
-        userGroupsSet: true
-      },
       systemIntake: {
         systemIntake: {
           ...initialSystemIntakeForm,
