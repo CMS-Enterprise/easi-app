@@ -20,11 +20,15 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
   const { contract } = systemIntake;
 
   const fundingDefinition = () => {
-    const isFunded = convertBoolToYesNo(systemIntake.fundingSource.isFunded);
-    if (systemIntake.fundingSource.isFunded) {
-      return `${isFunded}, ${systemIntake.fundingSource.fundingNumber}`;
+    const {
+      fundingSource: { isFunded, fundingNumber, source }
+    } = systemIntake;
+    const isFundedText = convertBoolToYesNo(isFunded);
+
+    if (isFunded) {
+      return `${isFundedText}, ${source}, ${fundingNumber}`;
     }
-    return isFunded;
+    return isFundedText;
   };
   const issoDefinition = () => {
     const hasIsso = convertBoolToYesNo(systemIntake.isso.isPresent);
