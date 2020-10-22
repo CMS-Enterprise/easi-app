@@ -185,6 +185,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 			ProcessStatus:      null.StringFrom("ABCDEF"),
 			ExistingFunding:    null.BoolFrom(false),
 			FundingNumber:      null.StringFrom(""),
+			FundingSource:      null.StringFrom(""),
 			CostIncrease:       null.StringFrom("YES"),
 			CostIncreaseAmount: null.StringFrom("$10 million"),
 			ExistingContract:   null.StringFrom("NOT_NEEDED"),
@@ -199,6 +200,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		processStatus := "Just an idea"
 		existingFunding := true
 		fundingNumber := "123456"
+		fundingSource := "CLIA"
 		existingContract := "IN_PROGRESS"
 		contractor := "TrussWorks, Inc."
 		contractVehicle := "Fixed price contract"
@@ -209,6 +211,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		partial.ProcessStatus = null.StringFrom(processStatus)
 		partial.ExistingFunding = null.BoolFrom(existingFunding)
 		partial.FundingNumber = null.StringFrom(fundingNumber)
+		partial.FundingSource = null.StringFrom(fundingSource)
 		partial.ExistingContract = null.StringFrom(existingContract)
 		partial.Contractor = null.StringFrom(contractor)
 		partial.ContractVehicle = null.StringFrom(contractVehicle)
@@ -226,6 +229,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Equal(processStatus, updated.ProcessStatus.String)
 		s.Equal(existingFunding, updated.ExistingFunding.Bool)
 		s.Equal(fundingNumber, updated.FundingNumber.String)
+		s.Equal(fundingSource, updated.FundingSource.String)
 		s.Equal(existingContract, updated.ExistingContract.String)
 		s.Equal(contractor, updated.Contractor.String)
 		s.Equal(contractVehicle, updated.ContractVehicle.String)
