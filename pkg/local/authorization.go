@@ -19,7 +19,7 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, testEUAID string
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger.Info("Using local authorization middleware and populating EUA ID")
-		ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{EUAID: euaID, JobCodeEASi: true})
+		ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{EUAID: euaID, JobCodeEASi: true, JobCodeGRT: true})
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
