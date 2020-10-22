@@ -24,6 +24,7 @@ import './index.scss';
 
 const GovernanceReviewTeam = () => {
   const { t } = useTranslation('governanceReviewTeam');
+  const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
 
@@ -183,7 +184,7 @@ const GovernanceReviewTeam = () => {
               render={() => (
                 <SubmitAction
                   action="not-an-it-request"
-                  actionName="Not and IT Request"
+                  actionName={actionsT('actions.notItRequest')}
                 />
               )}
             />
