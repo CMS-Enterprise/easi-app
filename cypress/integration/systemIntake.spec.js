@@ -93,7 +93,8 @@ describe('The System Intake Form', () => {
         },
         fundingSource: {
           isFunded: false,
-          fundingNumber: ''
+          fundingNumber: '',
+          source: ''
         },
         costs: {
           isExpectingIncrease: 'NO',
