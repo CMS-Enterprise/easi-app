@@ -295,7 +295,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', 'Does the project have funding')
       .siblings('dd')
-      .contains('Yes, 111111');
+      .contains('Yes, CLIA, 111111');
   });
 
   it('displays contact details error messages', () => {
