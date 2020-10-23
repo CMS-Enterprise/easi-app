@@ -9,12 +9,13 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { ActionForm } from 'types/action';
+import { Action, ActionForm, ActionType } from 'types/action';
+import { postSystemIntakeAction } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import actionSchema from 'validations/actionSchema';
 
 type SubmitActionProps = {
-  action: string;
+  action: ActionType;
   actionName: string;
 };
 
@@ -24,8 +25,12 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
 
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
-    const payload = { systemId, action, feedback };
-    console.log(payload);
+    const payload: Action = {
+      intakeId: systemId,
+      actionType: action,
+      feedback
+    };
+    postSystemIntakeAction(payload);
   };
 
   const initialValues: ActionForm = {
