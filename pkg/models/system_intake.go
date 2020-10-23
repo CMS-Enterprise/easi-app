@@ -44,7 +44,6 @@ type SystemIntake struct {
 	EACollaborator          null.String        `json:"eaCollaborator" db:"ea_collaborator"`
 	ProjectName             null.String        `json:"projectName" db:"project_name"`
 	ExistingFunding         null.Bool          `json:"existingFunding" db:"existing_funding"`
-	FundingNumber           null.String        `json:"fundingNumber" db:"funding_number"`
 	FundingSource           null.String        `json:"fundingSource" db:"funding_source"`
 	FundingNumber           null.String        `json:"fundingNumber" db:"funding_number"`
 	BusinessNeed            null.String        `json:"businessNeed" db:"business_need"`
