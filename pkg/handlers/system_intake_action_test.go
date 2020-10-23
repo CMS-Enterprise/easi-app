@@ -37,7 +37,7 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 		req, reqErr := http.NewRequestWithContext(
 			requestContext,
 			"POST",
-			fmt.Sprintf("/system_intake/%s/action/SUBMIT", id.String()),
+			fmt.Sprintf("/system_intake/%s/actions", id.String()),
 			bytes.NewBuffer(body),
 		)
 		s.NoError(reqErr)
@@ -55,7 +55,7 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 		req, reqErr := http.NewRequestWithContext(
 			requestContext,
 			"POST",
-			fmt.Sprintf("/system_intake/%s/action/SUBMIT", id.String()),
+			fmt.Sprintf("/system_intake/%s/actions", id.String()),
 			bytes.NewBufferString(""),
 		)
 		s.NoError(reqErr)
@@ -77,7 +77,7 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 		req, err := http.NewRequestWithContext(
 			requestContext,
 			"POST",
-			fmt.Sprintf("/system_intake/%s/action/SUBMIT", id.String()),
+			fmt.Sprintf("/system_intake/%s/actions", id.String()),
 			bytes.NewBuffer(body),
 		)
 		s.NoError(err)
