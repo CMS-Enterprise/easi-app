@@ -46,6 +46,7 @@ type SystemIntake struct {
 	ExistingFunding         null.Bool          `json:"existingFunding" db:"existing_funding"`
 	FundingNumber           null.String        `json:"fundingNumber" db:"funding_number"`
 	FundingSource           null.String        `json:"fundingSource" db:"funding_source"`
+	FundingNumber           null.String        `json:"fundingNumber" db:"funding_number"`
 	BusinessNeed            null.String        `json:"businessNeed" db:"business_need"`
 	Solution                null.String        `json:"solution"`
 	ProcessStatus           null.String        `json:"processStatus" db:"process_status"`
