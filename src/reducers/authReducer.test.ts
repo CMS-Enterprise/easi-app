@@ -1,4 +1,5 @@
 import authReducer, {
+  setUserGroups,
   updateLastActiveAt,
   updateLastRenewAt
 } from './authReducer';
@@ -18,7 +19,9 @@ describe('The auth reducer', () => {
   it('returns the initial state', () => {
     expect(authReducer(undefined, {})).toEqual({
       lastActiveAt: expect.any(Number),
-      lastRenewAt: expect.any(Number)
+      lastRenewAt: expect.any(Number),
+      groups: [],
+      userGroupsSet: false
     });
   });
 
@@ -45,6 +48,19 @@ describe('The auth reducer', () => {
     expect(authReducer(initialReducer, mockAction)).toEqual({
       lastActiveAt: 0,
       lastRenewAt: fakeTime
+    });
+  });
+
+  it('handles setUserGroups', () => {
+    const initialReducer = {
+      groups: [],
+      userGroupsSet: false
+    };
+    const mockAction = setUserGroups(['my-test-group']);
+
+    expect(authReducer(initialReducer, mockAction)).toEqual({
+      groups: ['my-test-group'],
+      userGroupsSet: true
     });
   });
 });

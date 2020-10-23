@@ -250,6 +250,18 @@ func (s *Server) routes(
 	)
 	api.Handle("/system_intake/{intake_id}/actions/{action_type}", systemIntakeActionHandler.Handle())
 
+	systemIntakeLifecycleIDHandler := handlers.NewSystemIntakeLifecycleIDHandler(
+		base,
+		services.NewUpdateLifecycleFields(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
+			store.GenerateLifecycleID,
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
+
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
