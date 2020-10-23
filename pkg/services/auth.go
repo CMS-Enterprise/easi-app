@@ -6,7 +6,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -20,15 +19,12 @@ func NewAuthorizeUserIsIntakeRequester() func(
 		logger := appcontext.ZLogger(ctx)
 		principal := appcontext.Principal(ctx)
 		if !principal.AllowEASi() {
-			logger.Error("unable to get EUA ID from context")
-			return false, &apperrors.ContextError{
-				Operation: apperrors.ContextGet,
-				Object:    "EUA ID",
-			}
+			logger.Info("does not have EASi job code")
+			return false, nil
 		}
 
 		// If intake is owned by user, authorize
-		if principal.AllowEASi() && principal.ID() == intake.EUAUserID {
+		if principal.ID() == intake.EUAUserID {
 			return true, nil
 		}
 		// Default to failure to authorize and create a quick audit log
@@ -46,11 +42,8 @@ func NewAuthorizeHasEASiRole() func(
 		logger := appcontext.ZLogger(ctx)
 		principal := appcontext.Principal(ctx)
 		if !principal.AllowEASi() {
-			logger.Error("unable to get EUA ID from context")
-			return false, &apperrors.ContextError{
-				Operation: apperrors.ContextGet,
-				Object:    "EUA ID",
-			}
+			logger.Error("does not have EASi job code")
+			return false, nil
 		}
 		logger.With(zap.Bool("Authorized", true)).
 			Info("user authorized as EASi user")
