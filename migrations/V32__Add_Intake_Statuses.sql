@@ -4,5 +4,7 @@ ALTER TYPE system_intake_status ADD VALUE 'BIZ_CASE_DRAFT_SUBMITTED';
 ALTER TYPE system_intake_status ADD VALUE 'BIZ_CASE_CHANGES_NEEDED';
 ALTER TYPE system_intake_status ADD VALUE 'BIZ_CASE_FINAL_NEEDED';
 ALTER TYPE system_intake_status ADD VALUE 'BIZ_CASE_FINAL_SUBMITTED';
+ALTER TYPE system_intake_status ADD VALUE 'READY_FOR_GRB';
+ALTER TYPE system_intake_status ADD VALUE 'LCID_ISSUED';
 ALTER TYPE system_intake_status ADD VALUE 'NOT_APPROVED';
 ALTER TYPE system_intake_status ADD VALUE 'NO_GOVERNANCE';
