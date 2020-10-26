@@ -539,7 +539,6 @@ func (s StoreTestSuite) TestFetchSystemIntakesNotArchived() {
 
 		for _, intake := range intakes {
 			id := intake.ID.String()
-			s.T().Logf("intake: %s\n", id)
 			expected[id] = true
 
 			// failure if we got back one of the ARCHIVED intakes
