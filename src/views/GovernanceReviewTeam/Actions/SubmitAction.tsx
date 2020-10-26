@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -22,6 +23,7 @@ type SubmitActionProps = {
 const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
   const { systemId } = useParams();
   const { t } = useTranslation('action');
+  const dispatch = useDispatch();
 
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
@@ -30,7 +32,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
       actionType: action,
       feedback
     };
-    postSystemIntakeAction(payload);
+    dispatch(postSystemIntakeAction(payload));
   };
 
   const initialValues: ActionForm = {
