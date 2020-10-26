@@ -33,20 +33,13 @@ const shortenTimeout = async (authService: any) => {
         .toSeconds()
     )
   };
-  console.log(newAccessToken);
   tokenManager.add('accessToken', newAccessToken);
-
-  console.log('I shortened the thing');
 };
 
 const logInfo = async (authService: any) => {
   const tokenManager = await authService.getTokenManager();
-  const idToken = await tokenManager.get('idToken');
-  console.log('idToken expires at ', idToken.expiresAt);
-
-  const accessToken = await tokenManager.get('accessToken');
-  console.log('accessToken expires at ', accessToken.value);
-  console.log('accessToken expires at ', accessToken.expiresAt);
+  await tokenManager.get('idToken');
+  await tokenManager.get('accessToken');
 };
 
 const Sandbox = () => {
