@@ -16,6 +16,7 @@ import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
 
 import ChooseAction from './Actions/ChooseAction';
+import IssueLifecycleId from './Actions/IssueLifecycleId';
 import SubmitAction from './Actions/SubmitAction';
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
@@ -196,6 +197,10 @@ const GovernanceReviewTeam = () => {
                   actionName={actionsT('actions.needBizCase')}
                 />
               )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/issue-lcid"
+              render={() => <IssueLifecycleId />}
             />
           </section>
         </section>
