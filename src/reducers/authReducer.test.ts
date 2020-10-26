@@ -1,21 +1,12 @@
+import { DateTime } from 'luxon';
+
 import authReducer, {
   setUserGroups,
   updateLastActiveAt,
   updateLastRenewAt
 } from './authReducer';
 
-// const RealDate = Date.now;
-const fakeTime = 123456789;
-
 describe('The auth reducer', () => {
-  // beforeAll(() => {
-  //   global.Date.now = jest.fn(() => fakeTime);
-  // });
-
-  // afterAll(() => {
-  //   global.Date.now = RealDate;
-  // });
-
   it('returns the initial state', () => {
     expect(authReducer(undefined, { type: 'TEST', payload: {} })).toEqual({
       lastActiveAt: expect.any(Number),
@@ -32,11 +23,11 @@ describe('The auth reducer', () => {
       groups: [],
       userGroupsSet: false
     };
-    const mockAction = updateLastActiveAt;
+    const now = DateTime.local();
 
-    expect(authReducer(initialReducer, mockAction).lastActiveAt).toEqual(
-      fakeTime
-    );
+    expect(
+      authReducer(initialReducer, updateLastActiveAt(now)).lastActiveAt
+    ).toEqual(now);
   });
 
   it('handles updateLastRenewAt', () => {
@@ -46,11 +37,11 @@ describe('The auth reducer', () => {
       groups: [],
       userGroupsSet: false
     };
-    const mockAction = updateLastRenewAt;
+    const now = DateTime.local();
 
-    expect(authReducer(initialReducer, mockAction).lastRenewAt).toEqual(
-      fakeTime
-    );
+    expect(
+      authReducer(initialReducer, updateLastRenewAt(now)).lastRenewAt
+    ).toEqual(now);
   });
 
   it('handles setUserGroups', () => {
