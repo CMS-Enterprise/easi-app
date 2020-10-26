@@ -180,7 +180,7 @@ const GovernanceReviewTeam = () => {
               render={() => <ChooseAction businessCase={businessCase} />}
             />
             <Route
-              path="/governance-review-team/:systemId/actions/not-an-it-request"
+              path="/governance-review-team/:systemId/actions/not-it-request"
               render={() => (
                 <SubmitAction
                   action="NOT_IT_REQUEST"
