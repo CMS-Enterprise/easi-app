@@ -3,13 +3,20 @@
 **User Story:** [EASi 697](https://jiraent.cms.gov/browse/EASI-697)
 
 As we try to have logs for user actions, we need to better understand where
-they live and what extent of logging we will be doing?
+they live and what extent of logging we will be doing.
 
-## Decisions / Answers
+The decision to use AWS logging tools is addressed in a previous
+[ADR](https://github.com/CMSgov/easi-app/blob/master/docs/adr/0009-logging-platform.md).
+We decided to use CMS Cloud Splunk because it best facilitated the requirement
+of forwarding logs to the CCIC and integrating with the CMS Cloud team.
+
+This document will be focusing on the requirements and rules of audit logging.
+
+## Questions / Answers
 
 ### 1) Where will the logging live
 
-CMS Splunk Cloudwatch
+CMS Splunk Cloudwatch, AWS logging tools (e.g. Cloudwatch, S3)
 
 #### &nbsp;&nbsp; a) How will it be accessed
 
@@ -139,6 +146,6 @@ but no less often than once every thirty (30) days.
 ### 6) How long do we need to keep logged data
 
 We can keep forever. The organization retains audit records for ninety (90) days
-and archive old records for one (1) year to provide support for after-the-fact
+and archives old records for one (1) year to provide support for after-the-fact
 investigations of security incidents and to meet regulatory and CMS information
 retention requirements.
