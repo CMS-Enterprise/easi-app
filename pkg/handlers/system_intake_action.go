@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"io"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -55,21 +54,14 @@ func (h SystemIntakeActionHandler) Handle() http.HandlerFunc {
 				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
-			actionType := models.ActionType(mux.Vars(r)["action_type"])
-			if actionType == "" {
-				valErr.WithValidation("path.actionType", "is required")
-				h.WriteErrorResponse(r.Context(), w, &valErr)
-				return
-			}
 			defer r.Body.Close()
 			decoder := json.NewDecoder(r.Body)
 			action := models.Action{}
 			err = decoder.Decode(&action)
-			if err != nil && err != io.EOF {
+			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
-			action.ActionType = actionType
 			action.IntakeID = &intakeID
 			err = h.CreateSystemIntakeAction(r.Context(), &action)
 			if err != nil {
