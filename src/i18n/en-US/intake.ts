@@ -21,6 +21,7 @@ const intake = {
     eaCollaborator: 'EA Collaborator Name',
     projectName: 'Project Name',
     existingFunding: 'Existing Funding',
+    fundingSource: 'Funding Source',
     fundingNumber: 'Funding Number',
     businessNeed: 'Business Need',
     businessSolution: 'Business Solution',
