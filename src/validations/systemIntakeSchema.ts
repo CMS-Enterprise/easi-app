@@ -89,6 +89,10 @@ const SystemIntakeValidationSchema: any = {
           .required(
             'Tell us your funding number. This is a six digit number and starts with 00'
           )
+      }),
+      source: Yup.string().when('isFunded', {
+        is: true,
+        then: Yup.string().required('Tell us your funding source')
       })
     }),
     costs: Yup.object().shape({
