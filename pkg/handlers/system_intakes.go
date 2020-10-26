@@ -5,12 +5,11 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchSystemIntakes func(context.Context, string) (models.SystemIntakes, error)
+type fetchSystemIntakes func(context.Context) (models.SystemIntakes, error)
 
 // NewSystemIntakesHandler is a constructor for SystemIntakesHandler
 func NewSystemIntakesHandler(base HandlerBase, fetch fetchSystemIntakes) SystemIntakesHandler {
@@ -31,16 +30,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
-			principal := appcontext.Principal(r.Context())
-			if !principal.AllowEASi() {
-				h.WriteErrorResponse(r.Context(), w, &apperrors.ContextError{
-					Operation: apperrors.ContextGet,
-					Object:    "User",
-				})
-				return
-			}
-
-			systemIntakes, err := h.FetchSystemIntakes(r.Context(), principal.ID())
+			systemIntakes, err := h.FetchSystemIntakes(r.Context())
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return

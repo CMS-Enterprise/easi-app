@@ -15,7 +15,7 @@ import (
 )
 
 func newMockFetchSystemIntakes(systemIntakes models.SystemIntakes, err error) fetchSystemIntakes {
-	return func(context context.Context, euaID string) (models.SystemIntakes, error) {
+	return func(context context.Context) (models.SystemIntakes, error) {
 		return systemIntakes, err
 	}
 }

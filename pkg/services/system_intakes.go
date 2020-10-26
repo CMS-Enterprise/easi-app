@@ -13,39 +13,39 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// NewAuthorizeFetchSystemIntakesByEuaID is a service to authorize FetchSystemIntakesByEuaID
-func NewAuthorizeFetchSystemIntakesByEuaID() func(ctx context.Context, euaID string) (bool, error) {
-	return func(ctx context.Context, euaID string) (bool, error) {
-		return true, nil
-	}
-}
-
-// NewFetchSystemIntakesByEuaID is a service to fetch system intakes by EUA id
-func NewFetchSystemIntakesByEuaID(
+// NewFetchSystemIntakes is a service to fetch multiple system intakes
+// that are to be presented to the given requester
+func NewFetchSystemIntakes(
 	config Config,
-	fetch func(c context.Context, euaID string) (models.SystemIntakes, error),
-	authorize func(c context.Context, euaID string) (bool, error),
-) func(c context.Context, e string) (models.SystemIntakes, error) {
-	return func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
+	fetchByID func(c context.Context, euaID string) (models.SystemIntakes, error),
+	fetchAll func(context.Context) (models.SystemIntakes, error),
+	authorize func(c context.Context) (bool, error),
+) func(c context.Context) (models.SystemIntakes, error) {
+	return func(ctx context.Context) (models.SystemIntakes, error) {
 		logger := appcontext.ZLogger(ctx)
-		ok, err := authorize(ctx, euaID)
+		ok, err := authorize(ctx)
 		if err != nil {
-			logger.Error("failed to authorize fetch system intakes")
-			return models.SystemIntakes{}, err
+			return nil, err
 		}
 		if !ok {
-			return models.SystemIntakes{}, &apperrors.UnauthorizedError{Err: err}
+			return nil, &apperrors.UnauthorizedError{Err: errors.New("failed to authorize fetch system intakes")}
 		}
-		intakes, err := fetch(ctx, euaID)
+		var result models.SystemIntakes
+		principal := appcontext.Principal(ctx)
+		if !principal.AllowGRT() {
+			result, err = fetchByID(ctx, principal.ID())
+		} else {
+			result, err = fetchAll(ctx)
+		}
 		if err != nil {
 			logger.Error("failed to fetch system intakes")
-			return models.SystemIntakes{}, &apperrors.QueryError{
+			return nil, &apperrors.QueryError{
 				Err:       err,
-				Model:     intakes,
+				Model:     result,
 				Operation: apperrors.QueryFetch,
 			}
 		}
-		return intakes, nil
+		return result, nil
 	}
 }
 
