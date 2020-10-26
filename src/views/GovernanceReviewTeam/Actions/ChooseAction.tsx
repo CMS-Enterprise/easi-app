@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 
@@ -12,7 +11,6 @@ type ChooseActionProps = {
 
 const ChooseAction = ({ businessCase }: ChooseActionProps) => {
   const history = useHistory();
-  const { t } = useTranslation('action');
 
   const businessCaseExists = !!businessCase.id;
   const [actionRoute, setActionRoute] = useState('');
@@ -28,7 +26,7 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     <RadioField
       key="not-an-it-request"
       id="not-an-it-request"
-      label={t('actions.notItRequest')}
+      label="Not an IT request"
       name={radioGroupName}
       value="not-an-it-request"
       onChange={onChange}
@@ -36,23 +34,23 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
-  const NeedBizCase = (
+  const TestAction = (
     <RadioField
-      key="need-biz-case"
-      id="need-biz-case"
-      label={t('actions.needBizCase')}
+      key="test-route"
+      id="test-route"
+      label="Test Action"
       name={radioGroupName}
-      value="need-biz-case"
+      value="test-route"
       onChange={onChange}
-      checked={actionRoute === 'need-biz-case'}
+      checked={actionRoute === 'test-route'}
     />
   );
 
   let availableActions: Array<any> = [];
   if (businessCaseExists) {
-    availableActions = [];
+    availableActions = [TestAction];
   } else {
-    availableActions = [NotAnITRequest, NeedBizCase];
+    availableActions = [NotAnITRequest, TestAction];
   }
 
   return (

@@ -188,15 +188,6 @@ const GovernanceReviewTeam = () => {
                 />
               )}
             />
-            <Route
-              path="/governance-review-team/:systemId/actions/need-biz-case"
-              render={() => (
-                <SubmitAction
-                  action="NEED_BIZ_CASE"
-                  actionName={actionsT('actions.needBizCase')}
-                />
-              )}
-            />
           </section>
         </section>
       </MainContent>
