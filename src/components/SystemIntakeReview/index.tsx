@@ -12,11 +12,13 @@ import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
-type SystemIntakeReview = {
+type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
 };
 
-export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
+export const SystemIntakeReview = ({
+  systemIntake
+}: SystemIntakeReviewProps) => {
   const { contract } = systemIntake;
 
   const fundingDefinition = () => {

@@ -25,6 +25,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
     const payload = { systemId, action, feedback };
+    // eslint-disable-next-line no-console
     console.log(payload);
   };
 
