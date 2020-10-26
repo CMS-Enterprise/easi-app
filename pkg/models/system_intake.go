@@ -19,6 +19,8 @@ const (
 	SystemIntakeStatusNEEDBIZCASE SystemIntakeStatus = "NEED_BIZ_CASE"
 	// SystemIntakeStatusCLOSED captures enum value "CLOSED"
 	SystemIntakeStatusCLOSED SystemIntakeStatus = "CLOSED"
+	// SystemIntakeStatusAPPROVED captures enum value "APPROVED"
+	SystemIntakeStatusAPPROVED SystemIntakeStatus = "APPROVED"
 	// SystemIntakeStatusREADYFORGRT captures enum value "READY_FOR_GRT"
 	SystemIntakeStatusREADYFORGRT SystemIntakeStatus = "READY_FOR_GRT"
 	// SystemIntakeStatusARCHIVED captures enum value "ARCHIVED"
