@@ -12,13 +12,15 @@ type authReducerState = {
 const UPDATE_LAST_ACTIVE_AT = 'AUTH_REDUCER_UPDATE_LAST_ACTIVE_AT';
 
 export const updateLastActiveAt = {
-  type: UPDATE_LAST_ACTIVE_AT
+  type: UPDATE_LAST_ACTIVE_AT,
+  payload: {}
 };
 
 const UPDATE_LAST_RENEW_AT = 'AUTH_REDUCER_UPDATE_LAST_RENEW_AT';
 
 export const updateLastRenewAt = {
-  type: UPDATE_LAST_RENEW_AT
+  type: UPDATE_LAST_RENEW_AT,
+  payload: {}
 };
 
 const SET_USER_GROUPS = 'AUTH_REDUCER_SET_USER_GROUPS';
