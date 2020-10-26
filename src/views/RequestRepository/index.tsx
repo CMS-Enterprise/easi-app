@@ -12,10 +12,7 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
-import {
-  convertIntakesToCSV,
-  initialSystemIntakeForm
-} from 'data/systemIntake';
+import { convertIntakeToCSV, initialSystemIntakeForm } from 'data/systemIntake';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 const RequestRepository = () => {
@@ -97,6 +94,7 @@ const RequestRepository = () => {
       },
       fundingSource: {
         isFunded: true,
+        source: 'CLIA',
         fundingNumber: '123456'
       },
       costs: {
@@ -277,6 +275,10 @@ const RequestRepository = () => {
       label: t('intake:csvHeadings.existingFunding')
     },
     {
+      key: 'fundingSource.source',
+      label: t('intake:csvHeadings.fundingSource')
+    },
+    {
       key: 'fundingSource.fundingNumber',
       label: t('intake:csvHeadings.fundingNumber')
     },
@@ -349,6 +351,10 @@ const RequestRepository = () => {
       label: t('intake:csvHeadings.archivedAt')
     }
   ];
+
+  const convertIntakesToCSV = (intakes: SystemIntakeForm[]) => {
+    return intakes.map(intake => convertIntakeToCSV(intake));
+  };
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (

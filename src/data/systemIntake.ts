@@ -212,43 +212,42 @@ export const prepareSystemIntakeForApp = (
   };
 };
 
-export const convertIntakesToCSV = (intakes: SystemIntakeForm[]) => {
-  return intakes.map(intake => {
-    const collaboratorTeams: any = {};
-    if (intake.governanceTeams.isPresent) {
-      intake.governanceTeams.teams.forEach(team => {
-        switch (team.name) {
-          case 'Technical Review Board':
-            collaboratorTeams.trbCollaborator = team.collaborator;
-            break;
-          case "OIT's Security and Privacy Group":
-            collaboratorTeams.oitCollaborator = team.collaborator;
-            break;
-          case 'Enterprise Architecture':
-            collaboratorTeams.eaCollaborator = team.collaborator;
-            break;
-          default:
-            break;
-        }
-      });
-    }
-    return {
-      ...intake,
-      ...collaboratorTeams,
-      contractStartDate:
-        ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-          intake.contract.hasContract
-        ) &&
-        `${intake.contract.startDate.month}/${intake.contract.startDate.year}`,
-      contractEndDate:
-        ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
-          intake.contract.hasContract
-        ) && `${intake.contract.endDate.month}/${intake.contract.endDate.year}`,
-      submittedAt: intake.submittedAt && intake.submittedAt.toISO(),
-      updatedAt: intake.updatedAt && intake.updatedAt.toISO(),
-      createdAt: intake.createdAt && intake.createdAt.toISO(),
-      decidedAt: intake.decidedAt && intake.decidedAt.toISO(),
-      archivedAt: intake.archivedAt && intake.archivedAt.toISO()
-    };
-  });
+export const convertIntakeToCSV = (intake: SystemIntakeForm) => {
+  const collaboratorTeams: any = {};
+  if (intake.governanceTeams.isPresent) {
+    intake.governanceTeams.teams.forEach(team => {
+      switch (team.name) {
+        case 'Technical Review Board':
+          collaboratorTeams.trbCollaborator = team.collaborator;
+          break;
+        case "OIT's Security and Privacy Group":
+          collaboratorTeams.oitCollaborator = team.collaborator;
+          break;
+        case 'Enterprise Architecture':
+          collaboratorTeams.eaCollaborator = team.collaborator;
+          break;
+        default:
+          break;
+      }
+    });
+  }
+  return {
+    ...intake,
+    ...collaboratorTeams,
+    contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+      intake.contract.hasContract
+    )
+      ? `${intake.contract.startDate.month}/${intake.contract.startDate.year}`
+      : '',
+    contractEndDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+      intake.contract.hasContract
+    )
+      ? `${intake.contract.endDate.month}/${intake.contract.endDate.year}`
+      : '',
+    submittedAt: intake.submittedAt && intake.submittedAt.toISO(),
+    updatedAt: intake.updatedAt && intake.updatedAt.toISO(),
+    createdAt: intake.createdAt && intake.createdAt.toISO(),
+    decidedAt: intake.decidedAt && intake.decidedAt.toISO(),
+    archivedAt: intake.archivedAt && intake.archivedAt.toISO()
+  };
 };
