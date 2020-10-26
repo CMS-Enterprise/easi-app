@@ -41,22 +41,16 @@ export const SystemIntake = () => {
     (state: AppState) => state.systemIntake.isLoading
   );
 
-  const isSaving = useSelector(
-    (state: AppState) => state.systemIntake.isSaving
-  );
-
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && !isSaving) {
-      if (systemId === 'new') {
-        dispatch(postSystemIntake({ ...systemIntake, ...current.values }));
-      } else {
-        dispatch(
-          saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
-        );
-      }
-      current.resetForm({ values: current.values, errors: current.errors });
+    if (systemId === 'new') {
+      dispatch(postSystemIntake({ ...systemIntake, ...current.values }));
+    } else {
+      dispatch(
+        saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
+      );
     }
+    current.resetForm({ values: current.values, errors: current.errors });
   };
 
   useEffect(() => {

@@ -1,8 +1,11 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 
 import { FlagProvider, useFlags } from 'contexts/flagContext';
+import { AppState } from 'reducers/rootReducer';
+import user from 'utils/user';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -23,11 +26,17 @@ import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
+import UserInfoWrapper from 'views/UserInfoWrapper';
 
 import './index.scss';
 
 const AppRoutes = () => {
   const flags = useFlags();
+  const userGroups = useSelector((state: AppState) => state.auth.groups);
+  const userGroupsSet = useSelector(
+    (state: AppState) => state.auth.userGroupsSet
+  );
+
   return (
     <Switch>
       <Route path="/" exact component={Home} />
@@ -55,10 +64,12 @@ const AppRoutes = () => {
         />
       )}
 
-      <SecureRoute
-        path="/governance-review-team/:systemId/:activePage"
-        component={GovernanceReviewTeam}
-      />
+      {userGroupsSet && user.isGrtReviewer(userGroups) && (
+        <SecureRoute
+          path="/governance-review-team/:systemId/:activePage"
+          component={GovernanceReviewTeam}
+        />
+      )}
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grt"
@@ -92,7 +103,7 @@ const AppRoutes = () => {
       <Redirect
         exact
         from="/business/:businessCaseId"
-        to="/business/:businessCaseId/general-project-info"
+        to="/business/:businessCaseId/general-request-info"
       />
       <SecureRoute
         path="/business/:businessCaseId/:formPage"
@@ -134,9 +145,11 @@ const App = () => {
       </button>
       <BrowserRouter>
         <AuthenticationWrapper>
-          <TimeOutWrapper>
-            <AppRoutes />
-          </TimeOutWrapper>
+          <UserInfoWrapper>
+            <TimeOutWrapper>
+              <AppRoutes />
+            </TimeOutWrapper>
+          </UserInfoWrapper>
         </AuthenticationWrapper>
       </BrowserRouter>
     </FlagProvider>
