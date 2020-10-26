@@ -89,6 +89,7 @@ export type ContractDetailsForm = {
   fundingSource: {
     isFunded: boolean | null;
     fundingNumber: string;
+    source: string;
   };
   costs: {
     isExpectingIncrease: string;
