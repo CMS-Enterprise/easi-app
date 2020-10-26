@@ -56,7 +56,12 @@ describe('The system intake data modifiers', () => {
         ...initialSystemIntakeForm,
         id: 'addaa218-34d3-4dd8-a12f-38f6ff33b22d',
         euaUserID: 'ABCD',
-        submittedAt: DateTime.fromObject({ year: 2020, month: 6, day: 26 }),
+        submittedAt: DateTime.fromObject({
+          year: 2020,
+          month: 6,
+          day: 26,
+          zone: 'America/Los_Angeles'
+        }),
         requestName: 'Easy Access to System Information',
         requester: {
           name: 'Christopher Hui',
@@ -119,10 +124,30 @@ describe('The system intake data modifiers', () => {
         currentStage: 'Test current stage',
         needsEaSupport: true,
         status: 'Submitted',
-        decidedAt: DateTime.fromObject({ year: 2020, month: 6, day: 27 }),
-        createdAt: DateTime.fromObject({ year: 2020, month: 6, day: 22 }),
-        updatedAt: DateTime.fromObject({ year: 2020, month: 6, day: 23 }),
-        archivedAt: DateTime.fromObject({ year: 2020, month: 6, day: 28 })
+        decidedAt: DateTime.fromObject({
+          year: 2020,
+          month: 6,
+          day: 27,
+          zone: 'America/Los_Angeles'
+        }),
+        createdAt: DateTime.fromObject({
+          year: 2020,
+          month: 6,
+          day: 22,
+          zone: 'America/Los_Angeles'
+        }),
+        updatedAt: DateTime.fromObject({
+          year: 2020,
+          month: 6,
+          day: 23,
+          zone: 'America/Los_Angeles'
+        }),
+        archivedAt: DateTime.fromObject({
+          year: 2020,
+          month: 6,
+          day: 28,
+          zone: 'America/Los_Angeles'
+        })
       };
 
       expect(convertIntakeToCSV(mockIntake)).toMatchObject({
