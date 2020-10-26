@@ -2,7 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { mount, shallow } from 'enzyme';
+import { mount, ReactWrapper, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
 import ActionBanner from 'components/shared/ActionBanner';
@@ -42,7 +42,7 @@ describe('The home page', () => {
   });
 
   describe('User is logged in', () => {
-    it('displays login button', async done => {
+    it('displays login button', async () => {
       const mockStore = configureMockStore();
       const store = mockStore({
         systemIntakes: {
@@ -52,7 +52,7 @@ describe('The home page', () => {
           businessCases: []
         }
       });
-      let component: any;
+      let component: ReactWrapper;
 
       await act(async () => {
         component = mount(
@@ -63,18 +63,15 @@ describe('The home page', () => {
           </MemoryRouter>
         );
 
-        setImmediate(() => {
-          component.update();
+        component.update();
 
-          expect(component.find('a[children="Start now"]').exists()).toEqual(
-            true
-          );
-          done();
-        });
+        expect(component.find('a[children="Start now"]').exists()).toEqual(
+          true
+        );
       });
     });
 
-    it('displays banners for intakes and biz cases', async done => {
+    it('displays banners for intakes and biz cases', async () => {
       const mockStore = configureMockStore();
       const store = mockStore({
         systemIntakes: {
@@ -110,7 +107,7 @@ describe('The home page', () => {
           ]
         }
       });
-      let component: any;
+      let component: ReactWrapper;
 
       await act(async () => {
         component = mount(
@@ -121,11 +118,8 @@ describe('The home page', () => {
           </MemoryRouter>
         );
 
-        setImmediate(() => {
-          component.update();
-          expect(component.find(ActionBanner).length).toEqual(4);
-          done();
-        });
+        component.update();
+        expect(component.find(ActionBanner).length).toEqual(4);
       });
     });
   });
