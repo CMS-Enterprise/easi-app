@@ -93,7 +93,8 @@ describe('The System Intake Form', () => {
         },
         fundingSource: {
           isFunded: false,
-          fundingNumber: ''
+          fundingNumber: '',
+          source: ''
         },
         costs: {
           isExpectingIncrease: 'NO',
@@ -162,6 +163,10 @@ describe('The System Intake Form', () => {
     cy.get('#IntakeForm-HasFundingSourceYes')
       .check({ force: true })
       .should('be.checked');
+
+    cy.get('#IntakeForm-FundingSource')
+      .select('CLIA')
+      .should('have.value', 'CLIA');
 
     cy.get('#IntakeForm-FundingNumber')
       .type('111111')
@@ -290,7 +295,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', 'Does the project have funding')
       .siblings('dd')
-      .contains('Yes, 111111');
+      .contains('Yes, CLIA, 111111');
   });
 
   it('displays contact details error messages', () => {
