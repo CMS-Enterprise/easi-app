@@ -16,7 +16,7 @@ describe('The Business Case Form', () => {
     eaCollaborator: '',
     projectName: 'Easy Access to System Information',
     existingFunding: false,
-    fundingSource: '',
+    fundingNumber: '',
     businessNeed: 'Business Need: The quick brown fox jumps over the lazy dog.',
     solution: 'The quick brown fox jumps over the lazy dog.',
     processStatus: 'The project is already funded',

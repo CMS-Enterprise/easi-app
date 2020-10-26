@@ -36,7 +36,7 @@
     "font-awesome": "^4.7.0",
     "formik": "^2.1.4",
     "history": "^4.10.1",
-    "i18next": "^19.4.5",
+    "i18next": "^19.8.3",
     "i18next-browser-languagedetector": "^5.0.0",
     "istanbul-lib-coverage": "^3.0.0",
     "lodash": "^4.17.15",
