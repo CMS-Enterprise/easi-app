@@ -79,7 +79,10 @@
     "cypress:run": "cypress run"
   },
   "nyc": {
-      "reporter": ["html", "text"]
+    "reporter": [
+      "html",
+      "text"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -103,7 +106,7 @@
     "cypress-otp": "^1.0.2",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
-    "eslint": "^6.6.0",
+    "eslint": "^7.11.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.5.0",
     "eslint-plugin-cypress": "^2.10.3",
