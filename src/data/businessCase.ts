@@ -23,6 +23,10 @@ export const defaultProposedSolution = {
   cons: '',
   estimatedLifecycleCost: defaultEstimatedLifecycle,
   costSavings: '',
+  security: {
+    isApproved: null,
+    isBeingApproved: ''
+  },
   hosting: {
     type: '',
     location: '',
@@ -84,6 +88,7 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
     title,
     summary,
     acquisitionApproach,
+    security,
     hosting,
     hasUserInterface,
     pros,
@@ -105,6 +110,8 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
     title ||
     summary ||
     acquisitionApproach ||
+    security.isApproved ||
+    security.isBeingApproved ||
     hosting.type ||
     hosting.location ||
     hosting.cloudServiceType ||
@@ -183,6 +190,10 @@ export const prepareBusinessCaseForApp = (
       cons: businessCase.preferredCons,
       costSavings: businessCase.preferredCostSavings,
       estimatedLifecycleCost: lifecycleCostLines.Preferred,
+      security: {
+        isApproved: businessCase.preferredSecurityIsApproved,
+        isBeingApproved: businessCase.preferredSecurityIsBeingApproved
+      },
       hosting: {
         type: businessCase.preferredHostingType,
         location: businessCase.preferredHostingLocation,
@@ -198,6 +209,10 @@ export const prepareBusinessCaseForApp = (
       cons: businessCase.alternativeACons,
       costSavings: businessCase.alternativeACostSavings,
       estimatedLifecycleCost: lifecycleCostLines.A,
+      security: {
+        isApproved: businessCase.alternativeASecurityIsApproved,
+        isBeingApproved: businessCase.alternativeASecurityIsBeingApproved
+      },
       hosting: {
         type: businessCase.alternativeAHostingType,
         location: businessCase.alternativeAHostingLocation,
@@ -213,6 +228,10 @@ export const prepareBusinessCaseForApp = (
       cons: businessCase.alternativeBCons || '',
       costSavings: businessCase.alternativeBCostSavings || '',
       estimatedLifecycleCost: lifecycleCostLines.B,
+      security: {
+        isApproved: businessCase.alternativeBSecurityIsApproved,
+        isBeingApproved: businessCase.alternativeBSecurityIsBeingApproved
+      },
       hosting: {
         type: businessCase.alternativeBHostingType,
         location: businessCase.alternativeBHostingLocation,
@@ -316,6 +335,10 @@ export const prepareBusinessCaseForApi = (
     preferredSummary: businessCase.preferredSolution.summary,
     preferredAcquisitionApproach:
       businessCase.preferredSolution.acquisitionApproach,
+    preferredSecuritysApproved:
+      businessCase.preferredSolution.security.isApproved,
+    preferredSecurityIsBeingApproved:
+      businessCase.preferredSolution.security.isBeingApproved,
     preferredHostingType: businessCase.preferredSolution.hosting.type,
     preferredHostingLocation: businessCase.preferredSolution.hosting.location,
     preferredHostingCloudServiceType:
@@ -328,6 +351,10 @@ export const prepareBusinessCaseForApi = (
     alternativeASummary: businessCase.alternativeA.summary,
     alternativeAAcquisitionApproach:
       businessCase.alternativeA.acquisitionApproach,
+    alternativeASecuritysApproved:
+      businessCase.alternativeA.security.isApproved,
+    alternativeASecurityIsBeingApproved:
+      businessCase.alternativeA.security.isBeingApproved,
     alternativeAHostingType: businessCase.alternativeA.hosting.type,
     alternativeAHostingLocation: businessCase.alternativeA.hosting.location,
     alternativeAHostingCloudServiceType:
@@ -344,6 +371,12 @@ export const prepareBusinessCaseForApi = (
       : null,
     alternativeBAcquisitionApproach: alternativeBExists
       ? businessCase.alternativeB.acquisitionApproach
+      : null,
+    alternativeBSecuritysApproved: alternativeBExists
+      ? businessCase.alternativeB.security.isApproved
+      : null,
+    alternativeBSecurityIsBeingApproved: alternativeBExists
+      ? businessCase.alternativeB.security.isBeingApproved
       : null,
     alternativeBHostingType: alternativeBExists
       ? businessCase.alternativeB.hosting.type
