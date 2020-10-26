@@ -210,6 +210,7 @@ const ContractDetails = ({
                       onChange={() => {
                         setFieldValue('fundingSource.isFunded', false);
                         setFieldValue('fundingSource.fundingNumber', '');
+                        setFieldValue('fundingSource.source', '');
                       }}
                       value={false}
                     />

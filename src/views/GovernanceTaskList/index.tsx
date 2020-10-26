@@ -56,6 +56,7 @@ const intakeLinkComponent = (
     case 'START':
       return (
         <UswdsLink
+          data-testid="intake-start-btn"
           className="usa-button"
           variant="unstyled"
           asCustom={Link}
