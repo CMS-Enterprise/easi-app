@@ -119,6 +119,7 @@ const businessCaseLinkComponent = ({
             });
           }}
           className="usa-button"
+          data-testid="start-biz-case-btn"
         >
           Start
         </Button>
