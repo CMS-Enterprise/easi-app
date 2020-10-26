@@ -23,6 +23,8 @@ const (
 	SystemIntakeStatusAPPROVED SystemIntakeStatus = "APPROVED"
 	// SystemIntakeStatusARCHIVED captures enum value "ARCHIVED"
 	SystemIntakeStatusARCHIVED SystemIntakeStatus = "ARCHIVED"
+	// SystemIntakeStatusNOTITREQUEST captures enum value "NOT_IT_REQUEST"
+	SystemIntakeStatusNOTITREQUEST SystemIntakeStatus = "NOT_IT_REQUEST"
 )
 
 // SystemIntake is the model for the system intake form
@@ -43,6 +45,7 @@ type SystemIntake struct {
 	ProjectName             null.String        `json:"projectName" db:"project_name"`
 	ExistingFunding         null.Bool          `json:"existingFunding" db:"existing_funding"`
 	FundingSource           null.String        `json:"fundingSource" db:"funding_source"`
+	FundingNumber           null.String        `json:"fundingNumber" db:"funding_number"`
 	BusinessNeed            null.String        `json:"businessNeed" db:"business_need"`
 	Solution                null.String        `json:"solution"`
 	ProcessStatus           null.String        `json:"processStatus" db:"process_status"`

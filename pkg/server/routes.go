@@ -15,6 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -236,9 +237,30 @@ func (s *Server) routes(
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeSubmissionEmail,
 			),
+			services.NewGRTReviewSystemIntake(
+				serviceConfig,
+				models.SystemIntakeStatusNOTITREQUEST,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+			),
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/actions/{action_type}", systemIntakeActionHandler.Handle())
+
+	systemIntakeLifecycleIDHandler := handlers.NewSystemIntakeLifecycleIDHandler(
+		base,
+		services.NewUpdateLifecycleFields(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
+			store.GenerateLifecycleID,
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,

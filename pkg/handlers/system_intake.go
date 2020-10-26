@@ -5,9 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -196,6 +198,125 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
+			return
+		default:
+			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
+			return
+		}
+	}
+}
+
+// NewSystemIntakeLifecycleIDHandler is a constructor for how we handle
+// LifecycleID assignment
+func NewSystemIntakeLifecycleIDHandler(
+	base HandlerBase,
+	assign func(context.Context, *models.SystemIntake) error,
+) SystemIntakeLifecycleIDHandler {
+	return SystemIntakeLifecycleIDHandler{
+		HandlerBase:       base,
+		AssignLifecycleID: assign,
+	}
+}
+
+// SystemIntakeLifecycleIDHandler is the handler for assigning
+// a lifecycleID to a SystemIntake
+type SystemIntakeLifecycleIDHandler struct {
+	HandlerBase
+	AssignLifecycleID func(context.Context, *models.SystemIntake) error
+}
+
+type lcidFields struct {
+	LCID      *string `json:"lcid"`
+	ExpiresAt string  `json:"lcidExpiresAt"`
+	Scope     string  `json:"lcidScope"`
+	NextSteps string  `json:"lcidNextSteps"`
+}
+
+// Handle handles a request for the system intake form
+func (h SystemIntakeLifecycleIDHandler) Handle() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "POST":
+			if r.Body == nil {
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
+				)
+				return
+			}
+			defer r.Body.Close()
+
+			fields := lcidFields{}
+			if err := json.NewDecoder(r.Body).Decode(&fields); err != nil {
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
+				return
+			}
+
+			// formatting and validation of required inputs
+			intake := &models.SystemIntake{
+				LifecycleID: null.StringFromPtr(fields.LCID),
+			}
+
+			valFail := false
+			valErr := apperrors.NewValidationError(
+				errors.New("system intake lifecycle fields failed validation"),
+				models.SystemIntake{},
+				"",
+			)
+
+			id := mux.Vars(r)["intake_id"]
+			if id == "" {
+				valErr.WithValidation("path.intakeID", "is required")
+				valFail = true
+			} else {
+				uuid, err := uuid.Parse(id)
+				if err != nil {
+					valErr.WithValidation("path.intakeID", "must be UUID")
+				} else {
+					intake.ID = uuid
+				}
+			}
+
+			if fields.ExpiresAt == "" {
+				valErr.WithValidation("body.lcidExpiresAt", "is required")
+				valFail = true
+			} else {
+				exp, tErr := time.Parse("2006-1-2", fields.ExpiresAt)
+				if tErr != nil {
+					valErr.WithValidation("body.lcidExpiresAt", tErr.Error())
+					valFail = true
+				} else {
+					intake.LifecycleExpiresAt = &exp
+				}
+			}
+
+			if fields.Scope == "" {
+				valErr.WithValidation("body.lcidScope", "is required")
+				valFail = true
+			} else {
+				intake.LifecycleScope = null.StringFrom(fields.Scope)
+			}
+
+			if fields.NextSteps == "" {
+				valErr.WithValidation("body.lcidNextSteps", "is required")
+				valFail = true
+			} else {
+				intake.LifecycleNextSteps = null.StringFrom(fields.NextSteps)
+			}
+
+			if valFail {
+				h.WriteErrorResponse(r.Context(), w, &valErr)
+				return
+			}
+
+			// send it to the database
+			if err := h.AssignLifecycleID(r.Context(), intake); err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
+			w.WriteHeader(http.StatusNoContent) // 204 No Content
 			return
 		default:
 			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
