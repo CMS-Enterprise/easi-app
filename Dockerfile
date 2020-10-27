@@ -1,9 +1,20 @@
-FROM golang:1.14.6 AS builder
+FROM golang:1.14.6 AS base
+
 WORKDIR /easi/
-COPY . .
+
+FROM base AS modules
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+FROM modules AS builder
+
+COPY cmd ./cmd
+COPY pkg ./pkg
 RUN  CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
 
 FROM alpine:3.11
+
 RUN apk --no-cache add ca-certificates tzdata
 WORKDIR /easi/
 COPY --from=builder /easi/bin/easi .
