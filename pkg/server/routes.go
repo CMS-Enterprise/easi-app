@@ -176,10 +176,11 @@ func (s *Server) routes(
 
 	systemIntakesHandler := handlers.NewSystemIntakesHandler(
 		base,
-		services.NewFetchSystemIntakesByEuaID(
+		services.NewFetchSystemIntakes(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
-			services.NewAuthorizeFetchSystemIntakesByEuaID(),
+			store.FetchSystemIntakesNotArchived,
+			services.NewAuthorizeHasEASiRole(),
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
