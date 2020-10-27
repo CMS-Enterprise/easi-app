@@ -98,6 +98,8 @@ type BusinessCase struct {
 	PreferredTitle                      null.String             `json:"preferredTitle" db:"preferred_title"`
 	PreferredSummary                    null.String             `json:"preferredSummary" db:"preferred_summary"`
 	PreferredAcquisitionApproach        null.String             `json:"preferredAcquisitionApproach" db:"preferred_acquisition_approach"`
+	PreferredSecurityIsApproved         null.Bool               `json:"preferredSecurityIsApproved" db:"preferred_security_is_approved"`
+	PreferredSecurityIsBeingReviewed    null.String             `json:"preferredSecurityIsBeingReviewed" db:"preferred_security_is_being_reviewed"`
 	PreferredHostingType                null.String             `json:"preferredHostingType" db:"preferred_hosting_type"`
 	PreferredHostingLocation            null.String             `json:"preferredHostingLocation" db:"preferred_hosting_location"`
 	PreferredHostingCloudServiceType    null.String             `json:"preferredHostingCloudServiceType" db:"preferred_hosting_cloud_service_type"`
@@ -108,6 +110,8 @@ type BusinessCase struct {
 	AlternativeATitle                   null.String             `json:"alternativeATitle" db:"alternative_a_title"`
 	AlternativeASummary                 null.String             `json:"alternativeASummary" db:"alternative_a_summary"`
 	AlternativeAAcquisitionApproach     null.String             `json:"alternativeAAcquisitionApproach" db:"alternative_a_acquisition_approach"`
+	AlternativeASecurityIsApproved      null.Bool               `json:"alternativeASecurityIsApproved" db:"alternative_a_security_is_approved"`
+	AlternativeASecurityIsBeingReviewed null.String             `json:"alternativeASecurityIsBeingReviewed" db:"alternative_a_security_is_being_reviewed"`
 	AlternativeAHostingType             null.String             `json:"alternativeAHostingType" db:"alternative_a_hosting_type"`
 	AlternativeAHostingLocation         null.String             `json:"alternativeAHostingLocation" db:"alternative_a_hosting_location"`
 	AlternativeAHostingCloudServiceType null.String             `json:"alternativeAHostingCloudServiceType" db:"alternative_a_hosting_cloud_service_type"`
@@ -118,6 +122,8 @@ type BusinessCase struct {
 	AlternativeBTitle                   null.String             `json:"alternativeBTitle" db:"alternative_b_title"`
 	AlternativeBSummary                 null.String             `json:"alternativeBSummary" db:"alternative_b_summary"`
 	AlternativeBAcquisitionApproach     null.String             `json:"alternativeBAcquisitionApproach" db:"alternative_b_acquisition_approach"`
+	AlternativeBSecurityIsApproved      null.Bool               `json:"alternativeBSecurityIsApproved" db:"alternative_b_security_is_approved"`
+	AlternativeBSecurityIsBeingReviewed null.String             `json:"alternativeBSecurityIsBeingReviewed" db:"alternative_b_security_is_being_reviewed"`
 	AlternativeBHostingType             null.String             `json:"alternativeBHostingType" db:"alternative_b_hosting_type"`
 	AlternativeBHostingLocation         null.String             `json:"alternativeBHostingLocation" db:"alternative_b_hosting_location"`
 	AlternativeBHostingCloudServiceType null.String             `json:"alternativeBHostingCloudServiceType" db:"alternative_b_hosting_cloud_service_type"`
