@@ -13,7 +13,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import { Action, ActionForm, ActionType } from 'types/action';
 import { postSystemIntakeAction } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
-import actionSchema from 'validations/actionSchema';
+import { actionSchema } from 'validations/actionSchema';
 
 type SubmitActionProps = {
   action: ActionType;
