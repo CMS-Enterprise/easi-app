@@ -127,6 +127,69 @@ const IssueLifecycleId = () => {
                     )}
                   </fieldset>
                 </FieldGroup>
+                <FieldGroup
+                  scrollElement="expirationDate"
+                  error={!!flatErrors.expirationDate}
+                >
+                  <fieldset className="usa-fieldset margin-top-4">
+                    <legend className="usa-label margin-bottom-1">
+                      {t('issueLCID.expirationDate.label')}
+                    </legend>
+                    <HelpText className="margin-bottom-1">
+                      {t('issueLCID.expirationDate.helpText')}
+                    </HelpText>
+                    <div
+                      className="usa-memorable-date"
+                      style={{ marginTop: '-2rem' }}
+                    >
+                      <div className="usa-form-group usa-form-group--month">
+                        <Label htmlFor="IssueLifecycleIdForm-ExpirationDateMonth">
+                          {t('issueLCID.expirationDate.month')}
+                        </Label>
+                        <FieldErrorMsg>
+                          {flatErrors.expirationDateMonth}
+                        </FieldErrorMsg>
+                        <Field
+                          as={TextField}
+                          error={!!flatErrors.expirationDateMonth}
+                          id="IssueLifecycleIdForm-ExpirationDateMonth"
+                          maxLength={2}
+                          name="expirationDateMonth"
+                        />
+                      </div>
+                      <div className="usa-form-group usa-form-group--day">
+                        <Label htmlFor="IssueLifecycleIdForm-ExpirationDateDay">
+                          {t('issueLCID.expirationDate.day')}
+                        </Label>
+                        <FieldErrorMsg>
+                          {flatErrors.expirationDateDay}
+                        </FieldErrorMsg>
+                        <Field
+                          as={TextField}
+                          error={!!flatErrors.expirationDateDay}
+                          id="IssueLifecycleIdForm-ExpirationDateDay"
+                          maxLength={2}
+                          name="expirationDateMonth"
+                        />
+                      </div>
+                      <div className="usa-form-group usa-form-group--year">
+                        <Label htmlFor="IssueLifecycleIdForm-ExpirationDateYear">
+                          {t('issueLCID.expirationDate.year')}
+                        </Label>
+                        <FieldErrorMsg>
+                          {flatErrors.expirationDateYear}
+                        </FieldErrorMsg>
+                        <Field
+                          as={TextField}
+                          error={!!flatErrors.expirationDateYear}
+                          id="IssueLifecycleIdForm-ExpirationDateYear"
+                          maxLength={4}
+                          name="expirationDateMonth"
+                        />
+                      </div>
+                    </div>
+                  </fieldset>
+                </FieldGroup>
                 <FieldGroup scrollElement="scope" error={!!flatErrors.scope}>
                   <Label htmlFor="IssueLifecycleIdForm-Scope">
                     {t('issueLCID.scopeLabel')}

@@ -20,6 +20,13 @@ const action = {
         'If you choose to generate a new Lifecycle ID, one will be generated when you submit this page',
       existing: 'Use an existing Lifecycle ID',
       label: 'Lifecycle ID'
+    },
+    expirationDate: {
+      label: 'Expiration Date',
+      helpText: 'For example 08 02 1776',
+      month: 'Month',
+      day: 'Day',
+      year: 'Year'
     }
   },
   submitAction: {
