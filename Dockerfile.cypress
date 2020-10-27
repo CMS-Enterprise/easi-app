@@ -1,8 +1,9 @@
-FROM cypress/base:10
+FROM cypress/base:10 AS modules
 
 COPY package.json /package.json
-
 RUN npm install --dev --silent
+
+FROM modules AS test
 
 COPY cypress /cypress
 COPY cypress.json /cypress.json
