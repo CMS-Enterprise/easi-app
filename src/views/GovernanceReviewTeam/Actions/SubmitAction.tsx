@@ -82,7 +82,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
               <Form>
                 <FieldGroup
                   scrollElement="feedback"
-                  error={!!flatErrors.businessSolution}
+                  error={!!flatErrors.feedback}
                 >
                   <Label htmlFor="SubmitActionForm-Feedback">
                     {t('action:submitAction.feedbackLabel')}
