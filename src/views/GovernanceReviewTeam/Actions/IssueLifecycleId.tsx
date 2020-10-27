@@ -22,7 +22,13 @@ const IssueLifecycleId = () => {
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
-  const initialValues: SubmitLifecycleIdForm = {};
+  // TODO: Fix Text Field so we don't have to set initial empty values
+  const initialValues: SubmitLifecycleIdForm = {
+    lifecycleId: '',
+    expirationDateDay: '',
+    expirationDateMonth: '',
+    expirationDateYear: ''
+  };
 
   const dispatchSave = (values: SubmitLifecycleIdForm) => {
     const payload = { systemId, ...values };
