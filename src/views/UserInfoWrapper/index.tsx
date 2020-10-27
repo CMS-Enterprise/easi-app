@@ -15,7 +15,9 @@ const UserInfoWrapper = ({ children }: UserInfoWrapper) => {
   const storeUserInfo = async () => {
     const tokenManager = await authService.getTokenManager();
     const accessToken = await tokenManager.get('accessToken');
-    const groups = (accessToken && accessToken.groups) || [];
+    const token = accessToken.value;
+    const decodedBearerToken = JSON.parse(atob(token.split('.')[1]));
+    const groups = (decodedBearerToken && decodedBearerToken.groups) || [];
     dispatch(setUserGroups(groups));
   };
 
