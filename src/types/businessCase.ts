@@ -23,6 +23,10 @@ export type BusinessCaseSolution = {
 // Proposed Solution
 export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
   acquisitionApproach: string;
+  security: {
+    isApproved: boolean | null;
+    isBeingReviewed: string;
+  };
   hosting: {
     type: string;
     location: string;
