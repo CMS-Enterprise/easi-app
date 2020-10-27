@@ -62,6 +62,18 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const ReadyForGRB = (
+    <RadioField
+      key="ready-for-grb"
+      id="ready-for-grb"
+      label={t('actions.readyForGrb')}
+      name={radioGroupName}
+      value="ready-for-grb"
+      onChange={onChange}
+      checked={actionRoute === 'ready-for-grb'}
+    />
+  );
+
   const ProvideFeedbackNeedBizCase = (
     <RadioField
       key="provide-feedback-need-biz-case"
@@ -81,7 +93,11 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     availableHiddenActions = [];
   } else {
     availableActions = [NotAnITRequest, NeedBizCase];
-    availableHiddenActions = [ReadyForGRT, ProvideFeedbackNeedBizCase];
+    availableHiddenActions = [
+      ReadyForGRT,
+      ProvideFeedbackNeedBizCase,
+      ReadyForGRB
+    ];
   }
 
   return (
