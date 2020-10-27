@@ -25,7 +25,7 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
   acquisitionApproach: string;
   security: {
     isApproved: boolean | null;
-    isBeingApproved: string;
+    isBeingReviewed: string;
   };
   hosting: {
     type: string;

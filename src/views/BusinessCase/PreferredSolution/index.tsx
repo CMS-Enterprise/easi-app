@@ -235,7 +235,7 @@ const PreferredSolution = ({
                           false
                         );
                         setFieldValue(
-                          'preferredSolution.security.isBeingApproved',
+                          'preferredSolution.security.isBeingReviewed',
                           ''
                         );
                       }}
@@ -245,9 +245,9 @@ const PreferredSolution = ({
 
                 {values.preferredSolution.security.isApproved === false && (
                   <FieldGroup
-                    scrollElement="preferredSolution.security.isBeingApproved"
+                    scrollElement="preferredSolution.security.isBeingReviewed"
                     error={
-                      !!flatErrors['preferredSolution.security.isBeingApproved']
+                      !!flatErrors['preferredSolution.security.isBeingReviewed']
                     }
                   >
                     <fieldset className="usa-fieldset margin-top-4">
@@ -257,40 +257,40 @@ const PreferredSolution = ({
                       <FieldErrorMsg>
                         {
                           flatErrors[
-                            'preferredSolution.security.isBeingApproved'
+                            'preferredSolution.security.isBeingReviewed'
                           ]
                         }
                       </FieldErrorMsg>
                       <Field
                         as={RadioField}
                         checked={
-                          values.preferredSolution.security.isBeingApproved ===
+                          values.preferredSolution.security.isBeingReviewed ===
                           'YES'
                         }
-                        id="BusinessCase-PreferredSolutionIsInSecurityProcessYes"
-                        name="preferredSolution.security.isBeingApproved"
+                        id="BusinessCase-PreferredSolutionSecurityIsBeingReviewedYes"
+                        name="preferredSolution.security.isBeingReviewed"
                         label={yesNoMap.YES}
                         value="YES"
                       />
                       <Field
                         as={RadioField}
                         checked={
-                          values.preferredSolution.security.isBeingApproved ===
+                          values.preferredSolution.security.isBeingReviewed ===
                           'NO'
                         }
-                        id="BusinessCase-PreferredSolutionIsInSecurityProcessNo"
-                        name="preferredSolution.security.isBeingApproved"
+                        id="BusinessCase-PreferredSolutionSecurityIsBeingReviewedNo"
+                        name="preferredSolution.security.isBeingReviewed"
                         label={yesNoMap.NO}
                         value="NO"
                       />
                       <Field
                         as={RadioField}
                         checked={
-                          values.preferredSolution.security.isBeingApproved ===
+                          values.preferredSolution.security.isBeingReviewed ===
                           'NOT_SURE'
                         }
-                        id="BusinessCase-PreferredSolutionIsInSecurityProcessNotSure"
-                        name="preferredSolution.security.isBeingApproved"
+                        id="BusinessCase-PreferredSolutionSecurityIsBeingReviewedNotSure"
+                        name="preferredSolution.security.isBeingReviewed"
                         label={yesNoMap.NOT_SURE}
                         value="NOT_SURE"
                       />
