@@ -163,6 +163,11 @@ const AlternativeSolutionFields = ({
               <legend className="usa-label margin-bottom-1">
                 Is it in the process of CMS approval?
               </legend>
+              <HelpText className="margin-bottom-1">
+                Obtaining CMS Approval can be lengthy and solutions that do not
+                have it or are just starting may lead to longer project
+                timelines.
+              </HelpText>
               <FieldErrorMsg>
                 {flatErrors[`${altId}.security.isBeingReviewed`]}
               </FieldErrorMsg>
