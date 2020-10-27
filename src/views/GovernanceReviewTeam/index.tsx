@@ -168,7 +168,12 @@ const GovernanceReviewTeam = () => {
           <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/intake-request"
-              render={() => <IntakeReview systemIntake={systemIntake} />}
+              render={() => (
+                <IntakeReview
+                  systemIntake={systemIntake}
+                  now={DateTime.local()}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
