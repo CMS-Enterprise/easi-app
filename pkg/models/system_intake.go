@@ -15,6 +15,8 @@ const (
 	SystemIntakeStatusDRAFT SystemIntakeStatus = "DRAFT"
 	// SystemIntakeStatusSUBMITTED captures enum value "SUBMITTED"
 	SystemIntakeStatusSUBMITTED SystemIntakeStatus = "SUBMITTED"
+	// SystemIntakeStatusACCEPTED captures enum value "ACCEPTED"
+	SystemIntakeStatusACCEPTED SystemIntakeStatus = "ACCEPTED"
 	// SystemIntakeStatusNEEDBIZCASE captures enum value "NEED_BIZ_CASE"
 	SystemIntakeStatusNEEDBIZCASE SystemIntakeStatus = "NEED_BIZ_CASE"
 	// SystemIntakeStatusCLOSED captures enum value "CLOSED"
