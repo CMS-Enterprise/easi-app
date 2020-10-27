@@ -118,6 +118,85 @@ const AlternativeSolutionFields = ({
         </FieldGroup>
 
         <FieldGroup
+          scrollElement={`${altId}.security.isApproved`}
+          error={!!flatErrors[`${altId}.security.isApproved`]}
+        >
+          <fieldset className="usa-fieldset margin-top-4">
+            <legend className="usa-label margin-bottom-1">
+              Is your solution approved by IT Security for use at CMS (FedRAMP,
+              FISMA approved, within the CMS cloud enclave)?
+            </legend>
+            <FieldErrorMsg>
+              {flatErrors[`${altId}.security.isApproved`]}
+            </FieldErrorMsg>
+            <Field
+              as={RadioField}
+              checked={values[`${altId}`].security.isApproved}
+              id={`BusinessCase-${altId}SecurityApproved`}
+              name={`${altId}.security.isApproved`}
+              label={yesNoMap.YES}
+              onChange={() => {
+                setFieldValue(`${altId}.security.isApproved`, true);
+              }}
+            />
+
+            <Field
+              as={RadioField}
+              checked={values[`${altId}`].security.isApproved === false}
+              id={`BusinessCase-${altId}SecurityNotApproved`}
+              name={`${altId}.security.isApproved`}
+              label={yesNoMap.NO}
+              onChange={() => {
+                setFieldValue(`${altId}.security.isApproved`, false);
+                setFieldValue(`${altId}.security.isBeingApproved`, '');
+              }}
+            />
+          </fieldset>
+        </FieldGroup>
+
+        {values[`${altId}`].security.isApproved === false && (
+          <FieldGroup
+            scrollElement={`${altId}.security.isBeingApproved`}
+            error={!!flatErrors[`${altId}.security.isBeingApproved`]}
+          >
+            <fieldset className="usa-fieldset margin-top-4">
+              <legend className="usa-label margin-bottom-1">
+                Is it in the process of CMS approval?
+              </legend>
+              <FieldErrorMsg>
+                {flatErrors[`${altId}.security.isBeingApproved`]}
+              </FieldErrorMsg>
+              <Field
+                as={RadioField}
+                checked={values[`${altId}`].security.isBeingApproved === 'YES'}
+                id={`BusinessCase-${altId}IsInSecurityProcessYes`}
+                name={`${altId}.security.isBeingApproved`}
+                label={yesNoMap.YES}
+                value="YES"
+              />
+              <Field
+                as={RadioField}
+                checked={values[`${altId}`].security.isBeingApproved === 'NO'}
+                id={`BusinessCase-${altId}IsInSecurityProcessNo`}
+                name={`${altId}.security.isBeingApproved`}
+                label={yesNoMap.NO}
+                value="NO"
+              />
+              <Field
+                as={RadioField}
+                checked={
+                  values[`${altId}`].security.isBeingApproved === 'NOT_SURE'
+                }
+                id={`BusinessCase-${altId}IsInSecurityProcessNotSure`}
+                name={`${altId}.security.isBeingApproved`}
+                label={yesNoMap.NOT_SURE}
+                value="NOT_SURE"
+              />
+            </fieldset>
+          </FieldGroup>
+        )}
+
+        <FieldGroup
           scrollElement={`${altId}.hosting.type`}
           error={!!flatErrors[`${altId}.hosting.type`]}
         >
