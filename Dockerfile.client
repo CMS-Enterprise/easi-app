@@ -1,7 +1,19 @@
-FROM node:10.22.0 AS builder
+FROM node:10.22.0 AS base
 
 WORKDIR /app
-COPY . .
+
+FROM base AS modules
+
+COPY package.json yarn.lock ./
+RUN yarn install
+
+FROM modules AS dev
+
+COPY public ./public
+COPY src ./src
+COPY craco.config.js tsconfig.json ./
+
+FROM dev AS builder
 
 ARG REACT_APP_API_ADDRESS
 ARG REACT_APP_APP_ENV
@@ -11,7 +23,6 @@ ARG REACT_APP_OKTA_ISSUER
 ARG REACT_APP_OKTA_REDIRECT_URI
 ARG REACT_APP_OKTA_SERVER_ID
 
-RUN yarn install
 RUN yarn run build
 
 FROM node:10.22.0
