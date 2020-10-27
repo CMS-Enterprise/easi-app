@@ -5,6 +5,7 @@ WORKDIR /app
 FROM base AS modules
 
 COPY package.json yarn.lock ./
+COPY node_modules ./node_modules
 RUN yarn install
 
 FROM modules AS dev
