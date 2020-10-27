@@ -1,6 +1,7 @@
 const action = {
   actions: {
-    notItRequest: 'Not an IT request'
+    notItRequest: 'Not an IT governance request',
+    needBizCase: 'Request a business case'
   },
   submitAction: {
     backLink: 'Change',
