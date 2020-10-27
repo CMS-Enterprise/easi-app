@@ -148,7 +148,7 @@ const AlternativeSolutionFields = ({
               label={yesNoMap.NO}
               onChange={() => {
                 setFieldValue(`${altId}.security.isApproved`, false);
-                setFieldValue(`${altId}.security.isBeingApproved`, '');
+                setFieldValue(`${altId}.security.isBeingReviewed`, '');
               }}
             />
           </fieldset>
@@ -156,39 +156,39 @@ const AlternativeSolutionFields = ({
 
         {values[`${altId}`].security.isApproved === false && (
           <FieldGroup
-            scrollElement={`${altId}.security.isBeingApproved`}
-            error={!!flatErrors[`${altId}.security.isBeingApproved`]}
+            scrollElement={`${altId}.security.isBeingReviewed`}
+            error={!!flatErrors[`${altId}.security.isBeingReviewed`]}
           >
             <fieldset className="usa-fieldset margin-top-4">
               <legend className="usa-label margin-bottom-1">
                 Is it in the process of CMS approval?
               </legend>
               <FieldErrorMsg>
-                {flatErrors[`${altId}.security.isBeingApproved`]}
+                {flatErrors[`${altId}.security.isBeingReviewed`]}
               </FieldErrorMsg>
               <Field
                 as={RadioField}
-                checked={values[`${altId}`].security.isBeingApproved === 'YES'}
-                id={`BusinessCase-${altId}IsInSecurityProcessYes`}
-                name={`${altId}.security.isBeingApproved`}
+                checked={values[`${altId}`].security.isBeingReviewed === 'YES'}
+                id={`BusinessCase-${altId}SecurityIsBeingReviewedYed`}
+                name={`${altId}.security.isBeingReviewed`}
                 label={yesNoMap.YES}
                 value="YES"
               />
               <Field
                 as={RadioField}
-                checked={values[`${altId}`].security.isBeingApproved === 'NO'}
-                id={`BusinessCase-${altId}IsInSecurityProcessNo`}
-                name={`${altId}.security.isBeingApproved`}
+                checked={values[`${altId}`].security.isBeingReviewed === 'NO'}
+                id={`BusinessCase-${altId}SecurityIsBeingReviewedNo`}
+                name={`${altId}.security.isBeingReviewed`}
                 label={yesNoMap.NO}
                 value="NO"
               />
               <Field
                 as={RadioField}
                 checked={
-                  values[`${altId}`].security.isBeingApproved === 'NOT_SURE'
+                  values[`${altId}`].security.isBeingReviewed === 'NOT_SURE'
                 }
-                id={`BusinessCase-${altId}IsInSecurityProcessNotSure`}
-                name={`${altId}.security.isBeingApproved`}
+                id={`BusinessCase-${altId}SecurityIsBeingReviewedNotSure`}
+                name={`${altId}.security.isBeingReviewed`}
                 label={yesNoMap.NOT_SURE}
                 value="NOT_SURE"
               />

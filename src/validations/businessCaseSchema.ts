@@ -88,7 +88,7 @@ const BusinessCaseValidationSchema = {
         isApproved: Yup.boolean().required(
           'Tell us whether for solution was approved by IT Security for use at CMS'
         ),
-        isBeingApproved: Yup.string().when('isApproved', {
+        isBeingReviewed: Yup.string().when('isApproved', {
           is: false,
           then: Yup.string().required(
             'Tell us whether your solution is in the process of receiving approval'
@@ -180,7 +180,7 @@ const BusinessCaseValidationSchema = {
         isApproved: Yup.boolean().required(
           'Tell us whether for solution was approved by IT Security for use at CMS'
         ),
-        isBeingApproved: Yup.string().when('isApproved', {
+        isBeingReviewed: Yup.string().when('isApproved', {
           is: false,
           then: Yup.string().required(
             'Tell us whether your solution is in the process of receiving approval'
@@ -272,7 +272,7 @@ const BusinessCaseValidationSchema = {
         isApproved: Yup.boolean().required(
           'Tell us whether for solution was approved by IT Security for use at CMS'
         ),
-        isBeingApproved: Yup.string().when('isApproved', {
+        isBeingReviewed: Yup.string().when('isApproved', {
           is: false,
           then: Yup.string().required(
             'Tell us whether your solution is in the process of receiving approval'

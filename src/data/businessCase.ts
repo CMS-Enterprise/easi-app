@@ -25,7 +25,7 @@ export const defaultProposedSolution = {
   costSavings: '',
   security: {
     isApproved: null,
-    isBeingApproved: ''
+    isBeingReviewed: ''
   },
   hosting: {
     type: '',
@@ -111,7 +111,7 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
     summary ||
     acquisitionApproach ||
     security.isApproved ||
-    security.isBeingApproved ||
+    security.isBeingReviewed ||
     hosting.type ||
     hosting.location ||
     hosting.cloudServiceType ||
@@ -192,7 +192,7 @@ export const prepareBusinessCaseForApp = (
       estimatedLifecycleCost: lifecycleCostLines.Preferred,
       security: {
         isApproved: businessCase.preferredSecurityIsApproved,
-        isBeingApproved: businessCase.preferredSecurityIsBeingApproved
+        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
       },
       hosting: {
         type: businessCase.preferredHostingType,
@@ -211,7 +211,7 @@ export const prepareBusinessCaseForApp = (
       estimatedLifecycleCost: lifecycleCostLines.A,
       security: {
         isApproved: businessCase.alternativeASecurityIsApproved,
-        isBeingApproved: businessCase.alternativeASecurityIsBeingApproved
+        isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
       },
       hosting: {
         type: businessCase.alternativeAHostingType,
@@ -230,7 +230,7 @@ export const prepareBusinessCaseForApp = (
       estimatedLifecycleCost: lifecycleCostLines.B,
       security: {
         isApproved: businessCase.alternativeBSecurityIsApproved,
-        isBeingApproved: businessCase.alternativeBSecurityIsBeingApproved
+        isBeingReviewed: businessCase.alternativeBSecurityIsBeingReviewed
       },
       hosting: {
         type: businessCase.alternativeBHostingType,
@@ -337,8 +337,8 @@ export const prepareBusinessCaseForApi = (
       businessCase.preferredSolution.acquisitionApproach,
     preferredSecuritysApproved:
       businessCase.preferredSolution.security.isApproved,
-    preferredSecurityIsBeingApproved:
-      businessCase.preferredSolution.security.isBeingApproved,
+    preferredSecurityisBeingReviewed:
+      businessCase.preferredSolution.security.isBeingReviewed,
     preferredHostingType: businessCase.preferredSolution.hosting.type,
     preferredHostingLocation: businessCase.preferredSolution.hosting.location,
     preferredHostingCloudServiceType:
@@ -353,8 +353,8 @@ export const prepareBusinessCaseForApi = (
       businessCase.alternativeA.acquisitionApproach,
     alternativeASecuritysApproved:
       businessCase.alternativeA.security.isApproved,
-    alternativeASecurityIsBeingApproved:
-      businessCase.alternativeA.security.isBeingApproved,
+    alternativeASecurityisBeingReviewed:
+      businessCase.alternativeA.security.isBeingReviewed,
     alternativeAHostingType: businessCase.alternativeA.hosting.type,
     alternativeAHostingLocation: businessCase.alternativeA.hosting.location,
     alternativeAHostingCloudServiceType:
@@ -375,8 +375,8 @@ export const prepareBusinessCaseForApi = (
     alternativeBSecuritysApproved: alternativeBExists
       ? businessCase.alternativeB.security.isApproved
       : null,
-    alternativeBSecurityIsBeingApproved: alternativeBExists
-      ? businessCase.alternativeB.security.isBeingApproved
+    alternativeBSecurityisBeingReviewed: alternativeBExists
+      ? businessCase.alternativeB.security.isBeingReviewed
       : null,
     alternativeBHostingType: alternativeBExists
       ? businessCase.alternativeB.hosting.type
