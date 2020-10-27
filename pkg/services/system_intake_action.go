@@ -67,7 +67,7 @@ func NewSubmitSystemIntake(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
 	createAction func(context.Context, *models.Action) (*models.Action, error),
-	fetchUserInfo func(*zap.Logger, string) (*models.UserInfo, error),
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	emailReviewer func(requester string, intakeID uuid.UUID) error,
 ) func(context.Context, *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
@@ -101,7 +101,7 @@ func NewSubmitSystemIntake(
 			return err
 		}
 
-		userInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), appcontext.Principal(ctx).ID())
+		userInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 		if err != nil {
 			return err
 		}
@@ -173,7 +173,7 @@ func NewGRTReviewSystemIntake(
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	authorize func(context.Context) (bool, error),
 	createAction func(context.Context, *models.Action) (*models.Action, error),
-	fetchUserInfo func(*zap.Logger, string) (*models.UserInfo, error),
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 ) func(context.Context, *models.SystemIntake, *models.Action) error {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -194,7 +194,7 @@ func NewGRTReviewSystemIntake(
 			return err
 		}
 
-		requesterInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), intake.EUAUserID)
+		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID)
 		if err != nil {
 			return err
 		}
@@ -208,7 +208,7 @@ func NewGRTReviewSystemIntake(
 			}
 		}
 
-		actorInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), appcontext.Principal(ctx).ID())
+		actorInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 		if err != nil {
 			return err
 		}

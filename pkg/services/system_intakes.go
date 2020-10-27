@@ -85,7 +85,7 @@ func NewUpdateSystemIntake(
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchRequesterInfo func(*zap.Logger, string) (*models.UserInfo, error),
+	fetchRequesterInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 	updateDraftIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
 	canDecideIntake bool,
@@ -118,7 +118,7 @@ func NewUpdateSystemIntake(
 			updatedTime := config.clock.Now()
 			intake.UpdatedAt = &updatedTime
 
-			requesterInfo, err := fetchRequesterInfo(appcontext.ZLogger(ctx), existingIntake.EUAUserID)
+			requesterInfo, err := fetchRequesterInfo(ctx, existingIntake.EUAUserID)
 			if err != nil {
 				return &models.SystemIntake{}, err
 			}

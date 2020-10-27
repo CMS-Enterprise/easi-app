@@ -82,7 +82,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		createdAction = *action
 		return action, nil
 	}
-	fetchUserInfo := func(logger *zap.Logger, EUAUserID string) (*models.UserInfo, error) {
+	fetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
 		return &models.UserInfo{
 			CommonName: "Name",
 			Email:      "name@site.com",
@@ -149,7 +149,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	s.Run("returns error if fails to fetch user info", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
 		fetchUserInfoError := errors.New("error")
-		failFetchUserInfo := func(logger *zap.Logger, EUAUserID string) (*models.UserInfo, error) {
+		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
 			return nil, fetchUserInfoError
 		}
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, failFetchUserInfo, sendSubmitEmail)
@@ -160,7 +160,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 
 	s.Run("returns error if fetches bad user info", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
-		failFetchUserInfo := func(logger *zap.Logger, EUAUserID string) (*models.UserInfo, error) {
+		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
 			return &models.UserInfo{}, nil
 		}
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, failFetchUserInfo, sendSubmitEmail)
@@ -253,7 +253,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 	authorize := func(_ context.Context) (bool, error) {
 		return true, nil
 	}
-	fetchUserInfo := func(logger2 *zap.Logger, euaID string) (*models.UserInfo, error) {
+	fetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return &models.UserInfo{
 			Email:      "name@site.com",
 			CommonName: "NAME",
@@ -379,7 +379,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 
 	s.Run("returns error from fetching requester email", func() {
 		ctx := context.Background()
-		failFetchUserInfo := func(logger *zap.Logger, euaID string) (*models.UserInfo, error) {
+		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return nil, &apperrors.ExternalAPIError{
 				Err:       errors.New("sample error"),
 				Model:     models.UserInfo{},
@@ -407,7 +407,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 
 	s.Run("returns ExternalAPIError if requester email not returned", func() {
 		ctx := context.Background()
-		failFetchUserInfo := func(logger *zap.Logger, euaID string) (*models.UserInfo, error) {
+		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return &models.UserInfo{}, nil
 		}
 		reviewSystemIntake := NewGRTReviewSystemIntake(

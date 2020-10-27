@@ -156,7 +156,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
-	fetchUserInfo := func(logger2 *zap.Logger, euaID string) (*models.UserInfo, error) {
+	fetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return &models.UserInfo{Email: "name@site.com"}, nil
 	}
 	reviewEmailCount := 0
@@ -241,7 +241,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns error from fetching requester email", func() {
 		ctx := context.Background()
-		failFetchEmailAddress := func(logger *zap.Logger, euaID string) (*models.UserInfo, error) {
+		failFetchEmailAddress := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return nil, &apperrors.ExternalAPIError{
 				Err:       errors.New("sample error"),
 				Model:     models.UserInfo{},
@@ -261,7 +261,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 
 	s.Run("returns ExternalAPIError if requester email not returned", func() {
 		ctx := context.Background()
-		failFetchUserInfo := func(logger *zap.Logger, euaID string) (*models.UserInfo, error) {
+		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return &models.UserInfo{}, nil
 		}
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, failFetchUserInfo, sendReviewEmail, updateDraftIntake, true)
