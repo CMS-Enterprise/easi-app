@@ -18,6 +18,8 @@ const (
 	ActionTypeNEEDBIZCASE ActionType = "NEED_BIZ_CASE"
 	// ActionTypeREADYFORGRT captures enum value READY_FOR_GRT
 	ActionTypeREADYFORGRT ActionType = "READY_FOR_GRT"
+	// ActionTypePROVIDEFEEDBACKNEEDBIZCASE captures enum value PROVIDE_FEEDBACK_NEED_BIZ_CASE
+	ActionTypePROVIDEFEEDBACKNEEDBIZCASE = "PROVIDE_FEEDBACK_NEED_BIZ_CASE"
 )
 
 // Action is the model for an action on a system intake

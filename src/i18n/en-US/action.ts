@@ -2,7 +2,9 @@ const action = {
   actions: {
     notItRequest: 'Not an IT governance request',
     needBizCase: 'Request a business case',
-    readyForGrt: 'Mark as ready for GRT'
+    readyForGrt: 'Mark as ready for GRT',
+    provideFeedbackNeedBizCase:
+      'Provide GRT Feedback and progress to business case'
   },
   submitAction: {
     backLink: 'Change',

@@ -62,6 +62,18 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const ProvideFeedbackNeedBizCase = (
+    <RadioField
+      key="provide-feedback-need-biz-case"
+      id="provide-feedback-need-biz-case"
+      label={t('actions.readyForGrt')}
+      name={radioGroupName}
+      value="provide-feedback-need-biz-case"
+      onChange={onChange}
+      checked={actionRoute === 'provide-feedback-need-biz-case'}
+    />
+  );
+
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
   if (businessCaseExists) {
@@ -69,7 +81,7 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     availableHiddenActions = [];
   } else {
     availableActions = [NotAnITRequest, NeedBizCase];
-    availableHiddenActions = [ReadyForGRT];
+    availableHiddenActions = [ReadyForGRT, ProvideFeedbackNeedBizCase];
   }
 
   return (
