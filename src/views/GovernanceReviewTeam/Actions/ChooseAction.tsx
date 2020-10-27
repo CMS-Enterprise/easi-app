@@ -66,7 +66,7 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     <RadioField
       key="provide-feedback-need-biz-case"
       id="provide-feedback-need-biz-case"
-      label={t('actions.readyForGrt')}
+      label={t('actions.provideFeedbackNeedBizCase')}
       name={radioGroupName}
       value="provide-feedback-need-biz-case"
       onChange={onChange}
