@@ -9,11 +9,18 @@ const action = {
     heading: 'Actions on intake request',
     subheading: 'How to proceed?',
     feedbackLabel: 'This email will be sent to the requester',
-    submit: 'Send email',
+    submit: 'Email decision and close this request',
     nextStepsLabel: 'Next Steps',
     nextStepsHelpText: 'Next Steps Help Text',
     scopeLabel: 'Scope of Lifecycle ID',
-    scopeHelpText: 'Scope Help Text'
+    scopeHelpText: 'Scope Help Text',
+    lcid: {
+      new: 'Generate a new Lifecycle ID',
+      helpText:
+        'If you choose to generate a new Lifecycle ID, one will be generated when you submit this page',
+      existing: 'Use an existing Lifecycle ID',
+      label: 'Lifecycle ID'
+    }
   },
   submitAction: {
     backLink: 'Change',

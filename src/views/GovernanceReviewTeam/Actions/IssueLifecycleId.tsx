@@ -9,10 +9,12 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
+import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
+import TextField from 'components/shared/TextField';
 import { SubmitLifecycleIdForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
-import actionSchema from 'validations/actionSchema';
+import { lifecycleIdSchema } from 'validations/actionSchema';
 
 const IssueLifecycleId = () => {
   const { systemId } = useParams();
@@ -31,13 +33,13 @@ const IssueLifecycleId = () => {
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={actionSchema}
+      validationSchema={lifecycleIdSchema}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitLifecycleIdForm>) => {
-        const { errors } = formikProps;
+        const { errors, setFieldValue, values } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -66,8 +68,67 @@ const IssueLifecycleId = () => {
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>
+                <FieldGroup
+                  scrollElement="newLifecycleId"
+                  error={!!flatErrors.newLifecycleId}
+                >
+                  <fieldset className="usa-fieldset margin-top-4">
+                    <legend className="usa-label margin-bottom-1">
+                      {t('issueLCID.lcid.label')}
+                    </legend>
+                    <HelpText className="margin-bottom-1">
+                      {t('issueLCID.lcid.helpText')}
+                    </HelpText>
+                    <FieldErrorMsg>{flatErrors.newLifecycleId}</FieldErrorMsg>
+                    <Field
+                      as={RadioField}
+                      checked={values.newLifecycleId === true}
+                      id="IssueLifecycleIdForm-NewLifecycleIdYes"
+                      name="newLifecycleId"
+                      label={t('issueLCID.lcid.new')}
+                      onChange={() => {
+                        setFieldValue('newLifecycleId', true);
+                        setFieldValue('lifecycleId', null);
+                      }}
+                      value
+                    />
+                    <Field
+                      as={RadioField}
+                      checked={values.newLifecycleId === false}
+                      id="IssueLifecycleIdForm-NewLifecycleIdNo"
+                      name="newLifecycleId"
+                      label={t('issueLCID.lcid.existing')}
+                      onChange={() => {
+                        setFieldValue('newLifecycleId', false);
+                      }}
+                      value={false}
+                    />
+                    {values.newLifecycleId === false && (
+                      <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
+                        <FieldGroup
+                          scrollElement="lifecycleId"
+                          error={!!flatErrors.lifecycleId}
+                        >
+                          <Label htmlFor="IssueLifecycleIdForm-LifecycleId">
+                            {t('issueLCID.lcid.label')}
+                          </Label>
+                          <FieldErrorMsg>
+                            {flatErrors.lifecycleId}
+                          </FieldErrorMsg>
+                          <Field
+                            as={TextField}
+                            error={!!flatErrors.lifecycleId}
+                            id="IssueLifecycleIdForm-LifecycleId"
+                            maxLength={7}
+                            name="lifecycleId"
+                          />
+                        </FieldGroup>
+                      </div>
+                    )}
+                  </fieldset>
+                </FieldGroup>
                 <FieldGroup scrollElement="scope" error={!!flatErrors.scope}>
-                  <Label htmlFor="SubmitActionForm-Scope">
+                  <Label htmlFor="IssueLifecycleIdForm-Scope">
                     {t('issueLCID.scopeLabel')}
                   </Label>
                   <HelpText>{t('issueLCID.scopeHelpText')}</HelpText>
@@ -75,7 +136,7 @@ const IssueLifecycleId = () => {
                   <Field
                     as={TextAreaField}
                     error={!!flatErrors.scope}
-                    id="SubmitActionForm-Scope"
+                    id="IssueLifecycleIdForm-Scope"
                     maxLength={2000}
                     name="scope"
                   />
@@ -84,7 +145,7 @@ const IssueLifecycleId = () => {
                   scrollElement="next-steps"
                   error={!!flatErrors.nextSteps}
                 >
-                  <Label htmlFor="SubmitActionForm-Next-Steps">
+                  <Label htmlFor="IssueLifecycleIdForm-NextSteps">
                     {t('issueLCID.nextStepsLabel')}
                   </Label>
                   <HelpText>{t('issueLCID.nextStepsHelpText')}</HelpText>
@@ -92,7 +153,7 @@ const IssueLifecycleId = () => {
                   <Field
                     as={TextAreaField}
                     error={!!flatErrors.nextSteps}
-                    id="SubmitActionForm-Next-Steps"
+                    id="IssueLifecycleIdForm-NextSteps"
                     maxLength={2000}
                     name="next-steps"
                   />
@@ -101,14 +162,14 @@ const IssueLifecycleId = () => {
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
                 >
-                  <Label htmlFor="SubmitActionForm-Feedback">
+                  <Label htmlFor="IssueLifecycleIdForm-Feedback">
                     {t('issueLCID.feedbackLabel')}
                   </Label>
                   <FieldErrorMsg>{flatErrors.feedback}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
                     error={!!flatErrors.feedback}
-                    id="SubmitActionForm-Feedback"
+                    id="IssueLifecycleIdForm-Feedback"
                     maxLength={2000}
                     name="feedback"
                   />
