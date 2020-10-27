@@ -8,9 +8,15 @@ type CollapsableLinkProps = {
   id: string;
   children: React.ReactNode | React.ReactNodeArray;
   label: string;
+  styleLeftBar?: boolean;
 };
 
-const CollapsableLink = ({ id, children, label }: CollapsableLinkProps) => {
+const CollapsableLink = ({
+  id,
+  children,
+  label,
+  styleLeftBar = true
+}: CollapsableLinkProps) => {
   // TODO: should this state instead be held in the parent and passed in as prop?
   // Followup: if the state should remain here, how do we test the component when it's open?
   // That is, how do we initialize this component and set isOpen to true?
@@ -34,7 +40,14 @@ const CollapsableLink = ({ id, children, label }: CollapsableLinkProps) => {
         {label}
       </Button>
       {isOpen && (
-        <div id={id} className="easi-collapsable-link__content">
+        <div
+          id={id}
+          className={
+            styleLeftBar
+              ? 'easi-collapsable-link__content'
+              : 'easi-collapsable-link__content-no-bar'
+          }
+        >
           {children}
         </div>
       )}

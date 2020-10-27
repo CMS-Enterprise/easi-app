@@ -14,3 +14,14 @@ export type ActionState = {
 export type ActionForm = {
   feedback: string;
 };
+
+export type SubmitLifecycleIdForm = {
+  newLifecycleId?: boolean;
+  lifecycleId?: string;
+  expirationDateMonth?: string;
+  expirationDateDay?: string;
+  expirationDateYear?: string;
+  scope?: string;
+  nextSteps?: string;
+  feedback?: string;
+};
