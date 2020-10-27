@@ -18,6 +18,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
+import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
@@ -193,6 +194,114 @@ const PreferredSolution = ({
                     }
                   />
                 </FieldGroup>
+
+                <FieldGroup
+                  scrollElement="preferredSolution.security.isApproved"
+                  error={!!flatErrors['preferredSolution.security.isApproved']}
+                >
+                  <fieldset className="usa-fieldset margin-top-4">
+                    <legend className="usa-label margin-bottom-1">
+                      Is your solution approved by IT Security for use at CMS
+                      (FedRAMP, FISMA approved, within the CMS cloud enclave)?
+                    </legend>
+                    <FieldErrorMsg>
+                      {flatErrors['preferredSolution.security.isApproved']}
+                    </FieldErrorMsg>
+                    <Field
+                      as={RadioField}
+                      checked={values.preferredSolution.security.isApproved}
+                      id="BusinessCase-PreferredSolutionSecurityApproved"
+                      name="preferredsolution.security.isApproved"
+                      label={yesNoMap.YES}
+                      onChange={() => {
+                        setFieldValue(
+                          'preferredSolution.security.isApproved',
+                          true
+                        );
+                      }}
+                    />
+
+                    <Field
+                      as={RadioField}
+                      checked={
+                        values.preferredSolution.security.isApproved === false
+                      }
+                      id="BusinessCase-PreferredSolutionSecurityNotApproved"
+                      name="preferredsolution.security.isApproved"
+                      label={yesNoMap.NO}
+                      onChange={() => {
+                        setFieldValue(
+                          'preferredSolution.security.isApproved',
+                          false
+                        );
+                        setFieldValue(
+                          'preferredSolution.security.isBeingReviewed',
+                          ''
+                        );
+                      }}
+                    />
+                  </fieldset>
+                </FieldGroup>
+
+                {values.preferredSolution.security.isApproved === false && (
+                  <FieldGroup
+                    scrollElement="preferredSolution.security.isBeingReviewed"
+                    error={
+                      !!flatErrors['preferredSolution.security.isBeingReviewed']
+                    }
+                  >
+                    <fieldset className="usa-fieldset margin-top-4">
+                      <legend className="usa-label margin-bottom-1">
+                        Is it in the process of CMS approval?
+                      </legend>
+                      <HelpText className="margin-bottom-1">
+                        Obtaining CMS Approval can be lengthy and solutions that
+                        do not have it or are just starting may lead to longer
+                        project timelines.
+                      </HelpText>
+                      <FieldErrorMsg>
+                        {
+                          flatErrors[
+                            'preferredSolution.security.isBeingReviewed'
+                          ]
+                        }
+                      </FieldErrorMsg>
+                      <Field
+                        as={RadioField}
+                        checked={
+                          values.preferredSolution.security.isBeingReviewed ===
+                          'YES'
+                        }
+                        id="BusinessCase-PreferredSolutionSecurityIsBeingReviewedYes"
+                        name="preferredSolution.security.isBeingReviewed"
+                        label={yesNoMap.YES}
+                        value="YES"
+                      />
+                      <Field
+                        as={RadioField}
+                        checked={
+                          values.preferredSolution.security.isBeingReviewed ===
+                          'NO'
+                        }
+                        id="BusinessCase-PreferredSolutionSecurityIsBeingReviewedNo"
+                        name="preferredSolution.security.isBeingReviewed"
+                        label={yesNoMap.NO}
+                        value="NO"
+                      />
+                      <Field
+                        as={RadioField}
+                        checked={
+                          values.preferredSolution.security.isBeingReviewed ===
+                          'NOT_SURE'
+                        }
+                        id="BusinessCase-PreferredSolutionSecurityIsBeingReviewedNotSure"
+                        name="preferredSolution.security.isBeingReviewed"
+                        label={yesNoMap.NOT_SURE}
+                        value="NOT_SURE"
+                      />
+                    </fieldset>
+                  </FieldGroup>
+                )}
 
                 <FieldGroup
                   scrollElement="preferredSolution.hosting.type"
