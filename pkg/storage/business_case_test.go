@@ -337,7 +337,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByIntakeID() {
 		businessCase := testhelpers.NewBusinessCase()
 		intake := testhelpers.NewSystemIntake()
 		businessCase.SystemIntakeID = intake.ID
-		intake.Status = models.SystemIntakeStatusNEEDBIZCASE
+		intake.Status = models.SystemIntakeStatusACCEPTED
 		setupTx := s.db.MustBegin()
 		_, err := setupTx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake)
 		s.NoError(err)
