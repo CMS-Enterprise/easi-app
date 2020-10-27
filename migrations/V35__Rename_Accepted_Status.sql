@@ -1,1 +1,0 @@
-ALTER TYPE system_intake_status RENAME VALUE 'ACCEPTED' TO 'NEED_BIZ_CASE';
