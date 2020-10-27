@@ -127,10 +127,7 @@ const IssueLifecycleId = () => {
                     )}
                   </fieldset>
                 </FieldGroup>
-                <FieldGroup
-                  scrollElement="expirationDate"
-                  error={!!flatErrors.expirationDate}
-                >
+                <FieldGroup>
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
                       {t('issueLCID.expirationDate.label')}
@@ -169,7 +166,7 @@ const IssueLifecycleId = () => {
                           error={!!flatErrors.expirationDateDay}
                           id="IssueLifecycleIdForm-ExpirationDateDay"
                           maxLength={2}
-                          name="expirationDateMonth"
+                          name="expirationDateDay"
                         />
                       </div>
                       <div className="usa-form-group usa-form-group--year">
@@ -184,7 +181,7 @@ const IssueLifecycleId = () => {
                           error={!!flatErrors.expirationDateYear}
                           id="IssueLifecycleIdForm-ExpirationDateYear"
                           maxLength={4}
-                          name="expirationDateMonth"
+                          name="expirationDateYear"
                         />
                       </div>
                     </div>
