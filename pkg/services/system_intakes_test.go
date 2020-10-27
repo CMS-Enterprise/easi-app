@@ -18,37 +18,76 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
-	logger := zap.NewNop()
-	fakeEuaID := "FAKE"
-	serviceConfig := NewConfig(logger, nil)
-	serviceConfig.clock = clock.NewMock()
-	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
+func (s ServicesTestSuite) TestFetchSystemIntakes() {
+	requesterID := "REQ"
+	requester := &authn.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
+	reviewerID := "GRT"
+	reviewer := &authn.EUAPrincipal{EUAID: reviewerID, JobCodeEASi: true, JobCodeGRT: true}
+	serviceConfig := NewConfig(nil, nil)
 
-	s.Run("successfully fetches System Intakes by EUA ID without an error", func() {
-		fetch := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
-			return models.SystemIntakes{
-				models.SystemIntake{
-					EUAUserID: fakeEuaID,
-				},
-			}, nil
-		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch, authorize)
-		intakes, err := fetchSystemIntakesByEuaID(context.Background(), fakeEuaID)
-		s.NoError(err)
-		s.Equal(fakeEuaID, intakes[0].EUAUserID)
-	})
+	fnAuth := NewAuthorizeHasEASiRole()
 
-	s.Run("returns query error when fetch fails", func() {
-		fetch := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
-			return models.SystemIntakes{}, errors.New("fetch failed")
-		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch, authorize)
-		intakes, err := fetchSystemIntakesByEuaID(context.Background(), "FAKE")
+	fnByID := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
+		return models.SystemIntakes{
+			models.SystemIntake{EUAUserID: euaID},
+		}, nil
+	}
+	fnByIDFail := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
+		return nil, errors.New("forced error")
+	}
 
-		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(models.SystemIntakes{}, intakes)
-	})
+	fnAll := func(ctx context.Context) (models.SystemIntakes, error) {
+		return models.SystemIntakes{
+			models.SystemIntake{EUAUserID: reviewerID},
+			models.SystemIntake{EUAUserID: requesterID},
+		}, nil
+	}
+	fnAllFail := func(ctx context.Context) (models.SystemIntakes, error) { return nil, errors.New("forced error") }
+
+	testCases := map[string]struct {
+		ctx  context.Context
+		fn   func(ctx context.Context) (models.SystemIntakes, error)
+		fail bool
+	}{
+		"happy path requester": {
+			appcontext.WithPrincipal(context.Background(), requester),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			false,
+		},
+		"happy path reviewer": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			false,
+		},
+		"fail authorization": {
+			context.Background(),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnAuth),
+			true,
+		},
+		"fail requester data access": {
+			appcontext.WithPrincipal(context.Background(), requester),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			true,
+		},
+		"fail reviewer data access": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			true,
+		},
+	}
+
+	for name, tc := range testCases {
+		s.Run(name, func() {
+			intakes, err := tc.fn(tc.ctx)
+
+			if tc.fail {
+				s.Error(err)
+				return
+			}
+			s.NoError(err)
+			s.GreaterOrEqual(len(intakes), 1)
+		})
+	}
 }
 
 func (s ServicesTestSuite) TestNewCreateSystemIntake() {
