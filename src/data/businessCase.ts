@@ -335,7 +335,7 @@ export const prepareBusinessCaseForApi = (
     preferredSummary: businessCase.preferredSolution.summary,
     preferredAcquisitionApproach:
       businessCase.preferredSolution.acquisitionApproach,
-    preferredSecuritysApproved:
+    preferredSecurityIsApproved:
       businessCase.preferredSolution.security.isApproved,
     preferredSecurityisBeingReviewed:
       businessCase.preferredSolution.security.isBeingReviewed,
@@ -351,7 +351,7 @@ export const prepareBusinessCaseForApi = (
     alternativeASummary: businessCase.alternativeA.summary,
     alternativeAAcquisitionApproach:
       businessCase.alternativeA.acquisitionApproach,
-    alternativeASecuritysApproved:
+    alternativeASecurityIsApproved:
       businessCase.alternativeA.security.isApproved,
     alternativeASecurityisBeingReviewed:
       businessCase.alternativeA.security.isBeingReviewed,
@@ -372,7 +372,7 @@ export const prepareBusinessCaseForApi = (
     alternativeBAcquisitionApproach: alternativeBExists
       ? businessCase.alternativeB.acquisitionApproach
       : null,
-    alternativeBSecuritysApproved: alternativeBExists
+    alternativeBSecurityIsApproved: alternativeBExists
       ? businessCase.alternativeB.security.isApproved
       : null,
     alternativeBSecurityisBeingReviewed: alternativeBExists
