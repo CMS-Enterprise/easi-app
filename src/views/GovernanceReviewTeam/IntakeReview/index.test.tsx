@@ -2,6 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
+import { DateTime } from 'luxon';
 
 import IntakeReview from './index';
 
@@ -73,14 +74,16 @@ describe('The GRT intake review view', () => {
   };
 
   it('renders without crashing', () => {
-    shallow(<IntakeReview systemIntake={mockSystemIntake} />);
+    const now = DateTime.local();
+    shallow(<IntakeReview systemIntake={mockSystemIntake} now={now} />);
   });
 
   it('matches the snapshot', () => {
+    const now = DateTime.fromRFC2822('30 Sep 2020 13:23:12 GMT');
     const tree = renderer
       .create(
         <MemoryRouter>
-          <IntakeReview systemIntake={mockSystemIntake} />{' '}
+          <IntakeReview systemIntake={mockSystemIntake} now={now} />{' '}
         </MemoryRouter>
       )
       .toJSON();

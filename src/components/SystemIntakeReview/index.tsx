@@ -14,10 +14,12 @@ import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
+  now: DateTime;
 };
 
 export const SystemIntakeReview = ({
-  systemIntake
+  systemIntake,
+  now
 }: SystemIntakeReviewProps) => {
   const { contract } = systemIntake;
 
@@ -54,9 +56,8 @@ export const SystemIntakeReview = ({
         <ReviewRow>
           <div>
             <DescriptionTerm term="Submission Date" />
-            {/* TO DO Make this changeable */}
             <DescriptionDefinition
-              definition={DateTime.local().toLocaleString(DateTime.DATE_MED)}
+              definition={now.toLocaleString(DateTime.DATE_MED)}
             />
           </div>
         </ReviewRow>
