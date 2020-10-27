@@ -18,9 +18,9 @@ export type ActionForm = {
 export type SubmitLifecycleIdForm = {
   newLifecycleId?: boolean;
   lifecycleId?: string;
-  expirationDateMonth?: number;
-  expirationDateDay?: number;
-  expirationDateYear?: number;
+  expirationDateMonth?: string;
+  expirationDateDay?: string;
+  expirationDateYear?: string;
   scope?: string;
   nextSteps?: string;
   feedback?: string;
