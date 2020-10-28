@@ -104,6 +104,10 @@ cy.businessCase = {
         .type('Preferred Solution Acquisition approach')
         .should('have.value', 'Preferred Solution Acquisition approach');
 
+      cy.get('#BusinessCase-PreferredSolutionSecurityApproved')
+        .check({ force: true })
+        .should('be.checked');
+
       cy.get('#BusinessCase-PreferredSolutionHostingNone')
         .check({ force: true })
         .should('be.checked');
@@ -168,6 +172,10 @@ cy.businessCase = {
       cy.get('#BusinessCase-alternativeAAcquisitionApproach')
         .type('Alternative A AcquisitionApproach')
         .should('have.value', 'Alternative A AcquisitionApproach');
+
+      cy.get('#BusinessCase-alternativeASecurityApproved')
+        .check({ force: true })
+        .should('be.checked');
 
       cy.get('#BusinessCase-alternativeAHostingNone')
         .check({ force: true })

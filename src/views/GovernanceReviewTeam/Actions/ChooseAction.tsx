@@ -38,6 +38,19 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  
+  const IssueLifecycleId = (
+    <RadioField
+      key="issue-lcid"
+      id="issue-lcid"
+      label="Issue Lifecycle Id"
+      name={radioGroupName}
+      value="issue-lcid"
+      onChange={onChange}
+      checked={actionRoute === 'issue-lcid'}
+    />
+  );
+
   const NeedBizCase = (
     <RadioField
       key="need-biz-case"
@@ -92,7 +105,7 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     availableActions = [];
     availableHiddenActions = [];
   } else {
-    availableActions = [NotAnITRequest, NeedBizCase];
+    availableActions = [NotAnITRequest, NeedBizCase, IssueLifecycleId];
     availableHiddenActions = [
       ReadyForGRT,
       ProvideFeedbackNeedBizCase,
