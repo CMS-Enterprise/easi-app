@@ -36,7 +36,9 @@ const RequestRepository = () => {
         accessor: 'requestName',
         Cell: ({ row, value }: any) => {
           return (
-            <Link to={`/governance-review-team/${row.original.id}`}>
+            <Link
+              to={`/governance-review-team/${row.original.id}/intake-request`}
+            >
               {value}
             </Link>
           );
