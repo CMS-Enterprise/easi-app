@@ -3,6 +3,10 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
+	"time"
+
+	"github.com/guregu/null"
 
 	"github.com/facebookgo/clock"
 	"github.com/google/uuid"
@@ -14,37 +18,76 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (s ServicesTestSuite) TestSystemIntakesByEuaIDFetcher() {
-	logger := zap.NewNop()
-	fakeEuaID := "FAKE"
-	serviceConfig := NewConfig(logger, nil)
-	serviceConfig.clock = clock.NewMock()
-	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
+func (s ServicesTestSuite) TestFetchSystemIntakes() {
+	requesterID := "REQ"
+	requester := &authn.EUAPrincipal{EUAID: requesterID, JobCodeEASi: true}
+	reviewerID := "GRT"
+	reviewer := &authn.EUAPrincipal{EUAID: reviewerID, JobCodeEASi: true, JobCodeGRT: true}
+	serviceConfig := NewConfig(nil, nil)
 
-	s.Run("successfully fetches System Intakes by EUA ID without an error", func() {
-		fetch := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
-			return models.SystemIntakes{
-				models.SystemIntake{
-					EUAUserID: fakeEuaID,
-				},
-			}, nil
-		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch, authorize)
-		intakes, err := fetchSystemIntakesByEuaID(context.Background(), fakeEuaID)
-		s.NoError(err)
-		s.Equal(fakeEuaID, intakes[0].EUAUserID)
-	})
+	fnAuth := NewAuthorizeHasEASiRole()
 
-	s.Run("returns query error when fetch fails", func() {
-		fetch := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
-			return models.SystemIntakes{}, errors.New("fetch failed")
-		}
-		fetchSystemIntakesByEuaID := NewFetchSystemIntakesByEuaID(serviceConfig, fetch, authorize)
-		intakes, err := fetchSystemIntakesByEuaID(context.Background(), "FAKE")
+	fnByID := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
+		return models.SystemIntakes{
+			models.SystemIntake{EUAUserID: euaID},
+		}, nil
+	}
+	fnByIDFail := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
+		return nil, errors.New("forced error")
+	}
 
-		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(models.SystemIntakes{}, intakes)
-	})
+	fnAll := func(ctx context.Context) (models.SystemIntakes, error) {
+		return models.SystemIntakes{
+			models.SystemIntake{EUAUserID: reviewerID},
+			models.SystemIntake{EUAUserID: requesterID},
+		}, nil
+	}
+	fnAllFail := func(ctx context.Context) (models.SystemIntakes, error) { return nil, errors.New("forced error") }
+
+	testCases := map[string]struct {
+		ctx  context.Context
+		fn   func(ctx context.Context) (models.SystemIntakes, error)
+		fail bool
+	}{
+		"happy path requester": {
+			appcontext.WithPrincipal(context.Background(), requester),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			false,
+		},
+		"happy path reviewer": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			false,
+		},
+		"fail authorization": {
+			context.Background(),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnAuth),
+			true,
+		},
+		"fail requester data access": {
+			appcontext.WithPrincipal(context.Background(), requester),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			true,
+		},
+		"fail reviewer data access": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			true,
+		},
+	}
+
+	for name, tc := range testCases {
+		s.Run(name, func() {
+			intakes, err := tc.fn(tc.ctx)
+
+			if tc.fail {
+				s.Error(err)
+				return
+			}
+			s.NoError(err)
+			s.GreaterOrEqual(len(intakes), 1)
+		})
+	}
 }
 
 func (s ServicesTestSuite) TestNewCreateSystemIntake() {
@@ -84,47 +127,6 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 		})
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
-	})
-}
-
-func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
-	authorizeSaveSystemIntake := NewAuthorizeUserIsIntakeRequester()
-
-	s.Run("No EUA ID fails auth", func() {
-		ctx := context.Background()
-
-		ok, err := authorizeSaveSystemIntake(ctx, &models.SystemIntake{})
-
-		s.False(ok)
-		s.IsType(&apperrors.ContextError{}, err)
-	})
-
-	s.Run("Mismatched EUA ID fails auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
-
-		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeSaveSystemIntake(ctx, &intake)
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Matched EUA ID passes auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
-
-		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeSaveSystemIntake(ctx, &intake)
-
-		s.True(ok)
-		s.NoError(err)
 	})
 }
 
@@ -507,5 +509,90 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 		err := archiveSystemIntake(ctx, fakeID)
 		s.IsType(&apperrors.QueryError{}, err)
 	})
+}
 
+func (s ServicesTestSuite) TestUpdateLifecycleFields() {
+	today := time.Now()
+	input := &models.SystemIntake{
+		ID:                 uuid.New(),
+		LifecycleID:        null.StringFrom("010010"),
+		LifecycleExpiresAt: &today,
+		LifecycleNextSteps: null.StringFrom(fmt.Sprintf("next %s", today)),
+		LifecycleScope:     null.StringFrom(fmt.Sprintf("scope %s", today)),
+	}
+
+	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
+	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{ID: id}, nil
+	}
+	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+		if i.LifecycleID.ValueOrZero() == "" {
+			return nil, errors.New("missing lcid")
+		}
+		if !i.LifecycleExpiresAt.Equal(today) {
+			return nil, errors.New("incorrect date")
+		}
+		if !i.LifecycleNextSteps.Equal(input.LifecycleNextSteps) {
+			return nil, errors.New("incorrect next")
+		}
+		if !i.LifecycleScope.Equal(input.LifecycleScope) {
+			return nil, errors.New("incorrect scope")
+		}
+		return i, nil
+	}
+	fnGenerate := func(context.Context) (string, error) { return "993659", nil }
+	cfg := Config{clock: clock.NewMock()}
+	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerate)
+
+	s.Run("happy path provided lcid", func() {
+		err := happy(context.Background(), input)
+		s.NoError(err)
+	})
+
+	// from here on out, we always expect the LCID to get generated
+	input.LifecycleID = null.StringFrom("")
+
+	s.Run("happy path generates lcid", func() {
+		err := happy(context.Background(), input)
+		s.NoError(err)
+	})
+
+	// build the error-generating pieces
+	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
+	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
+	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return nil, errors.New("fetch error")
+	}
+	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+		return nil, errors.New("update error")
+	}
+	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
+
+	// build the table-driven test of error cases for unhappy path
+	testCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake) error
+	}{
+		"error path fetch": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnGenerate),
+		},
+		"error path auth": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnGenerate),
+		},
+		"error path auth fail": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnGenerate),
+		},
+		"error path generate": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerateErr),
+		},
+		"error path update": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnGenerate),
+		},
+	}
+
+	for expectedErr, tc := range testCases {
+		s.Run(expectedErr, func() {
+			err := tc.fn(context.Background(), input)
+			s.Error(err)
+		})
+	}
 }

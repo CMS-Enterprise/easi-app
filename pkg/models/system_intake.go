@@ -17,12 +17,18 @@ const (
 	SystemIntakeStatusSUBMITTED SystemIntakeStatus = "SUBMITTED"
 	// SystemIntakeStatusACCEPTED captures enum value "ACCEPTED"
 	SystemIntakeStatusACCEPTED SystemIntakeStatus = "ACCEPTED"
+	// SystemIntakeStatusNEEDBIZCASE captures enum value "NEED_BIZ_CASE"
+	SystemIntakeStatusNEEDBIZCASE SystemIntakeStatus = "NEED_BIZ_CASE"
 	// SystemIntakeStatusCLOSED captures enum value "CLOSED"
 	SystemIntakeStatusCLOSED SystemIntakeStatus = "CLOSED"
 	// SystemIntakeStatusAPPROVED captures enum value "APPROVED"
 	SystemIntakeStatusAPPROVED SystemIntakeStatus = "APPROVED"
+	// SystemIntakeStatusREADYFORGRT captures enum value "READY_FOR_GRT"
+	SystemIntakeStatusREADYFORGRT SystemIntakeStatus = "READY_FOR_GRT"
 	// SystemIntakeStatusARCHIVED captures enum value "ARCHIVED"
 	SystemIntakeStatusARCHIVED SystemIntakeStatus = "ARCHIVED"
+	// SystemIntakeStatusNOTITREQUEST captures enum value "NOT_IT_REQUEST"
+	SystemIntakeStatusNOTITREQUEST SystemIntakeStatus = "NOT_IT_REQUEST"
 )
 
 // SystemIntake is the model for the system intake form
@@ -43,6 +49,7 @@ type SystemIntake struct {
 	ProjectName             null.String        `json:"projectName" db:"project_name"`
 	ExistingFunding         null.Bool          `json:"existingFunding" db:"existing_funding"`
 	FundingSource           null.String        `json:"fundingSource" db:"funding_source"`
+	FundingNumber           null.String        `json:"fundingNumber" db:"funding_number"`
 	BusinessNeed            null.String        `json:"businessNeed" db:"business_need"`
 	Solution                null.String        `json:"solution"`
 	ProcessStatus           null.String        `json:"processStatus" db:"process_status"`

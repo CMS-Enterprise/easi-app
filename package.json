@@ -17,6 +17,7 @@
     "@types/node": "12.11.2",
     "@types/react": "16.9.19",
     "@types/react-autosuggest": "^9.3.13",
+    "@types/react-csv": "^1.1.1",
     "@types/react-dom": "16.9.2",
     "@types/react-modal": "^3.10.5",
     "@types/react-redux": "^7.1.5",
@@ -35,7 +36,7 @@
     "font-awesome": "^4.7.0",
     "formik": "^2.1.4",
     "history": "^4.10.1",
-    "i18next": "^19.4.5",
+    "i18next": "^19.8.3",
     "i18next-browser-languagedetector": "^5.0.0",
     "istanbul-lib-coverage": "^3.0.0",
     "lodash": "^4.17.15",
@@ -45,13 +46,14 @@
     "nyc": "^15.0.0",
     "react": "^16.10.2",
     "react-autosuggest": "^9.4.3",
+    "react-csv": "^2.0.3",
     "react-dom": "^16.10.2",
     "react-i18next": "^11.5.0",
     "react-media": "^1.10.0",
     "react-modal": "^3.11.2",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.4.1",
+    "react-scripts": "3.4.4",
     "react-table": "^7.5.1",
     "redux": "^4.0.4",
     "redux-actions": "^2.6.5",
@@ -79,7 +81,10 @@
     "cypress:run": "cypress run"
   },
   "nyc": {
-      "reporter": ["html", "text"]
+    "reporter": [
+      "html",
+      "text"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"

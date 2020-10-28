@@ -15,6 +15,9 @@ import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
 
+import ChooseAction from './Actions/ChooseAction';
+import IssueLifecycleId from './Actions/IssueLifecycleId';
+import SubmitAction from './Actions/SubmitAction';
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
 
@@ -22,6 +25,7 @@ import './index.scss';
 
 const GovernanceReviewTeam = () => {
   const { t } = useTranslation('governanceReviewTeam');
+  const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
 
@@ -173,7 +177,48 @@ const GovernanceReviewTeam = () => {
             />
             <Route
               path="/governance-review-team/:systemId/actions"
-              render={() => <h1>Actions on intake request</h1>}
+              exact
+              render={() => <ChooseAction businessCase={businessCase} />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/not-it-request"
+              render={() => (
+                <SubmitAction
+                  action="NOT_IT_REQUEST"
+                  actionName={actionsT('actions.notItRequest')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/need-biz-case"
+              render={() => (
+                <SubmitAction
+                  action="NEED_BIZ_CASE"
+                  actionName={actionsT('actions.needBizCase')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/provide-feedback-need-biz-case"
+              render={() => (
+                <SubmitAction
+                  action="PROVIDE_FEEDBACK_NEED_BIZ_CASE"
+                  actionName={actionsT('actions.provideFeedbackNeedBizCase')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/ready-for-grt"
+              render={() => (
+                <SubmitAction
+                  action="READY_FOR_GRT"
+                  actionName={actionsT('actions.readyForGrt')}
+                />
+              )}
+            />  
+            <Route
+              path="/governance-review-team/:systemId/actions/issue-lcid"
+              render={() => <IssueLifecycleId />}
             />
           </section>
         </section>

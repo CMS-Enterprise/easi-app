@@ -26,6 +26,11 @@ export const storeBusinessCase = createRoutine('STORE_BUSINESS_CASE');
 export const submitBusinessCase = createRoutine('SUBMIT_BUSINESS_CASE');
 export const clearBusinessCase = createRoutine('CLEAR_BUSINESS_CASE');
 
+// Request Repository
+export const fetchRequestRepoIntakes = createRoutine(
+  'FETCH_REQUEST_REPO_INTAKES'
+);
+
 // Action routines
 export const postSystemIntakeAction = createRoutine<Action>(
   'POST_SYSTEM_INTAKE_ACTION'

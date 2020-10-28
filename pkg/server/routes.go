@@ -15,6 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
@@ -175,10 +176,11 @@ func (s *Server) routes(
 
 	systemIntakesHandler := handlers.NewSystemIntakesHandler(
 		base,
-		services.NewFetchSystemIntakesByEuaID(
+		services.NewFetchSystemIntakes(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
-			services.NewAuthorizeFetchSystemIntakesByEuaID(),
+			store.FetchSystemIntakesNotArchived,
+			services.NewAuthorizeHasEASiRole(),
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
@@ -236,9 +238,57 @@ func (s *Server) routes(
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeSubmissionEmail,
 			),
+			services.NewGRTReviewSystemIntake(
+				serviceConfig,
+				models.SystemIntakeStatusNOTITREQUEST,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+			),
+			services.NewGRTReviewSystemIntake(
+				serviceConfig,
+				models.SystemIntakeStatusREADYFORGRT,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+			),
+			services.NewGRTReviewSystemIntake(
+				serviceConfig,
+				models.SystemIntakeStatusNEEDBIZCASE,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+			),
+			services.NewGRTReviewSystemIntake(
+				serviceConfig,
+				models.SystemIntakeStatusNEEDBIZCASE,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+			),
 		),
 	)
-	api.Handle("/system_intake/{intake_id}/actions/{action_type}", systemIntakeActionHandler.Handle())
+	api.Handle("/system_intake/{intake_id}/actions", systemIntakeActionHandler.Handle())
+
+	systemIntakeLifecycleIDHandler := handlers.NewSystemIntakeLifecycleIDHandler(
+		base,
+		services.NewUpdateLifecycleFields(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
+			store.GenerateLifecycleID,
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
