@@ -26,7 +26,7 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
 
   const radioGroupName = 'Available Actions';
 
-  const NotAnITRequest = (
+  const NotITRequest = (
     <RadioField
       key="not-it-request"
       id="not-it-request"
@@ -68,7 +68,7 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     availableActions = [];
     availableHiddenActions = [];
   } else {
-    availableActions = [NotAnITRequest, NeedBizCase];
+    availableActions = [NotITRequest, NeedBizCase];
     availableHiddenActions = [ReadyForGRT];
   }
 
