@@ -16,7 +16,7 @@ This document will be focusing on the requirements and rules of audit logging.
 
 ### 1) Where will the logging live
 
-CMS Splunk Cloudwatch, AWS logging tools (e.g. Cloudwatch, S3)
+CMS Splunk, AWS logging tools (e.g. Cloudwatch, S3)
 
 #### &nbsp;&nbsp; a) How will it be accessed
 
