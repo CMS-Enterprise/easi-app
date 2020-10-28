@@ -1,4 +1,10 @@
-export type ActionType = 'SUBMIT' | 'NOT_IT_REQUEST' | 'NEED_BIZ_CASE';
+export type ActionType =
+  | 'SUBMIT'
+  | 'NOT_IT_REQUEST'
+  | 'NEED_BIZ_CASE'
+  | 'READY_FOR_GRT'
+  | 'READY_FOR_GRB'
+  | 'PROVIDE_FEEDBACK_NEED_BIZ_CASE';
 
 export type Action = {
   intakeId: string;
@@ -13,4 +19,15 @@ export type ActionState = {
 
 export type ActionForm = {
   feedback: string;
+};
+
+export type SubmitLifecycleIdForm = {
+  newLifecycleId?: boolean;
+  lifecycleId?: string;
+  expirationDateMonth?: string;
+  expirationDateDay?: string;
+  expirationDateYear?: string;
+  scope?: string;
+  nextSteps?: string;
+  feedback?: string;
 };
