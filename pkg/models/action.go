@@ -14,6 +14,10 @@ const (
 	ActionTypeSUBMIT ActionType = "SUBMIT"
 	// ActionTypeNOTITREQUEST captures enum value NOT_IT_REQUEST
 	ActionTypeNOTITREQUEST ActionType = "NOT_IT_REQUEST"
+	// ActionTypeNEEDBIZCASE captures enum value NEED_BIZ_CASE
+	ActionTypeNEEDBIZCASE ActionType = "NEED_BIZ_CASE"
+	// ActionTypeREADYFORGRT captures enum value READY_FOR_GRT
+	ActionTypeREADYFORGRT ActionType = "READY_FOR_GRT"
 )
 
 // Action is the model for an action on a system intake

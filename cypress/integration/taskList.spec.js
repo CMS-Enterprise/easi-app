@@ -15,7 +15,9 @@ describe('The Task List', () => {
   });
 
   it('shows a continue link when a user clicks back until they reach the task list', () => {
-    cy.get('[data-testid="intake-start-btn"]').click();
+    cy.get('[data-testid="intake-start-btn"]')
+      .should('be.visible')
+      .click();
 
     cy.systemIntake.contactDetails.fillNonBranchingFields();
     cy.get('#IntakeForm-HasIssoNo')

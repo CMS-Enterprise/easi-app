@@ -176,10 +176,11 @@ func (s *Server) routes(
 
 	systemIntakesHandler := handlers.NewSystemIntakesHandler(
 		base,
-		services.NewFetchSystemIntakesByEuaID(
+		services.NewFetchSystemIntakes(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
-			services.NewAuthorizeFetchSystemIntakesByEuaID(),
+			store.FetchSystemIntakesNotArchived,
+			services.NewAuthorizeHasEASiRole(),
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
@@ -240,6 +241,24 @@ func (s *Server) routes(
 			services.NewGRTReviewSystemIntake(
 				serviceConfig,
 				models.SystemIntakeStatusNOTITREQUEST,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+			),
+			services.NewGRTReviewSystemIntake(
+				serviceConfig,
+				models.SystemIntakeStatusREADYFORGRT,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+			),
+			services.NewGRTReviewSystemIntake(
+				serviceConfig,
+				models.SystemIntakeStatusNEEDBIZCASE,
 				store.UpdateSystemIntake,
 				services.NewAuthorizeRequireGRTJobCode(),
 				store.CreateAction,
