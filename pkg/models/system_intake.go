@@ -31,6 +31,8 @@ const (
 	SystemIntakeStatusARCHIVED SystemIntakeStatus = "ARCHIVED"
 	// SystemIntakeStatusNOTITREQUEST captures enum value "NOT_IT_REQUEST"
 	SystemIntakeStatusNOTITREQUEST SystemIntakeStatus = "NOT_IT_REQUEST"
+	// SystemIntakeStatusLCIDISSUED captures enum value "LCID_ISSUED"
+	SystemIntakeStatusLCIDISSUED SystemIntakeStatus = "LCID_ISSUED"
 )
 
 // SystemIntake is the model for the system intake form

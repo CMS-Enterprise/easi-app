@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -12,13 +13,20 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { SubmitLifecycleIdForm } from 'types/action';
+import { ActionType, SubmitLifecycleIdForm } from 'types/action';
+import {
+  issueLifecycleIdForSystemIntake,
+  postSystemIntakeAction
+} from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
 const IssueLifecycleId = () => {
   const { systemId } = useParams();
+  const dispatch = useDispatch();
   const { t } = useTranslation('action');
+
+  const actionType: ActionType = 'ISSUE_LCID';
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -31,8 +39,29 @@ const IssueLifecycleId = () => {
   };
 
   const dispatchSave = (values: SubmitLifecycleIdForm) => {
-    const payload = { systemId, ...values };
-    console.log(payload);
+    const {
+      feedback,
+      expirationDateMonth,
+      expirationDateDay,
+      expirationDateYear,
+      nextSteps,
+      scope,
+      lifecycleId
+    } = values;
+    const actionPayload = { actionType, intakeId: systemId, feedback };
+    dispatch(postSystemIntakeAction(actionPayload));
+
+    const lcidData = {
+      lcidExpiresAt: `${expirationDateYear}-${expirationDateMonth}-${expirationDateDay}`,
+      lcidNextSteps: nextSteps,
+      lcidScope: scope,
+      lcid: lifecycleId
+    };
+    const lcidPayload = {
+      id: systemId,
+      data: lcidData
+    };
+    dispatch(issueLifecycleIdForSystemIntake(lcidPayload));
   };
 
   return (
@@ -208,7 +237,7 @@ const IssueLifecycleId = () => {
                   />
                 </FieldGroup>
                 <FieldGroup
-                  scrollElement="next-steps"
+                  scrollElement="nextSteps"
                   error={!!flatErrors.nextSteps}
                 >
                   <Label htmlFor="IssueLifecycleIdForm-NextSteps">
@@ -221,7 +250,7 @@ const IssueLifecycleId = () => {
                     error={!!flatErrors.nextSteps}
                     id="IssueLifecycleIdForm-NextSteps"
                     maxLength={2000}
-                    name="next-steps"
+                    name="nextSteps"
                   />
                 </FieldGroup>
                 <FieldGroup
