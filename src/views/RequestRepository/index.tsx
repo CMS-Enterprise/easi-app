@@ -28,7 +28,10 @@ const RequestRepository = () => {
         Header: t('intake:fields.submissionDate'),
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
-          return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          if (value) {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          }
+          return t('requestRepository.table.submissionDate.null');
         }
       },
       {
