@@ -199,6 +199,24 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
+              path="/governance-review-team/:systemId/actions/provide-feedback-need-biz-case"
+              render={() => (
+                <SubmitAction
+                  action="PROVIDE_FEEDBACK_NEED_BIZ_CASE"
+                  actionName={actionsT('actions.provideFeedbackNeedBizCase')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/ready-for-grt"
+              render={() => (
+                <SubmitAction
+                  action="READY_FOR_GRT"
+                  actionName={actionsT('actions.readyForGrt')}
+                />
+              )}
+            />  
+            <Route
               path="/governance-review-team/:systemId/actions/issue-lcid"
               render={() => <IssueLifecycleId />}
             />
