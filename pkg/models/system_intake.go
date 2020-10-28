@@ -25,10 +25,14 @@ const (
 	SystemIntakeStatusAPPROVED SystemIntakeStatus = "APPROVED"
 	// SystemIntakeStatusREADYFORGRT captures enum value "READY_FOR_GRT"
 	SystemIntakeStatusREADYFORGRT SystemIntakeStatus = "READY_FOR_GRT"
+	// SystemIntakeStatusREADYFORGRB captures enum value "READY_FOR_GRB"
+	SystemIntakeStatusREADYFORGRB SystemIntakeStatus = "READY_FOR_GRB"
 	// SystemIntakeStatusARCHIVED captures enum value "ARCHIVED"
 	SystemIntakeStatusARCHIVED SystemIntakeStatus = "ARCHIVED"
 	// SystemIntakeStatusNOTITREQUEST captures enum value "NOT_IT_REQUEST"
 	SystemIntakeStatusNOTITREQUEST SystemIntakeStatus = "NOT_IT_REQUEST"
+	// SystemIntakeStatusLCIDISSUED captures enum value "LCID_ISSUED"
+	SystemIntakeStatusLCIDISSUED SystemIntakeStatus = "LCID_ISSUED"
 )
 
 // SystemIntake is the model for the system intake form

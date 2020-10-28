@@ -15,6 +15,7 @@ describe('The Task List', () => {
   });
 
   it('shows a continue link when a user clicks back until they reach the task list', () => {
+    cy.wait(500);
     cy.get('[data-testid="intake-start-btn"]')
       .should('be.visible')
       .click();
