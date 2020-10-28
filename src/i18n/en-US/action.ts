@@ -14,9 +14,11 @@ const action = {
     feedbackLabel: 'This email will be sent to the requester',
     submit: 'Email decision and close this request',
     nextStepsLabel: 'Next Steps',
-    nextStepsHelpText: 'Next Steps Help Text',
+    nextStepsHelpText:
+      'Provide the requester with some recommendations on how to continue their process. For example, “begin your ATO” or “update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID.',
     scopeLabel: 'Scope of Lifecycle ID',
-    scopeHelpText: 'Scope Help Text',
+    scopeHelpText:
+      'Tell the requester what is covered by this Lifecycle ID and what work it limits the project team to.',
     lcid: {
       new: 'Generate a new Lifecycle ID',
       helpText:
