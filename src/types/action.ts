@@ -1,4 +1,10 @@
-export type ActionType = 'SUBMIT' | 'NOT_IT_REQUEST' | 'NEED_BIZ_CASE';
+export type ActionType =
+  | 'SUBMIT'
+  | 'NOT_IT_REQUEST'
+  | 'NEED_BIZ_CASE'
+  | 'READY_FOR_GRT'
+  | 'READY_FOR_GRB'
+  | 'PROVIDE_FEEDBACK_NEED_BIZ_CASE';
 
 export type Action = {
   intakeId: string;
