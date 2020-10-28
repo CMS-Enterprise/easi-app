@@ -9,7 +9,7 @@ const action = {
   },
   issueLCID: {
     backLink: 'Change',
-    heading: 'Actions on intake request',
+    heading: 'Actions on request',
     subheading: 'How to proceed?',
     feedbackLabel: 'This email will be sent to the requester',
     submit: 'Email decision and close this request',
@@ -36,7 +36,7 @@ const action = {
   },
   submitAction: {
     backLink: 'Change',
-    heading: 'Actions on intake request',
+    heading: 'Actions on request',
     feedbackLabel: 'This email will be sent to the requester',
     subheading: 'How to proceed?',
     submit: 'Send email',
