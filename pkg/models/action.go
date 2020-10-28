@@ -12,6 +12,14 @@ type ActionType string
 const (
 	// ActionTypeSUBMIT captures enum value SUBMIT
 	ActionTypeSUBMIT ActionType = "SUBMIT"
+	// ActionTypeNOTITREQUEST captures enum value NOT_IT_REQUEST
+	ActionTypeNOTITREQUEST ActionType = "NOT_IT_REQUEST"
+	// ActionTypeNEEDBIZCASE captures enum value NEED_BIZ_CASE
+	ActionTypeNEEDBIZCASE ActionType = "NEED_BIZ_CASE"
+	// ActionTypeREADYFORGRT captures enum value READY_FOR_GRT
+	ActionTypeREADYFORGRT ActionType = "READY_FOR_GRT"
+	// ActionTypePROVIDEFEEDBACKNEEDBIZCASE captures enum value PROVIDE_FEEDBACK_NEED_BIZ_CASE
+	ActionTypePROVIDEFEEDBACKNEEDBIZCASE = "PROVIDE_FEEDBACK_NEED_BIZ_CASE"
 )
 
 // Action is the model for an action on a system intake
@@ -23,5 +31,6 @@ type Action struct {
 	ActorName      string     `json:"actorName" db:"actor_name"`
 	ActorEmail     string     `json:"actorEmail" db:"actor_email"`
 	ActorEUAUserID string     `json:"actorEuaUserId" db:"actor_eua_user_id"`
+	Feedback       string
 	CreatedAt      *time.Time `json:"createdAt" db:"created_at"`
 }

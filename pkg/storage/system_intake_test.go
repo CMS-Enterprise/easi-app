@@ -184,6 +184,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 			ProcessStatus:      null.StringFrom("ABCDEF"),
 			ExistingFunding:    null.BoolFrom(false),
+			FundingNumber:      null.StringFrom(""),
 			FundingSource:      null.StringFrom(""),
 			CostIncrease:       null.StringFrom("YES"),
 			CostIncreaseAmount: null.StringFrom("$10 million"),
@@ -198,7 +199,8 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		// Update
 		processStatus := "Just an idea"
 		existingFunding := true
-		fundingSource := "123456"
+		fundingNumber := "123456"
+		fundingSource := "CLIA"
 		existingContract := "IN_PROGRESS"
 		contractor := "TrussWorks, Inc."
 		contractVehicle := "Fixed price contract"
@@ -208,6 +210,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		contractEndYear := "2021"
 		partial.ProcessStatus = null.StringFrom(processStatus)
 		partial.ExistingFunding = null.BoolFrom(existingFunding)
+		partial.FundingNumber = null.StringFrom(fundingNumber)
 		partial.FundingSource = null.StringFrom(fundingSource)
 		partial.ExistingContract = null.StringFrom(existingContract)
 		partial.Contractor = null.StringFrom(contractor)
@@ -225,6 +228,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 		s.Equal(processStatus, updated.ProcessStatus.String)
 		s.Equal(existingFunding, updated.ExistingFunding.Bool)
+		s.Equal(fundingNumber, updated.FundingNumber.String)
 		s.Equal(fundingSource, updated.FundingSource.String)
 		s.Equal(existingContract, updated.ExistingContract.String)
 		s.Equal(contractor, updated.Contractor.String)
@@ -504,6 +508,51 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		}
 		s.Equal(&bizCase.ID, fetchedIntakeWithBizCase(fetched).BusinessCaseID)
 		s.Equal((*uuid.UUID)(nil), fetchedIntakeWithoutBizCase(fetched).BusinessCaseID)
+	})
+}
+
+func (s StoreTestSuite) TestFetchSystemIntakesNotArchived() {
+	s.Run("ensure positive and negative cases", func() {
+		ctx := context.Background()
+
+		// seed the db with intakes that we DO expect to be returned
+		expected := map[string]bool{}
+		for ix := 0; ix < 5; ix++ {
+			intake := testhelpers.NewSystemIntake()
+			result, err := s.store.CreateSystemIntake(ctx, &intake)
+			s.NoError(err)
+			expected[result.ID.String()] = false
+		}
+
+		// seed the db with ARCHIVED intakes that should NOT be returned
+		unexpected := map[string]bool{}
+		for ix := 0; ix < 5; ix++ {
+			intake := testhelpers.NewSystemIntake()
+			result, err := s.store.CreateSystemIntake(ctx, &intake)
+			s.NoError(err)
+
+			result.Status = models.SystemIntakeStatusARCHIVED
+			_, err = s.store.UpdateSystemIntake(ctx, result)
+			s.NoError(err)
+
+			unexpected[result.ID.String()] = true
+		}
+
+		intakes, err := s.store.FetchSystemIntakesNotArchived(ctx)
+		s.NoError(err)
+
+		for _, intake := range intakes {
+			id := intake.ID.String()
+			expected[id] = true
+
+			// failure if we got back one of the ARCHIVED intakes
+			s.False(unexpected[id], "unexpected intake", id)
+		}
+
+		// failure if we did not see all the expected seeded not-ARCHIVED intakes
+		for id, found := range expected {
+			s.True(found, "did not receive expected intake", id)
+		}
 	})
 }
 

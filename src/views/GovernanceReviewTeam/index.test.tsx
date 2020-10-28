@@ -29,6 +29,10 @@ describe('The GRT Review page', () => {
   it('shows open status', () => {
     const mockStore = configureMockStore();
     const store = mockStore({
+      auth: {
+        groups: ['EASI_D_GOVTEAM'],
+        userGroupsSet: true
+      },
       systemIntake: {
         systemIntake: {
           ...initialSystemIntakeForm,

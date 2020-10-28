@@ -13,39 +13,39 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// NewAuthorizeFetchSystemIntakesByEuaID is a service to authorize FetchSystemIntakesByEuaID
-func NewAuthorizeFetchSystemIntakesByEuaID() func(ctx context.Context, euaID string) (bool, error) {
-	return func(ctx context.Context, euaID string) (bool, error) {
-		return true, nil
-	}
-}
-
-// NewFetchSystemIntakesByEuaID is a service to fetch system intakes by EUA id
-func NewFetchSystemIntakesByEuaID(
+// NewFetchSystemIntakes is a service to fetch multiple system intakes
+// that are to be presented to the given requester
+func NewFetchSystemIntakes(
 	config Config,
-	fetch func(c context.Context, euaID string) (models.SystemIntakes, error),
-	authorize func(c context.Context, euaID string) (bool, error),
-) func(c context.Context, e string) (models.SystemIntakes, error) {
-	return func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
+	fetchByID func(c context.Context, euaID string) (models.SystemIntakes, error),
+	fetchAll func(context.Context) (models.SystemIntakes, error),
+	authorize func(c context.Context) (bool, error),
+) func(c context.Context) (models.SystemIntakes, error) {
+	return func(ctx context.Context) (models.SystemIntakes, error) {
 		logger := appcontext.ZLogger(ctx)
-		ok, err := authorize(ctx, euaID)
+		ok, err := authorize(ctx)
 		if err != nil {
-			logger.Error("failed to authorize fetch system intakes")
-			return models.SystemIntakes{}, err
+			return nil, err
 		}
 		if !ok {
-			return models.SystemIntakes{}, &apperrors.UnauthorizedError{Err: err}
+			return nil, &apperrors.UnauthorizedError{Err: errors.New("failed to authorize fetch system intakes")}
 		}
-		intakes, err := fetch(ctx, euaID)
+		var result models.SystemIntakes
+		principal := appcontext.Principal(ctx)
+		if !principal.AllowGRT() {
+			result, err = fetchByID(ctx, principal.ID())
+		} else {
+			result, err = fetchAll(ctx)
+		}
 		if err != nil {
 			logger.Error("failed to fetch system intakes")
-			return models.SystemIntakes{}, &apperrors.QueryError{
+			return nil, &apperrors.QueryError{
 				Err:       err,
-				Model:     intakes,
+				Model:     result,
 				Operation: apperrors.QueryFetch,
 			}
 		}
-		return intakes, nil
+		return result, nil
 	}
 }
 
@@ -76,38 +76,6 @@ func NewCreateSystemIntake(
 			}
 		}
 		return createdIntake, nil
-	}
-}
-
-// NewAuthorizeUserIsIntakeRequester returns a function
-// that authorizes a user as being the requester of the given System Intake
-func NewAuthorizeUserIsIntakeRequester() func(
-	context.Context,
-	*models.SystemIntake,
-) (bool, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowEASi() {
-			logger.Error("unable to get EUA ID from context")
-			return false, &apperrors.ContextError{
-				Operation: apperrors.ContextGet,
-				Object:    "EUA ID",
-			}
-		}
-
-		// If intake is owned by user, authorize
-		if principal.AllowEASi() && principal.ID() == intake.EUAUserID {
-			logger.With(zap.Bool("Authorized", true)).
-				With(zap.String("Operation", "UpdateSystemIntake")).
-				Info("user authorized to save system intake")
-			return true, nil
-		}
-		// Default to failure to authorize and create a quick audit log
-		logger.With(zap.Bool("Authorized", false)).
-			With(zap.String("Operation", "UpdateSystemIntake")).
-			Info("unauthorized attempt to save system intake")
-		return false, nil
 	}
 }
 
@@ -346,5 +314,71 @@ func NewFetchSystemIntakeByID(
 			return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
 		}
 		return intake, nil
+	}
+}
+
+// NewUpdateLifecycleFields provides a way to update several of the fields
+// associated with assigning a LifecycleID
+func NewUpdateLifecycleFields(
+	config Config,
+	authorize func(context.Context) (bool, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	generateLCID func(context.Context) (string, error),
+) func(context.Context, *models.SystemIntake) error {
+	return func(ctx context.Context, intake *models.SystemIntake) error {
+		existing, err := fetch(ctx, intake.ID)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Operation: apperrors.QueryFetch,
+				Model:     existing,
+			}
+		}
+
+		ok, err := authorize(ctx)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return &apperrors.UnauthorizedError{Err: err}
+		}
+
+		// don't allow overwriting an existing LCID
+		if existing.LifecycleID.ValueOrZero() != "" {
+			return &apperrors.ResourceConflictError{
+				Err:        errors.New("lifecycle id already exists"),
+				Resource:   models.SystemIntake{},
+				ResourceID: intake.ID.String(),
+			}
+		}
+
+		// we only want to bring over the fields specifically
+		// dealing with lifecycleID information
+		updatedTime := config.clock.Now()
+		existing.UpdatedAt = &updatedTime
+		existing.LifecycleID = intake.LifecycleID
+		existing.LifecycleExpiresAt = intake.LifecycleExpiresAt
+		existing.LifecycleScope = intake.LifecycleScope
+		existing.LifecycleNextSteps = intake.LifecycleNextSteps
+
+		// if a LCID wasn't passed in, we generate one
+		if existing.LifecycleID.ValueOrZero() == "" {
+			lcid, gErr := generateLCID(ctx)
+			if gErr != nil {
+				return gErr
+			}
+			existing.LifecycleID = null.StringFrom(lcid)
+		}
+
+		_, err = update(ctx, existing)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
+			}
+		}
+		return nil
 	}
 }

@@ -57,9 +57,67 @@ describe('The System Intake Form', () => {
     cy.contains('button', 'Next').click();
 
     cy.wait('@putSystemIntake');
-
+    cy.wait(1000);
     // Review
     cy.contains('h1', 'Check your answers before sending');
+
+    cy.window()
+      .its('store')
+      .invoke('getState')
+      .its('systemIntake')
+      .its('systemIntake')
+      .should('deep.include', {
+        requestName: 'Test Request Name',
+        requester: {
+          name: 'EASi Testing',
+          component: 'Center for Medicare',
+          email: ''
+        },
+        businessOwner: {
+          name: 'Casey Doe',
+          component: 'Center for Medicare'
+        },
+        productManager: {
+          name: 'Casey Doe',
+          component: 'Center for Medicare'
+        },
+        // DB doesn't properly save the radio button value
+        isso: {
+          isPresent: null,
+          name: ''
+        },
+        // DB doesn't properly save the radio button value
+        governanceTeams: {
+          isPresent: null,
+          teams: []
+        },
+        fundingSource: {
+          isFunded: false,
+          fundingNumber: '',
+          source: ''
+        },
+        costs: {
+          isExpectingIncrease: 'NO',
+          expectedIncreaseAmount: ''
+        },
+        contract: {
+          hasContract: 'NOT_NEEDED',
+          contractor: '',
+          vehicle: '',
+          startDate: {
+            month: '',
+            year: ''
+          },
+          endDate: {
+            month: '',
+            year: ''
+          }
+        },
+        businessNeed: 'This is my business need.',
+        businessSolution: 'This is my business solution.',
+        currentStage: 'Just an idea',
+        needsEaSupport: false
+      });
   });
 
   it('displays and fills conditional fields', () => {
@@ -105,6 +163,10 @@ describe('The System Intake Form', () => {
     cy.get('#IntakeForm-HasFundingSourceYes')
       .check({ force: true })
       .should('be.checked');
+
+    cy.get('#IntakeForm-FundingSource')
+      .select('CLIA')
+      .should('have.value', 'CLIA');
 
     cy.get('#IntakeForm-FundingNumber')
       .type('111111')
@@ -233,7 +295,7 @@ describe('The System Intake Form', () => {
 
     cy.contains('.easi-review-row dt', 'Does the project have funding')
       .siblings('dd')
-      .contains('Yes, 111111');
+      .contains('Yes, CLIA, 111111');
   });
 
   it('displays contact details error messages', () => {

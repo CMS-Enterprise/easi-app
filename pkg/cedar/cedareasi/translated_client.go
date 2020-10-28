@@ -97,11 +97,11 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 		expectedError.WithValidation("ExistingFunding", validationMessage)
 	}
 	if intake.ExistingFunding.Bool {
-		if validate.RequireNullString(intake.FundingSource) {
-			expectedError.WithValidation("FundingSource", validationMessage)
+		if validate.RequireNullString(intake.FundingNumber) {
+			expectedError.WithValidation("FundingNumber", validationMessage)
 		}
-		if intake.FundingSource.Valid && validate.FundingNumberInvalid(intake.FundingSource.String) {
-			expectedError.WithValidation("FundingSource", "must be a 6 digit string")
+		if intake.FundingNumber.Valid && validate.FundingNumberInvalid(intake.FundingNumber.String) {
+			expectedError.WithValidation("FundingNumber", "must be a 6 digit string")
 		}
 	}
 	if validate.RequireNullString(intake.BusinessNeed) {
@@ -150,7 +150,7 @@ func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntak
 		EuaUserID:               &validatedIntake.EUAUserID,
 		ExistingContract:        &validatedIntake.ExistingContract.String,
 		ExistingFunding:         &validatedIntake.ExistingFunding.Bool,
-		FundingSource:           validatedIntake.FundingSource.String,
+		FundingNumber:           validatedIntake.FundingNumber.String,
 		ID:                      &id,
 		Isso:                    validatedIntake.ISSO.String,
 		OitSecurityCollaborator: validatedIntake.OITSecurityCollaborator.String,
