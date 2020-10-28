@@ -304,43 +304,6 @@ Time: 0.016s
 postgres@localhost:postgres>
 ```
 
-##### Use case: Run additional services locally
-
-Use the following command to run all services locally, *including* cypress tests:
-
-```console
-# build the images
-docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml build --parallel
-
-# run the services in the background
-docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up --detach
-
-# watch the logs
-docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml logs -f
-```
-
-Note: you can modify the command above to run only some of the services. For
-example, use the following command to run all services locally, *except* cypress
-tests:
-
-```console
-docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up db db_migrate easi easi_client --detach
-```
-
-Docker Compose merges files in the order they're specified on the command line.
-Due to the way the configurations are currently set for each environment, you
-need to include the CircleCI file as indicated above to run the services
-locally. The values in the local file will take precedence over the
-CircleCI-specific configurations.
-
-The full list of compose files will also need to be provided when running other
-docker-compose commands, e.g.:
-
-```console
-docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml kill
-docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml down
-```
-
 ### Setup: Cloud Services
 
 You may need to access cloud service
@@ -450,8 +413,13 @@ to upgrade golangci-lint.
 
 ### Cypress tests (End-to-end integration tests)
 
-Run `npx cypress run` to run the tests in the CLI. To have a slightly more interactive
-experience, you can instead run `npx cypress open`.
+There are multiple ways to run the Cypress tests:
+
+* Run `npx cypress run` to run the tests in the CLI. To have a slightly more interactive
+  experience, you can instead run `npx cypress open`. Note: the database,
+  frontend, and backend must be running prior to starting the Cypress tests.
+* `./scripts/run-cypress-test-docker` : Run Cypress tests locally in Docker.
+  This will closely resemble how the Cypress tests run in CircleCI.
 
 ## Development and Debugging
 

@@ -44,7 +44,12 @@ else
 
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up -d db db_migrate
   docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up -d easi easi_client
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up -d cypress
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up cypress
 
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml logs -f
+  CYPRESS_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${CYPRESS_CONTAINER}")
+
+  # Clean up
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml down
+
+  exit "${CYPRESS_EXIT_CODE}"
 fi
