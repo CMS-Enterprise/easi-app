@@ -418,8 +418,10 @@ There are multiple ways to run the Cypress tests:
 * Run `npx cypress run` to run the tests in the CLI. To have a slightly more interactive
   experience, you can instead run `npx cypress open`. Note: the database,
   frontend, and backend must be running prior to starting the Cypress tests.
-* `./scripts/run-cypress-test-docker` : Run Cypress tests locally in Docker.
-  This will closely resemble how the Cypress tests run in CircleCI.
+* `./scripts/run-cypress-test-docker` : Run the Cypress tests, database,
+  migrations, backend, and frontend locally in Docker, similar to how they run
+  in CircleCI. Running the tests in this way takes time, but is useful for
+  troubleshooting integration test failures in CI.
 
 ## Development and Debugging
 
