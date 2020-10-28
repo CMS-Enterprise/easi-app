@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -9,23 +10,29 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { ActionForm } from 'types/action';
+import { Action, ActionForm, ActionType } from 'types/action';
+import { postSystemIntakeAction } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
-import actionSchema from 'validations/actionSchema';
+import { actionSchema } from 'validations/actionSchema';
 
 type SubmitActionProps = {
-  action: string;
+  action: ActionType;
   actionName: string;
 };
 
 const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
   const { systemId } = useParams();
   const { t } = useTranslation('action');
+  const dispatch = useDispatch();
 
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
-    const payload = { systemId, action, feedback };
-    console.log(payload);
+    const payload: Action = {
+      intakeId: systemId,
+      actionType: action,
+      feedback
+    };
+    dispatch(postSystemIntakeAction(payload));
   };
 
   const initialValues: ActionForm = {
@@ -75,7 +82,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
               <Form>
                 <FieldGroup
                   scrollElement="feedback"
-                  error={!!flatErrors.businessSolution}
+                  error={!!flatErrors.feedback}
                 >
                   <Label htmlFor="SubmitActionForm-Feedback">
                     {t('action:submitAction.feedbackLabel')}
