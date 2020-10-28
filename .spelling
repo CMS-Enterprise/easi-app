@@ -7,6 +7,7 @@ easi
 pre-commit
 MilMove
 e.g.
+i.e.
 Django
 frontend
 APIs
@@ -99,3 +100,4 @@ ParameterStore
 CloudTamer
 DMs
 1Password
+Splunk

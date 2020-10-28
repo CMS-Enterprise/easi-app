@@ -16,6 +16,7 @@ import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
 
 import ChooseAction from './Actions/ChooseAction';
+import IssueLifecycleId from './Actions/IssueLifecycleId';
 import SubmitAction from './Actions/SubmitAction';
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
@@ -194,6 +195,37 @@ const GovernanceReviewTeam = () => {
                 <SubmitAction
                   action="NEED_BIZ_CASE"
                   actionName={actionsT('actions.needBizCase')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/provide-feedback-need-biz-case"
+              render={() => (
+                <SubmitAction
+                  action="PROVIDE_FEEDBACK_NEED_BIZ_CASE"
+                  actionName={actionsT('actions.provideFeedbackNeedBizCase')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/ready-for-grt"
+              render={() => (
+                <SubmitAction
+                  action="READY_FOR_GRT"
+                  actionName={actionsT('actions.readyForGrt')}
+                />
+              )}
+            />  
+            <Route
+              path="/governance-review-team/:systemId/actions/issue-lcid"
+              render={() => <IssueLifecycleId />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/ready-for-grt"
+              render={() => (
+                <SubmitAction
+                  action="READY_FOR_GRT"
+                  actionName={actionsT('actions.readyForGrt')}
                 />
               )}
             />
