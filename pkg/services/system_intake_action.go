@@ -21,6 +21,7 @@ func NewCreateSystemIntakeAction(
 	reviewReadyForGRT func(context.Context, *models.SystemIntake, *models.Action) error,
 	reviewRequestBizCase func(context.Context, *models.SystemIntake, *models.Action) error,
 	reviewProvideFeedbackNeedBizCase func(context.Context, *models.SystemIntake, *models.Action) error,
+	reviewReadyForGRB func(context.Context, *models.SystemIntake, *models.Action) error,
 ) func(context.Context, *models.Action) error {
 	return func(ctx context.Context, action *models.Action) error {
 		intake, fetchErr := fetch(ctx, *action.IntakeID)
@@ -43,6 +44,8 @@ func NewCreateSystemIntakeAction(
 			return reviewReadyForGRT(ctx, intake, action)
 		case models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE:
 			return reviewProvideFeedbackNeedBizCase(ctx, intake, action)
+		case models.ActionTypeREADYFORGRB:
+			return reviewReadyForGRB(ctx, intake, action)
 		default:
 			return &apperrors.ResourceConflictError{
 				Err:        errors.New("invalid system intake action type"),

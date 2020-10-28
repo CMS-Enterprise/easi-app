@@ -220,6 +220,15 @@ const GovernanceReviewTeam = () => {
               path="/governance-review-team/:systemId/actions/issue-lcid"
               render={() => <IssueLifecycleId />}
             />
+            <Route
+              path="/governance-review-team/:systemId/actions/ready-for-grt"
+              render={() => (
+                <SubmitAction
+                  action="READY_FOR_GRT"
+                  actionName={actionsT('actions.readyForGrt')}
+                />
+              )}
+            />
           </section>
         </section>
       </MainContent>
