@@ -1,20 +1,13 @@
-FROM node:10.22.0 AS base
+FROM node:10.22.0 AS builder
 
 WORKDIR /app
 
-FROM base AS modules
-
 COPY package.json yarn.lock ./
-COPY node_modules ./node_modules
 RUN yarn install
 
-FROM modules AS dev
-
+COPY craco.config.js tsconfig.json ./
 COPY public ./public
 COPY src ./src
-COPY craco.config.js tsconfig.json ./
-
-FROM dev AS builder
 
 ARG REACT_APP_API_ADDRESS
 ARG REACT_APP_APP_ENV
