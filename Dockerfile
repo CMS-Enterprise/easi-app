@@ -1,13 +1,9 @@
-FROM golang:1.14.6 AS base
+FROM golang:1.14.6 AS builder
 
 WORKDIR /easi/
 
-FROM base AS modules
-
 COPY go.mod go.sum ./
 RUN go mod download
-
-FROM modules AS builder
 
 COPY cmd ./cmd
 COPY pkg ./pkg
