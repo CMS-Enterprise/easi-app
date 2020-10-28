@@ -75,6 +75,30 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const ReadyForGRB = (
+    <RadioField
+      key="ready-for-grb"
+      id="ready-for-grb"
+      label={t('actions.readyForGrb')}
+      name={radioGroupName}
+      value="ready-for-grb"
+      onChange={onChange}
+      checked={actionRoute === 'ready-for-grb'}
+    />
+  );
+
+  const ProvideFeedbackNeedBizCase = (
+    <RadioField
+      key="provide-feedback-need-biz-case"
+      id="provide-feedback-need-biz-case"
+      label={t('actions.provideFeedbackNeedBizCase')}
+      name={radioGroupName}
+      value="provide-feedback-need-biz-case"
+      onChange={onChange}
+      checked={actionRoute === 'provide-feedback-need-biz-case'}
+    />
+  );
+
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
   if (businessCaseExists) {
@@ -82,7 +106,11 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     availableHiddenActions = [];
   } else {
     availableActions = [NotAnITRequest, NeedBizCase, IssueLifecycleId];
-    availableHiddenActions = [ReadyForGRT];
+    availableHiddenActions = [
+      ReadyForGRT,
+      ProvideFeedbackNeedBizCase,
+      ReadyForGRB
+    ];
   }
 
   return (
