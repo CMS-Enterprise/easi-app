@@ -13,6 +13,9 @@ export const storeSystemIntake = createRoutine('STORE_SYSTEM_INTAKE');
 export const clearSystemIntake = createRoutine('CLEAR_SYSTEM_INTAKE');
 export const reviewSystemIntake = createRoutine('REVIEW_SYSTEM_INTAKE');
 export const archiveSystemIntake = createRoutine('ARCHIVE_SYSTEM_INTAKE');
+export const issueLifecycleIdForSystemIntake = createRoutine(
+  'ISSUE_LIFECYCLE_ID_FOR_SYSTEM_INTAKE'
+);
 
 // SystemShorts routines
 export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');
