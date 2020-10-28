@@ -84,6 +84,17 @@ const BusinessCaseValidationSchema = {
       acquisitionApproach: Yup.string().required(
         'Tell us about the acquisition approach for the Preferred solution'
       ),
+      security: Yup.object().shape({
+        isApproved: Yup.boolean().required(
+          'Tell us whether for solution was approved by IT Security for use at CMS'
+        ),
+        isBeingReviewed: Yup.string().when('isApproved', {
+          is: false,
+          then: Yup.string().required(
+            'Tell us whether your solution is in the process of receiving approval'
+          )
+        })
+      }),
       hosting: Yup.object().shape({
         type: Yup.string().required(
           'Tell us how Preferred solution will be hosted'
@@ -165,6 +176,17 @@ const BusinessCaseValidationSchema = {
       acquisitionApproach: Yup.string().required(
         'Tell us about the acquisition approach for the Alternative A solution'
       ),
+      security: Yup.object().shape({
+        isApproved: Yup.boolean().required(
+          'Tell us whether for solution was approved by IT Security for use at CMS'
+        ),
+        isBeingReviewed: Yup.string().when('isApproved', {
+          is: false,
+          then: Yup.string().required(
+            'Tell us whether your solution is in the process of receiving approval'
+          )
+        })
+      }),
       hosting: Yup.object().shape({
         type: Yup.string().required(
           'Tell us how Alternative A solution will be hosted'
@@ -246,6 +268,17 @@ const BusinessCaseValidationSchema = {
       acquisitionApproach: Yup.string().required(
         'Tell us about the acquisition approach for the Alternative B solution'
       ),
+      security: Yup.object().shape({
+        isApproved: Yup.boolean().required(
+          'Tell us whether for solution was approved by IT Security for use at CMS'
+        ),
+        isBeingReviewed: Yup.string().when('isApproved', {
+          is: false,
+          then: Yup.string().required(
+            'Tell us whether your solution is in the process of receiving approval'
+          )
+        })
+      }),
       hosting: Yup.object().shape({
         type: Yup.string().required(
           'Tell us how Alternative B solution will be hosted'
