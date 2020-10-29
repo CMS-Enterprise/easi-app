@@ -237,8 +237,6 @@ func NewTakeActionUpdateStatus(
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
 		intake.Status = newStatus
-		intake.RequesterEmailAddress = null.StringFrom(requesterInfo.Email)
-		intake.UpdatedAt = &updatedTime
 
 		intake, err = update(ctx, intake)
 		if err != nil {
