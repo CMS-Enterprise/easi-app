@@ -90,7 +90,10 @@ const governanceReviewTeam = {
     header: 'Requests',
     requestCount: 'There are {{count}} requests',
     table: {
-      requestType: 'Type of request'
+      requestType: 'Type of request',
+      submissionDate: {
+        null: 'Not yet submitted'
+      }
     },
     aria: {
       openTableCaption:
