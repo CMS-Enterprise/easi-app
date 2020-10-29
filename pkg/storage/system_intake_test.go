@@ -396,23 +396,6 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		s.Equal(intake.ID, fetched.ID)
 		s.Equal(&bizCase.ID, fetched.BusinessCaseID)
 	})
-
-	s.Run("does not fetch archived intake", func() {
-		intake := testhelpers.NewSystemIntake()
-		id := intake.ID
-		intake.Status = models.SystemIntakeStatusARCHIVED
-		tx := s.db.MustBegin()
-		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
-		s.NoError(err)
-		err = tx.Commit()
-		s.NoError(err)
-
-		fetched, err := s.store.FetchSystemIntakeByID(ctx, id)
-
-		s.Error(err)
-		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Nil(fetched)
-	})
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
