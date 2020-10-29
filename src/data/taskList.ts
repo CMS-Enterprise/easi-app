@@ -63,8 +63,6 @@ export const bizCaseStatus = (
       case 'APPROVED':
       case 'CLOSED':
         return 'NOT_NEEDED';
-      case 'BIZ_CASE_DRAFT_SUBMITTED':
-        return 'BIZ_CASE_DRAFT_SUBMITTED';
       default:
         return 'CANNOT_START';
     }
