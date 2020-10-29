@@ -11,7 +11,6 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import {
   bizCaseStatus,
-  chooseBusinessCasePath,
   chooseIntakePath,
   feedbackStatusFromIntakeStatus,
   intakeStatusFromIntake
@@ -95,15 +94,14 @@ const businessCaseLinkComponent = ({
   businessCaseStatus,
   history
 }: businessCaseLinkComponentProps) => {
-  const path = chooseBusinessCasePath(businessCaseStatus, businessCase.id);
-  // if path is null, there's nothing to render here
-  if (!path) {
-    return null;
-  }
   switch (businessCaseStatus) {
     case 'COMPLETED':
       return (
-        <UswdsLink variant="unstyled" asCustom={Link} to={path}>
+        <UswdsLink
+          variant="unstyled"
+          asCustom={Link}
+          to={`/business/${businessCase.id}/general-request-info`}
+        >
           Update the business case
         </UswdsLink>
       );
@@ -113,7 +111,7 @@ const businessCaseLinkComponent = ({
           type="button"
           onClick={() => {
             history.push({
-              pathname: `/business/new/general-request-info`,
+              pathname: '/business/new/general-request-info',
               state: {
                 systemIntakeId
               }
@@ -131,9 +129,19 @@ const businessCaseLinkComponent = ({
           className="usa-button"
           variant="unstyled"
           asCustom={Link}
-          to={path}
+          to={`/business/${businessCase.id}/general-request-info`}
         >
           Continue
+        </UswdsLink>
+      );
+    case 'BIZ_CASE_DRAFT_SUBMITTED':
+      return (
+        <UswdsLink
+          variant="unstyled"
+          asCustom={Link}
+          to={`/business/${systemIntakeId}/general-request-info`}
+        >
+          View submitted draft business case
         </UswdsLink>
       );
     default:
