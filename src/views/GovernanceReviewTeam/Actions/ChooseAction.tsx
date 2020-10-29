@@ -38,7 +38,6 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
-  
   const IssueLifecycleId = (
     <RadioField
       key="issue-lcid"
@@ -105,11 +104,12 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     availableActions = [];
     availableHiddenActions = [];
   } else {
-    availableActions = [NotITRequest, NeedBizCase, IssueLifecycleId];
+    availableActions = [NotITRequest, NeedBizCase];
     availableHiddenActions = [
       ReadyForGRT,
       ProvideFeedbackNeedBizCase,
-      ReadyForGRB
+      ReadyForGRB,
+      IssueLifecycleId
     ];
   }
 
