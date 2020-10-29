@@ -227,7 +227,7 @@ func (s *Server) routes(
 
 	systemIntakeActionHandler := handlers.NewSystemIntakeActionHandler(
 		base,
-		services.NewCreateSystemIntakeAction(
+		services.NewCreateAction(
 			store.FetchSystemIntakeByID,
 			services.NewSubmitSystemIntake(
 				serviceConfig,
@@ -238,7 +238,7 @@ func (s *Server) routes(
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeSubmissionEmail,
 			),
-			services.NewGRTReviewSystemIntake(
+			services.NewTakeActionUpdateStatus(
 				serviceConfig,
 				models.SystemIntakeStatusNOTITREQUEST,
 				store.UpdateSystemIntake,
@@ -247,7 +247,7 @@ func (s *Server) routes(
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
 			),
-			services.NewGRTReviewSystemIntake(
+			services.NewTakeActionUpdateStatus(
 				serviceConfig,
 				models.SystemIntakeStatusREADYFORGRT,
 				store.UpdateSystemIntake,
@@ -256,7 +256,7 @@ func (s *Server) routes(
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
 			),
-			services.NewGRTReviewSystemIntake(
+			services.NewTakeActionUpdateStatus(
 				serviceConfig,
 				models.SystemIntakeStatusNEEDBIZCASE,
 				store.UpdateSystemIntake,
@@ -265,7 +265,7 @@ func (s *Server) routes(
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
 			),
-			services.NewGRTReviewSystemIntake(
+			services.NewTakeActionUpdateStatus(
 				serviceConfig,
 				models.SystemIntakeStatusNEEDBIZCASE,
 				store.UpdateSystemIntake,
@@ -274,7 +274,7 @@ func (s *Server) routes(
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
 			),
-			services.NewGRTReviewSystemIntake(
+			services.NewTakeActionUpdateStatus(
 				serviceConfig,
 				models.SystemIntakeStatusREADYFORGRB,
 				store.UpdateSystemIntake,
@@ -283,7 +283,7 @@ func (s *Server) routes(
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
 			),
-			services.NewGRTReviewSystemIntake(
+			services.NewTakeActionUpdateStatus(
 				serviceConfig,
 				models.SystemIntakeStatusLCIDISSUED,
 				store.UpdateSystemIntake,

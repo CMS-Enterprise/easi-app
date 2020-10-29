@@ -30,7 +30,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("error")
 		}
-		createAction := NewCreateSystemIntakeAction(failFetch, submit, review, review, review, review, review, review)
+		createAction := NewCreateAction(failFetch, submit, review, review, review, review, review, review)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -45,7 +45,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 		failSubmit := func(ctx context.Context, intake *models.SystemIntake) error {
 			return submitError
 		}
-		createAction := NewCreateSystemIntakeAction(fetch, failSubmit, review, review, review, review, review, review)
+		createAction := NewCreateAction(fetch, failSubmit, review, review, review, review, review, review)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -56,7 +56,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 	})
 
 	s.Run("returns ResourceConflictError if invalid action type", func() {
-		createAction := NewCreateSystemIntakeAction(fetch, submit, review, review, review, review, review, review)
+		createAction := NewCreateAction(fetch, submit, review, review, review, review, review, review)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -275,7 +275,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 
 	s.Run("golden path review system intake", func() {
 		ctx := context.Background()
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -298,7 +298,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		failAuthorize := func(ctx context.Context) (bool, error) {
 			return false, err
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -320,7 +320,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		notOKAuthorize := func(ctx context.Context) (bool, error) {
 			return false, nil
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -339,7 +339,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 	s.Run("returns error when intake is not SUBMITTED", func() {
 		reviewEmailCount = 0
 		ctx := context.Background()
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -361,7 +361,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		failCreateAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
 			return nil, errors.New("error")
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -388,7 +388,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 				Source:    "CEDAR LDAP",
 			}
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -410,7 +410,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return &models.UserInfo{}, nil
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -435,7 +435,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 				DestinationType: apperrors.DestinationTypeEmail,
 			}
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,

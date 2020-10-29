@@ -13,8 +13,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// NewCreateSystemIntakeAction is a service to create and execute a system intake action
-func NewCreateSystemIntakeAction(
+// NewCreateAction is a service to create and execute an action
+func NewCreateAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	submit func(context.Context, *models.SystemIntake) error,
 	reviewNotITRequest func(context.Context, *models.SystemIntake, *models.Action) error,
@@ -51,7 +51,7 @@ func NewCreateSystemIntakeAction(
 			return issueLCID(ctx, intake, action)
 		default:
 			return &apperrors.ResourceConflictError{
-				Err:        errors.New("invalid system intake action type"),
+				Err:        errors.New("invalid action type"),
 				Resource:   intake,
 				ResourceID: intake.ID.String(),
 			}
@@ -165,9 +165,9 @@ func NewSubmitSystemIntake(
 	}
 }
 
-// NewGRTReviewSystemIntake returns a function that
-// reviews a system intake
-func NewGRTReviewSystemIntake(
+// NewTakeActionUpdateStatus returns a function that
+// updates the status of a request
+func NewTakeActionUpdateStatus(
 	config Config,
 	newStatus models.SystemIntakeStatus,
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
