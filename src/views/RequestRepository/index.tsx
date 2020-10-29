@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
 import { Table } from '@trussworks/react-uswds';
@@ -12,18 +13,27 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
-import { convertIntakeToCSV, initialSystemIntakeForm } from 'data/systemIntake';
+import { convertIntakeToCSV } from 'data/systemIntake';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
+
+import csvHeaderMap from './csvHeaderMap';
 
 const RequestRepository = () => {
   const { t } = useTranslation('governanceReviewTeam');
+  const dispatch = useDispatch();
+
   const columns: any = useMemo(
     () => [
       {
         Header: t('intake:fields.submissionDate'),
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
-          return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          if (value) {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          }
+          return t('requestRepository.table.submissionDate.null');
         }
       },
       {
@@ -31,7 +41,9 @@ const RequestRepository = () => {
         accessor: 'requestName',
         Cell: ({ row, value }: any) => {
           return (
-            <Link to={`/governance-review-team/${row.original.id}`}>
+            <Link
+              to={`/governance-review-team/${row.original.id}/intake-request`}
+            >
               {value}
             </Link>
           );
@@ -49,146 +61,15 @@ const RequestRepository = () => {
     [t]
   );
 
-  // Mock Data
-  // EASI-789 will create an endpoint for getting all intake requests for GRT
-  const mockData: SystemIntakeForm[] = [
-    {
-      ...initialSystemIntakeForm,
-      id: 'addaa218-34d3-4dd8-a12f-38f6ff33b22d',
-      euaUserID: 'ABCD',
-      submittedAt: DateTime.fromObject({ year: 2020, month: 6, day: 26 }),
-      requestName: 'Easy Access to System Information',
-      requester: {
-        name: 'Christopher Hui',
-        component: 'Division of Pop Corners',
-        email: ''
-      },
-      businessOwner: {
-        name: 'Business Owner 1',
-        component: 'Office of Information Technology'
-      },
-      productManager: {
-        name: 'Product Manager 1',
-        component: 'Office of Information Technology'
-      },
-      isso: {
-        isPresent: true,
-        name: 'John ISSO'
-      },
-      governanceTeams: {
-        isPresent: true,
-        teams: [
-          {
-            name: 'Technical Review Board',
-            collaborator: 'Chris TRB'
-          },
-          {
-            name: "OIT's Security and Privacy Group",
-            collaborator: 'Sam OIT Security'
-          },
-          {
-            name: 'Enterprise Architecture',
-            collaborator: 'Todd EA'
-          }
-        ]
-      },
-      fundingSource: {
-        isFunded: true,
-        source: 'CLIA',
-        fundingNumber: '123456'
-      },
-      costs: {
-        isExpectingIncrease: 'YES',
-        expectedIncreaseAmount: 'One million'
-      },
-      contract: {
-        hasContract: 'IN_PROGRESS',
-        contractor: 'TrussWorks, Inc.',
-        vehicle: 'Fixed price contract',
-        startDate: {
-          month: '1',
-          year: '2015'
-        },
-        endDate: {
-          month: '12',
-          year: '2021'
-        }
-      },
-      businessNeed: 'Test business need',
-      businessSolution: 'Test business solution',
-      currentStage: 'Test current stage',
-      needsEaSupport: true,
-      status: 'Submitted',
-      decidedAt: DateTime.fromObject({ year: 2020, month: 6, day: 27 }),
-      createdAt: DateTime.fromObject({ year: 2020, month: 6, day: 22 }),
-      updatedAt: DateTime.fromObject({ year: 2020, month: 6, day: 23 }),
-      archivedAt: DateTime.fromObject({ year: 2020, month: 6, day: 28 })
-    },
-    {
-      ...initialSystemIntakeForm,
-      id: '229f9b64-18fc-4ee1-95c4-9d4b143d215c',
-      euaUserID: 'ABCD',
-      submittedAt: DateTime.fromObject({ year: 2020, month: 9, day: 19 }),
-      requestName: 'Hard Access to System Information',
-      requester: {
-        name: 'George Baukerton',
-        component: 'Office of Information Technology',
-        email: ''
-      },
-      businessOwner: {
-        name: 'Business Owner 2',
-        component: 'Office of Information Technology'
-      },
-      productManager: {
-        name: 'Product Manager 2',
-        component: 'Office of Information Technology'
-      },
-      status: 'Submitted'
-    },
-    {
-      ...initialSystemIntakeForm,
-      id: '229f9b64-18fc-4ee1-95c4-9d4b143d215d',
-      euaUserID: 'ABCD',
-      submittedAt: DateTime.fromObject({ year: 2020, month: 10, day: 20 }),
-      requestName: 'Super System',
-      requester: {
-        name: 'George Baukerton',
-        component: 'Office of Information Technology',
-        email: ''
-      },
-      businessOwner: {
-        name: 'Business Owner 3',
-        component: 'Office of Information Technology'
-      },
-      productManager: {
-        name: 'Product Manager 3',
-        component: 'Office of Information Technology'
-      },
-      status: 'Submitted'
-    },
-    {
-      ...initialSystemIntakeForm,
-      id: '229f9b64-18fc-4ee1-95c4-9d4b143d215e',
-      euaUserID: 'ABCD',
-      submittedAt: DateTime.fromObject({ year: 2020, month: 8, day: 26 }),
-      requestName: 'Monster System',
-      requester: {
-        name: 'George Baukerton',
-        component: 'Office of Information Technology',
-        email: ''
-      },
-      businessOwner: {
-        name: 'Business Owner 4',
-        component: 'Office of Information Technology'
-      },
-      productManager: {
-        name: 'Product Manager 4',
-        component: 'Office of Information Technology'
-      },
-      status: 'Submitted'
-    }
-  ];
-  const data = useMemo(() => mockData, [mockData]);
+  useEffect(() => {
+    dispatch(fetchSystemIntakes());
+  }, [dispatch]);
+
+  const systemIntakes = useSelector(
+    (state: AppState) => state.systemIntakes.systemIntakes
+  );
+
+  const data = useMemo(() => systemIntakes, [systemIntakes]);
 
   const {
     getTableProps,
@@ -227,130 +108,7 @@ const RequestRepository = () => {
     return 'none';
   };
 
-  const csvHeaders = [
-    { key: 'euaUserID', label: t('intake:csvHeadings.euaId') },
-    { key: 'requester.name', label: t('intake:csvHeadings.requesterName') },
-    {
-      key: 'requester.component',
-      label: t('intake:csvHeadings.requesterComponent')
-    },
-    {
-      key: 'businessOwner.name',
-      label: t('intake:csvHeadings.businessOwnerName')
-    },
-    {
-      key: 'businessOwner.component',
-      label: t('intake:csvHeadings.businessOwnerComponent')
-    },
-    {
-      key: 'productManager.name',
-      label: t('intake:csvHeadings.productManagerName')
-    },
-    {
-      key: 'productManager.component',
-      label: t('intake:csvHeadings.productManagerComponent')
-    },
-    {
-      key: 'isso.name',
-      label: t('intake:csvHeadings.isso')
-    },
-    {
-      key: 'trbCollaborator',
-      label: t('intake:csvHeadings.trbCollaborator')
-    },
-    {
-      key: 'oitCollaborator',
-      label: t('intake:csvHeadings.oitCollaborator')
-    },
-    {
-      key: 'eaCollaborator',
-      label: t('intake:csvHeadings.eaCollaborator')
-    },
-    {
-      key: 'requestName',
-      label: t('intake:csvHeadings.projectName')
-    },
-    {
-      key: 'fundingSource.isFunded',
-      label: t('intake:csvHeadings.existingFunding')
-    },
-    {
-      key: 'fundingSource.source',
-      label: t('intake:csvHeadings.fundingSource')
-    },
-    {
-      key: 'fundingSource.fundingNumber',
-      label: t('intake:csvHeadings.fundingNumber')
-    },
-    {
-      key: 'businessNeed',
-      label: t('intake:csvHeadings.businessNeed')
-    },
-    {
-      key: 'businessSolution',
-      label: t('intake:csvHeadings.businessSolution')
-    },
-    {
-      key: 'currentStage',
-      label: t('intake:csvHeadings.currentStage')
-    },
-    {
-      key: 'needsEaSupport',
-      label: t('intake:csvHeadings.eaSupport')
-    },
-    {
-      key: 'costs.isExpectingIncrease',
-      label: t('intake:csvHeadings.isExpectingCostIncrease')
-    },
-    {
-      key: 'costs.expectedIncreaseAmount',
-      label: t('intake:csvHeadings.expectedIncreaseAmount')
-    },
-    {
-      key: 'contract.hasContract',
-      label: t('intake:csvHeadings.existingContract')
-    },
-    {
-      key: 'contract.contractor',
-      label: t('intake:csvHeadings.contractors')
-    },
-    {
-      key: 'contract.vehicle',
-      label: t('intake:csvHeadings.contractVehicle')
-    },
-    {
-      key: 'contractStartDate',
-      label: t('intake:csvHeadings.contractStart')
-    },
-    {
-      key: 'contractEndDate',
-      label: t('intake:csvHeadings.contractEnd')
-    },
-    {
-      key: 'status',
-      label: t('intake:csvHeadings.status')
-    },
-    {
-      key: 'updatedAt',
-      label: t('intake:csvHeadings.updatedAt')
-    },
-    {
-      key: 'submittedAt',
-      label: t('intake:csvHeadings.submittedAt')
-    },
-    {
-      key: 'createdAt',
-      label: t('intake:csvHeadings.createdAt')
-    },
-    {
-      key: 'decidedAt',
-      label: t('intake:csvHeadings.decidedAt')
-    },
-    {
-      key: 'archivedAt',
-      label: t('intake:csvHeadings.archivedAt')
-    }
-  ];
+  const csvHeaders = csvHeaderMap(t);
 
   const convertIntakesToCSV = (intakes: SystemIntakeForm[]) => {
     return intakes.map(intake => convertIntakeToCSV(intake));

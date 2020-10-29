@@ -1,13 +1,15 @@
 package cedarldap
 
 import (
+	"context"
 	"errors"
 	"fmt"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/cedarldap/gen/client"
@@ -37,12 +39,12 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 }
 
 // FetchUserInfo fetches a user's personal details
-func (c TranslatedClient) FetchUserInfo(logger *zap.Logger, euaID string) (*models2.UserInfo, error) {
+func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*models2.UserInfo, error) {
 	params := operations.NewPersonIDParams()
 	params.ID = euaID
 	resp, err := c.client.Operations.PersonID(params, c.apiAuthHeader)
 	if err != nil {
-		logger.Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err))
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch person from CEDAR LDAP with error: %v", err))
 		return nil, &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     models.Person{},

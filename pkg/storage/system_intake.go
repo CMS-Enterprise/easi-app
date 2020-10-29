@@ -166,11 +166,11 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 	}
 	// the SystemIntake may have been updated to Archived, so we want to use
 	// the un-filtered fetch to return the saved object
-	return s.fetchSystemIntakeByID(ctx, intake.ID)
+	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// fetchSystemIntakeByID queries the DB for a system intake matching the given ID, WITHOUT filtering based on status
-func (s *Store) fetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
+func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
 	err := s.db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
 	if err != nil {
@@ -190,22 +190,6 @@ func (s *Store) fetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 		intake.BusinessCaseID = bizCaseID
 	}
 	return &intake, nil
-}
-
-// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
-func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	intake, err := s.fetchSystemIntakeByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: consider making this filtering behavior part of the services layer, or alternately
-	// make this explicitly separate behavior in the data layer that the services layer
-	// opts into
-	if intake.Status == models.SystemIntakeStatusARCHIVED {
-		return nil, &apperrors.ResourceNotFoundError{Err: sql.ErrNoRows, Resource: models.SystemIntake{}}
-	}
-	return intake, nil
 }
 
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
