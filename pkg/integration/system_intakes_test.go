@@ -145,7 +145,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 			EASupportRequest:        null.BoolFrom(true),
 			ExistingContract:        null.StringFrom("Test Requester"),
 			UpdatedAt:               &updatedAt,
-			Status:                  models.SystemIntakeStatusSUBMITTED,
+			Status:                  models.SystemIntakeStatusINTAKESUBMITTED,
 		}
 		body, err := json.Marshal(intake)
 		s.NoError(err)
