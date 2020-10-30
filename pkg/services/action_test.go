@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
+func (s ServicesTestSuite) TestNewTakeAction() {
 	ctx := context.Background()
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{ID: id}, nil
@@ -125,16 +125,6 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		s.Equal(authorizationError, err)
 	})
 
-	s.Run("returns resource conflict error if status is not DRAFT", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
-
-		err := submitSystemIntake(ctx, &intake)
-		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(0, submitEmailCount)
-
-	})
-
 	s.Run("returns unauthorized error if authorization denied", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
 		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
@@ -238,7 +228,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 }
 
-func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
+func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	logger := zap.NewNop()
 
 	requester := "Test Requester"
@@ -336,26 +326,6 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		s.IsType(&apperrors.UnauthorizedError{}, err)
 	})
 
-	s.Run("returns error when intake is not SUBMITTED", func() {
-		reviewEmailCount = 0
-		ctx := context.Background()
-		reviewSystemIntake := NewTakeActionUpdateStatus(
-			serviceConfig,
-			models.SystemIntakeStatusNOTITREQUEST,
-			save,
-			authorize,
-			createAction,
-			fetchUserInfo,
-			sendReviewEmail,
-		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
-		action := &models.Action{}
-		err := reviewSystemIntake(ctx, intake, action)
-
-		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(0, reviewEmailCount)
-	})
-
 	s.Run("returns error if fails to save action", func() {
 		ctx := context.Background()
 		failCreateAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
@@ -378,6 +348,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 	})
 
 	s.Run("returns error from fetching requester email", func() {
+		reviewEmailCount = 0
 		ctx := context.Background()
 		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return nil, &apperrors.ExternalAPIError{
