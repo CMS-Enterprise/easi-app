@@ -7,7 +7,7 @@ import BusinessCaseReview from 'components/BusinessCaseReview';
 import { hasAlternativeB } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
-import { submitBusinessCase } from 'types/routines';
+import { postSystemIntakeAction } from 'types/routines';
 
 type ReviewProps = {
   businessCase: BusinessCaseModel;
@@ -47,7 +47,13 @@ const Review = ({ businessCase }: ReviewProps) => {
           type="submit"
           disabled={isSubmitting}
           onClick={() => {
-            dispatch(submitBusinessCase(businessCase));
+            // Updating the Intake's status to be BIZ_CASE_DRAFT_SUBMITTED
+            dispatch(
+              postSystemIntakeAction({
+                actionType: 'BIZ_CASE_DRAFT_SUBMITTED',
+                intakeId: businessCase.systemIntakeId
+              })
+            );
           }}
         >
           Send my business case

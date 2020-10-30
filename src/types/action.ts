@@ -5,7 +5,8 @@ export type ActionType =
   | 'READY_FOR_GRT'
   | 'READY_FOR_GRB'
   | 'PROVIDE_FEEDBACK_NEED_BIZ_CASE'
-  | 'ISSUE_LCID';
+  | 'ISSUE_LCID'
+  | 'BIZ_CASE_DRAFT_SUBMITTED';
 
 export type Action = {
   intakeId: string;

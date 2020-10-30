@@ -24,6 +24,8 @@ const (
 	ActionTypePROVIDEFEEDBACKNEEDBIZCASE = "PROVIDE_FEEDBACK_NEED_BIZ_CASE"
 	// ActionTypeISSUELCID captures enum value ISSUE_LCID
 	ActionTypeISSUELCID ActionType = "ISSUE_LCID"
+	// ActionTypeSUBMITDRAFTBIZCASE captures enum value BIZ_CASE_DRAFT_SUBMITTED
+	ActionTypeSUBMITDRAFTBIZCASE ActionType = "BIZ_CASE_DRAFT_SUBMITTED"
 )
 
 // Action is the model for an action on a system intake
