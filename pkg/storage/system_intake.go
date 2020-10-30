@@ -185,7 +185,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	}
 	// This should cover all statuses that might have a related business case on it.
 	// In the future submitted will also need to be checked.
-	if intake.Status != models.SystemIntakeStatusDRAFT {
+	if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
 		bizCaseID, _ := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 		intake.BusinessCaseID = bizCaseID
 	}
@@ -204,7 +204,7 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 		return models.SystemIntakes{}, err
 	}
 	for k, intake := range intakes {
-		if intake.Status != models.SystemIntakeStatusDRAFT {
+		if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
 			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 			if fetchErr != nil {
 				return models.SystemIntakes{}, fetchErr
@@ -224,7 +224,7 @@ func (s *Store) FetchSystemIntakesNotArchived(ctx context.Context) (models.Syste
 		return models.SystemIntakes{}, err
 	}
 	for k, intake := range intakes {
-		if intake.Status != models.SystemIntakeStatusDRAFT {
+		if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
 			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 			if fetchErr != nil {
 				return models.SystemIntakes{}, fetchErr

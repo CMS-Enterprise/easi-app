@@ -38,7 +38,7 @@ func newMockCreateSystemIntake(requester string, err error) createSystemIntake {
 		newIntake := models.SystemIntake{
 			ID:        uuid.New(),
 			EUAUserID: "FAKE",
-			Status:    models.SystemIntakeStatusDRAFT,
+			Status:    models.SystemIntakeStatusINTAKEDRAFT,
 			Requester: requester,
 		}
 		return &newIntake, err

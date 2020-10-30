@@ -79,7 +79,7 @@ func NewSubmitSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
-		if intake.Status != models.SystemIntakeStatusDRAFT {
+		if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
 			err := &apperrors.ResourceConflictError{
 				Err:        errors.New("intake is not in DRAFT state"),
 				ResourceID: intake.ID.String(),
@@ -90,7 +90,7 @@ func NewSubmitSystemIntake(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = models.SystemIntakeStatusSUBMITTED
+		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 
 		if intake.AlfabetID.Valid {
 			err := &apperrors.ResourceConflictError{
@@ -185,7 +185,7 @@ func NewGRTReviewSystemIntake(
 			return &apperrors.UnauthorizedError{}
 		}
 
-		if intake.Status != models.SystemIntakeStatusSUBMITTED {
+		if intake.Status != models.SystemIntakeStatusINTAKESUBMITTED {
 			err := &apperrors.ResourceConflictError{
 				Err:        errors.New("intake is not in SUBMITTED state"),
 				ResourceID: intake.ID.String(),
