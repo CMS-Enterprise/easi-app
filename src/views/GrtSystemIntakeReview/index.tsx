@@ -64,7 +64,7 @@ export const GrtSystemIntakeReview = () => {
           ) && (
             <div className="bg-gray-5 padding-top-6 padding-bottom-5">
               <div className="grid-container">
-                {systemIntake.status === 'SUBMITTED' && (
+                {systemIntake.status === 'INTAKE_SUBMITTED' && (
                   <Formik
                     initialValues={systemIntake}
                     onSubmit={values => {
