@@ -227,7 +227,7 @@ func (s *Server) routes(
 
 	systemIntakeActionHandler := handlers.NewSystemIntakeActionHandler(
 		base,
-		services.NewCreateAction(
+		services.NewTakeAction(
 			store.FetchSystemIntakeByID,
 			services.NewSubmitSystemIntake(
 				serviceConfig,

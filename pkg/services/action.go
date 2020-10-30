@@ -13,8 +13,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// NewCreateAction is a service to create and execute an action
-func NewCreateAction(
+// NewTakeAction is a service to create and execute an action
+func NewTakeAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	submit func(context.Context, *models.SystemIntake) error,
 	reviewNotITRequest func(context.Context, *models.SystemIntake, *models.Action) error,
@@ -77,15 +77,6 @@ func NewSubmitSystemIntake(
 		}
 		if !ok {
 			return &apperrors.UnauthorizedError{Err: err}
-		}
-
-		if intake.Status != models.SystemIntakeStatusDRAFT {
-			err := &apperrors.ResourceConflictError{
-				Err:        errors.New("intake is not in DRAFT state"),
-				ResourceID: intake.ID.String(),
-				Resource:   intake,
-			}
-			return err
 		}
 
 		updatedTime := config.clock.Now()
@@ -183,15 +174,6 @@ func NewTakeActionUpdateStatus(
 		}
 		if !ok {
 			return &apperrors.UnauthorizedError{}
-		}
-
-		if intake.Status != models.SystemIntakeStatusSUBMITTED {
-			err := &apperrors.ResourceConflictError{
-				Err:        errors.New("intake is not in SUBMITTED state"),
-				ResourceID: intake.ID.String(),
-				Resource:   intake,
-			}
-			return err
 		}
 
 		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID)
