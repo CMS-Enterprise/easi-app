@@ -424,7 +424,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake := testhelpers.NewSystemIntake()
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
-		intake2.Status = models.SystemIntakeStatusARCHIVED
+		intake2.Status = models.SystemIntakeStatusWITHDRAWN
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
@@ -507,14 +507,14 @@ func (s StoreTestSuite) TestFetchSystemIntakesNotArchived() {
 			expected[result.ID.String()] = false
 		}
 
-		// seed the db with ARCHIVED intakes that should NOT be returned
+		// seed the db with WITHDRAWN intakes that should NOT be returned
 		unexpected := map[string]bool{}
 		for ix := 0; ix < 5; ix++ {
 			intake := testhelpers.NewSystemIntake()
 			result, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
 
-			result.Status = models.SystemIntakeStatusARCHIVED
+			result.Status = models.SystemIntakeStatusWITHDRAWN
 			_, err = s.store.UpdateSystemIntake(ctx, result)
 			s.NoError(err)
 
@@ -528,11 +528,11 @@ func (s StoreTestSuite) TestFetchSystemIntakesNotArchived() {
 			id := intake.ID.String()
 			expected[id] = true
 
-			// failure if we got back one of the ARCHIVED intakes
+			// failure if we got back one of the WITHDRAWN intakes
 			s.False(unexpected[id], "unexpected intake", id)
 		}
 
-		// failure if we did not see all the expected seeded not-ARCHIVED intakes
+		// failure if we did not see all the expected seeded not-WITHDRAWN intakes
 		for id, found := range expected {
 			s.True(found, "did not receive expected intake", id)
 		}

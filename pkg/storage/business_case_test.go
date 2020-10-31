@@ -112,7 +112,7 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 		intake2.Status = models.SystemIntakeStatusINTAKEDRAFT
 		_, err = s.store.CreateSystemIntake(ctx, &intake2)
 		s.NoError(err)
-		intake2.Status = models.SystemIntakeStatusARCHIVED
+		intake2.Status = models.SystemIntakeStatusWITHDRAWN
 		_, err = s.store.UpdateSystemIntake(ctx, &intake2)
 		s.NoError(err)
 

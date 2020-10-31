@@ -29,6 +29,8 @@ const (
 	SystemIntakeStatusREADYFORGRB SystemIntakeStatus = "READY_FOR_GRB"
 	// SystemIntakeStatusARCHIVED captures enum value "ARCHIVED"
 	SystemIntakeStatusARCHIVED SystemIntakeStatus = "ARCHIVED"
+	// SystemIntakeStatusWITHDRAWN captures enum value "WITHDRAWN"
+	SystemIntakeStatusWITHDRAWN SystemIntakeStatus = "WITHDRAWN"
 	// SystemIntakeStatusNOTITREQUEST captures enum value "NOT_IT_REQUEST"
 	SystemIntakeStatusNOTITREQUEST SystemIntakeStatus = "NOT_IT_REQUEST"
 	// SystemIntakeStatusLCIDISSUED captures enum value "LCID_ISSUED"
