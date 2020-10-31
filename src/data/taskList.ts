@@ -32,7 +32,7 @@ export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   switch (intakeStatus) {
     case 'INTAKE_SUBMITTED':
       return 'SUBMITTED';
-    case 'ACCEPTED':
+    case 'NEED_BIZ_CASE':
     case 'LCID_ISSUED':
     case 'CLOSED':
       return 'COMPLETED';
@@ -48,7 +48,7 @@ export const bizCaseStatus = (
 ) => {
   if (businessCase === businessCaseInitialData) {
     switch (intakeStatus) {
-      case 'ACCEPTED':
+      case 'NEED_BIZ_CASE':
         return 'START';
       case 'LCID_ISSUED':
       case 'CLOSED':
