@@ -33,7 +33,7 @@ export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
     case 'INTAKE_SUBMITTED':
       return 'SUBMITTED';
     case 'ACCEPTED':
-    case 'APPROVED':
+    case 'LCID_ISSUED':
     case 'CLOSED':
       return 'COMPLETED';
     default:
@@ -50,7 +50,7 @@ export const bizCaseStatus = (
     switch (intakeStatus) {
       case 'ACCEPTED':
         return 'START';
-      case 'APPROVED':
+      case 'LCID_ISSUED':
       case 'CLOSED':
         return 'NOT_NEEDED';
       default:

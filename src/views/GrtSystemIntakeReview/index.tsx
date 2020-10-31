@@ -87,12 +87,12 @@ export const GrtSystemIntakeReview = () => {
                                   </legend>
                                   <Field
                                     as={RadioField}
-                                    checked={values.status === 'APPROVED'}
+                                    checked={values.status === 'LCID_ISSUED'}
                                     id="GrtIntakeReviewForm-Approved"
                                     name="decision"
                                     label={t('review.approved_label')}
                                     onChange={() => {
-                                      setFieldValue('status', 'APPROVED');
+                                      setFieldValue('status', 'LCID_ISSUED');
                                     }}
                                     value
                                   />

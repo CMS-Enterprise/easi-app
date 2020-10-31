@@ -103,7 +103,7 @@ func NewUpdateSystemIntake(
 		if existingIntake.Status == models.SystemIntakeStatusINTAKEDRAFT && intake.Status == models.SystemIntakeStatusINTAKEDRAFT {
 			return updateDraftIntake(ctx, existingIntake, intake)
 		} else if existingIntake.Status == models.SystemIntakeStatusINTAKESUBMITTED &&
-			(intake.Status == models.SystemIntakeStatusAPPROVED ||
+			(intake.Status == models.SystemIntakeStatusLCIDISSUED ||
 				intake.Status == models.SystemIntakeStatusACCEPTED ||
 				intake.Status == models.SystemIntakeStatusCLOSED) && canDecideIntake {
 
