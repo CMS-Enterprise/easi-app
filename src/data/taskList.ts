@@ -34,7 +34,7 @@ export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
       return 'SUBMITTED';
     case 'NEED_BIZ_CASE':
     case 'LCID_ISSUED':
-    case 'CLOSED':
+    case 'NOT_IT_REQUEST':
       return 'COMPLETED';
     default:
       return 'CANNOT_START';
@@ -51,7 +51,7 @@ export const bizCaseStatus = (
       case 'NEED_BIZ_CASE':
         return 'START';
       case 'LCID_ISSUED':
-      case 'CLOSED':
+      case 'NOT_IT_REQUEST':
         return 'NOT_NEEDED';
       default:
         return 'CANNOT_START';

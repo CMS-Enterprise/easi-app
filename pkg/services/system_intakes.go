@@ -105,7 +105,7 @@ func NewUpdateSystemIntake(
 		} else if existingIntake.Status == models.SystemIntakeStatusINTAKESUBMITTED &&
 			(intake.Status == models.SystemIntakeStatusLCIDISSUED ||
 				intake.Status == models.SystemIntakeStatusNEEDBIZCASE ||
-				intake.Status == models.SystemIntakeStatusCLOSED) && canDecideIntake {
+				intake.Status == models.SystemIntakeStatusNOTITREQUEST) && canDecideIntake {
 
 			ok, err := authorize(ctx, existingIntake)
 			if err != nil {
