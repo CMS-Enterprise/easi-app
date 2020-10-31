@@ -260,7 +260,7 @@ func NewArchiveSystemIntake(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = models.SystemIntakeStatusARCHIVED
+		intake.Status = models.SystemIntakeStatusWITHDRAWN
 		intake.ArchivedAt = &updatedTime
 
 		intake, err = update(ctx, intake)
