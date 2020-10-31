@@ -71,7 +71,7 @@ const intakeLinkComponent = (
 };
 
 const intakeFeedbackBannerComponent = (systemIntakeStatus: string) => {
-  if (systemIntakeStatus === 'CLOSED' || systemIntakeStatus === 'APPROVED') {
+  if (systemIntakeStatus === 'CLOSED' || systemIntakeStatus === 'LCID_ISSUED') {
     return (
       <Alert type="info" slim>
         Please check your email for feedback and next steps.

@@ -26,7 +26,7 @@ export const closedIntakeStatuses = [
   'NO_GOVERNANCE'
 ];
 
-export const oldIntakeStatuses = ['ACCEPTED', 'APPROVED', 'CLOSED'];
+export const oldIntakeStatuses = ['ACCEPTED', 'CLOSED'];
 
 export const intakeStatuses = [
   ...openIntakeStatuses,
