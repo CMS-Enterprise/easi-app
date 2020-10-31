@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#
+# Generates self-signed TLS certificate and key
+
+set -u
+
+SUBJ=${1:-'/CN=localhost'}
+PREFIX=${2:-'devlocal-https'}
+SERVER_CERT="${PREFIX}".crt
+SERVER_KEY="${PREFIX}".key
+
+openssl ecparam -genkey -name prime256v1 -out "$SERVER_KEY" && \
+openssl req -new -x509 -days 3652 -nodes -sha256 \
+  -subj "$SUBJ" \
+  -key "$SERVER_KEY" -out "$SERVER_CERT"
