@@ -11,6 +11,11 @@ repos:
     hooks:
       - id: shell-lint
 
+  - repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: v3.3.0
+    hooks:
+      - id: detect-private-key
+
   - repo: git://github.com/trussworks/pre-commit-hooks
     rev: v0.0.3
     hooks:
