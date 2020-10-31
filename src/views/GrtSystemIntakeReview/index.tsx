@@ -98,12 +98,12 @@ export const GrtSystemIntakeReview = () => {
                                   />
                                   <Field
                                     as={RadioField}
-                                    checked={values.status === 'ACCEPTED'}
+                                    checked={values.status === 'NEED_BIZ_CASE'}
                                     id="GrtIntakeReviewForm-Accepted"
                                     name="decision"
                                     label={t('review.accepted_label')}
                                     onChange={() => {
-                                      setFieldValue('status', 'ACCEPTED');
+                                      setFieldValue('status', 'NEED_BIZ_CASE');
                                     }}
                                     value
                                   />
@@ -150,7 +150,7 @@ export const GrtSystemIntakeReview = () => {
                     }}
                   </Formik>
                 )}
-                {['APPROVED', 'ACCEPTED', 'CLOSED'].includes(
+                {['LCID_ISSUED', 'NEED_BIZ_CASE', 'CLOSED'].includes(
                   systemIntake.status
                 ) && (
                   <div>
@@ -165,10 +165,10 @@ export const GrtSystemIntakeReview = () => {
                     <p className="margin-bottom-3">
                       Decision:{' '}
                       {((status: SystemIntakeStatus) => {
-                        if (status === 'APPROVED') {
+                        if (status === 'LCID_ISSUED') {
                           return t('review.approved_label');
                         }
-                        if (status === 'ACCEPTED') {
+                        if (status === 'NEED_BIZ_CASE') {
                           return t('review.accepted_label');
                         }
                         if (status === 'CLOSED') {
