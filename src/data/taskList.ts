@@ -6,7 +6,7 @@ export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   if (intake.id === '') {
     return 'START';
   }
-  if (intake.status === 'DRAFT') {
+  if (intake.status === 'INTAKE_DRAFT') {
     return 'CONTINUE';
   }
   return 'COMPLETED';
@@ -30,7 +30,7 @@ export const chooseIntakePath = (intake: SystemIntakeForm, status: string) => {
 
 export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   switch (intakeStatus) {
-    case 'SUBMITTED':
+    case 'INTAKE_SUBMITTED':
       return 'SUBMITTED';
     case 'ACCEPTED':
     case 'APPROVED':

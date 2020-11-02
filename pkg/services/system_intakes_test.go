@@ -104,13 +104,13 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 			return &models.SystemIntake{
 				EUAUserID: intake.EUAUserID,
 				Requester: requester,
-				Status:    models.SystemIntakeStatusDRAFT,
+				Status:    models.SystemIntakeStatusINTAKEDRAFT,
 			}, nil
 		}
 		createIntake := NewCreateSystemIntake(serviceConfig, create)
 		intake, err := createIntake(ctx, &models.SystemIntake{
 			Requester: requester,
-			Status:    models.SystemIntakeStatusDRAFT,
+			Status:    models.SystemIntakeStatusINTAKEDRAFT,
 		})
 		s.NoError(err)
 		s.Equal(fakeEuaID, intake.EUAUserID)
@@ -123,7 +123,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 		createIntake := NewCreateSystemIntake(serviceConfig, create)
 		intake, err := createIntake(ctx, &models.SystemIntake{
 			Requester: requester,
-			Status:    models.SystemIntakeStatusDRAFT,
+			Status:    models.SystemIntakeStatusINTAKEDRAFT,
 		})
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
@@ -134,13 +134,13 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 	logger := zap.NewNop()
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{
-			Status: models.SystemIntakeStatusDRAFT,
+			Status: models.SystemIntakeStatusINTAKEDRAFT,
 		}, nil
 	}
 
 	fetchSubmitted := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{
-			Status: models.SystemIntakeStatusSUBMITTED,
+			Status: models.SystemIntakeStatusINTAKESUBMITTED,
 		}, nil
 	}
 
@@ -175,7 +175,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{
-			Status:    models.SystemIntakeStatusDRAFT,
+			Status:    models.SystemIntakeStatusINTAKEDRAFT,
 			Requester: requester,
 		})
 
@@ -205,7 +205,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, fetchUserInfo, sendReviewEmail, failUpdateDraft, true)
 
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{
-			Status: models.SystemIntakeStatusDRAFT,
+			Status: models.SystemIntakeStatusINTAKEDRAFT,
 		})
 		s.Equal(updateDraftError, err)
 		s.Equal(&models.SystemIntake{}, intake)
@@ -293,8 +293,8 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		ctx := context.Background()
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
 
-		// In this case, saving a DRAFT intake against an existing SUBMITTED intake
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusDRAFT})
+		// In this case, saving a INTAKE_DRAFT intake against an existing SUBMITTED intake
+		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT})
 
 		s.IsType(&apperrors.ResourceConflictError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)

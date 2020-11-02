@@ -25,7 +25,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	businessCaseURL.Path = path.Join(businessCaseURL.Path, "/business_case")
 
 	intake := testhelpers.NewSystemIntake()
-	intake.Status = models.SystemIntakeStatusSUBMITTED
+	intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 	intake.EUAUserID = s.user.euaID
 
 	createdIntake, err := s.store.CreateSystemIntake(context.Background(), &intake)

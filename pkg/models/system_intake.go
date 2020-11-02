@@ -11,10 +11,10 @@ import (
 type SystemIntakeStatus string
 
 const (
-	// SystemIntakeStatusDRAFT captures enum value "DRAFT"
-	SystemIntakeStatusDRAFT SystemIntakeStatus = "DRAFT"
-	// SystemIntakeStatusSUBMITTED captures enum value "SUBMITTED"
-	SystemIntakeStatusSUBMITTED SystemIntakeStatus = "SUBMITTED"
+	// SystemIntakeStatusINTAKEDRAFT captures enum value "INTAKE_DRAFT"
+	SystemIntakeStatusINTAKEDRAFT SystemIntakeStatus = "INTAKE_DRAFT"
+	// SystemIntakeStatusINTAKESUBMITTED captures enum value "INTAKE_SUBMITTED"
+	SystemIntakeStatusINTAKESUBMITTED SystemIntakeStatus = "INTAKE_SUBMITTED"
 	// SystemIntakeStatusACCEPTED captures enum value "ACCEPTED"
 	SystemIntakeStatusACCEPTED SystemIntakeStatus = "ACCEPTED"
 	// SystemIntakeStatusNEEDBIZCASE captures enum value "NEED_BIZ_CASE"
