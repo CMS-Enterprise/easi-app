@@ -15,7 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-const insertBasicIntakeSQL = "INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
+const insertBasicIntakeSQL = "INSERT INTO system_intake (id, eua_user_id, status, request_type, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
 const insertRelatedBizCaseSQL = `INSERT INTO business_case (id, eua_user_id, status, requester, system_intake)
 		VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
 
