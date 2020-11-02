@@ -27,7 +27,7 @@ func checkUniqLifecycleCosts(costs models.EstimatedLifecycleCosts) (string, stri
 
 // check the system intake status is submitted
 func checkSystemIntakeSubmitted(intake *models.SystemIntake) (string, string) {
-	if intake.Status == models.SystemIntakeStatusDRAFT {
+	if intake.Status == models.SystemIntakeStatusINTAKEDRAFT {
 		return "SystemIntake", "must have already been submitted"
 	}
 	return "", ""

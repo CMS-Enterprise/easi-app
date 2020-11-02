@@ -28,7 +28,7 @@ describe('The system intakes reducer', () => {
   it('handles fetchSystemIntakes.SUCCESS', () => {
     const mockApiSystemIntake = {
       id: '',
-      status: 'DRAFT',
+      status: 'INTAKE_DRAFT',
       requester: '',
       component: '',
       businessOwner: '',
