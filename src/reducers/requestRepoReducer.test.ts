@@ -6,7 +6,7 @@ import requestRepoReducer from './requestRepoReducer';
 describe('The request repository reducer', () => {
   const mockApiSystemIntake = {
     id: '',
-    status: 'DRAFT',
+    status: 'INTAKE_DRAFT',
     requester: '',
     component: '',
     businessOwner: '',

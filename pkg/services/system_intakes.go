@@ -13,39 +13,39 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// NewAuthorizeFetchSystemIntakesByEuaID is a service to authorize FetchSystemIntakesByEuaID
-func NewAuthorizeFetchSystemIntakesByEuaID() func(ctx context.Context, euaID string) (bool, error) {
-	return func(ctx context.Context, euaID string) (bool, error) {
-		return true, nil
-	}
-}
-
-// NewFetchSystemIntakesByEuaID is a service to fetch system intakes by EUA id
-func NewFetchSystemIntakesByEuaID(
+// NewFetchSystemIntakes is a service to fetch multiple system intakes
+// that are to be presented to the given requester
+func NewFetchSystemIntakes(
 	config Config,
-	fetch func(c context.Context, euaID string) (models.SystemIntakes, error),
-	authorize func(c context.Context, euaID string) (bool, error),
-) func(c context.Context, e string) (models.SystemIntakes, error) {
-	return func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
+	fetchByID func(c context.Context, euaID string) (models.SystemIntakes, error),
+	fetchAll func(context.Context) (models.SystemIntakes, error),
+	authorize func(c context.Context) (bool, error),
+) func(c context.Context) (models.SystemIntakes, error) {
+	return func(ctx context.Context) (models.SystemIntakes, error) {
 		logger := appcontext.ZLogger(ctx)
-		ok, err := authorize(ctx, euaID)
+		ok, err := authorize(ctx)
 		if err != nil {
-			logger.Error("failed to authorize fetch system intakes")
-			return models.SystemIntakes{}, err
+			return nil, err
 		}
 		if !ok {
-			return models.SystemIntakes{}, &apperrors.UnauthorizedError{Err: err}
+			return nil, &apperrors.UnauthorizedError{Err: errors.New("failed to authorize fetch system intakes")}
 		}
-		intakes, err := fetch(ctx, euaID)
+		var result models.SystemIntakes
+		principal := appcontext.Principal(ctx)
+		if !principal.AllowGRT() {
+			result, err = fetchByID(ctx, principal.ID())
+		} else {
+			result, err = fetchAll(ctx)
+		}
 		if err != nil {
 			logger.Error("failed to fetch system intakes")
-			return models.SystemIntakes{}, &apperrors.QueryError{
+			return nil, &apperrors.QueryError{
 				Err:       err,
-				Model:     intakes,
+				Model:     result,
 				Operation: apperrors.QueryFetch,
 			}
 		}
-		return intakes, nil
+		return result, nil
 	}
 }
 
@@ -85,7 +85,7 @@ func NewUpdateSystemIntake(
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchRequesterInfo func(*zap.Logger, string) (*models.UserInfo, error),
+	fetchRequesterInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 	updateDraftIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
 	canDecideIntake bool,
@@ -100,9 +100,9 @@ func NewUpdateSystemIntake(
 			}
 		}
 
-		if existingIntake.Status == models.SystemIntakeStatusDRAFT && intake.Status == models.SystemIntakeStatusDRAFT {
+		if existingIntake.Status == models.SystemIntakeStatusINTAKEDRAFT && intake.Status == models.SystemIntakeStatusINTAKEDRAFT {
 			return updateDraftIntake(ctx, existingIntake, intake)
-		} else if existingIntake.Status == models.SystemIntakeStatusSUBMITTED &&
+		} else if existingIntake.Status == models.SystemIntakeStatusINTAKESUBMITTED &&
 			(intake.Status == models.SystemIntakeStatusAPPROVED ||
 				intake.Status == models.SystemIntakeStatusACCEPTED ||
 				intake.Status == models.SystemIntakeStatusCLOSED) && canDecideIntake {
@@ -118,7 +118,7 @@ func NewUpdateSystemIntake(
 			updatedTime := config.clock.Now()
 			intake.UpdatedAt = &updatedTime
 
-			requesterInfo, err := fetchRequesterInfo(appcontext.ZLogger(ctx), existingIntake.EUAUserID)
+			requesterInfo, err := fetchRequesterInfo(ctx, existingIntake.EUAUserID)
 			if err != nil {
 				return &models.SystemIntake{}, err
 			}

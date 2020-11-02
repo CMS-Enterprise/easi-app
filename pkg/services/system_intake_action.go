@@ -20,6 +20,9 @@ func NewCreateSystemIntakeAction(
 	reviewNotITRequest func(context.Context, *models.SystemIntake, *models.Action) error,
 	reviewReadyForGRT func(context.Context, *models.SystemIntake, *models.Action) error,
 	reviewRequestBizCase func(context.Context, *models.SystemIntake, *models.Action) error,
+	reviewProvideFeedbackNeedBizCase func(context.Context, *models.SystemIntake, *models.Action) error,
+	reviewReadyForGRB func(context.Context, *models.SystemIntake, *models.Action) error,
+	issueLCID func(context.Context, *models.SystemIntake, *models.Action) error,
 ) func(context.Context, *models.Action) error {
 	return func(ctx context.Context, action *models.Action) error {
 		intake, fetchErr := fetch(ctx, *action.IntakeID)
@@ -40,6 +43,12 @@ func NewCreateSystemIntakeAction(
 			return reviewRequestBizCase(ctx, intake, action)
 		case models.ActionTypeREADYFORGRT:
 			return reviewReadyForGRT(ctx, intake, action)
+		case models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE:
+			return reviewProvideFeedbackNeedBizCase(ctx, intake, action)
+		case models.ActionTypeREADYFORGRB:
+			return reviewReadyForGRB(ctx, intake, action)
+		case models.ActionTypeISSUELCID:
+			return issueLCID(ctx, intake, action)
 		default:
 			return &apperrors.ResourceConflictError{
 				Err:        errors.New("invalid system intake action type"),
@@ -58,7 +67,7 @@ func NewSubmitSystemIntake(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
 	createAction func(context.Context, *models.Action) (*models.Action, error),
-	fetchUserInfo func(*zap.Logger, string) (*models.UserInfo, error),
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	emailReviewer func(requester string, intakeID uuid.UUID) error,
 ) func(context.Context, *models.SystemIntake) error {
 	return func(ctx context.Context, intake *models.SystemIntake) error {
@@ -70,7 +79,7 @@ func NewSubmitSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
-		if intake.Status != models.SystemIntakeStatusDRAFT {
+		if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
 			err := &apperrors.ResourceConflictError{
 				Err:        errors.New("intake is not in DRAFT state"),
 				ResourceID: intake.ID.String(),
@@ -81,7 +90,7 @@ func NewSubmitSystemIntake(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = models.SystemIntakeStatusSUBMITTED
+		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 
 		if intake.AlfabetID.Valid {
 			err := &apperrors.ResourceConflictError{
@@ -92,7 +101,7 @@ func NewSubmitSystemIntake(
 			return err
 		}
 
-		userInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), appcontext.Principal(ctx).ID())
+		userInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 		if err != nil {
 			return err
 		}
@@ -164,7 +173,7 @@ func NewGRTReviewSystemIntake(
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	authorize func(context.Context) (bool, error),
 	createAction func(context.Context, *models.Action) (*models.Action, error),
-	fetchUserInfo func(*zap.Logger, string) (*models.UserInfo, error),
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 ) func(context.Context, *models.SystemIntake, *models.Action) error {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -176,7 +185,7 @@ func NewGRTReviewSystemIntake(
 			return &apperrors.UnauthorizedError{}
 		}
 
-		if intake.Status != models.SystemIntakeStatusSUBMITTED {
+		if intake.Status != models.SystemIntakeStatusINTAKESUBMITTED {
 			err := &apperrors.ResourceConflictError{
 				Err:        errors.New("intake is not in SUBMITTED state"),
 				ResourceID: intake.ID.String(),
@@ -185,7 +194,7 @@ func NewGRTReviewSystemIntake(
 			return err
 		}
 
-		requesterInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), intake.EUAUserID)
+		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID)
 		if err != nil {
 			return err
 		}
@@ -199,7 +208,7 @@ func NewGRTReviewSystemIntake(
 			}
 		}
 
-		actorInfo, err := fetchUserInfo(appcontext.ZLogger(ctx), appcontext.Principal(ctx).ID())
+		actorInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 		if err != nil {
 			return err
 		}

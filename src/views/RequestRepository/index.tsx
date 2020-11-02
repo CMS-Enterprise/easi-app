@@ -1,25 +1,39 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
+import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
 import { Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
+import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import { convertIntakeToCSV } from 'data/systemIntake';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntakes } from 'types/routines';
+import { SystemIntakeForm } from 'types/systemIntake';
+
+import csvHeaderMap from './csvHeaderMap';
 
 const RequestRepository = () => {
   const { t } = useTranslation('governanceReviewTeam');
+  const dispatch = useDispatch();
+
   const columns: any = useMemo(
     () => [
       {
         Header: t('intake:fields.submissionDate'),
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
-          return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          if (value) {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          }
+          return t('requestRepository.table.submissionDate.null');
         }
       },
       {
@@ -27,7 +41,9 @@ const RequestRepository = () => {
         accessor: 'requestName',
         Cell: ({ row, value }: any) => {
           return (
-            <Link to={`/governance-review-team/${row.original.id}`}>
+            <Link
+              to={`/governance-review-team/${row.original.id}/intake-request`}
+            >
               {value}
             </Link>
           );
@@ -45,57 +61,15 @@ const RequestRepository = () => {
     [t]
   );
 
-  // Mock Data
-  // EASI-789 will create an endpoint for getting all intake requests for GRT
-  const data = useMemo(
-    () => [
-      {
-        id: 'addaa218-34d3-4dd8-a12f-38f6ff33b22d',
-        submittedAt: new Date(2020, 6, 26).toISOString(),
-        requestName: 'Easy Access to System Information',
-        requester: {
-          name: 'Christopher Hui',
-          component: 'Division of Pop Corners'
-        },
-        status: 'Submitted',
-        type: 'Decomission a system'
-      },
-      {
-        id: '229f9b64-18fc-4ee1-95c4-9d4b143d215c',
-        submittedAt: new Date(2020, 9, 19).toISOString(),
-        requestName: 'Hard Access to System Information',
-        requester: {
-          name: 'George Baukerton',
-          component: 'Office of Information Technology'
-        },
-        status: 'Submitted',
-        type: 'Re-compete'
-      },
-      {
-        id: '229f9b64-18fc-4ee1-95c4-9d4b143d215d',
-        submittedAt: new Date().toISOString(),
-        requestName: 'Super System',
-        requester: {
-          name: 'George Baukerton',
-          component: 'Office of Information Technology'
-        },
-        status: 'Submitted',
-        type: 'Re-compete'
-      },
-      {
-        id: '229f9b64-18fc-4ee1-95c4-9d4b143d215e',
-        submittedAt: new Date(2020, 8, 26).toISOString(),
-        requestName: 'Monster System',
-        requester: {
-          name: 'George Baukerton',
-          component: 'Office of Information Technology'
-        },
-        status: 'Submitted',
-        type: 'Re-compete'
-      }
-    ],
-    []
+  useEffect(() => {
+    dispatch(fetchSystemIntakes());
+  }, [dispatch]);
+
+  const systemIntakes = useSelector(
+    (state: AppState) => state.systemIntakes.systemIntakes
   );
+
+  const data = useMemo(() => systemIntakes, [systemIntakes]);
 
   const {
     getTableProps,
@@ -134,11 +108,43 @@ const RequestRepository = () => {
     return 'none';
   };
 
+  const csvHeaders = csvHeaderMap(t);
+
+  const convertIntakesToCSV = (intakes: SystemIntakeForm[]) => {
+    return intakes.map(intake => convertIntakeToCSV(intake));
+  };
+
   /* eslint-disable react/jsx-props-no-spreading */
   return (
     <PageWrapper>
       <Header />
       <MainContent className="grid-container">
+        <div className="display-flex flex-justify flex-wrap margin-y-2">
+          <BreadcrumbNav>
+            <li>
+              <Link to="/">Home</Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>Requests</li>
+          </BreadcrumbNav>
+          <div>
+            <CSVLink
+              data={convertIntakesToCSV(data)}
+              filename="request-repository.csv"
+              headers={csvHeaders}
+            >
+              <i className="fa fa-download" />
+            </CSVLink>
+            &nbsp;
+            <CSVLink
+              data={convertIntakesToCSV(data)}
+              filename="request-repository.csv"
+              headers={csvHeaders}
+            >
+              Download all requests as excel file
+            </CSVLink>
+          </div>
+        </div>
         <h1>{t('requestRepository.header')}</h1>
         <p>{t('requestRepository.requestCount', { count: data.length })}</p>
         <Table bordered={false} {...getTableProps()} fullWidth>

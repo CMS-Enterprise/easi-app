@@ -1,11 +1,10 @@
 import { DateTime } from 'luxon';
 
+import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-
-import cmsGovernanceTeams from '../constants/enums/cmsGovernanceTeams';
 
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
@@ -13,7 +12,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   id: '',
   euaUserID: '',
   requestName: '',
-  status: 'DRAFT',
+  status: 'INTAKE_DRAFT',
   requester: {
     name: '',
     component: '',
@@ -65,6 +64,9 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   decidedAt: null,
   businessCaseId: null,
   submittedAt: null,
+  updatedAt: null,
+  createdAt: null,
+  archivedAt: null,
   lcid: ''
 };
 
@@ -135,7 +137,7 @@ export const prepareSystemIntakeForApp = (
     id: systemIntake.id || '',
     euaUserID: systemIntake.euaUserID || '',
     requestName: systemIntake.projectName || '',
-    status: systemIntake.status || 'DRAFT',
+    status: systemIntake.status || 'INTAKE_DRAFT',
     requester: {
       name: systemIntake.requester || '',
       component: systemIntake.component || '',
@@ -197,6 +199,55 @@ export const prepareSystemIntakeForApp = (
     submittedAt: systemIntake.submittedAt
       ? DateTime.fromISO(systemIntake.submittedAt)
       : null,
+    updatedAt: systemIntake.updatedAt
+      ? DateTime.fromISO(systemIntake.updatedAt)
+      : null,
+    createdAt: systemIntake.createdAt
+      ? DateTime.fromISO(systemIntake.createdAt)
+      : null,
+    archivedAt: systemIntake.archivedAt
+      ? DateTime.fromISO(systemIntake.archivedAt)
+      : null,
     lcid: systemIntake.lcid || ''
+  };
+};
+
+export const convertIntakeToCSV = (intake: SystemIntakeForm) => {
+  const collaboratorTeams: any = {};
+  if (intake.governanceTeams.isPresent) {
+    intake.governanceTeams.teams.forEach(team => {
+      switch (team.name) {
+        case 'Technical Review Board':
+          collaboratorTeams.trbCollaborator = team.collaborator;
+          break;
+        case "OIT's Security and Privacy Group":
+          collaboratorTeams.oitCollaborator = team.collaborator;
+          break;
+        case 'Enterprise Architecture':
+          collaboratorTeams.eaCollaborator = team.collaborator;
+          break;
+        default:
+          break;
+      }
+    });
+  }
+  return {
+    ...intake,
+    ...collaboratorTeams,
+    contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+      intake.contract.hasContract
+    )
+      ? `${intake.contract.startDate.month}/${intake.contract.startDate.year}`
+      : '',
+    contractEndDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+      intake.contract.hasContract
+    )
+      ? `${intake.contract.endDate.month}/${intake.contract.endDate.year}`
+      : '',
+    submittedAt: intake.submittedAt && intake.submittedAt.toISO(),
+    updatedAt: intake.updatedAt && intake.updatedAt.toISO(),
+    createdAt: intake.createdAt && intake.createdAt.toISO(),
+    decidedAt: intake.decidedAt && intake.decidedAt.toISO(),
+    archivedAt: intake.archivedAt && intake.archivedAt.toISO()
   };
 };

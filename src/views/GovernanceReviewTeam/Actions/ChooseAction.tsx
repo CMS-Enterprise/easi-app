@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
+import { kebabCase } from 'lodash';
 
+import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import { BusinessCaseModel } from 'types/businessCase';
 
@@ -11,6 +14,7 @@ type ChooseActionProps = {
 
 const ChooseAction = ({ businessCase }: ChooseActionProps) => {
   const history = useHistory();
+  const { t } = useTranslation('action');
 
   const businessCaseExists = !!businessCase.id;
   const [actionRoute, setActionRoute] = useState('');
@@ -22,43 +26,115 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
 
   const radioGroupName = 'Available Actions';
 
-  const NotAnITRequest = (
+  const NotITRequest = (
     <RadioField
-      key="not-an-it-request"
-      id="not-an-it-request"
-      label="Not an IT request"
+      key="not-it-request"
+      id="not-it-request"
+      label={t('actions.notItRequest')}
       name={radioGroupName}
-      value="not-an-it-request"
+      value="not-it-request"
       onChange={onChange}
-      checked={actionRoute === 'not-an-it-request'}
+      checked={actionRoute === 'not-it-request'}
     />
   );
 
-  const TestAction = (
+  const IssueLifecycleId = (
     <RadioField
-      key="test-route"
-      id="test-route"
-      label="Test Action"
+      key="issue-lcid"
+      id="issue-lcid"
+      label="Issue Lifecycle Id"
       name={radioGroupName}
-      value="test-route"
+      value="issue-lcid"
       onChange={onChange}
-      checked={actionRoute === 'test-route'}
+      checked={actionRoute === 'issue-lcid'}
+    />
+  );
+
+  const NeedBizCase = (
+    <RadioField
+      key="need-biz-case"
+      id="need-biz-case"
+      label={t('actions.needBizCase')}
+      name={radioGroupName}
+      value="need-biz-case"
+      onChange={onChange}
+      checked={actionRoute === 'need-biz-case'}
+    />
+  );
+
+  const ReadyForGRT = (
+    <RadioField
+      key="ready-for-grt"
+      id="ready-for-grt"
+      label={t('actions.readyForGrt')}
+      name={radioGroupName}
+      value="ready-for-grt"
+      onChange={onChange}
+      checked={actionRoute === 'ready-for-grt'}
+    />
+  );
+
+  const ReadyForGRB = (
+    <RadioField
+      key="ready-for-grb"
+      id="ready-for-grb"
+      label={t('actions.readyForGrb')}
+      name={radioGroupName}
+      value="ready-for-grb"
+      onChange={onChange}
+      checked={actionRoute === 'ready-for-grb'}
+    />
+  );
+
+  const ProvideFeedbackNeedBizCase = (
+    <RadioField
+      key="provide-feedback-need-biz-case"
+      id="provide-feedback-need-biz-case"
+      label={t('actions.provideFeedbackNeedBizCase')}
+      name={radioGroupName}
+      value="provide-feedback-need-biz-case"
+      onChange={onChange}
+      checked={actionRoute === 'provide-feedback-need-biz-case'}
     />
   );
 
   let availableActions: Array<any> = [];
+  let availableHiddenActions: Array<any> = [];
   if (businessCaseExists) {
-    availableActions = [TestAction];
+    availableActions = [];
+    availableHiddenActions = [];
   } else {
-    availableActions = [NotAnITRequest, TestAction];
+    availableActions = [NotITRequest, NeedBizCase];
+    availableHiddenActions = [
+      ReadyForGRT,
+      ProvideFeedbackNeedBizCase,
+      ReadyForGRB,
+      IssueLifecycleId
+    ];
   }
 
   return (
     <>
-      <h1>Actions on intake request</h1>
+      <h1>{t('submitAction.heading')}</h1>
+      <h2 className="margin-y-3">{t('submitAction.subheading')}</h2>
       <form onSubmit={onSubmit}>
-        <RadioGroup>{availableActions}</RadioGroup>
-        <Button type="submit" disabled={!actionRoute}>
+        <RadioGroup>
+          <div>
+            {availableActions.map(actionRadio => (
+              <div className="margin-y-3">{actionRadio}</div>
+            ))}
+          </div>
+          <CollapsableLink
+            id={kebabCase(t('submitAction.otherOptions'))}
+            label={t('submitAction.otherOptions')}
+            styleLeftBar={false}
+          >
+            {availableHiddenActions.map(actionRadio => (
+              <div className="margin-bottom-3">{actionRadio}</div>
+            ))}
+          </CollapsableLink>
+        </RadioGroup>
+        <Button className="margin-top-5" type="submit" disabled={!actionRoute}>
           Continue
         </Button>
       </form>
