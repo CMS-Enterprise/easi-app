@@ -25,7 +25,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	systemIntakeURL.Path = path.Join(systemIntakeURL.Path, "/system_intake")
 
 	body, err := json.Marshal(map[string]string{
-		"status":    "INTAKE_DRAFT",
+		"status":    string(models.SystemIntakeStatusINTAKEDRAFT),
 		"requester": "TEST REQUESTER",
 	})
 	s.NoError(err)
@@ -66,7 +66,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		body, err := json.Marshal(map[string]string{
 			"id":        id.String(),
 			"requester": "TEST REQUESTER",
-			"status":    "INTAKE_DRAFT",
+			"status":    string(models.SystemIntakeStatusINTAKEDRAFT),
 		})
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
@@ -103,7 +103,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	s.Run("PUT will succeed second time with with new data", func() {
 		body, err := json.Marshal(map[string]string{
 			"id":        id.String(),
-			"status":    "INTAKE_DRAFT",
+			"status":    string(models.SystemIntakeStatusINTAKEDRAFT),
 			"requester": "Test Requester",
 		})
 		s.NoError(err)
@@ -166,7 +166,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		}
 		body, err := json.Marshal(map[string]string{
 			"id":        id.String(),
-			"status":    "INTAKE_SUBMITTED",
+			"status":    string(models.SystemIntakeStatusINTAKESUBMITTED),
 			"requester": "Test Requester",
 		})
 		s.NoError(err)
