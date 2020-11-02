@@ -43,7 +43,8 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 
 	s.Run("cannot save without EUA ID", func() {
 		partialIntake := models.SystemIntake{
-			Status: models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
 		}
 
 		_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
@@ -61,7 +62,8 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 	for _, tc := range euaTests {
 		s.Run(fmt.Sprintf("cannot save with invalid EUA ID: %s", tc), func() {
 			partialIntake := models.SystemIntake{
-				Status: models.SystemIntakeStatusDRAFT,
+				Status:      models.SystemIntakeStatusDRAFT,
+				RequestType: models.SystemIntakeRequestTypeNEW,
 			}
 			partialIntake.EUAUserID = tc
 
