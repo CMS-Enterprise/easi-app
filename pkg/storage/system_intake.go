@@ -166,11 +166,11 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 	}
 	// the SystemIntake may have been updated to Archived, so we want to use
 	// the un-filtered fetch to return the saved object
-	return s.fetchSystemIntakeByID(ctx, intake.ID)
+	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// fetchSystemIntakeByID queries the DB for a system intake matching the given ID, WITHOUT filtering based on status
-func (s *Store) fetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
+func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
 	err := s.db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
 	if err != nil {
@@ -185,27 +185,11 @@ func (s *Store) fetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	}
 	// This should cover all statuses that might have a related business case on it.
 	// In the future submitted will also need to be checked.
-	if intake.Status != models.SystemIntakeStatusDRAFT {
+	if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
 		bizCaseID, _ := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 		intake.BusinessCaseID = bizCaseID
 	}
 	return &intake, nil
-}
-
-// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
-func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	intake, err := s.fetchSystemIntakeByID(ctx, id)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO: consider making this filtering behavior part of the services layer, or alternately
-	// make this explicitly separate behavior in the data layer that the services layer
-	// opts into
-	if intake.Status == models.SystemIntakeStatusARCHIVED {
-		return nil, &apperrors.ResourceNotFoundError{Err: sql.ErrNoRows, Resource: models.SystemIntake{}}
-	}
-	return intake, nil
 }
 
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
@@ -220,7 +204,27 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 		return models.SystemIntakes{}, err
 	}
 	for k, intake := range intakes {
-		if intake.Status != models.SystemIntakeStatusDRAFT {
+		if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
+			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
+			if fetchErr != nil {
+				return models.SystemIntakes{}, fetchErr
+			}
+			intakes[k].BusinessCaseID = bizCaseID
+		}
+	}
+	return intakes, nil
+}
+
+// FetchSystemIntakesNotArchived queries the DB for all system intakes that are not archived
+func (s *Store) FetchSystemIntakesNotArchived(ctx context.Context) (models.SystemIntakes, error) {
+	intakes := []models.SystemIntake{}
+	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE status != 'ARCHIVED'")
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
+		return models.SystemIntakes{}, err
+	}
+	for k, intake := range intakes {
+		if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
 			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
 			if fetchErr != nil {
 				return models.SystemIntakes{}, fetchErr

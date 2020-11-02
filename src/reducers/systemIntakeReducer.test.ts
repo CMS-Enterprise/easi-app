@@ -14,7 +14,7 @@ import {
 describe('The system intake reducer', () => {
   const mockApiSystemIntake = {
     id: '',
-    status: 'DRAFT',
+    status: 'INTAKE_DRAFT',
     requester: '',
     component: '',
     businessOwner: '',

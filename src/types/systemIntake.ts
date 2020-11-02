@@ -26,13 +26,7 @@ export const closedIntakeStatuses = [
   'NO_GOVERNANCE'
 ];
 
-export const oldIntakeStatuses = [
-  'DRAFT',
-  'SUBMITTED',
-  'ACCEPTED',
-  'APPROVED',
-  'CLOSED'
-];
+export const oldIntakeStatuses = ['ACCEPTED', 'APPROVED', 'CLOSED'];
 
 export const intakeStatuses = [
   ...openIntakeStatuses,
@@ -81,6 +75,9 @@ export type SystemIntakeForm = {
   decidedAt: DateTime | null;
   businessCaseId?: string | null;
   submittedAt: DateTime | null;
+  updatedAt: DateTime | null;
+  createdAt: DateTime | null;
+  archivedAt: DateTime | null;
   lcid: string;
 } & ContractDetailsForm;
 

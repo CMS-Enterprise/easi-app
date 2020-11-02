@@ -1,12 +1,11 @@
 FROM cypress/base:10
 
-COPY package.json /package.json
-
+COPY package.json /
 RUN npm install --dev --silent
 
 COPY cypress /cypress
-COPY cypress.json /cypress.json
-COPY tsconfig.json /tsconfig.json
+COPY cypress.json /
+COPY tsconfig.json /
 COPY src /src
 
 ENTRYPOINT ["/node_modules/.bin/cypress"]
