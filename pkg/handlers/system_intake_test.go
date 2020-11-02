@@ -105,7 +105,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 
 	s.Run("golden path POST passes", func() {
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    "INTAKE_DRAFT",
 			"requester": requester,
 		})
 		s.NoError(err)
@@ -126,7 +126,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		badContext := context.Background()
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    "INTAKE_DRAFT",
 			"requester": requester,
 		})
 		s.NoError(err)
@@ -143,7 +143,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 
 	s.Run("POST fails if a validation error is thrown", func() {
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    "INTAKE_DRAFT",
 			"requester": requester,
 		})
 		s.NoError(err)
@@ -167,7 +167,7 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 
 	s.Run("POST fails if system intake isn't created", func() {
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    "INTAKE_DRAFT",
 			"requester": requester,
 		})
 		s.NoError(err)

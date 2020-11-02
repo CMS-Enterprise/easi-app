@@ -125,7 +125,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		s.Equal(authorizationError, err)
 	})
 
-	s.Run("returns resource conflict error if status is not DRAFT", func() {
+	s.Run("returns resource conflict error if status is not INTAKE_DRAFT", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
 
