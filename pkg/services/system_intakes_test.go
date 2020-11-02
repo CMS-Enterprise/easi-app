@@ -219,7 +219,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		}
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, failAuthorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
 
-		intake, actualError := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusAPPROVED})
+		intake, actualError := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
 
 		s.Error(err)
 		s.Equal(err, actualError)
@@ -233,7 +233,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		}
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, notOKAuthorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
 
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusAPPROVED})
+		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
@@ -252,7 +252,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		}
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, failFetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
 
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusAPPROVED})
+		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
 
 		s.IsType(&apperrors.ExternalAPIError{}, err)
 		s.Equal(0, reviewEmailCount)
@@ -266,7 +266,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		}
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, failFetchUserInfo, sendReviewEmail, updateDraftIntake, true)
 
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusAPPROVED})
+		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
 
 		s.IsType(&apperrors.ExternalAPIError{}, err)
 		s.Equal(0, reviewEmailCount)
@@ -283,7 +283,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		}
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, fetchUserInfo, failSendReviewEmail, updateDraftIntake, true)
 
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusAPPROVED})
+		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
 
 		s.IsType(&apperrors.NotificationError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)

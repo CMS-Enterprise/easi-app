@@ -32,9 +32,9 @@ export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   switch (intakeStatus) {
     case 'INTAKE_SUBMITTED':
       return 'SUBMITTED';
-    case 'ACCEPTED':
-    case 'APPROVED':
-    case 'CLOSED':
+    case 'NEED_BIZ_CASE':
+    case 'LCID_ISSUED':
+    case 'NOT_IT_REQUEST':
       return 'COMPLETED';
     default:
       return 'CANNOT_START';
@@ -48,10 +48,10 @@ export const bizCaseStatus = (
 ) => {
   if (businessCase === businessCaseInitialData) {
     switch (intakeStatus) {
-      case 'ACCEPTED':
+      case 'NEED_BIZ_CASE':
         return 'START';
-      case 'APPROVED':
-      case 'CLOSED':
+      case 'LCID_ISSUED':
+      case 'NOT_IT_REQUEST':
         return 'NOT_NEEDED';
       default:
         return 'CANNOT_START';
