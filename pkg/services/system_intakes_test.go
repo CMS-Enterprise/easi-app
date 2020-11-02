@@ -293,7 +293,7 @@ func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
 		ctx := context.Background()
 		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
 
-		// In this case, saving a DRAFT intake against an existing SUBMITTED intake
+		// In this case, saving a INTAKE_DRAFT intake against an existing SUBMITTED intake
 		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT})
 
 		s.IsType(&apperrors.ResourceConflictError{}, err)
