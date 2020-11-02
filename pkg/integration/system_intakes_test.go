@@ -25,8 +25,9 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	systemIntakeURL.Path = path.Join(systemIntakeURL.Path, "/system_intake")
 
 	body, err := json.Marshal(map[string]string{
-		"status":    "DRAFT",
-		"requester": "TEST REQUESTER",
+		"status":      "DRAFT",
+		"requestType": "NEW",
+		"requester":   "TEST REQUESTER",
 	})
 	s.NoError(err)
 
@@ -64,9 +65,10 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	s.Run("PUT will succeed first time with token", func() {
 		body, err := json.Marshal(map[string]string{
-			"id":        id.String(),
-			"requester": "TEST REQUESTER",
-			"status":    "DRAFT",
+			"id":          id.String(),
+			"requester":   "TEST REQUESTER",
+			"requestType": "NEW",
+			"status":      "DRAFT",
 		})
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
@@ -102,9 +104,10 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	s.Run("PUT will succeed second time with with new data", func() {
 		body, err := json.Marshal(map[string]string{
-			"id":        id.String(),
-			"status":    "DRAFT",
-			"requester": "Test Requester",
+			"id":          id.String(),
+			"status":      "DRAFT",
+			"requestType": "NEW",
+			"requester":   "Test Requester",
 		})
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))

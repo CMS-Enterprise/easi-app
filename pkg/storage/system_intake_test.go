@@ -15,7 +15,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-const insertBasicIntakeSQL = "INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)"
+const insertBasicIntakeSQL = "INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
 const insertRelatedBizCaseSQL = `INSERT INTO business_case (id, eua_user_id, status, requester, system_intake)
 		VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
 
@@ -24,9 +24,10 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 
 	s.Run("create a new system intake", func() {
 		intake := models.SystemIntake{
-			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: "Test requester",
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
 		}
 
 		created, err := s.store.CreateSystemIntake(ctx, &intake)
@@ -73,9 +74,10 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 
 	s.Run("cannot create with invalid status", func() {
 		partialIntake := models.SystemIntake{
-			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    "fakeStatus",
-			Requester: "Test requester",
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      "fakeStatus",
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
 		}
 
 		created, err := s.store.CreateSystemIntake(ctx, &partialIntake)
@@ -91,9 +93,10 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 	s.Run("update an existing system intake", func() {
 		intake, err := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: "Test requester",
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
 		})
 		s.NoError(err)
 		now := time.Now()
@@ -108,18 +111,20 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 	s.Run("EUA ID will not update", func() {
 		originalIntake := models.SystemIntake{
-			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: "Test requester",
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
 		}
 		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
 		s.NoError(err)
 		originalEUA := originalIntake.EUAUserID
 		partialIntake := models.SystemIntake{
-			ID:        originalIntake.ID,
-			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: "Test requester",
+			ID:          originalIntake.ID,
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
 		}
 		partialIntake.EUAUserID = "NEWS"
 
@@ -135,9 +140,10 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("Lifecycle fields only upon update", func() {
 		now := time.Now()
 		originalIntake := models.SystemIntake{
-			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: "Test requester",
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
 
 			// These fields should NOT be written during a create
 			LifecycleID:        null.StringFrom("ABCDEF"),
@@ -178,9 +184,10 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 	s.Run("Update contract details information", func() {
 		originalIntake := models.SystemIntake{
-			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: "Test requester",
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
 
 			ProcessStatus:      null.StringFrom("ABCDEF"),
 			ExistingFunding:    null.BoolFrom(false),
@@ -241,9 +248,10 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 	s.Run("LifecycleID format", func() {
 		originalIntake := models.SystemIntake{
-			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: "Test requester",
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
 		}
 
 		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
@@ -268,9 +276,10 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("exhaust lifecycleID generation", func() {
 		for ix := 0; ix < 10; ix++ {
 			original := models.SystemIntake{
-				EUAUserID: testhelpers.RandomEUAID(),
-				Status:    models.SystemIntakeStatusDRAFT,
-				Requester: fmt.Sprintf("LCID Exhaust %d", ix),
+				EUAUserID:   testhelpers.RandomEUAID(),
+				Status:      models.SystemIntakeStatusDRAFT,
+				RequestType: models.SystemIntakeRequestTypeNEW,
+				Requester:   fmt.Sprintf("LCID Exhaust %d", ix),
 			}
 
 			_, err := s.store.CreateSystemIntake(ctx, &original)
@@ -290,9 +299,10 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		// the 11th attempt should generate an LCID that looks like "2136510" (~"YYddd10"),
 		// and this should violate the db constraint of a 6-digit LCID
 		original := models.SystemIntake{
-			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.SystemIntakeStatusDRAFT,
-			Requester: "LCID Exhaust 10",
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "LCID Exhaust 10",
 		}
 
 		_, err := s.store.CreateSystemIntake(ctx, &original)
