@@ -5,6 +5,7 @@ import './index.scss';
 
 type RadioFieldProps = {
   id: string;
+  className?: string;
   inline?: boolean;
   checked?: boolean;
   label: string;
@@ -18,6 +19,7 @@ type RadioFieldProps = {
 export const RadioField = ({
   checked,
   id,
+  className,
   inline,
   label,
   name,
@@ -25,9 +27,13 @@ export const RadioField = ({
   onChange,
   value
 }: RadioFieldProps) => {
-  const radioClasses = classnames('usa-radio', {
-    'easi-radio--inline': inline
-  });
+  const radioClasses = classnames(
+    'usa-radio',
+    {
+      'easi-radio--inline': inline
+    },
+    className
+  );
 
   const radioLabelClasses = classnames('usa-radio__label', {
     'easi-radio__label--inline': inline
