@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation, withRouter } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -36,6 +37,7 @@ const Banners = () => {
 };
 
 const Home = () => {
+  const { authState } = useOktaAuth();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const userGroupsSet = useSelector(
     (state: AppState) => state.auth.userGroupsSet
@@ -48,8 +50,13 @@ const Home = () => {
         {userGroupsSet && user.isGrtReviewer(userGroups) && (
           <RequestRepository />
         )}
-        {userGroupsSet && !user.isGrtReviewer(userGroups) && <Banners />}
-        <WelcomeText />
+        {userGroupsSet && !user.isGrtReviewer(userGroups) && (
+          <>
+            <Banners />
+            <WelcomeText />
+          </>
+        )}
+        {!authState.isAuthenticated && <WelcomeText />}
       </MainContent>
       <Footer />
     </PageWrapper>
