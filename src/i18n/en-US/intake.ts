@@ -40,6 +40,31 @@ const intake = {
     createdAt: 'Created At',
     decidedAt: 'Decided At',
     archivedAt: 'Archived At'
+  },
+  requestTypeForm: {
+    heading: 'Make a System Request',
+    subheading: 'What is this request for?',
+    info:
+      'If you are unsure or do not see an option for your use-case, mark "I\'m not sure" and someone from the Governance Team will assist you',
+    fields: {
+      addNewSystem: 'Add a new system',
+      majorChanges: 'Major changes or upgrades to an existing system',
+      recompete:
+        'Re-compete a contract without any changes to systems or services',
+      shutdown: 'Shutdown a system'
+    },
+    helpAndGuidance: {
+      majorChanges: {
+        label: 'What is a major change?',
+        para: 'A major change could be any of the following:',
+        list: [
+          'Moving a system from a physical data center to the cloud',
+          'Software platform changes',
+          'New system integrations/interconnections',
+          'Changes in Major Function Alignments or the Data Categories a system supports'
+        ]
+      }
+    }
   }
 };
 
