@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -24,6 +24,7 @@ import { lifecycleIdSchema } from 'validations/actionSchema';
 const IssueLifecycleId = () => {
   const { systemId } = useParams();
   const dispatch = useDispatch();
+  const history = useHistory();
   const { t } = useTranslation('action');
 
   const actionType: ActionType = 'ISSUE_LCID';
@@ -38,7 +39,7 @@ const IssueLifecycleId = () => {
     expirationDateYear: ''
   };
 
-  const dispatchSave = (values: SubmitLifecycleIdForm) => {
+  const onSubmit = (values: SubmitLifecycleIdForm) => {
     const {
       feedback,
       expirationDateMonth,
@@ -62,12 +63,14 @@ const IssueLifecycleId = () => {
       data: lcidData
     };
     dispatch(issueLifecycleIdForSystemIntake(lcidPayload));
+
+    history.push(`/governance-review-team/${systemId}/intake-request`);
   };
 
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={dispatchSave}
+      onSubmit={onSubmit}
       validationSchema={lifecycleIdSchema}
       validateOnBlur={false}
       validateOnChange={false}

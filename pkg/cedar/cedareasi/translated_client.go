@@ -48,10 +48,18 @@ func (c TranslatedClient) FetchSystems(ctx context.Context) (models.SystemShorts
 
 	systems := make([]models.SystemShort, len(resp.Payload.Systems))
 	for index, system := range resp.Payload.Systems {
-		systems[index] = models.SystemShort{
-			ID:      *system.ID,
-			Name:    *system.SystemName,
-			Acronym: system.SystemAcronym,
+		if system.ID != nil {
+			// this ensures we always have a name populated for display,
+			// even if it is just a restatement of the acronym
+			name := system.SystemAcronym
+			if system.SystemName != nil {
+				name = *system.SystemName
+			}
+			systems[index] = models.SystemShort{
+				ID:      *system.ID,
+				Name:    name,
+				Acronym: system.SystemAcronym,
+			}
 		}
 	}
 	return systems, nil
