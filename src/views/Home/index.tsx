@@ -1,14 +1,7 @@
 import React, { useEffect } from 'react';
-import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  Link,
-  RouteComponentProps,
-  useLocation,
-  withRouter
-} from 'react-router-dom';
+import { RouteComponentProps, useLocation, withRouter } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -22,12 +15,13 @@ import { Flags } from 'types/flags';
 import { fetchBusinessCases, fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
+import WelcomeText from './WelcomeText';
+
 import './index.scss';
 
 type HomeProps = RouteComponentProps;
 
 const Home = ({ history }: HomeProps) => {
-  const { t } = useTranslation();
   const { authState } = useOktaAuth();
   const dispatch = useDispatch();
   const location = useLocation<any>();
@@ -162,48 +156,7 @@ const Home = ({ history }: HomeProps) => {
           {getSystemIntakeBanners(flags)}
           {getBusinessCaseBanners(flags)}
         </div>
-        <div className="tablet:grid-col-9">
-          <h1 className="margin-top-6">{t('home:title')}</h1>
-          <p className="line-height-body-5 font-body-lg text-light">
-            {t('home:subtitle')}
-          </p>
-          <div className="easi-home__info-wrapper">
-            <div className="easi-home__info-icon">
-              <i className="fa fa-info" />
-            </div>
-            <p className="line-height-body-5">
-              <Trans i18nKey="home:easiInfo">
-                zeroIndex
-                <a
-                  href="https://share.cms.gov/Office/OIT/CIOCorner/Lists/Intake/NewForm.aspx"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  localeLink
-                </a>
-              </Trans>
-            </p>
-          </div>
-          {authState.isAuthenticated ? (
-            <UswdsLink
-              className="usa-button"
-              asCustom={Link}
-              variant="unstyled"
-              to="/governance-overview"
-            >
-              {t('home:startNow')}
-            </UswdsLink>
-          ) : (
-            <UswdsLink
-              className="usa-button"
-              asCustom={Link}
-              variant="unstyled"
-              to="/signin"
-            >
-              {t('home:signIn')}
-            </UswdsLink>
-          )}
-        </div>
+        <WelcomeText />
       </MainContent>
       <Footer />
     </PageWrapper>
