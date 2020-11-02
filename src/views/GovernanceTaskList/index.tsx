@@ -249,7 +249,7 @@ const GovernanceTaskList = () => {
               </TaskListItem>
               <TaskListItem
                 heading="Prepare your Business Case"
-                description="Draft different solutions and the corresponding costs involved."
+                description="Make a draft about the various solutions you’ve thought of and costs involved. After you’ve completed your draft business case you will likely attend the GRT meeting."
                 status={businessCaseStatus}
               >
                 {businessCaseLink}
