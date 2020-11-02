@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 #
 # Generates self-signed TLS certificate and key
+#
+# Follows Mozilla's "modern" server side TLS recommendations
+# https://wiki.mozilla.org/Security/Server_Side_TLS#Modern_compatibility
+# https://ssl-config.mozilla.org/guidelines/5.6.json
 
 set -u
 
