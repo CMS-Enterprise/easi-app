@@ -10,8 +10,8 @@ import (
 type ActionType string
 
 const (
-	// ActionTypeSUBMIT captures enum value SUBMIT
-	ActionTypeSUBMIT ActionType = "SUBMIT"
+	// ActionTypeSUBMITINTAKE captures enum value SUBMIT_INTAKE
+	ActionTypeSUBMITINTAKE ActionType = "SUBMIT_INTAKE"
 	// ActionTypeNOTITREQUEST captures enum value NOT_IT_REQUEST
 	ActionTypeNOTITREQUEST ActionType = "NOT_IT_REQUEST"
 	// ActionTypeNEEDBIZCASE captures enum value NEED_BIZ_CASE
