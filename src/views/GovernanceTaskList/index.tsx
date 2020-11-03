@@ -70,7 +70,10 @@ const intakeLinkComponent = (
 };
 
 const intakeFeedbackBannerComponent = (systemIntakeStatus: string) => {
-  if (systemIntakeStatus === 'CLOSED' || systemIntakeStatus === 'APPROVED') {
+  if (
+    systemIntakeStatus === 'NOT_IT_REQUEST' ||
+    systemIntakeStatus === 'LCID_ISSUED'
+  ) {
     return (
       <Alert type="info" slim>
         Please check your email for feedback and next steps.
@@ -257,7 +260,7 @@ const GovernanceTaskList = () => {
               </TaskListItem>
               <TaskListItem
                 heading="Prepare your Business Case"
-                description="Draft different solutions and the corresponding costs involved."
+                description="Make a draft about the various solutions you’ve thought of and costs involved. After you’ve completed your draft business case you will likely attend the GRT meeting."
                 status={businessCaseStatus}
               >
                 {businessCaseLink}

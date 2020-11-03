@@ -13,8 +13,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// NewCreateSystemIntakeAction is a service to create and execute a system intake action
-func NewCreateSystemIntakeAction(
+// NewTakeAction is a service to create and execute an action
+func NewTakeAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
 	submit func(context.Context, *models.SystemIntake) error,
 	reviewNotITRequest func(context.Context, *models.SystemIntake, *models.Action) error,
@@ -51,7 +51,7 @@ func NewCreateSystemIntakeAction(
 			return issueLCID(ctx, intake, action)
 		default:
 			return &apperrors.ResourceConflictError{
-				Err:        errors.New("invalid system intake action type"),
+				Err:        errors.New("invalid action type"),
 				Resource:   intake,
 				ResourceID: intake.ID.String(),
 			}
@@ -79,18 +79,9 @@ func NewSubmitSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
-		if intake.Status != models.SystemIntakeStatusDRAFT {
-			err := &apperrors.ResourceConflictError{
-				Err:        errors.New("intake is not in DRAFT state"),
-				ResourceID: intake.ID.String(),
-				Resource:   intake,
-			}
-			return err
-		}
-
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = models.SystemIntakeStatusSUBMITTED
+		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 
 		if intake.AlfabetID.Valid {
 			err := &apperrors.ResourceConflictError{
@@ -165,9 +156,9 @@ func NewSubmitSystemIntake(
 	}
 }
 
-// NewGRTReviewSystemIntake returns a function that
-// reviews a system intake
-func NewGRTReviewSystemIntake(
+// NewTakeActionUpdateStatus returns a function that
+// updates the status of a request
+func NewTakeActionUpdateStatus(
 	config Config,
 	newStatus models.SystemIntakeStatus,
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
@@ -183,15 +174,6 @@ func NewGRTReviewSystemIntake(
 		}
 		if !ok {
 			return &apperrors.UnauthorizedError{}
-		}
-
-		if intake.Status != models.SystemIntakeStatusSUBMITTED {
-			err := &apperrors.ResourceConflictError{
-				Err:        errors.New("intake is not in SUBMITTED state"),
-				ResourceID: intake.ID.String(),
-				Resource:   intake,
-			}
-			return err
 		}
 
 		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID)
@@ -237,10 +219,6 @@ func NewGRTReviewSystemIntake(
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
 		intake.Status = newStatus
-		intake.GrtReviewEmailBody = null.StringFrom(action.Feedback)
-		intake.RequesterEmailAddress = null.StringFrom(requesterInfo.Email)
-		intake.DecidedAt = &updatedTime
-		intake.UpdatedAt = &updatedTime
 
 		intake, err = update(ctx, intake)
 		if err != nil {

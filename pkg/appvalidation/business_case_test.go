@@ -45,7 +45,7 @@ func (s AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
 func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 	s.Run("returns empty strings when intake is submitted", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
-		submittedIntake.Status = models.SystemIntakeStatusSUBMITTED
+		submittedIntake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		k, _ := checkSystemIntakeSubmitted(&submittedIntake)
 		s.Equal("", k)
 	})
@@ -61,7 +61,7 @@ func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 func (s AppValidateTestSuite) TestBusinessCaseForCreation() {
 	s.Run("golden path", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
-		submittedIntake.Status = models.SystemIntakeStatusSUBMITTED
+		submittedIntake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		businessCase := models.BusinessCase{
 			SystemIntakeID:     submittedIntake.ID,
 			LifecycleCostLines: nil,
