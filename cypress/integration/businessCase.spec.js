@@ -2,6 +2,7 @@ describe('The Business Case Form', () => {
   let intakeId;
   const systemIntake = {
     status: 'NEED_BIZ_CASE',
+    requestType: 'NEW',
     requester: 'John Requester',
     component: 'Center for Consumer Information and Insurance Oversight',
     businessOwner: 'John BusinessOwner',
