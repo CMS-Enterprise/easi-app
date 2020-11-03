@@ -9,9 +9,7 @@ import (
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -21,7 +19,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
-	authorize := func(context context.Context, intake *models.BusinessCase) (bool, error) { return true, nil }
+	authorize := func(context context.Context) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches Business Case by ID without an error", func() {
 		fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
@@ -54,7 +52,7 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 	fakeEuaID := "FAKE"
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
-	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
+	authorize := func(context context.Context) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches Business Cases by EUA ID without an error", func() {
 		fetch := func(ctx context.Context, euaID string) (models.BusinessCases, error) {
@@ -79,46 +77,6 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(models.BusinessCases{}, businessCases)
-	})
-}
-
-func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
-	logger := zap.NewNop()
-	authorizeCreateBusinessCase := NewAuthorizeCreateBusinessCase(logger)
-
-	s.Run("No EUA ID fails auth", func() {
-		ctx := context.Background()
-		ok, err := authorizeCreateBusinessCase(ctx, &models.SystemIntake{})
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Mismatched EUA ID fails auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
-
-		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeCreateBusinessCase(ctx, &intake)
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Matched EUA ID passes auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
-		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeCreateBusinessCase(ctx, &intake)
-
-		s.True(ok)
-		s.NoError(err)
 	})
 }
 
@@ -208,46 +166,6 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	//	s.IsType(&apperrors.ValidationError{}, err)
 	//	s.Equal(&models.BusinessCase{}, businessCase)
 	//})
-}
-
-func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
-	logger := zap.NewNop()
-	authorizeUpdateBusinessCase := NewAuthorizeUpdateBusinessCase(logger)
-
-	s.Run("No EUA ID fails auth", func() {
-		ctx := context.Background()
-		ok, err := authorizeUpdateBusinessCase(ctx, &models.BusinessCase{})
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Mismatched EUA ID fails auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
-
-		businessCase := models.BusinessCase{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeUpdateBusinessCase(ctx, &businessCase)
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Matched EUA ID passes auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
-		businessCase := models.BusinessCase{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeUpdateBusinessCase(ctx, &businessCase)
-
-		s.True(ok)
-		s.NoError(err)
-	})
 }
 
 func (s ServicesTestSuite) TestBusinessCaseUpdater() {

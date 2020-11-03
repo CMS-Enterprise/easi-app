@@ -193,37 +193,6 @@ func NewUpdateDraftSystemIntake(
 	}
 }
 
-// NewAuthorizeArchiveSystemIntake returns a function
-// that authorizes a user for archiving a system intake
-func NewAuthorizeArchiveSystemIntake(logger *zap.Logger) func(
-	c context.Context,
-	i *models.SystemIntake,
-) (bool, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowEASi() {
-			logger.Error("unable to get EUA ID from context")
-			return false, &apperrors.ContextError{
-				Operation: apperrors.ContextGet,
-				Object:    "EUA ID",
-			}
-		}
-
-		// If intake doesn't exist or owned by user, authorize
-		if intake == nil || principal.ID() == intake.EUAUserID {
-			logger.With(zap.Bool("Authorized", true)).
-				With(zap.String("Operation", "UpdateSystemIntake")).
-				Info("user authorized to save system intake")
-			return true, nil
-		}
-		// Default to failure to authorize and create a quick audit log
-		logger.With(zap.Bool("Authorized", false)).
-			With(zap.String("Operation", "UpdateSystemIntake")).
-			Info("unauthorized attempt to save system intake")
-		return false, nil
-	}
-}
-
 // NewArchiveSystemIntake is a service to archive a system intake
 func NewArchiveSystemIntake(
 	config Config,
@@ -281,18 +250,11 @@ func NewArchiveSystemIntake(
 	}
 }
 
-// NewAuthorizeFetchSystemIntakeByID is a service to authorize FetchSystemIntakeByID
-func NewAuthorizeFetchSystemIntakeByID() func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-		return true, nil
-	}
-}
-
 // NewFetchSystemIntakeByID is a service to fetch the system intake by intake id
 func NewFetchSystemIntakeByID(
 	config Config,
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
-	authorize func(c context.Context, i *models.SystemIntake) (bool, error),
+	authorize func(context.Context) (bool, error),
 ) func(c context.Context, u uuid.UUID) (*models.SystemIntake, error) {
 	return func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		logger := appcontext.ZLogger(ctx)
@@ -305,7 +267,7 @@ func NewFetchSystemIntakeByID(
 				Operation: apperrors.QueryFetch,
 			}
 		}
-		ok, err := authorize(ctx, intake)
+		ok, err := authorize(ctx)
 		if err != nil {
 			logger.Error("failed to authorize fetch system intake")
 			return &models.SystemIntake{}, err
