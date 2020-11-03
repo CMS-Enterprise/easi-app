@@ -31,6 +31,10 @@ const (
 	BusinessCaseStatusREJECTED BusinessCaseStatus = "REJECTED"
 	// BusinessCaseStatusARCHIVED captures enum value "ARCHIVED"
 	BusinessCaseStatusARCHIVED BusinessCaseStatus = "ARCHIVED"
+	// BusinessCaseStatusOPEN captures enum value "OPEN"
+	BusinessCaseStatusOPEN BusinessCaseStatus = "OPEN"
+	// BusinessCaseStatusCLOSED captures enum value "CLOSED"
+	BusinessCaseStatusCLOSED BusinessCaseStatus = "CLOSED"
 
 	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
