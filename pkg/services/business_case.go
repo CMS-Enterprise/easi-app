@@ -79,6 +79,7 @@ func NewCreateBusinessCase(
 		businessCase.BusinessOwner = intake.BusinessOwner
 		businessCase.ProjectName = intake.ProjectName
 		businessCase.BusinessNeed = intake.BusinessNeed
+		businessCase.Status = models.BusinessCaseStatusOPEN
 
 		businessCase, err = create(ctx, businessCase)
 		if err != nil {
