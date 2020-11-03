@@ -43,7 +43,7 @@ describe('The system intake data modifiers', () => {
         },
         contractStartDate: '',
         contractEndDate: '',
-        status: 'DRAFT',
+        status: 'INTAKE_DRAFT',
         updatedAt: null,
         submittedAt: null,
         createdAt: null,

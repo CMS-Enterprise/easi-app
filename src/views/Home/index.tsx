@@ -49,7 +49,7 @@ const Home = ({ history }: HomeProps) => {
     const rootPath = flags.taskListLite ? '/governance-task-list' : '/system';
     return systemIntakes.map((intake: SystemIntakeForm) => {
       switch (intake.status) {
-        case 'DRAFT':
+        case 'INTAKE_DRAFT':
           return (
             <ActionBanner
               key={intake.id}
@@ -66,7 +66,7 @@ const Home = ({ history }: HomeProps) => {
               data-intakeid={intake.id}
             />
           );
-        case 'SUBMITTED':
+        case 'INTAKE_SUBMITTED':
           if (intake.businessCaseId !== null) {
             return null;
           }
