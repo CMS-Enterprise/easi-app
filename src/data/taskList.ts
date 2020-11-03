@@ -46,6 +46,16 @@ export const bizCaseStatus = (
   businessCase: BusinessCaseModel
   // eslint-disable-next-line consistent-return
 ) => {
+  // This is for our NEW and CURRENT intake statuses
+  // until all the old ones are deprecated
+  switch (intakeStatus) {
+    case 'BIZ_CASE_DRAFT_SUBMITTED':
+      return 'BIZ_CASE_DRAFT_SUBMITTED';
+    default:
+      break;
+  }
+
+  // START: Delete this when old statuses are deprecated
   if (businessCase === businessCaseInitialData) {
     switch (intakeStatus) {
       case 'NEED_BIZ_CASE':
@@ -65,21 +75,5 @@ export const bizCaseStatus = (
     default:
       return 'CANNOT_START';
   }
-};
-
-// chooseBusinessCasePath won't return a link if the business case
-// status is NOT_NEEDED or CANNOT_START
-export const chooseBusinessCasePath = (
-  businessCaseStatus: string,
-  bizCaseId?: string
-) => {
-  switch (businessCaseStatus) {
-    case 'START':
-      return '/business/new/general-request-info';
-    case 'CONTINUE':
-    case 'COMPLETED':
-      return `/business/${bizCaseId}/general-request-info`;
-    default:
-      return null;
-  }
+  // END: Delete this when old statuses are deprecated
 };
