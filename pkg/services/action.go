@@ -81,7 +81,7 @@ func NewSubmitSystemIntake(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = models.SystemIntakeStatusSUBMITTED
+		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 
 		if intake.AlfabetID.Valid {
 			err := &apperrors.ResourceConflictError{
