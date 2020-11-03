@@ -56,6 +56,18 @@ const RequestRepository = () => {
       {
         Header: t('requestRepository.table.requestType'),
         accessor: 'type'
+      },
+      {
+        Header: t('intake:fields.status'),
+        accessor: 'status',
+        Cell: ({ row, value }: { row: any; value: string }) => {
+          if (value === 'LCID_ISSUED') {
+            // if status is LCID_ISSUED, display LCID
+            return t(`intake:statusMap.${value}`) + row.original.lcid;
+          }
+          // if not display translation for status
+          return t(`intake:statusMap.${value}`);
+        }
       }
     ],
     [t]
