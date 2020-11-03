@@ -22,6 +22,7 @@ import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
 import RequestRepository from 'views/RequestRepository';
+import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TermsAndConditions from 'views/TermsAndConditions';
@@ -79,6 +80,11 @@ const AppRoutes = () => {
         exact
         path="/governance-task-list/:systemId/prepare-for-grb"
         component={PrepareForGRB}
+      />
+      <SecureRoute
+        exact
+        path="/system/request-type"
+        component={RequestTypeForm}
       />
       <SecureRoute
         exact

@@ -26,12 +26,9 @@ export const closedIntakeStatuses = [
   'NO_GOVERNANCE'
 ];
 
-export const oldIntakeStatuses = ['ACCEPTED', 'APPROVED', 'CLOSED'];
-
 export const intakeStatuses = [
   ...openIntakeStatuses,
-  ...closedIntakeStatuses,
-  ...oldIntakeStatuses
+  ...closedIntakeStatuses
 ] as const;
 
 // TODO: Remove old intake statuses once they're deprecated
