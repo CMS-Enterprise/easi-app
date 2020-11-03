@@ -84,6 +84,7 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
       id: systemIntake.id
     }),
     status: systemIntake.status,
+    requestType: 'NEW',
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,
     businessOwner: systemIntake.businessOwner.name,
