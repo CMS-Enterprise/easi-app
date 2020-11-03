@@ -34,7 +34,7 @@ func (s ServicesTestSuite) TestNewTakeAction() {
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
-			ActionType: models.ActionTypeSUBMIT,
+			ActionType: models.ActionTypeSUBMITINTAKE,
 		}
 		err := createAction(ctx, &action)
 		s.IsType(&apperrors.QueryError{}, err)
@@ -49,7 +49,7 @@ func (s ServicesTestSuite) TestNewTakeAction() {
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
-			ActionType: models.ActionTypeSUBMIT,
+			ActionType: models.ActionTypeSUBMITINTAKE,
 		}
 		err := createAction(ctx, &action)
 		s.Equal(submitError, err)

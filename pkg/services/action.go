@@ -35,7 +35,7 @@ func NewTakeAction(
 		}
 
 		switch action.ActionType {
-		case models.ActionTypeSUBMIT:
+		case models.ActionTypeSUBMITINTAKE:
 			return submit(ctx, intake)
 		case models.ActionTypeNOTITREQUEST:
 			return reviewNotITRequest(ctx, intake, action)
@@ -124,7 +124,7 @@ func NewSubmitSystemIntake(
 
 		action := models.Action{
 			IntakeID:       &intake.ID,
-			ActionType:     models.ActionTypeSUBMIT,
+			ActionType:     models.ActionTypeSUBMITINTAKE,
 			ActorName:      userInfo.CommonName,
 			ActorEmail:     userInfo.Email,
 			ActorEUAUserID: userInfo.EuaUserID,
