@@ -19,7 +19,7 @@ describe('The GRT intake review view', () => {
   const mockSystemIntake = {
     id: '53d762ea-0bc8-4af0-b24d-0b5844bacea5',
     euaUserID: 'ABCD',
-    status: 'SUBMITTED',
+    status: 'INTAKE_SUBMITTED',
     requester: {
       name: 'Jane Doe',
       component: 'OIT',

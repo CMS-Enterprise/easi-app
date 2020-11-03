@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
+func (s ServicesTestSuite) TestNewTakeAction() {
 	ctx := context.Background()
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{ID: id}, nil
@@ -30,7 +30,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("error")
 		}
-		createAction := NewCreateSystemIntakeAction(failFetch, submit, review, review, review, review, review, review)
+		createAction := NewTakeAction(failFetch, submit, review, review, review, review, review, review)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -45,7 +45,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 		failSubmit := func(ctx context.Context, intake *models.SystemIntake) error {
 			return submitError
 		}
-		createAction := NewCreateSystemIntakeAction(fetch, failSubmit, review, review, review, review, review, review)
+		createAction := NewTakeAction(fetch, failSubmit, review, review, review, review, review, review)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -56,7 +56,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 	})
 
 	s.Run("returns ResourceConflictError if invalid action type", func() {
-		createAction := NewCreateSystemIntakeAction(fetch, submit, review, review, review, review, review, review)
+		createAction := NewTakeAction(fetch, submit, review, review, review, review, review, review)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -99,7 +99,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	}
 
 	s.Run("golden path submit intake", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
 		s.Equal(0, submitEmailCount)
 
@@ -114,7 +114,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 
 	s.Run("returns error from authorization if authorization fails", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		authorizationError := errors.New("authorization failed")
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, authorizationError
@@ -125,18 +125,8 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		s.Equal(authorizationError, err)
 	})
 
-	s.Run("returns resource conflict error if status is not DRAFT", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
-
-		err := submitSystemIntake(ctx, &intake)
-		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(0, submitEmailCount)
-
-	})
-
 	s.Run("returns unauthorized error if authorization denied", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
@@ -147,7 +137,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 
 	s.Run("returns error if fails to fetch user info", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		fetchUserInfoError := errors.New("error")
 		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
 			return nil, fetchUserInfoError
@@ -159,7 +149,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 
 	s.Run("returns error if fetches bad user info", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
 			return &models.UserInfo{}, nil
 		}
@@ -170,7 +160,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 
 	s.Run("returns error if fails to save action", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		failCreateAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
 			return nil, errors.New("error")
 		}
@@ -181,7 +171,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 
 	s.Run("returns error when validation fails", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		failValidationSubmit := func(_ context.Context, intake *models.SystemIntake) (string, error) {
 			return "", &apperrors.ValidationError{
 				Err:     errors.New("validation failed on these fields: ID"),
@@ -197,7 +187,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 
 	s.Run("returns error when submission fails", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		failValidationSubmit := func(_ context.Context, intake *models.SystemIntake) (string, error) {
 			return "", &apperrors.ExternalAPIError{
 				Err:       errors.New("CEDAR return result: unexpected failure"),
@@ -216,7 +206,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 
 	s.Run("returns error when intake has already been submitted", func() {
 		alreadySubmittedIntake := models.SystemIntake{
-			Status:    models.SystemIntakeStatusDRAFT,
+			Status:    models.SystemIntakeStatusINTAKEDRAFT,
 			AlfabetID: null.StringFrom("394-141-0"),
 		}
 		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
@@ -227,7 +217,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 
 	s.Run("returns query error if update fails", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		failUpdate := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("update error")
 		}
@@ -238,7 +228,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 }
 
-func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
+func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	logger := zap.NewNop()
 
 	requester := "Test Requester"
@@ -275,7 +265,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 
 	s.Run("golden path review system intake", func() {
 		ctx := context.Background()
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -284,7 +274,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 			fetchUserInfo,
 			sendReviewEmail,
 		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED}
+		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
 		err := reviewSystemIntake(ctx, intake, action)
 
@@ -298,7 +288,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		failAuthorize := func(ctx context.Context) (bool, error) {
 			return false, err
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -307,7 +297,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 			fetchUserInfo,
 			sendReviewEmail,
 		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED}
+		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
 		actualError := reviewSystemIntake(ctx, intake, action)
 
@@ -320,7 +310,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		notOKAuthorize := func(ctx context.Context) (bool, error) {
 			return false, nil
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -329,31 +319,11 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 			fetchUserInfo,
 			sendReviewEmail,
 		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED}
+		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
 		err := reviewSystemIntake(ctx, intake, action)
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
-	})
-
-	s.Run("returns error when intake is not SUBMITTED", func() {
-		reviewEmailCount = 0
-		ctx := context.Background()
-		reviewSystemIntake := NewGRTReviewSystemIntake(
-			serviceConfig,
-			models.SystemIntakeStatusNOTITREQUEST,
-			save,
-			authorize,
-			createAction,
-			fetchUserInfo,
-			sendReviewEmail,
-		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusDRAFT}
-		action := &models.Action{}
-		err := reviewSystemIntake(ctx, intake, action)
-
-		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(0, reviewEmailCount)
 	})
 
 	s.Run("returns error if fails to save action", func() {
@@ -361,7 +331,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		failCreateAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
 			return nil, errors.New("error")
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -370,7 +340,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 			fetchUserInfo,
 			sendReviewEmail,
 		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED}
+		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
 		err := reviewSystemIntake(ctx, intake, action)
 
@@ -378,6 +348,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 	})
 
 	s.Run("returns error from fetching requester email", func() {
+		reviewEmailCount = 0
 		ctx := context.Background()
 		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return nil, &apperrors.ExternalAPIError{
@@ -388,7 +359,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 				Source:    "CEDAR LDAP",
 			}
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -397,7 +368,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 			failFetchUserInfo,
 			sendReviewEmail,
 		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED}
+		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
 		err := reviewSystemIntake(ctx, intake, action)
 
@@ -410,7 +381,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return &models.UserInfo{}, nil
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -419,7 +390,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 			failFetchUserInfo,
 			sendReviewEmail,
 		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED}
+		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
 		err := reviewSystemIntake(ctx, intake, action)
 
@@ -435,7 +406,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 				DestinationType: apperrors.DestinationTypeEmail,
 			}
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -444,7 +415,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 			fetchUserInfo,
 			failSendReviewEmail,
 		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusSUBMITTED}
+		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
 		err := reviewSystemIntake(ctx, intake, action)
 

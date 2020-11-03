@@ -130,7 +130,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	euaID := testhelpers.RandomEUAID()
 	intake := &models.SystemIntake{
 		EUAUserID:   euaID,
-		Status:      models.SystemIntakeStatusSUBMITTED,
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	}
 	intake, err := s.store.CreateSystemIntake(ctx, intake)
@@ -259,7 +259,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	euaID := testhelpers.RandomEUAID()
 	intake := &models.SystemIntake{
 		EUAUserID:   euaID,
-		Status:      models.SystemIntakeStatusSUBMITTED,
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
 		RequestType: models.SystemIntakeRequestTypeNEW,
 	}
 	_, err := s.store.CreateSystemIntake(ctx, intake)

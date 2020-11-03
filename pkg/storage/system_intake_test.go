@@ -25,7 +25,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 	s.Run("create a new system intake", func() {
 		intake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAID(),
-			Status:      models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
@@ -43,7 +43,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 
 	s.Run("cannot save without EUA ID", func() {
 		partialIntake := models.SystemIntake{
-			Status:      models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 		}
 
@@ -62,7 +62,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 	for _, tc := range euaTests {
 		s.Run(fmt.Sprintf("cannot save with invalid EUA ID: %s", tc), func() {
 			partialIntake := models.SystemIntake{
-				Status:      models.SystemIntakeStatusDRAFT,
+				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 			}
 			partialIntake.EUAUserID = tc
@@ -96,7 +96,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("update an existing system intake", func() {
 		intake, err := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAID(),
-			Status:      models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		})
@@ -114,7 +114,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("EUA ID will not update", func() {
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAID(),
-			Status:      models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
@@ -124,7 +124,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		partialIntake := models.SystemIntake{
 			ID:          originalIntake.ID,
 			EUAUserID:   testhelpers.RandomEUAID(),
-			Status:      models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
@@ -143,7 +143,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		now := time.Now()
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAID(),
-			Status:      models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 
@@ -187,7 +187,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("Update contract details information", func() {
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAID(),
-			Status:      models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 
@@ -251,7 +251,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("LifecycleID format", func() {
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAID(),
-			Status:      models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
@@ -279,7 +279,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		for ix := 0; ix < 10; ix++ {
 			original := models.SystemIntake{
 				EUAUserID:   testhelpers.RandomEUAID(),
-				Status:      models.SystemIntakeStatusDRAFT,
+				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Requester:   fmt.Sprintf("LCID Exhaust %d", ix),
 			}
@@ -302,7 +302,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		// and this should violate the db constraint of a 6-digit LCID
 		original := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAID(),
-			Status:      models.SystemIntakeStatusDRAFT,
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "LCID Exhaust 10",
 		}
@@ -390,7 +390,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 	s.Run("fetches biz case id if exists and intake is past draft status", func() {
 		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
-		intake.Status = models.SystemIntakeStatusAPPROVED
+		intake.Status = models.SystemIntakeStatusLCIDISSUED
 		bizCase := testhelpers.NewBusinessCase()
 		bizCase.SystemIntakeID = id
 
@@ -436,7 +436,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake := testhelpers.NewSystemIntake()
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
-		intake2.Status = models.SystemIntakeStatusARCHIVED
+		intake2.Status = models.SystemIntakeStatusWITHDRAWN
 		tx := s.db.MustBegin()
 		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
 		s.NoError(err)
@@ -465,8 +465,8 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		intake2 := testhelpers.NewSystemIntake()
 		id := intake.ID
 		intake2.EUAUserID = intake.EUAUserID
-		intake.Status = models.SystemIntakeStatusAPPROVED
-		intake2.Status = models.SystemIntakeStatusSUBMITTED
+		intake.Status = models.SystemIntakeStatusLCIDISSUED
+		intake2.Status = models.SystemIntakeStatusINTAKESUBMITTED
 
 		bizCase := testhelpers.NewBusinessCase()
 		bizCase.SystemIntakeID = id
@@ -519,14 +519,14 @@ func (s StoreTestSuite) TestFetchSystemIntakesNotArchived() {
 			expected[result.ID.String()] = false
 		}
 
-		// seed the db with ARCHIVED intakes that should NOT be returned
+		// seed the db with WITHDRAWN intakes that should NOT be returned
 		unexpected := map[string]bool{}
 		for ix := 0; ix < 5; ix++ {
 			intake := testhelpers.NewSystemIntake()
 			result, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
 
-			result.Status = models.SystemIntakeStatusARCHIVED
+			result.Status = models.SystemIntakeStatusWITHDRAWN
 			_, err = s.store.UpdateSystemIntake(ctx, result)
 			s.NoError(err)
 
@@ -540,11 +540,11 @@ func (s StoreTestSuite) TestFetchSystemIntakesNotArchived() {
 			id := intake.ID.String()
 			expected[id] = true
 
-			// failure if we got back one of the ARCHIVED intakes
+			// failure if we got back one of the WITHDRAWN intakes
 			s.False(unexpected[id], "unexpected intake", id)
 		}
 
-		// failure if we did not see all the expected seeded not-ARCHIVED intakes
+		// failure if we did not see all the expected seeded not-WITHDRAWN intakes
 		for id, found := range expected {
 			s.True(found, "did not receive expected intake", id)
 		}
