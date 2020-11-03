@@ -103,9 +103,9 @@ func NewUpdateSystemIntake(
 		if existingIntake.Status == models.SystemIntakeStatusINTAKEDRAFT && intake.Status == models.SystemIntakeStatusINTAKEDRAFT {
 			return updateDraftIntake(ctx, existingIntake, intake)
 		} else if existingIntake.Status == models.SystemIntakeStatusINTAKESUBMITTED &&
-			(intake.Status == models.SystemIntakeStatusAPPROVED ||
-				intake.Status == models.SystemIntakeStatusACCEPTED ||
-				intake.Status == models.SystemIntakeStatusCLOSED) && canDecideIntake {
+			(intake.Status == models.SystemIntakeStatusLCIDISSUED ||
+				intake.Status == models.SystemIntakeStatusNEEDBIZCASE ||
+				intake.Status == models.SystemIntakeStatusNOTITREQUEST) && canDecideIntake {
 
 			ok, err := authorize(ctx, existingIntake)
 			if err != nil {
@@ -260,7 +260,7 @@ func NewArchiveSystemIntake(
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = models.SystemIntakeStatusARCHIVED
+		intake.Status = models.SystemIntakeStatusWITHDRAWN
 		intake.ArchivedAt = &updatedTime
 
 		intake, err = update(ctx, intake)

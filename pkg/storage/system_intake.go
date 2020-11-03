@@ -195,7 +195,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'ARCHIVED'", euaID)
+	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'WITHDRAWN'", euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
@@ -218,7 +218,7 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 // FetchSystemIntakesNotArchived queries the DB for all system intakes that are not archived
 func (s *Store) FetchSystemIntakesNotArchived(ctx context.Context) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE status != 'ARCHIVED'")
+	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE status != 'WITHDRAWN'")
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return models.SystemIntakes{}, err
