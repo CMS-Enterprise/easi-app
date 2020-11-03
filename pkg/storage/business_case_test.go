@@ -61,13 +61,13 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 
 	s.Run("golden path to fetch business cases", func() {
 		intake := testhelpers.NewSystemIntake()
-		intake.Status = models.SystemIntakeStatusSUBMITTED
+		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
-		intake2.Status = models.SystemIntakeStatusSUBMITTED
+		intake2.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		_, err = s.store.CreateSystemIntake(ctx, &intake2)
 		s.NoError(err)
 
@@ -103,16 +103,16 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 
 	s.Run("does not fetch archived business case", func() {
 		intake := testhelpers.NewSystemIntake()
-		intake.Status = models.SystemIntakeStatusSUBMITTED
+		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		_, err := s.store.CreateSystemIntake(ctx, &intake)
 		s.NoError(err)
 
 		intake2 := testhelpers.NewSystemIntake()
 		intake2.EUAUserID = intake.EUAUserID
-		intake2.Status = models.SystemIntakeStatusDRAFT
+		intake2.Status = models.SystemIntakeStatusINTAKEDRAFT
 		_, err = s.store.CreateSystemIntake(ctx, &intake2)
 		s.NoError(err)
-		intake2.Status = models.SystemIntakeStatusARCHIVED
+		intake2.Status = models.SystemIntakeStatusWITHDRAWN
 		_, err = s.store.UpdateSystemIntake(ctx, &intake2)
 		s.NoError(err)
 
@@ -337,7 +337,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByIntakeID() {
 		businessCase := testhelpers.NewBusinessCase()
 		intake := testhelpers.NewSystemIntake()
 		businessCase.SystemIntakeID = intake.ID
-		intake.Status = models.SystemIntakeStatusACCEPTED
+		intake.Status = models.SystemIntakeStatusNEEDBIZCASE
 		setupTx := s.db.MustBegin()
 		_, err := setupTx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake)
 		s.NoError(err)

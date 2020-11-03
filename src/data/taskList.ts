@@ -6,7 +6,7 @@ export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   if (intake.id === '') {
     return 'START';
   }
-  if (intake.status === 'DRAFT') {
+  if (intake.status === 'INTAKE_DRAFT') {
     return 'CONTINUE';
   }
   return 'COMPLETED';
@@ -30,11 +30,11 @@ export const chooseIntakePath = (intake: SystemIntakeForm, status: string) => {
 
 export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   switch (intakeStatus) {
-    case 'SUBMITTED':
+    case 'INTAKE_SUBMITTED':
       return 'SUBMITTED';
-    case 'ACCEPTED':
-    case 'APPROVED':
-    case 'CLOSED':
+    case 'NEED_BIZ_CASE':
+    case 'LCID_ISSUED':
+    case 'NOT_IT_REQUEST':
       return 'COMPLETED';
     default:
       return 'CANNOT_START';
@@ -58,10 +58,10 @@ export const bizCaseStatus = (
   // START: Delete this when old statuses are deprecated
   if (businessCase === businessCaseInitialData) {
     switch (intakeStatus) {
-      case 'ACCEPTED':
+      case 'NEED_BIZ_CASE':
         return 'START';
-      case 'APPROVED':
-      case 'CLOSED':
+      case 'LCID_ISSUED':
+      case 'NOT_IT_REQUEST':
         return 'NOT_NEEDED';
       default:
         return 'CANNOT_START';
