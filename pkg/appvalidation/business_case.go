@@ -188,7 +188,7 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase, existingBusinessCa
 	)
 
 	if businessCase.Status == models.BusinessCaseStatusSUBMITTED {
-		if existingBusinessCase.Status != models.BusinessCaseStatusDRAFT {
+		if existingBusinessCase.Status != models.BusinessCaseStatusOPEN {
 			expectedErr.WithValidation("Status", "cannot be SUBMITTED")
 		}
 
