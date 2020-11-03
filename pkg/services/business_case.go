@@ -14,18 +14,11 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// NewAuthorizeFetchBusinessCaseByID is a service to authorize FetchBusinessCaseByID
-func NewAuthorizeFetchBusinessCaseByID() func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) {
-	return func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) {
-		return true, nil
-	}
-}
-
 // NewFetchBusinessCaseByID is a service to fetch the business case by id
 func NewFetchBusinessCaseByID(
 	config Config,
 	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
-	authorize func(c context.Context, b *models.BusinessCase) (bool, error),
+	authorize func(context.Context) (bool, error),
 ) func(c context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 	return func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 		logger := appcontext.ZLogger(ctx)
@@ -38,7 +31,7 @@ func NewFetchBusinessCaseByID(
 				Operation: apperrors.QueryFetch,
 			}
 		}
-		ok, err := authorize(ctx, businessCase)
+		ok, err := authorize(ctx)
 		if err != nil {
 			logger.Error("failed to authorize fetch business case")
 			return &models.BusinessCase{}, err
@@ -47,43 +40,6 @@ func NewFetchBusinessCaseByID(
 			return &models.BusinessCase{}, &apperrors.UnauthorizedError{Err: err}
 		}
 		return businessCase, nil
-	}
-}
-
-// NewAuthorizeCreateBusinessCase returns a function
-// that authorizes a user for creating a business case
-func NewAuthorizeCreateBusinessCase(_ *zap.Logger) func(
-	c context.Context,
-	intake *models.SystemIntake,
-) (bool, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		if intake == nil {
-			logger.With(zap.Bool("Authorized", false)).
-				With(zap.String("Operation", "CreateBusinessCase")).
-				Info("intake does not exist")
-			return false, nil
-		}
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowEASi() {
-			// Default to failure to authorize and create a quick audit log
-			logger.With(zap.Bool("Authorized", false)).
-				With(zap.String("Operation", "CreateBusinessCase")).
-				Info("something went wrong fetching the eua id from the context")
-			return false, nil
-		}
-		// If business case is owned by user, authorize
-		if principal.ID() == intake.EUAUserID {
-			logger.With(zap.Bool("Authorized", true)).
-				With(zap.String("Operation", "CreateBusinessCase")).
-				Info("user authorized to create business case")
-			return true, nil
-		}
-		// Default to failure to authorize and create a quick audit log
-		logger.With(zap.Bool("Authorized", false)).
-			With(zap.String("Operation", "CreateBusinessCase")).
-			Info("unauthorized attempt to create business case")
-		return false, nil
 	}
 }
 
@@ -137,21 +93,14 @@ func NewCreateBusinessCase(
 	}
 }
 
-// NewAuthorizeFetchBusinessCasesByEuaID is a service to authorize FetchBusinessCasesByEuaID
-func NewAuthorizeFetchBusinessCasesByEuaID() func(ctx context.Context, euaID string) (bool, error) {
-	return func(ctx context.Context, euaID string) (bool, error) {
-		return true, nil
-	}
-}
-
 // NewFetchBusinessCasesByEuaID is a service to fetch a list of business cases by EUA ID
 func NewFetchBusinessCasesByEuaID(
 	config Config,
 	fetch func(c context.Context, euaID string) (models.BusinessCases, error),
-	authorize func(c context.Context, euaID string) (bool, error),
+	authorize func(c context.Context) (bool, error),
 ) func(c context.Context, euaID string) (models.BusinessCases, error) {
 	return func(ctx context.Context, euaID string) (models.BusinessCases, error) {
-		ok, err := authorize(ctx, euaID)
+		ok, err := authorize(ctx)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("failed to authorize fetch system intakes")
 			return models.BusinessCases{}, err
@@ -169,43 +118,6 @@ func NewFetchBusinessCasesByEuaID(
 			}
 		}
 		return businessCases, nil
-	}
-}
-
-// NewAuthorizeUpdateBusinessCase returns a function
-// that authorizes a user for updating an existing business case
-func NewAuthorizeUpdateBusinessCase(_ *zap.Logger) func(
-	c context.Context,
-	bb *models.BusinessCase,
-) (bool, error) {
-	return func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		if businessCase == nil {
-			logger.With(zap.Bool("Authorized", false)).
-				With(zap.String("Operation", "UpdateBusinessCase")).
-				Info("business case does not exist")
-			return false, nil
-		}
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowEASi() {
-			// Default to failure to authorize and create a quick audit log
-			logger.With(zap.Bool("Authorized", false)).
-				With(zap.String("Operation", "UpdateBusinessCase")).
-				Info("something went wrong fetching the eua id from the context")
-			return false, nil
-		}
-		// If intake is owned by user, authorize
-		if principal.ID() == businessCase.EUAUserID {
-			logger.With(zap.Bool("Authorized", true)).
-				With(zap.String("Operation", "UpdateBusinessCase")).
-				Info("user authorized to update business case")
-			return true, nil
-		}
-		// Default to failure to authorize and create a quick audit log
-		logger.With(zap.Bool("Authorized", false)).
-			With(zap.String("Operation", "UpdateBusinessCase")).
-			Info("unauthorized attempt to update business case")
-		return false, nil
 	}
 }
 

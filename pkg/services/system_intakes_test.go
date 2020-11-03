@@ -360,7 +360,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
-	authorize := func(context context.Context, intake *models.SystemIntake) (bool, error) { return true, nil }
+	authorize := func(context context.Context) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches System Intake by ID without an error", func() {
 		fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -385,46 +385,6 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 
 		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(&models.SystemIntake{}, intake)
-	})
-}
-
-func (s ServicesTestSuite) TestAuthorizeArchiveSystemIntake() {
-	logger := zap.NewNop()
-	authorizeArchiveSystemIntake := NewAuthorizeArchiveSystemIntake(logger)
-
-	s.Run("No EUA ID fails auth", func() {
-		ctx := context.Background()
-
-		ok, err := authorizeArchiveSystemIntake(ctx, &models.SystemIntake{})
-
-		s.False(ok)
-		s.IsType(&apperrors.ContextError{}, err)
-	})
-
-	s.Run("Mismatched EUA ID fails auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
-		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeArchiveSystemIntake(ctx, &intake)
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Matched EUA ID passes auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
-		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeArchiveSystemIntake(ctx, &intake)
-
-		s.True(ok)
-		s.NoError(err)
 	})
 }
 

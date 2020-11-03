@@ -156,7 +156,7 @@ func (s *Server) routes(
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeFetchSystemIntakeByID(),
+			services.NewAuthorizeHasEASiRole(),
 		),
 		services.NewArchiveSystemIntake(
 			serviceConfig,
@@ -167,7 +167,7 @@ func (s *Server) routes(
 				store.FetchBusinessCaseByID,
 				store.UpdateBusinessCase,
 			),
-			services.NewAuthorizeArchiveSystemIntake(s.logger),
+			services.NewAuthorizeUserIsIntakeRequester(),
 			emailClient.SendWithdrawRequestEmail,
 		),
 	)
@@ -190,18 +190,18 @@ func (s *Server) routes(
 		services.NewFetchBusinessCaseByID(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-			services.NewAuthorizeFetchBusinessCaseByID(),
+			services.NewAuthorizeHasEASiRole(),
 		),
 		services.NewCreateBusinessCase(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeCreateBusinessCase(s.logger),
+			services.NewAuthorizeUserIsIntakeRequester(),
 			store.CreateBusinessCase,
 		),
 		services.NewUpdateBusinessCase(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-			services.NewAuthorizeUpdateBusinessCase(s.logger),
+			services.NewAuthorizeUserIsBusinessCaseRequester(),
 			store.UpdateBusinessCase,
 			emailClient.SendBusinessCaseSubmissionEmail,
 		),
@@ -214,7 +214,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
-			services.NewAuthorizeFetchBusinessCasesByEuaID(),
+			services.NewAuthorizeHasEASiRole(),
 		),
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
