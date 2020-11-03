@@ -14,7 +14,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
+func (s ServicesTestSuite) TestNewTakeAction() {
 	ctx := context.Background()
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 		return &models.SystemIntake{ID: id}, nil
@@ -30,7 +30,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("error")
 		}
-		createAction := NewCreateSystemIntakeAction(failFetch, submit, review, review, review, review, review, review)
+		createAction := NewTakeAction(failFetch, submit, review, review, review, review, review, review)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -45,7 +45,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 		failSubmit := func(ctx context.Context, intake *models.SystemIntake) error {
 			return submitError
 		}
-		createAction := NewCreateSystemIntakeAction(fetch, failSubmit, review, review, review, review, review, review)
+		createAction := NewTakeAction(fetch, failSubmit, review, review, review, review, review, review)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -56,7 +56,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntakeAction() {
 	})
 
 	s.Run("returns ResourceConflictError if invalid action type", func() {
-		createAction := NewCreateSystemIntakeAction(fetch, submit, review, review, review, review, review, review)
+		createAction := NewTakeAction(fetch, submit, review, review, review, review, review, review)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -123,16 +123,6 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		err := submitSystemIntake(ctx, &intake)
 
 		s.Equal(authorizationError, err)
-	})
-
-	s.Run("returns resource conflict error if status is not INTAKE_DRAFT", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
-
-		err := submitSystemIntake(ctx, &intake)
-		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(0, submitEmailCount)
-
 	})
 
 	s.Run("returns unauthorized error if authorization denied", func() {
@@ -238,7 +228,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	})
 }
 
-func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
+func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	logger := zap.NewNop()
 
 	requester := "Test Requester"
@@ -275,7 +265,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 
 	s.Run("golden path review system intake", func() {
 		ctx := context.Background()
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -298,7 +288,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		failAuthorize := func(ctx context.Context) (bool, error) {
 			return false, err
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -320,7 +310,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		notOKAuthorize := func(ctx context.Context) (bool, error) {
 			return false, nil
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -336,32 +326,12 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		s.IsType(&apperrors.UnauthorizedError{}, err)
 	})
 
-	s.Run("returns error when intake is not SUBMITTED", func() {
-		reviewEmailCount = 0
-		ctx := context.Background()
-		reviewSystemIntake := NewGRTReviewSystemIntake(
-			serviceConfig,
-			models.SystemIntakeStatusNOTITREQUEST,
-			save,
-			authorize,
-			createAction,
-			fetchUserInfo,
-			sendReviewEmail,
-		)
-		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
-		action := &models.Action{}
-		err := reviewSystemIntake(ctx, intake, action)
-
-		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(0, reviewEmailCount)
-	})
-
 	s.Run("returns error if fails to save action", func() {
 		ctx := context.Background()
 		failCreateAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
 			return nil, errors.New("error")
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -378,6 +348,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 	})
 
 	s.Run("returns error from fetching requester email", func() {
+		reviewEmailCount = 0
 		ctx := context.Background()
 		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return nil, &apperrors.ExternalAPIError{
@@ -388,7 +359,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 				Source:    "CEDAR LDAP",
 			}
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -410,7 +381,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 			return &models.UserInfo{}, nil
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
@@ -435,7 +406,7 @@ func (s ServicesTestSuite) TestNewGRTReviewSystemIntake() {
 				DestinationType: apperrors.DestinationTypeEmail,
 			}
 		}
-		reviewSystemIntake := NewGRTReviewSystemIntake(
+		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
