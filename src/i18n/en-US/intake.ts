@@ -4,9 +4,28 @@ const intake = {
     requester: 'Requester',
     submissionDate: 'Submission date',
     requestFor: 'Request for',
-    component: 'Component'
+    component: 'Component',
+    status: 'Status'
   },
   lifecycleId: 'Lifecycle ID',
+  statusMap: {
+    INTAKE_DRAFT: 'N/A',
+    INTAKE_SUBMITTED: 'Intake request received',
+    NEED_BIZ_CASE: 'Waiting for draft business case',
+    BIZ_CASE_DRAFT: 'Waiting for draft business case',
+    BIZ_CASE_DRAFT_SUBMITTED: 'Draft business case received',
+    BIZ_CASE_CHANGES_NEEDED: 'Waiting for draft business case',
+    BIZ_CASE_FINAL_NEEDED: 'Waiting for final business case',
+    BIZ_CASE_FINAL_SUBMITTED: 'Final business case received',
+    READY_FOR_GRT: 'Ready for GRT meeting',
+    READY_FOR_GRB: 'Ready for GRB meeting',
+    LCID_ISSUED: 'LCID: ',
+    WITHDRAWN: 'Withdrawn',
+    NOT_IT_REQUEST: 'Closed',
+    NOT_APPROVED: 'Business case not approved',
+    NO_GOVERNANCE: 'Closed'
+  },
+
   csvHeadings: {
     euaId: 'EUA ID',
     requesterName: 'Requester Name',
