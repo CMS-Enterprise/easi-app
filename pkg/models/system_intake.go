@@ -10,6 +10,9 @@ import (
 // SystemIntakeStatus represents the status of a system intake
 type SystemIntakeStatus string
 
+// SystemIntakeRequestType represents the type of a system intake
+type SystemIntakeRequestType string
+
 const (
 	// SystemIntakeStatusINTAKEDRAFT captures enum value "INTAKE_DRAFT"
 	SystemIntakeStatusINTAKEDRAFT SystemIntakeStatus = "INTAKE_DRAFT"
@@ -33,12 +36,7 @@ const (
 	SystemIntakeStatusNOTITREQUEST SystemIntakeStatus = "NOT_IT_REQUEST"
 	// SystemIntakeStatusLCIDISSUED captures enum value "LCID_ISSUED"
 	SystemIntakeStatusLCIDISSUED SystemIntakeStatus = "LCID_ISSUED"
-)
 
-// SystemIntakeRequestType represents the type of a system intake
-type SystemIntakeRequestType string
-
-const (
 	// SystemIntakeRequestTypeNEW captures enum value of "NEW"
 	SystemIntakeRequestTypeNEW SystemIntakeRequestType = "NEW"
 	// SystemIntakeRequestTypeMAJORCHANGES captures enum value of "MAJOR_CHANGES"
