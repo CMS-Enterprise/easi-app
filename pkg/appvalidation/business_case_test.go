@@ -241,15 +241,12 @@ func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 }
 
 func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
-	existingBusinessCase := models.BusinessCase{}
-	existingBusinessCase.Status = models.BusinessCaseStatusREVIEWED
-
 	s.Run("golden path", func() {
 		businessCase := testhelpers.NewBusinessCase()
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 		submittedTime := time.Now()
 		businessCase.LastSubmittedAt = &submittedTime
-		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+		err := BusinessCaseForSubmit(&businessCase)
 		s.NoError(err)
 	})
 
@@ -304,7 +301,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"alternativeASolution":"years 1, 2, 3, 4, 5 are required",` +
 			`"asIsSolution":"years 1, 2, 3, 4, 5 are required",` +
 			`"preferredSolution":"years 1, 2, 3, 4, 5 are required"}`
-		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+		err := BusinessCaseForSubmit(&businessCase)
 
 		s.IsType(err, &apperrors.ValidationError{})
 		s.Equal(expectedError, err.Error())
@@ -336,7 +333,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"AlternativeBPros":"is required",` +
 			`"AlternativeBSummary":"is required"}`
 
-		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+		err := BusinessCaseForSubmit(&businessCase)
 
 		s.Error(err)
 		s.Equal(expectedError, err.Error())

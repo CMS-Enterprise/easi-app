@@ -163,7 +163,7 @@ func NewUpdateBusinessCase(
 				businessCase.InitialSubmittedAt = &updatedAt
 			}
 			businessCase.LastSubmittedAt = &updatedAt
-			err = appvalidation.BusinessCaseForSubmit(businessCase, existingBusinessCase)
+			err = appvalidation.BusinessCaseForSubmit(businessCase)
 			if err != nil {
 				logger.Error("Failed to validate", zap.Error(err))
 				return businessCase, err
