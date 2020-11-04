@@ -12,11 +12,11 @@ enum DocumentType {
   TRBLetter
 }
 
-type DocumentInput {
+input DocumentInput {
   title: String!
   key: String!
   type: DocumentType!
-  project: Project!
+  project_id: ID!
 }
 
 type DocumentUpdateResponse {
@@ -31,7 +31,7 @@ type Project {
   documents: [Document]
 }
 
-type ProjectInput {
+input ProjectInput {
   name: String!
 }
 
