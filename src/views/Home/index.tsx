@@ -7,9 +7,9 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import RequestRepository from 'components/RequestRepository';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
-import RequestRepository from 'views/RequestRepository';
 
 import BusinessCaseBanners from './BusinessCaseBanners';
 import SystemIntakeBanners from './SystemIntakeBanners';
