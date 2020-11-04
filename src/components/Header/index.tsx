@@ -91,7 +91,7 @@ export const Header = ({ children }: HeaderProps) => {
               </button>
               {displayDropdown && (
                 <UserActionList id="Header-UserActionsList">
-                  <UserAction link="/system/request-type">
+                  <UserAction link="/governance-overview">
                     {t('header:addSystem')}
                   </UserAction>
                   <UserAction

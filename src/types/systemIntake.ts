@@ -112,6 +112,7 @@ export type SystemIntakeState = {
   systemIntake: SystemIntakeForm;
   isLoading: boolean | null;
   isSaving: boolean;
+  isNewIntakeCreated: boolean | null;
   error?: any;
 };
 
