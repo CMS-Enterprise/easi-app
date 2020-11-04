@@ -163,11 +163,11 @@ describe('The system intake reducer', () => {
     it('handles postSystemIntake.SUCCESS', () => {
       const mockSuccessAction = {
         type: postSystemIntake.SUCCESS,
-        payload: mockApiSystemIntake
+        payload: prepareSystemIntakeForApp(mockApiSystemIntake)
       };
 
       expect(systemIntakeReducer(undefined, mockSuccessAction)).toEqual({
-        systemIntake: prepareSystemIntakeForApp(mockSuccessAction.payload),
+        systemIntake: mockSuccessAction.payload,
         isLoading: null,
         isSaving: false,
         error: null
