@@ -111,6 +111,19 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const provideFeedbackNeedFinalRoute = 'provide-feedback-need-final';
+  const ProvideFeedbackNeedFinal = (
+    <RadioField
+      key={provideFeedbackNeedFinalRoute}
+      id={provideFeedbackNeedFinalRoute}
+      label={t('actions.provideGrtFeedbackNeedFinal')}
+      name={radioGroupName}
+      value={provideFeedbackNeedFinalRoute}
+      onChange={onChange}
+      checked={actionRoute === provideFeedbackNeedFinalRoute}
+    />
+  );
+
   const BizCaseNeedsChanges = (
     <RadioField
       key="biz-case-needs-changes"
@@ -130,7 +143,8 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     availableHiddenActions = [
       ReadyForGRT,
       ReadyForGRB,
-      ProvideFeedbackKeepDraft
+      ProvideFeedbackKeepDraft,
+      ProvideFeedbackNeedFinal
     ];
   } else {
     availableActions = [NotITRequest, NeedBizCase];
