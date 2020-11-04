@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -17,12 +17,14 @@ import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { postSystemIntake } from 'types/routines';
+import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
   const { t } = useTranslation('intake');
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const majorChangesExamples: string[] = t(
     'requestTypeForm.helpAndGuidance.majorChanges.list',
@@ -31,31 +33,42 @@ const RequestTypeForm = () => {
     }
   );
 
-  const handleCreateIntake = (values: { requestType: string }) => {
+  const handleIntakeCreationRedirect = (intake: SystemIntakeForm) => {
+    switch (intake.requestType) {
+      case 'NEW':
+        history.push(`/governance-task-list/${intake.id}`);
+        break;
+      case 'MAJOR_CHANGES':
+        history.push(`/governance-task-list/${intake.id}`);
+        break;
+      case 'RECOMPETE':
+        history.push(`/governance-task-list/${intake.id}`);
+        break;
+      case 'SHUTDOWN':
+        history.push(`/system/${intake.id}/contact-details`);
+        break;
+      default:
+        console.warn(`Unknown request type: ${intake.requestType}`);
+        break;
+    }
+  };
+
+  const handleCreateIntake = (formikValues: { requestType: string }) => {
+    const formData = {
+      ...initialSystemIntakeForm,
+      requestType: formikValues.requestType
+    };
+
+    const options = {
+      handleOnSuccess: handleIntakeCreationRedirect
+    };
+
     dispatch(
       postSystemIntake({
-        ...initialSystemIntakeForm,
-        requestType: values.requestType
+        formData,
+        options
       })
     );
-
-    // switch (values.requestType) {
-    //   case 'NEW':
-    //     history.push(`/governance-task-list/${systemIntake.id}`);
-    //     break;
-    //   case 'MAJOR_CHANGES':
-    //     history.push(`/governance-task-list/${systemIntake.id}`);
-    //     break;
-    //   case 'RECOMPETE':
-    //     history.push(`/governance-task-list/${systemIntake.id}`);
-    //     break;
-    //   case 'SHUTDOWN':
-    //     history.push(`/system/${systemIntake.id}/contact-details`);
-    //     break;
-    //   default:
-    //     console.warn(`Unknown request type: ${systemIntake.requestType}`);
-    //     break;
-    // }
   };
 
   return (

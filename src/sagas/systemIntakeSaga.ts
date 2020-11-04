@@ -2,7 +2,10 @@ import axios from 'axios';
 import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import { prepareSystemIntakeForApi } from 'data/systemIntake';
+import {
+  prepareSystemIntakeForApi,
+  prepareSystemIntakeForApp
+} from 'data/systemIntake';
 import { updateLastActiveAt } from 'reducers/authReducer';
 import {
   archiveSystemIntake,
@@ -14,6 +17,9 @@ import {
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
+type OptionalSagaOptions = {
+  handleOnSuccess?: (values: SystemIntakeForm) => void;
+};
 function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
   const data = prepareSystemIntakeForApi(formData);
@@ -25,11 +31,21 @@ function postSystemIntakeRequest(formData: SystemIntakeForm) {
   return axios.post(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }
 
-function* createSystemIntake(action: Action<any>) {
+function* createSystemIntake(
+  action: Action<{ formData: SystemIntakeForm; options?: OptionalSagaOptions }>
+) {
+  const { formData, options = {} } = action.payload;
   try {
     yield put(postSystemIntake.request());
-    const response = yield call(postSystemIntakeRequest, action.payload);
-    yield put(postSystemIntake.success(response.data));
+    const response = yield call(postSystemIntakeRequest, formData);
+    const formattedResponse = yield call(
+      prepareSystemIntakeForApp,
+      response.data
+    );
+    yield put(postSystemIntake.success(formattedResponse));
+    if (options.handleOnSuccess) {
+      yield call(options.handleOnSuccess, formattedResponse);
+    }
   } catch (error) {
     yield put(postSystemIntake.failure(error.message));
   } finally {
