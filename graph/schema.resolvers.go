@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/cmsgov/easi-app/graph/generated"
 	"github.com/cmsgov/easi-app/graph/model"
@@ -20,11 +21,16 @@ func (r *mutationResolver) CreateDocument(ctx context.Context, input *model.Docu
 }
 
 func (r *queryResolver) Projects(ctx context.Context) ([]*model.Project, error) {
-	panic(fmt.Errorf("not implemented"))
+	var projects []*model.Project
+	for i := 1; i <= 10; i++ {
+		projects = append(projects, &model.Project{ID: strconv.Itoa(i), Name: fmt.Sprintf("Project #%d", i)})
+	}
+	return projects, nil
 }
 
 func (r *queryResolver) Project(ctx context.Context, id string) (*model.Project, error) {
-	panic(fmt.Errorf("not implemented"))
+	project := model.Project{ID: id, Name: fmt.Sprintf("Project #%s", id)}
+	return &project, nil
 }
 
 // Mutation returns generated.MutationResolver implementation.
