@@ -164,7 +164,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Empty(partial.LifecycleNextSteps)
 
 		// Update
-		lcid := "200110" // first LCID issued on 2020-01-11
+		lcid := "H200110" // historical first LCID issued on 2020-01-11
 		content1 := "ABC"
 		content2 := "XYZ"
 		partial.LifecycleID = null.StringFrom(lcid)
@@ -263,9 +263,12 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.NoError(err)
 
 		fails := []string{
-			"20001",   // short
-			"2000110", // long
-			"20001A",  // non-numeric
+			"20001",    // short
+			"2000110",  // long
+			"20001A",   // non-numeric
+			"A20001",   // short with prefix
+			"A2000110", // long with prefix
+			"AA123456", // too many character prefix
 		}
 
 		for _, fail := range fails {
