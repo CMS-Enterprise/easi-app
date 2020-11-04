@@ -499,7 +499,7 @@ exports[`The governance overview page matches the snapshot 1`] = `
     </div>
     <a
       className="usa-button"
-      href="/system/new"
+      href="/system/request-type"
       onClick={[Function]}
     >
       Get started

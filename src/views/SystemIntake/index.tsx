@@ -44,7 +44,12 @@ export const SystemIntake = () => {
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
     if (systemId === 'new') {
-      dispatch(postSystemIntake({ ...systemIntake, ...current.values }));
+      dispatch(
+        postSystemIntake({
+          ...systemIntake,
+          ...current.values
+        })
+      );
     } else {
       dispatch(
         saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })

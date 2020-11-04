@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -15,14 +16,27 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
+import { useFlags } from 'contexts/flagContext';
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import { AppState } from 'reducers/rootReducer';
 import { postSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
   const { t } = useTranslation('intake');
+  const { authService } = useOktaAuth();
   const dispatch = useDispatch();
+  const history = useHistory();
+  const flags = useFlags();
+
+  const isNewIntakeCreated = useSelector(
+    (state: AppState) => state.systemIntake.isNewIntakeCreated
+  );
+
+  const systemIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake
+  );
 
   const majorChangesExamples: string[] = t(
     'requestTypeForm.helpAndGuidance.majorChanges.list',
@@ -31,14 +45,47 @@ const RequestTypeForm = () => {
     }
   );
 
-  const handleCreateIntake = (values: { requestType: string }) => {
-    dispatch(
-      postSystemIntake({
-        ...initialSystemIntakeForm,
-        requestType: values.requestType
-      })
-    );
+  const handleCreateIntake = (formikValues: { requestType: string }) => {
+    authService.getUser().then((user: any) => {
+      dispatch(
+        postSystemIntake({
+          ...initialSystemIntakeForm,
+          requestType: formikValues.requestType,
+          requester: {
+            name: user.name,
+            component: '',
+            email: user.email
+          }
+        })
+      );
+    });
   };
+
+  useEffect(() => {
+    if (isNewIntakeCreated) {
+      const navigationLink = flags.taskListLite
+        ? `/governance-task-list/${systemIntake.id}`
+        : `/system/${systemIntake.id}/contact-details`;
+      switch (systemIntake.requestType) {
+        case 'NEW':
+          history.push(navigationLink);
+          break;
+        case 'MAJOR_CHANGES':
+          history.push(navigationLink);
+          break;
+        case 'RECOMPETE':
+          history.push(navigationLink);
+          break;
+        case 'SHUTDOWN':
+          history.push(`/system/${systemIntake.id}/contact-details`);
+          break;
+        default:
+          console.warn(`Unknown request type: ${systemIntake.requestType}`);
+          break;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isNewIntakeCreated]);
 
   return (
     <PageWrapper>
