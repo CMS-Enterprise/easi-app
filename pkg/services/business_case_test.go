@@ -87,8 +87,9 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intake := &models.SystemIntake{
-		EUAUserID: euaID,
-		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
+		EUAUserID:   euaID,
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
 	}
 	intake, err := s.store.CreateSystemIntake(ctx, intake)
 	s.NoError(err)
@@ -175,8 +176,9 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intake := &models.SystemIntake{
-		EUAUserID: euaID,
-		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
+		EUAUserID:   euaID,
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
 	}
 	_, err := s.store.CreateSystemIntake(ctx, intake)
 	s.NoError(err)

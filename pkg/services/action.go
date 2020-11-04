@@ -291,7 +291,7 @@ func NewTakeActionUpdateStatus(
 		}
 		if requesterInfo == nil || requesterInfo.Email == "" {
 			return &apperrors.ExternalAPIError{
-				Err:       errors.New("user info fetch was not successful"),
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
 				Model:     intake,
 				ModelID:   intake.ID.String(),
 				Operation: apperrors.Fetch,
@@ -305,7 +305,7 @@ func NewTakeActionUpdateStatus(
 		}
 		if actorInfo == nil || actorInfo.Email == "" || actorInfo.CommonName == "" || actorInfo.EuaUserID == "" {
 			return &apperrors.ExternalAPIError{
-				Err:       errors.New("user info fetch was not successful"),
+				Err:       errors.New("actor info fetch was not successful when submitting an action"),
 				Model:     intake,
 				ModelID:   intake.ID.String(),
 				Operation: apperrors.Fetch,
