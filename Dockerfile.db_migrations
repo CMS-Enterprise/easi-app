@@ -3,7 +3,6 @@ FROM flyway/flyway:6.3
 COPY migrations/ /flyway/sql
 
 ENV FLYWAY_CONNECT_RETRIES=10
-ENV FLYWAY_IGNORE_INVALID_MIGRATION_NAMES="false"
 ENV FLYWAY_CLEAN_DISABLED="true"
 
-ENTRYPOINT ["flyway", "migrate"]
+ENTRYPOINT ["flyway", "-validateMigrationNaming=true", "migrate"]
