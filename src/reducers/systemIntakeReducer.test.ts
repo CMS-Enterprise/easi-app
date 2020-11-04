@@ -40,6 +40,7 @@ describe('The system intake reducer', () => {
       systemIntake: initialSystemIntakeForm,
       isLoading: null,
       isSaving: false,
+      isNewIntakeCreated: null,
       error: null
     });
   });
@@ -55,6 +56,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: true,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -75,6 +77,7 @@ describe('The system intake reducer', () => {
         systemIntake: prepareSystemIntakeForApp(mockPayload),
         isLoading: null,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -89,6 +92,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -115,6 +119,7 @@ describe('The system intake reducer', () => {
         },
         isLoading: false,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -128,6 +133,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: 'Error'
       });
     });
@@ -141,6 +147,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -157,6 +164,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: true,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -170,6 +178,7 @@ describe('The system intake reducer', () => {
         systemIntake: mockSuccessAction.payload,
         isLoading: null,
         isSaving: false,
+        isNewIntakeCreated: true,
         error: null
       });
     });
@@ -179,6 +188,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
+        isNewIntakeCreated: null,
         error: null
       };
       const mockFailureAction = {
@@ -190,6 +200,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
+        isNewIntakeCreated: false,
         error: 'Error'
       });
     });
@@ -204,6 +215,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -220,6 +232,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: true,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -233,6 +246,7 @@ describe('The system intake reducer', () => {
         systemIntake: prepareSystemIntakeForApp(mockSuccessAction.payload),
         isLoading: null,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -242,6 +256,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
+        isNewIntakeCreated: null,
         error: null
       };
       const mockFailureAction = {
@@ -253,6 +268,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
+        isNewIntakeCreated: null,
         error: 'Error'
       });
     });
@@ -262,6 +278,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: true,
+        isNewIntakeCreated: null,
         error: null
       };
 
@@ -274,6 +291,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: false,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: null
       });
     });
@@ -290,6 +308,7 @@ describe('The system intake reducer', () => {
         systemIntake: initialSystemIntakeForm,
         isLoading: null,
         isSaving: false,
+        isNewIntakeCreated: null,
         error: null
       });
     });
