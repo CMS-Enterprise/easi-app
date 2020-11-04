@@ -60,7 +60,7 @@ function systemIntakeReducer(
         ...state,
         systemIntake: {
           ...state.systemIntake,
-          ...prepareSystemIntakeForApp(action.payload)
+          ...action.payload
         }
       };
     case postSystemIntake.FAILURE:
