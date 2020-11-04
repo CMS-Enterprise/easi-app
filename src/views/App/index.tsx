@@ -84,6 +84,7 @@ const AppRoutes = () => {
       <SecureRoute
         exact
         path="/system/request-type"
+        render={({ component }: any) => component()}
         component={RequestTypeForm}
       />
       <SecureRoute
