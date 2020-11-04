@@ -30,7 +30,7 @@ func (s ServicesTestSuite) TestNewTakeAction() {
 		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 			return nil, errors.New("error")
 		}
-		createAction := NewTakeAction(failFetch, submit, review, review, review, review, review, review)
+		createAction := NewTakeAction(failFetch, submit, review, review, review, review, review, review, submit)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -45,7 +45,7 @@ func (s ServicesTestSuite) TestNewTakeAction() {
 		failSubmit := func(ctx context.Context, intake *models.SystemIntake) error {
 			return submitError
 		}
-		createAction := NewTakeAction(fetch, failSubmit, review, review, review, review, review, review)
+		createAction := NewTakeAction(fetch, failSubmit, review, review, review, review, review, review, submit)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
@@ -56,7 +56,7 @@ func (s ServicesTestSuite) TestNewTakeAction() {
 	})
 
 	s.Run("returns ResourceConflictError if invalid action type", func() {
-		createAction := NewTakeAction(fetch, submit, review, review, review, review, review, review)
+		createAction := NewTakeAction(fetch, submit, review, review, review, review, review, review, submit)
 		id := uuid.New()
 		action := models.Action{
 			IntakeID:   &id,
