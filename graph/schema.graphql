@@ -28,7 +28,7 @@ type DocumentUpdateResponse {
 type Project {
   id: ID!
   name: String!
-  documents: [Document]
+  documents: [Document!]!
 }
 
 input ProjectInput {
@@ -42,7 +42,7 @@ type ProjectUpdateResponse {
 }
 
 type Query {
-  projects: [Project]!
+  projects: [Project!]!
   project(id: ID!): Project
 }
 

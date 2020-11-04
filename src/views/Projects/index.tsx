@@ -1,18 +1,11 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { gql, useQuery } from '@apollo/client';
-
-const GET_PROJECTS = gql`
-  query GetProjects {
-    projects {
-      id
-      name
-    }
-  }
-`;
+import { useQuery } from '@apollo/client';
+import getProjects from 'queries/getProjects';
+import { GetProjects } from 'queries/types/GetProjects';
 
 const Projects = () => {
-  const { loading, error, data } = useQuery(GET_PROJECTS);
+  const { loading, error, data } = useQuery<GetProjects>(getProjects);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
