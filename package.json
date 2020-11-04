@@ -30,6 +30,7 @@
     "@types/uuid": "^7.0.2",
     "@types/validator": "^13.1.0",
     "@types/yup": "^0.26.32",
+    "apollo": "^2.31.0",
     "axios": "^0.19.0",
     "classnames": "^2.2.6",
     "craco-sass-resources-loader": "^1.1.0",
@@ -80,7 +81,8 @@
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "generate":"apollo client:codegen --localSchemaFile=graph/schema.graphql --target typescript  --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types"
   },
   "nyc": {
     "reporter": [

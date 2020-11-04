@@ -339,7 +339,7 @@ type DocumentUpdateResponse {
 type Project {
   id: ID!
   name: String!
-  documents: [Document]
+  documents: [Document!]!
 }
 
 input ProjectInput {
@@ -353,7 +353,7 @@ type ProjectUpdateResponse {
 }
 
 type Query {
-  projects: [Project]!
+  projects: [Project!]!
   project(id: ID!): Project
 }
 
@@ -917,11 +917,14 @@ func (ec *executionContext) _Project_documents(ctx context.Context, field graphq
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]*model.Document)
 	fc.Result = res
-	return ec.marshalODocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐDocument(ctx, field.Selections, res)
+	return ec.marshalNDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐDocumentᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _ProjectUpdateResponse_success(ctx context.Context, field graphql.CollectedField, obj *model.ProjectUpdateResponse) (ret graphql.Marshaler) {
@@ -1058,7 +1061,7 @@ func (ec *executionContext) _Query_projects(ctx context.Context, field graphql.C
 	}
 	res := resTmp.([]*model.Project)
 	fc.Result = res
-	return ec.marshalNProject2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐProject(ctx, field.Selections, res)
+	return ec.marshalNProject2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐProjectᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_project(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2464,6 +2467,9 @@ func (ec *executionContext) _Project(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "documents":
 			out.Values[i] = ec._Project_documents(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2824,6 +2830,43 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐDocumentᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Document) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐDocument(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) marshalNDocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐDocument(ctx context.Context, sel ast.SelectionSet, v *model.Document) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -2859,7 +2902,7 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) marshalNProject2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐProject(ctx context.Context, sel ast.SelectionSet, v []*model.Project) graphql.Marshaler {
+func (ec *executionContext) marshalNProject2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐProjectᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Project) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -2883,7 +2926,7 @@ func (ec *executionContext) marshalNProject2ᚕᚖgithubᚗcomᚋcmsgovᚋeasi�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOProject2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐProject(ctx, sel, v[i])
+			ret[i] = ec.marshalNProject2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐProject(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -3172,53 +3215,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
-}
-
-func (ec *executionContext) marshalODocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐDocument(ctx context.Context, sel ast.SelectionSet, v []*model.Document) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalODocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐDocument(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-	return ret
-}
-
-func (ec *executionContext) marshalODocument2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐDocument(ctx context.Context, sel ast.SelectionSet, v *model.Document) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Document(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalODocumentInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐDocumentInput(ctx context.Context, v interface{}) (*model.DocumentInput, error) {
