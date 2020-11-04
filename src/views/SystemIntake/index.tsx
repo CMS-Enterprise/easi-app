@@ -46,10 +46,8 @@ export const SystemIntake = () => {
     if (systemId === 'new') {
       dispatch(
         postSystemIntake({
-          formData: {
-            ...systemIntake,
-            ...current.values
-          }
+          ...systemIntake,
+          ...current.values
         })
       );
     } else {
