@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.2.5",
     "@craco/craco": "^5.6.1",
     "@cypress/code-coverage": "^1.12.2",
     "@okta/okta-react": "^3.0.4",
@@ -35,6 +36,7 @@
     "detect-browser": "^5.0.0",
     "font-awesome": "^4.7.0",
     "formik": "^2.1.4",
+    "graphql": "^15.4.0",
     "history": "^4.10.1",
     "i18next": "^19.8.3",
     "i18next-browser-languagedetector": "^5.0.0",
