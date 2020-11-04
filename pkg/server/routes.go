@@ -9,6 +9,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
+	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -291,6 +292,17 @@ func (s *Server) routes(
 				store.CreateAction,
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+			),
+			services.NewSubmitBusinessCase(
+				serviceConfig,
+				services.NewAuthorizeUserIsIntakeRequester(),
+				store.FetchOpenBusinessCaseByIntakeID,
+				appvalidation.BusinessCaseForSubmit,
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				store.UpdateSystemIntake,
+				store.UpdateBusinessCase,
+				emailClient.SendBusinessCaseSubmissionEmail,
 			),
 		),
 	)

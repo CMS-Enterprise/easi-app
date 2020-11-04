@@ -16,13 +16,14 @@ import (
 // NewTakeAction is a service to create and execute an action
 func NewTakeAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
-	submit func(context.Context, *models.SystemIntake) error,
+	submitIntake func(context.Context, *models.SystemIntake) error,
 	reviewNotITRequest func(context.Context, *models.SystemIntake, *models.Action) error,
 	reviewReadyForGRT func(context.Context, *models.SystemIntake, *models.Action) error,
 	reviewRequestBizCase func(context.Context, *models.SystemIntake, *models.Action) error,
 	reviewProvideFeedbackNeedBizCase func(context.Context, *models.SystemIntake, *models.Action) error,
 	reviewReadyForGRB func(context.Context, *models.SystemIntake, *models.Action) error,
 	issueLCID func(context.Context, *models.SystemIntake, *models.Action) error,
+	submitBizCase func(context.Context, *models.SystemIntake) error,
 ) func(context.Context, *models.Action) error {
 	return func(ctx context.Context, action *models.Action) error {
 		intake, fetchErr := fetch(ctx, *action.IntakeID)
@@ -36,7 +37,7 @@ func NewTakeAction(
 
 		switch action.ActionType {
 		case models.ActionTypeSUBMITINTAKE:
-			return submit(ctx, intake)
+			return submitIntake(ctx, intake)
 		case models.ActionTypeNOTITREQUEST:
 			return reviewNotITRequest(ctx, intake, action)
 		case models.ActionTypeNEEDBIZCASE:
@@ -49,6 +50,8 @@ func NewTakeAction(
 			return reviewReadyForGRB(ctx, intake, action)
 		case models.ActionTypeISSUELCID:
 			return issueLCID(ctx, intake, action)
+		case models.ActionTypeSUBMITBIZCASE:
+			return submitBizCase(ctx, intake)
 		default:
 			return &apperrors.ResourceConflictError{
 				Err:        errors.New("invalid action type"),
