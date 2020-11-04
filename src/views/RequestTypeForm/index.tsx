@@ -16,6 +16,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
+import { useFlags } from 'contexts/flagContext';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { postSystemIntake } from 'types/routines';
@@ -27,6 +28,7 @@ const RequestTypeForm = () => {
   const { authService } = useOktaAuth();
   const dispatch = useDispatch();
   const history = useHistory();
+  const flags = useFlags();
 
   const isNewIntakeCreated = useSelector(
     (state: AppState) => state.systemIntake.isNewIntakeCreated
@@ -61,15 +63,18 @@ const RequestTypeForm = () => {
 
   useEffect(() => {
     if (isNewIntakeCreated) {
+      const navigationLink = flags.taskListLite
+        ? `/governance-task-list/${systemIntake.id}`
+        : `/system/${systemIntake.id}/contact-details`;
       switch (systemIntake.requestType) {
         case 'NEW':
-          history.push(`/governance-task-list/${systemIntake.id}`);
+          history.push(navigationLink);
           break;
         case 'MAJOR_CHANGES':
-          history.push(`/governance-task-list/${systemIntake.id}`);
+          history.push(navigationLink);
           break;
         case 'RECOMPETE':
-          history.push(`/governance-task-list/${systemIntake.id}`);
+          history.push(navigationLink);
           break;
         case 'SHUTDOWN':
           history.push(`/system/${systemIntake.id}/contact-details`);
