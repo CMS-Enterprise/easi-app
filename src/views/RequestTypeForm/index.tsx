@@ -38,24 +38,6 @@ const RequestTypeForm = () => {
         requestType: values.requestType
       })
     );
-
-    // switch (values.requestType) {
-    //   case 'NEW':
-    //     history.push(`/governance-task-list/${systemIntake.id}`);
-    //     break;
-    //   case 'MAJOR_CHANGES':
-    //     history.push(`/governance-task-list/${systemIntake.id}`);
-    //     break;
-    //   case 'RECOMPETE':
-    //     history.push(`/governance-task-list/${systemIntake.id}`);
-    //     break;
-    //   case 'SHUTDOWN':
-    //     history.push(`/system/${systemIntake.id}/contact-details`);
-    //     break;
-    //   default:
-    //     console.warn(`Unknown request type: ${systemIntake.requestType}`);
-    //     break;
-    // }
   };
 
   return (
