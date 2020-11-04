@@ -5,3 +5,5 @@ CREATE TABLE note (
     eua_user_id text not null,
     author_name text,
     content text);
+ALTER TABLE note
+    ADD CONSTRAINT eua_id_check CHECK (public.note.eua_user_id ~ '^[A-Z0-9]{4}$');
