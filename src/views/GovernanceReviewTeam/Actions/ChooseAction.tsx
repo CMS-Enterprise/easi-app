@@ -98,11 +98,23 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const BizCaseNeedsChanges = (
+    <RadioField
+      key="biz-case-needs-changes"
+      id="biz-case-needs-changes"
+      label={t('actions.bizCaseNeedsChanges')}
+      name={radioGroupName}
+      value="biz-case-needs-changes"
+      onChange={onChange}
+      checked={actionRoute === 'biz-case-needs-changes'}
+    />
+  );
+
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
   if (businessCaseExists) {
-    availableActions = [ReadyForGRT, ReadyForGRB];
-    availableHiddenActions = [];
+    availableActions = [BizCaseNeedsChanges];
+    availableHiddenActions = [ReadyForGRT, ReadyForGRB];
   } else {
     availableActions = [NotITRequest, NeedBizCase];
     availableHiddenActions = [
