@@ -1,0 +1,52 @@
+type Document {
+  id: ID!
+  title: String!
+  key: String!
+  kind: String!
+  project: Project!
+}
+
+enum DocumentType {
+  VPAT
+  DesignSessionDeck
+  TRBLetter
+}
+
+type DocumentInput {
+  title: String!
+  key: String!
+  type: DocumentType!
+  project: Project!
+}
+
+type DocumentUpdateResponse {
+  success: Boolean!
+  message: String
+  document: Document!
+}
+
+type Project {
+  id: ID!
+  name: String!
+  documents: [Document]
+}
+
+type ProjectInput {
+  name: String!
+}
+
+type ProjectUpdateResponse {
+  success: Boolean!
+  message: String
+  project: Project!
+}
+
+type Query {
+  projects: [Project]!
+  project(id: ID!): Project
+}
+
+type Mutation {
+  createProject(project: ProjectInput): ProjectUpdateResponse
+  createDocument(input: DocumentInput): DocumentUpdateResponse
+}
