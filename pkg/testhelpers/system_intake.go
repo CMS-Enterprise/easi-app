@@ -13,6 +13,7 @@ func NewSystemIntake() models.SystemIntake {
 		ID:                      uuid.New(),
 		EUAUserID:               RandomEUAID(),
 		Status:                  models.SystemIntakeStatusINTAKEDRAFT,
+		RequestType:             models.SystemIntakeRequestTypeNEW,
 		Requester:               "Test Requester",
 		Component:               null.StringFrom("Test Component"),
 		BusinessOwner:           null.StringFrom("Test Business Owner"),
