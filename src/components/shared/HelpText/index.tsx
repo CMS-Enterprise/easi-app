@@ -4,13 +4,18 @@ import classnames from 'classnames';
 import './index.scss';
 
 type HelpTextProps = {
+  id?: string;
   children: ReactNode;
   className?: string;
 };
 
-const HelpText = ({ children, className }: HelpTextProps) => {
+const HelpText = ({ id, children, className }: HelpTextProps) => {
   const classNames = classnames('easi-help-text', className);
-  return <div className={classNames}>{children}</div>;
+  return (
+    <div id={id} className={classNames}>
+      {children}
+    </div>
+  );
 };
 
 export default HelpText;

@@ -13,6 +13,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   euaUserID: '',
   requestName: '',
   status: 'INTAKE_DRAFT',
+  requestType: 'NEW',
   requester: {
     name: '',
     component: '',
@@ -84,7 +85,7 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
       id: systemIntake.id
     }),
     status: systemIntake.status,
-    requestType: 'NEW',
+    requestType: systemIntake.requestType,
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,
     businessOwner: systemIntake.businessOwner.name,
@@ -139,6 +140,7 @@ export const prepareSystemIntakeForApp = (
     euaUserID: systemIntake.euaUserID || '',
     requestName: systemIntake.projectName || '',
     status: systemIntake.status || 'INTAKE_DRAFT',
+    requestType: systemIntake.requestType || 'NEW',
     requester: {
       name: systemIntake.requester || '',
       component: systemIntake.component || '',
