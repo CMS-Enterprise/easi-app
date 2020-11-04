@@ -292,6 +292,15 @@ func (s *Server) routes(
 				cedarLdapClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
 			),
+			services.NewTakeActionUpdateStatus(
+				serviceConfig,
+				models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+			),
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/actions", systemIntakeActionHandler.Handle())
