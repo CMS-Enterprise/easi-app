@@ -21,7 +21,6 @@ import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
-import RequestRepository from 'views/RequestRepository';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
@@ -54,17 +53,6 @@ const AppRoutes = () => {
           component={GovernanceTaskList}
         />
       )}
-
-      {['local', 'dev', 'impl'].includes(
-        process.env.REACT_APP_APP_ENV || ''
-      ) && (
-        <SecureRoute
-          path="/governance-review-team/all"
-          exact
-          component={RequestRepository}
-        />
-      )}
-
       {userGroupsSet && user.isGrtReviewer(userGroups) && (
         <SecureRoute
           path="/governance-review-team/:systemId/:activePage"
