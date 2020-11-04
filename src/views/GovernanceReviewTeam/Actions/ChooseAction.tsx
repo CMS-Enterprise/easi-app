@@ -101,7 +101,7 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
   if (businessCaseExists) {
-    availableActions = [];
+    availableActions = [ReadyForGRT, ReadyForGRB];
     availableHiddenActions = [];
   } else {
     availableActions = [NotITRequest, NeedBizCase];
