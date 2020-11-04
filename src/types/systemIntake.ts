@@ -34,6 +34,8 @@ export const intakeStatuses = [
 // TODO: Remove old intake statuses once they're deprecated
 export type SystemIntakeStatus = typeof intakeStatuses[number];
 
+export type RequestType = 'NEW' | 'MAJOR_CHANGES' | 'RECOMPETE' | 'SHUTDOWN';
+
 /**
  * Type for SystemIntakeForm
  *
@@ -43,6 +45,7 @@ export type SystemIntakeForm = {
   euaUserID: string;
   requestName: string;
   status: SystemIntakeStatus;
+  requestType: RequestType;
   requester: {
     name: string;
     component: string;
