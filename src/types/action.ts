@@ -6,6 +6,7 @@ export type ActionType =
   | 'READY_FOR_GRB'
   | 'PROVIDE_FEEDBACK_NEED_BIZ_CASE'
   | 'BIZ_CASE_NEEDS_CHANGES'
+  | 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT'
   | 'ISSUE_LCID';
 
 export type Action = {
