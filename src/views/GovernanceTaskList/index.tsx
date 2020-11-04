@@ -147,6 +147,17 @@ const businessCaseLinkComponent = ({
           View submitted draft business case
         </UswdsLink>
       );
+    case 'BIZ_CASE_CHANGES_NEEDED':
+      return (
+        <UswdsLink
+          className="usa-button"
+          variant="unstyled"
+          asCustom={Link}
+          to={`/business/${systemIntakeId}/general-request-info`}
+        >
+          Update draft business case
+        </UswdsLink>
+      );
     default:
       return null;
   }
@@ -213,6 +224,16 @@ const GovernanceTaskList = () => {
     dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
   };
 
+  const getBusinessCaseDescription = () => {
+    switch (systemIntake.status) {
+      case 'BIZ_CASE_DRAFT_SUBMITTED':
+        return 'Status: Business case submitted. Waiting for feedback.';
+      case 'BIZ_CASE_CHANGES_NEEDED':
+        return 'Status: Read feedback in your email, make updates to your business case and re-submit it.';
+      default:
+        return 'Make a draft about the various solutions you’ve thought of and costs involved. After you’ve completed your draft business case you will likely attend the GRT meeting.';
+    }
+  };
   return (
     <PageWrapper className="governance-task-list">
       <Header />
@@ -260,7 +281,7 @@ const GovernanceTaskList = () => {
               </TaskListItem>
               <TaskListItem
                 heading="Prepare your Business Case"
-                description="Make a draft about the various solutions you’ve thought of and costs involved. After you’ve completed your draft business case you will likely attend the GRT meeting."
+                description={getBusinessCaseDescription()}
                 status={businessCaseStatus}
               >
                 {businessCaseLink}
