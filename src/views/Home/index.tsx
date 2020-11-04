@@ -47,15 +47,15 @@ const Home = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        {userGroupsSet && user.isGrtReviewer(userGroups) && (
-          <RequestRepository />
-        )}
-        {userGroupsSet && !user.isGrtReviewer(userGroups) && (
-          <>
-            <Banners />
-            <WelcomeText />
-          </>
-        )}
+        {userGroupsSet &&
+          (user.isGrtReviewer(userGroups) ? (
+            <RequestRepository />
+          ) : (
+            <>
+              <Banners />
+              <WelcomeText />
+            </>
+          ))}
         {!authState.isAuthenticated && <WelcomeText />}
       </MainContent>
       <Footer />
