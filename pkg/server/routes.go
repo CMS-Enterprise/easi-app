@@ -3,10 +3,14 @@ package server
 import (
 	"net/http"
 
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
+	"github.com/cmsgov/easi-app/graph"
+	"github.com/cmsgov/easi-app/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
@@ -98,6 +102,17 @@ func (s *Server) routes(
 	}
 
 	flagUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
+
+	// WIP GraphQL server
+	gql := s.router.PathPrefix("/graph").Subrouter()
+
+	gql.Use(loggerMiddleware)
+	gql.Use(corsMiddleware)
+
+	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	gql.Handle("/query", graphqlServer)
+
+	gql.HandleFunc("/playground", playground.Handler("GraphQL playground", "/query"))
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()

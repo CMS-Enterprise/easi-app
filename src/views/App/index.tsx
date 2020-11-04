@@ -21,6 +21,7 @@ import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
+import Projects from 'views/Projects';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
@@ -39,6 +40,7 @@ const AppRoutes = () => {
 
   return (
     <Switch>
+      <Route path="/projects" exact component={Projects} />
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
