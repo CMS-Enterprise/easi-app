@@ -17,9 +17,6 @@ import {
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
-type OptionalSagaOptions = {
-  handleOnSuccess?: (values: SystemIntakeForm) => void;
-};
 function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
   const data = prepareSystemIntakeForApi(formData);
@@ -31,21 +28,15 @@ function postSystemIntakeRequest(formData: SystemIntakeForm) {
   return axios.post(`${process.env.REACT_APP_API_ADDRESS}/system_intake`, data);
 }
 
-function* createSystemIntake(
-  action: Action<{ formData: SystemIntakeForm; options?: OptionalSagaOptions }>
-) {
-  const { formData, options = {} } = action.payload;
+function* createSystemIntake(action: Action<any>) {
   try {
     yield put(postSystemIntake.request());
-    const response = yield call(postSystemIntakeRequest, formData);
+    const response = yield call(postSystemIntakeRequest, action.payload);
     const formattedResponse = yield call(
       prepareSystemIntakeForApp,
       response.data
     );
     yield put(postSystemIntake.success(formattedResponse));
-    if (options.handleOnSuccess) {
-      yield call(options.handleOnSuccess, formattedResponse);
-    }
   } catch (error) {
     yield put(postSystemIntake.failure(error.message));
   } finally {

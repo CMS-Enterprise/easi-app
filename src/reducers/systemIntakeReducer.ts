@@ -19,6 +19,7 @@ const initialState: SystemIntakeState = {
   systemIntake: initialSystemIntakeForm,
   isLoading: null,
   isSaving: false,
+  isNewIntakeCreated: null,
   error: null
 };
 
@@ -61,17 +62,20 @@ function systemIntakeReducer(
         systemIntake: {
           ...state.systemIntake,
           ...action.payload
-        }
+        },
+        isNewIntakeCreated: true
       };
     case postSystemIntake.FAILURE:
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
+        isNewIntakeCreated: false
       };
     case postSystemIntake.FULFILL:
       return {
         ...state,
-        isSaving: false
+        isSaving: false,
+        isNewIntakeCreated: null
       };
     case saveSystemIntake.REQUEST:
       return {
