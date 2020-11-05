@@ -1,5 +1,5 @@
 export type ActionType =
-  | 'SUBMIT'
+  | 'SUBMIT_INTAKE'
   | 'NOT_IT_REQUEST'
   | 'NEED_BIZ_CASE'
   | 'READY_FOR_GRT'
