@@ -175,7 +175,16 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 // FetchSystemIntakeByID queries the DB for a system intake matching the given ID
 func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
-	err := s.db.Get(&intake, "SELECT * FROM public.system_intake WHERE id=$1", id)
+	const fetchSystemIntakeByIDsql = `
+		SELECT
+		       system_intake.*,
+		       business_case.id as business_case_id
+		FROM
+		     system_intake
+		     LEFT JOIN business_case ON business_case.system_intake = system_intake.id AND business_case.status = 'OPEN'
+		WHERE system_intake.eua_user_id=$1 AND system_intake.status != 'WITHDRAWN'
+`
+	err := s.db.Get(&intake, fetchSystemIntakeByIDsql, id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
@@ -198,7 +207,16 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE eua_user_id=$1 AND status != 'WITHDRAWN'", euaID)
+	const fetchSystemIntakesByEuaIDsql = `
+		SELECT
+		       system_intake.*,
+		       business_case.id as business_case_id
+		FROM
+		     system_intake
+		     LEFT JOIN business_case ON business_case.system_intake = system_intake.id AND business_case.status = 'OPEN'
+		WHERE system_intake.eua_user_id=$1 AND system_intake.status != 'WITHDRAWN'
+	`
+	err := s.db.Select(&intakes, fetchSystemIntakesByEuaIDsql, euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
