@@ -92,7 +92,7 @@ const SystemIntakeBanners = () => {
                   // ToDo: where do we get the biz case ID to put in "???????"
                   pathname: flags.taskListLite
                     ? `/governance-task-list/${intake.id}`
-                    : '/business/???????????/general-request-info',
+                    : `/business/${intake.businessCaseId}/general-request-info`,
                   ...((!flags.taskListLite && {
                     state: {
                       systemIntakeId: intake.id
