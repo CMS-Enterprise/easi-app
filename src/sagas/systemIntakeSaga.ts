@@ -2,7 +2,10 @@ import axios from 'axios';
 import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import { prepareSystemIntakeForApi } from 'data/systemIntake';
+import {
+  prepareSystemIntakeForApi,
+  prepareSystemIntakeForApp
+} from 'data/systemIntake';
 import { updateLastActiveAt } from 'reducers/authReducer';
 import {
   archiveSystemIntake,
@@ -29,7 +32,11 @@ function* createSystemIntake(action: Action<any>) {
   try {
     yield put(postSystemIntake.request());
     const response = yield call(postSystemIntakeRequest, action.payload);
-    yield put(postSystemIntake.success(response.data));
+    const formattedResponse = yield call(
+      prepareSystemIntakeForApp,
+      response.data
+    );
+    yield put(postSystemIntake.success(formattedResponse));
   } catch (error) {
     yield put(postSystemIntake.failure(error.message));
   } finally {

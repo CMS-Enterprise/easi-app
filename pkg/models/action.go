@@ -26,6 +26,8 @@ const (
 	ActionTypeISSUELCID ActionType = "ISSUE_LCID"
 	// ActionTypeSUBMITBIZCASE captures enum value SUBMIT_BIZ_CASE
 	ActionTypeSUBMITBIZCASE ActionType = "SUBMIT_BIZ_CASE"
+	// ActionTypeBIZCASENEEDSCHANGES captures enum value BIZ_CASE_NEEDS_CHANGES
+	ActionTypeBIZCASENEEDSCHANGES ActionType = "BIZ_CASE_NEEDS_CHANGES"
 )
 
 // Action is the model for an action on a system intake

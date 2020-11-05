@@ -6,7 +6,8 @@ const action = {
     readyForGrb: 'Mark as ready for GRB',
     provideFeedbackNeedBizCase:
       'Provide GRT Feedback and progress to business case',
-    issueLcid: 'Issue Lifecycle ID with no further governance'
+    issueLcid: 'Issue Lifecycle ID with no further governance',
+    bizCaseNeedsChanges: 'Business case needs changes and is not ready for GRT'
   },
   issueLCID: {
     backLink: 'Change',
