@@ -187,8 +187,8 @@ func BusinessCaseForSubmit(businessCase *models.BusinessCase) error {
 		businessCase.ID.String(),
 	)
 
-	if businessCase.Status != models.BusinessCaseStatusOPEN && businessCase.Status != models.BusinessCaseStatusSUBMITTED {
-		expectedErr.WithValidation("Status", "must be SUBMITTED or OPEN")
+	if businessCase.Status != models.BusinessCaseStatusOPEN {
+		expectedErr.WithValidation("Status", "must be OPEN")
 	}
 
 	if validate.RequireUUID(businessCase.ID) {

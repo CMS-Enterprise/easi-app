@@ -233,7 +233,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		businessCase.ID = existingBusinessCase.ID
 		businessCase.EUAUserID = existingBusinessCase.EUAUserID
 		businessCase.Requester = null.NewString("", false)
-		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		businessCase.Status = models.BusinessCaseStatusOPEN
 
 		_, err := updateBusinessCase(ctx, &businessCase)
 

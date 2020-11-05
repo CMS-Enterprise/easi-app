@@ -266,7 +266,7 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 	s.Run("lifecycle costs are recreated", func() {
 		businessCaseToUpdate := models.BusinessCase{
 			ID:     id,
-			Status: models.BusinessCaseStatusSUBMITTED,
+			Status: models.BusinessCaseStatusOPEN,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{
