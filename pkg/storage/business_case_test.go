@@ -148,7 +148,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
 			EUAUserID:      testhelpers.RandomEUAID(),
-			Status:         models.BusinessCaseStatusDRAFT,
+			Status:         models.BusinessCaseStatusOPEN,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{
 				testhelpers.NewEstimatedLifecycleCost(testhelpers.EstimatedLifecycleCostOptions{}),
 			},
@@ -164,7 +164,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 	s.Run("requires a system intake ID", func() {
 		businessCase := models.BusinessCase{
 			EUAUserID: testhelpers.RandomEUAID(),
-			Status:    models.BusinessCaseStatusDRAFT,
+			Status:    models.BusinessCaseStatusOPEN,
 		}
 
 		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
@@ -178,7 +178,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		businessCase := models.BusinessCase{
 			SystemIntakeID: badintakeID,
 			EUAUserID:      testhelpers.RandomEUAID(),
-			Status:         models.BusinessCaseStatusDRAFT,
+			Status:         models.BusinessCaseStatusOPEN,
 		}
 
 		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
@@ -193,7 +193,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		s.NoError(err)
 		businessCase := models.BusinessCase{
 			SystemIntakeID: intake.ID,
-			Status:         models.BusinessCaseStatusDRAFT,
+			Status:         models.BusinessCaseStatusOPEN,
 		}
 		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 
@@ -238,7 +238,7 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 		expectedProjectName := null.StringFrom("Fake name")
 		businessCaseToUpdate := models.BusinessCase{
 			ID:                   id,
-			Status:               models.BusinessCaseStatusDRAFT,
+			Status:               models.BusinessCaseStatusOPEN,
 			ProjectName:          expectedProjectName,
 			RequesterPhoneNumber: expectedPhoneNumber,
 			PriorityAlignment:    null.String{},
@@ -302,7 +302,7 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 		unwantedEUAUserID := testhelpers.RandomEUAID()
 		businessCaseToUpdate := models.BusinessCase{
 			ID:             id,
-			Status:         models.BusinessCaseStatusDRAFT,
+			Status:         models.BusinessCaseStatusOPEN,
 			SystemIntakeID: unwantedSystemIntakeID,
 			EUAUserID:      unwantedEUAUserID,
 		}
@@ -321,7 +321,7 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 		badUUID := uuid.New()
 		businessCaseToUpdate := models.BusinessCase{
 			ID:                 badUUID,
-			Status:             models.BusinessCaseStatusDRAFT,
+			Status:             models.BusinessCaseStatusOPEN,
 			LifecycleCostLines: models.EstimatedLifecycleCosts{},
 		}
 		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)
