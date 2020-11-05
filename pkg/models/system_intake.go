@@ -72,6 +72,7 @@ type SystemIntake struct {
 	OITSecurityCollaborator null.String             `json:"oitSecurityCollaborator" db:"oit_security_collaborator"`
 	EACollaborator          null.String             `json:"eaCollaborator" db:"ea_collaborator"`
 	ProjectName             null.String             `json:"projectName" db:"project_name"`
+	ProjectAcronym          null.String             `json:"projectAcronym" db:"project_acronym"`
 	ExistingFunding         null.Bool               `json:"existingFunding" db:"existing_funding"`
 	FundingSource           null.String             `json:"fundingSource" db:"funding_source"`
 	FundingNumber           null.String             `json:"fundingNumber" db:"funding_number"`
@@ -93,6 +94,8 @@ type SystemIntake struct {
 	SubmittedAt             *time.Time              `json:"submittedAt" db:"submitted_at"`
 	DecidedAt               *time.Time              `json:"decidedAt" db:"decided_at"`
 	ArchivedAt              *time.Time              `db:"archived_at"`
+	GRTDate                 *time.Time              `json:"grtDate" db:"grt_date"`
+	GRBDate                 *time.Time              `json:"grbDate" db:"grb_date"`
 	AlfabetID               null.String             `json:"alfabetID" db:"alfabet_id"`
 	GrtReviewEmailBody      null.String             `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 	RequesterEmailAddress   null.String             `json:"requesterEmailAddress" db:"requester_email_address"`
