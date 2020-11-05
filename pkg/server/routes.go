@@ -302,6 +302,7 @@ func (s *Server) routes(
 				store.UpdateSystemIntake,
 				store.UpdateBusinessCase,
 				emailClient.SendBusinessCaseSubmissionEmail,
+			),
 			services.NewTakeActionUpdateStatus(
 				serviceConfig,
 				models.SystemIntakeStatusBIZCASECHANGESNEEDED,
