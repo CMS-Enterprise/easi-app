@@ -9,7 +9,9 @@ const action = {
     issueLcid: 'Issue Lifecycle ID with no further governance',
     bizCaseNeedsChanges: 'Business case needs changes and is not ready for GRT',
     provideGrtFeedbackKeepDraft:
-      'Provide GRT feedback and keep business case draft'
+      'Provide GRT feedback and keep business case draft',
+    provideGrtFeedbackNeedFinal:
+      'Provide GRT feedback and move business case to final'
   },
   issueLCID: {
     backLink: 'Change',

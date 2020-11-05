@@ -322,6 +322,15 @@ func (s *Server) routes(
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 				),
+				models.ActionTypePROVIDEFEEDBACKBIZCASEFINAL: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusBIZCASEFINALNEEDED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
 			},
 		),
 	)
