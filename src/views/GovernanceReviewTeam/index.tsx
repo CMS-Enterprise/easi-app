@@ -217,6 +217,15 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
+              path="/governance-review-team/:systemId/actions/ready-for-grb"
+              render={() => (
+                <SubmitAction
+                  action="READY_FOR_GRB"
+                  actionName={actionsT('actions.readyForGrb')}
+                />
+              )}
+            />
+            <Route
               path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
               render={() => (
                 <SubmitAction
