@@ -195,12 +195,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 		}
 		return nil, err
 	}
-	// This should cover all statuses that might have a related business case on it.
-	// In the future submitted will also need to be checked.
-	if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
-		bizCaseID, _ := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
-		intake.BusinessCaseID = bizCaseID
-	}
+
 	return &intake, nil
 }
 
@@ -224,34 +219,25 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 		)
 		return models.SystemIntakes{}, err
 	}
-	for k, intake := range intakes {
-		if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
-			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
-			if fetchErr != nil {
-				return models.SystemIntakes{}, fetchErr
-			}
-			intakes[k].BusinessCaseID = bizCaseID
-		}
-	}
 	return intakes, nil
 }
 
 // FetchSystemIntakesNotArchived queries the DB for all system intakes that are not archived
 func (s *Store) FetchSystemIntakesNotArchived(ctx context.Context) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	err := s.db.Select(&intakes, "SELECT * FROM system_intake WHERE status != 'WITHDRAWN'")
+	const fetchSystemIntakesSQL = `
+		SELECT
+		       system_intake.*,
+		       business_case.id as business_case_id
+		FROM
+		     system_intake
+		     LEFT JOIN business_case ON business_case.system_intake = system_intake.id AND business_case.status = 'OPEN'
+		WHERE system_intake.status != 'WITHDRAWN'
+	`
+	err := s.db.Select(&intakes, fetchSystemIntakesSQL)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return models.SystemIntakes{}, err
-	}
-	for k, intake := range intakes {
-		if intake.Status != models.SystemIntakeStatusINTAKEDRAFT {
-			bizCaseID, fetchErr := s.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
-			if fetchErr != nil {
-				return models.SystemIntakes{}, fetchErr
-			}
-			intakes[k].BusinessCaseID = bizCaseID
-		}
 	}
 	return intakes, nil
 }

@@ -390,10 +390,9 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		s.Nil(fetched)
 	})
 
-	s.Run("fetches biz case id if exists and intake is past draft status", func() {
+	s.Run("fetches OPEN biz case id if exists", func() {
 		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
-		intake.Status = models.SystemIntakeStatusLCIDISSUED
 		bizCase := testhelpers.NewBusinessCase()
 		bizCase.SystemIntakeID = id
 
@@ -463,13 +462,11 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		s.Equal(models.SystemIntakes{}, fetched)
 	})
 
-	s.Run("fetches biz case IDs if they exist and intakes are past draft status", func() {
+	s.Run("fetches OPEN biz case IDs if they exist", func() {
 		intake := testhelpers.NewSystemIntake()
 		intake2 := testhelpers.NewSystemIntake()
 		id := intake.ID
 		intake2.EUAUserID = intake.EUAUserID
-		intake.Status = models.SystemIntakeStatusLCIDISSUED
-		intake2.Status = models.SystemIntakeStatusINTAKESUBMITTED
 
 		bizCase := testhelpers.NewBusinessCase()
 		bizCase.SystemIntakeID = id
