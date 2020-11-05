@@ -40,7 +40,7 @@ const (
 	SystemIntakeStatusBIZCASESUBMITTED SystemIntakeStatus = "BIZ_CASE_SUBMITTED"
 	// SystemIntakeStatusBIZCASECHANGESNEEDED captures enum value "BIZ_CASE_CHANGES_NEEDED"
 	SystemIntakeStatusBIZCASECHANGESNEEDED SystemIntakeStatus = "BIZ_CASE_CHANGES_NEEDED"
-  
+
 	// SystemIntakeRequestTypeNEW captures enum value of "NEW"
 	SystemIntakeRequestTypeNEW SystemIntakeRequestType = "NEW"
 	// SystemIntakeRequestTypeMAJORCHANGES captures enum value of "MAJOR_CHANGES"
