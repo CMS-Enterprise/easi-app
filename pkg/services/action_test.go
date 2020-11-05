@@ -401,7 +401,9 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		}, nil
 	}
 	reviewEmailCount := 0
+	feedbackForEmailText := ""
 	sendReviewEmail := func(emailText string, recipientAddress string) error {
+		feedbackForEmailText = emailText
 		reviewEmailCount++
 		return nil
 	}
@@ -425,11 +427,13 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			sendReviewEmail,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
-		action := &models.Action{}
+		action := &models.Action{Feedback: "feedback"}
 		err := reviewSystemIntake(ctx, intake, action)
 
 		s.NoError(err)
 		s.Equal("NAME", createdAction.ActorName)
+		s.Equal(1, reviewEmailCount)
+		s.Equal("feedback", feedbackForEmailText)
 	})
 
 	s.Run("returns error when authorization errors", func() {
