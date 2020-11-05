@@ -98,6 +98,32 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const provideFeedbackKeepDraftRoute = 'provide-feedback-keep-draft';
+  const ProvideFeedbackKeepDraft = (
+    <RadioField
+      key={provideFeedbackKeepDraftRoute}
+      id={provideFeedbackKeepDraftRoute}
+      label={t('actions.provideGrtFeedbackKeepDraft')}
+      name={radioGroupName}
+      value={provideFeedbackKeepDraftRoute}
+      onChange={onChange}
+      checked={actionRoute === provideFeedbackKeepDraftRoute}
+    />
+  );
+
+  const provideFeedbackNeedFinalRoute = 'provide-feedback-need-final';
+  const ProvideFeedbackNeedFinal = (
+    <RadioField
+      key={provideFeedbackNeedFinalRoute}
+      id={provideFeedbackNeedFinalRoute}
+      label={t('actions.provideGrtFeedbackNeedFinal')}
+      name={radioGroupName}
+      value={provideFeedbackNeedFinalRoute}
+      onChange={onChange}
+      checked={actionRoute === provideFeedbackNeedFinalRoute}
+    />
+  );
+
   const BizCaseNeedsChanges = (
     <RadioField
       key="biz-case-needs-changes"
@@ -110,17 +136,36 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const noFurtherGovernanceRoute = 'no-governance';
+  const NoFurtherGovernance = (
+    <RadioField
+      key={noFurtherGovernanceRoute}
+      id={noFurtherGovernanceRoute}
+      label={t('actions.noGovernance')}
+      name={radioGroupName}
+      value={noFurtherGovernanceRoute}
+      onChange={onChange}
+      checked={actionRoute === noFurtherGovernanceRoute}
+    />
+  );
+
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
   if (businessCaseExists) {
     availableActions = [BizCaseNeedsChanges];
-    availableHiddenActions = [ReadyForGRT, ReadyForGRB];
+    availableHiddenActions = [
+      ReadyForGRT,
+      ReadyForGRB,
+      ProvideFeedbackKeepDraft,
+      ProvideFeedbackNeedFinal
+    ];
   } else {
     availableActions = [NotITRequest, NeedBizCase];
     availableHiddenActions = [
       ReadyForGRT,
       ProvideFeedbackNeedBizCase,
       ReadyForGRB,
+      NoFurtherGovernance,
       IssueLifecycleId
     ];
   }

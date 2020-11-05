@@ -13,18 +13,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+// ActionExecuter is a function that can execute an action
+type ActionExecuter func(context.Context, *models.SystemIntake, *models.Action) error
+
 // NewTakeAction is a service to create and execute an action
 func NewTakeAction(
 	fetch func(context.Context, uuid.UUID) (*models.SystemIntake, error),
-	submitIntake func(context.Context, *models.SystemIntake) error,
-	reviewNotITRequest func(context.Context, *models.SystemIntake, *models.Action) error,
-	reviewReadyForGRT func(context.Context, *models.SystemIntake, *models.Action) error,
-	reviewRequestBizCase func(context.Context, *models.SystemIntake, *models.Action) error,
-	reviewProvideFeedbackNeedBizCase func(context.Context, *models.SystemIntake, *models.Action) error,
-	reviewReadyForGRB func(context.Context, *models.SystemIntake, *models.Action) error,
-	issueLCID func(context.Context, *models.SystemIntake, *models.Action) error,
-	submitBizCase func(context.Context, *models.SystemIntake) error,
-	bizCaseNeedsChanges func(context.Context, *models.SystemIntake, *models.Action) error,
+	actionTypeMap map[models.ActionType]ActionExecuter,
 ) func(context.Context, *models.Action) error {
 	return func(ctx context.Context, action *models.Action) error {
 		intake, fetchErr := fetch(ctx, *action.IntakeID)
@@ -36,31 +31,13 @@ func NewTakeAction(
 			}
 		}
 
-		switch action.ActionType {
-		case models.ActionTypeSUBMITINTAKE:
-			return submitIntake(ctx, intake)
-		case models.ActionTypeNOTITREQUEST:
-			return reviewNotITRequest(ctx, intake, action)
-		case models.ActionTypeNEEDBIZCASE:
-			return reviewRequestBizCase(ctx, intake, action)
-		case models.ActionTypeREADYFORGRT:
-			return reviewReadyForGRT(ctx, intake, action)
-		case models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE:
-			return reviewProvideFeedbackNeedBizCase(ctx, intake, action)
-		case models.ActionTypeREADYFORGRB:
-			return reviewReadyForGRB(ctx, intake, action)
-		case models.ActionTypeISSUELCID:
-			return issueLCID(ctx, intake, action)
-		case models.ActionTypeSUBMITBIZCASE:
-			return submitBizCase(ctx, intake)
-		case models.ActionTypeBIZCASENEEDSCHANGES:
-			return bizCaseNeedsChanges(ctx, intake, action)
-		default:
-			return &apperrors.ResourceConflictError{
-				Err:        errors.New("invalid action type"),
-				Resource:   intake,
-				ResourceID: intake.ID.String(),
-			}
+		if executeAction, ok := actionTypeMap[action.ActionType]; ok {
+			return executeAction(ctx, intake, action)
+		}
+		return &apperrors.ResourceConflictError{
+			Err:        errors.New("invalid action type"),
+			Resource:   intake,
+			ResourceID: intake.ID.String(),
 		}
 	}
 }
@@ -75,8 +52,8 @@ func NewSubmitSystemIntake(
 	createAction func(context.Context, *models.Action) (*models.Action, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	emailReviewer func(requester string, intakeID uuid.UUID) error,
-) func(context.Context, *models.SystemIntake) error {
-	return func(ctx context.Context, intake *models.SystemIntake) error {
+) ActionExecuter {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
 		if err != nil {
 			return err
@@ -98,11 +75,11 @@ func NewSubmitSystemIntake(
 			return err
 		}
 
-		userInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+		actorInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
 		if err != nil {
 			return err
 		}
-		if userInfo == nil || userInfo.Email == "" || userInfo.CommonName == "" || userInfo.EuaUserID == "" {
+		if actorInfo == nil || actorInfo.Email == "" || actorInfo.CommonName == "" || actorInfo.EuaUserID == "" {
 			return &apperrors.ExternalAPIError{
 				Err:       errors.New("user info fetch was not successful"),
 				Model:     intake,
@@ -128,14 +105,10 @@ func NewSubmitSystemIntake(
 		}
 		intake.AlfabetID = null.StringFrom(alfabetID)
 
-		action := models.Action{
-			IntakeID:       &intake.ID,
-			ActionType:     models.ActionTypeSUBMITINTAKE,
-			ActorName:      userInfo.CommonName,
-			ActorEmail:     userInfo.Email,
-			ActorEUAUserID: userInfo.EuaUserID,
-		}
-		_, err = createAction(ctx, &action)
+		action.ActorName = actorInfo.CommonName
+		action.ActorEmail = actorInfo.Email
+		action.ActorEUAUserID = actorInfo.EuaUserID
+		_, err = createAction(ctx, action)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
@@ -174,8 +147,8 @@ func NewSubmitBusinessCase(
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
 	sendEmail func(requester string, intakeID uuid.UUID) error,
-) func(context.Context, *models.SystemIntake) error {
-	return func(ctx context.Context, intake *models.SystemIntake) error {
+) ActionExecuter {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
 		if err != nil {
 			return err
@@ -223,14 +196,10 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		action := models.Action{
-			IntakeID:       &intake.ID,
-			ActionType:     models.ActionTypeSUBMITBIZCASE,
-			ActorName:      userInfo.CommonName,
-			ActorEmail:     userInfo.Email,
-			ActorEUAUserID: userInfo.EuaUserID,
-		}
-		_, err = createAction(ctx, &action)
+		action.ActorName = userInfo.CommonName
+		action.ActorEmail = userInfo.Email
+		action.ActorEUAUserID = userInfo.EuaUserID
+		_, err = createAction(ctx, action)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
@@ -278,7 +247,7 @@ func NewTakeActionUpdateStatus(
 	createAction func(context.Context, *models.Action) (*models.Action, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
-) func(context.Context, *models.SystemIntake, *models.Action) error {
+) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx)
 		if err != nil {
@@ -341,7 +310,7 @@ func NewTakeActionUpdateStatus(
 			}
 		}
 
-		err = sendReviewEmail(intake.GrtReviewEmailBody.String, requesterInfo.Email)
+		err = sendReviewEmail(action.Feedback, requesterInfo.Email)
 		if err != nil {
 			return err
 		}

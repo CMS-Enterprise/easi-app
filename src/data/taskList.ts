@@ -51,6 +51,7 @@ export const bizCaseStatus = (
   switch (intakeStatus) {
     case 'BIZ_CASE_DRAFT':
     case 'BIZ_CASE_DRAFT_SUBMITTED':
+    case 'BIZ_CASE_CHANGES_NEEDED':
       return intakeStatus;
     default:
       break;

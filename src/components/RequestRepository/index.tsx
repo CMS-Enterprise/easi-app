@@ -164,6 +164,7 @@ const RequestRepository = () => {
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
+                  style={{ whiteSpace: 'nowrap' }}
                 >
                   {column.render('Header')}
                   {column.isSorted && (
