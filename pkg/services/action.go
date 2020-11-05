@@ -23,6 +23,7 @@ func NewTakeAction(
 	reviewProvideFeedbackNeedBizCase func(context.Context, *models.SystemIntake, *models.Action) error,
 	reviewReadyForGRB func(context.Context, *models.SystemIntake, *models.Action) error,
 	issueLCID func(context.Context, *models.SystemIntake, *models.Action) error,
+	bizCaseNeedsChanges func(context.Context, *models.SystemIntake, *models.Action) error,
 ) func(context.Context, *models.Action) error {
 	return func(ctx context.Context, action *models.Action) error {
 		intake, fetchErr := fetch(ctx, *action.IntakeID)
@@ -49,6 +50,8 @@ func NewTakeAction(
 			return reviewReadyForGRB(ctx, intake, action)
 		case models.ActionTypeISSUELCID:
 			return issueLCID(ctx, intake, action)
+		case models.ActionTypeBIZCASENEEDSCHANGES:
+			return bizCaseNeedsChanges(ctx, intake, action)
 		default:
 			return &apperrors.ResourceConflictError{
 				Err:        errors.New("invalid action type"),

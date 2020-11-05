@@ -217,6 +217,15 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
+              path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
+              render={() => (
+                <SubmitAction
+                  action="BIZ_CASE_NEEDS_CHANGES"
+                  actionName={actionsT('actions.bizCaseNeedsChanges')}
+                />
+              )}
+            />
+            <Route
               path="/governance-review-team/:systemId/actions/issue-lcid"
               render={() => <IssueLifecycleId />}
             />
