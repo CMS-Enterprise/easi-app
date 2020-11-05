@@ -11,7 +11,8 @@ const action = {
     provideGrtFeedbackKeepDraft:
       'Provide GRT feedback and keep business case draft',
     provideGrtFeedbackNeedFinal:
-      'Provide GRT feedback and move business case to final'
+      'Provide GRT feedback and move business case to final',
+    noGovernance: 'No further governance needed'
   },
   issueLCID: {
     backLink: 'Change',

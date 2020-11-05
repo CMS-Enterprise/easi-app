@@ -8,6 +8,7 @@ export type ActionType =
   | 'BIZ_CASE_NEEDS_CHANGES'
   | 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT'
   | 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL'
+  | 'NO_GOVERNANCE_NEEDED'
   | 'ISSUE_LCID';
 
 export type Action = {
