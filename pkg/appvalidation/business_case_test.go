@@ -308,10 +308,8 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 	})
 
 	s.Run("returns validations when optional alternative", func() {
-		existingBusinessCase := testhelpers.NewBusinessCase()
-		existingBusinessCase.Status = models.BusinessCaseStatusDRAFT
 		businessCase := testhelpers.NewBusinessCase()
-		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		businessCase.Status = models.BusinessCaseStatusOPEN
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 		submittedAt := time.Now()
 		businessCase.LastSubmittedAt = &submittedAt
