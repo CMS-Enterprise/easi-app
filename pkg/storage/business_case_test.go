@@ -38,22 +38,6 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
 		s.Nil(fetched)
 	})
-
-	s.Run("does not fetch archived business case", func() {
-		intake := testhelpers.NewSystemIntake()
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
-		s.NoError(err)
-		businessCase := testhelpers.NewBusinessCase()
-		businessCase.SystemIntakeID = intake.ID
-		businessCase.Status = models.BusinessCaseStatusARCHIVED
-		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
-		s.NoError(err)
-		fetched, err := s.store.FetchBusinessCaseByID(ctx, created.ID)
-
-		s.Error(err)
-		s.IsType(&apperrors.ResourceNotFoundError{}, err)
-		s.Nil(fetched)
-	})
 }
 
 func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
@@ -99,42 +83,6 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 		s.NoError(err)
 		s.Len(fetched, 0)
 		s.Equal(models.BusinessCases{}, fetched)
-	})
-
-	s.Run("does not fetch archived business case", func() {
-		intake := testhelpers.NewSystemIntake()
-		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
-		s.NoError(err)
-
-		intake2 := testhelpers.NewSystemIntake()
-		intake2.EUAUserID = intake.EUAUserID
-		intake2.Status = models.SystemIntakeStatusINTAKEDRAFT
-		_, err = s.store.CreateSystemIntake(ctx, &intake2)
-		s.NoError(err)
-		intake2.Status = models.SystemIntakeStatusWITHDRAWN
-		_, err = s.store.UpdateSystemIntake(ctx, &intake2)
-		s.NoError(err)
-
-		businessCase := testhelpers.NewBusinessCase()
-		businessCase.EUAUserID = intake.EUAUserID
-		businessCase.SystemIntakeID = intake.ID
-
-		businessCase2 := testhelpers.NewBusinessCase()
-		businessCase2.EUAUserID = intake.EUAUserID
-		businessCase2.SystemIntakeID = intake2.ID
-		businessCase2.Status = models.BusinessCaseStatusARCHIVED
-
-		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
-		s.NoError(err)
-
-		_, err = s.store.CreateBusinessCase(ctx, &businessCase2)
-		s.NoError(err)
-
-		fetched, err := s.store.FetchBusinessCasesByEuaID(ctx, businessCase.EUAUserID)
-
-		s.NoError(err, "failed to fetch business cases")
-		s.Len(fetched, 1)
 	})
 }
 

@@ -38,7 +38,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 			business_case
 			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
 		WHERE
-			business_case.id = $1 AND business_case.status != 'ARCHIVED'
+			business_case.id = $1
 		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
 
 	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, id)
@@ -119,7 +119,7 @@ func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (mo
 			business_case
 			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
 		WHERE
-			business_case.eua_user_id = $1 AND business_case.status != 'ARCHIVED'
+			business_case.eua_user_id = $1
 		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
 
 	err := s.db.Select(&businessCases, fetchBusinessCaseSQL, euaID)

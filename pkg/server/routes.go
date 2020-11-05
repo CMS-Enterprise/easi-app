@@ -162,7 +162,7 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
-			services.NewArchiveBusinessCase(
+			services.NewCloseBusinessCase(
 				serviceConfig,
 				store.FetchBusinessCaseByID,
 				store.UpdateBusinessCase,

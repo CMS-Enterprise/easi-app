@@ -167,8 +167,8 @@ func NewUpdateBusinessCase(
 	}
 }
 
-// NewArchiveBusinessCase is a service to archive a businessCase
-func NewArchiveBusinessCase(
+// NewCloseBusinessCase is a service to close a businessCase
+func NewCloseBusinessCase(
 	config Config,
 	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
 	update func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
@@ -185,8 +185,7 @@ func NewArchiveBusinessCase(
 
 		updatedTime := config.clock.Now()
 		businessCase.UpdatedAt = &updatedTime
-		businessCase.Status = models.BusinessCaseStatusARCHIVED
-		businessCase.ArchivedAt = &updatedTime
+		businessCase.Status = models.BusinessCaseStatusCLOSED
 
 		_, err := update(ctx, businessCase)
 		if err != nil {

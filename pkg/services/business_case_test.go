@@ -258,7 +258,7 @@ func (s ServicesTestSuite) TestBusinessCaseArchiver() {
 	}
 
 	s.Run("golden path archive business case", func() {
-		archiveBusinessCase := NewArchiveBusinessCase(serviceConfig, fetch, update)
+		archiveBusinessCase := NewCloseBusinessCase(serviceConfig, fetch, update)
 		err := archiveBusinessCase(ctx, fakeID)
 		s.NoError(err)
 	})
@@ -267,7 +267,7 @@ func (s ServicesTestSuite) TestBusinessCaseArchiver() {
 		failFetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("fetch failed")
 		}
-		archiveBusinessCase := NewArchiveBusinessCase(serviceConfig, failFetch, update)
+		archiveBusinessCase := NewCloseBusinessCase(serviceConfig, failFetch, update)
 		err := archiveBusinessCase(ctx, fakeID)
 		s.IsType(&apperrors.QueryError{}, err)
 	})
@@ -276,7 +276,7 @@ func (s ServicesTestSuite) TestBusinessCaseArchiver() {
 		failUpdate := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("update failed")
 		}
-		archiveBusinessCase := NewArchiveBusinessCase(serviceConfig, fetch, failUpdate)
+		archiveBusinessCase := NewCloseBusinessCase(serviceConfig, fetch, failUpdate)
 		err := archiveBusinessCase(ctx, fakeID)
 		s.IsType(&apperrors.QueryError{}, err)
 	})
