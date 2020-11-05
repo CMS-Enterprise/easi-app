@@ -2,6 +2,7 @@ import { businessCaseInitialData } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeForm } from 'types/systemIntake';
 
+// TODO: REFACTOR
 export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   if (intake.id === '') {
     return 'START';
@@ -12,11 +13,14 @@ export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   return 'COMPLETED';
 };
 
+// TODO: REFACTOR
 export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   switch (intakeStatus) {
     case 'INTAKE_SUBMITTED':
       return 'SUBMITTED';
     case 'NEED_BIZ_CASE':
+    case 'BIZ_CASE_DRAFT':
+    case 'BIZ_CASE_DRAFT_SUBMITTED':
     case 'LCID_ISSUED':
     case 'NOT_IT_REQUEST':
       return 'COMPLETED';
@@ -25,6 +29,7 @@ export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   }
 };
 
+// TODO: REFACTOR
 export const bizCaseStatus = (
   intakeStatus: string,
   businessCase: BusinessCaseModel
