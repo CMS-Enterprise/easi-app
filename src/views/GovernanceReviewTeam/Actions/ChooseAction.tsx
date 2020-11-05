@@ -136,6 +136,19 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const noFurtherGovernanceRoute = 'no-governance';
+  const NoFurtherGovernance = (
+    <RadioField
+      key={noFurtherGovernanceRoute}
+      id={noFurtherGovernanceRoute}
+      label={t('actions.noGovernance')}
+      name={radioGroupName}
+      value={noFurtherGovernanceRoute}
+      onChange={onChange}
+      checked={actionRoute === noFurtherGovernanceRoute}
+    />
+  );
+
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
   if (businessCaseExists) {
@@ -152,6 +165,7 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
       ReadyForGRT,
       ProvideFeedbackNeedBizCase,
       ReadyForGRB,
+      NoFurtherGovernance,
       IssueLifecycleId
     ];
   }
