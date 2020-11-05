@@ -203,7 +203,6 @@ func (s *Server) routes(
 			store.FetchBusinessCaseByID,
 			services.NewAuthorizeUserIsBusinessCaseRequester(),
 			store.UpdateBusinessCase,
-			emailClient.SendBusinessCaseSubmissionEmail,
 		),
 	)
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
