@@ -8,7 +8,6 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
-import { useFlags } from 'contexts/flagContext';
 
 import './index.scss';
 
@@ -31,7 +30,6 @@ const GovernanceStep = ({ header, body }: NumberedListItemProps) => {
 };
 
 const GovernanceOverview = () => {
-  const flags = useFlags();
   return (
     <PageWrapper className="easi-governance-overview">
       <Header />
@@ -132,7 +130,7 @@ const GovernanceOverview = () => {
           className="usa-button"
           asCustom={Link}
           variant="unstyled"
-          to={flags.taskListLite ? '/governance-task-list/new' : '/system/new'}
+          to="/system/request-type"
         >
           Get started
         </UswdsLink>

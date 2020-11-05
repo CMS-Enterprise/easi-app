@@ -9,10 +9,6 @@ import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
-import Footer from 'components/Footer';
-import Header from 'components/Header';
-import MainContent from 'components/MainContent';
-import PageWrapper from 'components/PageWrapper';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
@@ -128,85 +124,79 @@ const RequestRepository = () => {
 
   /* eslint-disable react/jsx-props-no-spreading */
   return (
-    <PageWrapper>
-      <Header />
-      <MainContent className="grid-container">
-        <div className="display-flex flex-justify flex-wrap margin-y-2">
-          <BreadcrumbNav>
-            <li>
-              <Link to="/">Home</Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>Requests</li>
-          </BreadcrumbNav>
-          <div>
-            <CSVLink
-              data={convertIntakesToCSV(data)}
-              filename="request-repository.csv"
-              headers={csvHeaders}
-            >
-              <i className="fa fa-download" />
-            </CSVLink>
-            &nbsp;
-            <CSVLink
-              data={convertIntakesToCSV(data)}
-              filename="request-repository.csv"
-              headers={csvHeaders}
-            >
-              Download all requests as excel file
-            </CSVLink>
-          </div>
+    <>
+      <div className="display-flex flex-justify flex-wrap margin-y-2">
+        <BreadcrumbNav>
+          <li>
+            <Link to="/">Home</Link>
+            <i className="fa fa-angle-right margin-x-05" aria-hidden />
+          </li>
+          <li>Requests</li>
+        </BreadcrumbNav>
+        <div>
+          <CSVLink
+            data={convertIntakesToCSV(data)}
+            filename="request-repository.csv"
+            headers={csvHeaders}
+          >
+            <i className="fa fa-download" />
+          </CSVLink>
+          &nbsp;
+          <CSVLink
+            data={convertIntakesToCSV(data)}
+            filename="request-repository.csv"
+            headers={csvHeaders}
+          >
+            Download all requests as excel file
+          </CSVLink>
         </div>
-        <h1>{t('requestRepository.header')}</h1>
-        <p>{t('requestRepository.requestCount', { count: data.length })}</p>
-        <Table bordered={false} {...getTableProps()} fullWidth>
-          <caption className="usa-sr-only">
-            {t('requestRepository.aria.openRequestsTable')}
-          </caption>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    aria-sort={getColumnSortStatus(column)}
-                  >
-                    {column.render('Header')}
-                    {column.isSorted && (
-                      <span
-                        className={getHeaderSortIcon(column.isSortedDesc)}
-                      />
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map(row => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell, i) => {
-                    if (i === 0) {
-                      return (
-                        <th {...cell.getCellProps()} scope="row">
-                          {cell.render('Cell')}
-                        </th>
-                      );
-                    }
+      </div>
+      <h1>{t('requestRepository.header')}</h1>
+      <p>{t('requestRepository.requestCount', { count: data.length })}</p>
+      <Table bordered={false} {...getTableProps()} fullWidth>
+        <caption className="usa-sr-only">
+          {t('requestRepository.aria.openRequestsTable')}
+        </caption>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
+                  aria-sort={getColumnSortStatus(column)}
+                >
+                  {column.render('Header')}
+                  {column.isSorted && (
+                    <span className={getHeaderSortIcon(column.isSortedDesc)} />
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell, i) => {
+                  if (i === 0) {
                     return (
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      <th {...cell.getCellProps()} scope="row">
+                        {cell.render('Cell')}
+                      </th>
                     );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-      </MainContent>
-      <Footer />
-    </PageWrapper>
+                  }
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+    </>
   );
 };
 

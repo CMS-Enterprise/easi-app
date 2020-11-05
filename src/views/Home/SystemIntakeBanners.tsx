@@ -26,7 +26,9 @@ const SystemIntakeBanners = () => {
   }, [dispatch, authState.isAuthenticated]);
 
   const getSystemIntakeBanners = (featureFlags: Flags) => {
-    const rootPath = featureFlags.taskListLite ? '/governance-task-list' : '/system';
+    const rootPath = featureFlags.taskListLite
+      ? '/governance-task-list'
+      : '/system';
     return systemIntakes.map((intake: SystemIntakeForm) => {
       switch (intake.status) {
         case 'INTAKE_DRAFT':
