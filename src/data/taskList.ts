@@ -12,22 +12,6 @@ export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   return 'COMPLETED';
 };
 
-export const chooseIntakePath = (intake: SystemIntakeForm, status: string) => {
-  let link: string;
-  switch (status) {
-    case 'CONTINUE':
-      link = `/system/${intake.id}/contact-details`;
-      break;
-    case 'COMPLETED':
-      // This will need to be changed once we have an intake review page
-      link = '/';
-      break;
-    default:
-      link = '/system/new';
-  }
-  return link;
-};
-
 export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   switch (intakeStatus) {
     case 'INTAKE_SUBMITTED':
