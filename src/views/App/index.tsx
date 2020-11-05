@@ -50,6 +50,7 @@ const AppRoutes = () => {
         <SecureRoute
           path="/governance-task-list/:systemId"
           exact
+          render={({ component }: any) => component()}
           component={GovernanceTaskList}
         />
       )}
