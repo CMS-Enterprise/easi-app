@@ -63,10 +63,9 @@ const SystemIntakeBanners = () => {
               helpfulText="Your intake form has been submitted. The admin team will be in touch with you to fill out a Business Case"
               onClick={() => {
                 history.push({
-                  // ToDo: where do we get the biz case ID for here?
                   pathname: flags.taskListLite
                     ? `/governance-task-list/${intake.id}`
-                    : '/business/?????????/general-request-info',
+                    : '/business/new/general-request-info',
                   ...((!flags.taskListLite && {
                     state: {
                       systemIntakeId: intake.id
@@ -90,9 +89,10 @@ const SystemIntakeBanners = () => {
               helpfulText="Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next phase"
               onClick={() => {
                 history.push({
+                  // ToDo: where do we get the biz case ID to put in "???????"
                   pathname: flags.taskListLite
                     ? `/governance-task-list/${intake.id}`
-                    : '/business/new/general-request-info',
+                    : '/business/???????????/general-request-info',
                   ...((!flags.taskListLite && {
                     state: {
                       systemIntakeId: intake.id
