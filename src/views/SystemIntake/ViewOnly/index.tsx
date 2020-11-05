@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SystemIntakeReview } from 'components/SystemIntakeReview';
+import SystemIntakeReview from 'components/SystemIntakeReview';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 type SystemIntakeViewOnlyProps = {

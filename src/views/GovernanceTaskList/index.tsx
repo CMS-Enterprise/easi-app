@@ -143,7 +143,7 @@ const businessCaseLinkComponent = ({
         <UswdsLink
           variant="unstyled"
           asCustom={Link}
-          to={`/business/${systemIntakeId}/general-request-info`}
+          to={`/business/${businessCase.id}/view`}
         >
           View submitted draft business case
         </UswdsLink>
@@ -154,7 +154,7 @@ const businessCaseLinkComponent = ({
           className="usa-button"
           variant="unstyled"
           asCustom={Link}
-          to={`/business/${systemIntakeId}/general-request-info`}
+          to={`/business/${businessCase.id}/general-request-info`}
         >
           Update draft business case
         </UswdsLink>
