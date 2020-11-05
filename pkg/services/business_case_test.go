@@ -226,19 +226,6 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	//	s.IsType(&apperrors.ValidationError{}, err)
 	//	s.Equal(&models.BusinessCase{}, businessCase)
 	//})
-
-	s.Run("returns error when validation fails", func() {
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, update)
-		businessCase := testhelpers.NewBusinessCase()
-		businessCase.ID = existingBusinessCase.ID
-		businessCase.EUAUserID = existingBusinessCase.EUAUserID
-		businessCase.Requester = null.NewString("", false)
-		businessCase.Status = models.BusinessCaseStatusOPEN
-
-		_, err := updateBusinessCase(ctx, &businessCase)
-
-		s.IsType(&apperrors.ValidationError{}, err)
-	})
 }
 
 func (s ServicesTestSuite) TestBusinessCaseArchiver() {
