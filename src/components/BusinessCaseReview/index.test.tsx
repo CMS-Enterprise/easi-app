@@ -11,7 +11,7 @@ window.matchMedia = (): any => ({
 
 describe('The Business Case Review Component', () => {
   const businessCase = {
-    status: 'DRAFT',
+    status: 'OPEN',
     systemIntakeId: '048c26ea-07be-4f40-b29e-761fc17bf414',
     requestName: 'EASi Test',
     requester: {

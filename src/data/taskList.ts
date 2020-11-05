@@ -49,8 +49,9 @@ export const bizCaseStatus = (
   // This is for our NEW and CURRENT intake statuses
   // until all the old ones are deprecated
   switch (intakeStatus) {
+    case 'BIZ_CASE_DRAFT':
     case 'BIZ_CASE_DRAFT_SUBMITTED':
-      return 'BIZ_CASE_DRAFT_SUBMITTED';
+      return intakeStatus;
     default:
       break;
   }
@@ -68,8 +69,6 @@ export const bizCaseStatus = (
     }
   }
   switch (businessCase.status) {
-    case 'DRAFT':
-      return 'CONTINUE';
     case 'SUBMITTED':
       return 'COMPLETED';
     default:

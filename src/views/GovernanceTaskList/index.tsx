@@ -126,7 +126,7 @@ const businessCaseLinkComponent = ({
           Start
         </Button>
       );
-    case 'CONTINUE':
+    case 'BIZ_CASE_DRAFT':
       return (
         <UswdsLink
           className="usa-button"

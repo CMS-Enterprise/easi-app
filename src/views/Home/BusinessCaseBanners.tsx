@@ -32,22 +32,6 @@ const BusinessCaseBanners = () => {
         ? `/governance-task-list/${busCase.systemIntakeId}`
         : `/business/${busCase.id}/general-request-info`;
       switch (busCase.status) {
-        case 'DRAFT':
-          return (
-            <ActionBanner
-              key={busCase.id}
-              title={
-                busCase.requestName
-                  ? `${busCase.requestName}: Business Case`
-                  : 'Business Case'
-              }
-              helpfulText="Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next phase"
-              onClick={() => {
-                history.push(path);
-              }}
-              label="Go to Business Case"
-            />
-          );
         case 'SUBMITTED':
           return (
             <ActionBanner
