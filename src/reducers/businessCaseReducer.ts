@@ -10,8 +10,7 @@ import {
   fetchBusinessCase,
   postBusinessCase,
   putBusinessCase,
-  storeBusinessCase,
-  submitBusinessCase
+  storeBusinessCase
 } from 'types/routines';
 
 const initialState: BusinessCaseState = {
@@ -101,30 +100,6 @@ function businessCaseReducer(
           ...action.payload
         },
         isLoading: false
-      };
-    case submitBusinessCase.REQUEST:
-      return {
-        ...state,
-        isSubmitting: true,
-        error: null
-      };
-    case submitBusinessCase.SUCCESS:
-      return {
-        ...state,
-        form: {
-          ...state.form,
-          ...prepareBusinessCaseForApp(action.payload)
-        }
-      };
-    case submitBusinessCase.FAILURE:
-      return {
-        ...state,
-        error: action.payload
-      };
-    case submitBusinessCase.FULFILL:
-      return {
-        ...state,
-        isSubmitting: false
       };
     case clearBusinessCase.TRIGGER:
       return initialState;
