@@ -89,7 +89,6 @@ const SystemIntakeBanners = () => {
               helpfulText="Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next phase"
               onClick={() => {
                 history.push({
-                  // ToDo: where do we get the biz case ID to put in "???????"
                   pathname: flags.taskListLite
                     ? `/governance-task-list/${intake.id}`
                     : `/business/${intake.businessCaseId}/general-request-info`,
