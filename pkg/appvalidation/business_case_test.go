@@ -243,6 +243,7 @@ func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 	s.Run("golden path", func() {
 		businessCase := testhelpers.NewBusinessCase()
+		businessCase.Status = models.BusinessCaseStatusOPEN
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 		submittedTime := time.Now()
 		businessCase.LastSubmittedAt = &submittedTime
@@ -252,7 +253,6 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 
 	s.Run("returns validations when submitted", func() {
 		businessCase := models.BusinessCase{}
-		businessCase.Status = models.BusinessCaseStatusSUBMITTED
 		cost := 300
 		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
 			models.EstimatedLifecycleCost{
@@ -295,7 +295,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"ProjectName":"is required",` +
 			`"Requester":"is required",` +
 			`"RequesterPhoneNumber":"is required",` +
-			`"Status":"cannot be SUBMITTED",` +
+			`"Status":"must be SUBMITTED or OPEN",` +
 			`"SuccessIndicators":"is required",` +
 			`"SystemIntakeID":"is required",` +
 			`"alternativeASolution":"years 1, 2, 3, 4, 5 are required",` +
