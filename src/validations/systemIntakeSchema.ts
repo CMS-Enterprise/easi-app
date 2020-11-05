@@ -135,6 +135,9 @@ const SystemIntakeValidationSchema: any = {
         })
       })
     })
+  }),
+  requestType: Yup.object().shape({
+    requestType: Yup.string().required('Tell us what your request is for')
   })
 };
 

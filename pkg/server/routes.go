@@ -58,7 +58,6 @@ func (s *Server) routes(
 
 	if s.environment.Deployed() {
 		s.CheckCEDAREasiClientConnection(cedarEasiClient)
-		s.CheckCEDARLdapClientConnection(cedarLdapClient)
 	}
 
 	// set up Email Client
@@ -303,6 +302,14 @@ func (s *Server) routes(
 				store.UpdateSystemIntake,
 				store.UpdateBusinessCase,
 				emailClient.SendBusinessCaseSubmissionEmail,
+			services.NewTakeActionUpdateStatus(
+				serviceConfig,
+				models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+				store.UpdateSystemIntake,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.CreateAction,
+				cedarLdapClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
 			),
 		),
 	)
