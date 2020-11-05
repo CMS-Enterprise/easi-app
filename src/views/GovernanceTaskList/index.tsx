@@ -60,7 +60,7 @@ const IntakeLink = ({ intake }: { intake: SystemIntakeForm }) => {
           className="usa-button"
           variant="unstyled"
           asCustom={Link}
-          to={`/system/${intake.id}/contact-details`}
+          to={`/system/${intake.id || 'new'}/contact-details`}
         >
           Start
         </UswdsLink>
