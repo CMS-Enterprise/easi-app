@@ -21,8 +21,6 @@ type LifecycleCostSolution string
 type LifecycleCostYear string
 
 const (
-	// BusinessCaseStatusSUBMITTED captures enum value "SUBMITTED"
-	BusinessCaseStatusSUBMITTED BusinessCaseStatus = "SUBMITTED"
 	// BusinessCaseStatusREVIEWED captures enum value "REVIEWED"
 	BusinessCaseStatusREVIEWED BusinessCaseStatus = "REVIEWED"
 	// BusinessCaseStatusREJECTED captures enum value "REJECTED"
