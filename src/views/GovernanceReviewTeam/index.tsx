@@ -208,6 +208,15 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
+              path="/governance-review-team/:systemId/actions/provide-feedback-keep-draft"
+              render={() => (
+                <SubmitAction
+                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT"
+                  actionName={actionsT('actions.provideGrtFeedbackKeepDraft')}
+                />
+              )}
+            />
+            <Route
               path="/governance-review-team/:systemId/actions/ready-for-grt"
               render={() => (
                 <SubmitAction
