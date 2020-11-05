@@ -9,9 +9,9 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import { isIntakeStarted } from 'data/systemIntake';
 import {
   bizCaseStatus,
-  chooseIntakePath,
   feedbackStatusFromIntakeStatus,
   intakeStatusFromIntake
 } from 'data/taskList';
@@ -29,43 +29,44 @@ import TaskListItem from './TaskListItem';
 
 import './index.scss';
 
-const intakeLinkComponent = (
-  intakeStatus: string,
-  systemIntake: SystemIntakeForm
-) => {
-  const path = chooseIntakePath(systemIntake, intakeStatus);
-  switch (intakeStatus) {
-    case 'COMPLETED':
+const IntakeLink = ({ intake }: { intake: SystemIntakeForm }) => {
+  switch (intake.status) {
+    case 'INTAKE_SUBMITTED':
       return (
-        <UswdsLink variant="unstyled" asCustom={Link} to={path}>
+        <UswdsLink
+          variant="unstyled"
+          asCustom={Link}
+          to={`/system/${intake.id}/view`}
+        >
           View Submitted Request Form
         </UswdsLink>
       );
-    case 'CONTINUE':
-      return (
-        <UswdsLink
-          className="usa-button"
-          variant="unstyled"
-          asCustom={Link}
-          to={path}
-        >
-          Continue
-        </UswdsLink>
-      );
-    case 'START':
+    case 'INTAKE_DRAFT':
+      if (isIntakeStarted(intake)) {
+        return (
+          <UswdsLink
+            className="usa-button"
+            variant="unstyled"
+            asCustom={Link}
+            to={`/system/${intake.id}/contact-details`}
+          >
+            Continue
+          </UswdsLink>
+        );
+      }
       return (
         <UswdsLink
           data-testid="intake-start-btn"
           className="usa-button"
           variant="unstyled"
           asCustom={Link}
-          to={path}
+          to={`/system/${intake.id}/contact-details`}
         >
           Start
         </UswdsLink>
       );
     default:
-      return null;
+      return <></>;
   }
 };
 
@@ -196,7 +197,6 @@ const GovernanceTaskList = () => {
   );
 
   const intakeStatus = intakeStatusFromIntake(systemIntake);
-  const intakeLink = intakeLinkComponent(intakeStatus, systemIntake);
 
   const intakeFeedbackStatus = feedbackStatusFromIntakeStatus(
     systemIntake.status
@@ -268,7 +268,7 @@ const GovernanceTaskList = () => {
               context about your request and start preparing for discussions with your team."
                 status={intakeStatus}
               >
-                {intakeLink}
+                <IntakeLink intake={systemIntake} />
               </TaskListItem>
               <TaskListItem
                 heading="Feedback from initial review"
