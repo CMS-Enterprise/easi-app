@@ -324,6 +324,47 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Error(err)
 	})
 
+	s.Run("new backfill fields", func() {
+		t1 := clock.NewMock().Now().UTC()
+		t2 := clock.NewMock().Now().UTC()
+		original := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+
+			ProjectAcronym: null.StringFrom("JIT"),
+			GRTDate:        &t1,
+			GRBDate:        &t2,
+		}
+
+		_, err := s.store.CreateSystemIntake(ctx, &original)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, original.ID)
+		s.NoError(err)
+		s.Equal(original.ProjectAcronym.ValueOrZero(), partial.ProjectAcronym.ValueOrZero())
+		s.Equal(original.GRTDate.String(), partial.GRTDate.String())
+		s.Equal(original.GRBDate.String(), partial.GRBDate.String())
+
+		n1 := t1.Add(time.Hour)
+		n2 := t2.Add(time.Minute)
+		partial.ProjectAcronym = null.StringFrom("RBG")
+		partial.GRTDate = &n1
+		partial.GRBDate = &n2
+
+		_, err = s.store.UpdateSystemIntake(ctx, partial)
+		s.NoError(err)
+
+		finished, err := s.store.FetchSystemIntakeByID(ctx, original.ID)
+		s.NoError(err)
+
+		s.Equal(partial.ProjectAcronym.ValueOrZero(), finished.ProjectAcronym.ValueOrZero())
+		s.NotEqual(original.ProjectAcronym.ValueOrZero(), finished.ProjectAcronym.ValueOrZero())
+		s.Equal(partial.GRTDate.String(), finished.GRTDate.String())
+		s.NotEqual(original.GRTDate.String(), finished.GRTDate.String())
+		s.Equal(partial.GRBDate.String(), finished.GRBDate.String())
+		s.NotEqual(original.GRBDate.String(), finished.GRBDate.String())
+	})
 }
 
 func (s StoreTestSuite) TestLifecyclePrefixBoundaries() {
