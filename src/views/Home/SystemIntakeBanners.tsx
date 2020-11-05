@@ -102,6 +102,31 @@ const SystemIntakeBanners = () => {
               label="Go to Business Case"
             />
           );
+        case 'BIZ_CASE_SUBMITTED':
+          return (
+            <ActionBanner
+              key={intake.id}
+              title={
+                intake.requestName
+                  ? `${intake.requestName}: Business Case`
+                  : 'Business Case'
+              }
+              helpfulText="The form has been submitted for review. You can update it and re-submit it any time in the process"
+              onClick={() => {
+                history.push({
+                  pathname: flags.taskListLite
+                    ? `/governance-task-list/${intake.id}`
+                    : `/business/${intake.businessCaseId}/general-request-info`,
+                  ...((!flags.taskListLite && {
+                    state: {
+                      systemIntakeId: intake.id
+                    }
+                  }) as {})
+                });
+              }}
+              label="Update Business Case"
+            />
+          );
         default:
           return null;
       }

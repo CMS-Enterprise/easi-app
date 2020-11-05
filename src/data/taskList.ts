@@ -69,8 +69,6 @@ export const bizCaseStatus = (
     }
   }
   switch (businessCase.status) {
-    case 'SUBMITTED':
-      return 'COMPLETED';
     default:
       return 'CANNOT_START';
   }
