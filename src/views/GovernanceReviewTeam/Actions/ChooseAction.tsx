@@ -157,7 +157,8 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
       ReadyForGRT,
       ReadyForGRB,
       ProvideFeedbackKeepDraft,
-      ProvideFeedbackNeedFinal
+      ProvideFeedbackNeedFinal,
+      IssueLifecycleId
     ];
   } else {
     availableActions = [NotITRequest, NeedBizCase];
