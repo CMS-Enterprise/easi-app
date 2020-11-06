@@ -11,7 +11,6 @@ import RequestRepository from 'components/RequestRepository';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 
-import BusinessCaseBanners from './BusinessCaseBanners';
 import SystemIntakeBanners from './SystemIntakeBanners';
 import WelcomeText from './WelcomeText';
 
@@ -31,7 +30,6 @@ const Banners = () => {
         </div>
       )}
       <SystemIntakeBanners />
-      <BusinessCaseBanners />
     </div>
   );
 };

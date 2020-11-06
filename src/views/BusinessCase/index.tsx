@@ -36,6 +36,7 @@ import GeneralRequestInfo from './GeneralRequestInfo';
 import PreferredSolution from './PreferredSolution';
 import RequestDescription from './RequestDescription';
 import Review from './Review';
+import BusinessCaseView from './ViewOnly';
 
 import './index.scss';
 
@@ -207,6 +208,10 @@ export const BusinessCase = () => {
             <SecureRoute
               path="/business/:businessCaseId/review"
               render={() => <Review businessCase={businessCase} />}
+            />
+            <SecureRoute
+              path="/business/:businessCaseId/view"
+              render={() => <BusinessCaseView businessCase={businessCase} />}
             />
             <SecureRoute
               path="/business/:businessCaseId/confirmation"
