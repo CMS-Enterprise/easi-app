@@ -81,7 +81,7 @@ const BusinessCaseLink = ({ systemIntake }: BusinessCaseLinkProps) => {
             history.push({
               pathname: '/business/new/general-request-info',
               state: {
-                systemIntake: systemIntake.id
+                systemIntakeId: systemIntake.id
               }
             });
           }}
