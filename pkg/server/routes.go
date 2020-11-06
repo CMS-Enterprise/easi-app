@@ -162,7 +162,7 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
-			services.NewArchiveBusinessCase(
+			services.NewCloseBusinessCase(
 				serviceConfig,
 				store.FetchBusinessCaseByID,
 				store.UpdateBusinessCase,
@@ -203,7 +203,6 @@ func (s *Server) routes(
 			store.FetchBusinessCaseByID,
 			services.NewAuthorizeUserIsBusinessCaseRequester(),
 			store.UpdateBusinessCase,
-			emailClient.SendBusinessCaseSubmissionEmail,
 		),
 	)
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())

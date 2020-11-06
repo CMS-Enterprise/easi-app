@@ -36,7 +36,7 @@ export const defaultProposedSolution = {
 };
 
 export const businessCaseInitialData: BusinessCaseModel = {
-  status: 'DRAFT',
+  status: 'OPEN',
   systemIntakeId: '',
   requestName: '',
   requester: {

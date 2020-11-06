@@ -77,6 +77,56 @@ const SystemIntakeBanners = () => {
               data-intakeid={intake.id}
             />
           );
+        case 'BIZ_CASE_DRAFT':
+          return (
+            <ActionBanner
+              key={intake.id}
+              title={
+                intake.requestName
+                  ? `${intake.requestName}: Business Case incomplete`
+                  : 'Business Case incomplete'
+              }
+              helpfulText="Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next phase"
+              onClick={() => {
+                history.push({
+                  pathname: flags.taskListLite
+                    ? `/governance-task-list/${intake.id}`
+                    : `/business/${intake.businessCaseId}/general-request-info`,
+                  ...((!flags.taskListLite && {
+                    state: {
+                      systemIntakeId: intake.id
+                    }
+                  }) as {})
+                });
+              }}
+              label="Go to Business Case"
+            />
+          );
+        case 'BIZ_CASE_SUBMITTED':
+          return (
+            <ActionBanner
+              key={intake.id}
+              title={
+                intake.requestName
+                  ? `${intake.requestName}: Business Case`
+                  : 'Business Case'
+              }
+              helpfulText="The form has been submitted for review. You can update it and re-submit it any time in the process"
+              onClick={() => {
+                history.push({
+                  pathname: flags.taskListLite
+                    ? `/governance-task-list/${intake.id}`
+                    : `/business/${intake.businessCaseId}/general-request-info`,
+                  ...((!flags.taskListLite && {
+                    state: {
+                      systemIntakeId: intake.id
+                    }
+                  }) as {})
+                });
+              }}
+              label="Update Business Case"
+            />
+          );
         default:
           return null;
       }

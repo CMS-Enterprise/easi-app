@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
-	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -128,7 +127,6 @@ func NewUpdateBusinessCase(
 	fetchBusinessCase func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
 	authorize func(c context.Context, b *models.BusinessCase) (bool, error),
 	update func(c context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error),
-	sendEmail func(requester string, intakeID uuid.UUID) error,
 ) func(c context.Context, b *models.BusinessCase) (*models.BusinessCase, error) {
 	return func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		logger := appcontext.ZLogger(ctx)
@@ -155,21 +153,6 @@ func NewUpdateBusinessCase(
 		updatedAt := config.clock.Now()
 		businessCase.UpdatedAt = &updatedAt
 
-		// Once CEDAR endpoint exists, we should be doing validations and submissions in the CEDAR package
-		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
-			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
-			// Set submitted at times before validations as it is one of the fields that is validated
-			if businessCase.InitialSubmittedAt == nil {
-				businessCase.InitialSubmittedAt = &updatedAt
-			}
-			businessCase.LastSubmittedAt = &updatedAt
-			err = appvalidation.BusinessCaseForSubmit(businessCase)
-			if err != nil {
-				logger.Error("Failed to validate", zap.Error(err))
-				return businessCase, err
-			}
-		}
-
 		businessCase, err = update(ctx, businessCase)
 		if err != nil {
 			logger.Error("failed to update business case")
@@ -180,21 +163,12 @@ func NewUpdateBusinessCase(
 			}
 		}
 
-		// At this point, if everything has gone well, email the GRT
-		if businessCase.Status == models.BusinessCaseStatusSUBMITTED &&
-			existingBusinessCase.Status == models.BusinessCaseStatusDRAFT {
-			err = sendEmail(businessCase.Requester.String, businessCase.ID)
-			if err != nil {
-				logger.Error("Failed to send email", zap.Error(err))
-				return businessCase, err
-			}
-		}
 		return businessCase, nil
 	}
 }
 
-// NewArchiveBusinessCase is a service to archive a businessCase
-func NewArchiveBusinessCase(
+// NewCloseBusinessCase is a service to close a businessCase
+func NewCloseBusinessCase(
 	config Config,
 	fetch func(c context.Context, id uuid.UUID) (*models.BusinessCase, error),
 	update func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
@@ -211,8 +185,7 @@ func NewArchiveBusinessCase(
 
 		updatedTime := config.clock.Now()
 		businessCase.UpdatedAt = &updatedTime
-		businessCase.Status = models.BusinessCaseStatusARCHIVED
-		businessCase.ArchivedAt = &updatedTime
+		businessCase.Status = models.BusinessCaseStatusCLOSED
 
 		_, err := update(ctx, businessCase)
 		if err != nil {
