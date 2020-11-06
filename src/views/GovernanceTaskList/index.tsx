@@ -99,16 +99,6 @@ const businessCaseLinkComponent = ({
   history
 }: businessCaseLinkComponentProps) => {
   switch (businessCaseStatus) {
-    case 'COMPLETED':
-      return (
-        <UswdsLink
-          variant="unstyled"
-          asCustom={Link}
-          to={`/business/${businessCase.id}/general-request-info`}
-        >
-          Update the business case
-        </UswdsLink>
-      );
     case 'START':
       return (
         <Button
@@ -127,7 +117,7 @@ const businessCaseLinkComponent = ({
           Start
         </Button>
       );
-    case 'CONTINUE':
+    case 'BIZ_CASE_DRAFT':
       return (
         <UswdsLink
           className="usa-button"

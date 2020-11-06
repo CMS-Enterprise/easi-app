@@ -21,16 +21,6 @@ type LifecycleCostSolution string
 type LifecycleCostYear string
 
 const (
-	// BusinessCaseStatusDRAFT captures enum value "DRAFT"
-	BusinessCaseStatusDRAFT BusinessCaseStatus = "DRAFT"
-	// BusinessCaseStatusSUBMITTED captures enum value "SUBMITTED"
-	BusinessCaseStatusSUBMITTED BusinessCaseStatus = "SUBMITTED"
-	// BusinessCaseStatusREVIEWED captures enum value "REVIEWED"
-	BusinessCaseStatusREVIEWED BusinessCaseStatus = "REVIEWED"
-	// BusinessCaseStatusREJECTED captures enum value "REJECTED"
-	BusinessCaseStatusREJECTED BusinessCaseStatus = "REJECTED"
-	// BusinessCaseStatusARCHIVED captures enum value "ARCHIVED"
-	BusinessCaseStatusARCHIVED BusinessCaseStatus = "ARCHIVED"
 	// BusinessCaseStatusOPEN captures enum value "OPEN"
 	BusinessCaseStatusOPEN BusinessCaseStatus = "OPEN"
 	// BusinessCaseStatusCLOSED captures enum value "CLOSED"
