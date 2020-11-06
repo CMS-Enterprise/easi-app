@@ -35,7 +35,7 @@ export type ProposedBusinessCaseSolution = BusinessCaseSolution & {
   hasUserInterface: string;
 };
 
-type BusinessCaseStatus = 'OPEN' | 'SUBMITTED' | 'REVIEWED' | 'REJECTED';
+type BusinessCaseStatus = 'OPEN' | 'CLOSED';
 
 export type GeneralRequestInfoForm = {
   requestName: string;

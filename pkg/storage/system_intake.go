@@ -39,6 +39,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			oit_security_collaborator,
 			ea_collaborator,
 			project_name,
+			project_acronym,
 			existing_funding,
 			funding_number,
 			funding_source,
@@ -55,6 +56,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			contract_start_year,
 			contract_end_month,
 			contract_end_year,
+			grt_date,
+			grb_date,
 			created_at,
 			updated_at
 		)
@@ -74,6 +77,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:oit_security_collaborator,
 			:ea_collaborator,
 			:project_name,
+			:project_acronym,
 			:existing_funding,
 			:funding_number,
 			:funding_source,
@@ -90,8 +94,10 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:contract_start_year,
 			:contract_end_month,
 			:contract_end_year,
+			:grt_date,
+			:grb_date,
 		    :created_at,
-		    :updated_at
+			:updated_at
 		)`
 	_, err := s.db.NamedExec(
 		createIntakeSQL,
@@ -126,6 +132,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			oit_security_collaborator = :oit_security_collaborator,
 			ea_collaborator = :ea_collaborator,
 			project_name = :project_name,
+			project_acronym = :project_acronym,
 			existing_funding = :existing_funding,
 			funding_number = :funding_number,
 			funding_source = :funding_source,
@@ -147,7 +154,9 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			updated_at = :updated_at,
 			submitted_at = :submitted_at,
 		    decided_at = :decided_at,
-		    archived_at = :archived_at,
+			archived_at = :archived_at,
+			grt_date = :grt_date,
+			grb_date = :grb_date,
 			alfabet_id = :alfabet_id,
 			lcid = :lcid,
 			lcid_expires_at = :lcid_expires_at,

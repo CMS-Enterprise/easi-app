@@ -2,6 +2,7 @@ import { businessCaseInitialData } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import { SystemIntakeForm } from 'types/systemIntake';
 
+// TODO: REFACTOR
 export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   if (intake.id === '') {
     return 'START';
@@ -12,27 +13,14 @@ export const intakeStatusFromIntake = (intake: SystemIntakeForm) => {
   return 'COMPLETED';
 };
 
-export const chooseIntakePath = (intake: SystemIntakeForm, status: string) => {
-  let link: string;
-  switch (status) {
-    case 'CONTINUE':
-      link = `/system/${intake.id}/contact-details`;
-      break;
-    case 'COMPLETED':
-      // This will need to be changed once we have an intake review page
-      link = '/';
-      break;
-    default:
-      link = '/system/new';
-  }
-  return link;
-};
-
+// TODO: REFACTOR
 export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   switch (intakeStatus) {
     case 'INTAKE_SUBMITTED':
       return 'SUBMITTED';
     case 'NEED_BIZ_CASE':
+    case 'BIZ_CASE_DRAFT':
+    case 'BIZ_CASE_DRAFT_SUBMITTED':
     case 'LCID_ISSUED':
     case 'NOT_IT_REQUEST':
       return 'COMPLETED';
@@ -41,6 +29,7 @@ export const feedbackStatusFromIntakeStatus = (intakeStatus: string) => {
   }
 };
 
+// TODO: REFACTOR
 export const bizCaseStatus = (
   intakeStatus: string,
   businessCase: BusinessCaseModel
@@ -51,6 +40,7 @@ export const bizCaseStatus = (
   switch (intakeStatus) {
     case 'BIZ_CASE_DRAFT':
     case 'BIZ_CASE_DRAFT_SUBMITTED':
+    case 'BIZ_CASE_CHANGES_NEEDED':
       return intakeStatus;
     default:
       break;
@@ -69,8 +59,6 @@ export const bizCaseStatus = (
     }
   }
   switch (businessCase.status) {
-    case 'SUBMITTED':
-      return 'COMPLETED';
     default:
       return 'CANNOT_START';
   }

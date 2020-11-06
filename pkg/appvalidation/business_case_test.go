@@ -295,7 +295,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"ProjectName":"is required",` +
 			`"Requester":"is required",` +
 			`"RequesterPhoneNumber":"is required",` +
-			`"Status":"must be SUBMITTED or OPEN",` +
+			`"Status":"must be OPEN",` +
 			`"SuccessIndicators":"is required",` +
 			`"SystemIntakeID":"is required",` +
 			`"alternativeASolution":"years 1, 2, 3, 4, 5 are required",` +

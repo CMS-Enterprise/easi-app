@@ -34,7 +34,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 	body, err := json.Marshal(map[string]string{
 		"systemIntakeId": intakeID.String(),
-		"status":         "DRAFT",
+		"status":         string(models.BusinessCaseStatusOPEN),
 	})
 	s.NoError(err)
 
@@ -113,7 +113,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    string(models.BusinessCaseStatusOPEN),
 			"requester": requester,
 		})
 		s.NoError(err)
@@ -131,7 +131,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    string(models.BusinessCaseStatusOPEN),
 			"requester": requester,
 		})
 		s.NoError(err)

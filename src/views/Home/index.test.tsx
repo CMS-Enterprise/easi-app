@@ -6,7 +6,6 @@ import { mount, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
 import ActionBanner from 'components/shared/ActionBanner';
-import { businessCaseInitialData } from 'data/businessCase';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 
 import Home from './index';
@@ -109,15 +108,6 @@ describe('The home page', () => {
                 businessCaseId: '1'
               }
             ]
-          },
-          businessCases: {
-            businessCases: [
-              {
-                ...businessCaseInitialData,
-                id: '1',
-                systemIntakeId: '4'
-              }
-            ]
           }
         });
         let component: any;
@@ -133,7 +123,7 @@ describe('The home page', () => {
 
           setImmediate(() => {
             component.update();
-            expect(component.find(ActionBanner).length).toEqual(4);
+            expect(component.find(ActionBanner).length).toEqual(3);
             done();
           });
         });
