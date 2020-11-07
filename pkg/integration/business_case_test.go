@@ -29,8 +29,8 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	intake.EUAUserID = s.user.euaID
 
 	createdIntake, err := s.store.CreateSystemIntake(context.Background(), &intake)
-	intakeID := createdIntake.ID
 	s.NoError(err)
+	intakeID := createdIntake.ID
 
 	body, err := json.Marshal(map[string]string{
 		"systemIntakeId": intakeID.String(),
