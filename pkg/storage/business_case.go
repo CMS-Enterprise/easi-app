@@ -16,10 +16,10 @@ import (
 )
 
 // IntakeExistsMsg is the error we see when there is no valid system intake
-const IntakeExistsMsg = "pq: insert or update on table \"business_case\" violates foreign key constraint \"business_case_system_intake_fkey\""
+const IntakeExistsMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: insert or update on table \"business_case\" violates foreign key constraint \"business_case_system_intake_fkey\""
 
 // EuaIDMsg is the error we see when EUA doesn't meet EUA ID constraints
-const EuaIDMsg = "pq: new row for relation \"business_case\" violates check constraint \"eua_id_check\""
+const EuaIDMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: new row for relation \"business_case\" violates check constraint \"eua_id_check\""
 
 // ValidStatusMsg is a match for an error we see when there is no valid status
 const ValidStatusMsg = "pq: invalid input value for enum business_case_status: "
@@ -107,26 +107,25 @@ func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (mo
 	return businessCases, nil
 }
 
-const createEstimatedLifecycleCostSQL = `
-	INSERT INTO estimated_lifecycle_cost (
-		id,
-		business_case,
-		solution,
-		year,
-		phase,
-		cost
-	)
-	VALUES (
-		:id,
-		:business_case,
-		:solution,
-		:year,
-		:phase,
-		:cost
-	)
-`
-
 func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCase *models.BusinessCase) error {
+	const createEstimatedLifecycleCostSQL = `
+		INSERT INTO estimated_lifecycle_cost (
+			id,
+			business_case,
+			solution,
+			year,
+			phase,
+			cost
+		)
+		VALUES (
+			:id,
+			:business_case,
+			:solution,
+			:year,
+			:phase,
+			:cost
+		)
+	`
 	for _, cost := range businessCase.LifecycleCostLines {
 		cost.ID = uuid.New()
 		cost.BusinessCaseID = businessCase.ID
@@ -286,7 +285,11 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 					ResourceID: businessCase.SystemIntakeID.String(),
 				}
 		}
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     businessCase,
+			Operation: apperrors.QueryPost,
+		}
 	}
 	err = createEstimatedLifecycleCosts(ctx, tx, businessCase)
 	if err != nil {
@@ -295,7 +298,11 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("BusinessCaseID", businessCase.ID.String()),
 		)
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     businessCase,
+			Operation: apperrors.QueryPost,
+		}
 	}
 	err = tx.Commit()
 	if err != nil {
@@ -304,7 +311,11 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 		)
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     businessCase,
+			Operation: apperrors.QueryPost,
+		}
 	}
 
 	return businessCase, nil

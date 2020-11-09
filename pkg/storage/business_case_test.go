@@ -118,6 +118,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
+		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(IntakeExistsMsg, err.Error())
 	})
 
@@ -132,6 +133,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
+		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(IntakeExistsMsg, err.Error())
 	})
 
@@ -146,6 +148,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
+		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(EuaIDMsg, err.Error())
 	})
 
@@ -160,6 +163,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
+		s.IsType(&apperrors.QueryError{}, err)
 		s.Contains(err.Error(), ValidStatusMsg)
 	})
 }
