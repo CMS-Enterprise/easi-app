@@ -45,6 +45,7 @@ const SystemIntakeBanners = () => {
                 history.push(`${rootPath}/${intake.id}`);
               }}
               label="Go to Intake Request"
+              requestType={intake.requestType}
               data-intakeid={intake.id}
             />
           );
@@ -74,6 +75,7 @@ const SystemIntakeBanners = () => {
                 });
               }}
               label="Start my Business Case"
+              requestType={intake.requestType}
               data-intakeid={intake.id}
             />
           );
@@ -99,6 +101,7 @@ const SystemIntakeBanners = () => {
                   }) as {})
                 });
               }}
+              requestType={intake.requestType}
               label="Go to Business Case"
             />
           );
@@ -124,6 +127,7 @@ const SystemIntakeBanners = () => {
                   }) as {})
                 });
               }}
+              requestType={intake.requestType}
               label="Update Business Case"
             />
           );
