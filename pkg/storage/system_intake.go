@@ -191,7 +191,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 		FROM
 		     system_intake
 		     LEFT JOIN business_case ON business_case.system_intake = system_intake.id AND business_case.status = 'OPEN'
-		WHERE system_intake.id=$1 AND system_intake.status != 'WITHDRAWN'
+		WHERE system_intake.id=$1
 `
 	err := s.db.Get(&intake, fetchSystemIntakeByIDsql, id)
 	if err != nil {
