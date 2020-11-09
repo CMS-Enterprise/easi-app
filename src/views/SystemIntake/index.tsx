@@ -24,6 +24,7 @@ import ContactDetails from './ContactDetails';
 import ContractDetails from './ContractDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
+import SystemIntakeView from './ViewOnly';
 
 import './index.scss';
 
@@ -44,7 +45,12 @@ export const SystemIntake = () => {
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
     if (systemId === 'new') {
-      dispatch(postSystemIntake({ ...systemIntake, ...current.values }));
+      dispatch(
+        postSystemIntake({
+          ...systemIntake,
+          ...current.values
+        })
+      );
     } else {
       dispatch(
         saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
@@ -83,7 +89,7 @@ export const SystemIntake = () => {
   }, []);
 
   return (
-    <PageWrapper className="system-intake ">
+    <PageWrapper className="system-intake">
       <Header />
       <MainContent className="grid-container margin-bottom-5">
         {!['local', 'dev', 'impl'].includes(
@@ -149,6 +155,10 @@ export const SystemIntake = () => {
             <SecureRoute
               path="/system/:systemId/review"
               render={() => <Review systemIntake={systemIntake} />}
+            />
+            <SecureRoute
+              path="/system/:systemId/view"
+              render={() => <SystemIntakeView systemIntake={systemIntake} />}
             />
             <SecureRoute path="*" render={() => <NotFoundPartial />} />
           </Switch>

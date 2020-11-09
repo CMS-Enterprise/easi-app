@@ -98,17 +98,75 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const provideFeedbackKeepDraftRoute = 'provide-feedback-keep-draft';
+  const ProvideFeedbackKeepDraft = (
+    <RadioField
+      key={provideFeedbackKeepDraftRoute}
+      id={provideFeedbackKeepDraftRoute}
+      label={t('actions.provideGrtFeedbackKeepDraft')}
+      name={radioGroupName}
+      value={provideFeedbackKeepDraftRoute}
+      onChange={onChange}
+      checked={actionRoute === provideFeedbackKeepDraftRoute}
+    />
+  );
+
+  const provideFeedbackNeedFinalRoute = 'provide-feedback-need-final';
+  const ProvideFeedbackNeedFinal = (
+    <RadioField
+      key={provideFeedbackNeedFinalRoute}
+      id={provideFeedbackNeedFinalRoute}
+      label={t('actions.provideGrtFeedbackNeedFinal')}
+      name={radioGroupName}
+      value={provideFeedbackNeedFinalRoute}
+      onChange={onChange}
+      checked={actionRoute === provideFeedbackNeedFinalRoute}
+    />
+  );
+
+  const BizCaseNeedsChanges = (
+    <RadioField
+      key="biz-case-needs-changes"
+      id="biz-case-needs-changes"
+      label={t('actions.bizCaseNeedsChanges')}
+      name={radioGroupName}
+      value="biz-case-needs-changes"
+      onChange={onChange}
+      checked={actionRoute === 'biz-case-needs-changes'}
+    />
+  );
+
+  const noFurtherGovernanceRoute = 'no-governance';
+  const NoFurtherGovernance = (
+    <RadioField
+      key={noFurtherGovernanceRoute}
+      id={noFurtherGovernanceRoute}
+      label={t('actions.noGovernance')}
+      name={radioGroupName}
+      value={noFurtherGovernanceRoute}
+      onChange={onChange}
+      checked={actionRoute === noFurtherGovernanceRoute}
+    />
+  );
+
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
   if (businessCaseExists) {
-    availableActions = [];
-    availableHiddenActions = [];
+    availableActions = [BizCaseNeedsChanges];
+    availableHiddenActions = [
+      ReadyForGRT,
+      ReadyForGRB,
+      ProvideFeedbackKeepDraft,
+      ProvideFeedbackNeedFinal,
+      IssueLifecycleId
+    ];
   } else {
     availableActions = [NotITRequest, NeedBizCase];
     availableHiddenActions = [
       ReadyForGRT,
       ProvideFeedbackNeedBizCase,
       ReadyForGRB,
+      NoFurtherGovernance,
       IssueLifecycleId
     ];
   }

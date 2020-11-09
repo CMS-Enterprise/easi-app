@@ -10,8 +10,8 @@ import (
 type ActionType string
 
 const (
-	// ActionTypeSUBMIT captures enum value SUBMIT
-	ActionTypeSUBMIT ActionType = "SUBMIT"
+	// ActionTypeSUBMITINTAKE captures enum value SUBMIT_INTAKE
+	ActionTypeSUBMITINTAKE ActionType = "SUBMIT_INTAKE"
 	// ActionTypeNOTITREQUEST captures enum value NOT_IT_REQUEST
 	ActionTypeNOTITREQUEST ActionType = "NOT_IT_REQUEST"
 	// ActionTypeNEEDBIZCASE captures enum value NEED_BIZ_CASE
@@ -21,9 +21,19 @@ const (
 	// ActionTypeREADYFORGRB captures enum value READY_FOR_GRB
 	ActionTypeREADYFORGRB ActionType = "READY_FOR_GRB"
 	// ActionTypePROVIDEFEEDBACKNEEDBIZCASE captures enum value PROVIDE_FEEDBACK_NEED_BIZ_CASE
-	ActionTypePROVIDEFEEDBACKNEEDBIZCASE = "PROVIDE_FEEDBACK_NEED_BIZ_CASE"
+	ActionTypePROVIDEFEEDBACKNEEDBIZCASE ActionType = "PROVIDE_FEEDBACK_NEED_BIZ_CASE"
 	// ActionTypeISSUELCID captures enum value ISSUE_LCID
 	ActionTypeISSUELCID ActionType = "ISSUE_LCID"
+	// ActionTypeSUBMITBIZCASE captures enum value SUBMIT_BIZ_CASE
+	ActionTypeSUBMITBIZCASE ActionType = "SUBMIT_BIZ_CASE"
+	// ActionTypeBIZCASENEEDSCHANGES captures enum value BIZ_CASE_NEEDS_CHANGES
+	ActionTypeBIZCASENEEDSCHANGES ActionType = "BIZ_CASE_NEEDS_CHANGES"
+	// ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES captures enum value PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT
+	ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES ActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT"
+	// ActionTypePROVIDEFEEDBACKBIZCASEFINAL captures enum value PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
+	ActionTypePROVIDEFEEDBACKBIZCASEFINAL ActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
+	// ActionTypeNOGOVERNANCENEEDED captures enum value NO_GOVERNANCE_NEEDED
+	ActionTypeNOGOVERNANCENEEDED ActionType = "NO_GOVERNANCE_NEEDED"
 )
 
 // Action is the model for an action on a system intake

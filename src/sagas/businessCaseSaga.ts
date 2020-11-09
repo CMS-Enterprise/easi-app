@@ -9,8 +9,7 @@ import { BusinessCaseModel } from 'types/businessCase';
 import {
   fetchBusinessCase,
   postBusinessCase,
-  putBusinessCase,
-  submitBusinessCase
+  putBusinessCase
 } from 'types/routines';
 
 function getBusinessCaseRequest(id: string) {
@@ -70,25 +69,8 @@ function* updateBusinessCase(action: Action<any>) {
   }
 }
 
-function* completeBusinessCase(action: Action<any>) {
-  try {
-    yield put(submitBusinessCase.request());
-    const response = yield call(putBusinessCaseRequest, {
-      ...action.payload,
-      status: 'SUBMITTED'
-    });
-    yield put(submitBusinessCase.success(response.data));
-  } catch (error) {
-    yield put(submitBusinessCase.failure(error.message));
-  } finally {
-    yield put(submitBusinessCase.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
-  }
-}
-
 export default function* businessCaseSaga() {
   yield takeLatest(fetchBusinessCase.TRIGGER, getBusinessCase);
   yield takeLatest(postBusinessCase.TRIGGER, createBusinessCase);
   yield takeLatest(putBusinessCase.TRIGGER, updateBusinessCase);
-  yield takeLatest(submitBusinessCase.TRIGGER, completeBusinessCase);
 }

@@ -9,9 +9,7 @@ import (
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -21,7 +19,7 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
-	authorize := func(context context.Context, intake *models.BusinessCase) (bool, error) { return true, nil }
+	authorize := func(context context.Context) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches Business Case by ID without an error", func() {
 		fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
@@ -54,7 +52,7 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 	fakeEuaID := "FAKE"
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
-	authorize := func(context context.Context, euaID string) (bool, error) { return true, nil }
+	authorize := func(context context.Context) (bool, error) { return true, nil }
 
 	s.Run("successfully fetches Business Cases by EUA ID without an error", func() {
 		fetch := func(ctx context.Context, euaID string) (models.BusinessCases, error) {
@@ -82,46 +80,6 @@ func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
 	})
 }
 
-func (s ServicesTestSuite) TestAuthorizeCreateBusinessCase() {
-	logger := zap.NewNop()
-	authorizeCreateBusinessCase := NewAuthorizeCreateBusinessCase(logger)
-
-	s.Run("No EUA ID fails auth", func() {
-		ctx := context.Background()
-		ok, err := authorizeCreateBusinessCase(ctx, &models.SystemIntake{})
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Mismatched EUA ID fails auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
-
-		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeCreateBusinessCase(ctx, &intake)
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Matched EUA ID passes auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
-		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeCreateBusinessCase(ctx, &intake)
-
-		s.True(ok)
-		s.NoError(err)
-	})
-}
-
 func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	ctx := context.Background()
 	logger := zap.NewNop()
@@ -129,8 +87,9 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intake := &models.SystemIntake{
-		EUAUserID: euaID,
-		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
+		EUAUserID:   euaID,
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
 	}
 	intake, err := s.store.CreateSystemIntake(ctx, intake)
 	s.NoError(err)
@@ -210,46 +169,6 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	//})
 }
 
-func (s ServicesTestSuite) TestAuthorizeUpdateBusinessCase() {
-	logger := zap.NewNop()
-	authorizeUpdateBusinessCase := NewAuthorizeUpdateBusinessCase(logger)
-
-	s.Run("No EUA ID fails auth", func() {
-		ctx := context.Background()
-		ok, err := authorizeUpdateBusinessCase(ctx, &models.BusinessCase{})
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Mismatched EUA ID fails auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
-
-		businessCase := models.BusinessCase{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeUpdateBusinessCase(ctx, &businessCase)
-
-		s.False(ok)
-		s.NoError(err)
-	})
-
-	s.Run("Matched EUA ID passes auth", func() {
-		ctx := context.Background()
-		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
-		businessCase := models.BusinessCase{
-			EUAUserID: "ABCD",
-		}
-
-		ok, err := authorizeUpdateBusinessCase(ctx, &businessCase)
-
-		s.True(ok)
-		s.NoError(err)
-	})
-}
-
 func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	ctx := context.Background()
 	logger := zap.NewNop()
@@ -257,8 +176,9 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	serviceConfig.clock = clock.NewMock()
 	euaID := testhelpers.RandomEUAID()
 	intake := &models.SystemIntake{
-		EUAUserID: euaID,
-		Status:    models.SystemIntakeStatusINTAKESUBMITTED,
+		EUAUserID:   euaID,
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
 	}
 	_, err := s.store.CreateSystemIntake(ctx, intake)
 	s.NoError(err)
@@ -273,14 +193,9 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	authorize := func(ctx context.Context, businessCase *models.BusinessCase) (bool, error) {
 		return true, nil
 	}
-	emailCount := 0
-	sendEmail := func(requester string, intakeID uuid.UUID) error {
-		emailCount++
-		return nil
-	}
 
 	s.Run("successfully updates a Business Case without an error", func() {
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, update, sendEmail)
+		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, update)
 
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
@@ -292,7 +207,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 		failUpdate := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("creation failed")
 		}
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, failUpdate, sendEmail)
+		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, failUpdate)
 		businessCase, err := updateBusinessCase(ctx, &existingBusinessCase)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -311,76 +226,6 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	//	s.IsType(&apperrors.ValidationError{}, err)
 	//	s.Equal(&models.BusinessCase{}, businessCase)
 	//})
-
-	s.Run("returns error when validation fails", func() {
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, update, sendEmail)
-		businessCase := testhelpers.NewBusinessCase()
-		businessCase.ID = existingBusinessCase.ID
-		businessCase.EUAUserID = existingBusinessCase.EUAUserID
-		businessCase.Requester = null.NewString("", false)
-		businessCase.Status = models.BusinessCaseStatusSUBMITTED
-
-		_, err := updateBusinessCase(ctx, &businessCase)
-
-		s.IsType(&apperrors.ValidationError{}, err)
-	})
-
-	s.Run("doesn't email if existing businessCase was previously submitted", func() {
-		earlierBusinessCase := testhelpers.NewBusinessCase()
-		earlierBusinessCase.Status = models.BusinessCaseStatusSUBMITTED
-		fetchDifferent := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
-			return &earlierBusinessCase, nil
-		}
-
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetchDifferent, authorize, update, sendEmail)
-		businessCase := testhelpers.NewBusinessCase()
-		businessCase.Status = models.BusinessCaseStatusSUBMITTED
-		businessCase.ID = earlierBusinessCase.ID
-		businessCase.EUAUserID = earlierBusinessCase.EUAUserID
-
-		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
-
-		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
-		s.NoError(err)
-		s.Equal(businessCase, *actualBusinessCase)
-		s.Equal(0, emailCount)
-	})
-
-	s.Run("returns no error when successful on submit", func() {
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, update, sendEmail)
-		businessCase := testhelpers.NewBusinessCase()
-		businessCase.Status = models.BusinessCaseStatusSUBMITTED
-		businessCase.ID = existingBusinessCase.ID
-		businessCase.EUAUserID = existingBusinessCase.EUAUserID
-		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
-
-		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
-
-		s.NoError(err)
-		s.Equal(businessCase, *actualBusinessCase)
-		s.Equal(1, emailCount)
-		s.Equal(serviceConfig.clock.Now(), *actualBusinessCase.LastSubmittedAt)
-	})
-
-	s.Run("returns notification error when email fails", func() {
-		failSendEmail := func(requester string, intakeID uuid.UUID) error {
-			return &apperrors.NotificationError{
-				Err:             errors.New("failed to send Email"),
-				DestinationType: apperrors.DestinationTypeEmail,
-			}
-		}
-		updateBusinessCase := NewUpdateBusinessCase(serviceConfig, fetch, authorize, update, failSendEmail)
-		businessCase := testhelpers.NewBusinessCase()
-		businessCase.Status = models.BusinessCaseStatusSUBMITTED
-		businessCase.ID = existingBusinessCase.ID
-		businessCase.EUAUserID = existingBusinessCase.EUAUserID
-		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
-
-		actualBusinessCase, err := updateBusinessCase(ctx, &businessCase)
-
-		s.IsType(&apperrors.NotificationError{}, err)
-		s.Equal(businessCase, *actualBusinessCase)
-	})
 }
 
 func (s ServicesTestSuite) TestBusinessCaseArchiver() {
@@ -400,7 +245,7 @@ func (s ServicesTestSuite) TestBusinessCaseArchiver() {
 	}
 
 	s.Run("golden path archive business case", func() {
-		archiveBusinessCase := NewArchiveBusinessCase(serviceConfig, fetch, update)
+		archiveBusinessCase := NewCloseBusinessCase(serviceConfig, fetch, update)
 		err := archiveBusinessCase(ctx, fakeID)
 		s.NoError(err)
 	})
@@ -409,7 +254,7 @@ func (s ServicesTestSuite) TestBusinessCaseArchiver() {
 		failFetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("fetch failed")
 		}
-		archiveBusinessCase := NewArchiveBusinessCase(serviceConfig, failFetch, update)
+		archiveBusinessCase := NewCloseBusinessCase(serviceConfig, failFetch, update)
 		err := archiveBusinessCase(ctx, fakeID)
 		s.IsType(&apperrors.QueryError{}, err)
 	})
@@ -418,7 +263,7 @@ func (s ServicesTestSuite) TestBusinessCaseArchiver() {
 		failUpdate := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("update failed")
 		}
-		archiveBusinessCase := NewArchiveBusinessCase(serviceConfig, fetch, failUpdate)
+		archiveBusinessCase := NewCloseBusinessCase(serviceConfig, fetch, failUpdate)
 		err := archiveBusinessCase(ctx, fakeID)
 		s.IsType(&apperrors.QueryError{}, err)
 	})
