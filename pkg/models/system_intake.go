@@ -99,7 +99,7 @@ type SystemIntake struct {
 	AlfabetID               null.String             `json:"alfabetID" db:"alfabet_id"`
 	GrtReviewEmailBody      null.String             `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 	RequesterEmailAddress   null.String             `json:"requesterEmailAddress" db:"requester_email_address"`
-	BusinessCaseID          *uuid.UUID              `json:"businessCase"`
+	BusinessCaseID          *uuid.UUID              `json:"businessCase" db:"business_case_id"`
 	LifecycleID             null.String             `json:"lcid" db:"lcid"`
 	LifecycleExpiresAt      *time.Time              `json:"lcidExpiresAt" db:"lcid_expires_at"`
 	LifecycleScope          null.String             `json:"lcidScope" db:"lcid_scope"`

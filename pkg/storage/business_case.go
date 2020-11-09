@@ -55,32 +55,6 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 	return &businessCase, nil
 }
 
-// FetchBusinessCaseIDByIntakeID queries the DB for a business case matching the given intake ID
-func (s *Store) FetchBusinessCaseIDByIntakeID(ctx context.Context, intakeID uuid.UUID) (*uuid.UUID, error) {
-	var businessCaseID *uuid.UUID = nil
-	const fetchBusinessCaseIDSQL = `
-		SELECT
-			id
-		FROM
-			business_case
-		WHERE
-			business_case.system_intake = $1 AND business_case.status != 'ARCHIVED'`
-
-	err := s.db.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
-	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
-		}
-
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case id for intake %s", err),
-			zap.String("System Intake", intakeID.String()),
-		)
-		return nil, err
-	}
-	return businessCaseID, nil
-}
-
 // FetchOpenBusinessCaseByIntakeID queries the DB for an open business case matching the given intake ID
 func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uuid.UUID) (*models.BusinessCase, error) {
 	businessCase := models.BusinessCase{}
