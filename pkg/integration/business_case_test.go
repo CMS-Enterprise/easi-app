@@ -29,12 +29,12 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 	intake.EUAUserID = s.user.euaID
 
 	createdIntake, err := s.store.CreateSystemIntake(context.Background(), &intake)
-	intakeID := createdIntake.ID
 	s.NoError(err)
+	intakeID := createdIntake.ID
 
 	body, err := json.Marshal(map[string]string{
 		"systemIntakeId": intakeID.String(),
-		"status":         "DRAFT",
+		"status":         string(models.BusinessCaseStatusOPEN),
 	})
 	s.NoError(err)
 
@@ -113,7 +113,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    string(models.BusinessCaseStatusOPEN),
 			"requester": requester,
 		})
 		s.NoError(err)
@@ -131,7 +131,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    string(models.BusinessCaseStatusOPEN),
 			"requester": requester,
 		})
 		s.NoError(err)

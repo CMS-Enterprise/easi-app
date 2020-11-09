@@ -38,7 +38,7 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 			business_case
 			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
 		WHERE
-			business_case.id = $1 AND business_case.status != 'ARCHIVED'
+			business_case.id = $1
 		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
 
 	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, id)
@@ -55,30 +55,31 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 	return &businessCase, nil
 }
 
-// FetchBusinessCaseIDByIntakeID queries the DB for a business case matching the given intake ID
-func (s *Store) FetchBusinessCaseIDByIntakeID(ctx context.Context, intakeID uuid.UUID) (*uuid.UUID, error) {
-	var businessCaseID *uuid.UUID = nil
-	const fetchBusinessCaseIDSQL = `
+// FetchOpenBusinessCaseByIntakeID queries the DB for an open business case matching the given intake ID
+func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uuid.UUID) (*models.BusinessCase, error) {
+	businessCase := models.BusinessCase{}
+	const fetchBusinessCaseSQL = `
 		SELECT
-			id
+			business_case.*,
+			json_agg(estimated_lifecycle_cost) as lifecycle_cost_lines
 		FROM
 			business_case
+			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
 		WHERE
-			business_case.system_intake = $1 AND business_case.status != 'ARCHIVED'`
-
-	err := s.db.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
+			business_case.system_intake = $1 AND business_case.status = 'OPEN'
+		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
+	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, intakeID)
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
-		}
-
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case id for intake %s", err),
-			zap.String("System Intake", intakeID.String()),
+			fmt.Sprintf("Failed to fetch business case %s", err),
+			zap.String("id", intakeID.String()),
 		)
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
+		}
 		return nil, err
 	}
-	return businessCaseID, nil
+	return &businessCase, nil
 }
 
 // FetchBusinessCasesByEuaID queries the DB for a list of business case matching the given EUA ID
@@ -92,7 +93,7 @@ func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (mo
 			business_case
 			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
 		WHERE
-			business_case.eua_user_id = $1 AND business_case.status != 'ARCHIVED'
+			business_case.eua_user_id = $1
 		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
 
 	err := s.db.Select(&businessCases, fetchBusinessCaseSQL, euaID)

@@ -9,6 +9,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
+	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -57,7 +58,6 @@ func (s *Server) routes(
 
 	if s.environment.Deployed() {
 		s.CheckCEDAREasiClientConnection(cedarEasiClient)
-		s.CheckCEDARLdapClientConnection(cedarLdapClient)
 	}
 
 	// set up Email Client
@@ -156,18 +156,18 @@ func (s *Server) routes(
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeFetchSystemIntakeByID(),
+			services.NewAuthorizeHasEASiRole(),
 		),
 		services.NewArchiveSystemIntake(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
-			services.NewArchiveBusinessCase(
+			services.NewCloseBusinessCase(
 				serviceConfig,
 				store.FetchBusinessCaseByID,
 				store.UpdateBusinessCase,
 			),
-			services.NewAuthorizeArchiveSystemIntake(s.logger),
+			services.NewAuthorizeUserIsIntakeRequester(),
 			emailClient.SendWithdrawRequestEmail,
 		),
 	)
@@ -190,20 +190,19 @@ func (s *Server) routes(
 		services.NewFetchBusinessCaseByID(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-			services.NewAuthorizeFetchBusinessCaseByID(),
+			services.NewAuthorizeHasEASiRole(),
 		),
 		services.NewCreateBusinessCase(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeCreateBusinessCase(s.logger),
+			services.NewAuthorizeUserIsIntakeRequester(),
 			store.CreateBusinessCase,
 		),
 		services.NewUpdateBusinessCase(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-			services.NewAuthorizeUpdateBusinessCase(s.logger),
+			services.NewAuthorizeUserIsBusinessCaseRequester(),
 			store.UpdateBusinessCase,
-			emailClient.SendBusinessCaseSubmissionEmail,
 		),
 	)
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
@@ -214,7 +213,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
-			services.NewAuthorizeFetchBusinessCasesByEuaID(),
+			services.NewAuthorizeHasEASiRole(),
 		),
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
@@ -229,69 +228,118 @@ func (s *Server) routes(
 		base,
 		services.NewTakeAction(
 			store.FetchSystemIntakeByID,
-			services.NewSubmitSystemIntake(
-				serviceConfig,
-				services.NewAuthorizeUserIsIntakeRequester(),
-				store.UpdateSystemIntake,
-				cedarEasiClient.ValidateAndSubmitSystemIntake,
-				store.CreateAction,
-				cedarLdapClient.FetchUserInfo,
-				emailClient.SendSystemIntakeSubmissionEmail,
-			),
-			services.NewTakeActionUpdateStatus(
-				serviceConfig,
-				models.SystemIntakeStatusNOTITREQUEST,
-				store.UpdateSystemIntake,
-				services.NewAuthorizeRequireGRTJobCode(),
-				store.CreateAction,
-				cedarLdapClient.FetchUserInfo,
-				emailClient.SendSystemIntakeReviewEmail,
-			),
-			services.NewTakeActionUpdateStatus(
-				serviceConfig,
-				models.SystemIntakeStatusREADYFORGRT,
-				store.UpdateSystemIntake,
-				services.NewAuthorizeRequireGRTJobCode(),
-				store.CreateAction,
-				cedarLdapClient.FetchUserInfo,
-				emailClient.SendSystemIntakeReviewEmail,
-			),
-			services.NewTakeActionUpdateStatus(
-				serviceConfig,
-				models.SystemIntakeStatusNEEDBIZCASE,
-				store.UpdateSystemIntake,
-				services.NewAuthorizeRequireGRTJobCode(),
-				store.CreateAction,
-				cedarLdapClient.FetchUserInfo,
-				emailClient.SendSystemIntakeReviewEmail,
-			),
-			services.NewTakeActionUpdateStatus(
-				serviceConfig,
-				models.SystemIntakeStatusNEEDBIZCASE,
-				store.UpdateSystemIntake,
-				services.NewAuthorizeRequireGRTJobCode(),
-				store.CreateAction,
-				cedarLdapClient.FetchUserInfo,
-				emailClient.SendSystemIntakeReviewEmail,
-			),
-			services.NewTakeActionUpdateStatus(
-				serviceConfig,
-				models.SystemIntakeStatusREADYFORGRB,
-				store.UpdateSystemIntake,
-				services.NewAuthorizeRequireGRTJobCode(),
-				store.CreateAction,
-				cedarLdapClient.FetchUserInfo,
-				emailClient.SendSystemIntakeReviewEmail,
-			),
-			services.NewTakeActionUpdateStatus(
-				serviceConfig,
-				models.SystemIntakeStatusLCIDISSUED,
-				store.UpdateSystemIntake,
-				services.NewAuthorizeRequireGRTJobCode(),
-				store.CreateAction,
-				cedarLdapClient.FetchUserInfo,
-				emailClient.SendSystemIntakeReviewEmail,
-			),
+			map[models.ActionType]services.ActionExecuter{
+				models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
+					serviceConfig,
+					services.NewAuthorizeUserIsIntakeRequester(),
+					store.UpdateSystemIntake,
+					cedarEasiClient.ValidateAndSubmitSystemIntake,
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeSubmissionEmail,
+				),
+				models.ActionTypeNOTITREQUEST: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNOTITREQUEST,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+				models.ActionTypeNEEDBIZCASE: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNEEDBIZCASE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+				models.ActionTypeREADYFORGRT: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusREADYFORGRT,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+				models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNEEDBIZCASE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+				models.ActionTypeREADYFORGRB: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusREADYFORGRB,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+				models.ActionTypeISSUELCID: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusLCIDISSUED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
+					serviceConfig,
+					services.NewAuthorizeUserIsIntakeRequester(),
+					store.FetchOpenBusinessCaseByIntakeID,
+					appvalidation.BusinessCaseForSubmit,
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					store.UpdateSystemIntake,
+					store.UpdateBusinessCase,
+					emailClient.SendBusinessCaseSubmissionEmail,
+				),
+				models.ActionTypeBIZCASENEEDSCHANGES: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+				models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+				models.ActionTypePROVIDEFEEDBACKBIZCASEFINAL: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusBIZCASEFINALNEEDED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+				models.ActionTypeNOGOVERNANCENEEDED: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNOGOVERNANCE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLdapClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+				),
+			},
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/actions", systemIntakeActionHandler.Handle())
@@ -307,6 +355,16 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
+
+	notesHandler := handlers.NewNotesHandler(
+		base,
+		services.NewFetchNotes(
+			serviceConfig,
+			store.FetchNotesBySystemIntakeID,
+			services.NewAuthorizeRequireGRTJobCode(),
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/notes", notesHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,

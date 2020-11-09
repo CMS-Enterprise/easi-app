@@ -65,7 +65,7 @@ const Review = ({ systemIntake, now }: ReviewProps) => {
         onClick={() =>
           dispatch(
             postSystemIntakeAction({
-              actionType: 'SUBMIT',
+              actionType: 'SUBMIT_INTAKE',
               intakeId: systemIntake.id
             })
           )

@@ -21,7 +21,7 @@ func (s StoreTestSuite) TestCreateAction() {
 		action := models.Action{
 			ID:             uuid.New(),
 			IntakeID:       &intake.ID,
-			ActionType:     models.ActionTypeSUBMIT,
+			ActionType:     models.ActionTypeSUBMITINTAKE,
 			ActorName:      "name",
 			ActorEmail:     "email@site.com",
 			ActorEUAUserID: testhelpers.RandomEUAID(),
@@ -45,7 +45,7 @@ func (s StoreTestSuite) TestCreateAction() {
 		action := models.Action{
 			ID:             uuid.New(),
 			IntakeID:       &intake.ID,
-			ActionType:     models.ActionTypeSUBMIT,
+			ActionType:     models.ActionTypeSUBMITINTAKE,
 			ActorEmail:     "email@site.com",
 			ActorEUAUserID: testhelpers.RandomEUAID(),
 		}

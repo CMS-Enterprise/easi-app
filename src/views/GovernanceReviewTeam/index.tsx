@@ -213,26 +213,62 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
+              path="/governance-review-team/:systemId/actions/provide-feedback-keep-draft"
+              render={() => (
+                <SubmitAction
+                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT"
+                  actionName={actionsT('actions.provideGrtFeedbackKeepDraft')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/provide-feedback-need-final"
+              render={() => (
+                <SubmitAction
+                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
+                  actionName={actionsT('actions.provideGrtFeedbackNeedFinal')}
+                />
+              )}
+            />
+            <Route
               path="/governance-review-team/:systemId/actions/ready-for-grt"
               render={() => (
                 <SubmitAction
                   action="READY_FOR_GRT"
                   actionName={actionsT('actions.readyForGrt')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/ready-for-grb"
+              render={() => (
+                <SubmitAction
+                  action="READY_FOR_GRB"
+                  actionName={actionsT('actions.readyForGrb')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
+              render={() => (
+                <SubmitAction
+                  action="BIZ_CASE_NEEDS_CHANGES"
+                  actionName={actionsT('actions.bizCaseNeedsChanges')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
+              render={() => (
+                <SubmitAction
+                  action="NO_GOVERNANCE_NEEDED"
+                  actionName={actionsT('actions.noGovernance')}
                 />
               )}
             />
             <Route
               path="/governance-review-team/:systemId/actions/issue-lcid"
               render={() => <IssueLifecycleId />}
-            />
-            <Route
-              path="/governance-review-team/:systemId/actions/ready-for-grt"
-              render={() => (
-                <SubmitAction
-                  action="READY_FOR_GRT"
-                  actionName={actionsT('actions.readyForGrt')}
-                />
-              )}
             />
           </section>
         </section>

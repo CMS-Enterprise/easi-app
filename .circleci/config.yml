@@ -150,15 +150,6 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      - restore_cache:
-          keys:
-            - yarn-deps-cache-{{ checksum "yarn.lock" }}
-      - restore_cache:
-          keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
-      - run:
-          name: Install dependencies
-          command: yarn install
       - run:
           name: Docker Hub login
           command: |
@@ -167,14 +158,6 @@ jobs:
           name: Run Cypress integration tests
           command: |
             ./scripts/run-cypress-test-docker
-      - save_cache:
-          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/.cache/yarn
-      - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
-          paths:
-            - ~/project/node_modules
       - store_artifacts:
           path: cypress/videos
           destination: videos
