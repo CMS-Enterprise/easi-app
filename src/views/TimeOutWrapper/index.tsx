@@ -78,7 +78,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   const handleModalExit = async () => {
     setIsModalOpen(false);
-    dispatch(updateLastActiveAt);
+    dispatch(updateLastActiveAt(DateTime.local()));
   };
 
   useEffect(() => {

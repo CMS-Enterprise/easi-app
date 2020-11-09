@@ -12,7 +12,7 @@ const AutoSave = ({ values, onSave, debounceDelay }: AutoSaveProps) => {
   // save had already been invoked and pending the debounce delay.
   const isMounted = useRef(false);
   const debouncedSave = useMemo(() => {
-    debounce(() => {
+    return debounce(() => {
       // We also don't want to save when the component is unmounted, but a
       // debounceSave had already been invoked and ispending the debounce delay.
       if (isMounted.current) {
