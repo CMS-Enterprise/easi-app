@@ -142,7 +142,7 @@ export const SystemIntakeReview = ({
           <div>
             <DescriptionTerm term="What is your business need?" />
             <DescriptionDefinition
-              className="text-pre"
+              className="text-pre-wrap"
               definition={systemIntake.businessNeed}
             />
           </div>
@@ -151,7 +151,7 @@ export const SystemIntakeReview = ({
           <div>
             <DescriptionTerm term="How are you thinking of solving it?" />
             <DescriptionDefinition
-              className="text-pre"
+              className="text-pre-wrap"
               definition={systemIntake.businessSolution}
             />
           </div>

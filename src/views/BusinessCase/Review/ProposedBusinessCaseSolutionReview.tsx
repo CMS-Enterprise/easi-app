@@ -42,7 +42,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
       <div className="line-height-body-3">
         <DescriptionTerm term={`${name}: Summary`} />
         <DescriptionDefinition
-          className="text-pre"
+          className="text-pre-wrap"
           definition={solution.summary}
         />
       </div>
@@ -51,7 +51,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
       <div className="line-height-body-3">
         <DescriptionTerm term={`${name}: Acquisition approach`} />
         <DescriptionDefinition
-          className="text-pre"
+          className="text-pre-wrap"
           definition={solution.acquisitionApproach}
         />
       </div>
@@ -60,7 +60,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
       <div className="line-height-body-3">
         <DescriptionTerm term="Do you need to host your solution?" />
         <DescriptionDefinition
-          className="text-pre"
+          className="text-pre-wrap"
           definition={hostingTypeMap[solution.hosting.type]}
         />
       </div>
@@ -70,7 +70,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
         <div className="line-height-body-3">
           <DescriptionTerm term="Where are you planning to host?" />
           <DescriptionDefinition
-            className="text-pre"
+            className="text-pre-wrap"
             definition={solution.hosting.location}
           />
         </div>
@@ -78,7 +78,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
           <div className="line-height-body-3">
             <DescriptionTerm term="What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?" />
             <DescriptionDefinition
-              className="text-pre"
+              className="text-pre-wrap"
               definition={solution.hosting.cloudServiceType}
             />
           </div>
@@ -89,7 +89,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
       <div className="line-height-body-3">
         <DescriptionTerm term="Will your solution have a User Interface?" />
         <DescriptionDefinition
-          className="text-pre"
+          className="text-pre-wrap"
           definition={yesNoMap[solution.hasUserInterface]}
         />
       </div>
@@ -98,7 +98,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
       <div className="line-height-body-3">
         <DescriptionTerm term={`${name}: Pros`} />
         <DescriptionDefinition
-          className="text-pre"
+          className="text-pre-wrap"
           definition={solution.pros}
         />
       </div>
@@ -107,7 +107,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
       <div className="line-height-body-3">
         <DescriptionTerm term={`${name}: Cons`} />
         <DescriptionDefinition
-          className="text-pre"
+          className="text-pre-wrap"
           definition={solution.cons}
         />
       </div>
@@ -119,7 +119,7 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
       <div className="line-height-body-3">
         <DescriptionTerm term="What is the cost savings or avoidance associated with this solution?" />
         <DescriptionDefinition
-          className="text-pre"
+          className="text-pre-wrap"
           definition={solution.costSavings}
         />
       </div>

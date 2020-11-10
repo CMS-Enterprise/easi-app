@@ -90,7 +90,7 @@ Array [
             What is your business or user need?
           </dt>
           <dd
-            className="description-definition margin-0 text-pre"
+            className="description-definition margin-0 text-pre-wrap"
           >
             Test business need
           </dd>
@@ -108,7 +108,7 @@ Array [
             How will CMS benefit from this effort?
           </dt>
           <dd
-            className="description-definition margin-0 text-pre"
+            className="description-definition margin-0 text-pre-wrap"
           >
             Test CMS benefit
           </dd>
@@ -126,7 +126,7 @@ Array [
             How does this effort align with organizational priorities?
           </dt>
           <dd
-            className="description-definition margin-0 text-pre"
+            className="description-definition margin-0 text-pre-wrap"
           >
             Test priority alignment
           </dd>
@@ -144,7 +144,7 @@ Array [
             How will you determine whether or not this effort is successful?
           </dt>
           <dd
-            className="description-definition margin-0 text-pre"
+            className="description-definition margin-0 text-pre-wrap"
           >
             Test success indicators
           </dd>
@@ -301,7 +301,7 @@ Array [
                     “As is” solution: Summary
                   </dt>
                   <dd
-                    className="description-definition margin-0 text-pre"
+                    className="description-definition margin-0 text-pre-wrap"
                   >
                     Test summary
                   </dd>
@@ -319,7 +319,7 @@ Array [
                     “As is” solution: Pros
                   </dt>
                   <dd
-                    className="description-definition margin-0 text-pre"
+                    className="description-definition margin-0 text-pre-wrap"
                   >
                     Test pros
                   </dd>
@@ -337,7 +337,7 @@ Array [
                     “As is” solution: Cons
                   </dt>
                   <dd
-                    className="description-definition margin-0 text-pre"
+                    className="description-definition margin-0 text-pre-wrap"
                   >
                     Test cons
                   </dd>
@@ -385,7 +385,7 @@ Array [
                   What is the cost savings or avoidance associated with this solution?
                 </dt>
                 <dd
-                  className="description-definition margin-0 text-pre"
+                  className="description-definition margin-0 text-pre-wrap"
                 >
                   Test cost savings
                 </dd>
