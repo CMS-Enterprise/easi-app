@@ -26,10 +26,16 @@ const SystemIntakeBanners = () => {
   }, [dispatch, authState.isAuthenticated]);
 
   const getSystemIntakeBanners = (featureFlags: Flags) => {
-    const rootPath = featureFlags.taskListLite
-      ? '/governance-task-list'
-      : '/system';
     return systemIntakes.map((intake: SystemIntakeForm) => {
+      let rootPath = '';
+      if (intake.requestType === 'SHUTDOWN') {
+        rootPath = '/system';
+      } else {
+        rootPath = featureFlags.taskListLite
+          ? '/governance-task-list'
+          : '/system';
+      }
+
       switch (intake.status) {
         case 'INTAKE_DRAFT':
           return (
