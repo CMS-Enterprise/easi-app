@@ -1,7 +1,9 @@
 .action-banner {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
+  &__content {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+  }
 
   &.usa-alert {
       background-color: #f4e3db;
