@@ -36,6 +36,8 @@ const (
 	SystemIntakeStatusNOTITREQUEST SystemIntakeStatus = "NOT_IT_REQUEST"
 	// SystemIntakeStatusLCIDISSUED captures enum value "LCID_ISSUED"
 	SystemIntakeStatusLCIDISSUED SystemIntakeStatus = "LCID_ISSUED"
+	// SystemIntakeStatusBIZCASEDRAFT captures enum value "BIZ_CASE_DRAFT"
+	SystemIntakeStatusBIZCASEDRAFT SystemIntakeStatus = "BIZ_CASE_DRAFT"
 	// SystemIntakeStatusBIZCASESUBMITTED captures enum value "BIZ_CASE_SUBMITTED"
 	SystemIntakeStatusBIZCASESUBMITTED SystemIntakeStatus = "BIZ_CASE_SUBMITTED"
 	// SystemIntakeStatusBIZCASECHANGESNEEDED captures enum value "BIZ_CASE_CHANGES_NEEDED"

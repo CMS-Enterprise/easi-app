@@ -196,7 +196,10 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeUserIsIntakeRequester(),
+			store.CreateAction,
+			cedarLdapClient.FetchUserInfo,
 			store.CreateBusinessCase,
+			store.UpdateSystemIntake,
 		),
 		services.NewUpdateBusinessCase(
 			serviceConfig,
