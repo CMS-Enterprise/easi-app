@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { DateTime } from 'luxon';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { updateLastActiveAt } from 'reducers/authReducer';
@@ -13,7 +14,7 @@ function* getRequestRepoIntakes() {
     yield put(fetchRequestRepoIntakes.request());
     const response = yield call(fetchRequestRepos);
     yield put(fetchRequestRepoIntakes.success(response.data));
-    yield put(updateLastActiveAt);
+    yield put(updateLastActiveAt(DateTime.local()));
   } catch (error) {
     yield put(fetchRequestRepoIntakes.failure(error.message));
   } finally {

@@ -53,7 +53,10 @@ export const GrtSystemIntakeReview = () => {
               </h2>
             )}
             {!isLoading && !error && (
-              <SystemIntakeReview systemIntake={systemIntake} />
+              <SystemIntakeReview
+                systemIntake={systemIntake}
+                now={DateTime.local()}
+              />
             )}
           </div>
         </div>

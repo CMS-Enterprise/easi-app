@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 
 const newTimeStamp = () => Date.now();
@@ -11,14 +12,24 @@ type authReducerState = {
 
 const UPDATE_LAST_ACTIVE_AT = 'AUTH_REDUCER_UPDATE_LAST_ACTIVE_AT';
 
-export const updateLastActiveAt = {
-  type: UPDATE_LAST_ACTIVE_AT
+export const updateLastActiveAt = (lastActiveAt: DateTime) => {
+  return {
+    type: UPDATE_LAST_ACTIVE_AT,
+    payload: {
+      lastActiveAt
+    }
+  };
 };
 
 const UPDATE_LAST_RENEW_AT = 'AUTH_REDUCER_UPDATE_LAST_RENEW_AT';
 
-export const updateLastRenewAt = {
-  type: UPDATE_LAST_RENEW_AT
+export const updateLastRenewAt = (lastRenewAt: DateTime) => {
+  return {
+    type: UPDATE_LAST_RENEW_AT,
+    payload: {
+      lastRenewAt
+    }
+  };
 };
 
 const SET_USER_GROUPS = 'AUTH_REDUCER_SET_USER_GROUPS';
@@ -42,12 +53,12 @@ function authReducer(
     case UPDATE_LAST_ACTIVE_AT:
       return {
         ...state,
-        lastActiveAt: newTimeStamp()
+        lastActiveAt: action.payload.lastActiveAt
       };
     case UPDATE_LAST_RENEW_AT:
       return {
         ...state,
-        lastRenewAt: newTimeStamp()
+        lastRenewAt: action.payload.lastRenewAt
       };
     case SET_USER_GROUPS:
       return {
