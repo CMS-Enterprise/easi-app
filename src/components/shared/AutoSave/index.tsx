@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import debounce from 'lodash/debounce';
 
 type AutoSaveProps = {
@@ -11,16 +11,15 @@ const AutoSave = ({ values, onSave, debounceDelay }: AutoSaveProps) => {
   // We also don't want to save when the component is unmounted, but a
   // save had already been invoked and pending the debounce delay.
   const isMounted = useRef(false);
-  const debouncedSave = useCallback(
-    debounce(() => {
+  const debouncedSave = useMemo(() => {
+    return debounce(() => {
       // We also don't want to save when the component is unmounted, but a
       // debounceSave had already been invoked and ispending the debounce delay.
       if (isMounted.current) {
         onSave();
       }
-    }, debounceDelay),
-    []
-  );
+    }, debounceDelay);
+  }, [debounceDelay, onSave]);
 
   useEffect(() => {
     // We don't want autosave to to run on initial render because it can

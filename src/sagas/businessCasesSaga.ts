@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { DateTime } from 'luxon';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { updateLastActiveAt } from 'reducers/authReducer';
@@ -17,7 +18,7 @@ function* getBusinessCases() {
     yield put(fetchBusinessCases.failure(error.message));
   } finally {
     yield put(fetchBusinessCases.fulfill());
-    yield put(updateLastActiveAt);
+    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 

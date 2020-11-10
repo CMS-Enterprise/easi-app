@@ -36,6 +36,8 @@ const (
 	SystemIntakeStatusNOTITREQUEST SystemIntakeStatus = "NOT_IT_REQUEST"
 	// SystemIntakeStatusLCIDISSUED captures enum value "LCID_ISSUED"
 	SystemIntakeStatusLCIDISSUED SystemIntakeStatus = "LCID_ISSUED"
+	// SystemIntakeStatusBIZCASEDRAFT captures enum value "BIZ_CASE_DRAFT"
+	SystemIntakeStatusBIZCASEDRAFT SystemIntakeStatus = "BIZ_CASE_DRAFT"
 	// SystemIntakeStatusBIZCASESUBMITTED captures enum value "BIZ_CASE_SUBMITTED"
 	SystemIntakeStatusBIZCASESUBMITTED SystemIntakeStatus = "BIZ_CASE_SUBMITTED"
 	// SystemIntakeStatusBIZCASECHANGESNEEDED captures enum value "BIZ_CASE_CHANGES_NEEDED"
@@ -99,7 +101,7 @@ type SystemIntake struct {
 	AlfabetID               null.String             `json:"alfabetID" db:"alfabet_id"`
 	GrtReviewEmailBody      null.String             `json:"grtReviewEmailBody" db:"grt_review_email_body"`
 	RequesterEmailAddress   null.String             `json:"requesterEmailAddress" db:"requester_email_address"`
-	BusinessCaseID          *uuid.UUID              `json:"businessCase"`
+	BusinessCaseID          *uuid.UUID              `json:"businessCase" db:"business_case_id"`
 	LifecycleID             null.String             `json:"lcid" db:"lcid"`
 	LifecycleExpiresAt      *time.Time              `json:"lcidExpiresAt" db:"lcid_expires_at"`
 	LifecycleScope          null.String             `json:"lcidScope" db:"lcid_scope"`
