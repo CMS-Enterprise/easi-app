@@ -19,7 +19,8 @@ const AutoSave = ({ values, onSave, debounceDelay }: AutoSaveProps) => {
         onSave();
       }
     }, debounceDelay);
-  }, [debounceDelay, onSave]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     // We don't want autosave to to run on initial render because it can
