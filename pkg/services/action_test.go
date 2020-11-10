@@ -395,12 +395,14 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	logger := zap.NewNop()
 
 	requester := "Test Requester"
+	bizCaseID := uuid.New()
 	save := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		return &models.SystemIntake{
-			EUAUserID: intake.EUAUserID,
-			Requester: requester,
-			Status:    intake.Status,
-			AlfabetID: intake.AlfabetID,
+			EUAUserID:      intake.EUAUserID,
+			Requester:      requester,
+			Status:         intake.Status,
+			AlfabetID:      intake.AlfabetID,
+			BusinessCaseID: &bizCaseID,
 		}, nil
 	}
 	authorize := func(_ context.Context) (bool, error) {
@@ -427,6 +429,11 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		createdAction = *action
 		return action, nil
 	}
+	closeBusinessCaseCount := 0
+	closeBusinessCase := func(ctx context.Context, id uuid.UUID) error {
+		closeBusinessCaseCount++
+		return nil
+	}
 
 	s.Run("golden path review system intake", func() {
 		ctx := context.Background()
@@ -438,6 +445,8 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			createAction,
 			fetchUserInfo,
 			sendReviewEmail,
+			true,
+			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{Feedback: "feedback"}
@@ -446,6 +455,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		s.NoError(err)
 		s.Equal("NAME", createdAction.ActorName)
 		s.Equal(1, reviewEmailCount)
+		s.Equal(1, closeBusinessCaseCount)
 		s.Equal("feedback", feedbackForEmailText)
 	})
 
@@ -463,6 +473,8 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			createAction,
 			fetchUserInfo,
 			sendReviewEmail,
+			false,
+			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
@@ -485,6 +497,8 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			createAction,
 			fetchUserInfo,
 			sendReviewEmail,
+			false,
+			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
@@ -506,6 +520,8 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			failCreateAction,
 			fetchUserInfo,
 			sendReviewEmail,
+			false,
+			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
@@ -534,6 +550,8 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			createAction,
 			failFetchUserInfo,
 			sendReviewEmail,
+			false,
+			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
@@ -556,6 +574,8 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			createAction,
 			failFetchUserInfo,
 			sendReviewEmail,
+			false,
+			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
@@ -563,6 +583,30 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 
 		s.IsType(&apperrors.ExternalAPIError{}, err)
 		s.Equal(0, reviewEmailCount)
+	})
+
+	s.Run("returns error if closeBusinessCase fails", func() {
+		ctx := context.Background()
+		failCloseBusinessCase := func(ctx context.Context, id uuid.UUID) error {
+			return errors.New("error")
+		}
+		reviewSystemIntake := NewTakeActionUpdateStatus(
+			serviceConfig,
+			models.SystemIntakeStatusNOTITREQUEST,
+			save,
+			authorize,
+			createAction,
+			fetchUserInfo,
+			sendReviewEmail,
+			true,
+			failCloseBusinessCase,
+		)
+		bizCaseID := uuid.New()
+		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED, BusinessCaseID: &bizCaseID}
+		action := &models.Action{Feedback: "feedback"}
+		err := reviewSystemIntake(ctx, intake, action)
+
+		s.Error(err)
 	})
 
 	s.Run("returns notification error when review email fails", func() {
@@ -581,6 +625,8 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			createAction,
 			fetchUserInfo,
 			failSendReviewEmail,
+			false,
+			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
 		action := &models.Action{}
