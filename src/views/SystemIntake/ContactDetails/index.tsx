@@ -87,6 +87,18 @@ const ContactDetails = ({
       />
     ));
 
+  const saveExitLink = (() => {
+    let link = '';
+    if (systemIntake.requestType === 'SHUTDOWN') {
+      link = '/';
+    } else {
+      link = flags.taskListLite
+        ? `/governance-task-list/${systemIntake.id}`
+        : '/';
+    }
+    return link;
+  })();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -461,11 +473,7 @@ const ContactDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push(
-                        flags.taskListLite
-                          ? `/governance-task-list/${systemIntake.id}`
-                          : '/'
-                      );
+                      history.push(saveExitLink);
                     }}
                   >
                     <span>
