@@ -138,7 +138,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 		createBusinessCase := NewCreateBusinessCase(serviceConfig, fetch, authorize, createAction, fetchUserInfo, failCreate, updateIntake)
 		businessCase, err := createBusinessCase(ctx, &input)
 
-		s.IsType(&apperrors.QueryError{}, err)
+		s.Error(err)
 		s.Equal(&models.BusinessCase{}, businessCase)
 	})
 
