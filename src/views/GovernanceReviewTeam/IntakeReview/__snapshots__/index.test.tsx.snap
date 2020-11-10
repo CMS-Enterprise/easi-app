@@ -188,7 +188,7 @@ Array [
               What is your business need?
             </dt>
             <dd
-              className="description-definition margin-0 text-pre"
+              className="description-definition margin-0 text-pre-wrap"
             >
               The quick brown fox jumps over the lazy dog.
             </dd>
@@ -204,7 +204,7 @@ Array [
               How are you thinking of solving it?
             </dt>
             <dd
-              className="description-definition margin-0 text-pre"
+              className="description-definition margin-0 text-pre-wrap"
             >
               The quick brown fox jumps over the lazy dog.
             </dd>
