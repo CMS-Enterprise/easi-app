@@ -33,20 +33,13 @@ const shortenTimeout = async (authService: any) => {
         .toSeconds()
     )
   };
-  console.log(newAccessToken);
   tokenManager.add('accessToken', newAccessToken);
-
-  console.log('I shortened the thing');
 };
 
 const logInfo = async (authService: any) => {
   const tokenManager = await authService.getTokenManager();
-  const idToken = await tokenManager.get('idToken');
-  console.log('idToken expires at ', idToken.expiresAt);
-
-  const accessToken = await tokenManager.get('accessToken');
-  console.log('accessToken expires at ', accessToken.value);
-  console.log('accessToken expires at ', accessToken.expiresAt);
+  await tokenManager.get('idToken');
+  await tokenManager.get('accessToken');
 };
 
 const Sandbox = () => {
@@ -61,25 +54,29 @@ const Sandbox = () => {
           title="Update activeAt timestamp"
           helpfulText="Do something to be active"
           label="Activate!"
-          onClick={() => dispatch(updateLastActiveAt)}
+          onClick={() => dispatch(updateLastActiveAt(DateTime.local()))}
+          requestType="NEW"
         />
         <ActionBanner
           title="Shorten the life of your token"
           helpfulText="Change expiration to a minute from now"
           label="Do iiiiiit"
           onClick={() => shortenTimeout(authService)}
+          requestType="NEW"
         />
         <ActionBanner
           title="Learn more about your token"
           helpfulText="Console log the current tokens"
           label="Log the thing"
           onClick={() => logInfo(authService)}
+          requestType="NEW"
         />
         <ActionBanner
           title="Update your last active at timestamp"
           helpfulText="Dispatch the thing to do the thing"
           label="Update"
-          onClick={() => dispatch(updateLastActiveAt)}
+          onClick={() => dispatch(updateLastActiveAt(DateTime.local()))}
+          requestType="NEW"
         />
       </div>
     </div>

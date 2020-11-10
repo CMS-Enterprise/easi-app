@@ -38,6 +38,7 @@ function requestRepoReducer(
         } else if (isIntakeClosed(intake.status)) {
           closedIntakes.push(prepareSystemIntakeForApp(intake));
         } else {
+          // eslint-disable-next-line no-console
           console.warn(`Intake ${intake.projectName} has an invalid status.`);
         }
       });

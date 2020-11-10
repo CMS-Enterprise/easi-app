@@ -118,6 +118,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
+		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(IntakeExistsMsg, err.Error())
 	})
 
@@ -132,6 +133,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err := s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
+		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(IntakeExistsMsg, err.Error())
 	})
 
@@ -146,6 +148,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
+		s.IsType(&apperrors.QueryError{}, err)
 		s.Equal(EuaIDMsg, err.Error())
 	})
 
@@ -160,6 +163,7 @@ func (s StoreTestSuite) TestCreateBusinessCase() {
 		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
 
 		s.Error(err)
+		s.IsType(&apperrors.QueryError{}, err)
 		s.Contains(err.Error(), ValidStatusMsg)
 	})
 }
@@ -275,33 +279,5 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 		_, err := s.store.UpdateBusinessCase(ctx, &businessCaseToUpdate)
 		s.Error(err)
 		s.Equal("business case not found", err.Error())
-	})
-}
-
-func (s StoreTestSuite) TestFetchBusinessCaseByIntakeID() {
-	ctx := context.Background()
-
-	s.Run("golden path to fetching a business case id by intake id", func() {
-		businessCase := testhelpers.NewBusinessCase()
-		intake := testhelpers.NewSystemIntake()
-		businessCase.SystemIntakeID = intake.ID
-		intake.Status = models.SystemIntakeStatusNEEDBIZCASE
-		setupTx := s.db.MustBegin()
-		_, err := setupTx.NamedExec("INSERT INTO system_intake (id, eua_user_id, status, requester) VALUES (:id, :eua_user_id, :status, :requester)", &intake)
-		s.NoError(err)
-		_, err = setupTx.NamedExec("INSERT INTO business_case (id, eua_user_id, status, requester, system_intake) VALUES (:id, :eua_user_id, :status, :requester, :system_intake)", &businessCase)
-		s.NoError(err)
-		err = setupTx.Commit()
-		s.NoError(err)
-
-		fetchedBizCaseID, err := s.store.FetchBusinessCaseIDByIntakeID(ctx, intake.ID)
-		s.NoError(err)
-		s.Equal(&businessCase.ID, fetchedBizCaseID)
-	})
-
-	s.Run("doesn't error when no records are found", func() {
-		fetchedBizCaseID, err := s.store.FetchBusinessCaseIDByIntakeID(ctx, uuid.New())
-		s.NoError(err)
-		s.Equal((*uuid.UUID)(nil), fetchedBizCaseID)
 	})
 }

@@ -100,6 +100,7 @@ const AlternativeSolutionB = ({
                     unstyled
                     onClick={() => {
                       if (
+                        // eslint-disable-next-line no-alert
                         window.confirm(
                           'Are you sure you want to remove Alternative B?'
                         )
