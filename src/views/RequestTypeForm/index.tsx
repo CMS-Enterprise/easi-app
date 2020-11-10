@@ -80,7 +80,7 @@ const RequestTypeForm = () => {
           history.push(`/system/${systemIntake.id}/contact-details`);
           break;
         default:
-          console.warn(`Unknown request type: ${systemIntake.requestType}`);
+          // console.warn(`Unknown request type: ${systemIntake.requestType}`);
           break;
       }
     }
