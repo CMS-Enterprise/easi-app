@@ -238,7 +238,7 @@ describe('The Goveranance Task List', () => {
   describe('Statuses', () => {
     const mockStore = configureMockStore();
 
-    it('renders proper buttons for INTAKE_DRAFT', async done => {
+    it('renders proper buttons for INTAKE_DRAFT', async () => {
       const store = mockStore({
         systemIntake: {
           systemIntake: {
@@ -260,30 +260,27 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      setImmediate(() => {
-        component.update();
-        expect(
-          component.find('[data-testid="intake-start-btn"]').exists()
-        ).toEqual(true);
+      component!.update();
+      expect(
+        component!.find('[data-testid="intake-start-btn"]').exists()
+      ).toEqual(true);
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-review"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Cannot start yet');
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
 
-        expect(
-          component
-            .find('[data-testid="task-list-business-case-draft"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Cannot start yet');
-        done();
-      });
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
     });
 
-    it('renders proper buttons for INTAKE_SUBMITTED', async done => {
+    it('renders proper buttons for INTAKE_SUBMITTED', async () => {
       const store = mockStore({
         systemIntake: {
           systemIntake: {
@@ -305,31 +302,27 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      setImmediate(() => {
-        component.update();
-        expect(
-          component.find('[data-testid="intake-view-link"]').exists()
-        ).toEqual(true);
+      component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-form"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
 
-        expect(
-          component
-            .find('[data-testid="task-list-business-case-draft"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Cannot start yet');
-
-        done();
-      });
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
     });
 
-    it('renders proper buttons for NEED_BIZ_CASE', async done => {
+    it('renders proper buttons for NEED_BIZ_CASE', async () => {
       const store = mockStore({
         systemIntake: {
           systemIntake: {
@@ -351,31 +344,27 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      setImmediate(() => {
-        component.update();
-        expect(
-          component.find('[data-testid="start-biz-case-btn"]').exists()
-        ).toEqual(true);
+      component!.update();
+      expect(
+        component!.find('[data-testid="start-biz-case-btn"]').exists()
+      ).toEqual(true);
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-form"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-review"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
-
-        done();
-      });
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
     });
 
-    it('renders proper buttons for BIZ_CASE_DRAFT', async done => {
+    it('renders proper buttons for BIZ_CASE_DRAFT', async () => {
       const store = mockStore({
         systemIntake: {
           systemIntake: {
@@ -397,30 +386,27 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      setImmediate(() => {
-        component.update();
-        expect(
-          component.find('[data-testid="continue-biz-case-btn"]').exists()
-        ).toEqual(true);
+      component!.update();
+      expect(
+        component!.find('[data-testid="continue-biz-case-btn"]').exists()
+      ).toEqual(true);
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-form"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-review"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
-        done();
-      });
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
     });
 
-    it('renders proper buttons for BIZ_CASE_DRAFT_SUBMITTED', async done => {
+    it('renders proper buttons for BIZ_CASE_DRAFT_SUBMITTED', async () => {
       const store = mockStore({
         systemIntake: {
           systemIntake: {
@@ -442,37 +428,34 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      setImmediate(() => {
-        component.update();
-        expect(
-          component.find('[data-testid="view-biz-case-link"]').exists()
-        ).toEqual(true);
+      component!.update();
+      expect(
+        component!.find('[data-testid="view-biz-case-link"]').exists()
+      ).toEqual(true);
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-form"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-review"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
 
-        expect(
-          component
-            .find('[data-testid="task-list-business-case-draft"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
-        done();
-      });
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
     });
 
-    it('renders proper buttons for BIZ_CASE_CHANGES_NEEDED', async done => {
+    it('renders proper buttons for BIZ_CASE_CHANGES_NEEDED', async () => {
       const store = mockStore({
         systemIntake: {
           systemIntake: {
@@ -494,28 +477,24 @@ describe('The Goveranance Task List', () => {
         );
       });
 
-      setImmediate(() => {
-        component.update();
-        expect(
-          component.find('[data-testid="update-biz-case-draft"]').exists()
-        ).toEqual(true);
+      component!.update();
+      expect(
+        component!.find('[data-testid="update-biz-case-draft"]').exists()
+      ).toEqual(true);
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-form"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
 
-        expect(
-          component
-            .find('[data-testid="task-list-intake-review"]')
-            .find('.governance-task-list__task-tag')
-            .text()
-        ).toEqual('Completed');
-
-        done();
-      });
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
     });
   });
 });
