@@ -249,6 +249,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 				models.ActionTypeNEEDBIZCASE: services.NewTakeActionUpdateStatus(
 					serviceConfig,
@@ -258,6 +264,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 				models.ActionTypeREADYFORGRT: services.NewTakeActionUpdateStatus(
 					serviceConfig,
@@ -267,6 +279,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 				models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE: services.NewTakeActionUpdateStatus(
 					serviceConfig,
@@ -276,6 +294,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 				models.ActionTypeREADYFORGRB: services.NewTakeActionUpdateStatus(
 					serviceConfig,
@@ -285,6 +309,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 				models.ActionTypeISSUELCID: services.NewTakeActionUpdateStatus(
 					serviceConfig,
@@ -294,6 +324,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
@@ -314,6 +350,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 				models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES: services.NewTakeActionUpdateStatus(
 					serviceConfig,
@@ -323,6 +365,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 				models.ActionTypePROVIDEFEEDBACKBIZCASEFINAL: services.NewTakeActionUpdateStatus(
 					serviceConfig,
@@ -332,6 +380,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 				models.ActionTypeNOGOVERNANCENEEDED: services.NewTakeActionUpdateStatus(
 					serviceConfig,
@@ -341,6 +395,12 @@ func (s *Server) routes(
 					store.CreateAction,
 					cedarLdapClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
 				),
 			},
 		),

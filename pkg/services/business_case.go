@@ -217,16 +217,18 @@ func NewCloseBusinessCase(
 			}
 		}
 
-		updatedTime := config.clock.Now()
-		businessCase.UpdatedAt = &updatedTime
-		businessCase.Status = models.BusinessCaseStatusCLOSED
+		if businessCase.Status != models.BusinessCaseStatusCLOSED {
+			updatedTime := config.clock.Now()
+			businessCase.UpdatedAt = &updatedTime
+			businessCase.Status = models.BusinessCaseStatusCLOSED
 
-		_, err := update(ctx, businessCase)
-		if err != nil {
-			return &apperrors.QueryError{
-				Err:       err,
-				Model:     businessCase,
-				Operation: apperrors.QuerySave,
+			_, err := update(ctx, businessCase)
+			if err != nil {
+				return &apperrors.QueryError{
+					Err:       err,
+					Model:     businessCase,
+					Operation: apperrors.QuerySave,
+				}
 			}
 		}
 
