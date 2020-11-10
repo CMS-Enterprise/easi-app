@@ -55,24 +55,28 @@ const Sandbox = () => {
           helpfulText="Do something to be active"
           label="Activate!"
           onClick={() => dispatch(updateLastActiveAt(DateTime.local()))}
+          requestType="NEW"
         />
         <ActionBanner
           title="Shorten the life of your token"
           helpfulText="Change expiration to a minute from now"
           label="Do iiiiiit"
           onClick={() => shortenTimeout(authService)}
+          requestType="NEW"
         />
         <ActionBanner
           title="Learn more about your token"
           helpfulText="Console log the current tokens"
           label="Log the thing"
           onClick={() => logInfo(authService)}
+          requestType="NEW"
         />
         <ActionBanner
           title="Update your last active at timestamp"
           helpfulText="Dispatch the thing to do the thing"
           label="Update"
           onClick={() => dispatch(updateLastActiveAt(DateTime.local()))}
+          requestType="NEW"
         />
       </div>
     </div>

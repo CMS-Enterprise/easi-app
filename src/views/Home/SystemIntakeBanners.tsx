@@ -26,10 +26,16 @@ const SystemIntakeBanners = () => {
   }, [dispatch, authState.isAuthenticated]);
 
   const getSystemIntakeBanners = (featureFlags: Flags) => {
-    const rootPath = featureFlags.taskListLite
-      ? '/governance-task-list'
-      : '/system';
     return systemIntakes.map((intake: SystemIntakeForm) => {
+      let rootPath = '';
+      if (intake.requestType === 'SHUTDOWN') {
+        rootPath = '/system';
+      } else {
+        rootPath = featureFlags.taskListLite
+          ? '/governance-task-list'
+          : '/system';
+      }
+
       switch (intake.status) {
         case 'INTAKE_DRAFT':
           return (
@@ -45,6 +51,7 @@ const SystemIntakeBanners = () => {
                 history.push(`${rootPath}/${intake.id}`);
               }}
               label="Go to Intake Request"
+              requestType={intake.requestType}
               data-intakeid={intake.id}
             />
           );
@@ -74,6 +81,7 @@ const SystemIntakeBanners = () => {
                 });
               }}
               label="Start my Business Case"
+              requestType={intake.requestType}
               data-intakeid={intake.id}
             />
           );
@@ -99,6 +107,7 @@ const SystemIntakeBanners = () => {
                   }) as {})
                 });
               }}
+              requestType={intake.requestType}
               label="Go to Business Case"
             />
           );
@@ -124,6 +133,7 @@ const SystemIntakeBanners = () => {
                   }) as {})
                 });
               }}
+              requestType={intake.requestType}
               label="Update Business Case"
             />
           );
