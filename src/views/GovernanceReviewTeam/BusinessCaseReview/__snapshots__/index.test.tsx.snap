@@ -92,7 +92,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
           What is your business or user need?
         </dt>
         <dd
-          className="description-definition margin-0 text-pre"
+          className="description-definition margin-0 text-pre-wrap"
         >
           Mock business need
         </dd>
@@ -110,7 +110,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
           How will CMS benefit from this effort?
         </dt>
         <dd
-          className="description-definition margin-0 text-pre"
+          className="description-definition margin-0 text-pre-wrap"
         >
           Mock CMS benefit
         </dd>
@@ -128,7 +128,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
           How does this effort align with organizational priorities?
         </dt>
         <dd
-          className="description-definition margin-0 text-pre"
+          className="description-definition margin-0 text-pre-wrap"
         >
           Mock priority alignment
         </dd>
@@ -146,7 +146,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
           How will you determine whether or not this effort is successful?
         </dt>
         <dd
-          className="description-definition margin-0 text-pre"
+          className="description-definition margin-0 text-pre-wrap"
         >
           Mock success indicators
         </dd>
@@ -273,7 +273,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
                 “As is” solution: Summary
               </dt>
               <dd
-                className="description-definition margin-0 text-pre"
+                className="description-definition margin-0 text-pre-wrap"
               >
                 Mock As is solution summary
               </dd>
@@ -291,7 +291,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
                 “As is” solution: Pros
               </dt>
               <dd
-                className="description-definition margin-0 text-pre"
+                className="description-definition margin-0 text-pre-wrap"
               >
                 Mock As is solution  pros
               </dd>
@@ -309,7 +309,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
                 “As is” solution: Cons
               </dt>
               <dd
-                className="description-definition margin-0 text-pre"
+                className="description-definition margin-0 text-pre-wrap"
               >
                 Mock As is solution cons
               </dd>
@@ -352,7 +352,7 @@ exports[`The GRT business case review matches the snapshot 1`] = `
               What is the cost savings or avoidance associated with this solution?
             </dt>
             <dd
-              className="description-definition margin-0 text-pre"
+              className="description-definition margin-0 text-pre-wrap"
             >
               
             </dd>
