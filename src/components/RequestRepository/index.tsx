@@ -55,15 +55,7 @@ const RequestRepository = () => {
       },
       {
         Header: t('intake:fields.status'),
-        accessor: 'status',
-        Cell: ({ row, value }: { row: any; value: string }) => {
-          if (value === 'LCID_ISSUED') {
-            // if status is LCID_ISSUED, display LCID
-            return t(`intake:statusMap.${value}`) + row.original.lcid;
-          }
-          // if not display translation for status
-          return t(`intake:statusMap.${value}`);
-        }
+        accessor: 'status'
       }
     ],
     [t]
@@ -77,7 +69,26 @@ const RequestRepository = () => {
     (state: AppState) => state.systemIntakes.systemIntakes
   );
 
-  const data = useMemo(() => systemIntakes, [systemIntakes]);
+  const data = useMemo(() => {
+    return systemIntakes.map(intake => {
+      const statusEnum = intake.status;
+      let statusTranslation = '';
+
+      if (statusEnum === 'LCID_ISSUED') {
+        // if status is LCID_ISSUED, translate from enum to i18n and append LCID
+        statusTranslation = t(`intake:statusMap.${statusEnum}`) + intake.lcid;
+      } else {
+        // if not just translate from enum to i18n
+        statusTranslation = t(`intake:statusMap.${statusEnum}`);
+      }
+
+      // Override all statuses in intake to use i18n translations
+      return {
+        ...intake,
+        status: statusTranslation
+      };
+    });
+  }, [systemIntakes, t]);
 
   const {
     getTableProps,
