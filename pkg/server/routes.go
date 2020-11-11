@@ -54,7 +54,7 @@ func (s *Server) routes(
 	if s.environment.Deployed() {
 		s.CheckCEDAREasiClientConnection(connectedCedarEasiClient)
 	}
-	if s.environment.Local() {
+	if s.environment.Local() || s.environment.Test() {
 		cedarEasiClient = local.NewCedarEasiClient(s.logger)
 	} else {
 		cedarEasiClient = connectedCedarEasiClient
