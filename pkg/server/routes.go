@@ -65,7 +65,7 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_URL"),
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
-	if s.environment.Local() {
+	if s.environment.Local() || s.environment.Test() {
 		cedarLDAPClient = local.NewCedarLdapClient(s.logger)
 	}
 
@@ -78,7 +78,7 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to create email client", zap.Error(err))
 	}
 	// override email client with local one
-	if s.environment.Local() {
+	if s.environment.Local() || s.environment.Test() {
 		localSender := local.NewSender(s.logger)
 		emailClient, err = email.NewClient(emailConfig, localSender)
 		if err != nil {
