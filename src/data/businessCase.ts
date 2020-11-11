@@ -133,6 +133,7 @@ export const prepareBusinessCaseForApp = (
     B: cloneDeep(emptyEstimatedLifecycle)
   };
 
+  let doesAltBHaveLifecycleCostLines = false;
   businessCase.lifecycleCostLines.forEach((line: any) => {
     const solution = (solutionName => {
       switch (solutionName) {
@@ -143,6 +144,7 @@ export const prepareBusinessCaseForApp = (
         case 'A':
           return lifecycleCostLines.A;
         case 'B':
+          doesAltBHaveLifecycleCostLines = true;
           return lifecycleCostLines.B;
         default:
           return null;
@@ -156,6 +158,10 @@ export const prepareBusinessCaseForApp = (
       });
     }
   });
+
+  if (!doesAltBHaveLifecycleCostLines) {
+    lifecycleCostLines.B = defaultEstimatedLifecycle;
+  }
 
   return {
     id: businessCase.id,

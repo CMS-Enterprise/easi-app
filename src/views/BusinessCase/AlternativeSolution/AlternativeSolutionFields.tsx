@@ -131,10 +131,11 @@ const AlternativeSolutionFields = ({
             </FieldErrorMsg>
             <Field
               as={RadioField}
-              checked={values[`${altId}`].security.isApproved}
+              checked={values[`${altId}`].security.isApproved === true}
               id={`BusinessCase-${altId}SecurityApproved`}
               name={`${altId}.security.isApproved`}
               label={yesNoMap.YES}
+              value
               onChange={() => {
                 setFieldValue(`${altId}.security.isApproved`, true);
               }}
@@ -146,6 +147,7 @@ const AlternativeSolutionFields = ({
               id={`BusinessCase-${altId}SecurityNotApproved`}
               name={`${altId}.security.isApproved`}
               label={yesNoMap.NO}
+              value={false}
               onChange={() => {
                 setFieldValue(`${altId}.security.isApproved`, false);
                 setFieldValue(`${altId}.security.isBeingReviewed`, '');
