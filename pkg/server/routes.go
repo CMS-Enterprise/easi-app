@@ -55,7 +55,7 @@ func (s *Server) routes(
 		s.CheckCEDAREasiClientConnection(connectedCedarEasiClient)
 	}
 	if s.environment.Local() {
-		cedarEasiClient = local.EasiClient{}
+		cedarEasiClient = local.NewCedarEasiClient(s.logger)
 	} else {
 		cedarEasiClient = connectedCedarEasiClient
 	}
@@ -66,7 +66,7 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 	if s.environment.Local() {
-		cedarLDAPClient = local.LDAPClient{}
+		cedarLDAPClient = local.NewCedarLdapClient(s.logger)
 	}
 
 	// set up Email Client
