@@ -275,7 +275,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	//})
 }
 
-func (s ServicesTestSuite) TestBusinessCaseArchiver() {
+func (s ServicesTestSuite) TestBusinessCaseCloser() {
 	logger := zap.NewNop()
 	fakeID := uuid.New()
 	serviceConfig := NewConfig(logger, nil)
@@ -284,7 +284,8 @@ func (s ServicesTestSuite) TestBusinessCaseArchiver() {
 
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
 		return &models.BusinessCase{
-			ID: id,
+			ID:     id,
+			Status: models.BusinessCaseStatusOPEN,
 		}, nil
 	}
 	update := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {

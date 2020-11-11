@@ -198,7 +198,7 @@ func NewArchiveSystemIntake(
 	config Config,
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
-	archiveBusinessCase func(context.Context, uuid.UUID) error,
+	closeBusinessCase func(context.Context, uuid.UUID) error,
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	sendWithdrawEmail func(requestName string) error,
 ) func(context.Context, uuid.UUID) error {
@@ -219,9 +219,9 @@ func NewArchiveSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
-		// We need to archive any associated business case
+		// We need to close any associated business case
 		if intake.BusinessCaseID != nil {
-			err = archiveBusinessCase(ctx, *intake.BusinessCaseID)
+			err = closeBusinessCase(ctx, *intake.BusinessCaseID)
 			if err != nil {
 				return err
 			}

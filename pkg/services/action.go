@@ -247,6 +247,8 @@ func NewTakeActionUpdateStatus(
 	createAction func(context.Context, *models.Action) (*models.Action, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
+	shouldCloseBusinessCase bool,
+	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx)
@@ -307,6 +309,12 @@ func NewTakeActionUpdateStatus(
 				Err:       err,
 				Model:     intake,
 				Operation: apperrors.QuerySave,
+			}
+		}
+
+		if shouldCloseBusinessCase && intake.BusinessCaseID != nil {
+			if err = closeBusinessCase(ctx, *intake.BusinessCaseID); err != nil {
+				return err
 			}
 		}
 
