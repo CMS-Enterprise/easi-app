@@ -4,11 +4,11 @@ import { useOktaAuth } from '@okta/okta-react';
 
 import { setUserGroups } from 'reducers/authReducer';
 
-type UserInfoWrapper = {
+type UserInfoWrapperProps = {
   children: React.ReactNode;
 };
 
-const UserInfoWrapper = ({ children }: UserInfoWrapper) => {
+const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   const dispatch = useDispatch();
   const { authState, authService } = useOktaAuth();
 

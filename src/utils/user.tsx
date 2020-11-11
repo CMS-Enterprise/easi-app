@@ -9,6 +9,8 @@ export const isGrtReviewer = (groups: Array<String> | null) => {
   return false;
 };
 
-export default {
+const user = {
   isGrtReviewer
 };
+
+export default user;

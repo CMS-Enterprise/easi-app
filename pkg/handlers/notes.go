@@ -14,12 +14,14 @@ import (
 )
 
 type fetchNotes func(context.Context, uuid.UUID) ([]*models.Note, error)
+type createNote func(context.Context, *models.Note) (*models.Note, error)
 
 // NewNotesHandler is a constructor for SystemListHandler
-func NewNotesHandler(base HandlerBase, fetch fetchNotes) NotesHandler {
+func NewNotesHandler(base HandlerBase, fetch fetchNotes, create createNote) NotesHandler {
 	return NotesHandler{
 		HandlerBase: base,
 		FetchNotes:  fetch,
+		CreateNote:  create,
 	}
 }
 
@@ -28,6 +30,7 @@ func NewNotesHandler(base HandlerBase, fetch fetchNotes) NotesHandler {
 type NotesHandler struct {
 	HandlerBase
 	FetchNotes fetchNotes
+	CreateNote createNote
 }
 
 // Handle handles a web request and returns a list of systems
@@ -74,7 +77,45 @@ func (h NotesHandler) Handle() http.HandlerFunc {
 			}
 
 		case "POST":
-			h.WriteErrorResponse(r.Context(), w, errors.New("not yet implemented"))
+			if r.Body == nil {
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
+				)
+				return
+			}
+			defer r.Body.Close()
+
+			decoder := json.NewDecoder(r.Body)
+			note := models.Note{}
+
+			err := decoder.Decode(&note)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
+				return
+			}
+
+			note.SystemIntakeID = uuid
+
+			createdNote, err := h.CreateNote(r.Context(), &note)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
+			responseBody, err := json.Marshal(createdNote)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
+			w.WriteHeader(http.StatusCreated)
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
 			return
 		default:
 			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})

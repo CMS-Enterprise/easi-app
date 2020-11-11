@@ -51,11 +51,9 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  const isSubmitting = useSelector(
-    (state: AppState) => state.businessCase.isSubmitting
-  );
+  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
 
-  const error = useSelector((state: AppState) => state.businessCase.error);
+  const actionError = useSelector((state: AppState) => state.action.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
 
   const dispatchSave = () => {
@@ -100,7 +98,7 @@ export const BusinessCase = () => {
 
   // Handle submit
   useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !error) {
+    if (prevIsSubmitting && !isSubmitting && !actionError) {
       history.push(`/business/${businessCaseId}/confirmation`);
     }
 
@@ -215,7 +213,7 @@ export const BusinessCase = () => {
             />
             <SecureRoute
               path="/business/:businessCaseId/confirmation"
-              render={() => <Confirmation />}
+              render={() => <Confirmation businessCase={businessCase} />}
             />
             <SecureRoute
               path="*"

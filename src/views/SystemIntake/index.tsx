@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Switch, useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -154,7 +155,9 @@ export const SystemIntake = () => {
             />
             <SecureRoute
               path="/system/:systemId/review"
-              render={() => <Review systemIntake={systemIntake} />}
+              render={() => (
+                <Review systemIntake={systemIntake} now={DateTime.local()} />
+              )}
             />
             <SecureRoute
               path="/system/:systemId/view"

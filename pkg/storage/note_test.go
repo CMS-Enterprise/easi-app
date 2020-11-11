@@ -28,7 +28,7 @@ func (s StoreTestSuite) TestNoteRoundtrip() {
 		testCases := map[string]*models.Note{
 			"missing system intake foreign key": {
 				SystemIntakeID: uuid.Nil,
-				AuthorEUAID:    null.StringFrom(euaID),
+				AuthorEUAID:    euaID,
 			},
 			"missing author id": {
 				SystemIntakeID: intake.ID,
@@ -53,22 +53,23 @@ func (s StoreTestSuite) TestNoteRoundtrip() {
 			in := &models.Note{
 				SystemIntakeID: intake.ID,
 				// CreatedAt:      &ts,
-				AuthorEUAID: null.StringFrom(euaID),
+				AuthorEUAID: euaID,
 				AuthorName:  null.StringFrom(ts.String()),
 				Content:     null.StringFrom(ts.String()),
 			}
 
-			id, err := s.store.CreateNote(ctx, in)
+			createdNote, err := s.store.CreateNote(ctx, in)
+			id := createdNote.ID
 			s.NoError(err)
 
-			out, err := s.store.FetchNoteByID(ctx, *id)
+			out, err := s.store.FetchNoteByID(ctx, id)
 			s.NoError(err)
-			s.Equal(*id, out.ID)
+			s.Equal(id, out.ID)
 			s.Equal(in.SystemIntakeID, out.SystemIntakeID)
 			s.Equal(in.AuthorEUAID, out.AuthorEUAID)
 			s.Equal(in.AuthorName, out.AuthorName)
 			s.Equal(in.Content, out.Content)
-			notes[*id] = out
+			notes[id] = out
 		}
 
 		testCases := map[string]struct {
