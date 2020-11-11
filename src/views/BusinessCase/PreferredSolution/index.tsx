@@ -347,7 +347,7 @@ const PreferredSolution = ({
                             !!flatErrors['preferredSolution.hosting.location']
                           }
                         >
-                          <Label htmlFor="BusinessCase-PreferredSolutiohnCloudLocation">
+                          <Label htmlFor="BusinessCase-PreferredSolutionCloudLocation">
                             Where are you planning to host?
                           </Label>
                           <FieldErrorMsg>
