@@ -51,10 +51,14 @@ func (s *Server) routes(
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 
-	cedarLdapClient := cedarldap.NewTranslatedClient(
+	var cedarLDAPClient cedarldap.LDAPClient
+	cedarLDAPClient = cedarldap.NewTranslatedClient(
 		s.Config.GetString("CEDAR_API_URL"),
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
+	if s.environment.Local() {
+		cedarLDAPClient = local.LDAPClient{}
+	}
 
 	if s.environment.Deployed() {
 		s.CheckCEDAREasiClientConnection(cedarEasiClient)
@@ -144,7 +148,7 @@ func (s *Server) routes(
 			store.UpdateSystemIntake,
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeUserIsIntakeRequester(),
-			cedarLdapClient.FetchUserInfo,
+			cedarLDAPClient.FetchUserInfo,
 			emailClient.SendSystemIntakeReviewEmail,
 			services.NewUpdateDraftSystemIntake(
 				serviceConfig,
@@ -197,7 +201,7 @@ func (s *Server) routes(
 			store.FetchSystemIntakeByID,
 			services.NewAuthorizeUserIsIntakeRequester(),
 			store.CreateAction,
-			cedarLdapClient.FetchUserInfo,
+			cedarLDAPClient.FetchUserInfo,
 			store.CreateBusinessCase,
 			store.UpdateSystemIntake,
 		),
@@ -238,7 +242,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					cedarEasiClient.ValidateAndSubmitSystemIntake,
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeSubmissionEmail,
 				),
 				models.ActionTypeNOTITREQUEST: services.NewTakeActionUpdateStatus(
@@ -247,7 +251,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					true,
 					services.NewCloseBusinessCase(
@@ -262,7 +266,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					false,
 					services.NewCloseBusinessCase(
@@ -277,7 +281,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					false,
 					services.NewCloseBusinessCase(
@@ -292,7 +296,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					false,
 					services.NewCloseBusinessCase(
@@ -307,7 +311,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					false,
 					services.NewCloseBusinessCase(
@@ -322,7 +326,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					true,
 					services.NewCloseBusinessCase(
@@ -337,7 +341,7 @@ func (s *Server) routes(
 					store.FetchOpenBusinessCaseByIntakeID,
 					appvalidation.BusinessCaseForSubmit,
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					store.UpdateSystemIntake,
 					store.UpdateBusinessCase,
 					emailClient.SendBusinessCaseSubmissionEmail,
@@ -348,7 +352,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					false,
 					services.NewCloseBusinessCase(
@@ -363,7 +367,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					false,
 					services.NewCloseBusinessCase(
@@ -378,7 +382,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					false,
 					services.NewCloseBusinessCase(
@@ -393,7 +397,7 @@ func (s *Server) routes(
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					store.CreateAction,
-					cedarLdapClient.FetchUserInfo,
+					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
 					true,
 					services.NewCloseBusinessCase(
