@@ -92,7 +92,7 @@ describe('The home page', () => {
               {
                 ...initialSystemIntakeForm,
                 id: '2',
-                status: 'INTAKE_SUBMITTED'
+                status: 'NEED_BIZ_CASE'
               },
               {
                 ...initialSystemIntakeForm,
@@ -101,7 +101,7 @@ describe('The home page', () => {
               {
                 ...initialSystemIntakeForm,
                 id: '4',
-                status: 'INTAKE_SUBMITTED',
+                status: 'NEED_BIZ_CASE',
                 businessCaseId: '1'
               }
             ]
