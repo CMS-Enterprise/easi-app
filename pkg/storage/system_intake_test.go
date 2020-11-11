@@ -431,7 +431,7 @@ func (s StoreTestSuite) TestFetchSystemIntakeByID() {
 		s.Nil(fetched)
 	})
 
-	s.Run("fetches OPEN biz case id if exists", func() {
+	s.Run("fetches biz case id if exists", func() {
 		intake := testhelpers.NewSystemIntake()
 		id := intake.ID
 		bizCase := testhelpers.NewBusinessCase()
@@ -503,7 +503,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		s.Equal(models.SystemIntakes{}, fetched)
 	})
 
-	s.Run("fetches OPEN biz case IDs if they exist", func() {
+	s.Run("fetches biz case ID if it exists", func() {
 		intake := testhelpers.NewSystemIntake()
 		intake2 := testhelpers.NewSystemIntake()
 		id := intake.ID

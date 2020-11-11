@@ -2,7 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { mount, shallow } from 'enzyme';
+import { mount, ReactWrapper, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
 import ActionBanner from 'components/shared/ActionBanner';
@@ -49,7 +49,7 @@ describe('The home page', () => {
     });
 
     describe('User is logged in', () => {
-      it('displays login button', async done => {
+      it('displays login button', async () => {
         const mockStore = configureMockStore();
         const store = mockStore({
           auth: mockAuthReducer,
@@ -71,18 +71,15 @@ describe('The home page', () => {
             </MemoryRouter>
           );
 
-          setImmediate(() => {
-            component.update();
+          component.update();
 
-            expect(component.find('a[children="Start now"]').exists()).toEqual(
-              true
-            );
-            done();
-          });
+          expect(component.find('a[children="Start now"]').exists()).toEqual(
+            true
+          );
         });
       });
 
-      it('displays banners for intakes and biz cases', async done => {
+      it('displays banners for intakes and biz cases', async () => {
         const mockStore = configureMockStore();
         const store = mockStore({
           auth: mockAuthReducer,
@@ -121,11 +118,8 @@ describe('The home page', () => {
             </MemoryRouter>
           );
 
-          setImmediate(() => {
-            component.update();
-            expect(component.find(ActionBanner).length).toEqual(3);
-            done();
-          });
+          component.update();
+          expect(component.find(ActionBanner).length).toEqual(3);
         });
       });
     });
@@ -161,7 +155,7 @@ describe('The home page', () => {
       ]
     };
 
-    const mountComponent = () => {
+    const mountComponent = (): ReactWrapper => {
       const mockStore = configureMockStore();
       const store = mockStore({
         auth: mockAuthReducer,
@@ -196,29 +190,21 @@ describe('The home page', () => {
       expect(shallowComponent).not.toThrow();
     });
 
-    it('renders the table', async done => {
-      let homePage: any;
-      await act(async () => {
-        homePage = mountComponent();
+    it('renders the table', async () => {
+      const homePage = mountComponent();
 
-        setImmediate(() => {
-          homePage.update();
-          expect(homePage.text()).toContain('There are 4 requests');
-          done();
-        });
+      await act(async () => {
+        homePage.update();
+        expect(homePage.text()).toContain('There are 4 requests');
       });
     });
 
-    it('does not render any banners', async done => {
-      let homePage: any;
-      await act(async () => {
-        homePage = mountComponent();
+    it('does not render any banners', async () => {
+      const homePage = mountComponent();
 
-        setImmediate(() => {
-          homePage.update();
-          expect(homePage.find(ActionBanner).length).toEqual(0);
-          done();
-        });
+      await act(async () => {
+        homePage.update();
+        expect(homePage.find(ActionBanner).length).toEqual(0);
       });
     });
   });

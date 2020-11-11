@@ -17,7 +17,6 @@ describe('The business case reducer', () => {
       form: businessCaseInitialData,
       isLoading: null,
       isSaving: false,
-      isSubmitting: false,
       error: null
     });
   });
@@ -33,7 +32,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: true,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -88,7 +86,6 @@ describe('The business case reducer', () => {
         form: prepareBusinessCaseForApp(mockBusinessCase),
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -103,7 +100,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: 'Error Found!'
       });
     });
@@ -118,7 +114,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: false,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -135,7 +130,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: true,
-        isSubmitting: false,
         error: null
       });
     });
@@ -188,7 +182,6 @@ describe('The business case reducer', () => {
         form: prepareBusinessCaseForApp(mockSuccessAction.payload),
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -198,7 +191,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: false,
         isSaving: true,
-        isSubmitting: false,
         error: null
       };
       const mockFailureAction = {
@@ -210,7 +202,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: false,
         isSaving: true,
-        isSubmitting: false,
         error: 'Error'
       });
     });
@@ -225,7 +216,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -244,7 +234,6 @@ describe('The business case reducer', () => {
         form: { ...businessCaseInitialData, ...{ id: '12345' } },
         isLoading: false,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -261,7 +250,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });

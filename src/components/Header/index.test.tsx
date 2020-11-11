@@ -5,8 +5,6 @@ import { mount, shallow } from 'enzyme';
 
 import { Header } from './index';
 
-declare const global: any;
-
 jest.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {

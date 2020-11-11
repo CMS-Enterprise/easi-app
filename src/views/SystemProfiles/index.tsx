@@ -128,6 +128,7 @@ export const SystemProfiles = () => {
                   onClick={() => {}}
                   buttonUnstyled={intake.status === 'SUBMITTED'}
                   label={getButtonLabel(intake.status)}
+                  requestType="NEW"
                 />
               );
             })}

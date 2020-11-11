@@ -169,7 +169,12 @@ const GovernanceReviewTeam = () => {
           <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/intake-request"
-              render={() => <IntakeReview systemIntake={systemIntake} />}
+              render={() => (
+                <IntakeReview
+                  systemIntake={systemIntake}
+                  now={DateTime.local()}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
@@ -253,7 +258,7 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
-              path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
+              path="/governance-review-team/:systemId/actions/no-governance"
               render={() => (
                 <SubmitAction
                   action="NO_GOVERNANCE_NEEDED"

@@ -13,7 +13,7 @@ import TextField from 'components/shared/TextField';
 import { yesNoMap } from 'data/common';
 import flattenErrors from 'utils/flattenErrors';
 
-type AlternativeSolutionFields = {
+type AlternativeSolutionFieldsProps = {
   altLetter: string;
   formikProps: FormikProps<any>;
 };
@@ -21,7 +21,7 @@ type AlternativeSolutionFields = {
 const AlternativeSolutionFields = ({
   altLetter,
   formikProps
-}: AlternativeSolutionFields) => {
+}: AlternativeSolutionFieldsProps) => {
   const { values, errors = {}, setFieldValue } = formikProps;
   const altLabel = `Alternative ${altLetter}`;
   const altId = `alternative${altLetter}`;

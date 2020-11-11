@@ -1,7 +1,8 @@
 import React from 'react';
+import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
@@ -26,7 +27,7 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The GRT Review page', () => {
-  it('shows open status', () => {
+  it('shows open status', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       auth: {
@@ -44,17 +45,22 @@ describe('The GRT Review page', () => {
       }
     });
 
-    const component = mount(
-      <MemoryRouter>
-        <Provider store={store}>
-          <GovernanceReviewTeam />
-        </Provider>
-      </MemoryRouter>
+    let component: ReactWrapper;
+    await act(async () => {
+      component = mount(
+        <MemoryRouter>
+          <Provider store={store}>
+            <GovernanceReviewTeam />
+          </Provider>
+        </MemoryRouter>
+      );
+    });
+    expect(component!.find('[data-testid="grt-status"]').text()).toEqual(
+      'Open'
     );
-    expect(component.find('[data-testid="grt-status"]').text()).toEqual('Open');
   });
 
-  it('shows closed status', () => {
+  it('shows closed status', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       systemIntake: {
@@ -68,19 +74,22 @@ describe('The GRT Review page', () => {
       }
     });
 
-    const component = mount(
-      <MemoryRouter>
-        <Provider store={store}>
-          <GovernanceReviewTeam />
-        </Provider>
-      </MemoryRouter>
-    );
-    expect(component.find('[data-testid="grt-status"]').text()).toEqual(
+    let component: ReactWrapper;
+    await act(async () => {
+      component = mount(
+        <MemoryRouter>
+          <Provider store={store}>
+            <GovernanceReviewTeam />
+          </Provider>
+        </MemoryRouter>
+      );
+    });
+    expect(component!.find('[data-testid="grt-status"]').text()).toEqual(
       'Closed'
     );
   });
 
-  it('shows lifecycle id if it exists', () => {
+  it('shows lifecycle id if it exists', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       systemIntake: {
@@ -94,14 +103,16 @@ describe('The GRT Review page', () => {
       }
     });
 
-    const component = mount(
-      <MemoryRouter>
-        <Provider store={store}>
-          <GovernanceReviewTeam />
-        </Provider>
-      </MemoryRouter>
-    );
-
-    expect(component.find('[data-testid="grt-lcid"]').text()).toEqual('12345');
+    let component: ReactWrapper;
+    await act(async () => {
+      component = mount(
+        <MemoryRouter>
+          <Provider store={store}>
+            <GovernanceReviewTeam />
+          </Provider>
+        </MemoryRouter>
+      );
+    });
+    expect(component!.find('[data-testid="grt-lcid"]').text()).toEqual('12345');
   });
 });

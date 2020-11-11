@@ -17,7 +17,6 @@ const initialState: BusinessCaseState = {
   form: businessCaseInitialData,
   isLoading: null,
   isSaving: false,
-  isSubmitting: false,
   error: null
 };
 
