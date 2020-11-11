@@ -15,7 +15,6 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
-import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import {
@@ -50,13 +49,6 @@ export const BusinessCase = () => {
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
   );
-
-  const isSubmitting = useSelector(
-    (state: AppState) => state.businessCase.isSubmitting
-  );
-
-  const error = useSelector((state: AppState) => state.businessCase.error);
-  const prevIsSubmitting = usePrevious(isSubmitting);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
@@ -97,15 +89,6 @@ export const BusinessCase = () => {
       history.replace(`/business/${businessCase.id}/${formPage}`);
     }
   }, [history, businessCase.id, formPage]);
-
-  // Handle submit
-  useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !error) {
-      history.push(`/business/${businessCaseId}/confirmation`);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubmitting]);
 
   return (
     <PageWrapper className="business-case">
