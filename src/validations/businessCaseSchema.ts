@@ -85,9 +85,11 @@ const BusinessCaseValidationSchema = {
         'Tell us about the acquisition approach for the Preferred solution'
       ),
       security: Yup.object().shape({
-        isApproved: Yup.boolean().required(
-          'Tell us whether for solution was approved by IT Security for use at CMS'
-        ),
+        isApproved: Yup.boolean()
+          .nullable()
+          .required(
+            'Tell us whether for solution was approved by IT Security for use at CMS'
+          ),
         isBeingReviewed: Yup.string().when('isApproved', {
           is: false,
           then: Yup.string().required(
@@ -177,9 +179,11 @@ const BusinessCaseValidationSchema = {
         'Tell us about the acquisition approach for the Alternative A solution'
       ),
       security: Yup.object().shape({
-        isApproved: Yup.boolean().required(
-          'Tell us whether for solution was approved by IT Security for use at CMS'
-        ),
+        isApproved: Yup.boolean()
+          .nullable()
+          .required(
+            'Tell us whether for solution was approved by IT Security for use at CMS'
+          ),
         isBeingReviewed: Yup.string().when('isApproved', {
           is: false,
           then: Yup.string().required(
@@ -269,9 +273,11 @@ const BusinessCaseValidationSchema = {
         'Tell us about the acquisition approach for the Alternative B solution'
       ),
       security: Yup.object().shape({
-        isApproved: Yup.boolean().required(
-          'Tell us whether for solution was approved by IT Security for use at CMS'
-        ),
+        isApproved: Yup.boolean()
+          .nullable()
+          .required(
+            'Tell us whether for solution was approved by IT Security for use at CMS'
+          ),
         isBeingReviewed: Yup.string().when('isApproved', {
           is: false,
           then: Yup.string().required(
