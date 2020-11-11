@@ -217,7 +217,7 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		intake.Status = models.SystemIntakeStatusBIZCASESUBMITTED
+		intake.Status = models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
 		intake.UpdatedAt = &updatedAt
 		intake, err = updateIntake(ctx, intake)
 		if err != nil {
