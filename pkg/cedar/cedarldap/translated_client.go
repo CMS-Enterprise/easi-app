@@ -24,6 +24,11 @@ type TranslatedClient struct {
 	apiAuthHeader runtime.ClientAuthInfoWriter
 }
 
+// LDAPClient is an interface for helping test dependencies
+type LDAPClient interface {
+	FetchUserInfo(context.Context, string) (*models2.UserInfo, error)
+}
+
 // NewTranslatedClient returns an API client for CEDAR LDAP using EASi language
 func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
 	// create the transport
