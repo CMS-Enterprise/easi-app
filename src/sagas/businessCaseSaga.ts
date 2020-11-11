@@ -57,7 +57,7 @@ function putBusinessCaseRequest(formData: BusinessCaseModel) {
 
 function* updateBusinessCase(action: Action<any>) {
   try {
-    yield put(putBusinessCase.request());
+    yield put(putBusinessCase.request(action.payload));
     const reponse = yield call(putBusinessCaseRequest, action.payload);
 
     yield put(putBusinessCase.success(reponse.data));
