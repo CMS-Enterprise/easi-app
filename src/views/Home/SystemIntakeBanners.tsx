@@ -111,7 +111,7 @@ const SystemIntakeBanners = () => {
               label="Go to Business Case"
             />
           );
-        case 'BIZ_CASE_SUBMITTED':
+        case 'BIZ_CASE_DRAFT_SUBMITTED':
           return (
             <ActionBanner
               key={intake.id}
