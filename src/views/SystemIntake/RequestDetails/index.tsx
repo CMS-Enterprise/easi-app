@@ -52,6 +52,19 @@ const RequestDetails = ({
     businessSolution: systemIntake.businessSolution,
     needsEaSupport: systemIntake.needsEaSupport
   };
+
+  const saveExitLink = (() => {
+    let link = '';
+    if (systemIntake.requestType === 'SHUTDOWN') {
+      link = '/';
+    } else {
+      link = flags.taskListLite
+        ? `/governance-task-list/${systemIntake.id}`
+        : '/';
+    }
+    return link;
+  })();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -291,11 +304,7 @@ const RequestDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push(
-                        flags.taskListLite
-                          ? `/governance-task-list/${systemIntake.id}`
-                          : '/'
-                      );
+                      history.push(saveExitLink);
                     }}
                   >
                     <span>
