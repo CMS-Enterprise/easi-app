@@ -258,7 +258,7 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
-              path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
+              path="/governance-review-team/:systemId/actions/no-governance"
               render={() => (
                 <SubmitAction
                   action="NO_GOVERNANCE_NEEDED"
