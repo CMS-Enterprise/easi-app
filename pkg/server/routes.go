@@ -434,6 +434,13 @@ func (s *Server) routes(
 	)
 	api.Handle("/system_intake/{intake_id}/notes", notesHandler.Handle())
 
+	// File Upload Handlers
+	fileUploadHandler := handlers.NewFileUploadHandler(
+		base,
+		services.NewCreateFileUploadURL(serviceConfig),
+	)
+	api.Handle("/file_uploads", fileUploadHandler.Handle())
+
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
