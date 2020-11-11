@@ -24,6 +24,12 @@ type TranslatedClient struct {
 	apiAuthHeader runtime.ClientAuthInfoWriter
 }
 
+// Client is an interface to ease testing dependencies
+type Client interface {
+	FetchSystems(context.Context) (models.SystemShorts, error)
+	ValidateAndSubmitSystemIntake(context.Context, *models.SystemIntake) (string, error)
+}
+
 // NewTranslatedClient returns an API client for CEDAR EASi using EASi language
 func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
 	// create the transport

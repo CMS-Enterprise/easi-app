@@ -46,22 +46,27 @@ func (s *Server) routes(
 	}
 
 	// set up CEDAR client
-	cedarEasiClient := cedareasi.NewTranslatedClient(
+	var cedarEasiClient cedareasi.Client
+	connectedCedarEasiClient := cedareasi.NewTranslatedClient(
 		s.Config.GetString("CEDAR_API_URL"),
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
+	if s.environment.Deployed() {
+		s.CheckCEDAREasiClientConnection(connectedCedarEasiClient)
+	}
+	if s.environment.Local() {
+		cedarEasiClient = local.EasiClient{}
+	} else {
+		cedarEasiClient = connectedCedarEasiClient
+	}
 
-	var cedarLDAPClient cedarldap.LDAPClient
+	var cedarLDAPClient cedarldap.Client
 	cedarLDAPClient = cedarldap.NewTranslatedClient(
 		s.Config.GetString("CEDAR_API_URL"),
 		s.Config.GetString("CEDAR_API_KEY"),
 	)
 	if s.environment.Local() {
 		cedarLDAPClient = local.LDAPClient{}
-	}
-
-	if s.environment.Deployed() {
-		s.CheckCEDAREasiClientConnection(cedarEasiClient)
 	}
 
 	// set up Email Client
