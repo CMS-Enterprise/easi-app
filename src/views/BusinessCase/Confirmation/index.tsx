@@ -2,9 +2,18 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
-const Confirmation = () => {
+import { useFlags } from 'contexts/flagContext';
+import { BusinessCaseModel } from 'types/businessCase';
+
+const Confirmation = ({
+  businessCase
+}: {
+  businessCase: BusinessCaseModel;
+}) => {
   const { businessCaseId } = useParams();
+  const flags = useFlags();
   const { t } = useTranslation();
+
   return (
     <div className="grid-container margin-bottom-7">
       <div>
@@ -30,10 +39,17 @@ const Confirmation = () => {
           </Trans>
         </p>
         <div>
-          <Link to="/">
-            <i className="fa fa-angle-left margin-x-05" aria-hidden />
-            {t('businessCase:submission.confirmation.homeCta')}
-          </Link>
+          {flags.taskListLite ? (
+            <Link to={`/governance-task-list/${businessCase.systemIntakeId}`}>
+              <i className="fa fa-angle-left margin-x-05" aria-hidden />
+              {t('businessCase:submission.confirmation.taskListCta')}
+            </Link>
+          ) : (
+            <Link to="/">
+              <i className="fa fa-angle-left margin-x-05" aria-hidden />
+              {t('businessCase:submission.confirmation.homeCta')}
+            </Link>
+          )}
         </div>
       </div>
     </div>
