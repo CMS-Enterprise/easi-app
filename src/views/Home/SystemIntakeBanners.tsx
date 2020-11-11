@@ -55,7 +55,7 @@ const SystemIntakeBanners = () => {
               data-intakeid={intake.id}
             />
           );
-        case 'INTAKE_SUBMITTED':
+        case 'NEED_BIZ_CASE':
           if (intake.businessCaseId !== null) {
             return null;
           }
@@ -67,7 +67,7 @@ const SystemIntakeBanners = () => {
                   ? `${intake.requestName}: Business Case`
                   : 'Business Case'
               }
-              helpfulText="Your intake form has been submitted. The admin team will be in touch with you to fill out a Business Case"
+              helpfulText="The Governance Admin team would like you to fill out a Business Case"
               onClick={() => {
                 history.push({
                   pathname: flags.taskListLite

@@ -209,7 +209,9 @@ const PreferredSolution = ({
                     </FieldErrorMsg>
                     <Field
                       as={RadioField}
-                      checked={values.preferredSolution.security.isApproved}
+                      checked={
+                        values.preferredSolution.security.isApproved === true
+                      }
                       id="BusinessCase-PreferredSolutionSecurityApproved"
                       name="preferredsolution.security.isApproved"
                       label={yesNoMap.YES}
@@ -345,7 +347,7 @@ const PreferredSolution = ({
                             !!flatErrors['preferredSolution.hosting.location']
                           }
                         >
-                          <Label htmlFor="BusinessCase-PreferredSolutiohnCloudLocation">
+                          <Label htmlFor="BusinessCase-PreferredSolutionCloudLocation">
                             Where are you planning to host?
                           </Label>
                           <FieldErrorMsg>
