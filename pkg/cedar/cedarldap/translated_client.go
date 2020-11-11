@@ -24,8 +24,8 @@ type TranslatedClient struct {
 	apiAuthHeader runtime.ClientAuthInfoWriter
 }
 
-// LDAPClient is an interface for helping test dependencies
-type LDAPClient interface {
+// Client is an interface for helping test dependencies
+type Client interface {
 	FetchUserInfo(context.Context, string) (*models2.UserInfo, error)
 }
 
