@@ -72,16 +72,14 @@ function businessCaseReducer(
     case putBusinessCase.REQUEST:
       return {
         ...state,
+        form: {
+          ...state.form,
+          ...action.payload
+        },
         isSaving: true
       };
     case putBusinessCase.SUCCESS:
-      return {
-        ...state,
-        form: {
-          ...state.form,
-          ...prepareBusinessCaseForApp(action.payload)
-        }
-      };
+      return state;
     case putBusinessCase.FAILURE:
       return {
         ...state,
