@@ -20,6 +20,7 @@ import IssueLifecycleId from './Actions/IssueLifecycleId';
 import SubmitAction from './Actions/SubmitAction';
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
+import Notes from './Notes';
 
 import './index.scss';
 
@@ -158,13 +159,24 @@ const GovernanceReviewTeam = () => {
               </li>
             </ul>
             <hr />
-            <Link
-              to={`/governance-review-team/${systemId}/actions`}
-              aria-label={t('actions')}
-              className={getNavLinkClasses('actions')}
-            >
-              {t('actions')}
-            </Link>
+            <ul className="easi-grt__nav-list">
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/actions`}
+                  className={getNavLinkClasses('actions')}
+                >
+                  {t('actions')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/notes`}
+                  className={getNavLinkClasses('notes')}
+                >
+                  {t('notes')}
+                </Link>
+              </li>
+            </ul>
           </nav>
           <section className="tablet:grid-col-9">
             <Route
@@ -179,6 +191,10 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/business-case"
               render={() => <BusinessCaseReview businessCase={businessCase} />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/notes"
+              render={() => <Notes />}
             />
             <Route
               path="/governance-review-team/:systemId/actions"
