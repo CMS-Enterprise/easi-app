@@ -19,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 func (s *Server) routes(
@@ -79,6 +80,13 @@ func (s *Server) routes(
 
 	if s.environment.Deployed() {
 		s.CheckEmailClient(emailClient)
+	}
+
+	// set up S3 client
+	s3Config := s.NewS3Config()
+	s3Client, err := upload.NewS3Client(s3Config)
+	if err != nil {
+		s.logger.Fatal("Failed to create s3 client", zap.Error(err))
 	}
 
 	// set up FlagClient
@@ -437,7 +445,7 @@ func (s *Server) routes(
 	// File Upload Handlers
 	fileUploadHandler := handlers.NewFileUploadHandler(
 		base,
-		services.NewCreateFileUploadURL(serviceConfig),
+		services.NewCreateFileUploadURL(serviceConfig, s3Client),
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
 
