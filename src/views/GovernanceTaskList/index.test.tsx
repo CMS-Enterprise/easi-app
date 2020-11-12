@@ -2,6 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { mount, ReactWrapper, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
@@ -93,7 +94,7 @@ describe('The Goveranance Task List', () => {
       ).toEqual(2);
       expect(
         component.find('ol.governance-task-list__task-list li').length
-      ).toEqual(8);
+      ).toEqual(9);
     });
   });
 
@@ -488,6 +489,45 @@ describe('The Goveranance Task List', () => {
           .find('.governance-task-list__task-tag')
           .text()
       ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_FINAL_NEEDED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .exists()
+      ).toEqual(true);
+
+      expect(component!.find(UswdsLink).exists()).toEqual(true);
 
       expect(
         component!

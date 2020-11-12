@@ -280,6 +280,7 @@ const GovernanceTaskList = () => {
                 start={4}
               >
                 <TaskListItem
+                  data-testid="task-list-business-case-final"
                   heading="Submit the business case for final approval"
                   description="Update the Business Case based on feedback from the review meeting and submit it to the Governance Review Board."
                   status={finalBusinessCaseTag(systemIntake.status)}
