@@ -287,11 +287,11 @@ func NewUpdateLifecycleFields(
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	generateLCID func(context.Context) (string, error),
-) func(context.Context, *models.SystemIntake) error {
-	return func(ctx context.Context, intake *models.SystemIntake) error {
+) func(context.Context, *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
-			return &apperrors.QueryError{
+			return nil, &apperrors.QueryError{
 				Err:       err,
 				Operation: apperrors.QueryFetch,
 				Model:     existing,
@@ -300,15 +300,15 @@ func NewUpdateLifecycleFields(
 
 		ok, err := authorize(ctx)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if !ok {
-			return &apperrors.UnauthorizedError{Err: err}
+			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
 		// don't allow overwriting an existing LCID
 		if existing.LifecycleID.ValueOrZero() != "" {
-			return &apperrors.ResourceConflictError{
+			return nil, &apperrors.ResourceConflictError{
 				Err:        errors.New("lifecycle id already exists"),
 				Resource:   models.SystemIntake{},
 				ResourceID: intake.ID.String(),
@@ -328,19 +328,19 @@ func NewUpdateLifecycleFields(
 		if existing.LifecycleID.ValueOrZero() == "" {
 			lcid, gErr := generateLCID(ctx)
 			if gErr != nil {
-				return gErr
+				return nil, gErr
 			}
 			existing.LifecycleID = null.StringFrom(lcid)
 		}
 
-		_, err = update(ctx, existing)
+		updated, err := update(ctx, existing)
 		if err != nil {
-			return &apperrors.QueryError{
+			return nil, &apperrors.QueryError{
 				Err:       err,
 				Model:     intake,
 				Operation: apperrors.QuerySave,
 			}
 		}
-		return nil
+		return updated, nil
 	}
 }
