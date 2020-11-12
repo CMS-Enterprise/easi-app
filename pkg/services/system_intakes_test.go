@@ -472,13 +472,18 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 }
 
 func (s ServicesTestSuite) TestUpdateLifecycleFields() {
+	lifecycleID := null.StringFrom("010010")
 	today := time.Now()
+	expiresAt := &today
+	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
+	scope := null.StringFrom(fmt.Sprintf("scope %s", today))
+
 	input := &models.SystemIntake{
 		ID:                 uuid.New(),
-		LifecycleID:        null.StringFrom("010010"),
-		LifecycleExpiresAt: &today,
-		LifecycleNextSteps: null.StringFrom(fmt.Sprintf("next %s", today)),
-		LifecycleScope:     null.StringFrom(fmt.Sprintf("scope %s", today)),
+		LifecycleID:        lifecycleID,
+		LifecycleExpiresAt: expiresAt,
+		LifecycleNextSteps: nextSteps,
+		LifecycleScope:     scope,
 	}
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
@@ -505,16 +510,24 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
-		err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input)
 		s.NoError(err)
+		s.Equal(intake.LifecycleID, lifecycleID)
+		s.Equal(intake.LifecycleExpiresAt, expiresAt)
+		s.Equal(intake.LifecycleNextSteps, nextSteps)
+		s.Equal(intake.LifecycleScope, scope)
 	})
 
 	// from here on out, we always expect the LCID to get generated
 	input.LifecycleID = null.StringFrom("")
 
 	s.Run("happy path generates lcid", func() {
-		err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input)
 		s.NoError(err)
+		s.NotEqual(intake.LifecycleID, "")
+		s.Equal(intake.LifecycleExpiresAt, expiresAt)
+		s.Equal(intake.LifecycleNextSteps, nextSteps)
+		s.Equal(intake.LifecycleScope, scope)
 	})
 
 	// build the error-generating pieces
@@ -530,7 +543,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake) error
+		fn func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
 			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnGenerate),
@@ -551,7 +564,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			err := tc.fn(context.Background(), input)
+			_, err := tc.fn(context.Background(), input)
 			s.Error(err)
 		})
 	}
