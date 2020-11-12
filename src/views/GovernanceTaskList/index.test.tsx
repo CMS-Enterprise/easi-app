@@ -39,7 +39,7 @@ describe('The Goveranance Task List', () => {
     );
   });
 
-  it('displays only the initial governance steps', async () => {
+  it('displays only the all governance steps', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       systemIntake: { systemIntake: {} },
@@ -58,43 +58,8 @@ describe('The Goveranance Task List', () => {
     });
     component!.update();
     expect(
-      component!.find('ol.governance-task-list__task-list').length
-    ).toEqual(1);
-    expect(
       component!.find('ol.governance-task-list__task-list li').length
-    ).toEqual(3);
-  });
-
-  it('displays all governance steps', async () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
-      systemIntake: { systemIntake: {} },
-      businessCase: { form: {} }
-    });
-    let component: ReactWrapper;
-    await act(async () => {
-      component = mount(
-        <MemoryRouter initialEntries={['/']} initialIndex={0}>
-          <Provider store={store}>
-            <GovernanceTaskList />
-          </Provider>
-        </MemoryRouter>
-      );
-
-      await act(async () => {
-        component
-          .find('button[data-testid="remaining-steps-btn"]')
-          .simulate('click');
-      });
-      component.update();
-
-      expect(
-        component.find('ol.governance-task-list__task-list').length
-      ).toEqual(2);
-      expect(
-        component.find('ol.governance-task-list__task-list li').length
-      ).toEqual(8);
-    });
+    ).toEqual(6);
   });
 
   describe('Heading', () => {
@@ -164,75 +129,6 @@ describe('The Goveranance Task List', () => {
     });
     component!.update();
     expect(component!.find('.sidenav-actions').length).toEqual(1);
-  });
-
-  describe('Governance Task List Accessibility', () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
-      systemIntake: { systemIntake: {} },
-      businessCase: { form: {} }
-    });
-
-    it('button expansion is tied to the secondary ordered list', async () => {
-      let component: ReactWrapper;
-      await act(async () => {
-        component = mount(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <GovernanceTaskList />
-            </Provider>
-          </MemoryRouter>
-        );
-      });
-
-      const id = 'GovernanceTaskList-SecondaryList';
-      component!
-        .find('button[data-testid="remaining-steps-btn"]')
-        .simulate('click');
-      component!.update();
-      expect(component!.find(`button[aria-controls="${id}"]`).exists()).toEqual(
-        true
-      );
-      expect(component!.find(`ol#${id}`).exists()).toEqual(true);
-    });
-
-    it('renders aria-expanded/label correctly', async () => {
-      let component: ReactWrapper;
-      await act(async () => {
-        component = mount(
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <Provider store={store}>
-              <GovernanceTaskList />
-            </Provider>
-          </MemoryRouter>
-        );
-      });
-
-      expect(
-        component!.find('button[data-testid="remaining-steps-btn"]').text()
-      ).toEqual('Show remaining steps');
-      expect(
-        component!
-          .find('button[data-testid="remaining-steps-btn"]')
-          .prop('aria-expanded')
-      ).toEqual(false);
-
-      await act(async () => {
-        component
-          .find('button[data-testid="remaining-steps-btn"]')
-          .simulate('click');
-      });
-
-      component!.update();
-      expect(
-        component!.find('button[data-testid="remaining-steps-btn"]').text()
-      ).toEqual('Hide remaining steps');
-      expect(
-        component!
-          .find('button[data-testid="remaining-steps-btn"]')
-          .prop('aria-expanded')
-      ).toEqual(true);
-    });
   });
 
   describe('Statuses', () => {
