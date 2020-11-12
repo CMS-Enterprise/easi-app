@@ -163,7 +163,6 @@ const GovernanceReviewTeam = () => {
               <li>
                 <Link
                   to={`/governance-review-team/${systemId}/actions`}
-                  aria-label={t('actions')}
                   className={getNavLinkClasses('actions')}
                 >
                   {t('actions')}
@@ -172,7 +171,6 @@ const GovernanceReviewTeam = () => {
               <li>
                 <Link
                   to={`/governance-review-team/${systemId}/notes`}
-                  aria-label={t('notes')}
                   className={getNavLinkClasses('notes')}
                 >
                   {t('notes')}
