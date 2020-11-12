@@ -241,11 +241,7 @@ const GovernanceTaskList = () => {
                 data-testid="task-list-business-case-draft"
                 heading="Prepare your Business Case for the GRT"
                 description={getBusinessCaseDescription()}
-                status={
-                  isRecompete
-                    ? 'NOT_NEEDED'
-                    : businessCaseTag(systemIntake.status)
-                }
+                status={businessCaseTag(systemIntake)}
               >
                 <BusinessCaseLink systemIntake={systemIntake} />
               </TaskListItem>
