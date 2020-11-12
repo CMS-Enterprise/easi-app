@@ -10,7 +10,12 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { isIntakeStarted } from 'data/systemIntake';
-import { businessCaseTag, initialReviewTag, intakeTag } from 'data/taskList';
+import {
+  businessCaseTag,
+  finalBusinessCaseTag,
+  initialReviewTag,
+  intakeTag
+} from 'data/taskList';
 import { AppState } from 'reducers/rootReducer';
 import {
   archiveSystemIntake,
@@ -159,6 +164,13 @@ const GovernanceTaskList = () => {
     }
   }, [dispatch, systemIntake.id, systemIntake.businessCaseId]);
 
+  useEffect(() => {
+    const remainingStepsStatuses = ['BIZ_CASE_FINAL_NEEDED'];
+    if (remainingStepsStatuses.includes(systemIntake.status)) {
+      setDisplayRemainingSteps(true);
+    }
+  }, [systemIntake.status]);
+
   const archiveIntake = () => {
     const redirect = () => {
       history.push('/', {
@@ -267,6 +279,22 @@ const GovernanceTaskList = () => {
                 className="governance-task-list__task-list governance-task-list__task-list--secondary"
                 start={4}
               >
+                <TaskListItem
+                  heading="Submit the business case for final approval"
+                  description="Update the Business Case based on feedback from the review meeting and submit it to the Governance Review Board."
+                  status={finalBusinessCaseTag(systemIntake.status)}
+                >
+                  {systemIntake.status === 'BIZ_CASE_FINAL_NEEDED' && (
+                    <UswdsLink
+                      className="usa-button"
+                      variant="unstyled"
+                      asCustom={Link}
+                      to={`/business/${systemIntake.businessCaseId}/general-request-info`}
+                    >
+                      Review and Submit
+                    </UswdsLink>
+                  )}
+                </TaskListItem>
                 <TaskListItem
                   heading="Attend the review meeting"
                   description="Discuss your draft Business Case with Governance Review Team. They will
