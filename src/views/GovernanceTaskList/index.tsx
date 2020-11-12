@@ -122,7 +122,7 @@ const BusinessCaseLink = ({ systemIntake }: BusinessCaseLinkProps) => {
     case 'BIZ_CASE_CHANGES_NEEDED':
       return (
         <UswdsLink
-          data-testid="update-biz-case-draft"
+          data-testid="update-biz-case-draft-btn"
           className="usa-button"
           variant="unstyled"
           asCustom={Link}
@@ -165,7 +165,10 @@ const GovernanceTaskList = () => {
   }, [dispatch, systemIntake.id, systemIntake.businessCaseId]);
 
   useEffect(() => {
-    const remainingStepsStatuses = ['BIZ_CASE_FINAL_NEEDED'];
+    const remainingStepsStatuses = [
+      'BIZ_CASE_FINAL_NEEDED',
+      'BIZ_CASE_FINAL_SUBMITTED'
+    ];
     if (remainingStepsStatuses.includes(systemIntake.status)) {
       setDisplayRemainingSteps(true);
     }
