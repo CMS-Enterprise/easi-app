@@ -9,6 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 const configMissingMessage = "Must set config: %v"
@@ -62,6 +63,17 @@ func (s Server) NewSESConfig() appses.Config {
 	return appses.Config{
 		SourceARN: s.Config.GetString(appconfig.AWSSESSourceARNKey),
 		Source:    s.Config.GetString(appconfig.AWSSESSourceKey),
+	}
+}
+
+// NewS3Config returns a new s3.Config and checks required fields
+func (s Server) NewS3Config() upload.Config {
+	s.checkRequiredConfig(appconfig.AWSS3FileUploadBucket)
+	s.checkRequiredConfig(appconfig.AWSS3Region)
+
+	return upload.Config{
+		Bucket: s.Config.GetString(appconfig.AWSS3FileUploadBucket),
+		Region: s.Config.GetString(appconfig.AWSS3Region),
 	}
 }
 
