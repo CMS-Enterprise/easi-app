@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -34,18 +35,19 @@ func NewS3Client(config Config) S3Client {
 }
 
 // NewPutPresignedURL returns a pre-signed URL used for PUT-ing objects
-func (c S3Client) NewPutPresignedURL(key string) (*models.PreSignedURL, error) {
-	var result models.PreSignedURL
+func (c S3Client) NewPutPresignedURL() (*models.PreSignedURL, error) {
+	key := uuid.New()
 	req, _ := c.client.PutObjectRequest(&s3.PutObjectInput{
 		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
+		Key:    aws.String(key.String()),
 	})
 
 	url, err := req.Presign(15 * time.Minute)
 	if err != nil {
-		return &result, err
+		return &models.PreSignedURL{}, err
 	}
-	result.URL = url
+
+	result := models.PreSignedURL{URL: url, Filename: key.String()}
 
 	return &result, nil
 }
