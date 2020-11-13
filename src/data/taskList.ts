@@ -43,6 +43,7 @@ export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
     case 'BIZ_CASE_DRAFT_SUBMITTED':
     case 'BIZ_CASE_FINAL_NEEDED':
     case 'BIZ_CASE_FINAL_SUBMITTED':
+    case 'READY_FOR_GRB':
     case 'LCID_ISSUED':
       return 'COMPLETED';
     case 'NOT_IT_REQUEST':
