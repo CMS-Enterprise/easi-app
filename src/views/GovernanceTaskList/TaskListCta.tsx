@@ -153,19 +153,13 @@ export const DecisionCta = ({ intake }: { intake: SystemIntakeForm }) => {
   if (
     ['LCID_ISSUED', 'NOT_APPROVED', 'NOT_IT_REQUEST'].includes(intake.status)
   ) {
-    const paths: { [key: string]: string } = {
-      LCID_ISSUED: '',
-      NOT_APPROVED: '',
-      NOT_IT_REQUEST: ''
-    };
-
     return (
       <UswdsLink
         data-testid="decision-cta"
         className="usa-button"
         variant="unstyled"
         asCustom={Link}
-        to={paths[intake.status]}
+        to={`/governance-task-list/${intake.id}/request-decision`}
       >
         Read decision from board
       </UswdsLink>

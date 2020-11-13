@@ -13,6 +13,7 @@ import Cookies from 'views/Cookies';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
+import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
 import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
 import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
@@ -45,7 +46,24 @@ const AppRoutes = () => {
       <Route path="/governance-overview" exact component={GovernanceOverview} />
 
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
-
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/prepare-for-grt"
+        render={({ component }: any) => component()}
+        component={PrepareForGRT}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/prepare-for-grb"
+        render={({ component }: any) => component()}
+        component={PrepareForGRB}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/request-decision"
+        render={({ component }: any) => component()}
+        component={RequestDecision}
+      />
       {flags.taskListLite && (
         <SecureRoute
           path="/governance-task-list/:systemId"
@@ -60,16 +78,6 @@ const AppRoutes = () => {
           component={GovernanceReviewTeam}
         />
       )}
-      <SecureRoute
-        exact
-        path="/governance-task-list/:systemId/prepare-for-grt"
-        component={PrepareForGRT}
-      />
-      <SecureRoute
-        exact
-        path="/governance-task-list/:systemId/prepare-for-grb"
-        component={PrepareForGRB}
-      />
       <SecureRoute
         exact
         path="/system/request-type"
