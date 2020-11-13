@@ -147,3 +147,34 @@ export const AttendGrbMeetingCta = ({
 
   return <></>;
 };
+
+// CTA for Task List Decision
+export const DecisionCta = ({ intake }: { intake: SystemIntakeForm }) => {
+  if (
+    ['LCID_ISSUED', 'NOT_APPROVED', 'NOT_IT_REQUEST'].includes(intake.status)
+  ) {
+    const paths: { [key: string]: string } = {
+      LCID_ISSUED: '',
+      NOT_APPROVED: '',
+      NOT_IT_REQUEST: ''
+    };
+
+    return (
+      <UswdsLink
+        data-testid="decision-cta"
+        className="usa-button"
+        variant="unstyled"
+        asCustom={Link}
+        to={paths[intake.status]}
+      >
+        Read decision from board
+      </UswdsLink>
+    );
+  }
+
+  if (intake.status === 'NO_GOVERNANCE') {
+    return <span>No further governance required</span>;
+  }
+
+  return <></>;
+};
