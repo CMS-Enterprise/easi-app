@@ -31,8 +31,12 @@ export const initialReviewTag = (intakeStatus: string): TagEnum => {
     : 'CANNOT_START';
 };
 
-export const businessCaseTag = (intakeStatus: string): TagEnum => {
-  switch (intakeStatus) {
+export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
+  if (intake.requestType === 'RECOMPETE') {
+    return 'CANNOT_START';
+  }
+
+  switch (intake.status) {
     case 'INTAKE_DRAFT':
     case 'INTAKE_SUBMITTED':
       return 'CANNOT_START';
@@ -48,10 +52,35 @@ export const businessCaseTag = (intakeStatus: string): TagEnum => {
   }
 };
 
+export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
+  if (intake.requestType === 'RECOMPETE') {
+    return 'CANNOT_START';
+  }
+
+  switch (intake.status) {
+    case 'INTAKE_DRAFT':
+    case 'INTAKE_SUBMITTED':
+    case 'NEED_BIZ_CASE':
+    case 'BIZ_CASE_DRAFT':
+    case 'BIZ_CASE_DRAFT_SUBMITTED':
+      return 'CANNOT_START';
+    case 'BIZ_CASE_FINAL_SUBMITTED':
+    case 'READY_FOR_GRT':
+    case 'READY_FOR_GRB':
+      return 'COMPLETED';
+    case 'NOT_IT_REQUEST':
+    case 'WITHDRAWN':
+    case 'LCID_ISSUED':
+      return 'NOT_NEEDED';
+    default:
+      return '';
+  }
+};
+
 // Task List Item: Attend GRB Meeting
 export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
-    return 'NOT_NEEDED';
+    return 'CANNOT_START';
   }
 
   switch (intake.status) {

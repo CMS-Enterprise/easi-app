@@ -99,7 +99,7 @@ export const BusinessCaseDraftCta = ({
     case 'BIZ_CASE_CHANGES_NEEDED':
       return (
         <UswdsLink
-          data-testid="update-biz-case-draft"
+          data-testid="update-biz-case-draft-btn"
           className="usa-button"
           variant="unstyled"
           asCustom={Link}

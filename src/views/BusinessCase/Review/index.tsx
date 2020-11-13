@@ -17,6 +17,10 @@ const Review = ({ businessCase }: ReviewProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
+  const actionType =
+    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
+      ? 'SUBMIT_FINAL_BIZ_CASE'
+      : 'SUBMIT_BIZ_CASE';
 
   return (
     <div>
@@ -48,7 +52,7 @@ const Review = ({ businessCase }: ReviewProps) => {
             dispatch(
               postSystemIntakeAction({
                 intakeId: businessCase.systemIntakeId,
-                actionType: 'SUBMIT_BIZ_CASE'
+                actionType
               })
             );
           }}

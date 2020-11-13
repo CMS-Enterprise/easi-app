@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { Alert } from '@trussworks/react-uswds';
+import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -12,6 +12,7 @@ import PageWrapper from 'components/PageWrapper';
 import {
   attendGrbMeetingTag,
   businessCaseTag,
+  finalBusinessCaseTag,
   initialReviewTag,
   intakeTag
 } from 'data/taskList';
@@ -80,6 +81,9 @@ const GovernanceTaskList = () => {
         return 'Make a draft about the various solutions you’ve thought of and costs involved. After you’ve completed your draft business case you will likely attend the GRT meeting.';
     }
   };
+
+  const isRecompete = systemIntake.requestType === 'RECOMPETE';
+
   return (
     <PageWrapper className="governance-task-list">
       <Header />
@@ -103,7 +107,9 @@ const GovernanceTaskList = () => {
               Get governance approval
               {systemIntake.requestName && (
                 <span className="display-block line-height-body-5 font-body-lg text-light">
-                  {`for ${systemIntake.requestName}`}
+                  {isRecompete
+                    ? 'for re-competing a contract without any changes to systems or services'
+                    : `for ${systemIntake.requestName}`}
                 </span>
               )}
             </h1>
@@ -137,16 +143,29 @@ const GovernanceTaskList = () => {
                 data-testid="task-list-business-case-draft"
                 heading="Prepare your Business Case for the GRT"
                 description={getBusinessCaseDescription()}
-                status={businessCaseTag(systemIntake.status)}
+                status={businessCaseTag(systemIntake)}
               >
                 <BusinessCaseDraftCta systemIntake={systemIntake} />
               </TaskListItem>
               <TaskListItem
+                data-testid="task-list-business-case-final"
                 heading="Submit the business case for final approval"
                 description="Update the Business Case based on feedback from the review meeting and
               submit it to the Governance Review Board."
-                status="CANNOT_START"
-              />
+                status={finalBusinessCaseTag(systemIntake)}
+              >
+                {systemIntake.status === 'BIZ_CASE_FINAL_NEEDED' && (
+                  <UswdsLink
+                    className="usa-button"
+                    variant="unstyled"
+                    asCustom={Link}
+                    to={`/business/${systemIntake.businessCaseId}/general-request-info`}
+                  >
+                    Review and Submit
+                  </UswdsLink>
+                )}
+              </TaskListItem>
+
               <TaskListItem
                 data-testid="task-list-grb-meeting"
                 heading="Attend the GRB meeting"
@@ -157,6 +176,7 @@ const GovernanceTaskList = () => {
                 <AttendGrbMeetingCta intake={systemIntake} />
               </TaskListItem>
               <TaskListItem
+                data-testid="task-list-decision"
                 heading="Decision and next steps"
                 description="If your Business Case is approved you will receive a unique Lifecycle
               ID. If it is not approved, you would need address the concerns to
