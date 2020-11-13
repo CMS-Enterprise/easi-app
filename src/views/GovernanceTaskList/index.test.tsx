@@ -2,6 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { mount, ReactWrapper, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
@@ -448,7 +449,7 @@ describe('The Goveranance Task List', () => {
 
       component!.update();
       expect(
-        component!.find('[data-testid="update-biz-case-draft"]').exists()
+        component!.find('[data-testid="update-biz-case-draft-btn"]').exists()
       ).toEqual(true);
 
       expect(
@@ -461,6 +462,83 @@ describe('The Goveranance Task List', () => {
       expect(
         component!
           .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_FINAL_NEEDED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find(UswdsLink)
+          .text()
+      ).toEqual('Review and Submit');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for BIZ_CASE_FINAL_SUBMITTED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_FINAL_SUBMITTED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find(UswdsLink)
+          .exists()
+      ).toEqual(false);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
           .find('.governance-task-list__task-tag')
           .text()
       ).toEqual('Completed');
