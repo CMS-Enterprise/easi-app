@@ -40,7 +40,7 @@ describe('The Goveranance Task List', () => {
     );
   });
 
-  it('displays only the all governance steps', async () => {
+  it('displays all the governance steps', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       systemIntake: { systemIntake: {} },
@@ -61,6 +61,79 @@ describe('The Goveranance Task List', () => {
     expect(
       component!.find('ol.governance-task-list__task-list li').length
     ).toEqual(6);
+  });
+
+  describe('Recompetes', () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      systemIntake: {
+        systemIntake: {
+          ...initialSystemIntakeForm,
+          requestName: 'Easy Access to System Information',
+          requestType: 'RECOMPETE'
+        }
+      },
+      businessCase: { form: {} }
+    });
+    it('displays "for recompete in title', async () => {
+      let component: ReactWrapper;
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+      component!.update();
+
+      expect(component!.find('h1').text()).toContain(
+        'for re-competing a contract without any changes to systems or services'
+      );
+    });
+
+    it('displays not applicable steps as cannot start', async () => {
+      let component: ReactWrapper;
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+      component!.update();
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-decision"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+    });
   });
 
   describe('Heading', () => {
