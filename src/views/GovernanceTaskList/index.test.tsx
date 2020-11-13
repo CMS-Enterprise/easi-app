@@ -392,5 +392,41 @@ describe('The Goveranance Task List', () => {
           .text()
       ).toEqual('Completed');
     });
+
+    it('renders proper buttons for READY_FOR_GRB', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'READY_FOR_GRB'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+
+      expect(
+        component!.find('[data-testid="prepare-for-grb-btn"]').exists()
+      ).toEqual(true);
+    });
   });
 });
