@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { Alert, Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
-import { isIntakeStarted } from 'data/systemIntake';
 import {
+  attendGrbMeetingTag,
   businessCaseTag,
   finalBusinessCaseTag,
   initialReviewTag,
@@ -22,119 +22,16 @@ import {
   fetchBusinessCase,
   fetchSystemIntake
 } from 'types/routines';
-import { SystemIntakeForm } from 'types/systemIntake';
 
 import SideNavActions from './SideNavActions';
+import {
+  AttendGrbMeetingCta,
+  BusinessCaseDraftCta,
+  IntakeDraftCta
+} from './TaskListCta';
 import TaskListItem from './TaskListItem';
 
 import './index.scss';
-
-const IntakeLink = ({ intake }: { intake: SystemIntakeForm }) => {
-  switch (intake.status) {
-    case 'INTAKE_SUBMITTED':
-      return (
-        <UswdsLink
-          data-testid="intake-view-link"
-          variant="unstyled"
-          asCustom={Link}
-          to={`/system/${intake.id}/view`}
-        >
-          View Submitted Request Form
-        </UswdsLink>
-      );
-    case 'INTAKE_DRAFT':
-      if (isIntakeStarted(intake)) {
-        return (
-          <UswdsLink
-            className="usa-button"
-            variant="unstyled"
-            asCustom={Link}
-            to={`/system/${intake.id}/contact-details`}
-          >
-            Continue
-          </UswdsLink>
-        );
-      }
-      return (
-        <UswdsLink
-          data-testid="intake-start-btn"
-          className="usa-button"
-          variant="unstyled"
-          asCustom={Link}
-          to={`/system/${intake.id || 'new'}/contact-details`}
-        >
-          Start
-        </UswdsLink>
-      );
-    default:
-      return <></>;
-  }
-};
-
-type BusinessCaseLinkProps = {
-  systemIntake: SystemIntakeForm;
-};
-
-const BusinessCaseLink = ({ systemIntake }: BusinessCaseLinkProps) => {
-  const history = useHistory();
-  switch (systemIntake.status) {
-    case 'NEED_BIZ_CASE':
-      return (
-        <Button
-          type="button"
-          onClick={() => {
-            history.push({
-              pathname: '/business/new/general-request-info',
-              state: {
-                systemIntakeId: systemIntake.id
-              }
-            });
-          }}
-          className="usa-button"
-          data-testid="start-biz-case-btn"
-        >
-          Start
-        </Button>
-      );
-    case 'BIZ_CASE_DRAFT':
-      return (
-        <UswdsLink
-          data-testid="continue-biz-case-btn"
-          className="usa-button"
-          variant="unstyled"
-          asCustom={Link}
-          to={`/business/${systemIntake.businessCaseId}/general-request-info`}
-        >
-          Continue
-        </UswdsLink>
-      );
-    case 'BIZ_CASE_DRAFT_SUBMITTED':
-      return (
-        <UswdsLink
-          data-testid="view-biz-case-link"
-          variant="unstyled"
-          asCustom={Link}
-          to={`/business/${systemIntake.businessCaseId}/view`}
-        >
-          View submitted draft business case
-        </UswdsLink>
-      );
-    case 'BIZ_CASE_CHANGES_NEEDED':
-      return (
-        <UswdsLink
-          data-testid="update-biz-case-draft-btn"
-          className="usa-button"
-          variant="unstyled"
-          asCustom={Link}
-          to={`/business/${systemIntake.businessCaseId}/general-request-info`}
-        >
-          Update draft business case
-        </UswdsLink>
-      );
-    default:
-      return <></>;
-  }
-};
 
 const GovernanceTaskList = () => {
   const { systemId } = useParams();
@@ -224,7 +121,7 @@ const GovernanceTaskList = () => {
               context about your request and start preparing for discussions with your team."
                 status={intakeTag(systemIntake.status)}
               >
-                <IntakeLink intake={systemIntake} />
+                <IntakeDraftCta intake={systemIntake} />
               </TaskListItem>
               <TaskListItem
                 data-testid="task-list-intake-review"
@@ -248,14 +145,14 @@ const GovernanceTaskList = () => {
                 description={getBusinessCaseDescription()}
                 status={businessCaseTag(systemIntake)}
               >
-                <BusinessCaseLink systemIntake={systemIntake} />
+                <BusinessCaseDraftCta systemIntake={systemIntake} />
               </TaskListItem>
               <TaskListItem
                 data-testid="task-list-business-case-final"
                 heading="Submit the business case for final approval"
                 description="Update the Business Case based on feedback from the review meeting and
               submit it to the Governance Review Board."
-                status={finalBusinessCaseTag(systemIntake.status)}
+                status={finalBusinessCaseTag(systemIntake)}
               >
                 {systemIntake.status === 'BIZ_CASE_FINAL_NEEDED' && (
                   <UswdsLink
@@ -274,8 +171,10 @@ const GovernanceTaskList = () => {
                 heading="Attend the GRB meeting"
                 description="The Governance Review Board will discuss and make decisions based on the
               Business Case and recommendations from the Review Team."
-                status="CANNOT_START"
-              />
+                status={attendGrbMeetingTag(systemIntake)}
+              >
+                <AttendGrbMeetingCta intake={systemIntake} />
+              </TaskListItem>
               <TaskListItem
                 data-testid="task-list-decision"
                 heading="Decision and next steps"
