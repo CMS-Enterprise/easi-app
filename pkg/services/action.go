@@ -147,6 +147,7 @@ func NewSubmitBusinessCase(
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
 	sendEmail func(requester string, intakeID uuid.UUID) error,
+	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
@@ -217,7 +218,7 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		intake.Status = models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
+		intake.Status = newIntakeStatus
 		intake.UpdatedAt = &updatedAt
 		intake, err = updateIntake(ctx, intake)
 		if err != nil {
