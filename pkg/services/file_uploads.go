@@ -14,7 +14,7 @@ type PreSignedURLReturn func(context.Context) (*models.PreSignedURL, error)
 // NewCreateFileUploadURL is a service to create a file upload URL via a pre-signed URL in S3
 func NewCreateFileUploadURL(config Config, s3client upload.S3Client) handlers.CreateFileUploadURL {
 	return func(ctx context.Context) (*models.PreSignedURL, error) {
-		url, err := s3client.NewPutPresignedURL("test.jpg")
+		url, err := s3client.NewPutPresignedURL()
 		if err != nil {
 			return nil, err
 		}

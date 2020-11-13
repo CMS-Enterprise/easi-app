@@ -2,5 +2,6 @@ package models
 
 //PreSignedURL is the model to return S3 pre-signed URLs
 type PreSignedURL struct {
-	URL string `json:"URL"`
+	URL      string `json:"URL"`
+	Filename string `json:"filename"`
 }
