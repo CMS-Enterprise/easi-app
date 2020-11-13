@@ -1,3 +1,5 @@
+import { SystemIntakeForm } from 'types/systemIntake';
+
 export const intakeTag = (status: string) => {
   if (status === 'INTAKE_DRAFT') {
     return '';
@@ -26,8 +28,12 @@ export const initialReviewTag = (intakeStatus: string) => {
     : 'CANNOT_START';
 };
 
-export const businessCaseTag = (intakeStatus: string) => {
-  switch (intakeStatus) {
+export const businessCaseTag = (intake: SystemIntakeForm) => {
+  if (intake.requestType === 'RECOMPETE') {
+    return 'CANNOT_START';
+  }
+
+  switch (intake.status) {
     case 'INTAKE_DRAFT':
     case 'INTAKE_SUBMITTED':
       return 'CANNOT_START';

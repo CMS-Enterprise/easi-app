@@ -184,6 +184,9 @@ const GovernanceTaskList = () => {
         return 'Make a draft about the various solutions you’ve thought of and costs involved. After you’ve completed your draft business case you will likely attend the GRT meeting.';
     }
   };
+
+  const isRecompete = systemIntake.requestType === 'RECOMPETE';
+
   return (
     <PageWrapper className="governance-task-list">
       <Header />
@@ -207,7 +210,9 @@ const GovernanceTaskList = () => {
               Get governance approval
               {systemIntake.requestName && (
                 <span className="display-block line-height-body-5 font-body-lg text-light">
-                  {`for ${systemIntake.requestName}`}
+                  {isRecompete
+                    ? 'for re-competing a contract without any changes to systems or services'
+                    : `for ${systemIntake.requestName}`}
                 </span>
               )}
             </h1>
@@ -241,7 +246,7 @@ const GovernanceTaskList = () => {
                 data-testid="task-list-business-case-draft"
                 heading="Prepare your Business Case for the GRT"
                 description={getBusinessCaseDescription()}
-                status={businessCaseTag(systemIntake.status)}
+                status={businessCaseTag(systemIntake)}
               >
                 <BusinessCaseLink systemIntake={systemIntake} />
               </TaskListItem>
@@ -265,12 +270,14 @@ const GovernanceTaskList = () => {
               </TaskListItem>
 
               <TaskListItem
+                data-testid="task-list-grb-meeting"
                 heading="Attend the GRB meeting"
                 description="The Governance Review Board will discuss and make decisions based on the
               Business Case and recommendations from the Review Team."
                 status="CANNOT_START"
               />
               <TaskListItem
+                data-testid="task-list-decision"
                 heading="Decision and next steps"
                 description="If your Business Case is approved you will receive a unique Lifecycle
               ID. If it is not approved, you would need address the concerns to
