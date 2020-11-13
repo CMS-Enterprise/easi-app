@@ -40,6 +40,8 @@ const (
 	SystemIntakeStatusBIZCASEDRAFT SystemIntakeStatus = "BIZ_CASE_DRAFT"
 	// SystemIntakeStatusBIZCASEDRAFTSUBMITTED captures enum value "BIZ_CASE_DRAFT_SUBMITTED"
 	SystemIntakeStatusBIZCASEDRAFTSUBMITTED SystemIntakeStatus = "BIZ_CASE_DRAFT_SUBMITTED"
+	// SystemIntakeStatusBIZCASEFINALSUBMITTED captures enum value "BIZ_CASE_FINAL_SUBMITTED"
+	SystemIntakeStatusBIZCASEFINALSUBMITTED SystemIntakeStatus = "BIZ_CASE_FINAL_SUBMITTED"
 	// SystemIntakeStatusBIZCASECHANGESNEEDED captures enum value "BIZ_CASE_CHANGES_NEEDED"
 	SystemIntakeStatusBIZCASECHANGESNEEDED SystemIntakeStatus = "BIZ_CASE_CHANGES_NEEDED"
 	// SystemIntakeStatusBIZCASEFINALNEEDED captures enum value "BIZ_CASE_FINAL_NEEDED"

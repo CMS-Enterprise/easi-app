@@ -27,6 +27,7 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.NoError(err, "failed to fetch business case")
 		s.Equal(created.ID, fetched.ID)
 		s.Equal(businessCase.EUAUserID, fetched.EUAUserID)
+		s.Equal(intake.Status, fetched.SystemIntakeStatus)
 		s.Len(fetched.LifecycleCostLines, 2)
 	})
 
