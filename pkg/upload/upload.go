@@ -16,28 +16,25 @@ type Config struct {
 	Region string
 }
 
-// Client is an EASi s3 client wrapper
-type Client struct {
-	config Config
+// S3Client is an EASi s3 client wrapper
+type S3Client struct {
 	client *s3.S3
+	config Config
 }
 
 // NewS3Client creates a new s3 service client
-func NewS3Client(config Config) (Client, error) {
+func NewS3Client(config Config) S3Client {
 	s3Session := session.Must(session.NewSession(&aws.Config{
 		Region: aws.String(config.Region)},
 	))
+	// create the s3 service client
+	client := s3.New(s3Session)
 
-	// Create S3 service client
-	client := Client{
-		config: config,
-		client: s3.New(s3Session),
-	}
-	return client, nil
+	return S3Client{client, config}
 }
 
 // NewPutPresignedURL returns a pre-signed URL used for PUT-ing objects
-func (c Client) NewPutPresignedURL(key string) (*models.PreSignedURL, error) {
+func (c S3Client) NewPutPresignedURL(key string) (*models.PreSignedURL, error) {
 	var result models.PreSignedURL
 	req, _ := c.client.PutObjectRequest(&s3.PutObjectInput{
 		Bucket: aws.String(c.config.Bucket),
