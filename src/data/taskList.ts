@@ -64,14 +64,15 @@ export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
     case 'NEED_BIZ_CASE':
     case 'BIZ_CASE_DRAFT':
     case 'BIZ_CASE_DRAFT_SUBMITTED':
+    case 'BIZ_CASE_CHANGES_NEEDED':
       return 'CANNOT_START';
     case 'BIZ_CASE_FINAL_SUBMITTED':
     case 'READY_FOR_GRT':
     case 'READY_FOR_GRB':
+    case 'LCID_ISSUED':
       return 'COMPLETED';
     case 'NOT_IT_REQUEST':
     case 'WITHDRAWN':
-    case 'LCID_ISSUED':
       return 'NOT_NEEDED';
     default:
       return '';
