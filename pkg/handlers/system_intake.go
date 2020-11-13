@@ -210,7 +210,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 // LifecycleID assignment
 func NewSystemIntakeLifecycleIDHandler(
 	base HandlerBase,
-	assign func(context.Context, *models.SystemIntake) error,
+	assign func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 ) SystemIntakeLifecycleIDHandler {
 	return SystemIntakeLifecycleIDHandler{
 		HandlerBase:       base,
@@ -222,7 +222,7 @@ func NewSystemIntakeLifecycleIDHandler(
 // a lifecycleID to a SystemIntake
 type SystemIntakeLifecycleIDHandler struct {
 	HandlerBase
-	AssignLifecycleID func(context.Context, *models.SystemIntake) error
+	AssignLifecycleID func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
 }
 
 type lcidFields struct {
@@ -311,12 +311,24 @@ func (h SystemIntakeLifecycleIDHandler) Handle() http.HandlerFunc {
 			}
 
 			// send it to the database
-			if err := h.AssignLifecycleID(r.Context(), intake); err != nil {
+			updatedIntake, err := h.AssignLifecycleID(r.Context(), intake)
+			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
-			w.WriteHeader(http.StatusNoContent) // 204 No Content
+			responseBody, err := json.Marshal(updatedIntake)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
+			w.WriteHeader(http.StatusCreated)
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
 			return
 		default:
 			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
