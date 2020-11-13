@@ -39,7 +39,7 @@ describe('The Goveranance Task List', () => {
     );
   });
 
-  it('displays all thegovernance steps', async () => {
+  it('displays all the governance steps', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       systemIntake: { systemIntake: {} },
@@ -92,7 +92,7 @@ describe('The Goveranance Task List', () => {
       );
     });
 
-    it('displays not applicable steps as Not Needed', async () => {
+    it('displays not applicable steps as cannot start', async () => {
       let component: ReactWrapper;
       await act(async () => {
         component = mount(
@@ -110,28 +110,28 @@ describe('The Goveranance Task List', () => {
           .find('[data-testid="task-list-business-case-draft"]')
           .find('.governance-task-list__task-tag')
           .text()
-      ).toEqual('Not needed');
+      ).toEqual('Cannot start yet');
 
       expect(
         component!
           .find('[data-testid="task-list-business-case-final"]')
           .find('.governance-task-list__task-tag')
           .text()
-      ).toEqual('Not needed');
+      ).toEqual('Cannot start yet');
 
       expect(
         component!
           .find('[data-testid="task-list-grb-meeting"]')
           .find('.governance-task-list__task-tag')
           .text()
-      ).toEqual('Not needed');
+      ).toEqual('Cannot start yet');
 
       expect(
         component!
           .find('[data-testid="task-list-decision"]')
           .find('.governance-task-list__task-tag')
           .text()
-      ).toEqual('Not needed');
+      ).toEqual('Cannot start yet');
     });
   });
 

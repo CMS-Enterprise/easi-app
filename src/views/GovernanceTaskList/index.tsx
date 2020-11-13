@@ -250,14 +250,14 @@ const GovernanceTaskList = () => {
                 heading="Submit the business case for final approval"
                 description="Update the Business Case based on feedback from the review meeting and
               submit it to the Governance Review Board."
-                status={isRecompete ? 'NOT_NEEDED' : 'CANNOT_START'}
+                status="CANNOT_START"
               />
               <TaskListItem
                 data-testid="task-list-grb-meeting"
                 heading="Attend the GRB meeting"
                 description="The Governance Review Board will discuss and make decisions based on the
               Business Case and recommendations from the Review Team."
-                status={isRecompete ? 'NOT_NEEDED' : 'CANNOT_START'}
+                status="CANNOT_START"
               />
               <TaskListItem
                 data-testid="task-list-decision"
@@ -265,7 +265,7 @@ const GovernanceTaskList = () => {
                 description="If your Business Case is approved you will receive a unique Lifecycle
               ID. If it is not approved, you would need address the concerns to
               proceed."
-                status={isRecompete ? 'NOT_NEEDED' : 'CANNOT_START'}
+                status="CANNOT_START"
               />
             </ol>
           </div>
