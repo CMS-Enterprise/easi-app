@@ -15,13 +15,6 @@
         content: counter(primaryList) '. ';
       }
     }
-
-    &--secondary {
-      .governance-task-list__item:before {
-        counter-increment: secondaryList;
-        content: counter(secondaryList) '. ';
-      }
-    }
   }
 
   &__item {
