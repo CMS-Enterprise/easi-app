@@ -19,7 +19,7 @@ EASi does.
   develop the PDFs using the same workflows, tools, and CSS code that we
   currently use for the existing UI.
 
-**User Story:** _[ticket/issue-number]_ <!-- optional -->
+**User Story:** EASI-983
 
 ## Chosen Solution
 
