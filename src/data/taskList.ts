@@ -30,7 +30,7 @@ export const initialReviewTag = (intakeStatus: string) => {
 
 export const businessCaseTag = (intake: SystemIntakeForm) => {
   if (intake.requestType === 'RECOMPETE') {
-    return 'NOT_NEEDED';
+    return 'CANNOT_START';
   }
 
   switch (intake.status) {
