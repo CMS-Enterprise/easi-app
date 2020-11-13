@@ -18,6 +18,8 @@ import {
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
+import { postSystemIntakeActionRequest } from './actionSaga';
+
 function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
   const data = prepareSystemIntakeForApi(formData);
@@ -79,6 +81,7 @@ function* getSystemIntake(action: Action<any>) {
 function* submitSystemIntakeReview(action: Action<any>) {
   try {
     yield put(reviewSystemIntake.request());
+    yield postSystemIntakeActionRequest(action);
     const response = yield call(putSystemIntakeRequest, action.payload);
     yield put(reviewSystemIntake.success(response.data));
   } catch (error) {
@@ -128,7 +131,9 @@ function postLifecycleId({ id, data }: { id: string; data: lifecycleIdData }) {
 function* issueLifecyleId(action: Action<any>) {
   try {
     yield put(issueLifecycleIdForSystemIntake.request());
-    const response = yield call(postLifecycleId, action.payload);
+    const { id, lcidPayload, actionPayload } = action.payload;
+    yield call(postSystemIntakeActionRequest, { id, ...actionPayload });
+    const response = yield call(postLifecycleId, { id, data: lcidPayload });
     yield put(issueLifecycleIdForSystemIntake.success(response.data));
   } catch (error) {
     yield put(issueLifecycleIdForSystemIntake.failure(error.message));
