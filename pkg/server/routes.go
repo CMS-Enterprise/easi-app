@@ -84,10 +84,7 @@ func (s *Server) routes(
 
 	// set up S3 client
 	s3Config := s.NewS3Config()
-	s3Client, err := upload.NewS3Client(s3Config)
-	if err != nil {
-		s.logger.Fatal("Failed to create s3 client", zap.Error(err))
-	}
+	s3Client := upload.NewS3Client(s3Config)
 
 	// set up FlagClient
 	flagConfig := s.NewFlagConfig()
