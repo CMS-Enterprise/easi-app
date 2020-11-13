@@ -2,6 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { mount, ReactWrapper, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
@@ -39,7 +40,7 @@ describe('The Goveranance Task List', () => {
     );
   });
 
-  it('displays only the all governance steps', async () => {
+  it('displays all the governance steps', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       systemIntake: { systemIntake: {} },
@@ -60,6 +61,79 @@ describe('The Goveranance Task List', () => {
     expect(
       component!.find('ol.governance-task-list__task-list li').length
     ).toEqual(6);
+  });
+
+  describe('Recompetes', () => {
+    const mockStore = configureMockStore();
+    const store = mockStore({
+      systemIntake: {
+        systemIntake: {
+          ...initialSystemIntakeForm,
+          requestName: 'Easy Access to System Information',
+          requestType: 'RECOMPETE'
+        }
+      },
+      businessCase: { form: {} }
+    });
+    it('displays "for recompete in title', async () => {
+      let component: ReactWrapper;
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+      component!.update();
+
+      expect(component!.find('h1').text()).toContain(
+        'for re-competing a contract without any changes to systems or services'
+      );
+    });
+
+    it('displays not applicable steps as cannot start', async () => {
+      let component: ReactWrapper;
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+      component!.update();
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-decision"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+    });
   });
 
   describe('Heading', () => {
@@ -375,7 +449,7 @@ describe('The Goveranance Task List', () => {
 
       component!.update();
       expect(
-        component!.find('[data-testid="update-biz-case-draft"]').exists()
+        component!.find('[data-testid="update-biz-case-draft-btn"]').exists()
       ).toEqual(true);
 
       expect(
@@ -388,6 +462,83 @@ describe('The Goveranance Task List', () => {
       expect(
         component!
           .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_FINAL_NEEDED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find(UswdsLink)
+          .text()
+      ).toEqual('Review and Submit');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for BIZ_CASE_FINAL_SUBMITTED', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'BIZ_CASE_FINAL_SUBMITTED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find(UswdsLink)
+          .exists()
+      ).toEqual(false);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
           .find('.governance-task-list__task-tag')
           .text()
       ).toEqual('Completed');

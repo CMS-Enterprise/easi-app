@@ -73,7 +73,7 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 				"lcidNextSteps": "fuhgeddaboutit",
 				"lcidScope": "telescope"
 			}`,
-			status: http.StatusNoContent,
+			status: http.StatusCreated,
 		},
 		"happy path generate": {
 			verb:     "POST",
@@ -83,7 +83,7 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 				"lcidNextSteps": "fuhgeddaboutit",
 				"lcidScope": "telescope"
 			}`,
-			status: http.StatusNoContent,
+			status: http.StatusCreated,
 		},
 		"write error": {
 			verb:     "POST",
@@ -134,11 +134,11 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 		},
 	}
 
-	fnLCID := func(c context.Context, i *models.SystemIntake) error {
+	fnLCID := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		if i.ID == uuid.Nil {
-			return errors.New("forced error")
+			return nil, errors.New("forced error")
 		}
-		return nil
+		return nil, nil
 	}
 	var handler http.Handler = NewSystemIntakeLifecycleIDHandler(s.base, fnLCID).Handle()
 

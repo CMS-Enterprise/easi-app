@@ -33,13 +33,15 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 	const fetchBusinessCaseSQL = `
 		SELECT
 			business_case.*,
-			json_agg(estimated_lifecycle_cost) as lifecycle_cost_lines
+			json_agg(estimated_lifecycle_cost) as lifecycle_cost_lines,
+			system_intake.status as system_intake_status
 		FROM
 			business_case
 			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
+			JOIN system_intake ON business_case.system_intake = system_intake.id
 		WHERE
 			business_case.id = $1
-		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
+		GROUP BY estimated_lifecycle_cost.business_case, business_case.id, system_intake.id`
 
 	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, id)
 	if err != nil {
