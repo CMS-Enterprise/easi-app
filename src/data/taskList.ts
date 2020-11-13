@@ -1,13 +1,15 @@
 import { SystemIntakeForm } from 'types/systemIntake';
 
-export const intakeTag = (status: string) => {
+type TagEnum = 'COMPLETED' | 'CANNOT_START' | 'NOT_NEEDED' | '';
+
+export const intakeTag = (status: string): TagEnum => {
   if (status === 'INTAKE_DRAFT') {
     return '';
   }
   return 'COMPLETED';
 };
 
-export const initialReviewTag = (intakeStatus: string) => {
+export const initialReviewTag = (intakeStatus: string): TagEnum => {
   const intakeCompletedStatuses = [
     'NEED_BIZ_CASE',
     'BIZ_CASE_DRAFT',
@@ -29,7 +31,7 @@ export const initialReviewTag = (intakeStatus: string) => {
     : 'CANNOT_START';
 };
 
-export const businessCaseTag = (intakeStatus: string) => {
+export const businessCaseTag = (intakeStatus: string): TagEnum => {
   switch (intakeStatus) {
     case 'INTAKE_DRAFT':
     case 'INTAKE_SUBMITTED':
@@ -47,7 +49,7 @@ export const businessCaseTag = (intakeStatus: string) => {
 };
 
 // Task List Item: Attend GRB Meeting
-export const attendGrbMeetingTag = (intake: SystemIntakeForm) => {
+export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
     return 'NOT_NEEDED';
   }
