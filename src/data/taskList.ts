@@ -1,3 +1,5 @@
+import { SystemIntakeForm } from 'types/systemIntake';
+
 export const intakeTag = (status: string) => {
   if (status === 'INTAKE_DRAFT') {
     return '';
@@ -13,6 +15,7 @@ export const initialReviewTag = (intakeStatus: string) => {
     'BIZ_CASE_CHANGES_NEEDED',
     'BIZ_CASE_FINAL_NEEDED',
     'BIZ_CASE_FINAL_SUBMITTED',
+    'READY_FOR_GRB',
     'LCID_ISSUED',
     'NOT_IT_REQUEST'
   ];
@@ -34,11 +37,31 @@ export const businessCaseTag = (intakeStatus: string) => {
     case 'BIZ_CASE_DRAFT_SUBMITTED':
     case 'BIZ_CASE_FINAL_NEEDED':
     case 'BIZ_CASE_FINAL_SUBMITTED':
+    case 'LCID_ISSUED':
       return 'COMPLETED';
     case 'NOT_IT_REQUEST':
-    case 'LCID_ISSUED':
       return 'NOT_NEEDED';
     default:
       return '';
+  }
+};
+
+// Task List Item: Attend GRB Meeting
+export const attendGrbMeetingTag = (intake: SystemIntakeForm) => {
+  if (intake.requestType === 'RECOMPETE') {
+    return 'NOT_NEEDED';
+  }
+
+  switch (intake.status) {
+    case 'READY_FOR_GRB':
+      return '';
+    case 'LCID_ISSUED':
+    case 'WITHDRAWN':
+    case 'NOT_IT_REQUEST':
+    case 'NOT_APPROVED':
+    case 'NOT_GOVERNANCE':
+      return 'COMPLETED';
+    default:
+      return 'CANNOT_START';
   }
 };
