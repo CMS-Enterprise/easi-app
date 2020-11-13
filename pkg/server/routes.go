@@ -459,4 +459,7 @@ func (s *Server) routes(
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
+
+	api.Handle("/pdf/generate", handlers.NewPDFHandler().Handle())
+
 }
