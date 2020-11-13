@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
@@ -135,7 +135,6 @@ const GovernanceTaskList = () => {
   const { systemId } = useParams();
   const dispatch = useDispatch();
   const history = useHistory();
-  const [displayRemainingSteps, setDisplayRemainingSteps] = useState(false);
   const { t } = useTranslation();
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -235,71 +234,32 @@ const GovernanceTaskList = () => {
               </TaskListItem>
               <TaskListItem
                 data-testid="task-list-business-case-draft"
-                heading="Prepare your Business Case"
+                heading="Prepare your Business Case for the GRT"
                 description={getBusinessCaseDescription()}
                 status={businessCaseTag(systemIntake.status)}
               >
                 <BusinessCaseLink systemIntake={systemIntake} />
               </TaskListItem>
-            </ol>
-
-            <Alert type="info">
-              The following steps will be temporarily managed outside of EASi.
-              Please get in touch with the governance admin team [email] if you
-              have any questions about your process.
-            </Alert>
-
-            <Button
-              type="button"
-              className="margin-y-2"
-              onClick={() => setDisplayRemainingSteps(prev => !prev)}
-              aria-expanded={displayRemainingSteps}
-              aria-controls="GovernanceTaskList-SecondaryList"
-              data-testid="remaining-steps-btn"
-              unstyled
-            >
-              {displayRemainingSteps ? 'Hide' : 'Show'} remaining steps
-            </Button>
-
-            {displayRemainingSteps && (
-              <ol
-                id="GovernanceTaskList-SecondaryList"
-                className="governance-task-list__task-list governance-task-list__task-list--secondary"
-                start={4}
-              >
-                <TaskListItem
-                  heading="Attend the review meeting"
-                  description="Discuss your draft Business Case with Governance Review Team. They will
-              help you refine and make your business case in the best shape possible."
-                  status="CANNOT_START"
-                />
-                <TaskListItem
-                  heading="Feedback from the Review Team"
-                  description="If the Review Team has any additional comments, they will ask you to
-              update your business case before it’s submitted to the Review Board."
-                  status="CANNOT_START"
-                />
-                <TaskListItem
-                  heading="Submit the business case for final approval"
-                  description="Update the Business Case based on feedback from the review meeting and
+              <TaskListItem
+                heading="Submit the business case for final approval"
+                description="Update the Business Case based on feedback from the review meeting and
               submit it to the Governance Review Board."
-                  status="CANNOT_START"
-                />
-                <TaskListItem
-                  heading="Attend the board meeting"
-                  description="The Governance Review Board will discuss and make decisions based on the
+                status="CANNOT_START"
+              />
+              <TaskListItem
+                heading="Attend the GRB meeting"
+                description="The Governance Review Board will discuss and make decisions based on the
               Business Case and recommendations from the Review Team."
-                  status="CANNOT_START"
-                />
-                <TaskListItem
-                  heading="Decision and next steps"
-                  description="If your Business Case is approved you will receive a unique Lifecycle
+                status="CANNOT_START"
+              />
+              <TaskListItem
+                heading="Decision and next steps"
+                description="If your Business Case is approved you will receive a unique Lifecycle
               ID. If it is not approved, you would need address the concerns to
               proceed."
-                  status="CANNOT_START"
-                />
-              </ol>
-            )}
+                status="CANNOT_START"
+              />
+            </ol>
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">
