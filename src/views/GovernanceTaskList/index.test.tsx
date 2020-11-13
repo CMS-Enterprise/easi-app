@@ -286,6 +286,13 @@ describe('The Goveranance Task List', () => {
 
       expect(
         component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+
+      expect(
+        component!
           .find('[data-testid="task-list-business-case-draft"]')
           .find('.governance-task-list__task-tag')
           .text()
@@ -332,6 +339,13 @@ describe('The Goveranance Task List', () => {
           .find('.governance-task-list__task-tag')
           .text()
       ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
     });
 
     it('renders proper buttons for BIZ_CASE_DRAFT', async () => {
@@ -374,6 +388,13 @@ describe('The Goveranance Task List', () => {
           .find('.governance-task-list__task-tag')
           .text()
       ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
     });
 
     it('renders proper buttons for BIZ_CASE_DRAFT_SUBMITTED', async () => {
@@ -465,6 +486,13 @@ describe('The Goveranance Task List', () => {
           .find('.governance-task-list__task-tag')
           .text()
       ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
     });
 
     it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
@@ -500,10 +528,31 @@ describe('The Goveranance Task List', () => {
 
       expect(
         component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
           .find('[data-testid="task-list-business-case-draft"]')
           .find('.governance-task-list__task-tag')
           .text()
       ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
     });
 
     it('renders proper buttons for BIZ_CASE_FINAL_SUBMITTED', async () => {
@@ -538,6 +587,27 @@ describe('The Goveranance Task List', () => {
 
       expect(
         component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
           .find('[data-testid="task-list-business-case-final"]')
           .find('.governance-task-list__task-tag')
           .text()
@@ -569,15 +639,43 @@ describe('The Goveranance Task List', () => {
       component!.update();
 
       expect(
+        component!.find('[data-testid="prepare-for-grb-btn"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
         component!
           .find('[data-testid="task-list-grb-meeting"]')
           .find('.governance-task-list__task-tag')
           .exists()
       ).toEqual(false);
-
-      expect(
-        component!.find('[data-testid="prepare-for-grb-btn"]').exists()
-      ).toEqual(true);
     });
   });
 });
