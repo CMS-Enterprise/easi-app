@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -181,19 +182,22 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
-// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
-func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	intake := models.SystemIntake{}
-	const fetchSystemIntakeByIDsql = `
+const fetchSystemIntakeSQL = `
 		SELECT
 		       system_intake.*,
 		       business_case.id as business_case_id
 		FROM
 		     system_intake
 		     LEFT JOIN business_case ON business_case.system_intake = system_intake.id
+`
+
+// FetchSystemIntakeByID queries the DB for a system intake matching the given ID
+func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	intake := models.SystemIntake{}
+	const idMatchClause = `
 		WHERE system_intake.id=$1
 `
-	err := s.db.Get(&intake, fetchSystemIntakeByIDsql, id)
+	err := s.db.Get(&intake, fetchSystemIntakeSQL+idMatchClause, id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),
@@ -211,16 +215,10 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 // FetchSystemIntakesByEuaID queries the DB for system intakes matching the given EUA ID
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	const fetchSystemIntakesByEuaIDsql = `
-		SELECT
-		       system_intake.*,
-		       business_case.id as business_case_id
-		FROM
-		     system_intake
-		     LEFT JOIN business_case ON business_case.system_intake = system_intake.id
+	const byEuaIDClause = `
 		WHERE system_intake.eua_user_id=$1 AND system_intake.status != 'WITHDRAWN'
 	`
-	err := s.db.Select(&intakes, fetchSystemIntakesByEuaIDsql, euaID)
+	err := s.db.Select(&intakes, fetchSystemIntakeSQL+byEuaIDClause, euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intakes %s", err),
@@ -231,19 +229,30 @@ func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (mo
 	return intakes, nil
 }
 
-// FetchSystemIntakesNotArchived queries the DB for all system intakes that are not archived
-func (s *Store) FetchSystemIntakesNotArchived(ctx context.Context) (models.SystemIntakes, error) {
+// FetchSystemIntakes queries the DB for all system intakes
+func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
-	const fetchSystemIntakesSQL = `
-		SELECT
-		       system_intake.*,
-		       business_case.id as business_case_id
-		FROM
-		     system_intake
-		     LEFT JOIN business_case ON business_case.system_intake = system_intake.id
-		WHERE system_intake.status != 'WITHDRAWN'
+	err := s.db.Select(&intakes, fetchSystemIntakeSQL)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
+		return models.SystemIntakes{}, err
+	}
+	return intakes, nil
+}
+
+// FetchSystemIntakesByStatuses queries the DB for all system intakes matching a status filter
+func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
+	intakes := []models.SystemIntake{}
+	const byStatusClause = `
+		WHERE system_intake.status IN (?)
 	`
-	err := s.db.Select(&intakes, fetchSystemIntakesSQL)
+	query, args, err := sqlx.In(fetchSystemIntakeSQL+byStatusClause, allowedStatuses)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
+		return models.SystemIntakes{}, err
+	}
+	query = s.db.Rebind(query)
+	err = s.db.Select(&intakes, query, args...)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
 		return models.SystemIntakes{}, err
