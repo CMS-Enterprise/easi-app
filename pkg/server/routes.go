@@ -188,7 +188,8 @@ func (s *Server) routes(
 		services.NewFetchSystemIntakes(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
-			store.FetchSystemIntakesNotArchived,
+			store.FetchSystemIntakes,
+			store.FetchSystemIntakesByStatuses,
 			services.NewAuthorizeHasEASiRole(),
 		),
 	)
