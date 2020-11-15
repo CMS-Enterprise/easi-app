@@ -7,7 +7,7 @@ import { updateLastActiveAt } from 'reducers/authReducer';
 import { Action } from 'types/action';
 import { postSystemIntakeAction } from 'types/routines';
 
-function postSystemIntakeActionRequest(formData: Action) {
+export function postSystemIntakeActionRequest(formData: Action) {
   return axios.post(
     `${process.env.REACT_APP_API_ADDRESS}/system_intake/${formData.intakeId}/actions`,
     formData
