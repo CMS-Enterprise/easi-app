@@ -302,7 +302,7 @@ func (h SystemIntakeLifecycleIDHandler) Handle() http.HandlerFunc {
 				valErr.WithValidation("body.lcidNextSteps", "is required")
 				valFail = true
 			} else {
-				intake.LifecycleNextSteps = null.StringFrom(fields.NextSteps)
+				intake.DecisionNextSteps = null.StringFrom(fields.NextSteps)
 			}
 
 			if valFail {

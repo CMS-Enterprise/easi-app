@@ -322,7 +322,7 @@ func NewUpdateLifecycleFields(
 		existing.LifecycleID = intake.LifecycleID
 		existing.LifecycleExpiresAt = intake.LifecycleExpiresAt
 		existing.LifecycleScope = intake.LifecycleScope
-		existing.LifecycleNextSteps = intake.LifecycleNextSteps
+		existing.DecisionNextSteps = intake.DecisionNextSteps
 
 		// if a LCID wasn't passed in, we generate one
 		if existing.LifecycleID.ValueOrZero() == "" {
