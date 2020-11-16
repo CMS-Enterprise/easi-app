@@ -61,4 +61,10 @@
       margin: 0 1em 0 0;
     }
   }
+
+  &__note-field {
+    &.usa-textarea {
+      height: 5rem;
+    }
+  }
 }
