@@ -184,6 +184,41 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Equal(content2, updated.DecisionNextSteps.String)
 	})
 
+	s.Run("Rejection fields only upon update", func() {
+		originalIntake := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
+
+			// These fields should NOT be written during a create
+			RejectionReason:   null.StringFrom("ABCDEF"),
+			DecisionNextSteps: null.StringFrom("ABCDEF"),
+		}
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+		s.Empty(partial.RejectionReason)
+		s.Empty(partial.DecisionNextSteps)
+
+		// Update
+		content1 := "ABC"
+		content2 := "XYZ"
+		partial.RejectionReason = null.StringFrom(content1)
+		partial.DecisionNextSteps = null.StringFrom(content2)
+
+		_, err = s.store.UpdateSystemIntake(ctx, partial)
+		s.NoError(err, "failed to update system intake")
+
+		updated, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		s.Equal(content1, updated.RejectionReason.String)
+		s.Equal(content2, updated.DecisionNextSteps.String)
+	})
+
 	s.Run("Update contract details information", func() {
 		originalIntake := models.SystemIntake{
 			EUAUserID:   testhelpers.RandomEUAID(),
