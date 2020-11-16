@@ -54,7 +54,6 @@ export type RequestDescriptionForm = {
   cmsBenefit: string;
   priorityAlignment: string;
   successIndicators: string;
-  systemIntakeStatus: SystemIntakeStatus;
 };
 
 export type AsIsSolutionForm = {
