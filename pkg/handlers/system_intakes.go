@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -33,7 +34,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 			var filterValue models.SystemIntakeStatusFilter
 			statusFilters := r.URL.Query()["status"]
 			if len(statusFilters) == 1 {
-				filterValue = models.SystemIntakeStatusFilter(statusFilters[0])
+				filterValue = models.SystemIntakeStatusFilter(strings.ToUpper(statusFilters[0]))
 			}
 
 			systemIntakes, err := h.FetchSystemIntakes(r.Context(), filterValue)
