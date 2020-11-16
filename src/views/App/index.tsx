@@ -33,9 +33,7 @@ import './index.scss';
 const AppRoutes = () => {
   const flags = useFlags();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const userGroupsSet = useSelector(
-    (state: AppState) => state.auth.userGroupsSet
-  );
+  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   return (
     <Switch>
@@ -54,7 +52,7 @@ const AppRoutes = () => {
           component={GovernanceTaskList}
         />
       )}
-      {userGroupsSet && user.isGrtReviewer(userGroups) && (
+      {isUserSet && user.isGrtReviewer(userGroups) && (
         <SecureRoute
           path="/governance-review-team/:systemId/:activePage"
           component={GovernanceReviewTeam}

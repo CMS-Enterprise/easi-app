@@ -30,7 +30,7 @@ jest.mock('@okta/okta-react', () => ({
 describe('The home page', () => {
   describe('not a grt review user', () => {
     const mockAuthReducer = {
-      userGroupsSet: true,
+      isUserSet: true,
       groups: []
     };
 
@@ -127,7 +127,7 @@ describe('The home page', () => {
 
   describe('is a grt reviewer', () => {
     const mockAuthReducer = {
-      userGroupsSet: true,
+      isUserSet: true,
       groups: ['EASI_D_GOVTEAM']
     };
 

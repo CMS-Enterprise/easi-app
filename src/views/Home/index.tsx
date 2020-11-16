@@ -37,15 +37,13 @@ const Banners = () => {
 const Home = () => {
   const { authState } = useOktaAuth();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const userGroupsSet = useSelector(
-    (state: AppState) => state.auth.userGroupsSet
-  );
+  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   return (
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        {userGroupsSet &&
+        {isUserSet &&
           (user.isGrtReviewer(userGroups) ? (
             <RequestRepository />
           ) : (
