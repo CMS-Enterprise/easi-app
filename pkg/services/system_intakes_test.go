@@ -569,3 +569,73 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		})
 	}
 }
+
+func (s ServicesTestSuite) TestUpdateRejectionFields() {
+	today := time.Now()
+	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
+	reason := null.StringFrom(fmt.Sprintf("reason %s", today))
+
+	input := &models.SystemIntake{
+		ID:                uuid.New(),
+		DecisionNextSteps: nextSteps,
+		RejectionReason:   reason,
+	}
+
+	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
+	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{ID: id}, nil
+	}
+	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
+			return nil, errors.New("incorrect next")
+		}
+		if !i.LifecycleScope.Equal(input.LifecycleScope) {
+			return nil, errors.New("incorrect scope")
+		}
+		return i, nil
+	}
+	cfg := Config{clock: clock.NewMock()}
+	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate)
+
+	s.Run("happy path", func() {
+		intake, err := happy(context.Background(), input)
+		s.NoError(err)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.RejectionReason, reason)
+	})
+
+	// build the error-generating pieces
+	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
+	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
+	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return nil, errors.New("fetch error")
+	}
+	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+		return nil, errors.New("update error")
+	}
+
+	// build the table-driven test of error cases for unhappy path
+	testCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
+	}{
+		"error path fetch": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate),
+		},
+		"error path auth": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate),
+		},
+		"error path auth fail": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate),
+		},
+		"error path update": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr),
+		},
+	}
+
+	for expectedErr, tc := range testCases {
+		s.Run(expectedErr, func() {
+			_, err := tc.fn(context.Background(), input)
+			s.Error(err)
+		})
+	}
+}

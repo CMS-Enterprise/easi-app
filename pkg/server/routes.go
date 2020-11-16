@@ -441,6 +441,17 @@ func (s *Server) routes(
 	)
 	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
 
+	systemIntakeRejectionHandler := handlers.NewSystemIntakeRejectionHandler(
+		base,
+		services.NewUpdateRejectionFields(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/reject", systemIntakeRejectionHandler.Handle())
+
 	notesHandler := handlers.NewNotesHandler(
 		base,
 		services.NewFetchNotes(
