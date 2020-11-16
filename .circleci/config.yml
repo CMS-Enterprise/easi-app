@@ -385,12 +385,12 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "17" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "dev-ecs-manager" "17" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "18" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "dev-ecs-manager" "18" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "17" "easi-backend"
+            ./scripts/deploy_service "easi-app" "18" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
