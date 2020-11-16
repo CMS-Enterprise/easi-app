@@ -32,7 +32,7 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 		case "GET":
 			var filterValue models.SystemIntakeStatusFilter
 			statusFilters := r.URL.Query()["status"]
-			if len(statusFilters) != 1 {
+			if len(statusFilters) == 1 {
 				filterValue = models.SystemIntakeStatusFilter(statusFilters[0])
 			}
 
