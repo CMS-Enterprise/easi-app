@@ -482,7 +482,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		ID:                 uuid.New(),
 		LifecycleID:        lifecycleID,
 		LifecycleExpiresAt: expiresAt,
-		LifecycleNextSteps: nextSteps,
+		DecisionNextSteps:  nextSteps,
 		LifecycleScope:     scope,
 	}
 
@@ -497,7 +497,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		if !i.LifecycleExpiresAt.Equal(today) {
 			return nil, errors.New("incorrect date")
 		}
-		if !i.LifecycleNextSteps.Equal(input.LifecycleNextSteps) {
+		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
 			return nil, errors.New("incorrect next")
 		}
 		if !i.LifecycleScope.Equal(input.LifecycleScope) {
@@ -514,7 +514,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
-		s.Equal(intake.LifecycleNextSteps, nextSteps)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.LifecycleScope, scope)
 	})
 
@@ -526,7 +526,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		s.NoError(err)
 		s.NotEqual(intake.LifecycleID, "")
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
-		s.Equal(intake.LifecycleNextSteps, nextSteps)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.LifecycleScope, scope)
 	})
 
