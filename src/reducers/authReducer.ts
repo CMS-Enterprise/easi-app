@@ -6,8 +6,10 @@ const newTimeStamp = () => Date.now();
 type authReducerState = {
   lastActiveAt: number;
   lastRenewAt: number;
+  name: string;
+  euaId: string;
   groups: Array<string>;
-  userGroupsSet: boolean;
+  isUserSet: boolean;
 };
 
 const UPDATE_LAST_ACTIVE_AT = 'AUTH_REDUCER_UPDATE_LAST_ACTIVE_AT';
@@ -32,17 +34,19 @@ export const updateLastRenewAt = (lastRenewAt: DateTime) => {
   };
 };
 
-const SET_USER_GROUPS = 'AUTH_REDUCER_SET_USER_GROUPS';
-export const setUserGroups = (groups: Array<string>) => ({
-  type: SET_USER_GROUPS,
-  payload: { groups }
+const SET_USER = 'AUTH_REDUCER_SET_USER';
+export const setUser = (user: any) => ({
+  type: SET_USER,
+  payload: user
 });
 
 const initialState: authReducerState = {
   lastActiveAt: newTimeStamp(),
   lastRenewAt: newTimeStamp(),
+  name: '',
+  euaId: '',
   groups: [],
-  userGroupsSet: false
+  isUserSet: false
 };
 
 function authReducer(
@@ -60,11 +64,11 @@ function authReducer(
         ...state,
         lastRenewAt: action.payload.lastRenewAt
       };
-    case SET_USER_GROUPS:
+    case SET_USER:
       return {
         ...state,
-        groups: action.payload.groups,
-        userGroupsSet: true
+        ...action.payload,
+        isUserSet: true
       };
     default:
       return state;
