@@ -39,7 +39,13 @@ func NewFetchSystemIntakes(
 			if statusFilter == "" {
 				result, err = fetchAll(ctx)
 			} else {
-				result, err = fetchByStatusFilter(ctx, models.GetStatusesByFilter(statusFilter))
+				statuses, filterErr := models.GetStatusesByFilter(statusFilter)
+				if filterErr != nil {
+					return nil, &apperrors.BadRequestError{
+						Err: filterErr,
+					}
+				}
+				result, err = fetchByStatusFilter(ctx, statuses)
 			}
 		}
 		if err != nil {

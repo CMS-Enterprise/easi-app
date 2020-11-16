@@ -101,6 +101,12 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 			models.SystemIntakeStatusFilterOPEN,
 			true,
 		},
+		"fail reviewer filter name": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter("blue"),
+			true,
+		},
 	}
 
 	for name, tc := range testCases {

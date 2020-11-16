@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -134,7 +135,7 @@ type SystemIntakeMetrics struct {
 }
 
 // GetStatusesByFilter returns a list of status corresponding to a /system_intakes/ filter
-func GetStatusesByFilter(filter SystemIntakeStatusFilter) []SystemIntakeStatus {
+func GetStatusesByFilter(filter SystemIntakeStatusFilter) ([]SystemIntakeStatus, error) {
 	switch filter {
 	case SystemIntakeStatusFilterOPEN:
 		return []SystemIntakeStatus{
@@ -147,7 +148,7 @@ func GetStatusesByFilter(filter SystemIntakeStatusFilter) []SystemIntakeStatus {
 			SystemIntakeStatusBIZCASEFINALSUBMITTED,
 			SystemIntakeStatusREADYFORGRT,
 			SystemIntakeStatusREADYFORGRB,
-		}
+		}, nil
 	case SystemIntakeStatusFilterCLOSED:
 		return []SystemIntakeStatus{
 			SystemIntakeStatusLCIDISSUED,
@@ -155,8 +156,8 @@ func GetStatusesByFilter(filter SystemIntakeStatusFilter) []SystemIntakeStatus {
 			SystemIntakeStatusNOTITREQUEST,
 			SystemIntakeStatusNOTAPPROVED,
 			SystemIntakeStatusNOGOVERNANCE,
-		}
+		}, nil
 	default:
-		return []SystemIntakeStatus{}
+		return []SystemIntakeStatus{}, errors.New("unexpected system intake status filter name")
 	}
 }
