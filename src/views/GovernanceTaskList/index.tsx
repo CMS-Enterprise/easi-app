@@ -12,6 +12,7 @@ import PageWrapper from 'components/PageWrapper';
 import {
   attendGrbMeetingTag,
   businessCaseTag,
+  decisionTag,
   finalBusinessCaseTag,
   initialReviewTag,
   intakeTag
@@ -27,6 +28,7 @@ import SideNavActions from './SideNavActions';
 import {
   AttendGrbMeetingCta,
   BusinessCaseDraftCta,
+  DecisionCta,
   IntakeDraftCta
 } from './TaskListCta';
 import TaskListItem from './TaskListItem';
@@ -181,8 +183,10 @@ const GovernanceTaskList = () => {
                 description="If your Business Case is approved you will receive a unique Lifecycle
               ID. If it is not approved, you would need address the concerns to
               proceed."
-                status="CANNOT_START"
-              />
+                status={decisionTag(systemIntake)}
+              >
+                <DecisionCta intake={systemIntake} />
+              </TaskListItem>
             </ol>
           </div>
           <div className="tablet:grid-col-1" />
