@@ -96,7 +96,7 @@ func (s *Server) routes(
 
 	switch flagConfig.Source {
 	case appconfig.FlagSourceLocal:
-		defaultFlags := flags.FlagValues{"taskListLite": "true", "sandbox": "true"}
+		defaultFlags := flags.FlagValues{"taskListLite": "true", "sandbox": "true", "pdfExport": "true"}
 		flagClient = flags.NewLocalClient(defaultFlags)
 
 	case appconfig.FlagSourceLaunchDarkly:
@@ -460,4 +460,7 @@ func (s *Server) routes(
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
+
+	api.Handle("/pdf/generate", handlers.NewPDFHandler().Handle())
+
 }
