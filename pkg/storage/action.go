@@ -17,7 +17,7 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 	action.ID = id
 	createAt := s.clock.Now()
 	action.CreatedAt = &createAt
-	const createActionSQL = `	
+	const createActionSQL = `
 		INSERT INTO actions (
 			id,
 			action_type,
@@ -26,14 +26,14 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 		    actor_eua_user_id,
 			intake_id,
 			created_at
-		) 
+		)
 		VALUES (
 			:id,
 			:action_type,
 		    :actor_name,
 		    :actor_email,
 			:actor_eua_user_id,
-		    :intake_id,    
+		    :intake_id,
 		    :created_at
 		)`
 	_, err := s.db.NamedExec(
@@ -48,4 +48,25 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 		return nil, err
 	}
 	return action, nil
+}
+
+// GetActionsByRequestID fetches actions for a particular request
+func (s *Store) GetActionsByRequestID(ctx context.Context, id uuid.UUID) ([]models.Action, error) {
+	actions := []models.Action{}
+	const fetchActionsByRequestIDSQL = `
+		SELECT
+		       *
+		FROM
+		     actions
+		WHERE actions.intake_id=$1
+	`
+	err := s.db.Select(&actions, fetchActionsByRequestIDSQL, id)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch actions %s", err),
+			zap.String("intakeID", id.String()),
+		)
+		return nil, err
+	}
+	return actions, nil
 }

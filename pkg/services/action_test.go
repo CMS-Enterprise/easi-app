@@ -475,7 +475,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
-		action := &models.Action{Feedback: "feedback"}
+		action := &models.Action{Feedback: null.StringFrom("feedback")}
 		err := reviewSystemIntake(ctx, intake, action)
 
 		s.NoError(err)
@@ -629,7 +629,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		)
 		bizCaseID := uuid.New()
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED, BusinessCaseID: &bizCaseID}
-		action := &models.Action{Feedback: "feedback"}
+		action := &models.Action{Feedback: null.StringFrom("feedback")}
 		err := reviewSystemIntake(ctx, intake, action)
 
 		s.Error(err)
