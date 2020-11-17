@@ -1,13 +1,40 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
-import { Field, Form, Formik, FormikProps } from 'formik';
+import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import { AppState } from 'reducers/rootReducer';
+import { postIntakeNote } from 'types/routines';
+
+type NoteForm = {
+  note: string;
+};
 
 const Notes = () => {
-  const onSubmit = () => {};
+  const dispatch = useDispatch();
+  const { systemId } = useParams<{ systemId: string }>();
+  const authState = useSelector((state: AppState) => state.auth);
+  const { t } = useTranslation('governanceReviewTeam');
+
+  const onSubmit = async (
+    values: NoteForm,
+    { resetForm }: FormikHelpers<NoteForm>
+  ) => {
+    await dispatch(
+      postIntakeNote({
+        intakeId: systemId,
+        authorName: authState.name,
+        authorId: authState.euaId,
+        content: values.note
+      })
+    );
+    await resetForm();
+  };
 
   const initialValues = {
     note: ''
@@ -15,15 +42,17 @@ const Notes = () => {
 
   return (
     <>
-      <h1>Admin team notes</h1>
+      <h1>{t('notes.heading')}</h1>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
-        {(formikProps: FormikProps<any>) => {
+        {(formikProps: FormikProps<NoteForm>) => {
           const { values } = formikProps;
           return (
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>
                 <FieldGroup>
-                  <Label htmlFor="GovernanceReviewTeam-Note">Add a note</Label>
+                  <Label htmlFor="GovernanceReviewTeam-Note">
+                    {t('notes.addNote')}
+                  </Label>
                   <Field
                     as={TextAreaField}
                     id="GovernanceReviewTeam-Note"
@@ -37,7 +66,7 @@ const Notes = () => {
                   type="submit"
                   disabled={!values.note}
                 >
-                  Add note
+                  {t('notes.addNoteCta')}
                 </Button>
               </Form>
             </div>
