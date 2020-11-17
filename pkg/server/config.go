@@ -69,11 +69,11 @@ func (s Server) NewSESConfig() appses.Config {
 // NewS3Config returns a new s3.Config and checks required fields
 func (s Server) NewS3Config() upload.Config {
 	s.checkRequiredConfig(appconfig.AWSS3FileUploadBucket)
-	s.checkRequiredConfig(appconfig.AWSS3Region)
+	s.checkRequiredConfig(appconfig.AWSRegion)
 
 	return upload.Config{
 		Bucket: s.Config.GetString(appconfig.AWSS3FileUploadBucket),
-		Region: s.Config.GetString(appconfig.AWSS3Region),
+		Region: s.Config.GetString(appconfig.AWSRegion),
 	}
 }
 
