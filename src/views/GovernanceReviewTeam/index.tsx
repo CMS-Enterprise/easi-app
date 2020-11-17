@@ -173,7 +173,7 @@ const GovernanceReviewTeam = () => {
                   to={`/governance-review-team/${systemId}/notes`}
                   className={getNavLinkClasses('notes')}
                 >
-                  {t('notes')}
+                  {t('notes.heading')}
                 </Link>
               </li>
             </ul>
