@@ -19,9 +19,10 @@ func NewFetchSystemIntakes(
 	config Config,
 	fetchByID func(c context.Context, euaID string) (models.SystemIntakes, error),
 	fetchAll func(context.Context) (models.SystemIntakes, error),
+	fetchByStatusFilter func(context.Context, []models.SystemIntakeStatus) (models.SystemIntakes, error),
 	authorize func(c context.Context) (bool, error),
-) func(c context.Context) (models.SystemIntakes, error) {
-	return func(ctx context.Context) (models.SystemIntakes, error) {
+) func(context.Context, models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
+	return func(ctx context.Context, statusFilter models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
 		logger := appcontext.ZLogger(ctx)
 		ok, err := authorize(ctx)
 		if err != nil {
@@ -35,7 +36,17 @@ func NewFetchSystemIntakes(
 		if !principal.AllowGRT() {
 			result, err = fetchByID(ctx, principal.ID())
 		} else {
-			result, err = fetchAll(ctx)
+			if statusFilter == "" {
+				result, err = fetchAll(ctx)
+			} else {
+				statuses, filterErr := models.GetStatusesByFilter(statusFilter)
+				if filterErr != nil {
+					return nil, &apperrors.BadRequestError{
+						Err: filterErr,
+					}
+				}
+				result, err = fetchByStatusFilter(ctx, statuses)
+			}
 		}
 		if err != nil {
 			logger.Error("failed to fetch system intakes")
