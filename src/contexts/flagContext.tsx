@@ -6,7 +6,8 @@ import { Flags, FlagsState } from 'types/flags';
 const initialState: FlagsState = {
   flags: {
     taskListLite: false,
-    sandbox: false
+    sandbox: false,
+    pdfExport: false
   },
   isLoaded: false
 };
