@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -66,7 +67,11 @@ func (s *Store) GetActionsByRequestID(ctx context.Context, id uuid.UUID) ([]mode
 			fmt.Sprintf("Failed to fetch actions %s", err),
 			zap.String("intakeID", id.String()),
 		)
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     []models.Action{},
+			Operation: apperrors.QueryFetch,
+		}
 	}
 	return actions, nil
 }
