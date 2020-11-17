@@ -98,3 +98,20 @@ export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
       return 'CANNOT_START';
   }
 };
+
+// Task List Item: Decision
+export const decisionTag = (intake: SystemIntakeForm): TagEnum => {
+  if (intake.requestType === 'RECOMPETE') {
+    return 'CANNOT_START';
+  }
+
+  switch (intake.status) {
+    case 'LCID_ISSUED':
+    case 'NOT_APPROVED':
+    case 'NOT_IT_REQUEST':
+    case 'NO_GOVERNANCE':
+      return '';
+    default:
+      return 'CANNOT_START';
+  }
+};
