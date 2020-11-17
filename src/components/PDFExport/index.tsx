@@ -43,9 +43,8 @@ function generatePDF(filename: string, content: string) {
       const blob = new Blob([response.data], { type: 'application/pdf' });
       downloadBlob(filename, blob);
     })
-    .catch(error => {
+    .catch(() => {
       // TODO add error handling: display a modal if things fail?
-      console.debug(error);
     });
 }
 
@@ -67,8 +66,8 @@ const downloadPDF = (title: string, filename: string): void => {
     .then(stylesheets => {
       styleBlocks.concat(stylesheets.map(response => response.data));
     })
-    .catch(error => {
-      console.debug(error);
+    .catch(() => {
+      // TODO add error handling: display a modal if things fail?
     });
 
   const markupToRender = `<html lang="en">
