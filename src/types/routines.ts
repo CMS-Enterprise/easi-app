@@ -17,6 +17,7 @@ export const issueLifecycleIdForSystemIntake = createRoutine(
   'ISSUE_LIFECYCLE_ID_FOR_SYSTEM_INTAKE'
 );
 export const postIntakeNote = createRoutine('POST_INTAKE_NOTE');
+export const rejectSystemIntake = createRoutine('REJECT_SYSTEM_INTAKE');
 
 // SystemShorts routines
 export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');
