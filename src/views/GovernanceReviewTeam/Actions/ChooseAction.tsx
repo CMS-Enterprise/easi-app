@@ -149,6 +149,19 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
     />
   );
 
+  const rejectIntakeRoute = 'not-approved';
+  const RejectIntake = (
+    <RadioField
+      key={rejectIntakeRoute}
+      id={rejectIntakeRoute}
+      label={t('actions.rejectIntake')}
+      name={radioGroupName}
+      value={rejectIntakeRoute}
+      onChange={onChange}
+      checked={actionRoute === rejectIntakeRoute}
+    />
+  );
+
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
   if (businessCaseExists) {
@@ -159,7 +172,8 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
       ProvideFeedbackKeepDraft,
       ProvideFeedbackNeedFinal,
       IssueLifecycleId,
-      NoFurtherGovernance
+      NoFurtherGovernance,
+      RejectIntake
     ];
   } else {
     availableActions = [NotITRequest, NeedBizCase];
