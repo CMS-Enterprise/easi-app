@@ -25,20 +25,20 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
       euaId: '',
       groups: []
     };
-    if (accessToken) {
-      const token = accessToken.value;
-      const decodedBearerToken = JSON.parse(atob(token.split('.')[1]));
-      user.groups = (decodedBearerToken && decodedBearerToken.groups) || [];
-    }
+    if (accessToken && idToken) {
+      const accessTokenValue = accessToken.value;
+      const decodedBearerToken = JSON.parse(
+        atob(accessTokenValue.split('.')[1])
+      );
 
-    if (idToken) {
-      const token = idToken.value;
-      const decodedIdToken = JSON.parse(atob(token.split('.')[1]));
+      const idTokenValue = idToken.value;
+      const decodedIdToken = JSON.parse(atob(idTokenValue.split('.')[1]));
+
       user.name = (decodedIdToken && decodedIdToken.name) || '';
       user.euaId = (decodedIdToken && decodedIdToken.preferred_username) || '';
+      user.groups = (decodedBearerToken && decodedBearerToken.groups) || [];
+      dispatch(setUser(user));
     }
-
-    dispatch(setUser(user));
   };
 
   useEffect(() => {
