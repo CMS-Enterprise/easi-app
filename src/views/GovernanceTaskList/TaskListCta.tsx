@@ -87,6 +87,7 @@ export const BusinessCaseDraftCta = ({
         </UswdsLink>
       );
     case 'BIZ_CASE_DRAFT_SUBMITTED':
+    case 'BIZ_CASE_FINAL_NEEDED':
       return (
         <UswdsLink
           data-testid="view-biz-case-link"
