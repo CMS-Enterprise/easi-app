@@ -91,6 +91,7 @@ jobs:
           APP_ENV: test
           AWS_REGION: us-west-2 # easi app tests expect AWS_REGION instead of AWS_DEFAULT_REGION
           AWS_SES_SOURCE: '"EASi Test" <no-reply-test@info.easi.cms.gov>'
+          AWS_S3_FILE_UPLOAD_BUCKET: easi-app-test-file-uploads
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
