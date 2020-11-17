@@ -44,41 +44,74 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 	}
 	fnAllFail := func(ctx context.Context) (models.SystemIntakes, error) { return nil, errors.New("forced error") }
 
+	fnByFilter := func(ctx context.Context, statuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
+		return models.SystemIntakes{
+			models.SystemIntake{},
+		}, nil
+	}
+	fnByFilterFail := func(ctx context.Context, statuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
+		return nil, errors.New("forced error")
+	}
+
 	testCases := map[string]struct {
-		ctx  context.Context
-		fn   func(ctx context.Context) (models.SystemIntakes, error)
-		fail bool
+		ctx    context.Context
+		fn     func(context.Context, models.SystemIntakeStatusFilter) (models.SystemIntakes, error)
+		filter models.SystemIntakeStatusFilter
+		fail   bool
 	}{
 		"happy path requester": {
 			appcontext.WithPrincipal(context.Background(), requester),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnByFilterFail, fnAuth),
+			models.SystemIntakeStatusFilter(""),
 			false,
 		},
-		"happy path reviewer": {
+		"happy path reviewer fetch all": {
 			appcontext.WithPrincipal(context.Background(), reviewer),
-			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnByFilterFail, fnAuth),
+			models.SystemIntakeStatusFilter(""),
+			false,
+		},
+		"happy path reviewer filter": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAllFail, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilterOPEN,
 			false,
 		},
 		"fail authorization": {
 			context.Background(),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter(""),
 			true,
 		},
 		"fail requester data access": {
 			appcontext.WithPrincipal(context.Background(), requester),
-			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter(""),
 			true,
 		},
-		"fail reviewer data access": {
+		"fail reviewer fetch all data access": {
 			appcontext.WithPrincipal(context.Background(), reviewer),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter(""),
+			true,
+		},
+		"fail reviewer filter data access": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilterFail, fnAuth),
+			models.SystemIntakeStatusFilterOPEN,
+			true,
+		},
+		"fail reviewer filter name": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter("blue"),
 			true,
 		},
 	}
 
 	for name, tc := range testCases {
 		s.Run(name, func() {
-			intakes, err := tc.fn(tc.ctx)
+			intakes, err := tc.fn(tc.ctx, tc.filter)
 
 			if tc.fail {
 				s.Error(err)

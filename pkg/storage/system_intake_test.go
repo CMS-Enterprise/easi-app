@@ -547,7 +547,35 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 	})
 }
 
-func (s StoreTestSuite) TestFetchSystemIntakesNotArchived() {
+func (s StoreTestSuite) TestFetchSystemIntakes() {
+	s.Run("fetches all intakes", func() {
+		ctx := context.Background()
+
+		// seed the db with intakes that we DO expect to be returned
+		expected := map[string]bool{}
+		for ix := 0; ix < 5; ix++ {
+			intake := testhelpers.NewSystemIntake()
+			result, err := s.store.CreateSystemIntake(ctx, &intake)
+			s.NoError(err)
+			expected[result.ID.String()] = false
+		}
+
+		intakes, err := s.store.FetchSystemIntakes(ctx)
+		s.NoError(err)
+
+		for _, intake := range intakes {
+			id := intake.ID.String()
+			expected[id] = true
+		}
+
+		// failure if we did not see all the expected seeded not-WITHDRAWN intakes
+		for id, found := range expected {
+			s.True(found, "did not receive expected intake", id)
+		}
+	})
+}
+
+func (s StoreTestSuite) TestFetchSystemIntakesByFilter() {
 	s.Run("ensure positive and negative cases", func() {
 		ctx := context.Background()
 
@@ -555,6 +583,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesNotArchived() {
 		expected := map[string]bool{}
 		for ix := 0; ix < 5; ix++ {
 			intake := testhelpers.NewSystemIntake()
+
 			result, err := s.store.CreateSystemIntake(ctx, &intake)
 			s.NoError(err)
 			expected[result.ID.String()] = false
@@ -574,7 +603,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesNotArchived() {
 			unexpected[result.ID.String()] = true
 		}
 
-		intakes, err := s.store.FetchSystemIntakesNotArchived(ctx)
+		intakes, err := s.store.FetchSystemIntakesByStatuses(ctx, []models.SystemIntakeStatus{models.SystemIntakeStatusINTAKEDRAFT, models.SystemIntakeStatusINTAKESUBMITTED})
 		s.NoError(err)
 
 		for _, intake := range intakes {
