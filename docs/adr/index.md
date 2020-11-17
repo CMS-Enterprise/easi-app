@@ -26,5 +26,6 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0019](0019-use-1password-for-sharing-secrets.md) - Use 1Password for sharing secrets
 - [ADR-0020](0020-do-not-implement-state-machine.md) - Do not implement state machine to handle transitions in Services
 - [ADR-0021](0021-audit-logging.md) - Audit Logging
+- [ADR-0022](0022-generate-pdfs-with-prince.md) - Generate PDFs with Prince
 
 <!-- adrlogstop -->
