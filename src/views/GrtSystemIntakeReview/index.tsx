@@ -10,6 +10,7 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import PDFExport from 'components/PDFExport';
 import Alert from 'components/shared/Alert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
@@ -58,6 +59,7 @@ export const GrtSystemIntakeReview = () => {
                 now={DateTime.local()}
               />
             )}
+            <PDFExport filename="system-intake.pdf" />
           </div>
         </div>
         {!isLoading &&
@@ -65,7 +67,7 @@ export const GrtSystemIntakeReview = () => {
           ['local', 'dev', 'impl'].includes(
             process.env.REACT_APP_APP_ENV || ''
           ) && (
-            <div className="bg-gray-5 padding-top-6 padding-bottom-5">
+            <div className="bg-gray-5 padding-top-6 padding-bottom-5 easi-no-print">
               <div className="grid-container">
                 {systemIntake.status === 'INTAKE_SUBMITTED' && (
                   <Formik
