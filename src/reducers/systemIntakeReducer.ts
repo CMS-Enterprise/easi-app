@@ -9,6 +9,7 @@ import {
   clearSystemIntake,
   fetchSystemIntake,
   issueLifecycleIdForSystemIntake,
+  postIntakeNote,
   postSystemIntake,
   reviewSystemIntake,
   saveSystemIntake,
@@ -21,7 +22,8 @@ const initialState: SystemIntakeState = {
   isLoading: null,
   isSaving: false,
   isNewIntakeCreated: null,
-  error: null
+  error: null,
+  notes: []
 };
 
 function systemIntakeReducer(
@@ -148,6 +150,11 @@ function systemIntakeReducer(
           ...state.systemIntake,
           ...prepareSystemIntakeForApp(action.payload)
         }
+      };
+    case postIntakeNote.SUCCESS:
+      return {
+        ...state,
+        notes: [...state.notes, action.payload]
       };
     default:
       return state;

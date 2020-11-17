@@ -114,6 +114,7 @@ export type SystemIntakeState = {
   isSaving: boolean;
   isNewIntakeCreated: boolean | null;
   error?: any;
+  notes: any[];
 };
 
 // Redux store type for systems

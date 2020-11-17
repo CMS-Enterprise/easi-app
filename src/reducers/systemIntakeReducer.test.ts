@@ -6,6 +6,7 @@ import systemIntakeReducer from 'reducers/systemIntakeReducer';
 import {
   clearSystemIntake,
   fetchSystemIntake,
+  postIntakeNote,
   postSystemIntake,
   saveSystemIntake,
   storeSystemIntake
@@ -41,7 +42,8 @@ describe('The system intake reducer', () => {
       isLoading: null,
       isSaving: false,
       isNewIntakeCreated: null,
-      error: null
+      error: null,
+      notes: []
     });
   });
 
@@ -57,7 +59,8 @@ describe('The system intake reducer', () => {
         isLoading: true,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
 
@@ -78,7 +81,8 @@ describe('The system intake reducer', () => {
         isLoading: null,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
 
@@ -93,7 +97,8 @@ describe('The system intake reducer', () => {
         isLoading: false,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
   });
@@ -120,7 +125,8 @@ describe('The system intake reducer', () => {
         isLoading: false,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
     it('handles storeSystemIntake.FAILURE', () => {
@@ -134,7 +140,8 @@ describe('The system intake reducer', () => {
         isLoading: null,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: 'Error'
+        error: 'Error',
+        notes: []
       });
     });
     it('handles storeSystemIntake.FULFILL', () => {
@@ -148,7 +155,8 @@ describe('The system intake reducer', () => {
         isLoading: false,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
   });
@@ -165,7 +173,8 @@ describe('The system intake reducer', () => {
         isLoading: null,
         isSaving: true,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
     it('handles postSystemIntake.SUCCESS', () => {
@@ -179,7 +188,8 @@ describe('The system intake reducer', () => {
         isLoading: null,
         isSaving: false,
         isNewIntakeCreated: true,
-        error: null
+        error: null,
+        notes: []
       });
     });
 
@@ -189,7 +199,8 @@ describe('The system intake reducer', () => {
         isLoading: false,
         isSaving: true,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       };
       const mockFailureAction = {
         type: postSystemIntake.FAILURE,
@@ -201,7 +212,8 @@ describe('The system intake reducer', () => {
         isLoading: false,
         isSaving: true,
         isNewIntakeCreated: false,
-        error: 'Error'
+        error: 'Error',
+        notes: []
       });
     });
 
@@ -216,7 +228,8 @@ describe('The system intake reducer', () => {
         isLoading: null,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
   });
@@ -233,7 +246,8 @@ describe('The system intake reducer', () => {
         isLoading: null,
         isSaving: true,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
     it('handles saveSystemIntake.SUCCESS', () => {
@@ -247,7 +261,8 @@ describe('The system intake reducer', () => {
         isLoading: null,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
 
@@ -257,7 +272,8 @@ describe('The system intake reducer', () => {
         isLoading: false,
         isSaving: true,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       };
       const mockFailureAction = {
         type: saveSystemIntake.FAILURE,
@@ -269,7 +285,8 @@ describe('The system intake reducer', () => {
         isLoading: false,
         isSaving: true,
         isNewIntakeCreated: null,
-        error: 'Error'
+        error: 'Error',
+        notes: []
       });
     });
 
@@ -279,7 +296,8 @@ describe('The system intake reducer', () => {
         isLoading: false,
         isSaving: true,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       };
 
       const mockFulfillAction = {
@@ -292,7 +310,8 @@ describe('The system intake reducer', () => {
         isLoading: false,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
       });
     });
   });
@@ -309,7 +328,94 @@ describe('The system intake reducer', () => {
         isLoading: null,
         isSaving: false,
         isNewIntakeCreated: null,
-        error: null
+        error: null,
+        notes: []
+      });
+    });
+  });
+
+  describe('postIntakeNote', () => {
+    it('adds successfully created note to the reducer', () => {
+      const mockPostAction = {
+        type: postIntakeNote.SUCCESS,
+        payload: {
+          id: '12345',
+          authorName: 'John Brown',
+          authorId: 'ABCD',
+          content: 'Test Note 1',
+          systemIntakeId: 'test-uuid-note-1'
+        }
+      };
+
+      expect(systemIntakeReducer(undefined, mockPostAction)).toEqual({
+        systemIntake: initialSystemIntakeForm,
+        isLoading: null,
+        isSaving: false,
+        isNewIntakeCreated: null,
+        error: null,
+        notes: [
+          {
+            id: '12345',
+            authorName: 'John Brown',
+            authorId: 'ABCD',
+            content: 'Test Note 1',
+            systemIntakeId: 'test-uuid-note-1'
+          }
+        ]
+      });
+    });
+
+    it('appends successfully created note to the reducer', () => {
+      const initialState = {
+        systemIntake: initialSystemIntakeForm,
+        isLoading: null,
+        isSaving: false,
+        isNewIntakeCreated: null,
+        error: null,
+        notes: [
+          {
+            id: '12345',
+            authorName: 'John Brown',
+            authorId: 'ABCD',
+            content: 'Test Note 1',
+            systemIntakeId: 'test-uuid-note-1'
+          }
+        ]
+      };
+
+      const mockPostAction = {
+        type: postIntakeNote.SUCCESS,
+        payload: {
+          id: '67890',
+          authorName: 'Lisa Brown',
+          authorId: 'EFGH',
+          content: 'Test Note 2',
+          systemIntakeId: 'test-uuid-note-2'
+        }
+      };
+
+      expect(systemIntakeReducer(initialState, mockPostAction)).toEqual({
+        systemIntake: initialSystemIntakeForm,
+        isLoading: null,
+        isSaving: false,
+        isNewIntakeCreated: null,
+        error: null,
+        notes: [
+          {
+            id: '12345',
+            authorName: 'John Brown',
+            authorId: 'ABCD',
+            content: 'Test Note 1',
+            systemIntakeId: 'test-uuid-note-1'
+          },
+          {
+            id: '67890',
+            authorName: 'Lisa Brown',
+            authorId: 'EFGH',
+            content: 'Test Note 2',
+            systemIntakeId: 'test-uuid-note-2'
+          }
+        ]
       });
     });
   });
