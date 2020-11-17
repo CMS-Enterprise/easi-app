@@ -18,6 +18,7 @@ export const initialReviewTag = (intakeStatus: string): TagEnum => {
     'BIZ_CASE_FINAL_NEEDED',
     'BIZ_CASE_FINAL_SUBMITTED',
     'READY_FOR_GRB',
+    'READY_FOR_GRT',
     'LCID_ISSUED',
     'NOT_IT_REQUEST'
   ];
@@ -67,7 +68,6 @@ export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
     case 'BIZ_CASE_CHANGES_NEEDED':
       return 'CANNOT_START';
     case 'BIZ_CASE_FINAL_SUBMITTED':
-    case 'READY_FOR_GRT':
     case 'READY_FOR_GRB':
     case 'LCID_ISSUED':
       return 'COMPLETED';
