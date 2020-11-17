@@ -17,6 +17,7 @@ import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
+import RejectIntake from './Actions/RejectIntake';
 import SubmitAction from './Actions/SubmitAction';
 import BusinessCaseReview from './BusinessCaseReview';
 import IntakeReview from './IntakeReview';
@@ -285,6 +286,10 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/actions/issue-lcid"
               render={() => <IssueLifecycleId />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/not-approved"
+              render={() => <RejectIntake />}
             />
           </section>
         </section>
