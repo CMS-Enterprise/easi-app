@@ -101,7 +101,11 @@ const governanceReviewTeam = {
       closedTableCaption: 'Table of closed requests'
     }
   },
-  notes: 'Admin team notes',
+  notes: {
+    heading: 'Admin team notes',
+    addNote: 'Add a note',
+    addNoteCta: 'Add note'
+  },
   aria: {
     openIntake: 'Open intake request',
     openBusiness: 'Open business case',
