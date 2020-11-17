@@ -319,7 +319,7 @@ func NewTakeActionUpdateStatus(
 			}
 		}
 
-		err = sendReviewEmail(action.Feedback, requesterInfo.Email)
+		err = sendReviewEmail(action.Feedback.String, requesterInfo.Email)
 		if err != nil {
 			return err
 		}
