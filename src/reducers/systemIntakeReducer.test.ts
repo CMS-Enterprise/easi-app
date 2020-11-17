@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 import {
   initialSystemIntakeForm,
   prepareSystemIntakeForApp
@@ -335,6 +337,16 @@ describe('The system intake reducer', () => {
   });
 
   describe('postIntakeNote', () => {
+    let dateSpy: jest.SpyInstance;
+    beforeAll(() => {
+      // September 30, 2020
+      dateSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1601449200000);
+    });
+
+    afterAll(() => {
+      dateSpy.mockRestore();
+    });
+
     it('adds successfully created note to the reducer', () => {
       const mockPostAction = {
         type: postIntakeNote.SUCCESS,
@@ -343,7 +355,8 @@ describe('The system intake reducer', () => {
           authorName: 'John Brown',
           authorId: 'ABCD',
           content: 'Test Note 1',
-          systemIntakeId: 'test-uuid-note-1'
+          systemIntakeId: 'test-uuid-note-1',
+          createdAt: '2020-11-17 08:13:18.936399+00'
         }
       };
 
@@ -359,7 +372,8 @@ describe('The system intake reducer', () => {
             authorName: 'John Brown',
             authorId: 'ABCD',
             content: 'Test Note 1',
-            systemIntakeId: 'test-uuid-note-1'
+            systemIntakeId: 'test-uuid-note-1',
+            createdAt: DateTime.fromISO('2020-11-17 08:13:18.936399+00')
           }
         ]
       });
@@ -378,7 +392,8 @@ describe('The system intake reducer', () => {
             authorName: 'John Brown',
             authorId: 'ABCD',
             content: 'Test Note 1',
-            systemIntakeId: 'test-uuid-note-1'
+            systemIntakeId: 'test-uuid-note-1',
+            createdAt: DateTime.fromISO('2020-11-17 08:13:18.936399+00')
           }
         ]
       };
@@ -390,7 +405,8 @@ describe('The system intake reducer', () => {
           authorName: 'Lisa Brown',
           authorId: 'EFGH',
           content: 'Test Note 2',
-          systemIntakeId: 'test-uuid-note-2'
+          systemIntakeId: 'test-uuid-note-2',
+          createdAt: '2020-11-17 08:13:18.936399+00'
         }
       };
 
@@ -406,14 +422,16 @@ describe('The system intake reducer', () => {
             authorName: 'John Brown',
             authorId: 'ABCD',
             content: 'Test Note 1',
-            systemIntakeId: 'test-uuid-note-1'
+            systemIntakeId: 'test-uuid-note-1',
+            createdAt: DateTime.fromISO('2020-11-17 08:13:18.936399+00')
           },
           {
             id: '67890',
             authorName: 'Lisa Brown',
             authorId: 'EFGH',
             content: 'Test Note 2',
-            systemIntakeId: 'test-uuid-note-2'
+            systemIntakeId: 'test-uuid-note-2',
+            createdAt: DateTime.fromISO('2020-11-17 08:13:18.936399+00')
           }
         ]
       });

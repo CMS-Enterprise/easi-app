@@ -107,6 +107,15 @@ export type ContractDetailsForm = {
   };
 };
 
+export type IntakeNote = {
+  id: string;
+  authorName: string;
+  authorId: string;
+  content: string;
+  systemIntakeId: string;
+  createdAt: DateTime;
+};
+
 // Redux store type for a system intake
 export type SystemIntakeState = {
   systemIntake: SystemIntakeForm;
@@ -114,7 +123,7 @@ export type SystemIntakeState = {
   isSaving: boolean;
   isNewIntakeCreated: boolean | null;
   error?: any;
-  notes: any[];
+  notes: IntakeNote[];
 };
 
 // Redux store type for systems

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 
 import {
@@ -154,7 +155,13 @@ function systemIntakeReducer(
     case postIntakeNote.SUCCESS:
       return {
         ...state,
-        notes: [...state.notes, action.payload]
+        notes: [
+          ...state.notes,
+          {
+            ...action.payload,
+            createdAt: DateTime.fromISO(action.payload.createdAt)
+          }
+        ]
       };
     default:
       return state;
