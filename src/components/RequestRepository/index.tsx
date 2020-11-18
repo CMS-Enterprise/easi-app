@@ -62,7 +62,7 @@ const RequestRepository = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchSystemIntakes());
+    dispatch(fetchSystemIntakes({ status: 'open' }));
   }, [dispatch]);
 
   const systemIntakes = useSelector(

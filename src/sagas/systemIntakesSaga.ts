@@ -1,18 +1,25 @@
 import axios from 'axios';
 import { DateTime } from 'luxon';
+import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { updateLastActiveAt } from 'reducers/authReducer';
 import { fetchSystemIntakes } from 'types/routines';
 
-function getSystemIntakesRequest() {
-  return axios.get(`${process.env.REACT_APP_API_ADDRESS}/system_intakes`);
+function getSystemIntakesRequest(status: string | null) {
+  let route = `${process.env.REACT_APP_API_ADDRESS}/system_intakes`;
+  if (status) {
+    route = `${route}?status=${status}`;
+  }
+  return axios.get(route);
 }
 
-function* getSystemIntakes() {
+function* getSystemIntakes(action: Action<any>) {
+  const { payload } = action;
+  const status = payload && payload.status;
   try {
     yield put(fetchSystemIntakes.request());
-    const response = yield call(getSystemIntakesRequest);
+    const response = yield call(getSystemIntakesRequest, status);
     yield put(fetchSystemIntakes.success(response.data));
   } catch (error) {
     yield put(fetchSystemIntakes.failure(error.message));
