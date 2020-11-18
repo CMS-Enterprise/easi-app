@@ -73,7 +73,6 @@ const RequestRepository = () => {
     return systemIntakes.map(intake => {
       const statusEnum = intake.status;
       let statusTranslation = '';
-      let requestTypeTranslation = '';
 
       // Translating status
       if (statusEnum === 'LCID_ISSUED') {
@@ -84,14 +83,11 @@ const RequestRepository = () => {
         statusTranslation = t(`intake:statusMap.${statusEnum}`);
       }
 
-      // Translating request type
-      requestTypeTranslation = t(`intake:requestTypeMap.${intake.requestType}`);
-
       // Override all applicable fields in intake to use i18n translations
       return {
         ...intake,
         status: statusTranslation,
-        requestType: requestTypeTranslation
+        requestType: t(`intake:requestTypeMap.${intake.requestType}`)
       };
     });
   }, [systemIntakes, t]);
