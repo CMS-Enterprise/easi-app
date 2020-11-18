@@ -125,3 +125,50 @@ func (s ServicesTestSuite) TestAuthorizeRequireGRTJobCode() {
 		})
 	}
 }
+
+func (s ServicesTestSuite) NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode() {
+	fnAuth := NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode()
+	nonEASI := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: false, JobCodeGRT: false}
+	nonGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
+	yesGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
+
+	testCases := map[string]struct {
+		ctx     context.Context
+		intake  *models.SystemIntake
+		allowed bool
+	}{
+		"anonymous": {
+			ctx:     context.Background(),
+			intake:  &models.SystemIntake{},
+			allowed: false,
+		},
+		"non easi": {
+			ctx:     appcontext.WithPrincipal(context.Background(), &nonEASI),
+			intake:  &models.SystemIntake{},
+			allowed: false,
+		},
+		"is not grt, is not author": {
+			ctx:     appcontext.WithPrincipal(context.Background(), &nonGRT),
+			intake:  &models.SystemIntake{EUAUserID: "NOPE"},
+			allowed: false,
+		},
+		"is author, is not grt": {
+			ctx:     appcontext.WithPrincipal(context.Background(), &nonGRT),
+			intake:  &models.SystemIntake{EUAUserID: "FAKE"},
+			allowed: true,
+		},
+		"is grt, is not author": {
+			ctx:     appcontext.WithPrincipal(context.Background(), &yesGRT),
+			intake:  &models.SystemIntake{EUAUserID: "NOPE"},
+			allowed: true,
+		},
+	}
+
+	for name, tc := range testCases {
+		s.Run(name, func() {
+			ok, err := fnAuth(tc.ctx, tc.intake)
+			s.NoError(err)
+			s.Equal(tc.allowed, ok)
+		})
+	}
+}
