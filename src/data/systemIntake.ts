@@ -115,7 +115,9 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     contractStartMonth: systemIntake.contract.startDate.month,
     contractStartYear: systemIntake.contract.startDate.year,
     contractEndMonth: systemIntake.contract.endDate.month,
-    contractEndYear: systemIntake.contract.endDate.year
+    contractEndYear: systemIntake.contract.endDate.year,
+    grtDate: systemIntake.grtDate,
+    grbDate: systemIntake.grbDate
   };
 };
 
@@ -211,7 +213,13 @@ export const prepareSystemIntakeForApp = (
     archivedAt: systemIntake.archivedAt
       ? DateTime.fromISO(systemIntake.archivedAt)
       : null,
-    lcid: systemIntake.lcid || ''
+    lcid: systemIntake.lcid || '',
+    grtDate: systemIntake.grtDate
+      ? DateTime.fromISO(systemIntake.grtDate)
+      : null,
+    grbDate: systemIntake.grbDate
+      ? DateTime.fromISO(systemIntake.grbDate)
+      : null
   };
 };
 

@@ -79,6 +79,8 @@ export type SystemIntakeForm = {
   createdAt: DateTime | null;
   archivedAt: DateTime | null;
   lcid: string;
+  grtDate: DateTime | null;
+  grbDate: DateTime | null;
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
