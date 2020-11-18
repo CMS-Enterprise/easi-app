@@ -360,6 +360,43 @@ type rejectionFields struct {
 	NextSteps string `json:"rejectionNextSteps"`
 }
 
+func validateRejection(id string, data rejectionFields) (*uuid.UUID, error) {
+	valFail := false
+	valErr := apperrors.NewValidationError(
+		errors.New("system intake lifecycle fields failed validation"),
+		models.SystemIntake{},
+		"",
+	)
+	var intakeID uuid.UUID
+	var err error
+
+	if id == "" {
+		valErr.WithValidation("path.intakeID", "is required")
+		valFail = true
+	} else {
+		intakeID, err = uuid.Parse(id)
+		if err != nil {
+			valErr.WithValidation("path.intakeID", "must be UUID")
+		}
+	}
+
+	if data.Reason == "" {
+		valErr.WithValidation("body.rejectionReason", "is required")
+		valFail = true
+	}
+
+	if data.NextSteps == "" {
+		valErr.WithValidation("body.rejectionNextSteps", "is required")
+		valFail = true
+	}
+
+	if valFail {
+		return nil, &valErr
+	}
+
+	return &intakeID, nil
+}
+
 // Handle handles a request for the system intake form
 func (h SystemIntakeRejectionHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -375,6 +412,7 @@ func (h SystemIntakeRejectionHandler) Handle() http.HandlerFunc {
 			}
 			defer r.Body.Close()
 
+			id := mux.Vars(r)["intake_id"]
 			fields := rejectionFields{}
 			if err := json.NewDecoder(r.Body).Decode(&fields); err != nil {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
@@ -382,44 +420,15 @@ func (h SystemIntakeRejectionHandler) Handle() http.HandlerFunc {
 			}
 
 			// formatting and validation of required inputs
-			intake := &models.SystemIntake{}
-			valFail := false
-			valErr := apperrors.NewValidationError(
-				errors.New("system intake lifecycle fields failed validation"),
-				models.SystemIntake{},
-				"",
-			)
-
-			id := mux.Vars(r)["intake_id"]
-			if id == "" {
-				valErr.WithValidation("path.intakeID", "is required")
-				valFail = true
-			} else {
-				uuid, err := uuid.Parse(id)
-				if err != nil {
-					valErr.WithValidation("path.intakeID", "must be UUID")
-				} else {
-					intake.ID = uuid
-				}
-			}
-
-			if fields.Reason == "" {
-				valErr.WithValidation("body.rejectionReason", "is required")
-				valFail = true
-			} else {
-				intake.RejectionReason = null.StringFrom(fields.Reason)
-			}
-
-			if fields.NextSteps == "" {
-				valErr.WithValidation("body.rejectionNextSteps", "is required")
-				valFail = true
-			} else {
-				intake.DecisionNextSteps = null.StringFrom(fields.NextSteps)
-			}
-
-			if valFail {
-				h.WriteErrorResponse(r.Context(), w, &valErr)
+			uuid, valErr := validateRejection(id, fields)
+			if valErr != nil {
+				h.WriteErrorResponse(r.Context(), w, valErr)
 				return
+			}
+			intake := &models.SystemIntake{
+				ID:                *uuid,
+				RejectionReason:   null.StringFrom(fields.Reason),
+				DecisionNextSteps: null.StringFrom(fields.NextSteps),
 			}
 
 			// send it to the database
