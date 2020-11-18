@@ -425,6 +425,21 @@ func (s *Server) routes(
 						store.UpdateBusinessCase,
 					),
 				),
+				models.ActionTypeREJECT: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNOTAPPROVED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
 			},
 		),
 	)
@@ -441,6 +456,17 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
+
+	systemIntakeRejectionHandler := handlers.NewSystemIntakeRejectionHandler(
+		base,
+		services.NewUpdateRejectionFields(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/reject", systemIntakeRejectionHandler.Handle())
 
 	notesHandler := handlers.NewNotesHandler(
 		base,

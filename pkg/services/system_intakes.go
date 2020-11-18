@@ -333,7 +333,7 @@ func NewUpdateLifecycleFields(
 		existing.LifecycleID = intake.LifecycleID
 		existing.LifecycleExpiresAt = intake.LifecycleExpiresAt
 		existing.LifecycleScope = intake.LifecycleScope
-		existing.LifecycleNextSteps = intake.LifecycleNextSteps
+		existing.DecisionNextSteps = intake.DecisionNextSteps
 
 		// if a LCID wasn't passed in, we generate one
 		if existing.LifecycleID.ValueOrZero() == "" {
@@ -343,6 +343,51 @@ func NewUpdateLifecycleFields(
 			}
 			existing.LifecycleID = null.StringFrom(lcid)
 		}
+
+		updated, err := update(ctx, existing)
+		if err != nil {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
+			}
+		}
+		return updated, nil
+	}
+}
+
+// NewUpdateRejectionFields provides a way to update several of the fields
+// associated with rejecting an intake request
+func NewUpdateRejectionFields(
+	config Config,
+	authorize func(context.Context) (bool, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+) func(context.Context, *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+		existing, err := fetch(ctx, intake.ID)
+		if err != nil {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Operation: apperrors.QueryFetch,
+				Model:     existing,
+			}
+		}
+
+		ok, err := authorize(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if !ok {
+			return nil, &apperrors.UnauthorizedError{Err: err}
+		}
+
+		// we only want to bring over the fields specifically
+		// dealing with Rejection information
+		updatedTime := config.clock.Now()
+		existing.UpdatedAt = &updatedTime
+		existing.RejectionReason = intake.RejectionReason
+		existing.DecisionNextSteps = intake.DecisionNextSteps
 
 		updated, err := update(ctx, existing)
 		if err != nil {
