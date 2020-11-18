@@ -54,8 +54,6 @@ const (
 	SystemIntakeStatusNOTAPPROVED SystemIntakeStatus = "NOT_APPROVED"
 	// SystemIntakeStatusNOGOVERNANCE captures enum value "NO_GOVERNANCE"
 	SystemIntakeStatusNOGOVERNANCE SystemIntakeStatus = "NO_GOVERNANCE"
-	// SystemIntakeStatusNOTAPPROVED captures enum value "NOT_APPROVED"
-	SystemIntakeStatusNOTAPPROVED SystemIntakeStatus = "NOT_APPROVED"
 
 	// SystemIntakeRequestTypeNEW captures enum value of "NEW"
 	SystemIntakeRequestTypeNEW SystemIntakeRequestType = "NEW"
