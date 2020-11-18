@@ -38,6 +38,8 @@ const (
 	ActionTypePROVIDEFEEDBACKBIZCASEFINAL ActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
 	// ActionTypeNOGOVERNANCENEEDED captures enum value NO_GOVERNANCE_NEEDED
 	ActionTypeNOGOVERNANCENEEDED ActionType = "NO_GOVERNANCE_NEEDED"
+	// ActionTypeREJECT captures enum value REJECTED
+	ActionTypeREJECT ActionType = "REJECT"
 )
 
 // Action is the model for an action on a system intake
