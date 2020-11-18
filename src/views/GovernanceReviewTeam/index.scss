@@ -67,4 +67,37 @@
       height: 5rem;
     }
   }
+
+  &__note-list {
+    list-style-type: none;
+    margin-top: 3.5em;
+    padding-left: 1em;
+  }
+
+  &__note {
+    display: flex;
+    &:not(:last-of-type) {
+      border-left: 1px solid #000;
+    }
+
+    &:before {
+      flex: none;
+      content: '';
+      background-color: #000;
+      height: 12px;
+      width: 12px;
+      margin-left: -6px;
+      line-height: 24px;
+      text-align: center;
+      border-radius: 50%;
+    }
+  }
+
+  &__note-content {
+    width: 100%;
+    margin-bottom: 2em;
+    margin-left: 1em;
+    padding-bottom: 2em;
+    border-bottom: 1px solid #979797;
+  }
 }
