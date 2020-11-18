@@ -237,7 +237,7 @@ func (s *Server) routes(
 	)
 	api.Handle("/metrics", metricsHandler.Handle())
 
-	systemIntakeActionHandler := handlers.NewSystemIntakeActionHandler(
+	actionHandler := handlers.NewActionHandler(
 		base,
 		services.NewTakeAction(
 			store.FetchSystemIntakeByID,
@@ -442,8 +442,12 @@ func (s *Server) routes(
 				),
 			},
 		),
+		services.NewFetchActionsByRequestID(
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.GetActionsByRequestID,
+		),
 	)
-	api.Handle("/system_intake/{intake_id}/actions", systemIntakeActionHandler.Handle())
+	api.Handle("/system_intake/{intake_id}/actions", actionHandler.Handle())
 
 	systemIntakeLifecycleIDHandler := handlers.NewSystemIntakeLifecycleIDHandler(
 		base,

@@ -475,7 +475,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			closeBusinessCase,
 		)
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED}
-		action := &models.Action{Feedback: "feedback"}
+		action := &models.Action{Feedback: null.StringFrom("feedback")}
 		err := reviewSystemIntake(ctx, intake, action)
 
 		s.NoError(err)
@@ -629,7 +629,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		)
 		bizCaseID := uuid.New()
 		intake := &models.SystemIntake{Status: models.SystemIntakeStatusINTAKESUBMITTED, BusinessCaseID: &bizCaseID}
-		action := &models.Action{Feedback: "feedback"}
+		action := &models.Action{Feedback: null.StringFrom("feedback")}
 		err := reviewSystemIntake(ctx, intake, action)
 
 		s.Error(err)
@@ -660,4 +660,66 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 
 		s.IsType(&apperrors.NotificationError{}, err)
 	})
+}
+
+func (s ServicesTestSuite) TestFetchActions() {
+	fetch := func(_ context.Context, _ uuid.UUID) ([]models.Action, error) {
+		return []models.Action{
+			{},
+			{},
+		}, nil
+	}
+	failFetch := func(_ context.Context, _ uuid.UUID) ([]models.Action, error) {
+		return nil, errors.New("failFetch")
+	}
+	authorize := func(_ context.Context) (bool, error) {
+		return true, nil
+	}
+	unauthorize := func(_ context.Context) (bool, error) {
+		return false, nil
+	}
+	failAuthorize := func(_ context.Context) (bool, error) {
+		return false, errors.New("fail authorization")
+	}
+
+	tests := map[string]struct {
+		fn                      func(ctx context.Context, id uuid.UUID) ([]models.Action, error)
+		shouldError             bool
+		numberOfReturnedActions int
+	}{
+		"happy path": {
+			fn:                      NewFetchActionsByRequestID(authorize, fetch),
+			shouldError:             false,
+			numberOfReturnedActions: 2,
+		},
+		"authorization fails": {
+			fn:                      NewFetchActionsByRequestID(failAuthorize, fetch),
+			shouldError:             true,
+			numberOfReturnedActions: 0,
+		},
+		"unauthorized": {
+			fn:                      NewFetchActionsByRequestID(unauthorize, fetch),
+			shouldError:             true,
+			numberOfReturnedActions: 0,
+		},
+		"errors when talking to storage layer": {
+			fn:                      NewFetchActionsByRequestID(authorize, failFetch),
+			shouldError:             true,
+			numberOfReturnedActions: 0,
+		},
+	}
+
+	for name, tc := range tests {
+		s.Run(name, func() {
+			actions, err := tc.fn(context.Background(), uuid.New())
+			if tc.shouldError {
+				s.Error(err)
+				s.Nil(actions)
+			} else {
+				s.NoError(err)
+				s.Len(actions, tc.numberOfReturnedActions)
+			}
+		})
+	}
+
 }
