@@ -22,7 +22,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 			"<p>\n  You have a new intake request pending in EASi.\n  " +
 			"Please get back to the requester as soon as possible with your response.\n</p>\n\n" +
 			fmt.Sprintf(
-				"<a href=\"%s://%s/system/%s/grt-review\" >",
+				"<a href=\"%s://%s/governance-review-team/%s/intake-request\" >",
 				s.config.URLScheme,
 				s.config.URLHost,
 				intakeID.String(),
