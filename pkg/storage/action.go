@@ -64,8 +64,9 @@ func (s *Store) GetActionsByRequestID(ctx context.Context, id uuid.UUID) ([]mode
 	err := s.db.Select(&actions, fetchActionsByRequestIDSQL, id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch actions %s", err),
+			"Failed to fetch actions",
 			zap.String("intakeID", id.String()),
+			zap.String("error", err.Error()),
 		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
