@@ -112,21 +112,15 @@ export const BusinessCaseDraftCta = ({
     case 'READY_FOR_GRT':
       return (
         <>
-          <Button
-            type="button"
-            onClick={() => {
-              history.push({
-                pathname: `/governance-task-list/${systemIntake.businessCaseId}/prepare-for-grt`,
-                state: {
-                  systemIntakeId: systemIntake.id
-                }
-              });
-            }}
-            className="display-block margin-bottom-3"
+          <UswdsLink
             data-testid="prepare-for-grt-btn"
+            className="display-table margin-bottom-3 usa-button"
+            variant="unstyled"
+            asCustom={Link}
+            to={`/governance-task-list/${systemIntake.businessCaseId}/prepare-for-grt`}
           >
             Prepare for review team meeting
-          </Button>
+          </UswdsLink>
 
           <UswdsLink
             data-testid="view-biz-case-link"
