@@ -229,7 +229,7 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		err = sendEmail(businessCase.Requester.String, businessCase.ID)
+		err = sendEmail(businessCase.Requester.String, businessCase.SystemIntakeID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Submit Business Case email failed to send: ", zap.Error(err))
 		}
