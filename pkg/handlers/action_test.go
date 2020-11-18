@@ -17,9 +17,21 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func newMockCreateSystemIntakeAction(err error) createSystemIntakeAction {
+func newMockCreateAction(err error) createAction {
 	return func(ctx context.Context, action *models.Action) error {
 		return err
+	}
+}
+
+func newMockFetchActions(err error) fetchActions {
+	return func(ctx context.Context, id uuid.UUID) ([]models.Action, error) {
+		if err != nil {
+			return nil, err
+		}
+		return []models.Action{
+			{},
+			{},
+		}, nil
 	}
 }
 
@@ -42,9 +54,9 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 		)
 		s.NoError(reqErr)
 		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
-		SystemIntakeActionHandler{
-			HandlerBase:              s.base,
-			CreateSystemIntakeAction: newMockCreateSystemIntakeAction(nil),
+		ActionHandler{
+			HandlerBase:  s.base,
+			CreateAction: newMockCreateAction(nil),
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusCreated, rr.Code)
@@ -60,9 +72,9 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 		)
 		s.NoError(reqErr)
 		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
-		SystemIntakeActionHandler{
-			HandlerBase:              s.base,
-			CreateSystemIntakeAction: newMockCreateSystemIntakeAction(nil),
+		ActionHandler{
+			HandlerBase:  s.base,
+			CreateAction: newMockCreateAction(nil),
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusBadRequest, rr.Code)
@@ -87,11 +99,54 @@ func (s HandlerTestSuite) TestSystemIntakeActionHandler() {
 			ModelID: "",
 			Err:     fmt.Errorf("failed validations"),
 		}
-		SystemIntakeActionHandler{
-			HandlerBase:              s.base,
-			CreateSystemIntakeAction: newMockCreateSystemIntakeAction(&expectedErr),
+		ActionHandler{
+			HandlerBase:  s.base,
+			CreateAction: newMockCreateAction(&expectedErr),
 		}.Handle()(rr, req)
 
 		s.Equal(http.StatusUnprocessableEntity, rr.Code)
+	})
+
+	s.Run("golden path GET passes", func() {
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "GET", fmt.Sprintf("/system_intake/%s/actions", id.String()), bytes.NewBufferString(""))
+		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"intake_id": id.String()})
+		ActionHandler{
+			HandlerBase:  s.base,
+			FetchActions: newMockFetchActions(nil),
+		}.Handle()(rr, req)
+		s.Equal(http.StatusOK, rr.Code)
+	})
+
+	s.Run("GET returns an error if the uuid is not valid", func() {
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/NON_EXISTENT/actions", bytes.NewBufferString(""))
+		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"intake_id": "NON_EXISTENT"})
+		ActionHandler{
+			HandlerBase:  s.base,
+			FetchActions: newMockFetchActions(nil),
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusUnprocessableEntity, rr.Code)
+	})
+
+	s.Run("GET returns an error if the service return an error", func() {
+		nonexistentID := uuid.New()
+		rr := httptest.NewRecorder()
+		req, err := http.NewRequestWithContext(requestContext, "GET", "/system_intake/"+nonexistentID.String()+"/actions", bytes.NewBufferString(""))
+		s.NoError(err)
+		req = mux.SetURLVars(req, map[string]string{"intake_id": nonexistentID.String()})
+		ActionHandler{
+			HandlerBase:  s.base,
+			FetchActions: newMockFetchActions(&apperrors.ResourceNotFoundError{}),
+		}.Handle()(rr, req)
+
+		s.Equal(http.StatusNotFound, rr.Code)
+		responseErr := errorResponse{}
+		err = json.Unmarshal(rr.Body.Bytes(), &responseErr)
+		s.NoError(err)
+		s.Equal("Resource not found", responseErr.Message)
 	})
 }
