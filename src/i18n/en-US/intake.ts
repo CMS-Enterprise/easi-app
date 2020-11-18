@@ -7,7 +7,9 @@ const intake = {
     component: 'Component',
     status: 'Status'
   },
+
   lifecycleId: 'Lifecycle ID',
+
   statusMap: {
     INTAKE_DRAFT: 'N/A',
     INTAKE_SUBMITTED: 'Intake request received',
@@ -24,6 +26,13 @@ const intake = {
     NOT_IT_REQUEST: 'Closed',
     NOT_APPROVED: 'Business case not approved',
     NO_GOVERNANCE: 'Closed'
+  },
+
+  requestTypeMap: {
+    NEW: 'Add a new system',
+    RECOMPETE: 'Recompete',
+    MAJOR_CHANGES: 'Major change or upgrade',
+    SHUTDOWN: 'Decommission a system'
   },
 
   csvHeadings: {

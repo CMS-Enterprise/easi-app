@@ -51,7 +51,7 @@ const RequestRepository = () => {
       },
       {
         Header: t('requestRepository.table.requestType'),
-        accessor: 'type'
+        accessor: 'requestType'
       },
       {
         Header: t('intake:fields.status'),
@@ -73,7 +73,9 @@ const RequestRepository = () => {
     return systemIntakes.map(intake => {
       const statusEnum = intake.status;
       let statusTranslation = '';
+      let requestTypeTranslation = '';
 
+      // Translating status
       if (statusEnum === 'LCID_ISSUED') {
         // if status is LCID_ISSUED, translate from enum to i18n and append LCID
         statusTranslation = t(`intake:statusMap.${statusEnum}`) + intake.lcid;
@@ -82,10 +84,14 @@ const RequestRepository = () => {
         statusTranslation = t(`intake:statusMap.${statusEnum}`);
       }
 
-      // Override all statuses in intake to use i18n translations
+      // Translating request type
+      requestTypeTranslation = t(`intake:requestTypeMap.${intake.requestType}`);
+
+      // Override all applicable fields in intake to use i18n translations
       return {
         ...intake,
-        status: statusTranslation
+        status: statusTranslation,
+        requestType: requestTypeTranslation
       };
     });
   }, [systemIntakes, t]);
