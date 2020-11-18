@@ -69,3 +69,45 @@ func (s StoreTestSuite) TestCreateAction() {
 		s.Equal("pq: invalid input value for enum action_type: \"fake_status\"", err.Error())
 	})
 }
+
+func (s StoreTestSuite) TestFetchActionsByRequestID() {
+	ctx := context.Background()
+
+	intake := testhelpers.NewSystemIntake()
+	createdIntake, err := s.store.CreateSystemIntake(ctx, &intake)
+	s.NoError(err)
+
+	s.Run("golden path to fetch actions", func() {
+		action := testhelpers.NewAction()
+		action2 := testhelpers.NewAction()
+		action.IntakeID = &createdIntake.ID
+		action2.IntakeID = &createdIntake.ID
+
+		_, err := s.store.CreateAction(ctx, &action)
+		s.NoError(err)
+		_, err = s.store.CreateAction(ctx, &action2)
+		s.NoError(err)
+		fetched, err := s.store.GetActionsByRequestID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch actions")
+		s.Len(fetched, 2)
+		s.Equal(&intake.ID, fetched[0].IntakeID)
+	})
+
+	s.Run("does not fetch action for other request", func() {
+		intake2 := testhelpers.NewSystemIntake()
+		createdIntake2, err := s.store.CreateSystemIntake(ctx, &intake2)
+		s.NoError(err)
+
+		action := testhelpers.NewAction()
+		action.IntakeID = &createdIntake2.ID
+		_, err = s.store.CreateAction(ctx, &action)
+		s.NoError(err)
+
+		fetched, err := s.store.GetActionsByRequestID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch actions")
+		s.Len(fetched, 2)
+		s.Equal(&intake.ID, fetched[0].IntakeID)
+	})
+}
