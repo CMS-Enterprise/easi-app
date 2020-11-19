@@ -10,6 +10,7 @@ import {
 import { updateLastActiveAt } from 'reducers/authReducer';
 import {
   archiveSystemIntake,
+  fetchIntakeNotes,
   fetchSystemIntake,
   issueLifecycleIdForSystemIntake,
   postIntakeNote,
@@ -143,6 +144,24 @@ function* issueLifecyleId(action: Action<any>) {
   }
 }
 
+function getIntakeNotesRequest(intakeId: string) {
+  return axios.get(
+    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${intakeId}/notes`
+  );
+}
+
+function* getIntakeNotes(action: Action<any>) {
+  try {
+    yield put(fetchIntakeNotes.request());
+    const response = yield call(getIntakeNotesRequest, action.payload);
+    yield put(fetchIntakeNotes.success(response.data));
+  } catch (error) {
+    yield put(fetchIntakeNotes.failure(error.message));
+  } finally {
+    yield put(fetchIntakeNotes.fulfill());
+  }
+}
+
 type NoteRequestBody = {
   intakeId: string;
   content: string;
@@ -180,5 +199,6 @@ export default function* systemIntakeSaga() {
   yield takeLatest(reviewSystemIntake.TRIGGER, submitSystemIntakeReview);
   yield takeLatest(archiveSystemIntake.TRIGGER, deleteSystemIntake);
   yield takeLatest(issueLifecycleIdForSystemIntake.TRIGGER, issueLifecyleId);
+  yield takeLatest(fetchIntakeNotes.TRIGGER, getIntakeNotes);
   yield takeLatest(postIntakeNote.TRIGGER, createIntakeNote);
 }

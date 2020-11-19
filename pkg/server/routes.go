@@ -19,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 func (s *Server) routes(
@@ -90,6 +91,10 @@ func (s *Server) routes(
 		s.CheckEmailClient(emailClient)
 	}
 
+	// set up S3 client
+	s3Config := s.NewS3Config()
+	s3Client := upload.NewS3Client(s3Config)
+
 	// set up FlagClient
 	flagConfig := s.NewFlagConfig()
 	var flagClient flags.FlagClient
@@ -150,17 +155,9 @@ func (s *Server) routes(
 		),
 		services.NewUpdateSystemIntake(
 			serviceConfig,
-			store.UpdateSystemIntake,
 			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
 			services.NewAuthorizeUserIsIntakeRequester(),
-			cedarLDAPClient.FetchUserInfo,
-			emailClient.SendSystemIntakeReviewEmail,
-			services.NewUpdateDraftSystemIntake(
-				serviceConfig,
-				services.NewAuthorizeUserIsIntakeRequester(),
-				store.UpdateSystemIntake,
-			),
-			!s.environment.Prod(),
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
@@ -486,6 +483,13 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/notes", notesHandler.Handle())
+
+	// File Upload Handlers
+	fileUploadHandler := handlers.NewFileUploadHandler(
+		base,
+		services.NewCreateFileUploadURL(serviceConfig, s3Client),
+	)
+	api.Handle("/file_uploads", fileUploadHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
