@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import PrintableTabContent from 'components/PrintableTabContent';
 import ResponsiveTabs from 'components/shared/ResponsiveTabs';
 import { hasAlternativeB } from 'data/businessCase';
 import {
@@ -51,38 +52,34 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
         className="bg-white easi-business-case__review-solutions-wrapper"
         style={{ overflow: 'auto' }}
       >
-        {(tab => {
-          switch (tab) {
-            case '"As is" solution':
-              return <AsIsSolutionReview solution={asIsSolution} />;
-            case 'Preferred solution':
-              return (
-                <ProposedBusinessCaseSolutionReview
-                  name="Preferred solution"
-                  solution={preferredSolution}
-                />
-              );
-            case 'Alternative A':
-              return (
-                <ProposedBusinessCaseSolutionReview
-                  name="Alternative A"
-                  solution={alternativeA}
-                />
-              );
-            case 'Alternative B':
-              if (alternativeB && hasAlternativeB(alternativeB)) {
-                return (
-                  <ProposedBusinessCaseSolutionReview
-                    name="Alternative B"
-                    solution={alternativeB}
-                  />
-                );
-              }
-              return null;
-            default:
-              return <div />;
-          }
-        })(activeSolutionTab)}
+        <PrintableTabContent visible={activeSolutionTab === '"As is" solution'}>
+          <AsIsSolutionReview solution={asIsSolution} />
+        </PrintableTabContent>
+
+        <PrintableTabContent
+          visible={activeSolutionTab === 'Preferred solution'}
+        >
+          <ProposedBusinessCaseSolutionReview
+            name="Preferred solution"
+            solution={preferredSolution}
+          />
+        </PrintableTabContent>
+
+        <PrintableTabContent visible={activeSolutionTab === 'Alternative A'}>
+          <ProposedBusinessCaseSolutionReview
+            name="Alternative A"
+            solution={alternativeA}
+          />
+        </PrintableTabContent>
+
+        <PrintableTabContent visible={activeSolutionTab === 'Alternative B'}>
+          {alternativeB && hasAlternativeB(alternativeB) && (
+            <ProposedBusinessCaseSolutionReview
+              name="Alternative A"
+              solution={alternativeA}
+            />
+          )}
+        </PrintableTabContent>
       </div>
     </ResponsiveTabs>
   );
