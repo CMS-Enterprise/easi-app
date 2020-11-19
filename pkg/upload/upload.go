@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -19,7 +20,7 @@ type Config struct {
 
 // S3Client is an EASi s3 client wrapper
 type S3Client struct {
-	client *s3.S3
+	client s3iface.S3API
 	config Config
 }
 
