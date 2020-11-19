@@ -18,7 +18,7 @@ func (s StoreTestSuite) TestNoteRoundtrip() {
 	intake, err := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		Status:      models.SystemIntakeStatusINTAKEDRAFT,
 		RequestType: models.SystemIntakeRequestTypeNEW,
-		EUAUserID:   euaID,
+		EUAUserID:   null.StringFrom(euaID),
 	})
 	s.NoError(err)
 
