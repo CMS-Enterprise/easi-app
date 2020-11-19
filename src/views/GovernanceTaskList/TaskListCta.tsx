@@ -113,7 +113,7 @@ export const BusinessCaseDraftCta = ({
       return (
         <>
           <UswdsLink
-            data-testid="prepare-for-grt-btn"
+            data-testid="prepare-for-grt-cta"
             className="display-table margin-bottom-3 usa-button"
             variant="unstyled"
             asCustom={Link}
@@ -123,7 +123,7 @@ export const BusinessCaseDraftCta = ({
           </UswdsLink>
 
           <UswdsLink
-            data-testid="view-biz-case-link"
+            data-testid="view-biz-case-cta"
             asCustom={Link}
             to={`/business/${systemIntake.businessCaseId}/general-request-info`}
           >
