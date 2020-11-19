@@ -109,13 +109,12 @@ const governanceReviewTeam = {
   dates: {
     heading: 'Dates',
     subheading: 'Add GRT and GRB dates',
+    submit: 'Save',
     grtDate: {
-      label: 'GRT Date',
-      helpText: 'Help text goes here'
+      label: 'GRT Date'
     },
     grbDate: {
-      label: 'GRB Date',
-      helpText: 'Help text goes here'
+      label: 'GRB Date'
     }
   },
   aria: {

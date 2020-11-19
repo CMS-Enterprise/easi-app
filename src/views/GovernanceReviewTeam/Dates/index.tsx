@@ -9,7 +9,6 @@ import { DateTime } from 'luxon';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
-import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { saveSystemIntake } from 'types/routines';
@@ -107,9 +106,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                     <legend className="usa-label margin-bottom-1">
                       {t('governanceReviewTeam:dates.grtDate.label')}
                     </legend>
-                    <HelpText className="margin-bottom-1">
-                      {t('governanceReviewTeam:dates.grtDate.helpText')}
-                    </HelpText>
                     <div
                       className="usa-memorable-date"
                       style={{ marginTop: '-2rem' }}
@@ -163,9 +159,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                     <legend className="usa-label margin-bottom-1">
                       {t('governanceReviewTeam:dates.grbDate.label')}
                     </legend>
-                    <HelpText className="margin-bottom-1">
-                      {t('governanceReviewTeam:dates.grbDate.helpText')}
-                    </HelpText>
                     <div
                       className="usa-memorable-date"
                       style={{ marginTop: '-2rem' }}
@@ -214,7 +207,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                 </FieldGroup>
                 {/* End GRB Date Fields */}
                 <Button className="margin-top-2" type="submit">
-                  {t('submit')}
+                  {t('governanceReviewTeam:dates.submit')}
                 </Button>
               </Form>
             </div>
