@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"path"
 
+	"github.com/guregu/null"
+
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
@@ -24,7 +26,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 	intake := testhelpers.NewSystemIntake()
 	intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
-	intake.EUAUserID = s.user.euaID
+	intake.EUAUserID = null.StringFrom(s.user.euaID)
 
 	createdIntake, err := s.store.CreateSystemIntake(context.Background(), &intake)
 	s.NoError(err)

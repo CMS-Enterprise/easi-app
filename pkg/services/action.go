@@ -260,7 +260,7 @@ func NewTakeActionUpdateStatus(
 			return &apperrors.UnauthorizedError{}
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID)
+		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
 		if err != nil {
 			return err
 		}
