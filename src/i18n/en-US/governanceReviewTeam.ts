@@ -106,6 +106,18 @@ const governanceReviewTeam = {
     addNote: 'Add a note',
     addNoteCta: 'Add note'
   },
+  dates: {
+    heading: 'Dates',
+    subheading: 'Add GRT and GRB dates',
+    grtDate: {
+      label: 'GRT Date',
+      helpText: 'Help text goes here'
+    },
+    grbDate: {
+      label: 'GRB Date',
+      helpText: 'Help text goes here'
+    }
+  },
   aria: {
     openIntake: 'Open intake request',
     openBusiness: 'Open business case',

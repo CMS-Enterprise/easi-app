@@ -19,6 +19,7 @@ import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
 import SubmitAction from './Actions/SubmitAction';
 import BusinessCaseReview from './BusinessCaseReview';
+import Dates from './Dates';
 import IntakeReview from './IntakeReview';
 import Notes from './Notes';
 
@@ -176,6 +177,14 @@ const GovernanceReviewTeam = () => {
                   {t('notes.heading')}
                 </Link>
               </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/dates`}
+                  className={getNavLinkClasses('dates')}
+                >
+                  {t('dates.heading')}
+                </Link>
+              </li>
             </ul>
           </nav>
           <section className="tablet:grid-col-9">
@@ -195,6 +204,10 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/notes"
               render={() => <Notes />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/dates"
+              render={() => <Dates systemIntake={systemIntake} />}
             />
             <Route
               path="/governance-review-team/:systemId/actions"
