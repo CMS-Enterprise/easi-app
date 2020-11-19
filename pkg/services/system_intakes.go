@@ -75,7 +75,7 @@ func NewCreateSystemIntake(
 				Info("something went wrong fetching the eua id from the context")
 			return &models.SystemIntake{}, &apperrors.UnauthorizedError{}
 		}
-		intake.EUAUserID = principal.ID()
+		intake.EUAUserID = null.StringFrom(principal.ID())
 		// app validation belongs here
 		createdIntake, err := create(ctx, intake)
 		if err != nil {
@@ -106,13 +106,52 @@ func NewUpdateSystemIntake(
 			}
 		}
 
-		ok, err := authorize(ctx, existingIntake)
-		if err != nil {
-			return nil, err
-		}
-		if !ok {
-			return nil, &apperrors.UnauthorizedError{Err: err}
-		}
+		if existingIntake.Status == models.SystemIntakeStatusINTAKEDRAFT && intake.Status == models.SystemIntakeStatusINTAKEDRAFT {
+			return updateDraftIntake(ctx, existingIntake, intake)
+		} else if existingIntake.Status == models.SystemIntakeStatusINTAKESUBMITTED &&
+			(intake.Status == models.SystemIntakeStatusLCIDISSUED ||
+				intake.Status == models.SystemIntakeStatusNEEDBIZCASE ||
+				intake.Status == models.SystemIntakeStatusNOTITREQUEST) && canDecideIntake {
+
+			ok, err := authorize(ctx, existingIntake)
+			if err != nil {
+				return &models.SystemIntake{}, err
+			}
+			if !ok {
+				return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
+			}
+
+			updatedTime := config.clock.Now()
+			intake.UpdatedAt = &updatedTime
+
+			requesterInfo, err := fetchRequesterInfo(ctx, existingIntake.EUAUserID.ValueOrZero())
+			if err != nil {
+				return &models.SystemIntake{}, err
+			}
+			if requesterInfo == nil || requesterInfo.Email == "" {
+				return &models.SystemIntake{}, &apperrors.ExternalAPIError{
+					Err:       errors.New("user info fetch was not successful"),
+					Model:     existingIntake,
+					ModelID:   intake.ID.String(),
+					Operation: apperrors.Fetch,
+					Source:    "CEDAR LDAP",
+				}
+			}
+
+			existingIntake.Status = intake.Status
+			existingIntake.GrtReviewEmailBody = intake.GrtReviewEmailBody
+			existingIntake.RequesterEmailAddress = null.StringFrom(requesterInfo.Email)
+			existingIntake.DecidedAt = &updatedTime
+			existingIntake.UpdatedAt = &updatedTime
+			// This ensures only certain fields can be modified.
+			intake, err = update(ctx, existingIntake)
+			if err != nil {
+				return &models.SystemIntake{}, &apperrors.QueryError{
+					Err:       err,
+					Model:     intake,
+					Operation: apperrors.QuerySave,
+				}
+			}
 
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
