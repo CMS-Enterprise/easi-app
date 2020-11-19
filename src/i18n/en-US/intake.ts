@@ -30,7 +30,7 @@ const intake = {
 
   requestTypeMap: {
     NEW: 'Add a new system',
-    RECOMPETE: 'Recompete',
+    RECOMPETE: 'Re-compete',
     MAJOR_CHANGES: 'Major change or upgrade',
     SHUTDOWN: 'Decommission a system'
   },
@@ -79,7 +79,7 @@ const intake = {
       majorChanges: 'Major changes or upgrades to an existing system',
       recompete:
         'Re-compete a contract without any changes to systems or services',
-      shutdown: 'Shutdown a system'
+      shutdown: 'Decommission a system'
     },
     helpAndGuidance: {
       majorChanges: {
