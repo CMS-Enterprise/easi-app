@@ -51,7 +51,7 @@ describe('The Business Case Form', () => {
     cy.get('[data-testid="start-biz-case-btn"]').click();
   });
 
-  xit('fills out minimum required fields', () => {
+  it('fills out minimum required fields', () => {
     // General Request Information
     // Autofilled Fields from System Intake
     cy.get('#BusinessCase-RequestName').should(

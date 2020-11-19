@@ -30,7 +30,7 @@ jest.mock('@okta/okta-react', () => ({
 describe('The home page', () => {
   describe('not a grt review user', () => {
     const mockAuthReducer = {
-      userGroupsSet: true,
+      isUserSet: true,
       groups: []
     };
 
@@ -92,7 +92,7 @@ describe('The home page', () => {
               {
                 ...initialSystemIntakeForm,
                 id: '2',
-                status: 'INTAKE_SUBMITTED'
+                status: 'NEED_BIZ_CASE'
               },
               {
                 ...initialSystemIntakeForm,
@@ -101,7 +101,7 @@ describe('The home page', () => {
               {
                 ...initialSystemIntakeForm,
                 id: '4',
-                status: 'INTAKE_SUBMITTED',
+                status: 'NEED_BIZ_CASE',
                 businessCaseId: '1'
               }
             ]
@@ -127,7 +127,7 @@ describe('The home page', () => {
 
   describe('is a grt reviewer', () => {
     const mockAuthReducer = {
-      userGroupsSet: true,
+      isUserSet: true,
       groups: ['EASI_D_GOVTEAM']
     };
 

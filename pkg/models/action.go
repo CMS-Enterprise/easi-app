@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 )
 
 // ActionType represents type of action
@@ -28,6 +29,8 @@ const (
 	ActionTypeCREATEBIZCASE ActionType = "CREATE_BIZ_CASE"
 	// ActionTypeSUBMITBIZCASE captures enum value SUBMIT_BIZ_CASE
 	ActionTypeSUBMITBIZCASE ActionType = "SUBMIT_BIZ_CASE"
+	// ActionTypeSUBMITFINALBIZCASE captures enum value SUBMIT_FINAL_BIZ_CASE
+	ActionTypeSUBMITFINALBIZCASE ActionType = "SUBMIT_FINAL_BIZ_CASE"
 	// ActionTypeBIZCASENEEDSCHANGES captures enum value BIZ_CASE_NEEDS_CHANGES
 	ActionTypeBIZCASENEEDSCHANGES ActionType = "BIZ_CASE_NEEDS_CHANGES"
 	// ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES captures enum value PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT
@@ -36,6 +39,8 @@ const (
 	ActionTypePROVIDEFEEDBACKBIZCASEFINAL ActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
 	// ActionTypeNOGOVERNANCENEEDED captures enum value NO_GOVERNANCE_NEEDED
 	ActionTypeNOGOVERNANCENEEDED ActionType = "NO_GOVERNANCE_NEEDED"
+	// ActionTypeREJECT captures enum value REJECTED
+	ActionTypeREJECT ActionType = "REJECT"
 )
 
 // Action is the model for an action on a system intake
@@ -47,6 +52,6 @@ type Action struct {
 	ActorName      string     `json:"actorName" db:"actor_name"`
 	ActorEmail     string     `json:"actorEmail" db:"actor_email"`
 	ActorEUAUserID string     `json:"actorEuaUserId" db:"actor_eua_user_id"`
-	Feedback       string
+	Feedback       null.String
 	CreatedAt      *time.Time `json:"createdAt" db:"created_at"`
 }

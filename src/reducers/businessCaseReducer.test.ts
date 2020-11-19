@@ -6,6 +6,7 @@ import {
   clearBusinessCase,
   fetchBusinessCase,
   postBusinessCase,
+  putBusinessCase,
   storeBusinessCase
 } from 'types/routines';
 
@@ -216,6 +217,46 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: false,
+        error: null
+      });
+    });
+  });
+
+  describe('putBusinessCase', () => {
+    it('handles putBusinessCase.REQUEST', () => {
+      const initialState = {
+        form: {
+          ...businessCaseInitialData,
+          id: '5e579c80-31d0-4839-b1f8-d74bfa7d5e24'
+        },
+        isLoading: null,
+        isSaving: true,
+        isSubmitting: false,
+        error: null
+      };
+      const mockRequestAction = {
+        type: putBusinessCase.REQUEST,
+        payload: {
+          ...businessCaseInitialData,
+          businessNeed: 'The quick brown fox jumps over the lazy dog',
+          cmsBenefit: 'The quick brown fox jumps over the lazy dog',
+          priorityAlignment: 'The quick brown fox jumps over the lazy dog',
+          successIndicators: 'The quick brown fox jumps over the lazy dog'
+        }
+      };
+
+      expect(businessCaseReducer(initialState, mockRequestAction)).toEqual({
+        form: {
+          ...businessCaseInitialData,
+          id: '5e579c80-31d0-4839-b1f8-d74bfa7d5e24',
+          businessNeed: 'The quick brown fox jumps over the lazy dog',
+          cmsBenefit: 'The quick brown fox jumps over the lazy dog',
+          priorityAlignment: 'The quick brown fox jumps over the lazy dog',
+          successIndicators: 'The quick brown fox jumps over the lazy dog'
+        },
+        isLoading: null,
+        isSaving: true,
+        isSubmitting: false,
         error: null
       });
     });

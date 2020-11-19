@@ -10,13 +10,17 @@ import {
 import { updateLastActiveAt } from 'reducers/authReducer';
 import {
   archiveSystemIntake,
+  fetchIntakeNotes,
   fetchSystemIntake,
   issueLifecycleIdForSystemIntake,
+  postIntakeNote,
   postSystemIntake,
   reviewSystemIntake,
   saveSystemIntake
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
+
+import { postSystemIntakeActionRequest } from './actionSaga';
 
 function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
@@ -79,6 +83,7 @@ function* getSystemIntake(action: Action<any>) {
 function* submitSystemIntakeReview(action: Action<any>) {
   try {
     yield put(reviewSystemIntake.request());
+    yield postSystemIntakeActionRequest(action);
     const response = yield call(putSystemIntakeRequest, action.payload);
     yield put(reviewSystemIntake.success(response.data));
   } catch (error) {
@@ -128,12 +133,62 @@ function postLifecycleId({ id, data }: { id: string; data: lifecycleIdData }) {
 function* issueLifecyleId(action: Action<any>) {
   try {
     yield put(issueLifecycleIdForSystemIntake.request());
-    const response = yield call(postLifecycleId, action.payload);
+    const { id, lcidPayload, actionPayload } = action.payload;
+    yield call(postSystemIntakeActionRequest, { id, ...actionPayload });
+    const response = yield call(postLifecycleId, { id, data: lcidPayload });
     yield put(issueLifecycleIdForSystemIntake.success(response.data));
   } catch (error) {
     yield put(issueLifecycleIdForSystemIntake.failure(error.message));
   } finally {
     yield put(issueLifecycleIdForSystemIntake.fulfill());
+  }
+}
+
+function getIntakeNotesRequest(intakeId: string) {
+  return axios.get(
+    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${intakeId}/notes`
+  );
+}
+
+function* getIntakeNotes(action: Action<any>) {
+  try {
+    yield put(fetchIntakeNotes.request());
+    const response = yield call(getIntakeNotesRequest, action.payload);
+    yield put(fetchIntakeNotes.success(response.data));
+  } catch (error) {
+    yield put(fetchIntakeNotes.failure(error.message));
+  } finally {
+    yield put(fetchIntakeNotes.fulfill());
+  }
+}
+
+type NoteRequestBody = {
+  intakeId: string;
+  content: string;
+  authorId: string;
+  authorName: string;
+};
+
+function postIntakeNoteRequest(data: NoteRequestBody) {
+  const { content, authorId, authorName, intakeId } = data;
+  return axios.post(
+    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${intakeId}/notes`,
+    {
+      authorId,
+      authorName,
+      content
+    }
+  );
+}
+function* createIntakeNote(action: Action<any>) {
+  try {
+    yield put(postIntakeNote.request());
+    const response = yield call(postIntakeNoteRequest, action.payload);
+    yield put(postIntakeNote.success(response.data));
+  } catch (error) {
+    yield put(postIntakeNote.failure(error.message));
+  } finally {
+    yield put(postIntakeNote.fulfill());
   }
 }
 
@@ -144,4 +199,6 @@ export default function* systemIntakeSaga() {
   yield takeLatest(reviewSystemIntake.TRIGGER, submitSystemIntakeReview);
   yield takeLatest(archiveSystemIntake.TRIGGER, deleteSystemIntake);
   yield takeLatest(issueLifecycleIdForSystemIntake.TRIGGER, issueLifecyleId);
+  yield takeLatest(fetchIntakeNotes.TRIGGER, getIntakeNotes);
+  yield takeLatest(postIntakeNote.TRIGGER, createIntakeNote);
 }

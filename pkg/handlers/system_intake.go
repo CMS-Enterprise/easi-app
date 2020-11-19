@@ -210,7 +210,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 // LifecycleID assignment
 func NewSystemIntakeLifecycleIDHandler(
 	base HandlerBase,
-	assign func(context.Context, *models.SystemIntake) error,
+	assign func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 ) SystemIntakeLifecycleIDHandler {
 	return SystemIntakeLifecycleIDHandler{
 		HandlerBase:       base,
@@ -222,7 +222,7 @@ func NewSystemIntakeLifecycleIDHandler(
 // a lifecycleID to a SystemIntake
 type SystemIntakeLifecycleIDHandler struct {
 	HandlerBase
-	AssignLifecycleID func(context.Context, *models.SystemIntake) error
+	AssignLifecycleID func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
 }
 
 type lcidFields struct {
@@ -302,7 +302,7 @@ func (h SystemIntakeLifecycleIDHandler) Handle() http.HandlerFunc {
 				valErr.WithValidation("body.lcidNextSteps", "is required")
 				valFail = true
 			} else {
-				intake.LifecycleNextSteps = null.StringFrom(fields.NextSteps)
+				intake.DecisionNextSteps = null.StringFrom(fields.NextSteps)
 			}
 
 			if valFail {
@@ -311,12 +311,145 @@ func (h SystemIntakeLifecycleIDHandler) Handle() http.HandlerFunc {
 			}
 
 			// send it to the database
-			if err := h.AssignLifecycleID(r.Context(), intake); err != nil {
+			updatedIntake, err := h.AssignLifecycleID(r.Context(), intake)
+			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
 			}
 
-			w.WriteHeader(http.StatusNoContent) // 204 No Content
+			responseBody, err := json.Marshal(updatedIntake)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
+			w.WriteHeader(http.StatusCreated)
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+			return
+		default:
+			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
+			return
+		}
+	}
+}
+
+// NewSystemIntakeRejectionHandler is a constructor for how we handle
+// rejecting a request
+func NewSystemIntakeRejectionHandler(
+	base HandlerBase,
+	reject func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+) SystemIntakeRejectionHandler {
+	return SystemIntakeRejectionHandler{
+		HandlerBase:  base,
+		RejectIntake: reject,
+	}
+}
+
+// SystemIntakeRejectionHandler is the handler for rejecting a SystemIntake
+type SystemIntakeRejectionHandler struct {
+	HandlerBase
+	RejectIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
+}
+
+type rejectionFields struct {
+	Reason    string `json:"rejectionReason"`
+	NextSteps string `json:"rejectionNextSteps"`
+}
+
+func validateRejection(id string, data rejectionFields) (*uuid.UUID, error) {
+	valFail := false
+	valErr := apperrors.NewValidationError(
+		errors.New("system intake lifecycle fields failed validation"),
+		models.SystemIntake{},
+		"",
+	)
+	var intakeID uuid.UUID
+	var err error
+
+	if id == "" {
+		valErr.WithValidation("path.intakeID", "is required")
+		valFail = true
+	} else {
+		intakeID, err = uuid.Parse(id)
+		if err != nil {
+			valErr.WithValidation("path.intakeID", "must be UUID")
+		}
+	}
+
+	if data.Reason == "" {
+		valErr.WithValidation("body.rejectionReason", "is required")
+		valFail = true
+	}
+
+	if data.NextSteps == "" {
+		valErr.WithValidation("body.rejectionNextSteps", "is required")
+		valFail = true
+	}
+
+	if valFail {
+		return nil, &valErr
+	}
+
+	return &intakeID, nil
+}
+
+// Handle handles a request for the system intake form
+func (h SystemIntakeRejectionHandler) Handle() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "POST":
+			if r.Body == nil {
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.BadRequestError{Err: errors.New("empty request not allowed")},
+				)
+				return
+			}
+			defer r.Body.Close()
+
+			id := mux.Vars(r)["intake_id"]
+			fields := rejectionFields{}
+			if err := json.NewDecoder(r.Body).Decode(&fields); err != nil {
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
+				return
+			}
+
+			// formatting and validation of required inputs
+			uuid, valErr := validateRejection(id, fields)
+			if valErr != nil {
+				h.WriteErrorResponse(r.Context(), w, valErr)
+				return
+			}
+			intake := &models.SystemIntake{
+				ID:                *uuid,
+				RejectionReason:   null.StringFrom(fields.Reason),
+				DecisionNextSteps: null.StringFrom(fields.NextSteps),
+			}
+
+			// send it to the database
+			updatedIntake, err := h.RejectIntake(r.Context(), intake)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
+			responseBody, err := json.Marshal(updatedIntake)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
+			w.WriteHeader(http.StatusCreated)
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
 			return
 		default:
 			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})

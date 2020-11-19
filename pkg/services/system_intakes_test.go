@@ -44,41 +44,74 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 	}
 	fnAllFail := func(ctx context.Context) (models.SystemIntakes, error) { return nil, errors.New("forced error") }
 
+	fnByFilter := func(ctx context.Context, statuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
+		return models.SystemIntakes{
+			models.SystemIntake{},
+		}, nil
+	}
+	fnByFilterFail := func(ctx context.Context, statuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
+		return nil, errors.New("forced error")
+	}
+
 	testCases := map[string]struct {
-		ctx  context.Context
-		fn   func(ctx context.Context) (models.SystemIntakes, error)
-		fail bool
+		ctx    context.Context
+		fn     func(context.Context, models.SystemIntakeStatusFilter) (models.SystemIntakes, error)
+		filter models.SystemIntakeStatusFilter
+		fail   bool
 	}{
 		"happy path requester": {
 			appcontext.WithPrincipal(context.Background(), requester),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnByFilterFail, fnAuth),
+			models.SystemIntakeStatusFilter(""),
 			false,
 		},
-		"happy path reviewer": {
+		"happy path reviewer fetch all": {
 			appcontext.WithPrincipal(context.Background(), reviewer),
-			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnByFilterFail, fnAuth),
+			models.SystemIntakeStatusFilter(""),
+			false,
+		},
+		"happy path reviewer filter": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAllFail, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilterOPEN,
 			false,
 		},
 		"fail authorization": {
 			context.Background(),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter(""),
 			true,
 		},
 		"fail requester data access": {
 			appcontext.WithPrincipal(context.Background(), requester),
-			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter(""),
 			true,
 		},
-		"fail reviewer data access": {
+		"fail reviewer fetch all data access": {
 			appcontext.WithPrincipal(context.Background(), reviewer),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter(""),
+			true,
+		},
+		"fail reviewer filter data access": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilterFail, fnAuth),
+			models.SystemIntakeStatusFilterOPEN,
+			true,
+		},
+		"fail reviewer filter name": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter("blue"),
 			true,
 		},
 	}
 
 	for name, tc := range testCases {
 		s.Run(name, func() {
-			intakes, err := tc.fn(tc.ctx)
+			intakes, err := tc.fn(tc.ctx, tc.filter)
 
 			if tc.fail {
 				s.Error(err)
@@ -472,13 +505,18 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 }
 
 func (s ServicesTestSuite) TestUpdateLifecycleFields() {
+	lifecycleID := null.StringFrom("010010")
 	today := time.Now()
+	expiresAt := &today
+	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
+	scope := null.StringFrom(fmt.Sprintf("scope %s", today))
+
 	input := &models.SystemIntake{
 		ID:                 uuid.New(),
-		LifecycleID:        null.StringFrom("010010"),
-		LifecycleExpiresAt: &today,
-		LifecycleNextSteps: null.StringFrom(fmt.Sprintf("next %s", today)),
-		LifecycleScope:     null.StringFrom(fmt.Sprintf("scope %s", today)),
+		LifecycleID:        lifecycleID,
+		LifecycleExpiresAt: expiresAt,
+		DecisionNextSteps:  nextSteps,
+		LifecycleScope:     scope,
 	}
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
@@ -492,7 +530,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		if !i.LifecycleExpiresAt.Equal(today) {
 			return nil, errors.New("incorrect date")
 		}
-		if !i.LifecycleNextSteps.Equal(input.LifecycleNextSteps) {
+		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
 			return nil, errors.New("incorrect next")
 		}
 		if !i.LifecycleScope.Equal(input.LifecycleScope) {
@@ -505,16 +543,24 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
-		err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input)
 		s.NoError(err)
+		s.Equal(intake.LifecycleID, lifecycleID)
+		s.Equal(intake.LifecycleExpiresAt, expiresAt)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.LifecycleScope, scope)
 	})
 
 	// from here on out, we always expect the LCID to get generated
 	input.LifecycleID = null.StringFrom("")
 
 	s.Run("happy path generates lcid", func() {
-		err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input)
 		s.NoError(err)
+		s.NotEqual(intake.LifecycleID, "")
+		s.Equal(intake.LifecycleExpiresAt, expiresAt)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.LifecycleScope, scope)
 	})
 
 	// build the error-generating pieces
@@ -530,7 +576,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake) error
+		fn func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
 			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnGenerate),
@@ -551,7 +597,77 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			err := tc.fn(context.Background(), input)
+			_, err := tc.fn(context.Background(), input)
+			s.Error(err)
+		})
+	}
+}
+
+func (s ServicesTestSuite) TestUpdateRejectionFields() {
+	today := time.Now()
+	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
+	reason := null.StringFrom(fmt.Sprintf("reason %s", today))
+
+	input := &models.SystemIntake{
+		ID:                uuid.New(),
+		DecisionNextSteps: nextSteps,
+		RejectionReason:   reason,
+	}
+
+	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
+	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{ID: id}, nil
+	}
+	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
+			return nil, errors.New("incorrect next")
+		}
+		if !i.LifecycleScope.Equal(input.LifecycleScope) {
+			return nil, errors.New("incorrect scope")
+		}
+		return i, nil
+	}
+	cfg := Config{clock: clock.NewMock()}
+	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate)
+
+	s.Run("happy path", func() {
+		intake, err := happy(context.Background(), input)
+		s.NoError(err)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.RejectionReason, reason)
+	})
+
+	// build the error-generating pieces
+	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
+	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
+	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return nil, errors.New("fetch error")
+	}
+	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+		return nil, errors.New("update error")
+	}
+
+	// build the table-driven test of error cases for unhappy path
+	testCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
+	}{
+		"error path fetch": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate),
+		},
+		"error path auth": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate),
+		},
+		"error path auth fail": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate),
+		},
+		"error path update": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr),
+		},
+	}
+
+	for expectedErr, tc := range testCases {
+		s.Run(expectedErr, func() {
+			_, err := tc.fn(context.Background(), input)
 			s.Error(err)
 		})
 	}

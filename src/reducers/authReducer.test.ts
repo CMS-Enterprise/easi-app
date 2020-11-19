@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
 import authReducer, {
-  setUserGroups,
+  setUser,
   updateLastActiveAt,
   updateLastRenewAt
 } from './authReducer';
@@ -11,8 +11,10 @@ describe('The auth reducer', () => {
     expect(authReducer(undefined, { type: 'TEST', payload: {} })).toEqual({
       lastActiveAt: expect.any(Number),
       lastRenewAt: expect.any(Number),
+      name: '',
+      euaId: '',
       groups: [],
-      userGroupsSet: false
+      isUserSet: false
     });
   });
 
@@ -20,8 +22,10 @@ describe('The auth reducer', () => {
     const initialReducer = {
       lastActiveAt: 0,
       lastRenewAt: 0,
+      name: '',
+      euaId: '',
       groups: [],
-      userGroupsSet: false
+      isUserSet: false
     };
     const now = DateTime.local();
 
@@ -34,8 +38,10 @@ describe('The auth reducer', () => {
     const initialReducer = {
       lastActiveAt: 0,
       lastRenewAt: 0,
+      name: '',
+      euaId: '',
       groups: [],
-      userGroupsSet: false
+      isUserSet: false
     };
     const now = DateTime.local();
 
@@ -44,17 +50,25 @@ describe('The auth reducer', () => {
     ).toEqual(now);
   });
 
-  it('handles setUserGroups', () => {
+  it('sets user info', () => {
     const initialReducer = {
       lastActiveAt: 0,
       lastRenewAt: 0,
+      name: '',
+      euaId: '',
       groups: [],
-      userGroupsSet: false
+      isUserSet: false
     };
-    const mockAction = setUserGroups(['my-test-group']);
+    const mockAction = setUser({
+      name: 'Jane Smith',
+      euaId: 'ABCD',
+      groups: ['my-test-group']
+    });
 
     const newState = authReducer(initialReducer, mockAction);
+    expect(newState.name).toEqual('Jane Smith');
+    expect(newState.euaId).toEqual('ABCD');
     expect(newState.groups).toEqual(['my-test-group']);
-    expect(newState.userGroupsSet).toEqual(true);
+    expect(newState.isUserSet).toEqual(true);
   });
 });
