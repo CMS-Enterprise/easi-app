@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -21,14 +22,16 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
   const history = useHistory();
   const { t } = useTranslation();
 
+  const { grtDate, grbDate } = systemIntake;
+
   // TODO: Fix Text Field so we don't have to set initial empty values
   const initialValues: SubmitDatesForm = {
-    grtDateDay: '',
-    grtDateMonth: '',
-    grtDateYear: '',
-    grbDateDay: '',
-    grbDateMonth: '',
-    grbDateYear: ''
+    grtDateDay: grtDate ? String(grtDate.day) : '',
+    grtDateMonth: grtDate ? String(grtDate.month) : '',
+    grtDateYear: grtDate ? String(grtDate.year) : '',
+    grbDateDay: grbDate ? String(grbDate.day) : '',
+    grbDateMonth: grbDate ? String(grbDate.month) : '',
+    grbDateYear: grbDate ? String(grbDate.year) : ''
   };
 
   const onSubmit = (values: SubmitDatesForm) => {
@@ -40,11 +43,24 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
       grbDateDay,
       grbDateYear
     } = values;
-    const grtDate = `${grtDateYear}-${grtDateMonth}-${grtDateDay}`;
-    const grbDate = `${grbDateYear}-${grbDateMonth}-${grbDateDay}`;
 
-    const data = { ...systemIntake, grtDate, grbDate, id: systemId };
-    console.log(data);
+    const newGrtDate = DateTime.fromObject({
+      day: Number(grtDateDay),
+      month: Number(grtDateMonth),
+      year: Number(grtDateYear)
+    });
+    const newGrbDate = DateTime.fromObject({
+      day: Number(grbDateDay),
+      month: Number(grbDateMonth),
+      year: Number(grbDateYear)
+    });
+
+    const data = {
+      ...systemIntake,
+      grtDate: newGrtDate,
+      grbDate: newGrbDate,
+      id: systemId
+    };
     dispatch(saveSystemIntake({ ...data }));
 
     history.push(`/governance-review-team/${systemId}/intake-request`);
