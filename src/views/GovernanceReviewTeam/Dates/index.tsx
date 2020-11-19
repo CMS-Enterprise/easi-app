@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -11,6 +11,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
+import { AppState } from 'reducers/rootReducer';
 import { saveSystemIntake } from 'types/routines';
 import { SubmitDatesForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
@@ -20,6 +21,9 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation();
+  const intakeIsLoading = useSelector(
+    (state: AppState) => state.systemIntake.isLoading
+  );
 
   const { grtDate, grbDate } = systemIntake;
 
@@ -64,6 +68,10 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
 
     history.push(`/governance-review-team/${systemId}/intake-request`);
   };
+
+  if (intakeIsLoading) {
+    return <></>;
+  }
 
   return (
     <Formik
