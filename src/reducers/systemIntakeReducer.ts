@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 
 import {
@@ -7,7 +8,10 @@ import {
 import {
   archiveSystemIntake,
   clearSystemIntake,
+  fetchIntakeNotes,
   fetchSystemIntake,
+  issueLifecycleIdForSystemIntake,
+  postIntakeNote,
   postSystemIntake,
   reviewSystemIntake,
   saveSystemIntake,
@@ -20,7 +24,8 @@ const initialState: SystemIntakeState = {
   isLoading: null,
   isSaving: false,
   isNewIntakeCreated: null,
-  error: null
+  error: null,
+  notes: []
 };
 
 function systemIntakeReducer(
@@ -140,6 +145,43 @@ function systemIntakeReducer(
       };
     case archiveSystemIntake.SUCCESS:
       return initialState;
+    case issueLifecycleIdForSystemIntake.SUCCESS:
+      return {
+        ...state,
+        systemIntake: {
+          ...state.systemIntake,
+          ...prepareSystemIntakeForApp(action.payload)
+        }
+      };
+    case postIntakeNote.SUCCESS:
+      return {
+        ...state,
+        notes: [
+          {
+            ...action.payload,
+            createdAt: DateTime.fromISO(action.payload.createdAt)
+          },
+          ...state.notes
+        ]
+      };
+    case fetchIntakeNotes.TRIGGER:
+      return {
+        ...state,
+        notes: []
+      };
+    case fetchIntakeNotes.SUCCESS:
+      return {
+        ...state,
+        notes: action.payload.map((note: any) => ({
+          ...note,
+          createdAt: DateTime.fromISO(note.createdAt)
+        }))
+      };
+    case fetchIntakeNotes.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
     default:
       return state;
   }

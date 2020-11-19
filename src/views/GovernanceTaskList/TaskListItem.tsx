@@ -18,7 +18,9 @@ const TaskListItem = ({
     'governance-task-list__item',
     'padding-bottom-4',
     {
-      'governance-task-list__item--na': status === 'CANNOT_START'
+      'governance-task-list__item--na': ['NOT_NEEDED', 'CANNOT_START'].includes(
+        status
+      )
     }
   );
   return (

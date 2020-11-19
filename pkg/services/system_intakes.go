@@ -19,9 +19,10 @@ func NewFetchSystemIntakes(
 	config Config,
 	fetchByID func(c context.Context, euaID string) (models.SystemIntakes, error),
 	fetchAll func(context.Context) (models.SystemIntakes, error),
+	fetchByStatusFilter func(context.Context, []models.SystemIntakeStatus) (models.SystemIntakes, error),
 	authorize func(c context.Context) (bool, error),
-) func(c context.Context) (models.SystemIntakes, error) {
-	return func(ctx context.Context) (models.SystemIntakes, error) {
+) func(context.Context, models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
+	return func(ctx context.Context, statusFilter models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
 		logger := appcontext.ZLogger(ctx)
 		ok, err := authorize(ctx)
 		if err != nil {
@@ -35,7 +36,17 @@ func NewFetchSystemIntakes(
 		if !principal.AllowGRT() {
 			result, err = fetchByID(ctx, principal.ID())
 		} else {
-			result, err = fetchAll(ctx)
+			if statusFilter == "" {
+				result, err = fetchAll(ctx)
+			} else {
+				statuses, filterErr := models.GetStatusesByFilter(statusFilter)
+				if filterErr != nil {
+					return nil, &apperrors.BadRequestError{
+						Err: filterErr,
+					}
+				}
+				result, err = fetchByStatusFilter(ctx, statuses)
+			}
 		}
 		if err != nil {
 			logger.Error("failed to fetch system intakes")
@@ -287,11 +298,11 @@ func NewUpdateLifecycleFields(
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	generateLCID func(context.Context) (string, error),
-) func(context.Context, *models.SystemIntake) error {
-	return func(ctx context.Context, intake *models.SystemIntake) error {
+) func(context.Context, *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
-			return &apperrors.QueryError{
+			return nil, &apperrors.QueryError{
 				Err:       err,
 				Operation: apperrors.QueryFetch,
 				Model:     existing,
@@ -300,15 +311,15 @@ func NewUpdateLifecycleFields(
 
 		ok, err := authorize(ctx)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if !ok {
-			return &apperrors.UnauthorizedError{Err: err}
+			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
 		// don't allow overwriting an existing LCID
 		if existing.LifecycleID.ValueOrZero() != "" {
-			return &apperrors.ResourceConflictError{
+			return nil, &apperrors.ResourceConflictError{
 				Err:        errors.New("lifecycle id already exists"),
 				Resource:   models.SystemIntake{},
 				ResourceID: intake.ID.String(),
@@ -322,25 +333,70 @@ func NewUpdateLifecycleFields(
 		existing.LifecycleID = intake.LifecycleID
 		existing.LifecycleExpiresAt = intake.LifecycleExpiresAt
 		existing.LifecycleScope = intake.LifecycleScope
-		existing.LifecycleNextSteps = intake.LifecycleNextSteps
+		existing.DecisionNextSteps = intake.DecisionNextSteps
 
 		// if a LCID wasn't passed in, we generate one
 		if existing.LifecycleID.ValueOrZero() == "" {
 			lcid, gErr := generateLCID(ctx)
 			if gErr != nil {
-				return gErr
+				return nil, gErr
 			}
 			existing.LifecycleID = null.StringFrom(lcid)
 		}
 
-		_, err = update(ctx, existing)
+		updated, err := update(ctx, existing)
 		if err != nil {
-			return &apperrors.QueryError{
+			return nil, &apperrors.QueryError{
 				Err:       err,
 				Model:     intake,
 				Operation: apperrors.QuerySave,
 			}
 		}
-		return nil
+		return updated, nil
+	}
+}
+
+// NewUpdateRejectionFields provides a way to update several of the fields
+// associated with rejecting an intake request
+func NewUpdateRejectionFields(
+	config Config,
+	authorize func(context.Context) (bool, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+) func(context.Context, *models.SystemIntake) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+		existing, err := fetch(ctx, intake.ID)
+		if err != nil {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Operation: apperrors.QueryFetch,
+				Model:     existing,
+			}
+		}
+
+		ok, err := authorize(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if !ok {
+			return nil, &apperrors.UnauthorizedError{Err: err}
+		}
+
+		// we only want to bring over the fields specifically
+		// dealing with Rejection information
+		updatedTime := config.clock.Now()
+		existing.UpdatedAt = &updatedTime
+		existing.RejectionReason = intake.RejectionReason
+		existing.DecisionNextSteps = intake.DecisionNextSteps
+
+		updated, err := update(ctx, existing)
+		if err != nil {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
+			}
+		}
+		return updated, nil
 	}
 }

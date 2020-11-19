@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 
 import { LifecyclePhase } from 'types/estimatedLifecycle';
+import { SystemIntakeStatus } from 'types/systemIntake';
 
 export type EstimatedLifecycleCostLines = {
   year1: LifecyclePhase[];
@@ -53,6 +54,7 @@ export type RequestDescriptionForm = {
   cmsBenefit: string;
   priorityAlignment: string;
   successIndicators: string;
+  systemIntakeStatus: SystemIntakeStatus;
 };
 
 export type AsIsSolutionForm = {
@@ -82,6 +84,7 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
     euaUserId?: string;
     status: BusinessCaseStatus;
     systemIntakeId: string;
+    systemIntakeStatus: SystemIntakeStatus;
     initialSubmittedAt?: string;
     lastSubmittedAt?: string;
   };

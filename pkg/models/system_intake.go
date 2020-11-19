@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -12,6 +13,9 @@ type SystemIntakeStatus string
 
 // SystemIntakeRequestType represents the type of a system intake
 type SystemIntakeRequestType string
+
+// SystemIntakeStatusFilter represents a filter in GETting system intakes
+type SystemIntakeStatusFilter string
 
 const (
 	// SystemIntakeStatusINTAKEDRAFT captures enum value "INTAKE_DRAFT"
@@ -40,10 +44,14 @@ const (
 	SystemIntakeStatusBIZCASEDRAFT SystemIntakeStatus = "BIZ_CASE_DRAFT"
 	// SystemIntakeStatusBIZCASEDRAFTSUBMITTED captures enum value "BIZ_CASE_DRAFT_SUBMITTED"
 	SystemIntakeStatusBIZCASEDRAFTSUBMITTED SystemIntakeStatus = "BIZ_CASE_DRAFT_SUBMITTED"
+	// SystemIntakeStatusBIZCASEFINALSUBMITTED captures enum value "BIZ_CASE_FINAL_SUBMITTED"
+	SystemIntakeStatusBIZCASEFINALSUBMITTED SystemIntakeStatus = "BIZ_CASE_FINAL_SUBMITTED"
 	// SystemIntakeStatusBIZCASECHANGESNEEDED captures enum value "BIZ_CASE_CHANGES_NEEDED"
 	SystemIntakeStatusBIZCASECHANGESNEEDED SystemIntakeStatus = "BIZ_CASE_CHANGES_NEEDED"
 	// SystemIntakeStatusBIZCASEFINALNEEDED captures enum value "BIZ_CASE_FINAL_NEEDED"
 	SystemIntakeStatusBIZCASEFINALNEEDED SystemIntakeStatus = "BIZ_CASE_FINAL_NEEDED"
+	// SystemIntakeStatusNOTAPPROVED captures enum value "NOT_APPROVED"
+	SystemIntakeStatusNOTAPPROVED SystemIntakeStatus = "NOT_APPROVED"
 	// SystemIntakeStatusNOGOVERNANCE captures enum value "NO_GOVERNANCE"
 	SystemIntakeStatusNOGOVERNANCE SystemIntakeStatus = "NO_GOVERNANCE"
 
@@ -55,6 +63,11 @@ const (
 	SystemIntakeRequestTypeRECOMPETE SystemIntakeRequestType = "RECOMPETE"
 	// SystemIntakeRequestTypeSHUTDOWN captures enum value of "SHUTDOWN"
 	SystemIntakeRequestTypeSHUTDOWN SystemIntakeRequestType = "SHUTDOWN"
+
+	// SystemIntakeStatusFilterOPEN captures enum value "OPEN"
+	SystemIntakeStatusFilterOPEN SystemIntakeStatusFilter = "OPEN"
+	// SystemIntakeStatusFilterCLOSED captures enum value "CLOSED"
+	SystemIntakeStatusFilterCLOSED SystemIntakeStatusFilter = "CLOSED"
 )
 
 // SystemIntake is the model for the system intake form
@@ -105,7 +118,9 @@ type SystemIntake struct {
 	LifecycleID             null.String             `json:"lcid" db:"lcid"`
 	LifecycleExpiresAt      *time.Time              `json:"lcidExpiresAt" db:"lcid_expires_at"`
 	LifecycleScope          null.String             `json:"lcidScope" db:"lcid_scope"`
-	LifecycleNextSteps      null.String             `json:"lcidNextSteps" db:"lcid_next_steps"`
+	LifecycleNextSteps      null.String             `json:"lifecycleNextSteps" db:"lcid_next_steps"`
+	DecisionNextSteps       null.String             `json:"decisionNextSteps" db:"decision_next_steps"`
+	RejectionReason         null.String             `json:"rejectionReason" db:"rejection_reason"`
 }
 
 // SystemIntakes is a list of System Intakes
@@ -119,4 +134,32 @@ type SystemIntakeMetrics struct {
 	CompletedOfStarted int       `json:"completedOfStarted"`
 	Completed          int       `json:"completed"`
 	Funded             int       `json:"funded"`
+}
+
+// GetStatusesByFilter returns a list of status corresponding to a /system_intakes/ filter
+func GetStatusesByFilter(filter SystemIntakeStatusFilter) ([]SystemIntakeStatus, error) {
+	switch filter {
+	case SystemIntakeStatusFilterOPEN:
+		return []SystemIntakeStatus{
+			SystemIntakeStatusINTAKESUBMITTED,
+			SystemIntakeStatusNEEDBIZCASE,
+			SystemIntakeStatusBIZCASEDRAFT,
+			SystemIntakeStatusBIZCASEDRAFTSUBMITTED,
+			SystemIntakeStatusBIZCASECHANGESNEEDED,
+			SystemIntakeStatusBIZCASEFINALNEEDED,
+			SystemIntakeStatusBIZCASEFINALSUBMITTED,
+			SystemIntakeStatusREADYFORGRT,
+			SystemIntakeStatusREADYFORGRB,
+		}, nil
+	case SystemIntakeStatusFilterCLOSED:
+		return []SystemIntakeStatus{
+			SystemIntakeStatusLCIDISSUED,
+			SystemIntakeStatusWITHDRAWN,
+			SystemIntakeStatusNOTITREQUEST,
+			SystemIntakeStatusNOTAPPROVED,
+			SystemIntakeStatusNOGOVERNANCE,
+		}, nil
+	default:
+		return []SystemIntakeStatus{}, errors.New("unexpected system intake status filter name")
+	}
 }

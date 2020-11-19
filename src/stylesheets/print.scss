@@ -1,0 +1,29 @@
+@media print {
+  header.usa-header,
+  footer.usa-footer,
+  nav.easi-breadcrumb-nav,
+  .easi-no-print,
+  .skipnav,
+  noscript {
+    display: none;
+  }
+
+  .easi-review-row {
+    display: flex;
+    & > div {
+      flex: 1;
+      margin-bottom: 1.25rem;
+    }
+  }
+
+  hr.system-intake__hr {
+    opacity: 1;
+    border-bottom: solid 5px black;
+  }
+
+  h1 {
+    border-bottom: solid 5px #009bc3;
+    padding-bottom: 1rem;
+    margin-bottom: 3rem;
+  }
+}
