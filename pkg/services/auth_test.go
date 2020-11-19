@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 
+	"github.com/guregu/null"
+
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -26,7 +28,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ZYXW", JobCodeEASi: true})
 
 		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
+			EUAUserID: null.StringFrom("ABCD"),
 		}
 
 		ok, err := authorizeSaveSystemIntake(ctx, &intake)
@@ -40,7 +42,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 		ctx = appcontext.WithPrincipal(ctx, &authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true})
 
 		intake := models.SystemIntake{
-			EUAUserID: "ABCD",
+			EUAUserID: null.StringFrom("ABCD"),
 		}
 
 		ok, err := authorizeSaveSystemIntake(ctx, &intake)
