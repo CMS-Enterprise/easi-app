@@ -118,7 +118,9 @@ type SystemIntake struct {
 	LifecycleID             null.String             `json:"lcid" db:"lcid"`
 	LifecycleExpiresAt      *time.Time              `json:"lcidExpiresAt" db:"lcid_expires_at"`
 	LifecycleScope          null.String             `json:"lcidScope" db:"lcid_scope"`
-	LifecycleNextSteps      null.String             `json:"lcidNextSteps" db:"lcid_next_steps"`
+	LifecycleNextSteps      null.String             `json:"lifecycleNextSteps" db:"lcid_next_steps"`
+	DecisionNextSteps       null.String             `json:"decisionNextSteps" db:"decision_next_steps"`
+	RejectionReason         null.String             `json:"rejectionReason" db:"rejection_reason"`
 }
 
 // SystemIntakes is a list of System Intakes

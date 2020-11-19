@@ -14,8 +14,6 @@ import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
 import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
-import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
-import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import NotFound from 'views/NotFound';
@@ -82,12 +80,6 @@ const AppRoutes = () => {
         render={({ component }: any) => component()}
         component={RequestTypeForm}
       />
-      <SecureRoute
-        exact
-        path="/system/:systemId/grt-review"
-        render={({ component }: any) => component()}
-        component={GrtSystemIntakeReview}
-      />
       <Redirect
         exact
         from="/system/:systemId"
@@ -97,10 +89,6 @@ const AppRoutes = () => {
         path="/system/:systemId/:formPage"
         render={({ component }: any) => component()}
         component={SystemIntake}
-      />
-      <SecureRoute
-        path="/business/:businessCaseId/grt-review"
-        component={GrtBusinessCaseReview}
       />
       <Redirect
         exact

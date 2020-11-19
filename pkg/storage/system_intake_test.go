@@ -151,7 +151,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 			LifecycleID:        null.StringFrom("ABCDEF"),
 			LifecycleExpiresAt: &now,
 			LifecycleScope:     null.StringFrom("ABCDEF"),
-			LifecycleNextSteps: null.StringFrom("ABCDEF"),
+			DecisionNextSteps:  null.StringFrom("ABCDEF"),
 		}
 		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
 		s.NoError(err)
@@ -161,7 +161,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Empty(partial.LifecycleID)
 		s.Empty(partial.LifecycleExpiresAt)
 		s.Empty(partial.LifecycleScope)
-		s.Empty(partial.LifecycleNextSteps)
+		s.Empty(partial.DecisionNextSteps)
 
 		// Update
 		lcid := "H200110" // historical first LCID issued on 2020-01-11
@@ -170,7 +170,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		partial.LifecycleID = null.StringFrom(lcid)
 		partial.LifecycleExpiresAt = &now
 		partial.LifecycleScope = null.StringFrom(content1)
-		partial.LifecycleNextSteps = null.StringFrom(content2)
+		partial.DecisionNextSteps = null.StringFrom(content2)
 
 		_, err = s.store.UpdateSystemIntake(ctx, partial)
 		s.NoError(err, "failed to update system intake")
@@ -181,7 +181,42 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Equal(lcid, updated.LifecycleID.String)
 		s.NotEmpty(updated.LifecycleExpiresAt)
 		s.Equal(content1, updated.LifecycleScope.String)
-		s.Equal(content2, updated.LifecycleNextSteps.String)
+		s.Equal(content2, updated.DecisionNextSteps.String)
+	})
+
+	s.Run("Rejection fields only upon update", func() {
+		originalIntake := models.SystemIntake{
+			EUAUserID:   testhelpers.RandomEUAID(),
+			Status:      models.SystemIntakeStatusINTAKEDRAFT,
+			RequestType: models.SystemIntakeRequestTypeNEW,
+			Requester:   "Test requester",
+
+			// These fields should NOT be written during a create
+			RejectionReason:   null.StringFrom("ABCDEF"),
+			DecisionNextSteps: null.StringFrom("ABCDEF"),
+		}
+		_, err := s.store.CreateSystemIntake(ctx, &originalIntake)
+		s.NoError(err)
+
+		partial, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+		s.Empty(partial.RejectionReason)
+		s.Empty(partial.DecisionNextSteps)
+
+		// Update
+		content1 := "ABC"
+		content2 := "XYZ"
+		partial.RejectionReason = null.StringFrom(content1)
+		partial.DecisionNextSteps = null.StringFrom(content2)
+
+		_, err = s.store.UpdateSystemIntake(ctx, partial)
+		s.NoError(err, "failed to update system intake")
+
+		updated, err := s.store.FetchSystemIntakeByID(ctx, originalIntake.ID)
+		s.NoError(err)
+
+		s.Equal(content1, updated.RejectionReason.String)
+		s.Equal(content2, updated.DecisionNextSteps.String)
 	})
 
 	s.Run("Update contract details information", func() {
