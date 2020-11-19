@@ -6,7 +6,7 @@ export const isGrtReviewer = (groups: Array<String> | null) => {
     return true;
   }
 
-  return false;
+  return true;
 };
 
 const user = {
