@@ -495,6 +495,81 @@ describe('The Goveranance Task List', () => {
       ).toEqual(false);
     });
 
+    it('renders proper buttons for READY_FOR_GRT', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'READY_FOR_GRT'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+
+      expect(
+        component!.find('[data-testid="prepare-for-grt-cta"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="view-biz-case-cta"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-decision"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+    });
+
     it('renders proper buttons for BIZ_CASE_FINAL_NEEDED', async () => {
       const store = mockStore({
         systemIntake: {

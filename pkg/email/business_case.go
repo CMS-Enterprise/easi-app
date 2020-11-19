@@ -15,8 +15,8 @@ type businessCaseSubmission struct {
 	BusinessCaseLink string
 }
 
-func (c Client) businessCaseSubmissionBody(businessCaseID uuid.UUID) (string, error) {
-	businessCasePath := path.Join("business", businessCaseID.String(), "grt-review")
+func (c Client) businessCaseSubmissionBody(systemIntakeID uuid.UUID) (string, error) {
+	businessCasePath := path.Join("governance-review-team", systemIntakeID.String(), "business-case")
 	data := businessCaseSubmission{
 		BusinessCaseLink: c.urlFromPath(businessCasePath),
 	}
@@ -32,9 +32,9 @@ func (c Client) businessCaseSubmissionBody(businessCaseID uuid.UUID) (string, er
 }
 
 // SendBusinessCaseSubmissionEmail sends an email for a submitted business case
-func (c Client) SendBusinessCaseSubmissionEmail(requester string, businessCaseID uuid.UUID) error {
+func (c Client) SendBusinessCaseSubmissionEmail(requester string, systemIntakeID uuid.UUID) error {
 	subject := fmt.Sprintf("New Business Case: %s", requester)
-	body, err := c.businessCaseSubmissionBody(businessCaseID)
+	body, err := c.businessCaseSubmissionBody(systemIntakeID)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

@@ -93,84 +93,40 @@ func NewCreateSystemIntake(
 // NewUpdateSystemIntake is a service to update a system intake
 func NewUpdateSystemIntake(
 	config Config,
-	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchRequesterInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(emailText string, recipientAddress string) error,
-	updateDraftIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
-	canDecideIntake bool,
 ) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-		existingIntake, fetchErr := fetch(ctx, intake.ID)
-		if fetchErr != nil {
-			return &models.SystemIntake{}, &apperrors.QueryError{
-				Err:       fetchErr,
-				Operation: apperrors.QueryFetch,
-				Model:     existingIntake,
+		existingIntake, err := fetch(ctx, intake.ID)
+		if err != nil {
+			return nil, &apperrors.ResourceNotFoundError{
+				Err:      errors.New("business case does not exist"),
+				Resource: intake,
 			}
 		}
 
-		if existingIntake.Status == models.SystemIntakeStatusINTAKEDRAFT && intake.Status == models.SystemIntakeStatusINTAKEDRAFT {
-			return updateDraftIntake(ctx, existingIntake, intake)
-		} else if existingIntake.Status == models.SystemIntakeStatusINTAKESUBMITTED &&
-			(intake.Status == models.SystemIntakeStatusLCIDISSUED ||
-				intake.Status == models.SystemIntakeStatusNEEDBIZCASE ||
-				intake.Status == models.SystemIntakeStatusNOTITREQUEST) && canDecideIntake {
+		ok, err := authorize(ctx, existingIntake)
+		if err != nil {
+			return nil, err
+		}
+		if !ok {
+			return nil, &apperrors.UnauthorizedError{Err: err}
+		}
 
-			ok, err := authorize(ctx, existingIntake)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-			if !ok {
-				return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
-			}
+		updatedTime := config.clock.Now()
+		intake.UpdatedAt = &updatedTime
 
-			updatedTime := config.clock.Now()
-			intake.UpdatedAt = &updatedTime
-
-			requesterInfo, err := fetchRequesterInfo(ctx, existingIntake.EUAUserID)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-			if requesterInfo == nil || requesterInfo.Email == "" {
-				return &models.SystemIntake{}, &apperrors.ExternalAPIError{
-					Err:       errors.New("user info fetch was not successful"),
-					Model:     existingIntake,
-					ModelID:   intake.ID.String(),
-					Operation: apperrors.Fetch,
-					Source:    "CEDAR LDAP",
-				}
-			}
-
-			existingIntake.Status = intake.Status
-			existingIntake.GrtReviewEmailBody = intake.GrtReviewEmailBody
-			existingIntake.RequesterEmailAddress = null.StringFrom(requesterInfo.Email)
-			existingIntake.DecidedAt = &updatedTime
-			existingIntake.UpdatedAt = &updatedTime
-			// This ensures only certain fields can be modified.
-			intake, err = update(ctx, existingIntake)
-			if err != nil {
-				return &models.SystemIntake{}, &apperrors.QueryError{
-					Err:       err,
-					Model:     intake,
-					Operation: apperrors.QuerySave,
-				}
-			}
-
-			err = sendReviewEmail(intake.GrtReviewEmailBody.String, requesterInfo.Email)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-
-			return intake, nil
-		} else {
-			return &models.SystemIntake{}, &apperrors.ResourceConflictError{
-				Err:        errors.New("invalid intake status change"),
-				Resource:   intake,
-				ResourceID: intake.ID.String(),
+		intake, err = update(ctx, intake)
+		if err != nil {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
 			}
 		}
+
+		return intake, nil
 	}
 }
 

@@ -147,6 +147,12 @@ const ClientProtocolKey = "CLIENT_PROTOCOL"
 // EmailTemplateDirectoryKey is the key for getting the email template directory
 const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
 
+// AWSS3FileUploadBucket is the key for the bucket we upload files to
+const AWSS3FileUploadBucket = "AWS_S3_FILE_UPLOAD_BUCKET"
+
+// AWSRegion is the key for the region we establish a session to for AWS services
+const AWSRegion = "AWS_REGION"
+
 // CEDARAPIURL is the key for the CEDAR base url
 const CEDARAPIURL = "CEDAR_API_URL"
 
