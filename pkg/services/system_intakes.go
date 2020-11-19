@@ -75,7 +75,7 @@ func NewCreateSystemIntake(
 				Info("something went wrong fetching the eua id from the context")
 			return &models.SystemIntake{}, &apperrors.UnauthorizedError{}
 		}
-		intake.EUAUserID = principal.ID()
+		intake.EUAUserID = null.StringFrom(principal.ID())
 		// app validation belongs here
 		createdIntake, err := create(ctx, intake)
 		if err != nil {
