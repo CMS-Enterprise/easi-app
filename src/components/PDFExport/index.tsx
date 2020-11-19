@@ -84,7 +84,7 @@ const downloadRefAsPDF = (
         </head>
         <body>
           <h1>
-            Page Title
+            ${escape(title)}
           </h1>
           ${ref && ref.current && ref.current.outerHTML} 
         </body>
