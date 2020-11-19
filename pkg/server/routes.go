@@ -19,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 func (s *Server) routes(
@@ -90,6 +91,10 @@ func (s *Server) routes(
 		s.CheckEmailClient(emailClient)
 	}
 
+	// set up S3 client
+	s3Config := s.NewS3Config()
+	s3Client := upload.NewS3Client(s3Config)
+
 	// set up FlagClient
 	flagConfig := s.NewFlagConfig()
 	var flagClient flags.FlagClient
@@ -150,17 +155,9 @@ func (s *Server) routes(
 		),
 		services.NewUpdateSystemIntake(
 			serviceConfig,
-			store.UpdateSystemIntake,
 			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
 			services.NewAuthorizeUserIsIntakeRequester(),
-			cedarLDAPClient.FetchUserInfo,
-			emailClient.SendSystemIntakeReviewEmail,
-			services.NewUpdateDraftSystemIntake(
-				serviceConfig,
-				services.NewAuthorizeUserIsIntakeRequester(),
-				store.UpdateSystemIntake,
-			),
-			!s.environment.Prod(),
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
@@ -237,7 +234,7 @@ func (s *Server) routes(
 	)
 	api.Handle("/metrics", metricsHandler.Handle())
 
-	systemIntakeActionHandler := handlers.NewSystemIntakeActionHandler(
+	actionHandler := handlers.NewActionHandler(
 		base,
 		services.NewTakeAction(
 			store.FetchSystemIntakeByID,
@@ -425,10 +422,29 @@ func (s *Server) routes(
 						store.UpdateBusinessCase,
 					),
 				),
+				models.ActionTypeREJECT: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNOTAPPROVED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					store.CreateAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
 			},
 		),
+		services.NewFetchActionsByRequestID(
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.GetActionsByRequestID,
+		),
 	)
-	api.Handle("/system_intake/{intake_id}/actions", systemIntakeActionHandler.Handle())
+	api.Handle("/system_intake/{intake_id}/actions", actionHandler.Handle())
 
 	systemIntakeLifecycleIDHandler := handlers.NewSystemIntakeLifecycleIDHandler(
 		base,
@@ -441,6 +457,17 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
+
+	systemIntakeRejectionHandler := handlers.NewSystemIntakeRejectionHandler(
+		base,
+		services.NewUpdateRejectionFields(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/reject", systemIntakeRejectionHandler.Handle())
 
 	notesHandler := handlers.NewNotesHandler(
 		base,
@@ -456,6 +483,13 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/notes", notesHandler.Handle())
+
+	// File Upload Handlers
+	fileUploadHandler := handlers.NewFileUploadHandler(
+		base,
+		services.NewCreateFileUploadURL(serviceConfig, s3Client),
+	)
+	api.Handle("/file_uploads", fileUploadHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
