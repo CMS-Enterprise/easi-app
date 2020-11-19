@@ -34,6 +34,9 @@ export const initialReviewTag = (intakeStatus: string): TagEnum => {
 
 export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
+    if (intake.status === 'LCID_ISSUED') {
+      return 'NOT_NEEDED';
+    }
     return 'CANNOT_START';
   }
 
@@ -56,6 +59,9 @@ export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
 
 export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
   if (intake.requestType === 'RECOMPETE') {
+    if (intake.status === 'LCID_ISSUED') {
+      return 'NOT_NEEDED';
+    }
     return 'CANNOT_START';
   }
 
@@ -83,6 +89,9 @@ export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
 // Task List Item: Attend GRB Meeting
 export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
+    if (intake.status === 'LCID_ISSUED') {
+      return 'NOT_NEEDED';
+    }
     return 'CANNOT_START';
   }
 
@@ -103,6 +112,9 @@ export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
 // Task List Item: Decision
 export const decisionTag = (intake: SystemIntakeForm): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
+    if (intake.status === 'LCID_ISSUED') {
+      return '';
+    }
     return 'CANNOT_START';
   }
 
