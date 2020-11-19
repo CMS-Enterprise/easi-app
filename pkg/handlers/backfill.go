@@ -42,15 +42,16 @@ func (h BackfillHandler) Handle() http.HandlerFunc {
 			defer r.Body.Close()
 			decoder := json.NewDecoder(r.Body)
 			data := struct {
-				Intake *models.SystemIntake
+				Intake models.SystemIntake
 				Notes  []models.Note
 			}{}
 			if err := decoder.Decode(&data); err != nil {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 				return
 			}
-			if true {
-				panic("not yet implemented")
+			if err := h.Saver(r.Context(), data.Intake, data.Notes); err != nil {
+				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
+				return
 			}
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusNoContent) // 204 No Content
