@@ -79,6 +79,8 @@ const GovernanceTaskList = () => {
         return 'Status: Business case submitted. Waiting for feedback.';
       case 'BIZ_CASE_CHANGES_NEEDED':
         return 'Status: Read feedback in your email, make updates to your business case and re-submit it.';
+      case 'READY_FOR_GRT':
+        return 'Status: Attend GRT meeting. The admin team will email you to schedule a time.';
       default:
         return 'Make a draft about the various solutions you’ve thought of and costs involved. After you’ve completed your draft business case you will likely attend the GRT meeting.';
     }
