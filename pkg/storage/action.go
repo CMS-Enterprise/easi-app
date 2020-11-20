@@ -26,6 +26,7 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 		    actor_email,
 		    actor_eua_user_id,
 			intake_id,
+			feedback,
 			created_at
 		)
 		VALUES (
@@ -35,6 +36,7 @@ func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*model
 		    :actor_email,
 			:actor_eua_user_id,
 		    :intake_id,
+			:feedback,
 		    :created_at
 		)`
 	_, err := s.db.NamedExec(
