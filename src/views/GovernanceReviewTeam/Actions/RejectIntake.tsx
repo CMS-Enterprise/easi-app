@@ -26,6 +26,12 @@ const RejectIntake = () => {
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
+  const initialValues: RejectIntakeForm = {
+    feedback: '',
+    nextSteps: '',
+    reason: ''
+  };
+
   const onSubmit = (values: RejectIntakeForm) => {
     const { feedback, nextSteps, reason } = values;
     const actionPayload = { actionType, intakeId: systemId, feedback };
@@ -41,7 +47,7 @@ const RejectIntake = () => {
 
   return (
     <Formik
-      initialValues={{}}
+      initialValues={initialValues}
       onSubmit={onSubmit}
       validationSchema={rejectIntakeSchema}
       validateOnBlur={false}
