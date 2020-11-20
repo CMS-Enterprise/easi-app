@@ -21,3 +21,9 @@ export const lifecycleIdSchema = Yup.object().shape({
   nextSteps: Yup.string(),
   feedback: Yup.string().required('Please fill out email')
 });
+
+export const rejectIntakeSchema = Yup.object().shape({
+  nextSteps: Yup.string().required('Please include next steps'),
+  reason: Yup.string().required('Please include a reason'),
+  feedback: Yup.string().required('Please fill out email')
+});
