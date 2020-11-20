@@ -125,7 +125,8 @@ const governanceReviewTeam = {
       CREATE_BIZ_CASE: 'Created a new business case',
       SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
       REJECT: 'Rejected the request'
-    }
+    },
+    showEmail: 'Show Email'
   },
   aria: {
     openIntake: 'Open intake request',
