@@ -7,7 +7,9 @@ const intake = {
     component: 'Component',
     status: 'Status'
   },
+
   lifecycleId: 'Lifecycle ID',
+
   statusMap: {
     INTAKE_DRAFT: 'N/A',
     INTAKE_SUBMITTED: 'Intake request received',
@@ -24,6 +26,37 @@ const intake = {
     NOT_IT_REQUEST: 'Closed',
     NOT_APPROVED: 'Business case not approved',
     NO_GOVERNANCE: 'Closed'
+  },
+  banner: {
+    title: {
+      intakeIncomplete: 'Intake request incomplete',
+      pendingResponse: 'Pending response',
+      startBizCase: 'Start business case',
+      bizCaseIncomplete: 'Business case incomplete',
+      responseRecevied: 'Response received',
+      prepareGrt: 'Prepare for GRT',
+      prepareGrb: 'Prepare for GRB',
+      decisionReceived: 'Decision received',
+      requestWithdrawn: 'Request withdrawn'
+    },
+    description: {
+      intakeIncomplete:
+        'Your Intake Request is incomplete, please submit it when you are ready so that we can move you to the next phase.',
+      intakeSubmitted:
+        'Your Intake Request has been submitted for review. The Governance Admin team will get back to you about the next step.',
+      checkNextStep:
+        'The Governance Admin team has gotten back to you. Please check and take the next step.',
+      bizCaseIncomplete:
+        'Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next step.',
+      bizCaseSubmitted:
+        'Your Business Case has been submitted for review. The Governance Admin team will get back to you about the next step.'
+    }
+  },
+  requestTypeMap: {
+    NEW: 'Add a new system',
+    RECOMPETE: 'Re-compete',
+    MAJOR_CHANGES: 'Major change or upgrade',
+    SHUTDOWN: 'Decommission a system'
   },
 
   csvHeadings: {
@@ -70,7 +103,7 @@ const intake = {
       majorChanges: 'Major changes or upgrades to an existing system',
       recompete:
         'Re-compete a contract without any changes to systems or services',
-      shutdown: 'Shutdown a system'
+      shutdown: 'Decommission a system'
     },
     helpAndGuidance: {
       majorChanges: {

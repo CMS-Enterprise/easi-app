@@ -24,7 +24,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 
 	s.Run("create a new system intake", func() {
 		intake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
@@ -41,18 +41,6 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 		s.False(created.ID == uuid.Nil)
 	})
 
-	s.Run("cannot save without EUA ID", func() {
-		partialIntake := models.SystemIntake{
-			Status:      models.SystemIntakeStatusINTAKEDRAFT,
-			RequestType: models.SystemIntakeRequestTypeNEW,
-		}
-
-		_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
-
-		s.Error(err)
-		s.Equal("pq: new row for relation \"system_intake\" violates check constraint \"eua_id_check\"", err.Error())
-	})
-
 	euaTests := []string{
 		"f",
 		"F",
@@ -65,7 +53,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 			}
-			partialIntake.EUAUserID = tc
+			partialIntake.EUAUserID = null.StringFrom(tc)
 
 			_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
 
@@ -76,7 +64,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 
 	s.Run("cannot create with invalid status", func() {
 		partialIntake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      "fakeStatus",
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
@@ -95,7 +83,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 	s.Run("update an existing system intake", func() {
 		intake, err := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
@@ -113,7 +101,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 	s.Run("EUA ID will not update", func() {
 		originalIntake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
@@ -123,12 +111,12 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		originalEUA := originalIntake.EUAUserID
 		partialIntake := models.SystemIntake{
 			ID:          originalIntake.ID,
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
 		}
-		partialIntake.EUAUserID = "NEWS"
+		partialIntake.EUAUserID = null.StringFrom("NEWS")
 
 		_, err = s.store.UpdateSystemIntake(ctx, &partialIntake)
 		s.NoError(err, "failed to update system intake")
@@ -142,7 +130,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("Lifecycle fields only upon update", func() {
 		now := time.Now()
 		originalIntake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
@@ -186,7 +174,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 	s.Run("Rejection fields only upon update", func() {
 		originalIntake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
@@ -221,7 +209,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 	s.Run("Update contract details information", func() {
 		originalIntake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
@@ -285,7 +273,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 
 	s.Run("LifecycleID format", func() {
 		originalIntake := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "Test requester",
@@ -316,7 +304,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 	s.Run("exhaust lifecycleID generation", func() {
 		for ix := 0; ix < 10; ix++ {
 			original := models.SystemIntake{
-				EUAUserID:   testhelpers.RandomEUAID(),
+				EUAUserID:   testhelpers.RandomEUAIDNull(),
 				Status:      models.SystemIntakeStatusINTAKEDRAFT,
 				RequestType: models.SystemIntakeRequestTypeNEW,
 				Requester:   fmt.Sprintf("LCID Exhaust %d", ix),
@@ -339,7 +327,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		// the 11th attempt should generate an LCID that looks like "2136510" (~"YYddd10"),
 		// and this should violate the db constraint of a 6-digit LCID
 		original := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 			Requester:   "LCID Exhaust 10",
@@ -363,7 +351,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		t1 := clock.NewMock().Now().UTC()
 		t2 := clock.NewMock().Now().UTC()
 		original := models.SystemIntake{
-			EUAUserID:   testhelpers.RandomEUAID(),
+			EUAUserID:   testhelpers.RandomEUAIDNull(),
 			Status:      models.SystemIntakeStatusINTAKEDRAFT,
 			RequestType: models.SystemIntakeRequestTypeNEW,
 
@@ -503,7 +491,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID)
+		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Len(fetched, 2)
@@ -523,7 +511,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID)
+		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Len(fetched, 1)
@@ -557,7 +545,7 @@ func (s StoreTestSuite) TestFetchSystemIntakesByEuaID() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID)
+		fetched, err := s.store.FetchSystemIntakesByEuaID(ctx, intake.EUAUserID.ValueOrZero())
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Len(fetched, 2)

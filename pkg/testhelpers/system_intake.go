@@ -11,7 +11,7 @@ import (
 func NewSystemIntake() models.SystemIntake {
 	return models.SystemIntake{
 		ID:                      uuid.New(),
-		EUAUserID:               RandomEUAID(),
+		EUAUserID:               null.StringFrom(RandomEUAID()),
 		Status:                  models.SystemIntakeStatusINTAKEDRAFT,
 		RequestType:             models.SystemIntakeRequestTypeNEW,
 		Requester:               "Test Requester",

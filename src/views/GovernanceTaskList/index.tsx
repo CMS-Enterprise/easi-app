@@ -31,7 +31,7 @@ import {
   DecisionCta,
   IntakeDraftCta
 } from './TaskListCta';
-import TaskListItem from './TaskListItem';
+import TaskListItem, { TaskListDescription } from './TaskListItem';
 
 import './index.scss';
 
@@ -73,16 +73,18 @@ const GovernanceTaskList = () => {
     dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
   };
 
-  const getBusinessCaseDescription = () => {
+  const businessCaseStage = (() => {
     switch (systemIntake.status) {
       case 'BIZ_CASE_DRAFT_SUBMITTED':
-        return 'Status: Business case submitted. Waiting for feedback.';
+        return 'Business case submitted. Waiting for feedback.';
       case 'BIZ_CASE_CHANGES_NEEDED':
-        return 'Status: Read feedback in your email, make updates to your business case and re-submit it.';
+        return 'Read feedback in your email, make updates to your business case and re-submit it.';
+      case 'READY_FOR_GRT':
+        return 'Attend GRT meeting. The admin team will email you to schedule a time.';
       default:
-        return 'Make a draft about the various solutions you’ve thought of and costs involved. After you’ve completed your draft business case you will likely attend the GRT meeting.';
+        return '';
     }
-  };
+  })();
 
   const isRecompete = systemIntake.requestType === 'RECOMPETE';
 
@@ -119,43 +121,80 @@ const GovernanceTaskList = () => {
               <TaskListItem
                 data-testid="task-list-intake-form"
                 heading="Fill in the request form"
-                description="Tell the Governance Admin Team about your idea. This step lets CMS build
-              context about your request and start preparing for discussions with your team."
                 status={intakeTag(systemIntake.status)}
               >
+                <TaskListDescription>
+                  <p className="margin-top-0">
+                    Tell the Governance Admin Team about your idea. This step
+                    lets CMS build context about your request and start
+                    preparing for discussions with your team.
+                  </p>
+                </TaskListDescription>
                 <IntakeDraftCta intake={systemIntake} />
               </TaskListItem>
               <TaskListItem
                 data-testid="task-list-intake-review"
                 heading="Feedback from initial review"
-                description="The Governance Admin Team will review your request and decide if it
-              needs further governance. If it does, they’ll direct you to go through
-              the remaining steps."
                 status={initialReviewTag(systemIntake.status)}
               >
-                {['NOT_IT_REQUEST', 'LCID_ISSUED'].includes(
-                  systemIntake.status
-                ) && (
-                  <Alert type="info" slim>
-                    Please check your email for feedback and next steps.
-                  </Alert>
-                )}
+                <TaskListDescription>
+                  <p className="margin-top-0">
+                    The Governance Admin Team will review your request and
+                    decide if it needs further governance. If it does, they’ll
+                    direct you to go through the remaining steps.
+                  </p>
+                </TaskListDescription>
+                <Alert type="info">
+                  <span>
+                    To help with that review, someone from the IT Governance
+                    team will schedule a phone call with you and Enterprise
+                    Architecture (EA).
+                  </span>
+                  <br />
+                  <br />
+                  <span>
+                    After that phone call, the governance team will decide if
+                    you need to go through a full governance process.
+                  </span>
+                </Alert>
               </TaskListItem>
               <TaskListItem
                 data-testid="task-list-business-case-draft"
                 heading="Prepare your Business Case for the GRT"
-                description={getBusinessCaseDescription()}
                 status={businessCaseTag(systemIntake)}
               >
+                <TaskListDescription>
+                  <p className="margin-top-0">
+                    Draft a business case to communicate the business need, the
+                    solutions and its associated costs. Meet with the Governance
+                    Review Team to discuss your draft, receive feedback and
+                    refine your business case.
+                  </p>
+                  <p>
+                    This step can take some time due to scheduling and
+                    availability. You may go through multiple rounds of editing
+                    your business case and receiving feedback.
+                  </p>
+                  {businessCaseStage && (
+                    <p>
+                      <span className="text-bold">Status:&nbsp;</span>
+                      <span>{businessCaseStage}</span>
+                    </p>
+                  )}
+                </TaskListDescription>
                 <BusinessCaseDraftCta systemIntake={systemIntake} />
               </TaskListItem>
               <TaskListItem
                 data-testid="task-list-business-case-final"
                 heading="Submit the business case for final approval"
-                description="Update the Business Case based on feedback from the review meeting and
-              submit it to the Governance Review Board."
                 status={finalBusinessCaseTag(systemIntake)}
               >
+                <TaskListDescription>
+                  <p className="margin-top-0">
+                    Update the Business Case based on feedback from the review
+                    meeting and submit it to the Governance Review Board.
+                  </p>
+                </TaskListDescription>
                 {systemIntake.status === 'BIZ_CASE_FINAL_NEEDED' && (
                   <UswdsLink
                     className="usa-button"
@@ -171,20 +210,29 @@ const GovernanceTaskList = () => {
               <TaskListItem
                 data-testid="task-list-grb-meeting"
                 heading="Attend the GRB meeting"
-                description="The Governance Review Board will discuss and make decisions based on the
-              Business Case and recommendations from the Review Team."
                 status={attendGrbMeetingTag(systemIntake)}
               >
+                <TaskListDescription>
+                  <p className="margin-top-0">
+                    The Governance Review Board will discuss and make decisions
+                    based on the Business Case and recommendations from the
+                    Review Team.
+                  </p>
+                </TaskListDescription>
                 <AttendGrbMeetingCta intake={systemIntake} />
               </TaskListItem>
               <TaskListItem
                 data-testid="task-list-decision"
                 heading="Decision and next steps"
-                description="If your Business Case is approved you will receive a unique Lifecycle
-              ID. If it is not approved, you would need address the concerns to
-              proceed."
                 status={decisionTag(systemIntake)}
               >
+                <TaskListDescription>
+                  <p className="margin-top-0">
+                    If your Business Case is approved you will receive a unique
+                    Lifecycle ID. If it is not approved, you would need address
+                    the concerns to proceed.
+                  </p>
+                </TaskListDescription>
                 <DecisionCta intake={systemIntake} />
               </TaskListItem>
             </ol>

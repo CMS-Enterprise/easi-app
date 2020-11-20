@@ -109,6 +109,28 @@ export const BusinessCaseDraftCta = ({
           Update draft business case
         </UswdsLink>
       );
+    case 'READY_FOR_GRT':
+      return (
+        <>
+          <UswdsLink
+            data-testid="prepare-for-grt-cta"
+            className="display-table margin-bottom-3 usa-button"
+            variant="unstyled"
+            asCustom={Link}
+            to={`/governance-task-list/${systemIntake.businessCaseId}/prepare-for-grt`}
+          >
+            Prepare for review team meeting
+          </UswdsLink>
+
+          <UswdsLink
+            data-testid="view-biz-case-cta"
+            asCustom={Link}
+            to={`/business/${systemIntake.businessCaseId}/general-request-info`}
+          >
+            Update submitted draft business case
+          </UswdsLink>
+        </>
+      );
     default:
       return <></>;
   }
