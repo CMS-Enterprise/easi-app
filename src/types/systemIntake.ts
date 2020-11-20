@@ -79,6 +79,8 @@ export type SystemIntakeForm = {
   createdAt: DateTime | null;
   archivedAt: DateTime | null;
   lcid: string;
+  grtDate: DateTime | null;
+  grbDate: DateTime | null;
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
@@ -132,4 +134,14 @@ export type SystemIntakesState = {
   isLoading: boolean | null;
   loadedTimestamp: DateTime | null;
   error: string | null;
+};
+
+// Form for reviewer to add dates
+export type SubmitDatesForm = {
+  grtDateDay: string;
+  grtDateMonth: string;
+  grtDateYear: string;
+  grbDateDay: string;
+  grbDateMonth: string;
+  grbDateYear: string;
 };
