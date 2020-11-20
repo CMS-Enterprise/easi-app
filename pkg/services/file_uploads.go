@@ -8,8 +8,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
-//PreSignedURLReturn is the return type of these functions
-type PreSignedURLReturn func(context.Context) (*models.PreSignedURL, error)
+// createFunc is a function that saves uploaded file metadata
+type createFunc func(context.Context, *models.UploadedFile) (*models.UploadedFile, error)
 
 // NewCreateFileUploadURL is a service to create a file upload URL via a pre-signed URL in S3
 func NewCreateFileUploadURL(config Config, s3client upload.S3Client) handlers.CreateFileUploadURL {
@@ -19,5 +19,12 @@ func NewCreateFileUploadURL(config Config, s3client upload.S3Client) handlers.Cr
 			return nil, err
 		}
 		return url, nil
+	}
+}
+
+// NewCreateUploadedFile returns a function that saves the metadata of an uploaded file
+func NewCreateUploadedFile(config Config, create createFunc) handlers.CreateUploadedFile {
+	return func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error) {
+		return create(ctx, file)
 	}
 }
