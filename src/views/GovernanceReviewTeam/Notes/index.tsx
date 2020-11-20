@@ -75,16 +75,15 @@ const Notes = () => {
           <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
             {t(`notes.actionName.${action.actionType}`)}
           </p>
-          <span className="text-base-dark font-body-2xs">{`by: ${
+          <p className="text-base-dark font-body-2xs margin-bottom-1 margin-top-0">{`by: ${
             action.actorName
           } | ${action.createdAt.toLocaleString(
             DateTime.DATE_FULL
-          )} at ${action.createdAt.toLocaleString(
-            DateTime.TIME_SIMPLE
-          )}`}</span>
+          )} at ${action.createdAt.toLocaleString(DateTime.TIME_SIMPLE)}`}</p>
           <CollapsableLink
             id={`ActionEmailText-${action.id}`}
             label={t('notes.showEmail')}
+            styleLeftBar={false}
           >
             {action.feedback}
           </CollapsableLink>
