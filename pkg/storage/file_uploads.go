@@ -23,7 +23,8 @@ func (s *Store) CreateUploadedFile(ctx context.Context, file *models.UploadedFil
 	const createUploadedFileSQL = `INSERT INTO files (
                          id,
                          file_type,
-                         bucket, key,
+                         bucket,
+                         file_key,
                          created_at,
                          updated_at,
                          virus_scanned,
@@ -33,7 +34,7 @@ func (s *Store) CreateUploadedFile(ctx context.Context, file *models.UploadedFil
                          :id,
                          :file_type,
                          :bucket,
-                         :key,
+                         :file_key,
                          :created_at,
                          :updated_at,
                          :virus_scanned,
