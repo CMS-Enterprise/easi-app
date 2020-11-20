@@ -142,3 +142,57 @@ const SystemIntakeValidationSchema: any = {
 };
 
 export default SystemIntakeValidationSchema;
+
+export const DateValidationSchema: any = Yup.object().shape({
+  grtDate: Yup.mixed().test({
+    name: 'grtDate',
+    // exclusive: true,
+    // params: { ['grtDateDay', 'grtDateMonth', 'grtDateYear'] },
+    message: 'Please enter a complete GRT date',
+    test: ({
+      grtDateDay,
+      grtDateMonth,
+      grtDateYear
+    }: {
+      grtDateDay: any;
+      grtDateMonth: any;
+      grtDateYear: any;
+    }) => {
+      console.log('grtDateDay ', grtDateDay);
+      console.log('grtDateMonth ', grtDateMonth);
+      console.log('grtDateYear ', grtDateYear);
+
+      if (
+        grtDateDay === undefined &&
+        grtDateMonth === undefined &&
+        grtDateYear === undefined
+      ) {
+        console.log('Got here A');
+        return true;
+      }
+
+      if (
+        grtDateDay !== undefined &&
+        grtDateMonth !== undefined &&
+        grtDateYear !== undefined
+      ) {
+        console.log('got here B');
+        return true;
+      }
+
+      return false;
+    }
+  })
+  // grtDateDay: Yup.number().when(['grtDateMonth', 'grtDateYear'], {
+  //   is: (grtDateMonth: any, grtDateYear: any) => grtDateMonth || grtDateYear,
+  //   then: (s: any) => s.required('The day is required')
+  // }),
+  // grtDateMonth: Yup.string().when(['grtDateDay', 'grtDateYear'], {
+  //   is: (grtDateDay: any, grtDateYear: any) => grtDateDay || grtDateYear,
+  //   then: (s: any) => s.required('The month is required')
+  // }),
+  // grtDateYear: Yup.string().when(['grtDateDay', 'grtDateMonth'], {
+  //   is: true,
+  //   then: (s: any) => s.required('The year is required')
+  // })
+});
