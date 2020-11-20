@@ -68,7 +68,9 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   updatedAt: null,
   createdAt: null,
   archivedAt: null,
-  lcid: ''
+  lcid: '',
+  grtDate: null,
+  grbDate: null
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
