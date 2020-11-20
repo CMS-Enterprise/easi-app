@@ -6,6 +6,7 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
+import CollapsableLink from 'components/shared/CollapsableLink';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
@@ -81,6 +82,12 @@ const Notes = () => {
           )} at ${action.createdAt.toLocaleString(
             DateTime.TIME_SIMPLE
           )}`}</span>
+          <CollapsableLink
+            id={`ActionEmailText-${action.id}`}
+            label={t('notes.showEmail')}
+          >
+            {action.feedback}
+          </CollapsableLink>
         </div>
       </li>
     );
