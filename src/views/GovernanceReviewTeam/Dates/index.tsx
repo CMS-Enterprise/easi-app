@@ -15,6 +15,7 @@ import { AppState } from 'reducers/rootReducer';
 import { saveSystemIntake } from 'types/routines';
 import { SubmitDatesForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
+import { DateValidationSchema } from 'validations/systemIntakeSchema';
 
 const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
   const { systemId } = useParams();
@@ -77,13 +78,14 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
     <Formik
       initialValues={initialValues}
       onSubmit={onSubmit}
-      // validationSchema={lifecycleIdSchema}
+      validationSchema={DateValidationSchema}
       validateOnBlur={false}
-      validateOnChange={false}
+      validateOnChange
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitDatesForm>) => {
         const { errors } = formikProps;
+        console.log('errors ', errors);
         const flatErrors = flattenErrors(errors);
         return (
           <>
