@@ -41,7 +41,7 @@ export type SubmitLifecycleIdForm = {
 };
 
 export type RejectIntakeForm = {
-  feedback?: string;
-  nextSteps?: string;
-  reason?: string;
+  feedback: string;
+  nextSteps: string;
+  reason: string;
 };
