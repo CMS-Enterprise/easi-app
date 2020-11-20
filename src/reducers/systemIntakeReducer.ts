@@ -13,7 +13,6 @@ import {
   issueLifecycleIdForSystemIntake,
   postIntakeNote,
   postSystemIntake,
-  reviewSystemIntake,
   saveSystemIntake,
   storeSystemIntake
 } from 'types/routines';
@@ -124,24 +123,6 @@ function systemIntakeReducer(
       return {
         ...state,
         isLoading: false
-      };
-    case reviewSystemIntake.REQUEST:
-      return {
-        ...state,
-        error: null
-      };
-    case reviewSystemIntake.SUCCESS:
-      return {
-        ...state,
-        systemIntake: {
-          ...state.systemIntake,
-          ...prepareSystemIntakeForApp(action.payload)
-        }
-      };
-    case reviewSystemIntake.FAILURE:
-      return {
-        ...state,
-        error: action.payload
       };
     case archiveSystemIntake.SUCCESS:
       return initialState;
