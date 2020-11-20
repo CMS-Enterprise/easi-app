@@ -149,17 +149,17 @@ func (s ServicesTestSuite) NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode() {
 		},
 		"is not grt, is not author": {
 			ctx:     appcontext.WithPrincipal(context.Background(), &nonGRT),
-			intake:  &models.SystemIntake{EUAUserID: "NOPE"},
+			intake:  &models.SystemIntake{EUAUserID: null.StringFrom("NOPE")},
 			allowed: false,
 		},
 		"is author, is not grt": {
 			ctx:     appcontext.WithPrincipal(context.Background(), &nonGRT),
-			intake:  &models.SystemIntake{EUAUserID: "FAKE"},
+			intake:  &models.SystemIntake{EUAUserID: null.StringFrom("FAKE")},
 			allowed: true,
 		},
 		"is grt, is not author": {
 			ctx:     appcontext.WithPrincipal(context.Background(), &yesGRT),
-			intake:  &models.SystemIntake{EUAUserID: "NOPE"},
+			intake:  &models.SystemIntake{EUAUserID: null.StringFrom("NOPE")},
 			allowed: true,
 		},
 	}
