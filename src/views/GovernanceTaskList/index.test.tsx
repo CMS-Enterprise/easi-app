@@ -64,18 +64,19 @@ describe('The Goveranance Task List', () => {
   });
 
   describe('Recompetes', () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
-      systemIntake: {
-        systemIntake: {
-          ...initialSystemIntakeForm,
-          requestName: 'Easy Access to System Information',
-          requestType: 'RECOMPETE'
-        }
-      },
-      businessCase: { form: {} }
-    });
     it('displays "for recompete in title', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            requestName: 'Easy Access to System Information',
+            requestType: 'RECOMPETE'
+          }
+        },
+        businessCase: { form: {} }
+      });
+
       let component: ReactWrapper;
       await act(async () => {
         component = mount(
@@ -94,6 +95,18 @@ describe('The Goveranance Task List', () => {
     });
 
     it('displays not applicable steps as cannot start', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            requestName: 'Easy Access to System Information',
+            requestType: 'RECOMPETE'
+          }
+        },
+        businessCase: { form: {} }
+      });
+
       let component: ReactWrapper;
       await act(async () => {
         component = mount(
@@ -133,6 +146,74 @@ describe('The Goveranance Task List', () => {
           .find('.governance-task-list__task-tag')
           .text()
       ).toEqual('Cannot start yet');
+    });
+
+    it('displays steps 3, 4, and 5 as not needed once issued LCID', async () => {
+      const mockStore = configureMockStore();
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            requestName: 'Easy Access to System Information',
+            requestType: 'RECOMPETE',
+            status: 'LCID_ISSUED'
+          }
+        },
+        businessCase: { form: {} }
+      });
+
+      let component: ReactWrapper;
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+      component!.update();
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-draft"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Not needed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-business-case-final"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Not needed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Not needed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-decision"]')
+          .find('.governance-task-list__task-tag')
+          .exists()
+      ).toEqual(false);
     });
   });
 

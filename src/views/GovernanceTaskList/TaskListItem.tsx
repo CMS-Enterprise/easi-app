@@ -1,19 +1,25 @@
 import React from 'react';
 import classnames from 'classnames';
 
+type TaskListDescriptionProps = {
+  children?: React.ReactNode | React.ReactNodeArray;
+};
+
+export const TaskListDescription = ({ children }: TaskListDescriptionProps) => {
+  return (
+    <div className="governance-task-list__task-description line-height-body-4">
+      {children}
+    </div>
+  );
+};
+
 type TaskListItemProps = {
   heading: string;
-  description: string;
   status: string;
   children?: React.ReactNode | React.ReactNodeArray;
 };
 
-const TaskListItem = ({
-  heading,
-  description,
-  status,
-  children
-}: TaskListItemProps) => {
+const TaskListItem = ({ heading, status, children }: TaskListItemProps) => {
   const taskListItemClasses = classnames(
     'governance-task-list__item',
     'padding-bottom-4',
@@ -46,9 +52,6 @@ const TaskListItem = ({
             </span>
           )}
         </div>
-        <p className="governance-task-list__task-description line-height-body-4 margin-bottom-4">
-          {description}
-        </p>
         {children}
       </div>
     </li>

@@ -1,26 +1,16 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import TaskListItem from './TaskListItem';
+import TaskListItem, { TaskListDescription } from './TaskListItem';
 
 describe('The TaskListItem', () => {
   it('renders without crashing', () => {
-    shallow(
-      <TaskListItem
-        heading="Test Heading"
-        description="Test Description"
-        status="CANNOT_START"
-      />
-    );
+    shallow(<TaskListItem heading="Test Heading" status="CANNOT_START" />);
   });
 
   it('displays cannot start tag', () => {
     const component = shallow(
-      <TaskListItem
-        heading="Test Heading"
-        description="Test Description"
-        status="CANNOT_START"
-      />
+      <TaskListItem heading="Test Heading" status="CANNOT_START" />
     );
 
     expect(
@@ -30,11 +20,7 @@ describe('The TaskListItem', () => {
 
   it('displays completed tag', () => {
     const component = shallow(
-      <TaskListItem
-        heading="Test Heading"
-        description="Test Description"
-        status="COMPLETED"
-      />
+      <TaskListItem heading="Test Heading" status="COMPLETED" />
     );
 
     expect(
@@ -44,11 +30,8 @@ describe('The TaskListItem', () => {
 
   it('displays children', () => {
     const component = shallow(
-      <TaskListItem
-        heading="Test Heading"
-        description="Test Description"
-        status="START"
-      >
+      <TaskListItem heading="Test Heading" status="START">
+        <TaskListDescription>Hello</TaskListDescription>
         <div id="test-div">Test</div>
       </TaskListItem>
     );
