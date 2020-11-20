@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
-import { postSystemIntakeAction } from 'types/routines';
+import { postAction } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 type ReviewProps = {
@@ -64,7 +64,7 @@ const Review = ({ systemIntake, now }: ReviewProps) => {
         disabled={isSubmitting}
         onClick={() =>
           dispatch(
-            postSystemIntakeAction({
+            postAction({
               actionType: 'SUBMIT_INTAKE',
               intakeId: systemIntake.id
             })

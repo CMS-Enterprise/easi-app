@@ -10,7 +10,8 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { AppState } from 'reducers/rootReducer';
-import { fetchIntakeNotes, postIntakeNote } from 'types/routines';
+import { Action } from 'types/action';
+import { fetchActions, fetchIntakeNotes, postIntakeNote } from 'types/routines';
 import { IntakeNote } from 'types/systemIntake';
 
 type NoteForm = {
@@ -22,9 +23,9 @@ const Notes = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
   const notes = useSelector((state: AppState) => state.systemIntake.notes);
+  const actions = useSelector((state: AppState) => state.action.actions);
 
   const { t } = useTranslation('governanceReviewTeam');
-
   const onSubmit = async (
     values: NoteForm,
     { resetForm }: FormikHelpers<NoteForm>
@@ -42,16 +43,68 @@ const Notes = () => {
 
   useEffect(() => {
     dispatch(fetchIntakeNotes(systemId));
+    dispatch(fetchActions(systemId));
   }, [dispatch, systemId]);
 
   const initialValues = {
     note: ''
   };
 
-  const sortedNotes = notes.sort(
-    (a: IntakeNote, b: IntakeNote) =>
-      b.createdAt.toMillis() - a.createdAt.toMillis()
-  );
+  const makeNote = (note: IntakeNote) => {
+    return (
+      <li className="easi-grt__note" key={note.id}>
+        <div className="easi-grt__note-content">
+          <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
+            {note.content}
+          </p>
+          <span className="text-base-dark font-body-2xs">{`by: ${
+            note.authorName
+          } | ${note.createdAt.toLocaleString(
+            DateTime.DATE_FULL
+          )} at ${note.createdAt.toLocaleString(DateTime.TIME_SIMPLE)}`}</span>
+        </div>
+      </li>
+    );
+  };
+
+  const makeAction = (action: Action) => {
+    return (
+      <li className="easi-grt__note" key={action.id}>
+        <div className="easi-grt__note-content">
+          <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
+            {t(`notes.actionName.${action.actionType}`)}
+          </p>
+          <span className="text-base-dark font-body-2xs">{`by: ${
+            action.actorName
+          } | ${action.createdAt.toLocaleString(
+            DateTime.DATE_FULL
+          )} at ${action.createdAt.toLocaleString(
+            DateTime.TIME_SIMPLE
+          )}`}</span>
+        </div>
+      </li>
+    );
+  };
+
+  const notesByTimestamp = notes.reduce<
+    { createdAt: DateTime; element: JSX.Element }[]
+  >((ary, note: IntakeNote) => {
+    // eslint-disable-next-line no-param-reassign
+    ary.push({ createdAt: note.createdAt, element: makeNote(note) });
+    return ary;
+  }, []);
+
+  const actionsByTimestamp = actions.reduce<
+    { createdAt: DateTime; element: JSX.Element }[]
+  >((ary, action: Action) => {
+    // eslint-disable-next-line no-param-reassign
+    ary.push({ createdAt: action.createdAt, element: makeAction(action) });
+    return ary;
+  }, []);
+
+  const interleavedList = [...notesByTimestamp, ...actionsByTimestamp]
+    .sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis())
+    .map(a => a.element);
 
   return (
     <>
@@ -82,26 +135,7 @@ const Notes = () => {
                   {t('notes.addNoteCta')}
                 </Button>
               </Form>
-              <ul className="easi-grt__note-list">
-                {sortedNotes.map((note: IntakeNote) => {
-                  return (
-                    <li className="easi-grt__note" key={note.id}>
-                      <div className="easi-grt__note-content">
-                        <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
-                          {note.content}
-                        </p>
-                        <span className="text-base-dark font-body-2xs">{`by: ${
-                          note.authorName
-                        } | ${note.createdAt.toLocaleString(
-                          DateTime.DATE_FULL
-                        )} at ${note.createdAt.toLocaleString(
-                          DateTime.TIME_SIMPLE
-                        )}`}</span>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
+              <ul className="easi-grt__note-list">{interleavedList}</ul>
             </div>
           );
         }}

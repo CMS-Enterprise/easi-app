@@ -11,7 +11,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { Action, ActionForm, ActionType } from 'types/action';
-import { postSystemIntakeAction } from 'types/routines';
+import { postAction } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { actionSchema } from 'validations/actionSchema';
 
@@ -33,7 +33,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
       actionType: action,
       feedback
     };
-    dispatch(postSystemIntakeAction(payload));
+    dispatch(postAction(payload));
     history.push(`/governance-review-team/${systemId}/intake-request`);
   };
 
