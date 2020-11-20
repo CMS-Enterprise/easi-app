@@ -133,7 +133,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		updatedAt := time.Now().UTC()
 		intake := models.SystemIntake{
 			ID:                      id,
-			EUAUserID:               "FAKE",
+			EUAUserID:               null.StringFrom("FAKE"),
 			Requester:               "Test Requester",
 			Component:               null.StringFrom("Test Requester"),
 			BusinessOwner:           null.StringFrom("Test Requester"),

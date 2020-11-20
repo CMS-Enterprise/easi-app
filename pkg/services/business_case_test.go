@@ -85,7 +85,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
-	euaID := testhelpers.RandomEUAID()
+	euaID := testhelpers.RandomEUAIDNull()
 	intake := &models.SystemIntake{
 		EUAUserID:   euaID,
 		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
@@ -95,7 +95,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	s.NoError(err)
 
 	input := models.BusinessCase{
-		EUAUserID:      euaID,
+		EUAUserID:      euaID.ValueOrZero(),
 		SystemIntakeID: intake.ID,
 	}
 	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -103,7 +103,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	}
 	create := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 		return &models.BusinessCase{
-			EUAUserID: euaID,
+			EUAUserID: euaID.ValueOrZero(),
 		}, nil
 	}
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
@@ -128,7 +128,7 @@ func (s ServicesTestSuite) TestBusinessCaseCreator() {
 		businessCase, err := createBusinessCase(ctx, &input)
 		s.NoError(err)
 
-		s.Equal(euaID, businessCase.EUAUserID)
+		s.Equal(euaID.ValueOrZero(), businessCase.EUAUserID)
 	})
 
 	s.Run("returns query error when create fails", func() {
@@ -221,7 +221,7 @@ func (s ServicesTestSuite) TestBusinessCaseUpdater() {
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
-	euaID := testhelpers.RandomEUAID()
+	euaID := testhelpers.RandomEUAIDNull()
 	intake := &models.SystemIntake{
 		EUAUserID:   euaID,
 		Status:      models.SystemIntakeStatusINTAKESUBMITTED,

@@ -153,7 +153,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 					})
 				return
 			}
-			intake.EUAUserID = principal.ID()
+			intake.EUAUserID = null.StringFrom(principal.ID())
 
 			updatedIntake, err := h.UpdateSystemIntake(r.Context(), &intake)
 			if err != nil {

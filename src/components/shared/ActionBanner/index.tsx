@@ -23,18 +23,12 @@ const ActionBanner = ({
   ...remainingProps
 }: ActionBannerProps) => {
   const { t } = useTranslation('intake');
-  const intakeType: { [key: string]: string } = {
-    NEW: t('requestTypeForm.fields.addNewSystem'),
-    MAJOR_CHANGES: t('requestTypeForm.fields.majorChanges'),
-    RECOMPETE: t('requestTypeForm.fields.recompete'),
-    SHUTDOWN: t('requestTypeForm.fields.shutdown')
-  };
 
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <div className="action-banner usa-alert" {...remainingProps}>
       <span className="text-base-dark font-body-3xs">
-        {intakeType[requestType]}
+        {t(`requestTypeMap.${requestType}`)}
       </span>
       <div className="action-banner__content">
         <div className="action-banner__icon">

@@ -29,7 +29,7 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 
 	fnByID := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 		return models.SystemIntakes{
-			models.SystemIntake{EUAUserID: euaID},
+			models.SystemIntake{EUAUserID: null.StringFrom(euaID)},
 		}, nil
 	}
 	fnByIDFail := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
@@ -38,8 +38,8 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 
 	fnAll := func(ctx context.Context) (models.SystemIntakes, error) {
 		return models.SystemIntakes{
-			models.SystemIntake{EUAUserID: reviewerID},
-			models.SystemIntake{EUAUserID: requesterID},
+			models.SystemIntake{EUAUserID: null.StringFrom(reviewerID)},
+			models.SystemIntake{EUAUserID: null.StringFrom(requesterID)},
 		}, nil
 	}
 	fnAllFail := func(ctx context.Context) (models.SystemIntakes, error) { return nil, errors.New("forced error") }
@@ -146,7 +146,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 			Status:    models.SystemIntakeStatusINTAKEDRAFT,
 		})
 		s.NoError(err)
-		s.Equal(fakeEuaID, intake.EUAUserID)
+		s.Equal(fakeEuaID, intake.EUAUserID.ValueOrZero())
 	})
 
 	s.Run("returns query error when create fails", func() {
