@@ -126,7 +126,8 @@ const governanceReviewTeam = {
       SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
       REJECT: 'Rejected the request'
     },
-    showEmail: 'Show Email'
+    showEmail: 'Show Email',
+    hideEmail: 'Hide Email'
   },
   dates: {
     heading: 'Dates',
