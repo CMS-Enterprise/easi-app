@@ -93,6 +93,12 @@ const governanceReviewTeam = {
       requestType: 'Type of request',
       submissionDate: {
         null: 'Not yet submitted'
+      },
+      grtDate: {
+        null: 'Add date'
+      },
+      grbDate: {
+        null: 'Add date'
       }
     },
     aria: {
