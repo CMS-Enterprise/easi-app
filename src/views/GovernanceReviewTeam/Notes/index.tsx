@@ -21,8 +21,8 @@ type NoteForm = {
 
 const NoteListItem = ({ note }: { note: IntakeNote }) => {
   return (
-    <li className="easi-grt__note">
-      <div className="easi-grt__note-content">
+    <li className="easi-grt__history-item">
+      <div className="easi-grt__history-item-content">
         <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
           {note.content}
         </p>
@@ -40,8 +40,8 @@ const ActionListItem = ({ action }: { action: Action }) => {
   const { t } = useTranslation('governanceReviewTeam');
 
   return (
-    <li className="easi-grt__note">
-      <div className="easi-grt__note-content">
+    <li className="easi-grt__history-item">
+      <div className="easi-grt__history-item-content">
         <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
           {t(`notes.actionName.${action.actionType}`)}
         </p>
@@ -146,7 +146,7 @@ const Notes = () => {
                   {t('notes.addNoteCta')}
                 </Button>
               </Form>
-              <ul className="easi-grt__note-list">{interleavedList}</ul>
+              <ul className="easi-grt__history">{interleavedList}</ul>
             </div>
           );
         }}
