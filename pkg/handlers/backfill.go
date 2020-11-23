@@ -42,8 +42,8 @@ func (h BackfillHandler) Handle() http.HandlerFunc {
 			defer r.Body.Close()
 			decoder := json.NewDecoder(r.Body)
 			data := struct {
-				Intake models.SystemIntake
-				Notes  []models.Note
+				Intake models.SystemIntake `json:"intake"`
+				Notes  []models.Note       `json:"notes"`
 			}{}
 			if err := decoder.Decode(&data); err != nil {
 				h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
