@@ -6,5 +6,5 @@ CREATE TABLE files (
     created_at timestamp with time zone,
     updated_at timestamp with time zone,
     virus_scanned boolean,
-    virus_clean boolean,
-)
+    virus_clean boolean
+);
