@@ -143,56 +143,51 @@ const SystemIntakeValidationSchema: any = {
 
 export default SystemIntakeValidationSchema;
 
-export const DateValidationSchema: any = Yup.object().shape({
-  grtDate: Yup.mixed().test({
-    name: 'grtDate',
-    // exclusive: true,
-    // params: { ['grtDateDay', 'grtDateMonth', 'grtDateYear'] },
-    message: 'Please enter a complete GRT date',
-    test: ({
-      grtDateDay,
-      grtDateMonth,
-      grtDateYear
-    }: {
-      grtDateDay: any;
-      grtDateMonth: any;
-      grtDateYear: any;
-    }) => {
-      console.log('grtDateDay ', grtDateDay);
-      console.log('grtDateMonth ', grtDateMonth);
-      console.log('grtDateYear ', grtDateYear);
-
-      if (
-        grtDateDay === undefined &&
-        grtDateMonth === undefined &&
-        grtDateYear === undefined
-      ) {
-        console.log('Got here A');
-        return true;
-      }
-
-      if (
-        grtDateDay !== undefined &&
-        grtDateMonth !== undefined &&
-        grtDateYear !== undefined
-      ) {
-        console.log('got here B');
-        return true;
-      }
-
-      return false;
-    }
-  })
-  // grtDateDay: Yup.number().when(['grtDateMonth', 'grtDateYear'], {
-  //   is: (grtDateMonth: any, grtDateYear: any) => grtDateMonth || grtDateYear,
-  //   then: (s: any) => s.required('The day is required')
-  // }),
-  // grtDateMonth: Yup.string().when(['grtDateDay', 'grtDateYear'], {
-  //   is: (grtDateDay: any, grtDateYear: any) => grtDateDay || grtDateYear,
-  //   then: (s: any) => s.required('The month is required')
-  // }),
-  // grtDateYear: Yup.string().when(['grtDateDay', 'grtDateMonth'], {
-  //   is: true,
-  //   then: (s: any) => s.required('The year is required')
-  // })
-});
+export const DateValidationSchema: any = Yup.object().shape(
+  {
+    grtDateDay: Yup.string().when(['grtDateMonth', 'grtDateYear'], {
+      is: (grtDateMonth: string, grtDateYear: string) => {
+        return grtDateMonth || grtDateYear;
+      },
+      then: Yup.string().required('The day is required')
+    }),
+    grtDateMonth: Yup.string().when(['grtDateDay', 'grtDateYear'], {
+      is: (grtDateDay: string, grtDateYear: string) => {
+        return grtDateDay || grtDateYear;
+      },
+      then: Yup.string().required('The month is required')
+    }),
+    grtDateYear: Yup.string().when(['grtDateDay', 'grtDateMonth'], {
+      is: (grtDateDay: string, grtDateMonth: string) => {
+        return grtDateDay || grtDateMonth;
+      },
+      then: Yup.string().required('The year is required')
+    }),
+    grbDateDay: Yup.string().when(['grbDateMonth', 'grbDateYear'], {
+      is: (grbDateMonth: string, grbDateYear: string) => {
+        return grbDateMonth || grbDateYear;
+      },
+      then: Yup.string().required('The day is required')
+    }),
+    grbDateMonth: Yup.string().when(['grbDateDay', 'grbDateYear'], {
+      is: (grbDateDay: string, grbDateYear: string) => {
+        return grbDateDay || grbDateYear;
+      },
+      then: Yup.string().required('The month is required')
+    }),
+    grbDateYear: Yup.string().when(['grbDateDay', 'grbDateMonth'], {
+      is: (grbDateDay: string, grbDateMonth: string) => {
+        return grbDateDay || grbDateMonth;
+      },
+      then: Yup.string().required('The year is required')
+    })
+  },
+  [
+    ['grtDateDay', 'grtDateMonth'],
+    ['grtDateDay', 'grtDateYear'],
+    ['grtDateMonth', 'grtDateYear'],
+    ['grbDateDay', 'grbDateMonth'],
+    ['grbDateDay', 'grbDateYear'],
+    ['grbDateMonth', 'grbDateYear']
+  ]
+);

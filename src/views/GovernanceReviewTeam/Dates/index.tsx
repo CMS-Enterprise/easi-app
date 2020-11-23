@@ -80,12 +80,11 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
       onSubmit={onSubmit}
       validationSchema={DateValidationSchema}
       validateOnBlur={false}
-      validateOnChange
+      validateOnChange={false}
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitDatesForm>) => {
         const { errors } = formikProps;
-        console.log('errors ', errors);
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -111,11 +110,20 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>
                 {/* GRT Date Fields */}
-                <FieldGroup>
+                <FieldGroup
+                  error={
+                    !!flatErrors.grtDateMonth ||
+                    !!flatErrors.grtDateDay ||
+                    !!flatErrors.grtDateYear
+                  }
+                >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
                       {t('governanceReviewTeam:dates.grtDate.label')}
                     </legend>
+                    <FieldErrorMsg>{flatErrors.grtDateMonth}</FieldErrorMsg>
+                    <FieldErrorMsg>{flatErrors.grtDateDay}</FieldErrorMsg>
+                    <FieldErrorMsg>{flatErrors.grtDateYear}</FieldErrorMsg>
                     <div
                       className="usa-memorable-date"
                       style={{ marginTop: '-2rem' }}
@@ -124,7 +132,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                         <Label htmlFor="Dates-GrtDateMonth">
                           {t('general:date.month')}
                         </Label>
-                        <FieldErrorMsg>{flatErrors.grtDateMonth}</FieldErrorMsg>
                         <Field
                           as={TextField}
                           error={!!flatErrors.grtDateMonth}
@@ -137,7 +144,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                         <Label htmlFor="Dates-GrtDateDay">
                           {t('general:date.day')}
                         </Label>
-                        <FieldErrorMsg>{flatErrors.grtDateDay}</FieldErrorMsg>
                         <Field
                           as={TextField}
                           error={!!flatErrors.grtDateDay}
@@ -150,7 +156,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                         <Label htmlFor="Dates-GrtDateYear">
                           {t('general:date.year')}
                         </Label>
-                        <FieldErrorMsg>{flatErrors.grtDateYear}</FieldErrorMsg>
                         <Field
                           as={TextField}
                           error={!!flatErrors.grtDateYear}
@@ -164,11 +169,20 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                 </FieldGroup>
                 {/* End GRT Date Fields */}
                 {/* GRB Date Fields */}
-                <FieldGroup>
+                <FieldGroup
+                  error={
+                    !!flatErrors.grbDateMonth ||
+                    !!flatErrors.grbDateDay ||
+                    !!flatErrors.grbDateYear
+                  }
+                >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
                       {t('governanceReviewTeam:dates.grbDate.label')}
                     </legend>
+                    <FieldErrorMsg>{flatErrors.grbDateMonth}</FieldErrorMsg>
+                    <FieldErrorMsg>{flatErrors.grbDateDay}</FieldErrorMsg>
+                    <FieldErrorMsg>{flatErrors.grbDateYear}</FieldErrorMsg>
                     <div
                       className="usa-memorable-date"
                       style={{ marginTop: '-2rem' }}
@@ -177,7 +191,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                         <Label htmlFor="Dates-GrbDateMonth">
                           {t('general:date.month')}
                         </Label>
-                        <FieldErrorMsg>{flatErrors.grbDateMonth}</FieldErrorMsg>
                         <Field
                           as={TextField}
                           error={!!flatErrors.grbDateMonth}
@@ -190,7 +203,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                         <Label htmlFor="Dates-GrbDateDay">
                           {t('general:date.day')}
                         </Label>
-                        <FieldErrorMsg>{flatErrors.grbDateDay}</FieldErrorMsg>
                         <Field
                           as={TextField}
                           error={!!flatErrors.grbDateDay}
@@ -203,7 +215,6 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                         <Label htmlFor="Dates-GrbDateYear">
                           {t('general:date.year')}
                         </Label>
-                        <FieldErrorMsg>{flatErrors.grbDateYear}</FieldErrorMsg>
                         <Field
                           as={TextField}
                           error={!!flatErrors.grbDateYear}

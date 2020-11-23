@@ -71,7 +71,7 @@ const AppRoutes = () => {
       {isUserSet && user.isGrtReviewer(userGroups) && (
         <SecureRoute
           path="/governance-review-team/:systemId/:activePage"
-          component={GovernanceReviewTeam}
+          render={() => <GovernanceReviewTeam />}
         />
       )}
       <SecureRoute
