@@ -18,6 +18,7 @@ export const initialReviewTag = (intakeStatus: string): TagEnum => {
     'BIZ_CASE_FINAL_NEEDED',
     'BIZ_CASE_FINAL_SUBMITTED',
     'READY_FOR_GRB',
+    'READY_FOR_GRT',
     'LCID_ISSUED',
     'NOT_IT_REQUEST'
   ];
@@ -33,6 +34,9 @@ export const initialReviewTag = (intakeStatus: string): TagEnum => {
 
 export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
+    if (intake.status === 'LCID_ISSUED') {
+      return 'NOT_NEEDED';
+    }
     return 'CANNOT_START';
   }
 
@@ -55,6 +59,9 @@ export const businessCaseTag = (intake: SystemIntakeForm): TagEnum => {
 
 export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
   if (intake.requestType === 'RECOMPETE') {
+    if (intake.status === 'LCID_ISSUED') {
+      return 'NOT_NEEDED';
+    }
     return 'CANNOT_START';
   }
 
@@ -65,9 +72,9 @@ export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
     case 'BIZ_CASE_DRAFT':
     case 'BIZ_CASE_DRAFT_SUBMITTED':
     case 'BIZ_CASE_CHANGES_NEEDED':
+    case 'READY_FOR_GRT':
       return 'CANNOT_START';
     case 'BIZ_CASE_FINAL_SUBMITTED':
-    case 'READY_FOR_GRT':
     case 'READY_FOR_GRB':
     case 'LCID_ISSUED':
       return 'COMPLETED';
@@ -82,6 +89,9 @@ export const finalBusinessCaseTag = (intake: SystemIntakeForm) => {
 // Task List Item: Attend GRB Meeting
 export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
+    if (intake.status === 'LCID_ISSUED') {
+      return 'NOT_NEEDED';
+    }
     return 'CANNOT_START';
   }
 
@@ -102,6 +112,9 @@ export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
 // Task List Item: Decision
 export const decisionTag = (intake: SystemIntakeForm): TagEnum => {
   if (intake.requestType === 'RECOMPETE') {
+    if (intake.status === 'LCID_ISSUED') {
+      return '';
+    }
     return 'CANNOT_START';
   }
 
