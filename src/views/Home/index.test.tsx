@@ -79,7 +79,7 @@ describe('The home page', () => {
         });
       });
 
-      it('displays banners for intakes and biz cases', async () => {
+      it('displays banners for intakes', async () => {
         const mockStore = configureMockStore();
         const store = mockStore({
           auth: mockAuthReducer,
@@ -119,7 +119,7 @@ describe('The home page', () => {
           );
 
           component.update();
-          expect(component.find(ActionBanner).length).toEqual(3);
+          expect(component.find(ActionBanner).length).toEqual(4);
         });
       });
     });

@@ -68,7 +68,9 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   updatedAt: null,
   createdAt: null,
   archivedAt: null,
-  lcid: ''
+  lcid: '',
+  grtDate: null,
+  grbDate: null
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -115,7 +117,9 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     contractStartMonth: systemIntake.contract.startDate.month,
     contractStartYear: systemIntake.contract.startDate.year,
     contractEndMonth: systemIntake.contract.endDate.month,
-    contractEndYear: systemIntake.contract.endDate.year
+    contractEndYear: systemIntake.contract.endDate.year,
+    grtDate: systemIntake.grtDate && systemIntake.grtDate.toISO(),
+    grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO()
   };
 };
 
@@ -211,7 +215,13 @@ export const prepareSystemIntakeForApp = (
     archivedAt: systemIntake.archivedAt
       ? DateTime.fromISO(systemIntake.archivedAt)
       : null,
-    lcid: systemIntake.lcid || ''
+    lcid: systemIntake.lcid || '',
+    grtDate: systemIntake.grtDate
+      ? DateTime.fromISO(systemIntake.grtDate)
+      : null,
+    grbDate: systemIntake.grbDate
+      ? DateTime.fromISO(systemIntake.grbDate)
+      : null
   };
 };
 

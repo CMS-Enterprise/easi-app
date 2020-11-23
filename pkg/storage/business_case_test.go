@@ -57,11 +57,11 @@ func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
 		s.NoError(err)
 
 		businessCase := testhelpers.NewBusinessCase()
-		businessCase.EUAUserID = intake.EUAUserID
+		businessCase.EUAUserID = intake.EUAUserID.ValueOrZero()
 		businessCase.SystemIntakeID = intake.ID
 
 		businessCase2 := testhelpers.NewBusinessCase()
-		businessCase2.EUAUserID = intake.EUAUserID
+		businessCase2.EUAUserID = intake.EUAUserID.ValueOrZero()
 		businessCase2.SystemIntakeID = intake2.ID
 
 		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
@@ -175,7 +175,7 @@ func (s StoreTestSuite) TestUpdateBusinessCase() {
 	intake := testhelpers.NewSystemIntake()
 	_, err := s.store.CreateSystemIntake(ctx, &intake)
 	s.NoError(err)
-	euaID := intake.EUAUserID
+	euaID := intake.EUAUserID.ValueOrZero()
 	businessCaseOriginal := testhelpers.NewBusinessCase()
 	businessCaseOriginal.EUAUserID = euaID
 	businessCaseOriginal.SystemIntakeID = intake.ID

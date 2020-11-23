@@ -15,6 +15,7 @@ import {
   issueLifecycleIdForSystemIntake,
   postIntakeNote,
   postSystemIntake,
+  rejectSystemIntake,
   saveSystemIntake
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -178,6 +179,32 @@ function* createIntakeNote(action: Action<any>) {
   }
 }
 
+type rejectData = {
+  rejectionNextSteps?: string;
+  reejectionReason: string;
+};
+
+function postRejection({ id, data }: { id: string; data: rejectData }) {
+  return axios.post(
+    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}/reject`,
+    data
+  );
+}
+
+function* rejectIntake(action: Action<any>) {
+  try {
+    yield put(rejectSystemIntake.request());
+    const { id, rejectPayload, actionPayload } = action.payload;
+    yield call(postSystemIntakeActionRequest, { id, ...actionPayload });
+    const response = yield call(postRejection, { id, data: rejectPayload });
+    yield put(rejectSystemIntake.success(response.data));
+  } catch (error) {
+    yield put(rejectSystemIntake.failure(error.message));
+  } finally {
+    yield put(rejectSystemIntake.fulfill());
+  }
+}
+
 export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
@@ -186,4 +213,5 @@ export default function* systemIntakeSaga() {
   yield takeLatest(issueLifecycleIdForSystemIntake.TRIGGER, issueLifecycleId);
   yield takeLatest(fetchIntakeNotes.TRIGGER, getIntakeNotes);
   yield takeLatest(postIntakeNote.TRIGGER, createIntakeNote);
+  yield takeLatest(rejectSystemIntake.TRIGGER, rejectIntake);
 }

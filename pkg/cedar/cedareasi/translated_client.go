@@ -83,7 +83,7 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 	if validate.RequireUUID(intake.ID) {
 		expectedError.WithValidation("ID", validationMessage)
 	}
-	if validate.RequireString(intake.EUAUserID) {
+	if validate.RequireString(intake.EUAUserID.ValueOrZero()) {
 		expectedError.WithValidation("EUAUserID", validationMessage)
 	}
 	if validate.RequireString(intake.Requester) {
@@ -155,13 +155,14 @@ func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntak
 	id := validatedIntake.ID.String()
 	submissionTime := validatedIntake.SubmittedAt.String()
 	params := apioperations.NewIntakegovernancePOST4Params()
+	euaID := validatedIntake.EUAUserID.ValueOrZero()
 	governanceIntake := apimodels.GovernanceIntake{
 		BusinessNeeds:           &validatedIntake.BusinessNeed.String,
 		BusinessOwner:           &validatedIntake.BusinessOwner.String,
 		BusinessOwnerComponent:  &validatedIntake.BusinessOwnerComponent.String,
 		EaCollaborator:          validatedIntake.EACollaborator.String,
 		EaSupportRequest:        &validatedIntake.EASupportRequest.Bool,
-		EuaUserID:               &validatedIntake.EUAUserID,
+		EuaUserID:               &euaID,
 		ExistingContract:        &validatedIntake.ExistingContract.String,
 		ExistingFunding:         &validatedIntake.ExistingFunding.Bool,
 		FundingNumber:           validatedIntake.FundingNumber.String,

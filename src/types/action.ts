@@ -14,7 +14,8 @@ export type ActionType =
   | 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT'
   | 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL'
   | 'NO_GOVERNANCE_NEEDED'
-  | 'ISSUE_LCID';
+  | 'ISSUE_LCID'
+  | 'REJECT';
 
 export type Action = {
   id: string;
@@ -45,4 +46,10 @@ export type SubmitLifecycleIdForm = {
   scope?: string;
   nextSteps?: string;
   feedback?: string;
+};
+
+export type RejectIntakeForm = {
+  feedback: string;
+  nextSteps: string;
+  reason: string;
 };

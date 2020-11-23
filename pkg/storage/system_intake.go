@@ -107,7 +107,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create system intake with error %s", err),
-			zap.String("user", intake.EUAUserID),
+			zap.String("user", intake.EUAUserID.ValueOrZero()),
 		)
 		return nil, err
 	}
@@ -174,7 +174,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to update system intake %s", err),
 			zap.String("id", intake.ID.String()),
-			zap.String("user", intake.EUAUserID),
+			zap.String("user", intake.EUAUserID.ValueOrZero()),
 		)
 		return nil, err
 	}

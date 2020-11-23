@@ -24,7 +24,9 @@ describe('The request repository reducer', () => {
     solution: '',
     processStatus: '',
     eaSupportRequest: null,
-    existingContract: ''
+    existingContract: '',
+    grtDate: null,
+    grbDate: null
   };
 
   it('returns the initial state', () => {

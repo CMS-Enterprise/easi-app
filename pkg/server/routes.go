@@ -157,7 +157,7 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
-			services.NewAuthorizeUserIsIntakeRequester(),
+			services.NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode(),
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
