@@ -20,6 +20,7 @@ import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
+import Prototype508 from 'views/Prototype508';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
@@ -113,6 +114,7 @@ const AppRoutes = () => {
         path="/terms-and-conditions"
         component={TermsAndConditions}
       />
+      <Route path="/508" component={Prototype508} />
       <Route path="*" component={NotFound} />
     </Switch>
   );
