@@ -38,33 +38,36 @@ func (h FileUploadHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "POST":
-			url, err := h.CreateFileUploadURL(r.Context())
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
-
-			responseBody, err := json.Marshal(url)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
-
-			w.WriteHeader(http.StatusCreated)
-			_, err = w.Write(responseBody)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
-			return
-		case "PUT":
-			h.putHandler(w, r)
+			h.createFileMetadata(w, r)
 			return
 		}
 	}
 }
 
-func (h FileUploadHandler) putHandler(w http.ResponseWriter, r *http.Request) {
+// GeneratePresignedURL is our handler that handles generating pre-signed URLs
+func (h FileUploadHandler) GeneratePresignedURL(w http.ResponseWriter, r *http.Request) {
+	url, err := h.CreateFileUploadURL(r.Context())
+	if err != nil {
+		h.WriteErrorResponse(r.Context(), w, err)
+		return
+	}
+
+	responseBody, err := json.Marshal(url)
+	if err != nil {
+		h.WriteErrorResponse(r.Context(), w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	_, err = w.Write(responseBody)
+	if err != nil {
+		h.WriteErrorResponse(r.Context(), w, err)
+		return
+	}
+	return
+}
+
+func (h FileUploadHandler) createFileMetadata(w http.ResponseWriter, r *http.Request) {
 	if r.Body == nil {
 		h.WriteErrorResponse(
 			r.Context(),

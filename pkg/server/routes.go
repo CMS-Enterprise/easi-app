@@ -492,6 +492,9 @@ func (s *Server) routes(
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
 
+	api.HandleFunc("/file_uploads/presignedurl", fileUploadHandler.GeneratePresignedURL).
+		Methods("POST")
+
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
