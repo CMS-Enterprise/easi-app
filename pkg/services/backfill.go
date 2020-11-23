@@ -4,7 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/guregu/null"
+	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -24,7 +26,7 @@ func NewBackfill(
 		}
 		if !ok {
 			return &apperrors.ResourceNotFoundError{
-				Err:      errors.New("failed to authorize fetch notes"),
+				Err:      errors.New("failed to authorize backfill creation"),
 				Resource: models.Note{},
 			}
 		}
@@ -41,12 +43,13 @@ func NewBackfill(
 		for _, note := range notes {
 			// TODO: should this be done at transport layer
 			note.SystemIntakeID = intake.ID
-			note.AuthorEUAID = null.StringFrom(intake.EUAUserID)
+			note.AuthorEUAID = appcontext.Principal(ctx).ID()
 
 			if _, err = createNote(ctx, &note); err != nil {
 				return err
 			}
 		}
+		appcontext.ZLogger(ctx).Info("created backfill document", zap.String("intakeID", intake.ID.String()))
 		return nil
 	}
 }
