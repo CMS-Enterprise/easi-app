@@ -33,10 +33,10 @@ function getActionsRequest(intakeId: string) {
   );
 }
 
-function* getActions(action: ReduxAction<any>) {
+function* getActions(actions: ReduxAction<string>) {
   try {
     yield put(fetchActions.request());
-    const response = yield call(getActionsRequest, action.payload);
+    const response = yield call(getActionsRequest, actions.payload);
     yield put(fetchActions.success(response.data));
   } catch (error) {
     yield put(fetchActions.failure(error.message));
