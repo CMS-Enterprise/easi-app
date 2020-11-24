@@ -11,7 +11,6 @@ export const postSystemIntake = createRoutine('POST_SYSTEM_INTAKE');
 export const saveSystemIntake = createRoutine('PUT_SYSTEM_INTAKE');
 export const storeSystemIntake = createRoutine('STORE_SYSTEM_INTAKE');
 export const clearSystemIntake = createRoutine('CLEAR_SYSTEM_INTAKE');
-export const reviewSystemIntake = createRoutine('REVIEW_SYSTEM_INTAKE');
 export const archiveSystemIntake = createRoutine('ARCHIVE_SYSTEM_INTAKE');
 export const issueLifecycleIdForSystemIntake = createRoutine(
   'ISSUE_LIFECYCLE_ID_FOR_SYSTEM_INTAKE'
@@ -37,6 +36,5 @@ export const fetchRequestRepoIntakes = createRoutine(
 );
 
 // Action routines
-export const postSystemIntakeAction = createRoutine<Action>(
-  'POST_SYSTEM_INTAKE_ACTION'
-);
+export const postAction = createRoutine<Action>('POST_ACTION');
+export const fetchActions = createRoutine('FETCH_ACTIONS');

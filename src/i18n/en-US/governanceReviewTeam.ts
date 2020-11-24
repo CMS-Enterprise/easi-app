@@ -104,7 +104,30 @@ const governanceReviewTeam = {
   notes: {
     heading: 'Admin team notes',
     addNote: 'Add a note',
-    addNoteCta: 'Add note'
+    addNoteCta: 'Add note',
+    actionName: {
+      NOT_IT_REQUEST: 'Marked as not an IT governance request',
+      NEED_BIZ_CASE: 'Requested a business case',
+      READY_FOR_GRT: 'Marked as ready for GRT',
+      READY_FOR_GRB: 'Marked as ready for GRB',
+      PROVIDE_FEEDBACK_NEED_BIZ_CASE:
+        'Provided GRT Feedback and progressed to business case',
+      ISSUE_LCID: 'Issued Lifecycle ID with no further governance',
+      BIZ_CASE_NEEDS_CHANGES:
+        'Requested business case changes (not ready for GRT)',
+      PROVIDE_GRT_FEEDBACK_KEEP_DRAFT:
+        'Provided GRT feedback and kept business case draft',
+      PROVIDE_GRT_FEEDBACK_NEED_FINAL:
+        'Provided GRT feedback and moved business case to final',
+      NO_GOVERNANCE_NEEDED: 'Marked as no further governance needed',
+      SUBMIT_INTAKE: 'Submitted a System Intake',
+      SUBMIT_BIZ_CASE: 'Submitted a business case',
+      CREATE_BIZ_CASE: 'Created a new business case',
+      SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
+      REJECT: 'Rejected the request'
+    },
+    showEmail: 'Show Email',
+    hideEmail: 'Hide Email'
   },
   dates: {
     heading: 'Dates',

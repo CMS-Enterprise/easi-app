@@ -1,3 +1,6 @@
+import { DateTime } from 'luxon';
+
+// When adding a new ActionType, please add its description in i18n/governanceReviewTeam/notes
 export type ActionType =
   | 'SUBMIT_INTAKE'
   | 'NOT_IT_REQUEST'
@@ -15,6 +18,10 @@ export type ActionType =
   | 'REJECT';
 
 export type Action = {
+  id: string;
+  createdAt: DateTime;
+  actorName: string;
+  actorEuaUserId: string;
   intakeId: string;
   actionType: ActionType;
   feedback?: string;
@@ -23,6 +30,7 @@ export type Action = {
 export type ActionState = {
   isPosting: boolean;
   error?: any;
+  actions: Action[];
 };
 
 export type ActionForm = {
