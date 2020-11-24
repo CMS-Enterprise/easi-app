@@ -489,8 +489,12 @@ func (s *Server) routes(
 		base,
 		services.NewCreateFileUploadURL(serviceConfig, s3Client),
 		services.NewCreateUploadedFile(serviceConfig, store.CreateUploadedFile),
+		services.NewFetchUploadedFile(serviceConfig, store.FetchUploadedFileByID),
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
+
+	api.HandleFunc("/file_uploads/{file_id}", fileUploadHandler.FetchFileMetadata).
+		Methods("GET")
 
 	api.HandleFunc("/file_uploads/presignedurl", fileUploadHandler.GeneratePresignedURL).
 		Methods("POST")

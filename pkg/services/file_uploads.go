@@ -3,6 +3,8 @@ package services
 import (
 	"context"
 
+	"github.com/google/uuid"
+
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -10,6 +12,9 @@ import (
 
 // createFunc is a function that saves uploaded file metadata
 type createFunc func(context.Context, *models.UploadedFile) (*models.UploadedFile, error)
+
+// fetchFunc is a function that fetches uploaded file metadata
+type fetchFunc func(context.Context, uuid.UUID) (*models.UploadedFile, error)
 
 // NewCreateFileUploadURL is a service to create a file upload URL via a pre-signed URL in S3
 func NewCreateFileUploadURL(config Config, s3client upload.S3Client) handlers.CreateFileUploadURL {
@@ -27,4 +32,12 @@ func NewCreateUploadedFile(config Config, create createFunc) handlers.CreateUplo
 	return func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error) {
 		return create(ctx, file)
 	}
+}
+
+// NewFetchUploadedFile returns a function that fetches the metadata of an uploaded file
+func NewFetchUploadedFile(config Config, fetch fetchFunc) handlers.FetchUploadedFile {
+	return func(ctx context.Context, id uuid.UUID) (*models.UploadedFile, error) {
+		return fetch(ctx, id)
+	}
+
 }
