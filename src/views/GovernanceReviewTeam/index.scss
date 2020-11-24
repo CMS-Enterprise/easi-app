@@ -68,13 +68,13 @@
     }
   }
 
-  &__note-list {
+  &__history {
     list-style-type: none;
     margin-top: 3.5em;
     padding-left: 1em;
   }
 
-  &__note {
+  &__history-item {
     display: flex;
     &:not(:last-of-type) {
       border-left: 1px solid #000;
@@ -93,7 +93,7 @@
     }
   }
 
-  &__note-content {
+  &__history-item-content {
     width: 100%;
     margin-bottom: 2em;
     margin-left: 1em;
