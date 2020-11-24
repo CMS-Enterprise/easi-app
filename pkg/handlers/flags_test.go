@@ -20,13 +20,14 @@ func (s HandlerTestSuite) TestFlagsHandler() {
 		}
 		config := ld.DefaultConfig
 		config.Offline = true
-		flagClient := flags.NewLocalClient(flags.FlagValues{"foo": "bar"})
+		flagClient, ferr := flags.NewLaunchDarklyClient(flags.Config{Offline: true})
+		s.NoError(ferr)
 		ldUser := ld.NewAnonymousUser("bar")
 
 		FlagsHandler{
 			HandlerBase: s.base,
 			FetchFlags:  mockFetch,
-			FlagClient:  *flagClient,
+			FlagClient:  flagClient,
 			LDUser:      ldUser,
 		}.Handle()(rr, req)
 

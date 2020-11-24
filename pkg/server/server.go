@@ -90,6 +90,6 @@ func Serve(config *viper.Viper) {
 	s.logger.Info("Serving application on port 8080")
 	err := http.ListenAndServe(":8080", s)
 	if err != nil {
-		s.logger.Fatal("Failed to start server")
+		s.logger.Fatal("Failed to start server", zap.Error(err))
 	}
 }

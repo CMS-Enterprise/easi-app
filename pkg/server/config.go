@@ -91,16 +91,19 @@ func (s Server) NewFlagConfig() flags.Config {
 
 	var timeout time.Duration
 	var key string
+	var offline bool
 
 	switch flagSource {
 	case appconfig.FlagSourceLocal:
 		timeout = 0
 		key = "local-has-no-key"
+		offline = true
 	case appconfig.FlagSourceLaunchDarkly:
 		s.checkRequiredConfig(appconfig.LDKey)
 		s.checkRequiredConfig(appconfig.LDTimeout)
 		timeout = time.Duration(s.Config.GetInt(appconfig.LDTimeout)) * time.Second
 		key = s.Config.GetString(appconfig.LDKey)
+		offline = false
 	default:
 		opts := []appconfig.FlagSourceOption{appconfig.FlagSourceLocal, appconfig.FlagSourceLaunchDarkly}
 		s.logger.Fatal(fmt.Sprintf("%s must be set to one of %v", appconfig.FlagSourceKey, opts))
@@ -110,5 +113,6 @@ func (s Server) NewFlagConfig() flags.Config {
 		Source:  flagSource,
 		Key:     key,
 		Timeout: timeout,
+		Offline: offline,
 	}
 }

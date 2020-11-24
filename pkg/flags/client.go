@@ -13,6 +13,7 @@ type Config struct {
 	Source  appconfig.FlagSourceOption
 	Key     string
 	Timeout time.Duration
+	Offline bool
 }
 
 // FlagValues is the struct for our keys and values from LD
@@ -23,43 +24,28 @@ type FlagClient interface {
 	Flags(user ld.User) FlagValues
 }
 
-// LaunchDarklyClient is backed by the LaunchDarkly service and requires
-// network access.
+// LaunchDarklyClient is backed by the LaunchDarkly service
+// (network access is not needed in Offline Mode)
 type LaunchDarklyClient struct {
 	client *ld.LDClient
 }
 
 // Flags returns the flags from Launch Darkly
-func (c LaunchDarklyClient) Flags(user ld.User) FlagValues {
+func (c *LaunchDarklyClient) Flags(user ld.User) FlagValues {
 	currentFlags := FlagValues{}
-	state := c.client.AllFlagsState(user, ld.ClientSideOnly)
-	valuesMap := state.ToValuesMap()
+	valuesMap := c.client.AllFlagsState(user, ld.ClientSideOnly).ToValuesMap()
 	for k, v := range valuesMap {
 		currentFlags[k] = v
 	}
 	return currentFlags
 }
 
-// LocalFlagClient returns a set of flags specified locally
-type LocalFlagClient struct {
-	flags FlagValues
-}
-
-// Flags returns all flags
-func (c LocalFlagClient) Flags(user ld.User) FlagValues {
-	return c.flags
-}
-
 // NewLaunchDarklyClient returns a client backed by Launch Darkly
 func NewLaunchDarklyClient(config Config) (*LaunchDarklyClient, error) {
-	ldClient, err := ld.MakeClient(config.Key, config.Timeout)
+	ldConfig := ld.Config{Offline: config.Offline}
+	ldClient, err := ld.MakeCustomClient(config.Key, ldConfig, config.Timeout)
 	if err != nil {
 		return nil, err
 	}
 	return &LaunchDarklyClient{client: ldClient}, nil
-}
-
-// NewLocalClient returns a client backed by local values
-func NewLocalClient(flags FlagValues) *LocalFlagClient {
-	return &LocalFlagClient{flags: flags}
 }

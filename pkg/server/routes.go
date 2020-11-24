@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
-	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
@@ -97,21 +96,10 @@ func (s *Server) routes(
 
 	// set up FlagClient
 	flagConfig := s.NewFlagConfig()
-	var flagClient flags.FlagClient
-
-	switch flagConfig.Source {
-	case appconfig.FlagSourceLocal:
-		defaultFlags := flags.FlagValues{"taskListLite": "true", "sandbox": "true", "pdfExport": "true"}
-		flagClient = flags.NewLocalClient(defaultFlags)
-
-	case appconfig.FlagSourceLaunchDarkly:
-		client, clientErr := flags.NewLaunchDarklyClient(flagConfig)
-		if clientErr != nil {
-			s.logger.Fatal("Failed to connect to create flag client", zap.Error(clientErr))
-		}
-		flagClient = client
+	flagClient, flagErr := flags.NewLaunchDarklyClient(flagConfig)
+	if flagErr != nil {
+		s.logger.Fatal("Failed to connect to create flag client", zap.Error(flagErr))
 	}
-
 	flagUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
 
 	// API base path is versioned
