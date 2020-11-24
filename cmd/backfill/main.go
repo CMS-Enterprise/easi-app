@@ -84,6 +84,7 @@ func upload(host string, intake *models.SystemIntake) error {
 }
 
 const (
+	colUUID       = 25 // Z
 	colDate       = 0  // A
 	colStatus     = 1  // B
 	colName       = 2  // C
@@ -106,17 +107,24 @@ const (
 	colContractor = 18 // S
 	colVehicle    = 19 // T
 	colPeriod     = 20 // U
-	colItemType   = 21 // V
-	colPath       = 22 // W
 
+	colCStartM = 21 // V
+	colCStartY = 22 // W
+	colCEndM   = 23 // W
+	colCEndY   = 24 // X
 )
 
-func convert(row []string) (*models.SystemIntake, error) {
-	intake := &models.SystemIntake{}
+type entry struct {
+	Intake models.SystemIntake `json:"intake"`
+	Notes  []models.Note       `json:"notes"`
+}
+
+func convert(row []string) (*entry, error) {
+	data := &entry{}
 
 	// labelled "Request Date"
 	if dt, err := convertDate(row[colDate]); err == nil {
-		intake.CreatedAt = dt
+		data.Intake.CreatedAt = dt
 	} else {
 		return nil, err
 	}
@@ -124,32 +132,41 @@ func convert(row []string) (*models.SystemIntake, error) {
 	// TODO: "Final" / "Final-Admin" / "Draft"
 	_ = colStatus
 
-	// labelled "Project Name"
-	intake.ProjectName = null.StringFrom(row[colName])
+	// labeled "Project Name"
+	data.Intake.ProjectName = null.StringFrom(row[colName])
 
-	// TODO: do we have a place for Acronym?
-	_ = colAcronym
+	// we now have a place for Acronym
+	data.Intake.ProjectAcronym = null.StringFrom(row[colAcronym])
 
-	intake.Component = null.StringFrom(row[colComponent])
+	data.Intake.Component = null.StringFrom(row[colComponent])
+
+	if row[colGRTDate] != "" {
+		if dt, err := convertDate(row[colGRTDate]); err == nil {
+			data.Intake.GRTDate = dt
+		} else {
+			return nil, err
+		}
+	}
+
+	if row[colGRBDate] != "" {
+		if dt, err := convertDate(row[colGRBDate]); err == nil {
+			data.Intake.GRBDate = dt
+		} else {
+			return nil, err
+		}
+	}
 
 	// TODO: do we have a place for these fields
 	_ = colAdminLead // person's name
-	_ = colGRTDate   // null-able
-	_ = colGRBDate   // null-able
 	_ = colGRTNotes  // free-form text, maybe on coming `models.Note` object?!?
 
-	// TODO: LCIDs in spreadsheet frequently have a 1 character ALPHA prefix ??
-	lcid := row[colLCID]
-	if len(lcid) == 7 {
-		lcid = string([]byte(lcid)[1:])
-	}
-	intake.LifecycleID = null.StringFrom(lcid)
-
-	intake.LifecycleScope = null.StringFrom(row[colLCIDScope])
+	// sorted - LCIDs in spreadsheet frequently have a 1 character ALPHA prefix
+	data.Intake.LifecycleID = null.StringFrom(row[colLCID])
+	data.Intake.LifecycleScope = null.StringFrom(row[colLCIDScope])
 
 	// labelled "LCID Expires"
 	if dt, err := convertDate(row[colLCIDExp]); err == nil {
-		intake.LifecycleExpiresAt = dt
+		data.Intake.LifecycleExpiresAt = dt
 	} else {
 		return nil, err
 	}
