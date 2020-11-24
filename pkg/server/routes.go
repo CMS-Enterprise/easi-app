@@ -496,8 +496,15 @@ func (s *Server) routes(
 			serviceConfig,
 			services.NewAuthorizeRequireGRTJobCode(),
 			store.CreateUploadedFile),
+		services.NewFetchUploadedFile(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchUploadedFileByID),
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
+
+	api.HandleFunc("/file_uploads/{file_id}", fileUploadHandler.FetchFileMetadata).
+		Methods("GET")
 
 	api.HandleFunc("/file_uploads/presignedurl", fileUploadHandler.GeneratePresignedURL).
 		Methods("POST")
