@@ -125,7 +125,7 @@ func (s *Server) routes(
 	}
 
 	// endpoint for flags list
-	flagsHandler := handlers.NewFlagsHandler(base, flags.NewFetchFlags(), flagClient, flagUser)
+	flagsHandler := handlers.NewFlagsHandler(base, flagClient, flagUser)
 	api.Handle("/flags", flagsHandler.Handle())
 
 	// endpoint for systems list

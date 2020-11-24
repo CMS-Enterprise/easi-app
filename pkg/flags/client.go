@@ -19,33 +19,8 @@ type Config struct {
 // FlagValues is the struct for our keys and values from LD
 type FlagValues map[string]interface{}
 
-// FlagClient provides a way to retrieve the set of flags
-type FlagClient interface {
-	Flags(user ld.User) FlagValues
-}
-
-// LaunchDarklyClient is backed by the LaunchDarkly service
-// (network access is not needed in Offline Mode)
-type LaunchDarklyClient struct {
-	client *ld.LDClient
-}
-
-// Flags returns the flags from Launch Darkly
-func (c *LaunchDarklyClient) Flags(user ld.User) FlagValues {
-	currentFlags := FlagValues{}
-	valuesMap := c.client.AllFlagsState(user, ld.ClientSideOnly).ToValuesMap()
-	for k, v := range valuesMap {
-		currentFlags[k] = v
-	}
-	return currentFlags
-}
-
 // NewLaunchDarklyClient returns a client backed by Launch Darkly
-func NewLaunchDarklyClient(config Config) (*LaunchDarklyClient, error) {
+func NewLaunchDarklyClient(config Config) (*ld.LDClient, error) {
 	ldConfig := ld.Config{Offline: config.Offline}
-	ldClient, err := ld.MakeCustomClient(config.Key, ldConfig, config.Timeout)
-	if err != nil {
-		return nil, err
-	}
-	return &LaunchDarklyClient{client: ldClient}, nil
+	return ld.MakeCustomClient(config.Key, ldConfig, config.Timeout)
 }

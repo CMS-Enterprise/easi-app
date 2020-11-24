@@ -15,18 +15,14 @@ func (s HandlerTestSuite) TestFlagsHandler() {
 		rr := httptest.NewRecorder()
 		req, err := http.NewRequest("GET", "/flags/", nil)
 		s.NoError(err)
-		mockFetch := func(FlagClient flags.FlagClient, clientUser ld.User) flags.FlagValues {
-			return flags.FlagValues{"fakeFlag": false}
-		}
 		config := ld.DefaultConfig
 		config.Offline = true
-		flagClient, ferr := flags.NewLaunchDarklyClient(flags.Config{Offline: true})
+		flagClient, ferr := ld.MakeCustomClient("nada", ld.Config{Offline: true}, 0)
 		s.NoError(ferr)
 		ldUser := ld.NewAnonymousUser("bar")
 
 		FlagsHandler{
 			HandlerBase: s.base,
-			FetchFlags:  mockFetch,
 			FlagClient:  flagClient,
 			LDUser:      ldUser,
 		}.Handle()(rr, req)
@@ -36,7 +32,7 @@ func (s HandlerTestSuite) TestFlagsHandler() {
 		var flagValues flags.FlagValues
 		err = json.Unmarshal(rr.Body.Bytes(), &flagValues)
 		s.NoError(err)
-		s.Len(flagValues, 1)
-		s.Equal(flagValues["fakeFlag"], false)
+		s.Len(flagValues, 0) // ofline mode == no flags configured
+		s.Equal(flagValues["fakeFlag"], nil)
 	})
 }

@@ -3,12 +3,11 @@ package services
 import (
 	"github.com/facebookgo/clock"
 	"go.uber.org/zap"
-
-	"github.com/cmsgov/easi-app/pkg/flags"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 )
 
 // NewConfig returns a Config for services
-func NewConfig(logger *zap.Logger, flagClient flags.FlagClient) Config {
+func NewConfig(logger *zap.Logger, flagClient *ld.LDClient) Config {
 	return Config{
 		clock:      clock.New(),
 		logger:     logger,
@@ -20,5 +19,5 @@ func NewConfig(logger *zap.Logger, flagClient flags.FlagClient) Config {
 type Config struct {
 	clock      clock.Clock
 	logger     *zap.Logger
-	flagClient flags.FlagClient
+	flagClient *ld.LDClient
 }
