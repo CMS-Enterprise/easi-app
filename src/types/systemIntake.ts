@@ -79,6 +79,7 @@ export type SystemIntakeForm = {
   createdAt: DateTime | null;
   archivedAt: DateTime | null;
   lcid: string;
+  lcidExpiration: DateTime | null;
   grtDate: DateTime | null;
   grbDate: DateTime | null;
 } & ContractDetailsForm;
