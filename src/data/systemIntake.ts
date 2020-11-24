@@ -69,6 +69,7 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   createdAt: null,
   archivedAt: null,
   lcid: '',
+  lcidExpiration: null,
   grtDate: null,
   grbDate: null
 };
@@ -216,6 +217,9 @@ export const prepareSystemIntakeForApp = (
       ? DateTime.fromISO(systemIntake.archivedAt)
       : null,
     lcid: systemIntake.lcid || '',
+    lcidExpiration: systemIntake.lcidExpiresAt
+      ? DateTime.fromISO(systemIntake.lcidExpiresAt)
+      : null,
     grtDate: systemIntake.grtDate
       ? DateTime.fromISO(systemIntake.grtDate)
       : null,

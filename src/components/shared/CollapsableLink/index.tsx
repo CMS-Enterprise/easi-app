@@ -6,6 +6,7 @@ import './index.scss';
 
 type CollapsableLinkProps = {
   id: string;
+  className?: string;
   children: React.ReactNode | React.ReactNodeArray;
   label: string;
   closeLabel?: string;
@@ -14,6 +15,7 @@ type CollapsableLinkProps = {
 
 const CollapsableLink = ({
   id,
+  className,
   children,
   label,
   closeLabel,
@@ -29,7 +31,7 @@ const CollapsableLink = ({
     isOpen ? 'fa-caret-down' : 'fa-caret-right'
   );
   return (
-    <div className="easi-collapsable-link">
+    <div className={classnames('easi-collapsable-link', className)}>
       <Button
         type="button"
         onClick={() => setOpen(!isOpen)}
