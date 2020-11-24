@@ -68,7 +68,7 @@ const RequestRepository = () => {
               asCustom={Link}
               to={`/governance-review-team/${row.original.id}/dates`}
             >
-              {t('requestRepository.table.grtDate.null')}
+              {t('requestRepository.table.addDate')}
             </UswdsLink>
           );
         }
@@ -88,7 +88,7 @@ const RequestRepository = () => {
               asCustom={Link}
               to={`/governance-review-team/${row.original.id}/dates`}
             >
-              {t('requestRepository.table.grbDate.null')}
+              {t('requestRepository.table.addDate')}
             </UswdsLink>
           );
         }
