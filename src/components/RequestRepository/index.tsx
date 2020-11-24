@@ -66,7 +66,7 @@ const RequestRepository = () => {
             <UswdsLink
               data-testid="add-grt-date-cta"
               asCustom={Link}
-              to={`/governance-review-team/${row.original.id}:id/dates`}
+              to={`/governance-review-team/${row.original.id}/dates`}
             >
               {t('requestRepository.table.grtDate.null')}
             </UswdsLink>
@@ -86,7 +86,7 @@ const RequestRepository = () => {
             <UswdsLink
               data-testid="add-grb-date-cta"
               asCustom={Link}
-              to={`/governance-review-team/${row.original.id}:id/dates`}
+              to={`/governance-review-team/${row.original.id}/dates`}
             >
               {t('requestRepository.table.grbDate.null')}
             </UswdsLink>
