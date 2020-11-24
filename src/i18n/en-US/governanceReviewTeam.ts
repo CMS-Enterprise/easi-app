@@ -94,12 +94,7 @@ const governanceReviewTeam = {
       submissionDate: {
         null: 'Not yet submitted'
       },
-      grtDate: {
-        null: 'Add date'
-      },
-      grbDate: {
-        null: 'Add date'
-      }
+      addDate: 'Add date'
     },
     aria: {
       openTableCaption:
