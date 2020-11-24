@@ -7,7 +7,10 @@ const initialState: FlagsState = {
   flags: {
     taskListLite: false,
     sandbox: false,
-    pdfExport: false
+    pdfExport: false,
+    prototype508: false,
+    prototypeTRB: false,
+    fileUploads: false
   },
   isLoaded: false
 };
