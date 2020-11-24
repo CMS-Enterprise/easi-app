@@ -114,7 +114,8 @@ const AppRoutes = () => {
         path="/terms-and-conditions"
         component={TermsAndConditions}
       />
-      <Route path="/508" component={Prototype508} />
+
+      {flags.prototype508 && <Route path="/508" component={Prototype508} />}
       <Route path="*" component={NotFound} />
     </Switch>
   );

@@ -1,5 +1,12 @@
 import React from 'react';
-import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
+import {
+  Link,
+  Route,
+  Switch,
+  useHistory,
+  useParams,
+  useRouteMatch
+} from 'react-router-dom';
 import { DateTime } from 'luxon';
 
 import './index.scss';
@@ -11,11 +18,33 @@ type Document = {
   createdAt: DateTime;
 };
 
+enum ProjectStatus {
+  New,
+  Step1,
+  Step2
+}
+
 type Project = {
+  id: number;
   name: string;
-  status: string;
+  status: ProjectStatus;
   documents: Document[];
 };
+
+const projects: Project[] = [
+  {
+    id: 1,
+    name: 'Project A',
+    status: ProjectStatus.New,
+    documents: []
+  },
+  {
+    id: 2,
+    name: 'Project B',
+    status: ProjectStatus.Step1,
+    documents: []
+  }
+];
 
 const Header = () => {
   return (
@@ -26,15 +55,85 @@ const Header = () => {
 };
 
 const Login = () => {
-  return <main>login</main>;
+  const history = useHistory();
+
+  return (
+    <main>
+      <h1>Login to Scylla</h1>
+
+      <form className="usa-form">
+        <label className="usa-label" htmlFor="input-type-eua">
+          EUA
+        </label>
+        <input
+          className="usa-input"
+          id="input-type-eua"
+          name="input-type-eua"
+          type="text"
+        />
+        <label className="usa-label" htmlFor="input-type-password">
+          Password
+        </label>
+        <input
+          className="usa-input"
+          id="input-type-password"
+          name="input-type-password"
+          type="password"
+        />
+
+        <button
+          type="submit"
+          className="usa-button"
+          onClick={() => history.push('projects')}
+        >
+          Login
+        </button>
+      </form>
+    </main>
+  );
 };
 
 const ProjectsPage = () => {
-  return <main>projects</main>;
+  return (
+    <main>
+      <table className="usa-table">
+        <caption>Projects</caption>
+        <thead>
+          <tr>
+            <th scope="col">Project name</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {projects.map(project => {
+            return (
+              <tr key={project.id}>
+                <th scope="row">
+                  <Link to={`projects/${project.id}`}>{project.name}</Link>
+                </th>
+                <td>{ProjectStatus[project.status]}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </main>
+  );
 };
 
 const ProjectPage = () => {
-  return <main>project</main>;
+  const { id } = useParams();
+  const project = projects.find(p => p.id.toString() === id);
+
+  if (!project) {
+    return <main>Project not found</main>;
+  }
+
+  return (
+    <main>
+      <h1>{project.name}</h1>
+    </main>
+  );
 };
 
 const Footer = () => {
@@ -61,8 +160,6 @@ const Footer = () => {
 };
 
 const Prototype508 = () => {
-  const project: Project = { name: 'Project A', status: 'new', documents: [] };
-  console.log(project);
   const { path } = useRouteMatch();
 
   return (
