@@ -10,7 +10,7 @@ const footer = {
     hhsLogo: 'Department of Health and Human Services USA'
   },
   cmsTagline:
-    'A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 2124'
+    'A federal government website managed and paid for by the U.S. Centers for Medicare & Medicaid Services. 7500 Security Boulevard, Baltimore, MD 21244'
 };
 
 export default footer;
