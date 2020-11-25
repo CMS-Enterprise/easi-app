@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -54,7 +55,18 @@ const RequestDecision = () => {
             )}
           </div>
           <div className="tablet:grid-col-1" />
-          <div className="tablet:grid-col-2" />
+          <div className="tablet:grid-col-2">
+            <div className="sidebar margin-top-4">
+              <h3 className="font-sans-sm">
+                Need help? Contact the Governance team
+              </h3>
+              <p>
+                <UswdsLink href="mailto:ITgovernance@cms.hhs.gov">
+                  ITgovernance@cms.hhs.gov
+                </UswdsLink>
+              </p>
+            </div>
+          </div>
         </div>
       </MainContent>
       <Footer />
