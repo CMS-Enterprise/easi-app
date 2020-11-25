@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -42,9 +41,7 @@ func (s *Store) CreateUploadedFile(ctx context.Context, file *models.UploadedFil
                  )`
 	_, err := s.db.NamedExec(createUploadedFileSQL, file)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to create file upload with error %s", err),
-		)
+		appcontext.ZLogger(ctx).Error("Failed to create file upload", zap.Error(err))
 		return nil, err
 	}
 	return s.FetchUploadedFileByID(ctx, file.ID)
@@ -56,10 +53,7 @@ func (s *Store) FetchUploadedFileByID(ctx context.Context, id uuid.UUID) (*model
 
 	err := s.db.Get(&file, "SELECT * FROM files WHERE id=$1", id)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch file %s", err),
-			zap.String("id", id.String()),
-		)
+		appcontext.ZLogger(ctx).Error("Failed to fetch uploaded file", zap.Error(err))
 
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.UploadedFile{}}
