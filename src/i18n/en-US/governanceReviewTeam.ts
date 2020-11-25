@@ -88,7 +88,8 @@ const governanceReviewTeam = {
   },
   requestRepository: {
     header: 'Requests',
-    requestCount: 'There are {{count}} requests',
+    requestCount_open: 'There are {{count}} open requests',
+    requestCount_closed: 'There are {{count}} closed requests',
     table: {
       requestType: 'Type of request',
       submissionDate: {
