@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/upload"
 )
@@ -17,7 +16,7 @@ type createFunc func(context.Context, *models.UploadedFile) (*models.UploadedFil
 type authFunc func(context.Context) (bool, error)
 
 // NewCreateFileUploadURL is a service to create a file upload URL via a pre-signed URL in S3
-func NewCreateFileUploadURL(config Config, authorize authFunc, s3client upload.S3Client) handlers.CreateFileUploadURL {
+func NewCreateFileUploadURL(config Config, authorize authFunc, s3client upload.S3Client) func(ctx context.Context) (*models.PreSignedURL, error) {
 	return func(ctx context.Context) (*models.PreSignedURL, error) {
 		ok, err := authorize(ctx)
 		if err != nil {
@@ -40,7 +39,7 @@ func NewCreateFileUploadURL(config Config, authorize authFunc, s3client upload.S
 }
 
 // NewCreateUploadedFile returns a function that saves the metadata of an uploaded file
-func NewCreateUploadedFile(config Config, authorize authFunc, create createFunc) handlers.CreateUploadedFile {
+func NewCreateUploadedFile(config Config, authorize authFunc, create createFunc) func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error) {
 	return func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error) {
 		ok, err := authorize(ctx)
 		if err != nil {
