@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,11 @@ import { SystemIntakeForm } from 'types/systemIntake';
 
 import csvHeaderMap from './csvHeaderMap';
 
+import './index.scss';
+
 const RequestRepository = () => {
+  type TableTypes = 'open' | 'closed';
+  const [activeTable, setActiveTable] = useState<TableTypes>('open');
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
 
@@ -146,6 +150,7 @@ const RequestRepository = () => {
           </li>
           <li>Requests</li>
         </BreadcrumbNav>
+
         <div>
           <CSVLink
             data={convertIntakesToCSV(data)}
@@ -164,8 +169,42 @@ const RequestRepository = () => {
           </CSVLink>
         </div>
       </div>
-      <h1>{t('requestRepository.header')}</h1>
-      <p>{t('requestRepository.requestCount', { count: data.length })}</p>
+      <nav aria-label="Request Repository Table Navigation">
+        <ul className="easi-request-repo__tab-list">
+          <li
+            className={classnames('easi-request-repo__tab', {
+              'easi-request-repo__tab--active': activeTable === 'open'
+            })}
+          >
+            <button
+              type="button"
+              className="easi-request-repo__tab-btn"
+              onClick={() => setActiveTable('open')}
+            >
+              Open Requests
+            </button>
+          </li>
+          <li
+            className={classnames('easi-request-repo__tab', {
+              'easi-request-repo__tab--active': activeTable === 'closed'
+            })}
+          >
+            <button
+              type="button"
+              className="easi-request-repo__tab-btn"
+              onClick={() => setActiveTable('closed')}
+            >
+              Closed Requests
+            </button>
+          </li>
+        </ul>
+      </nav>
+      <h1 className="font-heading-sm">
+        {t('requestRepository.requestCount', {
+          context: activeTable,
+          count: data.length
+        })}
+      </h1>
       <Table bordered={false} {...getTableProps()} fullWidth>
         <caption className="usa-sr-only">
           {t('requestRepository.aria.openRequestsTable')}

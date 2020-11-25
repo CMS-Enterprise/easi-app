@@ -1,0 +1,38 @@
+.easi-request-repo {
+  &__tab-list {
+    display: flex;
+    padding: 0;
+    list-style-type: none;
+    border-bottom: 1px solid #000;
+  }
+
+  &__tab {
+    border: none;
+    background: none;
+
+    &--active {
+      font-weight: bold;
+      border-bottom: 5px solid #005ea2;
+    }
+
+
+  }
+
+  &__tab + &__tab {
+    margin-left: 2em;
+  }
+
+  &__tab-btn {
+    display: block;
+    padding: 1rem 0;
+    background: none;
+    border: none;
+    line-height: 0.9;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

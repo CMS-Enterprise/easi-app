@@ -195,7 +195,7 @@ describe('The home page', () => {
 
       await act(async () => {
         homePage.update();
-        expect(homePage.text()).toContain('There are 4 requests');
+        expect(homePage.text()).toContain('There are 4 open requests');
       });
     });
 
