@@ -487,8 +487,15 @@ func (s *Server) routes(
 	// File Upload Handlers
 	fileUploadHandler := handlers.NewFileUploadHandler(
 		base,
-		services.NewCreateFileUploadURL(serviceConfig, s3Client),
-		services.NewCreateUploadedFile(serviceConfig, store.CreateUploadedFile),
+		services.NewCreateFileUploadURL(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			s3Client,
+		),
+		services.NewCreateUploadedFile(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.CreateUploadedFile),
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
 
