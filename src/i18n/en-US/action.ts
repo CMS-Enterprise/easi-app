@@ -21,6 +21,8 @@ const action = {
     subheading: 'How to proceed?',
     feedbackLabel: 'This email will be sent to the requester',
     submit: 'Email decision and close this request',
+    submitHelp:
+      'The information you add to ‘Scope of Lifecycle ID’ and ‘Next Steps’ will be added to this email and then sent. Do not repeat any of that information in the field below.',
     nextStepsLabel: 'Next Steps',
     nextStepsHelpText:
       'Provide the requester with some recommendations on how to continue their process. For example, “begin your ATO” or “update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID.',
@@ -49,6 +51,8 @@ const action = {
     actionDescription: 'Business case not approved',
     feedbackLabel: 'This email will be sent to the requester',
     submit: 'Email decision and close this request',
+    submitHelp:
+      'The information you add to ‘Reason’ and ‘Next Steps’ will be added to this email and then sent. Do not repeat any of that information in the field below.',
     nextStepsLabel: 'Next Steps',
     nextStepsHelpText:
       'Provide clear, actionable set of next steps that the requester needs to do. Tell them when they’d need to come back for the governance process and at what stage they’d be joining back in.',
