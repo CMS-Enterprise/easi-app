@@ -45,11 +45,21 @@ func (s *Server) routes(
 		s.NewCEDARClientCheck()
 	}
 
+	// set up FlagClient
+	flagConfig := s.NewFlagConfig()
+	flagClient, flagErr := flags.NewLaunchDarklyClient(flagConfig)
+	if flagErr != nil {
+		s.logger.Fatal("Failed to connect to create flag client", zap.Error(flagErr))
+	}
+	flagUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
+
 	// set up CEDAR client
 	var cedarEasiClient cedareasi.Client
 	connectedCedarEasiClient := cedareasi.NewTranslatedClient(
 		s.Config.GetString("CEDAR_API_URL"),
 		s.Config.GetString("CEDAR_API_KEY"),
+		flagClient,
+		flagUser,
 	)
 	if s.environment.Deployed() {
 		s.CheckCEDAREasiClientConnection(connectedCedarEasiClient)
@@ -93,14 +103,6 @@ func (s *Server) routes(
 	// set up S3 client
 	s3Config := s.NewS3Config()
 	s3Client := upload.NewS3Client(s3Config)
-
-	// set up FlagClient
-	flagConfig := s.NewFlagConfig()
-	flagClient, flagErr := flags.NewLaunchDarklyClient(flagConfig)
-	if flagErr != nil {
-		s.logger.Fatal("Failed to connect to create flag client", zap.Error(flagErr))
-	}
-	flagUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()

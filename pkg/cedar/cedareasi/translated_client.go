@@ -8,6 +8,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -18,10 +19,14 @@ import (
 	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
+const flagName = "enable-cedar-submit"
+
 // TranslatedClient is an API client for CEDAR EASi using EASi language
 type TranslatedClient struct {
 	client        *apiclient.EASiCore
 	apiAuthHeader runtime.ClientAuthInfoWriter
+	flagClient    *ld.LDClient
+	flagUser      ld.User
 }
 
 // Client is an interface to ease testing dependencies
@@ -31,7 +36,7 @@ type Client interface {
 }
 
 // NewTranslatedClient returns an API client for CEDAR EASi using EASi language
-func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
+func NewTranslatedClient(cedarHost string, cedarAPIKey string, flagClient *ld.LDClient, flagUser ld.User) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
 
@@ -41,7 +46,12 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	// Set auth header
 	apiKeyHeaderAuth := httptransport.APIKeyAuth("x-Gateway-APIKey", "header", cedarAPIKey)
 
-	return TranslatedClient{client, apiKeyHeaderAuth}
+	return TranslatedClient{
+		client:        client,
+		apiAuthHeader: apiKeyHeaderAuth,
+		flagClient:    flagClient,
+		flagUser:      flagUser,
+	}
 }
 
 // FetchSystems fetches a system list from CEDAR
@@ -212,8 +222,16 @@ func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntak
 
 // ValidateAndSubmitSystemIntake submits a system intake to CEDAR
 func (c TranslatedClient) ValidateAndSubmitSystemIntake(ctx context.Context, intake *models.SystemIntake) (string, error) {
+	// TODO: consider moving validation of our data to a different spot in our stack...
+	// it feels a bit weird/late to be doing this validation here
 	err := ValidateSystemIntakeForCedar(ctx, intake)
 	if err != nil {
+		return "", err
+	}
+	// usually, we would want to create an ld.User (aka "target") based on the contextual
+	// value of the Principal who is making the web request... But currently the EASi project
+	// is not targeting individual users, just environments wholesale.
+	if ok, err := c.flagClient.BoolVariation(flagName, c.flagUser, false); !ok || err != nil {
 		return "", err
 	}
 	return submitSystemIntake(ctx, intake, c)

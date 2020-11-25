@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
+
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -26,9 +28,14 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 	s.NoError(err)
 	rr := httptest.NewRecorder()
 
+	ldClient, lderr := ld.MakeCustomClient("offline", ld.Config{Offline: true}, 0)
+	s.NoError(lderr)
+
 	cedarEasiClient := cedareasi.NewTranslatedClient(
 		s.config.GetString("CEDAR_API_URL"),
 		s.config.GetString("CEDAR_API_KEY"),
+		ldClient,
+		ld.NewAnonymousUser("env"),
 	)
 
 	handlers.NewSystemsListHandler(
