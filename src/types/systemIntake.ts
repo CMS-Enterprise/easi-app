@@ -80,6 +80,10 @@ export type SystemIntakeForm = {
   archivedAt: DateTime | null;
   lcid: string;
   lcidExpiration: DateTime | null;
+  lcidScope: string;
+  lifecycleNextSteps: string;
+  decisionNextSteps: string;
+  rejectionReason: string;
   grtDate: DateTime | null;
   grbDate: DateTime | null;
 } & ContractDetailsForm;
