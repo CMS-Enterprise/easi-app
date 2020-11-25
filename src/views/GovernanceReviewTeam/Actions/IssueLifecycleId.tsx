@@ -13,13 +13,17 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { ActionType, SubmitLifecycleIdForm } from 'types/action';
+import {
+  ActionType,
+  CreateActionPayload,
+  SubmitLifecycleIdForm
+} from 'types/action';
 import { issueLifecycleIdForSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
 const IssueLifecycleId = () => {
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('action');
@@ -46,7 +50,11 @@ const IssueLifecycleId = () => {
       scope,
       lifecycleId
     } = values;
-    const actionPayload = { actionType, intakeId: systemId, feedback };
+    const actionPayload: CreateActionPayload = {
+      actionType,
+      intakeId: systemId,
+      feedback
+    };
     const lcidPayload = {
       lcidExpiresAt: `${expirationDateYear}-${expirationDateMonth}-${expirationDateDay}`,
       lcidNextSteps: nextSteps,
@@ -118,7 +126,7 @@ const IssueLifecycleId = () => {
                       label={t('issueLCID.lcid.new')}
                       onChange={() => {
                         setFieldValue('newLifecycleId', true);
-                        setFieldValue('lifecycleId', null);
+                        setFieldValue('lifecycleId', '');
                       }}
                       value
                     />

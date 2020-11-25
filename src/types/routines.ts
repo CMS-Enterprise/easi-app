@@ -1,6 +1,6 @@
 import { createRoutine } from 'redux-saga-routines';
 
-import { Action } from 'types/action';
+import { CreateActionPayload } from 'types/action';
 
 // SystemIntakes routines
 export const fetchSystemIntakes = createRoutine('FETCH_SYSTEM_INTAKES');
@@ -36,5 +36,5 @@ export const fetchRequestRepoIntakes = createRoutine(
 );
 
 // Action routines
-export const postAction = createRoutine<Action>('POST_ACTION');
+export const postAction = createRoutine<CreateActionPayload>('POST_ACTION');
 export const fetchActions = createRoutine('FETCH_ACTIONS');

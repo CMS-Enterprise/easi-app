@@ -17,7 +17,7 @@ import flattenErrors from 'utils/flattenErrors';
 import { rejectIntakeSchema } from 'validations/actionSchema';
 
 const RejectIntake = () => {
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('action');
