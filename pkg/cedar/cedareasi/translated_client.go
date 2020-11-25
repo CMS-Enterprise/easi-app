@@ -19,20 +19,41 @@ import (
 	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
-const flagName = "enable-cedar-submit"
+const (
+	flagName    = "enable-cedar-submit"
+	flagDefault = false
+)
 
 // TranslatedClient is an API client for CEDAR EASi using EASi language
 type TranslatedClient struct {
 	client        *apiclient.EASiCore
 	apiAuthHeader runtime.ClientAuthInfoWriter
-	flagClient    *ld.LDClient
-	flagUser      ld.User
+	enableSubmit  func(context.Context) bool
 }
 
 // Client is an interface to ease testing dependencies
 type Client interface {
 	FetchSystems(context.Context) (models.SystemShorts, error)
 	ValidateAndSubmitSystemIntake(context.Context, *models.SystemIntake) (string, error)
+}
+
+func newEnableSubmit(client *ld.LDClient, target ld.User) func(context.Context) bool {
+	return func(ctx context.Context) bool {
+		// usually, we would want to create an ld.User (aka "target") based on the contextual
+		// value of the Principal who is making the web request... But currently the EASi project
+		// is _not_ targeting individual users, just environments wholesale.
+		ok, err := client.BoolVariation(flagName, target, flagDefault)
+		if err != nil {
+			appcontext.ZLogger(ctx).Error(
+				"problem evaluating feature flag",
+				zap.Error(err),
+				zap.String("flag_name", flagName),
+				zap.Bool("default", flagDefault),
+			)
+			return flagDefault
+		}
+		return ok
+	}
 }
 
 // NewTranslatedClient returns an API client for CEDAR EASi using EASi language
@@ -49,8 +70,7 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string, flagClient *ld.LD
 	return TranslatedClient{
 		client:        client,
 		apiAuthHeader: apiKeyHeaderAuth,
-		flagClient:    flagClient,
-		flagUser:      flagUser,
+		enableSubmit:  newEnableSubmit(flagClient, flagUser),
 	}
 }
 
@@ -228,11 +248,11 @@ func (c TranslatedClient) ValidateAndSubmitSystemIntake(ctx context.Context, int
 	if err != nil {
 		return "", err
 	}
-	// usually, we would want to create an ld.User (aka "target") based on the contextual
-	// value of the Principal who is making the web request... But currently the EASi project
-	// is not targeting individual users, just environments wholesale.
-	if ok, err := c.flagClient.BoolVariation(flagName, c.flagUser, false); !ok || err != nil {
-		return "", err
+
+	// check the feature flag to see if we are currently sending downstream to CEDAR
+	if !c.enableSubmit(ctx) {
+		return "", nil
 	}
+
 	return submitSystemIntake(ctx, intake, c)
 }
