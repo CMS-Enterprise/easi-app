@@ -255,6 +255,9 @@ const IssueLifecycleId = () => {
                   <Label htmlFor="IssueLifecycleIdForm-Feedback">
                     {t('issueLCID.feedbackLabel')}
                   </Label>
+                  <HelpText id="IssueLifecycleIdForm-SubmitHelp">
+                    {t('issueLCID.submitHelp')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.feedback}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -262,6 +265,7 @@ const IssueLifecycleId = () => {
                     id="IssueLifecycleIdForm-Feedback"
                     maxLength={2000}
                     name="feedback"
+                    aria-describedby="IssueLifecycleIdForm-SubmitHelp"
                   />
                 </FieldGroup>
                 <Button
