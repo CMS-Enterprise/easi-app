@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 
+	"github.com/google/uuid"
+
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/upload"
-	"github.com/google/uuid"
 )
 
 // authFunc is a function that deals with auth
@@ -78,5 +79,4 @@ func NewFetchUploadedFile(config Config, authorize authFunc, fetch fetchFunc) fu
 
 		return fetch(ctx, id)
 	}
-
 }
