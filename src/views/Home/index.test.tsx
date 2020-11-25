@@ -54,7 +54,8 @@ describe('The home page', () => {
         const store = mockStore({
           auth: mockAuthReducer,
           systemIntakes: {
-            systemIntakes: []
+            openIntakes: [],
+            closedIntakes: []
           },
           businessCases: {
             businessCases: []
@@ -84,7 +85,7 @@ describe('The home page', () => {
         const store = mockStore({
           auth: mockAuthReducer,
           systemIntakes: {
-            systemIntakes: [
+            openIntakes: [
               {
                 ...initialSystemIntakeForm,
                 id: '1'
@@ -104,7 +105,8 @@ describe('The home page', () => {
                 status: 'NEED_BIZ_CASE',
                 businessCaseId: '1'
               }
-            ]
+            ],
+            closeIntakes: []
           }
         });
         let component: any;
@@ -132,7 +134,7 @@ describe('The home page', () => {
     };
 
     const mockSystemIntakes = {
-      systemIntakes: [
+      openIntakes: [
         {
           ...initialSystemIntakeForm,
           id: '1'
@@ -151,6 +153,13 @@ describe('The home page', () => {
           id: '4',
           status: 'INTAKE_SUBMITTED',
           businessCaseId: '1'
+        }
+      ],
+      closedIntakes: [
+        {
+          ...initialSystemIntakeForm,
+          id: '4',
+          status: 'WITHDRAWN'
         }
       ]
     };
@@ -190,12 +199,24 @@ describe('The home page', () => {
       expect(shallowComponent).not.toThrow();
     });
 
-    it('renders the table', async () => {
+    it('renders the open requests table', async () => {
       const homePage = mountComponent();
 
       await act(async () => {
         homePage.update();
         expect(homePage.text()).toContain('There are 4 open requests');
+      });
+    });
+
+    it('renders the closed requests table', async () => {
+      const homePage = mountComponent();
+
+      homePage
+        .find('[data-testid="view-closed-intakes-btn"]')
+        .simulate('click');
+      await act(async () => {
+        homePage.update();
+        expect(homePage.text()).toContain('There is 1 closed request');
       });
     });
 

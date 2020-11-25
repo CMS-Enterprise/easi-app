@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, withRouter } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 
@@ -9,6 +9,8 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
 import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntakes } from 'types/routines';
+import { SystemIntakeForm } from 'types/systemIntake';
 import user from 'utils/user';
 
 import SystemIntakeBanners from './SystemIntakeBanners';
@@ -16,7 +18,10 @@ import WelcomeText from './WelcomeText';
 
 import './index.scss';
 
-const Banners = () => {
+type BannersProps = {
+  intakes: SystemIntakeForm[];
+};
+const Banners = ({ intakes }: BannersProps) => {
   const location = useLocation<any>();
 
   return (
@@ -29,15 +34,28 @@ const Banners = () => {
           </p>
         </div>
       )}
-      <SystemIntakeBanners />
+      <SystemIntakeBanners intakes={intakes} />
     </div>
   );
 };
 
 const Home = () => {
+  const dispatch = useDispatch();
   const { authState } = useOktaAuth();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const openIntakes = useSelector(
+    (state: AppState) => state.systemIntakes.openIntakes
+  );
+  const closedIntakes = useSelector(
+    (state: AppState) => state.systemIntakes.closedIntakes
+  );
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      dispatch(fetchSystemIntakes());
+    }
+  }, [dispatch, authState.isAuthenticated]);
 
   return (
     <PageWrapper>
@@ -45,10 +63,13 @@ const Home = () => {
       <MainContent className="grid-container margin-bottom-5">
         {isUserSet &&
           (user.isGrtReviewer(userGroups) ? (
-            <RequestRepository />
+            <RequestRepository
+              openIntakes={openIntakes}
+              closedIntakes={closedIntakes}
+            />
           ) : (
             <>
-              <Banners />
+              <Banners intakes={openIntakes} />
               <WelcomeText />
             </>
           ))}

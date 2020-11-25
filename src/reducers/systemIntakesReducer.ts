@@ -3,10 +3,12 @@ import { Action } from 'redux-actions';
 
 import { prepareSystemIntakeForApp } from 'data/systemIntake';
 import { fetchSystemIntakes } from 'types/routines';
-import { SystemIntakesState } from 'types/systemIntake';
+import { SystemIntakeForm, SystemIntakesState } from 'types/systemIntake';
+import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
 
 const initialState: SystemIntakesState = {
-  systemIntakes: [],
+  openIntakes: [],
+  closedIntakes: [],
   isLoading: null,
   loadedTimestamp: null,
   error: null
@@ -16,6 +18,8 @@ function systemIntakesReducer(
   state = initialState,
   action: Action<any>
 ): SystemIntakesState {
+  const openIntakes: SystemIntakeForm[] = [];
+  const closedIntakes: SystemIntakeForm[] = [];
   switch (action.type) {
     case fetchSystemIntakes.REQUEST:
       return {
@@ -23,11 +27,17 @@ function systemIntakesReducer(
         isLoading: true
       };
     case fetchSystemIntakes.SUCCESS:
+      action.payload.forEach((intake: any) => {
+        if (isIntakeOpen(intake.status)) {
+          openIntakes.push(prepareSystemIntakeForApp(intake));
+        } else if (isIntakeClosed(intake.status)) {
+          closedIntakes.push(prepareSystemIntakeForApp(intake));
+        }
+      });
       return {
         ...state,
-        systemIntakes: action.payload.map((intake: any) =>
-          prepareSystemIntakeForApp(intake)
-        ),
+        openIntakes,
+        closedIntakes,
         loadedTimestamp: DateTime.local()
       };
     case fetchSystemIntakes.FAILURE:
