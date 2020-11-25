@@ -123,19 +123,12 @@ const AppRoutes = () => {
 
 // eslint-disable-next-line react/prefer-stateless-function
 const App = () => {
-  const handleSkipNav = () => {
-    const mainContent = document.getElementById('main-content')!;
-    if (mainContent) {
-      mainContent.focus();
-    }
-  };
-
   return (
     <FlagProvider>
       <div className="usa-overlay" />
-      <button type="button" className="skipnav" onClick={handleSkipNav}>
+      <a href="#main-content" className="skipnav">
         Skip to main content
-      </button>
+      </a>
       <BrowserRouter>
         <AuthenticationWrapper>
           <UserInfoWrapper>

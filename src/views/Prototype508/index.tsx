@@ -7,42 +7,90 @@ import {
   useParams,
   useRouteMatch
 } from 'react-router-dom';
+import { Table } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import './index.scss';
 
-type Document = {
-  name: string;
-  filename: string;
-  mimetype: string;
-  createdAt: DateTime;
-};
+// type Document = {
+//   name: string;
+//   filename: string;
+//   mimetype: string;
+//   createdAt: DateTime;
+// };
 
 enum ProjectStatus {
-  New,
-  Step1,
-  Step2
+  ConsultRequested,
+  TestingRequested,
+  TestingInProgress,
+  TestingCompleted,
+  InRemediation
 }
+
+type BusinessOwner = {
+  name: string;
+};
 
 type Project = {
   id: number;
   name: string;
   status: ProjectStatus;
-  documents: Document[];
+  businessOwner: BusinessOwner;
+  submissionDate: DateTime;
+  lastUpdatedAt: DateTime;
 };
 
+// TODO needs to be at least 15
 const projects: Project[] = [
   {
     id: 1,
-    name: 'Project A',
-    status: ProjectStatus.New,
-    documents: []
+    name: 'TACO',
+    status: ProjectStatus.ConsultRequested,
+    submissionDate: DateTime.fromISO('2020-03-21'),
+    lastUpdatedAt: DateTime.fromISO('2020-05-17'),
+    businessOwner: {
+      name: 'Shane Clark'
+    }
   },
   {
     id: 2,
-    name: 'Project B',
-    status: ProjectStatus.Step1,
-    documents: []
+    name: 'Impact Analysis Network',
+    status: ProjectStatus.TestingRequested,
+    submissionDate: DateTime.fromISO('2020-03-21'),
+    lastUpdatedAt: DateTime.fromISO('2020-05-17'),
+    businessOwner: {
+      name: 'Shane Clark'
+    }
+  },
+  {
+    id: 3,
+    name: 'Migration Pipeline',
+    status: ProjectStatus.TestingInProgress,
+    submissionDate: DateTime.fromISO('2020-03-21'),
+    lastUpdatedAt: DateTime.fromISO('2020-05-17'),
+    businessOwner: {
+      name: 'Connie Leonard'
+    }
+  },
+  {
+    id: 4,
+    name: '(USDS) Dashboard for USDS',
+    status: ProjectStatus.TestingCompleted,
+    submissionDate: DateTime.fromISO('2020-03-21'),
+    lastUpdatedAt: DateTime.fromISO('2020-05-17'),
+    businessOwner: {
+      name: 'Ada Sanchez'
+    }
+  },
+  {
+    id: 5,
+    name: 'OSORA FOIA Portal Project',
+    status: ProjectStatus.InRemediation,
+    submissionDate: DateTime.fromISO('2020-03-21'),
+    lastUpdatedAt: DateTime.fromISO('2020-05-17'),
+    businessOwner: {
+      name: 'Amanda Johnson'
+    }
   }
 ];
 
@@ -95,28 +143,46 @@ const Login = () => {
 
 const ProjectsPage = () => {
   return (
-    <main>
-      <table className="usa-table">
-        <caption>Projects</caption>
+    <main id="main-content">
+      <Table bordered={false} fullWidth>
+        <caption className="usa-sr-only">Requests</caption>
         <thead>
           <tr>
-            <th scope="col">Project name</th>
-            <th scope="col">Status</th>
+            <th scope="col" style={{ whiteSpace: 'nowrap' }}>
+              Submission Date
+            </th>
+            <th scope="col" style={{ whiteSpace: 'nowrap' }}>
+              Project Name
+            </th>
+            <th scope="col" style={{ whiteSpace: 'nowrap' }}>
+              Business Owner
+            </th>
+            <th scope="col" style={{ whiteSpace: 'nowrap' }}>
+              Status
+            </th>
           </tr>
         </thead>
         <tbody>
           {projects.map(project => {
             return (
               <tr key={project.id}>
-                <th scope="row">
+                <th scope="row">{project.submissionDate.toLocaleString()}</th>
+                <td>
                   <Link to={`projects/${project.id}`}>{project.name}</Link>
-                </th>
-                <td>{ProjectStatus[project.status]}</td>
+                </td>
+                <td>{project.businessOwner.name}</td>
+                <td>
+                  <strong>{ProjectStatus[project.status]}</strong>
+                  <br />
+                  last updated at {project.lastUpdatedAt.toLocaleString()}
+                </td>
               </tr>
             );
           })}
         </tbody>
-      </table>
+      </Table>
+
+      <ul />
     </main>
   );
 };
