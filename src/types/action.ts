@@ -17,6 +17,18 @@ export type ActionType =
   | 'ISSUE_LCID'
   | 'REJECT';
 
+/**
+ * Type for the POST Action request payload
+ */
+export type CreateActionPayload = {
+  intakeId: string;
+  actionType: ActionType;
+  feedback?: string;
+};
+
+/**
+ * Type for the GET Action request payload
+ */
 export type Action = {
   id: string;
   createdAt: DateTime;
@@ -27,6 +39,9 @@ export type Action = {
   feedback?: string;
 };
 
+/**
+ * Type for Action Reducer State
+ */
 export type ActionState = {
   isPosting: boolean;
   error?: any;
