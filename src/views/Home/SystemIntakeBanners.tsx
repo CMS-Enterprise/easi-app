@@ -1,30 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useOktaAuth } from '@okta/okta-react';
 
 import ActionBanner from 'components/shared/ActionBanner';
 import { useFlags } from 'contexts/flagContext';
-import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
-const SystemIntakeBanners = () => {
-  const { authState } = useOktaAuth();
-  const dispatch = useDispatch();
-  const systemIntakes = useSelector(
-    (state: AppState) => state.systemIntakes.systemIntakes
-  );
+type SystemIntakeBannersProps = {
+  intakes: SystemIntakeForm[];
+};
+
+const SystemIntakeBanners = ({ intakes }: SystemIntakeBannersProps) => {
   const flags = useFlags();
   const history = useHistory();
   const { t } = useTranslation('intake');
-
-  useEffect(() => {
-    if (authState.isAuthenticated) {
-      dispatch(fetchSystemIntakes());
-    }
-  }, [dispatch, authState.isAuthenticated]);
 
   const statusMap: { [key: string]: { title: string; description: string } } = {
     INTAKE_DRAFT: {
@@ -91,7 +80,7 @@ const SystemIntakeBanners = () => {
 
   return (
     <>
-      {systemIntakes.map((intake: SystemIntakeForm) => {
+      {intakes.map((intake: SystemIntakeForm) => {
         let rootPath = '';
         if (intake.requestType === 'SHUTDOWN') {
           rootPath = '/system';

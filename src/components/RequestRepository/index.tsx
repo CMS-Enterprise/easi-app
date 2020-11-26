@@ -1,7 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
 import { Table } from '@trussworks/react-uswds';
@@ -10,19 +9,23 @@ import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import { convertIntakeToCSV } from 'data/systemIntake';
-import { AppState } from 'reducers/rootReducer';
-import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 import csvHeaderMap from './csvHeaderMap';
 
 import './index.scss';
 
-const RequestRepository = () => {
+type RequestRepositoryProps = {
+  openIntakes: SystemIntakeForm[];
+  closedIntakes: SystemIntakeForm[];
+};
+const RequestRepository = ({
+  openIntakes,
+  closedIntakes
+}: RequestRepositoryProps) => {
   type TableTypes = 'open' | 'closed';
   const [activeTable, setActiveTable] = useState<TableTypes>('open');
   const { t } = useTranslation('governanceReviewTeam');
-  const dispatch = useDispatch();
 
   const columns: any = useMemo(
     () => [
@@ -65,16 +68,12 @@ const RequestRepository = () => {
     [t]
   );
 
-  useEffect(() => {
-    dispatch(fetchSystemIntakes({ status: 'open' }));
-  }, [dispatch]);
-
-  const systemIntakes = useSelector(
-    (state: AppState) => state.systemIntakes.systemIntakes
-  );
-
   const data = useMemo(() => {
-    return systemIntakes.map(intake => {
+    const tableData = {
+      open: openIntakes,
+      closed: closedIntakes
+    };
+    return tableData[activeTable].map(intake => {
       const statusEnum = intake.status;
       let statusTranslation = '';
 
@@ -94,7 +93,7 @@ const RequestRepository = () => {
         requestType: t(`intake:requestTypeMap.${intake.requestType}`)
       };
     });
-  }, [systemIntakes, t]);
+  }, [activeTable, closedIntakes, openIntakes, t]);
 
   const {
     getTableProps,
@@ -193,6 +192,7 @@ const RequestRepository = () => {
               type="button"
               className="easi-request-repo__tab-btn"
               onClick={() => setActiveTable('closed')}
+              data-testid="view-closed-intakes-btn"
             >
               Closed Requests
             </button>
