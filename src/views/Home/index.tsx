@@ -64,7 +64,9 @@ const Home = () => {
         {isUserSet &&
           (user.isGrtReviewer(userGroups) ? (
             <RequestRepository
-              openIntakes={openIntakes}
+              openIntakes={openIntakes.filter(
+                intake => intake.status !== 'INTAKE_DRAFT'
+              )}
               closedIntakes={closedIntakes}
             />
           ) : (
