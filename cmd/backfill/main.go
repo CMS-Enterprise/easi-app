@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/guregu/null"
@@ -130,14 +129,11 @@ func convert(row []string) (*entry, error) {
 	}
 
 	// TODO: "Final" / "Final-Admin" / "Draft"
-	_ = colStatus
-
-	// labeled "Project Name"
-	data.Intake.ProjectName = null.StringFrom(row[colName])
+	data.Intake.Status = models.SystemIntakeStatusCLOSED // TODO: even for "Draft"??
 
 	// we now have a place for Acronym
 	data.Intake.ProjectAcronym = null.StringFrom(row[colAcronym])
-
+	data.Intake.ProjectName = null.StringFrom(row[colName])
 	data.Intake.Component = null.StringFrom(row[colComponent])
 
 	if row[colGRTDate] != "" {
@@ -174,39 +170,38 @@ func convert(row []string) (*entry, error) {
 	// TODO - labelled "Created By", string literal names, options:
 	// * pass to back-end to turn into EUA_IDs
 	// * manually fill out EUA_IDs in a new column?
-	intake.Requester = row[colCreatedBy] // TODO - Omit per HP
-	// intake.EUAUserID = row[colEUAID]
+	data.Intake.Requester = row[colCreatedBy]
 
 	// TODO - labelled "CMS Project Manager"
 	// example entry - "Carlos Borges Martinez;#435"
 	// is "#435" representative of their "component?"
-	prjs := strings.Split(";", row[colProjectMgr])
-	intake.ProductManager = null.StringFrom(prjs[0])
-	intake.ProductManagerComponent = null.StringFrom(prjs[1]) // TODO: de-reference somehow? on server-side?
+	data.Intake.ProductManager = null.StringFrom(row[colProjectMgr])
 
 	// TODO - labelled "Business Owner"
 	// example entry - "Carlos Borges Martinez;#435"
 	// is "#435" representative of their "component?"
-	bizs := strings.Split(";", row[colBizOwn])
-	intake.BusinessOwner = null.StringFrom(bizs[0])
-	intake.BusinessOwnerComponent = null.StringFrom(bizs[1]) // TODO: de-reference somehow? on server-side?
+	data.Intake.BusinessOwner = null.StringFrom(row[colBizOwn])
 
 	// TODO - labelled "Project #" - what does this map to?
 	// usually: "000120"; occaisonally: "001595, 000102, 002014", "FY20-000792,  FY-2021: 000787 and 000924"
-	intake.FundingNumber = null.StringFrom(row[colPrjNum]) // TODO - correct?
+	data.Intake.FundingNumber = null.StringFrom(row[colPrjNum]) // TODO - correct?
+	data.Intake.FundingSource = null.StringFrom(row[colFundSrc])
+	data.Intake.CostIncrease = null.StringFrom(row[colCostFree]) // TODO - correct mapping?
+	data.Intake.Contractor = null.StringFrom(row[colContractor])
+	data.Intake.ContractVehicle = null.StringFrom(row[colVehicle])
 
-	intake.FundingSource = null.StringFrom(row[colFundSrc])
-	intake.CostIncrease = null.StringFrom(row[colCostFree]) // TODO - correct mapping?
-	intake.Contractor = null.StringFrom(row[colContractor])
-	intake.ContractVehicle = null.StringFrom(row[colVehicle])
+	// manually parsed "Period of Performance"
+	data.Intake.ContractStartMonth = null.StringFrom(row[colCStartM])
+	data.Intake.ContractStartYear = null.StringFrom(row[colCStartY])
+	data.Intake.ContractEndMonth = null.StringFrom(row[colCEndM])
+	data.Intake.ContractEndYear = null.StringFrom(row[colCEndY])
 
-	// TODO - how to parse? "Period of Performance"
-	// e.g. "Nov 30, 2020 to Nov 29, 2024"; "current 4/1/2016 - 3/31/2021  extend 3 months to 6/30/2021"
-	// manual?!?
-	intake.ContractStartMonth = _
-	intake.ContractStartYear = _
-	intake.ContractEndMonth = _
-	intake.ContractEndYear = _
+	if row[colGRTNotes] != "" {
+		data.Notes = append(data.Notes, &models.Note{
+			Content:    row[colGRTNotes],
+			AuthorName: row[colAdminLead],
+		})
+	}
 
 	// SEND IT BACK!
 	return intake, nil
