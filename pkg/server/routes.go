@@ -487,9 +487,27 @@ func (s *Server) routes(
 	// File Upload Handlers
 	fileUploadHandler := handlers.NewFileUploadHandler(
 		base,
-		services.NewCreateFileUploadURL(serviceConfig, s3Client),
+		services.NewCreateFileUploadURL(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			s3Client,
+		),
+		services.NewCreateUploadedFile(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.CreateUploadedFile),
+		services.NewFetchUploadedFile(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchUploadedFileByID),
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
+
+	api.HandleFunc("/file_uploads/{file_id}", fileUploadHandler.FetchFileMetadata).
+		Methods("GET")
+
+	api.HandleFunc("/file_uploads/presignedurl", fileUploadHandler.GeneratePresignedURL).
+		Methods("POST")
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
