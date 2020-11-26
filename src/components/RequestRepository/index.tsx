@@ -19,6 +19,7 @@ type RequestRepositoryProps = {
   openIntakes: SystemIntakeForm[];
   closedIntakes: SystemIntakeForm[];
 };
+
 const RequestRepository = ({
   openIntakes,
   closedIntakes
@@ -134,7 +135,7 @@ const RequestRepository = ({
 
   const csvHeaders = csvHeaderMap(t);
 
-  const convertIntakesToCSV = (intakes: SystemIntakeForm[]) => {
+  const convertIntakesToCSV = (intakes: any[]) => {
     return intakes.map(intake => convertIntakeToCSV(intake));
   };
 
