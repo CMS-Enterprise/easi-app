@@ -1,7 +1,7 @@
 export type Flags = {
-  taskListLite?: Boolean;
-  sandbox?: Boolean;
-  pdfExport?: Boolean;
+  taskListLite: Boolean;
+  sandbox: Boolean;
+  pdfExport: Boolean;
 };
 
 export type FlagsState = {
