@@ -216,5 +216,10 @@ func (c TranslatedClient) ValidateAndSubmitSystemIntake(ctx context.Context, int
 	if err != nil {
 		return "", err
 	}
+	// TODO: this is the quick & dirty way of stopping us from submitting to CEDAR,
+	// ideally we'd want to use LaunchDarkly to flag this behavior in the future
+	if true {
+		return "", nil
+	}
 	return submitSystemIntake(ctx, intake, c)
 }
