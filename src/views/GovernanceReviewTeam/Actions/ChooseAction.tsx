@@ -7,12 +7,17 @@ import { kebabCase } from 'lodash';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import { BusinessCaseModel } from 'types/businessCase';
+import { RequestType } from 'types/systemIntake';
 
 type ChooseActionProps = {
   businessCase: BusinessCaseModel;
+  systemIntakeType: RequestType;
 };
 
-const ChooseAction = ({ businessCase }: ChooseActionProps) => {
+const ChooseAction = ({
+  businessCase,
+  systemIntakeType
+}: ChooseActionProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
@@ -183,7 +188,10 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
 
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
-  if (businessCaseExists) {
+  if (systemIntakeType === 'SHUTDOWN') {
+    availableActions = [NotITRequest];
+    availableHiddenActions = [];
+  } else if (businessCaseExists) {
     availableActions = [BizCaseNeedsChanges];
     availableHiddenActions = [
       ReadyForGRT,
@@ -212,13 +220,15 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
       <form onSubmit={onSubmit}>
         <RadioGroup>
           {[availableActions]}
-          <CollapsableLink
-            id={kebabCase(t('submitAction.otherOptions'))}
-            label={t('submitAction.otherOptions')}
-            styleLeftBar={false}
-          >
-            {[availableHiddenActions]}
-          </CollapsableLink>
+          {availableHiddenActions && (
+            <CollapsableLink
+              id={kebabCase(t('submitAction.otherOptions'))}
+              label={t('submitAction.otherOptions')}
+              styleLeftBar={false}
+            >
+              {[availableHiddenActions]}
+            </CollapsableLink>
+          )}
         </RadioGroup>
         <Button className="margin-top-5" type="submit" disabled={!actionRoute}>
           Continue

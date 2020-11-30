@@ -213,7 +213,12 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/actions"
               exact
-              render={() => <ChooseAction businessCase={businessCase} />}
+              render={() => (
+                <ChooseAction
+                  businessCase={businessCase}
+                  systemIntakeType={systemIntake.requestType}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/actions/not-it-request"
