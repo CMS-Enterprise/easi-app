@@ -93,7 +93,8 @@ const governanceReviewTeam = {
       requestType: 'Type of request',
       submissionDate: {
         null: 'Not yet submitted'
-      }
+      },
+      addDate: 'Add date'
     },
     aria: {
       openTableCaption:
