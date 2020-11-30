@@ -14,7 +14,9 @@ const action = {
       'Provide GRT feedback and move business case to final',
     noGovernance: 'No further governance needed',
     rejectIntake: 'Business case not approved',
-    sendEmail: 'Send email'
+    sendEmail: 'Send email',
+    guideReceivedClose: 'Decomission guide received. Close the request',
+    notRespondingClose: 'Project team not responding. Close the request'
   },
   issueLCID: {
     backLink: 'Change',

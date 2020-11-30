@@ -311,6 +311,24 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
+              path="/governance-review-team/:systemId/actions/guide-received-close"
+              render={() => (
+                <SubmitAction
+                  action="GUIDE_RECEIVED_CLOSE"
+                  actionName={actionsT('actions.guideReceivedClose')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/not-responding-close"
+              render={() => (
+                <SubmitAction
+                  action="NOT_RESPONDING_CLOSE"
+                  actionName={actionsT('actions.notRespondingClose')}
+                />
+              )}
+            />
+            <Route
               path="/governance-review-team/:systemId/actions/issue-lcid"
               render={() => <IssueLifecycleId />}
             />

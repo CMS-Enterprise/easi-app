@@ -26,7 +26,6 @@ const ActionRadioOption = ({
   checked
 }: ActionRadioOptionProps) => (
   <RadioField
-    key={route}
     id={route}
     label={label}
     name={radioGroupName}
@@ -60,6 +59,7 @@ const ChooseAction = ({
   const notITRequestRoute = 'not-it-request';
   const NotITRequest = (
     <ActionRadioOption
+      key={notITRequestRoute}
       onChange={onChange}
       label={t('actions.notItRequest')}
       route={notITRequestRoute}
@@ -70,6 +70,7 @@ const ChooseAction = ({
   const issueLifecycleIdRoute = 'issue-lcid';
   const IssueLifecycleId = (
     <ActionRadioOption
+      key={issueLifecycleIdRoute}
       onChange={onChange}
       label="Issue Lifecycle Id"
       route={issueLifecycleIdRoute}
@@ -80,6 +81,7 @@ const ChooseAction = ({
   const needBizCaseRoute = 'need-biz-case';
   const NeedBizCase = (
     <ActionRadioOption
+      key={needBizCaseRoute}
       onChange={onChange}
       label={t('actions.needBizCase')}
       route={needBizCaseRoute}
@@ -90,6 +92,7 @@ const ChooseAction = ({
   const readyForGrtRoute = 'ready-for-grt';
   const ReadyForGRT = (
     <ActionRadioOption
+      key={readyForGrtRoute}
       onChange={onChange}
       label={t('actions.readyForGrt')}
       route={readyForGrtRoute}
@@ -100,6 +103,7 @@ const ChooseAction = ({
   const readyForGrbRoute = 'ready-for-grb';
   const ReadyForGRB = (
     <ActionRadioOption
+      key={readyForGrbRoute}
       onChange={onChange}
       label={t('actions.readyForGrb')}
       route={readyForGrbRoute}
@@ -110,6 +114,7 @@ const ChooseAction = ({
   const provideFeedbackNeedBizCaseRoute = 'provide-feedback-need-biz-case';
   const ProvideFeedbackNeedBizCase = (
     <ActionRadioOption
+      key={provideFeedbackNeedBizCaseRoute}
       onChange={onChange}
       label={t('actions.provideFeedbackNeedBizCase')}
       route={provideFeedbackNeedBizCaseRoute}
@@ -120,6 +125,7 @@ const ChooseAction = ({
   const provideFeedbackKeepDraftRoute = 'provide-feedback-keep-draft';
   const ProvideFeedbackKeepDraft = (
     <ActionRadioOption
+      key={provideFeedbackKeepDraftRoute}
       onChange={onChange}
       label={t('actions.provideGrtFeedbackKeepDraft')}
       route={provideFeedbackKeepDraftRoute}
@@ -130,6 +136,7 @@ const ChooseAction = ({
   const provideFeedbackNeedFinalRoute = 'provide-feedback-need-final';
   const ProvideFeedbackNeedFinal = (
     <ActionRadioOption
+      key={provideFeedbackNeedFinalRoute}
       onChange={onChange}
       label={t('actions.provideGrtFeedbackNeedFinal')}
       route={provideFeedbackNeedFinalRoute}
@@ -140,6 +147,7 @@ const ChooseAction = ({
   const bizCaseNeedsChangesRoute = 'biz-case-needs-changes';
   const BizCaseNeedsChanges = (
     <ActionRadioOption
+      key={bizCaseNeedsChangesRoute}
       onChange={onChange}
       label={t('actions.bizCaseNeedsChanges')}
       route={bizCaseNeedsChangesRoute}
@@ -150,6 +158,7 @@ const ChooseAction = ({
   const noFurtherGovernanceRoute = 'no-governance';
   const NoFurtherGovernance = (
     <ActionRadioOption
+      key={noFurtherGovernanceRoute}
       onChange={onChange}
       label={t('actions.noGovernance')}
       route={noFurtherGovernanceRoute}
@@ -160,6 +169,7 @@ const ChooseAction = ({
   const rejectIntakeRoute = 'not-approved';
   const RejectIntake = (
     <ActionRadioOption
+      key={rejectIntakeRoute}
       onChange={onChange}
       label={t('actions.rejectIntake')}
       route={rejectIntakeRoute}
@@ -170,6 +180,7 @@ const ChooseAction = ({
   const sendEmailRoute = 'send-email';
   const SendEmail = (
     <ActionRadioOption
+      key={sendEmailRoute}
       onChange={onChange}
       label={t('actions.sendEmail')}
       route={sendEmailRoute}
@@ -177,10 +188,37 @@ const ChooseAction = ({
     />
   );
 
+  const guideReceivedCloseRoute = 'guide-received-close';
+  const GuideReceivedClose = (
+    <ActionRadioOption
+      key={guideReceivedCloseRoute}
+      onChange={onChange}
+      label={t('actions.guideReceivedClose')}
+      route={guideReceivedCloseRoute}
+      checked={actionRoute === guideReceivedCloseRoute}
+    />
+  );
+
+  const notRespondingCloseRoute = 'not-responding-close';
+  const NotRespondingClose = (
+    <ActionRadioOption
+      key={notRespondingCloseRoute}
+      onChange={onChange}
+      label={t('actions.notRespondingClose')}
+      route={notRespondingCloseRoute}
+      checked={actionRoute === notRespondingCloseRoute}
+    />
+  );
+
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
   if (systemIntakeType === 'SHUTDOWN') {
-    availableActions = [SendEmail, NotITRequest];
+    availableActions = [
+      SendEmail,
+      GuideReceivedClose,
+      NotRespondingClose,
+      NotITRequest
+    ];
     availableHiddenActions = [];
   } else if (businessCaseExists) {
     availableActions = [BizCaseNeedsChanges];
