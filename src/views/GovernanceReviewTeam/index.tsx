@@ -302,6 +302,15 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
+              path="/governance-review-team/:systemId/actions/send-email"
+              render={() => (
+                <SubmitAction
+                  action="SEND_EMAIL"
+                  actionName={actionsT('actions.sendEmail')}
+                />
+              )}
+            />
+            <Route
               path="/governance-review-team/:systemId/actions/issue-lcid"
               render={() => <IssueLifecycleId />}
             />
