@@ -148,6 +148,7 @@ jobs:
           AWS_DEFAULT_REGION: us-west-2
           FLAG_SOURCE: LAUNCH_DARKLY
           LD_SDK_KEY: $LD_SDK_ITEST
+          LD_TIMEOUT_SECONDS: 30
     steps:
       - checkout
       - setup_remote_docker:
