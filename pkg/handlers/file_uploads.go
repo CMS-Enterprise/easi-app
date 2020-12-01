@@ -25,13 +25,13 @@ type FetchUploadedFile func(ctx context.Context, id uuid.UUID) (*models.Uploaded
 // NewFileUploadHandler is a constructor for FileUploadHandler
 func NewFileUploadHandler(
 	base HandlerBase,
-	createURL CreateFileUploadURL,
+	createUploadURL CreateFileUploadURL,
 	createFile CreateUploadedFile,
 	fetchFile FetchUploadedFile,
 ) FileUploadHandler {
 	return FileUploadHandler{
 		HandlerBase:         base,
-		CreateFileUploadURL: createURL,
+		CreateFileUploadURL: createUploadURL,
 		CreateUploadedFile:  createFile,
 		FetchUploadedFile:   fetchFile,
 	}
@@ -61,8 +61,8 @@ func (h FileUploadHandler) Handle() http.HandlerFunc {
 	}
 }
 
-// GeneratePresignedURL is our handler that handles generating pre-signed URLs
-func (h FileUploadHandler) GeneratePresignedURL(w http.ResponseWriter, r *http.Request) {
+// GenerateUploadPresignedURL is our handler that handles generating pre-signed URLs
+func (h FileUploadHandler) GenerateUploadPresignedURL(w http.ResponseWriter, r *http.Request) {
 	url, err := h.CreateFileUploadURL(r.Context())
 	if err != nil {
 		h.WriteErrorResponse(r.Context(), w, err)
