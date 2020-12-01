@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
@@ -10,13 +11,15 @@ import './index.scss';
 type ApprovedProps = {
   intake: SystemIntakeForm;
 };
+
 const Approved = ({ intake }: ApprovedProps) => {
+  const { t } = useTranslation('taskList');
   return (
     <>
       <div className="easi-governance-decision__info">
-        <h2 className="margin-top-0">Your business case has been approved.</h2>
+        <h2 className="margin-top-0">{t('decision.bizCaseApproved')}</h2>
         <dl>
-          <dt>Project Lifecycle ID</dt>
+          <dt>{t('decision.lcid')}</dt>
           <dd className="margin-left-0 font-body-xl text-bold">
             {intake.lcid}
           </dd>
@@ -24,31 +27,29 @@ const Approved = ({ intake }: ApprovedProps) => {
         <p className="text-pre-wrap">{intake.lcidScope}</p>
         {intake.lcidExpiration && (
           <p className="text-bold">
-            {`This ID expires on ${intake.lcidExpiration.toLocaleString(
-              DateTime.DATE_FULL
-            )}`}
+            {t('decision.lcidExpiration', {
+              date: intake.lcidExpiration.toLocaleString(DateTime.DATE_FULL)
+            })}
           </p>
         )}
       </div>
 
       {intake.lifecycleNextSteps && (
         <>
-          <h3>Next steps</h3>
-          <Alert type="info">
-            Finish these next steps to complete the governance review process.
-          </Alert>
+          <h3>{t('decision.nextSteps')}</h3>
+          <Alert type="info">{t('decision.completeNextSteps')}</Alert>
 
           <p className="text-pre-wrap">{intake.lifecycleNextSteps}</p>
         </>
       )}
-      <h3>Help us improve</h3>
+      <h3>{t('general:feedback.improvement')}</h3>
       <UswdsLink href="/" target="_blank" rel="oponener noreferrer">
-        Tell us what you think of this service
+        {t('general:feedback.whatYouThink')}
       </UswdsLink>
 
       <div className="margin-top-4">
         <UswdsLink asCustom={Link} to={`/governance-task-list/${intake.id}`}>
-          Return to task list
+          {t('navigation.returnToTaskList')}
         </UswdsLink>
       </div>
     </>
