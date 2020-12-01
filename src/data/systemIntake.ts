@@ -69,6 +69,11 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   createdAt: null,
   archivedAt: null,
   lcid: '',
+  lcidExpiration: null,
+  lcidScope: '',
+  lifecycleNextSteps: '',
+  decisionNextSteps: '',
+  rejectionReason: '',
   grtDate: null,
   grbDate: null
 };
@@ -119,7 +124,8 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     contractEndMonth: systemIntake.contract.endDate.month,
     contractEndYear: systemIntake.contract.endDate.year,
     grtDate: systemIntake.grtDate && systemIntake.grtDate.toISO(),
-    grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO()
+    grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO(),
+    submittedAt: systemIntake.submittedAt && systemIntake.submittedAt.toISO()
   };
 };
 
@@ -216,6 +222,13 @@ export const prepareSystemIntakeForApp = (
       ? DateTime.fromISO(systemIntake.archivedAt)
       : null,
     lcid: systemIntake.lcid || '',
+    lcidExpiration: systemIntake.lcidExpiresAt
+      ? DateTime.fromISO(systemIntake.lcidExpiresAt)
+      : null,
+    lcidScope: systemIntake.lcidScope || '',
+    lifecycleNextSteps: systemIntake.lifecycleNextSteps || '',
+    decisionNextSteps: systemIntake.decisionNextSteps || '',
+    rejectionReason: systemIntake.rejectionReason || '',
     grtDate: systemIntake.grtDate
       ? DateTime.fromISO(systemIntake.grtDate)
       : null,
