@@ -116,9 +116,9 @@ const governanceReviewTeam = {
       ISSUE_LCID: 'Issued Lifecycle ID with no further governance',
       BIZ_CASE_NEEDS_CHANGES:
         'Requested business case changes (not ready for GRT)',
-      PROVIDE_GRT_FEEDBACK_KEEP_DRAFT:
+      PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT:
         'Provided GRT feedback and kept business case draft',
-      PROVIDE_GRT_FEEDBACK_NEED_FINAL:
+      PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL:
         'Provided GRT feedback and moved business case to final',
       NO_GOVERNANCE_NEEDED: 'Marked as no further governance needed',
       SUBMIT_INTAKE: 'Submitted a System Intake',
