@@ -15,6 +15,12 @@ const projects: Project[] = [
     lifecycleID: 'X200943',
     documents: [
       {
+        type: DocumentType.TestResults,
+        mimetype: 'application/pdf',
+        createdAt: DateTime.fromISO('2020-02-19'),
+        score: 70
+      },
+      {
         type: DocumentType.AwardedVPAT,
         mimetype: 'application/pdf',
         createdAt: DateTime.fromISO('2020-02-09')
@@ -22,12 +28,12 @@ const projects: Project[] = [
       {
         type: DocumentType.TestPlan,
         mimetype: 'application/pdf',
-        createdAt: DateTime.fromISO('2020-02-09')
+        createdAt: DateTime.fromISO('2020-02-10')
       },
       {
         type: DocumentType.AwardedVPAT,
         mimetype: 'application/pdf',
-        createdAt: DateTime.fromISO('2020-02-09')
+        createdAt: DateTime.fromISO('2020-02-11')
       }
     ],
     activities: [

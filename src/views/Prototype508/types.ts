@@ -1,17 +1,18 @@
 import { DateTime } from 'luxon';
 
 export enum DocumentType {
-  TestPlan,
-  TestingVPAT,
-  TestResults,
-  AwardedVPAT,
-  RemediationPlan
+  TestPlan = 'Testing Plan',
+  TestingVPAT = 'Testing VPAT',
+  TestResults = 'Test Results',
+  AwardedVPAT = 'Awarded VPAT',
+  RemediationPlan = 'Remediation Plan'
 }
 
 export type Document = {
   type: DocumentType;
   mimetype: string;
   createdAt: DateTime;
+  score?: number;
 };
 
 export enum ProjectStatus {
@@ -53,4 +54,5 @@ export type Project = {
   description?: string;
   documents: Document[];
   activities: Activity[];
+  banner?: string;
 };
