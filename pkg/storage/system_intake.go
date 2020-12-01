@@ -18,11 +18,16 @@ import (
 
 // CreateSystemIntake creates a system intake
 func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-	id := uuid.New()
-	intake.ID = id
+	if intake.ID == uuid.Nil {
+		intake.ID = uuid.New()
+	}
 	createAt := s.clock.Now()
-	intake.CreatedAt = &createAt
-	intake.UpdatedAt = &createAt
+	if intake.CreatedAt == nil {
+		intake.CreatedAt = &createAt
+	}
+	if intake.UpdatedAt == nil {
+		intake.UpdatedAt = &createAt
+	}
 	const createIntakeSQL = `
 		INSERT INTO system_intake (
 			id,
@@ -111,7 +116,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		)
 		return nil, err
 	}
-	return s.FetchSystemIntakeByID(ctx, id)
+	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
 
 // UpdateSystemIntake does an upsert for a system intake

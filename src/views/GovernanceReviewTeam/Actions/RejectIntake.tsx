@@ -17,7 +17,7 @@ import flattenErrors from 'utils/flattenErrors';
 import { rejectIntakeSchema } from 'validations/actionSchema';
 
 const RejectIntake = () => {
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('action');
@@ -122,6 +122,9 @@ const RejectIntake = () => {
                   <Label htmlFor="RejectIntakeForm-Feedback">
                     {t('rejectIntake.feedbackLabel')}
                   </Label>
+                  <HelpText id="RejectIntakeForm-SubmitHelp">
+                    {t('rejectIntake.submitHelp')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.feedback}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -129,6 +132,7 @@ const RejectIntake = () => {
                     id="RejectIntakeForm-Feedback"
                     maxLength={2000}
                     name="feedback"
+                    aria-describedby="RejectIntakeForm-SubmitHelp"
                   />
                 </FieldGroup>
                 <Button className="margin-top-2" type="submit">
