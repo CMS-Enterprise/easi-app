@@ -506,7 +506,7 @@ func (s *Server) routes(
 	api.HandleFunc("/file_uploads/{file_id}", fileUploadHandler.FetchFileMetadata).
 		Methods("GET")
 
-	api.HandleFunc("/file_uploads/presignedurl", fileUploadHandler.GeneratePresignedURL).
+	api.HandleFunc("/file_uploads/presignedurl", fileUploadHandler.GenerateUploadPresignedURL).
 		Methods("POST")
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
