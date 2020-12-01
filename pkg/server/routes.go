@@ -515,4 +515,16 @@ func (s *Server) routes(
 
 	api.Handle("/pdf/generate", handlers.NewPDFHandler().Handle())
 
+	// endpoint for short-lived backfill process
+	backfillHandler := handlers.NewBackfillHandler(
+		base,
+		services.NewBackfill(
+			serviceConfig,
+			store.CreateSystemIntake,
+			store.CreateNote,
+			services.NewAuthorizeHasEASiRole(),
+		),
+	)
+	api.Handle("/backfill", backfillHandler.Handle())
+
 }
