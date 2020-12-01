@@ -54,8 +54,7 @@ describe('The home page', () => {
         const store = mockStore({
           auth: mockAuthReducer,
           systemIntakes: {
-            openIntakes: [],
-            closedIntakes: []
+            systemIntakes: []
           },
           businessCases: {
             businessCases: []
@@ -85,7 +84,7 @@ describe('The home page', () => {
         const store = mockStore({
           auth: mockAuthReducer,
           systemIntakes: {
-            openIntakes: [
+            systemIntakes: [
               {
                 ...initialSystemIntakeForm,
                 id: '1'
@@ -105,8 +104,7 @@ describe('The home page', () => {
                 status: 'NEED_BIZ_CASE',
                 businessCaseId: '1'
               }
-            ],
-            closeIntakes: []
+            ]
           }
         });
         let component: any;
@@ -133,46 +131,31 @@ describe('The home page', () => {
       groups: ['EASI_D_GOVTEAM']
     };
 
-    const mockSystemIntakes = {
-      openIntakes: [
-        {
-          ...initialSystemIntakeForm,
-          id: '1'
-        },
-        {
-          ...initialSystemIntakeForm,
-          id: '2',
-          status: 'INTAKE_SUBMITTED'
-        },
-        {
-          ...initialSystemIntakeForm,
-          id: '3'
-        },
-        {
-          ...initialSystemIntakeForm,
-          id: '4',
-          status: 'INTAKE_SUBMITTED',
-          businessCaseId: '1'
-        }
-      ],
-      closedIntakes: [
-        {
-          ...initialSystemIntakeForm,
-          id: '4',
-          status: 'WITHDRAWN'
-        }
-      ]
-    };
+    const mockOpenIntakes = [
+      {
+        ...initialSystemIntakeForm,
+        id: '2',
+        status: 'INTAKE_SUBMITTED'
+      },
+      {
+        ...initialSystemIntakeForm,
+        id: '4',
+        status: 'INTAKE_SUBMITTED',
+        businessCaseId: '1'
+      }
+    ];
 
-    const mountComponent = (): ReactWrapper => {
+    const mockClosedIntakes = [
+      {
+        ...initialSystemIntakeForm,
+        id: '4',
+        status: 'WITHDRAWN'
+      }
+    ];
+
+    const mountComponent = (mockedStore: any): ReactWrapper => {
       const mockStore = configureMockStore();
-      const store = mockStore({
-        auth: mockAuthReducer,
-        systemIntakes: mockSystemIntakes,
-        businessCases: {
-          businessCases: []
-        }
-      });
+      const store = mockStore(mockedStore);
       return mount(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <Provider store={store}>
@@ -186,7 +169,7 @@ describe('The home page', () => {
       const mockStore = configureMockStore();
       const store = mockStore({
         auth: mockAuthReducer,
-        systemIntakes: mockSystemIntakes
+        systemIntakes: mockOpenIntakes
       });
       const shallowComponent = () =>
         shallow(
@@ -200,7 +183,15 @@ describe('The home page', () => {
     });
 
     it('renders the open requests table', async () => {
-      const homePage = mountComponent();
+      const homePage = mountComponent({
+        auth: mockAuthReducer,
+        systemIntakes: {
+          systemIntakes: mockOpenIntakes
+        },
+        businessCases: {
+          businessCases: []
+        }
+      });
 
       await act(async () => {
         homePage.update();
@@ -209,7 +200,15 @@ describe('The home page', () => {
     });
 
     it('renders the closed requests table', async () => {
-      const homePage = mountComponent();
+      const homePage = mountComponent({
+        auth: mockAuthReducer,
+        systemIntakes: {
+          systemIntakes: mockClosedIntakes
+        },
+        businessCases: {
+          businessCases: []
+        }
+      });
 
       homePage
         .find('[data-testid="view-closed-intakes-btn"]')
@@ -221,7 +220,15 @@ describe('The home page', () => {
     });
 
     it('does not render any banners', async () => {
-      const homePage = mountComponent();
+      const homePage = mountComponent({
+        auth: mockAuthReducer,
+        systemIntakes: {
+          systemIntakes: mockOpenIntakes
+        },
+        businessCases: {
+          businessCases: []
+        }
+      });
 
       await act(async () => {
         homePage.update();
