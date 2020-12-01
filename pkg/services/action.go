@@ -42,6 +42,40 @@ func NewTakeAction(
 	}
 }
 
+// NewSaveAction adds fields to an action and saves it in the db
+func NewSaveAction(
+	createAction func(context.Context, *models.Action) (*models.Action, error),
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+) func(context.Context, *models.Action) error {
+	return func(ctx context.Context, action *models.Action) error {
+		actorInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
+		if err != nil {
+			return err
+		}
+		if actorInfo == nil || actorInfo.Email == "" || actorInfo.CommonName == "" || actorInfo.EuaUserID == "" {
+			return &apperrors.ExternalAPIError{
+				Err:       errors.New("user info fetch was not successful"),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		action.ActorName = actorInfo.CommonName
+		action.ActorEmail = actorInfo.Email
+		action.ActorEUAUserID = actorInfo.EuaUserID
+		_, err = createAction(ctx, action)
+		if err != nil {
+			return &apperrors.QueryError{
+				Err:       err,
+				Model:     action,
+				Operation: apperrors.QueryPost,
+			}
+		}
+
+		return nil
+	}
+}
+
 // NewSubmitSystemIntake returns a function that
 // executes submit of a system intake
 func NewSubmitSystemIntake(
@@ -49,8 +83,7 @@ func NewSubmitSystemIntake(
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
-	createAction func(context.Context, *models.Action) (*models.Action, error),
-	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	saveAction func(context.Context, *models.Action) error,
 	emailReviewer func(requester string, intakeID uuid.UUID) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -75,20 +108,6 @@ func NewSubmitSystemIntake(
 			return err
 		}
 
-		actorInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
-		if err != nil {
-			return err
-		}
-		if actorInfo == nil || actorInfo.Email == "" || actorInfo.CommonName == "" || actorInfo.EuaUserID == "" {
-			return &apperrors.ExternalAPIError{
-				Err:       errors.New("user info fetch was not successful"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
-
 		intake.SubmittedAt = &updatedTime
 		alfabetID, validateAndSubmitErr := validateAndSubmit(ctx, intake)
 		if validateAndSubmitErr != nil {
@@ -106,10 +125,7 @@ func NewSubmitSystemIntake(
 		// }
 		intake.AlfabetID = null.StringFrom(alfabetID)
 
-		action.ActorName = actorInfo.CommonName
-		action.ActorEmail = actorInfo.Email
-		action.ActorEUAUserID = actorInfo.EuaUserID
-		_, err = createAction(ctx, action)
+		err = saveAction(ctx, action)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
@@ -143,8 +159,7 @@ func NewSubmitBusinessCase(
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
 	fetchOpenBusinessCase func(context.Context, uuid.UUID) (*models.BusinessCase, error),
 	validateForSubmit func(businessCase *models.BusinessCase) error,
-	createAction func(context.Context, *models.Action) (*models.Action, error),
-	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	saveAction func(context.Context, *models.Action) error,
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
 	sendEmail func(requester string, intakeID uuid.UUID) error,
@@ -184,24 +199,7 @@ func NewSubmitBusinessCase(
 			return err
 		}
 
-		userInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
-		if err != nil {
-			return err
-		}
-		if userInfo == nil || userInfo.Email == "" || userInfo.CommonName == "" || userInfo.EuaUserID == "" {
-			return &apperrors.ExternalAPIError{
-				Err:       errors.New("user info fetch was not successful"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
-
-		action.ActorName = userInfo.CommonName
-		action.ActorEmail = userInfo.Email
-		action.ActorEUAUserID = userInfo.EuaUserID
-		_, err = createAction(ctx, action)
+		err = saveAction(ctx, action)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
@@ -246,7 +244,7 @@ func NewTakeActionUpdateStatus(
 	newStatus models.SystemIntakeStatus,
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	authorize func(context.Context) (bool, error),
-	createAction func(context.Context, *models.Action) (*models.Action, error),
+	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(emailText string, recipientAddress string) error,
 	shouldCloseBusinessCase bool,
@@ -275,24 +273,7 @@ func NewTakeActionUpdateStatus(
 			}
 		}
 
-		actorInfo, err := fetchUserInfo(ctx, appcontext.Principal(ctx).ID())
-		if err != nil {
-			return err
-		}
-		if actorInfo == nil || actorInfo.Email == "" || actorInfo.CommonName == "" || actorInfo.EuaUserID == "" {
-			return &apperrors.ExternalAPIError{
-				Err:       errors.New("actor info fetch was not successful when submitting an action"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
-
-		action.ActorName = actorInfo.CommonName
-		action.ActorEmail = actorInfo.Email
-		action.ActorEUAUserID = actorInfo.EuaUserID
-		_, err = createAction(ctx, action)
+		err = saveAction(ctx, action)
 		if err != nil {
 			return &apperrors.QueryError{
 				Err:       err,
