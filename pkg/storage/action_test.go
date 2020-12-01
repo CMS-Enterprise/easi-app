@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -25,6 +26,7 @@ func (s StoreTestSuite) TestCreateAction() {
 			ActorName:      "name",
 			ActorEmail:     "email@site.com",
 			ActorEUAUserID: testhelpers.RandomEUAID(),
+			Feedback:       null.StringFrom("feedback"),
 		}
 
 		created, err := s.store.CreateAction(ctx, &action)
@@ -32,6 +34,7 @@ func (s StoreTestSuite) TestCreateAction() {
 		s.NotNil(created)
 		s.Equal(action.ID, created.ID)
 		s.Equal(action.ActionType, created.ActionType)
+		s.Equal("feedback", created.Feedback.String)
 		epochTime := time.Unix(0, 0)
 		s.Equal(created.CreatedAt, &epochTime)
 		s.False(created.ID == uuid.Nil)

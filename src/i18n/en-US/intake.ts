@@ -5,6 +5,8 @@ const intake = {
     submissionDate: 'Submission date',
     requestFor: 'Request for',
     component: 'Component',
+    grtDate: 'GRT Date',
+    grbDate: 'GRB Date',
     status: 'Status'
   },
 

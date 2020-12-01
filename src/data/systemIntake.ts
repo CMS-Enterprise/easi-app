@@ -124,7 +124,8 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     contractEndMonth: systemIntake.contract.endDate.month,
     contractEndYear: systemIntake.contract.endDate.year,
     grtDate: systemIntake.grtDate && systemIntake.grtDate.toISO(),
-    grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO()
+    grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO(),
+    submittedAt: systemIntake.submittedAt && systemIntake.submittedAt.toISO()
   };
 };
 
