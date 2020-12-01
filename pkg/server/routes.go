@@ -492,6 +492,11 @@ func (s *Server) routes(
 			services.NewAuthorizeRequireGRTJobCode(),
 			s3Client,
 		),
+		services.NewCreateFileDownloadURL(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			s3Client,
+		),
 		services.NewCreateUploadedFile(
 			serviceConfig,
 			services.NewAuthorizeRequireGRTJobCode(),
@@ -503,10 +508,13 @@ func (s *Server) routes(
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
 
+	api.HandleFunc("/file_uploads/upload_url", fileUploadHandler.GenerateUploadPresignedURL).
+		Methods("POST")
+
 	api.HandleFunc("/file_uploads/{file_id}", fileUploadHandler.FetchFileMetadata).
 		Methods("GET")
 
-	api.HandleFunc("/file_uploads/presignedurl", fileUploadHandler.GenerateUploadPresignedURL).
+	api.HandleFunc("/file_uploads/{file_id}/download_url", fileUploadHandler.GenerateDownloadPresignedURL).
 		Methods("POST")
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
