@@ -10,7 +10,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { Action, ActionForm, ActionType } from 'types/action';
+import { ActionForm, ActionType, CreateActionPayload } from 'types/action';
 import { postAction } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { actionSchema } from 'validations/actionSchema';
@@ -21,14 +21,14 @@ type SubmitActionProps = {
 };
 
 const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('action');
   const history = useHistory();
   const dispatch = useDispatch();
 
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
-    const payload: Action = {
+    const payload: CreateActionPayload = {
       intakeId: systemId,
       actionType: action,
       feedback
