@@ -3,7 +3,7 @@ import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
-import { Table } from '@trussworks/react-uswds';
+import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
@@ -60,6 +60,46 @@ const RequestRepository = ({
       {
         Header: t('requestRepository.table.requestType'),
         accessor: 'requestType'
+      },
+      {
+        Header: t('intake:fields.grtDate'),
+        accessor: 'grtDate',
+        Cell: ({ row, value }: any) => {
+          if (value) {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          }
+
+          // If date is null, return button that takes user to page to add date
+          return (
+            <UswdsLink
+              data-testid="add-grt-date-cta"
+              asCustom={Link}
+              to={`/governance-review-team/${row.original.id}/dates`}
+            >
+              {t('requestRepository.table.addDate')}
+            </UswdsLink>
+          );
+        }
+      },
+      {
+        Header: t('intake:fields.grbDate'),
+        accessor: 'grbDate',
+        Cell: ({ row, value }: any) => {
+          if (value) {
+            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+          }
+
+          // If date is null, return button that takes user to page to add date
+          return (
+            <UswdsLink
+              data-testid="add-grb-date-cta"
+              asCustom={Link}
+              to={`/governance-review-team/${row.original.id}/dates`}
+            >
+              {t('requestRepository.table.addDate')}
+            </UswdsLink>
+          );
+        }
       },
       {
         Header: t('intake:fields.status'),
