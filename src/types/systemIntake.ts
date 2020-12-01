@@ -135,8 +135,7 @@ export type SystemIntakeState = {
 
 // Redux store type for systems
 export type SystemIntakesState = {
-  openIntakes: SystemIntakeForm[];
-  closedIntakes: SystemIntakeForm[];
+  systemIntakes: SystemIntakeForm[];
   isLoading: boolean | null;
   loadedTimestamp: DateTime | null;
   error: string | null;

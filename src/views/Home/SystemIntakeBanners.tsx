@@ -1,20 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
 
 import ActionBanner from 'components/shared/ActionBanner';
 import { useFlags } from 'contexts/flagContext';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
-type SystemIntakeBannersProps = {
-  intakes: SystemIntakeForm[];
-};
-
-const SystemIntakeBanners = ({ intakes }: SystemIntakeBannersProps) => {
+const SystemIntakeBanners = () => {
   const flags = useFlags();
+  const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('intake');
-
+  const { authState } = useOktaAuth();
+  const intakes = useSelector(
+    (state: AppState) => state.systemIntakes.systemIntakes
+  );
   const statusMap: { [key: string]: { title: string; description: string } } = {
     INTAKE_DRAFT: {
       title: t('banner.title.intakeIncomplete'),
@@ -77,6 +81,12 @@ const SystemIntakeBanners = ({ intakes }: SystemIntakeBannersProps) => {
       description: t('banner.description.checkNextStep')
     }
   };
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      dispatch(fetchSystemIntakes());
+    }
+  }, [dispatch, authState.isAuthenticated]);
 
   return (
     <>

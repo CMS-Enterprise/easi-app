@@ -1,33 +1,32 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
+import { useOktaAuth } from '@okta/okta-react';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import { convertIntakeToCSV } from 'data/systemIntake';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntakes } from 'types/routines';
 
 import csvHeaderMap from './csvHeaderMap';
 
 import './index.scss';
 
-type RequestRepositoryProps = {
-  openIntakes: SystemIntakeForm[];
-  closedIntakes: SystemIntakeForm[];
-};
-
-const RequestRepository = ({
-  openIntakes,
-  closedIntakes
-}: RequestRepositoryProps) => {
+const RequestRepository = () => {
   type TableTypes = 'open' | 'closed';
   const [activeTable, setActiveTable] = useState<TableTypes>('open');
   const { t } = useTranslation('governanceReviewTeam');
-
+  const { authState } = useOktaAuth();
+  const dispatch = useDispatch();
+  const systemIntakes = useSelector(
+    (state: AppState) => state.systemIntakes.systemIntakes
+  );
   const columns: any = useMemo(
     () => [
       {
@@ -110,11 +109,7 @@ const RequestRepository = ({
   );
 
   const data = useMemo(() => {
-    const tableData = {
-      open: openIntakes,
-      closed: closedIntakes
-    };
-    return tableData[activeTable].map(intake => {
+    return systemIntakes.map(intake => {
       const statusEnum = intake.status;
       let statusTranslation = '';
 
@@ -134,7 +129,13 @@ const RequestRepository = ({
         requestType: t(`intake:requestTypeMap.${intake.requestType}`)
       };
     });
-  }, [activeTable, closedIntakes, openIntakes, t]);
+  }, [systemIntakes, t]);
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      dispatch(fetchSystemIntakes({ status: activeTable }));
+    }
+  }, [dispatch, authState.isAuthenticated, activeTable]);
 
   const {
     getTableProps,
