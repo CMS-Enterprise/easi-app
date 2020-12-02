@@ -14,7 +14,9 @@ const ProjectsPage = () => {
     >
       <h1>Active 508 Projects</h1>
       <Table bordered={false} fullWidth>
-        <caption className="usa-sr-only">Requests</caption>
+        <caption className="usa-sr-only">
+          List of active five oh eight projects
+        </caption>
         <thead>
           <tr>
             <th scope="col" style={{ whiteSpace: 'nowrap' }}>
@@ -43,7 +45,9 @@ const ProjectsPage = () => {
                 <td>
                   <strong>{project.status}</strong>
                   <br />
-                  last updated on {project.lastUpdatedAt.toFormat('LLLL d y')}
+                  {`last updated on ${project.lastUpdatedAt.toFormat(
+                    'LLLL d y'
+                  )}`}
                 </td>
               </tr>
             );

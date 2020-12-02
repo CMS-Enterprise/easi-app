@@ -95,6 +95,17 @@ const UploadPage = () => {
               />
               {file}
             </div>
+            <input
+              id="file-input-single"
+              className="usa-file-input__input"
+              type="file"
+              name="file-input-single"
+              onChange={e => {
+                if (e.target.files) {
+                  setFile(e.target.files[0].name);
+                }
+              }}
+            />
           </div>
         </div>
         <fieldset className="usa-fieldset margin-top-2">

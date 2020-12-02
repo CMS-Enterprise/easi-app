@@ -5,9 +5,11 @@ const LoginPage = () => {
   const history = useHistory();
 
   return (
-    <main>
+    <main
+      id="main-content"
+      className="easi-main-content grid-container margin-bottom-5"
+    >
       <h1>Login to Scylla</h1>
-
       <form className="usa-form">
         <label className="usa-label" htmlFor="input-type-eua">
           EUA

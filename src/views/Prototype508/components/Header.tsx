@@ -13,6 +13,7 @@ const Header = () => {
       className="usa-header easi-header"
       style={{ zIndex: 10 }}
       role="banner"
+      aria-label="United States website banner"
     >
       <UsGovBanner />
       <div
