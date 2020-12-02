@@ -12,7 +12,11 @@ const action = {
       'Provide GRT feedback and keep business case draft',
     provideGrtFeedbackNeedFinal:
       'Provide GRT feedback and move business case to final',
-    noGovernance: 'No further governance needed'
+    noGovernance: 'No further governance needed',
+    rejectIntake: 'Business case not approved',
+    sendEmail: 'Send email',
+    guideReceivedClose: 'Decomission guide received. Close the request',
+    notRespondingClose: 'Project team not responding. Close the request'
   },
   issueLCID: {
     backLink: 'Change',
@@ -20,6 +24,8 @@ const action = {
     subheading: 'How to proceed?',
     feedbackLabel: 'This email will be sent to the requester',
     submit: 'Email decision and close this request',
+    submitHelp:
+      'The information you add to ‘Scope of Lifecycle ID’ and ‘Next Steps’ will be added to this email and then sent. Do not repeat any of that information in the field below.',
     nextStepsLabel: 'Next Steps',
     nextStepsHelpText:
       'Provide the requester with some recommendations on how to continue their process. For example, “begin your ATO” or “update your System Profile”. This will help the requester stay on track after they receive their Lifecycle ID.',
@@ -40,6 +46,22 @@ const action = {
       day: 'Day',
       year: 'Year'
     }
+  },
+  rejectIntake: {
+    backLink: 'Change',
+    heading: 'Actions on request',
+    subheading: 'How to proceed?',
+    actionDescription: 'Business case not approved',
+    feedbackLabel: 'This email will be sent to the requester',
+    submit: 'Email decision and close this request',
+    submitHelp:
+      'The information you add to ‘Reason’ and ‘Next Steps’ will be added to this email and then sent. Do not repeat any of that information in the field below.',
+    nextStepsLabel: 'Next Steps',
+    nextStepsHelpText:
+      'Provide clear, actionable set of next steps that the requester needs to do. Tell them when they’d need to come back for the governance process and at what stage they’d be joining back in.',
+    reasonLabel: 'Reason',
+    reasonHelpText:
+      'Provide the exact set of reasons why their request in its current state has been rejected. Include the concerns raised about it.'
   },
   submitAction: {
     backLink: 'Change',

@@ -1,6 +1,6 @@
 import { createRoutine } from 'redux-saga-routines';
 
-import { Action } from 'types/action';
+import { CreateActionPayload } from 'types/action';
 
 // SystemIntakes routines
 export const fetchSystemIntakes = createRoutine('FETCH_SYSTEM_INTAKES');
@@ -11,13 +11,13 @@ export const postSystemIntake = createRoutine('POST_SYSTEM_INTAKE');
 export const saveSystemIntake = createRoutine('PUT_SYSTEM_INTAKE');
 export const storeSystemIntake = createRoutine('STORE_SYSTEM_INTAKE');
 export const clearSystemIntake = createRoutine('CLEAR_SYSTEM_INTAKE');
-export const reviewSystemIntake = createRoutine('REVIEW_SYSTEM_INTAKE');
 export const archiveSystemIntake = createRoutine('ARCHIVE_SYSTEM_INTAKE');
 export const issueLifecycleIdForSystemIntake = createRoutine(
   'ISSUE_LIFECYCLE_ID_FOR_SYSTEM_INTAKE'
 );
 export const fetchIntakeNotes = createRoutine('FETCH_INTAKE_NOTES');
 export const postIntakeNote = createRoutine('POST_INTAKE_NOTE');
+export const rejectSystemIntake = createRoutine('REJECT_SYSTEM_INTAKE');
 
 // SystemShorts routines
 export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');
@@ -30,12 +30,6 @@ export const putBusinessCase = createRoutine('PUT_BUSINESS_CASE');
 export const storeBusinessCase = createRoutine('STORE_BUSINESS_CASE');
 export const clearBusinessCase = createRoutine('CLEAR_BUSINESS_CASE');
 
-// Request Repository
-export const fetchRequestRepoIntakes = createRoutine(
-  'FETCH_REQUEST_REPO_INTAKES'
-);
-
 // Action routines
-export const postSystemIntakeAction = createRoutine<Action>(
-  'POST_SYSTEM_INTAKE_ACTION'
-);
+export const postAction = createRoutine<CreateActionPayload>('POST_ACTION');
+export const fetchActions = createRoutine('FETCH_ACTIONS');
