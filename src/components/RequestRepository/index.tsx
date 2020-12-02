@@ -141,6 +141,21 @@ const RequestRepository = () => {
   } = useTable(
     {
       columns,
+      sortTypes: {
+        // Sort method changes depending on if item is a string or object
+        alphanumeric: (row1, row2, columnName) => {
+          const rowOneColumn = row1.values[columnName];
+          const rowTwoColumn = row2.values[columnName];
+          // If item is a string, enforce capitalization (temporarily) and then compare
+          if (typeof rowOneColumn === 'string') {
+            return rowOneColumn.toUpperCase() > rowTwoColumn.toUpperCase()
+              ? 1
+              : -1;
+          }
+          // If item is object (date), convert to Number and compare
+          return Number(rowOneColumn) > Number(rowTwoColumn) ? 1 : -1;
+        }
+      },
       data,
       initialState: {
         sortBy: [{ id: 'submittedAt', desc: true }]
