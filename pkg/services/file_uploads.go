@@ -43,6 +43,31 @@ func NewCreateFileUploadURL(config Config, authorize authFunc, s3client upload.S
 	}
 }
 
+// NewCreateFileDownloadURL is a services to create a file download URL via a pre-signed s3 URL
+func NewCreateFileDownloadURL(config Config, authorize authFunc, s3client upload.S3Client) func(ctx context.Context, key string) (*models.PreSignedURL, error) {
+	return func(ctx context.Context, key string) (*models.PreSignedURL, error) {
+		ok, err := authorize(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		if !ok {
+			return nil, &apperrors.ResourceNotFoundError{
+				Err:      errors.New("failed to authorize pre-signed url generation"),
+				Resource: models.PreSignedURL{},
+			}
+		}
+
+		url, err := s3client.NewGetPresignedURL(key)
+		if err != nil {
+			return nil, err
+		}
+		return url, nil
+
+	}
+
+}
+
 // NewCreateUploadedFile returns a function that saves the metadata of an uploaded file
 func NewCreateUploadedFile(config Config, authorize authFunc, create createFunc) func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error) {
 	return func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error) {
