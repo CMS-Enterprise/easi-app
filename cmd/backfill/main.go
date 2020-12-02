@@ -1,13 +1,18 @@
 package main
 
 import (
+	"bytes"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -16,28 +21,32 @@ import (
 const (
 	envFile     = "BACKFILL_FILE"
 	envHost     = "BACKFILL_HOST"
+	envAuth     = "BACKFILL_AUTH"
 	healthcheck = "https://%s/api/v1/healthcheck"
 )
 
 type config struct {
 	file string
 	host string
+	auth string
 }
 
 func main() {
 	cfg := &config{
 		file: os.Getenv(envFile),
 		host: os.Getenv(envHost),
+		auth: os.Getenv(envAuth),
 	}
-
 	if err := execute(cfg); err != nil {
-		fmt.Fprintf(os.Stderr, "backfill failure: %v\n", err)
+		fmt.Fprintf(os.Stdout, "backfill failure: %v\n", err)
 		os.Exit(1)
 	}
 }
 
 func execute(cfg *config) error {
 	url := fmt.Sprintf(healthcheck, cfg.host)
+
+	/* #nosec G107 */
 	if _, err := http.Get(url); err != nil {
 		return fmt.Errorf("failed healthcheck for [%s]: %w", url, err)
 	}
@@ -51,34 +60,66 @@ func execute(cfg *config) error {
 	if err != nil {
 		return fmt.Errorf("failed to read column headers for [%s]: %w", cfg.file, err)
 	}
+	// fmt.Fprintf(os.Stdout, "headers: %v\n", row)
+	_ = row
 
 	errs := []error{}
-	for err != nil {
+	for err == nil {
 		row, err = src.Read()
 		if err != nil {
+			if err != io.EOF {
+				errs = append(errs, err)
+			}
 			continue
 		}
-		intake, rErr := convert(row)
+		item, rErr := convert(row)
 		if err != nil {
 			errs = append(errs, rErr)
 			continue
 		}
-		if rErr := upload(cfg.host, intake); rErr != nil {
+		if item == nil {
+			continue
+		}
+		if rErr := upload(cfg.host, cfg.auth, item); rErr != nil {
 			errs = append(errs, rErr)
 		}
 	}
 	if len(errs) != 0 {
+		fmt.Fprintf(os.Stdout, "problems processing file: %v", errs)
 		return fmt.Errorf("problems processing file: %v", errs)
 	}
 	return nil
 }
 
-func upload(host string, intake *models.SystemIntake) error {
-	body, err := json.MarshalIndent(intake, "", "\t")
+func upload(host string, auth string, item *entry) error {
+	body, err := json.MarshalIndent(item, "", "\t")
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(os.Stdout, "%s\n", body)
+	// fmt.Fprintf(os.Stderr, "%s\n", body)
+	// _ = body
+
+	req, err := http.NewRequest("POST", fmt.Sprintf("https://%s/api/v1/backfill", host), bytes.NewReader(body))
+	if err != nil {
+		return err
+	}
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", auth))
+	// req.Write(os.Stdout)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	content, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("expected 204; got %d; body %s", resp.StatusCode, err)
+	}
+
+	if resp.StatusCode != http.StatusNoContent {
+		return fmt.Errorf("expected 204; got %d; body %s", resp.StatusCode, content)
+	}
+	fmt.Fprintf(os.Stdout, "uploaded: %s\n", item.Intake.ID.String())
 	return nil
 }
 
@@ -109,8 +150,8 @@ const (
 
 	colCStartM = 21 // V
 	colCStartY = 22 // W
-	colCEndM   = 23 // W
-	colCEndY   = 24 // X
+	colCEndM   = 23 // X
+	colCEndY   = 24 // Y
 )
 
 type entry struct {
@@ -121,15 +162,26 @@ type entry struct {
 func convert(row []string) (*entry, error) {
 	data := &entry{}
 
+	// UUIDs were manually created on the spreadsheet
+	uuid, err := uuid.Parse(row[colUUID])
+	if err != nil {
+		return nil, err
+	}
+	data.Intake.ID = uuid
+
+	// skipping items that were marked as "Draft" in the spreadsheet
+	if strings.EqualFold("draft", row[colStatus]) {
+		fmt.Fprintf(os.Stdout, "skipping %v: status - %s\n", uuid, row[colStatus])
+		return nil, nil
+	}
+	data.Intake.Status = models.SystemIntakeStatusCLOSED
+
 	// labelled "Request Date"
 	if dt, err := convertDate(row[colDate]); err == nil {
 		data.Intake.CreatedAt = dt
 	} else {
 		return nil, err
 	}
-
-	// TODO: "Final" / "Final-Admin" / "Draft"
-	data.Intake.Status = models.SystemIntakeStatusCLOSED // TODO: even for "Draft"??
 
 	// we now have a place for Acronym
 	data.Intake.ProjectAcronym = null.StringFrom(row[colAcronym])
@@ -151,10 +203,6 @@ func convert(row []string) (*entry, error) {
 			return nil, err
 		}
 	}
-
-	// TODO: do we have a place for these fields
-	_ = colAdminLead // person's name
-	_ = colGRTNotes  // free-form text, maybe on coming `models.Note` object?!?
 
 	// sorted - LCIDs in spreadsheet frequently have a 1 character ALPHA prefix
 	data.Intake.LifecycleID = null.StringFrom(row[colLCID])
@@ -197,14 +245,21 @@ func convert(row []string) (*entry, error) {
 	data.Intake.ContractEndYear = null.StringFrom(row[colCEndY])
 
 	if row[colGRTNotes] != "" {
-		data.Notes = append(data.Notes, &models.Note{
-			Content:    row[colGRTNotes],
-			AuthorName: row[colAdminLead],
+		data.Notes = append(data.Notes, models.Note{
+			Content:    null.StringFrom(row[colGRTNotes]),
+			AuthorName: null.StringFrom(row[colAdminLead]),
+		})
+	}
+
+	if row[colPeriod] != "" {
+		data.Notes = append(data.Notes, models.Note{
+			Content:    null.StringFrom(fmt.Sprintf("Period of Performance: %s", row[colGRTNotes])),
+			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}
 
 	// SEND IT BACK!
-	return intake, nil
+	return data, nil
 }
 
 func convertDate(in string) (*time.Time, error) {
