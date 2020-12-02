@@ -357,161 +357,20 @@ export const BusinessCaseFinalValidationSchema = {
   })
 };
 
+// We don't validate much when a business case is in draft
+// This mostly empty validation makes it easier to switch validations in the form code
 export const BusinessCaseDraftValidationSchema = {
   generalRequestInfo: Yup.object().shape({
-    requestName: Yup.string(),
     requester: Yup.object().shape({
-      name: Yup.string(),
       phoneNumber: Yup.string().matches(
         phoneNumberRegex,
         'Enter the requester’s phone number like 123456789 or 123-456-789'
       )
-    }),
-    businessOwner: Yup.object().shape({
-      name: Yup.string()
     })
   }),
-  requestDescription: Yup.object().shape({
-    businessNeed: Yup.string(),
-    cmsBenefit: Yup.string(),
-    priorityAlignment: Yup.string(),
-    successIndicators: Yup.string()
-  }),
-  asIsSolution: Yup.object().shape({
-    asIsSolution: Yup.object().shape({
-      title: Yup.string(),
-      summary: Yup.string(),
-      pros: Yup.string(),
-      cons: Yup.string(),
-      estimatedLifecycleCost: Yup.object().shape({
-        year1: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year2: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year3: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year4: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year5: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        )
-      }),
-      costSavings: Yup.string()
-    })
-  }),
-  preferredSolution: Yup.object().shape({
-    preferredSolution: Yup.object().shape({
-      title: Yup.string(),
-      summary: Yup.string(),
-      acquisitionApproach: Yup.string(),
-      security: Yup.object().shape({
-        isApproved: Yup.boolean().nullable(),
-        isBeingReviewed: Yup.string()
-      }),
-      hosting: Yup.object().shape({
-        type: Yup.string(),
-        location: Yup.string(),
-        cloudServiceType: Yup.string()
-      }),
-      hasUserInterface: Yup.string(),
-      pros: Yup.string(),
-      cons: Yup.string(),
-      estimatedLifecycleCost: Yup.object().shape({
-        year1: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year2: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year3: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year4: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year5: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        )
-      }),
-      costSavings: Yup.string()
-    })
-  }),
-  alternativeA: Yup.object().shape({
-    alternativeA: Yup.object().shape({
-      title: Yup.string(),
-      summary: Yup.string(),
-      acquisitionApproach: Yup.string(),
-      security: Yup.object().shape({
-        isApproved: Yup.boolean().nullable(),
-        isBeingReviewed: Yup.string()
-      }),
-      hosting: Yup.object().shape({
-        type: Yup.string(),
-        location: Yup.string(),
-        cloudServiceType: Yup.string()
-      }),
-      hasUserInterface: Yup.string(),
-      pros: Yup.string(),
-      cons: Yup.string(),
-      estimatedLifecycleCost: Yup.object().shape({
-        year1: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year2: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year3: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year4: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year5: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        )
-      }),
-      costSavings: Yup.string()
-    })
-  }),
-  alternativeB: Yup.object().shape({
-    alternativeB: Yup.object().shape({
-      title: Yup.string(),
-      summary: Yup.string(),
-      acquisitionApproach: Yup.string(),
-      security: Yup.object().shape({
-        isApproved: Yup.boolean().nullable(),
-        isBeingReviewed: Yup.string()
-      }),
-      hosting: Yup.object().shape({
-        type: Yup.string(),
-        location: Yup.string(),
-        cloudServiceType: Yup.string()
-      }),
-      hasUserInterface: Yup.string(),
-      pros: Yup.string(),
-      cons: Yup.string(),
-      estimatedLifecycleCost: Yup.object().shape({
-        year1: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year2: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year3: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year4: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        ),
-        year5: Yup.array().of(
-          Yup.object().shape({ phase: Yup.string(), cost: Yup.string() })
-        )
-      }),
-      costSavings: Yup.string()
-    })
-  })
+  requestDescription: Yup.object().shape({}),
+  asIsSolution: Yup.object().shape({}),
+  preferredSolution: Yup.object().shape({}),
+  alternativeA: Yup.object().shape({}),
+  alternativeB: Yup.object().shape({})
 };
