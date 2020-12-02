@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
-import { useOktaAuth } from '@okta/okta-react';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
@@ -22,7 +21,6 @@ const RequestRepository = () => {
   type TableTypes = 'open' | 'closed';
   const [activeTable, setActiveTable] = useState<TableTypes>('open');
   const { t } = useTranslation('governanceReviewTeam');
-  const { authState } = useOktaAuth();
   const dispatch = useDispatch();
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
@@ -164,10 +162,8 @@ const RequestRepository = () => {
   }, [systemIntakes, t]);
 
   useEffect(() => {
-    if (authState.isAuthenticated) {
-      dispatch(fetchSystemIntakes({ status: activeTable }));
-    }
-  }, [dispatch, authState.isAuthenticated, activeTable]);
+    dispatch(fetchSystemIntakes({ status: activeTable }));
+  }, [dispatch, activeTable]);
 
   const {
     getTableProps,
