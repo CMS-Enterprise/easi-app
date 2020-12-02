@@ -213,7 +213,12 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/actions"
               exact
-              render={() => <ChooseAction businessCase={businessCase} />}
+              render={() => (
+                <ChooseAction
+                  businessCase={businessCase}
+                  systemIntakeType={systemIntake.requestType}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/actions/not-it-request"
@@ -293,6 +298,33 @@ const GovernanceReviewTeam = () => {
                 <SubmitAction
                   action="NO_GOVERNANCE_NEEDED"
                   actionName={actionsT('actions.noGovernance')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/send-email"
+              render={() => (
+                <SubmitAction
+                  action="SEND_EMAIL"
+                  actionName={actionsT('actions.sendEmail')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/guide-received-close"
+              render={() => (
+                <SubmitAction
+                  action="GUIDE_RECEIVED_CLOSE"
+                  actionName={actionsT('actions.guideReceivedClose')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/not-responding-close"
+              render={() => (
+                <SubmitAction
+                  action="NOT_RESPONDING_CLOSE"
+                  actionName={actionsT('actions.notRespondingClose')}
                 />
               )}
             />
