@@ -9,6 +9,7 @@ export enum DocumentType {
 }
 
 export type Document = {
+  id: number;
   type: DocumentType;
   mimetype: string;
   createdAt: DateTime;
@@ -16,11 +17,11 @@ export type Document = {
 };
 
 export enum ProjectStatus {
-  ConsultRequested,
-  TestingRequested,
-  TestingInProgress,
-  TestingCompleted,
-  InRemediation
+  ConsultRequested = 'Consult Requested',
+  TestingRequested = 'Testing Requested',
+  TestingInProgress = 'Testing in Progress',
+  TestingCompleted = 'Testing Completed',
+  InRemediation = 'In Remediation'
 }
 
 export type BusinessOwner = {

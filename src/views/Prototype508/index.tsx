@@ -1,22 +1,18 @@
 import React from 'react';
 import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 
+import Footer from 'components/Footer';
+
+import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import ProjectPage from './pages/ProjectPage';
 import ProjectsPage from './pages/ProjectsPage';
 import UploadPage from './pages/UploadPage';
+import { ProjectsProvider } from './state';
 
 import './index.scss';
 
-const Header = () => {
-  return (
-    <header>
-      <h1>EASi/Scylla Prototype</h1>
-    </header>
-  );
-};
-
-const Footer = () => {
+const PrototypeFooter = () => {
   const { path } = useRouteMatch();
 
   return (
@@ -46,23 +42,26 @@ const Prototype508 = () => {
   const { path } = useRouteMatch();
 
   return (
-    <>
-      <div className="grid-container prototype-508">
-        <Header />
-        <section className="content">
-          <Switch>
-            <Route path={`${path}/login`} component={LoginPage} />
-            <Route
-              path={`${path}/projects/:id/upload`}
-              component={UploadPage}
-            />
-            <Route path={`${path}/projects/:id`} component={ProjectPage} />
-            <Route path={`${path}/projects`} exact component={ProjectsPage} />
-          </Switch>
-        </section>
-        <Footer />
-      </div>
-    </>
+    <div className="easi-page-wrapper">
+      <Header />
+      <ProjectsProvider>
+        <div className="prototype-508">
+          <section className="content">
+            <Switch>
+              <Route path={`${path}/login`} component={LoginPage} />
+              <Route
+                path={`${path}/projects/:id/upload`}
+                component={UploadPage}
+              />
+              <Route path={`${path}/projects/:id`} component={ProjectPage} />
+              <Route path={`${path}/projects`} exact component={ProjectsPage} />
+            </Switch>
+          </section>
+          <Footer />
+          {false && <PrototypeFooter />}
+        </div>
+      </ProjectsProvider>
+    </div>
   );
 };
 

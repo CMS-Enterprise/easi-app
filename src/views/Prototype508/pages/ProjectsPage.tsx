@@ -2,12 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from '@trussworks/react-uswds';
 
-import projects from '../data';
-import { ProjectStatus } from '../types';
+import { useGlobalState } from '../state';
 
 const ProjectsPage = () => {
+  const { state } = useGlobalState();
+
   return (
-    <main id="main-content">
+    <main
+      id="main-content"
+      className="easi-main-content grid-container margin-bottom-5"
+    >
+      <h1>Active 508 Projects</h1>
       <Table bordered={false} fullWidth>
         <caption className="usa-sr-only">Requests</caption>
         <thead>
@@ -27,18 +32,18 @@ const ProjectsPage = () => {
           </tr>
         </thead>
         <tbody>
-          {projects.map(project => {
+          {Object.entries(state.projects).map(([id, project]) => {
             return (
-              <tr key={project.id}>
-                <td>{project.submissionDate.toLocaleString()}</td>
+              <tr key={id}>
+                <td>{project.submissionDate.toFormat('LLLL d y')}</td>
                 <td>
-                  <Link to={`projects/${project.id}`}>{project.name}</Link>
+                  <Link to={`/508/projects/${id}`}>{project.name}</Link>
                 </td>
                 <td>{project.businessOwner.name}</td>
                 <td>
-                  <strong>{ProjectStatus[project.status]}</strong>
+                  <strong>{project.status}</strong>
                   <br />
-                  last updated at {project.lastUpdatedAt.toLocaleString()}
+                  last updated on {project.lastUpdatedAt.toFormat('LLLL d y')}
                 </td>
               </tr>
             );
