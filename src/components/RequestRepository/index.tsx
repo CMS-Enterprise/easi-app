@@ -52,60 +52,92 @@ const RequestRepository = () => {
           );
         }
       },
+      ...(activeTable === 'closed'
+        ? [
+            {
+              Header: t('intake:fields.requester'),
+              accessor: 'requester.name'
+            }
+          ]
+        : []),
       {
         Header: t('intake:fields.component'),
         accessor: 'requester.component'
       },
-      {
-        Header: t('requestRepository.table.requestType'),
-        accessor: 'requestType'
-      },
-      {
-        Header: t('intake:fields.grtDate'),
-        accessor: 'grtDate',
-        Cell: ({ row, value }: any) => {
-          if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
-          }
+      ...(activeTable === 'open'
+        ? [
+            {
+              Header: t('requestRepository.table.requestType'),
+              accessor: 'requestType'
+            }
+          ]
+        : []),
+      ...(activeTable === 'closed'
+        ? [
+            {
+              Header: t('intake:fields.fundingNumber'),
+              accessor: 'fundingSource.fundingNumber'
+            }
+          ]
+        : []),
+      ...(activeTable === 'open'
+        ? [
+            {
+              Header: t('intake:fields.grtDate'),
+              accessor: 'grtDate',
+              Cell: ({ row, value }: any) => {
+                if (value) {
+                  return DateTime.fromISO(value).toLocaleString(
+                    DateTime.DATE_FULL
+                  );
+                }
 
-          // If date is null, return button that takes user to page to add date
-          return (
-            <UswdsLink
-              data-testid="add-grt-date-cta"
-              asCustom={Link}
-              to={`/governance-review-team/${row.original.id}/dates`}
-            >
-              {t('requestRepository.table.addDate')}
-            </UswdsLink>
-          );
-        }
-      },
-      {
-        Header: t('intake:fields.grbDate'),
-        accessor: 'grbDate',
-        Cell: ({ row, value }: any) => {
-          if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
-          }
+                // If date is null, return button that takes user to page to add date
+                return (
+                  <UswdsLink
+                    data-testid="add-grt-date-cta"
+                    asCustom={Link}
+                    to={`/governance-review-team/${row.original.id}/dates`}
+                  >
+                    {t('requestRepository.table.addDate')}
+                  </UswdsLink>
+                );
+              }
+            }
+          ]
+        : []),
+      ...(activeTable === 'open'
+        ? [
+            {
+              Header: t('intake:fields.grbDate'),
+              accessor: 'grbDate',
+              Cell: ({ row, value }: any) => {
+                if (value) {
+                  return DateTime.fromISO(value).toLocaleString(
+                    DateTime.DATE_FULL
+                  );
+                }
 
-          // If date is null, return button that takes user to page to add date
-          return (
-            <UswdsLink
-              data-testid="add-grb-date-cta"
-              asCustom={Link}
-              to={`/governance-review-team/${row.original.id}/dates`}
-            >
-              {t('requestRepository.table.addDate')}
-            </UswdsLink>
-          );
-        }
-      },
+                // If date is null, return button that takes user to page to add date
+                return (
+                  <UswdsLink
+                    data-testid="add-grb-date-cta"
+                    asCustom={Link}
+                    to={`/governance-review-team/${row.original.id}/dates`}
+                  >
+                    {t('requestRepository.table.addDate')}
+                  </UswdsLink>
+                );
+              }
+            }
+          ]
+        : []),
       {
         Header: t('intake:fields.status'),
         accessor: 'status'
       }
     ],
-    [t]
+    [activeTable, t]
   );
 
   const data = useMemo(() => {
