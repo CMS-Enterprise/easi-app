@@ -13,7 +13,7 @@ import { defaultProposedSolution } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import AlternativeSolutionFields from './AlternativeSolutionFields';
 
@@ -40,7 +40,7 @@ const AlternativeSolutionB = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.alternativeB}
+      validationSchema={BusinessCaseFinalValidationSchema.alternativeB}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
