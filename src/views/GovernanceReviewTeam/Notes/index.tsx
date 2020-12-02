@@ -6,15 +6,65 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
+import CollapsableLink from 'components/shared/CollapsableLink';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { AppState } from 'reducers/rootReducer';
-import { fetchIntakeNotes, postIntakeNote } from 'types/routines';
+import { Action } from 'types/action';
+import { fetchActions, fetchIntakeNotes, postIntakeNote } from 'types/routines';
 import { IntakeNote } from 'types/systemIntake';
 
 type NoteForm = {
   note: string;
+};
+
+const NoteListItem = ({ note }: { note: IntakeNote }) => {
+  return (
+    <li className="easi-grt__history-item">
+      <div className="easi-grt__history-item-content">
+        <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
+          {note.content}
+        </p>
+        <span className="text-base-dark font-body-2xs">{`by: ${
+          note.authorName
+        } | ${note.createdAt.toLocaleString(
+          DateTime.DATE_FULL
+        )} at ${note.createdAt.toLocaleString(DateTime.TIME_SIMPLE)}`}</span>
+      </div>
+    </li>
+  );
+};
+
+const ActionListItem = ({ action }: { action: Action }) => {
+  const { t } = useTranslation('governanceReviewTeam');
+
+  return (
+    <li className="easi-grt__history-item">
+      <div className="easi-grt__history-item-content">
+        <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
+          {t(`notes.actionName.${action.actionType}`)}
+        </p>
+        <span className="text-base-dark font-body-2xs display-block">
+          {`by: ${action.actorName} | ${action.createdAt.toLocaleString(
+            DateTime.DATE_FULL
+          )} at ${action.createdAt.toLocaleString(DateTime.TIME_SIMPLE)}`}
+        </span>
+        {action.feedback && (
+          <div className="margin-top-2">
+            <CollapsableLink
+              id={`ActionEmailText-${action.id}`}
+              label={t('notes.showEmail')}
+              closeLabel={t('notes.hideEmail')}
+              styleLeftBar={false}
+            >
+              {action.feedback}
+            </CollapsableLink>
+          </div>
+        )}
+      </div>
+    </li>
+  );
 };
 
 const Notes = () => {
@@ -22,9 +72,9 @@ const Notes = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
   const notes = useSelector((state: AppState) => state.systemIntake.notes);
+  const actions = useSelector((state: AppState) => state.action.actions);
 
   const { t } = useTranslation('governanceReviewTeam');
-
   const onSubmit = async (
     values: NoteForm,
     { resetForm }: FormikHelpers<NoteForm>
@@ -42,16 +92,30 @@ const Notes = () => {
 
   useEffect(() => {
     dispatch(fetchIntakeNotes(systemId));
+    dispatch(fetchActions(systemId));
   }, [dispatch, systemId]);
 
   const initialValues = {
     note: ''
   };
 
-  const sortedNotes = notes.sort(
-    (a: IntakeNote, b: IntakeNote) =>
-      b.createdAt.toMillis() - a.createdAt.toMillis()
-  );
+  const notesByTimestamp = notes.map((note: IntakeNote) => {
+    return {
+      createdAt: note.createdAt,
+      element: <NoteListItem note={note} key={note.id} />
+    };
+  });
+
+  const actionsByTimestamp = actions.map((action: Action) => {
+    return {
+      createdAt: action.createdAt,
+      element: <ActionListItem action={action} key={action.id} />
+    };
+  });
+
+  const interleavedList = [...notesByTimestamp, ...actionsByTimestamp]
+    .sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis())
+    .map(a => a.element);
 
   return (
     <>
@@ -82,26 +146,7 @@ const Notes = () => {
                   {t('notes.addNoteCta')}
                 </Button>
               </Form>
-              <ul className="easi-grt__note-list">
-                {sortedNotes.map((note: IntakeNote) => {
-                  return (
-                    <li className="easi-grt__note" key={note.id}>
-                      <div className="easi-grt__note-content">
-                        <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
-                          {note.content}
-                        </p>
-                        <span className="text-base-dark font-body-2xs">{`by: ${
-                          note.authorName
-                        } | ${note.createdAt.toLocaleString(
-                          DateTime.DATE_FULL
-                        )} at ${note.createdAt.toLocaleString(
-                          DateTime.TIME_SIMPLE
-                        )}`}</span>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
+              <ul className="easi-grt__history">{interleavedList}</ul>
             </div>
           );
         }}

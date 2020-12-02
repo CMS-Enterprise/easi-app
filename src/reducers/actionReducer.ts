@@ -1,33 +1,53 @@
+import { DateTime } from 'luxon';
 import { Action as ReduxAction } from 'redux-actions';
 
-import { Action, ActionState } from 'types/action';
-import { postSystemIntakeAction } from 'types/routines';
+import { ActionState } from 'types/action';
+import { fetchActions, fetchIntakeNotes, postAction } from 'types/routines';
 
 const initialState: ActionState = {
   isPosting: false,
-  error: null
+  error: null,
+  actions: []
 };
 
 function actionReducer(
   state = initialState,
-  action: ReduxAction<Action>
+  action: ReduxAction<any>
 ): ActionState {
   switch (action.type) {
-    case postSystemIntakeAction.REQUEST:
+    case postAction.REQUEST:
       return {
         ...state,
         isPosting: true,
         error: null
       };
-    case postSystemIntakeAction.FAILURE:
+    case postAction.FAILURE:
       return {
         ...state,
         error: action.payload
       };
-    case postSystemIntakeAction.FULFILL:
+    case postAction.FULFILL:
       return {
         ...state,
         isPosting: false
+      };
+    case fetchActions.TRIGGER:
+      return {
+        ...state,
+        actions: []
+      };
+    case fetchActions.SUCCESS:
+      return {
+        ...state,
+        actions: action.payload.map((fetchedAction: any) => ({
+          ...fetchedAction,
+          createdAt: DateTime.fromISO(fetchedAction.createdAt)
+        }))
+      };
+    case fetchIntakeNotes.FAILURE:
+      return {
+        ...state,
+        error: action.payload
       };
     default:
       return state;

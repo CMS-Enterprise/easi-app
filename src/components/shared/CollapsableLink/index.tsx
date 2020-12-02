@@ -8,6 +8,7 @@ type CollapsableLinkProps = {
   id: string;
   children: React.ReactNode | React.ReactNodeArray;
   label: string;
+  closeLabel?: string;
   styleLeftBar?: boolean;
 };
 
@@ -15,6 +16,7 @@ const CollapsableLink = ({
   id,
   children,
   label,
+  closeLabel,
   styleLeftBar = true
 }: CollapsableLinkProps) => {
   // TODO: should this state instead be held in the parent and passed in as prop?
@@ -37,7 +39,7 @@ const CollapsableLink = ({
         unstyled
       >
         <span className={arrowClassNames} />
-        {label}
+        {isOpen ? closeLabel || label : label}
       </Button>
       {isOpen && (
         <div

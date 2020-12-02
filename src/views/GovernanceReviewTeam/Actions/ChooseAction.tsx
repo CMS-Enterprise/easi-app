@@ -7,12 +7,44 @@ import { kebabCase } from 'lodash';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import { BusinessCaseModel } from 'types/businessCase';
+import { RequestType } from 'types/systemIntake';
+
+const radioGroupName = 'Available Actions';
+const radioFieldClassName = 'margin-y-3';
+
+type ActionRadioOptionProps = {
+  route: string;
+  label: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  checked: boolean;
+};
+
+const ActionRadioOption = ({
+  label,
+  route,
+  onChange,
+  checked
+}: ActionRadioOptionProps) => (
+  <RadioField
+    id={route}
+    label={label}
+    name={radioGroupName}
+    value={route}
+    onChange={onChange}
+    checked={checked}
+    className={radioFieldClassName}
+  />
+);
 
 type ChooseActionProps = {
   businessCase: BusinessCaseModel;
+  systemIntakeType: RequestType;
 };
 
-const ChooseAction = ({ businessCase }: ChooseActionProps) => {
+const ChooseAction = ({
+  businessCase,
+  systemIntakeType
+}: ChooseActionProps) => {
   const history = useHistory();
   const { t } = useTranslation('action');
 
@@ -24,134 +56,171 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
 
   const onSubmit = () => history.push(`actions/${actionRoute}`);
 
-  const radioGroupName = 'Available Actions';
-
+  const notITRequestRoute = 'not-it-request';
   const NotITRequest = (
-    <RadioField
-      key="not-it-request"
-      id="not-it-request"
+    <ActionRadioOption
+      key={notITRequestRoute}
+      onChange={onChange}
       label={t('actions.notItRequest')}
-      name={radioGroupName}
-      value="not-it-request"
-      onChange={onChange}
-      checked={actionRoute === 'not-it-request'}
+      route={notITRequestRoute}
+      checked={actionRoute === notITRequestRoute}
     />
   );
 
+  const issueLifecycleIdRoute = 'issue-lcid';
   const IssueLifecycleId = (
-    <RadioField
-      key="issue-lcid"
-      id="issue-lcid"
+    <ActionRadioOption
+      key={issueLifecycleIdRoute}
+      onChange={onChange}
       label="Issue Lifecycle Id"
-      name={radioGroupName}
-      value="issue-lcid"
-      onChange={onChange}
-      checked={actionRoute === 'issue-lcid'}
+      route={issueLifecycleIdRoute}
+      checked={actionRoute === issueLifecycleIdRoute}
     />
   );
 
+  const needBizCaseRoute = 'need-biz-case';
   const NeedBizCase = (
-    <RadioField
-      key="need-biz-case"
-      id="need-biz-case"
+    <ActionRadioOption
+      key={needBizCaseRoute}
+      onChange={onChange}
       label={t('actions.needBizCase')}
-      name={radioGroupName}
-      value="need-biz-case"
-      onChange={onChange}
-      checked={actionRoute === 'need-biz-case'}
+      route={needBizCaseRoute}
+      checked={actionRoute === needBizCaseRoute}
     />
   );
 
+  const readyForGrtRoute = 'ready-for-grt';
   const ReadyForGRT = (
-    <RadioField
-      key="ready-for-grt"
-      id="ready-for-grt"
+    <ActionRadioOption
+      key={readyForGrtRoute}
+      onChange={onChange}
       label={t('actions.readyForGrt')}
-      name={radioGroupName}
-      value="ready-for-grt"
-      onChange={onChange}
-      checked={actionRoute === 'ready-for-grt'}
+      route={readyForGrtRoute}
+      checked={actionRoute === readyForGrtRoute}
     />
   );
 
+  const readyForGrbRoute = 'ready-for-grb';
   const ReadyForGRB = (
-    <RadioField
-      key="ready-for-grb"
-      id="ready-for-grb"
-      label={t('actions.readyForGrb')}
-      name={radioGroupName}
-      value="ready-for-grb"
+    <ActionRadioOption
+      key={readyForGrbRoute}
       onChange={onChange}
-      checked={actionRoute === 'ready-for-grb'}
+      label={t('actions.readyForGrb')}
+      route={readyForGrbRoute}
+      checked={actionRoute === readyForGrbRoute}
     />
   );
 
+  const provideFeedbackNeedBizCaseRoute = 'provide-feedback-need-biz-case';
   const ProvideFeedbackNeedBizCase = (
-    <RadioField
-      key="provide-feedback-need-biz-case"
-      id="provide-feedback-need-biz-case"
-      label={t('actions.provideFeedbackNeedBizCase')}
-      name={radioGroupName}
-      value="provide-feedback-need-biz-case"
+    <ActionRadioOption
+      key={provideFeedbackNeedBizCaseRoute}
       onChange={onChange}
-      checked={actionRoute === 'provide-feedback-need-biz-case'}
+      label={t('actions.provideFeedbackNeedBizCase')}
+      route={provideFeedbackNeedBizCaseRoute}
+      checked={actionRoute === provideFeedbackNeedBizCaseRoute}
     />
   );
 
   const provideFeedbackKeepDraftRoute = 'provide-feedback-keep-draft';
   const ProvideFeedbackKeepDraft = (
-    <RadioField
+    <ActionRadioOption
       key={provideFeedbackKeepDraftRoute}
-      id={provideFeedbackKeepDraftRoute}
-      label={t('actions.provideGrtFeedbackKeepDraft')}
-      name={radioGroupName}
-      value={provideFeedbackKeepDraftRoute}
       onChange={onChange}
+      label={t('actions.provideGrtFeedbackKeepDraft')}
+      route={provideFeedbackKeepDraftRoute}
       checked={actionRoute === provideFeedbackKeepDraftRoute}
     />
   );
 
   const provideFeedbackNeedFinalRoute = 'provide-feedback-need-final';
   const ProvideFeedbackNeedFinal = (
-    <RadioField
+    <ActionRadioOption
       key={provideFeedbackNeedFinalRoute}
-      id={provideFeedbackNeedFinalRoute}
-      label={t('actions.provideGrtFeedbackNeedFinal')}
-      name={radioGroupName}
-      value={provideFeedbackNeedFinalRoute}
       onChange={onChange}
+      label={t('actions.provideGrtFeedbackNeedFinal')}
+      route={provideFeedbackNeedFinalRoute}
       checked={actionRoute === provideFeedbackNeedFinalRoute}
     />
   );
 
+  const bizCaseNeedsChangesRoute = 'biz-case-needs-changes';
   const BizCaseNeedsChanges = (
-    <RadioField
-      key="biz-case-needs-changes"
-      id="biz-case-needs-changes"
-      label={t('actions.bizCaseNeedsChanges')}
-      name={radioGroupName}
-      value="biz-case-needs-changes"
+    <ActionRadioOption
+      key={bizCaseNeedsChangesRoute}
       onChange={onChange}
-      checked={actionRoute === 'biz-case-needs-changes'}
+      label={t('actions.bizCaseNeedsChanges')}
+      route={bizCaseNeedsChangesRoute}
+      checked={actionRoute === bizCaseNeedsChangesRoute}
     />
   );
 
   const noFurtherGovernanceRoute = 'no-governance';
   const NoFurtherGovernance = (
-    <RadioField
+    <ActionRadioOption
       key={noFurtherGovernanceRoute}
-      id={noFurtherGovernanceRoute}
-      label={t('actions.noGovernance')}
-      name={radioGroupName}
-      value={noFurtherGovernanceRoute}
       onChange={onChange}
+      label={t('actions.noGovernance')}
+      route={noFurtherGovernanceRoute}
       checked={actionRoute === noFurtherGovernanceRoute}
+    />
+  );
+
+  const rejectIntakeRoute = 'not-approved';
+  const RejectIntake = (
+    <ActionRadioOption
+      key={rejectIntakeRoute}
+      onChange={onChange}
+      label={t('actions.rejectIntake')}
+      route={rejectIntakeRoute}
+      checked={actionRoute === rejectIntakeRoute}
+    />
+  );
+
+  const sendEmailRoute = 'send-email';
+  const SendEmail = (
+    <ActionRadioOption
+      key={sendEmailRoute}
+      onChange={onChange}
+      label={t('actions.sendEmail')}
+      route={sendEmailRoute}
+      checked={actionRoute === sendEmailRoute}
+    />
+  );
+
+  const guideReceivedCloseRoute = 'guide-received-close';
+  const GuideReceivedClose = (
+    <ActionRadioOption
+      key={guideReceivedCloseRoute}
+      onChange={onChange}
+      label={t('actions.guideReceivedClose')}
+      route={guideReceivedCloseRoute}
+      checked={actionRoute === guideReceivedCloseRoute}
+    />
+  );
+
+  const notRespondingCloseRoute = 'not-responding-close';
+  const NotRespondingClose = (
+    <ActionRadioOption
+      key={notRespondingCloseRoute}
+      onChange={onChange}
+      label={t('actions.notRespondingClose')}
+      route={notRespondingCloseRoute}
+      checked={actionRoute === notRespondingCloseRoute}
     />
   );
 
   let availableActions: Array<any> = [];
   let availableHiddenActions: Array<any> = [];
-  if (businessCaseExists) {
+  if (systemIntakeType === 'SHUTDOWN') {
+    availableActions = [
+      SendEmail,
+      GuideReceivedClose,
+      NotRespondingClose,
+      NotITRequest
+    ];
+    availableHiddenActions = [];
+  } else if (businessCaseExists) {
     availableActions = [BizCaseNeedsChanges];
     availableHiddenActions = [
       ReadyForGRT,
@@ -159,7 +228,8 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
       ProvideFeedbackKeepDraft,
       ProvideFeedbackNeedFinal,
       IssueLifecycleId,
-      NoFurtherGovernance
+      NoFurtherGovernance,
+      RejectIntake
     ];
   } else {
     availableActions = [NotITRequest, NeedBizCase];
@@ -178,20 +248,16 @@ const ChooseAction = ({ businessCase }: ChooseActionProps) => {
       <h2 className="margin-y-3">{t('submitAction.subheading')}</h2>
       <form onSubmit={onSubmit}>
         <RadioGroup>
-          <div>
-            {availableActions.map(actionRadio => (
-              <div className="margin-y-3">{actionRadio}</div>
-            ))}
-          </div>
-          <CollapsableLink
-            id={kebabCase(t('submitAction.otherOptions'))}
-            label={t('submitAction.otherOptions')}
-            styleLeftBar={false}
-          >
-            {availableHiddenActions.map(actionRadio => (
-              <div className="margin-bottom-3">{actionRadio}</div>
-            ))}
-          </CollapsableLink>
+          {[availableActions]}
+          {availableHiddenActions && (
+            <CollapsableLink
+              id={kebabCase(t('submitAction.otherOptions'))}
+              label={t('submitAction.otherOptions')}
+              styleLeftBar={false}
+            >
+              {[availableHiddenActions]}
+            </CollapsableLink>
+          )}
         </RadioGroup>
         <Button className="margin-top-5" type="submit" disabled={!actionRoute}>
           Continue
