@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 
 import { Flags, FlagsState } from 'types/flags';
 
@@ -8,11 +7,11 @@ const initialState: FlagsState = {
     taskListLite: false,
     sandbox: false,
     pdfExport: false,
-    prototype508: false,
+    prototype508: true,
     prototypeTRB: false,
     fileUploads: false
   },
-  isLoaded: false
+  isLoaded: true
 };
 
 const FlagContext = React.createContext(initialState);
@@ -22,26 +21,26 @@ type FlagProviderProps = {
 };
 
 export const FlagProvider = ({ children }: FlagProviderProps) => {
-  const [flagState, setFlagState] = useState(initialState);
+  const [flagState] = useState(initialState);
 
-  useEffect(() => {
-    const fetchFlags = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_ADDRESS}/flags`
-        );
-        setFlagState({ flags: response.data, isLoaded: true });
-      } catch (error) {
-        setFlagState(state => ({ ...state, isLoaded: true }));
-        if (process.env.NODE_ENV !== 'test') {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to load flags! #{response}`);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const fetchFlags = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${process.env.REACT_APP_API_ADDRESS}/flags`
+  //       );
+  //       setFlagState({ flags: response.data, isLoaded: true });
+  //     } catch (error) {
+  //       setFlagState(state => ({ ...state, isLoaded: true }));
+  //       if (process.env.NODE_ENV !== 'test') {
+  //         // eslint-disable-next-line no-console
+  //         console.error(`Failed to load flags! #{response}`);
+  //       }
+  //     }
+  //   };
 
-    fetchFlags();
-  }, []);
+  //   fetchFlags();
+  // }, []);
 
   return (
     <FlagContext.Provider value={flagState}>
