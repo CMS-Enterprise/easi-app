@@ -300,8 +300,8 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 		s.IsType(&apperrors.QueryError{}, err)
 	})
 
-	s.Run("returns error when validation fails", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
+	s.Run("does not return error for validation if status is not biz case final", func() {
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusBIZCASEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
 		failValidation := func(businessCase *models.BusinessCase) error {
@@ -310,6 +310,29 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 				ModelID: businessCase.ID.String(),
 				Model:   businessCase,
 			}
+		}
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, failValidation, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
+		err := submitBusinessCase(ctx, &intake, &action)
+
+		s.NoError(err)
+		s.Equal(1, submitEmailCount)
+
+		submitEmailCount = 0
+	})
+
+	s.Run("returns error when status is biz case final and validation fails", func() {
+		intake := models.SystemIntake{Status: models.SystemIntakeStatusBIZCASEFINALNEEDED}
+		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
+		status := models.SystemIntakeStatusBIZCASEFINALSUBMITTED
+		failValidation := func(businessCase *models.BusinessCase) error {
+			return &apperrors.ValidationError{
+				Err:     errors.New("validation failed on these fields: ID"),
+				ModelID: businessCase.ID.String(),
+				Model:   businessCase,
+			}
+		}
+		fetchOpenBusinessCase = func(ctx context.Context, id uuid.UUID) (*models.BusinessCase, error) {
+			return &models.BusinessCase{SystemIntakeStatus: intake.Status}, nil
 		}
 		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, failValidation, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
