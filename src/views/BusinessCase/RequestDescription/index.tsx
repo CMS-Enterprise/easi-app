@@ -17,7 +17,10 @@ import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
+import {
+  BusinessCaseDraftValidationSchema,
+  BusinessCaseFinalValidationSchema
+} from 'validations/businessCaseSchema';
 
 type RequestDescriptionProps = {
   businessCase: BusinessCaseModel;
@@ -39,11 +42,16 @@ const RequestDescription = ({
     successIndicators: businessCase.successIndicators
   };
 
+  const ValidationSchema =
+    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
+      ? BusinessCaseFinalValidationSchema
+      : BusinessCaseDraftValidationSchema;
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseFinalValidationSchema.requestDescription}
+      validationSchema={ValidationSchema.requestDescription}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
