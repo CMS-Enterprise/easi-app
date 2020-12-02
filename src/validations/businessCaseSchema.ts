@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 //
 const phoneNumberRegex = /( *-*[0-9] *?){10,}/;
-const BusinessCaseValidationSchema = {
+export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
     requestName: Yup.string().required('Enter the Project Name'),
     requester: Yup.object().shape({
@@ -357,4 +357,4 @@ const BusinessCaseValidationSchema = {
   })
 };
 
-export default BusinessCaseValidationSchema;
+export const BusinessCaseDraftValidationSchema = {};

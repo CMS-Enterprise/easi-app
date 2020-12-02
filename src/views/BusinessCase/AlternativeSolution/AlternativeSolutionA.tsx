@@ -12,7 +12,7 @@ import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import AlternativeSolutionFields from './AlternativeSolutionFields';
 
@@ -37,7 +37,7 @@ const AlternativeSolutionA = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.alternativeA}
+      validationSchema={BusinessCaseFinalValidationSchema.alternativeA}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}

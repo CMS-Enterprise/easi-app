@@ -15,7 +15,7 @@ import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 type GeneralRequestInfoProps = {
   businessCase: BusinessCaseModel;
@@ -40,7 +40,7 @@ const GeneralRequestInfo = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.generalRequestInfo}
+      validationSchema={BusinessCaseFinalValidationSchema.generalRequestInfo}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}

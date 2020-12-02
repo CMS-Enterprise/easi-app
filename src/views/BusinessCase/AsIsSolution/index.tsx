@@ -19,7 +19,7 @@ import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { AsIsSolutionForm, BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 type AsIsSolutionProps = {
   businessCase: BusinessCaseModel;
@@ -40,7 +40,7 @@ const AsIsSolution = ({
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.asIsSolution}
+      validationSchema={BusinessCaseFinalValidationSchema.asIsSolution}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
