@@ -13,11 +13,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import {
-  ActionType,
-  CreateActionPayload,
-  SubmitLifecycleIdForm
-} from 'types/action';
+import { SubmitLifecycleIdForm } from 'types/action';
 import { issueLifecycleIdForSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
@@ -27,8 +23,6 @@ const IssueLifecycleId = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('action');
-
-  const actionType: ActionType = 'ISSUE_LCID';
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -50,18 +44,14 @@ const IssueLifecycleId = () => {
       scope,
       lifecycleId
     } = values;
-    const actionPayload: CreateActionPayload = {
-      actionType,
-      intakeId: systemId,
-      feedback
-    };
     const lcidPayload = {
       lcidExpiresAt: `${expirationDateYear}-${expirationDateMonth}-${expirationDateDay}`,
       lcidNextSteps: nextSteps,
       lcidScope: scope,
-      lcid: lifecycleId
+      lcid: lifecycleId,
+      feedback
     };
-    const payload = { id: systemId, actionPayload, lcidPayload };
+    const payload = { id: systemId, lcidPayload };
     dispatch(issueLifecycleIdForSystemIntake(payload));
 
     history.push(`/governance-review-team/${systemId}/intake-request`);
