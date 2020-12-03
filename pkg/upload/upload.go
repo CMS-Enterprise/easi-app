@@ -52,3 +52,22 @@ func (c S3Client) NewPutPresignedURL() (*models.PreSignedURL, error) {
 
 	return &result, nil
 }
+
+// NewGetPresignedURL returns a pre-signed URL used for GET-ing objects
+func (c S3Client) NewGetPresignedURL(key string) (*models.PreSignedURL, error) {
+	objectInput := &s3.GetObjectInput{
+		Bucket: aws.String(c.config.Bucket),
+		Key:    aws.String(key),
+	}
+	req, _ := c.client.GetObjectRequest(objectInput)
+
+	url, err := req.Presign(15 * time.Minute)
+	if err != nil {
+		return &models.PreSignedURL{}, err
+	}
+
+	result := models.PreSignedURL{URL: url, Filename: key}
+
+	return &result, nil
+
+}
