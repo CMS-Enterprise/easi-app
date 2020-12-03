@@ -91,13 +91,39 @@ const SystemIntakeBanners = () => {
   return (
     <>
       {intakes.map((intake: SystemIntakeForm) => {
-        let rootPath = '';
-        if (intake.requestType === 'SHUTDOWN') {
-          rootPath = '/system';
-        } else {
-          rootPath = flags.taskListLite ? '/governance-task-list' : '/system';
-        }
         const status = statusMap[intake.status];
+        const rootPath = flags.taskListLite
+          ? '/governance-task-list'
+          : '/system';
+
+        if (intake.requestType === 'SHUTDOWN') {
+          return (
+            <ActionBanner
+              key={intake.id}
+              title={
+                intake.requestName
+                  ? `${intake.requestName}: ${status.title}`
+                  : status.title
+              }
+              helpfulText={status.description}
+              onClick={() => {
+                const link =
+                  intake.status === 'INTAKE_SUBMITTED'
+                    ? `/system/${intake.id}/view`
+                    : `/system/${intake.id}`;
+                history.push(link);
+              }}
+              label={
+                intake.status === 'INTAKE_SUBMITTED'
+                  ? 'View submitted intake request'
+                  : 'Go to intake request'
+              }
+              requestType={intake.requestType}
+              data-intakeid={intake.id}
+              buttonUnstyled={intake.status === 'INTAKE_SUBMITTED'}
+            />
+          );
+        }
 
         return (
           <ActionBanner
