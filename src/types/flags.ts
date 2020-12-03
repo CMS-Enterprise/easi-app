@@ -1,4 +1,5 @@
 export type Flags = {
+  fileUploads: Boolean;
   taskListLite: Boolean;
   sandbox: Boolean;
   pdfExport: Boolean;
