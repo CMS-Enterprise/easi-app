@@ -117,7 +117,7 @@ func upload(host string, auth string, item *entry) error {
 	}
 
 	if resp.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("expected 204; got %d; body %s", resp.StatusCode, content)
+		return fmt.Errorf("%s; expected 204; got %d; body %s", item.Intake.ID.String(), resp.StatusCode, content)
 	}
 	fmt.Fprintf(os.Stdout, "uploaded: %s\n", item.Intake.ID.String())
 	return nil
