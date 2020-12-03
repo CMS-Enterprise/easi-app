@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useOktaAuth } from '@okta/okta-react';
 
 import ActionBanner from 'components/shared/ActionBanner';
 import { useFlags } from 'contexts/flagContext';
@@ -15,7 +14,6 @@ const SystemIntakeBanners = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('intake');
-  const { authState } = useOktaAuth();
   const intakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
@@ -83,10 +81,8 @@ const SystemIntakeBanners = () => {
   };
 
   useEffect(() => {
-    if (authState.isAuthenticated) {
-      dispatch(fetchSystemIntakes());
-    }
-  }, [dispatch, authState.isAuthenticated]);
+    dispatch(fetchSystemIntakes());
+  }, [dispatch]);
 
   return (
     <>
