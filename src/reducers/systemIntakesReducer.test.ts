@@ -1,4 +1,7 @@
-import { prepareSystemIntakeForApp } from 'data/systemIntake';
+import {
+  initialSystemIntakeForm,
+  prepareSystemIntakeForApp
+} from 'data/systemIntake';
 import { fetchSystemIntakes } from 'types/routines';
 
 import systemIntakesReducer from './systemIntakesReducer';
@@ -12,6 +15,31 @@ describe('The system intakes reducer', () => {
       loadedTimestamp: null
     });
   });
+
+  it('handles fetchSystemIntakes.TRIGGER', () => {
+    const initialState = {
+      systemIntakes: [
+        initialSystemIntakeForm,
+        initialSystemIntakeForm,
+        initialSystemIntakeForm
+      ],
+      error: null,
+      isLoading: true,
+      loadedTimestamp: null
+    };
+    const mockRequestAction = {
+      type: fetchSystemIntakes.TRIGGER,
+      payload: undefined
+    };
+
+    expect(systemIntakesReducer(initialState, mockRequestAction)).toEqual({
+      systemIntakes: [],
+      error: null,
+      isLoading: true,
+      loadedTimestamp: null
+    });
+  });
+
   it('handles fetchSystemIntakes.REQUEST', () => {
     const mockRequestAction = {
       type: fetchSystemIntakes.REQUEST,
@@ -25,6 +53,7 @@ describe('The system intakes reducer', () => {
       loadedTimestamp: null
     });
   });
+
   it('handles fetchSystemIntakes.SUCCESS', () => {
     const mockApiSystemIntake = {
       id: '',
@@ -57,6 +86,7 @@ describe('The system intakes reducer', () => {
       systemIntakesReducer(undefined, mockSuccessAction).systemIntakes
     ).toMatchObject([prepareSystemIntakeForApp(mockApiSystemIntake)]);
   });
+
   it('handles fetchSystemIntakes.FAILURE', () => {
     const mockFailureAction = {
       type: fetchSystemIntakes.FAILURE,
@@ -70,6 +100,7 @@ describe('The system intakes reducer', () => {
       loadedTimestamp: null
     });
   });
+
   it('handles fetchSystemIntakes.FULFILL', () => {
     const mockFulfillAction = {
       type: fetchSystemIntakes.FULFILL,

@@ -12,7 +12,9 @@ import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntake } from 'types/routines';
 
 import Approved from './Approved';
-// import Rejected from './Rejected';
+import Rejected from './Rejected';
+
+import './index.scss';
 
 const RequestDecision = () => {
   const dispatch = useDispatch();
@@ -53,6 +55,9 @@ const RequestDecision = () => {
             {systemIntake.status === 'LCID_ISSUED' && (
               <Approved intake={systemIntake} />
             )}
+            {['NOT_IT_REQUEST', 'NOT_APPROVED', 'NO_GOVERNANCE'].includes(
+              systemIntake.status
+            ) && <Rejected intake={systemIntake} />}
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">

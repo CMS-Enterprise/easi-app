@@ -7,7 +7,8 @@ const intake = {
     component: 'Component',
     grtDate: 'GRT Date',
     grbDate: 'GRB Date',
-    status: 'Status'
+    status: 'Status',
+    fundingNumber: 'Funding number'
   },
 
   lifecycleId: 'Lifecycle ID',
