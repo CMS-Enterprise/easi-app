@@ -5,7 +5,7 @@ import { Flags, FlagsState } from 'types/flags';
 
 const initialState: FlagsState = {
   flags: {
-    taskListLite: false,
+    taskListLite: true,
     sandbox: false,
     pdfExport: false
   },
@@ -27,7 +27,13 @@ export const FlagProvider = ({ children }: FlagProviderProps) => {
         const response = await axios.get(
           `${process.env.REACT_APP_API_ADDRESS}/flags`
         );
-        setFlagState({ flags: response.data, isLoaded: true });
+        setFlagState(prevState => ({
+          flags: {
+            ...prevState.flags,
+            ...response.data
+          },
+          isLoaded: true
+        }));
       } catch (error) {
         setFlagState(state => ({ ...state, isLoaded: true }));
         if (process.env.NODE_ENV !== 'test') {
