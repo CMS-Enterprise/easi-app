@@ -33,8 +33,9 @@ func NewBackfill(
 
 		// invariant data for all backfill (maybe do this in transport layer, for de-normalizing fields?)
 		intake.RequestType = models.SystemIntakeRequestTypeNEW // TODO: correct RequestType?
-		if intake.Status == "" {
-			intake.Status = models.SystemIntakeStatusCLOSED // TODO: correct Status?
+		intake.Status = models.SystemIntakeStatusNOTAPPROVED
+		if intake.LifecycleID.ValueOrZero() != "" {
+			intake.Status = models.SystemIntakeStatusLCIDISSUED
 		}
 		if _, err = createIntake(ctx, &intake); err != nil {
 			return err
