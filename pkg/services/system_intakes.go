@@ -253,9 +253,12 @@ func NewUpdateLifecycleFields(
 	authorize func(context.Context) (bool, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	saveAction func(context.Context, *models.Action) error,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendReviewEmail func(emailText string, recipientAddress string) error,
 	generateLCID func(context.Context) (string, error),
-) func(context.Context, *models.SystemIntake) (*models.SystemIntake, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
 			return nil, &apperrors.QueryError{
@@ -278,7 +281,21 @@ func NewUpdateLifecycleFields(
 			return nil, &apperrors.ResourceConflictError{
 				Err:        errors.New("lifecycle id already exists"),
 				Resource:   models.SystemIntake{},
-				ResourceID: intake.ID.String(),
+				ResourceID: existing.ID.String(),
+			}
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
+				Model:     existing,
+				ModelID:   existing.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
 			}
 		}
 
@@ -300,6 +317,13 @@ func NewUpdateLifecycleFields(
 			existing.LifecycleID = null.StringFrom(lcid)
 		}
 
+		action.IntakeID = &existing.ID
+		action.ActionType = models.ActionTypeISSUELCID
+		if err = saveAction(ctx, action); err != nil {
+			return nil, err
+		}
+
+		existing.Status = models.SystemIntakeStatusLCIDISSUED
 		updated, err := update(ctx, existing)
 		if err != nil {
 			return nil, &apperrors.QueryError{
@@ -308,7 +332,14 @@ func NewUpdateLifecycleFields(
 				Operation: apperrors.QuerySave,
 			}
 		}
+
+		err = sendReviewEmail(action.Feedback.String, requesterInfo.Email)
+		if err != nil {
+			return nil, err
+		}
+
 		return updated, nil
+
 	}
 }
 
