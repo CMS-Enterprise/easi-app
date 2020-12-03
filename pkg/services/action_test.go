@@ -478,7 +478,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		action := &models.Action{}
 		err := reviewSystemIntake(ctx, intake, action)
 
-		s.IsType(&apperrors.QueryError{}, err)
+		s.Error(err)
 	})
 
 	s.Run("returns error from fetching requester email", func() {
