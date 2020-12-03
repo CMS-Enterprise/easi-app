@@ -1,14 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import { AppState } from 'reducers/rootReducer';
+import { fetchSystemIntake } from 'types/routines';
+
+import Approved from './Approved';
+// import Rejected from './Rejected';
 
 const RequestDecision = () => {
-  const { systemId } = useParams();
+  const dispatch = useDispatch();
+  const systemIntake = useSelector(
+    (state: AppState) => state.systemIntake.systemIntake
+  );
+
+  const { systemId } = useParams<{ systemId: string }>();
+
+  useEffect(() => {
+    dispatch(fetchSystemIntake(systemId));
+  }, [dispatch, systemId]);
+
   return (
     <PageWrapper className="governance-task-list">
       <Header />
@@ -33,9 +50,23 @@ const RequestDecision = () => {
             <h1 className="font-heading-2xl margin-top-4">
               Decision and next steps
             </h1>
+            {systemIntake.status === 'LCID_ISSUED' && (
+              <Approved intake={systemIntake} />
+            )}
           </div>
           <div className="tablet:grid-col-1" />
-          <div className="tablet:grid-col-2" />
+          <div className="tablet:grid-col-2">
+            <div className="sidebar margin-top-4">
+              <h3 className="font-sans-sm">
+                Need help? Contact the Governance team
+              </h3>
+              <p>
+                <UswdsLink href="mailto:ITgovernance@cms.hhs.gov">
+                  ITgovernance@cms.hhs.gov
+                </UswdsLink>
+              </p>
+            </div>
+          </div>
         </div>
       </MainContent>
       <Footer />
