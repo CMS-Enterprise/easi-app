@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -87,6 +88,17 @@ const GovernanceTaskList = () => {
   })();
 
   const isRecompete = systemIntake.requestType === 'RECOMPETE';
+
+  // The meeting date is "scheduled" until the next day since there is no time
+  // associated with meeting dates.
+  const getMeetingDate = (date: DateTime | null): string => {
+    if (date) {
+      return date.plus({ day: 1 }).toMillis() > DateTime.local().toMillis()
+        ? `Scheduled for ${date.toLocaleString(DateTime.DATE_FULL)}`
+        : `Attended on ${date.toLocaleString(DateTime.DATE_FULL)}`;
+    }
+    return '';
+  };
 
   return (
     <PageWrapper className="governance-task-list">
@@ -181,6 +193,9 @@ const GovernanceTaskList = () => {
                       <span>{businessCaseStage}</span>
                     </p>
                   )}
+                  <span className="governance-task-list__meeting-date">
+                    {getMeetingDate(systemIntake.grtDate)}
+                  </span>
                 </TaskListDescription>
                 <BusinessCaseDraftCta systemIntake={systemIntake} />
               </TaskListItem>
@@ -218,6 +233,9 @@ const GovernanceTaskList = () => {
                     based on the Business Case and recommendations from the
                     Review Team.
                   </p>
+                  <span className="governance-task-list__meeting-date">
+                    {getMeetingDate(systemIntake.grtDate)}
+                  </span>
                 </TaskListDescription>
                 <AttendGrbMeetingCta intake={systemIntake} />
               </TaskListItem>
