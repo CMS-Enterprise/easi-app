@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
-import { useOktaAuth } from '@okta/okta-react';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
@@ -22,91 +21,126 @@ const RequestRepository = () => {
   type TableTypes = 'open' | 'closed';
   const [activeTable, setActiveTable] = useState<TableTypes>('open');
   const { t } = useTranslation('governanceReviewTeam');
-  const { authState } = useOktaAuth();
   const dispatch = useDispatch();
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
-  const columns: any = useMemo(
-    () => [
-      {
-        Header: t('intake:fields.submissionDate'),
-        accessor: 'submittedAt',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
-          }
-          return t('requestRepository.table.submissionDate.null');
-        }
-      },
-      {
-        Header: t('intake:fields.projectName'),
-        accessor: 'requestName',
-        Cell: ({ row, value }: any) => {
-          return (
-            <Link
-              to={`/governance-review-team/${row.original.id}/intake-request`}
-            >
-              {value}
-            </Link>
-          );
-        }
-      },
-      {
-        Header: t('intake:fields.component'),
-        accessor: 'requester.component'
-      },
-      {
-        Header: t('requestRepository.table.requestType'),
-        accessor: 'requestType'
-      },
-      {
-        Header: t('intake:fields.grtDate'),
-        accessor: 'grtDate',
-        Cell: ({ row, value }: any) => {
-          if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
-          }
 
-          // If date is null, return button that takes user to page to add date
-          return (
-            <UswdsLink
-              data-testid="add-grt-date-cta"
-              asCustom={Link}
-              to={`/governance-review-team/${row.original.id}/dates`}
-            >
-              {t('requestRepository.table.addDate')}
-            </UswdsLink>
-          );
-        }
-      },
-      {
-        Header: t('intake:fields.grbDate'),
-        accessor: 'grbDate',
-        Cell: ({ row, value }: any) => {
-          if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
-          }
-
-          // If date is null, return button that takes user to page to add date
-          return (
-            <UswdsLink
-              data-testid="add-grb-date-cta"
-              asCustom={Link}
-              to={`/governance-review-team/${row.original.id}/dates`}
-            >
-              {t('requestRepository.table.addDate')}
-            </UswdsLink>
-          );
-        }
-      },
-      {
-        Header: t('intake:fields.status'),
-        accessor: 'status'
+  const submissionDateColumn = {
+    Header: t('intake:fields.submissionDate'),
+    accessor: 'submittedAt',
+    Cell: ({ value }: any) => {
+      if (value) {
+        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
       }
-    ],
-    [t]
-  );
+      return t('requestRepository.table.submissionDate.null');
+    }
+  };
+
+  const requestNameColumn = {
+    Header: t('intake:fields.projectName'),
+    accessor: 'requestName',
+    Cell: ({ row, value }: any) => {
+      return (
+        <Link to={`/governance-review-team/${row.original.id}/intake-request`}>
+          {value}
+        </Link>
+      );
+    }
+  };
+
+  const requesterNameColumn = {
+    Header: t('intake:fields.requester'),
+    accessor: 'requester.name'
+  };
+
+  const requesterComponentColumn = {
+    Header: t('intake:fields.component'),
+    accessor: 'requester.component'
+  };
+
+  const requestTypeColumn = {
+    Header: t('requestRepository.table.requestType'),
+    accessor: 'requestType'
+  };
+
+  const fundingNumberColmun = {
+    Header: t('intake:fields.fundingNumber'),
+    accessor: 'fundingSource.fundingNumber'
+  };
+
+  const grtDateColumn = {
+    Header: t('intake:fields.grtDate'),
+    accessor: 'grtDate',
+    Cell: ({ row, value }: any) => {
+      if (value) {
+        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+      }
+
+      // If date is null, return button that takes user to page to add date
+      return (
+        <UswdsLink
+          data-testid="add-grt-date-cta"
+          asCustom={Link}
+          to={`/governance-review-team/${row.original.id}/dates`}
+        >
+          {t('requestRepository.table.addDate')}
+        </UswdsLink>
+      );
+    }
+  };
+
+  const grbDateColumn = {
+    Header: t('intake:fields.grbDate'),
+    accessor: 'grbDate',
+    Cell: ({ row, value }: any) => {
+      if (value) {
+        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+      }
+
+      // If date is null, return button that takes user to page to add date
+      return (
+        <UswdsLink
+          data-testid="add-grb-date-cta"
+          asCustom={Link}
+          to={`/governance-review-team/${row.original.id}/dates`}
+        >
+          {t('requestRepository.table.addDate')}
+        </UswdsLink>
+      );
+    }
+  };
+
+  const statusColumn = {
+    Header: t('intake:fields.status'),
+    accessor: 'status'
+  };
+
+  const columns: any = useMemo(() => {
+    if (activeTable === 'open') {
+      return [
+        submissionDateColumn,
+        requestNameColumn,
+        requesterComponentColumn,
+        requestTypeColumn,
+        statusColumn,
+        grtDateColumn,
+        grbDateColumn
+      ];
+    }
+    if (activeTable === 'closed') {
+      return [
+        submissionDateColumn,
+        requestNameColumn,
+        requesterNameColumn,
+        requesterComponentColumn,
+        fundingNumberColmun,
+        statusColumn
+      ];
+    }
+    return [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTable, t]);
 
   const data = useMemo(() => {
     return systemIntakes.map(intake => {
@@ -132,10 +166,8 @@ const RequestRepository = () => {
   }, [systemIntakes, t]);
 
   useEffect(() => {
-    if (authState.isAuthenticated) {
-      dispatch(fetchSystemIntakes({ status: activeTable }));
-    }
-  }, [dispatch, authState.isAuthenticated, activeTable]);
+    dispatch(fetchSystemIntakes({ status: activeTable }));
+  }, [dispatch, activeTable]);
 
   const {
     getTableProps,
