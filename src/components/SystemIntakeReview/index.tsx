@@ -50,6 +50,7 @@ export const SystemIntakeReview = ({
     }
     return yesNoMap[isExpectingIncrease];
   };
+
   return (
     <div>
       <DescriptionList title="System Request">
