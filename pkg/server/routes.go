@@ -438,6 +438,51 @@ func (s *Server) routes(
 						store.UpdateBusinessCase,
 					),
 				),
+				models.ActionTypeSENDEMAIL: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusINTAKESUBMITTED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeGUIDERECEIVEDCLOSE: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNOGOVERNANCE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeNOTRESPONDINGCLOSE: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNOGOVERNANCE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
 			},
 		),
 		services.NewFetchActionsByRequestID(
@@ -493,6 +538,11 @@ func (s *Server) routes(
 			services.NewAuthorizeRequireGRTJobCode(),
 			s3Client,
 		),
+		services.NewCreateFileDownloadURL(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			s3Client,
+		),
 		services.NewCreateUploadedFile(
 			serviceConfig,
 			services.NewAuthorizeRequireGRTJobCode(),
@@ -504,10 +554,13 @@ func (s *Server) routes(
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
 
+	api.HandleFunc("/file_uploads/upload_url", fileUploadHandler.GenerateUploadPresignedURL).
+		Methods("POST")
+
 	api.HandleFunc("/file_uploads/{file_id}", fileUploadHandler.FetchFileMetadata).
 		Methods("GET")
 
-	api.HandleFunc("/file_uploads/presignedurl", fileUploadHandler.GeneratePresignedURL).
+	api.HandleFunc("/file_uploads/{file_id}/download_url", fileUploadHandler.GenerateDownloadPresignedURL).
 		Methods("POST")
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
