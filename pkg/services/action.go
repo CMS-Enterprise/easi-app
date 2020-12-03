@@ -194,9 +194,11 @@ func NewSubmitBusinessCase(
 			businessCase.InitialSubmittedAt = &updatedAt
 		}
 		businessCase.LastSubmittedAt = &updatedAt
-		err = validateForSubmit(businessCase)
-		if err != nil {
-			return err
+		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED {
+			err = validateForSubmit(businessCase)
+			if err != nil {
+				return err
+			}
 		}
 
 		err = saveAction(ctx, action)
