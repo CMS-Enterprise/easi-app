@@ -128,7 +128,10 @@ const governanceReviewTeam = {
       SUBMIT_BIZ_CASE: 'Submitted a business case',
       CREATE_BIZ_CASE: 'Created a new business case',
       SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
-      REJECT: 'Rejected the request'
+      REJECT: 'Rejected the request',
+      SEND_EMAIL: 'Email sent to requester',
+      NOT_RESPONDING_CLOSE: 'Requester was not responding. Closed the request.',
+      GUIDE_RECEIVED_CLOSE: 'Guide received. Closed the request.'
     },
     showEmail: 'Show Email',
     hideEmail: 'Hide Email'
