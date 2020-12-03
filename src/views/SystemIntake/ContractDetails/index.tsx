@@ -664,7 +664,7 @@ const ContractDetails = ({
                       checked={values.contract.hasContract === 'NOT_STARTED'}
                       id="IntakeForm-ContractNotStarted"
                       name="contract.status"
-                      label="I haven't started acquisiting planning yet"
+                      label="I haven't started acquisition planning yet"
                       value="NOT_STARTED"
                       onChange={() => {
                         setFieldValue('contract.hasContract', 'NOT_STARTED');
