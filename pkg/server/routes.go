@@ -574,7 +574,9 @@ func (s *Server) routes(
 		base,
 		services.NewBackfill(
 			serviceConfig,
+			store.FetchSystemIntakeByID,
 			store.CreateSystemIntake,
+			store.UpdateSystemIntake,
 			store.CreateNote,
 			services.NewAuthorizeHasEASiRole(),
 		),
