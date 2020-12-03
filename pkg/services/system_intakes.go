@@ -254,6 +254,8 @@ func NewUpdateLifecycleFields(
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendReviewEmail func(emailText string, recipientAddress string) error,
 	generateLCID func(context.Context) (string, error),
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
@@ -280,6 +282,20 @@ func NewUpdateLifecycleFields(
 				Err:        errors.New("lifecycle id already exists"),
 				Resource:   models.SystemIntake{},
 				ResourceID: intake.ID.String(),
+			}
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
 			}
 		}
 
@@ -315,7 +331,14 @@ func NewUpdateLifecycleFields(
 				Operation: apperrors.QuerySave,
 			}
 		}
+
+		err = sendReviewEmail(action.Feedback.String, requesterInfo.Email)
+		if err != nil {
+			return nil, err
+		}
+
 		return updated, nil
+
 	}
 }
 

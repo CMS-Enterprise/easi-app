@@ -455,6 +455,8 @@ func (s *Server) routes(
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
 			saveAction,
+			cedarLDAPClient.FetchUserInfo,
+			emailClient.SendSystemIntakeReviewEmail,
 			store.GenerateLifecycleID,
 		),
 	)
