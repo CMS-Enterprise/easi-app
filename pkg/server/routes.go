@@ -326,21 +326,6 @@ func (s *Server) routes(
 						store.UpdateBusinessCase,
 					),
 				),
-				models.ActionTypeISSUELCID: services.NewTakeActionUpdateStatus(
-					serviceConfig,
-					models.SystemIntakeStatusLCIDISSUED,
-					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
-					saveAction,
-					cedarLDAPClient.FetchUserInfo,
-					emailClient.SendSystemIntakeReviewEmail,
-					true,
-					services.NewCloseBusinessCase(
-						serviceConfig,
-						store.FetchBusinessCaseByID,
-						store.UpdateBusinessCase,
-					),
-				),
 				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
 					services.NewAuthorizeUserIsIntakeRequester(),
