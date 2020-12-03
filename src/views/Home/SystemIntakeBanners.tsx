@@ -11,21 +11,14 @@ import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 const SystemIntakeBanners = () => {
-  const { authState } = useOktaAuth();
-  const dispatch = useDispatch();
-  const systemIntakes = useSelector(
-    (state: AppState) => state.systemIntakes.systemIntakes
-  );
   const flags = useFlags();
+  const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('intake');
-
-  useEffect(() => {
-    if (authState.isAuthenticated) {
-      dispatch(fetchSystemIntakes());
-    }
-  }, [dispatch, authState.isAuthenticated]);
-
+  const { authState } = useOktaAuth();
+  const intakes = useSelector(
+    (state: AppState) => state.systemIntakes.systemIntakes
+  );
   const statusMap: { [key: string]: { title: string; description: string } } = {
     INTAKE_DRAFT: {
       title: t('banner.title.intakeIncomplete'),
@@ -89,9 +82,15 @@ const SystemIntakeBanners = () => {
     }
   };
 
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      dispatch(fetchSystemIntakes());
+    }
+  }, [dispatch, authState.isAuthenticated]);
+
   return (
     <>
-      {systemIntakes.map((intake: SystemIntakeForm) => {
+      {intakes.map((intake: SystemIntakeForm) => {
         let rootPath = '';
         if (intake.requestType === 'SHUTDOWN') {
           rootPath = '/system';
