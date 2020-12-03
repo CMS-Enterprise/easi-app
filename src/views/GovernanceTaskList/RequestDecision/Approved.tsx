@@ -6,8 +6,6 @@ import { DateTime } from 'luxon';
 
 import { SystemIntakeForm } from 'types/systemIntake';
 
-import './index.scss';
-
 type ApprovedProps = {
   intake: SystemIntakeForm;
 };
