@@ -144,22 +144,22 @@ const RequestRepository = () => {
       sortTypes: {
         // TODO: This may not work if another column is added that is not a string or date.
         // Sort method changes depending on if item is a string or object
-        alphanumeric: (row1, row2, columnName) => {
-          const rowOne = row1.values[columnName];
-          const rowTwo = row2.values[columnName];
+        alphanumeric: (rowOne, rowTwo, columnName) => {
+          const rowOneElem = rowOne.values[columnName];
+          const rowTwoElem = rowTwo.values[columnName];
 
           // If item is a string, enforce capitalization (temporarily) and then compare
-          if (typeof rowOne === 'string') {
-            return rowOne.toUpperCase() > rowTwo.toUpperCase() ? 1 : -1;
+          if (typeof rowOneElem === 'string') {
+            return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
           }
 
           // If item is a DateTime, convert to Number and compare
-          if (rowOne instanceof DateTime) {
-            return Number(rowOne) > Number(rowTwo) ? 1 : -1;
+          if (rowOneElem instanceof DateTime) {
+            return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
           }
 
           // If neither string nor DateTime, return bare comparison
-          return rowOne > rowTwo ? 1 : -1;
+          return rowOneElem > rowTwoElem ? 1 : -1;
         }
       },
       data,
