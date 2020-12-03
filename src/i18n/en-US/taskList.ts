@@ -9,8 +9,10 @@ const taskList = {
   },
   decision: {
     bizCaseApproved: 'Your business case has been approved.',
+    bizCaseRejected: 'Your business case has been rejected.',
     lcid: 'Project Lifecycle ID',
     lcidExpiration: 'This ID expires on {{date}}',
+    reasons: 'Reasons',
     nextSteps: 'Next steps',
     completeNextSteps:
       'Finish these next steps to complete the governance review process.'
