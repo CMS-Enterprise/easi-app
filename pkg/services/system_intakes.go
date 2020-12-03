@@ -281,19 +281,19 @@ func NewUpdateLifecycleFields(
 			return nil, &apperrors.ResourceConflictError{
 				Err:        errors.New("lifecycle id already exists"),
 				Resource:   models.SystemIntake{},
-				ResourceID: intake.ID.String(),
+				ResourceID: existing.ID.String(),
 			}
 		}
 
-		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
 		if err != nil {
 			return nil, err
 		}
 		if requesterInfo == nil || requesterInfo.Email == "" {
 			return nil, &apperrors.ExternalAPIError{
 				Err:       errors.New("requester info fetch was not successful when submitting an action"),
-				Model:     intake,
-				ModelID:   intake.ID.String(),
+				Model:     existing,
+				ModelID:   existing.ID.String(),
 				Operation: apperrors.Fetch,
 				Source:    "CEDAR LDAP",
 			}
@@ -323,6 +323,7 @@ func NewUpdateLifecycleFields(
 			return nil, err
 		}
 
+		existing.Status = models.SystemIntakeStatusLCIDISSUED
 		updated, err := update(ctx, existing)
 		if err != nil {
 			return nil, &apperrors.QueryError{
