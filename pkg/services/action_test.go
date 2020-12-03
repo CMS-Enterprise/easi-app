@@ -71,18 +71,10 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		return intake, nil
 	}
 
-	var createdAction models.Action
-	createAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
-		createdAction = *action
-		return action, nil
+	saveAction := func(ctx context.Context, action *models.Action) error {
+		return nil
 	}
-	fetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
-		return &models.UserInfo{
-			CommonName: "Name",
-			Email:      "name@site.com",
-			EuaUserID:  testhelpers.RandomEUAID(),
-		}, nil
-	}
+
 	submit := func(c context.Context, intake *models.SystemIntake) (string, error) {
 		return "ALFABET-ID", nil
 	}
@@ -95,7 +87,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 	s.Run("golden path submit intake", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, saveAction, sendSubmitEmail)
 		s.Equal(0, submitEmailCount)
 
 		err := submitSystemIntake(ctx, &intake, &action)
@@ -103,7 +95,6 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		s.NoError(err)
 		s.Equal(1, submitEmailCount)
 		s.Equal("ALFABET-ID", intake.AlfabetID.String)
-		s.Equal("Name", createdAction.ActorName)
 
 		submitEmailCount = 0
 	})
@@ -115,7 +106,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, authorizationError
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, failAuthorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, failAuthorize, update, submit, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.Equal(authorizationError, err)
@@ -127,44 +118,19 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, unauthorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, unauthorize, update, submit, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
 	})
 
-	s.Run("returns error if fails to fetch user info", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
-		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		fetchUserInfoError := errors.New("error")
-		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
-			return nil, fetchUserInfoError
-		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, failFetchUserInfo, sendSubmitEmail)
-		err := submitSystemIntake(ctx, &intake, &action)
-
-		s.Equal(fetchUserInfoError, err)
-	})
-
-	s.Run("returns error if fetches bad user info", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
-		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
-			return &models.UserInfo{}, nil
-		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, failFetchUserInfo, sendSubmitEmail)
-		err := submitSystemIntake(ctx, &intake, &action)
-
-		s.IsType(&apperrors.ExternalAPIError{}, err)
-	})
-
 	s.Run("returns error if fails to save action", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		failCreateAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
-			return nil, errors.New("error")
+		failCreateAction := func(ctx context.Context, action *models.Action) error {
+			return errors.New("error")
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, failCreateAction, fetchUserInfo, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, failCreateAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -180,7 +146,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 				Model:   intake,
 			}
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failValidationSubmit, createAction, fetchUserInfo, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failValidationSubmit, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.ValidationError{}, err)
@@ -199,7 +165,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 				Source:    "CEDAR",
 			}
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failValidationSubmit, createAction, fetchUserInfo, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, failValidationSubmit, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.ExternalAPIError{}, err)
@@ -212,7 +178,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 			AlfabetID: null.StringFrom("394-141-0"),
 		}
 		action := models.Action{ActionType: models.ActionTypeSUBMITINTAKE}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, createAction, fetchUserInfo, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, update, submit, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &alreadySubmittedIntake, &action)
 
 		s.IsType(&apperrors.ResourceConflictError{}, err)
@@ -225,7 +191,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		failUpdate := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("update error")
 		}
-		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, failUpdate, submit, createAction, fetchUserInfo, sendSubmitEmail)
+		submitSystemIntake := NewSubmitSystemIntake(serviceConfig, authorize, failUpdate, submit, saveAction, sendSubmitEmail)
 		err := submitSystemIntake(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -254,17 +220,8 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 		return nil
 	}
 
-	var createdAction models.Action
-	createAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
-		createdAction = *action
-		return action, nil
-	}
-	fetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
-		return &models.UserInfo{
-			CommonName: "Name",
-			Email:      "name@site.com",
-			EuaUserID:  testhelpers.RandomEUAID(),
-		}, nil
+	saveAction := func(ctx context.Context, action *models.Action) error {
+		return nil
 	}
 	submitEmailCount := 0
 	sendSubmitEmail := func(requester string, intakeID uuid.UUID) error {
@@ -276,14 +233,13 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, createAction, fetchUserInfo, updateIntake, updateBusinessCase, sendSubmitEmail, status)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		s.Equal(0, submitEmailCount)
 
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.NoError(err)
 		s.Equal(1, submitEmailCount)
-		s.Equal("Name", createdAction.ActorName)
 
 		submitEmailCount = 0
 	})
@@ -292,14 +248,13 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEFINALSUBMITTED
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, createAction, fetchUserInfo, updateIntake, updateBusinessCase, sendSubmitEmail, status)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		s.Equal(0, submitEmailCount)
 
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.NoError(err)
 		s.Equal(1, submitEmailCount)
-		s.Equal("Name", createdAction.ActorName)
 		s.Equal(intake.Status, status)
 
 		submitEmailCount = 0
@@ -313,7 +268,7 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, authorizationError
 		}
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, failAuthorize, fetchOpenBusinessCase, validateForSubmit, createAction, fetchUserInfo, updateIntake, updateBusinessCase, sendSubmitEmail, status)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, failAuthorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.Equal(authorizationError, err)
@@ -326,47 +281,20 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, unauthorize, fetchOpenBusinessCase, validateForSubmit, createAction, fetchUserInfo, updateIntake, updateBusinessCase, sendSubmitEmail, status)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, unauthorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
-	})
-
-	s.Run("returns error if fails to fetch user info", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
-		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
-		fetchUserInfoError := errors.New("error")
-		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
-			return nil, fetchUserInfoError
-		}
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, createAction, failFetchUserInfo, updateIntake, updateBusinessCase, sendSubmitEmail, status)
-		err := submitBusinessCase(ctx, &intake, &action)
-
-		s.Equal(fetchUserInfoError, err)
-	})
-
-	s.Run("returns error if fetches bad user info", func() {
-		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
-		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
-		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
-		failFetchUserInfo := func(_ context.Context, EUAUserID string) (*models.UserInfo, error) {
-			return &models.UserInfo{}, nil
-		}
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, createAction, failFetchUserInfo, updateIntake, updateBusinessCase, sendSubmitEmail, status)
-		err := submitBusinessCase(ctx, &intake, &action)
-
-		s.IsType(&apperrors.ExternalAPIError{}, err)
 	})
 
 	s.Run("returns error if fails to save action", func() {
 		intake := models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT}
 		action := models.Action{ActionType: models.ActionTypeSUBMITBIZCASE}
 		status := models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED
-		failCreateAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
-			return nil, errors.New("error")
+		failCreateAction := func(ctx context.Context, action *models.Action) error {
+			return errors.New("error")
 		}
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, failCreateAction, fetchUserInfo, updateIntake, updateBusinessCase, sendSubmitEmail, status)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, failCreateAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -383,7 +311,7 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 				Model:   businessCase,
 			}
 		}
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, failValidation, createAction, fetchUserInfo, updateIntake, updateBusinessCase, sendSubmitEmail, status)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, failValidation, saveAction, updateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.ValidationError{}, err)
@@ -397,7 +325,7 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 		failUpdateIntake := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("update error")
 		}
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, createAction, fetchUserInfo, failUpdateIntake, updateBusinessCase, sendSubmitEmail, status)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, saveAction, failUpdateIntake, updateBusinessCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -410,7 +338,7 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 		failUpdateBizCase := func(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 			return &models.BusinessCase{}, errors.New("update error")
 		}
-		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, createAction, fetchUserInfo, updateIntake, failUpdateBizCase, sendSubmitEmail, status)
+		submitBusinessCase := NewSubmitBusinessCase(serviceConfig, authorize, fetchOpenBusinessCase, validateForSubmit, saveAction, updateIntake, failUpdateBizCase, sendSubmitEmail, status)
 		err := submitBusinessCase(ctx, &intake, &action)
 
 		s.IsType(&apperrors.QueryError{}, err)
@@ -450,10 +378,8 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	}
 	serviceConfig := NewConfig(logger, nil)
 	serviceConfig.clock = clock.NewMock()
-	var createdAction models.Action
-	createAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
-		createdAction = *action
-		return action, nil
+	saveAction := func(ctx context.Context, action *models.Action) error {
+		return nil
 	}
 	closeBusinessCaseCount := 0
 	closeBusinessCase := func(ctx context.Context, id uuid.UUID) error {
@@ -468,7 +394,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
 			authorize,
-			createAction,
+			saveAction,
 			fetchUserInfo,
 			sendReviewEmail,
 			true,
@@ -479,7 +405,6 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 		err := reviewSystemIntake(ctx, intake, action)
 
 		s.NoError(err)
-		s.Equal("NAME", createdAction.ActorName)
 		s.Equal(1, reviewEmailCount)
 		s.Equal(1, closeBusinessCaseCount)
 		s.Equal("feedback", feedbackForEmailText)
@@ -496,7 +421,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
 			failAuthorize,
-			createAction,
+			saveAction,
 			fetchUserInfo,
 			sendReviewEmail,
 			false,
@@ -520,7 +445,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
 			notOKAuthorize,
-			createAction,
+			saveAction,
 			fetchUserInfo,
 			sendReviewEmail,
 			false,
@@ -535,8 +460,8 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 
 	s.Run("returns error if fails to save action", func() {
 		ctx := context.Background()
-		failCreateAction := func(ctx context.Context, action *models.Action) (*models.Action, error) {
-			return nil, errors.New("error")
+		failCreateAction := func(ctx context.Context, action *models.Action) error {
+			return errors.New("error")
 		}
 		reviewSystemIntake := NewTakeActionUpdateStatus(
 			serviceConfig,
@@ -573,7 +498,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
 			authorize,
-			createAction,
+			saveAction,
 			failFetchUserInfo,
 			sendReviewEmail,
 			false,
@@ -597,7 +522,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
 			authorize,
-			createAction,
+			saveAction,
 			failFetchUserInfo,
 			sendReviewEmail,
 			false,
@@ -621,7 +546,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
 			authorize,
-			createAction,
+			saveAction,
 			fetchUserInfo,
 			sendReviewEmail,
 			true,
@@ -648,7 +573,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 			models.SystemIntakeStatusNOTITREQUEST,
 			save,
 			authorize,
-			createAction,
+			saveAction,
 			fetchUserInfo,
 			failSendReviewEmail,
 			false,
@@ -722,4 +647,60 @@ func (s ServicesTestSuite) TestFetchActions() {
 		})
 	}
 
+}
+
+func (s ServicesTestSuite) TestNewSaveAction() {
+	createAction := func(_ context.Context, action *models.Action) (*models.Action, error) {
+		return action, nil
+	}
+
+	failCreateAction := func(_ context.Context, action *models.Action) (*models.Action, error) {
+		return nil, errors.New("failed createAction")
+	}
+
+	fetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			CommonName: "name",
+			Email:      "email",
+			EuaUserID:  "ABCD",
+		}, nil
+	}
+
+	failFetchUserInfo := func(context.Context, string) (*models.UserInfo, error) {
+		return nil, errors.New("failed fetchUserInfo")
+	}
+
+	tests := map[string]struct {
+		fn          func(context.Context, *models.Action) error
+		shouldError bool
+	}{
+		"happy path": {
+			fn:          NewSaveAction(createAction, fetchUserInfo),
+			shouldError: false,
+		},
+		"fails to fetch user info from CEDAR": {
+			fn:          NewSaveAction(failCreateAction, fetchUserInfo),
+			shouldError: true,
+		},
+		"fails to save action": {
+			fn:          NewSaveAction(createAction, failFetchUserInfo),
+			shouldError: true,
+		},
+	}
+
+	for name, tc := range tests {
+		s.Run(name, func() {
+			intakeID := uuid.New()
+			err := tc.fn(context.Background(), &models.Action{
+				IntakeID:   &intakeID,
+				ActionType: models.ActionTypeSUBMITINTAKE,
+				Feedback:   null.String{},
+			})
+			if tc.shouldError {
+				s.Error(err)
+			} else {
+				s.NoError(err)
+			}
+		})
+	}
 }
