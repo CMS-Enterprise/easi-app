@@ -253,9 +253,10 @@ func NewUpdateLifecycleFields(
 	authorize func(context.Context) (bool, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	saveAction func(context.Context, *models.Action) error,
 	generateLCID func(context.Context) (string, error),
-) func(context.Context, *models.SystemIntake) (*models.SystemIntake, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
 			return nil, &apperrors.QueryError{
@@ -298,6 +299,12 @@ func NewUpdateLifecycleFields(
 				return nil, gErr
 			}
 			existing.LifecycleID = null.StringFrom(lcid)
+		}
+
+		action.IntakeID = &existing.ID
+		action.ActionType = models.ActionTypeISSUELCID
+		if err = saveAction(ctx, action); err != nil {
+			return nil, err
 		}
 
 		updated, err := update(ctx, existing)

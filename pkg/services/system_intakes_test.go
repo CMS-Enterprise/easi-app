@@ -363,6 +363,9 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		DecisionNextSteps:  nextSteps,
 		LifecycleScope:     scope,
 	}
+	action := &models.Action{
+		IntakeID: &input.ID,
+	}
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
 	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -383,12 +386,15 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		}
 		return i, nil
 	}
+	fnSaveAction := func(c context.Context, action *models.Action) error {
+		return nil
+	}
 	fnGenerate := func(context.Context) (string, error) { return "993659", nil }
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerate)
+	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
-		intake, err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input, action)
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -400,7 +406,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	input.LifecycleID = null.StringFrom("")
 
 	s.Run("happy path generates lcid", func() {
-		intake, err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input, action)
 		s.NoError(err)
 		s.NotEqual(intake.LifecycleID, "")
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -417,32 +423,38 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		return nil, errors.New("update error")
 	}
+	fnSaveActionErr := func(c context.Context, a *models.Action) error {
+		return errors.New("action error")
+	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
+		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnGenerate),
 		},
 		"error path auth": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnGenerate),
 		},
 		"error path auth fail": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnGenerate),
 		},
 		"error path generate": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerateErr),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnGenerateErr),
+		},
+		"error path save action": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnGenerate),
 		},
 		"error path update": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnGenerate),
 		},
 	}
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input)
+			_, err := tc.fn(context.Background(), input, action)
 			s.Error(err)
 		})
 	}

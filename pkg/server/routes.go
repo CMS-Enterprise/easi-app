@@ -454,6 +454,7 @@ func (s *Server) routes(
 			services.NewAuthorizeRequireGRTJobCode(),
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
+			saveAction,
 			store.GenerateLifecycleID,
 		),
 	)
