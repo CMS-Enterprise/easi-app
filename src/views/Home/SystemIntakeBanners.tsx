@@ -120,7 +120,6 @@ const SystemIntakeBanners = () => {
               }
               requestType={intake.requestType}
               data-intakeid={intake.id}
-              buttonUnstyled={intake.status === 'INTAKE_SUBMITTED'}
             />
           );
         }
