@@ -277,11 +277,7 @@ func NewTakeActionUpdateStatus(
 
 		err = saveAction(ctx, action)
 		if err != nil {
-			return &apperrors.QueryError{
-				Err:       err,
-				Model:     action,
-				Operation: apperrors.QueryPost,
-			}
+			return err
 		}
 
 		updatedTime := config.clock.Now()
