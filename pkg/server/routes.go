@@ -93,6 +93,10 @@ func (s *Server) routes(
 
 	// set up S3 client
 	s3Config := s.NewS3Config()
+	if s.environment.Local() {
+		s3Config.IsLocal = true
+	}
+
 	s3Client := upload.NewS3Client(s3Config)
 
 	// set up FlagClient

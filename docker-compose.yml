@@ -11,3 +11,14 @@ services:
       - FLYWAY_URL=jdbc:postgresql://db/postgres
     depends_on:
       - db
+  minio:
+    restart: always
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+    volumes:
+      - s3-data:/data
+    entrypoint: minio server /data
+
+volumes:
+  s3-data:
