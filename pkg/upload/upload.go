@@ -1,21 +1,26 @@
 package upload
 
 import (
+	"os"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+
 	"github.com/google/uuid"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // Config holds the configuration to interact with s3
 type Config struct {
-	Bucket string
-	Region string
+	Bucket  string
+	Region  string
+	IsLocal bool
 }
 
 // S3Client is an EASi s3 client wrapper
@@ -26,9 +31,21 @@ type S3Client struct {
 
 // NewS3Client creates a new s3 service client
 func NewS3Client(config Config) S3Client {
-	s3Session := session.Must(session.NewSession(&aws.Config{
-		Region: aws.String(config.Region)},
-	))
+	awsConfig := &aws.Config{
+		Region: aws.String(config.Region),
+	}
+
+	// if we are in a local dev environment we use Minio for s3
+	if config.IsLocal {
+		awsConfig.Endpoint = aws.String("http://localhost:9000")
+		awsConfig.Credentials = credentials.NewStaticCredentials(
+			os.Getenv(appconfig.LocalMinioS3AccessKey),
+			os.Getenv(appconfig.LocalMinioS3SecretKey),
+			"")
+	}
+
+	s3Session := session.Must(session.NewSession(awsConfig))
+
 	// create the s3 service client
 	client := s3.New(s3Session)
 
