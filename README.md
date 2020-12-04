@@ -249,7 +249,7 @@ environments.
 
 | File | Description |
 | ---- | ----------- |
-| docker-compose.yml | Base configuration for `db` and `db_migrate` service |
+| docker-compose.yml | Base configuration for `db`, `db_migrate`, and `minio` service |
 | docker-compose.override.yml | Additional configuration for running `db` and `db_migrate` locally. Intended to simplify the use case where someone uses docker-compose only to run `db` and `db_migrate` |
 | docker-compose.circleci.yml | Additional configuration for running all services in CircleCI |
 | docker-compose.local.yml | Additional configuration for running all services locally |
@@ -349,6 +349,23 @@ air
 
 It's not currently set up to run with docker.
 You can edit the config [here](.air.conf)
+
+### Setup: Minio
+
+[MinIO](https://min.io/) is an S3 compatible object store.
+It ships as a Docker container and accepts normal AWS S3
+API requests. This allows us to test file uploading functionality
+in our local development environments without needing to interact
+with CMS AWS accounts.
+
+The container is configured as part of our `docker-compose.yml` and
+should be running when you `docker-compose up`. You'll need to set
+two environment variables locally in your `.envrc.local` file:
+
+```bash
+export MINIO_ACCESS_KEY='minioadmin'
+export MINIO_SECRET_KEY='minioadmin'
+```
 
 ## Build
 
