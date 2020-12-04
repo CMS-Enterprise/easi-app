@@ -30,6 +30,20 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.Equal(expectedEmail, sender.body)
 	})
 
+	s.Run("successful call has the right content with no next steps", func() {
+		client, err := NewClient(s.config, &sender)
+		s.NoError(err)
+
+		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: scope</p>" +
+			"\n\n<p>feedback</p>"
+		err = client.SendIssueLCIDEmail(recipient, lcid, &expiresAt, scope, "", feedback)
+
+		s.NoError(err)
+		s.Equal(recipient, sender.toAddress)
+		s.Equal("Your request has been approved", sender.subject)
+		s.Equal(expectedEmail, sender.body)
+	})
+
 	s.Run("if the template is nil, we get the error from it", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
