@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -255,7 +256,7 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(emailText string, recipientAddress string) error,
+	sendIssueLCIDEmail func(string, string, *time.Time, string, string, string) error,
 	generateLCID func(context.Context) (string, error),
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
@@ -333,7 +334,13 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		err = sendReviewEmail(action.Feedback.String, requesterInfo.Email)
+		err = sendIssueLCIDEmail(
+			requesterInfo.Email,
+			updated.LifecycleID.String,
+			updated.LifecycleExpiresAt,
+			updated.LifecycleScope.String,
+			updated.LifecycleNextSteps.String,
+			action.Feedback.String)
 		if err != nil {
 			return nil, err
 		}

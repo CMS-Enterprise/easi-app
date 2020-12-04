@@ -400,14 +400,14 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 	reviewEmailCount := 0
 	feedbackForEmailText := ""
-	fnSendReviewEmail := func(emailText string, recipientAddress string) error {
+	fnSendLCIDEmail := func(_ string, _ string, _ *time.Time, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
 		reviewEmailCount++
 		return nil
 	}
 	fnGenerate := func(context.Context) (string, error) { return "123456", nil }
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate)
+	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
 		intake, err := happy(context.Background(), input, action)
@@ -447,7 +447,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendReviewEmailErr := func(emailText string, recipientAddress string) error {
+	fnSendLCIDEmailErr := func(_ string, _ string, _ *time.Time, _ string, _ string, _ string) error {
 		return errors.New("send email error")
 	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
@@ -457,28 +457,28 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path auth": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path auth fail": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path generate": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerateErr),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerateErr),
 		},
 		"error path save action": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path fetch user info": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path send email": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmailErr, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnGenerate),
 		},
 		"error path update": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 	}
 
