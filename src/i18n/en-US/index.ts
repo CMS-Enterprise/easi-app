@@ -14,6 +14,7 @@ import header from './header';
 import home from './home';
 import intake from './intake';
 import privacyPolicy from './privacyPolicy';
+import survey from './survey';
 import termsAndConditions from './termsAndConditions';
 
 const enUS = {
@@ -32,7 +33,8 @@ const enUS = {
   intake,
   privacyPolicy,
   taskList,
-  termsAndConditions
+  termsAndConditions,
+  survey
 };
 
 export default enUS;
