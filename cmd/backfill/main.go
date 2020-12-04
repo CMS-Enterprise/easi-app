@@ -179,6 +179,7 @@ func convert(row []string) (*entry, error) {
 	// labelled "Request Date"
 	if dt, err := convertDate(row[colDate]); err == nil {
 		data.Intake.CreatedAt = dt
+		data.Intake.SubmittedAt = dt
 	} else {
 		return nil, err
 	}
@@ -186,7 +187,7 @@ func convert(row []string) (*entry, error) {
 	// we now have a place for Acronym
 	data.Intake.ProjectAcronym = null.StringFrom(row[colAcronym])
 	data.Intake.ProjectName = null.StringFrom(row[colName])
-	data.Intake.Component = null.StringFrom(row[colComponent])
+	data.Intake.BusinessOwnerComponent = null.StringFrom(row[colComponent])
 
 	if row[colGRTDate] != "" {
 		if dt, err := convertDate(row[colGRTDate]); err == nil {
@@ -253,7 +254,7 @@ func convert(row []string) (*entry, error) {
 
 	if row[colPeriod] != "" {
 		data.Notes = append(data.Notes, models.Note{
-			Content:    null.StringFrom(fmt.Sprintf("Period of Performance: %s", row[colGRTNotes])),
+			Content:    null.StringFrom(fmt.Sprintf("Period of Performance: %s", row[colPeriod])),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}
