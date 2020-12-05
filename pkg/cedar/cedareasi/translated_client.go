@@ -22,6 +22,7 @@ import (
 type TranslatedClient struct {
 	client        *apiclient.EASiCore
 	apiAuthHeader runtime.ClientAuthInfoWriter
+	emitToCedar   func(context.Context) bool
 }
 
 // Client is an interface to ease testing dependencies
@@ -41,7 +42,14 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	// Set auth header
 	apiKeyHeaderAuth := httptransport.APIKeyAuth("x-Gateway-APIKey", "header", cedarAPIKey)
 
-	return TranslatedClient{client, apiKeyHeaderAuth}
+	fn := func(context.Context) bool {
+		// TODO: this is the quick & dirty way of stopping us from submitting to CEDAR,
+		// ideally we'd want to use LaunchDarkly to flag this behavior in the future
+		// see EASI-1025
+		return false
+	}
+
+	return TranslatedClient{client, apiKeyHeaderAuth, fn}
 }
 
 // FetchSystems fetches a system list from CEDAR
@@ -216,11 +224,23 @@ func (c TranslatedClient) ValidateAndSubmitSystemIntake(ctx context.Context, int
 	if err != nil {
 		return "", err
 	}
-	// TODO: this is the quick & dirty way of stopping us from submitting to CEDAR,
-	// ideally we'd want to use LaunchDarkly to flag this behavior in the future
-	// see EASI-1025
-	if true {
+	// we may not be sending SystemIntakes to CEDAR currently
+	if !c.emitToCedar(ctx) {
 		return "", nil
 	}
-	return submitSystemIntake(ctx, intake, c)
+	alfabetID, err := submitSystemIntake(ctx, intake, c)
+	if err != nil {
+		return "", err
+	}
+	// if we are submitting to CEDAR, we expect a non-empty value back
+	if alfabetID == "" {
+		return "", &apperrors.ExternalAPIError{
+			Err:       errors.New("submission was not successful"),
+			Model:     intake,
+			ModelID:   intake.ID.String(),
+			Operation: apperrors.Submit,
+			Source:    "CEDAR EASi",
+		}
+	}
+	return alfabetID, nil
 }
