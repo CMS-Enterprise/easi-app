@@ -357,15 +357,14 @@ func NewUpdateRejectionFields(
 	authorize func(context.Context) (bool, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-) func(context.Context, *models.SystemIntake) (*models.SystemIntake, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	saveAction func(context.Context, *models.Action) error,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendReviewEmail func(emailText string, recipientAddress string) error,
+) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
-			return nil, &apperrors.QueryError{
-				Err:       err,
-				Operation: apperrors.QueryFetch,
-				Model:     existing,
-			}
+			return nil, err
 		}
 
 		ok, err := authorize(ctx)
@@ -376,21 +375,43 @@ func NewUpdateRejectionFields(
 			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
+		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
+				Model:     existing,
+				ModelID:   existing.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		action.IntakeID = &existing.ID
+		action.ActionType = models.ActionTypeREJECT
+		if err = saveAction(ctx, action); err != nil {
+			return nil, err
+		}
+
 		// we only want to bring over the fields specifically
 		// dealing with Rejection information
 		updatedTime := config.clock.Now()
 		existing.UpdatedAt = &updatedTime
 		existing.RejectionReason = intake.RejectionReason
 		existing.DecisionNextSteps = intake.DecisionNextSteps
-
+		existing.Status = models.SystemIntakeStatusNOTAPPROVED
 		updated, err := update(ctx, existing)
 		if err != nil {
-			return nil, &apperrors.QueryError{
-				Err:       err,
-				Model:     intake,
-				Operation: apperrors.QuerySave,
-			}
+			return nil, err
 		}
+
+		err = sendReviewEmail(action.Feedback.String, requesterInfo.Email)
+		if err != nil {
+			return nil, err
+		}
+
 		return updated, nil
 	}
 }
