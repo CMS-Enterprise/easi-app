@@ -181,7 +181,11 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			zap.String("id", intake.ID.String()),
 			zap.String("user", intake.EUAUserID.ValueOrZero()),
 		)
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     intake,
+			Operation: apperrors.QueryUpdate,
+		}
 	}
 	// the SystemIntake may have been updated to Archived, so we want to use
 	// the un-filtered fetch to return the saved object
@@ -212,7 +216,11 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
 		}
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     id,
+			Operation: apperrors.QueryFetch,
+		}
 	}
 
 	return &intake, nil

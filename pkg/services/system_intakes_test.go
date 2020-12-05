@@ -500,6 +500,10 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		DecisionNextSteps: nextSteps,
 		RejectionReason:   reason,
 	}
+	action := &models.Action{
+		IntakeID: &input.ID,
+		Feedback: null.StringFrom("Feedback"),
+	}
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
 	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -514,14 +518,33 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		}
 		return i, nil
 	}
+	fnSaveAction := func(c context.Context, action *models.Action) error {
+		return nil
+	}
+	fnFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			Email:      "name@site.com",
+			CommonName: "NAME",
+			EuaUserID:  testhelpers.RandomEUAID(),
+		}, nil
+	}
+	reviewEmailCount := 0
+	feedbackForEmailText := ""
+	fnSendReviewEmail := func(emailText string, recipientAddress string) error {
+		feedbackForEmailText = emailText
+		reviewEmailCount++
+		return nil
+	}
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate)
+	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail)
 
 	s.Run("happy path", func() {
-		intake, err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input, action)
 		s.NoError(err)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.RejectionReason, reason)
+		s.Equal(1, reviewEmailCount)
+		s.Equal("Feedback", feedbackForEmailText)
 	})
 
 	// build the error-generating pieces
@@ -533,28 +556,46 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		return nil, errors.New("update error")
 	}
+	fnSaveActionErr := func(c context.Context, a *models.Action) error {
+		return errors.New("action error")
+	}
+	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return nil, errors.New("fetch user info error")
+	}
+	fnSendReviewEmailErr := func(emailText string, recipientAddress string) error {
+		return errors.New("send email error")
+	}
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
+		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail),
 		},
 		"error path auth": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail),
 		},
 		"error path auth fail": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail),
 		},
 		"error path update": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail),
+		},
+		"error path fetch user info": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendReviewEmail),
+		},
+		"error path save action": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendReviewEmail),
+		},
+		"error path send email": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmailErr),
 		},
 	}
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input)
+			_, err := tc.fn(context.Background(), input, action)
 			s.Error(err)
 		})
 	}
