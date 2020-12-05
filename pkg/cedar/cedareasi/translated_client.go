@@ -8,6 +8,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -16,6 +17,11 @@ import (
 	apimodels "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/validate"
+)
+
+const (
+	emitFlagKey = "emit-to-cedar"
+	emitDefault = false
 )
 
 // TranslatedClient is an API client for CEDAR EASi using EASi language
@@ -32,7 +38,7 @@ type Client interface {
 }
 
 // NewTranslatedClient returns an API client for CEDAR EASi using EASi language
-func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
+func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient, ldUser ld.User) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
 
@@ -42,14 +48,25 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	// Set auth header
 	apiKeyHeaderAuth := httptransport.APIKeyAuth("x-Gateway-APIKey", "header", cedarAPIKey)
 
-	fn := func(context.Context) bool {
-		// TODO: this is the quick & dirty way of stopping us from submitting to CEDAR,
-		// ideally we'd want to use LaunchDarkly to flag this behavior in the future
-		// see EASI-1025
-		return false
+	fnEmit := func(ctx context.Context) bool {
+		// this is the conditional way of stopping us from submitting to CEDAR; see EASI-1025
+		// TODO: if we were using per-user targeting, we would use the context Principle to fetch/build
+		// the LD User; but currently we are not using that feature, so we use a common "static" User
+		// object
+		result, err := ldClient.BoolVariation(emitFlagKey, ldUser, emitDefault)
+		if err != nil {
+			appcontext.ZLogger(ctx).Info(
+				"problem evaluating feature flag",
+				zap.Error(err),
+				zap.String("flagName", emitFlagKey),
+				zap.Bool("flagDefault", emitDefault),
+				zap.Bool("flagResult", result),
+			)
+		}
+		return result
 	}
 
-	return TranslatedClient{client, apiKeyHeaderAuth, fn}
+	return TranslatedClient{client, apiKeyHeaderAuth, fnEmit}
 }
 
 // FetchSystems fetches a system list from CEDAR
