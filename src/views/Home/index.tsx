@@ -37,7 +37,10 @@ const Banners = () => {
       {confirmationText && (
         <div className="border-05 border-green">
           <div className="fa fa-check fa-2x display-inline-block text-middle text-green margin-left-1 margin-right-2" />
-          <p className="display-inline-block text-middle margin-y-105">
+          <p
+            role="alert"
+            className="display-inline-block text-middle margin-y-105"
+          >
             {confirmationText}
           </p>
         </div>
