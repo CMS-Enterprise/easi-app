@@ -11,6 +11,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import Survey, { SurveyTypeEnum } from 'components/Survey';
 import { ActionType, RejectIntakeForm } from 'types/action';
 import { rejectSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
@@ -139,6 +140,7 @@ const RejectIntake = () => {
                   {t('rejectIntake.submit')}
                 </Button>
               </Form>
+              <Survey surveyType={SurveyTypeEnum.IMPROVE_EASI} />
             </div>
           </>
         );
