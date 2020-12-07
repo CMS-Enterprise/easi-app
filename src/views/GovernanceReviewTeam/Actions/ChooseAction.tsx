@@ -6,6 +6,7 @@ import { kebabCase } from 'lodash';
 
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
+import Survey, { SurveyTypeEnum } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
 import { RequestType } from 'types/systemIntake';
 
@@ -255,6 +256,7 @@ const ChooseAction = ({
           Continue
         </Button>
       </form>
+      <Survey surveyType={SurveyTypeEnum.ANYTHING_WRONG} />
     </>
   );
 };
