@@ -394,3 +394,22 @@ func NewUpdateRejectionFields(
 		return updated, nil
 	}
 }
+
+// NewDeleteSystemIntakeByID is a service to remove the system intake by intake id
+// TODO: this should be remove quickly - EASI-974
+func NewDeleteSystemIntakeByID(
+	config Config,
+	delete func(c context.Context, id uuid.UUID) error,
+	authorize func(context.Context) (bool, error),
+) func(context.Context, uuid.UUID) error {
+	return func(ctx context.Context, id uuid.UUID) error {
+		ok, err := authorize(ctx)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return &apperrors.UnauthorizedError{Err: err}
+		}
+		return delete(ctx, id)
+	}
+}
