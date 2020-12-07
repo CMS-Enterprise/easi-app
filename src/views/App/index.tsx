@@ -21,6 +21,7 @@ import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
 import Prototype508 from 'views/Prototype508';
+import PrototypeTRB from 'views/PrototypeTRB';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
@@ -116,6 +117,8 @@ const AppRoutes = () => {
       />
 
       {flags.prototype508 && <Route path="/508" component={Prototype508} />}
+      {flags.prototypeTRB && <Route path="/trb" component={PrototypeTRB} />}
+
       <Route path="*" component={NotFound} />
     </Switch>
   );

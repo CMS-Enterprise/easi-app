@@ -8,7 +8,7 @@ const initialState: FlagsState = {
     sandbox: false,
     pdfExport: false,
     prototype508: true,
-    prototypeTRB: false,
+    prototypeTRB: true,
     fileUploads: false
   },
   isLoaded: true
