@@ -42,7 +42,7 @@ it('loads flags into the provider', async () => {
 
   const printer = wrapper.find(FlagPrinter);
   expect(printer.text()).toEqual(
-    `{"pdfExport":true,"sandbox":true,"taskListLite":true}`
+    `{"fileUploads":false,"pdfExport":true,"prototype508":false,"prototypeTRB":false,"sandbox":true,"taskListLite":true}`
   );
   expect(mockedAxios.get.mock.calls).toEqual([[flagsURL]]);
 });
