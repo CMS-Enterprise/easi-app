@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#
+# build a prince lambda package for deployment
+#
+
+set -x -u 
+
+root="$(git rev-parse --show-toplevel)"
+tmpdir="$root/lambda/prince/tmp"
+builddir="$root/lambda/prince/build"
+
+mkdir -p "$tmpdir"
+rm -rf "$builddir"
+mkdir -p "$builddir"
+
+wget --no-clobber -O "$tmpdir/prince-13.5-aws-lambda.zip" https://www.princexml.com/download/prince-13.5-aws-lambda.zip 
+unzip -o -q "$tmpdir/prince-13.5-aws-lambda.zip" -d "$builddir"
+
+wget --no-clobber -O "$tmpdir/uswds-2.9.0.zip" https://github.com/uswds/uswds/releases/download/v2.9.0/uswds-2.9.0.zip
+unzip -o -q "$tmpdir/uswds-2.9.0.zip" -d "$tmpdir/uswds-2.9.0"
+find "$tmpdir" -name "*.ttf" -exec cp {} "$builddir/fonts/" \;
+
+# compile Go handler
+cd lambda/prince || exit
+GOOS=linux go build main.go
+cp "$root/lambda/prince/main" "$builddir/"
+
+# create zip for distribution
+cd "$builddir" || exit
+zip -r function.zip -- *
