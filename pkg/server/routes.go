@@ -486,7 +486,7 @@ func (s *Server) routes(
 			store.UpdateSystemIntake,
 			saveAction,
 			cedarLDAPClient.FetchUserInfo,
-			emailClient.SendSystemIntakeReviewEmail,
+			emailClient.SendIssueLCIDEmail,
 			store.GenerateLifecycleID,
 		),
 	)
