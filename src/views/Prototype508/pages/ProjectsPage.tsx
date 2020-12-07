@@ -2,10 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from '@trussworks/react-uswds';
 
+import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
 
 const ProjectsPage = () => {
   const { state } = useGlobalState();
+
+  useDocumentTitle(`EASi: Active 508 projects`);
 
   return (
     <main
@@ -20,10 +23,10 @@ const ProjectsPage = () => {
         <thead>
           <tr>
             <th scope="col" style={{ whiteSpace: 'nowrap' }}>
-              Submission Date
+              Project Name
             </th>
             <th scope="col" style={{ whiteSpace: 'nowrap' }}>
-              Project Name
+              Submission Date
             </th>
             <th scope="col" style={{ whiteSpace: 'nowrap' }}>
               Business Owner
@@ -37,10 +40,10 @@ const ProjectsPage = () => {
           {Object.entries(state.projects).map(([id, project]) => {
             return (
               <tr key={id}>
-                <td>{project.submissionDate.toFormat('LLLL d y')}</td>
-                <td>
+                <th scope="row">
                   <Link to={`/508/projects/${id}`}>{project.name}</Link>
-                </td>
+                </th>
+                <td>{project.submissionDate.toFormat('LLLL d y')}</td>
                 <td>{project.businessOwner.name}</td>
                 <td>
                   <strong>{project.status}</strong>

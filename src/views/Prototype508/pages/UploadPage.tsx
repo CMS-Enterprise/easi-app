@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { DateTime } from 'luxon';
 
+import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
 import { ActivityType, DocumentType, Project, ProjectStatus } from '../types';
 
@@ -49,6 +50,8 @@ const UploadPage = () => {
   const [score, setScore] = useState('');
 
   const history = useHistory();
+
+  useDocumentTitle(`EASi: Upload a document to ${project && project.name}`);
 
   if (!project) {
     return <main>Project not found</main>;

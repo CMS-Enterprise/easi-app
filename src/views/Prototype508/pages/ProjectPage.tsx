@@ -6,6 +6,7 @@ import { DateTime } from 'luxon';
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
 
+import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
 import {
   Activity,
@@ -38,6 +39,8 @@ const ProjectPage = () => {
   const [noteContent, setNoteContent] = useState('');
   const [noteAlert, setNoteAlert] = useState('');
   const [documentAlert, setDocumentAlert] = useState('');
+
+  useDocumentTitle(`EASi: Project page for ${project && project.name}`);
 
   if (!project) {
     return <main>Project not found</main>;
@@ -239,10 +242,10 @@ const ProjectPage = () => {
             <thead>
               <tr>
                 <th scope="col" style={{ whiteSpace: 'nowrap' }}>
-                  Date Uploaded
+                  Document
                 </th>
                 <th scope="col" style={{ whiteSpace: 'nowrap' }}>
-                  Document
+                  Date Uploaded
                 </th>
                 <th>Actions</th>
               </tr>
@@ -250,18 +253,19 @@ const ProjectPage = () => {
             <tbody>
               {project.documents
                 .sort(
-                  (a, b) => b.createdAt.toSeconds() - a.createdAt.toSeconds()
+                  (a, b) => a.createdAt.toSeconds() - b.createdAt.toSeconds()
                 )
                 .map(document => {
                   return (
                     <tr key={document.id}>
-                      <td>{document.createdAt.toFormat('LLLL d y')}</td>
-                      <td>
+                      <th scope="row">
                         {document.type}{' '}
                         {document.type === DocumentType.TestResults && (
                           <span>- {document.score}%</span>
                         )}
-                      </td>
+                      </th>
+                      <td>{document.createdAt.toFormat('LLLL d y')}</td>
+
                       <td>
                         <button
                           type="button"
@@ -307,6 +311,30 @@ const ProjectPage = () => {
             </div>
           )}
 
+          <ul
+            className="easi-grt__note-list"
+            aria-label={`This is a list of all activity on ${project.name}.`}
+          >
+            {project.activities
+              .sort((a, b) => a.createdAt.toSeconds() - b.createdAt.toSeconds())
+              .map((activity: Activity) => {
+                return (
+                  <li className="easi-grt__note" key={activity.id}>
+                    <div className="easi-grt__note-content">
+                      <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
+                        {activity.content}
+                      </p>
+                      <span className="text-base-dark font-body-2xs">
+                        by {activity.authorName}
+                        <span aria-hidden="true">{' | '}</span>
+                        {activity.createdAt.toFormat('LLLL d y')}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
+          </ul>
+
           <form>
             <label className="usa-label" htmlFor="input-type-textarea">
               Add note
@@ -343,30 +371,6 @@ const ProjectPage = () => {
               Add Note
             </Button>
           </form>
-
-          <ul
-            className="easi-grt__note-list"
-            aria-label={`This is a list of all activity on ${project.name}.`}
-          >
-            {project.activities
-              .sort((a, b) => b.createdAt.toSeconds() - a.createdAt.toSeconds())
-              .map((activity: Activity) => {
-                return (
-                  <li className="easi-grt__note" key={activity.id}>
-                    <div className="easi-grt__note-content">
-                      <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
-                        {activity.content}
-                      </p>
-                      <span className="text-base-dark font-body-2xs">
-                        by {activity.authorName}
-                        <span aria-hidden="true">{' | '}</span>
-                        {activity.createdAt.toFormat('LLLL d y')}
-                      </span>
-                    </div>
-                  </li>
-                );
-              })}
-          </ul>
         </div>
       </main>
     </>
