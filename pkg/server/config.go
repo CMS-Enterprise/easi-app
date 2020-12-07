@@ -72,8 +72,9 @@ func (s Server) NewS3Config() upload.Config {
 	s.checkRequiredConfig(appconfig.AWSRegion)
 
 	return upload.Config{
-		Bucket: s.Config.GetString(appconfig.AWSS3FileUploadBucket),
-		Region: s.Config.GetString(appconfig.AWSRegion),
+		Bucket:  s.Config.GetString(appconfig.AWSS3FileUploadBucket),
+		Region:  s.Config.GetString(appconfig.AWSRegion),
+		IsLocal: false,
 	}
 }
 
