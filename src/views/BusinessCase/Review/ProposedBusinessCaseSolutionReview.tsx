@@ -31,100 +31,103 @@ type ReviewProps = {
 };
 
 const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
-  <DescriptionList title={name}>
-    <ReviewRow>
-      <div className="line-height-body-3">
-        <DescriptionTerm term={`${name}: Title`} />
-        <DescriptionDefinition definition={solution.title} />
-      </div>
-    </ReviewRow>
-    <ReviewRow>
-      <div className="line-height-body-3">
-        <DescriptionTerm term={`${name}: Summary`} />
-        <DescriptionDefinition
-          className="text-pre-wrap"
-          definition={solution.summary}
-        />
-      </div>
-    </ReviewRow>
-    <ReviewRow>
-      <div className="line-height-body-3">
-        <DescriptionTerm term={`${name}: Acquisition approach`} />
-        <DescriptionDefinition
-          className="text-pre-wrap"
-          definition={solution.acquisitionApproach}
-        />
-      </div>
-    </ReviewRow>
-    <ReviewRow>
-      <div className="line-height-body-3">
-        <DescriptionTerm term="Do you need to host your solution?" />
-        <DescriptionDefinition
-          className="text-pre-wrap"
-          definition={hostingTypeMap[solution.hosting.type]}
-        />
-      </div>
-    </ReviewRow>
-    {['cloud', 'dataCenter'].includes(solution.hosting.type) && (
+  <>
+    <h3 className="easi-only-print business-case-solution-header">{name}</h3>
+    <DescriptionList title={name}>
       <ReviewRow>
         <div className="line-height-body-3">
-          <DescriptionTerm term="Where are you planning to host?" />
+          <DescriptionTerm term={`${name}: Title`} />
+          <DescriptionDefinition definition={solution.title} />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term={`${name}: Summary`} />
           <DescriptionDefinition
             className="text-pre-wrap"
-            definition={solution.hosting.location}
+            definition={solution.summary}
           />
         </div>
-        {solution.hosting.cloudServiceType && (
+      </ReviewRow>
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term={`${name}: Acquisition approach`} />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={solution.acquisitionApproach}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="Do you need to host your solution?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={hostingTypeMap[solution.hosting.type]}
+          />
+        </div>
+      </ReviewRow>
+      {['cloud', 'dataCenter'].includes(solution.hosting.type) && (
+        <ReviewRow>
           <div className="line-height-body-3">
-            <DescriptionTerm term="What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?" />
+            <DescriptionTerm term="Where are you planning to host?" />
             <DescriptionDefinition
               className="text-pre-wrap"
-              definition={solution.hosting.cloudServiceType}
+              definition={solution.hosting.location}
             />
           </div>
-        )}
+          {solution.hosting.cloudServiceType && (
+            <div className="line-height-body-3">
+              <DescriptionTerm term="What, if any, type of cloud service are you planning to use for this solution (Iaas, PaaS, SaaS, etc.)?" />
+              <DescriptionDefinition
+                className="text-pre-wrap"
+                definition={solution.hosting.cloudServiceType}
+              />
+            </div>
+          )}
+        </ReviewRow>
+      )}
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="Will your solution have a User Interface?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={yesNoMap[solution.hasUserInterface]}
+          />
+        </div>
       </ReviewRow>
-    )}
-    <ReviewRow>
-      <div className="line-height-body-3">
-        <DescriptionTerm term="Will your solution have a User Interface?" />
-        <DescriptionDefinition
-          className="text-pre-wrap"
-          definition={yesNoMap[solution.hasUserInterface]}
-        />
-      </div>
-    </ReviewRow>
-    <ReviewRow>
-      <div className="line-height-body-3">
-        <DescriptionTerm term={`${name}: Pros`} />
-        <DescriptionDefinition
-          className="text-pre-wrap"
-          definition={solution.pros}
-        />
-      </div>
-    </ReviewRow>
-    <ReviewRow>
-      <div className="line-height-body-3">
-        <DescriptionTerm term={`${name}: Cons`} />
-        <DescriptionDefinition
-          className="text-pre-wrap"
-          definition={solution.cons}
-        />
-      </div>
-    </ReviewRow>
-    <ReviewRow>
-      <EstimatedLifecycleCostReview data={solution.estimatedLifecycleCost} />
-    </ReviewRow>
-    <ReviewRow>
-      <div className="line-height-body-3">
-        <DescriptionTerm term="What is the cost savings or avoidance associated with this solution?" />
-        <DescriptionDefinition
-          className="text-pre-wrap"
-          definition={solution.costSavings}
-        />
-      </div>
-    </ReviewRow>
-  </DescriptionList>
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term={`${name}: Pros`} />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={solution.pros}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term={`${name}: Cons`} />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={solution.cons}
+          />
+        </div>
+      </ReviewRow>
+      <ReviewRow>
+        <EstimatedLifecycleCostReview data={solution.estimatedLifecycleCost} />
+      </ReviewRow>
+      <ReviewRow>
+        <div className="line-height-body-3">
+          <DescriptionTerm term="What is the cost savings or avoidance associated with this solution?" />
+          <DescriptionDefinition
+            className="text-pre-wrap"
+            definition={solution.costSavings}
+          />
+        </div>
+      </ReviewRow>
+    </DescriptionList>
+  </>
 );
 
 export default PropsedBusinessCaseSolutionReview;

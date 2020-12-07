@@ -113,16 +113,6 @@ func NewSubmitSystemIntake(
 		if validateAndSubmitErr != nil {
 			return validateAndSubmitErr
 		}
-		// TODO: we are not submitting to CEDAR right now - EASI-1025
-		// if alfabetID == "" {
-		// 	return &apperrors.ExternalAPIError{
-		// 		Err:       errors.New("submission was not successful"),
-		// 		Model:     intake,
-		// 		ModelID:   intake.ID.String(),
-		// 		Operation: apperrors.Submit,
-		// 		Source:    "CEDAR EASi",
-		// 	}
-		// }
 		intake.AlfabetID = null.StringFrom(alfabetID)
 
 		err = saveAction(ctx, action)
@@ -277,11 +267,7 @@ func NewTakeActionUpdateStatus(
 
 		err = saveAction(ctx, action)
 		if err != nil {
-			return &apperrors.QueryError{
-				Err:       err,
-				Model:     action,
-				Operation: apperrors.QueryPost,
-			}
+			return err
 		}
 
 		updatedTime := config.clock.Now()

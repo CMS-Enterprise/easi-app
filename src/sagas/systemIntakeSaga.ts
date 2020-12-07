@@ -110,19 +110,23 @@ type lifecycleIdData = {
   lcid: string;
 };
 
-function postLifecycleId({ id, data }: { id: string; data: lifecycleIdData }) {
+function postLifecycleId({
+  id,
+  lcidPayload
+}: {
+  id: string;
+  lcidPayload: lifecycleIdData;
+}) {
   return axios.post(
     `${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}/lcid`,
-    data
+    lcidPayload
   );
 }
 
 function* issueLifecycleId(action: Action<any>) {
   try {
     yield put(issueLifecycleIdForSystemIntake.request());
-    const { id, lcidPayload, actionPayload } = action.payload;
-    yield call(postSystemIntakeActionRequest, { id, ...actionPayload });
-    const response = yield call(postLifecycleId, { id, data: lcidPayload });
+    const response = yield call(postLifecycleId, action.payload);
     yield put(issueLifecycleIdForSystemIntake.success(response.data));
   } catch (error) {
     yield put(issueLifecycleIdForSystemIntake.failure(error.message));

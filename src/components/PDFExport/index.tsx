@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import axios from 'axios';
 
 import { useFlags } from 'contexts/flagContext';
@@ -6,6 +6,7 @@ import { useFlags } from 'contexts/flagContext';
 type PDFExportProps = {
   filename: string;
   title: string;
+  children: React.ReactNode;
 };
 
 function downloadBlob(filename: string, blob: Blob) {
@@ -48,7 +49,11 @@ function generatePDF(filename: string, content: string) {
     });
 }
 
-const downloadPDF = (title: string, filename: string): void => {
+const downloadRefAsPDF = (
+  title: string,
+  filename: string,
+  ref: React.Ref<HTMLDivElement>
+): void => {
   // Collect any stylesheets that are linked to. These are used in production.
   const stylesheetRequests = Array.prototype.slice
     .apply(document.styleSheets)
@@ -77,32 +82,40 @@ const downloadPDF = (title: string, filename: string): void => {
             ${styleBlocks.join('\n\n')}
           </style>
         </head>
-        ${document.body.outerHTML} 
+        <body>
+          <h1>
+            ${escape(title)}
+          </h1>
+          ${ref && ref.current && ref.current.outerHTML} 
+        </body>
       </html>`;
 
   generatePDF(filename, markupToRender);
 };
 
 // PDFExport adds a "Download PDF" button to the screen. When this button is clicked,
-// the HTML content of the *entire current page* is sent to the server and converted
-// to PDF format. This is required because the style rules for the page are inlined
-// into the document source. Style changes will need to be made using print styles.
-//
-// An additional benefit to this design is that is pushes us to have decent print
-// stylesheets for the application, whether or not we are expecting users to export
-// that part to PDF.
-const PDFExport = ({ title, filename }: PDFExportProps) => {
+// the HTML content of child elements is sent to the server and converted
+// to PDF format.
+const PDFExport = ({ title, filename, children }: PDFExportProps) => {
   const flags = useFlags();
 
+  const divEl = useRef<HTMLDivElement>(null);
+
   return flags.pdfExport ? (
-    <button
-      className="easi-no-print"
-      type="button"
-      onClick={() => downloadPDF(title, filename)}
-    >
-      Download PDF
-    </button>
-  ) : null;
+    <div className="easi-pdf-export" ref={divEl}>
+      {children}
+
+      <button
+        className="easi-no-print"
+        type="button"
+        onClick={() => downloadRefAsPDF(title, filename, divEl)}
+      >
+        Download PDF
+      </button>
+    </div>
+  ) : (
+    children
+  );
 };
 
 export default PDFExport;

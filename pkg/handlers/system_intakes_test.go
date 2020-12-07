@@ -71,7 +71,8 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 				"lcid": "123456",
 				"lcidExpiresAt": "2021-09-10",
 				"lcidNextSteps": "fuhgeddaboutit",
-				"lcidScope": "telescope"
+				"lcidScope": "telescope",
+				"feedback": "blah blah blah"
 			}`,
 			status: http.StatusCreated,
 		},
@@ -81,7 +82,8 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			body: `{
 				"lcidExpiresAt": "2021-09-10",
 				"lcidNextSteps": "fuhgeddaboutit",
-				"lcidScope": "telescope"
+				"lcidScope": "telescope",
+				"feedback": "blah blah blah"
 			}`,
 			status: http.StatusCreated,
 		},
@@ -91,7 +93,8 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			body: `{
 				"lcidExpiresAt": "2021-09-10",
 				"lcidNextSteps": "fuhgeddaboutit",
-				"lcidScope": "telescope"
+				"lcidScope": "telescope",
+				"feedback": "blah blah blah"
 			}`,
 			status: http.StatusInternalServerError,
 		},
@@ -100,7 +103,8 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			intakeID: uuid.New().String(),
 			body: `{
 				"lcidExpiresAt": "2021-09-10",
-				"lcidNextSteps": "fuhgeddaboutit"
+				"lcidNextSteps": "fuhgeddaboutit",
+				"feedback": "blah blah blah"
 			}`,
 			status: http.StatusUnprocessableEntity,
 		},
@@ -109,7 +113,8 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			intakeID: uuid.New().String(),
 			body: `{
 				"lcidExpiresAt": "2021-09-10",
-				"lcidScope": "telescope"
+				"lcidScope": "telescope",
+				"feedback": "blah blah blah"
 			}`,
 			status: http.StatusUnprocessableEntity,
 		},
@@ -117,6 +122,17 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			verb:     "POST",
 			intakeID: uuid.New().String(),
 			body: `{
+				"lcidNextSteps": "fuhgeddaboutit",
+				"lcidScope": "telescope",
+				"feedback": "blah blah blah"
+			}`,
+			status: http.StatusUnprocessableEntity,
+		},
+		"missing feedback": {
+			verb:     "POST",
+			intakeID: uuid.New().String(),
+			body: `{
+				"lcidExpiresAt": "2021-09-10",
 				"lcidNextSteps": "fuhgeddaboutit",
 				"lcidScope": "telescope"
 			}`,
@@ -128,13 +144,14 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			body: `{
 				"lcidExpiresAt": "ooga-wakka",
 				"lcidNextSteps": "fuhgeddaboutit",
-				"lcidScope": "telescope"
+				"lcidScope": "telescope",
+				"feedback": "blah blah blah"
 			}`,
 			status: http.StatusUnprocessableEntity,
 		},
 	}
 
-	fnLCID := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+	fnLCID := func(c context.Context, i *models.SystemIntake, a *models.Action) (*models.SystemIntake, error) {
 		if i.ID == uuid.Nil {
 			return nil, errors.New("forced error")
 		}
