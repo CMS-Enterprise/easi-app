@@ -24,6 +24,9 @@ type ReviewProps = {
 
 const AsIsSolutionReview = ({ solution }: ReviewProps) => (
   <div>
+    <h3 className="easi-only-print business-case-solution-header">
+      As-Is Solution
+    </h3>
     <DescriptionList title="As-Is Solution">
       <ReviewRow>
         <div className="line-height-body-3">
