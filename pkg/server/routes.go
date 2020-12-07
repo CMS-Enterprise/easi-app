@@ -184,6 +184,11 @@ func (s *Server) routes(
 			services.NewAuthorizeUserIsIntakeRequester(),
 			emailClient.SendWithdrawRequestEmail,
 		),
+		services.NewDeleteSystemIntakeByID(
+			serviceConfig,
+			store.DeleteSystemIntakeByID,
+			services.NewAuthorizeRequireGRTJobCode(),
+		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
