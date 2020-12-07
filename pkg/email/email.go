@@ -29,6 +29,7 @@ type templates struct {
 	intakeReviewTemplate           templateCaller
 	namedRequestWithdrawTemplate   templateCaller
 	unnamedRequestWithdrawTemplate templateCaller
+	issueLCIDTemplate              templateCaller
 }
 
 // sender is an interface for swapping out email provider implementations
@@ -90,6 +91,13 @@ func NewClient(config Config, sender sender) (Client, error) {
 		return Client{}, templateError(unnamedRequestWithdrawTemplateName)
 	}
 	appTemplates.unnamedRequestWithdrawTemplate = unnamedRequestWithdrawTemplate
+
+	issueLCIDTemplateName := "issue_lcid.gohtml"
+	issueLCIDTemplate := rawTemplates.Lookup(issueLCIDTemplateName)
+	if issueLCIDTemplate == nil {
+		return Client{}, templateError(issueLCIDTemplateName)
+	}
+	appTemplates.issueLCIDTemplate = issueLCIDTemplate
 
 	client := Client{
 		config:    config,

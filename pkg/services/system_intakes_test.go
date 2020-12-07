@@ -16,6 +16,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s ServicesTestSuite) TestFetchSystemIntakes() {
@@ -363,6 +364,10 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		DecisionNextSteps:  nextSteps,
 		LifecycleScope:     scope,
 	}
+	action := &models.Action{
+		IntakeID: &input.ID,
+		Feedback: null.StringFrom("Feedback"),
+	}
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
 	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -383,24 +388,43 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		}
 		return i, nil
 	}
-	fnGenerate := func(context.Context) (string, error) { return "993659", nil }
+	fnSaveAction := func(c context.Context, action *models.Action) error {
+		return nil
+	}
+	fnFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			Email:      "name@site.com",
+			CommonName: "NAME",
+			EuaUserID:  testhelpers.RandomEUAID(),
+		}, nil
+	}
+	reviewEmailCount := 0
+	feedbackForEmailText := ""
+	fnSendLCIDEmail := func(_ string, _ string, _ *time.Time, _ string, _string, emailText string) error {
+		feedbackForEmailText = emailText
+		reviewEmailCount++
+		return nil
+	}
+	fnGenerate := func(context.Context) (string, error) { return "123456", nil }
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerate)
+	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
-		intake, err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input, action)
 		s.NoError(err)
 		s.Equal(intake.LifecycleID, lifecycleID)
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.LifecycleScope, scope)
+		s.Equal(1, reviewEmailCount)
+		s.Equal("Feedback", feedbackForEmailText)
 	})
 
 	// from here on out, we always expect the LCID to get generated
 	input.LifecycleID = null.StringFrom("")
 
 	s.Run("happy path generates lcid", func() {
-		intake, err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input, action)
 		s.NoError(err)
 		s.NotEqual(intake.LifecycleID, "")
 		s.Equal(intake.LifecycleExpiresAt, expiresAt)
@@ -417,32 +441,50 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		return nil, errors.New("update error")
 	}
+	fnSaveActionErr := func(c context.Context, a *models.Action) error {
+		return errors.New("action error")
+	}
+	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return nil, errors.New("fetch user info error")
+	}
+	fnSendLCIDEmailErr := func(_ string, _ string, _ *time.Time, _ string, _ string, _ string) error {
+		return errors.New("send email error")
+	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
+		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path auth": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path auth fail": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path generate": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerateErr),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerateErr),
+		},
+		"error path save action": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+		},
+		"error path fetch user info": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnGenerate),
+		},
+		"error path send email": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnGenerate),
 		},
 		"error path update": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 	}
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input)
+			_, err := tc.fn(context.Background(), input, action)
 			s.Error(err)
 		})
 	}

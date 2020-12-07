@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"time"
 
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
@@ -41,30 +42,52 @@ func (s *Server) routes(
 	)
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
-	// check we have all of the configs for CEDAR clients
-	if s.environment.Deployed() {
-		s.NewCEDARClientCheck()
+	// set up Feature Flagging utilities
+	flagUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
+	flagConfig := s.NewFlagConfig()
+	var flagClient flags.FlagClient
+
+	// we default to an OFFLINE client for non-deployed environments
+	ldClient, err := ld.MakeCustomClient("fake_offline_key", ld.Config{Offline: true}, 5*time.Second)
+	if err != nil {
+		s.logger.Fatal("Failed to create LaunchDarkly client", zap.Error(err))
+	}
+
+	switch flagConfig.Source {
+	case appconfig.FlagSourceLocal:
+		defaultFlags := flags.FlagValues{"taskListLite": "true", "sandbox": "true", "pdfExport": "true", "prototype508": "true", "fileUploads": "true", "prototypeTRB": "true"}
+		flagClient = flags.NewLocalClient(defaultFlags)
+
+	case appconfig.FlagSourceLaunchDarkly:
+		client, clientErr := flags.NewLaunchDarklyClient(flagConfig)
+		if clientErr != nil {
+			s.logger.Fatal("Failed to connect to create flag client", zap.Error(clientErr))
+		}
+		ldClient = client
+		flagClient = flags.WrapLaunchDarklyClient(ldClient)
 	}
 
 	// set up CEDAR client
-	var cedarEasiClient cedareasi.Client
-	connectedCedarEasiClient := cedareasi.NewTranslatedClient(
-		s.Config.GetString("CEDAR_API_URL"),
-		s.Config.GetString("CEDAR_API_KEY"),
-	)
-	if s.environment.Deployed() {
-		s.CheckCEDAREasiClientConnection(connectedCedarEasiClient)
-	}
-	if s.environment.Local() || s.environment.Test() {
-		cedarEasiClient = local.NewCedarEasiClient(s.logger)
-	} else {
-		cedarEasiClient = connectedCedarEasiClient
+	cedarEasiClient := local.NewCedarEasiClient(s.logger)
+	if !(s.environment.Local() || s.environment.Test()) {
+		// check we have all of the configs for CEDAR clients
+		s.NewCEDARClientCheck()
+
+		cedarEasiClient := cedareasi.NewTranslatedClient(
+			s.Config.GetString(appconfig.CEDARAPIURL),
+			s.Config.GetString(appconfig.CEDARAPIKey),
+			ldClient,
+			flagUser,
+		)
+		if s.environment.Deployed() {
+			s.CheckCEDAREasiClientConnection(cedarEasiClient)
+		}
 	}
 
 	var cedarLDAPClient cedarldap.Client
 	cedarLDAPClient = cedarldap.NewTranslatedClient(
-		s.Config.GetString("CEDAR_API_URL"),
-		s.Config.GetString("CEDAR_API_KEY"),
+		s.Config.GetString(appconfig.CEDARAPIURL),
+		s.Config.GetString(appconfig.CEDARAPIKey),
 	)
 	if s.environment.Local() || s.environment.Test() {
 		cedarLDAPClient = local.NewCedarLdapClient(s.logger)
@@ -94,25 +117,6 @@ func (s *Server) routes(
 	// set up S3 client
 	s3Config := s.NewS3Config()
 	s3Client := upload.NewS3Client(s3Config)
-
-	// set up FlagClient
-	flagConfig := s.NewFlagConfig()
-	var flagClient flags.FlagClient
-
-	switch flagConfig.Source {
-	case appconfig.FlagSourceLocal:
-		defaultFlags := flags.FlagValues{"taskListLite": "true", "sandbox": "true", "pdfExport": "true"}
-		flagClient = flags.NewLocalClient(defaultFlags)
-
-	case appconfig.FlagSourceLaunchDarkly:
-		client, clientErr := flags.NewLaunchDarklyClient(flagConfig)
-		if clientErr != nil {
-			s.logger.Fatal("Failed to connect to create flag client", zap.Error(clientErr))
-		}
-		flagClient = client
-	}
-
-	flagUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
@@ -326,21 +330,6 @@ func (s *Server) routes(
 						store.UpdateBusinessCase,
 					),
 				),
-				models.ActionTypeISSUELCID: services.NewTakeActionUpdateStatus(
-					serviceConfig,
-					models.SystemIntakeStatusLCIDISSUED,
-					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
-					saveAction,
-					cedarLDAPClient.FetchUserInfo,
-					emailClient.SendSystemIntakeReviewEmail,
-					true,
-					services.NewCloseBusinessCase(
-						serviceConfig,
-						store.FetchBusinessCaseByID,
-						store.UpdateBusinessCase,
-					),
-				),
 				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
 					services.NewAuthorizeUserIsIntakeRequester(),
@@ -499,6 +488,9 @@ func (s *Server) routes(
 			services.NewAuthorizeRequireGRTJobCode(),
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
+			saveAction,
+			cedarLDAPClient.FetchUserInfo,
+			emailClient.SendIssueLCIDEmail,
 			store.GenerateLifecycleID,
 		),
 	)

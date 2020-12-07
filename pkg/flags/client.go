@@ -51,12 +51,13 @@ func (c LocalFlagClient) Flags(user ld.User) FlagValues {
 }
 
 // NewLaunchDarklyClient returns a client backed by Launch Darkly
-func NewLaunchDarklyClient(config Config) (*LaunchDarklyClient, error) {
-	ldClient, err := ld.MakeClient(config.Key, config.Timeout)
-	if err != nil {
-		return nil, err
-	}
-	return &LaunchDarklyClient{client: ldClient}, nil
+func NewLaunchDarklyClient(config Config) (*ld.LDClient, error) {
+	return ld.MakeClient(config.Key, config.Timeout)
+}
+
+// WrapLaunchDarklyClient returns a client that fulfils the flags.FlagClient interface
+func WrapLaunchDarklyClient(c *ld.LDClient) *LaunchDarklyClient {
+	return &LaunchDarklyClient{client: c}
 }
 
 // NewLocalClient returns a client backed by local values

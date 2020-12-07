@@ -210,7 +210,7 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 // LifecycleID assignment
 func NewSystemIntakeLifecycleIDHandler(
 	base HandlerBase,
-	assign func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	assign func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error),
 ) SystemIntakeLifecycleIDHandler {
 	return SystemIntakeLifecycleIDHandler{
 		HandlerBase:       base,
@@ -222,7 +222,7 @@ func NewSystemIntakeLifecycleIDHandler(
 // a lifecycleID to a SystemIntake
 type SystemIntakeLifecycleIDHandler struct {
 	HandlerBase
-	AssignLifecycleID func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
+	AssignLifecycleID func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 }
 
 type lcidFields struct {
@@ -230,6 +230,7 @@ type lcidFields struct {
 	ExpiresAt string  `json:"lcidExpiresAt"`
 	Scope     string  `json:"lcidScope"`
 	NextSteps string  `json:"lcidNextSteps"`
+	Feedback  string  `json:"feedback"`
 }
 
 // Handle handles a request for the system intake form
@@ -257,6 +258,7 @@ func (h SystemIntakeLifecycleIDHandler) Handle() http.HandlerFunc {
 			intake := &models.SystemIntake{
 				LifecycleID: null.StringFromPtr(fields.LCID),
 			}
+			action := &models.Action{}
 
 			valFail := false
 			valErr := apperrors.NewValidationError(
@@ -305,13 +307,20 @@ func (h SystemIntakeLifecycleIDHandler) Handle() http.HandlerFunc {
 				intake.DecisionNextSteps = null.StringFrom(fields.NextSteps)
 			}
 
+			if fields.Feedback == "" {
+				valErr.WithValidation("body.feedback", "is required")
+				valFail = true
+			} else {
+				action.Feedback = null.StringFrom(fields.Feedback)
+			}
+
 			if valFail {
 				h.WriteErrorResponse(r.Context(), w, &valErr)
 				return
 			}
 
 			// send it to the database
-			updatedIntake, err := h.AssignLifecycleID(r.Context(), intake)
+			updatedIntake, err := h.AssignLifecycleID(r.Context(), intake, action)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
