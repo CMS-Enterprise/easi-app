@@ -359,7 +359,7 @@ func NewUpdateRejectionFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(emailText string, recipientAddress string) error,
+	sendRejectRequestEmail func(recipient string, reason string, nextSteps string, feedback string) error,
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
@@ -407,7 +407,12 @@ func NewUpdateRejectionFields(
 			return nil, err
 		}
 
-		err = sendReviewEmail(action.Feedback.String, requesterInfo.Email)
+		err = sendRejectRequestEmail(
+			requesterInfo.Email,
+			existing.RejectionReason.String,
+			existing.DecisionNextSteps.String,
+			action.Feedback.String,
+		)
 		if err != nil {
 			return nil, err
 		}
