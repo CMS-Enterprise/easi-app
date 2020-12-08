@@ -229,7 +229,7 @@ const EstimatedLifecycleCostReview = ({
           </>
         )}
       </Media>
-      <div className="bg-base-lightest overflow-auto padding-x-2">
+      <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto padding-x-2">
         <DescriptionList title="System total cost">
           <DescriptionTerm term="System total cost" />
           <DescriptionDefinition

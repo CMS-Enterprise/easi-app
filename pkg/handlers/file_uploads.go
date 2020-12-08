@@ -16,6 +16,9 @@ import (
 // CreateFileUploadURL is our handler for creating pre-signed S3 upload URLs
 type CreateFileUploadURL func(ctx context.Context) (*models.PreSignedURL, error)
 
+// CreateFileDownloadURL is a handler for creating pre-signed S3 download URLs
+type CreateFileDownloadURL func(ctx context.Context, key string) (*models.PreSignedURL, error)
+
 // CreateUploadedFile is a handler for storing file upload metadata
 type CreateUploadedFile func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error)
 
@@ -25,15 +28,17 @@ type FetchUploadedFile func(ctx context.Context, id uuid.UUID) (*models.Uploaded
 // NewFileUploadHandler is a constructor for FileUploadHandler
 func NewFileUploadHandler(
 	base HandlerBase,
-	createURL CreateFileUploadURL,
+	createUploadURL CreateFileUploadURL,
+	createFileDownloadURL CreateFileDownloadURL,
 	createFile CreateUploadedFile,
 	fetchFile FetchUploadedFile,
 ) FileUploadHandler {
 	return FileUploadHandler{
-		HandlerBase:         base,
-		CreateFileUploadURL: createURL,
-		CreateUploadedFile:  createFile,
-		FetchUploadedFile:   fetchFile,
+		HandlerBase:           base,
+		CreateFileUploadURL:   createUploadURL,
+		CreateFileDownloadURL: createFileDownloadURL,
+		CreateUploadedFile:    createFile,
+		FetchUploadedFile:     fetchFile,
 	}
 }
 
@@ -41,9 +46,10 @@ func NewFileUploadHandler(
 // to file uploads
 type FileUploadHandler struct {
 	HandlerBase
-	CreateFileUploadURL CreateFileUploadURL
-	CreateUploadedFile  CreateUploadedFile
-	FetchUploadedFile   FetchUploadedFile
+	CreateFileUploadURL   CreateFileUploadURL
+	CreateFileDownloadURL CreateFileDownloadURL
+	CreateUploadedFile    CreateUploadedFile
+	FetchUploadedFile     FetchUploadedFile
 }
 
 // Handle handles a request for file uploading
@@ -61,9 +67,38 @@ func (h FileUploadHandler) Handle() http.HandlerFunc {
 	}
 }
 
-// GeneratePresignedURL is our handler that handles generating pre-signed URLs
-func (h FileUploadHandler) GeneratePresignedURL(w http.ResponseWriter, r *http.Request) {
+// GenerateUploadPresignedURL is our handler that handles generating pre-signed URLs for file uploading
+func (h FileUploadHandler) GenerateUploadPresignedURL(w http.ResponseWriter, r *http.Request) {
 	url, err := h.CreateFileUploadURL(r.Context())
+	if err != nil {
+		h.WriteErrorResponse(r.Context(), w, err)
+		return
+	}
+
+	responseBody, err := json.Marshal(url)
+	if err != nil {
+		h.WriteErrorResponse(r.Context(), w, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	_, err = w.Write(responseBody)
+	if err != nil {
+		h.WriteErrorResponse(r.Context(), w, err)
+		return
+	}
+	return
+}
+
+// GenerateDownloadPresignedURL handles generating pre-signed URLs for file downloading
+func (h FileUploadHandler) GenerateDownloadPresignedURL(w http.ResponseWriter, r *http.Request) {
+	fileID, err := requireFileUploadID(mux.Vars(r))
+	if err != nil {
+		h.WriteErrorResponse(r.Context(), w, err)
+		return
+	}
+
+	url, err := h.CreateFileDownloadURL(r.Context(), fileID.String())
 	if err != nil {
 		h.WriteErrorResponse(r.Context(), w, err)
 		return

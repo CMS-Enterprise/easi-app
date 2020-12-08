@@ -8,6 +8,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -18,10 +19,16 @@ import (
 	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
+const (
+	emitFlagKey = "emit-to-cedar"
+	emitDefault = false
+)
+
 // TranslatedClient is an API client for CEDAR EASi using EASi language
 type TranslatedClient struct {
 	client        *apiclient.EASiCore
 	apiAuthHeader runtime.ClientAuthInfoWriter
+	emitToCedar   func(context.Context) bool
 }
 
 // Client is an interface to ease testing dependencies
@@ -31,7 +38,7 @@ type Client interface {
 }
 
 // NewTranslatedClient returns an API client for CEDAR EASi using EASi language
-func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
+func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient, ldUser ld.User) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
 
@@ -41,7 +48,25 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	// Set auth header
 	apiKeyHeaderAuth := httptransport.APIKeyAuth("x-Gateway-APIKey", "header", cedarAPIKey)
 
-	return TranslatedClient{client, apiKeyHeaderAuth}
+	fnEmit := func(ctx context.Context) bool {
+		// this is the conditional way of stopping us from submitting to CEDAR; see EASI-1025
+		// TODO: if we were using per-user targeting, we would use the context Principle to fetch/build
+		// the LD User; but currently we are not using that feature, so we use a common "static" User
+		// object
+		result, err := ldClient.BoolVariation(emitFlagKey, ldUser, emitDefault)
+		if err != nil {
+			appcontext.ZLogger(ctx).Info(
+				"problem evaluating feature flag",
+				zap.Error(err),
+				zap.String("flagName", emitFlagKey),
+				zap.Bool("flagDefault", emitDefault),
+				zap.Bool("flagResult", result),
+			)
+		}
+		return result
+	}
+
+	return TranslatedClient{client, apiKeyHeaderAuth, fnEmit}
 }
 
 // FetchSystems fetches a system list from CEDAR
@@ -216,11 +241,23 @@ func (c TranslatedClient) ValidateAndSubmitSystemIntake(ctx context.Context, int
 	if err != nil {
 		return "", err
 	}
-	// TODO: this is the quick & dirty way of stopping us from submitting to CEDAR,
-	// ideally we'd want to use LaunchDarkly to flag this behavior in the future
-	// see EASI-1025
-	if true {
+	// we may not be sending SystemIntakes to CEDAR currently
+	if !c.emitToCedar(ctx) {
 		return "", nil
 	}
-	return submitSystemIntake(ctx, intake, c)
+	alfabetID, err := submitSystemIntake(ctx, intake, c)
+	if err != nil {
+		return "", err
+	}
+	// if we are submitting to CEDAR, we expect a non-empty value back
+	if alfabetID == "" {
+		return "", &apperrors.ExternalAPIError{
+			Err:       errors.New("submission was not successful"),
+			Model:     intake,
+			ModelID:   intake.ID.String(),
+			Operation: apperrors.Submit,
+			Source:    "CEDAR EASi",
+		}
+	}
+	return alfabetID, nil
 }

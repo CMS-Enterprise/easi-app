@@ -17,6 +17,11 @@ function systemIntakesReducer(
   action: Action<any>
 ): SystemIntakesState {
   switch (action.type) {
+    case fetchSystemIntakes.TRIGGER:
+      return {
+        ...state,
+        systemIntakes: []
+      };
     case fetchSystemIntakes.REQUEST:
       return {
         ...state,

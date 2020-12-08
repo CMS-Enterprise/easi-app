@@ -41,6 +41,12 @@ const (
 	ActionTypeNOGOVERNANCENEEDED ActionType = "NO_GOVERNANCE_NEEDED"
 	// ActionTypeREJECT captures enum value REJECTED
 	ActionTypeREJECT ActionType = "REJECT"
+	// ActionTypeSENDEMAIL captures enum value SEND_EMAIL
+	ActionTypeSENDEMAIL ActionType = "SEND_EMAIL"
+	// ActionTypeGUIDERECEIVEDCLOSE captures enum value GUIDE_RECEIVED_CLOSE
+	ActionTypeGUIDERECEIVEDCLOSE ActionType = "GUIDE_RECEIVED_CLOSE"
+	// ActionTypeNOTRESPONDINGCLOSE captures enum value NOT_RESPONDING_CLOSE
+	ActionTypeNOTRESPONDINGCLOSE ActionType = "NOT_RESPONDING_CLOSE"
 )
 
 // Action is the model for an action on a system intake
