@@ -77,6 +77,14 @@ const SystemIntakeBanners = () => {
     NO_GOVERNANCE: {
       title: t('banner.title.responseRecevied'),
       description: t('banner.description.checkNextStep')
+    },
+    SHUTDOWN_IN_PROGRESS: {
+      title: t('banner.title.responseRecevied'),
+      description: t('banner.description.checkNextStep')
+    },
+    SHUTDOWN_COMPLETE: {
+      title: t('banner.title.responseRecevied'),
+      description: t('banner.description.checkNextStep')
     }
   };
 
