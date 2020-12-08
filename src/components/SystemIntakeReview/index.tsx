@@ -50,6 +50,7 @@ export const SystemIntakeReview = ({
     }
     return yesNoMap[isExpectingIncrease];
   };
+
   return (
     <div>
       <DescriptionList title="System Request">
@@ -57,7 +58,11 @@ export const SystemIntakeReview = ({
           <div>
             <DescriptionTerm term="Submission Date" />
             <DescriptionDefinition
-              definition={now.toLocaleString(DateTime.DATE_MED)}
+              definition={
+                systemIntake.submittedAt
+                  ? systemIntake.submittedAt.toLocaleString(DateTime.DATE_MED)
+                  : now.toLocaleString(DateTime.DATE_MED)
+              }
             />
           </div>
         </ReviewRow>

@@ -113,16 +113,6 @@ func NewSubmitSystemIntake(
 		if validateAndSubmitErr != nil {
 			return validateAndSubmitErr
 		}
-		// TODO: we are not submitting to CEDAR right now - EASI-1025
-		// if alfabetID == "" {
-		// 	return &apperrors.ExternalAPIError{
-		// 		Err:       errors.New("submission was not successful"),
-		// 		Model:     intake,
-		// 		ModelID:   intake.ID.String(),
-		// 		Operation: apperrors.Submit,
-		// 		Source:    "CEDAR EASi",
-		// 	}
-		// }
 		intake.AlfabetID = null.StringFrom(alfabetID)
 
 		err = saveAction(ctx, action)
@@ -194,9 +184,11 @@ func NewSubmitBusinessCase(
 			businessCase.InitialSubmittedAt = &updatedAt
 		}
 		businessCase.LastSubmittedAt = &updatedAt
-		err = validateForSubmit(businessCase)
-		if err != nil {
-			return err
+		if businessCase.SystemIntakeStatus == models.SystemIntakeStatusBIZCASEFINALNEEDED {
+			err = validateForSubmit(businessCase)
+			if err != nil {
+				return err
+			}
 		}
 
 		err = saveAction(ctx, action)
