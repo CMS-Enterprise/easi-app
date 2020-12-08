@@ -15,7 +15,8 @@ export const openIntakeStatuses = [
   'BIZ_CASE_FINAL_NEEDED',
   'BIZ_CASE_FINAL_SUBMITTED',
   'READY_FOR_GRT',
-  'READY_FOR_GRB'
+  'READY_FOR_GRB',
+  'SHUTDOWN_IN_PROGRESS'
 ];
 
 export const closedIntakeStatuses = [
@@ -23,7 +24,8 @@ export const closedIntakeStatuses = [
   'WITHDRAWN',
   'NOT_IT_REQUEST',
   'NOT_APPROVED',
-  'NO_GOVERNANCE'
+  'NO_GOVERNANCE',
+  'SHUTDOWN_COMPLETE'
 ];
 
 export const intakeStatuses = [
