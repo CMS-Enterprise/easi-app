@@ -441,7 +441,7 @@ func (s *Server) routes(
 			store.UpdateSystemIntake,
 			saveAction,
 			cedarLDAPClient.FetchUserInfo,
-			emailClient.SendSystemIntakeReviewEmail,
+			emailClient.SendRejectRequestEmail,
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/reject", systemIntakeRejectionHandler.Handle())
