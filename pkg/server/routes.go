@@ -201,11 +201,6 @@ func (s *Server) routes(
 			services.NewAuthorizeUserIsIntakeRequester(),
 			emailClient.SendWithdrawRequestEmail,
 		),
-		services.NewDeleteSystemIntakeByID(
-			serviceConfig,
-			store.DeleteSystemIntakeByID,
-			services.NewAuthorizeRequireGRTJobCode(),
-		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
 	api.Handle("/system_intake", systemIntakeHandler.Handle())
@@ -574,19 +569,5 @@ func (s *Server) routes(
 	).Handle())
 
 	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient, princeLambdaName)).Handle())
-
-	// endpoint for short-lived backfill process
-	backfillHandler := handlers.NewBackfillHandler(
-		base,
-		services.NewBackfill(
-			serviceConfig,
-			store.FetchSystemIntakeByID,
-			store.CreateSystemIntake,
-			store.UpdateSystemIntake,
-			store.CreateNote,
-			services.NewAuthorizeHasEASiRole(),
-		),
-	)
-	api.Handle("/backfill", backfillHandler.Handle())
 
 }
