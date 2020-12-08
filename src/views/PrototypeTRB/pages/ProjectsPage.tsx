@@ -15,11 +15,9 @@ const ProjectsPage = () => {
       id="main-content"
       className="easi-main-content grid-container margin-bottom-5"
     >
-      <h1>Active TRB Projects</h1>
+      <h1>TRB Projects</h1>
       <Table bordered={false} fullWidth>
-        <caption className="usa-sr-only">
-          List of active five oh eight projects
-        </caption>
+        <caption className="usa-sr-only">List of TRB projects</caption>
         <thead>
           <tr>
             <th scope="col" style={{ whiteSpace: 'nowrap' }}>

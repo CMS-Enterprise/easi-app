@@ -21,7 +21,7 @@ const addDocument = (project: Project, type: DocumentType, score: string) => {
         ? `${type} uploaded - ${score}%`
         : `${type} uploaded`,
     createdAt: DateTime.local(),
-    authorName: 'Aaron Allen',
+    authorName: 'Katrina Berkley',
     type: ActivityType.DocumentAdded
   });
   project.banner = `${type} uploaded to ${project.name} project page.`; // eslint-disable-line no-param-reassign
@@ -31,7 +31,7 @@ const addActivity = (project: Project, content: string) => {
   project.activities.push({
     id: Math.round(Math.random() * 10000000),
     createdAt: DateTime.local(),
-    authorName: 'Aaron Allen',
+    authorName: 'Katrina Berkley',
     type: ActivityType.StatusChanged,
     content
   });

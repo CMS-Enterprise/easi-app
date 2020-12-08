@@ -6,9 +6,9 @@ const projects: Record<string, Project> = {
   1: {
     id: 1,
     name: 'TACO',
-    status: ProjectStatus.TestingInProgress,
+    status: ProjectStatus.WaitingForFindings,
     submissionDate: DateTime.fromISO('2020-11-10'),
-    lastUpdatedAt: DateTime.fromISO('2020-11-25'),
+    lastUpdatedAt: DateTime.fromISO('2020-12-10'),
     businessOwner: {
       name: 'Shane Clark'
     },
@@ -16,66 +16,73 @@ const projects: Record<string, Project> = {
     documents: [
       {
         id: 2,
-        type: DocumentType.TestingVPAT,
+        type: DocumentType.ArchitectureDiagram,
         mimetype: 'application/pdf',
-        createdAt: DateTime.fromISO('2020-11-25')
+        createdAt: DateTime.fromISO('2020-11-30')
       },
       {
         id: 3,
-        type: DocumentType.TestPlan,
+        type: DocumentType.Deck,
         mimetype: 'application/pdf',
-        createdAt: DateTime.fromISO('2020-11-25')
-      },
-      {
-        id: 4,
-        type: DocumentType.AwardedVPAT,
-        mimetype: 'application/pdf',
-        createdAt: DateTime.fromISO('2020-11-11')
+        createdAt: DateTime.fromISO('2020-11-30')
       }
     ],
     activities: [
       {
         id: 1,
-        content: 'Status changed to Testing in progress',
-        createdAt: DateTime.fromISO('2020-11-25'),
-        type: ActivityType.StatusChanged,
-        authorName: 'Aaron Allen'
-      },
-      {
-        id: 2,
-        content: 'Testing VPAT uploaded',
-        createdAt: DateTime.fromISO('2020-11-25'),
-        type: ActivityType.DocumentAdded,
-        authorName: 'Aaron Allen'
-      },
-      {
-        id: 3,
-        content: 'Test plan uploaded',
-        createdAt: DateTime.fromISO('2020-11-25'),
-        type: ActivityType.DocumentAdded,
-        authorName: 'Aaron Allen'
-      },
-      {
-        id: 4,
-        content:
-          'We are waiting on the test plan and VPAT from business owner.',
-        createdAt: DateTime.fromISO('2020-11-19'),
-        type: ActivityType.NoteAdded,
-        authorName: 'Aaron Allen'
-      },
-      {
-        id: 5,
-        content: 'Awarded VPAT uploaded',
-        createdAt: DateTime.fromISO('2020-11-11'),
-        type: ActivityType.DocumentAdded,
-        authorName: 'Aaron Allen'
-      },
-      {
-        id: 6,
         content: 'TACO project created',
         createdAt: DateTime.fromISO('2020-11-10'),
         type: ActivityType.ProjectCreated,
-        authorName: 'Aaron Allen'
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 2,
+        content: 'Status changed to Review Requested',
+        createdAt: DateTime.fromISO('2020-11-10'),
+        type: ActivityType.StatusChanged,
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 3,
+        content: 'Status changed to In Consultation',
+        createdAt: DateTime.fromISO('2020-11-25'),
+        type: ActivityType.StatusChanged,
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 4,
+        content: 'Architecture Diagram uploaded',
+        createdAt: DateTime.fromISO('2020-11-30'),
+        type: ActivityType.DocumentAdded,
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 5,
+        content: 'Deck uploaded',
+        createdAt: DateTime.fromISO('2020-11-30'),
+        type: ActivityType.DocumentAdded,
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 6,
+        content: 'Status changed to In Design Review',
+        createdAt: DateTime.fromISO('2020-12-04'),
+        type: ActivityType.StatusChanged,
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 7,
+        content: 'Design review scheduled for 12/9',
+        createdAt: DateTime.fromISO('2020-12-04'),
+        type: ActivityType.NoteAdded,
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 8,
+        content: 'Status changed to Waiting for Findings',
+        createdAt: DateTime.fromISO('2020-12-10'),
+        type: ActivityType.StatusChanged,
+        authorName: 'Katrina Berkley'
       }
     ],
     description:
@@ -84,88 +91,83 @@ const projects: Record<string, Project> = {
   2: {
     id: 2,
     name: 'Impact Analysis Network',
-    status: ProjectStatus.TestingCompleted,
-    submissionDate: DateTime.fromISO('2020-08-28'),
-    lastUpdatedAt: DateTime.fromISO('2020-11-30'),
+    status: ProjectStatus.InDesignReview,
+    submissionDate: DateTime.fromISO('2020-11-06'),
+    lastUpdatedAt: DateTime.fromISO('2020-12-04'),
     businessOwner: {
       name: 'Marny Land'
     },
     documents: [
       {
         id: 1,
-        type: DocumentType.TestResults,
+        type: DocumentType.Deck,
         mimetype: 'application/pdf',
         createdAt: DateTime.fromISO('2020-11-30'),
         score: 70
       },
       {
         id: 2,
-        type: DocumentType.TestingVPAT,
+        type: DocumentType.ArchitectureDiagram,
         mimetype: 'application/pdf',
-        createdAt: DateTime.fromISO('2020-11-21')
-      },
-      {
-        id: 3,
-        type: DocumentType.TestPlan,
-        mimetype: 'application/pdf',
-        createdAt: DateTime.fromISO('2020-11-21')
-      },
-      {
-        id: 4,
-        type: DocumentType.AwardedVPAT,
-        mimetype: 'application/pdf',
-        createdAt: DateTime.fromISO('2020-10-29')
+        createdAt: DateTime.fromISO('2020-11-30')
       }
     ],
     activities: [
       {
         id: 1,
-        content: 'Status changed to Testing Complete',
-        createdAt: DateTime.fromISO('2020-11-30'),
-        type: ActivityType.StatusChanged,
-        authorName: 'Aaron Allen'
+        content: 'Impact Analysis Network project created',
+        createdAt: DateTime.fromISO('2020-11-06'),
+        type: ActivityType.ProjectCreated,
+        authorName: 'Katrina Berkley'
       },
       {
         id: 2,
-        content: 'Test Results uploaded - 70%',
-        createdAt: DateTime.fromISO('2020-11-30'),
-        type: ActivityType.DocumentAdded,
-        authorName: 'Aaron Allen'
-      },
-      {
-        id: 1,
-        content: 'Status changed to Testing in progress',
-        createdAt: DateTime.fromISO('2020-11-28'),
+        content: 'Status changed to Review Requested',
+        createdAt: DateTime.fromISO('2020-11-06'),
         type: ActivityType.StatusChanged,
-        authorName: 'Aaron Allen'
-      },
-      {
-        id: 2,
-        content: 'Testing VPAT uploaded',
-        createdAt: DateTime.fromISO('2020-11-21'),
-        type: ActivityType.DocumentAdded,
-        authorName: 'Aaron Allen'
+        authorName: 'Katrina Berkley'
       },
       {
         id: 3,
-        content: 'Test plan uploaded',
-        createdAt: DateTime.fromISO('2020-11-21'),
+        content: 'Status changed to In Consultation',
+        createdAt: DateTime.fromISO('2020-11-12'),
+        type: ActivityType.StatusChanged,
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 4,
+        content: 'Architecture Diagram uploaded',
+        createdAt: DateTime.fromISO('2020-11-30'),
         type: ActivityType.DocumentAdded,
-        authorName: 'Aaron Allen'
+        authorName: 'Katrina Berkley'
       },
       {
         id: 5,
-        content: 'Awarded VPAT uploaded',
-        createdAt: DateTime.fromISO('2020-10-29'),
+        content: 'Deck uploaded',
+        createdAt: DateTime.fromISO('2020-11-30'),
         type: ActivityType.DocumentAdded,
-        authorName: 'Aaron Allen'
+        authorName: 'Katrina Berkley'
       },
       {
         id: 6,
-        content: 'Impact Analysis Network project created',
-        createdAt: DateTime.fromISO('2020-08-28'),
-        type: ActivityType.ProjectCreated,
-        authorName: 'Aaron Allen'
+        content: 'Status changed to In Design Review',
+        createdAt: DateTime.fromISO('2020-12-04'),
+        type: ActivityType.StatusChanged,
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 7,
+        content: 'Design review scheduled for 12/9',
+        createdAt: DateTime.fromISO('2020-12-04'),
+        type: ActivityType.NoteAdded,
+        authorName: 'Katrina Berkley'
+      },
+      {
+        id: 8,
+        content: 'Documents need review ahead of the session',
+        createdAt: DateTime.fromISO('2020-12-04'),
+        type: ActivityType.NoteAdded,
+        authorName: 'Katrina Berkley'
       }
     ],
 
@@ -174,9 +176,9 @@ const projects: Record<string, Project> = {
   3: {
     id: 3,
     name: 'Migration Pipeline',
-    status: ProjectStatus.InRemediation,
-    submissionDate: DateTime.fromISO('2020-07-16'),
-    lastUpdatedAt: DateTime.fromISO('2020-10-03'),
+    status: ProjectStatus.InConsultation,
+    submissionDate: DateTime.fromISO('2020-11-24'),
+    lastUpdatedAt: DateTime.fromISO('2020-11-28'),
     businessOwner: {
       name: 'Connie Leonard'
     },
@@ -187,9 +189,9 @@ const projects: Record<string, Project> = {
   4: {
     id: 4,
     name: '(USDS) Dashboard for USDS',
-    status: ProjectStatus.InRemediation,
-    submissionDate: DateTime.fromISO('2020-05-21'),
-    lastUpdatedAt: DateTime.fromISO('2020-09-14'),
+    status: ProjectStatus.ReviewRequested,
+    submissionDate: DateTime.fromISO('2020-12-01'),
+    lastUpdatedAt: DateTime.fromISO('2020-12-01'),
     businessOwner: {
       name: 'Ada Sanchez'
     },
@@ -200,7 +202,7 @@ const projects: Record<string, Project> = {
   5: {
     id: 5,
     name: 'OSORA FOIA Portal Project',
-    status: ProjectStatus.InRemediation,
+    status: ProjectStatus.Closed,
     submissionDate: DateTime.fromISO('2020-01-02'),
     lastUpdatedAt: DateTime.fromISO('2020-03-17'),
     businessOwner: {

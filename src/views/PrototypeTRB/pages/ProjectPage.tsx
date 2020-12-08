@@ -20,7 +20,7 @@ const addActivity = (project: Project, content: string) => {
   project.activities.push({
     id: Math.round(Math.random() * 10000000),
     createdAt: DateTime.local(),
-    authorName: 'Aaron Allen',
+    authorName: 'Katrina Berkley',
     type: ActivityType.StatusChanged,
     content
   });
@@ -300,17 +300,6 @@ const ProjectPage = () => {
 
           <h2>Project Activity</h2>
 
-          {noteAlert !== '' && (
-            <div
-              className="usa-alert usa-alert--success usa-alert--slim margin-bottom-2"
-              role="alert"
-            >
-              <div className="usa-alert__body">
-                <p className="usa-alert__text">{noteAlert}</p>
-              </div>
-            </div>
-          )}
-
           <ul
             className="easi-grt__note-list"
             aria-label={`This is a list of all activity on ${project.name}.`}
@@ -334,6 +323,17 @@ const ProjectPage = () => {
                 );
               })}
           </ul>
+
+          {noteAlert !== '' && (
+            <div
+              className="usa-alert usa-alert--success usa-alert--slim margin-bottom-2"
+              role="alert"
+            >
+              <div className="usa-alert__body">
+                <p className="usa-alert__text">{noteAlert}</p>
+              </div>
+            </div>
+          )}
 
           <form>
             <label className="usa-label" htmlFor="input-type-textarea">
@@ -359,7 +359,7 @@ const ProjectPage = () => {
                     id: Math.round(Math.random() * 10000000),
                     content: noteContent,
                     createdAt: DateTime.local(),
-                    authorName: 'Aaron Allen',
+                    authorName: 'Katrina Berkley',
                     type: ActivityType.NoteAdded
                   });
                   updateProject(project);

@@ -1,11 +1,9 @@
 import { DateTime } from 'luxon';
 
 export enum DocumentType {
-  TestPlan = 'Testing Plan',
-  TestingVPAT = 'Testing VPAT',
-  TestResults = 'Test Results',
-  AwardedVPAT = 'Awarded VPAT',
-  RemediationPlan = 'Remediation Plan'
+  FindingsLetter = 'Findings Letter',
+  ArchitectureDiagram = 'Architecture Diagram',
+  Deck = 'Deck'
 }
 
 export type Document = {
@@ -17,11 +15,12 @@ export type Document = {
 };
 
 export enum ProjectStatus {
-  ConsultRequested = 'Consult Requested',
-  TestingRequested = 'Testing Requested',
-  TestingInProgress = 'Testing in Progress',
-  TestingCompleted = 'Testing Completed',
-  InRemediation = 'In Remediation'
+  ReviewRequested = 'Review Requested',
+  InConsultation = 'In Consultation',
+  InDesignReview = 'In Design Review',
+  InOperationalReadiness = 'In Operational Readiness',
+  WaitingForFindings = 'Waiting for Findings',
+  Closed = 'Closed'
 }
 
 export type BusinessOwner = {
