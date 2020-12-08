@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -28,6 +29,7 @@ func NewSystemIntakeHandler(
 	update updateSystemIntake,
 	fetch fetchSystemIntakeByID,
 	delete archiveSystemIntake,
+	remove archiveSystemIntake,
 ) SystemIntakeHandler {
 	return SystemIntakeHandler{
 		HandlerBase:           base,
@@ -35,6 +37,7 @@ func NewSystemIntakeHandler(
 		UpdateSystemIntake:    update,
 		FetchSystemIntakeByID: fetch,
 		ArchiveSystemIntake:   delete,
+		RemoveSystemIntake:    remove,
 	}
 }
 
@@ -45,6 +48,7 @@ type SystemIntakeHandler struct {
 	UpdateSystemIntake    updateSystemIntake
 	FetchSystemIntakeByID fetchSystemIntakeByID
 	ArchiveSystemIntake   archiveSystemIntake
+	RemoveSystemIntake    archiveSystemIntake
 }
 
 // Handle handles a request for the system intake form
@@ -192,7 +196,14 @@ func (h SystemIntakeHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			err = h.ArchiveSystemIntake(r.Context(), uuid)
+			// TODO: this is very temporary code that will be used to
+			// remove uploaded backfill data - EASI-974
+			fn := h.ArchiveSystemIntake
+			if ok, perr := strconv.ParseBool(r.URL.Query().Get("remove")); ok && perr == nil {
+				fn = h.RemoveSystemIntake
+			}
+
+			err = fn(r.Context(), uuid)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return

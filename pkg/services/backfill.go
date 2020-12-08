@@ -63,6 +63,10 @@ func NewBackfill(
 			hasUpdate = true
 			mutate.LifecycleScope = intake.LifecycleScope
 		}
+		if intake.SubmittedAt != nil {
+			hasUpdate = true
+			mutate.SubmittedAt = intake.SubmittedAt
+		}
 
 		if hasUpdate {
 			if _, err = updateIntake(ctx, mutate); err != nil {
