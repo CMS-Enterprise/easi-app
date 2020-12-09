@@ -77,6 +77,14 @@ const SystemIntakeBanners = () => {
     NO_GOVERNANCE: {
       title: t('banner.title.responseRecevied'),
       description: t('banner.description.checkNextStep')
+    },
+    SHUTDOWN_IN_PROGRESS: {
+      title: t('banner.title.decommissioning'),
+      description: t('banner.description.decommissioning')
+    },
+    SHUTDOWN_COMPLETE: {
+      title: t('banner.title.responseRecevied'),
+      description: t('banner.description.checkNextStep')
     }
   };
 
@@ -93,6 +101,16 @@ const SystemIntakeBanners = () => {
           : '/system';
 
         if (intake.requestType === 'SHUTDOWN') {
+          // Current implementation a banner doesn't appear for completed shutdown
+          // because the entire flow is handled via email. Nothing to display.
+          if (
+            ['SHUTDOWN_COMPLETE', 'NO_GOVERNANCE', 'NOT_IT_REQUEST'].includes(
+              intake.status
+            )
+          ) {
+            return <React.Fragment key={intake.id} />;
+          }
+
           return (
             <ActionBanner
               key={intake.id}
@@ -103,14 +121,18 @@ const SystemIntakeBanners = () => {
               }
               helpfulText={status.description}
               onClick={() => {
-                const link =
-                  intake.status === 'INTAKE_SUBMITTED'
-                    ? `/system/${intake.id}/view`
-                    : `/system/${intake.id}`;
+                const link = [
+                  'INTAKE_SUBMITTED',
+                  'SHUTDOWN_IN_PROGRESS'
+                ].includes(intake.status)
+                  ? `/system/${intake.id}/view`
+                  : `/system/${intake.id}`;
                 history.push(link);
               }}
               label={
-                intake.status === 'INTAKE_SUBMITTED'
+                ['INTAKE_SUBMITTED', 'SHUTDOWN_IN_PROGRESS'].includes(
+                  intake.status
+                )
                   ? 'View submitted intake request'
                   : 'Go to intake request'
               }

@@ -54,6 +54,10 @@ const (
 	SystemIntakeStatusNOTAPPROVED SystemIntakeStatus = "NOT_APPROVED"
 	// SystemIntakeStatusNOGOVERNANCE captures enum value "NO_GOVERNANCE"
 	SystemIntakeStatusNOGOVERNANCE SystemIntakeStatus = "NO_GOVERNANCE"
+	// SystemIntakeStatusSHUTDOWNINPROGRESS captures enum value "SHUTDOWN_IN_PROGRESS"
+	SystemIntakeStatusSHUTDOWNINPROGRESS SystemIntakeStatus = "SHUTDOWN_IN_PROGRESS"
+	// SystemIntakeStatusSHUTDOWNCOMPLETE captures enum value "SHUTDOWN_COMPLETE"
+	SystemIntakeStatusSHUTDOWNCOMPLETE SystemIntakeStatus = "SHUTDOWN_COMPLETE"
 
 	// SystemIntakeRequestTypeNEW captures enum value of "NEW"
 	SystemIntakeRequestTypeNEW SystemIntakeRequestType = "NEW"
@@ -150,6 +154,7 @@ func GetStatusesByFilter(filter SystemIntakeStatusFilter) ([]SystemIntakeStatus,
 			SystemIntakeStatusBIZCASEFINALSUBMITTED,
 			SystemIntakeStatusREADYFORGRT,
 			SystemIntakeStatusREADYFORGRB,
+			SystemIntakeStatusSHUTDOWNINPROGRESS,
 		}, nil
 	case SystemIntakeStatusFilterCLOSED:
 		return []SystemIntakeStatus{
@@ -158,6 +163,7 @@ func GetStatusesByFilter(filter SystemIntakeStatusFilter) ([]SystemIntakeStatus,
 			SystemIntakeStatusNOTITREQUEST,
 			SystemIntakeStatusNOTAPPROVED,
 			SystemIntakeStatusNOGOVERNANCE,
+			SystemIntakeStatusSHUTDOWNCOMPLETE,
 		}, nil
 	default:
 		return []SystemIntakeStatus{}, errors.New("unexpected system intake status filter name")
