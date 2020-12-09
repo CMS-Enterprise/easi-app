@@ -10,6 +10,7 @@ import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
 import Cookies from 'views/Cookies';
+import DocumentPrototype from 'views/DocumentPrototype';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
@@ -66,6 +67,13 @@ const AppRoutes = () => {
           exact
           render={({ component }: any) => component()}
           component={GovernanceTaskList}
+        />
+      )}
+      {flags.fileUploads && (
+        <SecureRoute
+          exact
+          path="/document-prototype"
+          render={() => <DocumentPrototype />}
         />
       )}
       {isUserSet && user.isGrtReviewer(userGroups) && (
