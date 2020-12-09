@@ -28,7 +28,9 @@ const intake = {
     WITHDRAWN: 'Withdrawn',
     NOT_IT_REQUEST: 'Closed',
     NOT_APPROVED: 'Business case not approved',
-    NO_GOVERNANCE: 'Closed'
+    NO_GOVERNANCE: 'Closed',
+    SHUTDOWN_IN_PROGRESS: 'Decomission in progress',
+    SHUTDOWN_COMPLETE: 'Decommissioned'
   },
   banner: {
     title: {
