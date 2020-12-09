@@ -1,7 +1,8 @@
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
+import { ImproveEasiSurvey } from 'components/Survey';
 import { useFlags } from 'contexts/flagContext';
 import { BusinessCaseModel } from 'types/businessCase';
 
@@ -25,19 +26,7 @@ const Confirmation = ({
             referenceId: businessCaseId
           })}
         </h2>
-        <p className="margin-y-8">
-          <Trans i18nKey="businessCase:submission.confirmation.improveEasi">
-            helpUsImproveEasi
-            <a
-              href="https://www.surveymonkey.com/r/JNYSMZP"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open EASi survey in a new tab"
-            >
-              tellUsWhatYouThink
-            </a>
-          </Trans>
-        </p>
+        <ImproveEasiSurvey />
         <div>
           {flags.taskListLite ? (
             <Link to={`/governance-task-list/${businessCase.systemIntakeId}`}>
