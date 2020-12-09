@@ -84,6 +84,12 @@ func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
 }
 
+// NewLambdaEndpointCheck checks if a lambda endpoint is configured
+func (s Server) NewLambdaEndpointCheck() string {
+	s.checkRequiredConfig(appconfig.LambdaEndpoint)
+	return s.Config.GetString(appconfig.LambdaEndpoint)
+}
+
 // NewFlagConfig checks if Launch Darkly config exists
 func (s Server) NewFlagConfig() flags.Config {
 	s.checkRequiredConfig(appconfig.FlagSourceKey)
