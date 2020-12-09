@@ -154,6 +154,7 @@ func GetStatusesByFilter(filter SystemIntakeStatusFilter) ([]SystemIntakeStatus,
 			SystemIntakeStatusBIZCASEFINALSUBMITTED,
 			SystemIntakeStatusREADYFORGRT,
 			SystemIntakeStatusREADYFORGRB,
+			SystemIntakeStatusSHUTDOWNINPROGRESS,
 		}, nil
 	case SystemIntakeStatusFilterCLOSED:
 		return []SystemIntakeStatus{
@@ -162,6 +163,7 @@ func GetStatusesByFilter(filter SystemIntakeStatusFilter) ([]SystemIntakeStatus,
 			SystemIntakeStatusNOTITREQUEST,
 			SystemIntakeStatusNOTAPPROVED,
 			SystemIntakeStatusNOGOVERNANCE,
+			SystemIntakeStatusSHUTDOWNCOMPLETE,
 		}, nil
 	default:
 		return []SystemIntakeStatus{}, errors.New("unexpected system intake status filter name")
