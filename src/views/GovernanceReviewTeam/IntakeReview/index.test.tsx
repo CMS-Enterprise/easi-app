@@ -70,7 +70,7 @@ describe('The GRT intake review view', () => {
     grtReviewEmailBody: 'The quick brown fox jumps over the lazy dog.',
     decidedAt: new Date().toISOString(),
     businessCaseId: null,
-    submittedAt: new Date().toISOString()
+    submittedAt: DateTime.fromISO(new Date(2020, 8, 30).toISOString())
   };
 
   it('renders without crashing', () => {

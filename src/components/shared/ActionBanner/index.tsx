@@ -34,7 +34,7 @@ const ActionBanner = ({
         <div className="action-banner__icon">
           <i className="fa fa-clock-o fa-3x" />
         </div>
-        <span className="action-banner__text">
+        <span className="action-banner__text margin-right-2">
           <h2>{title}</h2>
           <p>{helpfulText}</p>
         </span>

@@ -6,6 +6,10 @@ const general = {
     day: 'Day',
     month: 'Month',
     year: 'Year'
+  },
+  feedback: {
+    improvement: 'Help us improve',
+    whatYouThink: 'Tell us what you think of this service'
   }
 };
 

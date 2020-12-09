@@ -21,7 +21,10 @@ import { hasAlternativeB } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import {
+  BusinessCaseDraftValidationSchema,
+  BusinessCaseFinalValidationSchema
+} from 'validations/businessCaseSchema';
 
 type PreferredSolutionProps = {
   businessCase: BusinessCaseModel;
@@ -39,11 +42,16 @@ const PreferredSolution = ({
     preferredSolution: businessCase.preferredSolution
   };
 
+  const ValidationSchema =
+    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
+      ? BusinessCaseFinalValidationSchema
+      : BusinessCaseDraftValidationSchema;
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.preferredSolution}
+      validationSchema={ValidationSchema.preferredSolution}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}

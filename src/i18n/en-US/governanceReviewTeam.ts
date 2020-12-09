@@ -88,7 +88,10 @@ const governanceReviewTeam = {
   },
   requestRepository: {
     header: 'Requests',
-    requestCount: 'There are {{count}} requests',
+    requestCount_open: 'There is {{count}} open request',
+    requestCount_open_plural: 'There are {{count}} open requests',
+    requestCount_closed: 'There is {{count}} closed request',
+    requestCount_closed_plural: 'There are {{count}} closed requests',
     table: {
       requestType: 'Type of request',
       submissionDate: {
@@ -125,7 +128,10 @@ const governanceReviewTeam = {
       SUBMIT_BIZ_CASE: 'Submitted a business case',
       CREATE_BIZ_CASE: 'Created a new business case',
       SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
-      REJECT: 'Rejected the request'
+      REJECT: 'Rejected the request',
+      SEND_EMAIL: 'Email sent to requester',
+      NOT_RESPONDING_CLOSE: 'Requester was not responding. Closed the request.',
+      GUIDE_RECEIVED_CLOSE: 'Guide received. Closed the request.'
     },
     showEmail: 'Show Email',
     hideEmail: 'Hide Email'
