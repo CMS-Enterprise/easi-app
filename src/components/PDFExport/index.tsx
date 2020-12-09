@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import axios from 'axios';
+import escape from 'lodash';
 
 import { useFlags } from 'contexts/flagContext';
 
