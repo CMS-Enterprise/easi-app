@@ -63,6 +63,11 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDCl
 				zap.Bool("flagResult", result),
 			)
 		}
+		appcontext.ZLogger(ctx).Info(
+			"successful evaluation of feature flag",
+			zap.String("flagName", emitFlagKey),
+			zap.Bool("flagResult", result),
+		)
 		return result
 	}
 
