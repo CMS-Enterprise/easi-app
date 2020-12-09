@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
+import { ImproveEasiDecisionPageSurvey } from 'components/Survey';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 type RejectedProps = {
@@ -23,10 +24,7 @@ const Rejected = ({ intake }: RejectedProps) => {
           <p className="text-pre-wrap">{intake.decisionNextSteps}</p>
         </>
       )}
-      <h3>{t('general:feedback.improvement')}</h3>
-      <UswdsLink href="/" target="_blank" rel="oponener noreferrer">
-        {t('general:feedback.whatYouThink')}
-      </UswdsLink>
+      <ImproveEasiDecisionPageSurvey />
 
       <div className="margin-top-4">
         <UswdsLink asCustom={Link} to={`/governance-task-list/${intake.id}`}>
