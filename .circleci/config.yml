@@ -353,6 +353,45 @@ jobs:
             ./scripts/circleci-announce-broken-branch
           when: on_fail
 
+  release_prototype_static:
+    docker:
+      - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+          APP_ENV: prototype
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Setup custom environment variables
+          command: |
+            temp_role=$(aws sts assume-role \
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/circleci \
+                    --role-session-name circleci)
+            echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
+      - run:
+          name: Build prototype static assets and release to S3
+          command: |
+            ./scripts/release_prototype_static
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
+
   deploy_dev:
     docker:
       - image: *circleci_docker_primary
@@ -532,36 +571,58 @@ workflows:
   compile:
     jobs:
       - pre_deps
-      - build_db_migrate_image
+      - build_db_migrate_image:
+          filters:
+            branches:
+              ignore:
+                - jb-clickable-prototype
       - lint:
           requires:
             - pre_deps
       - client_test:
           requires:
             - pre_deps
+          filters:
+            branches:
+              ignore:
+                - jb-clickable-prototype
       - test:
           requires:
             - pre_deps
             - build_db_migrate_image
+          filters:
+            branches:
+              ignore:
+                - jb-clickable-prototype
       - build_tag_push:
           requires:
             - test
+          filters:
+            branches:
+              ignore:
+                - jb-clickable-prototype
       - integration_tests:
           requires:
             - lint
             - client_test
             - build_tag_push
+          filters:
+            branches:
+              ignore:
+                - jb-clickable-prototype
       - hold_dev:
           type: approval
           filters:
             branches:
               ignore:
                 - master
+                - jb-clickable-prototype
       - deploy_dev:
           filters:
             branches:
               ignore:
                 - master
+                - jb-clickable-prototype
           requires:
             - integration_tests
             - hold_dev
@@ -579,6 +640,11 @@ workflows:
       - deploy_prod:
           requires:
             - hold_prod
+      - release_prototype_static:
+          filters:
+            branches:
+              only:
+                - jb-clickable-prototype
   weekly:
     triggers:
       - schedule:
