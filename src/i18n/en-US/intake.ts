@@ -42,7 +42,8 @@ const intake = {
       prepareGrt: 'Prepare for GRT',
       prepareGrb: 'Prepare for GRB',
       decisionReceived: 'Decision received',
-      requestWithdrawn: 'Request withdrawn'
+      requestWithdrawn: 'Request withdrawn',
+      decommissioning: 'Decommission in progress'
     },
     description: {
       intakeIncomplete:
@@ -54,7 +55,9 @@ const intake = {
       bizCaseIncomplete:
         'Your Business Case is incomplete, please submit it when you are ready so that we can move you to the next step.',
       bizCaseSubmitted:
-        'Your Business Case has been submitted for review. The Governance Admin team will get back to you about the next step.'
+        'Your Business Case has been submitted for review. The Governance Admin team will get back to you about the next step.',
+      decommissioning:
+        'Follow the decommission guide, complete steps relevant to your system and submit it back to ITgovernance@cms.hhs.gov to officially complete the decommissioning of your system.'
     }
   },
   requestTypeMap: {
