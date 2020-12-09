@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 export const AnythingWrongSurvey = () => {
   const { t } = useTranslation();
@@ -24,20 +24,21 @@ export const AnythingWrongSurvey = () => {
 
 // This is the common version for most pages
 export const ImproveEasiSurvey = () => {
+  const { t } = useTranslation();
+  // Period and space to be added between translations since they are on same line
+  const periodSpace = '. ';
   return (
     <div>
       <p>
-        <Trans i18nKey="general:feedback.improveEasi">
-          helpUsImproveEasi
-          <a
-            href="https://www.surveymonkey.com/r/JNYSMZP"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open EASi survey in a new tab"
-          >
-            tellUsWhatYouThink
-          </a>
-        </Trans>
+        {t('general:feedback.improvement') + periodSpace}
+        <a
+          href="https://www.surveymonkey.com/r/JNYSMZP"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open EASi survey in a new tab"
+        >
+          {t('general:feedback.whatYouThink')}
+        </a>
       </p>
     </div>
   );
@@ -46,20 +47,19 @@ export const ImproveEasiSurvey = () => {
 /* This version is only for decision pages, it has a header so that it fits
   with the theme of the pages */
 export const ImproveEasiDecisionPageSurvey = () => {
+  const { t } = useTranslation();
   return (
     <div>
       <p>
-        <Trans i18nKey="general:feedback.improveEasi">
-          <h3>helpUsImproveEasi</h3>
-          <a
-            href="https://www.surveymonkey.com/r/JNYSMZP"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open EASi survey in a new tab"
-          >
-            tellUsWhatYouThink
-          </a>
-        </Trans>
+        <h3>{t('general:feedback.improvement')}</h3>
+        <a
+          href="https://www.surveymonkey.com/r/JNYSMZP"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Open EASi survey in a new tab"
+        >
+          {t('general:feedback.whatYouThink')}
+        </a>
       </p>
     </div>
   );
