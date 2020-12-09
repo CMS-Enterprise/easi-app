@@ -421,21 +421,6 @@ func (s *Server) routes(
 						store.UpdateBusinessCase,
 					),
 				),
-				models.ActionTypeREJECT: services.NewTakeActionUpdateStatus(
-					serviceConfig,
-					models.SystemIntakeStatusNOTAPPROVED,
-					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
-					saveAction,
-					cedarLDAPClient.FetchUserInfo,
-					emailClient.SendSystemIntakeReviewEmail,
-					true,
-					services.NewCloseBusinessCase(
-						serviceConfig,
-						store.FetchBusinessCaseByID,
-						store.UpdateBusinessCase,
-					),
-				),
 				models.ActionTypeSENDEMAIL: services.NewTakeActionUpdateStatus(
 					serviceConfig,
 					models.SystemIntakeStatusSHUTDOWNINPROGRESS,
@@ -512,6 +497,9 @@ func (s *Server) routes(
 			services.NewAuthorizeRequireGRTJobCode(),
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
+			saveAction,
+			cedarLDAPClient.FetchUserInfo,
+			emailClient.SendRejectRequestEmail,
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/reject", systemIntakeRejectionHandler.Handle())
