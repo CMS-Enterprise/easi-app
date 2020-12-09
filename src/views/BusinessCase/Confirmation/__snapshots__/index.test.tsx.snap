@@ -15,19 +15,19 @@ exports[`The Business Case Confirmation page matches the snapshot 1`] = `
     >
       Your reference ID is 
     </h2>
-    <p
-      className="margin-y-8"
-    >
-      Help us improve EASi. 
-      <a
-        aria-label="Open EASi survey in a new tab"
-        href="https://www.surveymonkey.com/r/JNYSMZP"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        Tell us what you think of this service (opens in a new tab)
-      </a>
-    </p>
+    <div>
+      <p>
+        Help us improve EASi. 
+        <a
+          aria-label="Open EASi survey in a new tab"
+          href="https://www.surveymonkey.com/r/JNYSMZP"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Tell us what you think of this service (opens in a new tab)
+        </a>
+      </p>
+    </div>
     <div>
       <a
         href="/"
