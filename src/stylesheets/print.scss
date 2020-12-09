@@ -1,14 +1,45 @@
+@media screen {
+  .easi-only-print {
+    display: none;
+  }
+}
+
 @media print {
-  header.usa-header,
-  footer.usa-footer,
-  nav.easi-breadcrumb-nav,
-  .easi-no-print,
-  .skipnav,
-  noscript {
+  html {
+    font-size: 12px;
+  }
+
+  @page {
+    @bottom-left {
+      content: 'Page ' counter(page) ' of ' counter(pages);
+    }
+  }
+}
+
+@media print {
+  .easi-no-print {
     display: none;
   }
 
+  .easi-only-print {
+    display: block;
+  }
+
+  h1 {
+    border-bottom: solid 5px #009bc3;
+    padding-bottom: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  // prince doesn't support overflow: auto
+  // this is a different way to create a new block formatting context
+  .overflow-auto {
+    float: left;
+    clear: both;
+  }
+
   .easi-review-row {
+    break-inside: avoid;
     display: flex;
     & > div {
       flex: 1;
@@ -21,9 +52,24 @@
     border-bottom: solid 5px black;
   }
 
-  h1 {
-    border-bottom: solid 5px #009bc3;
-    padding-bottom: 1rem;
-    margin-bottom: 3rem;
+  .easi-responsive-tabs__navigation {
+    display: none;
+  }
+
+  .easi-responsive-tabs {
+    border: 0;
+    box-shadow: none;
+  }
+
+  .easi-business-case__review-solutions-wrapper {
+    padding: 0;
+  }
+
+  .alternative-analysis-wrapper {
+    background: white;
+  }
+
+  .est-lifecycle-cost__total {
+    padding: 1rem;
   }
 }

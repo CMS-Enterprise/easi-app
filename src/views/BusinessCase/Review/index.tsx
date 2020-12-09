@@ -9,6 +9,8 @@ import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import { postAction } from 'types/routines';
 
+import './index.scss';
+
 type ReviewProps = {
   businessCase: BusinessCaseModel;
 };
