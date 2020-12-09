@@ -174,6 +174,9 @@ const LDTimeout = "LD_TIMEOUT_SECONDS"
 // FlagSourceKey indicates where flags should be loaded from
 const FlagSourceKey = "FLAG_SOURCE"
 
+// LambdaEndpoint is the host to direct lambda requests to
+const LambdaEndpoint = "LAMBDA_ENDPOINT"
+
 // FlagSourceOption represents an environment
 type FlagSourceOption string
 
