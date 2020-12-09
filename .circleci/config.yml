@@ -641,6 +641,8 @@ workflows:
           requires:
             - hold_prod
       - release_prototype_static:
+          requires:
+            - lint
           filters:
             branches:
               only:
