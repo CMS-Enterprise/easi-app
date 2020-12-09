@@ -438,7 +438,7 @@ func (s *Server) routes(
 				),
 				models.ActionTypeSENDEMAIL: services.NewTakeActionUpdateStatus(
 					serviceConfig,
-					models.SystemIntakeStatusINTAKESUBMITTED,
+					models.SystemIntakeStatusSHUTDOWNINPROGRESS,
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					saveAction,
@@ -453,7 +453,7 @@ func (s *Server) routes(
 				),
 				models.ActionTypeGUIDERECEIVEDCLOSE: services.NewTakeActionUpdateStatus(
 					serviceConfig,
-					models.SystemIntakeStatusNOGOVERNANCE,
+					models.SystemIntakeStatusSHUTDOWNCOMPLETE,
 					store.UpdateSystemIntake,
 					services.NewAuthorizeRequireGRTJobCode(),
 					saveAction,
