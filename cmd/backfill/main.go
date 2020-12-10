@@ -241,17 +241,25 @@ func convert(row []string) (*entry, error) {
 
 	// TODO - labelled "Project #" - what does this map to?
 	// usually: "000120"; occaisonally: "001595, 000102, 002014", "FY20-000792,  FY-2021: 000787 and 000924"
-	data.Intake.FundingNumber = null.StringFrom(row[colPrjNum]) // TODO - correct?
+	data.Intake.FundingNumber = null.StringFrom(row[colPrjNum])
 	data.Intake.FundingSource = null.StringFrom(row[colFundSrc])
-	data.Intake.CostIncrease = null.StringFrom(row[colCostFree]) // TODO - correct mapping?
+	if row[colPrjNum] != "" || row[colFundSrc] != "" {
+		data.Intake.ExistingFunding = null.BoolFrom(true)
+	}
+
+	data.Intake.CostIncrease = null.StringFrom(row[colCostFree])
+
 	data.Intake.Contractor = null.StringFrom(row[colContractor])
 	data.Intake.ContractVehicle = null.StringFrom(row[colVehicle])
-
-	// manually parsed "Period of Performance"
 	data.Intake.ContractStartMonth = null.StringFrom(row[colCStartM])
 	data.Intake.ContractStartYear = null.StringFrom(row[colCStartY])
 	data.Intake.ContractEndMonth = null.StringFrom(row[colCEndM])
 	data.Intake.ContractEndYear = null.StringFrom(row[colCEndY])
+	if row[colContractor] != "" || row[colVehicle] != "" ||
+		row[colCStartM] != "" || row[colCStartY] != "" ||
+		row[colCEndM] != "" || row[colCEndY] != "" {
+		data.Intake.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+	}
 
 	if row[colGRTNotes] != "" {
 		data.Notes = append(data.Notes, models.Note{
