@@ -10,7 +10,7 @@ import CollapsableLink from 'components/shared/CollapsableLink';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import Survey, { SurveyTypeEnum } from 'components/Survey';
+import { AnythingWrongSurvey } from 'components/Survey';
 import { AppState } from 'reducers/rootReducer';
 import { Action } from 'types/action';
 import { fetchActions, fetchIntakeNotes, postIntakeNote } from 'types/routines';
@@ -148,7 +148,7 @@ const Notes = () => {
                 </Button>
               </Form>
               <ul className="easi-grt__history">{interleavedList}</ul>
-              <Survey surveyType={SurveyTypeEnum.ANYTHING_WRONG} />
+              <AnythingWrongSurvey />
             </div>
           );
         }}
