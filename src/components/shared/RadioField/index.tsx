@@ -13,7 +13,7 @@ type RadioFieldProps = {
   onBlur?: () => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value: any;
-};
+} & JSX.IntrinsicElements['input'];
 
 // eslint-disable-next-line import/prefer-default-export
 export const RadioField = ({
@@ -25,7 +25,8 @@ export const RadioField = ({
   name,
   onBlur,
   onChange,
-  value
+  value,
+  ...props
 }: RadioFieldProps) => {
   const radioClasses = classnames(
     'usa-radio',
@@ -49,6 +50,8 @@ export const RadioField = ({
         onChange={onChange}
         type="radio"
         value={value}
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...props}
       />
       <label className={radioLabelClasses} htmlFor={id}>
         {label}
