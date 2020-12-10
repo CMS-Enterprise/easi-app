@@ -77,6 +77,14 @@ const SystemIntakeBanners = () => {
     NO_GOVERNANCE: {
       title: t('banner.title.responseRecevied'),
       description: t('banner.description.checkNextStep')
+    },
+    SHUTDOWN_IN_PROGRESS: {
+      title: t('banner.title.decommissioning'),
+      description: t('banner.description.decommissioning')
+    },
+    SHUTDOWN_COMPLETE: {
+      title: t('banner.title.responseRecevied'),
+      description: t('banner.description.checkNextStep')
     }
   };
 
@@ -87,13 +95,52 @@ const SystemIntakeBanners = () => {
   return (
     <>
       {intakes.map((intake: SystemIntakeForm) => {
-        let rootPath = '';
-        if (intake.requestType === 'SHUTDOWN') {
-          rootPath = '/system';
-        } else {
-          rootPath = flags.taskListLite ? '/governance-task-list' : '/system';
-        }
         const status = statusMap[intake.status];
+        const rootPath = flags.taskListLite
+          ? '/governance-task-list'
+          : '/system';
+
+        if (intake.requestType === 'SHUTDOWN') {
+          // Current implementation a banner doesn't appear for completed shutdown
+          // because the entire flow is handled via email. Nothing to display.
+          if (
+            ['SHUTDOWN_COMPLETE', 'NO_GOVERNANCE', 'NOT_IT_REQUEST'].includes(
+              intake.status
+            )
+          ) {
+            return <React.Fragment key={intake.id} />;
+          }
+
+          return (
+            <ActionBanner
+              key={intake.id}
+              title={
+                intake.requestName
+                  ? `${intake.requestName}: ${status.title}`
+                  : status.title
+              }
+              helpfulText={status.description}
+              onClick={() => {
+                const link = [
+                  'INTAKE_SUBMITTED',
+                  'SHUTDOWN_IN_PROGRESS'
+                ].includes(intake.status)
+                  ? `/system/${intake.id}/view`
+                  : `/system/${intake.id}`;
+                history.push(link);
+              }}
+              label={
+                ['INTAKE_SUBMITTED', 'SHUTDOWN_IN_PROGRESS'].includes(
+                  intake.status
+                )
+                  ? 'View submitted intake request'
+                  : 'Go to intake request'
+              }
+              requestType={intake.requestType}
+              data-intakeid={intake.id}
+            />
+          );
+        }
 
         return (
           <ActionBanner

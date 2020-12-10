@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -22,6 +23,7 @@ const (
 	envFile     = "BACKFILL_FILE"
 	envHost     = "BACKFILL_HOST"
 	envAuth     = "BACKFILL_AUTH"
+	envDrop     = "BACKFILL_DROP"
 	healthcheck = "https://%s/api/v1/healthcheck"
 )
 
@@ -96,13 +98,19 @@ func upload(host string, auth string, item *entry) error {
 	if err != nil {
 		return err
 	}
-	// fmt.Fprintf(os.Stderr, "%s\n", body)
-	// _ = body
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("https://%s/api/v1/backfill", host), bytes.NewReader(body))
 	if err != nil {
 		return err
 	}
+
+	if ok, perr := strconv.ParseBool(os.Getenv(envDrop)); ok && perr == nil {
+		req, err = http.NewRequest("DELETE", fmt.Sprintf("https://%s/api/v1/system_intake/%s?remove=true", host, item.Intake.ID.String()), nil)
+		if err != nil {
+			return err
+		}
+	}
+
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", auth))
 	// req.Write(os.Stdout)
 
@@ -116,10 +124,10 @@ func upload(host string, auth string, item *entry) error {
 		return fmt.Errorf("expected 204; got %d; body %s", resp.StatusCode, err)
 	}
 
-	if resp.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("%s; expected 204; got %d; body %s", item.Intake.ID.String(), resp.StatusCode, content)
+	if resp.StatusCode != http.StatusNoContent && resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("%s; expected 200/204; got %d; body %s", item.Intake.ID.String(), resp.StatusCode, content)
 	}
-	fmt.Fprintf(os.Stdout, "uploaded: %s\n", item.Intake.ID.String())
+	fmt.Fprintf(os.Stdout, "processed: %s\n", item.Intake.ID.String())
 	return nil
 }
 
@@ -179,6 +187,7 @@ func convert(row []string) (*entry, error) {
 	// labelled "Request Date"
 	if dt, err := convertDate(row[colDate]); err == nil {
 		data.Intake.CreatedAt = dt
+		data.Intake.SubmittedAt = dt
 	} else {
 		return nil, err
 	}
@@ -186,7 +195,7 @@ func convert(row []string) (*entry, error) {
 	// we now have a place for Acronym
 	data.Intake.ProjectAcronym = null.StringFrom(row[colAcronym])
 	data.Intake.ProjectName = null.StringFrom(row[colName])
-	data.Intake.Component = null.StringFrom(row[colComponent])
+	data.Intake.BusinessOwnerComponent = null.StringFrom(row[colComponent])
 
 	if row[colGRTDate] != "" {
 		if dt, err := convertDate(row[colGRTDate]); err == nil {
@@ -253,7 +262,7 @@ func convert(row []string) (*entry, error) {
 
 	if row[colPeriod] != "" {
 		data.Notes = append(data.Notes, models.Note{
-			Content:    null.StringFrom(fmt.Sprintf("Period of Performance: %s", row[colGRTNotes])),
+			Content:    null.StringFrom(fmt.Sprintf("Period of Performance: %s", row[colPeriod])),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}

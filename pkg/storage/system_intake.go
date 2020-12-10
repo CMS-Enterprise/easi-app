@@ -181,7 +181,11 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			zap.String("id", intake.ID.String()),
 			zap.String("user", intake.EUAUserID.ValueOrZero()),
 		)
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     intake,
+			Operation: apperrors.QueryUpdate,
+		}
 	}
 	// the SystemIntake may have been updated to Archived, so we want to use
 	// the un-filtered fetch to return the saved object
@@ -212,7 +216,11 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
 		}
-		return nil, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     id,
+			Operation: apperrors.QueryFetch,
+		}
 	}
 
 	return &intake, nil
@@ -358,4 +366,34 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	metrics.Funded = fundedResponse.FundedCount
 
 	return metrics, nil
+}
+
+// DeleteSystemIntakeByID removes an Intake, along with any associated Notes
+// TODO: this should be remove quickly - EASI-974
+func (s *Store) DeleteSystemIntakeByID(ctx context.Context, id uuid.UUID) error {
+	_, err := s.db.Exec(
+		`DELETE from note n WHERE n.system_intake=$1`,
+		id.String(),
+	)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to delete notes"),
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return err
+	}
+	_, err = s.db.Exec(
+		`DELETE from system_intake i WHERE i.id=$1`,
+		id.String(),
+	)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to delete system_intake"),
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
+		return err
+	}
+	return nil
 }

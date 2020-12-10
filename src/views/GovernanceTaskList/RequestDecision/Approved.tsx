@@ -38,7 +38,7 @@ const Approved = ({ intake }: ApprovedProps) => {
           <h3>{t('decision.nextSteps')}</h3>
           <Alert type="info">{t('decision.completeNextSteps')}</Alert>
 
-          <p className="text-pre-wrap">{intake.lifecycleNextSteps}</p>
+          <p className="text-pre-wrap">{intake.decisionNextSteps}</p>
         </>
       )}
       <ImproveEasiDecisionPageSurvey />
