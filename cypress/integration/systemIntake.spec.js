@@ -35,16 +35,89 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
+    cy.contains('button', 'Next').click();
+
+    // Contract Details
+    cy.get('#IntakeForm-CurrentStage')
+      .select('Just an idea')
+      .should('have.value', 'Just an idea');
+
     cy.get('#IntakeForm-HasFundingSourceNo')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#IntakeForm-CostsExpectingIncreaseNo')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#IntakeForm-ContractNotNeeded')
       .check({ force: true })
       .should('be.checked');
 
     cy.contains('button', 'Next').click();
 
     cy.wait('@putSystemIntake');
-
+    cy.wait(1000);
     // Review
     cy.contains('h1', 'Check your answers before sending');
+
+    cy.window()
+      .its('store')
+      .invoke('getState')
+      .its('systemIntake')
+      .its('systemIntake')
+      .should('deep.include', {
+        requestName: 'Test Request Name',
+        requester: {
+          name: 'EASi Testing',
+          component: 'Center for Medicare',
+          email: ''
+        },
+        businessOwner: {
+          name: 'Casey Doe',
+          component: 'Center for Medicare'
+        },
+        productManager: {
+          name: 'Casey Doe',
+          component: 'Center for Medicare'
+        },
+        // DB doesn't properly save the radio button value
+        isso: {
+          isPresent: null,
+          name: ''
+        },
+        // DB doesn't properly save the radio button value
+        governanceTeams: {
+          isPresent: null,
+          teams: []
+        },
+        fundingSource: {
+          isFunded: false,
+          fundingNumber: '',
+          source: ''
+        },
+        costs: {
+          isExpectingIncrease: 'NO',
+          expectedIncreaseAmount: ''
+        },
+        contract: {
+          hasContract: 'NOT_NEEDED',
+          contractor: '',
+          vehicle: '',
+          startDate: {
+            month: '',
+            year: ''
+          },
+          endDate: {
+            month: '',
+            year: ''
+          }
+        },
+        businessNeed: 'This is my business need.',
+        businessSolution: 'This is my business solution.',
+        currentStage: 'Just an idea',
+        needsEaSupport: false
+      });
   });
 
   it('displays and fills conditional fields', () => {
@@ -80,13 +153,60 @@ describe('The System Intake Form', () => {
     // Request Details
     cy.systemIntake.requestDetails.fillNonBranchingFields();
 
+    cy.contains('button', 'Next').click();
+
+    // Contract Details
+    cy.get('#IntakeForm-CurrentStage')
+      .select('Just an idea')
+      .should('have.value', 'Just an idea');
+
     cy.get('#IntakeForm-HasFundingSourceYes')
       .check({ force: true })
       .should('be.checked');
 
+    cy.get('#IntakeForm-FundingSource')
+      .select('CLIA')
+      .should('have.value', 'CLIA');
+
     cy.get('#IntakeForm-FundingNumber')
       .type('111111')
       .should('have.value', '111111');
+
+    cy.get('#IntakeForm-CostsExpectingIncreaseYes')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#IntakeForm-CostsExpectedIncrease')
+      .type('99999')
+      .should('have.value', '99999');
+
+    cy.get('#IntakeForm-ContractHaveContract')
+      .check({ force: true })
+      .should('be.checked');
+
+    cy.get('#IntakeForm-Contractor')
+      .type('TrussWorks, Inc.')
+      .should('have.value', 'TrussWorks, Inc.');
+
+    cy.get('#IntakeForm-Vehicle')
+      .type('Fixed Price Contract')
+      .should('have.value', 'Fixed Price Contract');
+
+    cy.get('#IntakeForm-ContractStartMonth')
+      .type('1')
+      .should('have.value', '1');
+
+    cy.get('#IntakeForm-ContractStartYear')
+      .type('2020')
+      .should('have.value', '2020');
+
+    cy.get('#IntakeForm-ContractEndMonth')
+      .type('12')
+      .should('have.value', '12');
+
+    cy.get('#IntakeForm-ContractEndYear')
+      .type('2021')
+      .should('have.value', '2021');
 
     cy.contains('button', 'Next').click();
 
@@ -150,9 +270,9 @@ describe('The System Intake Form', () => {
         /^Enterprise Architecture, Enterprise Architecture Collaborator$/
       );
 
-    cy.contains('.easi-review-row dt', 'Request Name')
+    cy.contains('.easi-review-row dt', 'Project Name')
       .siblings('dd')
-      .contains('Request Name');
+      .contains('Test Request Name');
 
     cy.contains('dt', 'What is your business need?')
       .siblings('dd')
@@ -173,16 +293,9 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('Just an idea');
 
-    cy.contains(
-      '.easi-review-row dt',
-      'Do you currently have a contract in place?'
-    )
-      .siblings('dd')
-      .contains('No');
-
     cy.contains('.easi-review-row dt', 'Does the project have funding')
       .siblings('dd')
-      .contains('Yes, 111111');
+      .contains('Yes, CLIA, 111111');
   });
 
   it('displays contact details error messages', () => {

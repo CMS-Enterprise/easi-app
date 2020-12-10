@@ -2,20 +2,25 @@ package server
 
 import (
 	"net/http"
+	"time"
 
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
+	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
+	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/services"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 func (s *Server) routes(
@@ -37,25 +42,55 @@ func (s *Server) routes(
 	)
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
-	// check we have all of the configs for CEDAR clients
-	if s.environment.Deployed() {
-		s.NewCEDARClientCheck()
+	// set up Feature Flagging utilities
+	flagUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
+	flagConfig := s.NewFlagConfig()
+	var flagClient flags.FlagClient
+
+	// we default to an OFFLINE client for non-deployed environments
+	ldClient, err := ld.MakeCustomClient("fake_offline_key", ld.Config{Offline: true}, 5*time.Second)
+	if err != nil {
+		s.logger.Fatal("Failed to create LaunchDarkly client", zap.Error(err))
+	}
+
+	switch flagConfig.Source {
+	case appconfig.FlagSourceLocal:
+		defaultFlags := flags.FlagValues{"taskListLite": "true", "sandbox": "true", "pdfExport": "true", "prototype508": "true", "fileUploads": "true", "prototypeTRB": "true"}
+		flagClient = flags.NewLocalClient(defaultFlags)
+
+	case appconfig.FlagSourceLaunchDarkly:
+		client, clientErr := flags.NewLaunchDarklyClient(flagConfig)
+		if clientErr != nil {
+			s.logger.Fatal("Failed to connect to create flag client", zap.Error(clientErr))
+		}
+		ldClient = client
+		flagClient = flags.WrapLaunchDarklyClient(ldClient)
 	}
 
 	// set up CEDAR client
-	cedarEasiClient := cedareasi.NewTranslatedClient(
-		s.Config.GetString("CEDAR_API_URL"),
-		s.Config.GetString("CEDAR_API_KEY"),
-	)
+	cedarEasiClient := local.NewCedarEasiClient(s.logger)
+	if !(s.environment.Local() || s.environment.Test()) {
+		// check we have all of the configs for CEDAR clients
+		s.NewCEDARClientCheck()
 
-	cedarLdapClient := cedarldap.NewTranslatedClient(
-		s.Config.GetString("CEDAR_API_URL"),
-		s.Config.GetString("CEDAR_API_KEY"),
-	)
+		cedarEasiClient := cedareasi.NewTranslatedClient(
+			s.Config.GetString(appconfig.CEDARAPIURL),
+			s.Config.GetString(appconfig.CEDARAPIKey),
+			ldClient,
+			flagUser,
+		)
+		if s.environment.Deployed() {
+			s.CheckCEDAREasiClientConnection(cedarEasiClient)
+		}
+	}
 
-	if s.environment.Deployed() {
-		s.CheckCEDAREasiClientConnection(cedarEasiClient)
-		s.CheckCEDARLdapClientConnection(cedarLdapClient)
+	var cedarLDAPClient cedarldap.Client
+	cedarLDAPClient = cedarldap.NewTranslatedClient(
+		s.Config.GetString(appconfig.CEDARAPIURL),
+		s.Config.GetString(appconfig.CEDARAPIKey),
+	)
+	if s.environment.Local() || s.environment.Test() {
+		cedarLDAPClient = local.NewCedarLdapClient(s.logger)
 	}
 
 	// set up Email Client
@@ -67,7 +102,7 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to create email client", zap.Error(err))
 	}
 	// override email client with local one
-	if s.environment.Local() {
+	if s.environment.Local() || s.environment.Test() {
 		localSender := local.NewSender(s.logger)
 		emailClient, err = email.NewClient(emailConfig, localSender)
 		if err != nil {
@@ -79,18 +114,13 @@ func (s *Server) routes(
 		s.CheckEmailClient(emailClient)
 	}
 
-	// set up LD Client
-	var ldClient *ld.LDClient
-	var ldUser *ld.User
+	// set up S3 client
+	s3Config := s.NewS3Config()
 	if s.environment.Local() {
-		ldConfig := s.NewLDConfig()
-		ldClient, err = flags.NewLDClient(ldConfig)
-		if err != nil {
-			s.logger.Fatal("Failed to connect to launch darkly", zap.Error(err))
-		}
-		anonUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
-		ldUser = &anonUser
+		s3Config.IsLocal = true
 	}
+
+	s3Client := upload.NewS3Client(s3Config)
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
@@ -104,7 +134,7 @@ func (s *Server) routes(
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
 
-	serviceConfig := services.NewConfig(s.logger, ldClient)
+	serviceConfig := services.NewConfig(s.logger, flagClient)
 
 	store, err := storage.NewStore(
 		s.logger,
@@ -115,10 +145,8 @@ func (s *Server) routes(
 	}
 
 	// endpoint for flags list
-	if ldClient != nil {
-		flagsHandler := handlers.NewFlagsHandler(base, flags.NewFetchFlags(), *ldClient, *ldUser)
-		api.Handle("/flags", flagsHandler.Handle())
-	}
+	flagsHandler := handlers.NewFlagsHandler(base, flags.NewFetchFlags(), flagClient, flagUser)
+	api.Handle("/flags", flagsHandler.Handle())
 
 	// endpoint for systems list
 	systemHandler := handlers.NewSystemsListHandler(
@@ -135,41 +163,31 @@ func (s *Server) routes(
 		),
 		services.NewUpdateSystemIntake(
 			serviceConfig,
-			store.UpdateSystemIntake,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeUserIsIntakeRequester(),
-			cedarLdapClient.FetchUserEmailAddress,
-			emailClient.SendSystemIntakeReviewEmail,
-			services.NewUpdateDraftSystemIntake(
-				serviceConfig,
-				services.NewAuthorizeUserIsIntakeRequester(),
-				store.UpdateSystemIntake,
-			),
-			services.NewSubmitSystemIntake(
-				serviceConfig,
-				services.NewAuthorizeUserIsIntakeRequester(),
-				store.UpdateSystemIntake,
-				cedarEasiClient.ValidateAndSubmitSystemIntake,
-				emailClient.SendSystemIntakeSubmissionEmail,
-			),
-			!s.environment.Prod(),
+			store.UpdateSystemIntake,
+			services.NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode(),
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeFetchSystemIntakeByID(),
+			services.NewAuthorizeHasEASiRole(),
 		),
 		services.NewArchiveSystemIntake(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
-			services.NewArchiveBusinessCase(
+			services.NewCloseBusinessCase(
 				serviceConfig,
 				store.FetchBusinessCaseByID,
 				store.UpdateBusinessCase,
 			),
-			services.NewAuthorizeArchiveSystemIntake(s.logger),
+			services.NewAuthorizeUserIsIntakeRequester(),
 			emailClient.SendWithdrawRequestEmail,
+		),
+		services.NewDeleteSystemIntakeByID(
+			serviceConfig,
+			store.DeleteSystemIntakeByID,
+			services.NewAuthorizeRequireGRTJobCode(),
 		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
@@ -177,10 +195,12 @@ func (s *Server) routes(
 
 	systemIntakesHandler := handlers.NewSystemIntakesHandler(
 		base,
-		services.NewFetchSystemIntakesByEuaID(
+		services.NewFetchSystemIntakes(
 			serviceConfig,
 			store.FetchSystemIntakesByEuaID,
-			services.NewAuthorizeFetchSystemIntakesByEuaID(),
+			store.FetchSystemIntakes,
+			store.FetchSystemIntakesByStatuses,
+			services.NewAuthorizeHasEASiRole(),
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
@@ -190,20 +210,22 @@ func (s *Server) routes(
 		services.NewFetchBusinessCaseByID(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-			services.NewAuthorizeFetchBusinessCaseByID(),
+			services.NewAuthorizeHasEASiRole(),
 		),
 		services.NewCreateBusinessCase(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeCreateBusinessCase(s.logger),
+			services.NewAuthorizeUserIsIntakeRequester(),
+			store.CreateAction,
+			cedarLDAPClient.FetchUserInfo,
 			store.CreateBusinessCase,
+			store.UpdateSystemIntake,
 		),
 		services.NewUpdateBusinessCase(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-			services.NewAuthorizeUpdateBusinessCase(s.logger),
+			services.NewAuthorizeUserIsBusinessCaseRequester(),
 			store.UpdateBusinessCase,
-			emailClient.SendBusinessCaseSubmissionEmail,
 		),
 	)
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
@@ -214,7 +236,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
-			services.NewAuthorizeFetchBusinessCasesByEuaID(),
+			services.NewAuthorizeHasEASiRole(),
 		),
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
@@ -225,7 +247,329 @@ func (s *Server) routes(
 	)
 	api.Handle("/metrics", metricsHandler.Handle())
 
+	saveAction := services.NewSaveAction(
+		store.CreateAction,
+		cedarLDAPClient.FetchUserInfo,
+	)
+	actionHandler := handlers.NewActionHandler(
+		base,
+		services.NewTakeAction(
+			store.FetchSystemIntakeByID,
+			map[models.ActionType]services.ActionExecuter{
+				models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
+					serviceConfig,
+					services.NewAuthorizeUserIsIntakeRequester(),
+					store.UpdateSystemIntake,
+					cedarEasiClient.ValidateAndSubmitSystemIntake,
+					saveAction,
+					emailClient.SendSystemIntakeSubmissionEmail,
+				),
+				models.ActionTypeNOTITREQUEST: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNOTITREQUEST,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeNEEDBIZCASE: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNEEDBIZCASE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeREADYFORGRT: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusREADYFORGRT,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNEEDBIZCASE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeREADYFORGRB: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusREADYFORGRB,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
+					serviceConfig,
+					services.NewAuthorizeUserIsIntakeRequester(),
+					store.FetchOpenBusinessCaseByIntakeID,
+					appvalidation.BusinessCaseForSubmit,
+					saveAction,
+					store.UpdateSystemIntake,
+					store.UpdateBusinessCase,
+					emailClient.SendBusinessCaseSubmissionEmail,
+					models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED,
+				),
+				models.ActionTypeSUBMITFINALBIZCASE: services.NewSubmitBusinessCase(
+					serviceConfig,
+					services.NewAuthorizeUserIsIntakeRequester(),
+					store.FetchOpenBusinessCaseByIntakeID,
+					appvalidation.BusinessCaseForSubmit,
+					saveAction,
+					store.UpdateSystemIntake,
+					store.UpdateBusinessCase,
+					emailClient.SendBusinessCaseSubmissionEmail,
+					models.SystemIntakeStatusBIZCASEFINALSUBMITTED,
+				),
+				models.ActionTypeBIZCASENEEDSCHANGES: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypePROVIDEFEEDBACKBIZCASEFINAL: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusBIZCASEFINALNEEDED,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeNOGOVERNANCENEEDED: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNOGOVERNANCE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeSENDEMAIL: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusSHUTDOWNINPROGRESS,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					false,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeGUIDERECEIVEDCLOSE: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusSHUTDOWNCOMPLETE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+				models.ActionTypeNOTRESPONDINGCLOSE: services.NewTakeActionUpdateStatus(
+					serviceConfig,
+					models.SystemIntakeStatusNOGOVERNANCE,
+					store.UpdateSystemIntake,
+					services.NewAuthorizeRequireGRTJobCode(),
+					saveAction,
+					cedarLDAPClient.FetchUserInfo,
+					emailClient.SendSystemIntakeReviewEmail,
+					true,
+					services.NewCloseBusinessCase(
+						serviceConfig,
+						store.FetchBusinessCaseByID,
+						store.UpdateBusinessCase,
+					),
+				),
+			},
+		),
+		services.NewFetchActionsByRequestID(
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.GetActionsByRequestID,
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/actions", actionHandler.Handle())
+
+	systemIntakeLifecycleIDHandler := handlers.NewSystemIntakeLifecycleIDHandler(
+		base,
+		services.NewUpdateLifecycleFields(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
+			saveAction,
+			cedarLDAPClient.FetchUserInfo,
+			emailClient.SendIssueLCIDEmail,
+			store.GenerateLifecycleID,
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
+
+	systemIntakeRejectionHandler := handlers.NewSystemIntakeRejectionHandler(
+		base,
+		services.NewUpdateRejectionFields(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchSystemIntakeByID,
+			store.UpdateSystemIntake,
+			saveAction,
+			cedarLDAPClient.FetchUserInfo,
+			emailClient.SendRejectRequestEmail,
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/reject", systemIntakeRejectionHandler.Handle())
+
+	notesHandler := handlers.NewNotesHandler(
+		base,
+		services.NewFetchNotes(
+			serviceConfig,
+			store.FetchNotesBySystemIntakeID,
+			services.NewAuthorizeRequireGRTJobCode(),
+		),
+		services.NewCreateNote(
+			serviceConfig,
+			store.CreateNote,
+			services.NewAuthorizeRequireGRTJobCode(),
+		),
+	)
+	api.Handle("/system_intake/{intake_id}/notes", notesHandler.Handle())
+
+	// File Upload Handlers
+	fileUploadHandler := handlers.NewFileUploadHandler(
+		base,
+		services.NewCreateFileUploadURL(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			s3Client,
+		),
+		services.NewCreateFileDownloadURL(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			s3Client,
+		),
+		services.NewCreateUploadedFile(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.CreateUploadedFile),
+		services.NewFetchUploadedFile(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			store.FetchUploadedFileByID),
+	)
+	api.Handle("/file_uploads", fileUploadHandler.Handle())
+
+	api.HandleFunc("/file_uploads/upload_url", fileUploadHandler.GenerateUploadPresignedURL).
+		Methods("POST")
+
+	api.HandleFunc("/file_uploads/{file_id}", fileUploadHandler.FetchFileMetadata).
+		Methods("GET")
+
+	api.HandleFunc("/file_uploads/{file_id}/download_url", fileUploadHandler.GenerateDownloadPresignedURL).
+		Methods("POST")
+
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
+
+	api.Handle("/pdf/generate", handlers.NewPDFHandler().Handle())
+
+	// endpoint for short-lived backfill process
+	backfillHandler := handlers.NewBackfillHandler(
+		base,
+		services.NewBackfill(
+			serviceConfig,
+			store.FetchSystemIntakeByID,
+			store.CreateSystemIntake,
+			store.UpdateSystemIntake,
+			store.CreateNote,
+			services.NewAuthorizeHasEASiRole(),
+		),
+	)
+	api.Handle("/backfill", backfillHandler.Handle())
+
 }

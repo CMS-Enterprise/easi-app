@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Switch, useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -21,8 +22,10 @@ import { SystemIntakeForm } from 'types/systemIntake';
 import { NotFoundPartial } from 'views/NotFound';
 
 import ContactDetails from './ContactDetails';
+import ContractDetails from './ContractDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
+import SystemIntakeView from './ViewOnly';
 
 import './index.scss';
 
@@ -40,22 +43,21 @@ export const SystemIntake = () => {
     (state: AppState) => state.systemIntake.isLoading
   );
 
-  const isSaving = useSelector(
-    (state: AppState) => state.systemIntake.isSaving
-  );
-
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
-    if (current && current.dirty && !isSaving) {
-      if (systemId === 'new') {
-        dispatch(postSystemIntake({ ...systemIntake, ...current.values }));
-      } else {
-        dispatch(
-          saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
-        );
-      }
-      current.resetForm({ values: current.values, errors: current.errors });
+    if (systemId === 'new') {
+      dispatch(
+        postSystemIntake({
+          ...systemIntake,
+          ...current.values
+        })
+      );
+    } else {
+      dispatch(
+        saveSystemIntake({ ...systemIntake, ...current.values, id: systemId })
+      );
     }
+    current.resetForm({ values: current.values, errors: current.errors });
   };
 
   useEffect(() => {
@@ -88,7 +90,7 @@ export const SystemIntake = () => {
   }, []);
 
   return (
-    <PageWrapper className="system-intake ">
+    <PageWrapper className="system-intake">
       <Header />
       <MainContent className="grid-container margin-bottom-5">
         {!['local', 'dev', 'impl'].includes(
@@ -142,8 +144,24 @@ export const SystemIntake = () => {
               )}
             />
             <SecureRoute
+              path="/system/:systemId/contract-details"
+              render={() => (
+                <ContractDetails
+                  formikRef={formikRef}
+                  systemIntake={systemIntake}
+                  dispatchSave={dispatchSave}
+                />
+              )}
+            />
+            <SecureRoute
               path="/system/:systemId/review"
-              render={() => <Review systemIntake={systemIntake} />}
+              render={() => (
+                <Review systemIntake={systemIntake} now={DateTime.local()} />
+              )}
+            />
+            <SecureRoute
+              path="/system/:systemId/view"
+              render={() => <SystemIntakeView systemIntake={systemIntake} />}
             />
             <SecureRoute path="*" render={() => <NotFoundPartial />} />
           </Switch>

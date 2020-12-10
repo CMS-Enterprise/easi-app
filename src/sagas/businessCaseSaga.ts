@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
@@ -8,8 +9,7 @@ import { BusinessCaseModel } from 'types/businessCase';
 import {
   fetchBusinessCase,
   postBusinessCase,
-  putBusinessCase,
-  submitBusinessCase
+  putBusinessCase
 } from 'types/routines';
 
 function getBusinessCaseRequest(id: string) {
@@ -21,7 +21,7 @@ function* getBusinessCase(action: Action<any>) {
     yield put(fetchBusinessCase.request());
     const response = yield call(getBusinessCaseRequest, action.payload);
     yield put(fetchBusinessCase.success(response.data));
-    yield put(updateLastActiveAt);
+    yield put(updateLastActiveAt(DateTime.local()));
   } catch (error) {
     yield put(fetchBusinessCase.failure(error.message));
   } finally {
@@ -43,7 +43,7 @@ function* createBusinessCase(action: Action<any>) {
     yield put(postBusinessCase.failure(error.message));
   } finally {
     yield put(postBusinessCase.fulfill());
-    yield put(updateLastActiveAt);
+    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
@@ -57,7 +57,7 @@ function putBusinessCaseRequest(formData: BusinessCaseModel) {
 
 function* updateBusinessCase(action: Action<any>) {
   try {
-    yield put(putBusinessCase.request());
+    yield put(putBusinessCase.request(action.payload));
     const reponse = yield call(putBusinessCaseRequest, action.payload);
 
     yield put(putBusinessCase.success(reponse.data));
@@ -65,23 +65,7 @@ function* updateBusinessCase(action: Action<any>) {
     yield put(putBusinessCase.failure(error.message));
   } finally {
     yield put(putBusinessCase.fulfill());
-    yield put(updateLastActiveAt);
-  }
-}
-
-function* completeBusinessCase(action: Action<any>) {
-  try {
-    yield put(submitBusinessCase.request());
-    const response = yield call(putBusinessCaseRequest, {
-      ...action.payload,
-      status: 'SUBMITTED'
-    });
-    yield put(submitBusinessCase.success(response.data));
-  } catch (error) {
-    yield put(submitBusinessCase.failure(error.message));
-  } finally {
-    yield put(submitBusinessCase.fulfill());
-    yield put(updateLastActiveAt);
+    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
@@ -89,5 +73,4 @@ export default function* businessCaseSaga() {
   yield takeLatest(fetchBusinessCase.TRIGGER, getBusinessCase);
   yield takeLatest(postBusinessCase.TRIGGER, createBusinessCase);
   yield takeLatest(putBusinessCase.TRIGGER, updateBusinessCase);
-  yield takeLatest(submitBusinessCase.TRIGGER, completeBusinessCase);
 }

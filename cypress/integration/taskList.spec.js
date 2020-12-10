@@ -1,4 +1,4 @@
-describe('The System Intake Form', () => {
+describe('The Task List', () => {
   before(() => {
     cy.login();
     // TODO HACK
@@ -15,7 +15,10 @@ describe('The System Intake Form', () => {
   });
 
   it('shows a continue link when a user clicks back until they reach the task list', () => {
-    cy.contains('a', 'Start').click();
+    cy.wait(500);
+    cy.get('[data-testid="intake-start-btn"]')
+      .should('be.visible')
+      .click();
 
     cy.systemIntake.contactDetails.fillNonBranchingFields();
     cy.get('#IntakeForm-HasIssoNo')

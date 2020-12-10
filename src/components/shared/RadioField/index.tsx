@@ -5,7 +5,8 @@ import './index.scss';
 
 type RadioFieldProps = {
   id: string;
-  inline: boolean;
+  className?: string;
+  inline?: boolean;
   checked?: boolean;
   label: string;
   name: string;
@@ -18,6 +19,7 @@ type RadioFieldProps = {
 export const RadioField = ({
   checked,
   id,
+  className,
   inline,
   label,
   name,
@@ -25,9 +27,13 @@ export const RadioField = ({
   onChange,
   value
 }: RadioFieldProps) => {
-  const radioClasses = classnames('usa-radio', {
-    'easi-radio--inline': inline
-  });
+  const radioClasses = classnames(
+    'usa-radio',
+    {
+      'easi-radio--inline': inline
+    },
+    className
+  );
 
   const radioLabelClasses = classnames('usa-radio__label', {
     'easi-radio__label--inline': inline
@@ -54,14 +60,15 @@ export const RadioField = ({
 type RadioGroupProps = {
   children: React.ReactNode | React.ReactNodeArray;
   inline?: boolean;
-};
+} & JSX.IntrinsicElements['div'];
 
-export const RadioGroup = ({ children, inline }: RadioGroupProps) => {
+export const RadioGroup = ({ children, inline, ...props }: RadioGroupProps) => {
   const classes = classnames('easi-radio__group', {
     'easi-radio__group--inline': inline
   });
   return (
-    <div className={classes} role="radiogroup">
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <div className={classes} role="radiogroup" {...props}>
       {children}
     </div>
   );

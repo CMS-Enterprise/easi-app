@@ -7,7 +7,6 @@ type DropdownFieldProps = {
   id: string;
   disabled?: boolean;
   error?: boolean;
-  label?: string;
   name: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onBlur: () => void;

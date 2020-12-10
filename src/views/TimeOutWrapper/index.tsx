@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button } from '@trussworks/react-uswds';
-import { Duration } from 'luxon';
+import { DateTime, Duration } from 'luxon';
 
 import Modal from 'components/Modal';
 import useInterval from 'hooks/useInterval';
@@ -50,7 +50,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     tokenManager.on('expired', (key: any) => {
       if (activeSinceLastRenew) {
         tokenManager.renew(key);
-        dispatch(updateLastRenewAt);
+        dispatch(updateLastRenewAt(DateTime.local()));
       } else {
         authService.logout('/login');
       }
@@ -78,7 +78,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   const handleModalExit = async () => {
     setIsModalOpen(false);
-    dispatch(updateLastActiveAt);
+    dispatch(updateLastActiveAt(DateTime.local()));
   };
 
   useEffect(() => {

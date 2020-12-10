@@ -75,7 +75,6 @@ const SearchBar = ({
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    console.log(searchValue);
     event.preventDefault();
   };
 

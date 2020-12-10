@@ -36,6 +36,7 @@ import GeneralRequestInfo from './GeneralRequestInfo';
 import PreferredSolution from './PreferredSolution';
 import RequestDescription from './RequestDescription';
 import Review from './Review';
+import BusinessCaseView from './ViewOnly';
 
 import './index.scss';
 
@@ -50,28 +51,20 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  const isSaving = useSelector(
-    (state: AppState) => state.businessCase.isSaving
-  );
+  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
 
-  const isSubmitting = useSelector(
-    (state: AppState) => state.businessCase.isSubmitting
-  );
-
-  const error = useSelector((state: AppState) => state.businessCase.error);
+  const actionError = useSelector((state: AppState) => state.action.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<BusinessCaseModel> } = formikRef;
-    if (current && current.dirty && !isSaving) {
-      dispatch(
-        putBusinessCase({
-          ...businessCase,
-          ...current.values
-        })
-      );
-      current.resetForm({ values: current.values, errors: current.errors });
-    }
+    dispatch(
+      putBusinessCase({
+        ...businessCase,
+        ...current.values
+      })
+    );
+    current.resetForm({ values: current.values, errors: current.errors });
   };
 
   // Start new business case or resume existing business case
@@ -105,7 +98,7 @@ export const BusinessCase = () => {
 
   // Handle submit
   useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !error) {
+    if (prevIsSubmitting && !isSubmitting && !actionError) {
       history.push(`/business/${businessCaseId}/confirmation`);
     }
 
@@ -215,8 +208,12 @@ export const BusinessCase = () => {
               render={() => <Review businessCase={businessCase} />}
             />
             <SecureRoute
+              path="/business/:businessCaseId/view"
+              render={() => <BusinessCaseView businessCase={businessCase} />}
+            />
+            <SecureRoute
               path="/business/:businessCaseId/confirmation"
-              render={() => <Confirmation />}
+              render={() => <Confirmation businessCase={businessCase} />}
             />
             <SecureRoute
               path="*"

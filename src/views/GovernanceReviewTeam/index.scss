@@ -45,4 +45,59 @@
       color: $easi-bright-blue;
     }
   }
+
+  &__status {
+    &--open {
+      background-color: #faf3d1;
+    }
+  }
+
+  &__status-info {
+    dt, dd {
+      display: inline;
+    }
+
+    dd {
+      margin: 0 1em 0 0;
+    }
+  }
+
+  &__note-field {
+    &.usa-textarea {
+      height: 5rem;
+    }
+  }
+
+  &__history {
+    list-style-type: none;
+    margin-top: 3.5em;
+    padding-left: 1em;
+  }
+
+  &__history-item {
+    display: flex;
+    &:not(:last-of-type) {
+      border-left: 1px solid #000;
+    }
+
+    &:before {
+      flex: none;
+      content: '';
+      background-color: #000;
+      height: 12px;
+      width: 12px;
+      margin-left: -6px;
+      line-height: 24px;
+      text-align: center;
+      border-radius: 50%;
+    }
+  }
+
+  &__history-item-content {
+    width: 100%;
+    margin-bottom: 2em;
+    margin-left: 1em;
+    padding-bottom: 2em;
+    border-bottom: 1px solid #979797;
+  }
 }

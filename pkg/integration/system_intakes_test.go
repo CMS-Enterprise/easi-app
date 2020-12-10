@@ -25,8 +25,9 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 	systemIntakeURL.Path = path.Join(systemIntakeURL.Path, "/system_intake")
 
 	body, err := json.Marshal(map[string]string{
-		"status":    "DRAFT",
-		"requester": "TEST REQUESTER",
+		"status":      string(models.SystemIntakeStatusINTAKEDRAFT),
+		"requestType": string(models.SystemIntakeRequestTypeNEW),
+		"requester":   "TEST REQUESTER",
 	})
 	s.NoError(err)
 
@@ -64,9 +65,10 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	s.Run("PUT will succeed first time with token", func() {
 		body, err := json.Marshal(map[string]string{
-			"id":        id.String(),
-			"requester": "TEST REQUESTER",
-			"status":    "DRAFT",
+			"id":          id.String(),
+			"requester":   "TEST REQUESTER",
+			"status":      string(models.SystemIntakeStatusINTAKEDRAFT),
+			"requestType": string(models.SystemIntakeRequestTypeNEW),
 		})
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
@@ -102,9 +104,10 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 
 	s.Run("PUT will succeed second time with with new data", func() {
 		body, err := json.Marshal(map[string]string{
-			"id":        id.String(),
-			"status":    "DRAFT",
-			"requester": "Test Requester",
+			"id":          id.String(),
+			"status":      string(models.SystemIntakeStatusINTAKEDRAFT),
+			"requestType": string(models.SystemIntakeRequestTypeNEW),
+			"requester":   "Test Requester",
 		})
 		s.NoError(err)
 		req, err := http.NewRequest(http.MethodPut, systemIntakeURL.String(), bytes.NewBuffer(body))
@@ -130,7 +133,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		updatedAt := time.Now().UTC()
 		intake := models.SystemIntake{
 			ID:                      id,
-			EUAUserID:               "FAKE",
+			EUAUserID:               null.StringFrom("FAKE"),
 			Requester:               "Test Requester",
 			Component:               null.StringFrom("Test Requester"),
 			BusinessOwner:           null.StringFrom("Test Requester"),
@@ -145,7 +148,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 			EASupportRequest:        null.BoolFrom(true),
 			ExistingContract:        null.StringFrom("Test Requester"),
 			UpdatedAt:               &updatedAt,
-			Status:                  models.SystemIntakeStatusSUBMITTED,
+			Status:                  models.SystemIntakeStatusINTAKESUBMITTED,
 		}
 		body, err := json.Marshal(intake)
 		s.NoError(err)
@@ -166,7 +169,7 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		}
 		body, err := json.Marshal(map[string]string{
 			"id":        id.String(),
-			"status":    "SUBMITTED",
+			"status":    string(models.SystemIntakeStatusINTAKESUBMITTED),
 			"requester": "Test Requester",
 		})
 		s.NoError(err)

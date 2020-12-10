@@ -73,9 +73,10 @@ const SystemIntakeValidationSchema: any = {
     ),
     needsEaSupport: Yup.boolean()
       .nullable()
-      .required('Tell us if you need Enterprise Architecture (EA) support'),
+      .required('Tell us if you need Enterprise Architecture (EA) support')
+  }),
+  contractDetails: Yup.object().shape({
     currentStage: Yup.string().required('Tell us where you are in the process'),
-    hasContract: Yup.string().required('Tell us about your contract situation'),
     fundingSource: Yup.object().shape({
       isFunded: Yup.boolean()
         .nullable()
@@ -88,9 +89,105 @@ const SystemIntakeValidationSchema: any = {
           .required(
             'Tell us your funding number. This is a six digit number and starts with 00'
           )
+      }),
+      source: Yup.string().when('isFunded', {
+        is: true,
+        then: Yup.string().required('Tell us your funding source')
+      })
+    }),
+    costs: Yup.object().shape({
+      isExpectingIncrease: Yup.string().required(
+        'Tell us whether you are expecting costs for this request to increase'
+      ),
+      expectedIncreaseAmount: Yup.string().when('isExpectingIncrease', {
+        is: 'YES',
+        then: Yup.string().required(
+          'Tell us approximately how much do you expect the cost to increase'
+        )
+      })
+    }),
+    contract: Yup.object().shape({
+      hasContract: Yup.string().required(
+        'Tell us whether you have a contract to support this effort'
+      ),
+      contractor: Yup.string().when('hasContract', {
+        is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
+        then: Yup.string().required(
+          'Tell us whether you have selected a contractor(s)'
+        )
+      }),
+      vehicle: Yup.string().when('hasContract', {
+        is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
+        then: Yup.string().required('Tell us about the contract vehicle')
+      }),
+      startDate: Yup.mixed().when('hasContract', {
+        is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
+        then: Yup.object().shape({
+          month: Yup.string().required('Tell us the contract start month'),
+          year: Yup.string().required('Tell us the contract start year')
+        })
+      }),
+      endDate: Yup.mixed().when('hasContract', {
+        is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
+        then: Yup.object().shape({
+          month: Yup.string().required('Tell us the contract end month'),
+          year: Yup.string().required('Tell us the contract end year')
+        })
       })
     })
+  }),
+  requestType: Yup.object().shape({
+    requestType: Yup.string().required('Tell us what your request is for')
   })
 };
 
 export default SystemIntakeValidationSchema;
+
+export const DateValidationSchema: any = Yup.object().shape(
+  {
+    grtDateDay: Yup.string().when(['grtDateMonth', 'grtDateYear'], {
+      is: (grtDateMonth: string, grtDateYear: string) => {
+        return grtDateMonth || grtDateYear;
+      },
+      then: Yup.string().required('The day is required')
+    }),
+    grtDateMonth: Yup.string().when(['grtDateDay', 'grtDateYear'], {
+      is: (grtDateDay: string, grtDateYear: string) => {
+        return grtDateDay || grtDateYear;
+      },
+      then: Yup.string().required('The month is required')
+    }),
+    grtDateYear: Yup.string().when(['grtDateDay', 'grtDateMonth'], {
+      is: (grtDateDay: string, grtDateMonth: string) => {
+        return grtDateDay || grtDateMonth;
+      },
+      then: Yup.string().required('The year is required')
+    }),
+    grbDateDay: Yup.string().when(['grbDateMonth', 'grbDateYear'], {
+      is: (grbDateMonth: string, grbDateYear: string) => {
+        return grbDateMonth || grbDateYear;
+      },
+      then: Yup.string().required('The day is required')
+    }),
+    grbDateMonth: Yup.string().when(['grbDateDay', 'grbDateYear'], {
+      is: (grbDateDay: string, grbDateYear: string) => {
+        return grbDateDay || grbDateYear;
+      },
+      then: Yup.string().required('The month is required')
+    }),
+    grbDateYear: Yup.string().when(['grbDateDay', 'grbDateMonth'], {
+      is: (grbDateDay: string, grbDateMonth: string) => {
+        return grbDateDay || grbDateMonth;
+      },
+      then: Yup.string().required('The year is required')
+    })
+  },
+  [
+    ['grtDateDay', 'grtDateMonth'],
+    ['grtDateDay', 'grtDateYear'],
+    ['grtDateMonth', 'grtDateYear'],
+    ['grbDateDay', 'grbDateMonth'],
+    ['grbDateDay', 'grbDateYear'],
+    ['grbDateMonth', 'grbDateYear']
+  ]
+);

@@ -37,6 +37,13 @@ if (browser.name === 'ie') {
 }
 
 /**
+ * expose store when run in Cypress
+ */
+if (window.Cypress) {
+  window.store = store;
+}
+
+/**
  * axios interceptor to add authorization tokens to all requests made to
  * our application API
  */

@@ -1,7 +1,8 @@
 describe('The Business Case Form', () => {
   let intakeId;
   const systemIntake = {
-    status: 'SUBMITTED',
+    status: 'NEED_BIZ_CASE',
+    requestType: 'NEW',
     requester: 'John Requester',
     component: 'Center for Consumer Information and Insurance Oversight',
     businessOwner: 'John BusinessOwner',
@@ -16,7 +17,7 @@ describe('The Business Case Form', () => {
     eaCollaborator: '',
     projectName: 'Easy Access to System Information',
     existingFunding: false,
-    fundingSource: '',
+    fundingNumber: '',
     businessNeed: 'Business Need: The quick brown fox jumps over the lazy dog.',
     solution: 'The quick brown fox jumps over the lazy dog.',
     processStatus: 'The project is already funded',
@@ -27,17 +28,18 @@ describe('The Business Case Form', () => {
   before(() => {
     cy.login();
     cy.wait(1000);
-    cy.saveLocalStorage();
-    cy.getAccessToken().then(accessToken => {
-      cy.request({
-        method: 'POST',
-        url: Cypress.env('systemIntakeApi'),
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        },
-        body: systemIntake
-      }).then(response => {
-        intakeId = response.body.id;
+    cy.saveLocalStorage().then(() => {
+      cy.getAccessToken().then(accessToken => {
+        cy.request({
+          method: 'POST',
+          url: Cypress.env('systemIntakeApi'),
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          },
+          body: systemIntake
+        }).then(response => {
+          intakeId = response.body.id;
+        });
       });
     });
   });
@@ -45,11 +47,8 @@ describe('The Business Case Form', () => {
   beforeEach(() => {
     cy.restoreLocalStorage();
 
-    cy.visit('/');
-    cy.get(`[data-intakeid="${intakeId}"]`)
-      .get('button')
-      .contains('Start my Business Case')
-      .click();
+    cy.visit(`/governance-task-list/${intakeId}`);
+    cy.get('[data-testid="start-biz-case-btn"]').click();
   });
 
   it('fills out minimum required fields', () => {

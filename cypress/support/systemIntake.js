@@ -39,14 +39,6 @@ cy.systemIntake = {
       cy.get('#IntakeForm-NeedsEaSupportNo')
         .check({ force: true })
         .should('be.checked');
-
-      cy.get('#IntakeForm-CurrentStage')
-        .select('Just an idea')
-        .should('have.value', 'Just an idea');
-
-      cy.get('#IntakeForm-HasContract')
-        .select('No')
-        .should('have.value', 'No');
     }
   }
 };

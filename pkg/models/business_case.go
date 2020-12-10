@@ -21,16 +21,10 @@ type LifecycleCostSolution string
 type LifecycleCostYear string
 
 const (
-	// BusinessCaseStatusDRAFT captures enum value "DRAFT"
-	BusinessCaseStatusDRAFT BusinessCaseStatus = "DRAFT"
-	// BusinessCaseStatusSUBMITTED captures enum value "SUBMITTED"
-	BusinessCaseStatusSUBMITTED BusinessCaseStatus = "SUBMITTED"
-	// BusinessCaseStatusREVIEWED captures enum value "REVIEWED"
-	BusinessCaseStatusREVIEWED BusinessCaseStatus = "REVIEWED"
-	// BusinessCaseStatusREJECTED captures enum value "REJECTED"
-	BusinessCaseStatusREJECTED BusinessCaseStatus = "REJECTED"
-	// BusinessCaseStatusARCHIVED captures enum value "ARCHIVED"
-	BusinessCaseStatusARCHIVED BusinessCaseStatus = "ARCHIVED"
+	// BusinessCaseStatusOPEN captures enum value "OPEN"
+	BusinessCaseStatusOPEN BusinessCaseStatus = "OPEN"
+	// BusinessCaseStatusCLOSED captures enum value "CLOSED"
+	BusinessCaseStatusCLOSED BusinessCaseStatus = "CLOSED"
 
 	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
@@ -81,6 +75,7 @@ type BusinessCase struct {
 	ID                                  uuid.UUID               `json:"id"`
 	EUAUserID                           string                  `json:"euaUserId" db:"eua_user_id"`
 	SystemIntakeID                      uuid.UUID               `json:"systemIntakeId" db:"system_intake"`
+	SystemIntakeStatus                  SystemIntakeStatus      `json:"systemIntakeStatus" db:"system_intake_status"`
 	Status                              BusinessCaseStatus      `json:"status"`
 	ProjectName                         null.String             `json:"projectName" db:"project_name"`
 	Requester                           null.String             `json:"requester"`
@@ -98,6 +93,8 @@ type BusinessCase struct {
 	PreferredTitle                      null.String             `json:"preferredTitle" db:"preferred_title"`
 	PreferredSummary                    null.String             `json:"preferredSummary" db:"preferred_summary"`
 	PreferredAcquisitionApproach        null.String             `json:"preferredAcquisitionApproach" db:"preferred_acquisition_approach"`
+	PreferredSecurityIsApproved         null.Bool               `json:"preferredSecurityIsApproved" db:"preferred_security_is_approved"`
+	PreferredSecurityIsBeingReviewed    null.String             `json:"preferredSecurityIsBeingReviewed" db:"preferred_security_is_being_reviewed"`
 	PreferredHostingType                null.String             `json:"preferredHostingType" db:"preferred_hosting_type"`
 	PreferredHostingLocation            null.String             `json:"preferredHostingLocation" db:"preferred_hosting_location"`
 	PreferredHostingCloudServiceType    null.String             `json:"preferredHostingCloudServiceType" db:"preferred_hosting_cloud_service_type"`
@@ -108,6 +105,8 @@ type BusinessCase struct {
 	AlternativeATitle                   null.String             `json:"alternativeATitle" db:"alternative_a_title"`
 	AlternativeASummary                 null.String             `json:"alternativeASummary" db:"alternative_a_summary"`
 	AlternativeAAcquisitionApproach     null.String             `json:"alternativeAAcquisitionApproach" db:"alternative_a_acquisition_approach"`
+	AlternativeASecurityIsApproved      null.Bool               `json:"alternativeASecurityIsApproved" db:"alternative_a_security_is_approved"`
+	AlternativeASecurityIsBeingReviewed null.String             `json:"alternativeASecurityIsBeingReviewed" db:"alternative_a_security_is_being_reviewed"`
 	AlternativeAHostingType             null.String             `json:"alternativeAHostingType" db:"alternative_a_hosting_type"`
 	AlternativeAHostingLocation         null.String             `json:"alternativeAHostingLocation" db:"alternative_a_hosting_location"`
 	AlternativeAHostingCloudServiceType null.String             `json:"alternativeAHostingCloudServiceType" db:"alternative_a_hosting_cloud_service_type"`
@@ -118,6 +117,8 @@ type BusinessCase struct {
 	AlternativeBTitle                   null.String             `json:"alternativeBTitle" db:"alternative_b_title"`
 	AlternativeBSummary                 null.String             `json:"alternativeBSummary" db:"alternative_b_summary"`
 	AlternativeBAcquisitionApproach     null.String             `json:"alternativeBAcquisitionApproach" db:"alternative_b_acquisition_approach"`
+	AlternativeBSecurityIsApproved      null.Bool               `json:"alternativeBSecurityIsApproved" db:"alternative_b_security_is_approved"`
+	AlternativeBSecurityIsBeingReviewed null.String             `json:"alternativeBSecurityIsBeingReviewed" db:"alternative_b_security_is_being_reviewed"`
 	AlternativeBHostingType             null.String             `json:"alternativeBHostingType" db:"alternative_b_hosting_type"`
 	AlternativeBHostingLocation         null.String             `json:"alternativeBHostingLocation" db:"alternative_b_hosting_location"`
 	AlternativeBHostingCloudServiceType null.String             `json:"alternativeBHostingCloudServiceType" db:"alternative_b_hosting_cloud_service_type"`

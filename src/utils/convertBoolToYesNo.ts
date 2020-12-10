@@ -7,7 +7,6 @@ const convertBoolToYesNo = (bool: boolean | null) => {
     case null:
       return 'N/A';
     default:
-      console.log('Unknown bool type');
       return '';
   }
 };

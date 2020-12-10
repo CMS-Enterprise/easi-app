@@ -43,5 +43,6 @@ Cypress.Commands.add('getAccessToken', () => {
     const tokenObj = JSON.parse(LOCAL_STORAGE_MEMORY['okta-token-storage']);
     return cy.wrap(tokenObj.accessToken.value, { log: false });
   }
+  cy.log('Access Token not found');
   return cy.wrap('');
 });

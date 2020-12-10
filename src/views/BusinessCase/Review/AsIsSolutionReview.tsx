@@ -24,6 +24,9 @@ type ReviewProps = {
 
 const AsIsSolutionReview = ({ solution }: ReviewProps) => (
   <div>
+    <h3 className="easi-only-print business-case-solution-header">
+      As-Is Solution
+    </h3>
     <DescriptionList title="As-Is Solution">
       <ReviewRow>
         <div className="line-height-body-3">
@@ -35,7 +38,7 @@ const AsIsSolutionReview = ({ solution }: ReviewProps) => (
         <div className="line-height-body-3">
           <DescriptionTerm term="“As is” solution: Summary" />
           <DescriptionDefinition
-            className="text-pre"
+            className="text-pre-wrap"
             definition={solution.summary}
           />
         </div>
@@ -44,7 +47,7 @@ const AsIsSolutionReview = ({ solution }: ReviewProps) => (
         <div className="line-height-body-3">
           <DescriptionTerm term="“As is” solution: Pros" />
           <DescriptionDefinition
-            className="text-pre"
+            className="text-pre-wrap"
             definition={solution.pros}
           />
         </div>
@@ -53,7 +56,7 @@ const AsIsSolutionReview = ({ solution }: ReviewProps) => (
         <div className="line-height-body-3">
           <DescriptionTerm term="“As is” solution: Cons" />
           <DescriptionDefinition
-            className="text-pre"
+            className="text-pre-wrap"
             definition={solution.cons}
           />
         </div>
@@ -67,7 +70,7 @@ const AsIsSolutionReview = ({ solution }: ReviewProps) => (
       <div className="line-height-body-3">
         <DescriptionTerm term="What is the cost savings or avoidance associated with this solution?" />
         <DescriptionDefinition
-          className="text-pre"
+          className="text-pre-wrap"
           definition={solution.costSavings}
         />
       </div>

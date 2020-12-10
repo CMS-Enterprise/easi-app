@@ -7,20 +7,32 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
+import contractStatus from 'constants/enums/contractStatus';
+import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
-type SystemIntakeReview = {
+type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
+  now: DateTime;
 };
 
-export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
+export const SystemIntakeReview = ({
+  systemIntake,
+  now
+}: SystemIntakeReviewProps) => {
+  const { contract } = systemIntake;
+
   const fundingDefinition = () => {
-    const isFunded = convertBoolToYesNo(systemIntake.fundingSource.isFunded);
-    if (systemIntake.fundingSource.isFunded) {
-      return `${isFunded}, ${systemIntake.fundingSource.fundingNumber}`;
+    const {
+      fundingSource: { isFunded, fundingNumber, source }
+    } = systemIntake;
+    const isFundedText = convertBoolToYesNo(isFunded);
+
+    if (isFunded) {
+      return `${isFundedText}, ${source}, ${fundingNumber}`;
     }
-    return isFunded;
+    return isFundedText;
   };
   const issoDefinition = () => {
     const hasIsso = convertBoolToYesNo(systemIntake.isso.isPresent);
@@ -29,15 +41,28 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
     }
     return hasIsso;
   };
+  const expectedCosts = () => {
+    const {
+      costs: { expectedIncreaseAmount, isExpectingIncrease }
+    } = systemIntake;
+    if (expectedIncreaseAmount) {
+      return `${yesNoMap[isExpectingIncrease]}, ${expectedIncreaseAmount}`;
+    }
+    return yesNoMap[isExpectingIncrease];
+  };
+
   return (
     <div>
       <DescriptionList title="System Request">
         <ReviewRow>
           <div>
             <DescriptionTerm term="Submission Date" />
-            {/* TO DO Make this changeable */}
             <DescriptionDefinition
-              definition={DateTime.local().toLocaleString(DateTime.DATE_MED)}
+              definition={
+                systemIntake.submittedAt
+                  ? systemIntake.submittedAt.toLocaleString(DateTime.DATE_MED)
+                  : now.toLocaleString(DateTime.DATE_MED)
+              }
             />
           </div>
         </ReviewRow>
@@ -114,7 +139,7 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
       <DescriptionList title="Request Details">
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Request Name" />
+            <DescriptionTerm term="Project Name" />
             <DescriptionDefinition definition={systemIntake.requestName} />
           </div>
         </ReviewRow>
@@ -122,7 +147,7 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
           <div>
             <DescriptionTerm term="What is your business need?" />
             <DescriptionDefinition
-              className="text-pre"
+              className="text-pre-wrap"
               definition={systemIntake.businessNeed}
             />
           </div>
@@ -131,7 +156,7 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
           <div>
             <DescriptionTerm term="How are you thinking of solving it?" />
             <DescriptionDefinition
-              className="text-pre"
+              className="text-pre-wrap"
               definition={systemIntake.businessSolution}
             />
           </div>
@@ -143,21 +168,65 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
               definition={convertBoolToYesNo(systemIntake.needsEaSupport)}
             />
           </div>
+        </ReviewRow>
+      </DescriptionList>
+
+      <hr className="system-intake__hr" />
+      <h2 className="font-heading-xl">Contract Details</h2>
+
+      <DescriptionList title="Contract Details">
+        <ReviewRow>
           <div>
             <DescriptionTerm term="Where are you in the process?" />
             <DescriptionDefinition definition={systemIntake.currentStage} />
           </div>
-        </ReviewRow>
-        <ReviewRow>
           <div>
-            <DescriptionTerm term="Do you currently have a contract in place?" />
-            <DescriptionDefinition definition={systemIntake.hasContract} />
-          </div>
-          <div>
-            <DescriptionTerm term="Does the project have funding" />
+            <DescriptionTerm term="Does the project have funding?" />
             <DescriptionDefinition definition={fundingDefinition()} />
           </div>
         </ReviewRow>
+        <ReviewRow>
+          <div>
+            <DescriptionTerm term="Do you expect costs for this request to increase?" />
+            <DescriptionDefinition definition={expectedCosts()} />
+          </div>
+          <div>
+            <DescriptionTerm term="Do you already have a contract in place to support this effort?" />
+            <DescriptionDefinition
+              definition={
+                contractStatus[`${systemIntake.contract.hasContract}`]
+              }
+            />
+          </div>
+        </ReviewRow>
+        {['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+          systemIntake.contract.hasContract
+        ) && (
+          <>
+            <ReviewRow>
+              <div>
+                <DescriptionTerm term="Contractor(s)" />
+                <DescriptionDefinition
+                  definition={systemIntake.contract.contractor}
+                />
+              </div>
+              <div>
+                <DescriptionTerm term="Contract vehicle" />
+                <DescriptionDefinition
+                  definition={systemIntake.contract.vehicle}
+                />
+              </div>
+            </ReviewRow>
+            <ReviewRow>
+              <div>
+                <DescriptionTerm term="Period of performance" />
+                <DescriptionDefinition
+                  definition={`${contract.startDate.month}/${contract.startDate.year} to ${contract.endDate.month}/${contract.endDate.year}`}
+                />
+              </div>
+            </ReviewRow>
+          </>
+        )}
       </DescriptionList>
     </div>
   );
