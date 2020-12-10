@@ -361,7 +361,7 @@ func (h SystemIntakeLifecycleIDHandler) Handle() http.HandlerFunc {
 // rejecting a request
 func NewSystemIntakeRejectionHandler(
 	base HandlerBase,
-	reject func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	reject func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error),
 ) SystemIntakeRejectionHandler {
 	return SystemIntakeRejectionHandler{
 		HandlerBase:  base,
@@ -372,12 +372,13 @@ func NewSystemIntakeRejectionHandler(
 // SystemIntakeRejectionHandler is the handler for rejecting a SystemIntake
 type SystemIntakeRejectionHandler struct {
 	HandlerBase
-	RejectIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
+	RejectIntake func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 }
 
 type rejectionFields struct {
 	Reason    string `json:"rejectionReason"`
 	NextSteps string `json:"rejectionNextSteps"`
+	Feedback  string
 }
 
 func validateRejection(id string, data rejectionFields) (*uuid.UUID, error) {
@@ -407,6 +408,11 @@ func validateRejection(id string, data rejectionFields) (*uuid.UUID, error) {
 
 	if data.NextSteps == "" {
 		valErr.WithValidation("body.rejectionNextSteps", "is required")
+		valFail = true
+	}
+
+	if data.Feedback == "" {
+		valErr.WithValidation("body.feedback", "is required")
 		valFail = true
 	}
 
@@ -450,9 +456,13 @@ func (h SystemIntakeRejectionHandler) Handle() http.HandlerFunc {
 				RejectionReason:   null.StringFrom(fields.Reason),
 				DecisionNextSteps: null.StringFrom(fields.NextSteps),
 			}
+			action := &models.Action{
+				Feedback: null.StringFrom(fields.Feedback),
+				IntakeID: uuid,
+			}
 
 			// send it to the database
-			updatedIntake, err := h.RejectIntake(r.Context(), intake)
+			updatedIntake, err := h.RejectIntake(r.Context(), intake, action)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return
