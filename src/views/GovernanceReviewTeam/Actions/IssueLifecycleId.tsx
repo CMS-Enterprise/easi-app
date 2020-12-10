@@ -13,7 +13,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import Survey, { SurveyTypeEnum } from 'components/Survey';
+import { ImproveEasiSurvey } from 'components/Survey';
 import { SubmitLifecycleIdForm } from 'types/action';
 import { issueLifecycleIdForSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
@@ -275,7 +275,7 @@ const IssueLifecycleId = () => {
                   {t('issueLCID.submit')}
                 </Button>
               </Form>
-              <Survey surveyType={SurveyTypeEnum.IMPROVE_EASI} />
+              <ImproveEasiSurvey />
             </div>
           </>
         );

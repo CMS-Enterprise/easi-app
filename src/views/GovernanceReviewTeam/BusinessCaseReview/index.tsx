@@ -6,7 +6,7 @@ import { Link as UswdsLink } from '@trussworks/react-uswds';
 import AlternativeAnalysisReview from 'components/BusinessCaseReview/AlternativeAnalysisReview';
 import GeneralRequestInfoReview from 'components/BusinessCaseReview/GeneralRequestInfoReview';
 import RequestDescriptionReview from 'components/BusinessCaseReview/RequestDescriptionReview';
-import Survey, { SurveyTypeEnum } from 'components/Survey';
+import { AnythingWrongSurvey } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
 
 type BusinessCaseReviewProps = {
@@ -67,7 +67,7 @@ const BusinessCaseReview = ({ businessCase }: BusinessCaseReviewProps) => {
       >
         Take an action
       </UswdsLink>
-      <Survey surveyType={SurveyTypeEnum.ANYTHING_WRONG} />
+      <AnythingWrongSurvey />
     </div>
   );
 };
