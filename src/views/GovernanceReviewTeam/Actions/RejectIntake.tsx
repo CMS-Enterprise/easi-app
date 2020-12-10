@@ -11,7 +11,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { ActionType, RejectIntakeForm } from 'types/action';
+import { RejectIntakeForm } from 'types/action';
 import { rejectSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { rejectIntakeSchema } from 'validations/actionSchema';
@@ -21,8 +21,6 @@ const RejectIntake = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('action');
-
-  const actionType: ActionType = 'REJECT';
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -34,12 +32,12 @@ const RejectIntake = () => {
 
   const onSubmit = (values: RejectIntakeForm) => {
     const { feedback, nextSteps, reason } = values;
-    const actionPayload = { actionType, intakeId: systemId, feedback };
     const rejectPayload = {
       rejectionNextSteps: nextSteps,
-      rejectionReason: reason
+      rejectionReason: reason,
+      feedback
     };
-    const payload = { id: systemId, actionPayload, rejectPayload };
+    const payload = { id: systemId, rejectPayload };
     dispatch(rejectSystemIntake(payload));
 
     history.push(`/governance-review-team/${systemId}/intake-request`);

@@ -20,8 +20,6 @@ import {
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
-import { postSystemIntakeActionRequest } from './actionSaga';
-
 function putSystemIntakeRequest(formData: SystemIntakeForm) {
   // Make API save request
   const data = prepareSystemIntakeForApi(formData);
@@ -188,19 +186,23 @@ type rejectData = {
   reejectionReason: string;
 };
 
-function postRejection({ id, data }: { id: string; data: rejectData }) {
+function postRejection({
+  id,
+  rejectPayload
+}: {
+  id: string;
+  rejectPayload: rejectData;
+}) {
   return axios.post(
     `${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}/reject`,
-    data
+    rejectPayload
   );
 }
 
 function* rejectIntake(action: Action<any>) {
   try {
     yield put(rejectSystemIntake.request());
-    const { id, rejectPayload, actionPayload } = action.payload;
-    yield call(postSystemIntakeActionRequest, { id, ...actionPayload });
-    const response = yield call(postRejection, { id, data: rejectPayload });
+    const response = yield call(postRejection, action.payload);
     yield put(rejectSystemIntake.success(response.data));
   } catch (error) {
     yield put(rejectSystemIntake.failure(error.message));
