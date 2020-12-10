@@ -32,7 +32,12 @@
 // Custom USWDS
 @import './stylesheets/custom.scss';
 
-html, body, #root {
+// Print styles (used for PDF generation)
+@import './stylesheets/print.scss';
+
+html,
+body,
+#root {
   height: 100%;
   min-height: 100%;
 }

@@ -23,6 +23,10 @@ export const defaultProposedSolution = {
   cons: '',
   estimatedLifecycleCost: defaultEstimatedLifecycle,
   costSavings: '',
+  security: {
+    isApproved: null,
+    isBeingReviewed: ''
+  },
   hosting: {
     type: '',
     location: '',
@@ -32,7 +36,7 @@ export const defaultProposedSolution = {
 };
 
 export const businessCaseInitialData: BusinessCaseModel = {
-  status: 'DRAFT',
+  status: 'OPEN',
   systemIntakeId: '',
   requestName: '',
   requester: {
@@ -84,6 +88,7 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
     title,
     summary,
     acquisitionApproach,
+    security,
     hosting,
     hasUserInterface,
     pros,
@@ -105,6 +110,8 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
     title ||
     summary ||
     acquisitionApproach ||
+    security.isApproved ||
+    security.isBeingReviewed ||
     hosting.type ||
     hosting.location ||
     hosting.cloudServiceType ||
@@ -126,6 +133,7 @@ export const prepareBusinessCaseForApp = (
     B: cloneDeep(emptyEstimatedLifecycle)
   };
 
+  let doesAltBHaveLifecycleCostLines = false;
   businessCase.lifecycleCostLines.forEach((line: any) => {
     const solution = (solutionName => {
       switch (solutionName) {
@@ -136,6 +144,7 @@ export const prepareBusinessCaseForApp = (
         case 'A':
           return lifecycleCostLines.A;
         case 'B':
+          doesAltBHaveLifecycleCostLines = true;
           return lifecycleCostLines.B;
         default:
           return null;
@@ -150,11 +159,16 @@ export const prepareBusinessCaseForApp = (
     }
   });
 
+  if (!doesAltBHaveLifecycleCostLines) {
+    lifecycleCostLines.B = defaultEstimatedLifecycle;
+  }
+
   return {
     id: businessCase.id,
     euaUserId: businessCase.euaUserId,
     status: businessCase.status,
     systemIntakeId: businessCase.systemIntakeId,
+    systemIntakeStatus: businessCase.systemIntakeStatus,
     requestName: businessCase.projectName,
     requester: {
       name: businessCase.requester,
@@ -183,6 +197,10 @@ export const prepareBusinessCaseForApp = (
       cons: businessCase.preferredCons,
       costSavings: businessCase.preferredCostSavings,
       estimatedLifecycleCost: lifecycleCostLines.Preferred,
+      security: {
+        isApproved: businessCase.preferredSecurityIsApproved,
+        isBeingReviewed: businessCase.preferredSecurityIsBeingReviewed
+      },
       hosting: {
         type: businessCase.preferredHostingType,
         location: businessCase.preferredHostingLocation,
@@ -198,6 +216,10 @@ export const prepareBusinessCaseForApp = (
       cons: businessCase.alternativeACons,
       costSavings: businessCase.alternativeACostSavings,
       estimatedLifecycleCost: lifecycleCostLines.A,
+      security: {
+        isApproved: businessCase.alternativeASecurityIsApproved,
+        isBeingReviewed: businessCase.alternativeASecurityIsBeingReviewed
+      },
       hosting: {
         type: businessCase.alternativeAHostingType,
         location: businessCase.alternativeAHostingLocation,
@@ -213,6 +235,10 @@ export const prepareBusinessCaseForApp = (
       cons: businessCase.alternativeBCons || '',
       costSavings: businessCase.alternativeBCostSavings || '',
       estimatedLifecycleCost: lifecycleCostLines.B,
+      security: {
+        isApproved: businessCase.alternativeBSecurityIsApproved,
+        isBeingReviewed: businessCase.alternativeBSecurityIsBeingReviewed
+      },
       hosting: {
         type: businessCase.alternativeBHostingType,
         location: businessCase.alternativeBHostingLocation,
@@ -316,6 +342,10 @@ export const prepareBusinessCaseForApi = (
     preferredSummary: businessCase.preferredSolution.summary,
     preferredAcquisitionApproach:
       businessCase.preferredSolution.acquisitionApproach,
+    preferredSecurityIsApproved:
+      businessCase.preferredSolution.security.isApproved,
+    preferredSecurityisBeingReviewed:
+      businessCase.preferredSolution.security.isBeingReviewed,
     preferredHostingType: businessCase.preferredSolution.hosting.type,
     preferredHostingLocation: businessCase.preferredSolution.hosting.location,
     preferredHostingCloudServiceType:
@@ -328,6 +358,10 @@ export const prepareBusinessCaseForApi = (
     alternativeASummary: businessCase.alternativeA.summary,
     alternativeAAcquisitionApproach:
       businessCase.alternativeA.acquisitionApproach,
+    alternativeASecurityIsApproved:
+      businessCase.alternativeA.security.isApproved,
+    alternativeASecurityisBeingReviewed:
+      businessCase.alternativeA.security.isBeingReviewed,
     alternativeAHostingType: businessCase.alternativeA.hosting.type,
     alternativeAHostingLocation: businessCase.alternativeA.hosting.location,
     alternativeAHostingCloudServiceType:
@@ -344,6 +378,12 @@ export const prepareBusinessCaseForApi = (
       : null,
     alternativeBAcquisitionApproach: alternativeBExists
       ? businessCase.alternativeB.acquisitionApproach
+      : null,
+    alternativeBSecurityIsApproved: alternativeBExists
+      ? businessCase.alternativeB.security.isApproved
+      : null,
+    alternativeBSecurityisBeingReviewed: alternativeBExists
+      ? businessCase.alternativeB.security.isBeingReviewed
       : null,
     alternativeBHostingType: alternativeBExists
       ? businessCase.alternativeB.hosting.type

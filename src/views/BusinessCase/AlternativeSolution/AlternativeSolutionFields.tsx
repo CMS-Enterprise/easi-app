@@ -13,7 +13,7 @@ import TextField from 'components/shared/TextField';
 import { yesNoMap } from 'data/common';
 import flattenErrors from 'utils/flattenErrors';
 
-type AlternativeSolutionFields = {
+type AlternativeSolutionFieldsProps = {
   altLetter: string;
   formikProps: FormikProps<any>;
 };
@@ -21,7 +21,7 @@ type AlternativeSolutionFields = {
 const AlternativeSolutionFields = ({
   altLetter,
   formikProps
-}: AlternativeSolutionFields) => {
+}: AlternativeSolutionFieldsProps) => {
   const { values, errors = {}, setFieldValue } = formikProps;
   const altLabel = `Alternative ${altLetter}`;
   const altId = `alternative${altLetter}`;
@@ -116,6 +116,92 @@ const AlternativeSolutionFields = ({
             }
           />
         </FieldGroup>
+
+        <FieldGroup
+          scrollElement={`${altId}.security.isApproved`}
+          error={!!flatErrors[`${altId}.security.isApproved`]}
+        >
+          <fieldset className="usa-fieldset margin-top-4">
+            <legend className="usa-label margin-bottom-1">
+              Is your solution approved by IT Security for use at CMS (FedRAMP,
+              FISMA approved, within the CMS cloud enclave)?
+            </legend>
+            <FieldErrorMsg>
+              {flatErrors[`${altId}.security.isApproved`]}
+            </FieldErrorMsg>
+            <Field
+              as={RadioField}
+              checked={values[`${altId}`].security.isApproved === true}
+              id={`BusinessCase-${altId}SecurityApproved`}
+              name={`${altId}.security.isApproved`}
+              label={yesNoMap.YES}
+              value
+              onChange={() => {
+                setFieldValue(`${altId}.security.isApproved`, true);
+              }}
+            />
+
+            <Field
+              as={RadioField}
+              checked={values[`${altId}`].security.isApproved === false}
+              id={`BusinessCase-${altId}SecurityNotApproved`}
+              name={`${altId}.security.isApproved`}
+              label={yesNoMap.NO}
+              value={false}
+              onChange={() => {
+                setFieldValue(`${altId}.security.isApproved`, false);
+                setFieldValue(`${altId}.security.isBeingReviewed`, '');
+              }}
+            />
+          </fieldset>
+        </FieldGroup>
+
+        {values[`${altId}`].security.isApproved === false && (
+          <FieldGroup
+            scrollElement={`${altId}.security.isBeingReviewed`}
+            error={!!flatErrors[`${altId}.security.isBeingReviewed`]}
+          >
+            <fieldset className="usa-fieldset margin-top-4">
+              <legend className="usa-label margin-bottom-1">
+                Is it in the process of CMS approval?
+              </legend>
+              <HelpText className="margin-bottom-1">
+                Obtaining CMS Approval can be lengthy and solutions that do not
+                have it or are just starting may lead to longer project
+                timelines.
+              </HelpText>
+              <FieldErrorMsg>
+                {flatErrors[`${altId}.security.isBeingReviewed`]}
+              </FieldErrorMsg>
+              <Field
+                as={RadioField}
+                checked={values[`${altId}`].security.isBeingReviewed === 'YES'}
+                id={`BusinessCase-${altId}SecurityIsBeingReviewedYed`}
+                name={`${altId}.security.isBeingReviewed`}
+                label={yesNoMap.YES}
+                value="YES"
+              />
+              <Field
+                as={RadioField}
+                checked={values[`${altId}`].security.isBeingReviewed === 'NO'}
+                id={`BusinessCase-${altId}SecurityIsBeingReviewedNo`}
+                name={`${altId}.security.isBeingReviewed`}
+                label={yesNoMap.NO}
+                value="NO"
+              />
+              <Field
+                as={RadioField}
+                checked={
+                  values[`${altId}`].security.isBeingReviewed === 'NOT_SURE'
+                }
+                id={`BusinessCase-${altId}SecurityIsBeingReviewedNotSure`}
+                name={`${altId}.security.isBeingReviewed`}
+                label={yesNoMap.NOT_SURE}
+                value="NOT_SURE"
+              />
+            </fieldset>
+          </FieldGroup>
+        )}
 
         <FieldGroup
           scrollElement={`${altId}.hosting.type`}

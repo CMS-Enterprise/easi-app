@@ -4,13 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"strings"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-type fetchSystemIntakes func(context.Context, string) (models.SystemIntakes, error)
+type fetchSystemIntakes func(context.Context, models.SystemIntakeStatusFilter) (models.SystemIntakes, error)
 
 // NewSystemIntakesHandler is a constructor for SystemIntakesHandler
 func NewSystemIntakesHandler(base HandlerBase, fetch fetchSystemIntakes) SystemIntakesHandler {
@@ -31,16 +31,13 @@ func (h SystemIntakesHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case "GET":
-			principal := appcontext.Principal(r.Context())
-			if !principal.AllowEASi() {
-				h.WriteErrorResponse(r.Context(), w, &apperrors.ContextError{
-					Operation: apperrors.ContextGet,
-					Object:    "User",
-				})
-				return
+			var filterValue models.SystemIntakeStatusFilter
+			statusFilters := r.URL.Query()["status"]
+			if len(statusFilters) == 1 {
+				filterValue = models.SystemIntakeStatusFilter(strings.ToUpper(statusFilters[0]))
 			}
 
-			systemIntakes, err := h.FetchSystemIntakes(r.Context(), principal.ID())
+			systemIntakes, err := h.FetchSystemIntakes(r.Context(), filterValue)
 			if err != nil {
 				h.WriteErrorResponse(r.Context(), w, err)
 				return

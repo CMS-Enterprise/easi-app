@@ -1,11 +1,10 @@
 import { DateTime } from 'luxon';
 
+import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-
-import cmsGovernanceTeams from '../constants/enums/cmsGovernanceTeams';
 
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
@@ -13,7 +12,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   id: '',
   euaUserID: '',
   requestName: '',
-  status: 'DRAFT',
+  status: 'INTAKE_DRAFT',
+  requestType: 'NEW',
   requester: {
     name: '',
     component: '',
@@ -37,17 +37,45 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   },
   fundingSource: {
     isFunded: null,
-    fundingNumber: ''
+    fundingNumber: '',
+    source: ''
+  },
+  costs: {
+    isExpectingIncrease: '',
+    expectedIncreaseAmount: ''
+  },
+  contract: {
+    hasContract: '',
+    contractor: '',
+    vehicle: '',
+    startDate: {
+      month: '',
+      year: ''
+    },
+    endDate: {
+      month: '',
+      year: ''
+    }
   },
   businessNeed: '',
   businessSolution: '',
   currentStage: '',
   needsEaSupport: null,
-  hasContract: '',
   grtReviewEmailBody: '',
   decidedAt: null,
   businessCaseId: null,
-  submittedAt: null
+  submittedAt: null,
+  updatedAt: null,
+  createdAt: null,
+  archivedAt: null,
+  lcid: '',
+  lcidExpiration: null,
+  lcidScope: '',
+  lifecycleNextSteps: '',
+  decisionNextSteps: '',
+  rejectionReason: '',
+  grtDate: null,
+  grbDate: null
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -64,6 +92,7 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
       id: systemIntake.id
     }),
     status: systemIntake.status,
+    requestType: systemIntake.requestType,
     requester: systemIntake.requester.name,
     component: systemIntake.requester.component,
     businessOwner: systemIntake.businessOwner.name,
@@ -78,13 +107,25 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     eaCollaborator: getGovernanceCollaborator('Enterprise Architecture'),
     projectName: systemIntake.requestName,
     existingFunding: systemIntake.fundingSource.isFunded,
-    fundingSource: systemIntake.fundingSource.fundingNumber,
+    fundingNumber: systemIntake.fundingSource.fundingNumber,
+    fundingSource: systemIntake.fundingSource.source,
     businessNeed: systemIntake.businessNeed,
     solution: systemIntake.businessSolution,
     processStatus: systemIntake.currentStage,
     eaSupportRequest: systemIntake.needsEaSupport,
-    existingContract: systemIntake.hasContract,
-    grtReviewEmailBody: systemIntake.grtReviewEmailBody
+    existingContract: systemIntake.contract.hasContract,
+    grtReviewEmailBody: systemIntake.grtReviewEmailBody,
+    costIncrease: systemIntake.costs.isExpectingIncrease,
+    costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
+    contractor: systemIntake.contract.contractor,
+    contractVehicle: systemIntake.contract.vehicle,
+    contractStartMonth: systemIntake.contract.startDate.month,
+    contractStartYear: systemIntake.contract.startDate.year,
+    contractEndMonth: systemIntake.contract.endDate.month,
+    contractEndYear: systemIntake.contract.endDate.year,
+    grtDate: systemIntake.grtDate && systemIntake.grtDate.toISO(),
+    grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO(),
+    submittedAt: systemIntake.submittedAt && systemIntake.submittedAt.toISO()
   };
 };
 
@@ -108,7 +149,8 @@ export const prepareSystemIntakeForApp = (
     id: systemIntake.id || '',
     euaUserID: systemIntake.euaUserID || '',
     requestName: systemIntake.projectName || '',
-    status: systemIntake.status || 'DRAFT',
+    status: systemIntake.status || 'INTAKE_DRAFT',
+    requestType: systemIntake.requestType || 'NEW',
     requester: {
       name: systemIntake.requester || '',
       component: systemIntake.component || '',
@@ -135,7 +177,25 @@ export const prepareSystemIntakeForApp = (
         systemIntake.existingFunding === null
           ? null
           : systemIntake.existingFunding,
-      fundingNumber: systemIntake.fundingSource || ''
+      fundingNumber: systemIntake.fundingNumber || '',
+      source: systemIntake.fundingSource || ''
+    },
+    costs: {
+      isExpectingIncrease: systemIntake.costIncrease || '',
+      expectedIncreaseAmount: systemIntake.costIncreaseAmount || ''
+    },
+    contract: {
+      hasContract: systemIntake.existingContract || '',
+      contractor: systemIntake.contractor || '',
+      vehicle: systemIntake.contractVehicle || '',
+      startDate: {
+        month: systemIntake.contractStartMonth || '',
+        year: systemIntake.contractStartYear || ''
+      },
+      endDate: {
+        month: systemIntake.contractEndMonth || '',
+        year: systemIntake.contractEndYear || ''
+      }
     },
     businessNeed: systemIntake.businessNeed || '',
     businessSolution: systemIntake.solution || '',
@@ -144,7 +204,6 @@ export const prepareSystemIntakeForApp = (
       systemIntake.eaSupportRequest === null
         ? null
         : systemIntake.eaSupportRequest,
-    hasContract: systemIntake.existingContract || '',
     grtReviewEmailBody: systemIntake.grtReviewEmailBody || '',
     decidedAt: systemIntake.decidedAt
       ? DateTime.fromISO(systemIntake.decidedAt)
@@ -152,6 +211,107 @@ export const prepareSystemIntakeForApp = (
     businessCaseId: systemIntake.businessCase || null,
     submittedAt: systemIntake.submittedAt
       ? DateTime.fromISO(systemIntake.submittedAt)
+      : null,
+    updatedAt: systemIntake.updatedAt
+      ? DateTime.fromISO(systemIntake.updatedAt)
+      : null,
+    createdAt: systemIntake.createdAt
+      ? DateTime.fromISO(systemIntake.createdAt)
+      : null,
+    archivedAt: systemIntake.archivedAt
+      ? DateTime.fromISO(systemIntake.archivedAt)
+      : null,
+    lcid: systemIntake.lcid || '',
+    lcidExpiration: systemIntake.lcidExpiresAt
+      ? DateTime.fromISO(systemIntake.lcidExpiresAt)
+      : null,
+    lcidScope: systemIntake.lcidScope || '',
+    lifecycleNextSteps: systemIntake.lifecycleNextSteps || '',
+    decisionNextSteps: systemIntake.decisionNextSteps || '',
+    rejectionReason: systemIntake.rejectionReason || '',
+    grtDate: systemIntake.grtDate
+      ? DateTime.fromISO(systemIntake.grtDate)
+      : null,
+    grbDate: systemIntake.grbDate
+      ? DateTime.fromISO(systemIntake.grbDate)
       : null
   };
+};
+
+export const convertIntakeToCSV = (intake: SystemIntakeForm) => {
+  const collaboratorTeams: any = {};
+  if (intake.governanceTeams.isPresent) {
+    intake.governanceTeams.teams.forEach(team => {
+      switch (team.name) {
+        case 'Technical Review Board':
+          collaboratorTeams.trbCollaborator = team.collaborator;
+          break;
+        case "OIT's Security and Privacy Group":
+          collaboratorTeams.oitCollaborator = team.collaborator;
+          break;
+        case 'Enterprise Architecture':
+          collaboratorTeams.eaCollaborator = team.collaborator;
+          break;
+        default:
+          break;
+      }
+    });
+  }
+  return {
+    ...intake,
+    ...collaboratorTeams,
+    contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+      intake.contract.hasContract
+    )
+      ? `${intake.contract.startDate.month}/${intake.contract.startDate.year}`
+      : '',
+    contractEndDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
+      intake.contract.hasContract
+    )
+      ? `${intake.contract.endDate.month}/${intake.contract.endDate.year}`
+      : '',
+    submittedAt: intake.submittedAt && intake.submittedAt.toISO(),
+    updatedAt: intake.updatedAt && intake.updatedAt.toISO(),
+    createdAt: intake.createdAt && intake.createdAt.toISO(),
+    decidedAt: intake.decidedAt && intake.decidedAt.toISO(),
+    archivedAt: intake.archivedAt && intake.archivedAt.toISO()
+  };
+};
+
+/**
+ * Check if any intake fields have been filled out
+ */
+export const isIntakeStarted = (intake: SystemIntakeForm) => {
+  /**
+   * Ignore id, euaUserID, status, requester name/component/email
+   * because those are generated by default.
+   */
+  return !!(
+    intake.requestName ||
+    intake.requester.component ||
+    intake.businessOwner.name ||
+    intake.businessOwner.component ||
+    intake.productManager.name ||
+    intake.productManager.component ||
+    intake.isso.isPresent ||
+    intake.isso.name ||
+    intake.governanceTeams.isPresent ||
+    intake.governanceTeams.teams.length > 0 ||
+    intake.fundingSource.isFunded ||
+    intake.fundingSource.fundingNumber ||
+    intake.fundingSource.source ||
+    intake.costs.isExpectingIncrease ||
+    intake.costs.expectedIncreaseAmount ||
+    intake.contract.hasContract ||
+    intake.contract.contractor ||
+    intake.contract.vehicle ||
+    intake.contract.startDate.month ||
+    intake.contract.startDate.year ||
+    intake.contract.endDate.month ||
+    intake.contract.endDate.year ||
+    intake.businessNeed ||
+    intake.businessSolution ||
+    intake.currentStage ||
+    intake.needsEaSupport
+  );
 };

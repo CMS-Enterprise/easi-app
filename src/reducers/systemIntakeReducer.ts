@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 
 import {
@@ -7,12 +8,13 @@ import {
 import {
   archiveSystemIntake,
   clearSystemIntake,
+  fetchIntakeNotes,
   fetchSystemIntake,
+  issueLifecycleIdForSystemIntake,
+  postIntakeNote,
   postSystemIntake,
-  reviewSystemIntake,
   saveSystemIntake,
-  storeSystemIntake,
-  submitSystemIntake
+  storeSystemIntake
 } from 'types/routines';
 import { SystemIntakeState } from 'types/systemIntake';
 
@@ -20,8 +22,9 @@ const initialState: SystemIntakeState = {
   systemIntake: initialSystemIntakeForm,
   isLoading: null,
   isSaving: false,
-  isSubmitting: false,
-  error: null
+  isNewIntakeCreated: null,
+  error: null,
+  notes: []
 };
 
 function systemIntakeReducer(
@@ -62,18 +65,21 @@ function systemIntakeReducer(
         ...state,
         systemIntake: {
           ...state.systemIntake,
-          ...prepareSystemIntakeForApp(action.payload)
-        }
+          ...action.payload
+        },
+        isNewIntakeCreated: true
       };
     case postSystemIntake.FAILURE:
       return {
         ...state,
-        error: action.payload
+        error: action.payload,
+        isNewIntakeCreated: false
       };
     case postSystemIntake.FULFILL:
       return {
         ...state,
-        isSaving: false
+        isSaving: false,
+        isNewIntakeCreated: null
       };
     case saveSystemIntake.REQUEST:
       return {
@@ -118,29 +124,9 @@ function systemIntakeReducer(
         ...state,
         isLoading: false
       };
-    case submitSystemIntake.REQUEST:
-      return {
-        ...state,
-        isSubmitting: true,
-        error: null
-      };
-    case submitSystemIntake.FAILURE:
-      return {
-        ...state,
-        error: action.payload
-      };
-    case submitSystemIntake.FULFILL:
-      return {
-        ...state,
-        isSubmitting: false
-      };
-    case reviewSystemIntake.REQUEST:
-      return {
-        ...state,
-        isSubmitting: true,
-        error: null
-      };
-    case reviewSystemIntake.SUCCESS:
+    case archiveSystemIntake.SUCCESS:
+      return initialState;
+    case issueLifecycleIdForSystemIntake.SUCCESS:
       return {
         ...state,
         systemIntake: {
@@ -148,18 +134,35 @@ function systemIntakeReducer(
           ...prepareSystemIntakeForApp(action.payload)
         }
       };
-    case reviewSystemIntake.FAILURE:
+    case postIntakeNote.SUCCESS:
+      return {
+        ...state,
+        notes: [
+          {
+            ...action.payload,
+            createdAt: DateTime.fromISO(action.payload.createdAt)
+          },
+          ...state.notes
+        ]
+      };
+    case fetchIntakeNotes.TRIGGER:
+      return {
+        ...state,
+        notes: []
+      };
+    case fetchIntakeNotes.SUCCESS:
+      return {
+        ...state,
+        notes: action.payload.map((note: any) => ({
+          ...note,
+          createdAt: DateTime.fromISO(note.createdAt)
+        }))
+      };
+    case fetchIntakeNotes.FAILURE:
       return {
         ...state,
         error: action.payload
       };
-    case reviewSystemIntake.FULFILL:
-      return {
-        ...state,
-        isSubmitting: false
-      };
-    case archiveSystemIntake.SUCCESS:
-      return initialState;
     default:
       return state;
   }

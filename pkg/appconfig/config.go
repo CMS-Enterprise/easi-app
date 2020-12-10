@@ -147,6 +147,18 @@ const ClientProtocolKey = "CLIENT_PROTOCOL"
 // EmailTemplateDirectoryKey is the key for getting the email template directory
 const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
 
+// AWSS3FileUploadBucket is the key for the bucket we upload files to
+const AWSS3FileUploadBucket = "AWS_S3_FILE_UPLOAD_BUCKET"
+
+// LocalMinioS3AccessKey is a key used for local access to minio
+const LocalMinioS3AccessKey = "MINIO_ACCESS_KEY"
+
+// LocalMinioS3SecretKey is the secret key used for local access to minio
+const LocalMinioS3SecretKey = "MINIO_SECRET_KEY"
+
+// AWSRegion is the key for the region we establish a session to for AWS services
+const AWSRegion = "AWS_REGION"
+
 // CEDARAPIURL is the key for the CEDAR base url
 const CEDARAPIURL = "CEDAR_API_URL"
 
@@ -158,3 +170,17 @@ const LDKey = "LD_SDK_KEY"
 
 // LDTimeout is the key for accessing LaunchDarkly
 const LDTimeout = "LD_TIMEOUT_SECONDS"
+
+// FlagSourceKey indicates where flags should be loaded from
+const FlagSourceKey = "FLAG_SOURCE"
+
+// FlagSourceOption represents an environment
+type FlagSourceOption string
+
+const (
+	// FlagSourceLocal is LOCAL
+	FlagSourceLocal FlagSourceOption = "LOCAL"
+
+	// FlagSourceLaunchDarkly is LAUNCH_DARKLY
+	FlagSourceLaunchDarkly FlagSourceOption = "LAUNCH_DARKLY"
+)

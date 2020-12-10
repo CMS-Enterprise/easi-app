@@ -3,6 +3,25 @@
     opacity: 0.3;
   }
 
+  &__cost-amount {
+    &.usa-textarea {
+      height: 5em;
+    }
+  }
+
+  // Override .usa-label
+  &__label-margin-top-1 {
+    &.usa-label {
+      margin-top: 1em;
+    }
+  }
+
+  &__label-margin-top-0 {
+    &.usa-label {
+      margin-top: 0;
+    }
+  }
+
   &__review-row {
     display: grid;
     grid-gap: 1.25rem;

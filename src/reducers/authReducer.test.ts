@@ -1,50 +1,74 @@
+import { DateTime } from 'luxon';
+
 import authReducer, {
+  setUser,
   updateLastActiveAt,
   updateLastRenewAt
 } from './authReducer';
 
-const RealDate = Date.now;
-const fakeTime = 123456789;
-
 describe('The auth reducer', () => {
-  beforeAll(() => {
-    global.Date.now = jest.fn(() => fakeTime);
-  });
-
-  afterAll(() => {
-    global.Date.now = RealDate;
-  });
-
   it('returns the initial state', () => {
-    expect(authReducer(undefined, {})).toEqual({
+    expect(authReducer(undefined, { type: 'TEST', payload: {} })).toEqual({
       lastActiveAt: expect.any(Number),
-      lastRenewAt: expect.any(Number)
+      lastRenewAt: expect.any(Number),
+      name: '',
+      euaId: '',
+      groups: [],
+      isUserSet: false
     });
   });
 
   it('handles updateLastActiveAt', () => {
     const initialReducer = {
       lastActiveAt: 0,
-      lastRenewAt: 0
+      lastRenewAt: 0,
+      name: '',
+      euaId: '',
+      groups: [],
+      isUserSet: false
     };
-    const mockAction = updateLastActiveAt;
+    const now = DateTime.local();
 
-    expect(authReducer(initialReducer, mockAction)).toEqual({
-      lastActiveAt: fakeTime,
-      lastRenewAt: 0
-    });
+    expect(
+      authReducer(initialReducer, updateLastActiveAt(now)).lastActiveAt
+    ).toEqual(now);
   });
 
   it('handles updateLastRenewAt', () => {
     const initialReducer = {
       lastActiveAt: 0,
-      lastRenewAt: 0
+      lastRenewAt: 0,
+      name: '',
+      euaId: '',
+      groups: [],
+      isUserSet: false
     };
-    const mockAction = updateLastRenewAt;
+    const now = DateTime.local();
 
-    expect(authReducer(initialReducer, mockAction)).toEqual({
+    expect(
+      authReducer(initialReducer, updateLastRenewAt(now)).lastRenewAt
+    ).toEqual(now);
+  });
+
+  it('sets user info', () => {
+    const initialReducer = {
       lastActiveAt: 0,
-      lastRenewAt: fakeTime
+      lastRenewAt: 0,
+      name: '',
+      euaId: '',
+      groups: [],
+      isUserSet: false
+    };
+    const mockAction = setUser({
+      name: 'Jane Smith',
+      euaId: 'ABCD',
+      groups: ['my-test-group']
     });
+
+    const newState = authReducer(initialReducer, mockAction);
+    expect(newState.name).toEqual('Jane Smith');
+    expect(newState.euaId).toEqual('ABCD');
+    expect(newState.groups).toEqual(['my-test-group']);
+    expect(newState.isUserSet).toEqual(true);
   });
 });

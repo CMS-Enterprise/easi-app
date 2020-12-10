@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
@@ -18,7 +17,6 @@ type ServicesTestSuite struct {
 	suite.Suite
 	logger *zap.Logger
 	store  *storage.Store
-	db     *sqlx.DB
 }
 
 func TestServicesTestSuite(t *testing.T) {
@@ -43,7 +41,6 @@ func TestServicesTestSuite(t *testing.T) {
 		Suite:  suite.Suite{},
 		logger: logger,
 		store:  store,
-		db:     store.DB,
 	}
 	suite.Run(t, servicesTestSuite)
 }

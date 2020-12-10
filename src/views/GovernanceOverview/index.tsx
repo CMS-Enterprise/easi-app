@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
-import { useFlags } from 'contexts/flagContext';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -31,7 +30,6 @@ const GovernanceStep = ({ header, body }: NumberedListItemProps) => {
 };
 
 const GovernanceOverview = () => {
-  const flags = useFlags();
   return (
     <PageWrapper className="easi-governance-overview">
       <Header />
@@ -41,17 +39,7 @@ const GovernanceOverview = () => {
             <Link to="/">Home</Link>
             <i className="fa fa-angle-right margin-x-05" aria-hidden />
           </li>
-          <li>
-            {flags.taskListLite ? (
-              <Link to="/governance-task-list/new" aria-current="location">
-                Add a new system or service
-              </Link>
-            ) : (
-              <Link to="/governance-overview" aria-current="location">
-                Add a new system or service
-              </Link>
-            )}
-          </li>
+          <li aria-current="location">Add a new system or service</li>
         </BreadcrumbNav>
         <Link to="/">
           <i className="fa fa-angle-left margin-right-05 text-no-underline" />
@@ -142,7 +130,7 @@ const GovernanceOverview = () => {
           className="usa-button"
           asCustom={Link}
           variant="unstyled"
-          to="/system/new"
+          to="/system/request-type"
         >
           Get started
         </UswdsLink>

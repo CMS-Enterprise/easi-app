@@ -2,9 +2,9 @@ import * as Yup from 'yup';
 
 //
 const phoneNumberRegex = /( *-*[0-9] *?){10,}/;
-const BusinessCaseValidationSchema = {
+export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
-    requestName: Yup.string().required('Enter the Request Name'),
+    requestName: Yup.string().required('Enter the Project Name'),
     requester: Yup.object().shape({
       name: Yup.string().required("Enter the Requester's name"),
       phoneNumber: Yup.string()
@@ -84,6 +84,19 @@ const BusinessCaseValidationSchema = {
       acquisitionApproach: Yup.string().required(
         'Tell us about the acquisition approach for the Preferred solution'
       ),
+      security: Yup.object().shape({
+        isApproved: Yup.boolean()
+          .nullable()
+          .required(
+            'Tell us whether for solution was approved by IT Security for use at CMS'
+          ),
+        isBeingReviewed: Yup.string().when('isApproved', {
+          is: false,
+          then: Yup.string().required(
+            'Tell us whether your solution is in the process of receiving approval'
+          )
+        })
+      }),
       hosting: Yup.object().shape({
         type: Yup.string().required(
           'Tell us how Preferred solution will be hosted'
@@ -165,6 +178,19 @@ const BusinessCaseValidationSchema = {
       acquisitionApproach: Yup.string().required(
         'Tell us about the acquisition approach for the Alternative A solution'
       ),
+      security: Yup.object().shape({
+        isApproved: Yup.boolean()
+          .nullable()
+          .required(
+            'Tell us whether for solution was approved by IT Security for use at CMS'
+          ),
+        isBeingReviewed: Yup.string().when('isApproved', {
+          is: false,
+          then: Yup.string().required(
+            'Tell us whether your solution is in the process of receiving approval'
+          )
+        })
+      }),
       hosting: Yup.object().shape({
         type: Yup.string().required(
           'Tell us how Alternative A solution will be hosted'
@@ -246,6 +272,19 @@ const BusinessCaseValidationSchema = {
       acquisitionApproach: Yup.string().required(
         'Tell us about the acquisition approach for the Alternative B solution'
       ),
+      security: Yup.object().shape({
+        isApproved: Yup.boolean()
+          .nullable()
+          .required(
+            'Tell us whether for solution was approved by IT Security for use at CMS'
+          ),
+        isBeingReviewed: Yup.string().when('isApproved', {
+          is: false,
+          then: Yup.string().required(
+            'Tell us whether your solution is in the process of receiving approval'
+          )
+        })
+      }),
       hosting: Yup.object().shape({
         type: Yup.string().required(
           'Tell us how Alternative B solution will be hosted'
@@ -318,4 +357,20 @@ const BusinessCaseValidationSchema = {
   })
 };
 
-export default BusinessCaseValidationSchema;
+// We don't validate much when a business case is in draft
+// This mostly empty validation makes it easier to switch validations in the form code
+export const BusinessCaseDraftValidationSchema = {
+  generalRequestInfo: Yup.object().shape({
+    requester: Yup.object().shape({
+      phoneNumber: Yup.string().matches(
+        phoneNumberRegex,
+        'Enter the requester’s phone number like 123456789 or 123-456-789'
+      )
+    })
+  }),
+  requestDescription: Yup.object().shape({}),
+  asIsSolution: Yup.object().shape({}),
+  preferredSolution: Yup.object().shape({}),
+  alternativeA: Yup.object().shape({}),
+  alternativeB: Yup.object().shape({})
+};

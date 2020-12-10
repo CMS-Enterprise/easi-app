@@ -19,8 +19,8 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 	id := uuid.New()
 	intake := models.SystemIntake{
 		ID:                      id,
-		EUAUserID:               "FAKE",
-		Status:                  "SUBMITTED",
+		EUAUserID:               null.StringFrom("FAKE"),
+		Status:                  models.SystemIntakeStatusINTAKESUBMITTED,
 		Requester:               "Fake Requester",
 		Component:               null.StringFrom("Fake Component"),
 		BusinessOwner:           null.StringFrom("Fake Business Owner"),
@@ -33,12 +33,14 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 		EACollaborator:          null.StringFrom("Fake EACollaborator"),
 		ProjectName:             null.StringFrom("Fake Project Name"),
 		ExistingFunding:         null.BoolFrom(false),
-		FundingSource:           null.String{},
+		FundingNumber:           null.String{},
 		BusinessNeed:            null.StringFrom("Fake Business Need"),
 		Solution:                null.StringFrom("Fake Solution"),
 		ProcessStatus:           null.StringFrom("Just an idea"),
 		EASupportRequest:        null.BoolFrom(false),
 		ExistingContract:        null.StringFrom("No"),
+		CostIncrease:            null.StringFrom("NO"),
+		CostIncreaseAmount:      null.StringFrom(""),
 		UpdatedAt:               &clockTime,
 		SubmittedAt:             &clockTime,
 		AlfabetID:               null.String{},
@@ -75,12 +77,12 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 		intake.ExistingFunding = null.BoolFrom(false)
 	})
 
-	s.Run("An intake with existing funding requires a funding source", func() {
+	s.Run("An intake with existing funding requires a funding number", func() {
 		intake.ExistingFunding = null.BoolFrom(true)
 		err := ValidateSystemIntakeForCedar(ctx, &intake)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate *models.SystemIntake %s: {\"FundingSource\":\"is required\"}",
+			"Could not validate *models.SystemIntake %s: {\"FundingNumber\":\"is required\"}",
 			id.String(),
 		)
 		s.EqualError(err, expectedErrString)
@@ -89,42 +91,42 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 		intake.ExistingFunding = null.BoolFrom(false)
 	})
 
-	s.Run("An intake with a required funding source fails if it is not 6 digits", func() {
+	s.Run("An intake with a required funding number fails if it is not 6 digits", func() {
 		intake.ExistingFunding = null.BoolFrom(true)
-		intake.FundingSource = null.StringFrom("12")
+		intake.FundingNumber = null.StringFrom("12")
 		err := ValidateSystemIntakeForCedar(ctx, &intake)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
-			"Could not validate *models.SystemIntake %s: {\"FundingSource\":\"must be a 6 digit string\"}",
+			"Could not validate *models.SystemIntake %s: {\"FundingNumber\":\"must be a 6 digit string\"}",
 			id.String(),
 		)
 		s.EqualError(err, expectedErrString)
 
 		// Reset intake fields
 		intake.ExistingFunding = null.BoolFrom(false)
-		intake.FundingSource = null.String{}
+		intake.FundingNumber = null.String{}
 	})
 
-	s.Run("An intake with a required funding source passes if it is 6 digits", func() {
+	s.Run("An intake with a required funding number passes if it is 6 digits", func() {
 		intake.ExistingFunding = null.BoolFrom(true)
-		intake.FundingSource = null.StringFrom("123456")
+		intake.FundingNumber = null.StringFrom("123456")
 		err := ValidateSystemIntakeForCedar(ctx, &intake)
 		s.NoError(err)
 
 		// Reset intake fields
 		intake.ExistingFunding = null.BoolFrom(false)
-		intake.FundingSource = null.String{}
+		intake.FundingNumber = null.String{}
 	})
 
-	s.Run("An intake with a no existing funding doesn't validate funding source", func() {
+	s.Run("An intake with a no existing funding doesn't validate funding number", func() {
 		intake.ExistingFunding = null.BoolFrom(false)
-		intake.FundingSource = null.String{}
+		intake.FundingNumber = null.String{}
 		err := ValidateSystemIntakeForCedar(ctx, &intake)
 		s.NoError(err)
 	})
 
 	s.Run("An intake without a required string fails", func() {
-		intake.EUAUserID = ""
+		intake.EUAUserID = null.StringFrom("")
 		err := ValidateSystemIntakeForCedar(ctx, &intake)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
@@ -134,7 +136,7 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 		s.EqualError(err, expectedErrString)
 
 		// Reset intake fields
-		intake.EUAUserID = "FAKE"
+		intake.EUAUserID = null.StringFrom("FAKE")
 	})
 
 	s.Run("An intake without a required id fails", func() {

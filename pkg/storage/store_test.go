@@ -42,7 +42,7 @@ func TestStoreTestSuite(t *testing.T) {
 
 	storeTestSuite := &StoreTestSuite{
 		Suite:  suite.Suite{},
-		db:     store.DB,
+		db:     store.db,
 		logger: logger,
 		store:  store,
 	}

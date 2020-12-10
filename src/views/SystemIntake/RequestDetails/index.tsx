@@ -8,7 +8,6 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import CollapsableLink from 'components/shared/CollapsableLink';
-import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -17,7 +16,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import processStages from 'constants/enums/processStages';
+import { useFlags } from 'contexts/flagContext';
 import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -30,9 +29,7 @@ type RequestDetailsForm = {
   };
   businessNeed: string;
   businessSolution: string;
-  currentStage: string;
   needsEaSupport: boolean | null;
-  hasContract: string;
 };
 
 type RequestDetailsProps = {
@@ -46,16 +43,28 @@ const RequestDetails = ({
   systemIntake,
   dispatchSave
 }: RequestDetailsProps) => {
+  const flags = useFlags();
   const history = useHistory();
   const initialValues: RequestDetailsForm = {
     requestName: systemIntake.requestName,
     fundingSource: systemIntake.fundingSource,
     businessNeed: systemIntake.businessNeed,
     businessSolution: systemIntake.businessSolution,
-    currentStage: systemIntake.currentStage,
-    needsEaSupport: systemIntake.needsEaSupport,
-    hasContract: systemIntake.hasContract
+    needsEaSupport: systemIntake.needsEaSupport
   };
+
+  const saveExitLink = (() => {
+    let link = '';
+    if (systemIntake.requestType === 'SHUTDOWN') {
+      link = '/';
+    } else {
+      link = flags.taskListLite
+        ? `/governance-task-list/${systemIntake.id}`
+        : '/';
+    }
+    return link;
+  })();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -107,7 +116,7 @@ const RequestDetails = ({
                   scrollElement="requestName"
                   error={!!flatErrors.requestName}
                 >
-                  <Label htmlFor="IntakeForm-RequestName">Request Name</Label>
+                  <Label htmlFor="IntakeForm-RequestName">Project Name</Label>
                   <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                   <Field
                     as={TextField}
@@ -193,6 +202,7 @@ const RequestDetails = ({
                 </FieldGroup>
 
                 <FieldGroup
+                  className="margin-bottom-4"
                   scrollElement="needsEaSupport"
                   error={!!flatErrors.needsEaSupport}
                 >
@@ -260,151 +270,6 @@ const RequestDetails = ({
                   </fieldset>
                 </FieldGroup>
 
-                <FieldGroup
-                  scrollElement="currentStage"
-                  error={!!flatErrors.currentStage}
-                >
-                  <Label htmlFor="IntakeForm-CurrentStage">
-                    Where are you in the process?
-                  </Label>
-                  <HelpText className="margin-y-1">
-                    This helps the governance team provide the right type of
-                    guidance for your request
-                  </HelpText>
-                  <FieldErrorMsg>{flatErrors.CurrentStage}</FieldErrorMsg>
-                  <Field
-                    as={DropdownField}
-                    error={!!flatErrors.currentStage}
-                    id="IntakeForm-CurrentStage"
-                    name="currentStage"
-                  >
-                    <Field
-                      as={DropdownItem}
-                      name="Select an option"
-                      value=""
-                      disabled
-                    />
-                    {processStages.map(stage => (
-                      <Field
-                        as={DropdownItem}
-                        key={`ProcessStageComponent-${stage.value}`}
-                        name={stage.name}
-                        value={stage.name}
-                      />
-                    ))}
-                  </Field>
-                </FieldGroup>
-
-                <FieldGroup
-                  scrollElement="hasContract"
-                  error={!!flatErrors.hasContract}
-                >
-                  <Label htmlFor="IntakeForm-HasContract">
-                    Do you already have a contract in place to support this
-                    effort?
-                  </Label>
-                  <HelpText className="margin-y-1">
-                    This information helps the Office of Acquisition and Grants
-                    Management (OAGM) track current work
-                  </HelpText>
-                  <FieldErrorMsg>{flatErrors.hasContract}</FieldErrorMsg>
-                  <Field
-                    as={DropdownField}
-                    error={!!flatErrors.hasContract}
-                    id="IntakeForm-HasContract"
-                    helpText="This information helps the Office of Acquisition and Grants Management (OAGM) track work"
-                    name="hasContract"
-                  >
-                    <Field
-                      as={DropdownItem}
-                      name="Select an option"
-                      value=""
-                      disabled
-                    />
-                    <Field
-                      as={DropdownItem}
-                      key="HasContract-Yes"
-                      name="Yes"
-                      value="Yes"
-                    />
-                    <Field
-                      as={DropdownItem}
-                      key="HasContract-No"
-                      name="No"
-                      value="No"
-                    />
-                    <Field
-                      as={DropdownItem}
-                      key="HasContract-StatementOfWork"
-                      name="No, but I have a Statement of Work/Objectives"
-                      value="No, but I have a Statement of Work/Objectives"
-                    />
-                  </Field>
-                </FieldGroup>
-
-                <FieldGroup
-                  scrollElement="fundingSource.isFunded"
-                  error={!!flatErrors['fundingSource.isFunded']}
-                >
-                  <fieldset className="usa-fieldset margin-top-4">
-                    <legend className="usa-label margin-bottom-1">
-                      Does this request have funding from an existing funding
-                      source?
-                    </legend>
-                    <HelpText className="margin-bottom-1">
-                      If you are unsure, please get in touch with your
-                      Contracting Officer Representative
-                    </HelpText>
-                    <FieldErrorMsg>
-                      {flatErrors['fundingSource.isFunded']}
-                    </FieldErrorMsg>
-                    <Field
-                      as={RadioField}
-                      checked={values.fundingSource.isFunded === true}
-                      id="IntakeForm-HasFundingSourceYes"
-                      name="fundingSource.isFunded"
-                      label="Yes"
-                      onChange={() => {
-                        setFieldValue('fundingSource.isFunded', true);
-                      }}
-                      value
-                    />
-                    {values.fundingSource.isFunded && (
-                      <div className="width-card margin-top-neg-2 margin-left-3 margin-bottom-1">
-                        <FieldGroup
-                          scrollElement="fundingSource.fundingNumber"
-                          error={!!flatErrors['fundingSource.fundingNumber']}
-                        >
-                          <Label htmlFor="IntakeForm-FundingNumber">
-                            Funding Number
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['fundingSource.fundingNumber']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={TextField}
-                            error={!!flatErrors['fundingSource.fundingNumber']}
-                            id="IntakeForm-FundingNumber"
-                            maxLength={6}
-                            name="fundingSource.fundingNumber"
-                          />
-                        </FieldGroup>
-                      </div>
-                    )}
-                    <Field
-                      as={RadioField}
-                      checked={values.fundingSource.isFunded === false}
-                      id="IntakeForm-HasFundingSourceNo"
-                      name="fundingSource.isFunded"
-                      label="No"
-                      onChange={() => {
-                        setFieldValue('fundingSource.isFunded', false);
-                        setFieldValue('fundingSource.fundingNumber', '');
-                      }}
-                      value={false}
-                    />
-                  </fieldset>
-                </FieldGroup>
                 <Button
                   type="button"
                   outline
@@ -424,7 +289,7 @@ const RequestDetails = ({
                     formikProps.validateForm().then(err => {
                       if (Object.keys(err).length === 0) {
                         dispatchSave();
-                        const newUrl = 'review';
+                        const newUrl = 'contract-details';
                         history.push(newUrl);
                       }
                       window.scrollTo(0, 0);
@@ -439,7 +304,7 @@ const RequestDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push('/');
+                      history.push(saveExitLink);
                     }}
                   >
                     <span>
@@ -454,7 +319,7 @@ const RequestDetails = ({
               onSave={dispatchSave}
               debounceDelay={1000 * 30}
             />
-            <PageNumber currentPage={2} totalPages={2} />
+            <PageNumber currentPage={2} totalPages={3} />
           </>
         );
       }}

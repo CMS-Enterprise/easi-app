@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 
+import actionReducer from 'reducers/actionReducer';
 import systemIntakesReducer from 'reducers/systemIntakesReducer';
 
 import authReducer from './authReducer';
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   systemIntakes: systemIntakesReducer,
   businessCase: businessCaseReducer,
   businessCases: businessCasesReducer,
+  action: actionReducer,
   auth: authReducer
 });
 

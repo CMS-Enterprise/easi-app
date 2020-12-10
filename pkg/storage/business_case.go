@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 
@@ -15,10 +16,10 @@ import (
 )
 
 // IntakeExistsMsg is the error we see when there is no valid system intake
-const IntakeExistsMsg = "pq: insert or update on table \"business_case\" violates foreign key constraint \"business_case_system_intake_fkey\""
+const IntakeExistsMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: insert or update on table \"business_case\" violates foreign key constraint \"business_case_system_intake_fkey\""
 
 // EuaIDMsg is the error we see when EUA doesn't meet EUA ID constraints
-const EuaIDMsg = "pq: new row for relation \"business_case\" violates check constraint \"eua_id_check\""
+const EuaIDMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: new row for relation \"business_case\" violates check constraint \"eua_id_check\""
 
 // ValidStatusMsg is a match for an error we see when there is no valid status
 const ValidStatusMsg = "pq: invalid input value for enum business_case_status: "
@@ -32,52 +33,55 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 	const fetchBusinessCaseSQL = `
 		SELECT
 			business_case.*,
-			json_agg(estimated_lifecycle_cost) as lifecycle_cost_lines
+			json_agg(estimated_lifecycle_cost) as lifecycle_cost_lines,
+			system_intake.status as system_intake_status
 		FROM
 			business_case
 			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
+			JOIN system_intake ON business_case.system_intake = system_intake.id
 		WHERE
-			business_case.id = $1 AND business_case.status != 'ARCHIVED'
-		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
+			business_case.id = $1
+		GROUP BY estimated_lifecycle_cost.business_case, business_case.id, system_intake.id`
 
-	err := s.DB.Get(&businessCase, fetchBusinessCaseSQL, id)
+	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business case %s", err),
 			zap.String("id", id.String()),
 		)
-		if err.Error() == "sql: no rows in result set" {
-			return &models.BusinessCase{}, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
 		}
-		return &models.BusinessCase{}, err
+		return nil, err
 	}
 	return &businessCase, nil
 }
 
-// FetchBusinessCaseIDByIntakeID queries the DB for a business case matching the given intake ID
-func (s *Store) FetchBusinessCaseIDByIntakeID(ctx context.Context, intakeID uuid.UUID) (*uuid.UUID, error) {
-	var businessCaseID *uuid.UUID = nil
-	const fetchBusinessCaseIDSQL = `
+// FetchOpenBusinessCaseByIntakeID queries the DB for an open business case matching the given intake ID
+func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uuid.UUID) (*models.BusinessCase, error) {
+	businessCase := models.BusinessCase{}
+	const fetchBusinessCaseSQL = `
 		SELECT
-			id
+			business_case.*,
+			json_agg(estimated_lifecycle_cost) as lifecycle_cost_lines
 		FROM
 			business_case
+			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
 		WHERE
-			business_case.system_intake = $1 AND business_case.status != 'ARCHIVED'`
-
-	err := s.DB.Get(&businessCaseID, fetchBusinessCaseIDSQL, intakeID)
+			business_case.system_intake = $1 AND business_case.status = 'OPEN'
+		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
+	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, intakeID)
 	if err != nil {
-		if err.Error() == "sql: no rows in result set" {
-			return businessCaseID, nil
-		}
-
 		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business case id for intake %s", err),
-			zap.String("System Intake", intakeID.String()),
+			fmt.Sprintf("Failed to fetch business case %s", err),
+			zap.String("id", intakeID.String()),
 		)
-		return businessCaseID, err
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.BusinessCase{}}
+		}
+		return nil, err
 	}
-	return businessCaseID, nil
+	return &businessCase, nil
 }
 
 // FetchBusinessCasesByEuaID queries the DB for a list of business case matching the given EUA ID
@@ -91,40 +95,39 @@ func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (mo
 			business_case
 			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
 		WHERE
-			business_case.eua_user_id = $1 AND business_case.status != 'ARCHIVED'
+			business_case.eua_user_id = $1
 		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
 
-	err := s.DB.Select(&businessCases, fetchBusinessCaseSQL, euaID)
+	err := s.db.Select(&businessCases, fetchBusinessCaseSQL, euaID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch business cases %s", err),
 			zap.String("euaID", euaID),
 		)
-		return models.BusinessCases{}, err
+		return nil, err
 	}
 	return businessCases, nil
 }
 
-const createEstimatedLifecycleCostSQL = `
-	INSERT INTO estimated_lifecycle_cost (
-		id,
-		business_case,
-		solution,
-		year,
-		phase,
-		cost
-	)
-	VALUES (
-		:id,
-		:business_case,
-		:solution,
-		:year,
-		:phase,
-		:cost
-	)
-`
-
 func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCase *models.BusinessCase) error {
+	const createEstimatedLifecycleCostSQL = `
+		INSERT INTO estimated_lifecycle_cost (
+			id,
+			business_case,
+			solution,
+			year,
+			phase,
+			cost
+		)
+		VALUES (
+			:id,
+			:business_case,
+			:solution,
+			:year,
+			:phase,
+			:cost
+		)
+	`
 	for _, cost := range businessCase.LifecycleCostLines {
 		cost.ID = uuid.New()
 		cost.BusinessCaseID = businessCase.ID
@@ -172,6 +175,8 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			preferred_title,
 			preferred_summary,
 			preferred_acquisition_approach,
+			preferred_security_is_approved,
+			preferred_security_is_being_reviewed,
 			preferred_hosting_type,
 			preferred_hosting_location,
 			preferred_hosting_cloud_service_type,
@@ -182,6 +187,8 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			alternative_a_title,
 			alternative_a_summary,
 			alternative_a_acquisition_approach,
+			alternative_a_security_is_approved,
+			alternative_a_security_is_being_reviewed,
 			alternative_a_hosting_type,
 			alternative_a_hosting_location,
 			alternative_a_hosting_cloud_service_type,
@@ -192,6 +199,8 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			alternative_b_title,
 			alternative_b_summary,
 			alternative_b_acquisition_approach,
+			alternative_b_security_is_approved,
+			alternative_b_security_is_being_reviewed,
 			alternative_b_hosting_type,
 			alternative_b_hosting_location,
 			alternative_b_hosting_cloud_service_type,
@@ -223,6 +232,8 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			:preferred_title,
 			:preferred_summary,
 			:preferred_acquisition_approach,
+			:preferred_security_is_approved,
+			:preferred_security_is_being_reviewed,
 			:preferred_hosting_type,
 			:preferred_hosting_location,
 			:preferred_hosting_cloud_service_type,
@@ -233,6 +244,8 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			:alternative_a_title,
 			:alternative_a_summary,
 			:alternative_a_acquisition_approach,
+			:alternative_a_security_is_approved,
+			:alternative_a_security_is_being_reviewed,
 			:alternative_a_hosting_type,
 			:alternative_a_hosting_location,
 			:alternative_a_hosting_cloud_service_type,
@@ -243,6 +256,8 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			:alternative_b_title,
 			:alternative_b_summary,
 			:alternative_b_acquisition_approach,
+			:alternative_b_security_is_approved,
+			:alternative_b_security_is_being_reviewed,
 			:alternative_b_hosting_type,
 			:alternative_b_hosting_location,
 			:alternative_b_hosting_cloud_service_type,
@@ -254,7 +269,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 		    :updated_at
 		)`
 	logger := appcontext.ZLogger(ctx)
-	tx := s.DB.MustBegin()
+	tx := s.db.MustBegin()
 	//Rollback only happens if transaction isn't committed
 	defer tx.Rollback()
 	_, err := tx.NamedExec(createBusinessCaseSQL, &businessCase)
@@ -265,14 +280,18 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 		)
 		if err.Error() == "pq: duplicate key value violates unique constraint \"unique_intake_per_biz_case\"" {
-			return &models.BusinessCase{},
+			return nil,
 				&apperrors.ResourceConflictError{
 					Err:        err,
 					Resource:   models.BusinessCase{},
 					ResourceID: businessCase.SystemIntakeID.String(),
 				}
 		}
-		return &models.BusinessCase{}, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     businessCase,
+			Operation: apperrors.QueryPost,
+		}
 	}
 	err = createEstimatedLifecycleCosts(ctx, tx, businessCase)
 	if err != nil {
@@ -281,7 +300,11 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("BusinessCaseID", businessCase.ID.String()),
 		)
-		return &models.BusinessCase{}, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     businessCase,
+			Operation: apperrors.QueryPost,
+		}
 	}
 	err = tx.Commit()
 	if err != nil {
@@ -290,7 +313,11 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 			zap.String("EUAUserID", businessCase.EUAUserID),
 			zap.String("SystemIntakeID", businessCase.SystemIntakeID.String()),
 		)
-		return &models.BusinessCase{}, err
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     businessCase,
+			Operation: apperrors.QueryPost,
+		}
 	}
 
 	return businessCase, nil
@@ -318,6 +345,8 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 			preferred_title = :preferred_title,
 			preferred_summary = :preferred_summary,
 			preferred_acquisition_approach = :preferred_acquisition_approach,
+			preferred_security_is_approved = :preferred_security_is_approved,
+			preferred_security_is_being_reviewed = :preferred_security_is_being_reviewed,
 			preferred_hosting_type = :preferred_hosting_type,
 			preferred_hosting_location = :preferred_hosting_location,
 			preferred_hosting_cloud_service_type = :preferred_hosting_cloud_service_type,
@@ -328,6 +357,8 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 			alternative_a_title = :alternative_a_title,
 			alternative_a_summary = :alternative_a_summary,
 			alternative_a_acquisition_approach = :alternative_a_acquisition_approach,
+			alternative_a_security_is_approved = :alternative_a_security_is_approved,
+			alternative_a_security_is_being_reviewed = :alternative_a_security_is_being_reviewed,
 			alternative_a_hosting_type = :alternative_a_hosting_type,
 			alternative_a_hosting_location = :alternative_a_hosting_location,
 			alternative_a_hosting_cloud_service_type = :alternative_a_hosting_cloud_service_type,
@@ -338,6 +369,8 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 			alternative_b_title = :alternative_b_title,
 			alternative_b_summary = :alternative_b_summary,
 			alternative_b_acquisition_approach = :alternative_b_acquisition_approach,
+			alternative_b_security_is_approved = :alternative_b_security_is_approved,
+			alternative_b_security_is_being_reviewed = :alternative_b_security_is_being_reviewed,
 			alternative_b_hosting_type = :alternative_b_hosting_type,
 			alternative_b_hosting_location = :alternative_b_hosting_location,
 			alternative_b_hosting_cloud_service_type = :alternative_b_hosting_cloud_service_type,
@@ -358,7 +391,7 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 	`
 
 	logger := appcontext.ZLogger(ctx)
-	tx := s.DB.MustBegin()
+	tx := s.db.MustBegin()
 	//Rollback only happens if transaction isn't committed
 	defer tx.Rollback()
 	result, err := tx.NamedExec(updateBusinessCaseSQL, &businessCase)

@@ -13,10 +13,14 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import {
+  BusinessCaseDraftValidationSchema,
+  BusinessCaseFinalValidationSchema
+} from 'validations/businessCaseSchema';
 
 type RequestDescriptionProps = {
   businessCase: BusinessCaseModel;
@@ -29,6 +33,7 @@ const RequestDescription = ({
   formikRef,
   dispatchSave
 }: RequestDescriptionProps) => {
+  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     businessNeed: businessCase.businessNeed,
@@ -37,11 +42,16 @@ const RequestDescription = ({
     successIndicators: businessCase.successIndicators
   };
 
+  const ValidationSchema =
+    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
+      ? BusinessCaseFinalValidationSchema
+      : BusinessCaseDraftValidationSchema;
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.requestDescription}
+      validationSchema={ValidationSchema.requestDescription}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -238,7 +248,11 @@ const RequestDescription = ({
                 unstyled
                 onClick={() => {
                   dispatchSave();
-                  history.push('/');
+                  history.push(
+                    flags.taskListLite
+                      ? `/governance-task-list/${businessCase.systemIntakeId}`
+                      : '/'
+                  );
                 }}
               >
                 <span>

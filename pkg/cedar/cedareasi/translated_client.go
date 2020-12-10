@@ -8,6 +8,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -18,14 +19,26 @@ import (
 	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
+const (
+	emitFlagKey = "emit-to-cedar"
+	emitDefault = false
+)
+
 // TranslatedClient is an API client for CEDAR EASi using EASi language
 type TranslatedClient struct {
 	client        *apiclient.EASiCore
 	apiAuthHeader runtime.ClientAuthInfoWriter
+	emitToCedar   func(context.Context) bool
+}
+
+// Client is an interface to ease testing dependencies
+type Client interface {
+	FetchSystems(context.Context) (models.SystemShorts, error)
+	ValidateAndSubmitSystemIntake(context.Context, *models.SystemIntake) (string, error)
 }
 
 // NewTranslatedClient returns an API client for CEDAR EASi using EASi language
-func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
+func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient, ldUser ld.User) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
 
@@ -35,7 +48,25 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	// Set auth header
 	apiKeyHeaderAuth := httptransport.APIKeyAuth("x-Gateway-APIKey", "header", cedarAPIKey)
 
-	return TranslatedClient{client, apiKeyHeaderAuth}
+	fnEmit := func(ctx context.Context) bool {
+		// this is the conditional way of stopping us from submitting to CEDAR; see EASI-1025
+		// TODO: if we were using per-user targeting, we would use the context Principle to fetch/build
+		// the LD User; but currently we are not using that feature, so we use a common "static" User
+		// object
+		result, err := ldClient.BoolVariation(emitFlagKey, ldUser, emitDefault)
+		if err != nil {
+			appcontext.ZLogger(ctx).Info(
+				"problem evaluating feature flag",
+				zap.Error(err),
+				zap.String("flagName", emitFlagKey),
+				zap.Bool("flagDefault", emitDefault),
+				zap.Bool("flagResult", result),
+			)
+		}
+		return result
+	}
+
+	return TranslatedClient{client, apiKeyHeaderAuth, fnEmit}
 }
 
 // FetchSystems fetches a system list from CEDAR
@@ -48,10 +79,18 @@ func (c TranslatedClient) FetchSystems(ctx context.Context) (models.SystemShorts
 
 	systems := make([]models.SystemShort, len(resp.Payload.Systems))
 	for index, system := range resp.Payload.Systems {
-		systems[index] = models.SystemShort{
-			ID:      *system.ID,
-			Name:    *system.SystemName,
-			Acronym: system.SystemAcronym,
+		if system.ID != nil {
+			// this ensures we always have a name populated for display,
+			// even if it is just a restatement of the acronym
+			name := system.SystemAcronym
+			if system.SystemName != nil {
+				name = *system.SystemName
+			}
+			systems[index] = models.SystemShort{
+				ID:      *system.ID,
+				Name:    name,
+				Acronym: system.SystemAcronym,
+			}
 		}
 	}
 	return systems, nil
@@ -69,7 +108,7 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 	if validate.RequireUUID(intake.ID) {
 		expectedError.WithValidation("ID", validationMessage)
 	}
-	if validate.RequireString(intake.EUAUserID) {
+	if validate.RequireString(intake.EUAUserID.ValueOrZero()) {
 		expectedError.WithValidation("EUAUserID", validationMessage)
 	}
 	if validate.RequireString(intake.Requester) {
@@ -97,11 +136,11 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 		expectedError.WithValidation("ExistingFunding", validationMessage)
 	}
 	if intake.ExistingFunding.Bool {
-		if validate.RequireNullString(intake.FundingSource) {
-			expectedError.WithValidation("FundingSource", validationMessage)
+		if validate.RequireNullString(intake.FundingNumber) {
+			expectedError.WithValidation("FundingNumber", validationMessage)
 		}
-		if intake.FundingSource.Valid && validate.FundingNumberInvalid(intake.FundingSource.String) {
-			expectedError.WithValidation("FundingSource", "must be a 6 digit string")
+		if intake.FundingNumber.Valid && validate.FundingNumberInvalid(intake.FundingNumber.String) {
+			expectedError.WithValidation("FundingNumber", "must be a 6 digit string")
 		}
 	}
 	if validate.RequireNullString(intake.BusinessNeed) {
@@ -122,6 +161,15 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 	if validate.RequireTime(*intake.SubmittedAt) {
 		expectedError.WithValidation("SubmittedAt", validationMessage)
 	}
+	// TODO: CEDAR isn't aware of these fields yet, so I'm commenting these out
+	// if validate.RequireNullString(intake.CostIncrease) {
+	// 	expectedError.WithValidation("CostIncrease", validationMessage)
+	// }
+	// if intake.CostIncrease.String == "YES" {
+	// 	if validate.RequireNullString(intake.CostIncreaseAmount) {
+	// 		expectedError.WithValidation("CostIncreaseAmount", validationMessage)
+	// 	}
+	// }
 	if len(expectedError.Validations) > 0 {
 		return &expectedError
 	}
@@ -132,16 +180,17 @@ func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntak
 	id := validatedIntake.ID.String()
 	submissionTime := validatedIntake.SubmittedAt.String()
 	params := apioperations.NewIntakegovernancePOST4Params()
+	euaID := validatedIntake.EUAUserID.ValueOrZero()
 	governanceIntake := apimodels.GovernanceIntake{
 		BusinessNeeds:           &validatedIntake.BusinessNeed.String,
 		BusinessOwner:           &validatedIntake.BusinessOwner.String,
 		BusinessOwnerComponent:  &validatedIntake.BusinessOwnerComponent.String,
 		EaCollaborator:          validatedIntake.EACollaborator.String,
 		EaSupportRequest:        &validatedIntake.EASupportRequest.Bool,
-		EuaUserID:               &validatedIntake.EUAUserID,
+		EuaUserID:               &euaID,
 		ExistingContract:        &validatedIntake.ExistingContract.String,
 		ExistingFunding:         &validatedIntake.ExistingFunding.Bool,
-		FundingSource:           validatedIntake.FundingSource.String,
+		FundingNumber:           validatedIntake.FundingNumber.String,
 		ID:                      &id,
 		Isso:                    validatedIntake.ISSO.String,
 		OitSecurityCollaborator: validatedIntake.OITSecurityCollaborator.String,
@@ -192,5 +241,23 @@ func (c TranslatedClient) ValidateAndSubmitSystemIntake(ctx context.Context, int
 	if err != nil {
 		return "", err
 	}
-	return submitSystemIntake(ctx, intake, c)
+	// we may not be sending SystemIntakes to CEDAR currently
+	if !c.emitToCedar(ctx) {
+		return "", nil
+	}
+	alfabetID, err := submitSystemIntake(ctx, intake, c)
+	if err != nil {
+		return "", err
+	}
+	// if we are submitting to CEDAR, we expect a non-empty value back
+	if alfabetID == "" {
+		return "", &apperrors.ExternalAPIError{
+			Err:       errors.New("submission was not successful"),
+			Model:     intake,
+			ModelID:   intake.ID.String(),
+			Operation: apperrors.Submit,
+			Source:    "CEDAR EASi",
+		}
+	}
+	return alfabetID, nil
 }

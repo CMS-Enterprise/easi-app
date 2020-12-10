@@ -6,59 +6,18 @@ import {
   clearBusinessCase,
   fetchBusinessCase,
   postBusinessCase,
-  storeBusinessCase,
-  submitBusinessCase
+  putBusinessCase,
+  storeBusinessCase
 } from 'types/routines';
 
 import businessCaseReducer from './businessCaseReducer';
 
 describe('The business case reducer', () => {
-  const mockApiBusinessCase = {
-    id: 'c8e9fe76-e9bc-4a0c-b5c3-29b7bfa856d7',
-    euaUserId: 'ABCD',
-    systemIntake: 'a84f7cc3-75e1-4686-aaac-68af95455ae8',
-    status: 'DRAFT',
-    projectName: '',
-    requester: '',
-    requesterPhoneNumber: '',
-    businessOwner: '',
-    businessNeed: '',
-    cmsBenefit: '',
-    priorityAlignment: '',
-    successIndicators: '',
-    asIsTitle: '',
-    asIsSummary: '',
-    asIsPros: '',
-    asIsCons: '',
-    asIsCostSavings: '',
-    preferredTitle: '',
-    preferredSummary: '',
-    preferredAcquisitionApproach: '',
-    preferredPros: '',
-    preferredCons: '',
-    preferredCostSavings: '',
-    alternativeATitle: '',
-    alternativeASummary: '',
-    alternativeAAcquisitionApproach: '',
-    alternativeAPros: '',
-    alternativeACons: '',
-    alternativeACostSavings: '',
-    alternativeBTitle: null,
-    alternativeBSummary: null,
-    alternativeBAcquisitionApproach: null,
-    alternativeBPros: null,
-    alternativeBCons: null,
-    alternativeBCostSavings: null,
-    lifecycleCostLines: [],
-    createdAt: '2020-05-22T23:42:18.626594-07:00',
-    updatedAt: '2020-05-22T23:42:18.626594-07:00'
-  };
   it('returns the initial state', () => {
     expect(businessCaseReducer(undefined, {})).toEqual({
       form: businessCaseInitialData,
       isLoading: null,
       isSaving: false,
-      isSubmitting: false,
       error: null
     });
   });
@@ -74,7 +33,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: true,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -84,7 +42,7 @@ describe('The business case reducer', () => {
         id: 'c8e9fe76-e9bc-4a0c-b5c3-29b7bfa856d7',
         euaUserId: 'ABCD',
         systemIntake: 'a84f7cc3-75e1-4686-aaac-68af95455ae8',
-        status: 'DRAFT',
+        status: 'OPEN',
         projectName: 'Easy Access to System Information',
         requester: 'Tom Foolery',
         requesterPhoneNumber: '1234567890',
@@ -129,7 +87,6 @@ describe('The business case reducer', () => {
         form: prepareBusinessCaseForApp(mockBusinessCase),
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -144,7 +101,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: 'Error Found!'
       });
     });
@@ -159,7 +115,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: false,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -176,7 +131,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: true,
-        isSubmitting: false,
         error: null
       });
     });
@@ -187,7 +141,7 @@ describe('The business case reducer', () => {
           id: 'c8e9fe76-e9bc-4a0c-b5c3-29b7bfa856d7',
           euaUserId: 'ABCD',
           systemIntake: 'a84f7cc3-75e1-4686-aaac-68af95455ae8',
-          status: 'DRAFT',
+          status: 'OPEN',
           projectName: 'Easy Access to System Information',
           requester: 'Kelly Stone',
           requesterPhoneNumber: '',
@@ -229,7 +183,6 @@ describe('The business case reducer', () => {
         form: prepareBusinessCaseForApp(mockSuccessAction.payload),
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -239,7 +192,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: false,
         isSaving: true,
-        isSubmitting: false,
         error: null
       };
       const mockFailureAction = {
@@ -251,7 +203,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: false,
         isSaving: true,
-        isSubmitting: false,
         error: 'Error'
       });
     });
@@ -266,6 +217,45 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: false,
+        error: null
+      });
+    });
+  });
+
+  describe('putBusinessCase', () => {
+    it('handles putBusinessCase.REQUEST', () => {
+      const initialState = {
+        form: {
+          ...businessCaseInitialData,
+          id: '5e579c80-31d0-4839-b1f8-d74bfa7d5e24'
+        },
+        isLoading: null,
+        isSaving: true,
+        isSubmitting: false,
+        error: null
+      };
+      const mockRequestAction = {
+        type: putBusinessCase.REQUEST,
+        payload: {
+          ...businessCaseInitialData,
+          businessNeed: 'The quick brown fox jumps over the lazy dog',
+          cmsBenefit: 'The quick brown fox jumps over the lazy dog',
+          priorityAlignment: 'The quick brown fox jumps over the lazy dog',
+          successIndicators: 'The quick brown fox jumps over the lazy dog'
+        }
+      };
+
+      expect(businessCaseReducer(initialState, mockRequestAction)).toEqual({
+        form: {
+          ...businessCaseInitialData,
+          id: '5e579c80-31d0-4839-b1f8-d74bfa7d5e24',
+          businessNeed: 'The quick brown fox jumps over the lazy dog',
+          cmsBenefit: 'The quick brown fox jumps over the lazy dog',
+          priorityAlignment: 'The quick brown fox jumps over the lazy dog',
+          successIndicators: 'The quick brown fox jumps over the lazy dog'
+        },
+        isLoading: null,
+        isSaving: true,
         isSubmitting: false,
         error: null
       });
@@ -285,84 +275,6 @@ describe('The business case reducer', () => {
         form: { ...businessCaseInitialData, ...{ id: '12345' } },
         isLoading: false,
         isSaving: false,
-        isSubmitting: false,
-        error: null
-      });
-    });
-  });
-
-  describe('submitBusinessCase', () => {
-    const initialState = {
-      form: {
-        ...businessCaseInitialData,
-        id: 'Test Id 123'
-      },
-      isLoading: null,
-      isSaving: false,
-      isSubmitting: true,
-      error: null
-    };
-
-    it('handles submitBusinessCase.REQUEST', () => {
-      const mockRequestAction = {
-        type: submitBusinessCase.REQUEST,
-        payload: undefined
-      };
-
-      expect(businessCaseReducer(undefined, mockRequestAction)).toEqual({
-        form: businessCaseInitialData,
-        isLoading: null,
-        isSaving: false,
-        isSubmitting: true,
-        error: null
-      });
-    });
-
-    it('handles submitBusinessCase.SUCCESS', () => {
-      const mockResponse = {
-        ...mockApiBusinessCase,
-        status: 'SUBMITTED'
-      };
-      const mockSuccessAction = {
-        type: submitBusinessCase.SUCCESS,
-        payload: mockResponse
-      };
-
-      expect(businessCaseReducer(initialState, mockSuccessAction)).toEqual({
-        form: prepareBusinessCaseForApp(mockResponse),
-        isLoading: null,
-        isSaving: false,
-        isSubmitting: true,
-        error: null
-      });
-    });
-
-    it('handles submitBusinessCase.FAILURE', () => {
-      const mockFailureAction = {
-        type: submitBusinessCase.FAILURE,
-        payload: 'Error'
-      };
-
-      expect(businessCaseReducer(initialState, mockFailureAction)).toEqual({
-        form: initialState.form,
-        isLoading: null,
-        isSaving: false,
-        isSubmitting: true,
-        error: 'Error'
-      });
-    });
-
-    it('handles submitBusinessCase.FULFILL', () => {
-      const mockFulfillAction = {
-        type: submitBusinessCase.FULFILL,
-        payload: undefined
-      };
-
-      expect(businessCaseReducer(undefined, mockFulfillAction)).toEqual({
-        form: businessCaseInitialData,
-        isLoading: null,
-        isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });
@@ -379,7 +291,6 @@ describe('The business case reducer', () => {
         form: businessCaseInitialData,
         isLoading: null,
         isSaving: false,
-        isSubmitting: false,
         error: null
       });
     });

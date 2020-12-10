@@ -3,6 +3,8 @@ package testhelpers
 import (
 	"math/rand"
 	"time"
+
+	"github.com/guregu/null"
 )
 
 // RandomEUAID returns a random EUA ID for testing
@@ -16,4 +18,10 @@ func RandomEUAID() string {
 		b[i] = letter[rand.Intn(len(letter))]
 	}
 	return string(b)
+}
+
+// RandomEUAIDNull returns a random EUA ID for testing,
+// in the form of a null.String
+func RandomEUAIDNull() null.String {
+	return null.StringFrom(RandomEUAID())
 }

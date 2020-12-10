@@ -11,10 +11,14 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
+import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import {
+  BusinessCaseDraftValidationSchema,
+  BusinessCaseFinalValidationSchema
+} from 'validations/businessCaseSchema';
 
 type GeneralRequestInfoProps = {
   businessCase: BusinessCaseModel;
@@ -26,6 +30,7 @@ const GeneralRequestInfo = ({
   businessCase,
   dispatchSave
 }: GeneralRequestInfoProps) => {
+  const flags = useFlags();
   const history = useHistory();
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
@@ -34,11 +39,16 @@ const GeneralRequestInfo = ({
   };
   const allowedPhoneNumberCharacters = /[\d- ]+/g;
 
+  const ValidationSchema =
+    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
+      ? BusinessCaseFinalValidationSchema
+      : BusinessCaseDraftValidationSchema;
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.generalRequestInfo}
+      validationSchema={ValidationSchema.generalRequestInfo}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -82,7 +92,7 @@ const GeneralRequestInfo = ({
                   scrollElement="requestName"
                   error={!!flatErrors.requestName}
                 >
-                  <Label htmlFor="BusinessCase-RequestName">Request Name</Label>
+                  <Label htmlFor="BusinessCase-RequestName">Project Name</Label>
                   <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                   <Field
                     as={TextField}
@@ -171,7 +181,11 @@ const GeneralRequestInfo = ({
                 unstyled
                 onClick={() => {
                   dispatchSave();
-                  history.push('/');
+                  history.push(
+                    flags.taskListLite
+                      ? `/governance-task-list/${businessCase.systemIntakeId}`
+                      : '/'
+                  );
                 }}
               >
                 <span>

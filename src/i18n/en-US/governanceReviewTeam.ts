@@ -86,9 +86,18 @@ const governanceReviewTeam = {
     alert_header: 'Email sent',
     email_time_notification: 'An email was sent to the requester on {{date}}'
   },
-  allRequests: {
+  requestRepository: {
+    header: 'Requests',
+    requestCount_open: 'There is {{count}} open request',
+    requestCount_open_plural: 'There are {{count}} open requests',
+    requestCount_closed: 'There is {{count}} closed request',
+    requestCount_closed_plural: 'There are {{count}} closed requests',
     table: {
-      requestType: 'Type of request'
+      requestType: 'Type of request',
+      submissionDate: {
+        null: 'Not yet submitted'
+      },
+      addDate: 'Add date'
     },
     aria: {
       openTableCaption:
@@ -96,7 +105,48 @@ const governanceReviewTeam = {
       closedTableCaption: 'Table of closed requests'
     }
   },
-  notes: 'Admin team notes',
+  notes: {
+    heading: 'Admin team notes',
+    addNote: 'Add a note',
+    addNoteCta: 'Add note',
+    actionName: {
+      NOT_IT_REQUEST: 'Marked as not an IT governance request',
+      NEED_BIZ_CASE: 'Requested a business case',
+      READY_FOR_GRT: 'Marked as ready for GRT',
+      READY_FOR_GRB: 'Marked as ready for GRB',
+      PROVIDE_FEEDBACK_NEED_BIZ_CASE:
+        'Provided GRT Feedback and progressed to business case',
+      ISSUE_LCID: 'Issued Lifecycle ID with no further governance',
+      BIZ_CASE_NEEDS_CHANGES:
+        'Requested business case changes (not ready for GRT)',
+      PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT:
+        'Provided GRT feedback and kept business case draft',
+      PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL:
+        'Provided GRT feedback and moved business case to final',
+      NO_GOVERNANCE_NEEDED: 'Marked as no further governance needed',
+      SUBMIT_INTAKE: 'Submitted a System Intake',
+      SUBMIT_BIZ_CASE: 'Submitted a business case',
+      CREATE_BIZ_CASE: 'Created a new business case',
+      SUBMIT_FINAL_BIZ_CASE: 'Submitted a final draft business case',
+      REJECT: 'Rejected the request',
+      SEND_EMAIL: 'Email sent to requester',
+      NOT_RESPONDING_CLOSE: 'Requester was not responding. Closed the request.',
+      GUIDE_RECEIVED_CLOSE: 'Guide received. Closed the request.'
+    },
+    showEmail: 'Show Email',
+    hideEmail: 'Hide Email'
+  },
+  dates: {
+    heading: 'Dates',
+    subheading: 'Add GRT and GRB dates',
+    submit: 'Save',
+    grtDate: {
+      label: 'GRT Date'
+    },
+    grbDate: {
+      label: 'GRB Date'
+    }
+  },
   aria: {
     openIntake: 'Open intake request',
     openBusiness: 'Open business case',
@@ -105,7 +155,12 @@ const governanceReviewTeam = {
   back: {
     allRequests: 'Back to all requests'
   },
-  actions: 'Actions'
+  actions: 'Actions',
+  status: {
+    label: 'Status',
+    open: 'Open',
+    closed: 'Closed'
+  }
 };
 
 export default governanceReviewTeam;

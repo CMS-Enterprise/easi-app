@@ -8,11 +8,15 @@ import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
+import { useFlags } from 'contexts/flagContext';
 import { defaultProposedSolution } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import {
+  BusinessCaseDraftValidationSchema,
+  BusinessCaseFinalValidationSchema
+} from 'validations/businessCaseSchema';
 
 import AlternativeSolutionFields from './AlternativeSolutionFields';
 
@@ -27,6 +31,7 @@ const AlternativeSolutionB = ({
   formikRef,
   dispatchSave
 }: AlternativeSolutionBProps) => {
+  const flags = useFlags();
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -34,11 +39,16 @@ const AlternativeSolutionB = ({
     alternativeB: businessCase.alternativeB
   };
 
+  const ValidationSchema =
+    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
+      ? BusinessCaseFinalValidationSchema
+      : BusinessCaseDraftValidationSchema;
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.alternativeB}
+      validationSchema={ValidationSchema.alternativeB}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -98,6 +108,7 @@ const AlternativeSolutionB = ({
                     unstyled
                     onClick={() => {
                       if (
+                        // eslint-disable-next-line no-alert
                         window.confirm(
                           'Are you sure you want to remove Alternative B?'
                         )
@@ -159,7 +170,11 @@ const AlternativeSolutionB = ({
                 unstyled
                 onClick={() => {
                   dispatchSave();
-                  history.push('/');
+                  history.push(
+                    flags.taskListLite
+                      ? `/governance-task-list/${businessCase.systemIntakeId}`
+                      : '/'
+                  );
                 }}
               >
                 <span>

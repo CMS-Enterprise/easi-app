@@ -45,7 +45,7 @@ func (s AppValidateTestSuite) TestCheckUniqLifecycleCosts() {
 func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 	s.Run("returns empty strings when intake is submitted", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
-		submittedIntake.Status = models.SystemIntakeStatusSUBMITTED
+		submittedIntake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		k, _ := checkSystemIntakeSubmitted(&submittedIntake)
 		s.Equal("", k)
 	})
@@ -61,7 +61,7 @@ func (s AppValidateTestSuite) TestCheckSystemIntakeSubmitted() {
 func (s AppValidateTestSuite) TestBusinessCaseForCreation() {
 	s.Run("golden path", func() {
 		submittedIntake := testhelpers.NewSystemIntake()
-		submittedIntake.Status = models.SystemIntakeStatusSUBMITTED
+		submittedIntake.Status = models.SystemIntakeStatusINTAKESUBMITTED
 		businessCase := models.BusinessCase{
 			SystemIntakeID:     submittedIntake.ID,
 			LifecycleCostLines: nil,
@@ -241,21 +241,18 @@ func (s AppValidateTestSuite) TestValidateAllRequiredLifecycleCosts() {
 }
 
 func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
-	existingBusinessCase := models.BusinessCase{}
-	existingBusinessCase.Status = models.BusinessCaseStatusREVIEWED
-
 	s.Run("golden path", func() {
 		businessCase := testhelpers.NewBusinessCase()
+		businessCase.Status = models.BusinessCaseStatusOPEN
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 		submittedTime := time.Now()
 		businessCase.LastSubmittedAt = &submittedTime
-		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+		err := BusinessCaseForSubmit(&businessCase)
 		s.NoError(err)
 	})
 
 	s.Run("returns validations when submitted", func() {
 		businessCase := models.BusinessCase{}
-		businessCase.Status = models.BusinessCaseStatusSUBMITTED
 		cost := 300
 		businessCase.LifecycleCostLines = models.EstimatedLifecycleCosts{
 			models.EstimatedLifecycleCost{
@@ -298,23 +295,21 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"ProjectName":"is required",` +
 			`"Requester":"is required",` +
 			`"RequesterPhoneNumber":"is required",` +
-			`"Status":"cannot be SUBMITTED",` +
+			`"Status":"must be OPEN",` +
 			`"SuccessIndicators":"is required",` +
 			`"SystemIntakeID":"is required",` +
 			`"alternativeASolution":"years 1, 2, 3, 4, 5 are required",` +
 			`"asIsSolution":"years 1, 2, 3, 4, 5 are required",` +
 			`"preferredSolution":"years 1, 2, 3, 4, 5 are required"}`
-		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+		err := BusinessCaseForSubmit(&businessCase)
 
 		s.IsType(err, &apperrors.ValidationError{})
 		s.Equal(expectedError, err.Error())
 	})
 
 	s.Run("returns validations when optional alternative", func() {
-		existingBusinessCase := testhelpers.NewBusinessCase()
-		existingBusinessCase.Status = models.BusinessCaseStatusDRAFT
 		businessCase := testhelpers.NewBusinessCase()
-		businessCase.Status = models.BusinessCaseStatusSUBMITTED
+		businessCase.Status = models.BusinessCaseStatusOPEN
 		businessCase.LifecycleCostLines = testhelpers.NewValidLifecycleCosts(&businessCase.ID)
 		submittedAt := time.Now()
 		businessCase.LastSubmittedAt = &submittedAt
@@ -336,7 +331,7 @@ func (s AppValidateTestSuite) TestBusinessCaseForSubmit() {
 			`"AlternativeBPros":"is required",` +
 			`"AlternativeBSummary":"is required"}`
 
-		err := BusinessCaseForSubmit(&businessCase, &existingBusinessCase)
+		err := BusinessCaseForSubmit(&businessCase)
 
 		s.Error(err)
 		s.Equal(expectedError, err.Error())
