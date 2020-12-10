@@ -245,6 +245,8 @@ func convert(row []string) (*entry, error) {
 	data.Intake.FundingSource = null.StringFrom(row[colFundSrc])
 	if row[colPrjNum] != "" || row[colFundSrc] != "" {
 		data.Intake.ExistingFunding = null.BoolFrom(true)
+	} else {
+		data.Intake.ExistingFunding = null.BoolFrom(false)
 	}
 
 	data.Intake.CostIncrease = null.StringFrom(row[colCostFree])
@@ -255,10 +257,13 @@ func convert(row []string) (*entry, error) {
 	data.Intake.ContractStartYear = null.StringFrom(row[colCStartY])
 	data.Intake.ContractEndMonth = null.StringFrom(row[colCEndM])
 	data.Intake.ContractEndYear = null.StringFrom(row[colCEndY])
+
 	if row[colContractor] != "" || row[colVehicle] != "" ||
 		row[colCStartM] != "" || row[colCStartY] != "" ||
 		row[colCEndM] != "" || row[colCEndY] != "" {
 		data.Intake.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+	} else {
+		data.Intake.ExistingContract = null.StringFrom("NOT_NEEDED")
 	}
 
 	if row[colGRTNotes] != "" {
