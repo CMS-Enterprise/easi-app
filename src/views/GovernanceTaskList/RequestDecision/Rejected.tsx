@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
-import { ImproveEasiDecisionPageSurvey } from 'components/Survey';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 type RejectedProps = {
@@ -24,7 +23,15 @@ const Rejected = ({ intake }: RejectedProps) => {
           <p className="text-pre-wrap">{intake.lifecycleNextSteps}</p>
         </>
       )}
-      <ImproveEasiDecisionPageSurvey />
+      <h3>{t('general:feedback.improvement')}</h3>
+      <UswdsLink
+        href="https://www.surveymonkey.com/r/JNYSMZP"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open EASi survey in a new tab"
+      >
+        {t('general:feedback.whatYouThink')}
+      </UswdsLink>
 
       <div className="margin-top-4">
         <UswdsLink asCustom={Link} to={`/governance-task-list/${intake.id}`}>
