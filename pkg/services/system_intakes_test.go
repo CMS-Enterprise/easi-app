@@ -400,14 +400,14 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 	reviewEmailCount := 0
 	feedbackForEmailText := ""
-	fnSendReviewEmail := func(emailText string, recipientAddress string) error {
+	fnSendLCIDEmail := func(_ string, _ string, _ *time.Time, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
 		reviewEmailCount++
 		return nil
 	}
 	fnGenerate := func(context.Context) (string, error) { return "123456", nil }
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate)
+	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
 		intake, err := happy(context.Background(), input, action)
@@ -447,7 +447,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendReviewEmailErr := func(emailText string, recipientAddress string) error {
+	fnSendLCIDEmailErr := func(_ string, _ string, _ *time.Time, _ string, _ string, _ string) error {
 		return errors.New("send email error")
 	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
@@ -457,28 +457,28 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path auth": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path auth fail": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path generate": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerateErr),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerateErr),
 		},
 		"error path save action": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path fetch user info": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path send email": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendReviewEmailErr, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnGenerate),
 		},
 		"error path update": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendReviewEmail, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 	}
 
@@ -500,6 +500,10 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		DecisionNextSteps: nextSteps,
 		RejectionReason:   reason,
 	}
+	action := &models.Action{
+		IntakeID: &input.ID,
+		Feedback: null.StringFrom("Feedback"),
+	}
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
 	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
@@ -514,14 +518,33 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 		}
 		return i, nil
 	}
+	fnSaveAction := func(c context.Context, action *models.Action) error {
+		return nil
+	}
+	fnFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			Email:      "name@site.com",
+			CommonName: "NAME",
+			EuaUserID:  testhelpers.RandomEUAID(),
+		}, nil
+	}
+	reviewEmailCount := 0
+	feedbackForEmailText := ""
+	fnSendRejectRequestEmail := func(recipientAddress string, reason string, nextSteps string, feedback string) error {
+		feedbackForEmailText = feedback
+		reviewEmailCount++
+		return nil
+	}
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate)
+	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail)
 
 	s.Run("happy path", func() {
-		intake, err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input, action)
 		s.NoError(err)
 		s.Equal(intake.DecisionNextSteps, nextSteps)
 		s.Equal(intake.RejectionReason, reason)
+		s.Equal(1, reviewEmailCount)
+		s.Equal("Feedback", feedbackForEmailText)
 	})
 
 	// build the error-generating pieces
@@ -533,28 +556,46 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		return nil, errors.New("update error")
 	}
+	fnSaveActionErr := func(c context.Context, a *models.Action) error {
+		return errors.New("action error")
+	}
+	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return nil, errors.New("fetch user info error")
+	}
+	fnSendRejectRequestEmailErr := func(recipientAddress string, reason string, nextSteps string, feedback string) error {
+		return errors.New("send email error")
+	}
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake) (*models.SystemIntake, error)
+		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
 		},
 		"error path auth": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
 		},
 		"error path auth fail": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
 		},
 		"error path update": {
-			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr),
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+		},
+		"error path fetch user info": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendRejectRequestEmail),
+		},
+		"error path save action": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendRejectRequestEmail),
+		},
+		"error path send email": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmailErr),
 		},
 	}
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			_, err := tc.fn(context.Background(), input)
+			_, err := tc.fn(context.Background(), input, action)
 			s.Error(err)
 		})
 	}

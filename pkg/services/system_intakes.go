@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -255,7 +256,7 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(emailText string, recipientAddress string) error,
+	sendIssueLCIDEmail func(string, string, *time.Time, string, string, string) error,
 	generateLCID func(context.Context) (string, error),
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
@@ -333,7 +334,13 @@ func NewUpdateLifecycleFields(
 			}
 		}
 
-		err = sendReviewEmail(action.Feedback.String, requesterInfo.Email)
+		err = sendIssueLCIDEmail(
+			requesterInfo.Email,
+			updated.LifecycleID.String,
+			updated.LifecycleExpiresAt,
+			updated.LifecycleScope.String,
+			updated.LifecycleNextSteps.String,
+			action.Feedback.String)
 		if err != nil {
 			return nil, err
 		}
@@ -350,15 +357,14 @@ func NewUpdateRejectionFields(
 	authorize func(context.Context) (bool, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
-) func(context.Context, *models.SystemIntake) (*models.SystemIntake, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
+	saveAction func(context.Context, *models.Action) error,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendRejectRequestEmail func(recipient string, reason string, nextSteps string, feedback string) error,
+) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
-			return nil, &apperrors.QueryError{
-				Err:       err,
-				Operation: apperrors.QueryFetch,
-				Model:     existing,
-			}
+			return nil, err
 		}
 
 		ok, err := authorize(ctx)
@@ -369,21 +375,67 @@ func NewUpdateRejectionFields(
 			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
+		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
+				Model:     existing,
+				ModelID:   existing.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		action.IntakeID = &existing.ID
+		action.ActionType = models.ActionTypeREJECT
+		if err = saveAction(ctx, action); err != nil {
+			return nil, err
+		}
+
 		// we only want to bring over the fields specifically
 		// dealing with Rejection information
 		updatedTime := config.clock.Now()
 		existing.UpdatedAt = &updatedTime
 		existing.RejectionReason = intake.RejectionReason
 		existing.DecisionNextSteps = intake.DecisionNextSteps
-
+		existing.Status = models.SystemIntakeStatusNOTAPPROVED
 		updated, err := update(ctx, existing)
 		if err != nil {
-			return nil, &apperrors.QueryError{
-				Err:       err,
-				Model:     intake,
-				Operation: apperrors.QuerySave,
-			}
+			return nil, err
 		}
+
+		err = sendRejectRequestEmail(
+			requesterInfo.Email,
+			existing.RejectionReason.String,
+			existing.DecisionNextSteps.String,
+			action.Feedback.String,
+		)
+		if err != nil {
+			return nil, err
+		}
+
 		return updated, nil
+	}
+}
+
+// NewDeleteSystemIntakeByID is a service to remove the system intake by intake id
+// TODO: this should be remove quickly - EASI-974
+func NewDeleteSystemIntakeByID(
+	config Config,
+	delete func(c context.Context, id uuid.UUID) error,
+	authorize func(context.Context) (bool, error),
+) func(context.Context, uuid.UUID) error {
+	return func(ctx context.Context, id uuid.UUID) error {
+		ok, err := authorize(ctx)
+		if err != nil {
+			return err
+		}
+		if !ok {
+			return &apperrors.UnauthorizedError{Err: err}
+		}
+		return delete(ctx, id)
 	}
 }
