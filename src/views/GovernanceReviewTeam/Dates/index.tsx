@@ -11,7 +11,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
-import Survey, { SurveyTypeEnum } from 'components/Survey';
+import { AnythingWrongSurvey } from 'components/Survey';
 import { AppState } from 'reducers/rootReducer';
 import { saveSystemIntake } from 'types/routines';
 import { SubmitDatesForm, SystemIntakeForm } from 'types/systemIntake';
@@ -232,7 +232,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                   {t('governanceReviewTeam:dates.submit')}
                 </Button>
               </Form>
-              <Survey surveyType={SurveyTypeEnum.ANYTHING_WRONG} />
+              <AnythingWrongSurvey />
             </div>
           </>
         );

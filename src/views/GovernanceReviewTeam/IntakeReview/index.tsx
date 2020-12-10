@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
-import Survey, { SurveyTypeEnum } from 'components/Survey';
+import { AnythingWrongSurvey } from 'components/Survey';
 import SystemIntakeReview from 'components/SystemIntakeReview';
 import { SystemIntakeForm } from 'types/systemIntake';
 
@@ -28,7 +28,7 @@ const IntakeReview = ({ systemIntake, now }: IntakeReviewProps) => {
       >
         Take an action
       </UswdsLink>
-      <Survey surveyType={SurveyTypeEnum.ANYTHING_WRONG} />
+      <AnythingWrongSurvey />
     </div>
   );
 };

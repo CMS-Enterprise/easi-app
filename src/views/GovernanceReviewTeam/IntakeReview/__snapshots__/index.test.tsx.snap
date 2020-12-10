@@ -347,17 +347,17 @@ Array [
     >
       Take an action
     </a>
-    <div>
-      <p
-        className="margin-y-4"
-      >
+    <div
+      className="margin-top-4"
+    >
+      <p>
         <a
           aria-label="Open EASi survey in a new tab"
           href="https://www.surveymonkey.com/r/DM6NYRX"
           rel="noopener noreferrer"
           target="_blank"
         >
-          Is there anything wrong on this page?
+          Is there anything wrong on this page? (opens in a new tab)
         </a>
       </p>
     </div>
