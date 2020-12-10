@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 export const AnythingWrongSurvey = () => {
   const { t } = useTranslation();
   return (
-    <div>
+    <div className="margin-top-4">
       <p>
         <a
           href="https://www.surveymonkey.com/r/DM6NYRX"
@@ -28,7 +28,7 @@ export const ImproveEasiSurvey = () => {
   // Period and space to be added between translations since they are on same line
   const periodSpace = '. ';
   return (
-    <div>
+    <div className="margin-top-4">
       <p>
         {t('general:feedback.improvement') + periodSpace}
         <a
@@ -49,7 +49,7 @@ export const ImproveEasiSurvey = () => {
 export const ImproveEasiDecisionPageSurvey = () => {
   const { t } = useTranslation();
   return (
-    <div>
+    <div className="margin-top-4">
       <p>
         <h3>{t('general:feedback.improvement')}</h3>
         <a

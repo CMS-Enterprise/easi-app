@@ -15,7 +15,9 @@ exports[`The Business Case Confirmation page matches the snapshot 1`] = `
     >
       Your reference ID is 
     </h2>
-    <div>
+    <div
+      className="margin-top-4"
+    >
       <p>
         Help us improve EASi. 
         <a
