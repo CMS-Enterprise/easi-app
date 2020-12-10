@@ -171,7 +171,7 @@ const RequestDetails = ({
                     id="IntakeForm-BusinessNeed"
                     maxLength={2000}
                     name="businessNeed"
-                    aria-describedby="IntakeForm-BusinessNeedHelp IntakeForm-BusinessNeedCounter"
+                    aria-describedby="IntakeForm-BusinessNeedCounter IntakeForm-BusinessNeedHelp"
                   />
                   <CharacterCounter
                     id="IntakeForm-BusinessNeedCounter"
@@ -199,7 +199,7 @@ const RequestDetails = ({
                     id="IntakeForm-BusinessSolution"
                     maxLength={2000}
                     name="businessSolution"
-                    aria-describedby="IntakeForm-BusinessSolutionHelp IntakeForm-BusinessSolutionCounter"
+                    aria-describedby="IntakeForm-BusinessSolutionCounter IntakeForm-BusinessSolutionHelp"
                   />
                   <CharacterCounter
                     id="IntakeForm-BusinessSolutionCounter"
