@@ -68,12 +68,12 @@ func (s *Server) routes(
 	}
 
 	// set up CEDAR client
-	cedarEasiClient := local.NewCedarEasiClient(s.logger)
+	var cedarEasiClient cedareasi.Client = local.NewCedarEasiClient(s.logger)
 	if !(s.environment.Local() || s.environment.Test()) {
 		// check we have all of the configs for CEDAR clients
 		s.NewCEDARClientCheck()
 
-		cedarEasiClient := cedareasi.NewTranslatedClient(
+		cedarEasiClient = cedareasi.NewTranslatedClient(
 			s.Config.GetString(appconfig.CEDARAPIURL),
 			s.Config.GetString(appconfig.CEDARAPIKey),
 			ldClient,
