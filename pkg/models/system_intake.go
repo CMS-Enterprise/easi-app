@@ -112,7 +112,7 @@ type SystemIntake struct {
 	UpdatedAt               *time.Time              `json:"updatedAt" db:"updated_at"`
 	SubmittedAt             *time.Time              `json:"submittedAt" db:"submitted_at"`
 	DecidedAt               *time.Time              `json:"decidedAt" db:"decided_at"`
-	ArchivedAt              *time.Time              `db:"archived_at"`
+	ArchivedAt              *time.Time              `json:"archivedAt" db:"archived_at"`
 	GRTDate                 *time.Time              `json:"grtDate" db:"grt_date"`
 	GRBDate                 *time.Time              `json:"grbDate" db:"grb_date"`
 	AlfabetID               null.String             `json:"alfabetID" db:"alfabet_id"`
