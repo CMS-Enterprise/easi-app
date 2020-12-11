@@ -91,7 +91,10 @@ const RequestDescription = ({
                   <Label htmlFor="BusinessCase-BusinessNeed">
                     What is your business or user need?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-BusinessNeedHelp"
+                    className="margin-y-1"
+                  >
                     <span>Include:</span>
                     <ul className="margin-top-1 padding-left-205">
                       <li>
@@ -123,7 +126,7 @@ const RequestDescription = ({
                     id="BusinessCase-BusinessNeed"
                     maxLength={2000}
                     name="businessNeed"
-                    aria-describedby="BusinessCase-BusinessNeedCounter"
+                    aria-describedby="BusinessCase-BusinessNeedHelp BusinessCase-BusinessNeedCounter"
                   />
                   <CharacterCounter
                     id="BusinessCase-BusinessNeedCounter"
@@ -138,7 +141,10 @@ const RequestDescription = ({
                   <Label htmlFor="BusinessCase-CmsBenefit">
                     How will CMS benefit from this effort?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-CmsBenefitHelp"
+                    className="margin-y-1"
+                  >
                     Provide a summary of how this effort benefits CMS. Include
                     any information on how it supports CMS&apos; mission and
                     strategic goals, creates efficiencies and/or cost savings,
@@ -151,7 +157,7 @@ const RequestDescription = ({
                     id="BusinessCase-CmsBenefit"
                     maxLength={2000}
                     name="cmsBenefit"
-                    aria-describedby="BusinessCase-CmsBenefitCounter"
+                    aria-describedby="BusinessCase-CmsBenefitHelp BusinessCase-CmsBenefitCounter"
                   />
                   <CharacterCounter
                     id="BusinessCase-CmsBenefitCounter"
@@ -166,7 +172,10 @@ const RequestDescription = ({
                   <Label htmlFor="BusinessCase-PriorityAlignment">
                     How does this effort align with organizational priorities?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-PriorityAlignmentHelp"
+                    className="margin-y-1"
+                  >
                     List out any administrator priorities or new
                     legislative/regulatory mandates this effort supports. If
                     applicable, include any relevant deadlines
@@ -178,7 +187,7 @@ const RequestDescription = ({
                     id="BusinessCase-PriorityAlignment"
                     maxLength={2000}
                     name="priorityAlignment"
-                    aria-describedby="BusinessCase-PriorityAlignmentCounter"
+                    aria-describedby="BusinessCase-PriorityAlignmentHelp BusinessCase-PriorityAlignmentCounter"
                   />
                   <CharacterCounter
                     id="BusinessCase-PriorityAlignmentCounter"
@@ -194,7 +203,10 @@ const RequestDescription = ({
                     How will you determine whether or not this effort is
                     successful?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-SuccessIndicatorsHelp"
+                    className="margin-y-1"
+                  >
                     Include any indicators that you think would demonstrate
                     success
                   </HelpText>
@@ -205,7 +217,7 @@ const RequestDescription = ({
                     id="BusinessCase-SuccessIndicators"
                     maxLength={2000}
                     name="successIndicators"
-                    aria-describedby="BusinessCase-SuccessIndicatorsCounter"
+                    aria-describedby="BusinessCase-SuccessIndicatorsHelp BusinessCase-SuccessIndicatorsCounter"
                   />
                   <CharacterCounter
                     id="BusinessCase-SuccessIndicatorsCounter"
