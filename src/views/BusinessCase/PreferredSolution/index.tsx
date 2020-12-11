@@ -164,7 +164,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionSummary"
                     maxLength={2000}
                     name="preferredSolution.summary"
-                    aria-describedby="BusinessCase-PreferredSolutionSummaryHelp BusinessCase-PreferredSolutionSummaryCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionSummaryCounter BusinessCase-PreferredSolutionSummaryHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionSummaryCounter"
@@ -199,7 +199,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionAcquisitionApproach"
                     maxLength={2000}
                     name="preferredSolution.acquisitionApproach"
-                    aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachHelp BusinessCase-PreferredSolutionAcquisitionApproachCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter BusinessCase-PreferredSolutionAcquisitionApproachHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionAcquisitionApproachCounter"
@@ -548,7 +548,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionPros"
                     maxLength={2000}
                     name="preferredSolution.pros"
-                    aria-describedby="BusinessCase-PreferredSolutionProsHelp BusinessCase-PreferredSolutionProsCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionProsCounter BusinessCase-PreferredSolutionProsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionProsCounter"
@@ -579,7 +579,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionCons"
                     maxLength={2000}
                     name="preferredSolution.cons"
-                    aria-describedby="BusinessCase-PreferredSolutionConsHelp BusinessCase-PreferredSolutionConsCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionConsCounter BusinessCase-PreferredSolutionConsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionConsCounter"
@@ -642,7 +642,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionCostSavings"
                     maxLength={2000}
                     name="preferredSolution.costSavings"
-                    aria-describedby="BusinessCase-PreferredSolutionCostSavingsHelp BusinessCase-PreferredSolutionCostSavingsCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionCostSavingsCounter BusinessCase-PreferredSolutionCostSavingsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionCostSavingsCounter"
