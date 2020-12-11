@@ -126,7 +126,7 @@ const RequestDescription = ({
                     id="BusinessCase-BusinessNeed"
                     maxLength={2000}
                     name="businessNeed"
-                    aria-describedby="BusinessCase-BusinessNeedHelp BusinessCase-BusinessNeedCounter"
+                    aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-BusinessNeedCounter"
@@ -157,7 +157,7 @@ const RequestDescription = ({
                     id="BusinessCase-CmsBenefit"
                     maxLength={2000}
                     name="cmsBenefit"
-                    aria-describedby="BusinessCase-CmsBenefitHelp BusinessCase-CmsBenefitCounter"
+                    aria-describedby="BusinessCase-CmsBenefitCounter BusinessCase-CmsBenefitHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-CmsBenefitCounter"
@@ -187,7 +187,7 @@ const RequestDescription = ({
                     id="BusinessCase-PriorityAlignment"
                     maxLength={2000}
                     name="priorityAlignment"
-                    aria-describedby="BusinessCase-PriorityAlignmentHelp BusinessCase-PriorityAlignmentCounter"
+                    aria-describedby="BusinessCase-PriorityAlignmentCounter BusinessCase-PriorityAlignmentHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PriorityAlignmentCounter"
@@ -217,7 +217,7 @@ const RequestDescription = ({
                     id="BusinessCase-SuccessIndicators"
                     maxLength={2000}
                     name="successIndicators"
-                    aria-describedby="BusinessCase-SuccessIndicatorsHelp BusinessCase-SuccessIndicatorsCounter"
+                    aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-SuccessIndicatorsCounter"

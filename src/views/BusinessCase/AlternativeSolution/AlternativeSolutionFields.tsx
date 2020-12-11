@@ -81,7 +81,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}Summary`}
             maxLength={2000}
             name={`${altId}.summary`}
-            aria-describedby={`BusinessCase-${altId}SummaryHelp BusinessCase-${altId}SummmaryCounter`}
+            aria-describedby={`BusinessCase-${altId}SummmaryCounter BusinessCase-${altId}SummaryHelp`}
           />
           <CharacterCounter
             id={`BusinessCase-${altId}SummmaryCounter`}
@@ -113,7 +113,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}AcquisitionApproach`}
             maxLength={2000}
             name={`${altId}.acquisitionApproach`}
-            aria-describedby={`BusinessCase-${altId}AcquisitionApproachHelp BusinessCase-${altId}AcquisitionApproachCounter`}
+            aria-describedby={`BusinessCase-${altId}AcquisitionApproachCounter BusinessCase-${altId}AcquisitionApproachHelp`}
           />
           <CharacterCounter
             id={`BusinessCase-${altId}AcquisitionApproachCounter`}
@@ -387,7 +387,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}Pros`}
             maxLength={2000}
             name={`${altId}.pros`}
-            aria-describedby={`BusinessCase-${altId}ProsHelp BusinessCase-${altId}ProsCounter`}
+            aria-describedby={`BusinessCase-${altId}ProsCounter BusinessCase-${altId}ProsHelp`}
           />
           <CharacterCounter
             id={`BusinessCase-${altId}ProsCounter`}
@@ -423,7 +423,7 @@ const AlternativeSolutionFields = ({
       </div>
       <div className="margin-top-2">
         <h2 className="margin-0">Estimated lifecycle cost</h2>
-        <HelpText>
+        <HelpText id="BusinessCase-EstimatedLifecycleCostHelp">
           <p className="margin-y-2">
             You can add speculative costs if exact ones are not known or if a
             contract is not yet in place.
@@ -472,7 +472,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}CostSavings`}
             maxLength={2000}
             name={`${altId}.costSavings`}
-            aria-describedby={`BusinessCase-${altId}CostSavingsHelp BusinessCase-${altId}CostSavingsCounter`}
+            aria-describedby={`BusinessCase-${altId}CostSavingsCounter BusinessCase-${altId}CostSavingsHelp`}
           />
           <CharacterCounter
             id={`BusinessCase-${altId}CostSavingsCounter`}

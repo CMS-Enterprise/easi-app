@@ -149,7 +149,7 @@ const AsIsSolution = ({
                     id="BusinessCase-AsIsSolutionSummary"
                     maxLength={2000}
                     name="asIsSolution.summary"
-                    aria-describedby="BusinessCase-AsIsSolutionSummaryHelp BusinessCase-AsIsSolutionSummaryCounter"
+                    aria-describedby="BusinessCase-AsIsSolutionSummaryCounter BusinessCase-AsIsSolutionSummaryHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionSummaryCounter"
@@ -180,7 +180,7 @@ const AsIsSolution = ({
                     id="BusinessCase-AsIsSolutionPros"
                     maxLength={2000}
                     name="asIsSolution.pros"
-                    aria-describedby="BusinessCase-AsIsSolutionProsHelp BusinessCase-AsIsSolutionProsCounter"
+                    aria-describedby="BusinessCase-AsIsSolutionProsCounter BusinessCase-AsIsSolutionProsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionProsCounter"
@@ -211,7 +211,7 @@ const AsIsSolution = ({
                     id="BusinessCase-AsIsSolutionCons"
                     maxLength={2000}
                     name="asIsSolution.cons"
-                    aria-describedby="BusinessCase-AsIsSolutionConsHelp BusinessCase-AsIsSolutionConsCounter"
+                    aria-describedby="BusinessCase-AsIsSolutionConsCounter BusinessCase-AsIsSolutionConsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionConsCounter"
@@ -277,7 +277,7 @@ const AsIsSolution = ({
                     id="BusinessCase-AsIsSolutionCostSavings"
                     maxLength={2000}
                     name="asIsSolution.costSavings"
-                    aria-describedby="BusinessCase-AsIsSolutionCostSavingsHelp BusinessCase-AsIsSolutionCostSavingsCounter"
+                    aria-describedby="BusinessCase-AsIsSolutionCostSavingsCounter BusinessCase-AsIsSolutionCostSavingsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionCostSavingsCounter"
