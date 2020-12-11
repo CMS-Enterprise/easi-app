@@ -177,6 +177,9 @@ const FlagSourceKey = "FLAG_SOURCE"
 // LambdaEndpoint is the host to direct lambda requests to
 const LambdaEndpoint = "LAMBDA_ENDPOINT"
 
+// LambdaFunctionPrince is the name of the prince lambda function
+const LambdaFunctionPrince = "LAMBDA_FUNCTION_PRINCE"
+
 // FlagSourceOption represents an environment
 type FlagSourceOption string
 
