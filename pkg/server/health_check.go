@@ -12,7 +12,7 @@ import (
 
 // CheckCEDAREasiClientConnection makes a call to CEDAR Easi to test it is configured properly
 // this method will panic on failures
-func (s Server) CheckCEDAREasiClientConnection(client cedareasi.TranslatedClient) {
+func (s Server) CheckCEDAREasiClientConnection(client cedareasi.Client) {
 	s.logger.Info("Testing CEDAR EASi Connection")
 	// FetchSystems is agnostic to user, doesn't modify state,
 	// and tests that we're authorized to retrieve information
