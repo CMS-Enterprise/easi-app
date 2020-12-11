@@ -126,12 +126,15 @@ func (s *Server) routes(
 	s3Client := upload.NewS3Client(s3Config)
 
 	var lambdaClient *lambda.Lambda
+	var princeLambdaName string
 	lambdaSession := session.Must(session.NewSession())
 
+	princeConfig := s.NewPrinceLambdaConfig()
+	princeLambdaName = princeConfig.FunctionName
+
 	if s.environment.Local() || s.environment.Test() {
-		endpoint := s.NewLambdaEndpointCheck()
-		logLevel := aws.LogDebugWithHTTPBody
-		lambdaClient = lambda.New(lambdaSession, &aws.Config{Endpoint: &endpoint, Region: aws.String("us-west-2"), LogLevel: &logLevel})
+		endpoint := princeConfig.Endpoint
+		lambdaClient = lambda.New(lambdaSession, &aws.Config{Endpoint: &endpoint, Region: aws.String("us-west-2")})
 	} else {
 		lambdaClient = lambda.New(lambdaSession, &aws.Config{})
 	}
@@ -570,7 +573,7 @@ func (s *Server) routes(
 		base,
 	).Handle())
 
-	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient)).Handle())
+	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient, princeLambdaName)).Handle())
 
 	// endpoint for short-lived backfill process
 	backfillHandler := handlers.NewBackfillHandler(
