@@ -71,7 +71,6 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   lcid: '',
   lcidExpiration: null,
   lcidScope: '',
-  lifecycleNextSteps: '',
   decisionNextSteps: '',
   rejectionReason: '',
   grtDate: null,
@@ -226,7 +225,6 @@ export const prepareSystemIntakeForApp = (
       ? DateTime.fromISO(systemIntake.lcidExpiresAt)
       : null,
     lcidScope: systemIntake.lcidScope || '',
-    lifecycleNextSteps: systemIntake.lifecycleNextSteps || '',
     decisionNextSteps: systemIntake.decisionNextSteps || '',
     rejectionReason: systemIntake.rejectionReason || '',
     grtDate: systemIntake.grtDate
