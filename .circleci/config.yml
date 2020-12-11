@@ -575,7 +575,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - jb-clickable-prototype
+                - scylla-prototype
       - lint:
           requires:
             - pre_deps
@@ -585,7 +585,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - jb-clickable-prototype
+                - scylla-prototype
       - test:
           requires:
             - pre_deps
@@ -593,14 +593,14 @@ workflows:
           filters:
             branches:
               ignore:
-                - jb-clickable-prototype
+                - scylla-prototype
       - build_tag_push:
           requires:
             - test
           filters:
             branches:
               ignore:
-                - jb-clickable-prototype
+                - scylla-prototype
       - integration_tests:
           requires:
             - lint
@@ -609,20 +609,20 @@ workflows:
           filters:
             branches:
               ignore:
-                - jb-clickable-prototype
+                - scylla-prototype
       - hold_dev:
           type: approval
           filters:
             branches:
               ignore:
                 - master
-                - jb-clickable-prototype
+                - scylla-prototype
       - deploy_dev:
           filters:
             branches:
               ignore:
                 - master
-                - jb-clickable-prototype
+                - scylla-prototype
           requires:
             - integration_tests
             - hold_dev
@@ -646,7 +646,7 @@ workflows:
           filters:
             branches:
               only:
-                - jb-clickable-prototype
+                - scylla-prototype
   weekly:
     triggers:
       - schedule:
