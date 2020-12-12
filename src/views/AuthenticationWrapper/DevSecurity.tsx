@@ -6,7 +6,9 @@ const storageKey = 'dev-user-config';
 const initialAuthState = {
   isAuthenticated: false,
   isPending: false,
-  name: ''
+  name: '',
+  euaId: '',
+  groups: [] as string[]
 };
 
 const jobCodes = ['EASI_D_GOVTEAM', 'EASI_P_GOVTEAM'];
@@ -17,7 +19,7 @@ type ParentComponentProps = {
 
 const DevSecurity = ({ children }: ParentComponentProps) => {
   const [authState, setAuthState] = useState(initialAuthState);
-  const [inputValue, setInputValue] = useState('');
+  const [euaId, setEuaId] = useState('');
   const checkboxValues = useRef(new Set<string>());
 
   const authService = {
@@ -54,7 +56,7 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
   const handleSubmit: ReactEventHandler = event => {
     event.preventDefault();
     const value = {
-      eua: inputValue,
+      eua: euaId,
       jobCodes: Array.from(checkboxValues.current)
     };
     localStorage.setItem(storageKey, JSON.stringify(value));
@@ -62,7 +64,9 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
     setAuthState({
       ...authState,
       isAuthenticated: true,
-      name: `User ${inputValue}`
+      name: `User ${euaId}`,
+      euaId,
+      groups: Array.from(checkboxValues.current)
     });
   };
 
@@ -99,9 +103,9 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
             maxLength={4}
             minLength={4}
             required
-            value={inputValue}
+            value={euaId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setInputValue(e.target.value.toUpperCase())
+              setEuaId(e.target.value.toUpperCase())
             }
             style={{ border: 'solid 1px orangered' }}
           />

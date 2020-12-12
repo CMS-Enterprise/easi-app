@@ -14,11 +14,7 @@ const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
   const handleAuthRequiredRedirect = () => {
     history.push('/signin');
   };
-
-  // TODO replace this with checking an environment variable
-  const devMode = true;
-
-  return devMode ? (
+  return ['local'].includes(process.env.REACT_APP_APP_ENV || '') ? (
     <DevSecurity>{children}</DevSecurity>
   ) : (
     <Security
