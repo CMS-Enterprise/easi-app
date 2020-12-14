@@ -116,12 +116,13 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
       >
         <legend>Select job codes</legend>
         {jobCodes.map(code => (
-          <p>
+          <p key={code}>
             <label>
               <input
                 type="checkbox"
                 value={code}
                 onChange={e => checkboxChange(e)}
+                checked
               />
               {code}
             </label>
