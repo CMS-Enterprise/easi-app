@@ -17,7 +17,7 @@ const Rejected = ({ intake }: RejectedProps) => {
       <h2 className="margin-top-0">{t('decision.bizCaseRejected')}</h2>
       <h3>{t('decision.reasons')}</h3>
       <p>{intake.rejectionReason}</p>
-      {intake.lifecycleNextSteps && (
+      {intake.decisionNextSteps && (
         <>
           <h3>{t('decision.nextSteps')}</h3>
           <p className="text-pre-wrap">{intake.decisionNextSteps}</p>
