@@ -32,7 +32,7 @@ const Approved = ({ intake }: ApprovedProps) => {
         )}
       </div>
 
-      {intake.lifecycleNextSteps && (
+      {intake.decisionNextSteps && (
         <>
           <h3>{t('decision.nextSteps')}</h3>
           <Alert type="info">{t('decision.completeNextSteps')}</Alert>

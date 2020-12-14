@@ -194,9 +194,11 @@ const GovernanceTaskList = () => {
                       <span>{businessCaseStage}</span>
                     </p>
                   )}
-                  <span className="governance-task-list__meeting-date">
-                    {getMeetingDate(systemIntake.grtDate)}
-                  </span>
+                  {systemIntake.grtDate && (
+                    <span className="governance-task-list__meeting-date">
+                      {getMeetingDate(systemIntake.grtDate)}
+                    </span>
+                  )}
                 </TaskListDescription>
                 <BusinessCaseDraftCta systemIntake={systemIntake} />
               </TaskListItem>
@@ -234,9 +236,11 @@ const GovernanceTaskList = () => {
                     based on the Business Case and recommendations from the
                     Review Team.
                   </p>
-                  <span className="governance-task-list__meeting-date">
-                    {getMeetingDate(systemIntake.grtDate)}
-                  </span>
+                  {systemIntake.grbDate && (
+                    <span className="governance-task-list__meeting-date">
+                      {getMeetingDate(systemIntake.grbDate)}
+                    </span>
+                  )}
                 </TaskListDescription>
                 <AttendGrbMeetingCta intake={systemIntake} />
               </TaskListItem>

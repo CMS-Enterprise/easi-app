@@ -41,6 +41,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
             <div className="margin-right-2">
               <fieldset
                 className="usa-fieldset"
+                aria-describedby="BusinessCase-EstimatedLifecycleCostHelp"
                 data-scroll={`${formikKey}.year${year}.${index}.phase`}
               >
                 <div>

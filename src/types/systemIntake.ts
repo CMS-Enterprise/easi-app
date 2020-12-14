@@ -83,7 +83,6 @@ export type SystemIntakeForm = {
   lcid: string;
   lcidExpiration: DateTime | null;
   lcidScope: string;
-  lifecycleNextSteps: string;
   decisionNextSteps: string;
   rejectionReason: string;
   grtDate: DateTime | null;
