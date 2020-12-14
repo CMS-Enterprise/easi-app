@@ -20,7 +20,9 @@ type ParentComponentProps = {
 const DevSecurity = ({ children }: ParentComponentProps) => {
   const [authState, setAuthState] = useState(initialAuthState);
   const [euaId, setEuaId] = useState('');
-  const checkboxValues = useRef(new Set<string>());
+  const checkboxValues = useRef(
+    new Set<string>('EASI_D_GOVTEAM, EASI_P_GOVTEAM')
+  );
 
   const authService = {
     login: () => {},
