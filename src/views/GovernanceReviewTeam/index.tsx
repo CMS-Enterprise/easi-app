@@ -13,7 +13,11 @@ import PageWrapper from 'components/PageWrapper';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
-import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
+import {
+  isIntakeClosed,
+  isIntakeOpen,
+  translateRequestType
+} from 'utils/systemIntake';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -100,7 +104,7 @@ const GovernanceReviewTeam = () => {
                 </div>
                 <div className="easi-grt__description-group">
                   <dt>{t('intake:fields.requestFor')}</dt>
-                  <dd>N/A</dd>
+                  <dd>{translateRequestType(systemIntake.requestType)}</dd>
                 </div>
               </div>
             </dl>
