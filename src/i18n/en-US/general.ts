@@ -8,8 +8,9 @@ const general = {
     year: 'Year'
   },
   feedback: {
-    improvement: 'Help us improve',
-    whatYouThink: 'Tell us what you think of this service'
+    improvement: 'Help us improve EASi',
+    whatYouThink: 'Tell us what you think of this service (opens in a new tab)',
+    anythingWrong: 'Is there anything wrong on this page? (opens in a new tab)'
   }
 };
 

@@ -10,6 +10,7 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import { ImproveEasiSurvey } from 'components/Survey';
 import {
   attendGrbMeetingTag,
   businessCaseTag,
@@ -264,6 +265,7 @@ const GovernanceTaskList = () => {
             <SideNavActions archiveIntake={archiveIntake} />
           </div>
         </div>
+        <ImproveEasiSurvey />
       </MainContent>
       <Footer />
     </PageWrapper>
