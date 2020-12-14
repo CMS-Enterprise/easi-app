@@ -226,7 +226,7 @@ const AlternativeSolutionFields = ({
             <Field
               as={RadioField}
               checked={values[`${altId}`].hosting.type === 'cloud'}
-              id={`BusinessCase-${altId}SolutionHostingCloud`}
+              id={`BusinessCase-${altId}HostingCloud`}
               name={`${altId}.hosting.type`}
               label="Yes, in the cloud (AWS, Azure, etc.)"
               value="cloud"

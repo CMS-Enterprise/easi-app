@@ -51,7 +51,7 @@ describe('The Business Case Form', () => {
     cy.get('[data-testid="start-biz-case-btn"]').click();
   });
 
-  it('fills out minimum required fields', () => {
+  it('fills out all business case fields', () => {
     // General Request Information
     // Autofilled Fields from System Intake
     cy.get('#BusinessCase-RequestName').should(
@@ -109,14 +109,100 @@ describe('The Business Case Form', () => {
 
     cy.contains('button', 'Next').click();
 
-    cy.businessCase.preferredSolution.fillNonBranchingFields();
+    cy.businessCase.preferredSolution.fillAllFields();
 
     cy.contains('button', 'Next').click();
 
-    cy.businessCase.alternativeASolution.fillNonBranchingFields();
+    cy.businessCase.alternativeASolution.fillAllFields();
 
     cy.contains('button', 'Next').click();
 
     cy.get('h1').contains('Check your answers before sending');
+    cy.window()
+      .its('store')
+      .invoke('getState')
+      .its('businessCase')
+      .its('form')
+      .should('deep.include', {
+        requestName: 'Easy Access to System Information',
+        requester: {
+          name: 'John Requester',
+          phoneNumber: '1234567890'
+        },
+        businessOwner: {
+          name: 'John BusinessOwner'
+        },
+        businessNeed:
+          'Business Need: The quick brown fox jumps over the lazy dog.',
+        cmsBenefit: 'CMS Benefit: The quick brown fox jumps over the lazy dog.',
+        priorityAlignment:
+          'Priority Alignment: The quick brown fox jumps over the lazy dog.',
+        successIndicators:
+          'Success Indicators: The quick brown fox jumps over the lazy dog.',
+        asIsSolution: {
+          title: 'Test As is Solution',
+          summary: 'As is Solution Summary',
+          pros: 'As is Solution Pros',
+          cons: 'As is Solution Cons',
+          estimatedLifecycleCost: {
+            year1: [{ phase: 'Development', cost: '0' }],
+            year2: [{ phase: 'Development', cost: '0' }],
+            year3: [{ phase: 'Development', cost: '0' }],
+            year4: [{ phase: 'Operations and Maintenance', cost: '0' }],
+            year5: [{ phase: 'Operations and Maintenance', cost: '0' }]
+          },
+          costSavings: 'As is Solution Cost Savings'
+        },
+        preferredSolution: {
+          title: 'Preferred Solution Title',
+          summary: 'Preferred Solution Summary',
+          acquisitionApproach: 'Preferred Solution Acquisition approach',
+          security: {
+            isApproved: false,
+            isBeingReviewed: 'YES'
+          },
+          hosting: {
+            cloudServiceType: 'Saas',
+            location: 'AWS',
+            type: 'cloud'
+          },
+          hasUserInterface: 'YES',
+          pros: 'Preferred Solution Pros',
+          cons: 'Preferred Solution Cons',
+          estimatedLifecycleCost: {
+            year1: [{ phase: 'Development', cost: '0' }],
+            year2: [{ phase: 'Development', cost: '0' }],
+            year3: [{ phase: 'Development', cost: '0' }],
+            year4: [{ phase: 'Operations and Maintenance', cost: '0' }],
+            year5: [{ phase: 'Operations and Maintenance', cost: '0' }]
+          },
+          costSavings: '0'
+        },
+        alternativeA: {
+          title: 'Alternative A Title',
+          summary: 'Alternative A Summary',
+          acquisitionApproach: 'Alternative A AcquisitionApproach',
+          security: {
+            isApproved: false,
+            isBeingReviewed: 'YES'
+          },
+          hosting: {
+            cloudServiceType: 'Saas',
+            location: 'AWS',
+            type: 'cloud'
+          },
+          hasUserInterface: 'YES',
+          pros: 'Alternative A Pros',
+          cons: 'Alternative A Cons',
+          estimatedLifecycleCost: {
+            year1: [{ phase: 'Development', cost: '0' }],
+            year2: [{ phase: 'Development', cost: '0' }],
+            year3: [{ phase: 'Development', cost: '0' }],
+            year4: [{ phase: 'Operations and Maintenance', cost: '0' }],
+            year5: [{ phase: 'Operations and Maintenance', cost: '0' }]
+          },
+          costSavings: 'Alternative A Cost Savings'
+        }
+      });
   });
 });
