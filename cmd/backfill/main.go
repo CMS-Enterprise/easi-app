@@ -249,8 +249,6 @@ func convert(row []string) (*entry, error) {
 		data.Intake.ExistingFunding = null.BoolFrom(false)
 	}
 
-	data.Intake.CostIncrease = null.StringFrom(row[colCostFree])
-
 	data.Intake.Contractor = null.StringFrom(row[colContractor])
 	data.Intake.ContractVehicle = null.StringFrom(row[colVehicle])
 	data.Intake.ContractStartMonth = null.StringFrom(row[colCStartM])
@@ -275,7 +273,14 @@ func convert(row []string) (*entry, error) {
 
 	if row[colPeriod] != "" {
 		data.Notes = append(data.Notes, models.Note{
-			Content:    null.StringFrom(fmt.Sprintf("Period of Performance: %s", row[colPeriod])),
+			Content:    null.StringFrom(fmt.Sprintf("Period of Performance - %s", row[colPeriod])),
+			AuthorName: null.StringFrom(row[colAdminLead]),
+		})
+	}
+
+	if row[colCostFree] != "" {
+		data.Notes = append(data.Notes, models.Note{
+			Content:    null.StringFrom(fmt.Sprintf("Anticipated Cost Increase - %s", row[colCostFree])),
 			AuthorName: null.StringFrom(row[colAdminLead]),
 		})
 	}
