@@ -41,7 +41,12 @@ const Approved = ({ intake }: ApprovedProps) => {
         </>
       )}
       <h3>{t('general:feedback.improvement')}</h3>
-      <UswdsLink href="/" target="_blank" rel="oponener noreferrer">
+      <UswdsLink
+        href="https://www.surveymonkey.com/r/JNYSMZP"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open EASi survey in a new tab"
+      >
         {t('general:feedback.whatYouThink')}
       </UswdsLink>
 
