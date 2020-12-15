@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, useEffect, useRef, useState } from 'react';
+import React, { ReactEventHandler, useEffect, useState } from 'react';
 import { OktaContext } from '@okta/okta-react';
 
 const storageKey = 'dev-user-config';
@@ -8,10 +8,8 @@ const initialAuthState = {
   isPending: false,
   name: '',
   euaId: '',
-  groups: [] as string[]
+  groups: { EASI_D_GOVTEAM: true }
 };
-
-const jobCodes = ['EASI_D_GOVTEAM'];
 
 type ParentComponentProps = {
   children: React.ReactNode;
@@ -20,7 +18,9 @@ type ParentComponentProps = {
 const DevSecurity = ({ children }: ParentComponentProps) => {
   const [authState, setAuthState] = useState(initialAuthState);
   const [euaId, setEuaId] = useState('');
-  const checkboxValues = useRef(new Set<string>(jobCodes));
+  const [checkboxValues, setCheckboxValues] = useState({
+    EASI_D_GOVTEAM: true
+  });
 
   const authService = {
     login: () => {},
@@ -59,7 +59,7 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
     event.preventDefault();
     const value = {
       eua: euaId,
-      jobCodes: Array.from(checkboxValues.current)
+      jobCodes: checkboxValues
     };
     localStorage.setItem(storageKey, JSON.stringify(value));
     localStorage.removeItem('okta-token-storage'); // ensure that the dev token is used
@@ -68,16 +68,14 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
       isAuthenticated: true,
       name: `User ${euaId}`,
       euaId,
-      groups: Array.from(checkboxValues.current)
+      groups: checkboxValues
     });
   };
 
   const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
-    if (event.currentTarget.checked) {
-      checkboxValues.current.add(event.currentTarget.value);
-    } else {
-      checkboxValues.current.delete(event.currentTarget.value);
-    }
+    const newCheckboxValues = checkboxValues;
+    newCheckboxValues[event.currentTarget.value] = event.currentTarget.checked;
+    setCheckboxValues(newCheckboxValues);
   };
 
   return authState.isAuthenticated ? (
@@ -117,7 +115,7 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
         style={{ display: 'inline-block', border: 'solid 1px orangered' }}
       >
         <legend>Select job codes</legend>
-        {jobCodes.map(code => (
+        {Object.keys(authState.groups).map(code => (
           <p key={code}>
             <label>
               <input
