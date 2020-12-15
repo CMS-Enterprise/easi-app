@@ -11,7 +11,7 @@ const initialAuthState = {
   groups: [] as string[]
 };
 
-const jobCodes = ['EASI_D_GOVTEAM', 'EASI_P_GOVTEAM'];
+const jobCodes = ['EASI_D_GOVTEAM'];
 
 type ParentComponentProps = {
   children: React.ReactNode;
@@ -20,9 +20,7 @@ type ParentComponentProps = {
 const DevSecurity = ({ children }: ParentComponentProps) => {
   const [authState, setAuthState] = useState(initialAuthState);
   const [euaId, setEuaId] = useState('');
-  const checkboxValues = useRef(
-    new Set<string>(['EASI_D_GOVTEAM', 'EASI_P_GOVTEAM'])
-  );
+  const checkboxValues = useRef(new Set<string>(jobCodes));
 
   const authService = {
     login: () => {},
