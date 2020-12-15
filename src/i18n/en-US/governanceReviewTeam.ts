@@ -150,11 +150,13 @@ const governanceReviewTeam = {
   aria: {
     openIntake: 'Open intake request',
     openBusiness: 'Open business case',
-    openNotes: 'Open admin team notes'
+    openNotes: 'Open admin team notes',
+    openDecision: 'Open decision'
   },
   back: {
     allRequests: 'Back to all requests'
   },
+  decision: 'Decision',
   actions: 'Actions',
   status: {
     label: 'Status',
