@@ -23,7 +23,7 @@ func NewPDFHandler(invoker invokeLambdaFunc) *PDFHandler {
 }
 
 type requestPayload struct {
-	HTML string `json:"html"`
+	HTML []byte `json:"html"` // automatically decode base64
 }
 
 // Handle returns an http.HandlerFunc
@@ -43,7 +43,7 @@ func (h PDFHandler) Handle() http.HandlerFunc {
 			return
 		}
 
-		result, generateErr := h.invokeLambda(r.Context(), generateRequest.HTML)
+		result, generateErr := h.invokeLambda(r.Context(), string(generateRequest.HTML))
 		if generateErr != nil {
 			h.WriteErrorResponse(r.Context(), w, generateErr)
 			return
