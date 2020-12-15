@@ -94,7 +94,7 @@ export const SystemIntake = () => {
       <Header />
       <MainContent className="grid-container margin-bottom-5">
         {!['local', 'dev', 'impl'].includes(
-          process.env.REACT_APP_APP_ENV || ''
+          process.env.REACT_APP_APP_ENV as string
         ) && (
           <BreadcrumbNav className="margin-y-2">
             <li>
@@ -105,7 +105,7 @@ export const SystemIntake = () => {
           </BreadcrumbNav>
         )}
         {['local', 'dev', 'impl'].includes(
-          process.env.REACT_APP_APP_ENV || ''
+          process.env.REACT_APP_APP_ENV as string
         ) && (
           <BreadcrumbNav className="margin-y-2">
             <li>

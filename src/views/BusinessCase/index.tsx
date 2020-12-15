@@ -111,7 +111,7 @@ export const BusinessCase = () => {
       <MainContent className="margin-bottom-5">
         <div className="grid-container">
           {!['local', 'dev', 'impl'].includes(
-            process.env.REACT_APP_APP_ENV || ''
+            process.env.REACT_APP_APP_ENV as string
           ) && (
             <BreadcrumbNav className="margin-y-2">
               <li>
@@ -122,7 +122,7 @@ export const BusinessCase = () => {
             </BreadcrumbNav>
           )}
           {['local', 'dev', 'impl'].includes(
-            process.env.REACT_APP_APP_ENV || ''
+            process.env.REACT_APP_APP_ENV as string
           ) && (
             <BreadcrumbNav className="margin-y-2">
               <li>
