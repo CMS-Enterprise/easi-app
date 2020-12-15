@@ -522,16 +522,6 @@ func (s *Server) routes(
 	// File Upload Handlers
 	fileUploadHandler := handlers.NewFileUploadHandler(
 		base,
-		services.NewCreateFileUploadURL(
-			serviceConfig,
-			services.NewAuthorizeRequireGRTJobCode(),
-			s3Client,
-		),
-		services.NewCreateFileDownloadURL(
-			serviceConfig,
-			services.NewAuthorizeRequireGRTJobCode(),
-			s3Client,
-		),
 		services.NewCreateUploadedFile(
 			serviceConfig,
 			services.NewAuthorizeRequireGRTJobCode(),
@@ -543,14 +533,26 @@ func (s *Server) routes(
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
 
-	api.HandleFunc("/file_uploads/upload_url", fileUploadHandler.GenerateUploadPresignedURL).
-		Methods("POST")
+	presignedURLUploadHandler := handlers.NewPresignedURLUploadHandler(
+		base,
+		services.NewCreateFileUploadURL(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			s3Client,
+		),
+	)
+	api.Handle("/file_uploads/upload_url", presignedURLUploadHandler.Handle())
 
-	api.HandleFunc("/file_uploads/{file_id}", fileUploadHandler.FetchFileMetadata).
-		Methods("GET")
+	presignedURLDownloadHandler := handlers.NewPresignedURLDownloadHandler(
+		base,
+		services.NewCreateFileDownloadURL(
+			serviceConfig,
+			services.NewAuthorizeRequireGRTJobCode(),
+			s3Client,
+		),
+	)
 
-	api.HandleFunc("/file_uploads/{file_id}/download_url", fileUploadHandler.GenerateDownloadPresignedURL).
-		Methods("POST")
+	api.Handle("/file_uploads/{file_id}/download_url", presignedURLDownloadHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,

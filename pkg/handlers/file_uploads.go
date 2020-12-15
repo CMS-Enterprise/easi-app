@@ -28,17 +28,13 @@ type FetchUploadedFile func(ctx context.Context, id uuid.UUID) (*models.Uploaded
 // NewFileUploadHandler is a constructor for FileUploadHandler
 func NewFileUploadHandler(
 	base HandlerBase,
-	createUploadURL CreateFileUploadURL,
-	createFileDownloadURL CreateFileDownloadURL,
 	createFile CreateUploadedFile,
 	fetchFile FetchUploadedFile,
 ) FileUploadHandler {
 	return FileUploadHandler{
-		HandlerBase:           base,
-		CreateFileUploadURL:   createUploadURL,
-		CreateFileDownloadURL: createFileDownloadURL,
-		CreateUploadedFile:    createFile,
-		FetchUploadedFile:     fetchFile,
+		HandlerBase:        base,
+		CreateUploadedFile: createFile,
+		FetchUploadedFile:  fetchFile,
 	}
 }
 
@@ -46,10 +42,99 @@ func NewFileUploadHandler(
 // to file uploads
 type FileUploadHandler struct {
 	HandlerBase
-	CreateFileUploadURL   CreateFileUploadURL
+	CreateUploadedFile CreateUploadedFile
+	FetchUploadedFile  FetchUploadedFile
+}
+
+// NewPresignedURLUploadHandler returns a handler in this pattern
+func NewPresignedURLUploadHandler(
+	base HandlerBase,
+	createUploadURL CreateFileUploadURL,
+) PreSignedURLUploadHandler {
+	return PreSignedURLUploadHandler{
+		HandlerBase:         base,
+		CreateFileUploadURL: createUploadURL,
+	}
+}
+
+//PreSignedURLUploadHandler is for this pattern
+type PreSignedURLUploadHandler struct {
+	HandlerBase
+	CreateFileUploadURL CreateFileUploadURL
+}
+
+// Handle is the actual function
+func (h PreSignedURLUploadHandler) Handle() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		url, err := h.CreateFileUploadURL(r.Context())
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+
+		responseBody, err := json.Marshal(url)
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+
+		w.WriteHeader(http.StatusCreated)
+		_, err = w.Write(responseBody)
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+		return
+
+	}
+}
+
+// NewPresignedURLDownloadHandler returns a handler in this pattern
+func NewPresignedURLDownloadHandler(
+	base HandlerBase,
+	createFileDownloadURL CreateFileDownloadURL,
+) PreSignedURLDownloadHandler {
+	return PreSignedURLDownloadHandler{
+		HandlerBase:           base,
+		CreateFileDownloadURL: createFileDownloadURL,
+	}
+}
+
+//PreSignedURLDownloadHandler is for this pattern
+type PreSignedURLDownloadHandler struct {
+	HandlerBase
 	CreateFileDownloadURL CreateFileDownloadURL
-	CreateUploadedFile    CreateUploadedFile
-	FetchUploadedFile     FetchUploadedFile
+}
+
+// Handle is the actual function
+func (h PreSignedURLDownloadHandler) Handle() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fileID, err := requireFileUploadID(mux.Vars(r))
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+
+		url, err := h.CreateFileDownloadURL(r.Context(), fileID.String())
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+
+		responseBody, err := json.Marshal(url)
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+
+		w.WriteHeader(http.StatusCreated)
+		_, err = w.Write(responseBody)
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+		return
+	}
 }
 
 // Handle handles a request for file uploading
@@ -59,64 +144,15 @@ func (h FileUploadHandler) Handle() http.HandlerFunc {
 		case "POST":
 			h.createFileMetadata(w, r)
 			return
+		case "GET":
+			h.fetchFileMetadata(w, r)
+			return
 		default:
 			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
 			return
 
 		}
 	}
-}
-
-// GenerateUploadPresignedURL is our handler that handles generating pre-signed URLs for file uploading
-func (h FileUploadHandler) GenerateUploadPresignedURL(w http.ResponseWriter, r *http.Request) {
-	url, err := h.CreateFileUploadURL(r.Context())
-	if err != nil {
-		h.WriteErrorResponse(r.Context(), w, err)
-		return
-	}
-
-	responseBody, err := json.Marshal(url)
-	if err != nil {
-		h.WriteErrorResponse(r.Context(), w, err)
-		return
-	}
-
-	w.WriteHeader(http.StatusCreated)
-	_, err = w.Write(responseBody)
-	if err != nil {
-		h.WriteErrorResponse(r.Context(), w, err)
-		return
-	}
-	return
-}
-
-// GenerateDownloadPresignedURL handles generating pre-signed URLs for file downloading
-func (h FileUploadHandler) GenerateDownloadPresignedURL(w http.ResponseWriter, r *http.Request) {
-	fileID, err := requireFileUploadID(mux.Vars(r))
-	if err != nil {
-		h.WriteErrorResponse(r.Context(), w, err)
-		return
-	}
-
-	url, err := h.CreateFileDownloadURL(r.Context(), fileID.String())
-	if err != nil {
-		h.WriteErrorResponse(r.Context(), w, err)
-		return
-	}
-
-	responseBody, err := json.Marshal(url)
-	if err != nil {
-		h.WriteErrorResponse(r.Context(), w, err)
-		return
-	}
-
-	w.WriteHeader(http.StatusCreated)
-	_, err = w.Write(responseBody)
-	if err != nil {
-		h.WriteErrorResponse(r.Context(), w, err)
-		return
-	}
-	return
 }
 
 // createFileMetadata saves an uploaded file's metadata to our data store
@@ -181,7 +217,7 @@ func requireFileUploadID(reqVars map[string]string) (uuid.UUID, error) {
 }
 
 // FetchFileMetadata returns metadata for a saved file based on ID
-func (h FileUploadHandler) FetchFileMetadata(w http.ResponseWriter, r *http.Request) {
+func (h FileUploadHandler) fetchFileMetadata(w http.ResponseWriter, r *http.Request) {
 	fileID, err := requireFileUploadID(mux.Vars(r))
 	if err != nil {
 		h.WriteErrorResponse(r.Context(), w, err)
