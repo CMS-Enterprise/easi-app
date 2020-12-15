@@ -96,7 +96,11 @@ const downloadRefAsPDF = (
 // PDFExport adds a "Download PDF" button to the screen. When this button is clicked,
 // the HTML content of child elements is sent to the server and converted
 // to PDF format.
-const PDFExport = ({ title, filename, children }: PDFExportProps) => {
+const PDFExport = ({
+  title,
+  filename,
+  children
+}: PDFExportProps): JSX.Element => {
   const flags = useFlags();
 
   const divEl = useRef<HTMLDivElement>(null);
@@ -114,7 +118,7 @@ const PDFExport = ({ title, filename, children }: PDFExportProps) => {
       </button>
     </div>
   ) : (
-    children
+    <>{children}</>
   );
 };
 
