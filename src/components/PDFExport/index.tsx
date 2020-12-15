@@ -69,7 +69,7 @@ const downloadRefAsPDF = (
   // Combine external and inline styles
   Promise.all(stylesheetRequests)
     .then(stylesheets => {
-      styleBlocks.concat(stylesheets.map(response => response.data));
+      stylesheets.forEach(response => styleBlocks.push(response.data));
     })
     .catch(() => {
       // TODO add error handling: display a modal if things fail?
