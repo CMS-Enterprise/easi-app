@@ -37,7 +37,7 @@ function generatePDF(filename: string, content: string) {
       responseType: 'blob',
       method: 'POST',
       data: {
-        html: content,
+        html: btoa(content),
         filename: 'input.html'
       }
     })
