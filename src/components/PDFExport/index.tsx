@@ -58,9 +58,8 @@ const downloadRefAsPDF = (
   // Collect any stylesheets that are linked to. These are used in production.
   const stylesheetRequests = Array.prototype.slice
     .apply(document.styleSheets)
-    .filter(stylesheet =>
-      stylesheet.href ? axios.get(stylesheet.href) : null
-    );
+    .filter(stylesheet => stylesheet.href)
+    .map(stylesheet => axios.get(stylesheet.href));
 
   // Also grab any inline styles, used predominantly in development.
   const styleBlocks = Array.prototype.slice
