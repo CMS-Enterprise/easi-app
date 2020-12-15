@@ -13,8 +13,12 @@ const SystemIntakeView = ({ systemIntake }: SystemIntakeViewOnlyProps) => {
   return (
     <>
       <h1>Review your Intake Request</h1>
-      <SystemIntakeReview systemIntake={systemIntake} now={DateTime.local()} />
-      <PDFExport filename="system-intake.pdf" />
+      <PDFExport title="system intake" filename="system-intake.pdf">
+        <SystemIntakeReview
+          systemIntake={systemIntake}
+          now={DateTime.local()}
+        />
+      </PDFExport>
     </>
   );
 };

@@ -25,3 +25,12 @@ services:
     volumes:
       - ./cypress/videos:/cypress/videos
       - ./cypress/screenshots:/cypress/screenshots
+  lambda:
+    image: lambci/lambda:go1.x
+    ports:
+      - 9001:9001
+    environment:
+      - DOCKER_LAMBDA_STAY_OPEN=1
+      - LICENSE_KEY=
+    volumes:
+      - ./../easi-infra-modules/lambda/prince/build:/var/task:ro,delegated
