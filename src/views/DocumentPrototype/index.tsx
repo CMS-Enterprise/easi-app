@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
@@ -7,13 +8,24 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import Label from 'components/shared/Label';
-import { UploadForm } from 'types/files';
+import { AppState } from 'reducers/rootReducer';
+import { FileUploadModel } from 'types/files';
+import { postFileUploadURL } from 'types/routines';
 import { uploadSchema } from 'validations/fileSchema';
 
 const DocumentPrototype = () => {
   const { t } = useTranslation('action');
+  const dispatch = useDispatch();
 
-  const dispatchUpload = (values: UploadForm) => {
+  const file = useSelector((state: AppState) => state.files.form);
+
+  const dispatchUpload = (values: FileUploadModel) => {
+    dispatch(
+      postFileUploadURL({
+        ...file
+      })
+    );
+
     alert(
       JSON.stringify(
         {
@@ -37,7 +49,7 @@ const DocumentPrototype = () => {
           onSubmit={dispatchUpload}
           validationSchema={uploadSchema}
         >
-          {(formikProps: FormikProps<UploadForm>) => {
+          {(formikProps: FormikProps<FileUploadModel>) => {
             return (
               <Form onSubmit={formikProps.handleSubmit}>
                 <div className="form-group">
