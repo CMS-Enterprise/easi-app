@@ -61,7 +61,9 @@ axios.interceptors.request.use(
         if (json.accessToken) {
           newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
         }
-      } else if (window.localStorage['dev-user-config']) {
+      }
+      // prefer dev auth if it exists
+      if (window.localStorage['dev-user-config']) {
         newConfig.headers.Authorization = `Bearer ${window.localStorage['dev-user-config']}`;
       }
     }

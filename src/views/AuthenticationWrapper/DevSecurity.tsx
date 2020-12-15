@@ -17,10 +17,6 @@ type ParentComponentProps = {
 
 const DevSecurity = ({ children }: ParentComponentProps) => {
   const [authState, setAuthState] = useState(initialAuthState);
-  const [euaId, setEuaId] = useState('');
-  const [checkboxValues, setCheckboxValues] = useState({
-    EASI_D_GOVTEAM: true
-  });
 
   const authService = {
     login: () => {},
@@ -58,24 +54,23 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
   const handleSubmit: ReactEventHandler = event => {
     event.preventDefault();
     const value = {
-      eua: euaId,
-      jobCodes: checkboxValues
+      eua: authState.euaId,
+      jobCodes: authState.groups
     };
-    localStorage.setItem(storageKey, JSON.stringify(value));
-    localStorage.removeItem('okta-token-storage'); // ensure that the dev token is used
-    setAuthState({
-      ...authState,
-      isAuthenticated: true,
-      name: `User ${euaId}`,
-      euaId,
-      groups: checkboxValues
+    localStorage.setItem(storageKey, JSON.stringify(value)); // ensure that the dev token is used
+    setAuthState(as => {
+      return {
+        ...as,
+        isAuthenticated: true
+      };
     });
   };
 
   const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
-    const newCheckboxValues = checkboxValues;
-    newCheckboxValues[event.currentTarget.value] = event.currentTarget.checked;
-    setCheckboxValues(newCheckboxValues);
+    authState.groups[
+      event.currentTarget.value as keyof typeof authState.groups
+    ] = event.currentTarget.checked;
+    setAuthState(authState);
   };
 
   return authState.isAuthenticated ? (
@@ -103,9 +98,12 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
             maxLength={4}
             minLength={4}
             required
-            value={euaId}
+            value={authState.euaId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEuaId(e.target.value.toUpperCase())
+              setAuthState({
+                ...authState,
+                euaId: e.target.value.toUpperCase()
+              })
             }
             style={{ border: 'solid 1px orangered' }}
           />
