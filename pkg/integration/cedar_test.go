@@ -6,7 +6,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
+	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/handlers"
@@ -35,7 +36,7 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 		s.config.GetString("CEDAR_API_URL"),
 		s.config.GetString("CEDAR_API_KEY"),
 		ldClient,
-		ld.NewAnonymousUser("fake"),
+		lduser.NewAnonymousUser("fake"),
 	)
 
 	handlers.NewSystemsListHandler(
