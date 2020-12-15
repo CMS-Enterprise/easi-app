@@ -15,7 +15,7 @@ services:
     restart: always
     image: minio/minio:latest
     ports:
-      - "9000:9000"
+      - '9000:9000'
     volumes:
       - s3-data:/data
     entrypoint: minio server /data

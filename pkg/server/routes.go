@@ -4,6 +4,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/lambda"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
@@ -121,6 +124,20 @@ func (s *Server) routes(
 	}
 
 	s3Client := upload.NewS3Client(s3Config)
+
+	var lambdaClient *lambda.Lambda
+	var princeLambdaName string
+	lambdaSession := session.Must(session.NewSession())
+
+	princeConfig := s.NewPrinceLambdaConfig()
+	princeLambdaName = princeConfig.FunctionName
+
+	if s.environment.Local() || s.environment.Test() {
+		endpoint := princeConfig.Endpoint
+		lambdaClient = lambda.New(lambdaSession, &aws.Config{Endpoint: &endpoint, Region: aws.String("us-west-2")})
+	} else {
+		lambdaClient = lambda.New(lambdaSession, &aws.Config{})
+	}
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
@@ -556,7 +573,7 @@ func (s *Server) routes(
 		base,
 	).Handle())
 
-	api.Handle("/pdf/generate", handlers.NewPDFHandler().Handle())
+	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient, princeLambdaName)).Handle())
 
 	// endpoint for short-lived backfill process
 	backfillHandler := handlers.NewBackfillHandler(
