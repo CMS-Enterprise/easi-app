@@ -60,11 +60,11 @@ const intake = {
         'Follow the decommission guide, complete steps relevant to your system and submit it back to ITgovernance@cms.hhs.gov to officially complete the decommissioning of your system.'
     }
   },
-  requestTypeMap: {
-    NEW: 'Add a new system',
-    RECOMPETE: 'Re-compete',
-    MAJOR_CHANGES: 'Major change or upgrade',
-    SHUTDOWN: 'Decommission a system'
+  requestType: {
+    new: 'Add a new system',
+    recompete: 'Re-compete',
+    majorChanges: 'Major change or upgrade',
+    shutdown: 'Decommission a system'
   },
 
   csvHeadings: {
