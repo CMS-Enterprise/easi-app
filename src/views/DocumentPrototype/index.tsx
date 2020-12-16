@@ -33,7 +33,11 @@ const DocumentPrototype = () => {
       <MainContent className="grid-container margin-bottom-5">
         <h1>Document Prototype</h1>
         <Formik
-          initialValues={{ filename: '' }}
+          initialValues={{
+            filename: '',
+            file: {} as File,
+            uploadURL: ''
+          }}
           onSubmit={dispatchUpload}
           validationSchema={uploadSchema}
         >
