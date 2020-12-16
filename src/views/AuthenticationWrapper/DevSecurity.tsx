@@ -1,4 +1,5 @@
-import React, { ReactEventHandler, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { OktaContext } from '@okta/okta-react';
 
 const storageKey = 'dev-user-config';
@@ -8,7 +9,7 @@ const initialAuthState = {
   isPending: false,
   name: '',
   euaId: '',
-  groups: { EASI_D_GOVTEAM: true }
+  groups: [] as string[]
 };
 
 type ParentComponentProps = {
@@ -17,6 +18,7 @@ type ParentComponentProps = {
 
 const DevSecurity = ({ children }: ParentComponentProps) => {
   const [authState, setAuthState] = useState(initialAuthState);
+  const history = useHistory();
 
   const authService = {
     login: () => {},
@@ -42,108 +44,20 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
       setAuthState(as => {
         return {
           ...as,
-          name: `User ${state.eua}`,
+          name: `User ${state.euaId}`,
           isAuthenticated: true,
-          euaId: state.eua,
-          groups: state.jobCodes
+          euaId: state.euaId,
+          groups: Object.keys(state.jobCodes).filter(key => state.jobCodes[key])
         };
       });
+      history.push('/signin');
     }
   }, []);
 
-  const handleSubmit: ReactEventHandler = event => {
-    event.preventDefault();
-    const value = {
-      eua: authState.euaId,
-      jobCodes: authState.groups
-    };
-    localStorage.setItem(storageKey, JSON.stringify(value)); // ensure that the dev token is used
-    setAuthState(as => {
-      return {
-        ...as,
-        isAuthenticated: true
-      };
-    });
-  };
-
-  const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
-    authState.groups[
-      event.currentTarget.value as keyof typeof authState.groups
-    ] = event.currentTarget.checked;
-    setAuthState(authState);
-  };
-
-  return authState.isAuthenticated ? (
+  return (
     <OktaContext.Provider value={{ authService, authState }}>
       {children}
     </OktaContext.Provider>
-  ) : (
-    <form onSubmit={handleSubmit} style={{ padding: '1rem 3rem' }}>
-      <h1
-        style={{
-          backgroundImage: 'linear-gradient(to left, orange, red)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          display: 'inline-block'
-        }}
-      >
-        Dev auth
-      </h1>
-      <p>
-        <label>
-          Enter an EUA
-          <br />
-          <input
-            type="text"
-            maxLength={4}
-            minLength={4}
-            required
-            value={authState.euaId}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setAuthState({
-                ...authState,
-                euaId: e.target.value.toUpperCase()
-              })
-            }
-            style={{ border: 'solid 1px orangered' }}
-          />
-        </label>
-      </p>
-      <fieldset
-        style={{ display: 'inline-block', border: 'solid 1px orangered' }}
-      >
-        <legend>Select job codes</legend>
-        {Object.keys(authState.groups).map(code => (
-          <p key={code}>
-            <label>
-              <input
-                type="checkbox"
-                value={code}
-                onChange={e => checkboxChange(e)}
-                checked
-              />
-              {code}
-            </label>
-          </p>
-        ))}
-      </fieldset>
-      <p>
-        <button
-          type="submit"
-          style={{
-            backgroundImage: 'linear-gradient(to left, orange, red)',
-            color: 'white',
-            fontWeight: 'bold',
-            border: 0,
-            padding: '.3rem 1rem',
-            borderRadius: '3px',
-            cursor: 'pointer'
-          }}
-        >
-          Login
-        </button>
-      </p>
-    </form>
   );
 };
 

@@ -28,17 +28,19 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 		} else {
 			tokenParts := strings.Split(r.Header["Authorization"][0], "Bearer ")
 			if len(tokenParts) < 2 {
-				logger.Fatal("invalid Bearer in auth header")
+				logger.Error("invalid Bearer in auth header")
+				return
 			}
 			devUserConfigJSON := tokenParts[1]
 			if devUserConfigJSON == "" {
-				logger.Fatal("empty dev user config JSON")
+				logger.Error("empty dev user config JSON")
+				return
 			}
 
 			config := DevUserConfig{}
 			if parseErr := json.Unmarshal([]byte(devUserConfigJSON), &config); parseErr != nil {
-				logger.Fatal("could not parse dev user config")
-
+				logger.Error("could not parse dev user config")
+				return
 			}
 
 			logger.Info("Using local authorization middleware and populating EUA ID and job codes")
