@@ -10,32 +10,20 @@ import PageWrapper from 'components/PageWrapper';
 import Label from 'components/shared/Label';
 import { AppState } from 'reducers/rootReducer';
 import { FileUploadModel } from 'types/files';
-import { postFileUploadURL } from 'types/routines';
+import { postFileUploadURL, putFileS3 } from 'types/routines';
 import { uploadSchema } from 'validations/fileSchema';
 
 const DocumentPrototype = () => {
   const { t } = useTranslation('action');
   const dispatch = useDispatch();
 
-  const file = useSelector((state: AppState) => state.files.form);
+  const file = useSelector((state: AppState) => state.files);
 
-  const dispatchUpload = (values: FileUploadModel) => {
+  const dispatchUpload = () => {
     dispatch(
-      postFileUploadURL({
-        ...file
+      putFileS3({
+        ...file.form
       })
-    );
-
-    alert(
-      JSON.stringify(
-        {
-          fileName: values.file.name,
-          type: values.file.type,
-          size: `${values.file.size} bytes`
-        },
-        null,
-        2
-      )
     );
   };
 
@@ -45,7 +33,7 @@ const DocumentPrototype = () => {
       <MainContent className="grid-container margin-bottom-5">
         <h1>Document Prototype</h1>
         <Formik
-          initialValues={{ file: null }}
+          initialValues={{ filename: '' }}
           onSubmit={dispatchUpload}
           validationSchema={uploadSchema}
         >
@@ -62,6 +50,12 @@ const DocumentPrototype = () => {
                       formikProps.setFieldValue(
                         'file',
                         event.currentTarget.files[0]
+                      );
+
+                      dispatch(
+                        postFileUploadURL({
+                          ...file
+                        })
                       );
                     }}
                     className="form-control"

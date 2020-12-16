@@ -36,3 +36,4 @@ export const fetchActions = createRoutine('FETCH_ACTIONS');
 
 // File routines
 export const postFileUploadURL = createRoutine('POST_FILE_UPLOAD_URL');
+export const putFileS3 = createRoutine('PUT_FILE_S3');
