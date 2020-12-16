@@ -168,7 +168,9 @@ export const DateValidationSchema: any = Yup.object().shape(
       ['grtDateDay', 'grtDateMonth', 'grtDateYear'],
       {
         is: (grtDateDay: string, grtDateMonth: string, grtDateYear: string) => {
+          // Only check for a valid date if monday, date, and year a filled
           if (grtDateDay && grtDateMonth && grtDateYear) {
+            // If the date is valid, it passes the validation
             if (
               DateTime.fromObject({
                 month: Number(grtDateMonth) || 0,
@@ -180,6 +182,7 @@ export const DateValidationSchema: any = Yup.object().shape(
             }
             return false;
           }
+          // If month, day, and year aren't ALL filled, don't run the validation
           return true;
         },
         otherwise: Yup.string().test(
@@ -211,7 +214,9 @@ export const DateValidationSchema: any = Yup.object().shape(
       ['grbDateDay', 'grbDateMonth', 'grbDateYear'],
       {
         is: (grbDateDay: string, grbDateMonth: string, grbDateYear: string) => {
+          // Only check for a valid date if monday, date, and year a filled
           if (grbDateDay && grbDateMonth && grbDateYear) {
+            // If the date is valid, it passes the validation
             if (
               DateTime.fromObject({
                 month: Number(grbDateMonth) || 0,
@@ -223,6 +228,7 @@ export const DateValidationSchema: any = Yup.object().shape(
             }
             return false;
           }
+          // If month, day, and year aren't ALL filled, don't run the validation
           return true;
         },
         otherwise: Yup.string().test(
