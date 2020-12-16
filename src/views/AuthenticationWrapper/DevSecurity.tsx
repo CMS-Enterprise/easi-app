@@ -21,7 +21,14 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
   const history = useHistory();
 
   const authService = {
-    login: () => {},
+    login: () => {
+      setAuthState(prevAuthState => {
+        return {
+          ...prevAuthState,
+          isAuthenticated: true
+        };
+      });
+    },
     logout: () => {
       window.localStorage.removeItem(storageKey);
       window.location.href = '/';
