@@ -206,7 +206,32 @@ export const DateValidationSchema: any = Yup.object().shape(
         return grbDateDay || grbDateMonth;
       },
       then: Yup.string().required('The year is required')
-    })
+    }),
+    validGrbDate: Yup.string().when(
+      ['grbDateDay', 'grbDateMonth', 'grbDateYear'],
+      {
+        is: (grbDateDay: string, grbDateMonth: string, grbDateYear: string) => {
+          if (grbDateDay && grbDateMonth && grbDateYear) {
+            if (
+              DateTime.fromObject({
+                month: Number(grbDateMonth) || 0,
+                day: Number(grbDateDay) || 0,
+                year: Number(grbDateYear) || 0
+              }).isValid
+            ) {
+              return true;
+            }
+            return false;
+          }
+          return true;
+        },
+        otherwise: Yup.string().test(
+          'validateGrbDate',
+          'GRB Date: Please enter a valid date',
+          () => false
+        )
+      }
+    )
   },
   [
     ['grtDateDay', 'grtDateMonth'],
