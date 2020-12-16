@@ -12,7 +12,7 @@ const DevLogin = () => {
     if (window.localStorage[storageKey]) {
       history.push('/');
     }
-  }, []);
+  }, [history]);
 
   const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
     setJobCodes({
@@ -26,7 +26,9 @@ const DevLogin = () => {
     event.preventDefault();
     const value = {
       euaId,
-      jobCodes
+      jobCodes: Object.keys(jobCodes).filter(
+        key => jobCodes[key as keyof typeof jobCodes]
+      )
     };
     localStorage.setItem(storageKey, JSON.stringify(value)); // ensure that the dev token is used
     history.push('/');
