@@ -125,23 +125,18 @@ const Decision = ({ systemIntake }: DecisionProps) => {
     </>
   );
 
-  if (systemIntake.status === 'LCID_ISSUED') {
-    return <Approved />;
-  }
-
-  if (systemIntake.status === 'NOT_APPROVED') {
-    return <Rejected />;
-  }
-
-  if (systemIntake.status === 'NOT_IT_REQUEST') {
-    return <NotItRequest />;
-  }
-
-  if (systemIntake.status === 'NO_GOVERNANCE') {
-    return <NoGovernance />;
-  }
-  if (systemIntake.status === 'SHUTDOWN_COMPLETE') {
-    return <ShutdownComplete />;
+  switch (systemIntake.status) {
+    case 'LCID_ISSUED':
+      return <Approved />;
+    case 'NOT_APPROVED':
+      return <Rejected />;
+    case 'NOT_IT_REQUEST':
+      return <NotItRequest />;
+    case 'NO_GOVERNANCE':
+      return <NoGovernance />;
+    case 'SHUTDOWN_COMPLETE':
+      return <ShutdownComplete />;
+    default:
   }
 
   return (
