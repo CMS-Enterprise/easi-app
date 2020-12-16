@@ -4,6 +4,13 @@
 set -eu -o pipefail
 
 case "$APP_ENV" in
+  "prototype")
+    STATIC_S3_BUCKET="$STATIC_S3_BUCKET_PROTOTYPE"
+    EASI_URL="http://localhost:8080"
+    export REACT_APP_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
+    export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_DEV"
+    export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV"
+    ;;
   "dev")
     STATIC_S3_BUCKET="$STATIC_S3_BUCKET_DEV"
     EASI_URL="https://dev.easi.cms.gov"

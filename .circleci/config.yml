@@ -382,7 +382,7 @@ jobs:
       - run:
           name: Build prototype static assets and release to S3
           command: |
-            ./scripts/release_prototype_static
+            ./scripts/release_static
       - save_cache:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
@@ -575,7 +575,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - scylla-prototype
+                - /scylla-prototype/
       - lint:
           requires:
             - pre_deps
@@ -585,7 +585,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - scylla-prototype
+                - /scylla-prototype/
       - test:
           requires:
             - pre_deps
@@ -593,14 +593,14 @@ workflows:
           filters:
             branches:
               ignore:
-                - scylla-prototype
+                - /scylla-prototype/
       - build_tag_push:
           requires:
             - test
           filters:
             branches:
               ignore:
-                - scylla-prototype
+                - /scylla-prototype/
       - integration_tests:
           requires:
             - lint
@@ -609,20 +609,20 @@ workflows:
           filters:
             branches:
               ignore:
-                - scylla-prototype
+                - /scylla-prototype/
       - hold_dev:
           type: approval
           filters:
             branches:
               ignore:
                 - master
-                - scylla-prototype
+                - /scylla-prototype/
       - deploy_dev:
           filters:
             branches:
               ignore:
                 - master
-                - scylla-prototype
+                - /scylla-prototype/
           requires:
             - integration_tests
             - hold_dev
@@ -646,6 +646,10 @@ workflows:
           filters:
             branches:
               only:
+                # Only release prototype static assets on the primary
+                # scylla-prototype branch. The branch filtering above on
+                # /scylla-prototype/ covers any branch with
+                # "scylla-prototype" in the name.
                 - scylla-prototype
   weekly:
     triggers:
