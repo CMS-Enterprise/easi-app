@@ -40,6 +40,7 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
 
   useEffect(() => {
     if (window.localStorage[storageKey]) {
+      // TODO: this should run when login redirects back to homepage. Why doesn't it?
       const state = JSON.parse(window.localStorage[storageKey]);
       setAuthState(as => {
         return {
@@ -47,12 +48,12 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
           name: `User ${state.euaId}`,
           isAuthenticated: true,
           euaId: state.euaId,
-          groups: Object.keys(state.jobCodes).filter(key => state.jobCodes[key])
+          groups: state.jobCodes
         };
       });
       history.push('/signin');
     }
-  }, []);
+  }, [history]);
 
   return (
     <OktaContext.Provider value={{ authService, authState }}>
