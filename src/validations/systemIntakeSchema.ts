@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
@@ -163,6 +164,31 @@ export const DateValidationSchema: any = Yup.object().shape(
       },
       then: Yup.string().required('The year is required')
     }),
+    validGrtDate: Yup.string().when(
+      ['grtDateDay', 'grtDateMonth', 'grtDateYear'],
+      {
+        is: (grtDateDay: string, grtDateMonth: string, grtDateYear: string) => {
+          if (grtDateDay && grtDateMonth && grtDateYear) {
+            if (
+              DateTime.fromObject({
+                month: Number(grtDateMonth) || 0,
+                day: Number(grtDateDay) || 0,
+                year: Number(grtDateYear) || 0
+              }).isValid
+            ) {
+              return true;
+            }
+            return false;
+          }
+          return true;
+        },
+        otherwise: Yup.string().test(
+          'validateGrtDate',
+          'GRT Date: Please enter a valid date',
+          () => false
+        )
+      }
+    ),
     grbDateDay: Yup.string().when(['grbDateMonth', 'grbDateYear'], {
       is: (grbDateMonth: string, grbDateYear: string) => {
         return grbDateMonth || grbDateYear;

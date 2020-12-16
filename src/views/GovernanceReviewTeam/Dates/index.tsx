@@ -19,7 +19,7 @@ import flattenErrors from 'utils/flattenErrors';
 import { DateValidationSchema } from 'validations/systemIntakeSchema';
 
 const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation();
