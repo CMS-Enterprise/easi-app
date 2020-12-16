@@ -118,6 +118,13 @@ const Decision = ({ systemIntake }: DecisionProps) => {
     </>
   );
 
+  const ShutdownComplete = () => (
+    <>
+      <h1>{t('governanceReviewTeam:decision.titleClosed')}</h1>
+      <p>{t('governanceReviewTeam:decision.shutdownComplete')}</p>
+    </>
+  );
+
   if (systemIntake.status === 'LCID_ISSUED') {
     return <Approved />;
   }
@@ -133,12 +140,15 @@ const Decision = ({ systemIntake }: DecisionProps) => {
   if (systemIntake.status === 'NO_GOVERNANCE') {
     return <NoGovernance />;
   }
+  if (systemIntake.status === 'SHUTDOWN_COMPLETE') {
+    return <ShutdownComplete />;
+  }
 
   return (
-    <h1>
+    <>
       <h1>{t('governanceReviewTeam:decision.title')}</h1>
       <p>{t('governanceReviewTeam:decision.noDecision')}</p>
-    </h1>
+    </>
   );
 };
 
