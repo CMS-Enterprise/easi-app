@@ -156,7 +156,22 @@ const governanceReviewTeam = {
   back: {
     allRequests: 'Back to all requests'
   },
-  decision: 'Decision',
+  decision: {
+    title: 'Decision',
+    titleApproved: 'Decision - Approved',
+    titleRejected: 'Decision - Rejected',
+    titleClosed: 'Decision - Closed',
+    lcid: 'Lifecycle ID',
+    lcidExpiration: 'Lifecycle ID Expiration',
+    scope: 'Lifecycle ID Scope',
+    nextSteps: 'Next Steps',
+    rejectionReason: 'Rejection Reason',
+    decisionSectionTitle: 'Decision Details',
+    descriptionNotItRequest: 'Request was marked &quot;Not an IT Request&quot;',
+    descriptionNoGovernance:
+      'Request was marked &quot;No further governance needed&quot;',
+    noDecision: 'Decision not yet made'
+  },
   actions: 'Actions',
   status: {
     label: 'Status',
