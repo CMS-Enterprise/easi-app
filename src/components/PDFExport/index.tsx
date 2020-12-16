@@ -70,12 +70,8 @@ const downloadRefAsPDF = (
   Promise.all(stylesheetRequests)
     .then(stylesheets => {
       stylesheets.forEach(response => styleBlocks.push(response.data));
-    })
-    .catch(() => {
-      // TODO add error handling: display a modal if things fail?
-    });
 
-  const markupToRender = `<html lang="en">
+      const markupToRender = `<html lang="en">
         <head>
           <title>${escape(title)}</title>
           <style>
@@ -90,7 +86,11 @@ const downloadRefAsPDF = (
         </body>
       </html>`;
 
-  generatePDF(filename, markupToRender);
+      generatePDF(filename, markupToRender);
+    })
+    .catch(() => {
+      // TODO add error handling: display a modal if things fail?
+    });
 };
 
 // PDFExport adds a "Download PDF" button to the screen. When this button is clicked,
