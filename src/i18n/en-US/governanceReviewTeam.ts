@@ -150,10 +150,28 @@ const governanceReviewTeam = {
   aria: {
     openIntake: 'Open intake request',
     openBusiness: 'Open business case',
-    openNotes: 'Open admin team notes'
+    openNotes: 'Open admin team notes',
+    openDecision: 'Open decision'
   },
   back: {
     allRequests: 'Back to all requests'
+  },
+  decision: {
+    title: 'Decision',
+    titleApproved: 'Decision - Approved',
+    titleRejected: 'Decision - Rejected',
+    titleClosed: 'Decision - Closed',
+    lcid: 'Lifecycle ID',
+    lcidExpiration: 'Lifecycle ID Expiration',
+    scope: 'Lifecycle ID Scope',
+    nextSteps: 'Next Steps',
+    rejectionReason: 'Rejection Reason',
+    decisionSectionTitle: 'Decision Details',
+    descriptionNotItRequest: 'Request was marked "Not an IT Request"',
+    descriptionNoGovernance:
+      'Request was marked "No further governance needed"',
+    noDecision: 'Decision not yet made',
+    shutdownComplete: 'Request was marked "Shutdown Complete"'
   },
   actions: 'Actions',
   status: {
