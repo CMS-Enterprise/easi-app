@@ -25,7 +25,10 @@ function fileUploadReducer(
     case postFileUploadURL.SUCCESS:
       return {
         ...state,
-        form: prepareFileUploadForApp(action.payload)
+        form: {
+          ...state.form,
+          ...prepareFileUploadForApp(action.payload)
+        }
       };
     case postFileUploadURL.FAILURE:
       return {

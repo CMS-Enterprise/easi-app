@@ -17,12 +17,12 @@ const DocumentPrototype = () => {
   const { t } = useTranslation('action');
   const dispatch = useDispatch();
 
-  const file = useSelector((state: AppState) => state.files);
+  const fileState = useSelector((state: AppState) => state.files);
 
   const dispatchUpload = () => {
     dispatch(
       putFileS3({
-        ...file.form
+        ...fileState.form
       })
     );
   };
@@ -58,7 +58,7 @@ const DocumentPrototype = () => {
 
                       dispatch(
                         postFileUploadURL({
-                          ...file
+                          ...fileState.form.file
                         })
                       );
                     }}
