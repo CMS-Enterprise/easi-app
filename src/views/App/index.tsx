@@ -69,11 +69,13 @@ const AppRoutes = () => {
           component={GovernanceTaskList}
         />
       )}
-      <SecureRoute
-        exact
-        path="/document-prototype"
-        render={() => <DocumentPrototype />}
-      />
+      {flags.fileUploads && (
+        <SecureRoute
+          exact
+          path="/document-prototype"
+          render={() => <DocumentPrototype />}
+        />
+      )}
       {isUserSet && user.isGrtReviewer(userGroups) && (
         <SecureRoute
           path="/governance-review-team/:systemId/:activePage"
