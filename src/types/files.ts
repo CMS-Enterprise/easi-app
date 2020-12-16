@@ -1,5 +1,6 @@
 export type FileUploadModel = {
   file: File;
+  filename: string;
   uploadURL: string;
 };
 
@@ -9,4 +10,5 @@ export type FileUploadState = {
   isLoading: boolean | null;
   isSaving: boolean;
   error: any;
+  isUploaded: boolean;
 };

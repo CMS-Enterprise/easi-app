@@ -4,7 +4,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { prepareFileUploadForApi } from 'data/files';
 import { FileUploadModel } from 'types/files';
-import { postFileUploadURL } from 'types/routines';
+import { postFileUploadURL, putFileS3 } from 'types/routines';
 
 function postFileUploadURLRequest(formData: FileUploadModel) {
   const data = prepareFileUploadForApi(formData);
@@ -26,6 +26,24 @@ function* createFileUploadURL(action: Action<any>) {
   }
 }
 
+function putFileS3Request(formData: FileUploadModel) {
+  const data = new FormData();
+  data.append('file', formData.file);
+
+  return axios.put(formData.uploadURL, data);
+}
+
+function* uploadFile(action: Action<any>) {
+  try {
+    yield put(putFileS3.request());
+    const response = yield call(putFileS3Request, action.payload);
+    yield put(putFileS3.success(response.data));
+  } catch (error) {
+    yield put(putFileS3.failure(error.message));
+  }
+}
+
 export default function* fileUploadSaga() {
   yield takeLatest(postFileUploadURL.TRIGGER, createFileUploadURL);
+  yield takeLatest(putFileS3.TRIGGER, uploadFile);
 }
