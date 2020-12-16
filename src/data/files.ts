@@ -12,7 +12,6 @@ export const prepareFileUploadForApi = (fileUpload: FileUploadModel): any => {
 
 export const prepareFileUploadForApp = (fileUpload: any): FileUploadModel => {
   const upload = {
-    file: fileUpload.file,
     filename: fileUpload.filename,
     uploadURL: fileUpload.URL
   };
