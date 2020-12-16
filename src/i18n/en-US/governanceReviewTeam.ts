@@ -167,10 +167,11 @@ const governanceReviewTeam = {
     nextSteps: 'Next Steps',
     rejectionReason: 'Rejection Reason',
     decisionSectionTitle: 'Decision Details',
-    descriptionNotItRequest: 'Request was marked &quot;Not an IT Request&quot;',
+    descriptionNotItRequest: 'Request was marked "Not an IT Request"',
     descriptionNoGovernance:
-      'Request was marked &quot;No further governance needed&quot;',
-    noDecision: 'Decision not yet made'
+      'Request was marked "No further governance needed"',
+    noDecision: 'Decision not yet made',
+    shutdownComplete: 'Request was marked "Shutdown Complete"'
   },
   actions: 'Actions',
   status: {
