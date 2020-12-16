@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { OktaContext } from '@okta/okta-react';
 
 const storageKey = 'dev-user-config';
@@ -17,8 +16,21 @@ type ParentComponentProps = {
 };
 
 const DevSecurity = ({ children }: ParentComponentProps) => {
-  const [authState, setAuthState] = useState(initialAuthState);
-  const history = useHistory();
+  const getStateFromLocalStorage = () => {
+    if (window.localStorage[storageKey]) {
+      const state = JSON.parse(window.localStorage[storageKey]);
+      return {
+        isPending: false,
+        name: `User ${state.euaId}`,
+        isAuthenticated: true,
+        euaId: state.euaId,
+        groups: state.jobCodes
+      };
+    }
+    return initialAuthState;
+  };
+
+  const [authState, setAuthState] = useState(getStateFromLocalStorage);
 
   const authService = {
     login: () => {},
@@ -39,21 +51,8 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
   };
 
   useEffect(() => {
-    if (window.localStorage[storageKey]) {
-      // TODO: this should run when login redirects back to homepage. Why doesn't it?
-      const state = JSON.parse(window.localStorage[storageKey]);
-      setAuthState(as => {
-        return {
-          ...as,
-          name: `User ${state.euaId}`,
-          isAuthenticated: true,
-          euaId: state.euaId,
-          groups: state.jobCodes
-        };
-      });
-      history.push('/signin');
-    }
-  }, [history]);
+    setAuthState(getStateFromLocalStorage);
+  }, []);
 
   return (
     <OktaContext.Provider value={{ authService, authState }}>
