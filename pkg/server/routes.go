@@ -9,7 +9,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/lambda"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
-	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
+	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
@@ -46,7 +47,7 @@ func (s *Server) routes(
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up Feature Flagging utilities
-	flagUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
+	flagUser := lduser.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
 	flagConfig := s.NewFlagConfig()
 	var flagClient flags.FlagClient
 
