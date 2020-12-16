@@ -1,26 +1,31 @@
-import React, { ReactEventHandler, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { OktaContext } from '@okta/okta-react';
 
 const storageKey = 'dev-user-config';
 
+const jobCodes = ['EASI_D_GOVTEAM', 'EASI_P_GOVTEAM'];
+type EuaJobCodes = typeof jobCodes[number];
+type EuaJobCodeMap = { [jobCode in EuaJobCodes]: boolean };
+
 const initialAuthState = {
   isAuthenticated: false,
-  isPending: false,
-  name: '',
-  euaId: '',
-  groups: [] as string[]
+  isPending: false
 };
-
-const jobCodes = ['EASI_D_GOVTEAM'];
 
 type ParentComponentProps = {
   children: React.ReactNode;
 };
 
 const DevSecurity = ({ children }: ParentComponentProps) => {
-  const [authState, setAuthState] = useState(initialAuthState);
+  const [authState, setAuthState] = useState<{
+    isAuthenticated: boolean;
+    isPending: boolean;
+  }>(initialAuthState);
   const [euaId, setEuaId] = useState('');
-  const checkboxValues = useRef(new Set<string>(jobCodes));
+  const [groups, setGroups] = useState<EuaJobCodeMap>({
+    EASI_D_GOVTEAM: false,
+    EASI_P_GOVTEAM: false
+  });
 
   const authService = {
     login: () => {},
@@ -29,7 +34,7 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
       window.location.href = '/';
     },
     getUser: () => {
-      return Promise.resolve({ name: authState.name });
+      return Promise.resolve({ name: `User ${euaId}` });
     },
     getTokenManager: () => {
       return {
@@ -43,45 +48,52 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
   useEffect(() => {
     if (window.localStorage[storageKey]) {
       const state = JSON.parse(window.localStorage[storageKey]);
-      setAuthState(as => {
+      setAuthState(prevAuthState => {
         return {
-          ...as,
-          name: `User ${state.eua}`,
-          isAuthenticated: true,
-          euaId: state.eua,
-          groups: state.jobCodes
+          ...prevAuthState,
+          isAuthenticated: true
         };
       });
+      setEuaId(state.eua);
+      setGroups(state.jobCodes);
     }
   }, []);
 
-  const handleSubmit: ReactEventHandler = event => {
+  const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    const activeGroups = jobCodes.filter(group => groups[group]);
     const value = {
       eua: euaId,
-      jobCodes: Array.from(checkboxValues.current)
+      jobCodes: activeGroups
     };
     localStorage.setItem(storageKey, JSON.stringify(value));
     localStorage.removeItem('okta-token-storage'); // ensure that the dev token is used
     setAuthState({
       ...authState,
-      isAuthenticated: true,
-      name: `User ${euaId}`,
-      euaId,
-      groups: Array.from(checkboxValues.current)
+      isAuthenticated: true
     });
   };
 
-  const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
-    if (event.currentTarget.checked) {
-      checkboxValues.current.add(event.currentTarget.value);
-    } else {
-      checkboxValues.current.delete(event.currentTarget.value);
-    }
+  const checkboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.persist();
+    setGroups(prevGroups => {
+      return {
+        ...prevGroups,
+        [event.target.value]: event.target.checked
+      };
+    });
+  };
+
+  const mockOktaAuthState = {
+    name: `User ${euaId}`,
+    euaId,
+    groups: jobCodes.filter(group => groups[group]),
+    isPending: authState.isPending,
+    isAuthenticated: authState.isAuthenticated
   };
 
   return authState.isAuthenticated ? (
-    <OktaContext.Provider value={{ authService, authState }}>
+    <OktaContext.Provider value={{ authService, authState: mockOktaAuthState }}>
       {children}
     </OktaContext.Provider>
   ) : (
@@ -106,9 +118,10 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
             minLength={4}
             required
             value={euaId}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setEuaId(e.target.value.toUpperCase())
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              e.persist();
+              setEuaId(e.target.value.toUpperCase());
+            }}
             style={{ border: 'solid 1px orangered' }}
           />
         </label>
@@ -117,18 +130,19 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
         style={{ display: 'inline-block', border: 'solid 1px orangered' }}
       >
         <legend>Select job codes</legend>
-        {jobCodes.map(code => (
-          <p key={code}>
+        {Object.keys(groups).map(group => (
+          <Fragment key={group}>
             <label>
               <input
                 type="checkbox"
-                value={code}
-                onChange={e => checkboxChange(e)}
-                checked
+                value={group}
+                onChange={checkboxChange}
+                checked={groups[group]}
               />
-              {code}
+              {group}
             </label>
-          </p>
+            <br />
+          </Fragment>
         ))}
       </fieldset>
       <p>
