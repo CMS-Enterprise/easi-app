@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
 
 import ReviewRow from 'components/ReviewRow';
@@ -14,13 +15,17 @@ type DecisionProps = {
 };
 
 const Decision = ({ systemIntake }: DecisionProps) => {
+  const { t } = useTranslation();
+
   const Approved = () => (
     <>
-      <h1>Decision - Accepted</h1>
-      <DescriptionList title="Decision Details">
+      <h1>{t('governanceReviewTeam:decision.titleApproved')}</h1>
+      <DescriptionList
+        title={t('governanceReviewTeam:decision.decisionSectionTitle')}
+      >
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Lifecycle ID" />
+            <DescriptionTerm term={t('governanceReviewTeam:decision.lcid')} />
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake.lcid}
@@ -29,7 +34,9 @@ const Decision = ({ systemIntake }: DecisionProps) => {
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Lifecycle ID Expiration" />
+            <DescriptionTerm
+              term={t('governanceReviewTeam:decision.lcidExpiration')}
+            />
             <DescriptionDefinition
               definition={
                 systemIntake.lcidExpiration
@@ -43,7 +50,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Lifecycle ID Scope" />
+            <DescriptionTerm term={t('governanceReviewTeam:decision.scope')} />
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake.lcidScope}
@@ -52,7 +59,9 @@ const Decision = ({ systemIntake }: DecisionProps) => {
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Next Steps" />
+            <DescriptionTerm
+              term={t('governanceReviewTeam:decision.nextSteps')}
+            />
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake.decisionNextSteps}
@@ -65,11 +74,15 @@ const Decision = ({ systemIntake }: DecisionProps) => {
 
   const Rejected = () => (
     <>
-      <h1>Decision - Rejected</h1>
-      <DescriptionList title="Decision Details">
+      <h1>{t('governanceReviewTeam:decision.titleRejected')}</h1>
+      <DescriptionList
+        title={t('governanceReviewTeam:decision.decisionSectionTitle')}
+      >
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Rejection Reason" />
+            <DescriptionTerm
+              term={t('governanceReviewTeam:decision.rejectionReason')}
+            />
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake.rejectionReason}
@@ -78,7 +91,9 @@ const Decision = ({ systemIntake }: DecisionProps) => {
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="Next Steps" />
+            <DescriptionTerm
+              term={t('governanceReviewTeam:decision.nextSteps')}
+            />
             <DescriptionDefinition
               className="text-pre-wrap"
               definition={systemIntake.decisionNextSteps}
@@ -91,15 +106,15 @@ const Decision = ({ systemIntake }: DecisionProps) => {
 
   const NotItRequest = () => (
     <>
-      <h1>Decision - Closed</h1>
-      <p>Request was marked &quot;Not an IT Request&quot; </p>
+      <h1>{t('governanceReviewTeam:decision.titleClosed')}</h1>
+      <p>{t('governanceReviewTeam:decision.descriptionNotItRequest')}</p>
     </>
   );
 
   const NoGovernance = () => (
     <>
-      <h1>Decision - Closed</h1>
-      <p>REquest was marked &quot;No further governance needed&quot;</p>
+      <h1>{t('governanceReviewTeam:decision.titleClosed')}</h1>
+      <p>{t('governanceReviewTeam:decision.descriptionNoGovernance')}</p>
     </>
   );
 
@@ -121,8 +136,8 @@ const Decision = ({ systemIntake }: DecisionProps) => {
 
   return (
     <h1>
-      <h1> Decision</h1>
-      <p>Decision not yet made</p>
+      <h1>{t('governanceReviewTeam:decision.title')}</h1>
+      <p>{t('governanceReviewTeam:decision.noDecision')}</p>
     </h1>
   );
 };

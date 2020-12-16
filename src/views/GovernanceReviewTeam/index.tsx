@@ -170,7 +170,7 @@ const GovernanceReviewTeam = () => {
                   aria-label={t('aria.openDecision')}
                   className={getNavLinkClasses('decision')}
                 >
-                  {t('decision')}
+                  {t('decision.title')}
                 </Link>
               </li>
             </ul>
