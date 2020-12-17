@@ -8,18 +8,18 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // SystemsidGETResponse systemsid g e t response
+//
 // swagger:model systemsid_GET_response
 type SystemsidGETResponse struct {
 
 	// response
-	Response *Response `json:"Response,omitempty"`
+	Response *Response1 `json:"Response,omitempty"`
 
 	// systems
 	Systems []*System `json:"Systems"`
