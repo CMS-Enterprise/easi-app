@@ -10,9 +10,15 @@ const intake = {
     status: 'Status',
     fundingNumber: 'Funding number'
   },
-
+  submission: {
+    confirmation: {
+      heading: 'Your Intake Request has been submitted',
+      subheading: 'Your reference ID is {{referenceId}}',
+      homeCta: 'Go back to EASi homepage',
+      taskListCta: 'Go back to Governance Task List'
+    }
+  },
   lifecycleId: 'Lifecycle ID',
-
   statusMap: {
     INTAKE_DRAFT: 'N/A',
     INTAKE_SUBMITTED: 'Intake request received',
