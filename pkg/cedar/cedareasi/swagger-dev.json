@@ -532,7 +532,7 @@
     },
     "LifecycleCostLine" : {
       "type" : "object",
-      "required" : [ "cost", "id", "phase", "year" ],
+      "required" : [ "id" ],
       "properties" : {
         "phase" : {
           "type" : "string"
@@ -595,7 +595,7 @@
     },
     "GovernanceIntake" : {
       "type" : "object",
-      "required" : [ "business_needs", "business_owner", "business_owner_component", "decided_at", "ea_support_request", "eua_user_id", "existing_contract", "existing_funding", "id", "process_status", "product_manager", "product_manager_component", "requester", "requester_component", "solution", "status", "submitted_at", "system_name", "withdrawn_at" ],
+      "required" : [ "eua_user_id", "id", "status" ],
       "properties" : {
         "requester" : {
           "type" : "string"
@@ -658,7 +658,8 @@
           "type" : "string"
         },
         "id" : {
-          "type" : "string"
+          "type" : "string",
+          "description" : "PRIMARY KEY, e.g. unique constraint"
         },
         "product_manager_component" : {
           "type" : "string"
@@ -691,7 +692,7 @@
     },
     "BusinessCase" : {
       "type" : "object",
-      "required" : [ "business_need", "business_owner", "cms_benefit", "decided_at", "eua_user_id", "governance_id", "hosting_needs", "id", "lifecycle_id", "priority_alignment", "project_name", "requester", "requester_phone_number", "solutions", "status", "success_indicators", "user_interface" ],
+      "required" : [ "eua_user_id", "governance_id", "id", "solutions", "status" ],
       "properties" : {
         "requester" : {
           "type" : "string"
@@ -744,7 +745,7 @@
         },
         "id" : {
           "type" : "string",
-          "description" : "ID used to uniquely identify a business case"
+          "description" : "ID used to uniquely identify a business case; PRIMARY KEY, e.g. unique constraint"
         },
         "cms_benefit" : {
           "type" : "string"
@@ -762,7 +763,7 @@
     },
     "BusinessCaseSolution" : {
       "type" : "object",
-      "required" : [ "cons", "id", "lifecycle_cost_lines", "pros", "summary", "title", "type" ],
+      "required" : [ "id", "lifecycle_cost_lines" ],
       "properties" : {
         "summary" : {
           "type" : "string"
@@ -865,7 +866,7 @@
         },
         "next_major_project_date" : {
           "type" : "string",
-          "format" : "date",
+          "format" : "date-time",
           "description" : "yyyy-MM-dd"
         },
         "is_cms_owned" : {
@@ -894,7 +895,7 @@
         },
         "next_planned_prod_release_date" : {
           "type" : "string",
-          "format" : "date",
+          "format" : "date-time",
           "description" : "yyyy-MM-dd"
         },
         "system_name" : {
