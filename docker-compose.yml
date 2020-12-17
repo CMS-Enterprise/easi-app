@@ -13,7 +13,7 @@ services:
       - db
   minio:
     restart: always
-    image: minio/minio:edge
+    image: minio/minio:latest
     ports:
       - "9000:9000"
     entrypoint: minio server /data
