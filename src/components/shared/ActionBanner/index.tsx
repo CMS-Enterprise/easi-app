@@ -1,12 +1,14 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button } from '@trussworks/react-uswds';
+
+import { RequestType } from 'types/systemIntake';
+import { translateRequestType } from 'utils/systemIntake';
 
 import './index.scss';
 
 type ActionBannerProps = {
   title: string;
-  requestType: string;
+  requestType: RequestType;
   helpfulText: string;
   label: any;
   buttonUnstyled?: boolean;
@@ -22,13 +24,11 @@ const ActionBanner = ({
   onClick,
   ...remainingProps
 }: ActionBannerProps) => {
-  const { t } = useTranslation('intake');
-
   return (
     // eslint-disable-next-line react/jsx-props-no-spreading
     <div className="action-banner usa-alert" {...remainingProps}>
       <span className="text-base-dark font-body-3xs">
-        {t(`requestTypeMap.${requestType}`)}
+        {translateRequestType(requestType)}
       </span>
       <div className="action-banner__content">
         <div className="action-banner__icon">

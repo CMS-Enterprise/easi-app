@@ -10,6 +10,7 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import { ImproveEasiSurvey } from 'components/Survey';
 import {
   attendGrbMeetingTag,
   businessCaseTag,
@@ -193,9 +194,11 @@ const GovernanceTaskList = () => {
                       <span>{businessCaseStage}</span>
                     </p>
                   )}
-                  <span className="governance-task-list__meeting-date">
-                    {getMeetingDate(systemIntake.grtDate)}
-                  </span>
+                  {systemIntake.grtDate && (
+                    <span className="governance-task-list__meeting-date">
+                      {getMeetingDate(systemIntake.grtDate)}
+                    </span>
+                  )}
                 </TaskListDescription>
                 <BusinessCaseDraftCta systemIntake={systemIntake} />
               </TaskListItem>
@@ -233,9 +236,11 @@ const GovernanceTaskList = () => {
                     based on the Business Case and recommendations from the
                     Review Team.
                   </p>
-                  <span className="governance-task-list__meeting-date">
-                    {getMeetingDate(systemIntake.grtDate)}
-                  </span>
+                  {systemIntake.grbDate && (
+                    <span className="governance-task-list__meeting-date">
+                      {getMeetingDate(systemIntake.grbDate)}
+                    </span>
+                  )}
                 </TaskListDescription>
                 <AttendGrbMeetingCta intake={systemIntake} />
               </TaskListItem>
@@ -260,6 +265,7 @@ const GovernanceTaskList = () => {
             <SideNavActions archiveIntake={archiveIntake} />
           </div>
         </div>
+        <ImproveEasiSurvey />
       </MainContent>
       <Footer />
     </PageWrapper>

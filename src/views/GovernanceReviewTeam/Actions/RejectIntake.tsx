@@ -11,6 +11,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
+import { ImproveEasiSurvey } from 'components/Survey';
 import { RejectIntakeForm } from 'types/action';
 import { rejectSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
@@ -137,6 +138,7 @@ const RejectIntake = () => {
                   {t('rejectIntake.submit')}
                 </Button>
               </Form>
+              <ImproveEasiSurvey />
             </div>
           </>
         );

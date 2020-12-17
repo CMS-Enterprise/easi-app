@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import axios from 'axios';
+import escape from 'lodash';
 
 import { useFlags } from 'contexts/flagContext';
 
@@ -36,7 +37,7 @@ function generatePDF(filename: string, content: string) {
       responseType: 'blob',
       method: 'POST',
       data: {
-        html: content,
+        html: btoa(content),
         filename: 'input.html'
       }
     })
@@ -57,9 +58,11 @@ const downloadRefAsPDF = (
   // Collect any stylesheets that are linked to. These are used in production.
   const stylesheetRequests = Array.prototype.slice
     .apply(document.styleSheets)
-    .filter(stylesheet =>
-      stylesheet.href ? axios.get(stylesheet.href) : null
-    );
+    .filter(
+      // don't load google fonts stylesheets
+      stylesheet => stylesheet.href && !stylesheet.href.startsWith('http')
+    )
+    .map(stylesheet => axios.get(stylesheet.href));
 
   // Also grab any inline styles, used predominantly in development.
   const styleBlocks = Array.prototype.slice
@@ -69,13 +72,9 @@ const downloadRefAsPDF = (
   // Combine external and inline styles
   Promise.all(stylesheetRequests)
     .then(stylesheets => {
-      styleBlocks.concat(stylesheets.map(response => response.data));
-    })
-    .catch(() => {
-      // TODO add error handling: display a modal if things fail?
-    });
+      stylesheets.forEach(response => styleBlocks.push(response.data));
 
-  const markupToRender = `<html lang="en">
+      const markupToRender = `<html lang="en">
         <head>
           <title>${escape(title)}</title>
           <style>
@@ -90,13 +89,21 @@ const downloadRefAsPDF = (
         </body>
       </html>`;
 
-  generatePDF(filename, markupToRender);
+      generatePDF(filename, markupToRender);
+    })
+    .catch(() => {
+      // TODO add error handling: display a modal if things fail?
+    });
 };
 
 // PDFExport adds a "Download PDF" button to the screen. When this button is clicked,
 // the HTML content of child elements is sent to the server and converted
 // to PDF format.
-const PDFExport = ({ title, filename, children }: PDFExportProps) => {
+const PDFExport = ({
+  title,
+  filename,
+  children
+}: PDFExportProps): JSX.Element => {
   const flags = useFlags();
 
   const divEl = useRef<HTMLDivElement>(null);
@@ -114,7 +121,7 @@ const PDFExport = ({ title, filename, children }: PDFExportProps) => {
       </button>
     </div>
   ) : (
-    children
+    <>{children}</>
   );
 };
 

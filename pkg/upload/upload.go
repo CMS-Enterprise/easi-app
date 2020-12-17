@@ -42,6 +42,7 @@ func NewS3Client(config Config) S3Client {
 			os.Getenv(appconfig.LocalMinioS3AccessKey),
 			os.Getenv(appconfig.LocalMinioS3SecretKey),
 			"")
+		awsConfig.S3ForcePathStyle = aws.Bool(true)
 	}
 
 	s3Session := session.Must(session.NewSession(awsConfig))

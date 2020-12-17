@@ -17,14 +17,19 @@ const Rejected = ({ intake }: RejectedProps) => {
       <h2 className="margin-top-0">{t('decision.bizCaseRejected')}</h2>
       <h3>{t('decision.reasons')}</h3>
       <p>{intake.rejectionReason}</p>
-      {intake.lifecycleNextSteps && (
+      {intake.decisionNextSteps && (
         <>
           <h3>{t('decision.nextSteps')}</h3>
           <p className="text-pre-wrap">{intake.decisionNextSteps}</p>
         </>
       )}
       <h3>{t('general:feedback.improvement')}</h3>
-      <UswdsLink href="/" target="_blank" rel="oponener noreferrer">
+      <UswdsLink
+        href="https://www.surveymonkey.com/r/JNYSMZP"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Open EASi survey in a new tab"
+      >
         {t('general:feedback.whatYouThink')}
       </UswdsLink>
 

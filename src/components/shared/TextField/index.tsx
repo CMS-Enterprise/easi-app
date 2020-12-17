@@ -13,7 +13,7 @@ type TextFieldProps = {
   onBlur: () => void;
   value: string;
   match?: RegExp;
-};
+} & JSX.IntrinsicElements['input'];
 
 const TextField = ({
   disabled,
@@ -24,7 +24,8 @@ const TextField = ({
   onChange,
   onBlur,
   value,
-  match
+  match,
+  ...props
 }: TextFieldProps) => {
   const inputClasses = classnames(
     'usa-input',
@@ -53,6 +54,8 @@ const TextField = ({
       type="text"
       value={value}
       maxLength={maxLength}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...props}
     />
   );
 };
