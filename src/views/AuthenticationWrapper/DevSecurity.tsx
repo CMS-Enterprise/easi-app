@@ -22,10 +22,15 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
 
   const authService = {
     login: () => {
-      setAuthState(prevAuthState => {
+      console.log(window.localStorage[storageKey]);
+      const state = JSON.parse(window.localStorage[storageKey]);
+      setAuthState(as => {
         return {
-          ...prevAuthState,
-          isAuthenticated: true
+          ...as,
+          name: `User ${state.euaId}`,
+          isAuthenticated: true,
+          euaId: state.euaId,
+          groups: state.jobCodes
         };
       });
     },
@@ -47,7 +52,6 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
 
   useEffect(() => {
     if (window.localStorage[storageKey]) {
-      // TODO: this should run when login redirects back to homepage. Why doesn't it?
       const state = JSON.parse(window.localStorage[storageKey]);
       setAuthState(as => {
         return {
