@@ -12,21 +12,30 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Intake1 intake 1
+// LifecycleCostLine lifecycle cost line
 //
-// swagger:model Intake_1
-type Intake1 struct {
+// swagger:model LifecycleCostLine
+type LifecycleCostLine struct {
 
-	// governance
+	// cost
+	Cost int32 `json:"cost,omitempty"`
+
+	// id
 	// Required: true
-	Governance *GovernanceIntake `json:"Governance"`
+	ID *string `json:"id"`
+
+	// phase
+	Phase string `json:"phase,omitempty"`
+
+	// year
+	Year string `json:"year,omitempty"`
 }
 
-// Validate validates this intake 1
-func (m *Intake1) Validate(formats strfmt.Registry) error {
+// Validate validates this lifecycle cost line
+func (m *LifecycleCostLine) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateGovernance(formats); err != nil {
+	if err := m.validateID(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -36,26 +45,17 @@ func (m *Intake1) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Intake1) validateGovernance(formats strfmt.Registry) error {
+func (m *LifecycleCostLine) validateID(formats strfmt.Registry) error {
 
-	if err := validate.Required("Governance", "body", m.Governance); err != nil {
+	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
-	}
-
-	if m.Governance != nil {
-		if err := m.Governance.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
-				return ve.ValidateName("Governance")
-			}
-			return err
-		}
 	}
 
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *Intake1) MarshalBinary() ([]byte, error) {
+func (m *LifecycleCostLine) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -63,8 +63,8 @@ func (m *Intake1) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *Intake1) UnmarshalBinary(b []byte) error {
-	var res Intake1
+func (m *LifecycleCostLine) UnmarshalBinary(b []byte) error {
+	var res LifecycleCostLine
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -6,18 +6,18 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // SystemidGETResponse systemid g e t response
+//
 // swagger:model systemid_GET_response
 type SystemidGETResponse struct {
 
 	// response
-	Response *Response `json:"Response,omitempty"`
+	Response *Response1 `json:"Response,omitempty"`
 
 	// system detail
 	SystemDetail *SystemDetail `json:"SystemDetail,omitempty"`
