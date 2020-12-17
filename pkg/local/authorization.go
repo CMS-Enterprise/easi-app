@@ -14,7 +14,7 @@ import (
 
 // DevUserConfig is the set of values that can be passed in a request header
 type DevUserConfig struct {
-	EUA      string   `json:"eua"`
+	EUA      string   `json:"euaId"`
 	JobCodes []string `json:"jobCodes"`
 }
 
