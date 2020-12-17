@@ -217,13 +217,13 @@ const UploadPage = () => {
                 project.status = projectStatus;
                 updateProject(project);
               }
-              history.push(`/508/projects/${project.id}`);
+              history.push(`/508/v2/projects/${project.id}`);
             }
           }}
         >
           Upload document
         </button>
-        <Link to={`/508/projects/${id}`}>
+        <Link to={`/508/v2/projects/${id}`}>
           Don&rsquo;t upload and return to project page
         </Link>
       </main>
@@ -270,7 +270,7 @@ const UploadPage = () => {
         </div>
       </div>
       <p>
-        <Link to={`/508/projects/${id}`}>
+        <Link to={`/508/v2/projects/${id}`}>
           Don&rsquo;t upload and return to project page
         </Link>
       </p>

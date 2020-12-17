@@ -20,7 +20,8 @@ import NotFound from 'views/NotFound';
 import PrepareForGRB from 'views/PrepareForGRB';
 import PrepareForGRT from 'views/PrepareForGRT';
 import PrivacyPolicy from 'views/PrivacyPolicy';
-import Prototype508 from 'views/Prototype508';
+import Prototype508V1 from 'views/Prototype508/v1';
+import Prototype508V2 from 'views/Prototype508/v2';
 import PrototypeTRB from 'views/PrototypeTRB';
 import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
@@ -116,7 +117,12 @@ const AppRoutes = () => {
         component={TermsAndConditions}
       />
 
-      {flags.prototype508 && <Route path="/508" component={Prototype508} />}
+      {flags.prototype508 && (
+        <>
+          <Route path="/508/v1" component={Prototype508V1} />
+          <Route path="/508/v2" component={Prototype508V2} />
+        </>
+      )}
       {flags.prototypeTRB && <Route path="/trb" component={PrototypeTRB} />}
 
       <Route path="*" component={NotFound} />

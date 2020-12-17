@@ -41,7 +41,7 @@ const ProjectsPage = () => {
             return (
               <tr key={id}>
                 <th scope="row">
-                  <Link to={`/508/projects/${id}`}>{project.name}</Link>
+                  <Link to={`/508/v2/projects/${id}`}>{project.name}</Link>
                 </th>
                 <td>{project.submissionDate.toFormat('LLLL d y')}</td>
                 <td>{project.businessOwner.name}</td>
