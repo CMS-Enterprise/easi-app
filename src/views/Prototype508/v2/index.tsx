@@ -4,9 +4,10 @@ import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 import Footer from 'components/Footer';
 
 import Header from './components/Header';
+import InRemediationPage from './pages/InRemediationPage';
 import LoginPage from './pages/LoginPage';
-import ProjectPage from './pages/ProjectPage';
-import ProjectsPage from './pages/ProjectsPage';
+import RequestPage from './pages/RequestPage';
+import RequestsPage from './pages/RequestsPage';
 import UploadPage from './pages/UploadPage';
 import { ProjectsProvider } from './state';
 
@@ -24,13 +25,13 @@ const PrototypeFooter = () => {
             <Link to={`${path}/login`}>Login</Link>
           </li>
           <li>
-            <Link to={`${path}/projects`}>Projects</Link>
+            <Link to={`${path}/requests`}>Requests</Link>
           </li>
           <li>
-            <Link to={`${path}/projects/1`}>Project</Link>
+            <Link to={`${path}/requests/1`}>Project</Link>
           </li>
           <li>
-            <Link to={`${path}/projects/1/upload`}>Upload</Link>
+            <Link to={`${path}/requests/1/upload`}>Upload</Link>
           </li>
         </ul>
       </nav>
@@ -50,11 +51,16 @@ const Prototype508 = () => {
             <Switch>
               <Route path={`${path}/login`} component={LoginPage} />
               <Route
-                path={`${path}/projects/:id/upload`}
+                path={`${path}/requests/:id/upload`}
                 component={UploadPage}
               />
-              <Route path={`${path}/projects/:id`} component={ProjectPage} />
-              <Route path={`${path}/projects`} exact component={ProjectsPage} />
+              <Route path={`${path}/requests/:id`} component={RequestPage} />
+              <Route path={`${path}/requests`} exact component={RequestsPage} />
+              <Route
+                path={`${path}/remediation`}
+                exact
+                component={InRemediationPage}
+              />
             </Switch>
           </section>
           <Footer />

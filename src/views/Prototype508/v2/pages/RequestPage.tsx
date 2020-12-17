@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { Button, Table } from '@trussworks/react-uswds';
+import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
 
 import useDocumentTitle from '../hooks/DocumentTitle';
@@ -13,7 +13,7 @@ import {
   ActivityType,
   DocumentType,
   Project,
-  ProjectStatus
+  RequestStatus
 } from '../types';
 
 const addActivity = (project: Project, content: string) => {
@@ -48,81 +48,72 @@ const ProjectPage = () => {
 
   return (
     <>
-      <div className="easi-grt__request-summary padding-top-2">
-        <BreadcrumbNav className="grid-container">
-          <li>
-            <Link className="text-white" to="/508/projects">
-              Home
-            </Link>
-            <i className="fa fa-angle-right margin-x-05" aria-hidden />
-          </li>
-          <li>{project.name}</li>
-        </BreadcrumbNav>
-      </div>
       <main
         id="main-content"
         className="easi-main-content margin-bottom-5"
         aria-label={`Project page for ${project.name}`}
       >
-        <section className="easi-grt__request-summary">
+        <div className="grid-container">
+          <Link to="/v2/requests">Back to Active Requests</Link>
+
+          <h1>{project.name}</h1>
+
           <div
-            className="grid-container padding-bottom-2"
-            style={{ overflow: 'auto' }}
+            className="easi-grt__status-info text-gray-90 padding-top-1 padding-bottom-1"
+            aria-label={`Status for ${project.name}`}
           >
-            <dl
-              className="easi-grt__request-info"
-              aria-label={`Key details for ${project.name}`}
+            <span className="text-bold margin-right-1">Status</span>
+            <span
+              className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs margin-right-1"
+              data-testid="grt-status"
             >
-              <div>
-                <dt id="project-name-label">Project Name</dt>
-                <dd>
-                  <h1 style={{ fontSize: '16px', fontWeight: 600, margin: 0 }}>
-                    {project.name}
-                  </h1>
-                </dd>
-              </div>
-              <div className="easi-grt__request-info-col">
-                <div className="easi-grt__description-group">
-                  <dt>Submission Date</dt>
-                  <dd>{project.submissionDate.toFormat('LLLL d y')}</dd>
-                </div>
-                <div className="easi-grt__description-group">
-                  <dt>Business Owner</dt>
-                  <dd>{project.businessOwner.name}</dd>
-                </div>
-                <div className="easi-grt__description-group">
-                  <dt>Lifecycle ID</dt>
-                  <dd>{project.lifecycleID}</dd>
-                </div>
-              </div>
-            </dl>
+              {project.status}
+            </span>
+            <button
+              type="button"
+              className="usa-button usa-button--unstyled margin-left-3"
+              onClick={() => setModalIsOpen(true)}
+            >
+              Change Status
+            </button>
+            <span className="text-bold margin-right-1">Point of contact</span>
+            <span>{project.pointOfContact.name}</span>
+            <button
+              type="button"
+              className="usa-button usa-button--unstyled margin-left-3"
+            >
+              Update
+            </button>
+            <br />
+            Last updated on {project.lastUpdatedAt.toFormat('LLLL d y')}
           </div>
 
-          <div className="easi-grt__status--open">
-            <div className="grid-container overflow-auto">
-              <div
-                className="easi-grt__status-info text-gray-90 padding-top-1 padding-bottom-1"
-                aria-label={`Status for ${project.name}`}
-              >
-                <span className="text-bold margin-right-1">Status</span>
-                <span
-                  className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs margin-right-1"
-                  data-testid="grt-status"
-                >
-                  {project.status}
-                </span>
-                Last updated on {project.lastUpdatedAt.toFormat('LLLL d y')}
-                <button
-                  type="button"
-                  className="usa-button usa-button--unstyled margin-left-3"
-                  onClick={() => setModalIsOpen(true)}
-                >
-                  &nbsp;Change Status
-                </button>
-              </div>
-            </div>
+          <div className="usa-step-indicator" aria-label="progress">
+            <ol className="usa-step-indicator__segments">
+              {Object.values(RequestStatus).map(value => {
+                const status = value as RequestStatus;
+                const completed =
+                  Object.values(RequestStatus).indexOf(value) <=
+                  Object.values(RequestStatus).indexOf(project.status);
+                return (
+                  <li
+                    className={classnames({
+                      'usa-step-indicator__segment': true,
+                      'usa-step-indicator__segment--complete': completed
+                    })}
+                  >
+                    <span className="usa-step-indicator__segment-label">
+                      {status}{' '}
+                      {completed && (
+                        <span className="usa-sr-only">completed</span>
+                      )}
+                    </span>
+                  </li>
+                );
+              })}
+            </ol>
           </div>
-        </section>
+        </div>
 
         <Modal
           title="Change Project Status"
@@ -135,8 +126,8 @@ const ProjectPage = () => {
             <legend className="margin-bottom-2 text-bold">
               Choose project status for {project.name}
             </legend>
-            {Object.values(ProjectStatus).map(value => {
-              const status = value as ProjectStatus;
+            {Object.values(RequestStatus).map(value => {
+              const status = value as RequestStatus;
               return (
                 <>
                   <div className="usa-radio">
@@ -193,14 +184,6 @@ const ProjectPage = () => {
         </Modal>
 
         <div className="grid-container">
-          <h2>Project Details</h2>
-
-          <div className="usa-prose">
-            <p>{project.description}</p>
-          </div>
-
-          <hr className="system-intake__hr" aria-hidden="true" />
-
           <h2>Documents</h2>
 
           {documentAlert !== '' && (

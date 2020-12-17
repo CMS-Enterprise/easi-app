@@ -1,16 +1,23 @@
 import { DateTime } from 'luxon';
 
-import { ActivityType, DocumentType, Project, ProjectStatus } from './types';
+import { ActivityType, DocumentType, Project, RequestStatus } from './types';
 
 const projects: Record<string, Project> = {
   1: {
     id: 1,
     name: 'TACO',
-    status: ProjectStatus.TestingInProgress,
+    status: RequestStatus.DocumentsReceived,
     submissionDate: DateTime.fromISO('2020-11-10'),
+    testDate: DateTime.fromISO('2020-11-10'),
+    remediationStartDate: DateTime.fromISO('2020-11-10'),
     lastUpdatedAt: DateTime.fromISO('2020-11-25'),
     businessOwner: {
-      name: 'Shane Clark'
+      name: 'Shane Clark',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Shane Clark',
+      component: 'OIT'
     },
     lifecycleID: 'X200943',
     documents: [
@@ -84,11 +91,17 @@ const projects: Record<string, Project> = {
   2: {
     id: 2,
     name: 'Impact Analysis Network',
-    status: ProjectStatus.TestingCompleted,
+    status: RequestStatus.TestScheduled,
     submissionDate: DateTime.fromISO('2020-08-28'),
+    testDate: DateTime.fromISO('2020-11-10'),
     lastUpdatedAt: DateTime.fromISO('2020-11-30'),
     businessOwner: {
-      name: 'Marny Land'
+      name: 'Marny Land',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Shane Clark',
+      component: 'OIT'
     },
     documents: [
       {
@@ -174,11 +187,17 @@ const projects: Record<string, Project> = {
   3: {
     id: 3,
     name: 'Migration Pipeline',
-    status: ProjectStatus.InRemediation,
+    status: RequestStatus.InRemediation,
     submissionDate: DateTime.fromISO('2020-07-16'),
+    testDate: DateTime.fromISO('2020-11-10'),
     lastUpdatedAt: DateTime.fromISO('2020-10-03'),
     businessOwner: {
-      name: 'Connie Leonard'
+      name: 'Connie Leonard',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Shane Clark',
+      component: 'OIT'
     },
     activities: [],
     documents: [],
@@ -187,11 +206,16 @@ const projects: Record<string, Project> = {
   4: {
     id: 4,
     name: '(USDS) Dashboard for USDS',
-    status: ProjectStatus.InRemediation,
+    status: RequestStatus.InRemediation,
     submissionDate: DateTime.fromISO('2020-05-21'),
     lastUpdatedAt: DateTime.fromISO('2020-09-14'),
     businessOwner: {
-      name: 'Ada Sanchez'
+      name: 'Ada Sanchez',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Shane Clark',
+      component: 'OIT'
     },
     activities: [],
     documents: [],
@@ -200,11 +224,16 @@ const projects: Record<string, Project> = {
   5: {
     id: 5,
     name: 'OSORA FOIA Portal Project',
-    status: ProjectStatus.InRemediation,
+    status: RequestStatus.InRemediation,
     submissionDate: DateTime.fromISO('2020-01-02'),
     lastUpdatedAt: DateTime.fromISO('2020-03-17'),
     businessOwner: {
-      name: 'Amanda Johnson'
+      name: 'Amanda Johnson',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Shane Clark',
+      component: 'OIT'
     },
     activities: [],
     documents: [],

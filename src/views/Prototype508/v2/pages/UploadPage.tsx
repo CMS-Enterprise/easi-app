@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 
 import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
-import { ActivityType, DocumentType, Project, ProjectStatus } from '../types';
+import { ActivityType, DocumentType, Project, RequestStatus } from '../types';
 
 const addDocument = (project: Project, type: DocumentType, score: string) => {
   project.documents.push({
@@ -44,7 +44,7 @@ const UploadPage = () => {
 
   const [file, setFile] = useState('');
   const [documentType, setDocumentType] = useState<DocumentType>();
-  const [projectStatus, setProjectStatus] = useState<ProjectStatus>(
+  const [projectStatus, setProjectStatus] = useState<RequestStatus>(
     project.status
   );
   const [score, setScore] = useState('');
@@ -58,9 +58,9 @@ const UploadPage = () => {
   }
 
   if (file !== '') {
-    const projectStatuses = new Set<ProjectStatus>();
+    const projectStatuses = new Set<RequestStatus>();
     projectStatuses.add(project.status);
-    Object.values(ProjectStatus).forEach(status => {
+    Object.values(RequestStatus).forEach(status => {
       projectStatuses.add(status);
     });
 
@@ -165,7 +165,7 @@ const UploadPage = () => {
           </legend>
 
           {Array.from(projectStatuses.values()).map(value => {
-            const status = value as ProjectStatus;
+            const status = value as RequestStatus;
             return (
               <>
                 <div className="usa-radio">

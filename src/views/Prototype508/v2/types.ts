@@ -16,16 +16,9 @@ export type Document = {
   score?: number;
 };
 
-export enum ProjectStatus {
-  ConsultRequested = 'Consult Requested',
-  TestingRequested = 'Testing Requested',
-  TestingInProgress = 'Testing in Progress',
-  TestingCompleted = 'Testing Completed',
-  InRemediation = 'In Remediation'
-}
-
-export type BusinessOwner = {
+export type Person = {
   name: string;
+  component: string;
 };
 
 export enum ActivityType {
@@ -44,12 +37,23 @@ export type Activity = {
   type: ActivityType;
 };
 
+export enum RequestStatus {
+  RequestReceived = 'Request Received',
+  DocumentsReceived = 'Documents Received',
+  TestScheduled = 'Test Scheduled',
+  InRemediation = 'In Remediation',
+  Completed = 'Completed'
+}
+
 export type Project = {
   id: number;
   name: string;
-  status: ProjectStatus;
-  businessOwner: BusinessOwner;
+  status: RequestStatus;
+  businessOwner: Person;
+  pointOfContact: Person;
+  testDate?: DateTime;
   submissionDate: DateTime;
+  remediationStartDate?: DateTime;
   lastUpdatedAt: DateTime;
   lifecycleID: string;
   description?: string;
