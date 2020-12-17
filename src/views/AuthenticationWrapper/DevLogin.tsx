@@ -1,11 +1,18 @@
-import React, { ReactEventHandler, useEffect, useState } from 'react';
+import React, {
+  ReactEventHandler,
+  useContext,
+  useEffect,
+  useState
+} from 'react';
 import { useHistory } from 'react-router-dom';
+import { OktaContext } from '@okta/okta-react';
 
 const storageKey = 'dev-user-config';
 
 const DevLogin = () => {
   const history = useHistory();
   const [euaId, setEuaId] = useState('');
+  const { authService } = useContext(OktaContext);
   const [jobCodes, setJobCodes] = useState({ EASI_D_GOVTEAM: true });
 
   useEffect(() => {
@@ -31,6 +38,7 @@ const DevLogin = () => {
       )
     };
     localStorage.setItem(storageKey, JSON.stringify(value)); // ensure that the dev token is used
+    authService.login();
     history.push('/');
   };
 

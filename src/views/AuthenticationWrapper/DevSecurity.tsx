@@ -33,7 +33,9 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
   const [authState, setAuthState] = useState(getStateFromLocalStorage);
 
   const authService = {
-    login: () => {},
+    login: () => {
+      setAuthState(getStateFromLocalStorage());
+    },
     logout: () => {
       window.localStorage.removeItem(storageKey);
       window.location.href = '/';
