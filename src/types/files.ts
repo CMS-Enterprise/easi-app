@@ -1,13 +1,18 @@
-export type FileUploadModel = {
+export type FileUploadForm = {
   file: File;
+  filename: string;
+  uploadURL: string;
+};
+
+export type UploadedFile = {
   filename: string;
   uploadURL: string;
 };
 
 // Redux store type for file upload state
 export type FileUploadState = {
-  form: FileUploadModel;
-  files: FileUploadModel[];
+  form: FileUploadForm;
+  files: UploadedFile[];
   isLoading: boolean | null;
   isSaving: boolean;
   error: any;

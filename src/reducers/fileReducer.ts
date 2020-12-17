@@ -1,6 +1,10 @@
 import { Action } from 'redux-actions';
 
-import { fileUploadInitialData, prepareFileUploadForApp } from 'data/files';
+import {
+  fileUploadInitialData,
+  prepareFileUploadForApp,
+  prepareUploadedFileForApp
+} from 'data/files';
 import { FileUploadState } from 'types/files';
 import { postFileUploadURL, putFileS3 } from 'types/routines';
 
@@ -49,6 +53,12 @@ function fileUploadReducer(
     case putFileS3.SUCCESS:
       return {
         ...state,
+        files: [
+          ...state.files,
+          {
+            ...prepareUploadedFileForApp(state.form)
+          }
+        ],
         isUploaded: true
       };
     case putFileS3.FAILURE:
