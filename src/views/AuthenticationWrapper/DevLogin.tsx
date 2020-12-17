@@ -37,8 +37,8 @@ const DevLogin = () => {
         key => jobCodes[key as keyof typeof jobCodes]
       )
     };
-    authService.login();
     localStorage.setItem(storageKey, JSON.stringify(value)); // ensure that the dev token is used
+    authService.login();
     history.push('/');
   };
 
