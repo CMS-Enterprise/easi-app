@@ -70,6 +70,9 @@ const action = {
     subheading: 'How to proceed?',
     submit: 'Send email',
     otherOptions: 'show other options'
+  },
+  uploadFile: {
+    submit: 'Upload File'
   }
 };
 

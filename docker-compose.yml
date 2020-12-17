@@ -15,9 +15,7 @@ services:
     restart: always
     image: minio/minio:latest
     ports:
-      - '9000:9000'
-    volumes:
-      - s3-data:/data
+      - "9000:9000"
     entrypoint: minio server /data
   minio_mc:
     image: minio/mc:latest
@@ -31,6 +29,3 @@ services:
       /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
       /usr/bin/mc policy set public local/easi-app-file-uploads;
       "
-
-volumes:
-  s3-data:
