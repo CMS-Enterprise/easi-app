@@ -1,4 +1,5 @@
 import React, {
+  Fragment,
   ReactEventHandler,
   useContext,
   useEffect,
@@ -76,7 +77,7 @@ const DevLogin = () => {
       >
         <legend>Select job codes</legend>
         {Object.keys(jobCodes).map(code => (
-          <p key={code}>
+          <Fragment key={code}>
             <label>
               <input
                 type="checkbox"
@@ -86,7 +87,7 @@ const DevLogin = () => {
               />
               {code}
             </label>
-          </p>
+          </Fragment>
         ))}
       </fieldset>
       <p>
