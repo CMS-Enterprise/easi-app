@@ -12,7 +12,7 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import Label from 'components/shared/Label';
 import { AppState } from 'reducers/rootReducer';
-import { FileUploadModel } from 'types/files';
+import { FileUploadForm } from 'types/files';
 import { postFileUploadURL, putFileS3 } from 'types/routines';
 import { uploadSchema } from 'validations/fileSchema';
 
@@ -39,8 +39,8 @@ const DocumentPrototype = () => {
   };
 
   const fileURLColumn = {
-    Header: t('url'),
-    accessor: 'url'
+    Header: t('uploadURL'),
+    accessor: 'uploadURL'
   };
 
   const columns: any = useMemo(() => {
@@ -129,7 +129,7 @@ const DocumentPrototype = () => {
           onSubmit={dispatchUpload}
           validationSchema={uploadSchema}
         >
-          {(formikProps: FormikProps<FileUploadModel>) => {
+          {(formikProps: FormikProps<FileUploadForm>) => {
             return (
               <Form onSubmit={formikProps.handleSubmit}>
                 <div className="form-group">
