@@ -13,13 +13,9 @@ services:
       - db
   minio:
     restart: always
-    image: minio/minio:latest
-    environment:
-      - MINIO_API_CORS_ALLOW_ORIGIN="http://localhost"
+    image: minio/minio:edge
     ports:
       - "9000:9000"
-    volumes:
-      - s3-data:/data
     entrypoint: minio server /data
   minio_mc:
     image: minio/mc:latest
@@ -33,6 +29,3 @@ services:
       /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
       /usr/bin/mc policy set public local/easi-app-file-uploads;
       "
-
-volumes:
-  s3-data:
