@@ -16,9 +16,6 @@ type HeaderProps = {
 
 export const Header = ({ children }: HeaderProps) => {
   const { authState, authService } = useOktaAuth();
-  // const authState = {
-  //   isAuthenticated: true
-  // };
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
   const [displayDropdown, setDisplayDropdown] = useState(false);
@@ -129,7 +126,7 @@ export const Header = ({ children }: HeaderProps) => {
               type="button"
               className="easi-header__nav-link"
               onClick={() => {
-                // authService.logout();
+                authService.logout();
               }}
             >
               {t('header:signOut')}
