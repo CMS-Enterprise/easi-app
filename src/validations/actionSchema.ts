@@ -6,24 +6,38 @@ export const actionSchema = Yup.object().shape({
 
 export const lifecycleIdSchema = Yup.object().shape({
   lifecycleId: Yup.string()
+    .trim()
     .nullable()
     .length(7),
   expirationDateDay: Yup.string()
+    .trim()
     .length(2)
     .required('Please include a day'),
   expirationDateMonth: Yup.string()
+    .trim()
     .length(2)
     .required('Please include a month'),
   expirationDateYear: Yup.string()
+    .trim()
     .length(4)
     .required('Please include a year'),
-  scope: Yup.string().required('Please include a scope'),
-  nextSteps: Yup.string(),
-  feedback: Yup.string().required('Please fill out email')
+  scope: Yup.string()
+    .trim()
+    .required('Please include a scope'),
+  nextSteps: Yup.string().trim(),
+  feedback: Yup.string()
+    .trim()
+    .required('Please fill out email')
 });
 
 export const rejectIntakeSchema = Yup.object().shape({
-  nextSteps: Yup.string().required('Please include next steps'),
-  reason: Yup.string().required('Please include a reason'),
-  feedback: Yup.string().required('Please fill out email')
+  nextSteps: Yup.string()
+    .trim()
+    .required('Please include next steps'),
+  reason: Yup.string()
+    .trim()
+    .required('Please include a reason'),
+  feedback: Yup.string()
+    .trim()
+    .required('Please fill out email')
 });
