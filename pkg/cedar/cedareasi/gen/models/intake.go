@@ -6,22 +6,20 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"strconv"
-
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // Intake intake
+//
 // swagger:model Intake
 type Intake struct {
 
 	// governance
 	// Required: true
-	Governance []*GovernanceIntake `json:"Governance"`
+	Governance *GovernanceIntake `json:"Governance"`
 }
 
 // Validate validates this intake
@@ -44,20 +42,13 @@ func (m *Intake) validateGovernance(formats strfmt.Registry) error {
 		return err
 	}
 
-	for i := 0; i < len(m.Governance); i++ {
-		if swag.IsZero(m.Governance[i]) { // not required
-			continue
-		}
-
-		if m.Governance[i] != nil {
-			if err := m.Governance[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("Governance" + "." + strconv.Itoa(i))
-				}
-				return err
+	if m.Governance != nil {
+		if err := m.Governance.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("Governance")
 			}
+			return err
 		}
-
 	}
 
 	return nil
