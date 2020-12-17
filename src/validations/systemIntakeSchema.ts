@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import * as Yup from 'yup';
 
 import cmsGovernanceTeams from 'constants/enums/cmsGovernanceTeams';
@@ -163,6 +164,34 @@ export const DateValidationSchema: any = Yup.object().shape(
       },
       then: Yup.string().required('The year is required')
     }),
+    validGrtDate: Yup.string().when(
+      ['grtDateDay', 'grtDateMonth', 'grtDateYear'],
+      {
+        is: (grtDateDay: string, grtDateMonth: string, grtDateYear: string) => {
+          // Only check for a valid date if monday, date, and year a filled
+          if (grtDateDay && grtDateMonth && grtDateYear) {
+            // If the date is valid, it passes the validation
+            if (
+              DateTime.fromObject({
+                month: Number(grtDateMonth) || 0,
+                day: Number(grtDateDay) || 0,
+                year: Number(grtDateYear) || 0
+              }).isValid
+            ) {
+              return true;
+            }
+            return false;
+          }
+          // If month, day, and year aren't ALL filled, don't run the validation
+          return true;
+        },
+        otherwise: Yup.string().test(
+          'validateGrtDate',
+          'GRT Date: Please enter a valid date',
+          () => false
+        )
+      }
+    ),
     grbDateDay: Yup.string().when(['grbDateMonth', 'grbDateYear'], {
       is: (grbDateMonth: string, grbDateYear: string) => {
         return grbDateMonth || grbDateYear;
@@ -180,7 +209,35 @@ export const DateValidationSchema: any = Yup.object().shape(
         return grbDateDay || grbDateMonth;
       },
       then: Yup.string().required('The year is required')
-    })
+    }),
+    validGrbDate: Yup.string().when(
+      ['grbDateDay', 'grbDateMonth', 'grbDateYear'],
+      {
+        is: (grbDateDay: string, grbDateMonth: string, grbDateYear: string) => {
+          // Only check for a valid date if monday, date, and year a filled
+          if (grbDateDay && grbDateMonth && grbDateYear) {
+            // If the date is valid, it passes the validation
+            if (
+              DateTime.fromObject({
+                month: Number(grbDateMonth) || 0,
+                day: Number(grbDateDay) || 0,
+                year: Number(grbDateYear) || 0
+              }).isValid
+            ) {
+              return true;
+            }
+            return false;
+          }
+          // If month, day, and year aren't ALL filled, don't run the validation
+          return true;
+        },
+        otherwise: Yup.string().test(
+          'validateGrbDate',
+          'GRB Date: Please enter a valid date',
+          () => false
+        )
+      }
+    )
   },
   [
     ['grtDateDay', 'grtDateMonth'],

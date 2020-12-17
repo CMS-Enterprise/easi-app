@@ -4,9 +4,13 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/lambda"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
-	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
+	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
@@ -43,7 +47,7 @@ func (s *Server) routes(
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up Feature Flagging utilities
-	flagUser := ld.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
+	flagUser := lduser.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
 	flagConfig := s.NewFlagConfig()
 	var flagClient flags.FlagClient
 
@@ -68,12 +72,12 @@ func (s *Server) routes(
 	}
 
 	// set up CEDAR client
-	cedarEasiClient := local.NewCedarEasiClient(s.logger)
+	var cedarEasiClient cedareasi.Client = local.NewCedarEasiClient(s.logger)
 	if !(s.environment.Local() || s.environment.Test()) {
 		// check we have all of the configs for CEDAR clients
 		s.NewCEDARClientCheck()
 
-		cedarEasiClient := cedareasi.NewTranslatedClient(
+		cedarEasiClient = cedareasi.NewTranslatedClient(
 			s.Config.GetString(appconfig.CEDARAPIURL),
 			s.Config.GetString(appconfig.CEDARAPIKey),
 			ldClient,
@@ -121,6 +125,20 @@ func (s *Server) routes(
 	}
 
 	s3Client := upload.NewS3Client(s3Config)
+
+	var lambdaClient *lambda.Lambda
+	var princeLambdaName string
+	lambdaSession := session.Must(session.NewSession())
+
+	princeConfig := s.NewPrinceLambdaConfig()
+	princeLambdaName = princeConfig.FunctionName
+
+	if s.environment.Local() || s.environment.Test() {
+		endpoint := princeConfig.Endpoint
+		lambdaClient = lambda.New(lambdaSession, &aws.Config{Endpoint: &endpoint, Region: aws.String("us-west-2")})
+	} else {
+		lambdaClient = lambda.New(lambdaSession, &aws.Config{})
+	}
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
@@ -183,11 +201,6 @@ func (s *Server) routes(
 			),
 			services.NewAuthorizeUserIsIntakeRequester(),
 			emailClient.SendWithdrawRequestEmail,
-		),
-		services.NewDeleteSystemIntakeByID(
-			serviceConfig,
-			store.DeleteSystemIntakeByID,
-			services.NewAuthorizeRequireGRTJobCode(),
 		),
 	)
 	api.Handle("/system_intake/{intake_id}", systemIntakeHandler.Handle())
@@ -558,20 +571,6 @@ func (s *Server) routes(
 		base,
 	).Handle())
 
-	api.Handle("/pdf/generate", handlers.NewPDFHandler().Handle())
-
-	// endpoint for short-lived backfill process
-	backfillHandler := handlers.NewBackfillHandler(
-		base,
-		services.NewBackfill(
-			serviceConfig,
-			store.FetchSystemIntakeByID,
-			store.CreateSystemIntake,
-			store.UpdateSystemIntake,
-			store.CreateNote,
-			services.NewAuthorizeHasEASiRole(),
-		),
-	)
-	api.Handle("/backfill", backfillHandler.Handle())
+	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient, princeLambdaName)).Handle())
 
 }

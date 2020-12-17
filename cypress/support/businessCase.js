@@ -14,7 +14,7 @@ cy.businessCase = {
         .should('have.value', 'Casey Doe');
 
       cy.get('#BusinessCase-RequesterPhoneNumber')
-        .select('1234567890')
+        .type('1234567890')
         .should('have.value', '1234567890');
     }
   },
@@ -91,7 +91,7 @@ cy.businessCase = {
     }
   },
   preferredSolution: {
-    fillNonBranchingFields: () => {
+    fillAllFields: () => {
       cy.get('#BusinessCase-PreferredSolutionTitle')
         .type('Preferred Solution Title')
         .should('have.value', 'Preferred Solution Title');
@@ -104,13 +104,25 @@ cy.businessCase = {
         .type('Preferred Solution Acquisition approach')
         .should('have.value', 'Preferred Solution Acquisition approach');
 
-      cy.get('#BusinessCase-PreferredSolutionSecurityApproved')
+      cy.get('#BusinessCase-PreferredSolutionSecurityNotApproved')
         .check({ force: true })
         .should('be.checked');
 
-      cy.get('#BusinessCase-PreferredSolutionHostingNone')
+      cy.get('#BusinessCase-PreferredSolutionSecurityIsBeingReviewedYes')
         .check({ force: true })
         .should('be.checked');
+
+      cy.get('#BusinessCase-PreferredSolutionHostingCloud')
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get('#BusinessCase-PreferredSolutionCloudLocation')
+        .type('AWS')
+        .should('have.value', 'AWS');
+
+      cy.get('#BusinessCase-PreferredSolutionCloudServiceType')
+        .type('Saas')
+        .should('have.value', 'Saas');
 
       cy.get('#BusinessCase-PreferredHasUserInferfaceYes')
         .check({ force: true })
@@ -160,7 +172,7 @@ cy.businessCase = {
     }
   },
   alternativeASolution: {
-    fillNonBranchingFields: () => {
+    fillAllFields: () => {
       cy.get('#BusinessCase-alternativeATitle')
         .type('Alternative A Title')
         .should('have.value', 'Alternative A Title');
@@ -173,13 +185,25 @@ cy.businessCase = {
         .type('Alternative A AcquisitionApproach')
         .should('have.value', 'Alternative A AcquisitionApproach');
 
-      cy.get('#BusinessCase-alternativeASecurityApproved')
+      cy.get('#BusinessCase-alternativeASecurityNotApproved')
         .check({ force: true })
         .should('be.checked');
 
-      cy.get('#BusinessCase-alternativeAHostingNone')
+      cy.get('#BusinessCase-alternativeASecurityIsBeingReviewedYed')
         .check({ force: true })
         .should('be.checked');
+
+      cy.get('#BusinessCase-alternativeAHostingCloud')
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get('#BusinessCase-alternativeACloudLocation')
+        .type('AWS')
+        .should('have.value', 'AWS');
+
+      cy.get('#BusinessCase-alternativeACloudServiceType')
+        .type('Saas')
+        .should('have.value', 'Saas');
 
       cy.get('#BusinessCase-alternativeAHasUserInferfaceYes')
         .check({ force: true })

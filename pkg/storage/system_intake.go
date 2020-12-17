@@ -367,33 +367,3 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 
 	return metrics, nil
 }
-
-// DeleteSystemIntakeByID removes an Intake, along with any associated Notes
-// TODO: this should be remove quickly - EASI-974
-func (s *Store) DeleteSystemIntakeByID(ctx context.Context, id uuid.UUID) error {
-	_, err := s.db.Exec(
-		`DELETE from note n WHERE n.system_intake=$1`,
-		id.String(),
-	)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete notes"),
-			zap.Error(err),
-			zap.String("id", id.String()),
-		)
-		return err
-	}
-	_, err = s.db.Exec(
-		`DELETE from system_intake i WHERE i.id=$1`,
-		id.String(),
-	)
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to delete system_intake"),
-			zap.Error(err),
-			zap.String("id", id.String()),
-		)
-		return err
-	}
-	return nil
-}

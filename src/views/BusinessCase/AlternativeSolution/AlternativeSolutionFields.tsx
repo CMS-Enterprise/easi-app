@@ -54,7 +54,10 @@ const AlternativeSolutionFields = ({
           <Label htmlFor={`BusinessCase-${altId}Summary`}>
             {`${altLabel}: Summary`}
           </Label>
-          <HelpText className="margin-top-1">
+          <HelpText
+            id={`BusinessCase-${altId}SummaryHelp`}
+            className="margin-top-1"
+          >
             <span>Please include:</span>
             <ul className="padding-left-205 margin-bottom-1">
               <li>
@@ -78,7 +81,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}Summary`}
             maxLength={2000}
             name={`${altId}.summary`}
-            aria-describedby={`BusinessCase-${altId}SummmaryCounter`}
+            aria-describedby={`BusinessCase-${altId}SummmaryCounter BusinessCase-${altId}SummaryHelp`}
           />
           <CharacterCounter
             id={`BusinessCase-${altId}SummmaryCounter`}
@@ -93,7 +96,10 @@ const AlternativeSolutionFields = ({
           <Label htmlFor={`BusinessCase-${altId}AcquisitionApproach`}>
             {`${altLabel}: Acquisition approach`}
           </Label>
-          <HelpText className="margin-y-1">
+          <HelpText
+            id={`BusinessCase-${altId}AcquisitionApproachHelp`}
+            className="margin-y-1"
+          >
             Describe the approach to acquiring the products and services
             required to deliver the system, including potential contract
             vehicles.
@@ -107,7 +113,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}AcquisitionApproach`}
             maxLength={2000}
             name={`${altId}.acquisitionApproach`}
-            aria-describedby={`BusinessCase-${altId}AcquisitionApproachCounter`}
+            aria-describedby={`BusinessCase-${altId}AcquisitionApproachCounter BusinessCase-${altId}AcquisitionApproachHelp`}
           />
           <CharacterCounter
             id={`BusinessCase-${altId}AcquisitionApproachCounter`}
@@ -165,7 +171,10 @@ const AlternativeSolutionFields = ({
               <legend className="usa-label margin-bottom-1">
                 Is it in the process of CMS approval?
               </legend>
-              <HelpText className="margin-bottom-1">
+              <HelpText
+                id={`BusinessCase-${altId}SecurityReviewHelp`}
+                className="margin-bottom-1"
+              >
                 Obtaining CMS Approval can be lengthy and solutions that do not
                 have it or are just starting may lead to longer project
                 timelines.
@@ -180,6 +189,7 @@ const AlternativeSolutionFields = ({
                 name={`${altId}.security.isBeingReviewed`}
                 label={yesNoMap.YES}
                 value="YES"
+                aria-describedby={`BusinessCase-${altId}SecurityReviewHelp`}
               />
               <Field
                 as={RadioField}
@@ -216,7 +226,7 @@ const AlternativeSolutionFields = ({
             <Field
               as={RadioField}
               checked={values[`${altId}`].hosting.type === 'cloud'}
-              id={`BusinessCase-${altId}SolutionHostingCloud`}
+              id={`BusinessCase-${altId}HostingCloud`}
               name={`${altId}.hosting.type`}
               label="Yes, in the cloud (AWS, Azure, etc.)"
               value="cloud"
@@ -366,7 +376,7 @@ const AlternativeSolutionFields = ({
           <Label htmlFor={`BusinessCase-${altId}Pros`}>
             {`${altLabel}: Pros`}
           </Label>
-          <HelpText className="margin-y-1">
+          <HelpText id={`BusinessCase-${altId}ProsHelp`} className="margin-y-1">
             Identify any aspects of this solution that positively differentiates
             this approach from other solutions
           </HelpText>
@@ -377,7 +387,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}Pros`}
             maxLength={2000}
             name={`${altId}.pros`}
-            aria-describedby={`BusinessCase-${altId}ProsCounter`}
+            aria-describedby={`BusinessCase-${altId}ProsCounter BusinessCase-${altId}ProsHelp`}
           />
           <CharacterCounter
             id={`BusinessCase-${altId}ProsCounter`}
@@ -392,7 +402,7 @@ const AlternativeSolutionFields = ({
           <Label htmlFor={`BusinessCase-${altId}Cons`}>
             {`${altLabel}: Cons`}
           </Label>
-          <HelpText className="margin-y-1">
+          <HelpText id={`BusinessCase-${altId}ConsHelp`} className="margin-y-1">
             Identify any aspects of this solution that negatively impact this
             approach
           </HelpText>
@@ -403,7 +413,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}Cons`}
             maxLength={2000}
             name={`${altId}.cons`}
-            aria-describedby={`BusinessCase-${altId}ConsCounter`}
+            aria-describedby={`BusinessCase-${altId}ConsHelp BusinessCase-${altId}ConsCounter`}
           />
           <CharacterCounter
             id={`BusinessCase-${altId}ConsCounter`}
@@ -413,7 +423,7 @@ const AlternativeSolutionFields = ({
       </div>
       <div className="margin-top-2">
         <h2 className="margin-0">Estimated lifecycle cost</h2>
-        <HelpText>
+        <HelpText id="BusinessCase-EstimatedLifecycleCostHelp">
           <p className="margin-y-2">
             You can add speculative costs if exact ones are not known or if a
             contract is not yet in place.
@@ -448,7 +458,10 @@ const AlternativeSolutionFields = ({
           <Label htmlFor={`BusinessCase-${altId}CostSavings`}>
             What is the cost savings or avoidance associated with this solution?
           </Label>
-          <HelpText className="margin-y-1">
+          <HelpText
+            id={`BusinessCase-${altId}CostSavingsHelp`}
+            className="margin-y-1"
+          >
             This could include old systems going away, contract hours/ new Full
             Time Employees not needed, or other savings, even if indirect.
           </HelpText>
@@ -459,7 +472,7 @@ const AlternativeSolutionFields = ({
             id={`BusinessCase-${altId}CostSavings`}
             maxLength={2000}
             name={`${altId}.costSavings`}
-            aria-describedby={`BusinessCase-${altId}CostSavingsCounter`}
+            aria-describedby={`BusinessCase-${altId}CostSavingsCounter BusinessCase-${altId}CostSavingsHelp`}
           />
           <CharacterCounter
             id={`BusinessCase-${altId}CostSavingsCounter`}
