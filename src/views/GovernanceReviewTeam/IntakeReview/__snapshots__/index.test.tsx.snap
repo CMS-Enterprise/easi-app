@@ -347,6 +347,18 @@ Array [
     >
       Take an action
     </a>
+    <p
+      className="margin-top-4"
+    >
+      <a
+        aria-label="Open EASi survey in a new tab"
+        href="https://www.surveymonkey.com/r/DM6NYRX"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Is there anything wrong on this page? (opens in a new tab)
+      </a>
+    </p>
   </div>,
   " ",
 ]

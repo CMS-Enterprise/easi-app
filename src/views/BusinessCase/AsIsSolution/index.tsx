@@ -119,7 +119,10 @@ const AsIsSolution = ({
                   <Label htmlFor="BusinessCase-AsIsSolutionSummary">
                     &quot;As is&quot; solution: Summary
                   </Label>
-                  <HelpText className="margin-top-1">
+                  <HelpText
+                    id="BusinessCase-AsIsSolutionSummaryHelp"
+                    className="margin-top-1"
+                  >
                     <span>Please include:</span>
                     <ul className="padding-left-205">
                       <li>
@@ -146,7 +149,7 @@ const AsIsSolution = ({
                     id="BusinessCase-AsIsSolutionSummary"
                     maxLength={2000}
                     name="asIsSolution.summary"
-                    aria-describedby="BusinessCase-AsIsSolutionSummaryCounter"
+                    aria-describedby="BusinessCase-AsIsSolutionSummaryCounter BusinessCase-AsIsSolutionSummaryHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionSummaryCounter"
@@ -161,7 +164,10 @@ const AsIsSolution = ({
                   <Label htmlFor="BusinessCase-AsIsSolutionPros">
                     &quot;As is&quot; solution: Pros
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-AsIsSolutionProsHelp"
+                    className="margin-y-1"
+                  >
                     Identify any aspects of this solution that positively
                     differentiates this approach from other solutions
                   </HelpText>
@@ -174,7 +180,7 @@ const AsIsSolution = ({
                     id="BusinessCase-AsIsSolutionPros"
                     maxLength={2000}
                     name="asIsSolution.pros"
-                    aria-describedby="BusinessCase-AsIsSolutionProsCounter"
+                    aria-describedby="BusinessCase-AsIsSolutionProsCounter BusinessCase-AsIsSolutionProsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionProsCounter"
@@ -189,7 +195,10 @@ const AsIsSolution = ({
                   <Label htmlFor="BusinessCase-AsIsSolutionCons">
                     &quot;As is&quot; solution: Cons
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-AsIsSolutionConsHelp"
+                    className="margin-y-1"
+                  >
                     Identify any aspects of this solution that negatively impact
                     this approach
                   </HelpText>
@@ -202,7 +211,7 @@ const AsIsSolution = ({
                     id="BusinessCase-AsIsSolutionCons"
                     maxLength={2000}
                     name="asIsSolution.cons"
-                    aria-describedby="BusinessCase-AsIsSolutionConsCounter"
+                    aria-describedby="BusinessCase-AsIsSolutionConsCounter BusinessCase-AsIsSolutionConsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionConsCounter"
@@ -212,7 +221,7 @@ const AsIsSolution = ({
               </div>
               <div className="tablet:grid-col-9 margin-top-2">
                 <h2 className="margin-0">Estimated lifecycle cost</h2>
-                <HelpText>
+                <HelpText id="BusinessCase-EstimatedLifecycleCostHelp">
                   <p className="margin-y-2">
                     You can add speculative costs if exact ones are not known or
                     if a contract is not yet in place. If your &quot;As is&quot;
@@ -251,7 +260,10 @@ const AsIsSolution = ({
                     What is the cost savings or avoidance associated with this
                     solution?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-AsIsSolutionCostSavingsHelp"
+                    className="margin-y-1"
+                  >
                     This could include old systems going away, contract hours/
                     new Full Time Employees not needed, or other savings, even
                     if indirect.
@@ -265,7 +277,7 @@ const AsIsSolution = ({
                     id="BusinessCase-AsIsSolutionCostSavings"
                     maxLength={2000}
                     name="asIsSolution.costSavings"
-                    aria-describedby="BusinessCase-AsIsSolutionCostSavingsCounter"
+                    aria-describedby="BusinessCase-AsIsSolutionCostSavingsCounter BusinessCase-AsIsSolutionCostSavingsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionCostSavingsCounter"

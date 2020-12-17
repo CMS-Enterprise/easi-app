@@ -12,6 +12,7 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
+import { translateRequestType } from 'utils/systemIntake';
 
 import csvHeaderMap from './csvHeaderMap';
 
@@ -160,7 +161,7 @@ const RequestRepository = () => {
       return {
         ...intake,
         status: statusTranslation,
-        requestType: t(`intake:requestTypeMap.${intake.requestType}`)
+        requestType: translateRequestType(intake.requestType)
       };
     });
   }, [systemIntakes, t]);

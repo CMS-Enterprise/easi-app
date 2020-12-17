@@ -8,7 +8,8 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
-	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
+	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -38,7 +39,7 @@ type Client interface {
 }
 
 // NewTranslatedClient returns an API client for CEDAR EASi using EASi language
-func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient, ldUser ld.User) TranslatedClient {
+func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient, ldUser lduser.User) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
 
