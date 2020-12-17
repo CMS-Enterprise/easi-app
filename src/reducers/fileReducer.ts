@@ -6,6 +6,7 @@ import { postFileUploadURL, putFileS3 } from 'types/routines';
 
 const initialState: FileUploadState = {
   form: fileUploadInitialData,
+  files: [fileUploadInitialData],
   isLoading: null,
   isSaving: false,
   isUploaded: false,
