@@ -13,7 +13,11 @@ import PageWrapper from 'components/PageWrapper';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
-import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
+import {
+  isIntakeClosed,
+  isIntakeOpen,
+  translateRequestType
+} from 'utils/systemIntake';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -21,6 +25,7 @@ import RejectIntake from './Actions/RejectIntake';
 import SubmitAction from './Actions/SubmitAction';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
+import Decision from './Decision';
 import IntakeReview from './IntakeReview';
 import Notes from './Notes';
 
@@ -100,7 +105,7 @@ const GovernanceReviewTeam = () => {
                 </div>
                 <div className="easi-grt__description-group">
                   <dt>{t('intake:fields.requestFor')}</dt>
-                  <dd>N/A</dd>
+                  <dd>{translateRequestType(systemIntake.requestType)}</dd>
                 </div>
               </div>
             </dl>
@@ -159,6 +164,15 @@ const GovernanceReviewTeam = () => {
                   {t('general:businessCase')}
                 </Link>
               </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/decision`}
+                  aria-label={t('aria.openDecision')}
+                  className={getNavLinkClasses('decision')}
+                >
+                  {t('decision.title')}
+                </Link>
+              </li>
             </ul>
             <hr />
             <ul className="easi-grt__nav-list">
@@ -209,6 +223,10 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/dates"
               render={() => <Dates systemIntake={systemIntake} />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/decision"
+              render={() => <Decision systemIntake={systemIntake} />}
             />
             <Route
               path="/governance-review-team/:systemId/actions"

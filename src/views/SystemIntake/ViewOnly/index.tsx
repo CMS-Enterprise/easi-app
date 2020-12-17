@@ -10,11 +10,16 @@ type SystemIntakeViewOnlyProps = {
 };
 
 const SystemIntakeView = ({ systemIntake }: SystemIntakeViewOnlyProps) => {
+  const filename = `System intake for ${systemIntake.requestName}.pdf`;
   return (
     <>
       <h1>Review your Intake Request</h1>
-      <SystemIntakeReview systemIntake={systemIntake} now={DateTime.local()} />
-      <PDFExport filename="system-intake.pdf" />
+      <PDFExport title="System Intake" filename={filename}>
+        <SystemIntakeReview
+          systemIntake={systemIntake}
+          now={DateTime.local()}
+        />
+      </PDFExport>
     </>
   );
 };

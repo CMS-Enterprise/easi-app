@@ -84,6 +84,23 @@ func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
 }
 
+// LambdaConfig is the config to call a lambda func
+type LambdaConfig struct {
+	Endpoint     string
+	FunctionName string
+}
+
+// NewPrinceLambdaConfig returns the configutation for the prince lambda
+func (s Server) NewPrinceLambdaConfig() LambdaConfig {
+	endpoint := s.Config.GetString(appconfig.LambdaEndpoint)
+	name := s.Config.GetString(appconfig.LambdaFunctionPrince)
+
+	return LambdaConfig{
+		Endpoint:     endpoint,
+		FunctionName: name,
+	}
+}
+
 // NewFlagConfig checks if Launch Darkly config exists
 func (s Server) NewFlagConfig() flags.Config {
 	s.checkRequiredConfig(appconfig.FlagSourceKey)

@@ -11,7 +11,7 @@ type TextAreaFieldProps = {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onBlur: () => void;
   value: string;
-};
+} & JSX.IntrinsicElements['textarea'];
 
 const TextAreaField = ({
   id,
@@ -22,7 +22,8 @@ const TextAreaField = ({
   maxLength,
   onChange,
   onBlur,
-  value
+  value,
+  ...props
 }: TextAreaFieldProps) => {
   const textAreaClasses = classnames(
     'usa-textarea',
@@ -46,6 +47,8 @@ const TextAreaField = ({
         onBlur={onBlur}
         value={value}
         maxLength={maxLength}
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        {...props}
       />
     </>
   );

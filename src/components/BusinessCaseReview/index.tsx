@@ -12,9 +12,10 @@ type BusinessCaseReviewProps = {
 };
 
 const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
+  const filename = `Business case for ${values.requestName}.pdf`;
   return (
     <>
-      <PDFExport title="test business case" filename="bizcase.pdf">
+      <PDFExport title="Business Case" filename={filename}>
         <div className="grid-container">
           <h2 className="font-heading-xl">General request information</h2>
           <GeneralRequestInfoReview
