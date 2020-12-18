@@ -16,7 +16,7 @@ const projects: Record<string, Project> = {
       component: 'OIT'
     },
     pointOfContact: {
-      name: 'Shane Clark',
+      name: 'Aaron Allen',
       component: 'OIT'
     },
     lifecycleID: 'X200943',
@@ -100,7 +100,7 @@ const projects: Record<string, Project> = {
       component: 'OIT'
     },
     pointOfContact: {
-      name: 'Shane Clark',
+      name: 'Aaron Allen',
       component: 'OIT'
     },
     documents: [
@@ -196,7 +196,7 @@ const projects: Record<string, Project> = {
       component: 'OIT'
     },
     pointOfContact: {
-      name: 'Shane Clark',
+      name: 'Aaron Allen',
       component: 'OIT'
     },
     activities: [],
@@ -214,7 +214,7 @@ const projects: Record<string, Project> = {
       component: 'OIT'
     },
     pointOfContact: {
-      name: 'Shane Clark',
+      name: 'Aaron Allen',
       component: 'OIT'
     },
     activities: [],
@@ -232,7 +232,7 @@ const projects: Record<string, Project> = {
       component: 'OIT'
     },
     pointOfContact: {
-      name: 'Shane Clark',
+      name: 'Aaron Allen',
       component: 'OIT'
     },
     activities: [],

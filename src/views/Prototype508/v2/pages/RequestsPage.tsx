@@ -53,7 +53,7 @@ const ProjectsPage = () => {
                     ? project.testDate.toFormat('LLLL d y')
                     : null}
                 </td>
-                <td>{project.businessOwner.name}</td>
+                <td>{project.pointOfContact.name}</td>
                 <td>
                   <strong>{project.status}</strong>
                   <br />
