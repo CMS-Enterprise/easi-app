@@ -2,6 +2,7 @@ import { Action } from 'redux-actions';
 
 import {
   fileUploadInitialData,
+  prepareFileUploadForApi,
   prepareFileUploadForApp,
   prepareUploadedFileForApp
 } from 'data/files';
@@ -25,6 +26,7 @@ function fileUploadReducer(
     case postFileUploadURL.REQUEST:
       return {
         ...state,
+        ...prepareFileUploadForApi(action.payload),
         isLoading: true
       };
     case postFileUploadURL.SUCCESS:

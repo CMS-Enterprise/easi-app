@@ -31,6 +31,8 @@ const DocumentPrototype = () => {
         ...fileState.form
       })
     );
+
+    setActiveTable('files');
   };
 
   const filenameColumn = {
@@ -146,11 +148,10 @@ const DocumentPrototype = () => {
 
                       dispatch(
                         postFileUploadURL({
-                          ...fileState.form.file
+                          ...fileState.form,
+                          file: formikProps.values.file
                         })
                       );
-
-                      setActiveTable('files');
                     }}
                     className="form-control"
                   />
