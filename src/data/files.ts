@@ -7,7 +7,13 @@ export const fileUploadInitialData: FileUploadForm = {
 };
 
 export const prepareFileUploadForApi = (fileUpload: FileUploadForm): any => {
-  return fileUpload;
+  const fileURL = {
+    fileName: fileUpload.file.name,
+    fileType: fileUpload.file.type,
+    fileSize: fileUpload.file.size
+  };
+
+  return fileURL;
 };
 
 export const prepareFileUploadForApp = (fileUpload: any): FileUploadForm => {
