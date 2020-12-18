@@ -49,8 +49,9 @@ function generatePDF(filename: string, content: string) {
       const blob = new Blob([response.data], { type: 'application/pdf' });
       downloadBlob(filename, blob);
     })
-    .catch(() => {
+    .catch(e => {
       // TODO add error handling: display a modal if things fail?
+      console.error(e); // eslint-disable-line
     });
 }
 
@@ -97,7 +98,7 @@ const downloadRefAsPDF = (
       generatePDF(filename, markupToRender);
     })
     .catch(e => {
-      console.error(e);
+      console.error(e); // eslint-disable-line
       // TODO add error handling: display a modal if things fail?
     });
 };
