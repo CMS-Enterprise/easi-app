@@ -56,11 +56,12 @@ const downloadRefAsPDF = (
   ref: React.Ref<HTMLDivElement>
 ): void => {
   // Collect any stylesheets that are linked to. These are used in production.
+  const { origin } = document.location;
   const stylesheetRequests = Array.prototype.slice
     .apply(document.styleSheets)
     .filter(
       // don't load google fonts stylesheets
-      stylesheet => stylesheet.href && !stylesheet.href.startsWith('http')
+      stylesheet => stylesheet.href && stylesheet.href.startsWith(origin)
     )
     .map(stylesheet => axios.get(stylesheet.href));
 
