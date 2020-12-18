@@ -3,10 +3,10 @@ import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { prepareFileUploadForApi } from 'data/files';
-import { FileUploadModel } from 'types/files';
+import { FileUploadForm } from 'types/files';
 import { postFileUploadURL, putFileS3 } from 'types/routines';
 
-function postFileUploadURLRequest(formData: FileUploadModel) {
+function postFileUploadURLRequest(formData: FileUploadForm) {
   const data = prepareFileUploadForApi(formData);
   return axios.post(
     `${process.env.REACT_APP_API_ADDRESS}/file_uploads/upload_url`,
@@ -26,7 +26,7 @@ function* createFileUploadURL(action: Action<any>) {
   }
 }
 
-function putFileS3Request(formData: FileUploadModel) {
+function putFileS3Request(formData: FileUploadForm) {
   const data = new FormData();
   data.append('file', formData.file);
 
