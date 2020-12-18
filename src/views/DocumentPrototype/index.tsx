@@ -149,7 +149,7 @@ const DocumentPrototype = () => {
                       dispatch(
                         postFileUploadURL({
                           ...fileState.form,
-                          file: formikProps.values.file
+                          file: event.currentTarget.files[0]
                         })
                       );
                     }}
