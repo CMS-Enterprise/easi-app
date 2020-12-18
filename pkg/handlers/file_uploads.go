@@ -14,7 +14,7 @@ import (
 )
 
 // CreateFileUploadURL is our handler for creating pre-signed S3 upload URLs
-type CreateFileUploadURL func(ctx context.Context) (*models.PreSignedURL, error)
+type CreateFileUploadURL func(ctx context.Context, fileType string) (*models.PreSignedURL, error)
 
 // CreateFileDownloadURL is a handler for creating pre-signed S3 download URLs
 type CreateFileDownloadURL func(ctx context.Context, key string) (*models.PreSignedURL, error)
@@ -66,7 +66,19 @@ type PreSignedURLUploadHandler struct {
 // Handle is the actual function
 func (h PreSignedURLUploadHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		url, err := h.CreateFileUploadURL(r.Context())
+		decoder := json.NewDecoder(r.Body)
+		urlUploadRequest := struct {
+			Filename string `json:"fileName"`
+			FileType string `json:"fileType"`
+			FileSize int    `json:"fileSize"`
+		}{}
+		err := decoder.Decode(&urlUploadRequest)
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+
+		url, err := h.CreateFileUploadURL(r.Context(), urlUploadRequest.FileType)
 		if err != nil {
 			h.WriteErrorResponse(r.Context(), w, err)
 			return
