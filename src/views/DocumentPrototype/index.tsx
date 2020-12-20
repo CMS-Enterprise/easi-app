@@ -34,6 +34,7 @@ const DocumentPrototype = () => {
 
     setActiveTable('files');
   };
+
   const downloadFile = event => {
     const filename = event.target.value;
     dispatch(
