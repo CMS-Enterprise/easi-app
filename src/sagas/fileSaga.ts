@@ -54,6 +54,13 @@ function* downloadFile(action: Action<any>) {
     yield put(getFileS3.request());
     const response = yield call(postFileDownloadURLRequest, action.payload);
     yield put(getFileS3.success(response.data));
+
+    const url = window.URL.createObjectURL(new Blob([response.data.URL]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${response.data.filename}`);
+    document.body.appendChild(link);
+    link.click();
   } catch (error) {
     yield put(getFileS3.failure(error.message));
   } finally {
