@@ -18,7 +18,9 @@ function* createFileUploadURL(action: Action<any>) {
   try {
     yield put(postFileUploadURL.request());
     const response = yield call(postFileUploadURLRequest, action.payload);
-    yield put(postFileUploadURL.success(response.data));
+    yield put(
+      postFileUploadURL.success({ ...action.payload, ...response.data })
+    );
   } catch (error) {
     yield put(postFileUploadURL.failure(error.message));
   } finally {
@@ -27,17 +29,26 @@ function* createFileUploadURL(action: Action<any>) {
 }
 
 function putFileS3Request(formData: FileUploadForm) {
+  console.log('the upload:');
+  console.log(formData);
   const data = new FormData();
   data.append('file', formData.file);
 
-  return axios.put(formData.uploadURL, data);
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  };
+
+  return axios.put(formData.uploadURL, data, config);
 }
 
 function* uploadFile(action: Action<any>) {
   try {
     yield put(putFileS3.request());
-    const response = yield call(putFileS3Request, action.payload);
-    yield put(putFileS3.success(response.data));
+    yield call(putFileS3Request, action.payload);
+    // S3 doesn't return anything besides success
+    yield put(putFileS3.success(action.payload));
   } catch (error) {
     yield put(putFileS3.failure(error.message));
   }

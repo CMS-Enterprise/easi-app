@@ -34,7 +34,6 @@ function fileUploadReducer(
       return {
         ...state,
         form: {
-          ...state.form,
           ...prepareFileUploadForApp(action.payload)
         }
       };
@@ -51,6 +50,7 @@ function fileUploadReducer(
     case putFileS3.REQUEST:
       return {
         ...state,
+        form: action.payload,
         isLoading: true
       };
     case putFileS3.SUCCESS:
@@ -59,7 +59,7 @@ function fileUploadReducer(
         files: [
           ...state.files,
           {
-            ...prepareUploadedFileForApp(state.form)
+            ...prepareUploadedFileForApp(action.payload)
           }
         ],
         isUploaded: true

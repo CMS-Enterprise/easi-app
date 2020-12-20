@@ -24,6 +24,7 @@ export const prepareFileUploadForApi = (fileUpload: FileUploadForm): any => {
 
 export const prepareFileUploadForApp = (fileUpload: any): FileUploadForm => {
   const upload = {
+    file: fileUpload.file,
     filename: fileUpload.filename,
     uploadURL: fileUpload.URL
   };
@@ -32,8 +33,10 @@ export const prepareFileUploadForApp = (fileUpload: any): FileUploadForm => {
 
 export const prepareUploadedFileForApp = (fileUpload: any): UploadedFile => {
   const uploadedFile = {
+    file: fileUpload.file,
     filename: fileUpload.filename,
-    uploadURL: fileUpload.uploadURL
+    uploadURL: fileUpload.uploadURL,
+    downloadURL: ''
   };
   return uploadedFile;
 };

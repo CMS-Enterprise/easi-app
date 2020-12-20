@@ -173,7 +173,6 @@ const DocumentPrototype = () => {
 
                       dispatch(
                         postFileUploadURL({
-                          ...fileState.form,
                           file: event.currentTarget.files[0]
                         })
                       );
