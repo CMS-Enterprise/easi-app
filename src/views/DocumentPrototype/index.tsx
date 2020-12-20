@@ -34,6 +34,16 @@ const DocumentPrototype = () => {
 
     setActiveTable('files');
   };
+  const downloadFile = event => {
+    console.log(event.target.value);
+    /*
+    dispatch(
+      getFileS3({
+        value
+      })
+    );
+    */
+  };
 
   const filenameColumn = {
     Header: t('filename'),
@@ -45,9 +55,26 @@ const DocumentPrototype = () => {
     accessor: 'uploadURL'
   };
 
+  const fileDownloadColumn = {
+    Header: t('download'),
+    accessor: 'downloadURL',
+    Cell: ({ row }: any) => {
+      console.log(row.original);
+      return (
+        <Button
+          type="submit"
+          value={row.original.filename}
+          onClick={downloadFile}
+        >
+          Download
+        </Button>
+      );
+    }
+  };
+
   const columns: any = useMemo(() => {
     if (activeTable === 'files') {
-      return [filenameColumn, fileURLColumn];
+      return [filenameColumn, fileURLColumn, fileDownloadColumn];
     }
     return [];
     // eslint-disable-next-line react-hooks/exhaustive-deps

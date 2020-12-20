@@ -1,9 +1,15 @@
 import { FileUploadForm, UploadedFile } from 'types/files';
 
-export const fileUploadInitialData: FileUploadForm = {
+export const fileUploadFormInitialData: FileUploadForm = {
   file: {} as File,
   filename: '',
   uploadURL: ''
+};
+
+export const fileUploadTableInitialData: UploadedFile = {
+  filename: '',
+  uploadURL: '',
+  downloadURL: ''
 };
 
 export const prepareFileUploadForApi = (fileUpload: FileUploadForm): any => {
@@ -25,8 +31,9 @@ export const prepareFileUploadForApp = (fileUpload: any): FileUploadForm => {
 };
 
 export const prepareUploadedFileForApp = (fileUpload: any): UploadedFile => {
-  return {
+  const uploadedFile = {
     filename: fileUpload.filename,
     uploadURL: fileUpload.uploadURL
   };
+  return uploadedFile;
 };

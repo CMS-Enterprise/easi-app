@@ -7,6 +7,7 @@ export type FileUploadForm = {
 export type UploadedFile = {
   filename: string;
   uploadURL: string;
+  downloadURL: string;
 };
 
 // Redux store type for file upload state
