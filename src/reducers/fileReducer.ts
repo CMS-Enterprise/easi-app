@@ -1,16 +1,17 @@
 import { Action } from 'redux-actions';
 
 import {
-  fileUploadInitialData,
+  fileUploadFormInitialData,
+  fileUploadTableInitialData,
   prepareFileUploadForApp,
   prepareUploadedFileForApp
 } from 'data/files';
 import { FileUploadState } from 'types/files';
-import { postFileUploadURL, putFileS3 } from 'types/routines';
+import { getFileS3, postFileUploadURL, putFileS3 } from 'types/routines';
 
 const initialState: FileUploadState = {
-  form: fileUploadInitialData,
-  files: [fileUploadInitialData],
+  form: fileUploadFormInitialData,
+  files: [fileUploadTableInitialData],
   isLoading: null,
   isSaving: false,
   isUploaded: false,
@@ -71,6 +72,11 @@ function fileUploadReducer(
       return {
         ...state,
         isSaving: false
+      };
+    case getFileS3.REQUEST:
+      return {
+        ...state,
+        isLoading: true
       };
     default:
       return state;
