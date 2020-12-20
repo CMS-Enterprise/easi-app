@@ -14,6 +14,7 @@ export type UploadedFile = {
 export type FileUploadState = {
   form: FileUploadForm;
   files: UploadedFile[];
+  downloadTarget: string;
   isLoading: boolean | null;
   isSaving: boolean;
   error: any;

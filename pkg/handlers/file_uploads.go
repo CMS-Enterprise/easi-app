@@ -121,13 +121,13 @@ type PreSignedURLDownloadHandler struct {
 // Handle is the actual function
 func (h PreSignedURLDownloadHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fileID, err := requireFileUploadID(mux.Vars(r))
+		fileName, err := requireFileUploadName(mux.Vars(r))
 		if err != nil {
 			h.WriteErrorResponse(r.Context(), w, err)
 			return
 		}
 
-		url, err := h.CreateFileDownloadURL(r.Context(), fileID.String())
+		url, err := h.CreateFileDownloadURL(r.Context(), fileName)
 		if err != nil {
 			h.WriteErrorResponse(r.Context(), w, err)
 			return
@@ -204,6 +204,24 @@ func (h FileUploadHandler) createFileMetadata(w http.ResponseWriter, r *http.Req
 		h.WriteErrorResponse(r.Context(), w, err)
 		return
 	}
+}
+
+// requireFileUploadName does validation on a file name string received
+func requireFileUploadName(reqVars map[string]string) (string, error) {
+	valErr := apperrors.NewValidationError(
+		errors.New("file upload fetch failed validation"),
+		models.UploadedFile{},
+		"",
+	)
+
+	name := reqVars["file_name"]
+	if name == "" {
+		valErr.WithValidation("path.fileID", "is required")
+		return "", &valErr
+	}
+
+	return name, nil
+
 }
 
 // requireFileUploadID does validation on the ID string received by the API

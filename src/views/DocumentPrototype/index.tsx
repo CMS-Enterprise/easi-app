@@ -13,7 +13,7 @@ import PageWrapper from 'components/PageWrapper';
 import Label from 'components/shared/Label';
 import { AppState } from 'reducers/rootReducer';
 import { FileUploadForm } from 'types/files';
-import { postFileUploadURL, putFileS3 } from 'types/routines';
+import { getFileS3, postFileUploadURL, putFileS3 } from 'types/routines';
 import { uploadSchema } from 'validations/fileSchema';
 
 const DocumentPrototype = () => {
@@ -35,14 +35,12 @@ const DocumentPrototype = () => {
     setActiveTable('files');
   };
   const downloadFile = event => {
-    console.log(event.target.value);
-    /*
+    const filename = event.target.value;
     dispatch(
       getFileS3({
-        value
+        filename
       })
     );
-    */
   };
 
   const filenameColumn = {
@@ -59,7 +57,6 @@ const DocumentPrototype = () => {
     Header: t('download'),
     accessor: 'downloadURL',
     Cell: ({ row }: any) => {
-      console.log(row.original);
       return (
         <Button
           type="submit"
