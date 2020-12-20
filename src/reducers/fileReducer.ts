@@ -12,6 +12,7 @@ import { getFileS3, postFileUploadURL, putFileS3 } from 'types/routines';
 const initialState: FileUploadState = {
   form: fileUploadFormInitialData,
   files: [fileUploadTableInitialData],
+  downloadTarget: '',
   isLoading: null,
   isSaving: false,
   isUploaded: false,
@@ -76,7 +77,23 @@ function fileUploadReducer(
     case getFileS3.REQUEST:
       return {
         ...state,
+        downloadTarget: action.payload,
         isLoading: true
+      };
+    case getFileS3.SUCCESS:
+      return {
+        ...state,
+        downloadTarget: action.payload
+      };
+    case getFileS3.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case getFileS3.FULFILL:
+      return {
+        ...state,
+        isSaving: false
       };
     default:
       return state;
