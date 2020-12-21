@@ -16,6 +16,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s ServicesTestSuite) TestFetchSystemIntakes() {
@@ -29,7 +30,7 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 
 	fnByID := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 		return models.SystemIntakes{
-			models.SystemIntake{EUAUserID: euaID},
+			models.SystemIntake{EUAUserID: null.StringFrom(euaID)},
 		}, nil
 	}
 	fnByIDFail := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
@@ -38,47 +39,80 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 
 	fnAll := func(ctx context.Context) (models.SystemIntakes, error) {
 		return models.SystemIntakes{
-			models.SystemIntake{EUAUserID: reviewerID},
-			models.SystemIntake{EUAUserID: requesterID},
+			models.SystemIntake{EUAUserID: null.StringFrom(reviewerID)},
+			models.SystemIntake{EUAUserID: null.StringFrom(requesterID)},
 		}, nil
 	}
 	fnAllFail := func(ctx context.Context) (models.SystemIntakes, error) { return nil, errors.New("forced error") }
 
+	fnByFilter := func(ctx context.Context, statuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
+		return models.SystemIntakes{
+			models.SystemIntake{},
+		}, nil
+	}
+	fnByFilterFail := func(ctx context.Context, statuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
+		return nil, errors.New("forced error")
+	}
+
 	testCases := map[string]struct {
-		ctx  context.Context
-		fn   func(ctx context.Context) (models.SystemIntakes, error)
-		fail bool
+		ctx    context.Context
+		fn     func(context.Context, models.SystemIntakeStatusFilter) (models.SystemIntakes, error)
+		filter models.SystemIntakeStatusFilter
+		fail   bool
 	}{
 		"happy path requester": {
 			appcontext.WithPrincipal(context.Background(), requester),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnByFilterFail, fnAuth),
+			models.SystemIntakeStatusFilter(""),
 			false,
 		},
-		"happy path reviewer": {
+		"happy path reviewer fetch all": {
 			appcontext.WithPrincipal(context.Background(), reviewer),
-			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnByFilterFail, fnAuth),
+			models.SystemIntakeStatusFilter(""),
+			false,
+		},
+		"happy path reviewer filter": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAllFail, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilterOPEN,
 			false,
 		},
 		"fail authorization": {
 			context.Background(),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter(""),
 			true,
 		},
 		"fail requester data access": {
 			appcontext.WithPrincipal(context.Background(), requester),
-			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByIDFail, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter(""),
 			true,
 		},
-		"fail reviewer data access": {
+		"fail reviewer fetch all data access": {
 			appcontext.WithPrincipal(context.Background(), reviewer),
-			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnAuth),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAllFail, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter(""),
+			true,
+		},
+		"fail reviewer filter data access": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilterFail, fnAuth),
+			models.SystemIntakeStatusFilterOPEN,
+			true,
+		},
+		"fail reviewer filter name": {
+			appcontext.WithPrincipal(context.Background(), reviewer),
+			NewFetchSystemIntakes(serviceConfig, fnByID, fnAll, fnByFilter, fnAuth),
+			models.SystemIntakeStatusFilter("blue"),
 			true,
 		},
 	}
 
 	for name, tc := range testCases {
 		s.Run(name, func() {
-			intakes, err := tc.fn(tc.ctx)
+			intakes, err := tc.fn(tc.ctx, tc.filter)
 
 			if tc.fail {
 				s.Error(err)
@@ -113,7 +147,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 			Status:    models.SystemIntakeStatusINTAKEDRAFT,
 		})
 		s.NoError(err)
-		s.Equal(fakeEuaID, intake.EUAUserID)
+		s.Equal(fakeEuaID, intake.EUAUserID.ValueOrZero())
 	})
 
 	s.Run("returns query error when create fails", func() {
@@ -131,177 +165,7 @@ func (s ServicesTestSuite) TestNewCreateSystemIntake() {
 }
 
 func (s ServicesTestSuite) TestNewUpdateSystemIntake() {
-	logger := zap.NewNop()
-	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-		return &models.SystemIntake{
-			Status: models.SystemIntakeStatusINTAKEDRAFT,
-		}, nil
-	}
-
-	fetchSubmitted := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-		return &models.SystemIntake{
-			Status: models.SystemIntakeStatusINTAKESUBMITTED,
-		}, nil
-	}
-
-	requester := "Test Requester"
-	save := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-		return &models.SystemIntake{
-			EUAUserID: intake.EUAUserID,
-			Requester: requester,
-			Status:    intake.Status,
-			AlfabetID: intake.AlfabetID,
-		}, nil
-	}
-	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-		return true, nil
-	}
-	fetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
-		return &models.UserInfo{Email: "name@site.com"}, nil
-	}
-	reviewEmailCount := 0
-	sendReviewEmail := func(emailText string, recipientAddress string) error {
-		reviewEmailCount++
-		return nil
-	}
-	serviceConfig := NewConfig(logger, nil)
-	serviceConfig.clock = clock.NewMock()
-	updateDraftIntake := func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error) {
-		return incoming, nil
-	}
-
-	s.Run("returns no error when successful on update draft", func() {
-		ctx := context.Background()
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
-
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{
-			Status:    models.SystemIntakeStatusINTAKEDRAFT,
-			Requester: requester,
-		})
-
-		s.NoError(err)
-		s.Equal(requester, intake.Requester)
-	})
-
-	s.Run("returns query error when fetch fails", func() {
-		ctx := context.Background()
-		failFetch := func(ctx context.Context, uuid uuid.UUID) (*models.SystemIntake, error) {
-			return nil, errors.New("failed to fetch system intake")
-		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, failFetch, authorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
-
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{})
-
-		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-
-	s.Run("returns error from update draft", func() {
-		ctx := context.Background()
-		updateDraftError := errors.New("error")
-		failUpdateDraft := func(ctx context.Context, existingUpdate *models.SystemIntake, updatingIntake *models.SystemIntake) (*models.SystemIntake, error) {
-			return &models.SystemIntake{}, updateDraftError
-		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetch, authorize, fetchUserInfo, sendReviewEmail, failUpdateDraft, true)
-
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{
-			Status: models.SystemIntakeStatusINTAKEDRAFT,
-		})
-		s.Equal(updateDraftError, err)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-
-	s.Run("returns error when authorization errors", func() {
-		ctx := context.Background()
-		err := errors.New("authorization failed")
-		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-			return false, err
-		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, failAuthorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
-
-		intake, actualError := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
-
-		s.Error(err)
-		s.Equal(err, actualError)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-
-	s.Run("returns unauthorized error when authorization not ok", func() {
-		ctx := context.Background()
-		notOKAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-			return false, nil
-		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, notOKAuthorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
-
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
-
-		s.IsType(&apperrors.UnauthorizedError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-
-	s.Run("returns error from fetching requester email", func() {
-		ctx := context.Background()
-		failFetchEmailAddress := func(_ context.Context, euaID string) (*models.UserInfo, error) {
-			return nil, &apperrors.ExternalAPIError{
-				Err:       errors.New("sample error"),
-				Model:     models.UserInfo{},
-				ModelID:   euaID,
-				Operation: apperrors.Fetch,
-				Source:    "CEDAR LDAP",
-			}
-		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, failFetchEmailAddress, sendReviewEmail, updateDraftIntake, true)
-
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
-
-		s.IsType(&apperrors.ExternalAPIError{}, err)
-		s.Equal(0, reviewEmailCount)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-
-	s.Run("returns ExternalAPIError if requester email not returned", func() {
-		ctx := context.Background()
-		failFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
-			return &models.UserInfo{}, nil
-		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, failFetchUserInfo, sendReviewEmail, updateDraftIntake, true)
-
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
-
-		s.IsType(&apperrors.ExternalAPIError{}, err)
-		s.Equal(0, reviewEmailCount)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-
-	s.Run("returns notification error when review email fails", func() {
-		ctx := context.Background()
-		failSendReviewEmail := func(emailText string, recipientAddress string) error {
-			return &apperrors.NotificationError{
-				Err:             errors.New("failed to send Email"),
-				DestinationType: apperrors.DestinationTypeEmail,
-			}
-		}
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, fetchUserInfo, failSendReviewEmail, updateDraftIntake, true)
-
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusLCIDISSUED})
-
-		s.IsType(&apperrors.NotificationError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-
-	s.Run("returns resource conflict error when making unauthorized status change", func() {
-		ctx := context.Background()
-		updateSystemIntake := NewUpdateSystemIntake(serviceConfig, save, fetchSubmitted, authorize, fetchUserInfo, sendReviewEmail, updateDraftIntake, true)
-
-		// In this case, saving a INTAKE_DRAFT intake against an existing SUBMITTED intake
-		intake, err := updateSystemIntake(ctx, &models.SystemIntake{Status: models.SystemIntakeStatusINTAKEDRAFT})
-
-		s.IsType(&apperrors.ResourceConflictError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
-	})
-}
-
-func (s ServicesTestSuite) TestNewUpdateDraftSystemIntake() {
+	nilIntake := (*models.SystemIntake)(nil)
 	logger := zap.NewNop()
 	serviceConfig := NewConfig(logger, nil)
 	ctx := context.Background()
@@ -310,14 +174,29 @@ func (s ServicesTestSuite) TestNewUpdateDraftSystemIntake() {
 	update := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 		return intake, nil
 	}
+
 	existing := models.SystemIntake{Requester: "existing"}
 	incoming := models.SystemIntake{Requester: "incoming"}
+	fetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &existing, nil
+	}
 	s.Run("golden path update draft intake", func() {
-		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, authorize, update)
-		intake, err := updateDraftSystemIntake(ctx, &existing, &incoming)
+		updateDraftSystemIntake := NewUpdateSystemIntake(serviceConfig, fetch, update, authorize)
+		intake, err := updateDraftSystemIntake(ctx, &incoming)
 
 		s.NoError(err)
 		s.Equal(&incoming, intake)
+	})
+
+	s.Run("returns not found error if fetch fails", func() {
+		failFetch := func(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+			return nil, errors.New("fetch error")
+		}
+		updateDraftSystemIntake := NewUpdateSystemIntake(serviceConfig, failFetch, update, authorize)
+		intake, err := updateDraftSystemIntake(ctx, &incoming)
+
+		s.IsType(&apperrors.ResourceNotFoundError{}, err)
+		s.Equal(nilIntake, intake)
 	})
 
 	s.Run("returns error from authorization if authorization fails", func() {
@@ -325,33 +204,33 @@ func (s ServicesTestSuite) TestNewUpdateDraftSystemIntake() {
 		failAuthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, authorizationError
 		}
-		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, failAuthorize, update)
-		intake, err := updateDraftSystemIntake(ctx, &existing, &incoming)
+		updateDraftSystemIntake := NewUpdateSystemIntake(serviceConfig, fetch, update, failAuthorize)
+		intake, err := updateDraftSystemIntake(ctx, &incoming)
 
 		s.Equal(authorizationError, err)
-		s.Equal(&models.SystemIntake{}, intake)
+		s.Equal(nilIntake, intake)
 	})
 
 	s.Run("returns unauthorized error if authorization denied", func() {
 		unauthorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 			return false, nil
 		}
-		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, unauthorize, update)
-		intake, err := updateDraftSystemIntake(ctx, &existing, &incoming)
+		updateDraftSystemIntake := NewUpdateSystemIntake(serviceConfig, fetch, update, unauthorize)
+		intake, err := updateDraftSystemIntake(ctx, &incoming)
 
 		s.IsType(&apperrors.UnauthorizedError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
+		s.Equal(nilIntake, intake)
 	})
 
 	s.Run("returns query error if update fails", func() {
 		failUpdate := func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 			return &models.SystemIntake{}, errors.New("update error")
 		}
-		updateDraftSystemIntake := NewUpdateDraftSystemIntake(serviceConfig, authorize, failUpdate)
-		intake, err := updateDraftSystemIntake(ctx, &existing, &incoming)
+		updateDraftSystemIntake := NewUpdateSystemIntake(serviceConfig, fetch, failUpdate, authorize)
+		intake, err := updateDraftSystemIntake(ctx, &incoming)
 
 		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
+		s.Equal(nilIntake, intake)
 	})
 }
 
@@ -472,13 +351,22 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 }
 
 func (s ServicesTestSuite) TestUpdateLifecycleFields() {
+	lifecycleID := null.StringFrom("010010")
 	today := time.Now()
+	expiresAt := &today
+	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
+	scope := null.StringFrom(fmt.Sprintf("scope %s", today))
+
 	input := &models.SystemIntake{
 		ID:                 uuid.New(),
-		LifecycleID:        null.StringFrom("010010"),
-		LifecycleExpiresAt: &today,
-		LifecycleNextSteps: null.StringFrom(fmt.Sprintf("next %s", today)),
-		LifecycleScope:     null.StringFrom(fmt.Sprintf("scope %s", today)),
+		LifecycleID:        lifecycleID,
+		LifecycleExpiresAt: expiresAt,
+		DecisionNextSteps:  nextSteps,
+		LifecycleScope:     scope,
+	}
+	action := &models.Action{
+		IntakeID: &input.ID,
+		Feedback: null.StringFrom("Feedback"),
 	}
 
 	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
@@ -492,7 +380,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		if !i.LifecycleExpiresAt.Equal(today) {
 			return nil, errors.New("incorrect date")
 		}
-		if !i.LifecycleNextSteps.Equal(input.LifecycleNextSteps) {
+		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
 			return nil, errors.New("incorrect next")
 		}
 		if !i.LifecycleScope.Equal(input.LifecycleScope) {
@@ -500,21 +388,48 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 		}
 		return i, nil
 	}
-	fnGenerate := func(context.Context) (string, error) { return "993659", nil }
+	fnSaveAction := func(c context.Context, action *models.Action) error {
+		return nil
+	}
+	fnFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			Email:      "name@site.com",
+			CommonName: "NAME",
+			EuaUserID:  testhelpers.RandomEUAID(),
+		}, nil
+	}
+	reviewEmailCount := 0
+	feedbackForEmailText := ""
+	fnSendLCIDEmail := func(_ string, _ string, _ *time.Time, _ string, _string, emailText string) error {
+		feedbackForEmailText = emailText
+		reviewEmailCount++
+		return nil
+	}
+	fnGenerate := func(context.Context) (string, error) { return "123456", nil }
 	cfg := Config{clock: clock.NewMock()}
-	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerate)
+	happy := NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate)
 
 	s.Run("happy path provided lcid", func() {
-		err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input, action)
 		s.NoError(err)
+		s.Equal(intake.LifecycleID, lifecycleID)
+		s.Equal(intake.LifecycleExpiresAt, expiresAt)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.LifecycleScope, scope)
+		s.Equal(1, reviewEmailCount)
+		s.Equal("Feedback", feedbackForEmailText)
 	})
 
 	// from here on out, we always expect the LCID to get generated
 	input.LifecycleID = null.StringFrom("")
 
 	s.Run("happy path generates lcid", func() {
-		err := happy(context.Background(), input)
+		intake, err := happy(context.Background(), input, action)
 		s.NoError(err)
+		s.NotEqual(intake.LifecycleID, "")
+		s.Equal(intake.LifecycleExpiresAt, expiresAt)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.LifecycleScope, scope)
 	})
 
 	// build the error-generating pieces
@@ -526,32 +441,161 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 		return nil, errors.New("update error")
 	}
+	fnSaveActionErr := func(c context.Context, a *models.Action) error {
+		return errors.New("action error")
+	}
+	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return nil, errors.New("fetch user info error")
+	}
+	fnSendLCIDEmailErr := func(_ string, _ string, _ *time.Time, _ string, _ string, _ string) error {
+		return errors.New("send email error")
+	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
 
 	// build the table-driven test of error cases for unhappy path
 	testCases := map[string]struct {
-		fn func(context.Context, *models.SystemIntake) error
+		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 	}{
 		"error path fetch": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path auth": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path auth fail": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 		"error path generate": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnGenerateErr),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerateErr),
+		},
+		"error path save action": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
+		},
+		"error path fetch user info": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendLCIDEmail, fnGenerate),
+		},
+		"error path send email": {
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmailErr, fnGenerate),
 		},
 		"error path update": {
-			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnGenerate),
+			fn: NewUpdateLifecycleFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendLCIDEmail, fnGenerate),
 		},
 	}
 
 	for expectedErr, tc := range testCases {
 		s.Run(expectedErr, func() {
-			err := tc.fn(context.Background(), input)
+			_, err := tc.fn(context.Background(), input, action)
+			s.Error(err)
+		})
+	}
+}
+
+func (s ServicesTestSuite) TestUpdateRejectionFields() {
+	today := time.Now()
+	nextSteps := null.StringFrom(fmt.Sprintf("next %s", today))
+	reason := null.StringFrom(fmt.Sprintf("reason %s", today))
+
+	input := &models.SystemIntake{
+		ID:                uuid.New(),
+		DecisionNextSteps: nextSteps,
+		RejectionReason:   reason,
+	}
+	action := &models.Action{
+		IntakeID: &input.ID,
+		Feedback: null.StringFrom("Feedback"),
+	}
+
+	fnAuthorize := func(context.Context) (bool, error) { return true, nil }
+	fnFetch := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return &models.SystemIntake{ID: id}, nil
+	}
+	fnUpdate := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+		if !i.DecisionNextSteps.Equal(input.DecisionNextSteps) {
+			return nil, errors.New("incorrect next")
+		}
+		if !i.LifecycleScope.Equal(input.LifecycleScope) {
+			return nil, errors.New("incorrect scope")
+		}
+		return i, nil
+	}
+	fnSaveAction := func(c context.Context, action *models.Action) error {
+		return nil
+	}
+	fnFetchUserInfo := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return &models.UserInfo{
+			Email:      "name@site.com",
+			CommonName: "NAME",
+			EuaUserID:  testhelpers.RandomEUAID(),
+		}, nil
+	}
+	reviewEmailCount := 0
+	feedbackForEmailText := ""
+	fnSendRejectRequestEmail := func(recipientAddress string, reason string, nextSteps string, feedback string) error {
+		feedbackForEmailText = feedback
+		reviewEmailCount++
+		return nil
+	}
+	cfg := Config{clock: clock.NewMock()}
+	happy := NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail)
+
+	s.Run("happy path", func() {
+		intake, err := happy(context.Background(), input, action)
+		s.NoError(err)
+		s.Equal(intake.DecisionNextSteps, nextSteps)
+		s.Equal(intake.RejectionReason, reason)
+		s.Equal(1, reviewEmailCount)
+		s.Equal("Feedback", feedbackForEmailText)
+	})
+
+	// build the error-generating pieces
+	fnAuthorizeErr := func(context.Context) (bool, error) { return false, errors.New("auth error") }
+	fnAuthorizeFail := func(context.Context) (bool, error) { return false, nil }
+	fnFetchErr := func(c context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+		return nil, errors.New("fetch error")
+	}
+	fnUpdateErr := func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
+		return nil, errors.New("update error")
+	}
+	fnSaveActionErr := func(c context.Context, a *models.Action) error {
+		return errors.New("action error")
+	}
+	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
+		return nil, errors.New("fetch user info error")
+	}
+	fnSendRejectRequestEmailErr := func(recipientAddress string, reason string, nextSteps string, feedback string) error {
+		return errors.New("send email error")
+	}
+
+	// build the table-driven test of error cases for unhappy path
+	testCases := map[string]struct {
+		fn func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
+	}{
+		"error path fetch": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetchErr, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+		},
+		"error path auth": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeErr, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+		},
+		"error path auth fail": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorizeFail, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+		},
+		"error path update": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdateErr, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmail),
+		},
+		"error path fetch user info": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfoErr, fnSendRejectRequestEmail),
+		},
+		"error path save action": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveActionErr, fnFetchUserInfo, fnSendRejectRequestEmail),
+		},
+		"error path send email": {
+			fn: NewUpdateRejectionFields(cfg, fnAuthorize, fnFetch, fnUpdate, fnSaveAction, fnFetchUserInfo, fnSendRejectRequestEmailErr),
+		},
+	}
+
+	for expectedErr, tc := range testCases {
+		s.Run(expectedErr, func() {
+			_, err := tc.fn(context.Background(), input, action)
 			s.Error(err)
 		})
 	}

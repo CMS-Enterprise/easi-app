@@ -15,7 +15,8 @@ export const openIntakeStatuses = [
   'BIZ_CASE_FINAL_NEEDED',
   'BIZ_CASE_FINAL_SUBMITTED',
   'READY_FOR_GRT',
-  'READY_FOR_GRB'
+  'READY_FOR_GRB',
+  'SHUTDOWN_IN_PROGRESS'
 ];
 
 export const closedIntakeStatuses = [
@@ -23,7 +24,8 @@ export const closedIntakeStatuses = [
   'WITHDRAWN',
   'NOT_IT_REQUEST',
   'NOT_APPROVED',
-  'NO_GOVERNANCE'
+  'NO_GOVERNANCE',
+  'SHUTDOWN_COMPLETE'
 ];
 
 export const intakeStatuses = [
@@ -79,6 +81,12 @@ export type SystemIntakeForm = {
   createdAt: DateTime | null;
   archivedAt: DateTime | null;
   lcid: string;
+  lcidExpiration: DateTime | null;
+  lcidScope: string;
+  decisionNextSteps: string;
+  rejectionReason: string;
+  grtDate: DateTime | null;
+  grbDate: DateTime | null;
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
@@ -107,6 +115,15 @@ export type ContractDetailsForm = {
   };
 };
 
+export type IntakeNote = {
+  id: string;
+  authorName: string;
+  authorId: string;
+  content: string;
+  systemIntakeId: string;
+  createdAt: DateTime;
+};
+
 // Redux store type for a system intake
 export type SystemIntakeState = {
   systemIntake: SystemIntakeForm;
@@ -114,6 +131,7 @@ export type SystemIntakeState = {
   isSaving: boolean;
   isNewIntakeCreated: boolean | null;
   error?: any;
+  notes: IntakeNote[];
 };
 
 // Redux store type for systems
@@ -122,4 +140,14 @@ export type SystemIntakesState = {
   isLoading: boolean | null;
   loadedTimestamp: DateTime | null;
   error: string | null;
+};
+
+// Form for reviewer to add dates
+export type SubmitDatesForm = {
+  grtDateDay: string;
+  grtDateMonth: string;
+  grtDateYear: string;
+  grbDateDay: string;
+  grbDateMonth: string;
+  grbDateYear: string;
 };

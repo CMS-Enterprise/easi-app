@@ -2,18 +2,20 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
-import { postSystemIntakeAction } from 'types/routines';
+import { postAction } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 type ReviewProps = {
   systemIntake: SystemIntakeForm;
+  now: DateTime;
 };
 
-const Review = ({ systemIntake }: ReviewProps) => {
+const Review = ({ systemIntake, now }: ReviewProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -34,7 +36,7 @@ const Review = ({ systemIntake }: ReviewProps) => {
       <h1 className="font-heading-xl margin-top-4">
         Check your answers before sending
       </h1>
-      <SystemIntakeReview systemIntake={systemIntake} />
+      <SystemIntakeReview systemIntake={systemIntake} now={now} />
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">What happens next?</h2>
       <p>
@@ -62,8 +64,8 @@ const Review = ({ systemIntake }: ReviewProps) => {
         disabled={isSubmitting}
         onClick={() =>
           dispatch(
-            postSystemIntakeAction({
-              actionType: 'SUBMIT',
+            postAction({
+              actionType: 'SUBMIT_INTAKE',
               intakeId: systemIntake.id
             })
           )

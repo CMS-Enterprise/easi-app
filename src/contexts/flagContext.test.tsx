@@ -24,7 +24,8 @@ it('loads flags into the provider', async () => {
   const getMock = mockedAxios.get.mockResolvedValue({
     data: {
       sandbox: true,
-      taskListLite: true
+      taskListLite: true,
+      pdfExport: true
     }
   });
 
@@ -40,7 +41,9 @@ it('loads flags into the provider', async () => {
   wrapper.update();
 
   const printer = wrapper.find(FlagPrinter);
-  expect(printer.text()).toEqual(`{"sandbox":true,"taskListLite":true}`);
+  expect(printer.text()).toEqual(
+    `{"fileUploads":false,"pdfExport":true,"prototype508":false,"prototypeTRB":false,"sandbox":true,"taskListLite":true}`
+  );
   expect(mockedAxios.get.mock.calls).toEqual([[flagsURL]]);
 });
 
@@ -61,6 +64,15 @@ it('uses the defaults when flags fail to load', async () => {
   wrapper.update();
 
   const printer = wrapper.find(FlagPrinter);
-  expect(printer.text()).toEqual(`{"sandbox":false,"taskListLite":false}`);
+  expect(printer.text()).toEqual(
+    JSON.stringify({
+      fileUploads: false,
+      pdfExport: false,
+      prototype508: false,
+      prototypeTRB: false,
+      sandbox: false,
+      taskListLite: false
+    })
+  );
   expect(mockedAxios.get.mock.calls).toEqual([[flagsURL]]);
 });

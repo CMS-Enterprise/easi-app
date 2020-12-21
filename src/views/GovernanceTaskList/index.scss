@@ -15,13 +15,6 @@
         content: counter(primaryList) '. ';
       }
     }
-
-    &--secondary {
-      .governance-task-list__item:before {
-        counter-increment: secondaryList;
-        content: counter(secondaryList) '. ';
-      }
-    }
   }
 
   &__item {
@@ -75,5 +68,11 @@
   &__task-description {
     max-width: 600px;
     margin-right: auto;
+  }
+
+  &__meeting-date {
+    padding-left: 0.5rem;
+    border-left: 3px solid #000;
+    font-weight: bold;
   }
 }

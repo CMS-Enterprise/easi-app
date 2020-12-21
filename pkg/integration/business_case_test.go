@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"path"
 
-	"github.com/google/uuid"
+	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -26,58 +26,27 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 
 	intake := testhelpers.NewSystemIntake()
 	intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
-	intake.EUAUserID = s.user.euaID
+	intake.EUAUserID = null.StringFrom(s.user.euaID)
 
 	createdIntake, err := s.store.CreateSystemIntake(context.Background(), &intake)
-	intakeID := createdIntake.ID
 	s.NoError(err)
+	intakeID := createdIntake.ID
 
-	body, err := json.Marshal(map[string]string{
-		"systemIntakeId": intakeID.String(),
-		"status":         "DRAFT",
-	})
+	bizCase := testhelpers.NewBusinessCase()
+	bizCase.SystemIntakeID = intakeID
+	bizCase.EUAUserID = s.user.euaID
+	createdBizCase, err := s.store.CreateBusinessCase(context.Background(), &bizCase)
+
 	s.NoError(err)
 
 	getURL, err := url.Parse(businessCaseURL.String())
 	s.NoError(err, "failed to parse URL")
 
-	//initialize business case id for assignment after creating
-	var id uuid.UUID
-
 	client := &http.Client{}
 
-	s.Run("POST will fail with no Authorization", func() {
-		req, err := http.NewRequest(http.MethodPost, businessCaseURL.String(), bytes.NewBuffer(body))
-		req.Header.Del("Authorization")
-		s.NoError(err)
-		resp, err := client.Do(req)
-
-		s.NoError(err)
-		s.Equal(http.StatusUnauthorized, resp.StatusCode)
-	})
-
-	s.Run("POST will succeed with token", func() {
-		req, err := http.NewRequest(http.MethodPost, businessCaseURL.String(), bytes.NewBuffer(body))
-		s.NoError(err)
-		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
-
-		resp, err := client.Do(req)
-
-		s.NoError(err)
-		s.Equal(http.StatusCreated, resp.StatusCode)
-		actualBody, err := ioutil.ReadAll(resp.Body)
-		s.NoError(err)
-		var actualBusinessCase models.BusinessCase
-		err = json.Unmarshal(actualBody, &actualBusinessCase)
-		s.NoError(err)
-		s.Equal(intakeID, actualBusinessCase.SystemIntakeID)
-		s.Equal(s.user.euaID, actualBusinessCase.EUAUserID)
-
-		id = actualBusinessCase.ID
-	})
-
+	// POST tests were removed since they access CEDAR LDAP indirectly (in creating action)
 	s.Run("GET will fail with no Authorization", func() {
-		getURL.Path = path.Join(getURL.Path, id.String())
+		getURL.Path = path.Join(getURL.Path, createdBizCase.ID.String())
 		req, err := http.NewRequest(http.MethodPost, getURL.String(), nil)
 		req.Header.Del("Authorization")
 		s.NoError(err)
@@ -104,7 +73,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		var actualBusinessCase models.BusinessCase
 		err = json.Unmarshal(actualBody, &actualBusinessCase)
 		s.NoError(err)
-		s.Equal(id, actualBusinessCase.ID)
+		s.Equal(createdBizCase.ID, actualBusinessCase.ID)
 		s.Equal(intakeID, actualBusinessCase.SystemIntakeID)
 	})
 
@@ -113,7 +82,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    string(models.BusinessCaseStatusOPEN),
 			"requester": requester,
 		})
 		s.NoError(err)
@@ -131,7 +100,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		putURL := getURL
 		requester := "Test Requester"
 		body, err := json.Marshal(map[string]string{
-			"status":    "DRAFT",
+			"status":    string(models.BusinessCaseStatusOPEN),
 			"requester": requester,
 		})
 		s.NoError(err)
@@ -151,7 +120,7 @@ func (s IntegrationTestSuite) TestBusinessCaseEndpoints() {
 		var actualBusinessCase models.BusinessCase
 		err = json.Unmarshal(actualBody, &actualBusinessCase)
 		s.NoError(err)
-		s.Equal(id, actualBusinessCase.ID)
+		s.Equal(createdBizCase.ID, actualBusinessCase.ID)
 		s.Equal(requester, actualBusinessCase.Requester.String)
 	})
 }

@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
-import { Table } from '@trussworks/react-uswds';
+import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
@@ -12,72 +12,163 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
-import { SystemIntakeForm } from 'types/systemIntake';
+import { translateRequestType } from 'utils/systemIntake';
 
 import csvHeaderMap from './csvHeaderMap';
 
+import './index.scss';
+
 const RequestRepository = () => {
+  type TableTypes = 'open' | 'closed';
+  const [activeTable, setActiveTable] = useState<TableTypes>('open');
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
-
-  const columns: any = useMemo(
-    () => [
-      {
-        Header: t('intake:fields.submissionDate'),
-        accessor: 'submittedAt',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
-          }
-          return t('requestRepository.table.submissionDate.null');
-        }
-      },
-      {
-        Header: t('intake:fields.projectName'),
-        accessor: 'requestName',
-        Cell: ({ row, value }: any) => {
-          return (
-            <Link
-              to={`/governance-review-team/${row.original.id}/intake-request`}
-            >
-              {value}
-            </Link>
-          );
-        }
-      },
-      {
-        Header: t('intake:fields.component'),
-        accessor: 'requester.component'
-      },
-      {
-        Header: t('requestRepository.table.requestType'),
-        accessor: 'type'
-      },
-      {
-        Header: t('intake:fields.status'),
-        accessor: 'status',
-        Cell: ({ row, value }: { row: any; value: string }) => {
-          if (value === 'LCID_ISSUED') {
-            // if status is LCID_ISSUED, display LCID
-            return t(`intake:statusMap.${value}`) + row.original.lcid;
-          }
-          // if not display translation for status
-          return t(`intake:statusMap.${value}`);
-        }
-      }
-    ],
-    [t]
-  );
-
-  useEffect(() => {
-    dispatch(fetchSystemIntakes());
-  }, [dispatch]);
-
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
 
-  const data = useMemo(() => systemIntakes, [systemIntakes]);
+  const submissionDateColumn = {
+    Header: t('intake:fields.submissionDate'),
+    accessor: 'submittedAt',
+    Cell: ({ value }: any) => {
+      if (value) {
+        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+      }
+      return t('requestRepository.table.submissionDate.null');
+    }
+  };
+
+  const requestNameColumn = {
+    Header: t('intake:fields.projectName'),
+    accessor: 'requestName',
+    Cell: ({ row, value }: any) => {
+      return (
+        <Link to={`/governance-review-team/${row.original.id}/intake-request`}>
+          {value}
+        </Link>
+      );
+    }
+  };
+
+  const requesterNameColumn = {
+    Header: t('intake:fields.requester'),
+    accessor: 'requester.name'
+  };
+
+  const requesterComponentColumn = {
+    Header: t('intake:fields.component'),
+    accessor: 'requester.component'
+  };
+
+  const requestTypeColumn = {
+    Header: t('requestRepository.table.requestType'),
+    accessor: 'requestType'
+  };
+
+  const fundingNumberColmun = {
+    Header: t('intake:fields.fundingNumber'),
+    accessor: 'fundingSource.fundingNumber'
+  };
+
+  const grtDateColumn = {
+    Header: t('intake:fields.grtDate'),
+    accessor: 'grtDate',
+    Cell: ({ row, value }: any) => {
+      if (value) {
+        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+      }
+
+      // If date is null, return button that takes user to page to add date
+      return (
+        <UswdsLink
+          data-testid="add-grt-date-cta"
+          asCustom={Link}
+          to={`/governance-review-team/${row.original.id}/dates`}
+        >
+          {t('requestRepository.table.addDate')}
+        </UswdsLink>
+      );
+    }
+  };
+
+  const grbDateColumn = {
+    Header: t('intake:fields.grbDate'),
+    accessor: 'grbDate',
+    Cell: ({ row, value }: any) => {
+      if (value) {
+        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+      }
+
+      // If date is null, return button that takes user to page to add date
+      return (
+        <UswdsLink
+          data-testid="add-grb-date-cta"
+          asCustom={Link}
+          to={`/governance-review-team/${row.original.id}/dates`}
+        >
+          {t('requestRepository.table.addDate')}
+        </UswdsLink>
+      );
+    }
+  };
+
+  const statusColumn = {
+    Header: t('intake:fields.status'),
+    accessor: 'status'
+  };
+
+  const columns: any = useMemo(() => {
+    if (activeTable === 'open') {
+      return [
+        submissionDateColumn,
+        requestNameColumn,
+        requesterComponentColumn,
+        requestTypeColumn,
+        statusColumn,
+        grtDateColumn,
+        grbDateColumn
+      ];
+    }
+    if (activeTable === 'closed') {
+      return [
+        submissionDateColumn,
+        requestNameColumn,
+        requesterNameColumn,
+        requesterComponentColumn,
+        fundingNumberColmun,
+        statusColumn
+      ];
+    }
+    return [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeTable, t]);
+
+  const data = useMemo(() => {
+    return systemIntakes.map(intake => {
+      const statusEnum = intake.status;
+      let statusTranslation = '';
+
+      // Translating status
+      if (statusEnum === 'LCID_ISSUED') {
+        // if status is LCID_ISSUED, translate from enum to i18n and append LCID
+        statusTranslation = t(`intake:statusMap.${statusEnum}`) + intake.lcid;
+      } else {
+        // if not just translate from enum to i18n
+        statusTranslation = t(`intake:statusMap.${statusEnum}`);
+      }
+
+      // Override all applicable fields in intake to use i18n translations
+      return {
+        ...intake,
+        status: statusTranslation,
+        requestType: translateRequestType(intake.requestType)
+      };
+    });
+  }, [systemIntakes, t]);
+
+  useEffect(() => {
+    dispatch(fetchSystemIntakes({ status: activeTable }));
+  }, [dispatch, activeTable]);
 
   const {
     getTableProps,
@@ -88,6 +179,27 @@ const RequestRepository = () => {
   } = useTable(
     {
       columns,
+      sortTypes: {
+        // TODO: This may not work if another column is added that is not a string or date.
+        // Sort method changes depending on if item is a string or object
+        alphanumeric: (rowOne, rowTwo, columnName) => {
+          const rowOneElem = rowOne.values[columnName];
+          const rowTwoElem = rowTwo.values[columnName];
+
+          // If item is a string, enforce capitalization (temporarily) and then compare
+          if (typeof rowOneElem === 'string') {
+            return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
+          }
+
+          // If item is a DateTime, convert to Number and compare
+          if (rowOneElem instanceof DateTime) {
+            return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
+          }
+
+          // If neither string nor DateTime, return bare comparison
+          return rowOneElem > rowTwoElem ? 1 : -1;
+        }
+      },
       data,
       initialState: {
         sortBy: [{ id: 'submittedAt', desc: true }]
@@ -118,7 +230,7 @@ const RequestRepository = () => {
 
   const csvHeaders = csvHeaderMap(t);
 
-  const convertIntakesToCSV = (intakes: SystemIntakeForm[]) => {
+  const convertIntakesToCSV = (intakes: any[]) => {
     return intakes.map(intake => convertIntakeToCSV(intake));
   };
 
@@ -133,6 +245,7 @@ const RequestRepository = () => {
           </li>
           <li>Requests</li>
         </BreadcrumbNav>
+
         <div>
           <CSVLink
             data={convertIntakesToCSV(data)}
@@ -151,8 +264,43 @@ const RequestRepository = () => {
           </CSVLink>
         </div>
       </div>
-      <h1>{t('requestRepository.header')}</h1>
-      <p>{t('requestRepository.requestCount', { count: data.length })}</p>
+      <nav aria-label="Request Repository Table Navigation">
+        <ul className="easi-request-repo__tab-list">
+          <li
+            className={classnames('easi-request-repo__tab', {
+              'easi-request-repo__tab--active': activeTable === 'open'
+            })}
+          >
+            <button
+              type="button"
+              className="easi-request-repo__tab-btn"
+              onClick={() => setActiveTable('open')}
+            >
+              Open Requests
+            </button>
+          </li>
+          <li
+            className={classnames('easi-request-repo__tab', {
+              'easi-request-repo__tab--active': activeTable === 'closed'
+            })}
+          >
+            <button
+              type="button"
+              className="easi-request-repo__tab-btn"
+              onClick={() => setActiveTable('closed')}
+              data-testid="view-closed-intakes-btn"
+            >
+              Closed Requests
+            </button>
+          </li>
+        </ul>
+      </nav>
+      <h1 className="font-heading-sm">
+        {t('requestRepository.requestCount', {
+          context: activeTable,
+          count: data.length
+        })}
+      </h1>
       <Table bordered={false} {...getTableProps()} fullWidth>
         <caption className="usa-sr-only">
           {t('requestRepository.aria.openRequestsTable')}
@@ -164,6 +312,7 @@ const RequestRepository = () => {
                 <th
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   aria-sort={getColumnSortStatus(column)}
+                  style={{ whiteSpace: 'nowrap' }}
                 >
                   {column.render('Header')}
                   {column.isSorted && (

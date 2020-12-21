@@ -87,6 +87,18 @@ const ContactDetails = ({
       />
     ));
 
+  const saveExitLink = (() => {
+    let link = '';
+    if (systemIntake.requestType === 'SHUTDOWN') {
+      link = '/';
+    } else {
+      link = flags.taskListLite
+        ? `/governance-task-list/${systemIntake.id}`
+        : '/';
+    }
+    return link;
+  })();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -198,7 +210,10 @@ const ContactDetails = ({
                   >
                     CMS Business/Product Owner&apos;s Name
                   </Label>
-                  <HelpText className="margin-bottom-105">
+                  <HelpText
+                    id="IntakeForm-BusinessOwnerHelp"
+                    className="margin-bottom-105"
+                  >
                     This person owns a line of business related to this request
                     and will champion the request moving forward
                   </HelpText>
@@ -234,6 +249,7 @@ const ContactDetails = ({
                     id="IntakeForm-BusinessOwner"
                     maxLength={50}
                     name="businessOwner.name"
+                    aria-describedby="IntakeForm-BusinessOwnerHelp"
                   />
                 </FieldGroup>
 
@@ -276,7 +292,7 @@ const ContactDetails = ({
                   >
                     CMS Project/Product Manager, or lead
                   </Label>
-                  <HelpText>
+                  <HelpText id="IntakeForm-ProductManagerHelp">
                     This person may be contacted for follow ups and to
                     understand the state of the contract
                   </HelpText>
@@ -289,6 +305,7 @@ const ContactDetails = ({
                     id="IntakeForm-ProductManager"
                     maxLength={50}
                     name="productManager.name"
+                    aria-describedby="IntakeForm-ProductManagerHelp"
                   />
                 </FieldGroup>
 
@@ -330,7 +347,10 @@ const ContactDetails = ({
                       Does your project have an Information System Security
                       Officer (ISSO)?
                     </legend>
-                    <HelpText className="margin-bottom-2">
+                    <HelpText
+                      id="IntakeForm-ISSOHelp"
+                      className="margin-bottom-2"
+                    >
                       If yes, please tell us the name of your Information System
                       Security Officer so we can get in touch with them
                     </HelpText>
@@ -348,6 +368,7 @@ const ContactDetails = ({
                         setFieldValue('isso.isPresent', true);
                       }}
                       value
+                      aria-describedby="IntakeForm-ISSOHelp"
                     />
                     {values.isso.isPresent && (
                       <div className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
@@ -394,7 +415,10 @@ const ContactDetails = ({
                       For this request, I have started collaborating/consulting
                       with:
                     </legend>
-                    <HelpText className="margin-bottom-2">
+                    <HelpText
+                      id="IntakeForm-Collaborators"
+                      className="margin-bottom-2"
+                    >
                       Please disclose the name of each person you&apos;ve worked
                       with. This helps us locate any additional information on
                       your request
@@ -413,6 +437,7 @@ const ContactDetails = ({
                         setFieldValue('governanceTeams.isPresent', true);
                       }}
                       value
+                      aria-describedby="IntakeForm-Collaborators"
                     />
                     <div className="margin-left-3">
                       <FieldGroup
@@ -461,11 +486,7 @@ const ContactDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push(
-                        flags.taskListLite
-                          ? `/governance-task-list/${systemIntake.id}`
-                          : '/'
-                      );
+                      history.push(saveExitLink);
                     }}
                   >
                     <span>

@@ -21,7 +21,7 @@ const RequestDescriptionReview = ({
         <div className="margin-bottom-205 line-height-body-3">
           <DescriptionTerm term="What is your business or user need?" />
           <DescriptionDefinition
-            className="text-pre"
+            className="text-pre-wrap"
             definition={values.businessNeed}
           />
         </div>
@@ -30,7 +30,7 @@ const RequestDescriptionReview = ({
         <div className="margin-bottom-205 line-height-body-3">
           <DescriptionTerm term="How will CMS benefit from this effort?" />
           <DescriptionDefinition
-            className="text-pre"
+            className="text-pre-wrap"
             definition={values.cmsBenefit}
           />
         </div>
@@ -39,7 +39,7 @@ const RequestDescriptionReview = ({
         <div className="margin-bottom-205 line-height-body-3">
           <DescriptionTerm term="How does this effort align with organizational priorities?" />
           <DescriptionDefinition
-            className="text-pre"
+            className="text-pre-wrap"
             definition={values.priorityAlignment}
           />
         </div>
@@ -48,7 +48,7 @@ const RequestDescriptionReview = ({
         <div className="margin-bottom-205 line-height-body-3">
           <DescriptionTerm term="How will you determine whether or not this effort is successful?" />
           <DescriptionDefinition
-            className="text-pre"
+            className="text-pre-wrap"
             definition={values.successIndicators}
           />
         </div>

@@ -12,11 +12,15 @@ import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
 
-type SystemIntakeReview = {
+type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
+  now: DateTime;
 };
 
-export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
+export const SystemIntakeReview = ({
+  systemIntake,
+  now
+}: SystemIntakeReviewProps) => {
   const { contract } = systemIntake;
 
   const fundingDefinition = () => {
@@ -46,15 +50,19 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
     }
     return yesNoMap[isExpectingIncrease];
   };
+
   return (
     <div>
       <DescriptionList title="System Request">
         <ReviewRow>
           <div>
             <DescriptionTerm term="Submission Date" />
-            {/* TO DO Make this changeable */}
             <DescriptionDefinition
-              definition={DateTime.local().toLocaleString(DateTime.DATE_MED)}
+              definition={
+                systemIntake.submittedAt
+                  ? systemIntake.submittedAt.toLocaleString(DateTime.DATE_MED)
+                  : now.toLocaleString(DateTime.DATE_MED)
+              }
             />
           </div>
         </ReviewRow>
@@ -139,7 +147,7 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
           <div>
             <DescriptionTerm term="What is your business need?" />
             <DescriptionDefinition
-              className="text-pre"
+              className="text-pre-wrap"
               definition={systemIntake.businessNeed}
             />
           </div>
@@ -148,7 +156,7 @@ export const SystemIntakeReview = ({ systemIntake }: SystemIntakeReview) => {
           <div>
             <DescriptionTerm term="How are you thinking of solving it?" />
             <DescriptionDefinition
-              className="text-pre"
+              className="text-pre-wrap"
               definition={systemIntake.businessSolution}
             />
           </div>

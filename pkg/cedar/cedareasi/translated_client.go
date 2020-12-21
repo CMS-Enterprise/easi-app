@@ -8,6 +8,8 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
+	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -18,14 +20,26 @@ import (
 	"github.com/cmsgov/easi-app/pkg/validate"
 )
 
+const (
+	emitFlagKey = "emit-to-cedar"
+	emitDefault = false
+)
+
 // TranslatedClient is an API client for CEDAR EASi using EASi language
 type TranslatedClient struct {
-	client        *apiclient.EASiCore
+	client        *apiclient.EASiCoreAPI
 	apiAuthHeader runtime.ClientAuthInfoWriter
+	emitToCedar   func(context.Context) bool
+}
+
+// Client is an interface to ease testing dependencies
+type Client interface {
+	FetchSystems(context.Context) (models.SystemShorts, error)
+	ValidateAndSubmitSystemIntake(context.Context, *models.SystemIntake) (string, error)
 }
 
 // NewTranslatedClient returns an API client for CEDAR EASi using EASi language
-func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient {
+func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient, ldUser lduser.User) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
 
@@ -35,12 +49,30 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string) TranslatedClient 
 	// Set auth header
 	apiKeyHeaderAuth := httptransport.APIKeyAuth("x-Gateway-APIKey", "header", cedarAPIKey)
 
-	return TranslatedClient{client, apiKeyHeaderAuth}
+	fnEmit := func(ctx context.Context) bool {
+		// this is the conditional way of stopping us from submitting to CEDAR; see EASI-1025
+		// TODO: if we were using per-user targeting, we would use the context Principle to fetch/build
+		// the LD User; but currently we are not using that feature, so we use a common "static" User
+		// object
+		result, err := ldClient.BoolVariation(emitFlagKey, ldUser, emitDefault)
+		if err != nil {
+			appcontext.ZLogger(ctx).Info(
+				"problem evaluating feature flag",
+				zap.Error(err),
+				zap.String("flagName", emitFlagKey),
+				zap.Bool("flagDefault", emitDefault),
+				zap.Bool("flagResult", result),
+			)
+		}
+		return result
+	}
+
+	return TranslatedClient{client, apiKeyHeaderAuth, fnEmit}
 }
 
 // FetchSystems fetches a system list from CEDAR
 func (c TranslatedClient) FetchSystems(ctx context.Context) (models.SystemShorts, error) {
-	resp, err := c.client.Operations.SystemsGET1(nil, c.apiAuthHeader)
+	resp, err := c.client.Operations.SystemsGET2(nil, c.apiAuthHeader)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch system from CEDAR", zap.Error(err))
 		return models.SystemShorts{}, err
@@ -77,7 +109,7 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 	if validate.RequireUUID(intake.ID) {
 		expectedError.WithValidation("ID", validationMessage)
 	}
-	if validate.RequireString(intake.EUAUserID) {
+	if validate.RequireString(intake.EUAUserID.ValueOrZero()) {
 		expectedError.WithValidation("EUAUserID", validationMessage)
 	}
 	if validate.RequireString(intake.Requester) {
@@ -147,38 +179,35 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 
 func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
 	id := validatedIntake.ID.String()
-	submissionTime := validatedIntake.SubmittedAt.String()
-	params := apioperations.NewIntakegovernancePOST4Params()
+	params := apioperations.NewIntakegovernancePOST5Params()
+	euaID := validatedIntake.EUAUserID.ValueOrZero()
 	governanceIntake := apimodels.GovernanceIntake{
-		BusinessNeeds:           &validatedIntake.BusinessNeed.String,
-		BusinessOwner:           &validatedIntake.BusinessOwner.String,
-		BusinessOwnerComponent:  &validatedIntake.BusinessOwnerComponent.String,
+		BusinessNeeds:           validatedIntake.BusinessNeed.String,
+		BusinessOwner:           validatedIntake.BusinessOwner.String,
+		BusinessOwnerComponent:  validatedIntake.BusinessOwnerComponent.String,
 		EaCollaborator:          validatedIntake.EACollaborator.String,
-		EaSupportRequest:        &validatedIntake.EASupportRequest.Bool,
-		EuaUserID:               &validatedIntake.EUAUserID,
-		ExistingContract:        &validatedIntake.ExistingContract.String,
-		ExistingFunding:         &validatedIntake.ExistingFunding.Bool,
-		FundingNumber:           validatedIntake.FundingNumber.String,
+		EaSupportRequest:        validatedIntake.EASupportRequest.Bool,
+		EuaUserID:               &euaID,
+		ExistingContract:        validatedIntake.ExistingContract.String,
+		ExistingFunding:         validatedIntake.ExistingFunding.Bool,
+		FundingSource:           validatedIntake.FundingSource.String,
 		ID:                      &id,
 		Isso:                    validatedIntake.ISSO.String,
 		OitSecurityCollaborator: validatedIntake.OITSecurityCollaborator.String,
-		ProcessStatus:           &validatedIntake.ProcessStatus.String,
-		ProductManager:          &validatedIntake.ProductManager.String,
-		ProductManagerComponent: &validatedIntake.ProductManagerComponent.String,
-		Requester:               &validatedIntake.Requester,
-		RequesterComponent:      &validatedIntake.Component.String,
-		Solution:                &validatedIntake.Solution.String,
-		SubmittedTime:           &submissionTime,
-		SystemName:              &validatedIntake.ProjectName.String,
+		ProcessStatus:           validatedIntake.ProcessStatus.String,
+		ProductManager:          validatedIntake.ProductManager.String,
+		ProductManagerComponent: validatedIntake.ProductManagerComponent.String,
+		Requester:               validatedIntake.Requester,
+		RequesterComponent:      validatedIntake.Component.String,
+		Solution:                validatedIntake.Solution.String,
+		SubmittedAt:             validatedIntake.SubmittedAt.String(),
+		SystemName:              validatedIntake.ProjectName.String,
 		TrbCollaborator:         validatedIntake.TRBCollaborator.String,
 	}
-	governanceConversion := []*apimodels.GovernanceIntake{
-		&governanceIntake,
-	}
 	params.Body = &apimodels.Intake{
-		Governance: governanceConversion,
+		Governance: &governanceIntake,
 	}
-	resp, err := c.client.Operations.IntakegovernancePOST4(params, c.apiAuthHeader)
+	resp, err := c.client.Operations.IntakegovernancePOST5(params, c.apiAuthHeader)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to submit intake for CEDAR", zap.Error(err))
 		return "", &apperrors.ExternalAPIError{
@@ -209,5 +238,23 @@ func (c TranslatedClient) ValidateAndSubmitSystemIntake(ctx context.Context, int
 	if err != nil {
 		return "", err
 	}
-	return submitSystemIntake(ctx, intake, c)
+	// we may not be sending SystemIntakes to CEDAR currently
+	if !c.emitToCedar(ctx) {
+		return "", nil
+	}
+	alfabetID, err := submitSystemIntake(ctx, intake, c)
+	if err != nil {
+		return "", err
+	}
+	// if we are submitting to CEDAR, we expect a non-empty value back
+	if alfabetID == "" {
+		return "", &apperrors.ExternalAPIError{
+			Err:       errors.New("submission was not successful"),
+			Model:     intake,
+			ModelID:   intake.ID.String(),
+			Operation: apperrors.Submit,
+			Source:    "CEDAR EASi",
+		}
+	}
+	return alfabetID, nil
 }

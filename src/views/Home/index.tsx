@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, withRouter } from 'react-router-dom';
+import { useHistory, useLocation, withRouter } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 
 import Footer from 'components/Footer';
@@ -11,27 +11,41 @@ import RequestRepository from 'components/RequestRepository';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 
-import BusinessCaseBanners from './BusinessCaseBanners';
 import SystemIntakeBanners from './SystemIntakeBanners';
 import WelcomeText from './WelcomeText';
 
 import './index.scss';
 
 const Banners = () => {
+  const history = useHistory();
   const location = useLocation<any>();
+  const [confirmationText, setIsConfirmationText] = useState('');
+
+  useEffect(() => {
+    if (location.state && location.state.confirmationText) {
+      setIsConfirmationText(location.state.confirmationText);
+      history.replace({
+        pathname: '/',
+        state: {}
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="margin-y-6">
-      {location.state && location.state.confirmationText && (
+      {confirmationText && (
         <div className="border-05 border-green">
           <div className="fa fa-check fa-2x display-inline-block text-middle text-green margin-left-1 margin-right-2" />
-          <p className="display-inline-block text-middle margin-y-105">
-            {location.state.confirmationText}
+          <p
+            role="alert"
+            className="display-inline-block text-middle margin-y-105"
+          >
+            {confirmationText}
           </p>
         </div>
       )}
       <SystemIntakeBanners />
-      <BusinessCaseBanners />
     </div>
   );
 };
@@ -39,15 +53,13 @@ const Banners = () => {
 const Home = () => {
   const { authState } = useOktaAuth();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const userGroupsSet = useSelector(
-    (state: AppState) => state.auth.userGroupsSet
-  );
+  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   return (
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        {userGroupsSet &&
+        {isUserSet &&
           (user.isGrtReviewer(userGroups) ? (
             <RequestRepository />
           ) : (

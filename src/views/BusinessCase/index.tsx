@@ -36,6 +36,7 @@ import GeneralRequestInfo from './GeneralRequestInfo';
 import PreferredSolution from './PreferredSolution';
 import RequestDescription from './RequestDescription';
 import Review from './Review';
+import BusinessCaseView from './ViewOnly';
 
 import './index.scss';
 
@@ -50,11 +51,9 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  const isSubmitting = useSelector(
-    (state: AppState) => state.businessCase.isSubmitting
-  );
+  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
 
-  const error = useSelector((state: AppState) => state.businessCase.error);
+  const actionError = useSelector((state: AppState) => state.action.error);
   const prevIsSubmitting = usePrevious(isSubmitting);
 
   const dispatchSave = () => {
@@ -99,7 +98,7 @@ export const BusinessCase = () => {
 
   // Handle submit
   useEffect(() => {
-    if (prevIsSubmitting && !isSubmitting && !error) {
+    if (prevIsSubmitting && !isSubmitting && !actionError) {
       history.push(`/business/${businessCaseId}/confirmation`);
     }
 
@@ -112,7 +111,7 @@ export const BusinessCase = () => {
       <MainContent className="margin-bottom-5">
         <div className="grid-container">
           {!['local', 'dev', 'impl'].includes(
-            process.env.REACT_APP_APP_ENV || ''
+            process.env.REACT_APP_APP_ENV as string
           ) && (
             <BreadcrumbNav className="margin-y-2">
               <li>
@@ -123,7 +122,7 @@ export const BusinessCase = () => {
             </BreadcrumbNav>
           )}
           {['local', 'dev', 'impl'].includes(
-            process.env.REACT_APP_APP_ENV || ''
+            process.env.REACT_APP_APP_ENV as string
           ) && (
             <BreadcrumbNav className="margin-y-2">
               <li>
@@ -209,8 +208,12 @@ export const BusinessCase = () => {
               render={() => <Review businessCase={businessCase} />}
             />
             <SecureRoute
+              path="/business/:businessCaseId/view"
+              render={() => <BusinessCaseView businessCase={businessCase} />}
+            />
+            <SecureRoute
               path="/business/:businessCaseId/confirmation"
-              render={() => <Confirmation />}
+              render={() => <Confirmation businessCase={businessCase} />}
             />
             <SecureRoute
               path="*"

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 
 const newTimeStamp = () => Date.now();
@@ -5,33 +6,47 @@ const newTimeStamp = () => Date.now();
 type authReducerState = {
   lastActiveAt: number;
   lastRenewAt: number;
+  name: string;
+  euaId: string;
   groups: Array<string>;
-  userGroupsSet: boolean;
+  isUserSet: boolean;
 };
 
 const UPDATE_LAST_ACTIVE_AT = 'AUTH_REDUCER_UPDATE_LAST_ACTIVE_AT';
 
-export const updateLastActiveAt = {
-  type: UPDATE_LAST_ACTIVE_AT
+export const updateLastActiveAt = (lastActiveAt: DateTime) => {
+  return {
+    type: UPDATE_LAST_ACTIVE_AT,
+    payload: {
+      lastActiveAt
+    }
+  };
 };
 
 const UPDATE_LAST_RENEW_AT = 'AUTH_REDUCER_UPDATE_LAST_RENEW_AT';
 
-export const updateLastRenewAt = {
-  type: UPDATE_LAST_RENEW_AT
+export const updateLastRenewAt = (lastRenewAt: DateTime) => {
+  return {
+    type: UPDATE_LAST_RENEW_AT,
+    payload: {
+      lastRenewAt
+    }
+  };
 };
 
-const SET_USER_GROUPS = 'AUTH_REDUCER_SET_USER_GROUPS';
-export const setUserGroups = (groups: Array<string>) => ({
-  type: SET_USER_GROUPS,
-  payload: { groups }
+const SET_USER = 'AUTH_REDUCER_SET_USER';
+export const setUser = (user: any) => ({
+  type: SET_USER,
+  payload: user
 });
 
 const initialState: authReducerState = {
   lastActiveAt: newTimeStamp(),
   lastRenewAt: newTimeStamp(),
+  name: '',
+  euaId: '',
   groups: [],
-  userGroupsSet: false
+  isUserSet: false
 };
 
 function authReducer(
@@ -42,18 +57,18 @@ function authReducer(
     case UPDATE_LAST_ACTIVE_AT:
       return {
         ...state,
-        lastActiveAt: newTimeStamp()
+        lastActiveAt: action.payload.lastActiveAt
       };
     case UPDATE_LAST_RENEW_AT:
       return {
         ...state,
-        lastRenewAt: newTimeStamp()
+        lastRenewAt: action.payload.lastRenewAt
       };
-    case SET_USER_GROUPS:
+    case SET_USER:
       return {
         ...state,
-        groups: action.payload.groups,
-        userGroupsSet: true
+        ...action.payload,
+        isUserSet: true
       };
     default:
       return state;

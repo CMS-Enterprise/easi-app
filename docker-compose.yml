@@ -11,3 +11,30 @@ services:
       - FLYWAY_URL=jdbc:postgresql://db/postgres
     depends_on:
       - db
+  minio:
+    restart: always
+    image: minio/minio:latest
+    ports:
+      - '9000:9000'
+    entrypoint: minio server /data
+  minio_mc:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host rm local;
+      /usr/bin/mc config host add --quiet --api s3v4 local http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc rb --force local/easi-app-file-uploads/;
+      /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
+      /usr/bin/mc policy set public local/easi-app-file-uploads;
+      "
+  lambda:
+    image: lambci/lambda:go1.x
+    ports:
+      - 9001:9001
+    environment:
+      - DOCKER_LAMBDA_STAY_OPEN=1
+      - LICENSE_KEY=
+    volumes:
+      - ./../easi-infra-modules/lambda/prince/build:/var/task:ro,delegated

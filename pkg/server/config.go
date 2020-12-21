@@ -9,6 +9,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 const configMissingMessage = "Must set config: %v"
@@ -65,10 +66,39 @@ func (s Server) NewSESConfig() appses.Config {
 	}
 }
 
+// NewS3Config returns a new s3.Config and checks required fields
+func (s Server) NewS3Config() upload.Config {
+	s.checkRequiredConfig(appconfig.AWSS3FileUploadBucket)
+	s.checkRequiredConfig(appconfig.AWSRegion)
+
+	return upload.Config{
+		Bucket:  s.Config.GetString(appconfig.AWSS3FileUploadBucket),
+		Region:  s.Config.GetString(appconfig.AWSRegion),
+		IsLocal: false,
+	}
+}
+
 // NewCEDARClientCheck checks if CEDAR clients are not connectable
 func (s Server) NewCEDARClientCheck() {
 	s.checkRequiredConfig(appconfig.CEDARAPIURL)
 	s.checkRequiredConfig(appconfig.CEDARAPIKey)
+}
+
+// LambdaConfig is the config to call a lambda func
+type LambdaConfig struct {
+	Endpoint     string
+	FunctionName string
+}
+
+// NewPrinceLambdaConfig returns the configutation for the prince lambda
+func (s Server) NewPrinceLambdaConfig() LambdaConfig {
+	endpoint := s.Config.GetString(appconfig.LambdaEndpoint)
+	name := s.Config.GetString(appconfig.LambdaFunctionPrince)
+
+	return LambdaConfig{
+		Endpoint:     endpoint,
+		FunctionName: name,
+	}
 }
 
 // NewFlagConfig checks if Launch Darkly config exists

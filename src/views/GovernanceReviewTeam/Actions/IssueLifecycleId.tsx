@@ -13,21 +13,17 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { ActionType, SubmitLifecycleIdForm } from 'types/action';
-import {
-  issueLifecycleIdForSystemIntake,
-  postSystemIntakeAction
-} from 'types/routines';
+import { ImproveEasiSurvey } from 'components/Survey';
+import { SubmitLifecycleIdForm } from 'types/action';
+import { issueLifecycleIdForSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
 const IssueLifecycleId = () => {
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('action');
-
-  const actionType: ActionType = 'ISSUE_LCID';
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -49,20 +45,15 @@ const IssueLifecycleId = () => {
       scope,
       lifecycleId
     } = values;
-    const actionPayload = { actionType, intakeId: systemId, feedback };
-    dispatch(postSystemIntakeAction(actionPayload));
-
-    const lcidData = {
+    const lcidPayload = {
       lcidExpiresAt: `${expirationDateYear}-${expirationDateMonth}-${expirationDateDay}`,
       lcidNextSteps: nextSteps,
       lcidScope: scope,
-      lcid: lifecycleId
+      lcid: lifecycleId,
+      feedback
     };
-    const lcidPayload = {
-      id: systemId,
-      data: lcidData
-    };
-    dispatch(issueLifecycleIdForSystemIntake(lcidPayload));
+    const payload = { id: systemId, lcidPayload };
+    dispatch(issueLifecycleIdForSystemIntake(payload));
 
     history.push(`/governance-review-team/${systemId}/intake-request`);
   };
@@ -126,7 +117,7 @@ const IssueLifecycleId = () => {
                       label={t('issueLCID.lcid.new')}
                       onChange={() => {
                         setFieldValue('newLifecycleId', true);
-                        setFieldValue('lifecycleId', null);
+                        setFieldValue('lifecycleId', '');
                       }}
                       value
                     />
@@ -263,6 +254,9 @@ const IssueLifecycleId = () => {
                   <Label htmlFor="IssueLifecycleIdForm-Feedback">
                     {t('issueLCID.feedbackLabel')}
                   </Label>
+                  <HelpText id="IssueLifecycleIdForm-SubmitHelp">
+                    {t('issueLCID.submitHelp')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.feedback}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
@@ -270,6 +264,7 @@ const IssueLifecycleId = () => {
                     id="IssueLifecycleIdForm-Feedback"
                     maxLength={2000}
                     name="feedback"
+                    aria-describedby="IssueLifecycleIdForm-SubmitHelp"
                   />
                 </FieldGroup>
                 <Button
@@ -280,6 +275,7 @@ const IssueLifecycleId = () => {
                   {t('issueLCID.submit')}
                 </Button>
               </Form>
+              <ImproveEasiSurvey />
             </div>
           </>
         );

@@ -41,6 +41,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
             <div className="margin-right-2">
               <fieldset
                 className="usa-fieldset"
+                aria-describedby="BusinessCase-EstimatedLifecycleCostHelp"
                 data-scroll={`${formikKey}.year${year}.${index}.phase`}
               >
                 <div>
@@ -260,7 +261,7 @@ const EstimatedLifecycleCost = ({
             );
           })}
         </div>
-        <div className="bg-base-lightest overflow-auto margin-top-3 padding-x-2">
+        <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto margin-top-3 padding-x-2">
           <DescriptionList title="System total cost">
             <DescriptionTerm term="System total cost" />
             <DescriptionDefinition

@@ -21,7 +21,10 @@ import { hasAlternativeB } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import {
+  BusinessCaseDraftValidationSchema,
+  BusinessCaseFinalValidationSchema
+} from 'validations/businessCaseSchema';
 
 type PreferredSolutionProps = {
   businessCase: BusinessCaseModel;
@@ -39,11 +42,16 @@ const PreferredSolution = ({
     preferredSolution: businessCase.preferredSolution
   };
 
+  const ValidationSchema =
+    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
+      ? BusinessCaseFinalValidationSchema
+      : BusinessCaseDraftValidationSchema;
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.preferredSolution}
+      validationSchema={ValidationSchema.preferredSolution}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -126,7 +134,10 @@ const PreferredSolution = ({
                   <Label htmlFor="BusinessCase-PreferredSolutionSummary">
                     Preferred solution: Summary
                   </Label>
-                  <HelpText className="margin-top-1">
+                  <HelpText
+                    id="BusinessCase-PreferredSolutionSummaryHelp"
+                    className="margin-top-1"
+                  >
                     <span>Please include:</span>
                     <ul className="padding-left-205">
                       <li>
@@ -153,7 +164,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionSummary"
                     maxLength={2000}
                     name="preferredSolution.summary"
-                    aria-describedby="BusinessCase-PreferredSolutionSummaryCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionSummaryCounter BusinessCase-PreferredSolutionSummaryHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionSummaryCounter"
@@ -169,7 +180,10 @@ const PreferredSolution = ({
                   <Label htmlFor="BusinessCase-PreferredSolutionAcquisitionApproach">
                     Preferred solution: Acquisition approach
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-PreferredSolutionAcquisitionApproachHelp"
+                    className="margin-y-1"
+                  >
                     Describe the approach to acquiring the products and services
                     required to deliver the system, including potential contract
                     vehicles.
@@ -185,7 +199,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionAcquisitionApproach"
                     maxLength={2000}
                     name="preferredSolution.acquisitionApproach"
-                    aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionAcquisitionApproachCounter BusinessCase-PreferredSolutionAcquisitionApproachHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionAcquisitionApproachCounter"
@@ -209,7 +223,9 @@ const PreferredSolution = ({
                     </FieldErrorMsg>
                     <Field
                       as={RadioField}
-                      checked={values.preferredSolution.security.isApproved}
+                      checked={
+                        values.preferredSolution.security.isApproved === true
+                      }
                       id="BusinessCase-PreferredSolutionSecurityApproved"
                       name="preferredsolution.security.isApproved"
                       label={yesNoMap.YES}
@@ -254,7 +270,10 @@ const PreferredSolution = ({
                       <legend className="usa-label margin-bottom-1">
                         Is it in the process of CMS approval?
                       </legend>
-                      <HelpText className="margin-bottom-1">
+                      <HelpText
+                        id="BusinessCase-PreferredSolutionApprovalHelp"
+                        className="margin-bottom-1"
+                      >
                         Obtaining CMS Approval can be lengthy and solutions that
                         do not have it or are just starting may lead to longer
                         project timelines.
@@ -276,6 +295,7 @@ const PreferredSolution = ({
                         name="preferredSolution.security.isBeingReviewed"
                         label={yesNoMap.YES}
                         value="YES"
+                        aria-describedby="BusinessCase-PreferredSolutionApprovalHelp"
                       />
                       <Field
                         as={RadioField}
@@ -345,7 +365,7 @@ const PreferredSolution = ({
                             !!flatErrors['preferredSolution.hosting.location']
                           }
                         >
-                          <Label htmlFor="BusinessCase-PreferredSolutiohnCloudLocation">
+                          <Label htmlFor="BusinessCase-PreferredSolutionCloudLocation">
                             Where are you planning to host?
                           </Label>
                           <FieldErrorMsg>
@@ -512,7 +532,10 @@ const PreferredSolution = ({
                   <Label htmlFor="BusinessCase-PreferredSolutionPros">
                     Preferred solution: Pros
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-PreferredSolutionProsHelp"
+                    className="margin-y-1"
+                  >
                     Identify any aspects of this solution that positively
                     differentiates this approach from other solutions
                   </HelpText>
@@ -525,7 +548,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionPros"
                     maxLength={2000}
                     name="preferredSolution.pros"
-                    aria-describedby="BusinessCase-PreferredSolutionProsCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionProsCounter BusinessCase-PreferredSolutionProsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionProsCounter"
@@ -540,7 +563,10 @@ const PreferredSolution = ({
                   <Label htmlFor="BusinessCase-PreferredSolutionCons">
                     Preferred solution: Cons
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-PreferredSolutionConsHelp"
+                    className="margin-y-1"
+                  >
                     Identify any aspects of this solution that negatively impact
                     this approach
                   </HelpText>
@@ -553,7 +579,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionCons"
                     maxLength={2000}
                     name="preferredSolution.cons"
-                    aria-describedby="BusinessCase-PreferredSolutionConsCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionConsCounter BusinessCase-PreferredSolutionConsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionConsCounter"
@@ -563,7 +589,7 @@ const PreferredSolution = ({
               </div>
               <div className="tablet:grid-col-9 margin-top-2">
                 <h2 className="margin-0">Estimated lifecycle cost</h2>
-                <HelpText>
+                <HelpText id="BusinessCase-EstimatedLifecycleCostHelp">
                   <p className="margin-y-2">
                     You can add speculative costs if exact ones are not known or
                     if a contract is not yet in place.
@@ -599,7 +625,10 @@ const PreferredSolution = ({
                     What is the cost savings or avoidance associated with this
                     solution?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-PreferredSolutionCostSavingsHelp"
+                    className="margin-y-1"
+                  >
                     This could include old systems going away, contract hours/
                     new Full Time Employees not needed, or other savings, even
                     if indirect.
@@ -613,7 +642,7 @@ const PreferredSolution = ({
                     id="BusinessCase-PreferredSolutionCostSavings"
                     maxLength={2000}
                     name="preferredSolution.costSavings"
-                    aria-describedby="BusinessCase-PreferredSolutionCostSavingsCounter"
+                    aria-describedby="BusinessCase-PreferredSolutionCostSavingsCounter BusinessCase-PreferredSolutionCostSavingsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PreferredSolutionCostSavingsCounter"

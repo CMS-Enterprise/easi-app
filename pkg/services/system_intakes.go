@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -19,9 +20,10 @@ func NewFetchSystemIntakes(
 	config Config,
 	fetchByID func(c context.Context, euaID string) (models.SystemIntakes, error),
 	fetchAll func(context.Context) (models.SystemIntakes, error),
+	fetchByStatusFilter func(context.Context, []models.SystemIntakeStatus) (models.SystemIntakes, error),
 	authorize func(c context.Context) (bool, error),
-) func(c context.Context) (models.SystemIntakes, error) {
-	return func(ctx context.Context) (models.SystemIntakes, error) {
+) func(context.Context, models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
+	return func(ctx context.Context, statusFilter models.SystemIntakeStatusFilter) (models.SystemIntakes, error) {
 		logger := appcontext.ZLogger(ctx)
 		ok, err := authorize(ctx)
 		if err != nil {
@@ -35,7 +37,17 @@ func NewFetchSystemIntakes(
 		if !principal.AllowGRT() {
 			result, err = fetchByID(ctx, principal.ID())
 		} else {
-			result, err = fetchAll(ctx)
+			if statusFilter == "" {
+				result, err = fetchAll(ctx)
+			} else {
+				statuses, filterErr := models.GetStatusesByFilter(statusFilter)
+				if filterErr != nil {
+					return nil, &apperrors.BadRequestError{
+						Err: filterErr,
+					}
+				}
+				result, err = fetchByStatusFilter(ctx, statuses)
+			}
 		}
 		if err != nil {
 			logger.Error("failed to fetch system intakes")
@@ -64,7 +76,7 @@ func NewCreateSystemIntake(
 				Info("something went wrong fetching the eua id from the context")
 			return &models.SystemIntake{}, &apperrors.UnauthorizedError{}
 		}
-		intake.EUAUserID = principal.ID()
+		intake.EUAUserID = null.StringFrom(principal.ID())
 		// app validation belongs here
 		createdIntake, err := create(ctx, intake)
 		if err != nil {
@@ -82,84 +94,40 @@ func NewCreateSystemIntake(
 // NewUpdateSystemIntake is a service to update a system intake
 func NewUpdateSystemIntake(
 	config Config,
-	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	authorize func(context.Context, *models.SystemIntake) (bool, error),
-	fetchRequesterInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(emailText string, recipientAddress string) error,
-	updateDraftIntake func(ctx context.Context, existing *models.SystemIntake, incoming *models.SystemIntake) (*models.SystemIntake, error),
-	canDecideIntake bool,
 ) func(c context.Context, i *models.SystemIntake) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
-		existingIntake, fetchErr := fetch(ctx, intake.ID)
-		if fetchErr != nil {
-			return &models.SystemIntake{}, &apperrors.QueryError{
-				Err:       fetchErr,
-				Operation: apperrors.QueryFetch,
-				Model:     existingIntake,
+		existingIntake, err := fetch(ctx, intake.ID)
+		if err != nil {
+			return nil, &apperrors.ResourceNotFoundError{
+				Err:      errors.New("business case does not exist"),
+				Resource: intake,
 			}
 		}
 
-		if existingIntake.Status == models.SystemIntakeStatusINTAKEDRAFT && intake.Status == models.SystemIntakeStatusINTAKEDRAFT {
-			return updateDraftIntake(ctx, existingIntake, intake)
-		} else if existingIntake.Status == models.SystemIntakeStatusINTAKESUBMITTED &&
-			(intake.Status == models.SystemIntakeStatusLCIDISSUED ||
-				intake.Status == models.SystemIntakeStatusNEEDBIZCASE ||
-				intake.Status == models.SystemIntakeStatusNOTITREQUEST) && canDecideIntake {
+		ok, err := authorize(ctx, existingIntake)
+		if err != nil {
+			return nil, err
+		}
+		if !ok {
+			return nil, &apperrors.UnauthorizedError{Err: err}
+		}
 
-			ok, err := authorize(ctx, existingIntake)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-			if !ok {
-				return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
-			}
+		updatedTime := config.clock.Now()
+		intake.UpdatedAt = &updatedTime
 
-			updatedTime := config.clock.Now()
-			intake.UpdatedAt = &updatedTime
-
-			requesterInfo, err := fetchRequesterInfo(ctx, existingIntake.EUAUserID)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-			if requesterInfo == nil || requesterInfo.Email == "" {
-				return &models.SystemIntake{}, &apperrors.ExternalAPIError{
-					Err:       errors.New("user info fetch was not successful"),
-					Model:     existingIntake,
-					ModelID:   intake.ID.String(),
-					Operation: apperrors.Fetch,
-					Source:    "CEDAR LDAP",
-				}
-			}
-
-			existingIntake.Status = intake.Status
-			existingIntake.GrtReviewEmailBody = intake.GrtReviewEmailBody
-			existingIntake.RequesterEmailAddress = null.StringFrom(requesterInfo.Email)
-			existingIntake.DecidedAt = &updatedTime
-			existingIntake.UpdatedAt = &updatedTime
-			// This ensures only certain fields can be modified.
-			intake, err = update(ctx, existingIntake)
-			if err != nil {
-				return &models.SystemIntake{}, &apperrors.QueryError{
-					Err:       err,
-					Model:     intake,
-					Operation: apperrors.QuerySave,
-				}
-			}
-
-			err = sendReviewEmail(intake.GrtReviewEmailBody.String, requesterInfo.Email)
-			if err != nil {
-				return &models.SystemIntake{}, err
-			}
-
-			return intake, nil
-		} else {
-			return &models.SystemIntake{}, &apperrors.ResourceConflictError{
-				Err:        errors.New("invalid intake status change"),
-				Resource:   intake,
-				ResourceID: intake.ID.String(),
+		intake, err = update(ctx, intake)
+		if err != nil {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
 			}
 		}
+
+		return intake, nil
 	}
 }
 
@@ -198,7 +166,7 @@ func NewArchiveSystemIntake(
 	config Config,
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
-	archiveBusinessCase func(context.Context, uuid.UUID) error,
+	closeBusinessCase func(context.Context, uuid.UUID) error,
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
 	sendWithdrawEmail func(requestName string) error,
 ) func(context.Context, uuid.UUID) error {
@@ -219,9 +187,9 @@ func NewArchiveSystemIntake(
 			return &apperrors.UnauthorizedError{Err: err}
 		}
 
-		// We need to archive any associated business case
+		// We need to close any associated business case
 		if intake.BusinessCaseID != nil {
-			err = archiveBusinessCase(ctx, *intake.BusinessCaseID)
+			err = closeBusinessCase(ctx, *intake.BusinessCaseID)
 			if err != nil {
 				return err
 			}
@@ -286,12 +254,15 @@ func NewUpdateLifecycleFields(
 	authorize func(context.Context) (bool, error),
 	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	saveAction func(context.Context, *models.Action) error,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendIssueLCIDEmail func(string, string, *time.Time, string, string, string) error,
 	generateLCID func(context.Context) (string, error),
-) func(context.Context, *models.SystemIntake) error {
-	return func(ctx context.Context, intake *models.SystemIntake) error {
+) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
 		if err != nil {
-			return &apperrors.QueryError{
+			return nil, &apperrors.QueryError{
 				Err:       err,
 				Operation: apperrors.QueryFetch,
 				Model:     existing,
@@ -300,18 +271,32 @@ func NewUpdateLifecycleFields(
 
 		ok, err := authorize(ctx)
 		if err != nil {
-			return err
+			return nil, err
 		}
 		if !ok {
-			return &apperrors.UnauthorizedError{Err: err}
+			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 
 		// don't allow overwriting an existing LCID
 		if existing.LifecycleID.ValueOrZero() != "" {
-			return &apperrors.ResourceConflictError{
+			return nil, &apperrors.ResourceConflictError{
 				Err:        errors.New("lifecycle id already exists"),
 				Resource:   models.SystemIntake{},
-				ResourceID: intake.ID.String(),
+				ResourceID: existing.ID.String(),
+			}
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
+				Model:     existing,
+				ModelID:   existing.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
 			}
 		}
 
@@ -322,25 +307,116 @@ func NewUpdateLifecycleFields(
 		existing.LifecycleID = intake.LifecycleID
 		existing.LifecycleExpiresAt = intake.LifecycleExpiresAt
 		existing.LifecycleScope = intake.LifecycleScope
-		existing.LifecycleNextSteps = intake.LifecycleNextSteps
+		existing.DecisionNextSteps = intake.DecisionNextSteps
 
 		// if a LCID wasn't passed in, we generate one
 		if existing.LifecycleID.ValueOrZero() == "" {
 			lcid, gErr := generateLCID(ctx)
 			if gErr != nil {
-				return gErr
+				return nil, gErr
 			}
 			existing.LifecycleID = null.StringFrom(lcid)
 		}
 
-		_, err = update(ctx, existing)
+		action.IntakeID = &existing.ID
+		action.ActionType = models.ActionTypeISSUELCID
+		if err = saveAction(ctx, action); err != nil {
+			return nil, err
+		}
+
+		existing.Status = models.SystemIntakeStatusLCIDISSUED
+		updated, err := update(ctx, existing)
 		if err != nil {
-			return &apperrors.QueryError{
+			return nil, &apperrors.QueryError{
 				Err:       err,
 				Model:     intake,
 				Operation: apperrors.QuerySave,
 			}
 		}
-		return nil
+
+		err = sendIssueLCIDEmail(
+			requesterInfo.Email,
+			updated.LifecycleID.String,
+			updated.LifecycleExpiresAt,
+			updated.LifecycleScope.String,
+			updated.LifecycleNextSteps.String,
+			action.Feedback.String)
+		if err != nil {
+			return nil, err
+		}
+
+		return updated, nil
+
+	}
+}
+
+// NewUpdateRejectionFields provides a way to update several of the fields
+// associated with rejecting an intake request
+func NewUpdateRejectionFields(
+	config Config,
+	authorize func(context.Context) (bool, error),
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	saveAction func(context.Context, *models.Action) error,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendRejectRequestEmail func(recipient string, reason string, nextSteps string, feedback string) error,
+) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
+	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
+		existing, err := fetch(ctx, intake.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		ok, err := authorize(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if !ok {
+			return nil, &apperrors.UnauthorizedError{Err: err}
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, existing.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
+				Model:     existing,
+				ModelID:   existing.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		action.IntakeID = &existing.ID
+		action.ActionType = models.ActionTypeREJECT
+		if err = saveAction(ctx, action); err != nil {
+			return nil, err
+		}
+
+		// we only want to bring over the fields specifically
+		// dealing with Rejection information
+		updatedTime := config.clock.Now()
+		existing.UpdatedAt = &updatedTime
+		existing.RejectionReason = intake.RejectionReason
+		existing.DecisionNextSteps = intake.DecisionNextSteps
+		existing.Status = models.SystemIntakeStatusNOTAPPROVED
+		updated, err := update(ctx, existing)
+		if err != nil {
+			return nil, err
+		}
+
+		err = sendRejectRequestEmail(
+			requesterInfo.Email,
+			existing.RejectionReason.String,
+			existing.DecisionNextSteps.String,
+			action.Feedback.String,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		return updated, nil
 	}
 }

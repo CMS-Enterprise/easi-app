@@ -188,7 +188,7 @@ Array [
               What is your business need?
             </dt>
             <dd
-              className="description-definition margin-0 text-pre"
+              className="description-definition margin-0 text-pre-wrap"
             >
               The quick brown fox jumps over the lazy dog.
             </dd>
@@ -204,7 +204,7 @@ Array [
               How are you thinking of solving it?
             </dt>
             <dd
-              className="description-definition margin-0 text-pre"
+              className="description-definition margin-0 text-pre-wrap"
             >
               The quick brown fox jumps over the lazy dog.
             </dd>
@@ -347,6 +347,18 @@ Array [
     >
       Take an action
     </a>
+    <p
+      className="margin-top-4"
+    >
+      <a
+        aria-label="Open EASi survey in a new tab"
+        href="https://www.surveymonkey.com/r/DM6NYRX"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Is there anything wrong on this page? (opens in a new tab)
+      </a>
+    </p>
   </div>,
   " ",
 ]

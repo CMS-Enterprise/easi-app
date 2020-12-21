@@ -21,16 +21,10 @@ type LifecycleCostSolution string
 type LifecycleCostYear string
 
 const (
-	// BusinessCaseStatusDRAFT captures enum value "DRAFT"
-	BusinessCaseStatusDRAFT BusinessCaseStatus = "DRAFT"
-	// BusinessCaseStatusSUBMITTED captures enum value "SUBMITTED"
-	BusinessCaseStatusSUBMITTED BusinessCaseStatus = "SUBMITTED"
-	// BusinessCaseStatusREVIEWED captures enum value "REVIEWED"
-	BusinessCaseStatusREVIEWED BusinessCaseStatus = "REVIEWED"
-	// BusinessCaseStatusREJECTED captures enum value "REJECTED"
-	BusinessCaseStatusREJECTED BusinessCaseStatus = "REJECTED"
-	// BusinessCaseStatusARCHIVED captures enum value "ARCHIVED"
-	BusinessCaseStatusARCHIVED BusinessCaseStatus = "ARCHIVED"
+	// BusinessCaseStatusOPEN captures enum value "OPEN"
+	BusinessCaseStatusOPEN BusinessCaseStatus = "OPEN"
+	// BusinessCaseStatusCLOSED captures enum value "CLOSED"
+	BusinessCaseStatusCLOSED BusinessCaseStatus = "CLOSED"
 
 	// LifecycleCostPhaseDEVELOPMENT captures enum value "Development"
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
@@ -81,6 +75,7 @@ type BusinessCase struct {
 	ID                                  uuid.UUID               `json:"id"`
 	EUAUserID                           string                  `json:"euaUserId" db:"eua_user_id"`
 	SystemIntakeID                      uuid.UUID               `json:"systemIntakeId" db:"system_intake"`
+	SystemIntakeStatus                  SystemIntakeStatus      `json:"systemIntakeStatus" db:"system_intake_status"`
 	Status                              BusinessCaseStatus      `json:"status"`
 	ProjectName                         null.String             `json:"projectName" db:"project_name"`
 	Requester                           null.String             `json:"requester"`

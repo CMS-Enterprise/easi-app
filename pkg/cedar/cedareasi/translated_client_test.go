@@ -19,7 +19,7 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 	id := uuid.New()
 	intake := models.SystemIntake{
 		ID:                      id,
-		EUAUserID:               "FAKE",
+		EUAUserID:               null.StringFrom("FAKE"),
 		Status:                  models.SystemIntakeStatusINTAKESUBMITTED,
 		Requester:               "Fake Requester",
 		Component:               null.StringFrom("Fake Component"),
@@ -126,7 +126,7 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 	})
 
 	s.Run("An intake without a required string fails", func() {
-		intake.EUAUserID = ""
+		intake.EUAUserID = null.StringFrom("")
 		err := ValidateSystemIntakeForCedar(ctx, &intake)
 		s.IsType(&apperrors.ValidationError{}, err)
 		expectedErrString := fmt.Sprintf(
@@ -136,7 +136,7 @@ func (s CedarEasiTestSuite) TestValidateSystemIntakeForCedar() {
 		s.EqualError(err, expectedErrString)
 
 		// Reset intake fields
-		intake.EUAUserID = "FAKE"
+		intake.EUAUserID = null.StringFrom("FAKE")
 	})
 
 	s.Run("An intake without a required id fails", func() {
