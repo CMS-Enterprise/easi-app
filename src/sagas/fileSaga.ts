@@ -29,18 +29,10 @@ function* createFileUploadURL(action: Action<any>) {
 }
 
 function putFileS3Request(formData: FileUploadForm) {
-  console.log('the upload:');
-  console.log(formData);
   const data = new FormData();
   data.append('file', formData.file);
 
-  const config = {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  };
-
-  return axios.put(formData.uploadURL, data, config);
+  return axios.put(formData.uploadURL, data);
 }
 
 function* uploadFile(action: Action<any>) {
