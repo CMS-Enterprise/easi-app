@@ -491,7 +491,8 @@ describe('The Goveranance Task List', () => {
         systemIntake: {
           systemIntake: {
             ...initialSystemIntakeForm,
-            status: 'BIZ_CASE_DRAFT_SUBMITTED'
+            status: 'BIZ_CASE_DRAFT_SUBMITTED',
+            businessCaseId: 'ac94c1d7-48ca-4c49-9045-371b4d3062b4'
           }
         },
         businessCase: { form: {} }
