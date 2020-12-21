@@ -23,6 +23,8 @@ import (
 const (
 	emitFlagKey = "emit-to-cedar"
 	emitDefault = false
+
+	dateTimeLayout = "2006-01-02 15:04:05"
 )
 
 // TranslatedClient is an API client for CEDAR EASi using EASi language
@@ -177,35 +179,46 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 	return nil
 }
 
-func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
-	id := validatedIntake.ID.String()
-	params := apioperations.NewIntakegovernancePOST5Params()
-	euaID := validatedIntake.EUAUserID.ValueOrZero()
-	governanceIntake := apimodels.GovernanceIntake{
-		BusinessNeeds:           validatedIntake.BusinessNeed.String,
-		BusinessOwner:           validatedIntake.BusinessOwner.String,
-		BusinessOwnerComponent:  validatedIntake.BusinessOwnerComponent.String,
-		EaCollaborator:          validatedIntake.EACollaborator.String,
-		EaSupportRequest:        validatedIntake.EASupportRequest.Bool,
-		EuaUserID:               &euaID,
-		ExistingContract:        validatedIntake.ExistingContract.String,
-		ExistingFunding:         validatedIntake.ExistingFunding.Bool,
-		FundingSource:           validatedIntake.FundingSource.String,
+func systemIntakeToGovernanceIntake(si *models.SystemIntake) *apimodels.GovernanceIntake {
+	id := si.ID.String()
+	gi := &apimodels.GovernanceIntake{
+		BusinessNeeds:           si.BusinessNeed.ValueOrZero(),
+		BusinessOwner:           si.BusinessOwner.ValueOrZero(),
+		BusinessOwnerComponent:  si.BusinessOwnerComponent.ValueOrZero(),
+		EaCollaborator:          si.EACollaborator.ValueOrZero(),
+		EaSupportRequest:        si.EASupportRequest.ValueOrZero(),
+		EuaUserID:               si.EUAUserID.Ptr(),
+		ExistingContract:        si.ExistingContract.ValueOrZero(),
+		ExistingFunding:         si.ExistingFunding.ValueOrZero(),
+		FundingSource:           si.FundingSource.ValueOrZero(),
 		ID:                      &id,
-		Isso:                    validatedIntake.ISSO.String,
-		OitSecurityCollaborator: validatedIntake.OITSecurityCollaborator.String,
-		ProcessStatus:           validatedIntake.ProcessStatus.String,
-		ProductManager:          validatedIntake.ProductManager.String,
-		ProductManagerComponent: validatedIntake.ProductManagerComponent.String,
-		Requester:               validatedIntake.Requester,
-		RequesterComponent:      validatedIntake.Component.String,
-		Solution:                validatedIntake.Solution.String,
-		SubmittedAt:             validatedIntake.SubmittedAt.String(),
-		SystemName:              validatedIntake.ProjectName.String,
-		TrbCollaborator:         validatedIntake.TRBCollaborator.String,
+		Isso:                    si.ISSO.ValueOrZero(),
+		OitSecurityCollaborator: si.OITSecurityCollaborator.ValueOrZero(),
+		ProcessStatus:           si.ProcessStatus.ValueOrZero(),
+		ProductManager:          si.ProductManager.ValueOrZero(),
+		ProductManagerComponent: si.ProductManagerComponent.ValueOrZero(),
+		Requester:               si.Requester,
+		RequesterComponent:      si.Component.ValueOrZero(),
+		Solution:                si.Solution.ValueOrZero(),
+		SystemName:              si.ProjectName.ValueOrZero(),
+		TrbCollaborator:         si.TRBCollaborator.ValueOrZero(),
 	}
+	if si.SubmittedAt != nil {
+		gi.SubmittedAt = si.SubmittedAt.Format(dateTimeLayout)
+	}
+	if si.DecidedAt != nil {
+		gi.DecidedAt = si.DecidedAt.Format(dateTimeLayout)
+	}
+	if si.ArchivedAt != nil {
+		gi.WithdrawnAt = si.ArchivedAt.Format(dateTimeLayout)
+	}
+	return gi
+}
+
+func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
+	params := apioperations.NewIntakegovernancePOST5Params()
 	params.Body = &apimodels.Intake{
-		Governance: &governanceIntake,
+		Governance: systemIntakeToGovernanceIntake(validatedIntake),
 	}
 	resp, err := c.client.Operations.IntakegovernancePOST5(params, c.apiAuthHeader)
 	if err != nil {
@@ -213,7 +226,7 @@ func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntak
 		return "", &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     validatedIntake,
-			ModelID:   id,
+			ModelID:   validatedIntake.ID.String(),
 			Operation: apperrors.Submit,
 			Source:    "CEDAR",
 		}
