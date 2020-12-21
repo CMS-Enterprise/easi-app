@@ -3,7 +3,9 @@ package flags
 import (
 	"time"
 
-	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
+	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
+	"gopkg.in/launchdarkly/go-server-sdk.v5/interfaces/flagstate"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 )
@@ -20,7 +22,7 @@ type FlagValues map[string]interface{}
 
 // FlagClient provides a way to retrieve the set of flags
 type FlagClient interface {
-	Flags(user ld.User) FlagValues
+	Flags(user lduser.User) FlagValues
 }
 
 // LaunchDarklyClient is backed by the LaunchDarkly service and requires
@@ -30,9 +32,9 @@ type LaunchDarklyClient struct {
 }
 
 // Flags returns the flags from Launch Darkly
-func (c LaunchDarklyClient) Flags(user ld.User) FlagValues {
+func (c LaunchDarklyClient) Flags(user lduser.User) FlagValues {
 	currentFlags := FlagValues{}
-	state := c.client.AllFlagsState(user, ld.ClientSideOnly)
+	state := c.client.AllFlagsState(user, flagstate.OptionClientSideOnly())
 	valuesMap := state.ToValuesMap()
 	for k, v := range valuesMap {
 		currentFlags[k] = v
@@ -46,17 +48,18 @@ type LocalFlagClient struct {
 }
 
 // Flags returns all flags
-func (c LocalFlagClient) Flags(user ld.User) FlagValues {
+func (c LocalFlagClient) Flags(user lduser.User) FlagValues {
 	return c.flags
 }
 
 // NewLaunchDarklyClient returns a client backed by Launch Darkly
-func NewLaunchDarklyClient(config Config) (*LaunchDarklyClient, error) {
-	ldClient, err := ld.MakeClient(config.Key, config.Timeout)
-	if err != nil {
-		return nil, err
-	}
-	return &LaunchDarklyClient{client: ldClient}, nil
+func NewLaunchDarklyClient(config Config) (*ld.LDClient, error) {
+	return ld.MakeClient(config.Key, config.Timeout)
+}
+
+// WrapLaunchDarklyClient returns a client that fulfils the flags.FlagClient interface
+func WrapLaunchDarklyClient(c *ld.LDClient) *LaunchDarklyClient {
+	return &LaunchDarklyClient{client: c}
 }
 
 // NewLocalClient returns a client backed by local values

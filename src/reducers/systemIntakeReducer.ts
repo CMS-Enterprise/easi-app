@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 
 import {
@@ -7,9 +8,11 @@ import {
 import {
   archiveSystemIntake,
   clearSystemIntake,
+  fetchIntakeNotes,
   fetchSystemIntake,
+  issueLifecycleIdForSystemIntake,
+  postIntakeNote,
   postSystemIntake,
-  reviewSystemIntake,
   saveSystemIntake,
   storeSystemIntake
 } from 'types/routines';
@@ -20,7 +23,8 @@ const initialState: SystemIntakeState = {
   isLoading: null,
   isSaving: false,
   isNewIntakeCreated: null,
-  error: null
+  error: null,
+  notes: []
 };
 
 function systemIntakeReducer(
@@ -120,12 +124,9 @@ function systemIntakeReducer(
         ...state,
         isLoading: false
       };
-    case reviewSystemIntake.REQUEST:
-      return {
-        ...state,
-        error: null
-      };
-    case reviewSystemIntake.SUCCESS:
+    case archiveSystemIntake.SUCCESS:
+      return initialState;
+    case issueLifecycleIdForSystemIntake.SUCCESS:
       return {
         ...state,
         systemIntake: {
@@ -133,13 +134,35 @@ function systemIntakeReducer(
           ...prepareSystemIntakeForApp(action.payload)
         }
       };
-    case reviewSystemIntake.FAILURE:
+    case postIntakeNote.SUCCESS:
+      return {
+        ...state,
+        notes: [
+          {
+            ...action.payload,
+            createdAt: DateTime.fromISO(action.payload.createdAt)
+          },
+          ...state.notes
+        ]
+      };
+    case fetchIntakeNotes.TRIGGER:
+      return {
+        ...state,
+        notes: []
+      };
+    case fetchIntakeNotes.SUCCESS:
+      return {
+        ...state,
+        notes: action.payload.map((note: any) => ({
+          ...note,
+          createdAt: DateTime.fromISO(note.createdAt)
+        }))
+      };
+    case fetchIntakeNotes.FAILURE:
       return {
         ...state,
         error: action.payload
       };
-    case archiveSystemIntake.SUCCESS:
-      return initialState;
     default:
       return state;
   }

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, Switch, useHistory, useParams } from 'react-router-dom';
 import { SecureRoute, useOktaAuth } from '@okta/okta-react';
 import { FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -24,6 +25,7 @@ import ContactDetails from './ContactDetails';
 import ContractDetails from './ContractDetails';
 import RequestDetails from './RequestDetails';
 import Review from './Review';
+import SystemIntakeView from './ViewOnly';
 
 import './index.scss';
 
@@ -88,11 +90,11 @@ export const SystemIntake = () => {
   }, []);
 
   return (
-    <PageWrapper className="system-intake ">
+    <PageWrapper className="system-intake">
       <Header />
       <MainContent className="grid-container margin-bottom-5">
         {!['local', 'dev', 'impl'].includes(
-          process.env.REACT_APP_APP_ENV || ''
+          process.env.REACT_APP_APP_ENV as string
         ) && (
           <BreadcrumbNav className="margin-y-2">
             <li>
@@ -103,7 +105,7 @@ export const SystemIntake = () => {
           </BreadcrumbNav>
         )}
         {['local', 'dev', 'impl'].includes(
-          process.env.REACT_APP_APP_ENV || ''
+          process.env.REACT_APP_APP_ENV as string
         ) && (
           <BreadcrumbNav className="margin-y-2">
             <li>
@@ -153,7 +155,13 @@ export const SystemIntake = () => {
             />
             <SecureRoute
               path="/system/:systemId/review"
-              render={() => <Review systemIntake={systemIntake} />}
+              render={() => (
+                <Review systemIntake={systemIntake} now={DateTime.local()} />
+              )}
+            />
+            <SecureRoute
+              path="/system/:systemId/view"
+              render={() => <SystemIntakeView systemIntake={systemIntake} />}
             />
             <SecureRoute path="*" render={() => <NotFoundPartial />} />
           </Switch>

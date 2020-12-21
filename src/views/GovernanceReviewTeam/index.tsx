@@ -13,13 +13,21 @@ import PageWrapper from 'components/PageWrapper';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
-import { isIntakeClosed, isIntakeOpen } from 'utils/systemIntake';
+import {
+  isIntakeClosed,
+  isIntakeOpen,
+  translateRequestType
+} from 'utils/systemIntake';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
+import RejectIntake from './Actions/RejectIntake';
 import SubmitAction from './Actions/SubmitAction';
 import BusinessCaseReview from './BusinessCaseReview';
+import Dates from './Dates';
+import Decision from './Decision';
 import IntakeReview from './IntakeReview';
+import Notes from './Notes';
 
 import './index.scss';
 
@@ -97,7 +105,7 @@ const GovernanceReviewTeam = () => {
                 </div>
                 <div className="easi-grt__description-group">
                   <dt>{t('intake:fields.requestFor')}</dt>
-                  <dd>N/A</dd>
+                  <dd>{translateRequestType(systemIntake.requestType)}</dd>
                 </div>
               </div>
             </dl>
@@ -156,29 +164,79 @@ const GovernanceReviewTeam = () => {
                   {t('general:businessCase')}
                 </Link>
               </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/decision`}
+                  aria-label={t('aria.openDecision')}
+                  className={getNavLinkClasses('decision')}
+                >
+                  {t('decision.title')}
+                </Link>
+              </li>
             </ul>
             <hr />
-            <Link
-              to={`/governance-review-team/${systemId}/actions`}
-              aria-label={t('actions')}
-              className={getNavLinkClasses('actions')}
-            >
-              {t('actions')}
-            </Link>
+            <ul className="easi-grt__nav-list">
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/actions`}
+                  className={getNavLinkClasses('actions')}
+                >
+                  {t('actions')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/notes`}
+                  className={getNavLinkClasses('notes')}
+                >
+                  {t('notes.heading')}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={`/governance-review-team/${systemId}/dates`}
+                  className={getNavLinkClasses('dates')}
+                >
+                  {t('dates.heading')}
+                </Link>
+              </li>
+            </ul>
           </nav>
           <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/intake-request"
-              render={() => <IntakeReview systemIntake={systemIntake} />}
+              render={() => (
+                <IntakeReview
+                  systemIntake={systemIntake}
+                  now={DateTime.local()}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
               render={() => <BusinessCaseReview businessCase={businessCase} />}
             />
             <Route
+              path="/governance-review-team/:systemId/notes"
+              render={() => <Notes />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/dates"
+              render={() => <Dates systemIntake={systemIntake} />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/decision"
+              render={() => <Decision systemIntake={systemIntake} />}
+            />
+            <Route
               path="/governance-review-team/:systemId/actions"
               exact
-              render={() => <ChooseAction businessCase={businessCase} />}
+              render={() => (
+                <ChooseAction
+                  businessCase={businessCase}
+                  systemIntakeType={systemIntake.requestType}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/actions/not-it-request"
@@ -208,6 +266,24 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
+              path="/governance-review-team/:systemId/actions/provide-feedback-keep-draft"
+              render={() => (
+                <SubmitAction
+                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT"
+                  actionName={actionsT('actions.provideGrtFeedbackKeepDraft')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/provide-feedback-need-final"
+              render={() => (
+                <SubmitAction
+                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
+                  actionName={actionsT('actions.provideGrtFeedbackNeedFinal')}
+                />
+              )}
+            />
+            <Route
               path="/governance-review-team/:systemId/actions/ready-for-grt"
               render={() => (
                 <SubmitAction
@@ -217,8 +293,66 @@ const GovernanceReviewTeam = () => {
               )}
             />
             <Route
+              path="/governance-review-team/:systemId/actions/ready-for-grb"
+              render={() => (
+                <SubmitAction
+                  action="READY_FOR_GRB"
+                  actionName={actionsT('actions.readyForGrb')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
+              render={() => (
+                <SubmitAction
+                  action="BIZ_CASE_NEEDS_CHANGES"
+                  actionName={actionsT('actions.bizCaseNeedsChanges')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/no-governance"
+              render={() => (
+                <SubmitAction
+                  action="NO_GOVERNANCE_NEEDED"
+                  actionName={actionsT('actions.noGovernance')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/send-email"
+              render={() => (
+                <SubmitAction
+                  action="SEND_EMAIL"
+                  actionName={actionsT('actions.sendEmail')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/guide-received-close"
+              render={() => (
+                <SubmitAction
+                  action="GUIDE_RECEIVED_CLOSE"
+                  actionName={actionsT('actions.guideReceivedClose')}
+                />
+              )}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/not-responding-close"
+              render={() => (
+                <SubmitAction
+                  action="NOT_RESPONDING_CLOSE"
+                  actionName={actionsT('actions.notRespondingClose')}
+                />
+              )}
+            />
+            <Route
               path="/governance-review-team/:systemId/actions/issue-lcid"
               render={() => <IssueLifecycleId />}
+            />
+            <Route
+              path="/governance-review-team/:systemId/actions/not-approved"
+              render={() => <RejectIntake />}
             />
           </section>
         </section>

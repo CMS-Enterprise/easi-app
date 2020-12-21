@@ -46,6 +46,18 @@ const ContractDetails = ({
     contract: systemIntake.contract
   };
 
+  const saveExitLink = (() => {
+    let link = '';
+    if (systemIntake.requestType === 'SHUTDOWN') {
+      link = '/';
+    } else {
+      link = flags.taskListLite
+        ? `/governance-task-list/${systemIntake.id}`
+        : '/';
+    }
+    return link;
+  })();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -92,7 +104,7 @@ const ContractDetails = ({
                   <Label htmlFor="IntakeForm-CurrentStage">
                     Where are you in the process?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText id="IntakeForm-ProcessHelp" className="margin-y-1">
                     This helps the governance team provide the right type of
                     guidance for your request
                   </HelpText>
@@ -102,6 +114,7 @@ const ContractDetails = ({
                     error={!!flatErrors.currentStage}
                     id="IntakeForm-CurrentStage"
                     name="currentStage"
+                    aria-describedby="IntakeForm-ProcessHelp"
                   >
                     <Field
                       as={DropdownItem}
@@ -129,7 +142,10 @@ const ContractDetails = ({
                       Does this request have funding from an existing funding
                       source?
                     </legend>
-                    <HelpText className="margin-bottom-1">
+                    <HelpText
+                      id="Intake-Form-ExistingFundingHelp"
+                      className="margin-bottom-1"
+                    >
                       If you are unsure, please get in touch with your
                       Contracting Officer Representative
                     </HelpText>
@@ -145,6 +161,7 @@ const ContractDetails = ({
                       onChange={() => {
                         setFieldValue('fundingSource.isFunded', true);
                       }}
+                      aria-describedby="Intake-Form-ExistingFundingHelp"
                       value
                     />
                     {values.fundingSource.isFunded && (
@@ -225,7 +242,10 @@ const ContractDetails = ({
                     <legend className="usa-label margin-bottom-1">
                       Do you expect costs for this request to increase?
                     </legend>
-                    <HelpText className="margin-bottom-1">
+                    <HelpText
+                      id="IntakeForm-IncreasedCostsHelp"
+                      className="margin-bottom-1"
+                    >
                       This information helps the team decide on the right
                       approval process for this request
                     </HelpText>
@@ -239,6 +259,7 @@ const ContractDetails = ({
                       name="costs.isExpectingIncrease"
                       label={yesNoMap.YES}
                       value="YES"
+                      aria-describedby="IntakeForm-IncreasedCostsHelp"
                     />
                     {values.costs.isExpectingIncrease === 'YES' && (
                       <div className="width-mobile margin-top-neg-2 margin-left-3 margin-bottom-1">
@@ -300,7 +321,10 @@ const ContractDetails = ({
                       Do you already have a contract in place to support this
                       effort?
                     </legend>
-                    <HelpText className="margin-bottom-1">
+                    <HelpText
+                      id="IntakeForm-HasContractHelp"
+                      className="margin-bottom-1"
+                    >
                       This information helps the Office of Acquisition and
                       Grants Management (OAGM) track work
                     </HelpText>
@@ -314,6 +338,7 @@ const ContractDetails = ({
                       name="contract.hasContract"
                       label="I already have a contract/InterAgency Agreement (IAA) in place"
                       value="HAVE_CONTRACT"
+                      aria-describedby="IntakeForm-HasContractHelp"
                     />
                     {values.contract.hasContract === 'HAVE_CONTRACT' && (
                       <div className="margin-top-neg-2 margin-left-4 margin-bottom-2">
@@ -652,7 +677,7 @@ const ContractDetails = ({
                       checked={values.contract.hasContract === 'NOT_STARTED'}
                       id="IntakeForm-ContractNotStarted"
                       name="contract.status"
-                      label="I haven't started acquisiting planning yet"
+                      label="I haven't started acquisition planning yet"
                       value="NOT_STARTED"
                       onChange={() => {
                         setFieldValue('contract.hasContract', 'NOT_STARTED');
@@ -718,11 +743,7 @@ const ContractDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push(
-                        flags.taskListLite
-                          ? `/governance-task-list/${systemIntake.id}`
-                          : '/'
-                      );
+                      history.push(saveExitLink);
                     }}
                   >
                     <span>

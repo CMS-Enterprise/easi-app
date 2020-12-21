@@ -22,7 +22,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 			"<p>\n  You have a new draft Business Case pending in EASi.\n  " +
 			"Please get back to the requester as soon as possible with your response.\n</p>\n\n" +
 			fmt.Sprintf(
-				"<a href=\"%s://%s/business/%s/grt-review\" >",
+				"<a href=\"%s://%s/governance-review-team/%s/business-case\" >",
 				s.config.URLScheme,
 				s.config.URLHost,
 				businessCaseID.String(),

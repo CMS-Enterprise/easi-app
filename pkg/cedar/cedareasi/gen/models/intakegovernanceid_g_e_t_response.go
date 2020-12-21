@@ -6,14 +6,14 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // IntakegovernanceidGETResponse intakegovernanceid g e t response
+//
 // swagger:model intakegovernanceid_GET_response
 type IntakegovernanceidGETResponse struct {
 
@@ -22,7 +22,7 @@ type IntakegovernanceidGETResponse struct {
 	Intake *Intake1 `json:"Intake"`
 
 	// response
-	Response *Response `json:"Response,omitempty"`
+	Response *Response1 `json:"Response,omitempty"`
 }
 
 // Validate validates this intakegovernanceid g e t response

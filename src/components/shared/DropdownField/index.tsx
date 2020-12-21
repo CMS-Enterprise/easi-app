@@ -7,13 +7,13 @@ type DropdownFieldProps = {
   id: string;
   disabled?: boolean;
   error?: boolean;
-  label?: string;
   name: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onBlur: () => void;
   children: React.ReactNodeArray;
   value: any;
-};
+} & JSX.IntrinsicElements['select'];
+
 export const DropdownField = ({
   id,
   disabled,
@@ -22,7 +22,8 @@ export const DropdownField = ({
   onBlur,
   onChange,
   children,
-  value
+  value,
+  ...props
 }: DropdownFieldProps) => {
   const dropdownClassNames = classnames(
     'easi-dropdown',
@@ -39,6 +40,8 @@ export const DropdownField = ({
       onBlur={onBlur}
       id={id}
       value={value}
+      // eslint-disable-next-line react/jsx-props-no-spreading
+      {...props}
     >
       {children}
     </select>

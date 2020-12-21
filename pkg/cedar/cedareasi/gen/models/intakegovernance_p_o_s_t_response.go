@@ -6,20 +6,20 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // IntakegovernancePOSTResponse intakegovernance p o s t response
+//
 // swagger:model intakegovernance_POST_response
 type IntakegovernancePOSTResponse struct {
 
 	// response
 	// Required: true
-	Response *Response `json:"Response"`
+	Response *Response1 `json:"Response"`
 }
 
 // Validate validates this intakegovernance p o s t response

@@ -11,6 +11,7 @@ describe('The Action Banner component', () => {
         helpfulText="Testing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
         label="Finish CMS TEST"
         onClick={() => {}}
+        requestType="NEW"
       />
     );
   });
@@ -22,6 +23,7 @@ describe('The Action Banner component', () => {
         helpfulText="Testing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
         label="Finish CMS TEST"
         onClick={() => {}}
+        requestType="NEW"
       />
     );
     expect(component.find('button').length).toEqual(1);
@@ -35,6 +37,7 @@ describe('The Action Banner component', () => {
         title="TEST"
         helpfulText="Testing this form helps you receive a CMS IT LifeCycle ID so that you can start a new system or project."
         label="Finish CMS TEST"
+        requestType="NEW"
       />
     );
     expect(component.find('button').length).toEqual(0);

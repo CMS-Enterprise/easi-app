@@ -15,7 +15,7 @@ import (
 )
 
 // CreateNote inserts a new note into the database
-func (s *Store) CreateNote(ctx context.Context, note *models.Note) (*uuid.UUID, error) {
+func (s *Store) CreateNote(ctx context.Context, note *models.Note) (*models.Note, error) {
 	note.ID = uuid.New()
 	if note.CreatedAt == nil {
 		ts := s.clock.Now()
@@ -42,14 +42,19 @@ func (s *Store) CreateNote(ctx context.Context, note *models.Note) (*uuid.UUID, 
 		createNoteSQL,
 		note,
 	)
+
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to create note with error %s", err),
 			zap.String("user", appcontext.Principal(ctx).ID()),
 		)
-		return nil, err
+		return &models.Note{}, &apperrors.QueryError{
+			Err:       err,
+			Model:     note,
+			Operation: apperrors.QueryPost,
+		}
 	}
-	return &note.ID, nil
+	return s.FetchNoteByID(ctx, note.ID)
 }
 
 // FetchNoteByID retrieves a single Note by its primary key identifier

@@ -62,7 +62,7 @@ axios.interceptors.request.use(
     if (
       newConfig &&
       newConfig.url &&
-      newConfig.url.includes(process.env.REACT_APP_API_ADDRESS || ' ') &&
+      newConfig.url.includes(process.env.REACT_APP_API_ADDRESS as string) &&
       window.localStorage['okta-token-storage']
     ) {
       const json = JSON.parse(window.localStorage['okta-token-storage']);

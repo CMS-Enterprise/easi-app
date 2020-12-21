@@ -17,7 +17,10 @@ import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import BusinessCaseValidationSchema from 'validations/businessCaseSchema';
+import {
+  BusinessCaseDraftValidationSchema,
+  BusinessCaseFinalValidationSchema
+} from 'validations/businessCaseSchema';
 
 type RequestDescriptionProps = {
   businessCase: BusinessCaseModel;
@@ -39,11 +42,16 @@ const RequestDescription = ({
     successIndicators: businessCase.successIndicators
   };
 
+  const ValidationSchema =
+    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
+      ? BusinessCaseFinalValidationSchema
+      : BusinessCaseDraftValidationSchema;
+
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={BusinessCaseValidationSchema.requestDescription}
+      validationSchema={ValidationSchema.requestDescription}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -83,7 +91,10 @@ const RequestDescription = ({
                   <Label htmlFor="BusinessCase-BusinessNeed">
                     What is your business or user need?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-BusinessNeedHelp"
+                    className="margin-y-1"
+                  >
                     <span>Include:</span>
                     <ul className="margin-top-1 padding-left-205">
                       <li>
@@ -115,7 +126,7 @@ const RequestDescription = ({
                     id="BusinessCase-BusinessNeed"
                     maxLength={2000}
                     name="businessNeed"
-                    aria-describedby="BusinessCase-BusinessNeedCounter"
+                    aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-BusinessNeedCounter"
@@ -130,7 +141,10 @@ const RequestDescription = ({
                   <Label htmlFor="BusinessCase-CmsBenefit">
                     How will CMS benefit from this effort?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-CmsBenefitHelp"
+                    className="margin-y-1"
+                  >
                     Provide a summary of how this effort benefits CMS. Include
                     any information on how it supports CMS&apos; mission and
                     strategic goals, creates efficiencies and/or cost savings,
@@ -143,7 +157,7 @@ const RequestDescription = ({
                     id="BusinessCase-CmsBenefit"
                     maxLength={2000}
                     name="cmsBenefit"
-                    aria-describedby="BusinessCase-CmsBenefitCounter"
+                    aria-describedby="BusinessCase-CmsBenefitCounter BusinessCase-CmsBenefitHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-CmsBenefitCounter"
@@ -158,7 +172,10 @@ const RequestDescription = ({
                   <Label htmlFor="BusinessCase-PriorityAlignment">
                     How does this effort align with organizational priorities?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-PriorityAlignmentHelp"
+                    className="margin-y-1"
+                  >
                     List out any administrator priorities or new
                     legislative/regulatory mandates this effort supports. If
                     applicable, include any relevant deadlines
@@ -170,7 +187,7 @@ const RequestDescription = ({
                     id="BusinessCase-PriorityAlignment"
                     maxLength={2000}
                     name="priorityAlignment"
-                    aria-describedby="BusinessCase-PriorityAlignmentCounter"
+                    aria-describedby="BusinessCase-PriorityAlignmentCounter BusinessCase-PriorityAlignmentHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PriorityAlignmentCounter"
@@ -186,7 +203,10 @@ const RequestDescription = ({
                     How will you determine whether or not this effort is
                     successful?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="BusinessCase-SuccessIndicatorsHelp"
+                    className="margin-y-1"
+                  >
                     Include any indicators that you think would demonstrate
                     success
                   </HelpText>
@@ -197,7 +217,7 @@ const RequestDescription = ({
                     id="BusinessCase-SuccessIndicators"
                     maxLength={2000}
                     name="successIndicators"
-                    aria-describedby="BusinessCase-SuccessIndicatorsCounter"
+                    aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-SuccessIndicatorsCounter"

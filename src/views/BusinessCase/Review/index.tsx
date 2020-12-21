@@ -7,7 +7,9 @@ import BusinessCaseReview from 'components/BusinessCaseReview';
 import { hasAlternativeB } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
-import { submitBusinessCase } from 'types/routines';
+import { postAction } from 'types/routines';
+
+import './index.scss';
 
 type ReviewProps = {
   businessCase: BusinessCaseModel;
@@ -16,9 +18,11 @@ type ReviewProps = {
 const Review = ({ businessCase }: ReviewProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const isSubmitting = useSelector(
-    (state: AppState) => state.businessCase.isSubmitting
-  );
+  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
+  const actionType =
+    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
+      ? 'SUBMIT_FINAL_BIZ_CASE'
+      : 'SUBMIT_BIZ_CASE';
 
   return (
     <div>
@@ -47,7 +51,12 @@ const Review = ({ businessCase }: ReviewProps) => {
           type="submit"
           disabled={isSubmitting}
           onClick={() => {
-            dispatch(submitBusinessCase(businessCase));
+            dispatch(
+              postAction({
+                intakeId: businessCase.systemIntakeId,
+                actionType
+              })
+            );
           }}
         >
           Send my business case

@@ -4,16 +4,16 @@ import (
 	"encoding/json"
 	"net/http"
 
-	ld "gopkg.in/launchdarkly/go-server-sdk.v4"
+	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
 
 	"github.com/cmsgov/easi-app/pkg/flags"
 )
 
-type fetchFlags func(client flags.FlagClient, user ld.User) flags.FlagValues
+type fetchFlags func(client flags.FlagClient, user lduser.User) flags.FlagValues
 
 // NewFlagsHandler is a constructor for SystemListHandler
-func NewFlagsHandler(base HandlerBase, fetch fetchFlags, flagClient flags.FlagClient, lduser ld.User) FlagsHandler {
-	return FlagsHandler{HandlerBase: base, FetchFlags: fetch, FlagClient: flagClient, LDUser: lduser}
+func NewFlagsHandler(base HandlerBase, fetch fetchFlags, flagClient flags.FlagClient, ldUser lduser.User) FlagsHandler {
+	return FlagsHandler{HandlerBase: base, FetchFlags: fetch, FlagClient: flagClient, LDUser: ldUser}
 }
 
 // FlagsHandler is the handler for listing systems
@@ -21,7 +21,7 @@ type FlagsHandler struct {
 	HandlerBase
 	FetchFlags fetchFlags
 	FlagClient flags.FlagClient
-	LDUser     ld.User
+	LDUser     lduser.User
 }
 
 // Handle handles a web request and returns a list of flags

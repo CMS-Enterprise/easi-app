@@ -10,11 +10,11 @@ import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
 import Cookies from 'views/Cookies';
+import DocumentPrototype from 'views/DocumentPrototype';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
-import GrtBusinessCaseReview from 'views/GrtBusinessCaseReview';
-import GrtSystemIntakeReview from 'views/GrtSystemIntakeReview';
+import RequestDecision from 'views/GovernanceTaskList/RequestDecision';
 import Home from 'views/Home';
 import Login from 'views/Login';
 import NotFound from 'views/NotFound';
@@ -34,9 +34,7 @@ import './index.scss';
 const AppRoutes = () => {
   const flags = useFlags();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const userGroupsSet = useSelector(
-    (state: AppState) => state.auth.userGroupsSet
-  );
+  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   return (
     <Switch>
@@ -47,41 +45,50 @@ const AppRoutes = () => {
       <Route path="/governance-overview" exact component={GovernanceOverview} />
 
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
-
-      {flags.taskListLite && (
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          component={GovernanceTaskList}
-        />
-      )}
-      {userGroupsSet && user.isGrtReviewer(userGroups) && (
-        <SecureRoute
-          path="/governance-review-team/:systemId/:activePage"
-          component={GovernanceReviewTeam}
-        />
-      )}
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grt"
+        render={({ component }: any) => component()}
         component={PrepareForGRT}
       />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grb"
+        render={({ component }: any) => component()}
         component={PrepareForGRB}
       />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/request-decision"
+        render={({ component }: any) => component()}
+        component={RequestDecision}
+      />
+      {flags.taskListLite && (
+        <SecureRoute
+          path="/governance-task-list/:systemId"
+          exact
+          render={({ component }: any) => component()}
+          component={GovernanceTaskList}
+        />
+      )}
+      {flags.fileUploads && (
+        <SecureRoute
+          exact
+          path="/document-prototype"
+          render={() => <DocumentPrototype />}
+        />
+      )}
+      {isUserSet && user.isGrtReviewer(userGroups) && (
+        <SecureRoute
+          path="/governance-review-team/:systemId/:activePage"
+          render={() => <GovernanceReviewTeam />}
+        />
+      )}
       <SecureRoute
         exact
         path="/system/request-type"
         render={({ component }: any) => component()}
         component={RequestTypeForm}
-      />
-      <SecureRoute
-        exact
-        path="/system/:systemId/grt-review"
-        render={({ component }: any) => component()}
-        component={GrtSystemIntakeReview}
       />
       <Redirect
         exact
@@ -92,10 +99,6 @@ const AppRoutes = () => {
         path="/system/:systemId/:formPage"
         render={({ component }: any) => component()}
         component={SystemIntake}
-      />
-      <SecureRoute
-        path="/business/:businessCaseId/grt-review"
-        component={GrtBusinessCaseReview}
       />
       <Redirect
         exact

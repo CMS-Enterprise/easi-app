@@ -52,6 +52,19 @@ const RequestDetails = ({
     businessSolution: systemIntake.businessSolution,
     needsEaSupport: systemIntake.needsEaSupport
   };
+
+  const saveExitLink = (() => {
+    let link = '';
+    if (systemIntake.requestType === 'SHUTDOWN') {
+      link = '/';
+    } else {
+      link = flags.taskListLite
+        ? `/governance-task-list/${systemIntake.id}`
+        : '/';
+    }
+    return link;
+  })();
+
   return (
     <Formik
       initialValues={initialValues}
@@ -121,7 +134,10 @@ const RequestDetails = ({
                   <Label htmlFor="IntakeForm-BusinessNeed">
                     What is your business need?
                   </Label>
-                  <HelpText className="margin-top-105">
+                  <HelpText
+                    id="IntakeForm-BusinessNeedHelp"
+                    className="margin-top-105"
+                  >
                     <>
                       <span>Include:</span>
                       <ul className="margin-top-1 padding-left-205">
@@ -155,7 +171,7 @@ const RequestDetails = ({
                     id="IntakeForm-BusinessNeed"
                     maxLength={2000}
                     name="businessNeed"
-                    aria-describedby="IntakeForm-BusinessNeedCounter"
+                    aria-describedby="IntakeForm-BusinessNeedCounter IntakeForm-BusinessNeedHelp"
                   />
                   <CharacterCounter
                     id="IntakeForm-BusinessNeedCounter"
@@ -170,7 +186,10 @@ const RequestDetails = ({
                   <Label htmlFor="IntakeForm-BusinessSolution">
                     How are you thinking of solving it?
                   </Label>
-                  <HelpText className="margin-y-1">
+                  <HelpText
+                    id="IntakeForm-BusinessSolutionHelp"
+                    className="margin-y-1"
+                  >
                     Let us know if you have a solution in mind
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
@@ -180,7 +199,7 @@ const RequestDetails = ({
                     id="IntakeForm-BusinessSolution"
                     maxLength={2000}
                     name="businessSolution"
-                    aria-describedby="IntakeForm-BusinessSolutionCounter"
+                    aria-describedby="IntakeForm-BusinessSolutionCounter IntakeForm-BusinessSolutionHelp"
                   />
                   <CharacterCounter
                     id="IntakeForm-BusinessSolutionCounter"
@@ -197,7 +216,10 @@ const RequestDetails = ({
                     <legend className="usa-label margin-bottom-1">
                       Does your request need Enterprise Architecture support?
                     </legend>
-                    <HelpText className="margin-bottom-1">
+                    <HelpText
+                      id="IntakeForm-EAHelp"
+                      className="margin-bottom-1"
+                    >
                       If you are unsure, mark &quot;Yes&quot; and someone from
                       the EA team will assess your needs.
                     </HelpText>
@@ -212,6 +234,7 @@ const RequestDetails = ({
                         setFieldValue('needsEaSupport', true);
                       }}
                       value
+                      aria-describedby="IntakeForm-EAHelp"
                     />
 
                     <Field
@@ -291,11 +314,7 @@ const RequestDetails = ({
                     unstyled
                     onClick={() => {
                       dispatchSave();
-                      history.push(
-                        flags.taskListLite
-                          ? `/governance-task-list/${systemIntake.id}`
-                          : '/'
-                      );
+                      history.push(saveExitLink);
                     }}
                   >
                     <span>
