@@ -96,15 +96,24 @@ export const BusinessCaseDraftCta = ({
       );
     case 'BIZ_CASE_DRAFT_SUBMITTED':
     case 'BIZ_CASE_FINAL_NEEDED':
-      return (
-        <UswdsLink
-          data-testid="view-biz-case-link"
-          asCustom={Link}
-          to={`/business/${systemIntake.businessCaseId}/view`}
-        >
-          View submitted draft business case
-        </UswdsLink>
-      );
+    case 'READY_FOR_GRB':
+    case 'LCID_ISSUED':
+    case 'NOT_IT_REQUEST':
+    case 'NOT_APPROVED':
+    case 'NO_GOVERNANCE':
+    case 'WITHDRAWN':
+      if (systemIntake.businessCaseId) {
+        return (
+          <UswdsLink
+            data-testid="view-biz-case-link"
+            asCustom={Link}
+            to={`/business/${systemIntake.businessCaseId}/view`}
+          >
+            View submitted business case
+          </UswdsLink>
+        );
+      }
+      return <></>;
     case 'BIZ_CASE_CHANGES_NEEDED':
       return (
         <UswdsLink
