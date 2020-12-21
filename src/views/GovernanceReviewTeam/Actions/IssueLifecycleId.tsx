@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -13,7 +13,6 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { ImproveEasiSurvey } from 'components/Survey';
 import { SubmitLifecycleIdForm } from 'types/action';
 import { issueLifecycleIdForSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
@@ -275,7 +274,14 @@ const IssueLifecycleId = () => {
                   {t('issueLCID.submit')}
                 </Button>
               </Form>
-              <ImproveEasiSurvey />
+              <UswdsLink
+                href="https://www.surveymonkey.com/r/DF3Q9L2"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open EASi survey in a new tab"
+              >
+                {t('general:feedback.whatYouThink')}
+              </UswdsLink>
             </div>
           </>
         );
