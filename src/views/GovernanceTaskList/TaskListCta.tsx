@@ -44,7 +44,15 @@ export const IntakeDraftCta = ({ intake }: { intake: SystemIntakeForm }) => {
         </UswdsLink>
       );
     default:
-      return <></>;
+      return (
+        <UswdsLink
+          data-testid="intake-view-link"
+          asCustom={Link}
+          to={`/system/${intake.id}/view`}
+        >
+          View Submitted Request Form
+        </UswdsLink>
+      );
   }
 };
 
