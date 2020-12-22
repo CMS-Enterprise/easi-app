@@ -5,11 +5,11 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
-import { isDevEnvironment } from 'utils/local';
+import { isLocalEnvironment } from 'utils/local';
 import DevLogin from 'views/AuthenticationWrapper/DevLogin';
 
 const Login = () => {
-  return isDevEnvironment() ? (
+  return isLocalEnvironment() ? (
     <DevLogin />
   ) : (
     <PageWrapper>

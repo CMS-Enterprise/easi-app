@@ -25,31 +25,35 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 		if len(r.Header["Authorization"]) == 0 {
 			logger.Info("No Authentication header present")
 			next.ServeHTTP(w, r)
-		} else {
-			tokenParts := strings.Split(r.Header["Authorization"][0], "Bearer ")
-			if len(tokenParts) < 2 {
-				logger.Error("invalid Bearer in auth header")
-				return
-			}
-			devUserConfigJSON := tokenParts[1]
-			if devUserConfigJSON == "" {
-				logger.Error("empty dev user config JSON")
-				return
-			}
-
-			config := DevUserConfig{}
-			if parseErr := json.Unmarshal([]byte(devUserConfigJSON), &config); parseErr != nil {
-				logger.Error("could not parse dev user config")
-				return
-			}
-
-			logger.Info("Using local authorization middleware and populating EUA ID and job codes")
-			ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{
-				EUAID:       config.EUA,
-				JobCodeEASi: true,
-				JobCodeGRT:  swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM")})
-			next.ServeHTTP(w, r.WithContext(ctx))
+			w.WriteHeader(http.StatusBadRequest)
+			return
 		}
+		tokenParts := strings.Split(r.Header["Authorization"][0], "Bearer ")
+		if len(tokenParts) < 2 {
+			logger.Error("invalid Bearer in auth header")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		devUserConfigJSON := tokenParts[1]
+		if devUserConfigJSON == "" {
+			logger.Error("empty dev user config JSON")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		config := DevUserConfig{}
+		if parseErr := json.Unmarshal([]byte(devUserConfigJSON), &config); parseErr != nil {
+			logger.Error("could not parse dev user config", zap.Error(parseErr))
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		logger.Info("Using local authorization middleware and populating EUA ID and job codes")
+		ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{
+			EUAID:       config.EUA,
+			JobCodeEASi: true,
+			JobCodeGRT:  swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM")})
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
