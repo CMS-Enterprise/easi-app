@@ -82,7 +82,7 @@ const DevLogin = () => {
               <input
                 type="checkbox"
                 value={code}
-                onChange={e => checkboxChange(e)}
+                onChange={checkboxChange}
                 checked={jobCodes[code as keyof typeof jobCodes]}
               />
               {code}

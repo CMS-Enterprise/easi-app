@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 
 import { setUser } from 'reducers/authReducer';
-import { isDevEnvironment } from 'utils/local';
+import { isLocalEnvironment } from 'utils/local';
 
 type UserInfoWrapperProps = {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   const { authState, authService } = useOktaAuth();
 
   const storeUserInfo = async () => {
-    if (isDevEnvironment()) {
+    if (isLocalEnvironment()) {
       const user = {
         name: authState.name,
         euaId: authState.euaId || '',
