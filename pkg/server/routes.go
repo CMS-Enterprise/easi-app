@@ -162,10 +162,6 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to connect to database", zap.Error(err))
 	}
 
-	// endpoint for flags list
-	flagsHandler := handlers.NewFlagsHandler(base, flags.NewFetchFlags(), flagClient, flagUser)
-	api.Handle("/flags", flagsHandler.Handle())
-
 	// endpoint for systems list
 	systemHandler := handlers.NewSystemsListHandler(
 		base,
