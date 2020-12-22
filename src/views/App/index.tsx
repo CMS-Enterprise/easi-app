@@ -2,8 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import { FlagProvider, useFlags } from 'contexts/flagContext';
+import { FlagProvider } from 'contexts/flagContext';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import AccessibilityStatement from 'views/AccessibilityStatement';

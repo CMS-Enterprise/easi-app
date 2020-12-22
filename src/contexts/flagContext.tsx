@@ -1,68 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
-import { Flags, FlagsState } from 'types/flags';
-
-const initialState: FlagsState = {
-  flags: {
-    taskListLite: false,
-    sandbox: false,
-    pdfExport: false,
-    prototype508: false,
-    prototypeTRB: false,
-    fileUploads: false
-  },
-  isLoaded: false
-};
-
-const FlagContext = React.createContext(initialState);
+import React, { useEffect, useRef } from 'react';
+import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 
 type FlagProviderProps = {
   children: React.ReactNode;
 };
 
+// eslint-disable-next-line import/prefer-default-export
 export const FlagProvider = ({ children }: FlagProviderProps) => {
-  const [flagState, setFlagState] = useState(initialState);
+  const LDProviderRef = useRef<React.FunctionComponent>(() => <div />);
 
+  const testFN = async () => {
+    console.log('start');
+    LDProviderRef.current = await asyncWithLDProvider({
+      clientSideID: process.env.REACT_APP_LD_CLIENT_ID as string
+    });
+    console.log('end');
+  };
   useEffect(() => {
-    const fetchFlags = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_ADDRESS}/flags`
-        );
-        setFlagState(prevState => ({
-          flags: {
-            ...prevState.flags,
-            ...response.data
-          },
-          isLoaded: true
-        }));
-      } catch (error) {
-        setFlagState(state => ({ ...state, isLoaded: true }));
-        if (process.env.NODE_ENV !== 'test') {
-          // eslint-disable-next-line no-console
-          console.error(`Failed to load flags! #{response}`);
-        }
-      }
-    };
-
-    fetchFlags();
+    testFN();
   }, []);
 
-  return (
-    <FlagContext.Provider value={flagState}>
-      {flagState.isLoaded && children}
-    </FlagContext.Provider>
-  );
-};
-
-// useFlags is the main way to work with flags within the application
-//
-// const flags = useFlags();
-export const useFlags = (): Flags => {
-  const context = React.useContext(FlagContext);
-  if (context === undefined) {
-    return initialState.flags;
-  }
-  return context.flags;
+  const LDProvider = LDProviderRef.current;
+  return <LDProvider>{children}</LDProvider>;
 };
