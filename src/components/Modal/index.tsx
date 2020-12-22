@@ -8,15 +8,22 @@ type ModalProps = {
   title: string;
   children: ReactNode | ReactNodeArray;
   isOpen: boolean;
+  className?: string;
   closeModal: () => void;
 };
 
-const Modal = ({ title, children, isOpen, closeModal }: ModalProps) => {
+const Modal = ({
+  title,
+  children,
+  isOpen,
+  closeModal,
+  className
+}: ModalProps) => {
   return (
     <ReactModal
       isOpen={isOpen}
       overlayClassName="easi-modal__overlay"
-      className="easi-modal__content"
+      className={`easi-modal__content ${className}`}
       onAfterOpen={noScroll.on}
       onAfterClose={noScroll.off}
       onRequestClose={closeModal}

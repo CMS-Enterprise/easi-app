@@ -1,0 +1,16 @@
+.easi-progress-indicator {
+  list-style: none outside;
+  padding-left: 2rem;
+
+  .easi-progress-indicator__step {
+    padding-bottom: 1rem;
+    border-left: solid 1px black;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .easi-progress-indicator__icon {
+    position: absolute;
+    left: -2rem;
+  }
+}

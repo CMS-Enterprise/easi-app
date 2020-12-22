@@ -4,37 +4,28 @@ import { DateTime } from 'luxon';
 
 import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
-import { ActivityType, DocumentType, Project, RequestStatus } from '../types';
+import { DocumentType, Project, RequestStep } from '../types';
 
-const addDocument = (project: Project, type: DocumentType, score: string) => {
+const addDocument = ({
+  project,
+  type,
+  score,
+  otherName
+}: {
+  project: Project;
+  type: DocumentType;
+  score: string;
+  otherName: string;
+}) => {
   project.documents.push({
     id: Math.round(Math.random() * 10000000),
     mimetype: 'application/pdf',
     createdAt: DateTime.local(),
+    score: parseInt(score, 10),
     type,
-    score: parseInt(score, 10)
-  });
-  project.activities.push({
-    id: Math.round(Math.random() * 10000000),
-    content:
-      type === DocumentType.TestResults
-        ? `${type} uploaded - ${score}%`
-        : `${type} uploaded`,
-    createdAt: DateTime.local(),
-    authorName: 'Aaron Allen',
-    type: ActivityType.DocumentAdded
+    otherName
   });
   project.banner = `${type} uploaded to ${project.name} project page.`; // eslint-disable-line no-param-reassign
-};
-
-const addActivity = (project: Project, content: string) => {
-  project.activities.push({
-    id: Math.round(Math.random() * 10000000),
-    createdAt: DateTime.local(),
-    authorName: 'Aaron Allen',
-    type: ActivityType.StatusChanged,
-    content
-  });
 };
 
 const UploadPage = () => {
@@ -44,10 +35,11 @@ const UploadPage = () => {
 
   const [file, setFile] = useState('');
   const [documentType, setDocumentType] = useState<DocumentType>();
-  const [projectStatus, setProjectStatus] = useState<RequestStatus>(
+  const [projectStatus, setProjectStatus] = useState<RequestStep>(
     project.status
   );
   const [score, setScore] = useState('');
+  const [documentName, setDocumentName] = useState('');
 
   const history = useHistory();
 
@@ -58,9 +50,9 @@ const UploadPage = () => {
   }
 
   if (file !== '') {
-    const projectStatuses = new Set<RequestStatus>();
+    const projectStatuses = new Set<RequestStep>();
     projectStatuses.add(project.status);
-    Object.values(RequestStatus).forEach(status => {
+    Object.values(RequestStep).forEach(status => {
       projectStatuses.add(status);
     });
 
@@ -139,7 +131,7 @@ const UploadPage = () => {
                     {docType}
                   </label>
                 </div>
-                {docTypeName === 'Test Results' &&
+                {docTypeName === DocumentType.TestResults &&
                   documentType === DocumentType.TestResults && (
                     <div className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
                       <label className="usa-label" htmlFor="input-type-text">
@@ -155,6 +147,22 @@ const UploadPage = () => {
                       />
                     </div>
                   )}
+                {docTypeName === DocumentType.Other &&
+                  documentType === DocumentType.Other && (
+                    <div className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
+                      <label className="usa-label" htmlFor="input-type-text">
+                        Document name
+                      </label>
+                      <input
+                        className="usa-input"
+                        id="input-type-text"
+                        name="input-type-text"
+                        type="text"
+                        value={documentName}
+                        onChange={e => setDocumentName(e.target.value)}
+                      />
+                    </div>
+                  )}
               </>
             );
           })}
@@ -165,7 +173,7 @@ const UploadPage = () => {
           </legend>
 
           {Array.from(projectStatuses.values()).map(value => {
-            const status = value as RequestStatus;
+            const status = value as RequestStep;
             return (
               <>
                 <div className="usa-radio">
@@ -211,13 +219,17 @@ const UploadPage = () => {
           disabled={!documentType}
           onClick={() => {
             if (documentType) {
-              addDocument(project, documentType, score);
+              addDocument({
+                project,
+                type: documentType,
+                score,
+                otherName: documentName
+              });
               if (projectStatus !== project.status) {
-                addActivity(project, `Status changed to ${projectStatus}.`);
                 project.status = projectStatus;
                 updateProject(project);
               }
-              history.push(`/508/v2/projects/${project.id}`);
+              history.push(`/508/v2/requests/${project.id}`);
             }
           }}
         >
@@ -270,7 +282,7 @@ const UploadPage = () => {
         </div>
       </div>
       <p>
-        <Link to={`/508/v2/projects/${id}`}>
+        <Link to={`/508/v2/requests/${id}`}>
           Don&rsquo;t upload and return to project page
         </Link>
       </p>

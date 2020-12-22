@@ -1,18 +1,23 @@
 import { DateTime } from 'luxon';
 
+import { ProgressStatus } from './components/Progress';
+
 export enum DocumentType {
   TestPlan = 'Testing Plan',
   TestingVPAT = 'Testing VPAT',
   TestResults = 'Test Results',
   AwardedVPAT = 'Awarded VPAT',
-  RemediationPlan = 'Remediation Plan'
+  RemediationPlan = 'Remediation Plan',
+  Other = 'Other Document'
 }
 
 export type Document = {
   id: number;
   type: DocumentType;
+  otherName?: string;
   mimetype: string;
   createdAt: DateTime;
+  testDate?: DateTime;
   score?: number;
 };
 
@@ -21,34 +26,32 @@ export type Person = {
   component: string;
 };
 
-export enum ActivityType {
-  NoteAdded,
-  StatusChanged,
-  DocumentAdded,
-  DocumentRemoved,
-  ProjectCreated
-}
-
-export type Activity = {
+export type Note = {
   id: number;
   authorName: string;
   content: string;
   createdAt: DateTime;
-  type: ActivityType;
 };
 
-export enum RequestStatus {
+export enum RequestStep {
   RequestReceived = 'Request Received',
   DocumentsReceived = 'Documents Received',
   TestScheduled = 'Test Scheduled',
-  InRemediation = 'In Remediation',
+  RemediationRequested = 'Remediation Requested',
+  RemediationInProgress = 'Remediation in Progress',
+  ValidationTestingScheduled = 'Validation Testing Scheduled',
   Completed = 'Completed'
 }
+
+export type RequestStepStatus = {
+  date: DateTime;
+  status: ProgressStatus;
+};
 
 export type Project = {
   id: number;
   name: string;
-  status: RequestStatus;
+  status: RequestStep;
   businessOwner: Person;
   pointOfContact: Person;
   testDate?: DateTime;
@@ -58,6 +61,7 @@ export type Project = {
   lifecycleID: string;
   description?: string;
   documents: Document[];
-  activities: Activity[];
+  notes: Note[];
   banner?: string;
+  stepStatuses: { [index in RequestStep]?: RequestStepStatus };
 };
