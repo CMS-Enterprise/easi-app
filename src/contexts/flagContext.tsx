@@ -7,6 +7,8 @@ type FlagProviderProps = {
 
 // eslint-disable-next-line import/prefer-default-export
 export const FlagProvider = ({ children }: FlagProviderProps) => {
+  // wrapping initial value in function to get around useState and setState thinking
+  // the functional component is a function to be evaluated.
   const [LDProvider, setLDProvider] = useState<React.FunctionComponent>(
     () => () => <div />
   );
