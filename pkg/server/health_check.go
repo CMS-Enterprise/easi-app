@@ -14,12 +14,12 @@ import (
 // this method will panic on failures
 func (s Server) CheckCEDAREasiClientConnection(client cedareasi.Client) {
 	s.logger.Info("Testing CEDAR EASi Connection")
-	// FetchSystems is agnostic to user, doesn't modify state,
+	// CheckConnection is agnostic to user, doesn't modify state,
 	// and tests that we're authorized to retrieve information
 	// By the rubric "should someone get woken up at 2AM for this?", we have decided
 	// that transitory challenges connecting to the CEDAR API should NOT block
 	// deployment of the EASi app, nor should it be logged at `ERROR` level
-	if _, err := client.FetchSystems(appcontext.WithLogger(context.Background(), s.logger)); err != nil {
+	if err := client.CheckConnection(appcontext.WithLogger(context.Background(), s.logger)); err != nil {
 		s.logger.Info("Non-Fatal - Failed to connect to CEDAR EASi on startup", zap.Error(err))
 	}
 }
