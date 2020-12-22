@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 
-type FlagProviderProps = {
+type FlagsWrapperProps = {
   children: React.ReactNode;
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export const FlagProvider = ({ children }: FlagProviderProps) => {
+const FlagsWrapper = ({ children }: FlagsWrapperProps) => {
   // wrapping initial value in function to get around useState and setState thinking
   // the functional component is a function to be evaluated.
   const [LDProvider, setLDProvider] = useState<React.FunctionComponent>(
@@ -24,3 +23,5 @@ export const FlagProvider = ({ children }: FlagProviderProps) => {
 
   return <LDProvider>{children}</LDProvider>;
 };
+
+export default FlagsWrapper;
