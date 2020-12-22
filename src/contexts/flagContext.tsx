@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 
 type FlagProviderProps = {
@@ -7,16 +7,18 @@ type FlagProviderProps = {
 
 // eslint-disable-next-line import/prefer-default-export
 export const FlagProvider = ({ children }: FlagProviderProps) => {
-  const LDProviderRef = useRef<React.FunctionComponent>(() => <div />);
+  const [LDProvider, setLDProvider] = useState<React.FunctionComponent>(
+    () => () => <div />
+  );
 
   useEffect(() => {
     (async () => {
-      LDProviderRef.current = await asyncWithLDProvider({
+      const provider = await asyncWithLDProvider({
         clientSideID: process.env.REACT_APP_LD_CLIENT_ID as string
       });
+      setLDProvider(() => provider);
     })();
   }, []);
 
-  const LDProvider = LDProviderRef.current;
   return <LDProvider>{children}</LDProvider>;
 };
