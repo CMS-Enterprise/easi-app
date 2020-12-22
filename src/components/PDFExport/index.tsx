@@ -1,8 +1,7 @@
 import React, { useRef } from 'react';
 import axios from 'axios';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import escape from 'lodash';
-
-import { useFlags } from 'contexts/flagContext';
 
 type PDFExportProps = {
   filename: string;
@@ -85,7 +84,7 @@ const downloadRefAsPDF = (
           <h1>
             ${escape(title)}
           </h1>
-          ${ref && ref.current && ref.current.outerHTML} 
+          ${ref && ref.current && ref.current.outerHTML}
         </body>
       </html>`;
 
