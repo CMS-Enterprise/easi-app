@@ -9752,7 +9752,7 @@ last-call-webpack-plugin@^3.0.0:
     lodash "^4.17.5"
     webpack-sources "^1.1.0"
 
-launchdarkly-js-client-sdk@2.18.3, launchdarkly-js-client-sdk@^2.18.3:
+launchdarkly-js-client-sdk@2.18.3:
   version "2.18.3"
   resolved "https://registry.yarnpkg.com/launchdarkly-js-client-sdk/-/launchdarkly-js-client-sdk-2.18.3.tgz#e0172c969c603d473d891b17e031422fd930c85e"
   integrity sha512-ff9o7RixhpyZudxqFAGdmvlC1BDSNs6l4kmJiawYtfrWeKc44iFcGAc+wDBPp4iJEQT7DAlFPGjEfyKuY/Xi/w==
