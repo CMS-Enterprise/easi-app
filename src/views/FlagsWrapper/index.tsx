@@ -15,7 +15,22 @@ const FlagsWrapper = ({ children }: FlagsWrapperProps) => {
   useEffect(() => {
     (async () => {
       const provider = await asyncWithLDProvider({
-        clientSideID: process.env.REACT_APP_LD_CLIENT_ID as string
+        clientSideID: process.env.REACT_APP_LD_CLIENT_ID as string,
+        user: {
+          anonymous: true,
+          key: process.env.REACT_APP_LD_ENV_USER
+        },
+        options: {
+          hash: process.env.REACT_APP_LD_USER_HASH
+        },
+        flags: {
+          taskListLite: 'true',
+          sandbox: 'true',
+          pdfExport: 'true',
+          prototype508: 'true',
+          fileUploads: 'true',
+          prototypeTRB: 'true'
+        }
       });
       setLDProvider(() => provider);
     })();
