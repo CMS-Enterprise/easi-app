@@ -1,17 +1,13 @@
 package integration
 
 import (
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"net/http/httptest"
+	"context"
+	"time"
 
 	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
-	"github.com/cmsgov/easi-app/pkg/handlers"
-	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // Since we can't always hit the CEDAR API in tests
@@ -21,13 +17,8 @@ import (
 // Other tests should mock the API
 func (s *IntegrationTestSuite) TestCEDARConnection() {
 	if !s.environment.Local() {
-		fmt.Println("Skipped 'TestCEDARConnection' test")
-		return
+		s.T().Skip("Skipped 'TestCEDARConnection' test")
 	}
-
-	req, err := http.NewRequest("GET", "/systems/", nil)
-	s.NoError(err)
-	rr := httptest.NewRecorder()
 
 	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
 	s.NoError(err)
@@ -39,19 +30,13 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 		lduser.NewAnonymousUser("fake"),
 	)
 
-	handlers.NewSystemsListHandler(
-		s.base,
-		cedarEasiClient.FetchSystems,
-	).Handle()(rr, req)
+	ctx, cxl := context.WithTimeout(context.Background(), time.Second*2)
+	defer cxl()
 
-	s.Equal(http.StatusOK, rr.Code)
+	start := time.Now()
 
-	var systems models.SystemShorts
-	err = json.Unmarshal(rr.Body.Bytes(), &systems)
+	err = cedarEasiClient.CheckConnection(ctx)
 
+	s.Less(int64(time.Now().Sub(start)), int64(time.Second*3))
 	s.NoError(err)
-	s.NotEqual(len(systems), 0)
-	s.NotEmpty(systems[0].ID)
-	s.NotEmpty(systems[0].Name)
-	s.NotEmpty(systems[0].Acronym)
 }
