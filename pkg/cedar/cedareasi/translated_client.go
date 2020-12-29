@@ -36,7 +36,7 @@ type TranslatedClient struct {
 
 // Client is an interface to ease testing dependencies
 type Client interface {
-	FetchSystems(context.Context) (models.SystemShorts, error)
+	CheckConnection(context.Context) error
 	ValidateAndSubmitSystemIntake(context.Context, *models.SystemIntake) (string, error)
 }
 
@@ -72,31 +72,12 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDCl
 	return TranslatedClient{client, apiKeyHeaderAuth, fnEmit}
 }
 
-// FetchSystems fetches a system list from CEDAR
-func (c TranslatedClient) FetchSystems(ctx context.Context) (models.SystemShorts, error) {
-	resp, err := c.client.Operations.SystemsGET2(nil, c.apiAuthHeader)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to fetch system from CEDAR", zap.Error(err))
-		return models.SystemShorts{}, err
-	}
-
-	systems := make([]models.SystemShort, len(resp.Payload.Systems))
-	for index, system := range resp.Payload.Systems {
-		if system.ID != nil {
-			// this ensures we always have a name populated for display,
-			// even if it is just a restatement of the acronym
-			name := system.SystemAcronym
-			if system.SystemName != nil {
-				name = *system.SystemName
-			}
-			systems[index] = models.SystemShort{
-				ID:      *system.ID,
-				Name:    name,
-				Acronym: system.SystemAcronym,
-			}
-		}
-	}
-	return systems, nil
+// CheckConnection tries to verify if we are able to communicate with the CEDAR API
+func (c TranslatedClient) CheckConnection(ctx context.Context) error {
+	_, err := c.client.Operations.HealthCheckGET1(
+		apioperations.NewHealthCheckGET1ParamsWithContext(ctx),
+		c.apiAuthHeader)
+	return err
 }
 
 // ValidateSystemIntakeForCedar validates all required fields to ensure we won't get errors for contents of the request
@@ -216,7 +197,7 @@ func systemIntakeToGovernanceIntake(si *models.SystemIntake) *apimodels.Governan
 }
 
 func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
-	params := apioperations.NewIntakegovernancePOST5Params()
+	params := apioperations.NewIntakegovernancePOST5ParamsWithContext(ctx)
 	params.Body = &apimodels.Intake{
 		Governance: systemIntakeToGovernanceIntake(validatedIntake),
 	}
