@@ -72,7 +72,7 @@ func (s *Server) routes(
 	}
 
 	// set up CEDAR client
-	var cedarEasiClient cedareasi.Client = local.NewCedarEasiClient(s.logger)
+	var cedarEasiClient cedareasi.Client = local.NewCedarEasiClient()
 	if !(s.environment.Local() || s.environment.Test()) {
 		// check we have all of the configs for CEDAR clients
 		s.NewCEDARClientCheck()
@@ -161,13 +161,6 @@ func (s *Server) routes(
 	if err != nil {
 		s.logger.Fatal("Failed to connect to database", zap.Error(err))
 	}
-
-	// endpoint for systems list
-	systemHandler := handlers.NewSystemsListHandler(
-		base,
-		cedarEasiClient.FetchSystems,
-	)
-	api.Handle("/systems", systemHandler.Handle())
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,
