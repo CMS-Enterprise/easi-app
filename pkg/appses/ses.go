@@ -62,10 +62,9 @@ func (s Sender) Send(
 	}
 	_, err := s.client.SendEmail(input)
 	if err == nil {
-		s.logger.Info("Mock sending email",
+		s.logger.Info("Sending email with SES",
 			zap.String("To", toAddress),
 			zap.String("Subject", subject),
-			zap.String("Body", body),
 		)
 	}
 	return err
