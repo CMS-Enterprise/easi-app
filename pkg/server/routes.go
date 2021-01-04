@@ -81,7 +81,6 @@ func (s *Server) routes(
 			s.Config.GetString(appconfig.CEDARAPIURL),
 			s.Config.GetString(appconfig.CEDARAPIKey),
 			ldClient,
-			flagUser,
 		)
 		if s.environment.Deployed() {
 			s.CheckCEDAREasiClientConnection(cedarEasiClient)
