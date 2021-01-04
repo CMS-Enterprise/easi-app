@@ -1,7 +1,12 @@
 package flags
 
 import (
+	"context"
+	"crypto/sha256"
+	"fmt"
 	"time"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 
 	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
@@ -65,4 +70,28 @@ func WrapLaunchDarklyClient(c *ld.LDClient) *LaunchDarklyClient {
 // NewLocalClient returns a client backed by local values
 func NewLocalClient(flags FlagValues) *LocalFlagClient {
 	return &LocalFlagClient{flags: flags}
+}
+
+// Principal builds the LaunchDarkly user object for the
+// currently authenticated principal.
+func Principal(ctx context.Context) lduser.User {
+	p := appcontext.Principal(ctx)
+
+	// we should not be using bare EUA IDs as identifiers to
+	// LaunchDarkly (per Jimil/ISSO), so we use a cryptographically
+	// secure one-way hash of the EUA ID as "key" for the LD User object.
+	h := sha256.New()
+	_, _ = h.Write([]byte(p.ID()))
+	key := fmt.Sprintf("%x", h.Sum(nil))
+
+	// this is a bit of a loose inference, assuming a user w/o Job Codes
+	// is an Anonymous user. Over time, may want to consider adding
+	// a `func Anonymous() bool` accessor to the authn.Principal interface
+	// definition instead of doing this inference
+	authed := (p.AllowEASi() || p.AllowGRT())
+
+	return lduser.
+		NewUserBuilder(key).
+		Anonymous(!authed).
+		Build()
 }
