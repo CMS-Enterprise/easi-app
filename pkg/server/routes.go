@@ -99,7 +99,7 @@ func (s *Server) routes(
 
 	// set up Email Client
 	sesConfig := s.NewSESConfig()
-	sesSender := appses.NewSender(sesConfig)
+	sesSender := appses.NewSender(sesConfig, s.logger)
 	emailConfig := s.NewEmailConfig()
 	emailClient, err := email.NewClient(emailConfig, sesSender)
 	if err != nil {

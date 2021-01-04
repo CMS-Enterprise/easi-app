@@ -4,6 +4,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
+	"go.uber.org/zap"
 )
 
 // Config is email configs used only for SES
@@ -18,15 +19,17 @@ type Config struct {
 type Sender struct {
 	client *ses.SES
 	config Config
+	logger *zap.Logger
 }
 
 // NewSender constructs a Sender
-func NewSender(config Config) Sender {
+func NewSender(config Config, logger *zap.Logger) Sender {
 	sesSession := session.Must(session.NewSession())
 	client := ses.New(sesSession)
 	return Sender{
 		client,
 		config,
+		logger,
 	}
 }
 
@@ -58,5 +61,12 @@ func (s Sender) Send(
 		SourceArn: aws.String(s.config.SourceARN),
 	}
 	_, err := s.client.SendEmail(input)
+	if err == nil {
+		s.logger.Info("Mock sending email",
+			zap.String("To", toAddress),
+			zap.String("Subject", subject),
+			zap.String("Body", body),
+		)
+	}
 	return err
 }

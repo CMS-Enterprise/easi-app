@@ -49,6 +49,7 @@ func TestSESTestSuite(t *testing.T) {
 	sender := Sender{
 		client,
 		sesConfig,
+		logger,
 	}
 
 	sesTestSuite := &SESTestSuite{
