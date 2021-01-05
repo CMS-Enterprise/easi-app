@@ -10,6 +10,7 @@ case "$APP_ENV" in
     export REACT_APP_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
     export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_DEV"
     export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV"
+    export REACT_APP_LD_USER_HASH="$LD_ENV_USER_DEV"
     ;;
   "impl")
     STATIC_S3_BUCKET="$STATIC_S3_BUCKET_IMPL"
@@ -17,6 +18,7 @@ case "$APP_ENV" in
     export REACT_APP_OKTA_DOMAIN="https://impl.idp.idm.cms.gov"
     export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_IMPL"
     export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_IMPL"
+    export REACT_APP_LD_USER_HASH="$LD_ENV_USER_IMPL"
     ;;
   "prod")
     STATIC_S3_BUCKET="$STATIC_S3_BUCKET_PROD"
@@ -24,6 +26,7 @@ case "$APP_ENV" in
     export REACT_APP_OKTA_DOMAIN="https://idm.cms.gov"
     export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_PROD"
     export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_PROD"
+    export REACT_APP_LD_USER_HASH="$LD_ENV_USER_PROD"
     ;;
   *)
     echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
@@ -35,6 +38,7 @@ esac
 export REACT_APP_APP_ENV="$APP_ENV"
 export REACT_APP_OKTA_ISSUER="${REACT_APP_OKTA_DOMAIN}/oauth2/${REACT_APP_OKTA_SERVER_ID}"
 export REACT_APP_OKTA_REDIRECT_URI="${EASI_URL}/implicit/callback"
+export REACT_APP_LD_ENV_USER="$LD_ENV_USER"
 export REACT_APP_API_ADDRESS="${EASI_URL}/api/v1"
 
 # Check if we have any access to the s3 bucket
