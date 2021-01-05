@@ -3,14 +3,33 @@
   padding-left: 2rem;
 
   .easi-progress-indicator__step {
-    padding-bottom: 1rem;
-    border-left: solid 1px black;
-    padding-left: 1rem;
+    border-left: solid 2px black;
     position: relative;
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 
   .easi-progress-indicator__icon {
     position: absolute;
     left: -2rem;
+  }
+
+  .easi-progress-indicator-step__done {
+    color: #162e51;
+    border-color: #162e51;
+  }
+  .easi-progress-indicator-step__current {
+    color: #005ea2;
+    border-color: #005ea2;
+    border-left-width: 4px;
+    font-weight: bold;
+    span {
+      margin-left: -2px;
+    }
+  }
+  .easi-progress-indicator-step__todo {
+    color: #5c5c5c;
+    border-color: #e6e6e6;
   }
 }

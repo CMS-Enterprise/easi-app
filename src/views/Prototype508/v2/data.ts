@@ -7,6 +7,7 @@ const projects: Record<string, Project> = {
   1: {
     id: 1,
     name: 'TACO',
+    release: '1.3',
     status: RequestStep.DocumentsReceived,
     submissionDate: DateTime.fromISO('2020-11-10'),
     testDate: DateTime.fromISO('2020-11-10'),
@@ -81,7 +82,19 @@ const projects: Record<string, Project> = {
       }
     ],
     description:
-      'TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience.'
+      'TACO is a new tool for customers to access consolidated Active health information and facilitate the new Medicare process. The purpose is to provide a more integrated and unified customer service experience.',
+    pastRequests: [
+      {
+        name: 'TACO',
+        release: '1.2',
+        lastTestDate: DateTime.fromISO('2020-08-28')
+      },
+      {
+        name: 'TACO',
+        release: '1.1',
+        lastTestDate: DateTime.fromISO('2020-02-28')
+      }
+    ]
   },
   2: {
     id: 2,

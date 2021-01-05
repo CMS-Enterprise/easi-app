@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Table } from '@trussworks/react-uswds';
 
+import SecondaryNavigation from '../components/SecondaryNavigation';
 import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
 
@@ -14,27 +15,7 @@ const ProjectsPage = () => {
 
   return (
     <>
-      <nav className="site-nav-secondary">
-        <ul>
-          <li className="usa-nav__submenu-item">
-            <a href="/how-to-use-uswds/">
-              <span>Active Requests</span>
-            </a>
-          </li>
-
-          <li className="usa-nav__submenu-item">
-            <a href="/design-principles/">
-              <span>Remediation</span>
-            </a>
-          </li>
-
-          <li className="usa-nav__submenu-item is-current">
-            <a href="/components/" className="usa-current">
-              <span>Closed Requests</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <SecondaryNavigation />
       <main
         id="main-content"
         className="easi-main-content grid-container margin-bottom-5"
@@ -66,7 +47,9 @@ const ProjectsPage = () => {
               return (
                 <tr key={id}>
                   <th scope="row">
-                    <Link to={`/508/v2/requests/${id}`}>{project.name}</Link>
+                    <Link to={`/508/v2/requests/${id}`}>
+                      {project.name} {project.release}
+                    </Link>
                   </th>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     {project.businessOwner.name},{' '}

@@ -48,9 +48,16 @@ export type RequestStepStatus = {
   status: ProgressStatus;
 };
 
+export type PastRequest = {
+  name: string;
+  release: string;
+  lastTestDate: DateTime;
+};
+
 export type Project = {
   id: number;
   name: string;
+  release?: string;
   status: RequestStep;
   businessOwner: Person;
   pointOfContact: Person;
@@ -64,4 +71,5 @@ export type Project = {
   notes: Note[];
   banner?: string;
   stepStatuses: { [index in RequestStep]?: RequestStepStatus };
+  pastRequests: PastRequest[];
 };
