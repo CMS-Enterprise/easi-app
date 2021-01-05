@@ -15,7 +15,7 @@
     left: -2rem;
   }
 
-  .easi-progress-indicator-step__done {
+  .easi-progress-indicator-step__completed {
     color: #162e51;
     border-color: #162e51;
   }
@@ -28,7 +28,7 @@
       margin-left: -2px;
     }
   }
-  .easi-progress-indicator-step__todo {
+  .easi-progress-indicator-step__not_completed {
     color: #5c5c5c;
     border-color: #e6e6e6;
   }

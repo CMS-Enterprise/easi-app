@@ -1,23 +1,23 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import './index.scss';
 
 export enum ProgressStatus {
-  Done = 'Done',
+  Completed = 'Completed',
   Skipped = 'Skipped',
   Current = 'Current',
-  ToDo = 'ToDo'
+  NotCompleted = 'Not completed'
 }
 
 type ProgressStepProps = {
   name: string;
-  optionalLabel?: string;
   status: ProgressStatus;
+  children?: React.ReactNode;
 };
 
 function iconForStatus(status: ProgressStatus) {
   switch (status) {
-    case ProgressStatus.Done:
+    case ProgressStatus.Completed:
       // TODO this should be an outlined check circle
       return (
         <i
@@ -37,27 +37,28 @@ function iconForStatus(status: ProgressStatus) {
   }
 }
 
-export const ProgressIndicator = ({ children }) => {
-  return <ol className="easi-progress-indicator">{children}</ol>;
+export const ProgressIndicator = ({ children }: { children: ReactNode }) => {
+  return (
+    <ol className="easi-progress-indicator" aria-label="progress">
+      {children}
+    </ol>
+  );
 };
 
-export const ProgressStep = ({
-  name,
-  status,
-  optionalLabel
-}: ProgressStepProps) => {
+export const ProgressStep = ({ name, status, children }: ProgressStepProps) => {
   return (
     <li
       className={`easi-progress-indicator__step easi-progress-indicator-step__${status &&
-        status.toLowerCase()}`}
+        status.toLowerCase().replaceAll(' ', '_')}`}
+      aria-current={status === ProgressStatus.Current && 'step'}
     >
       {iconForStatus(status)}
-
       <span className="easi-progress-indicator-name">{name}</span>
-      {optionalLabel && (
+      <span className="usa-sr-only">{status}</span>
+      {React.Children.count(children) > 0 && (
         <>
           <br />
-          <span className="easi-progress-indicator-label">{optionalLabel}</span>
+          <span className="easi-progress-indicator-label">{children}</span>
         </>
       )}
     </li>

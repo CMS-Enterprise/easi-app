@@ -25,31 +25,19 @@ const projects: Record<string, Project> = {
     stepStatuses: {
       [RequestStep.RequestReceived]: {
         date: DateTime.fromISO('2020-11-25'),
-        status: ProgressStatus.Done
+        status: ProgressStatus.Completed
       },
       [RequestStep.DocumentsReceived]: {
         date: DateTime.fromISO('2020-11-25'),
-        status: ProgressStatus.Done
+        status: ProgressStatus.Completed
       },
       [RequestStep.TestScheduled]: {
         date: DateTime.fromISO('2020-11-25'),
-        status: ProgressStatus.Done
+        status: ProgressStatus.Completed
       },
       [RequestStep.RemediationRequested]: {
         date: DateTime.fromISO('2020-11-25'),
         status: ProgressStatus.Current
-      },
-      [RequestStep.RemediationInProgress]: {
-        date: DateTime.fromISO('2020-11-25'),
-        status: ProgressStatus.ToDo
-      },
-      [RequestStep.ValidationTestingScheduled]: {
-        date: DateTime.fromISO('2020-11-25'),
-        status: ProgressStatus.ToDo
-      },
-      [RequestStep.Completed]: {
-        date: DateTime.fromISO('2020-11-25'),
-        status: ProgressStatus.ToDo
       }
     },
     documents: [

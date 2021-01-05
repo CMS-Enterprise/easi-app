@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { TabPanel } from '@cmsgov/design-system/dist/esnext/Tabs/TabPanel';
 import { Tabs } from '@cmsgov/design-system/dist/esnext/Tabs/Tabs';
-import {
-  Button,
-  DateInput,
-  DateInputGroup,
-  Fieldset,
-  Table
-} from '@trussworks/react-uswds';
+import { Button, Table } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import Modal from 'components/Modal';
 
+import DateField from '../components/DateField';
 import {
   ProgressIndicator,
   ProgressStatus,
@@ -21,61 +16,17 @@ import {
 import SecondaryNavigation from '../components/SecondaryNavigation';
 import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
-import { Document, DocumentType, Note, Project, RequestStep } from '../types';
+import {
+  Document,
+  DocumentType,
+  Note,
+  Project,
+  RequestStep,
+  RequestStepStatus
+} from '../types';
 
 import '@cmsgov/design-system/dist/css/index.css';
 import './index.scss';
-
-const DateField = ({ setDate }: { setDate: (date: DateTime) => void }) => {
-  const [day, setDay] = useState<number>();
-  const [month, setMonth] = useState<number>();
-  const [year, setYear] = useState<number>();
-
-  useEffect(() => {
-    const newDate = DateTime.local(year, month, day);
-    setDate(newDate);
-  }, [setDate, month, day, year]);
-
-  return (
-    <Fieldset legend="Test date">
-      <span className="usa-hint" id="dateOfBirthHint">
-        For example: 4 28 2020
-      </span>
-      <DateInputGroup>
-        <DateInput
-          id="testDateInput"
-          name="testName"
-          label="Month"
-          unit="month"
-          maxLength={2}
-          minLength={2}
-          value={month}
-          onChange={e => setMonth(parseInt(e.target.value, 10))}
-        />
-        <DateInput
-          id="testDateInput"
-          name="testName"
-          label="Day"
-          unit="day"
-          maxLength={2}
-          minLength={2}
-          value={day}
-          onChange={e => setDay(parseInt(e.target.value, 10))}
-        />
-        <DateInput
-          id="testDateInput"
-          name="testName"
-          label="Year"
-          unit="year"
-          maxLength={4}
-          minLength={4}
-          value={year}
-          onChange={e => setYear(parseInt(e.target.value, 10))}
-        />
-      </DateInputGroup>
-    </Fieldset>
-  );
-};
 
 const AddTestDateModal = ({
   document,
@@ -96,6 +47,7 @@ const AddTestDateModal = ({
         }}
       >
         Add date
+        <span className="usa-sr-only">to {documentName(document)}</span>
       </button>
 
       <Modal
@@ -108,6 +60,7 @@ const AddTestDateModal = ({
       >
         <DateField
           setDate={d => {
+            // eslint-disable-next-line no-param-reassign
             document.testDate = d;
           }}
         />
@@ -130,6 +83,117 @@ const AddTestDateModal = ({
         >
           Don&rsquo;t add a test date
         </button>
+      </Modal>
+    </>
+  );
+};
+
+const UpdateStatusModal = ({
+  project,
+  updateProject
+}: {
+  project: Project;
+  updateProject: (project: Project) => void;
+}) => {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [projectStatus, setProjectStatus] = useState(project.status);
+
+  return (
+    <>
+      <button
+        type="button"
+        className="usa-button usa-button--unstyled"
+        onClick={() => setModalIsOpen(true)}
+      >
+        Change Status
+      </button>
+      <Modal
+        title="Change Project Status"
+        isOpen={modalIsOpen}
+        closeModal={() => {
+          setModalIsOpen(false);
+        }}
+        className="status-modal"
+      >
+        <div className="status-modal__content">
+          <fieldset className="usa-fieldset status-modal__body">
+            <legend className="margin-bottom-2 text-bold">
+              Choose project status for {project.name}
+            </legend>
+            {Object.values(RequestStep).map(value => {
+              const status = value as RequestStep;
+              return (
+                <>
+                  <div className="usa-radio">
+                    <input
+                      className="usa-radio__input"
+                      id={`input-${status}`}
+                      type="radio"
+                      name="document-type"
+                      value={status}
+                      checked={projectStatus === status}
+                      onChange={() => {
+                        setProjectStatus(status);
+                      }}
+                    />
+                    <label
+                      className="usa-radio__label"
+                      htmlFor={`input-${status}`}
+                    >
+                      {status}
+                      {project.status === status && ' (current status)'}
+                    </label>
+
+                    {[
+                      RequestStep.TestScheduled,
+                      RequestStep.RemediationInProgress,
+                      RequestStep.ValidationTestingScheduled
+                    ].includes(status) &&
+                      projectStatus === status && (
+                        <div className="width-card-lg margin-left-4 margin-bottom-1 margin-top-1">
+                          <DateField
+                            setDate={d => {
+                              // eslint-disable-next-line no-console
+                              console.debug(d);
+                            }}
+                          />
+                        </div>
+                      )}
+                  </div>
+                </>
+              );
+            })}
+          </fieldset>
+
+          <div className="status-modal__footer">
+            <p className="usa-prose">
+              Changing the project status will send an email to all members of
+              the 508 team letting them know about the new status.
+            </p>
+
+            <button
+              type="submit"
+              className="usa-button"
+              onClick={() => {
+                // eslint-disable-next-line no-param-reassign
+                project.status = projectStatus;
+                updateProject(project);
+                setModalIsOpen(false);
+              }}
+            >
+              Change status and send email
+            </button>
+            <button
+              type="button"
+              className="usa-button usa-button--unstyled"
+              onClick={() => {
+                setModalIsOpen(false);
+              }}
+            >
+              Don&rsquo;t change projects status
+            </button>
+          </div>
+        </div>
       </Modal>
     </>
   );
@@ -207,11 +271,10 @@ const DocumentTable = ({
                         project.documents.indexOf(doc),
                         1
                       );
-                      // eslint-disable no-param-reassign
+                      // eslint-disable-next-line no-param-reassign
                       project.banner = `${documentName(
                         doc
                       )} was removed from the project.`;
-                      // eslint-enable no-param-reassign
                       updateProject(project);
                     }}
                   >
@@ -234,9 +297,6 @@ const ProjectPage = () => {
 
   const { state, updateProject } = useGlobalState();
   const project = state.projects[id];
-
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [projectStatus, setProjectStatus] = useState(project.status);
   const [noteContent, setNoteContent] = useState('');
 
   useDocumentTitle(`EASi: Project page for ${project && project.name}`);
@@ -269,93 +329,6 @@ const ProjectPage = () => {
             {project.name} {project.release}
           </h1>
         </div>
-
-        <Modal
-          title="Change Project Status"
-          isOpen={modalIsOpen}
-          closeModal={() => {
-            setModalIsOpen(false);
-          }}
-          className="status-modal"
-        >
-          <div className="status-modal__content">
-            <fieldset className="usa-fieldset status-modal__body">
-              <legend className="margin-bottom-2 text-bold">
-                Choose project status for {project.name}
-              </legend>
-              {Object.values(RequestStep).map(value => {
-                const status = value as RequestStep;
-                return (
-                  <>
-                    <div className="usa-radio">
-                      <input
-                        className="usa-radio__input"
-                        id={`input-${status}`}
-                        type="radio"
-                        name="document-type"
-                        value={status}
-                        checked={projectStatus === status}
-                        onChange={() => {
-                          setProjectStatus(status);
-                        }}
-                      />
-                      <label
-                        className="usa-radio__label"
-                        htmlFor={`input-${status}`}
-                      >
-                        {status}
-                        {project.status === status && ' (current status)'}
-                      </label>
-
-                      {[
-                        RequestStep.TestScheduled,
-                        RequestStep.RemediationInProgress,
-                        RequestStep.ValidationTestingScheduled
-                      ].includes(status) &&
-                        projectStatus === status && (
-                          <div className="width-card-lg margin-left-4 margin-bottom-1 margin-top-1">
-                            <DateField
-                              setDate={d => {
-                                console.debug(d);
-                              }}
-                            />
-                          </div>
-                        )}
-                    </div>
-                  </>
-                );
-              })}
-            </fieldset>
-
-            <div className="status-modal__footer">
-              <p className="usa-prose">
-                Changing the project status will send an email to all members of
-                the 508 team letting them know about the new status.
-              </p>
-
-              <button
-                type="submit"
-                className="usa-button"
-                onClick={() => {
-                  project.status = projectStatus;
-                  updateProject(project);
-                  setModalIsOpen(false);
-                }}
-              >
-                Change status and send email
-              </button>
-              <button
-                type="button"
-                className="usa-button usa-button--unstyled"
-                onClick={() => {
-                  setModalIsOpen(false);
-                }}
-              >
-                Don&rsquo;t change projects status
-              </button>
-            </div>
-          </div>
-        </Modal>
 
         <div className="grid-container">
           <div className="grid-row grid-gap-lg">
@@ -416,7 +389,7 @@ const ProjectPage = () => {
 
                   <ol
                     className="note-list"
-                    aria-label={`This is a list of all activity on ${project.name}.`}
+                    aria-label={`This is a list of all notes on ${project.name}.`}
                   >
                     {project.notes
                       .sort(
@@ -434,7 +407,7 @@ const ProjectPage = () => {
                               <span aria-hidden="true">{' | '}</span>
                               {activity.createdAt.toFormat('LLLL d y')}
                             </span>
-                            <hr />
+                            <hr aria-hidden="true" />
                           </li>
                         );
                       })}
@@ -485,23 +458,29 @@ const ProjectPage = () => {
                 className="easi-grt__status-info text-gray-90 padding-top-1 padding-bottom-1"
                 aria-label={`Status for ${project.name}`}
               >
-                <span className="text-bold">Status</span>
-                <br />
-                <span
-                  className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs margin-right-1"
-                  data-testid="grt-status"
-                >
-                  {project.status}
-                </span>
-                <br />
-                <button
-                  type="button"
-                  className="usa-button usa-button--unstyled"
-                  onClick={() => setModalIsOpen(true)}
-                >
-                  Change Status
-                </button>
-                <hr />
+                <h3>Timeline</h3>
+                <UpdateStatusModal
+                  project={project}
+                  updateProject={updateProject}
+                />
+                <ProgressIndicator>
+                  {Object.values(RequestStep).map(value => {
+                    const step = value as RequestStep;
+                    const status = project.stepStatuses[step] || {
+                      status: ProgressStatus.NotCompleted,
+                      date: null
+                    };
+
+                    return (
+                      <ProgressStep name={step} status={status.status}>
+                        {stepContent(step, status)}
+                      </ProgressStep>
+                    );
+                  })}
+                </ProgressIndicator>
+
+                <hr aria-hidden="true" className="margin-bottom-2" />
+
                 <span className="text-bold margin-right-1">
                   Point of contact
                 </span>
@@ -514,33 +493,6 @@ const ProjectPage = () => {
                 >
                   Update
                 </button>
-                <hr />
-                <h3>Timeline</h3>
-                <ProgressIndicator>
-                  {Object.values(RequestStep).map(value => {
-                    const step = value as RequestStep;
-                    const status = project.stepStatuses[step] || {
-                      date: DateTime.fromISO('2020-11-25'),
-                      status: ProgressStatus.ToDo
-                    };
-
-                    return (
-                      <ProgressStep
-                        name={step}
-                        optionalLabel={
-                          [
-                            RequestStep.TestScheduled,
-                            RequestStep.RemediationInProgress,
-                            RequestStep.ValidationTestingScheduled
-                          ].includes(step)
-                            ? status.date.toFormat('LLLL d y')
-                            : undefined
-                        }
-                        status={status.status}
-                      />
-                    );
-                  })}
-                </ProgressIndicator>
               </div>
             </div>
           </div>
@@ -549,5 +501,26 @@ const ProjectPage = () => {
     </>
   );
 };
+
+function stepContent(
+  step: RequestStep,
+  status:
+    | RequestStepStatus
+    | { status: ProgressStatus.NotCompleted; date: null }
+) {
+  if (
+    [
+      RequestStep.TestScheduled,
+      RequestStep.ValidationTestingScheduled
+    ].includes(step) &&
+    status.date
+  ) {
+    return <>Test date: {status.date.toFormat('LLL d y')}</>;
+  }
+  if (step === RequestStep.RemediationInProgress && status.date) {
+    return <>Start date: {status.date.toFormat('LLL d y')}</>;
+  }
+  return null;
+}
 
 export default ProjectPage;

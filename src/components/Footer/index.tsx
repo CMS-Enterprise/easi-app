@@ -40,6 +40,7 @@ const Footer = () => {
                   {item.label}
                 </a>
               ))}
+              aria-label="Footer"
             />
           </div>
         </div>

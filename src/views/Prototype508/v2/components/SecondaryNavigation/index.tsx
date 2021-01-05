@@ -7,7 +7,7 @@ import './index.scss';
 const SecondaryNavigation = () => {
   const { pathname } = useLocation();
   return (
-    <nav className="site-nav-secondary">
+    <nav className="site-nav-secondary" aria-label="Primary">
       <ul>
         <li className="usa-nav__submenu-item">
           <Link
@@ -15,6 +15,7 @@ const SecondaryNavigation = () => {
             className={classNames({
               'usa-current': pathname === '/508/v2/requests'
             })}
+            aria-current={pathname === '/508/v2/requests' && 'page'}
           >
             <span>Active Requests</span>
           </Link>
@@ -26,6 +27,7 @@ const SecondaryNavigation = () => {
             className={classNames({
               'usa-current': pathname === '/508/v2/remediation'
             })}
+            aria-current={pathname === '/508/v2/remediation' && 'page'}
           >
             <span>Remediation</span>
           </Link>
@@ -37,6 +39,7 @@ const SecondaryNavigation = () => {
             className={classNames({
               'usa-current': pathname === '/508/v2/closed'
             })}
+            aria-current={pathname === '/508/v2/closed' && 'page'}
           >
             <span>Closed Requests</span>
           </Link>
