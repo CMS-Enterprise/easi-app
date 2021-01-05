@@ -41,7 +41,6 @@ esac
 export REACT_APP_APP_ENV="$APP_ENV"
 export REACT_APP_OKTA_ISSUER="${REACT_APP_OKTA_DOMAIN}/oauth2/${REACT_APP_OKTA_SERVER_ID}"
 export REACT_APP_OKTA_REDIRECT_URI="${EASI_URL}/implicit/callback"
-export REACT_APP_LD_ENV_USER="$LD_ENV_USER"
 export REACT_APP_API_ADDRESS="${EASI_URL}/api/v1"
 
 # Check if we have any access to the s3 bucket
