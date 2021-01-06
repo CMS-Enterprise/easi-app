@@ -23,6 +23,10 @@ Launches the test runner in the interactive watch mode.
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests)
 or more information.
 
+### `yarn storybook`
+
+Launches the [React Storybook](https://storybook.js.org) setup for the application
+
 ### `yarn build`
 
 Builds the app for production to the `build` folder.
@@ -123,3 +127,14 @@ touches upon React patterns such as HOC and render props.
 Currently, Cypress tests are written in JavaScript. The benefit in writing these
 tests in TypeScript isn't immediately apparent. If the project gravitates toward
 writing these tests in TypeScript, there is documentation in supporting that [here](https://www.cypress.io/blog/2019/05/13/code-create-react-app-v3-and-its-cypress-tests-using-typescript/).
+
+## React Storybook
+
+This application comes equipped with [React Storybook](https://storybook.js.org).
+Storybook allows us to build/document components in isolation and mock out
+its usage for design, product, and other stakeholders.
+
+Deployed instance of storybook TBD.
+
+We also use components from [react-uswds](https://github.com/trussworks/react-uswds).
+Its deployed storybook can be viewed [here](https://trussworks.github.io/react-uswds/).
