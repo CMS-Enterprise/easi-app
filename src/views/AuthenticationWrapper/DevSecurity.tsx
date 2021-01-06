@@ -32,7 +32,7 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
 
   const [authState, setAuthState] = useState(getStateFromLocalStorage);
 
-  const authService = {
+  const oktaAuth = {
     login: () => {
       setAuthState(getStateFromLocalStorage());
     },
@@ -57,7 +57,7 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
   }, []);
 
   return (
-    <OktaContext.Provider value={{ authService, authState }}>
+    <OktaContext.Provider value={{ oktaAuth, authState }}>
       {children}
     </OktaContext.Provider>
   );
