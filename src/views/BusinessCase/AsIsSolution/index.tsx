@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
@@ -15,7 +16,6 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { AsIsSolutionForm, BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';

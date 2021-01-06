@@ -7,6 +7,8 @@ import AlternativeAnalysisReview from './AlternativeAnalysisReview';
 import GeneralRequestInfoReview from './GeneralRequestInfoReview';
 import RequestDescriptionReview from './RequestDescriptionReview';
 
+import './index.scss';
+
 type BusinessCaseReviewProps = {
   values: BusinessCaseModel;
 };
@@ -15,7 +17,11 @@ const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
   const filename = `Business case for ${values.requestName}.pdf`;
   return (
     <>
-      <PDFExport title="Business Case" filename={filename}>
+      <PDFExport
+        title="Business Case"
+        filename={filename}
+        label="Download Business Case as PDF"
+      >
         <div className="grid-container">
           <h2 className="font-heading-xl">General request information</h2>
           <GeneralRequestInfoReview

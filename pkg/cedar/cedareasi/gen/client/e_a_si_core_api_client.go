@@ -6,15 +6,13 @@ package client
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/client/operations"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
-
-	strfmt "github.com/go-openapi/strfmt"
-
-	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/client/operations"
+	"github.com/go-openapi/strfmt"
 )
 
-// Default e a si core HTTP client.
+// Default e a si core API HTTP client.
 var Default = NewHTTPClient(nil)
 
 const (
@@ -29,14 +27,14 @@ const (
 // DefaultSchemes are the default schemes found in Meta (info) section of spec file
 var DefaultSchemes = []string{"http"}
 
-// NewHTTPClient creates a new e a si core HTTP client.
-func NewHTTPClient(formats strfmt.Registry) *EASiCore {
+// NewHTTPClient creates a new e a si core API HTTP client.
+func NewHTTPClient(formats strfmt.Registry) *EASiCoreAPI {
 	return NewHTTPClientWithConfig(formats, nil)
 }
 
-// NewHTTPClientWithConfig creates a new e a si core HTTP client,
+// NewHTTPClientWithConfig creates a new e a si core API HTTP client,
 // using a customizable transport config.
-func NewHTTPClientWithConfig(formats strfmt.Registry, cfg *TransportConfig) *EASiCore {
+func NewHTTPClientWithConfig(formats strfmt.Registry, cfg *TransportConfig) *EASiCoreAPI {
 	// ensure nullable parameters have default
 	if cfg == nil {
 		cfg = DefaultTransportConfig()
@@ -47,18 +45,16 @@ func NewHTTPClientWithConfig(formats strfmt.Registry, cfg *TransportConfig) *EAS
 	return New(transport, formats)
 }
 
-// New creates a new e a si core client
-func New(transport runtime.ClientTransport, formats strfmt.Registry) *EASiCore {
+// New creates a new e a si core API client
+func New(transport runtime.ClientTransport, formats strfmt.Registry) *EASiCoreAPI {
 	// ensure nullable parameters have default
 	if formats == nil {
 		formats = strfmt.Default
 	}
 
-	cli := new(EASiCore)
+	cli := new(EASiCoreAPI)
 	cli.Transport = transport
-
 	cli.Operations = operations.New(transport, formats)
-
 	return cli
 }
 
@@ -101,17 +97,15 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 	return cfg
 }
 
-// EASiCore is a client for e a si core
-type EASiCore struct {
-	Operations *operations.Client
+// EASiCoreAPI is a client for e a si core API
+type EASiCoreAPI struct {
+	Operations operations.ClientService
 
 	Transport runtime.ClientTransport
 }
 
 // SetTransport changes the transport on the client and all its subresources
-func (c *EASiCore) SetTransport(transport runtime.ClientTransport) {
+func (c *EASiCoreAPI) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
-
 	c.Operations.SetTransport(transport)
-
 }

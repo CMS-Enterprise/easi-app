@@ -57,9 +57,15 @@ axios.interceptors.request.use(
       newConfig.url.includes(process.env.REACT_APP_API_ADDRESS as string) &&
       window.localStorage['okta-token-storage']
     ) {
-      const json = JSON.parse(window.localStorage['okta-token-storage']);
-      if (json.accessToken) {
-        newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
+      if (window.localStorage['okta-token-storage']) {
+        const json = JSON.parse(window.localStorage['okta-token-storage']);
+        if (json.accessToken) {
+          newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
+        }
+      }
+      // prefer dev auth if it exists
+      if (window.localStorage['dev-user-config']) {
+        newConfig.headers.Authorization = `Bearer ${window.localStorage['dev-user-config']}`;
       }
     }
     return newConfig;
