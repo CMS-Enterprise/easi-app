@@ -554,7 +554,7 @@ func (s *Server) routes(
 		),
 	)
 
-	api.Handle("/file_uploads/{file_id}/download_url", presignedURLDownloadHandler.Handle())
+	api.Handle("/file_uploads/{file_name}/download_url", presignedURLDownloadHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
