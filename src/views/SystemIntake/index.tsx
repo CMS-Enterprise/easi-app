@@ -10,6 +10,7 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
 import {
   clearSystemIntake,
@@ -21,6 +22,7 @@ import {
 import { SystemIntakeForm } from 'types/systemIntake';
 import { NotFoundPartial } from 'views/NotFound';
 
+import Confirmation from './Confirmation';
 import ContactDetails from './ContactDetails';
 import ContractDetails from './ContractDetails';
 import RequestDetails from './RequestDetails';
@@ -31,7 +33,10 @@ import './index.scss';
 
 export const SystemIntake = () => {
   const history = useHistory();
-  const { systemId, formPage } = useParams();
+  const { systemId, formPage } = useParams<{
+    systemId: string;
+    formPage: string;
+  }>();
   const { authService } = useOktaAuth();
   const dispatch = useDispatch();
   const formikRef: any = useRef();
@@ -42,6 +47,9 @@ export const SystemIntake = () => {
   const isLoading = useSelector(
     (state: AppState) => state.systemIntake.isLoading
   );
+  const actionError = useSelector((state: AppState) => state.action.error);
+  const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
+  const prevIsSubmitting = usePrevious(isSubmitting);
 
   const dispatchSave = () => {
     const { current }: { current: FormikProps<SystemIntakeForm> } = formikRef;
@@ -65,6 +73,15 @@ export const SystemIntake = () => {
       history.replace(`/system/${systemIntake.id}/${formPage}`);
     }
   }, [history, systemIntake.id, formPage]);
+
+  // Handle redirect after submitting
+  useEffect(() => {
+    if (prevIsSubmitting && !isSubmitting && !actionError) {
+      history.push(`/system/${systemId}/confirmation`);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSubmitting]);
 
   useEffect(() => {
     if (systemId === 'new') {
@@ -158,6 +175,10 @@ export const SystemIntake = () => {
               render={() => (
                 <Review systemIntake={systemIntake} now={DateTime.local()} />
               )}
+            />
+            <SecureRoute
+              path="/system/:systemId/confirmation"
+              render={() => <Confirmation />}
             />
             <SecureRoute
               path="/system/:systemId/view"

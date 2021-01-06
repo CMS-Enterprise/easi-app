@@ -2,18 +2,23 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Security } from '@okta/okta-react';
 
-type AuthenticationWrapperProps = {
+import { isLocalEnvironment } from 'utils/local';
+
+import DevSecurity from './DevSecurity';
+
+type ParentComponentProps = {
   children: React.ReactNode;
 };
 
-const AuthenticationWrapper = ({ children }: AuthenticationWrapperProps) => {
+const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
   const history = useHistory();
 
   const handleAuthRequiredRedirect = () => {
     history.push('/signin');
   };
-
-  return (
+  return isLocalEnvironment() ? (
+    <DevSecurity>{children}</DevSecurity>
+  ) : (
     <Security
       issuer={process.env.REACT_APP_OKTA_ISSUER}
       clientId={process.env.REACT_APP_OKTA_CLIENT_ID}

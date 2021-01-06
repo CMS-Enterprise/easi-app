@@ -8,14 +8,14 @@ package models
 import (
 	"strconv"
 
-	strfmt "github.com/go-openapi/strfmt"
-
 	"github.com/go-openapi/errors"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 )
 
 // SystemDetail system detail
+//
 // swagger:model SystemDetail
 type SystemDetail struct {
 
@@ -75,12 +75,12 @@ type SystemDetail struct {
 	MissionEssentialFunctions []*MissionEssentialFunction `json:"mission_essential_functions"`
 
 	// yyyy-MM-dd
-	// Format: date
-	NextMajorProjectDate strfmt.Date `json:"next_major_project_date,omitempty"`
+	// Format: date-time
+	NextMajorProjectDate strfmt.DateTime `json:"next_major_project_date,omitempty"`
 
 	// yyyy-MM-dd
-	// Format: date
-	NextPlannedProdReleaseDate strfmt.Date `json:"next_planned_prod_release_date,omitempty"`
+	// Format: date-time
+	NextPlannedProdReleaseDate strfmt.DateTime `json:"next_planned_prod_release_date,omitempty"`
 
 	// parent system name
 	ParentSystemName string `json:"parent_system_name,omitempty"`
@@ -200,7 +200,7 @@ func (m *SystemDetail) validateNextMajorProjectDate(formats strfmt.Registry) err
 		return nil
 	}
 
-	if err := validate.FormatOf("next_major_project_date", "body", "date", m.NextMajorProjectDate.String(), formats); err != nil {
+	if err := validate.FormatOf("next_major_project_date", "body", "date-time", m.NextMajorProjectDate.String(), formats); err != nil {
 		return err
 	}
 
@@ -213,7 +213,7 @@ func (m *SystemDetail) validateNextPlannedProdReleaseDate(formats strfmt.Registr
 		return nil
 	}
 
-	if err := validate.FormatOf("next_planned_prod_release_date", "body", "date", m.NextPlannedProdReleaseDate.String(), formats); err != nil {
+	if err := validate.FormatOf("next_planned_prod_release_date", "body", "date-time", m.NextPlannedProdReleaseDate.String(), formats); err != nil {
 		return err
 	}
 

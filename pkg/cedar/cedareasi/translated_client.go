@@ -23,18 +23,20 @@ import (
 const (
 	emitFlagKey = "emit-to-cedar"
 	emitDefault = false
+
+	dateTimeLayout = "2006-01-02 15:04:05"
 )
 
 // TranslatedClient is an API client for CEDAR EASi using EASi language
 type TranslatedClient struct {
-	client        *apiclient.EASiCore
+	client        *apiclient.EASiCoreAPI
 	apiAuthHeader runtime.ClientAuthInfoWriter
 	emitToCedar   func(context.Context) bool
 }
 
 // Client is an interface to ease testing dependencies
 type Client interface {
-	FetchSystems(context.Context) (models.SystemShorts, error)
+	CheckConnection(context.Context) error
 	ValidateAndSubmitSystemIntake(context.Context, *models.SystemIntake) (string, error)
 }
 
@@ -70,31 +72,12 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDCl
 	return TranslatedClient{client, apiKeyHeaderAuth, fnEmit}
 }
 
-// FetchSystems fetches a system list from CEDAR
-func (c TranslatedClient) FetchSystems(ctx context.Context) (models.SystemShorts, error) {
-	resp, err := c.client.Operations.SystemsGET1(nil, c.apiAuthHeader)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to fetch system from CEDAR", zap.Error(err))
-		return models.SystemShorts{}, err
-	}
-
-	systems := make([]models.SystemShort, len(resp.Payload.Systems))
-	for index, system := range resp.Payload.Systems {
-		if system.ID != nil {
-			// this ensures we always have a name populated for display,
-			// even if it is just a restatement of the acronym
-			name := system.SystemAcronym
-			if system.SystemName != nil {
-				name = *system.SystemName
-			}
-			systems[index] = models.SystemShort{
-				ID:      *system.ID,
-				Name:    name,
-				Acronym: system.SystemAcronym,
-			}
-		}
-	}
-	return systems, nil
+// CheckConnection tries to verify if we are able to communicate with the CEDAR API
+func (c TranslatedClient) CheckConnection(ctx context.Context) error {
+	_, err := c.client.Operations.HealthCheckGET1(
+		apioperations.NewHealthCheckGET1ParamsWithContext(ctx),
+		c.apiAuthHeader)
+	return err
 }
 
 // ValidateSystemIntakeForCedar validates all required fields to ensure we won't get errors for contents of the request
@@ -177,47 +160,54 @@ func ValidateSystemIntakeForCedar(ctx context.Context, intake *models.SystemInta
 	return nil
 }
 
-func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
-	id := validatedIntake.ID.String()
-	submissionTime := validatedIntake.SubmittedAt.String()
-	params := apioperations.NewIntakegovernancePOST4Params()
-	euaID := validatedIntake.EUAUserID.ValueOrZero()
-	governanceIntake := apimodels.GovernanceIntake{
-		BusinessNeeds:           &validatedIntake.BusinessNeed.String,
-		BusinessOwner:           &validatedIntake.BusinessOwner.String,
-		BusinessOwnerComponent:  &validatedIntake.BusinessOwnerComponent.String,
-		EaCollaborator:          validatedIntake.EACollaborator.String,
-		EaSupportRequest:        &validatedIntake.EASupportRequest.Bool,
-		EuaUserID:               &euaID,
-		ExistingContract:        &validatedIntake.ExistingContract.String,
-		ExistingFunding:         &validatedIntake.ExistingFunding.Bool,
-		FundingNumber:           validatedIntake.FundingNumber.String,
+func systemIntakeToGovernanceIntake(si *models.SystemIntake) *apimodels.GovernanceIntake {
+	id := si.ID.String()
+	gi := &apimodels.GovernanceIntake{
+		BusinessNeeds:           si.BusinessNeed.ValueOrZero(),
+		BusinessOwner:           si.BusinessOwner.ValueOrZero(),
+		BusinessOwnerComponent:  si.BusinessOwnerComponent.ValueOrZero(),
+		EaCollaborator:          si.EACollaborator.ValueOrZero(),
+		EaSupportRequest:        si.EASupportRequest.ValueOrZero(),
+		EuaUserID:               si.EUAUserID.Ptr(),
+		ExistingContract:        si.ExistingContract.ValueOrZero(),
+		ExistingFunding:         si.ExistingFunding.ValueOrZero(),
+		FundingSource:           si.FundingSource.ValueOrZero(),
 		ID:                      &id,
-		Isso:                    validatedIntake.ISSO.String,
-		OitSecurityCollaborator: validatedIntake.OITSecurityCollaborator.String,
-		ProcessStatus:           &validatedIntake.ProcessStatus.String,
-		ProductManager:          &validatedIntake.ProductManager.String,
-		ProductManagerComponent: &validatedIntake.ProductManagerComponent.String,
-		Requester:               &validatedIntake.Requester,
-		RequesterComponent:      &validatedIntake.Component.String,
-		Solution:                &validatedIntake.Solution.String,
-		SubmittedTime:           &submissionTime,
-		SystemName:              &validatedIntake.ProjectName.String,
-		TrbCollaborator:         validatedIntake.TRBCollaborator.String,
+		Isso:                    si.ISSO.ValueOrZero(),
+		OitSecurityCollaborator: si.OITSecurityCollaborator.ValueOrZero(),
+		ProcessStatus:           si.ProcessStatus.ValueOrZero(),
+		ProductManager:          si.ProductManager.ValueOrZero(),
+		ProductManagerComponent: si.ProductManagerComponent.ValueOrZero(),
+		Requester:               si.Requester,
+		RequesterComponent:      si.Component.ValueOrZero(),
+		Solution:                si.Solution.ValueOrZero(),
+		SystemName:              si.ProjectName.ValueOrZero(),
+		TrbCollaborator:         si.TRBCollaborator.ValueOrZero(),
 	}
-	governanceConversion := []*apimodels.GovernanceIntake{
-		&governanceIntake,
+	if si.SubmittedAt != nil {
+		gi.SubmittedAt = si.SubmittedAt.Format(dateTimeLayout)
 	}
+	if si.DecidedAt != nil {
+		gi.DecidedAt = si.DecidedAt.Format(dateTimeLayout)
+	}
+	if si.ArchivedAt != nil {
+		gi.WithdrawnAt = si.ArchivedAt.Format(dateTimeLayout)
+	}
+	return gi
+}
+
+func submitSystemIntake(ctx context.Context, validatedIntake *models.SystemIntake, c TranslatedClient) (string, error) {
+	params := apioperations.NewIntakegovernancePOST5ParamsWithContext(ctx)
 	params.Body = &apimodels.Intake{
-		Governance: governanceConversion,
+		Governance: systemIntakeToGovernanceIntake(validatedIntake),
 	}
-	resp, err := c.client.Operations.IntakegovernancePOST4(params, c.apiAuthHeader)
+	resp, err := c.client.Operations.IntakegovernancePOST5(params, c.apiAuthHeader)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to submit intake for CEDAR", zap.Error(err))
 		return "", &apperrors.ExternalAPIError{
 			Err:       err,
 			Model:     validatedIntake,
-			ModelID:   id,
+			ModelID:   validatedIntake.ID.String(),
 			Operation: apperrors.Submit,
 			Source:    "CEDAR",
 		}

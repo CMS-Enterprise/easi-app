@@ -12,6 +12,9 @@ import { AppState } from 'reducers/rootReducer';
 
 const accessTokenExpires = () => {
   const token = localStorage.getItem('okta-token-storage') || '';
+  if (token === '') {
+    return Number.MAX_SAFE_INTEGER;
+  }
   const { accessToken } = JSON.parse(token);
   return accessToken && accessToken.expiresAt;
 };
