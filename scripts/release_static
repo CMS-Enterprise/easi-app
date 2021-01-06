@@ -10,6 +10,7 @@ case "$APP_ENV" in
     export REACT_APP_OKTA_DOMAIN="https://test.idp.idm.cms.gov"
     export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_DEV"
     export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_DEV"
+    export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID_DEV"
     export REACT_APP_LD_USER_HASH="$LD_USER_HASH_DEV"
     export REACT_APP_LD_ENV_USER="$LD_ENV_USER_DEV"
     ;;
@@ -19,6 +20,7 @@ case "$APP_ENV" in
     export REACT_APP_OKTA_DOMAIN="https://impl.idp.idm.cms.gov"
     export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_IMPL"
     export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_IMPL"
+    export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID_IMPL"
     export REACT_APP_LD_USER_HASH="$LD_USER_HASH_IMPL"
     export REACT_APP_LD_ENV_USER="$LD_ENV_USER_IMPL"
     ;;
@@ -28,6 +30,7 @@ case "$APP_ENV" in
     export REACT_APP_OKTA_DOMAIN="https://idm.cms.gov"
     export REACT_APP_OKTA_CLIENT_ID="$OKTA_CLIENT_ID_PROD"
     export REACT_APP_OKTA_SERVER_ID="$OKTA_SERVER_ID_PROD"
+    export REACT_APP_LD_CLIENT_ID="$LD_CLIENT_ID_PROD"
     export REACT_APP_LD_USER_HASH="$LD_USER_HASH_PROD"
     export REACT_APP_LD_ENV_USER="$LD_ENV_USER_PROD"
     ;;
