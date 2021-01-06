@@ -36,21 +36,3 @@ Default.args = {
   buttonUnstyled: false,
   onClick: true
 };
-// export const Default = () => (
-//   <ActionBanner
-//     title="Your Intake Request is incomplete"
-//     requestType="NEW"
-//     helpfulText="The quick brown fox jumps over the lazy dog"
-//     label="Continue"
-//     onClick={() => {}}
-//   />
-// );
-
-// export const NoCTA = () => (
-//   <ActionBanner
-//     title="Your Intake Request is submitted"
-//     requestType="NEW"
-//     helpfulText="The quick brown fox jumps over the lazy dog"
-//     label="No further action at this time"
-//   />
-// );
