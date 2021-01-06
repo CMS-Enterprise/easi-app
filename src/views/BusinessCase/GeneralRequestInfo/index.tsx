@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
@@ -11,7 +12,6 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
-import { useFlags } from 'contexts/flagContext';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
