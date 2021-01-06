@@ -1,11 +1,18 @@
 import { Action } from 'redux-actions';
 
-import { fileUploadInitialData, prepareFileUploadForApp } from 'data/files';
+import {
+  fileUploadFormInitialData,
+  fileUploadTableInitialData,
+  prepareFileUploadForApp,
+  prepareUploadedFileForApp
+} from 'data/files';
 import { FileUploadState } from 'types/files';
-import { postFileUploadURL, putFileS3 } from 'types/routines';
+import { getFileS3, postFileUploadURL, putFileS3 } from 'types/routines';
 
 const initialState: FileUploadState = {
-  form: fileUploadInitialData,
+  form: fileUploadFormInitialData,
+  files: [fileUploadTableInitialData],
+  downloadTarget: '',
   isLoading: null,
   isSaving: false,
   isUploaded: false,
@@ -20,13 +27,13 @@ function fileUploadReducer(
     case postFileUploadURL.REQUEST:
       return {
         ...state,
+        form: action.payload,
         isLoading: true
       };
     case postFileUploadURL.SUCCESS:
       return {
         ...state,
         form: {
-          ...state.form,
           ...prepareFileUploadForApp(action.payload)
         }
       };
@@ -43,11 +50,18 @@ function fileUploadReducer(
     case putFileS3.REQUEST:
       return {
         ...state,
+        form: action.payload,
         isLoading: true
       };
     case putFileS3.SUCCESS:
       return {
         ...state,
+        files: [
+          ...state.files,
+          {
+            ...prepareUploadedFileForApp(action.payload)
+          }
+        ],
         isUploaded: true
       };
     case putFileS3.FAILURE:
@@ -56,6 +70,27 @@ function fileUploadReducer(
         error: action.payload
       };
     case putFileS3.FULFILL:
+      return {
+        ...state,
+        isSaving: false
+      };
+    case getFileS3.REQUEST:
+      return {
+        ...state,
+        downloadTarget: action.payload,
+        isLoading: true
+      };
+    case getFileS3.SUCCESS:
+      return {
+        ...state,
+        downloadTarget: action.payload
+      };
+    case getFileS3.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case getFileS3.FULFILL:
       return {
         ...state,
         isSaving: false
