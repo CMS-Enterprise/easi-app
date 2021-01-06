@@ -431,6 +431,18 @@ const ProjectPage = () => {
                           </dd>
                           <dt>Lifecycle ID</dt>
                           <dd>{project.lifecycleID}</dd>
+
+                          <dt>Point of contact</dt>
+                          <dd>
+                            {project.pointOfContact.name}
+                            <br />
+                            <button
+                              type="button"
+                              className="usa-button usa-button--unstyled"
+                            >
+                              Update
+                            </button>
+                          </dd>
                         </dl>
                       </div>
                       <div className="grid-col-6">
@@ -454,11 +466,16 @@ const ProjectPage = () => {
               </Tabs>
             </div>
             <div className="grid-col-4">
+              <h3>Timeline</h3>
               <div
                 className="easi-grt__status-info text-gray-90 padding-top-1 padding-bottom-1"
                 aria-label={`Status for ${project.name}`}
+                aria-describedby="timeline-description"
               >
-                <h3>Timeline</h3>
+                <div className="usa-sr-only" id="timeline-description">
+                  The timeline indicates where this request is within the 508
+                  process and let’s you change the status.
+                </div>
                 <UpdateStatusModal
                   project={project}
                   updateProject={updateProject}
@@ -478,21 +495,6 @@ const ProjectPage = () => {
                     );
                   })}
                 </ProgressIndicator>
-
-                <hr aria-hidden="true" className="margin-bottom-2" />
-
-                <span className="text-bold margin-right-1">
-                  Point of contact
-                </span>
-                <br />
-                <span>{project.pointOfContact.name}</span>
-                <br />
-                <button
-                  type="button"
-                  className="usa-button usa-button--unstyled"
-                >
-                  Update
-                </button>
               </div>
             </div>
           </div>
