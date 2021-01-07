@@ -43,7 +43,7 @@ const logInfo = async (authService: any) => {
 };
 
 const Sandbox = () => {
-  const { authService }: { authService: any } = useOktaAuth();
+  const { oktaAuth } = useOktaAuth();
   const dispatch = useDispatch();
 
   return (
@@ -61,14 +61,14 @@ const Sandbox = () => {
           title="Shorten the life of your token"
           helpfulText="Change expiration to a minute from now"
           label="Do iiiiiit"
-          onClick={() => shortenTimeout(authService)}
+          onClick={() => shortenTimeout(oktaAuth)}
           requestType="NEW"
         />
         <ActionBanner
           title="Learn more about your token"
           helpfulText="Console log the current tokens"
           label="Log the thing"
-          onClick={() => logInfo(authService)}
+          onClick={() => logInfo(oktaAuth)}
           requestType="NEW"
         />
         <ActionBanner

@@ -37,7 +37,7 @@ export const SystemIntake = () => {
     systemId: string;
     formPage: string;
   }>();
-  const { authService } = useOktaAuth();
+  const { oktaAuth } = useOktaAuth();
   const dispatch = useDispatch();
   const formikRef: any = useRef();
 
@@ -85,7 +85,7 @@ export const SystemIntake = () => {
 
   useEffect(() => {
     if (systemId === 'new') {
-      authService.getUser().then((user: any) => {
+      oktaAuth.getUser().then((user: any) => {
         dispatch(
           storeSystemIntake({
             requester: {

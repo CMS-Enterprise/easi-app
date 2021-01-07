@@ -25,7 +25,7 @@ import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
 
 const RequestTypeForm = () => {
   const { t } = useTranslation('intake');
-  const { authService } = useOktaAuth();
+  const { oktaAuth } = useOktaAuth();
   const dispatch = useDispatch();
   const history = useHistory();
   const flags = useFlags();
@@ -46,7 +46,7 @@ const RequestTypeForm = () => {
   );
 
   const handleCreateIntake = (formikValues: { requestType: string }) => {
-    authService.getUser().then((user: any) => {
+    oktaAuth.getUser().then((user: any) => {
       dispatch(
         postSystemIntake({
           ...initialSystemIntakeForm,

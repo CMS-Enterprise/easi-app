@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { OktaContext } from '@okta/okta-react';
+import { AuthTransaction, OktaAuth } from '@okta/okta-auth-js';
+import { Security } from '@okta/okta-react';
 
 const storageKey = 'dev-user-config';
 
@@ -32,35 +33,25 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
 
   const [authState, setAuthState] = useState(getStateFromLocalStorage);
 
-  const oktaAuth = {
-    login: () => {
-      setAuthState(getStateFromLocalStorage());
-    },
-    logout: () => {
-      window.localStorage.removeItem(storageKey);
-      window.location.href = '/';
-    },
-    getUser: () => {
-      return Promise.resolve({ name: authState.name });
-    },
-    getTokenManager: () => {
-      return {
-        off: () => {},
-        on: () => {},
-        renew: () => {}
-      };
-    }
+  const oktaAuth2 = new OktaAuth({});
+  oktaAuth2.signInWithCredentials = (): Promise<AuthTransaction> => {
+    setAuthState(getStateFromLocalStorage);
+    return new Promise(() => {});
+  };
+  oktaAuth2.signOut = (): Promise<void> => {
+    window.localStorage.removeItem(storageKey);
+    window.location.href = '/';
+    return new Promise(() => {});
+  };
+  oktaAuth2.getUser = () => {
+    return Promise.resolve({ name: authState.name, sub: '' });
   };
 
   useEffect(() => {
     setAuthState(getStateFromLocalStorage);
   }, []);
 
-  return (
-    <OktaContext.Provider value={{ oktaAuth, authState }}>
-      {children}
-    </OktaContext.Provider>
-  );
+  return <Security oktaAuth={oktaAuth2}>{children}</Security>;
 };
 
 export default DevSecurity;

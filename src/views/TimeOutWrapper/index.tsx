@@ -36,7 +36,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const activeSinceLastRenew = lastActiveAt > lastRenewAt;
 
   const dispatch = useDispatch();
-  const { authState, authService } = useOktaAuth();
+  const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,16 +46,16 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('seconds');
 
   const registerExpire = async () => {
-    const tokenManager = await authService.getTokenManager();
+    const tokenManager = await oktaAuth.tokenManager;
 
     // clear the old listener so we don't register millions of them
-    tokenManager.off('expired');
+    tokenManager.off('expired', () => {});
     tokenManager.on('expired', (key: any) => {
       if (activeSinceLastRenew) {
         tokenManager.renew(key);
         dispatch(updateLastRenewAt(DateTime.local()));
       } else {
-        authService.logout('/login');
+        oktaAuth.signOut('/login');
       }
     });
   };
