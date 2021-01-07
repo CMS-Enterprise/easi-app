@@ -2,6 +2,7 @@ package email
 
 import (
 	"bytes"
+	"context"
 	"errors"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -27,13 +28,14 @@ func (c Client) systemIntakeReviewBody(EmailText string) (string, error) {
 }
 
 // SendSystemIntakeReviewEmail sends an email for a submitted system intake
-func (c Client) SendSystemIntakeReviewEmail(emailText string, recipientAddress string) error {
+func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText string, recipientAddress string) error {
 	subject := "Feedback on your intake request"
 	body, err := c.systemIntakeReviewBody(emailText)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 	err = c.sender.Send(
+		ctx,
 		recipientAddress,
 		subject,
 		body,

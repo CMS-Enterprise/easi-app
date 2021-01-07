@@ -1,6 +1,7 @@
 package email
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -8,7 +9,7 @@ import (
 
 func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 	sender := mockSender{}
-
+	ctx := context.Background()
 	requestName := "Request Name"
 
 	s.Run("successful call with request name has the right content", func() {
@@ -20,7 +21,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 			"No further action is required for the withdrawal.\n" +
 			"</p>\n"
 
-		err = client.SendWithdrawRequestEmail(requestName)
+		err = client.SendWithdrawRequestEmail(ctx, requestName)
 
 		s.NoError(err)
 		s.Equal(s.config.GRTEmail, sender.toAddress)
@@ -37,7 +38,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 			"No further action is required for the withdrawal.\n" +
 			"</p>\n"
 
-		err = client.SendWithdrawRequestEmail("")
+		err = client.SendWithdrawRequestEmail(ctx, "")
 
 		s.NoError(err)
 		s.Equal(s.config.GRTEmail, sender.toAddress)
@@ -50,7 +51,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendWithdrawRequestEmail(requestName)
+		err = client.SendWithdrawRequestEmail(ctx, requestName)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -64,7 +65,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendWithdrawRequestEmail("")
+		err = client.SendWithdrawRequestEmail(ctx, "")
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -78,7 +79,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		s.NoError(err)
 		client.templates.namedRequestWithdrawTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendWithdrawRequestEmail(requestName)
+		err = client.SendWithdrawRequestEmail(ctx, requestName)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -93,7 +94,7 @@ func (s *EmailTestSuite) TestSendWithdrawRequestEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendWithdrawRequestEmail(requestName)
+		err = client.SendWithdrawRequestEmail(ctx, requestName)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
