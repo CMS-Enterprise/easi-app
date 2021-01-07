@@ -5,6 +5,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -16,7 +17,6 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
-import { useFlags } from 'contexts/flagContext';
 import { initialSystemIntakeForm } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { postSystemIntake } from 'types/routines';
