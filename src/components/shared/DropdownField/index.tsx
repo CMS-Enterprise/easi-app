@@ -40,7 +40,6 @@ export const DropdownField = ({
       onBlur={onBlur}
       id={id}
       value={value}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
     >
       {children}

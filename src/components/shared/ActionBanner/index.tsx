@@ -25,7 +25,6 @@ const ActionBanner = ({
   ...remainingProps
 }: ActionBannerProps) => {
   return (
-    // eslint-disable-next-line react/jsx-props-no-spreading
     <div className="action-banner usa-alert" {...remainingProps}>
       <span className="text-base-dark font-body-3xs">
         {translateRequestType(requestType)}

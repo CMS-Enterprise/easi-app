@@ -50,7 +50,6 @@ export const RadioField = ({
         onChange={onChange}
         type="radio"
         value={value}
-        // eslint-disable-next-line react/jsx-props-no-spreading
         {...props}
       />
       <label className={radioLabelClasses} htmlFor={id}>
@@ -70,7 +69,6 @@ export const RadioGroup = ({ children, inline, ...props }: RadioGroupProps) => {
     'easi-radio__group--inline': inline
   });
   return (
-    // eslint-disable-next-line react/jsx-props-no-spreading
     <div className={classes} role="radiogroup" {...props}>
       {children}
     </div>
