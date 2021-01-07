@@ -1,6 +1,7 @@
 package appses
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -49,7 +50,6 @@ func TestSESTestSuite(t *testing.T) {
 	sender := Sender{
 		client,
 		sesConfig,
-		logger,
 	}
 
 	sesTestSuite := &SESTestSuite{
@@ -64,6 +64,7 @@ func TestSESTestSuite(t *testing.T) {
 func (s SESTestSuite) TestSend() {
 	s.Run("Sends successfully", func() {
 		err := s.sender.Send(
+			context.Background(),
 			"success@simulator.amazonses.com",
 			"Test Subject",
 			"Test Body",

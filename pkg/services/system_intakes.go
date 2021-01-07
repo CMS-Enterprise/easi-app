@@ -168,7 +168,7 @@ func NewArchiveSystemIntake(
 	update func(c context.Context, intake *models.SystemIntake) (*models.SystemIntake, error),
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 	authorize func(context context.Context, intake *models.SystemIntake) (bool, error),
-	sendWithdrawEmail func(requestName string) error,
+	sendWithdrawEmail func(ctx context.Context, requestName string) error,
 ) func(context.Context, uuid.UUID) error {
 	return func(ctx context.Context, id uuid.UUID) error {
 		intake, fetchErr := fetch(ctx, id)
@@ -209,7 +209,7 @@ func NewArchiveSystemIntake(
 			}
 		}
 
-		err = sendWithdrawEmail(intake.ProjectName.String)
+		err = sendWithdrawEmail(ctx, intake.ProjectName.String)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Withdraw email failed to send: ", zap.Error(err))
 		}
@@ -256,7 +256,7 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendIssueLCIDEmail func(string, string, *time.Time, string, string, string) error,
+	sendIssueLCIDEmail func(context.Context, string, string, *time.Time, string, string, string) error,
 	generateLCID func(context.Context) (string, error),
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
@@ -335,6 +335,7 @@ func NewUpdateLifecycleFields(
 		}
 
 		err = sendIssueLCIDEmail(
+			ctx,
 			requesterInfo.Email,
 			updated.LifecycleID.String,
 			updated.LifecycleExpiresAt,
@@ -359,7 +360,7 @@ func NewUpdateRejectionFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendRejectRequestEmail func(recipient string, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmail func(ctx context.Context, recipient string, reason string, nextSteps string, feedback string) error,
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
@@ -408,6 +409,7 @@ func NewUpdateRejectionFields(
 		}
 
 		err = sendRejectRequestEmail(
+			ctx,
 			requesterInfo.Email,
 			existing.RejectionReason.String,
 			existing.DecisionNextSteps.String,

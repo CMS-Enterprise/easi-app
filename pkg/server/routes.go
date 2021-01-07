@@ -99,7 +99,7 @@ func (s *Server) routes(
 
 	// set up Email Client
 	sesConfig := s.NewSESConfig()
-	sesSender := appses.NewSender(sesConfig, s.logger)
+	sesSender := appses.NewSender(sesConfig)
 	emailConfig := s.NewEmailConfig()
 	emailClient, err := email.NewClient(emailConfig, sesSender)
 	if err != nil {
@@ -107,7 +107,7 @@ func (s *Server) routes(
 	}
 	// override email client with local one
 	if s.environment.Local() || s.environment.Test() {
-		localSender := local.NewSender(s.logger)
+		localSender := local.NewSender()
 		emailClient, err = email.NewClient(emailConfig, localSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
