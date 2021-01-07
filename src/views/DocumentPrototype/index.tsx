@@ -141,7 +141,6 @@ const DocumentPrototype = () => {
     });
   };
 
-  /* eslint-disable react/jsx-props-no-spreading */
   return (
     <PageWrapper className="system-intake">
       <Header />

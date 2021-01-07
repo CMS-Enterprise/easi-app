@@ -33,7 +33,7 @@
     // https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-use-before-define.md#how-to-use
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
-   
+
     // We mostly use functional components anyhow
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/require-default-props.md
     "react/require-default-props": "off",
@@ -67,7 +67,8 @@
           ["^.+\\.s?css$"]
         ]
       }
-    ]
+    ],
+    "react/jsx-props-no-spreading": "off"
   },
   "settings": {
     "import/resolver": {

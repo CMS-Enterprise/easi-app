@@ -50,7 +50,6 @@ const SearchBar = ({
 
   const renderSuggestionsContainer = ({ containerProps, children }: any) => {
     return (
-      // eslint-disable-next-line react/jsx-props-no-spreading
       <div {...containerProps}>
         {children}
         {searchValue.trim().length >= 2 &&
