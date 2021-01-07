@@ -3,10 +3,10 @@ import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { prepareFileUploadForApi } from 'data/files';
-import { FileUploadModel } from 'types/files';
-import { postFileUploadURL, putFileS3 } from 'types/routines';
+import { FileUploadForm } from 'types/files';
+import { getFileS3, postFileUploadURL, putFileS3 } from 'types/routines';
 
-function postFileUploadURLRequest(formData: FileUploadModel) {
+function postFileUploadURLRequest(formData: FileUploadForm) {
   const data = prepareFileUploadForApi(formData);
   return axios.post(
     `${process.env.REACT_APP_API_ADDRESS}/file_uploads/upload_url`,
@@ -18,7 +18,9 @@ function* createFileUploadURL(action: Action<any>) {
   try {
     yield put(postFileUploadURL.request());
     const response = yield call(postFileUploadURLRequest, action.payload);
-    yield put(postFileUploadURL.success(response.data));
+    yield put(
+      postFileUploadURL.success({ ...action.payload, ...response.data })
+    );
   } catch (error) {
     yield put(postFileUploadURL.failure(error.message));
   } finally {
@@ -26,7 +28,7 @@ function* createFileUploadURL(action: Action<any>) {
   }
 }
 
-function putFileS3Request(formData: FileUploadModel) {
+function putFileS3Request(formData: FileUploadForm) {
   const data = new FormData();
   data.append('file', formData.file);
 
@@ -36,14 +38,41 @@ function putFileS3Request(formData: FileUploadModel) {
 function* uploadFile(action: Action<any>) {
   try {
     yield put(putFileS3.request());
-    const response = yield call(putFileS3Request, action.payload);
-    yield put(putFileS3.success(response.data));
+    yield call(putFileS3Request, action.payload);
+    // S3 doesn't return anything besides success
+    yield put(putFileS3.success(action.payload));
   } catch (error) {
     yield put(putFileS3.failure(error.message));
+  }
+}
+
+function postFileDownloadURLRequest(file: any) {
+  return axios.post(
+    `${process.env.REACT_APP_API_ADDRESS}/file_uploads/${file.filename}/download_url`
+  );
+}
+
+function* downloadFile(action: Action<any>) {
+  try {
+    yield put(getFileS3.request());
+    const response = yield call(postFileDownloadURLRequest, action.payload);
+
+    const link = document.createElement('a');
+    link.href = response.data.URL;
+    link.setAttribute('download', `${response.data.filename}`);
+    document.body.appendChild(link);
+    link.click();
+
+    yield put(getFileS3.success(response.data));
+  } catch (error) {
+    yield put(getFileS3.failure(error.message));
+  } finally {
+    yield put(getFileS3.fulfill());
   }
 }
 
 export default function* fileUploadSaga() {
   yield takeLatest(postFileUploadURL.TRIGGER, createFileUploadURL);
   yield takeLatest(putFileS3.TRIGGER, uploadFile);
+  yield takeLatest(getFileS3.TRIGGER, downloadFile);
 }

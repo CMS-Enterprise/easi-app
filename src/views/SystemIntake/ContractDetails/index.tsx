@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
@@ -19,7 +20,6 @@ import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import fundingSources from 'constants/enums/fundingSources';
 import processStages from 'constants/enums/processStages';
-import { useFlags } from 'contexts/flagContext';
 import { yesNoMap } from 'data/common';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';

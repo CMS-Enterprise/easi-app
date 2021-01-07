@@ -14,7 +14,7 @@ import (
 )
 
 // CreateFileUploadURL is our handler for creating pre-signed S3 upload URLs
-type CreateFileUploadURL func(ctx context.Context) (*models.PreSignedURL, error)
+type CreateFileUploadURL func(ctx context.Context, fileType string) (*models.PreSignedURL, error)
 
 // CreateFileDownloadURL is a handler for creating pre-signed S3 download URLs
 type CreateFileDownloadURL func(ctx context.Context, key string) (*models.PreSignedURL, error)
@@ -66,7 +66,19 @@ type PreSignedURLUploadHandler struct {
 // Handle is the actual function
 func (h PreSignedURLUploadHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		url, err := h.CreateFileUploadURL(r.Context())
+		decoder := json.NewDecoder(r.Body)
+		urlUploadRequest := struct {
+			Filename string `json:"fileName"`
+			FileType string `json:"fileType"`
+			FileSize int    `json:"fileSize"`
+		}{}
+		err := decoder.Decode(&urlUploadRequest)
+		if err != nil {
+			h.WriteErrorResponse(r.Context(), w, err)
+			return
+		}
+
+		url, err := h.CreateFileUploadURL(r.Context(), urlUploadRequest.FileType)
 		if err != nil {
 			h.WriteErrorResponse(r.Context(), w, err)
 			return
@@ -109,13 +121,13 @@ type PreSignedURLDownloadHandler struct {
 // Handle is the actual function
 func (h PreSignedURLDownloadHandler) Handle() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fileID, err := requireFileUploadID(mux.Vars(r))
+		fileName, err := requireFileUploadName(mux.Vars(r))
 		if err != nil {
 			h.WriteErrorResponse(r.Context(), w, err)
 			return
 		}
 
-		url, err := h.CreateFileDownloadURL(r.Context(), fileID.String())
+		url, err := h.CreateFileDownloadURL(r.Context(), fileName)
 		if err != nil {
 			h.WriteErrorResponse(r.Context(), w, err)
 			return
@@ -192,6 +204,24 @@ func (h FileUploadHandler) createFileMetadata(w http.ResponseWriter, r *http.Req
 		h.WriteErrorResponse(r.Context(), w, err)
 		return
 	}
+}
+
+// requireFileUploadName does validation on a file name string received
+func requireFileUploadName(reqVars map[string]string) (string, error) {
+	valErr := apperrors.NewValidationError(
+		errors.New("file upload fetch failed validation"),
+		models.UploadedFile{},
+		"",
+	)
+
+	name := reqVars["file_name"]
+	if name == "" {
+		valErr.WithValidation("path.fileID", "is required")
+		return "", &valErr
+	}
+
+	return name, nil
+
 }
 
 // requireFileUploadID does validation on the ID string received by the API
