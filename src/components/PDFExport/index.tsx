@@ -1,9 +1,8 @@
 import React, { useRef } from 'react';
 import axios from 'axios';
 import { Base64 } from 'js-base64';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import escape from 'lodash';
-
-import { useFlags } from 'contexts/flagContext';
 
 import downloadSVG from './download.svg';
 
@@ -91,7 +90,7 @@ const downloadRefAsPDF = (
           <h1>
             ${escape(title)}
           </h1>
-          ${ref && ref.current && ref.current.outerHTML} 
+          ${ref && ref.current && ref.current.outerHTML}
         </body>
       </html>`;
 

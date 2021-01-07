@@ -21,8 +21,8 @@ type createFunc func(context.Context, *models.UploadedFile) (*models.UploadedFil
 type fetchFunc func(context.Context, uuid.UUID) (*models.UploadedFile, error)
 
 // NewCreateFileUploadURL is a service to create a file upload URL via a pre-signed URL in S3
-func NewCreateFileUploadURL(config Config, authorize authFunc, s3client upload.S3Client) func(ctx context.Context) (*models.PreSignedURL, error) {
-	return func(ctx context.Context) (*models.PreSignedURL, error) {
+func NewCreateFileUploadURL(config Config, authorize authFunc, s3client upload.S3Client) func(ctx context.Context, fileType string) (*models.PreSignedURL, error) {
+	return func(ctx context.Context, fileType string) (*models.PreSignedURL, error) {
 		ok, err := authorize(ctx)
 		if err != nil {
 			return nil, err
@@ -35,7 +35,7 @@ func NewCreateFileUploadURL(config Config, authorize authFunc, s3client upload.S
 			}
 		}
 
-		url, err := s3client.NewPutPresignedURL()
+		url, err := s3client.NewPutPresignedURL(fileType)
 		if err != nil {
 			return nil, err
 		}

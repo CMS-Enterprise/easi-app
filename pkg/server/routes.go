@@ -162,10 +162,6 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to connect to database", zap.Error(err))
 	}
 
-	// endpoint for flags list
-	flagsHandler := handlers.NewFlagsHandler(base, flags.NewFetchFlags(), flagClient, flagUser)
-	api.Handle("/flags", flagsHandler.Handle())
-
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,
 		services.NewCreateSystemIntake(
@@ -558,7 +554,7 @@ func (s *Server) routes(
 		),
 	)
 
-	api.Handle("/file_uploads/{file_id}/download_url", presignedURLDownloadHandler.Handle())
+	api.Handle("/file_uploads/{file_name}/download_url", presignedURLDownloadHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
