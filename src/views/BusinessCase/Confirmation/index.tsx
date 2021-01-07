@@ -1,9 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { ImproveEasiSurvey } from 'components/Survey';
-import { useFlags } from 'contexts/flagContext';
 import { BusinessCaseModel } from 'types/businessCase';
 
 const Confirmation = ({
