@@ -97,6 +97,7 @@ const UpdateStatusModal = ({
 }) => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [projectStatus, setProjectStatus] = useState(project.status);
+  const [date, setDate] = useState<DateTime>();
 
   return (
     <>
@@ -151,12 +152,7 @@ const UpdateStatusModal = ({
                     ].includes(status) &&
                       projectStatus === status && (
                         <div className="width-card-lg margin-left-4 margin-bottom-1 margin-top-1">
-                          <DateField
-                            setDate={d => {
-                              // eslint-disable-next-line no-console
-                              console.debug(d);
-                            }}
-                          />
+                          <DateField setDate={setDate} />
                         </div>
                       )}
                   </div>
@@ -177,6 +173,30 @@ const UpdateStatusModal = ({
               onClick={() => {
                 // eslint-disable-next-line no-param-reassign
                 project.status = projectStatus;
+                Object.entries(project.stepStatuses).forEach(
+                  ([requestStep, stepStatus]) => {
+                    if (!stepStatus) {
+                      return;
+                    }
+                    if (requestStep === projectStatus) {
+                      // eslint-disable-next-line no-param-reassign
+                      stepStatus.date = date;
+                      // eslint-disable-next-line no-param-reassign
+                      stepStatus.status = ProgressStatus.Current;
+                    } else {
+                      // eslint-disable-next-line no-param-reassign
+                      stepStatus.status = ProgressStatus.Completed;
+                    }
+                  }
+                );
+
+                if (!project.stepStatuses[projectStatus]) {
+                  // eslint-disable-next-line no-param-reassign
+                  project.stepStatuses[projectStatus] = {
+                    status: ProgressStatus.Current,
+                    date
+                  };
+                }
                 updateProject(project);
                 setModalIsOpen(false);
               }}
@@ -290,14 +310,50 @@ const DocumentTable = ({
   );
 };
 
+const getSelectedTabId = (hash: string) => {
+  const id = hash.replace('#', '');
+  if (['documents', 'notes', 'details'].includes(id)) {
+    return id;
+  }
+  return 'documents';
+};
+
+const Timeline = ({ project }: { project: Project }) => {
+  let encounteredCurrent = false;
+  return (
+    <ProgressIndicator>
+      {Object.values(RequestStep).map(value => {
+        const step = value as RequestStep;
+
+        const status = project.stepStatuses[step] || {
+          status: encounteredCurrent
+            ? ProgressStatus.NotCompleted
+            : ProgressStatus.Skipped
+        };
+
+        if (status.status === ProgressStatus.Current) {
+          encounteredCurrent = true;
+        }
+
+        return (
+          <ProgressStep name={step} status={status.status}>
+            {stepContent(step, status)}
+          </ProgressStep>
+        );
+      })}
+    </ProgressIndicator>
+  );
+};
+
 const ProjectPage = () => {
   const { id } = useParams();
-  const { pathname } = useLocation();
+  const { hash, pathname } = useLocation();
   const history = useHistory();
 
   const { state, updateProject } = useGlobalState();
   const project = state.projects[id];
   const [noteContent, setNoteContent] = useState('');
+  hash.replace('#', '');
 
   useDocumentTitle(`EASi: Project page for ${project && project.name}`);
 
@@ -331,9 +387,28 @@ const ProjectPage = () => {
         </div>
 
         <div className="grid-container">
-          <div className="grid-row grid-gap-lg">
+          <div className="grid-row grid-gap-lg easi-column-reverse">
+            <div className="grid-col-4">
+              <h3>Timeline</h3>
+              <div
+                className="easi-grt__status-info text-gray-90 padding-top-1 padding-bottom-1"
+                aria-label={`Status for ${project.name}`}
+                aria-describedby="timeline-description"
+              >
+                <div className="usa-sr-only" id="timeline-description">
+                  The timeline indicates where this request is within the 508
+                  process and let’s you change the status.
+                </div>
+                <UpdateStatusModal
+                  project={project}
+                  updateProject={updateProject}
+                />
+                <Timeline project={project} />
+              </div>
+            </div>
+
             <div className="grid-col-8">
-              <Tabs>
+              <Tabs defaultSelectedId={getSelectedTabId(hash)}>
                 <TabPanel id="documents" tab="Documents">
                   <button
                     type="button"
@@ -439,6 +514,9 @@ const ProjectPage = () => {
                             <button
                               type="button"
                               className="usa-button usa-button--unstyled"
+                              onClick={() => {
+                                history.push('/508/v2/not-implemented');
+                              }}
                             >
                               Update
                             </button>
@@ -450,7 +528,7 @@ const ProjectPage = () => {
                         <ol className="past-requests">
                           {project.pastRequests.map(request => (
                             <li>
-                              <a href="#tbd">
+                              <a href="/508/v2/not-implemented">
                                 {request.name} {request.release}
                               </a>
                               <br />
@@ -464,38 +542,6 @@ const ProjectPage = () => {
                   </div>
                 </TabPanel>
               </Tabs>
-            </div>
-            <div className="grid-col-4">
-              <h3>Timeline</h3>
-              <div
-                className="easi-grt__status-info text-gray-90 padding-top-1 padding-bottom-1"
-                aria-label={`Status for ${project.name}`}
-                aria-describedby="timeline-description"
-              >
-                <div className="usa-sr-only" id="timeline-description">
-                  The timeline indicates where this request is within the 508
-                  process and let’s you change the status.
-                </div>
-                <UpdateStatusModal
-                  project={project}
-                  updateProject={updateProject}
-                />
-                <ProgressIndicator>
-                  {Object.values(RequestStep).map(value => {
-                    const step = value as RequestStep;
-                    const status = project.stepStatuses[step] || {
-                      status: ProgressStatus.NotCompleted,
-                      date: null
-                    };
-
-                    return (
-                      <ProgressStep name={step} status={status.status}>
-                        {stepContent(step, status)}
-                      </ProgressStep>
-                    );
-                  })}
-                </ProgressIndicator>
-              </div>
             </div>
           </div>
         </div>

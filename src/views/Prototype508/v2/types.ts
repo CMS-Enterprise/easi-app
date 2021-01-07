@@ -44,7 +44,7 @@ export enum RequestStep {
 }
 
 export type RequestStepStatus = {
-  date: DateTime;
+  date?: DateTime;
   status: ProgressStatus;
 };
 

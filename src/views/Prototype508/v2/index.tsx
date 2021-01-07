@@ -6,6 +6,7 @@ import Footer from 'components/Footer';
 import Header from './components/Header';
 import InRemediationPage from './pages/InRemediationPage';
 import LoginPage from './pages/LoginPage';
+import NotImplementedPage from './pages/NotImplemented';
 import RequestPage from './pages/RequestPage';
 import RequestsPage from './pages/RequestsPage';
 import UploadPage from './pages/UploadPage';
@@ -60,6 +61,11 @@ const Prototype508 = () => {
                 path={`${path}/remediation`}
                 exact
                 component={InRemediationPage}
+              />
+              <Route
+                path={`${path}/not-implemented`}
+                exact
+                component={NotImplementedPage}
               />
             </Switch>
           </section>

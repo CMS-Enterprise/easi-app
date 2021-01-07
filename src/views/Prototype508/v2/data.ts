@@ -9,10 +9,8 @@ const projects: Record<string, Project> = {
     name: 'TACO',
     release: '1.3',
     status: RequestStep.DocumentsReceived,
-    submissionDate: DateTime.fromISO('2020-11-10'),
-    testDate: DateTime.fromISO('2020-11-10'),
-    remediationStartDate: DateTime.fromISO('2020-11-10'),
-    lastUpdatedAt: DateTime.fromISO('2020-11-25'),
+    submissionDate: DateTime.fromISO('2020-12-28'),
+    lastUpdatedAt: DateTime.fromISO('2021-01-06'),
     businessOwner: {
       name: 'Shane Clark',
       component: 'OIT'
@@ -31,10 +29,10 @@ const projects: Record<string, Project> = {
         date: DateTime.fromISO('2020-11-25'),
         status: ProgressStatus.Completed
       },
-      [RequestStep.TestScheduled]: {
-        date: DateTime.fromISO('2020-11-25'),
-        status: ProgressStatus.Completed
-      },
+      // [RequestStep.TestScheduled]: {
+      //   date: DateTime.fromISO('2020-11-25'),
+      //   status: ProgressStatus.Completed
+      // },
       [RequestStep.RemediationRequested]: {
         date: DateTime.fromISO('2020-11-25'),
         status: ProgressStatus.Current
@@ -87,10 +85,9 @@ const projects: Record<string, Project> = {
   2: {
     id: 2,
     name: 'Impact Analysis Network',
-    status: RequestStep.TestScheduled,
+    status: RequestStep.DocumentsReceived,
     submissionDate: DateTime.fromISO('2020-08-28'),
-    testDate: DateTime.fromISO('2020-11-10'),
-    lastUpdatedAt: DateTime.fromISO('2020-11-30'),
+    lastUpdatedAt: DateTime.fromISO('2021-01-05'),
     businessOwner: {
       name: 'Marny Land',
       component: 'OIT'
@@ -128,16 +125,16 @@ const projects: Record<string, Project> = {
       }
     ],
     notes: [],
-
+    pastRequests: [],
     lifecycleID: 'X200943'
   },
   3: {
     id: 3,
     name: 'Migration Pipeline',
-    status: RequestStep.RemediationInProgress,
-    submissionDate: DateTime.fromISO('2020-07-16'),
-    testDate: DateTime.fromISO('2020-11-10'),
-    lastUpdatedAt: DateTime.fromISO('2020-10-03'),
+    release: '2.0',
+    status: RequestStep.TestScheduled,
+    submissionDate: DateTime.fromISO('2021-01-09'),
+    lastUpdatedAt: DateTime.fromISO('2021-01-09'),
     businessOwner: {
       name: 'Connie Leonard',
       component: 'OIT'
@@ -148,15 +145,17 @@ const projects: Record<string, Project> = {
     },
     notes: [],
     documents: [],
+    pastRequests: [],
     stepStatuses: {},
     lifecycleID: 'X200943'
   },
   4: {
     id: 4,
     name: '(USDS) Dashboard for USDS',
-    status: RequestStep.RemediationInProgress,
-    submissionDate: DateTime.fromISO('2020-05-21'),
-    lastUpdatedAt: DateTime.fromISO('2020-09-14'),
+    release: '1.7',
+    status: RequestStep.RequestReceived,
+    submissionDate: DateTime.fromISO('2021-01-10'),
+    lastUpdatedAt: DateTime.fromISO('2021-01-10'),
     businessOwner: {
       name: 'Ada Sanchez',
       component: 'OIT'
@@ -167,15 +166,17 @@ const projects: Record<string, Project> = {
     },
     notes: [],
     documents: [],
+    pastRequests: [],
     stepStatuses: {},
     lifecycleID: 'X200943'
   },
   5: {
     id: 5,
     name: 'OSORA FOIA Portal Project',
-    status: RequestStep.RemediationInProgress,
-    submissionDate: DateTime.fromISO('2020-01-02'),
-    lastUpdatedAt: DateTime.fromISO('2020-03-17'),
+    release: '3.0',
+    status: RequestStep.RequestReceived,
+    submissionDate: DateTime.fromISO('2021-01-15'),
+    lastUpdatedAt: DateTime.fromISO('2021-01-15'),
     businessOwner: {
       name: 'Amanda Johnson',
       component: 'OIT'
@@ -186,6 +187,111 @@ const projects: Record<string, Project> = {
     },
     notes: [],
     documents: [],
+    pastRequests: [],
+    stepStatuses: {},
+    lifecycleID: 'X200943'
+  },
+  6: {
+    id: 6,
+    name: 'System Integration for Paywall Processing',
+    release: '1.1',
+    status: RequestStep.TestScheduled,
+    submissionDate: DateTime.fromISO('2021-01-03'),
+    lastUpdatedAt: DateTime.fromISO('2020-03-17'),
+    businessOwner: {
+      name: 'Luke Jordan',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Aaron Allen',
+      component: 'OIT'
+    },
+    notes: [],
+    documents: [],
+    pastRequests: [],
+    stepStatuses: {},
+    lifecycleID: 'X200943'
+  },
+  7: {
+    id: 7,
+    name: 'Medicare Payments Processing',
+    release: '2.0',
+    status: RequestStep.TestScheduled,
+    submissionDate: DateTime.fromISO('2021-01-04'),
+    lastUpdatedAt: DateTime.fromISO('2020-12-27'),
+    businessOwner: {
+      name: 'Wanda McIver',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Aaron Allen',
+      component: 'OIT'
+    },
+    notes: [],
+    documents: [],
+    pastRequests: [],
+    stepStatuses: {},
+    lifecycleID: 'X200943'
+  },
+  8: {
+    id: 8,
+    name: 'Medical Redesign',
+    status: RequestStep.TestScheduled,
+    submissionDate: DateTime.fromISO('2021-01-12'),
+    lastUpdatedAt: DateTime.fromISO('2021-01-12'),
+    businessOwner: {
+      name: 'Aaron Heffler',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Aaron Allen',
+      component: 'OIT'
+    },
+    notes: [],
+    documents: [],
+    pastRequests: [],
+    stepStatuses: {},
+    lifecycleID: 'X200943'
+  },
+  9: {
+    id: 9,
+    name: 'Clinical Standards and Quality Migration',
+    release: '1.3',
+    status: RequestStep.DocumentsReceived,
+    submissionDate: DateTime.fromISO('2020-12-27'),
+    lastUpdatedAt: DateTime.fromISO('2021-01-04'),
+    businessOwner: {
+      name: 'Paul Shatto',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Aaron Allen',
+      component: 'OIT'
+    },
+    notes: [],
+    documents: [],
+    pastRequests: [],
+    stepStatuses: {},
+    lifecycleID: 'X200943'
+  },
+  10: {
+    id: 10,
+    name: 'Consumer Information and Insurance Oversight Pilot Program',
+    release: '1.0',
+    status: RequestStep.TestScheduled,
+    submissionDate: DateTime.fromISO('2020-09-09'),
+    lastUpdatedAt: DateTime.fromISO('2021-01-10'),
+    businessOwner: {
+      name: 'Blake Limmer',
+      component: 'OIT'
+    },
+    pointOfContact: {
+      name: 'Aaron Allen',
+      component: 'OIT'
+    },
+    notes: [],
+    documents: [],
+    pastRequests: [],
     stepStatuses: {},
     lifecycleID: 'X200943'
   }

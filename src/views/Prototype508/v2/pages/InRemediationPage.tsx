@@ -5,11 +5,25 @@ import { Table } from '@trussworks/react-uswds';
 import SecondaryNavigation from '../components/SecondaryNavigation';
 import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
+import { RequestStep } from '../types';
 
 const ProjectsPage = () => {
   const { state } = useGlobalState();
 
   useDocumentTitle(`EASi: Active 508 projects`);
+
+  const projects = Object.values(state.projects)
+    .filter(project =>
+      [
+        RequestStep.DocumentsReceived,
+        RequestStep.RequestReceived,
+        RequestStep.TestScheduled,
+        RequestStep.ValidationTestingScheduled
+      ].includes(project.status)
+    )
+    .sort(
+      (a, b) => b.submissionDate.toSeconds() - a.submissionDate.toSeconds()
+    );
 
   return (
     <>
@@ -41,11 +55,13 @@ const ProjectsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {Object.entries(state.projects).map(([id, project]) => {
+            {projects.map(project => {
               return (
-                <tr key={id}>
+                <tr key={project.id}>
                   <th scope="row">
-                    <Link to={`/508/v2/requests/${id}`}>{project.name}</Link>
+                    <Link to={`/508/v2/requests/${project.id}`}>
+                      {project.name}
+                    </Link>
                   </th>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     {project.businessOwner.name},{' '}

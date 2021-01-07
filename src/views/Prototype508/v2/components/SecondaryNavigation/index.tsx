@@ -33,15 +33,18 @@ const SecondaryNavigation = () => {
           </Link>
         </li>
 
-        <li className="usa-nav__submenu-item">
+        <li
+          className="usa-nav__submenu-item"
+          style={{ float: 'right', marginRight: '1.5rem' }}
+        >
           <Link
-            to="/508/v2/closed"
+            to="/508/v2/not-implemented"
             className={classNames({
-              'usa-current': pathname === '/508/v2/closed'
+              'usa-current': pathname === '/508/v2/not-implemented'
             })}
-            aria-current={pathname === '/508/v2/closed' && 'page'}
+            aria-current={pathname === '/508/v2/not-implemented' && 'page'}
           >
-            <span>Closed Requests</span>
+            <span>All Projects</span>
           </Link>
         </li>
       </ul>
