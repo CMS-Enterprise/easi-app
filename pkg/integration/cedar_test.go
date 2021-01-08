@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
@@ -27,7 +26,6 @@ func (s *IntegrationTestSuite) TestCEDARConnection() {
 		s.config.GetString("CEDAR_API_URL"),
 		s.config.GetString("CEDAR_API_KEY"),
 		ldClient,
-		lduser.NewAnonymousUser("fake"),
 	)
 
 	ctx, cxl := context.WithTimeout(context.Background(), time.Second*2)

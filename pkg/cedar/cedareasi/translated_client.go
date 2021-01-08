@@ -8,7 +8,6 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"go.uber.org/zap"
-	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -16,6 +15,7 @@ import (
 	apiclient "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/client"
 	apioperations "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/client/operations"
 	apimodels "github.com/cmsgov/easi-app/pkg/cedar/cedareasi/gen/models"
+	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/validate"
 )
@@ -41,7 +41,7 @@ type Client interface {
 }
 
 // NewTranslatedClient returns an API client for CEDAR EASi using EASi language
-func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient, ldUser lduser.User) TranslatedClient {
+func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) TranslatedClient {
 	// create the transport
 	transport := httptransport.New(cedarHost, apiclient.DefaultBasePath, []string{"https"})
 
@@ -53,10 +53,8 @@ func NewTranslatedClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDCl
 
 	fnEmit := func(ctx context.Context) bool {
 		// this is the conditional way of stopping us from submitting to CEDAR; see EASI-1025
-		// TODO: if we were using per-user targeting, we would use the context Principle to fetch/build
-		// the LD User; but currently we are not using that feature, so we use a common "static" User
-		// object
-		result, err := ldClient.BoolVariation(emitFlagKey, ldUser, emitDefault)
+		lduser := flags.Principal(ctx)
+		result, err := ldClient.BoolVariation(emitFlagKey, lduser, emitDefault)
 		if err != nil {
 			appcontext.ZLogger(ctx).Info(
 				"problem evaluating feature flag",
