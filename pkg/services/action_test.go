@@ -79,7 +79,7 @@ func (s ServicesTestSuite) TestNewSubmitSystemIntake() {
 		return "ALFABET-ID", nil
 	}
 	submitEmailCount := 0
-	sendSubmitEmail := func(requester string, intakeID uuid.UUID) error {
+	sendSubmitEmail := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
 		submitEmailCount++
 		return nil
 	}
@@ -224,7 +224,7 @@ func (s ServicesTestSuite) TestNewSubmitBizCase() {
 		return nil
 	}
 	submitEmailCount := 0
-	sendSubmitEmail := func(requester string, intakeID uuid.UUID) error {
+	sendSubmitEmail := func(ctx context.Context, requester string, intakeID uuid.UUID) error {
 		submitEmailCount++
 		return nil
 	}
@@ -394,7 +394,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	}
 	reviewEmailCount := 0
 	feedbackForEmailText := ""
-	sendReviewEmail := func(emailText string, recipientAddress string) error {
+	sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress string) error {
 		feedbackForEmailText = emailText
 		reviewEmailCount++
 		return nil
@@ -585,7 +585,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 
 	s.Run("returns notification error when review email fails", func() {
 		ctx := context.Background()
-		failSendReviewEmail := func(emailText string, recipientAddress string) error {
+		failSendReviewEmail := func(ctx context.Context, emailText string, recipientAddress string) error {
 			return &apperrors.NotificationError{
 				Err:             errors.New("failed to send Email"),
 				DestinationType: apperrors.DestinationTypeEmail,

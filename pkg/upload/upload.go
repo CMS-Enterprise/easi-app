@@ -1,6 +1,7 @@
 package upload
 
 import (
+	"mime"
 	"os"
 	"time"
 
@@ -54,11 +55,21 @@ func NewS3Client(config Config) S3Client {
 }
 
 // NewPutPresignedURL returns a pre-signed URL used for PUT-ing objects
-func (c S3Client) NewPutPresignedURL() (*models.PreSignedURL, error) {
-	key := uuid.New()
+func (c S3Client) NewPutPresignedURL(fileType string) (*models.PreSignedURL, error) {
+	// generate a uuid for file name storage on s3
+	key := uuid.New().String()
+
+	// get the file extension from the mime type
+	extensions, err := mime.ExtensionsByType(fileType)
+	if err != nil {
+		return &models.PreSignedURL{}, err
+	}
+	if len(extensions) > 0 {
+		key = key + extensions[0]
+	}
 	req, _ := c.client.PutObjectRequest(&s3.PutObjectInput{
 		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key.String()),
+		Key:    aws.String(key),
 	})
 
 	url, err := req.Presign(15 * time.Minute)
@@ -66,7 +77,7 @@ func (c S3Client) NewPutPresignedURL() (*models.PreSignedURL, error) {
 		return &models.PreSignedURL{}, err
 	}
 
-	result := models.PreSignedURL{URL: url, Filename: key.String()}
+	result := models.PreSignedURL{URL: url, Filename: key}
 
 	return &result, nil
 }
