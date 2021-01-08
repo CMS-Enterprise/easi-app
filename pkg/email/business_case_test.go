@@ -1,6 +1,7 @@
 package email
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -10,7 +11,7 @@ import (
 
 func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 	sender := mockSender{}
-
+	ctx := context.Background()
 	tester := "Test McTester"
 	businessCaseID, _ := uuid.Parse("1abc2671-c5df-45a0-b2be-c30899b473bf")
 
@@ -28,7 +29,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 				businessCaseID.String(),
 			) +
 			"Open Business Case in EASi</a>\n"
-		err = client.SendBusinessCaseSubmissionEmail(tester, businessCaseID)
+		err = client.SendBusinessCaseSubmissionEmail(ctx, tester, businessCaseID)
 
 		s.NoError(err)
 		s.Equal(s.config.GRTEmail, sender.toAddress)
@@ -41,7 +42,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendBusinessCaseSubmissionEmail(tester, businessCaseID)
+		err = client.SendBusinessCaseSubmissionEmail(ctx, tester, businessCaseID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -55,7 +56,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 		s.NoError(err)
 		client.templates.businessCaseSubmissionTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendBusinessCaseSubmissionEmail(tester, businessCaseID)
+		err = client.SendBusinessCaseSubmissionEmail(ctx, tester, businessCaseID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -70,7 +71,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendBusinessCaseSubmissionEmail(tester, businessCaseID)
+		err = client.SendBusinessCaseSubmissionEmail(ctx, tester, businessCaseID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
