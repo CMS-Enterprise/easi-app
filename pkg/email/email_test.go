@@ -1,6 +1,7 @@
 package email
 
 import (
+	"context"
 	"errors"
 	"io"
 	"testing"
@@ -24,7 +25,7 @@ type mockSender struct {
 	body      string
 }
 
-func (s *mockSender) Send(toAddress string, subject string, body string) error {
+func (s *mockSender) Send(ctx context.Context, toAddress string, subject string, body string) error {
 	s.toAddress = toAddress
 	s.subject = subject
 	s.body = body
@@ -33,7 +34,7 @@ func (s *mockSender) Send(toAddress string, subject string, body string) error {
 
 type mockFailedSender struct{}
 
-func (s *mockFailedSender) Send(toAddress string, subject string, body string) error {
+func (s *mockFailedSender) Send(ctx context.Context, toAddress string, subject string, body string) error {
 	return errors.New("sender had an error")
 }
 
