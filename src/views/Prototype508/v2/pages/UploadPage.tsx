@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { DateTime } from 'luxon';
 
+import { ProgressStatus } from '../components/Progress';
+import RequestStatusField from '../components/RequestStatusField';
 import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
 import { DocumentType, Project, RequestStep } from '../types';
@@ -40,6 +42,7 @@ const UploadPage = () => {
   );
   const [score, setScore] = useState('');
   const [documentName, setDocumentName] = useState('');
+  const [date, setDate] = useState<DateTime>();
 
   const history = useHistory();
 
@@ -167,48 +170,14 @@ const UploadPage = () => {
             );
           })}
         </fieldset>
-        <fieldset className="usa-fieldset margin-top-2">
-          <legend className="text-bold margin-bottom-1">
-            Do you need to change the project status?
-          </legend>
 
-          {Array.from(projectStatuses.values()).map(value => {
-            const status = value as RequestStep;
-            return (
-              <>
-                <div className="usa-radio">
-                  <input
-                    className="usa-radio__input"
-                    id={`input-${status}`}
-                    type="radio"
-                    name="project-status"
-                    value={status}
-                    checked={projectStatus === status}
-                    onChange={() => {
-                      setProjectStatus(status);
-                    }}
-                  />
-                  <label
-                    className="usa-radio__label"
-                    htmlFor={`input-${status}`}
-                  >
-                    {project.status === status &&
-                      `No, don't change project status (leave as ${status})`}
-                    {project.status !== status && status}
-                  </label>
-                </div>
-                {project.status === status && (
-                  <div
-                    className="margin-bottom-1 text-center"
-                    style={{ width: '1.6rem' }}
-                  >
-                    or
-                  </div>
-                )}
-              </>
-            );
-          })}
-        </fieldset>
+        <RequestStatusField
+          projectStatus={projectStatus}
+          projectName={project.name}
+          setProjectStatus={setProjectStatus}
+          setDate={setDate}
+        />
+
         <p className="usa-prose">
           Changing the project status will send an email to all members of the
           508 team letting them know about the new status.
@@ -227,16 +196,41 @@ const UploadPage = () => {
               });
               if (projectStatus !== project.status) {
                 project.status = projectStatus;
-                updateProject(project);
+                project.lastUpdatedAt = DateTime.local();
+                Object.entries(project.stepStatuses).forEach(
+                  ([requestStep, stepStatus]) => {
+                    if (!stepStatus) {
+                      return;
+                    }
+                    if (requestStep === projectStatus) {
+                      // eslint-disable-next-line no-param-reassign
+                      stepStatus.date = date;
+                      // eslint-disable-next-line no-param-reassign
+                      stepStatus.status = ProgressStatus.Current;
+                    } else {
+                      // eslint-disable-next-line no-param-reassign
+                      stepStatus.status = ProgressStatus.Completed;
+                    }
+                  }
+                );
+
+                if (!project.stepStatuses[projectStatus]) {
+                  // eslint-disable-next-line no-param-reassign
+                  project.stepStatuses[projectStatus] = {
+                    status: ProgressStatus.Current,
+                    date
+                  };
+                }
               }
+              updateProject(project);
               history.push(`/508/v2/requests/${project.id}`);
             }
           }}
         >
           Upload document
         </button>
-        <Link to={`/508/v2/projects/${id}`}>
-          Don&rsquo;t upload and return to project page
+        <Link to={`/508/v2/requests/${project.id}`}>
+          Don&rsquo;t upload and return to request page
         </Link>
       </main>
     );
@@ -283,7 +277,7 @@ const UploadPage = () => {
       </div>
       <p>
         <Link to={`/508/v2/requests/${id}`}>
-          Don&rsquo;t upload and return to project page
+          Don&rsquo;t upload and return to request page
         </Link>
       </p>
     </main>

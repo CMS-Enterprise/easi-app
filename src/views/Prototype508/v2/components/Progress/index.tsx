@@ -58,7 +58,9 @@ export const ProgressStep = ({ name, status, children }: ProgressStepProps) => {
       {React.Children.count(children) > 0 && (
         <>
           <br />
-          <span className="easi-progress-indicator-label">{children}</span>
+          <span className="easi-progress-indicator-label text-base-dark">
+            {children}
+          </span>
         </>
       )}
     </li>

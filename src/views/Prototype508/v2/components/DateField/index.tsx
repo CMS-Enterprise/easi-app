@@ -26,7 +26,11 @@ const DateField = ({ setDate }: { setDate: (date: DateTime) => void }) => {
           maxLength={2}
           minLength={2}
           value={month}
-          onChange={e => setMonth(parseInt(e.target.value, 10))}
+          onChange={e =>
+            e.target.value.length > 0
+              ? setMonth(parseInt(e.target.value, 10))
+              : setMonth(undefined)
+          }
         />
         <DateInput
           id="testDateInput"
@@ -36,7 +40,11 @@ const DateField = ({ setDate }: { setDate: (date: DateTime) => void }) => {
           maxLength={2}
           minLength={2}
           value={day}
-          onChange={e => setDay(parseInt(e.target.value, 10))}
+          onChange={e =>
+            e.target.value.length > 0
+              ? setDay(parseInt(e.target.value, 10))
+              : setDay(undefined)
+          }
         />
         <DateInput
           id="testDateInput"
@@ -46,7 +54,11 @@ const DateField = ({ setDate }: { setDate: (date: DateTime) => void }) => {
           maxLength={4}
           minLength={4}
           value={year}
-          onChange={e => setYear(parseInt(e.target.value, 10))}
+          onChange={e =>
+            e.target.value.length > 0
+              ? setYear(parseInt(e.target.value, 10))
+              : setYear(undefined)
+          }
         />
       </DateInputGroup>
     </Fieldset>

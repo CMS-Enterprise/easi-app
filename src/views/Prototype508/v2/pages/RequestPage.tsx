@@ -13,6 +13,7 @@ import {
   ProgressStatus,
   ProgressStep
 } from '../components/Progress';
+import RequestStatusField from '../components/RequestStatusField';
 import SecondaryNavigation from '../components/SecondaryNavigation';
 import useDocumentTitle from '../hooks/DocumentTitle';
 import { useGlobalState } from '../state';
@@ -117,49 +118,12 @@ const UpdateStatusModal = ({
         className="status-modal"
       >
         <div className="status-modal__content">
-          <fieldset className="usa-fieldset status-modal__body">
-            <legend className="margin-bottom-2 text-bold">
-              Choose project status for {project.name}
-            </legend>
-            {Object.values(RequestStep).map(value => {
-              const status = value as RequestStep;
-              return (
-                <>
-                  <div className="usa-radio">
-                    <input
-                      className="usa-radio__input"
-                      id={`input-${status}`}
-                      type="radio"
-                      name="document-type"
-                      value={status}
-                      checked={projectStatus === status}
-                      onChange={() => {
-                        setProjectStatus(status);
-                      }}
-                    />
-                    <label
-                      className="usa-radio__label"
-                      htmlFor={`input-${status}`}
-                    >
-                      {status}
-                      {project.status === status && ' (current status)'}
-                    </label>
-
-                    {[
-                      RequestStep.TestScheduled,
-                      RequestStep.RemediationInProgress,
-                      RequestStep.ValidationTestingScheduled
-                    ].includes(status) &&
-                      projectStatus === status && (
-                        <div className="width-card-lg margin-left-4 margin-bottom-1 margin-top-1">
-                          <DateField setDate={setDate} />
-                        </div>
-                      )}
-                  </div>
-                </>
-              );
-            })}
-          </fieldset>
+          <RequestStatusField
+            projectStatus={projectStatus}
+            projectName={project.name}
+            setProjectStatus={setProjectStatus}
+            setDate={setDate}
+          />
 
           <div className="status-modal__footer">
             <p className="usa-prose">
@@ -173,6 +137,8 @@ const UpdateStatusModal = ({
               onClick={() => {
                 // eslint-disable-next-line no-param-reassign
                 project.status = projectStatus;
+                // eslint-disable-next-line no-param-reassign
+                project.lastUpdatedAt = DateTime.local();
                 Object.entries(project.stepStatuses).forEach(
                   ([requestStep, stepStatus]) => {
                     if (!stepStatus) {
@@ -453,6 +419,7 @@ const ProjectPage = () => {
                             authorName: 'Aaron Allen'
                           });
                           project.banner = `Note added to ${project.name} project page.`;
+                          project.lastUpdatedAt = DateTime.local();
                           updateProject(project);
                           setNoteContent('');
                         }

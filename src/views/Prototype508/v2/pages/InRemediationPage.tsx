@@ -15,14 +15,15 @@ const ProjectsPage = () => {
   const projects = Object.values(state.projects)
     .filter(project =>
       [
-        RequestStep.DocumentsReceived,
-        RequestStep.RequestReceived,
-        RequestStep.TestScheduled,
+        RequestStep.RemediationInProgress,
+        RequestStep.RemediationRequested,
         RequestStep.ValidationTestingScheduled
       ].includes(project.status)
     )
     .sort(
-      (a, b) => b.submissionDate.toSeconds() - a.submissionDate.toSeconds()
+      (a, b) =>
+        a.remediationStartDate!.toSeconds() -
+        b.remediationStartDate!.toSeconds()
     );
 
   return (
@@ -47,10 +48,10 @@ const ProjectsPage = () => {
                 Remediation Started On
               </th>
               <th scope="col" style={{ whiteSpace: 'nowrap' }}>
-                Test Date
+                Validation Test Date
               </th>
               <th scope="col" style={{ whiteSpace: 'nowrap' }}>
-                Point of Contact
+                Status
               </th>
             </tr>
           </thead>
@@ -60,7 +61,7 @@ const ProjectsPage = () => {
                 <tr key={project.id}>
                   <th scope="row">
                     <Link to={`/508/v2/requests/${project.id}`}>
-                      {project.name}
+                      {project.name} {project.release}
                     </Link>
                   </th>
                   <td style={{ whiteSpace: 'nowrap' }}>
@@ -77,8 +78,13 @@ const ProjectsPage = () => {
                       ? project.testDate.toFormat('LLLL d y')
                       : null}
                   </td>
-
-                  <td>{project.businessOwner.name}</td>
+                  <td>
+                    <strong>{project.status}</strong>
+                    <br />
+                    {`last updated on ${project.lastUpdatedAt.toFormat(
+                      'LLLL d y'
+                    )}`}
+                  </td>{' '}
                 </tr>
               );
             })}

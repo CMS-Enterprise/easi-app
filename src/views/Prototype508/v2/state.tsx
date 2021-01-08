@@ -1,5 +1,4 @@
 import React from 'react';
-import { DateTime } from 'luxon';
 
 import projects from './data';
 import { Project } from './types';
@@ -28,8 +27,7 @@ export const ProjectsProvider = ({
         projects: {
           ...globalState.projects,
           [project.id]: {
-            ...project,
-            lastUpdatedAt: DateTime.local()
+            ...project
           }
         }
       };

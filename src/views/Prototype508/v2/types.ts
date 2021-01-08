@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { ProgressStatus } from './components/Progress';
 
 export enum DocumentType {
-  TestPlan = 'Testing Plan',
+  TestPlan = 'Test Plan',
   TestingVPAT = 'Testing VPAT',
   TestResults = 'Test Results',
   AwardedVPAT = 'Awarded VPAT',
@@ -37,7 +37,7 @@ export enum RequestStep {
   RequestReceived = 'Request Received',
   DocumentsReceived = 'Documents Received',
   TestScheduled = 'Test Scheduled',
-  RemediationRequested = 'Remediation Requested',
+  RemediationRequested = 'Remediation Plan Requested',
   RemediationInProgress = 'Remediation in Progress',
   ValidationTestingScheduled = 'Validation Testing Scheduled',
   Completed = 'Completed'

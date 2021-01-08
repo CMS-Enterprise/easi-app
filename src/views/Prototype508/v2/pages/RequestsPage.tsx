@@ -43,6 +43,9 @@ const ProjectsPage = () => {
                 Request Name
               </th>
               <th scope="col" style={{ whiteSpace: 'nowrap' }}>
+                Submission Date
+              </th>
+              <th scope="col" style={{ whiteSpace: 'nowrap' }}>
                 Business Owner
               </th>
               <th scope="col" style={{ whiteSpace: 'nowrap' }}>
@@ -60,11 +63,14 @@ const ProjectsPage = () => {
             {activeProjects.map(project => {
               return (
                 <tr key={project.id}>
-                  <th scope="row">
+                  <th scope="row" style={{ maxWidth: '16rem' }}>
                     <Link to={`/508/v2/requests/${project.id}`}>
                       {project.name} {project.release}
                     </Link>
                   </th>
+                  <td style={{ whiteSpace: 'nowrap' }}>
+                    {project.submissionDate.toFormat('LLLL d y')}
+                  </td>
                   <td style={{ whiteSpace: 'nowrap' }}>
                     {project.businessOwner.name},{' '}
                     {project.businessOwner.component}
