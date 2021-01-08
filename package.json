@@ -80,7 +80,9 @@
     "lint": "eslint '**/*.{ts,tsx}'",
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "storybook": "start-storybook -p 6006 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "nyc": {
     "reporter": [
@@ -106,6 +108,13 @@
   "devDependencies": {
     "@cypress/instrument-cra": "^1.1.0",
     "@cypress/webpack-preprocessor": "^5.4.1",
+    "@storybook/addon-actions": "^6.1.11",
+    "@storybook/addon-controls": "^6.1.11",
+    "@storybook/addon-essentials": "^6.1.11",
+    "@storybook/addon-links": "^6.1.11",
+    "@storybook/node-logger": "^6.1.11",
+    "@storybook/preset-create-react-app": "^3.1.5",
+    "@storybook/react": "^6.1.11",
     "cypress": "4.5.0",
     "cypress-otp": "^1.0.2",
     "enzyme": "^3.10.0",
