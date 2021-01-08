@@ -2,6 +2,7 @@ package email
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"path"
@@ -32,13 +33,14 @@ func (c Client) systemIntakeSubmissionBody(intakeID uuid.UUID) (string, error) {
 }
 
 // SendSystemIntakeSubmissionEmail sends an email for a submitted system intake
-func (c Client) SendSystemIntakeSubmissionEmail(requester string, intakeID uuid.UUID) error {
+func (c Client) SendSystemIntakeSubmissionEmail(ctx context.Context, requester string, intakeID uuid.UUID) error {
 	subject := fmt.Sprintf("New intake request: %s", requester)
 	body, err := c.systemIntakeSubmissionBody(intakeID)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 	err = c.sender.Send(
+		ctx,
 		c.config.GRTEmail,
 		subject,
 		body,
