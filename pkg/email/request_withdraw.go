@@ -2,6 +2,7 @@ package email
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 
@@ -43,7 +44,7 @@ func (c Client) withdrawUnnamedRequestBody() (string, error) {
 }
 
 // SendWithdrawRequestEmail sends an email for a submitted system intake
-func (c Client) SendWithdrawRequestEmail(requestName string) error {
+func (c Client) SendWithdrawRequestEmail(ctx context.Context, requestName string) error {
 	var subject, body string
 	var err error
 	if requestName == "" {
@@ -58,6 +59,7 @@ func (c Client) SendWithdrawRequestEmail(requestName string) error {
 	}
 
 	err = c.sender.Send(
+		ctx,
 		c.config.GRTEmail,
 		subject,
 		body,

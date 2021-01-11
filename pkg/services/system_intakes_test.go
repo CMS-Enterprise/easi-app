@@ -290,7 +290,7 @@ func (s ServicesTestSuite) TestSystemIntakeArchiver() {
 	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
-	sendWithdrawEmail := func(requestName string) error {
+	sendWithdrawEmail := func(ctx context.Context, requestName string) error {
 		return nil
 	}
 
@@ -400,7 +400,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	}
 	reviewEmailCount := 0
 	feedbackForEmailText := ""
-	fnSendLCIDEmail := func(_ string, _ string, _ *time.Time, _ string, _string, emailText string) error {
+	fnSendLCIDEmail := func(_ context.Context, _ string, _ string, _ *time.Time, _ string, _string, emailText string) error {
 		feedbackForEmailText = emailText
 		reviewEmailCount++
 		return nil
@@ -447,7 +447,7 @@ func (s ServicesTestSuite) TestUpdateLifecycleFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendLCIDEmailErr := func(_ string, _ string, _ *time.Time, _ string, _ string, _ string) error {
+	fnSendLCIDEmailErr := func(_ context.Context, string, _ string, _ *time.Time, _ string, _ string, _ string) error {
 		return errors.New("send email error")
 	}
 	fnGenerateErr := func(context.Context) (string, error) { return "", errors.New("gen error") }
@@ -530,7 +530,7 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	}
 	reviewEmailCount := 0
 	feedbackForEmailText := ""
-	fnSendRejectRequestEmail := func(recipientAddress string, reason string, nextSteps string, feedback string) error {
+	fnSendRejectRequestEmail := func(ctx context.Context, recipientAddress string, reason string, nextSteps string, feedback string) error {
 		feedbackForEmailText = feedback
 		reviewEmailCount++
 		return nil
@@ -562,7 +562,7 @@ func (s ServicesTestSuite) TestUpdateRejectionFields() {
 	fnFetchUserInfoErr := func(_ context.Context, euaID string) (*models.UserInfo, error) {
 		return nil, errors.New("fetch user info error")
 	}
-	fnSendRejectRequestEmailErr := func(recipientAddress string, reason string, nextSteps string, feedback string) error {
+	fnSendRejectRequestEmailErr := func(ctx context.Context, recipientAddress string, reason string, nextSteps string, feedback string) error {
 		return errors.New("send email error")
 	}
 

@@ -84,7 +84,7 @@ func NewSubmitSystemIntake(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
 	saveAction func(context.Context, *models.Action) error,
-	emailReviewer func(requester string, intakeID uuid.UUID) error,
+	emailReviewer func(ctx context.Context, requester string, intakeID uuid.UUID) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
@@ -133,7 +133,7 @@ func NewSubmitSystemIntake(
 			}
 		}
 		// only send an email when everything went ok
-		err = emailReviewer(intake.Requester, intake.ID)
+		err = emailReviewer(ctx, intake.Requester, intake.ID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Submit Intake email failed to send: ", zap.Error(err))
 		}
@@ -152,7 +152,7 @@ func NewSubmitBusinessCase(
 	saveAction func(context.Context, *models.Action) error,
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
-	sendEmail func(requester string, intakeID uuid.UUID) error,
+	sendEmail func(ctx context.Context, requester string, intakeID uuid.UUID) error,
 	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -220,7 +220,7 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		err = sendEmail(businessCase.Requester.String, businessCase.SystemIntakeID)
+		err = sendEmail(ctx, businessCase.Requester.String, businessCase.SystemIntakeID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Submit Business Case email failed to send: ", zap.Error(err))
 		}
@@ -238,7 +238,7 @@ func NewTakeActionUpdateStatus(
 	authorize func(context.Context) (bool, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(emailText string, recipientAddress string) error,
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string) error,
 	shouldCloseBusinessCase bool,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) ActionExecuter {
@@ -289,7 +289,7 @@ func NewTakeActionUpdateStatus(
 			}
 		}
 
-		err = sendReviewEmail(action.Feedback.String, requesterInfo.Email)
+		err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email)
 		if err != nil {
 			return err
 		}
