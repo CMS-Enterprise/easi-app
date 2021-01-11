@@ -558,10 +558,6 @@ workflows:
               ignore:
                 - master
       - deploy_dev:
-          filters:
-            branches:
-              ignore:
-                - master
           requires:
             - integration_tests
             - hold_dev
@@ -571,7 +567,7 @@ workflows:
               only:
                 - master
           requires:
-            - integration_tests
+            - deploy_dev
       - hold_prod:
           type: approval
           requires:
