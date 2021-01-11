@@ -443,8 +443,8 @@ There are multiple ways to run the Cypress tests:
 
 - Run `npx cypress run` to run the tests in the CLI. To have a slightly more interactive
   experience, you can instead run `npx cypress open`. Note: the database,
-  frontend, and backend must be running prior to starting the Cypress tests. 
-  You must be connected to the VPN, and the APP_ENV environment variable
+  frontend, and backend must be running prior to starting the Cypress tests.
+  The `APP_ENV` environment variable
   should be set to `test`.
 - `APP_ENV=test ./scripts/run-cypress-test-docker` : Run the Cypress tests, database,
   migrations, backend, and frontend locally in Docker, similar to how they run
