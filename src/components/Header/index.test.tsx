@@ -11,7 +11,7 @@ jest.mock('@okta/okta-react', () => ({
       authState: {
         isAuthenticated: true
       },
-      authService: {
+      oktaAuth: {
         getUser: async () => ({
           name: 'John Doe'
         }),
