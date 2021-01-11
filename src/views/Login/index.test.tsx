@@ -10,7 +10,7 @@ import Login from './index';
 jest.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
     return {
-      authService: {}
+      oktaAuth: {}
     };
   }
 }));
