@@ -234,7 +234,6 @@ const RequestRepository = () => {
     return intakes.map(intake => convertIntakeToCSV(intake));
   };
 
-  /* eslint-disable react/jsx-props-no-spreading */
   return (
     <>
       <div className="display-flex flex-justify flex-wrap margin-y-2">

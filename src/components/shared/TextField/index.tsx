@@ -54,7 +54,6 @@ const TextField = ({
       type="text"
       value={value}
       maxLength={maxLength}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
     />
   );

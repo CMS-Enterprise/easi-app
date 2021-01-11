@@ -28,7 +28,7 @@ func (s Server) CheckCEDAREasiClientConnection(client cedareasi.Client) {
 // this method will panic on failures
 func (s Server) CheckEmailClient(client email.Client) {
 	s.logger.Info("Testing email client")
-	err := client.SendTestEmail()
+	err := client.SendTestEmail(appcontext.WithLogger(context.Background(), s.logger))
 	if err != nil {
 		s.logger.Fatal("Failed to send test email", zap.Error(err))
 	}

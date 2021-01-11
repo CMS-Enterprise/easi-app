@@ -1,12 +1,14 @@
 package email
 
 import (
+	"context"
+
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 )
 
 func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 	sender := mockSender{}
-
+	ctx := context.Background()
 	recipientAddress := "sample@test.com"
 	emailBody := "Test Text\n\nTest"
 
@@ -15,7 +17,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.NoError(err)
 		expectedEmail := "<p>Test Text\n\nTest</p>\n"
 
-		err = client.SendSystemIntakeReviewEmail(emailBody, recipientAddress)
+		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress)
 
 		s.NoError(err)
 		s.Equal(recipientAddress, sender.toAddress)
@@ -28,7 +30,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendSystemIntakeReviewEmail(emailBody, recipientAddress)
+		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -42,7 +44,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.NoError(err)
 		client.templates.intakeReviewTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendSystemIntakeReviewEmail(emailBody, recipientAddress)
+		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -57,7 +59,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendSystemIntakeReviewEmail(emailBody, recipientAddress)
+		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
