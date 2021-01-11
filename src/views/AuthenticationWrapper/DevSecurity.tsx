@@ -40,12 +40,10 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
     }
   });
   oktaAuth.signInWithCredentials = (): Promise<AuthTransaction> => {
-    console.log('setting auth state');
     setAuthState(getStateFromLocalStorage);
     return new Promise(() => {});
   };
   oktaAuth.signOut = (): Promise<void> => {
-    console.log('signing out');
     window.localStorage.removeItem(storageKey);
     window.location.href = '/';
     return new Promise(() => {});
