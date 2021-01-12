@@ -21,7 +21,11 @@ const IntakeReview = ({ systemIntake, now }: IntakeReviewProps) => {
   return (
     <div>
       <h1 className="margin-top-0">{t('general:intake')}</h1>
-      <PDFExport title="System Intake" filename={filename}>
+      <PDFExport
+        title="System Intake"
+        filename={filename}
+        label="Download System Intake as PDF"
+      >
         <SystemIntakeReview systemIntake={systemIntake} now={now} />
       </PDFExport>
       <UswdsLink
