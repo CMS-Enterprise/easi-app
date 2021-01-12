@@ -14,7 +14,7 @@ module.exports = {
     config.resolve.modules = [
       // Resolve absolute import paths
       ...(config.resolve.modules || []),
-      path.resolve(__dirname, "../src")
+      path.resolve(__dirname, '../src')
     ];
 
     config.module.rules.push({
@@ -27,9 +27,9 @@ module.exports = {
           loader: 'sass-resources-loader',
           options: {
             resources: [
-              '../src/stylesheets/_colors.scss',
-              '../src/stylesheets/_uswdsUtilities.scss'
-            ],
+              path.resolve(__dirname, '../src/stylesheets/_colors.scss'),
+              path.resolve(__dirname, '../src/stylesheets/_uswdsUtilities.scss')
+            ]
           }
         }
       ],

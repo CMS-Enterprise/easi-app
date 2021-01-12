@@ -5,6 +5,11 @@ import Label from 'components/shared/Label';
 
 import TextField from './index';
 
+export default {
+  title: 'Text Field',
+  component: TextField
+};
+
 export const Default = () => (
   <TextField
     id="Test1"
