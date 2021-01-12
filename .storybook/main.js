@@ -1,12 +1,40 @@
+const path = require('path');
+
 module.exports = {
-  "stories": [
-    "../src/components/shared/**/*.stories.@(js|jsx|ts|tsx)",
-    "../src/components/**/*.stories.@(js|jsx|ts|tsx)",
+  stories: [
+    '../src/components/shared/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/components/**/*.stories.@(js|jsx|ts|tsx)'
   ],
-  "addons": [
-    "@storybook/addon-links",
-    "@storybook/addon-controls",
-    "@storybook/addon-essentials",
-    "@storybook/preset-create-react-app"
-  ]
+  addons: [
+    '@storybook/addon-essentials',
+    '@storybook/addon-links',
+    '@storybook/addon-controls',
+  ],
+  webpackFinal: (config) => {
+    config.resolve.modules = [
+      // Resolve absolute import paths
+      ...(config.resolve.modules || []),
+      path.resolve(__dirname, "../src")
+    ];
+
+    config.module.rules.push({
+      test: /\.scss$/,
+      use: [
+        'style-loader',
+        'css-loader',
+        'sass-loader',
+        {
+          loader: 'sass-resources-loader',
+          options: {
+            resources: [
+              '../src/stylesheets/_colors.scss',
+              '../src/stylesheets/_uswdsUtilities.scss'
+            ],
+          }
+        }
+      ],
+      include: path.resolve(__dirname, '../src'),
+    });
+    return config;
+  }
 }
