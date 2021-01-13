@@ -36,10 +36,22 @@ const DevLogin = () => {
       euaId,
       jobCodes: Object.keys(jobCodes).filter(
         key => jobCodes[key as keyof typeof jobCodes]
-      )
+      ),
+      favorOktaAuth: false
     };
     localStorage.setItem(storageKey, JSON.stringify(value)); // ensure that the dev token is used
     oktaAuth.signInWithCredentials({ username: '', password: '' });
+    history.push('/');
+  };
+
+  const handleFavorOktaAuth: ReactEventHandler = event => {
+    event.preventDefault();
+    const value = {
+      favorOktaAuth: true,
+      euaId: '',
+      jobCodes: []
+    };
+    localStorage.setItem(storageKey, JSON.stringify(value));
     history.push('/');
   };
 
@@ -55,6 +67,11 @@ const DevLogin = () => {
       >
         Dev auth
       </h1>
+      <p>
+        <button type="button" onClick={handleFavorOktaAuth}>
+          Use Okta Auth
+        </button>
+      </p>
       <p>
         <label>
           Enter a four-character EUA
