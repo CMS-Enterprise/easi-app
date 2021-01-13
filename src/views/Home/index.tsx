@@ -61,7 +61,7 @@ const Home = () => {
       <MainContent className="grid-container margin-bottom-5">
         {isUserSet && user.isGrtReviewer(userGroups) && <RequestRepository />}
         {isUserSet &&
-          (user.is508Admin(userGroups) || user.is508Tester(userGroups)) && (
+          (user.isA11yAdmin(userGroups) || user.isA11yTester(userGroups)) && (
             <div>I am 508!</div>
           )}
         {isUserSet && user.isBasicUser(userGroups) && (
