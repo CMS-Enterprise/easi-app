@@ -64,7 +64,7 @@ const Home = () => {
           (user.is508Admin(userGroups) || user.is508Tester(userGroups)) && (
             <div>I am 508!</div>
           )}
-        {isUserSet && (
+        {isUserSet && user.isBasicUser(userGroups) && (
           <>
             <Banners />
             <WelcomeText />
