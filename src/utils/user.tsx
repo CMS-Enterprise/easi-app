@@ -40,10 +40,15 @@ export const is508Admin = (groups: Array<String> | null) => {
   return false;
 };
 
+export const isBasicUser = (groups: Array<String> | null) => {
+  return groups && groups.length === 0;
+};
+
 const user = {
   isGrtReviewer,
   is508Tester,
-  is508Admin
+  is508Admin,
+  isBasicUser
 };
 
 export default user;
