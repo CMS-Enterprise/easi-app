@@ -13,3 +13,5 @@ export const JOB_CODES = [
   FIVE08ADMIN_DEV,
   FIVE08ADMIN_PROD
 ];
+
+export default JOB_CODES;
