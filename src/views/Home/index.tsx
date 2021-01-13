@@ -59,15 +59,17 @@ const Home = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
+        {isUserSet && user.isGrtReviewer(userGroups) && <RequestRepository />}
         {isUserSet &&
-          (user.isGrtReviewer(userGroups) ? (
-            <RequestRepository />
-          ) : (
-            <>
-              <Banners />
-              <WelcomeText />
-            </>
-          ))}
+          (user.is508Admin(userGroups) || user.is508Tester(userGroups)) && (
+            <div>I am 508!</div>
+          )}
+        {isUserSet && (
+          <>
+            <Banners />
+            <WelcomeText />
+          </>
+        )}
         {!authState.isAuthenticated && <WelcomeText />}
       </MainContent>
       <Footer />
