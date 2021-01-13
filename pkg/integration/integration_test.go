@@ -38,51 +38,51 @@ type IntegrationTestSuite struct {
 }
 
 func TestIntegrationTestSuite(t *testing.T) {
-	config := testhelpers.NewConfig()
-
-	if !testing.Short() {
-		easiServer := server.NewServer(config)
-		testServer := httptest.NewServer(easiServer)
-		defer testServer.Close()
-
-		accessToken, err := testhelpers.OktaAccessToken(config)
-		if err != nil {
-			fmt.Printf("Failed to get access token for integration testing with error: %s", err)
-			t.Fail()
-		}
-
-		logger := zap.NewNop()
-
-		dbConfig := storage.DBConfig{
-			Host:     config.GetString(appconfig.DBHostConfigKey),
-			Port:     config.GetString(appconfig.DBPortConfigKey),
-			Database: config.GetString(appconfig.DBNameConfigKey),
-			Username: config.GetString(appconfig.DBUsernameConfigKey),
-			Password: config.GetString(appconfig.DBPasswordConfigKey),
-			SSLMode:  config.GetString(appconfig.DBSSLModeConfigKey),
-		}
-		store, err := storage.NewStore(logger, dbConfig)
-		if err != nil {
-			fmt.Printf("Failed to get new database: %v", err)
-			t.Fail()
-		}
-
-		env, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
-		if err != nil {
-			fmt.Printf("Failed to get environment: %v", err)
-			t.Fail()
-		}
-		testSuite := &IntegrationTestSuite{
-			Suite:       suite.Suite{},
-			environment: env,
-			logger:      logger,
-			config:      config,
-			server:      testServer,
-			user:        user{euaID: config.GetString("OKTA_TEST_USERNAME"), accessToken: accessToken},
-			store:       store,
-			base:        handlers.NewHandlerBase(logger),
-		}
-
-		suite.Run(t, testSuite)
+	if testing.Short() {
+		t.Skip("skipping integration tests in `-short` mode")
 	}
+	config := testhelpers.NewConfig()
+	easiServer := server.NewServer(config)
+	testServer := httptest.NewServer(easiServer)
+	defer testServer.Close()
+
+	accessToken, err := testhelpers.OktaAccessToken(config)
+	if err != nil {
+		fmt.Printf("Failed to get access token for integration testing with error: %s", err)
+		t.Fail()
+	}
+
+	logger := zap.NewNop()
+
+	dbConfig := storage.DBConfig{
+		Host:     config.GetString(appconfig.DBHostConfigKey),
+		Port:     config.GetString(appconfig.DBPortConfigKey),
+		Database: config.GetString(appconfig.DBNameConfigKey),
+		Username: config.GetString(appconfig.DBUsernameConfigKey),
+		Password: config.GetString(appconfig.DBPasswordConfigKey),
+		SSLMode:  config.GetString(appconfig.DBSSLModeConfigKey),
+	}
+	store, err := storage.NewStore(logger, dbConfig)
+	if err != nil {
+		fmt.Printf("Failed to get new database: %v", err)
+		t.Fail()
+	}
+
+	env, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
+	if err != nil {
+		fmt.Printf("Failed to get environment: %v", err)
+		t.Fail()
+	}
+	testSuite := &IntegrationTestSuite{
+		Suite:       suite.Suite{},
+		environment: env,
+		logger:      logger,
+		config:      config,
+		server:      testServer,
+		user:        user{euaID: config.GetString("OKTA_TEST_USERNAME"), accessToken: accessToken},
+		store:       store,
+		base:        handlers.NewHandlerBase(logger),
+	}
+
+	suite.Run(t, testSuite)
 }
