@@ -11,13 +11,19 @@ type ParentComponentProps = {
   children: React.ReactNode;
 };
 
+const storageKey = 'dev-user-config';
+
 const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
   const history = useHistory();
 
   const handleAuthRequiredRedirect = () => {
     history.push('/signin');
   };
-  return isLocalEnvironment() ? (
+  return isLocalEnvironment() &&
+    !(
+      window.localStorage[storageKey] &&
+      JSON.parse(window.localStorage[storageKey]).favorOktaAuth
+    ) ? (
     <DevSecurity>{children}</DevSecurity>
   ) : (
     <Security

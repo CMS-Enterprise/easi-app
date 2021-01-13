@@ -8,8 +8,20 @@ import OktaSignInWidget from 'components/shared/OktaSignInWidget';
 import { isLocalEnvironment } from 'utils/local';
 import DevLogin from 'views/AuthenticationWrapper/DevLogin';
 
+const storageKey = 'dev-user-config';
+
 const Login = () => {
-  return isLocalEnvironment() ? (
+  const useLocalLogin = () => {
+    return (
+      isLocalEnvironment() &&
+      !(
+        window.localStorage[storageKey] &&
+        JSON.parse(window.localStorage[storageKey]).favorOktaAuth
+      )
+    );
+  };
+
+  return useLocalLogin() ? (
     <DevLogin />
   ) : (
     <PageWrapper>
