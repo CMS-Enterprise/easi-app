@@ -1,8 +1,8 @@
 import {
-  FIVE08ADMIN_DEV,
-  FIVE08ADMIN_PROD,
-  FIVE08TESTER_DEV,
-  FIVE08TESTER_PROD,
+  A11YADMIN_DEV,
+  A11YADMIN_PROD,
+  A11YTESTER_DEV,
+  A11YTESTER_PROD,
   GOVTEAM_DEV,
   GOVTEAM_PROD
 } from 'constants/jobCodes';
@@ -18,10 +18,10 @@ export const isGrtReviewer = (groups: Array<String> | null) => {
   return false;
 };
 
-export const is508Tester = (groups: Array<String> | null) => {
+export const isA11yTester = (groups: Array<String> | null) => {
   if (
     groups &&
-    (groups.includes(FIVE08TESTER_DEV) || groups.includes(FIVE08TESTER_PROD))
+    (groups.includes(A11YTESTER_DEV) || groups.includes(A11YTESTER_PROD))
   ) {
     return true;
   }
@@ -29,10 +29,10 @@ export const is508Tester = (groups: Array<String> | null) => {
   return false;
 };
 
-export const is508Admin = (groups: Array<String> | null) => {
+export const isA11yAdmin = (groups: Array<String> | null) => {
   if (
     groups &&
-    (groups.includes(FIVE08ADMIN_DEV) || groups.includes(FIVE08ADMIN_PROD))
+    (groups.includes(A11YADMIN_DEV) || groups.includes(A11YADMIN_PROD))
   ) {
     return true;
   }
@@ -46,8 +46,8 @@ export const isBasicUser = (groups: Array<String> | null) => {
 
 const user = {
   isGrtReviewer,
-  is508Tester,
-  is508Admin,
+  isA11yTester,
+  isA11yAdmin,
   isBasicUser
 };
 
