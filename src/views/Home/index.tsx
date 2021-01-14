@@ -61,8 +61,8 @@ const Home = () => {
       <MainContent className="grid-container margin-bottom-5">
         {isUserSet && user.isGrtReviewer(userGroups) && <RequestRepository />}
         {isUserSet &&
-          (user.isAccessabilityAdmin(userGroups) ||
-            user.isAccessabilityTester(userGroups)) && <div>I am 508!</div>}
+          (user.isAccessibilityAdmin(userGroups) ||
+            user.isAccessibilityTester(userGroups)) && <div>I am 508!</div>}
         {isUserSet && user.isBasicUser(userGroups) && (
           <>
             <Banners />
