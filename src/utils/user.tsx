@@ -48,8 +48,8 @@ export const isBasicUser = (groups: Array<String> | null) => {
 
 const user = {
   isGrtReviewer,
-  isAccessabilityTester,
-  isAccessabilityAdmin,
+  isAccessibilityTester,
+  isAccessibilityAdmin,
   isBasicUser
 };
 
