@@ -30,7 +30,7 @@ export const isAccessibilityTester = (groups: Array<String> | null) => {
   return false;
 };
 
-export const isAccessabilityAdmin = (groups: Array<String> | null) => {
+export const isAccessibilityAdmin = (groups: Array<String> | null) => {
   if (
     groups &&
     (groups.includes(ACCESSIBILITY_ADMIN_DEV) ||
