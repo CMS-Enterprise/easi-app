@@ -1,12 +1,14 @@
 package email
 
 import (
+	"context"
+
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 )
 
 func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 	sender := mockSender{}
-
+	ctx := context.Background()
 	recipient := "fake@fake.com"
 	reason := "reason"
 	nextSteps := "nextSteps"
@@ -17,7 +19,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		s.NoError(err)
 
 		expectedEmail := "<p>Reason: reason</p>\n<p>Next Steps: nextSteps</p>\n\n<p>feedback</p>"
-		err = client.SendRejectRequestEmail(recipient, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, reason, nextSteps, feedback)
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
@@ -30,7 +32,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		s.NoError(err)
 
 		expectedEmail := "<p>Reason: reason</p>\n\n<p>feedback</p>"
-		err = client.SendRejectRequestEmail(recipient, reason, "", feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, reason, "", feedback)
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
@@ -43,7 +45,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendRejectRequestEmail(recipient, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, reason, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -57,7 +59,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		s.NoError(err)
 		client.templates.rejectRequestTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendRejectRequestEmail(recipient, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, reason, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -72,7 +74,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendRejectRequestEmail(recipient, reason, nextSteps, feedback)
+		err = client.SendRejectRequestEmail(ctx, recipient, reason, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})

@@ -25,7 +25,7 @@ const Review = ({ businessCase }: ReviewProps) => {
       : 'SUBMIT_BIZ_CASE';
 
   return (
-    <div>
+    <div className="business-case-review">
       <div className="grid-container">
         <h1 className="font-heading-xl margin-top-4">
           Check your answers before sending

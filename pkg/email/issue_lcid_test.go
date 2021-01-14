@@ -1,6 +1,7 @@
 package email
 
 import (
+	"context"
 	"time"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -8,7 +9,7 @@ import (
 
 func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	sender := mockSender{}
-
+	ctx := context.Background()
 	recipient := "fake@fake.com"
 	lcid := "123456"
 	expiresAt, _ := time.Parse("2020-12-25", "2021-12-25")
@@ -22,7 +23,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 
 		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: scope</p>\n" +
 			"<p>Next Steps: nextSteps</p>\n\n<p>feedback</p>"
-		err = client.SendIssueLCIDEmail(recipient, lcid, &expiresAt, scope, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
@@ -36,7 +37,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 
 		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: scope</p>" +
 			"\n\n<p>feedback</p>"
-		err = client.SendIssueLCIDEmail(recipient, lcid, &expiresAt, scope, "", feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, "", feedback)
 
 		s.NoError(err)
 		s.Equal(recipient, sender.toAddress)
@@ -49,7 +50,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendIssueLCIDEmail(recipient, lcid, &expiresAt, scope, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -63,7 +64,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		s.NoError(err)
 		client.templates.issueLCIDTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendIssueLCIDEmail(recipient, lcid, &expiresAt, scope, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -78,7 +79,7 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendIssueLCIDEmail(recipient, lcid, &expiresAt, scope, nextSteps, feedback)
+		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})

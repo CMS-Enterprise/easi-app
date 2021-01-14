@@ -2,8 +2,8 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import { FlagProvider, useFlags } from 'contexts/flagContext';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import AccessibilityStatement from 'views/AccessibilityStatement';
@@ -11,6 +11,7 @@ import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
 import Cookies from 'views/Cookies';
 import DocumentPrototype from 'views/DocumentPrototype';
+import FlagsWrapper from 'views/FlagsWrapper';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
 import GovernanceTaskList from 'views/GovernanceTaskList';
@@ -138,7 +139,7 @@ const App = () => {
   };
 
   return (
-    <FlagProvider>
+    <FlagsWrapper>
       <div className="usa-overlay" />
       <button type="button" className="skipnav" onClick={handleSkipNav}>
         Skip to main content
@@ -152,7 +153,7 @@ const App = () => {
           </UserInfoWrapper>
         </AuthenticationWrapper>
       </BrowserRouter>
-    </FlagProvider>
+    </FlagsWrapper>
   );
 };
 
