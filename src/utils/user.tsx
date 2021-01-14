@@ -18,7 +18,7 @@ export const isGrtReviewer = (groups: Array<String> | null) => {
   return false;
 };
 
-export const isAccessabilityTester = (groups: Array<String> | null) => {
+export const isAccessibilityTester = (groups: Array<String> | null) => {
   if (
     groups &&
     (groups.includes(ACCESSIBILITY_TESTER_DEV) ||
