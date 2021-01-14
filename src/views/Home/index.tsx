@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useLocation, withRouter } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 
+import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -59,6 +60,8 @@ const Home = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container margin-bottom-5">
+        <AccessibilityRequestsTable />
+
         {isUserSet &&
           (user.isGrtReviewer(userGroups) ? (
             <RequestRepository />
