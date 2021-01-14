@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -11,7 +11,6 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { ImproveEasiSurvey } from 'components/Survey';
 import { RejectIntakeForm } from 'types/action';
 import { rejectSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
@@ -138,7 +137,14 @@ const RejectIntake = () => {
                   {t('rejectIntake.submit')}
                 </Button>
               </Form>
-              <ImproveEasiSurvey />
+              <UswdsLink
+                href="https://www.surveymonkey.com/r/DF3Q9L2"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open EASi survey in a new tab"
+              >
+                {t('general:feedback.whatYouThink')}
+              </UswdsLink>
             </div>
           </>
         );

@@ -98,12 +98,12 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     businessOwnerComponent: systemIntake.businessOwner.component,
     productManager: systemIntake.productManager.name,
     productManagerComponent: systemIntake.productManager.component,
-    isso: systemIntake.isso.name,
-    trbCollaborator: getGovernanceCollaborator('Technical Review Board'),
-    oitSecurityCollaborator: getGovernanceCollaborator(
+    issoName: systemIntake.isso.name,
+    trbCollaboratorName: getGovernanceCollaborator('Technical Review Board'),
+    oitSecurityCollaboratorName: getGovernanceCollaborator(
       "OIT's Security and Privacy Group"
     ),
-    eaCollaborator: getGovernanceCollaborator('Enterprise Architecture'),
+    eaCollaboratorName: getGovernanceCollaborator('Enterprise Architecture'),
     projectName: systemIntake.requestName,
     existingFunding: systemIntake.fundingSource.isFunded,
     fundingNumber: systemIntake.fundingSource.fundingNumber,
@@ -164,8 +164,8 @@ export const prepareSystemIntakeForApp = (
       component: systemIntake.productManagerComponent || ''
     },
     isso: {
-      isPresent: !!systemIntake.isso || null,
-      name: systemIntake.isso || ''
+      isPresent: !!systemIntake.issoName || null,
+      name: systemIntake.issoName || ''
     },
     governanceTeams: {
       isPresent: governanceTeams().length !== 0 || null,

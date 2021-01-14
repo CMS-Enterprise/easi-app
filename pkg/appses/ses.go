@@ -1,9 +1,14 @@
 package appses
 
 import (
+	"context"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ses"
+	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
 // Config is email configs used only for SES
@@ -32,6 +37,7 @@ func NewSender(config Config) Sender {
 
 // Send sends an email
 func (s Sender) Send(
+	ctx context.Context,
 	toAddress string,
 	subject string,
 	body string,
@@ -58,5 +64,11 @@ func (s Sender) Send(
 		SourceArn: aws.String(s.config.SourceARN),
 	}
 	_, err := s.client.SendEmail(input)
+	if err == nil {
+		appcontext.ZLogger(ctx).Info("Sending email with SES",
+			zap.String("To", toAddress),
+			zap.String("Subject", subject),
+		)
+	}
 	return err
 }

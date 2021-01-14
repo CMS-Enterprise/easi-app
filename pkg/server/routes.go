@@ -2,7 +2,6 @@ package server
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -11,8 +10,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/lambda"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
-	"gopkg.in/launchdarkly/go-sdk-common.v2/lduser"
-	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/graph"
 	"github.com/cmsgov/easi-app/graph/generated"
@@ -51,32 +48,13 @@ func (s *Server) routes(
 	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
 
 	// set up Feature Flagging utilities
-	flagUser := lduser.NewAnonymousUser(s.Config.GetString("LD_ENV_USER"))
-	flagConfig := s.NewFlagConfig()
-	var flagClient flags.FlagClient
-
-	// we default to an OFFLINE client for non-deployed environments
-	ldClient, err := ld.MakeCustomClient("fake_offline_key", ld.Config{Offline: true}, 5*time.Second)
+	ldClient, err := flags.NewLaunchDarklyClient(s.NewFlagConfig())
 	if err != nil {
 		s.logger.Fatal("Failed to create LaunchDarkly client", zap.Error(err))
 	}
 
-	switch flagConfig.Source {
-	case appconfig.FlagSourceLocal:
-		defaultFlags := flags.FlagValues{"taskListLite": "true", "sandbox": "true", "pdfExport": "true", "prototype508": "true", "fileUploads": "true", "prototypeTRB": "true"}
-		flagClient = flags.NewLocalClient(defaultFlags)
-
-	case appconfig.FlagSourceLaunchDarkly:
-		client, clientErr := flags.NewLaunchDarklyClient(flagConfig)
-		if clientErr != nil {
-			s.logger.Fatal("Failed to connect to create flag client", zap.Error(clientErr))
-		}
-		ldClient = client
-		flagClient = flags.WrapLaunchDarklyClient(ldClient)
-	}
-
 	// set up CEDAR client
-	var cedarEasiClient cedareasi.Client = local.NewCedarEasiClient(s.logger)
+	var cedarEasiClient cedareasi.Client = local.NewCedarEasiClient()
 	if !(s.environment.Local() || s.environment.Test()) {
 		// check we have all of the configs for CEDAR clients
 		s.NewCEDARClientCheck()
@@ -85,7 +63,6 @@ func (s *Server) routes(
 			s.Config.GetString(appconfig.CEDARAPIURL),
 			s.Config.GetString(appconfig.CEDARAPIKey),
 			ldClient,
-			flagUser,
 		)
 		if s.environment.Deployed() {
 			s.CheckCEDAREasiClientConnection(cedarEasiClient)
@@ -111,7 +88,7 @@ func (s *Server) routes(
 	}
 	// override email client with local one
 	if s.environment.Local() || s.environment.Test() {
-		localSender := local.NewSender(s.logger)
+		localSender := local.NewSender()
 		emailClient, err = email.NewClient(emailConfig, localSender)
 		if err != nil {
 			s.logger.Fatal("Failed to create email client", zap.Error(err))
@@ -167,7 +144,7 @@ func (s *Server) routes(
 	// protect all API routes with authorization middleware
 	api.Use(authorizationMiddleware)
 
-	serviceConfig := services.NewConfig(s.logger, flagClient)
+	serviceConfig := services.NewConfig(s.logger, ldClient)
 
 	store, err := storage.NewStore(
 		s.logger,
@@ -176,17 +153,6 @@ func (s *Server) routes(
 	if err != nil {
 		s.logger.Fatal("Failed to connect to database", zap.Error(err))
 	}
-
-	// endpoint for flags list
-	flagsHandler := handlers.NewFlagsHandler(base, flags.NewFetchFlags(), flagClient, flagUser)
-	api.Handle("/flags", flagsHandler.Handle())
-
-	// endpoint for systems list
-	systemHandler := handlers.NewSystemsListHandler(
-		base,
-		cedarEasiClient.FetchSystems,
-	)
-	api.Handle("/systems", systemHandler.Handle())
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,
@@ -580,7 +546,7 @@ func (s *Server) routes(
 		),
 	)
 
-	api.Handle("/file_uploads/{file_id}/download_url", presignedURLDownloadHandler.Handle())
+	api.Handle("/file_uploads/{file_name}/download_url", presignedURLDownloadHandler.Handle())
 
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,

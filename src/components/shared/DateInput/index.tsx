@@ -37,7 +37,6 @@ const DateInputMonth = ({
       inputMode="numeric"
       value={value}
       onChange={onChange}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
     />
   );
@@ -70,7 +69,6 @@ const DateInputDay = ({
       inputMode="numeric"
       value={value}
       onChange={onChange}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
     />
   );
@@ -104,7 +102,6 @@ const DateInputYear = ({
       inputMode="numeric"
       value={value}
       onChange={onChange}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
     />
   );

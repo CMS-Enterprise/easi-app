@@ -404,6 +404,10 @@ describe('The Goveranance Task List', () => {
 
       component!.update();
       expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
         component!.find('[data-testid="start-biz-case-btn"]').exists()
       ).toEqual(true);
 
@@ -453,6 +457,10 @@ describe('The Goveranance Task List', () => {
 
       component!.update();
       expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
         component!.find('[data-testid="continue-biz-case-btn"]').exists()
       ).toEqual(true);
 
@@ -483,7 +491,8 @@ describe('The Goveranance Task List', () => {
         systemIntake: {
           systemIntake: {
             ...initialSystemIntakeForm,
-            status: 'BIZ_CASE_DRAFT_SUBMITTED'
+            status: 'BIZ_CASE_DRAFT_SUBMITTED',
+            businessCaseId: 'ac94c1d7-48ca-4c49-9045-371b4d3062b4'
           }
         },
         businessCase: { form: {} }
@@ -501,6 +510,10 @@ describe('The Goveranance Task List', () => {
       });
 
       component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
       expect(
         component!.find('[data-testid="view-biz-case-link"]').exists()
       ).toEqual(true);
@@ -551,6 +564,10 @@ describe('The Goveranance Task List', () => {
 
       component!.update();
       expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
         component!.find('[data-testid="update-biz-case-draft-btn"]').exists()
       ).toEqual(true);
 
@@ -599,6 +616,9 @@ describe('The Goveranance Task List', () => {
       });
 
       component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
 
       expect(
         component!.find('[data-testid="prepare-for-grt-cta"]').exists()
@@ -674,6 +694,9 @@ describe('The Goveranance Task List', () => {
       });
 
       component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
 
       expect(
         component!
@@ -735,6 +758,10 @@ describe('The Goveranance Task List', () => {
 
       component!.update();
       expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
         component!
           .find('[data-testid="task-list-business-case-final"]')
           .find(UswdsLink)
@@ -793,6 +820,9 @@ describe('The Goveranance Task List', () => {
       });
 
       component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
 
       expect(
         component!.find('[data-testid="prepare-for-grb-btn"]').exists()
@@ -857,6 +887,9 @@ describe('The Goveranance Task List', () => {
       });
 
       component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
 
       expect(component!.find('[data-testid="decision-cta"]').exists()).toEqual(
         true

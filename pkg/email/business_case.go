@@ -2,6 +2,7 @@ package email
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"path"
@@ -32,13 +33,14 @@ func (c Client) businessCaseSubmissionBody(systemIntakeID uuid.UUID) (string, er
 }
 
 // SendBusinessCaseSubmissionEmail sends an email for a submitted business case
-func (c Client) SendBusinessCaseSubmissionEmail(requester string, systemIntakeID uuid.UUID) error {
+func (c Client) SendBusinessCaseSubmissionEmail(ctx context.Context, requester string, systemIntakeID uuid.UUID) error {
 	subject := fmt.Sprintf("New Business Case: %s", requester)
 	body, err := c.businessCaseSubmissionBody(systemIntakeID)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
 	err = c.sender.Send(
+		ctx,
 		c.config.GRTEmail,
 		subject,
 		body,

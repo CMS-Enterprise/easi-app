@@ -14,7 +14,11 @@ const SystemIntakeView = ({ systemIntake }: SystemIntakeViewOnlyProps) => {
   return (
     <>
       <h1>Review your Intake Request</h1>
-      <PDFExport title="System Intake" filename={filename}>
+      <PDFExport
+        title="System Intake"
+        filename={filename}
+        label="Download System Intake as PDF"
+      >
         <SystemIntakeReview
           systemIntake={systemIntake}
           now={DateTime.local()}
