@@ -1,8 +1,8 @@
 import {
-  A11YADMIN_DEV,
-  A11YADMIN_PROD,
-  A11YTESTER_DEV,
-  A11YTESTER_PROD,
+  ACCESSIBILITY_ADMIN_DEV,
+  ACCESSIBILITY_ADMIN_PROD,
+  ACCESSIBILITY_TESTER_DEV,
+  ACCESSIBILITY_TESTER_PROD,
   GOVTEAM_DEV,
   GOVTEAM_PROD
 } from 'constants/jobCodes';
@@ -18,10 +18,11 @@ export const isGrtReviewer = (groups: Array<String> | null) => {
   return false;
 };
 
-export const isA11yTester = (groups: Array<String> | null) => {
+export const isAccessibilityTester = (groups: Array<String> | null) => {
   if (
     groups &&
-    (groups.includes(A11YTESTER_DEV) || groups.includes(A11YTESTER_PROD))
+    (groups.includes(ACCESSIBILITY_TESTER_DEV) ||
+      groups.includes(ACCESSIBILITY_TESTER_PROD))
   ) {
     return true;
   }
@@ -29,10 +30,11 @@ export const isA11yTester = (groups: Array<String> | null) => {
   return false;
 };
 
-export const isA11yAdmin = (groups: Array<String> | null) => {
+export const isAccessibilityAdmin = (groups: Array<String> | null) => {
   if (
     groups &&
-    (groups.includes(A11YADMIN_DEV) || groups.includes(A11YADMIN_PROD))
+    (groups.includes(ACCESSIBILITY_ADMIN_DEV) ||
+      groups.includes(ACCESSIBILITY_ADMIN_PROD))
   ) {
     return true;
   }
@@ -46,8 +48,8 @@ export const isBasicUser = (groups: Array<String> | null) => {
 
 const user = {
   isGrtReviewer,
-  isA11yTester,
-  isA11yAdmin,
+  isAccessibilityTester,
+  isAccessibilityAdmin,
   isBasicUser
 };
 
