@@ -66,7 +66,10 @@ axios.interceptors.request.use(
         }
       }
       // prefer dev auth if it exists
-      if (window.localStorage[localAuthStorageKey]) {
+      if (
+        window.localStorage[localAuthStorageKey] &&
+        !JSON.parse(window.localStorage[localAuthStorageKey]).favorOktaAuth
+      ) {
         newConfig.headers.Authorization = `Bearer ${window.localStorage[localAuthStorageKey]}`;
       }
     }

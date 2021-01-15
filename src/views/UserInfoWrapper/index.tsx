@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 
+import { localAuthStorageKey } from 'constants/localAuth';
 import { setUser } from 'reducers/authReducer';
 import { isLocalEnvironment } from 'utils/local';
 
@@ -11,18 +12,25 @@ type UserInfoWrapperProps = {
 
 const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   const dispatch = useDispatch();
-  const { authState, authService } = useOktaAuth();
+  const { authState, oktaAuth } = useOktaAuth();
 
   const storeUserInfo = async () => {
-    if (isLocalEnvironment()) {
+    if (
+      isLocalEnvironment() &&
+      !(
+        window.localStorage[localAuthStorageKey] &&
+        JSON.parse(window.localStorage[localAuthStorageKey]).favorOktaAuth
+      )
+    ) {
+      const oktaUser = await oktaAuth.getUser();
       const user = {
-        name: authState.name,
-        euaId: authState.euaId || '',
-        groups: authState.groups || []
+        name: oktaUser.name,
+        euaId: oktaUser.euaId || '',
+        groups: oktaUser.groups || []
       };
       dispatch(setUser(user));
     } else {
-      const tokenManager = await authService.getTokenManager();
+      const tokenManager = await oktaAuth.tokenManager;
       const accessToken = await tokenManager.get('accessToken');
       const idToken = await tokenManager.get('idToken');
       if (accessToken && idToken) {
