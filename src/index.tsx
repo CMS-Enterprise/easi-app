@@ -5,6 +5,8 @@ import axios from 'axios';
 import { detect } from 'detect-browser';
 import { TextEncoder } from 'text-encoding';
 
+import { localAuthStorageKey } from 'constants/localAuth';
+
 import 'uswds';
 import './i18n';
 
@@ -64,8 +66,8 @@ axios.interceptors.request.use(
         }
       }
       // prefer dev auth if it exists
-      if (window.localStorage['dev-user-config']) {
-        newConfig.headers.Authorization = `Bearer ${window.localStorage['dev-user-config']}`;
+      if (window.localStorage[localAuthStorageKey]) {
+        newConfig.headers.Authorization = `Bearer ${window.localStorage[localAuthStorageKey]}`;
       }
     }
     return newConfig;

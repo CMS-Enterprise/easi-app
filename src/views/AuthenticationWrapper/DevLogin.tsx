@@ -8,7 +8,7 @@ import React, {
 import { useHistory } from 'react-router-dom';
 import { OktaContext } from '@okta/okta-react';
 
-const storageKey = 'dev-user-config';
+import { localAuthStorageKey } from 'constants/localAuth';
 
 const DevLogin = () => {
   const history = useHistory();
@@ -17,7 +17,7 @@ const DevLogin = () => {
   const [jobCodes, setJobCodes] = useState({ EASI_D_GOVTEAM: true });
 
   useEffect(() => {
-    if (window.localStorage[storageKey]) {
+    if (window.localStorage[localAuthStorageKey]) {
       history.push('/');
     }
   }, [history]);
@@ -39,7 +39,7 @@ const DevLogin = () => {
       ),
       favorOktaAuth: false
     };
-    localStorage.setItem(storageKey, JSON.stringify(value)); // ensure that the dev token is used
+    localStorage.setItem(localAuthStorageKey, JSON.stringify(value)); // ensure that the dev token is used
     oktaAuth.signInWithCredentials({ username: '', password: '' });
     history.push('/');
   };
@@ -51,7 +51,7 @@ const DevLogin = () => {
       euaId: '',
       jobCodes: []
     };
-    localStorage.setItem(storageKey, JSON.stringify(value));
+    localStorage.setItem(localAuthStorageKey, JSON.stringify(value));
     history.push('/');
   };
 
