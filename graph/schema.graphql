@@ -1,24 +1,32 @@
 scalar DateTime
 
+type UserError {
+  message: String!
+  path: [String!]!
+}
+
 enum AccessibilityRequestStatus {
-  RequestReceived
-  DocumentsReceived
-  TestScheduled
-  RemediationRequested
-  RemediationInProgress
-  ValidationTestingScheduled
-  Completed
+  REQUEST_RECIEVED
+  DOCUMENTS_RECIEVED
+  TEST_SCHEDULED
+  REMEDIATION_REQUESTED
+  REMEDIATION_IN_PROGRESS
+  VALIDATION_TEST_SCHEDULED
+  COMPLETED
+}
+
+type NoteAuthor {
+  name: String!
 }
 
 type AccessibilityRequestNote {
   id: ID!
+  author: NoteAuthor!
+  createdAt: DateTime!
+  body: String!
 }
 type AccessibilityRequestDocument {
   id: ID!
-}
-
-type AccessibilityRequests {
-  notes: [AccessibilityRequest!]
 }
 
 """
@@ -29,24 +37,28 @@ type AccessibilityRequest {
   name: String!
   release: String
   status: AccessibilityRequestStatus!
-  pointOfContact: Person
+  pointOfContact: PointOfContact
   lastUpdatedAt: DateTime
-  notes: [AccessibilityRequestNote!]!
+  notes: AccessibilityRequestNotesConnection
   documents: [AccessibilityRequestDocument!]!
   system: System!
 }
 
-type Person {
-  id: ID!
+type BusinessOwner {
   name: String!
   email: String!
+  component: String!
+}
+
+type PointOfContact {
+  name: String!
 }
 
 type System {
   id: ID!
   name: String!
   description: String
-  businessOwner: Person!
+  businessOwner: BusinessOwner
   lifecycleID: String!
 }
 
@@ -55,43 +67,41 @@ input CreateAccessibilityRequestInput {
   systemID: ID!
 }
 
-type CreateAccessibilityRequestSuccess {
-  accessibilityRequest: AccessibilityRequest!
+type CreateAccessibilityRequestPayload {
+  accessibilityRequest: AccessibilityRequest
+  userErrors: [UserError]!
 }
-
-type CreateAccessibilityRequestFailure {
-  message: String!
-}
-
-type NotFoundError {
-  message: String!
-}
-
-union AccessibilityRequestResponse = AccessibilityRequest | NotFoundError
-
-type Query {
-  accessibilityRequests: [AccessibilityRequest!]!
-  accessibilityRequest(id: ID!): AccessibilityRequestResponse
-}
-
-union CreateAccessibilityRequestResponse =
-    CreateAccessibilityRequestSuccess
-  | CreateAccessibilityRequestFailure
 
 type Mutation {
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput
-  ): CreateAccessibilityRequestResponse
+  ): CreateAccessibilityRequestPayload
 }
 
-interface User {
-  name: String!
-  email: String!
-  component: String!
+type AccessibilityRequestsConnection {
+  totalCount: Int!
+  edges: [AccessibilityRequestEdge!]!
 }
 
-type BusinessOwner implements User {
-  name: String!
-  email: String!
-  component: String!
+type AccessibilityRequestEdge {
+  cursor: String!
+  node: AccessibilityRequest!
+}
+
+type AccessibilityRequestNotesConnection {
+  totalCount: Int!
+  edges: [AccessibilityRequestNoteEdge!]!
+}
+
+type AccessibilityRequestNoteEdge {
+  cursor: String!
+  node: AccessibilityRequestNote!
+}
+
+type Query {
+  accessibilityRequests(
+    first: Int!
+    after: String
+  ): AccessibilityRequestsConnection
+  accessibilityRequest(id: ID!): AccessibilityRequest
 }

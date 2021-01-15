@@ -7,6 +7,11 @@
 // START Enums and Input Objects
 //==============================================================
 
+export interface CreateAccessibilityRequestInput {
+  release?: string | null;
+  systemID: string;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

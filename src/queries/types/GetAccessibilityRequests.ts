@@ -7,12 +7,26 @@
 // GraphQL query operation: GetAccessibilityRequests
 // ====================================================
 
-export interface GetAccessibilityRequests_accessibilityRequests {
+export interface GetAccessibilityRequests_accessibilityRequests_edges_node {
   __typename: "AccessibilityRequest";
   id: string;
   name: string;
 }
 
+export interface GetAccessibilityRequests_accessibilityRequests_edges {
+  __typename: "AccessibilityRequestEdge";
+  node: GetAccessibilityRequests_accessibilityRequests_edges_node;
+}
+
+export interface GetAccessibilityRequests_accessibilityRequests {
+  __typename: "AccessibilityRequestsConnection";
+  edges: GetAccessibilityRequests_accessibilityRequests_edges[];
+}
+
 export interface GetAccessibilityRequests {
-  accessibilityRequests: GetAccessibilityRequests_accessibilityRequests[];
+  accessibilityRequests: GetAccessibilityRequests_accessibilityRequests | null;
+}
+
+export interface GetAccessibilityRequestsVariables {
+  first: number;
 }
