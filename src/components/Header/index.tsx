@@ -5,6 +5,7 @@ import { useOktaAuth } from '@okta/okta-react';
 import classnames from 'classnames';
 
 import UsGovBanner from 'components/UsGovBanner';
+import { localAuthStorageKey } from 'constants/localAuth';
 
 import { UserAction, UserActionList } from './UserActionList';
 
@@ -96,6 +97,7 @@ export const Header = ({ children }: HeaderProps) => {
                   </UserAction>
                   <UserAction
                     onClick={() => {
+                      localStorage.removeItem(localAuthStorageKey);
                       oktaAuth.signOut();
                     }}
                   >
@@ -126,6 +128,7 @@ export const Header = ({ children }: HeaderProps) => {
               type="button"
               className="easi-header__nav-link"
               onClick={() => {
+                localStorage.removeItem(localAuthStorageKey);
                 oktaAuth.signOut();
               }}
             >

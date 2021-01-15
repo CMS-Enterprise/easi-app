@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { OktaAuth } from '@okta/okta-auth-js';
 import { Security } from '@okta/okta-react';
 
+import { localAuthStorageKey } from 'constants/localAuth';
 import { isLocalEnvironment } from 'utils/local';
 
 import DevSecurity from './DevSecurity';
@@ -10,8 +11,6 @@ import DevSecurity from './DevSecurity';
 type ParentComponentProps = {
   children: React.ReactNode;
 };
-
-const storageKey = 'dev-user-config';
 
 const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
   const history = useHistory();
@@ -21,8 +20,8 @@ const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
   };
   return isLocalEnvironment() &&
     !(
-      window.localStorage[storageKey] &&
-      JSON.parse(window.localStorage[storageKey]).favorOktaAuth
+      window.localStorage[localAuthStorageKey] &&
+      JSON.parse(window.localStorage[localAuthStorageKey]).favorOktaAuth
     ) ? (
     <DevSecurity>{children}</DevSecurity>
   ) : (

@@ -6,6 +6,7 @@ import { Button } from '@trussworks/react-uswds';
 import { DateTime, Duration } from 'luxon';
 
 import Modal from 'components/Modal';
+import { localAuthStorageKey } from 'constants/localAuth';
 import useInterval from 'hooks/useInterval';
 import { updateLastActiveAt, updateLastRenewAt } from 'reducers/authReducer';
 import { AppState } from 'reducers/rootReducer';
@@ -55,6 +56,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         tokenManager.renew(key);
         dispatch(updateLastRenewAt(DateTime.local()));
       } else {
+        localStorage.removeItem(localAuthStorageKey);
         oktaAuth.signOut('/login');
       }
     });

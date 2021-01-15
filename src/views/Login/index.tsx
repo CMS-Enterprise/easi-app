@@ -5,18 +5,17 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
+import { localAuthStorageKey } from 'constants/localAuth';
 import { isLocalEnvironment } from 'utils/local';
 import DevLogin from 'views/AuthenticationWrapper/DevLogin';
-
-const storageKey = 'dev-user-config';
 
 const Login = () => {
   const useLocalLogin = () => {
     return (
       isLocalEnvironment() &&
       !(
-        window.localStorage[storageKey] &&
-        JSON.parse(window.localStorage[storageKey]).favorOktaAuth
+        window.localStorage[localAuthStorageKey] &&
+        JSON.parse(window.localStorage[localAuthStorageKey]).favorOktaAuth
       )
     );
   };
