@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query GetProjects {
-    projects {
+  query GetAccessibilityRequests {
+    accessibilityRequests {
       id
       name
     }
