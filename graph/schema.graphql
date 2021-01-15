@@ -1,52 +1,97 @@
-type Document {
+scalar DateTime
+
+enum AccessibilityRequestStatus {
+  RequestReceived
+  DocumentsReceived
+  TestScheduled
+  RemediationRequested
+  RemediationInProgress
+  ValidationTestingScheduled
+  Completed
+}
+
+type AccessibilityRequestNote {
   id: ID!
-  title: String!
-  key: String!
-  kind: String!
-  project: Project!
+}
+type AccessibilityRequestDocument {
+  id: ID!
 }
 
-enum DocumentType {
-  VPAT
-  DesignSessionDeck
-  TRBLetter
+type AccessibilityRequests {
+  notes: [AccessibilityRequest!]
 }
 
-input DocumentInput {
-  title: String!
-  key: String!
-  type: DocumentType!
-  project_id: ID!
-}
-
-type DocumentUpdateResponse {
-  success: Boolean!
-  message: String
-  document: Document!
-}
-
-type Project {
+"""
+An accessibility request represents
+"""
+type AccessibilityRequest {
   id: ID!
   name: String!
-  documents: [Document!]!
+  release: String
+  status: AccessibilityRequestStatus!
+  pointOfContact: Person
+  lastUpdatedAt: DateTime
+  notes: [AccessibilityRequestNote!]!
+  documents: [AccessibilityRequestDocument!]!
+  system: System!
 }
 
-input ProjectInput {
+type Person {
+  id: ID!
   name: String!
+  email: String!
 }
 
-type ProjectUpdateResponse {
-  success: Boolean!
-  message: String
-  project: Project!
+type System {
+  id: ID!
+  name: String!
+  description: String
+  businessOwner: Person!
+  lifecycleID: String!
 }
+
+input CreateAccessibilityRequestInput {
+  release: String
+  systemID: ID!
+}
+
+type CreateAccessibilityRequestSuccess {
+  accessibilityRequest: AccessibilityRequest!
+}
+
+type CreateAccessibilityRequestFailure {
+  message: String!
+}
+
+type NotFoundError {
+  message: String!
+}
+
+union AccessibilityRequestResponse = AccessibilityRequest | NotFoundError
 
 type Query {
-  projects: [Project!]!
-  project(id: ID!): Project
+  accessibilityRequests: [AccessibilityRequest!]!
+  accessibilityRequest(id: ID!): AccessibilityRequestResponse
 }
 
+union CreateAccessibilityRequestResponse =
+    CreateAccessibilityRequestSuccess
+  | CreateAccessibilityRequestFailure
+
 type Mutation {
-  createProject(project: ProjectInput): ProjectUpdateResponse
-  createDocument(input: DocumentInput): DocumentUpdateResponse
+  createAccessibilityRequest(
+    input: CreateAccessibilityRequestInput
+  ): CreateAccessibilityRequestResponse
+}
+
+interface User {
+  name: String!
+  email: String!
+  component: String!
+}
+
+type BusinessOwner implements User {
+  name: String!
+  email: String!
+  component: String!
 }
