@@ -49,7 +49,12 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
     return new Promise(() => {});
   };
   oktaAuth.getUser = () => {
-    return Promise.resolve({ name: authState.name, sub: '' });
+    return Promise.resolve({
+      name: authState.name,
+      sub: '',
+      euaId: authState.euaId,
+      groups: authState.groups
+    });
   };
   oktaAuth.tokenManager.off = () => {};
   oktaAuth.tokenManager.on = () => {};
