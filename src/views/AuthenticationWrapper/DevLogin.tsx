@@ -43,7 +43,7 @@ const DevLogin = () => {
       jobCodes: Object.keys(jobCodes).filter(
         key => jobCodes[key as keyof typeof jobCodes]
       ),
-      favorOktaAuth: false
+      favorLocalAuth: true
     };
     localStorage.setItem(localAuthStorageKey, JSON.stringify(value)); // ensure that the dev token is used
     oktaAuth.signInWithCredentials({ username: '', password: '' });
@@ -53,7 +53,7 @@ const DevLogin = () => {
   const handleFavorOktaAuth: ReactEventHandler = event => {
     event.preventDefault();
     const value = {
-      favorOktaAuth: true,
+      favorLocalAuth: false,
       euaId: '',
       jobCodes: []
     };

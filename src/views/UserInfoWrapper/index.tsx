@@ -17,10 +17,8 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   const storeUserInfo = async () => {
     if (
       isLocalEnvironment() &&
-      !(
-        window.localStorage[localAuthStorageKey] &&
-        JSON.parse(window.localStorage[localAuthStorageKey]).favorOktaAuth
-      )
+      window.localStorage[localAuthStorageKey] &&
+      JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
     ) {
       const oktaUser = await oktaAuth.getUser();
       const user = {

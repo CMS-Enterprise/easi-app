@@ -13,10 +13,8 @@ const Login = () => {
   const useLocalLogin = () => {
     return (
       isLocalEnvironment() &&
-      !(
-        window.localStorage[localAuthStorageKey] &&
-        JSON.parse(window.localStorage[localAuthStorageKey]).favorOktaAuth
-      )
+      window.localStorage[localAuthStorageKey] &&
+      JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
     );
   };
 
