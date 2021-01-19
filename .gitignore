@@ -24,6 +24,7 @@ cypress.env.json
 .idea
 .envrc.local
 .vscode
+.eslintcache
 
 # npm/js ignores
 tmp

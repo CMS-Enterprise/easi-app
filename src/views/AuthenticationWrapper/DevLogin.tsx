@@ -8,13 +8,19 @@ import React, {
 import { useHistory } from 'react-router-dom';
 import { OktaContext } from '@okta/okta-react';
 
+import JOB_CODES from 'constants/jobCodes';
 import { localAuthStorageKey } from 'constants/localAuth';
 
 const DevLogin = () => {
+  const availableJobCodes: any = JOB_CODES.reduce(
+    (codes: any, code: any) => ({ ...codes, [code]: false }),
+    {}
+  );
+
   const history = useHistory();
   const [euaId, setEuaId] = useState('');
   const { oktaAuth } = useContext(OktaContext);
-  const [jobCodes, setJobCodes] = useState({ EASI_D_GOVTEAM: true });
+  const [jobCodes, setJobCodes] = useState(availableJobCodes);
 
   useEffect(() => {
     if (window.localStorage[localAuthStorageKey]) {
@@ -104,6 +110,7 @@ const DevLogin = () => {
               />
               {code}
             </label>
+            <br />
           </Fragment>
         ))}
       </fieldset>
