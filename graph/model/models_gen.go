@@ -2,27 +2,10 @@
 
 package model
 
-import (
-	"fmt"
-	"io"
-	"strconv"
-)
-
 // An accessibility request represents
 type AccessibilityRequest struct {
-	ID             string                               `json:"id"`
-	Name           string                               `json:"name"`
-	Release        *string                              `json:"release"`
-	Status         AccessibilityRequestStatus           `json:"status"`
-	PointOfContact *PointOfContact                      `json:"pointOfContact"`
-	LastUpdatedAt  *string                              `json:"lastUpdatedAt"`
-	Notes          *AccessibilityRequestNotesConnection `json:"notes"`
-	Documents      []*AccessibilityRequestDocument      `json:"documents"`
-	System         *System                              `json:"system"`
-}
-
-type AccessibilityRequestDocument struct {
-	ID string `json:"id"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type AccessibilityRequestEdge struct {
@@ -30,37 +13,13 @@ type AccessibilityRequestEdge struct {
 	Node   *AccessibilityRequest `json:"node"`
 }
 
-type AccessibilityRequestNote struct {
-	ID        string      `json:"id"`
-	Author    *NoteAuthor `json:"author"`
-	CreatedAt string      `json:"createdAt"`
-	Body      string      `json:"body"`
-}
-
-type AccessibilityRequestNoteEdge struct {
-	Cursor string                    `json:"cursor"`
-	Node   *AccessibilityRequestNote `json:"node"`
-}
-
-type AccessibilityRequestNotesConnection struct {
-	TotalCount int                             `json:"totalCount"`
-	Edges      []*AccessibilityRequestNoteEdge `json:"edges"`
-}
-
 type AccessibilityRequestsConnection struct {
 	TotalCount int                         `json:"totalCount"`
 	Edges      []*AccessibilityRequestEdge `json:"edges"`
 }
 
-type BusinessOwner struct {
-	Name      string `json:"name"`
-	Email     string `json:"email"`
-	Component string `json:"component"`
-}
-
 type CreateAccessibilityRequestInput struct {
-	Release  *string `json:"release"`
-	SystemID string  `json:"systemID"`
+	Name string `json:"name"`
 }
 
 type CreateAccessibilityRequestPayload struct {
@@ -68,74 +27,7 @@ type CreateAccessibilityRequestPayload struct {
 	UserErrors           []*UserError          `json:"userErrors"`
 }
 
-type NoteAuthor struct {
-	Name string `json:"name"`
-}
-
-type PointOfContact struct {
-	Name string `json:"name"`
-}
-
-type System struct {
-	ID            string         `json:"id"`
-	Name          string         `json:"name"`
-	Description   *string        `json:"description"`
-	BusinessOwner *BusinessOwner `json:"businessOwner"`
-	LifecycleID   string         `json:"lifecycleID"`
-}
-
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
-}
-
-type AccessibilityRequestStatus string
-
-const (
-	AccessibilityRequestStatusRequestRecieved         AccessibilityRequestStatus = "REQUEST_RECIEVED"
-	AccessibilityRequestStatusDocumentsRecieved       AccessibilityRequestStatus = "DOCUMENTS_RECIEVED"
-	AccessibilityRequestStatusTestScheduled           AccessibilityRequestStatus = "TEST_SCHEDULED"
-	AccessibilityRequestStatusRemediationRequested    AccessibilityRequestStatus = "REMEDIATION_REQUESTED"
-	AccessibilityRequestStatusRemediationInProgress   AccessibilityRequestStatus = "REMEDIATION_IN_PROGRESS"
-	AccessibilityRequestStatusValidationTestScheduled AccessibilityRequestStatus = "VALIDATION_TEST_SCHEDULED"
-	AccessibilityRequestStatusCompleted               AccessibilityRequestStatus = "COMPLETED"
-)
-
-var AllAccessibilityRequestStatus = []AccessibilityRequestStatus{
-	AccessibilityRequestStatusRequestRecieved,
-	AccessibilityRequestStatusDocumentsRecieved,
-	AccessibilityRequestStatusTestScheduled,
-	AccessibilityRequestStatusRemediationRequested,
-	AccessibilityRequestStatusRemediationInProgress,
-	AccessibilityRequestStatusValidationTestScheduled,
-	AccessibilityRequestStatusCompleted,
-}
-
-func (e AccessibilityRequestStatus) IsValid() bool {
-	switch e {
-	case AccessibilityRequestStatusRequestRecieved, AccessibilityRequestStatusDocumentsRecieved, AccessibilityRequestStatusTestScheduled, AccessibilityRequestStatusRemediationRequested, AccessibilityRequestStatusRemediationInProgress, AccessibilityRequestStatusValidationTestScheduled, AccessibilityRequestStatusCompleted:
-		return true
-	}
-	return false
-}
-
-func (e AccessibilityRequestStatus) String() string {
-	return string(e)
-}
-
-func (e *AccessibilityRequestStatus) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = AccessibilityRequestStatus(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid AccessibilityRequestStatus", str)
-	}
-	return nil
-}
-
-func (e AccessibilityRequestStatus) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
 }
