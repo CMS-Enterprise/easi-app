@@ -12,7 +12,9 @@ const BusinessCaseView = ({ businessCase }: BusinessCaseViewOnlyProps) => (
     <div className="grid-container">
       <h1>Review your Business Case</h1>
     </div>
-    <BusinessCaseReview values={businessCase} />
+    <div className="business-case-review">
+      <BusinessCaseReview values={businessCase} />
+    </div>
   </>
 );
 
