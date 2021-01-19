@@ -839,10 +839,10 @@ Array [
             <h3
               className="easi-only-print business-case-solution-header"
             >
-              Alternative A
+              Alternative B
             </h3>
             <dl
-              title="Alternative A"
+              title="Alternative B"
             >
               <div
                 className="easi-review-row"
@@ -853,12 +853,12 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    Alternative A: Title
+                    Alternative B: Title
                   </dt>
                   <dd
                     className="description-definition margin-0"
                   >
-                    Test alternative a solution
+                    Test alternative b solution
                   </dd>
                 </div>
               </div>
@@ -871,7 +871,7 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    Alternative A: Summary
+                    Alternative B: Summary
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
@@ -889,7 +889,7 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    Alternative A: Acquisition approach
+                    Alternative B: Acquisition approach
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
@@ -975,7 +975,7 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    Alternative A: Pros
+                    Alternative B: Pros
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
@@ -993,7 +993,7 @@ Array [
                   <dt
                     className="text-bold margin-bottom-05"
                   >
-                    Alternative A: Cons
+                    Alternative B: Cons
                   </dt>
                   <dd
                     className="description-definition margin-0 text-pre-wrap"
