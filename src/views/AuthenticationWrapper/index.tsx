@@ -19,10 +19,8 @@ const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
     history.push('/signin');
   };
   return isLocalEnvironment() &&
-    !(
-      window.localStorage[localAuthStorageKey] &&
-      JSON.parse(window.localStorage[localAuthStorageKey]).favorOktaAuth
-    ) ? (
+    window.localStorage[localAuthStorageKey] &&
+    JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth ? (
     <DevSecurity>{children}</DevSecurity>
   ) : (
     <Security
