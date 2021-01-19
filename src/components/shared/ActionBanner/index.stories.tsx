@@ -2,8 +2,7 @@ import React from 'react';
 
 import ActionBanner from './index';
 
-// eslint-disable-next-line react/jsx-props-no-spreading
-const Template = args => <ActionBanner {...args} />;
+const Template = (args: any) => <ActionBanner {...args} />;
 
 export default {
   title: 'Action Banner',
