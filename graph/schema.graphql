@@ -69,13 +69,7 @@ input CreateAccessibilityRequestInput {
 
 type CreateAccessibilityRequestPayload {
   accessibilityRequest: AccessibilityRequest
-  userErrors: [UserError]!
-}
-
-type Mutation {
-  createAccessibilityRequest(
-    input: CreateAccessibilityRequestInput
-  ): CreateAccessibilityRequestPayload
+  userErrors: [UserError!]
 }
 
 type AccessibilityRequestsConnection {
@@ -96,6 +90,12 @@ type AccessibilityRequestNotesConnection {
 type AccessibilityRequestNoteEdge {
   cursor: String!
   node: AccessibilityRequestNote!
+}
+
+type Mutation {
+  createAccessibilityRequest(
+    input: CreateAccessibilityRequestInput
+  ): CreateAccessibilityRequestPayload
 }
 
 type Query {
