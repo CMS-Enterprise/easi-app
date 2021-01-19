@@ -2,8 +2,10 @@
 package server
 
 import (
+	"crypto/tls"
 	"log"
 	"net/http"
+	"sync"
 
 	"github.com/gorilla/mux"
 	"github.com/spf13/viper"
@@ -17,6 +19,7 @@ import (
 
 // Server holds dependencies for running the EASi server
 type Server struct {
+	server      *http.Server
 	router      *mux.Router
 	Config      *viper.Viper
 	logger      *zap.Logger
@@ -28,7 +31,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // NewServer sets up the dependencies for a server
-func NewServer(config *viper.Viper) *Server {
+func NewServer(config *viper.Viper, useTLS bool) *Server {
 
 	// Set environment from config
 	environment, err := appconfig.NewEnvironment(config.GetString(appconfig.EnvironmentKey))
@@ -66,11 +69,38 @@ func NewServer(config *viper.Viper) *Server {
 	// set up server dependencies
 	clientAddress := config.GetString("CLIENT_ADDRESS")
 
-	s := &Server{
-		router:      r,
-		Config:      config,
-		logger:      zapLogger,
-		environment: environment,
+	var s *Server
+	if useTLS {
+		serverCert, err := tls.X509KeyPair([]byte(config.GetString("SERVER_CERT")), []byte(config.GetString("SERVER_KEY")))
+		if err != nil {
+			log.Fatal("Failed to parse key pair", err)
+		}
+
+		s = &Server{
+			server: &http.Server{
+				Addr:    ":8443",
+				Handler: r,
+				TLSConfig: &tls.Config{
+					Certificates: []tls.Certificate{serverCert},
+					MinVersion:   tls.VersionTLS13,
+				},
+			},
+			router:      r,
+			Config:      config,
+			logger:      zapLogger,
+			environment: environment,
+		}
+	} else {
+		s = &Server{
+			server: &http.Server{
+				Addr:    ":8080",
+				Handler: r,
+			},
+			router:      r,
+			Config:      config,
+			logger:      zapLogger,
+			environment: environment,
+		}
 	}
 
 	// set up routes
@@ -85,11 +115,24 @@ func NewServer(config *viper.Viper) *Server {
 
 // Serve runs the server
 func Serve(config *viper.Viper) {
-	s := NewServer(config)
-	// start the server
-	s.logger.Info("Serving application on port 8080")
-	err := http.ListenAndServe(":8080", s)
-	if err != nil {
-		s.logger.Fatal("Failed to start server")
-	}
+	wg := &sync.WaitGroup{}
+	wg.Add(1)
+
+	go func() {
+		s := NewServer(config, false)
+		// start the server
+		s.logger.Info("Serving application on port 8080")
+		log.Fatal(s.server.ListenAndServe())
+		wg.Done()
+	}()
+
+	go func() {
+		s := NewServer(config, true)
+		// start the server
+		s.logger.Info("Serving application on port 8443")
+		log.Fatal(s.server.ListenAndServeTLS("", ""))
+		wg.Done()
+	}()
+
+	wg.Wait()
 }
