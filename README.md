@@ -378,6 +378,20 @@ It should start automatically if you run `docker-compose up`.
 
 ## Build
 
+### GraphQL Generation
+
+Regenerate the go types and resolver definitions:
+
+```shell
+go generate ./...
+```
+
+Regenerate the TypeScript types and validate `schema.graphql`:
+
+```shell
+yarn generate
+```
+
 ### Swagger Generation
 
 The EASi server uses Swagger generation
