@@ -474,6 +474,12 @@ To run a test request,
 you can send a GET to the health check endpoint:
 `curl localhost:8080/api/v1/healthcheck`
 
+### GraphQL Playground
+
+You can visit `http://localhost:8080/query` to access a GraphQL playground while
+the Go backend is running. **You will need to enter `/graph/query` as the query
+path in the UI for this to work.**
+
 #### Authorization
 
 Setting this `APP_ENV` environment variable to "local"
