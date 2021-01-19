@@ -11,7 +11,7 @@ type UserInfoWrapperProps = {
 
 const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   const dispatch = useDispatch();
-  const { authState, authService } = useOktaAuth();
+  const { authState, oktaAuth } = useOktaAuth();
 
   const storeUserInfo = async () => {
     if (isLocalEnvironment()) {
@@ -22,7 +22,7 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
       };
       dispatch(setUser(user));
     } else {
-      const tokenManager = await authService.getTokenManager();
+      const tokenManager = await oktaAuth.tokenManager;
       const accessToken = await tokenManager.get('accessToken');
       const idToken = await tokenManager.get('idToken');
       if (accessToken && idToken) {
