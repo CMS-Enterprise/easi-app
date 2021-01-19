@@ -8,8 +8,7 @@
 //==============================================================
 
 export interface CreateAccessibilityRequestInput {
-  release?: string | null;
-  systemID: string;
+  name: string;
 }
 
 //==============================================================
