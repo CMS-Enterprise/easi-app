@@ -6,31 +6,21 @@ package graph
 import (
 	"context"
 	"fmt"
-	"strconv"
 
 	"github.com/cmsgov/easi-app/graph/generated"
 	"github.com/cmsgov/easi-app/graph/model"
 )
 
-func (r *mutationResolver) CreateProject(ctx context.Context, project *model.ProjectInput) (*model.ProjectUpdateResponse, error) {
+func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *mutationResolver) CreateDocument(ctx context.Context, input *model.DocumentInput) (*model.DocumentUpdateResponse, error) {
+func (r *queryResolver) AccessibilityRequests(ctx context.Context, first int, after *string) (*model.AccessibilityRequestsConnection, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Projects(ctx context.Context) ([]*model.Project, error) {
-	var projects []*model.Project
-	for i := 1; i <= 10; i++ {
-		projects = append(projects, &model.Project{ID: strconv.Itoa(i), Name: fmt.Sprintf("Project #%d", i)})
-	}
-	return projects, nil
-}
-
-func (r *queryResolver) Project(ctx context.Context, id string) (*model.Project, error) {
-	project := model.Project{ID: id, Name: fmt.Sprintf("Project #%s", id)}
-	return &project, nil
+func (r *queryResolver) AccessibilityRequest(ctx context.Context, id string) (*model.AccessibilityRequest, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Mutation returns generated.MutationResolver implementation.

@@ -8,82 +8,134 @@ import (
 	"strconv"
 )
 
-type Document struct {
-	ID      string   `json:"id"`
-	Title   string   `json:"title"`
-	Key     string   `json:"key"`
-	Kind    string   `json:"kind"`
-	Project *Project `json:"project"`
+// An accessibility request represents
+type AccessibilityRequest struct {
+	ID             string                               `json:"id"`
+	Name           string                               `json:"name"`
+	Release        *string                              `json:"release"`
+	Status         AccessibilityRequestStatus           `json:"status"`
+	PointOfContact *PointOfContact                      `json:"pointOfContact"`
+	LastUpdatedAt  *string                              `json:"lastUpdatedAt"`
+	Notes          *AccessibilityRequestNotesConnection `json:"notes"`
+	Documents      []*AccessibilityRequestDocument      `json:"documents"`
+	System         *System                              `json:"system"`
 }
 
-type DocumentInput struct {
-	Title     string       `json:"title"`
-	Key       string       `json:"key"`
-	Type      DocumentType `json:"type"`
-	ProjectID string       `json:"project_id"`
+type AccessibilityRequestDocument struct {
+	ID string `json:"id"`
 }
 
-type DocumentUpdateResponse struct {
-	Success  bool      `json:"success"`
-	Message  *string   `json:"message"`
-	Document *Document `json:"document"`
+type AccessibilityRequestEdge struct {
+	Cursor string                `json:"cursor"`
+	Node   *AccessibilityRequest `json:"node"`
 }
 
-type Project struct {
+type AccessibilityRequestNote struct {
 	ID        string      `json:"id"`
-	Name      string      `json:"name"`
-	Documents []*Document `json:"documents"`
+	Author    *NoteAuthor `json:"author"`
+	CreatedAt string      `json:"createdAt"`
+	Body      string      `json:"body"`
 }
 
-type ProjectInput struct {
+type AccessibilityRequestNoteEdge struct {
+	Cursor string                    `json:"cursor"`
+	Node   *AccessibilityRequestNote `json:"node"`
+}
+
+type AccessibilityRequestNotesConnection struct {
+	TotalCount int                             `json:"totalCount"`
+	Edges      []*AccessibilityRequestNoteEdge `json:"edges"`
+}
+
+type AccessibilityRequestsConnection struct {
+	TotalCount int                         `json:"totalCount"`
+	Edges      []*AccessibilityRequestEdge `json:"edges"`
+}
+
+type BusinessOwner struct {
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	Component string `json:"component"`
+}
+
+type CreateAccessibilityRequestInput struct {
+	Release  *string `json:"release"`
+	SystemID string  `json:"systemID"`
+}
+
+type CreateAccessibilityRequestPayload struct {
+	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
+	UserErrors           []*UserError          `json:"userErrors"`
+}
+
+type NoteAuthor struct {
 	Name string `json:"name"`
 }
 
-type ProjectUpdateResponse struct {
-	Success bool     `json:"success"`
-	Message *string  `json:"message"`
-	Project *Project `json:"project"`
+type PointOfContact struct {
+	Name string `json:"name"`
 }
 
-type DocumentType string
+type System struct {
+	ID            string         `json:"id"`
+	Name          string         `json:"name"`
+	Description   *string        `json:"description"`
+	BusinessOwner *BusinessOwner `json:"businessOwner"`
+	LifecycleID   string         `json:"lifecycleID"`
+}
+
+type UserError struct {
+	Message string   `json:"message"`
+	Path    []string `json:"path"`
+}
+
+type AccessibilityRequestStatus string
 
 const (
-	DocumentTypeVpat              DocumentType = "VPAT"
-	DocumentTypeDesignSessionDeck DocumentType = "DesignSessionDeck"
-	DocumentTypeTRBLetter         DocumentType = "TRBLetter"
+	AccessibilityRequestStatusRequestRecieved         AccessibilityRequestStatus = "REQUEST_RECIEVED"
+	AccessibilityRequestStatusDocumentsRecieved       AccessibilityRequestStatus = "DOCUMENTS_RECIEVED"
+	AccessibilityRequestStatusTestScheduled           AccessibilityRequestStatus = "TEST_SCHEDULED"
+	AccessibilityRequestStatusRemediationRequested    AccessibilityRequestStatus = "REMEDIATION_REQUESTED"
+	AccessibilityRequestStatusRemediationInProgress   AccessibilityRequestStatus = "REMEDIATION_IN_PROGRESS"
+	AccessibilityRequestStatusValidationTestScheduled AccessibilityRequestStatus = "VALIDATION_TEST_SCHEDULED"
+	AccessibilityRequestStatusCompleted               AccessibilityRequestStatus = "COMPLETED"
 )
 
-var AllDocumentType = []DocumentType{
-	DocumentTypeVpat,
-	DocumentTypeDesignSessionDeck,
-	DocumentTypeTRBLetter,
+var AllAccessibilityRequestStatus = []AccessibilityRequestStatus{
+	AccessibilityRequestStatusRequestRecieved,
+	AccessibilityRequestStatusDocumentsRecieved,
+	AccessibilityRequestStatusTestScheduled,
+	AccessibilityRequestStatusRemediationRequested,
+	AccessibilityRequestStatusRemediationInProgress,
+	AccessibilityRequestStatusValidationTestScheduled,
+	AccessibilityRequestStatusCompleted,
 }
 
-func (e DocumentType) IsValid() bool {
+func (e AccessibilityRequestStatus) IsValid() bool {
 	switch e {
-	case DocumentTypeVpat, DocumentTypeDesignSessionDeck, DocumentTypeTRBLetter:
+	case AccessibilityRequestStatusRequestRecieved, AccessibilityRequestStatusDocumentsRecieved, AccessibilityRequestStatusTestScheduled, AccessibilityRequestStatusRemediationRequested, AccessibilityRequestStatusRemediationInProgress, AccessibilityRequestStatusValidationTestScheduled, AccessibilityRequestStatusCompleted:
 		return true
 	}
 	return false
 }
 
-func (e DocumentType) String() string {
+func (e AccessibilityRequestStatus) String() string {
 	return string(e)
 }
 
-func (e *DocumentType) UnmarshalGQL(v interface{}) error {
+func (e *AccessibilityRequestStatus) UnmarshalGQL(v interface{}) error {
 	str, ok := v.(string)
 	if !ok {
 		return fmt.Errorf("enums must be strings")
 	}
 
-	*e = DocumentType(str)
+	*e = AccessibilityRequestStatus(str)
 	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid DocumentType", str)
+		return fmt.Errorf("%s is not a valid AccessibilityRequestStatus", str)
 	}
 	return nil
 }
 
-func (e DocumentType) MarshalGQL(w io.Writer) {
+func (e AccessibilityRequestStatus) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

@@ -24,7 +24,7 @@ export interface CreateAccessibilityRequest_createAccessibilityRequest_userError
 export interface CreateAccessibilityRequest_createAccessibilityRequest {
   __typename: "CreateAccessibilityRequestPayload";
   accessibilityRequest: CreateAccessibilityRequest_createAccessibilityRequest_accessibilityRequest | null;
-  userErrors: (CreateAccessibilityRequest_createAccessibilityRequest_userErrors | null)[];
+  userErrors: CreateAccessibilityRequest_createAccessibilityRequest_userErrors[] | null;
 }
 
 export interface CreateAccessibilityRequest {
