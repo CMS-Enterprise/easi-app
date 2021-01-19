@@ -75,8 +75,8 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
         <PrintableTabContent visible={activeSolutionTab === 'Alternative B'}>
           {alternativeB && hasAlternativeB(alternativeB) && (
             <ProposedBusinessCaseSolutionReview
-              name="Alternative A"
-              solution={alternativeA}
+              name="Alternative B"
+              solution={alternativeB}
             />
           )}
         </PrintableTabContent>
