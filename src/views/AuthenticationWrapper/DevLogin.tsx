@@ -1,6 +1,5 @@
 import React, { Fragment, ReactEventHandler, useState } from 'react';
 
-// import { OktaContext } from '@okta/okta-react';
 import JOB_CODES from 'constants/jobCodes';
 import { localAuthStorageKey } from 'constants/localAuth';
 
@@ -11,7 +10,6 @@ const DevLogin = () => {
   );
 
   const [euaId, setEuaId] = useState('');
-  // const { oktaAuth } = useContext(OktaContext);
   const [jobCodes, setJobCodes] = useState(availableJobCodes);
 
   const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
@@ -31,8 +29,7 @@ const DevLogin = () => {
       ),
       favorLocalAuth: true
     };
-    localStorage.setItem(localAuthStorageKey, JSON.stringify(value)); // ensure that the dev token is used
-    // oktaAuth.signInWithCredentials({ username: '', password: '' });
+    localStorage.setItem(localAuthStorageKey, JSON.stringify(value));
     window.location.href = '/';
   };
 
