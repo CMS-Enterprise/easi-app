@@ -12,13 +12,17 @@ import (
 	"github.com/cmsgov/easi-app/pkg/authn"
 )
 
+// If you're developing interfaces with CEDAR LDAP and you want to use Okta login on the frontend,
+// you may need to set the LOCAL_TEST_EUAID variable to your a valid EUAID (such as your own)
+const defaultTestEUAID = "ABCD"
+
 // DevUserConfig is the set of values that can be passed in a request header
 type DevUserConfig struct {
 	EUA      string   `json:"euaId"`
 	JobCodes []string `json:"jobCodes"`
 }
 
-func authorizeMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
+func authorizeMiddleware(logger *zap.Logger, next http.Handler, testEUAID string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		logger.Info("Using local authorization middleware")
 
@@ -43,8 +47,14 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 
 		config := DevUserConfig{}
 		if parseErr := json.Unmarshal([]byte(devUserConfigJSON), &config); parseErr != nil {
-			logger.Error("could not parse dev user config", zap.Error(parseErr))
-			w.WriteHeader(http.StatusBadRequest)
+			// Assume at this point that we've opted for Okta login on the frontend.
+			euaID := defaultTestEUAID
+			if testEUAID != "" {
+				euaID = testEUAID
+			}
+			logger.Info("Using local authorization middleware with Okta frontend login")
+			ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{EUAID: euaID, JobCodeEASi: true, JobCodeGRT: true})
+			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
 
@@ -58,8 +68,8 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler) http.Handler {
 }
 
 // NewLocalAuthorizeMiddleware stubs out context info while ignoring remote authorization
-func NewLocalAuthorizeMiddleware(logger *zap.Logger) func(http.Handler) http.Handler {
+func NewLocalAuthorizeMiddleware(logger *zap.Logger, testEUAID string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
-		return authorizeMiddleware(logger, next)
+		return authorizeMiddleware(logger, next, testEUAID)
 	}
 }
