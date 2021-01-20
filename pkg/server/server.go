@@ -90,8 +90,8 @@ func Serve(config *viper.Viper) {
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 
+	s := NewServer(config)
 	go func() {
-		s := NewServer(config)
 		s.logger.Info("Serving application on port 8080")
 		err := http.ListenAndServe(":8080", s)
 		if err != nil {
@@ -106,7 +106,6 @@ func Serve(config *viper.Viper) {
 		if err != nil {
 			log.Fatal("Failed to parse key pair", err)
 		}
-		s := NewServer(config)
 		srv := &http.Server{
 			Addr:    ":8443",
 			Handler: s,
