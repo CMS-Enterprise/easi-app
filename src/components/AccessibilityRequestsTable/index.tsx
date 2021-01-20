@@ -84,7 +84,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-
         status: 'Request Received'
       },
       {
@@ -97,7 +96,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-
         status: 'Request Received'
       },
       {
@@ -110,7 +108,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-
         status: 'Documents Received'
       },
       {
@@ -123,7 +120,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-
         status: 'Reuqest Received'
       },
       {
@@ -136,7 +132,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-
         status: 'Documents Received'
       },
       {
@@ -149,7 +144,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '2021-01-19T00:00:00.000-07:00',
-
         status: 'Test Scheduled'
       },
       {
@@ -162,7 +156,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '2021-01-19T00:00:00.000-07:00',
-
         status: 'Test Scheduled'
       },
       {
@@ -175,7 +168,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '2021-01-07T00:00:00.000-07:00',
-
         status: 'Test Scheduled'
       },
       {
@@ -189,7 +181,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '2020-11-19T00:00:00.000-07:00',
-
         status: 'Test Scheduled'
       }
     ];
