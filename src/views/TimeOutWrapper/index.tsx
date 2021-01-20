@@ -49,7 +49,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     const tokenManager = await oktaAuth.tokenManager;
 
     // clear the old listener so we don't register millions of them
-    tokenManager.off('expired', () => {});
+    tokenManager.off('expired');
     tokenManager.on('expired', (key: any) => {
       if (activeSinceLastRenew) {
         tokenManager.renew(key);
