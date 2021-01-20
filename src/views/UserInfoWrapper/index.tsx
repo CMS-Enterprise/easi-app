@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useOktaAuth } from '@okta/okta-react';
 
+import { localAuthStorageKey } from 'constants/localAuth';
 import { setUser } from 'reducers/authReducer';
 import { isLocalEnvironment } from 'utils/local';
 
@@ -14,11 +15,16 @@ const UserInfoWrapper = ({ children }: UserInfoWrapperProps) => {
   const { authState, oktaAuth } = useOktaAuth();
 
   const storeUserInfo = async () => {
-    if (isLocalEnvironment()) {
+    if (
+      isLocalEnvironment() &&
+      window.localStorage[localAuthStorageKey] &&
+      JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
+    ) {
+      const oktaUser = await oktaAuth.getUser();
       const user = {
-        name: authState.name,
-        euaId: authState.euaId || '',
-        groups: authState.groups || []
+        name: oktaUser.name,
+        euaId: oktaUser.euaId || '',
+        groups: oktaUser.groups || []
       };
       dispatch(setUser(user));
     } else {

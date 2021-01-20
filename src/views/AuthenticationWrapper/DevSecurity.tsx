@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AuthTransaction, OktaAuth } from '@okta/okta-auth-js';
 import { OktaContext } from '@okta/okta-react';
 
-const storageKey = 'dev-user-config';
+import { localAuthStorageKey } from 'constants/localAuth';
 
 const initialAuthState = {
   isAuthenticated: false,
@@ -18,8 +18,8 @@ type ParentComponentProps = {
 
 const DevSecurity = ({ children }: ParentComponentProps) => {
   const getStateFromLocalStorage = () => {
-    if (window.localStorage[storageKey]) {
-      const state = JSON.parse(window.localStorage[storageKey]);
+    if (window.localStorage[localAuthStorageKey]) {
+      const state = JSON.parse(window.localStorage[localAuthStorageKey]);
       return {
         isPending: false,
         name: `User ${state.euaId}`,
@@ -44,12 +44,17 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
     return new Promise(() => {});
   };
   oktaAuth.signOut = (): Promise<void> => {
-    window.localStorage.removeItem(storageKey);
+    window.localStorage.removeItem(localAuthStorageKey);
     window.location.href = '/';
     return new Promise(() => {});
   };
   oktaAuth.getUser = () => {
-    return Promise.resolve({ name: authState.name, sub: '' });
+    return Promise.resolve({
+      name: authState.name,
+      sub: '',
+      euaId: authState.euaId,
+      groups: authState.groups
+    });
   };
   oktaAuth.tokenManager.off = () => {};
   oktaAuth.tokenManager.on = () => {};
