@@ -1,13 +1,6 @@
-import React, {
-  Fragment,
-  ReactEventHandler,
-  useContext,
-  useEffect,
-  useState
-} from 'react';
-import { useHistory } from 'react-router-dom';
-import { OktaContext } from '@okta/okta-react';
+import React, { Fragment, ReactEventHandler, useState } from 'react';
 
+// import { OktaContext } from '@okta/okta-react';
 import JOB_CODES from 'constants/jobCodes';
 import { localAuthStorageKey } from 'constants/localAuth';
 
@@ -17,16 +10,9 @@ const DevLogin = () => {
     {}
   );
 
-  const history = useHistory();
   const [euaId, setEuaId] = useState('');
-  const { oktaAuth } = useContext(OktaContext);
+  // const { oktaAuth } = useContext(OktaContext);
   const [jobCodes, setJobCodes] = useState(availableJobCodes);
-
-  useEffect(() => {
-    if (window.localStorage[localAuthStorageKey]) {
-      history.push('/');
-    }
-  }, [history]);
 
   const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
     setJobCodes({
@@ -46,23 +32,12 @@ const DevLogin = () => {
       favorLocalAuth: true
     };
     localStorage.setItem(localAuthStorageKey, JSON.stringify(value)); // ensure that the dev token is used
-    oktaAuth.signInWithCredentials({ username: '', password: '' });
-    history.push('/');
-  };
-
-  const handleFavorOktaAuth: ReactEventHandler = event => {
-    event.preventDefault();
-    const value = {
-      favorLocalAuth: false,
-      euaId: '',
-      jobCodes: []
-    };
-    localStorage.setItem(localAuthStorageKey, JSON.stringify(value));
-    history.push('/');
+    // oktaAuth.signInWithCredentials({ username: '', password: '' });
+    window.location.href = '/';
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '1rem 3rem' }}>
+    <form onSubmit={handleSubmit}>
       <h1
         style={{
           backgroundImage: 'linear-gradient(to left, orange, red)',
@@ -73,11 +48,6 @@ const DevLogin = () => {
       >
         Dev auth
       </h1>
-      <p>
-        <button type="button" onClick={handleFavorOktaAuth}>
-          Use Okta Auth
-        </button>
-      </p>
       <p>
         <label>
           Enter a four-character EUA
