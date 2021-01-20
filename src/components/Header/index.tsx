@@ -5,6 +5,7 @@ import { useOktaAuth } from '@okta/okta-react';
 import classnames from 'classnames';
 
 import UsGovBanner from 'components/UsGovBanner';
+import { localAuthStorageKey } from 'constants/localAuth';
 
 import { UserAction, UserActionList } from './UserActionList';
 
@@ -15,7 +16,7 @@ type HeaderProps = {
 };
 
 export const Header = ({ children }: HeaderProps) => {
-  const { authState, authService } = useOktaAuth();
+  const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
   const [displayDropdown, setDisplayDropdown] = useState(false);
@@ -23,11 +24,11 @@ export const Header = ({ children }: HeaderProps) => {
 
   useEffect(() => {
     if (authState.isAuthenticated) {
-      authService.getUser().then((info: any) => {
+      oktaAuth.getUser().then((info: any) => {
         setUserName(info.name);
       });
     }
-  }, [authState, authService]);
+  }, [authState, oktaAuth]);
 
   const handleClick = (e: Event) => {
     if (
@@ -96,7 +97,8 @@ export const Header = ({ children }: HeaderProps) => {
                   </UserAction>
                   <UserAction
                     onClick={() => {
-                      authService.logout();
+                      localStorage.removeItem(localAuthStorageKey);
+                      oktaAuth.signOut();
                     }}
                   >
                     {t('header:signOut')}
@@ -126,7 +128,8 @@ export const Header = ({ children }: HeaderProps) => {
               type="button"
               className="easi-header__nav-link"
               onClick={() => {
-                authService.logout();
+                localStorage.removeItem(localAuthStorageKey);
+                oktaAuth.signOut();
               }}
             >
               {t('header:signOut')}

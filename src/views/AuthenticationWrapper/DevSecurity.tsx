@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { AuthTransaction, OktaAuth } from '@okta/okta-auth-js';
 import { OktaContext } from '@okta/okta-react';
 
-const storageKey = 'dev-user-config';
+import { localAuthStorageKey } from 'constants/localAuth';
 
 const initialAuthState = {
   isAuthenticated: false,
@@ -17,8 +18,8 @@ type ParentComponentProps = {
 
 const DevSecurity = ({ children }: ParentComponentProps) => {
   const getStateFromLocalStorage = () => {
-    if (window.localStorage[storageKey]) {
-      const state = JSON.parse(window.localStorage[storageKey]);
+    if (window.localStorage[localAuthStorageKey]) {
+      const state = JSON.parse(window.localStorage[localAuthStorageKey]);
       return {
         isPending: false,
         name: `User ${state.euaId}`,
@@ -31,33 +32,41 @@ const DevSecurity = ({ children }: ParentComponentProps) => {
   };
 
   const [authState, setAuthState] = useState(getStateFromLocalStorage);
-
-  const authService = {
-    login: () => {
-      setAuthState(getStateFromLocalStorage());
-    },
-    logout: () => {
-      window.localStorage.removeItem(storageKey);
-      window.location.href = '/';
-    },
-    getUser: () => {
-      return Promise.resolve({ name: authState.name });
-    },
-    getTokenManager: () => {
-      return {
-        off: () => {},
-        on: () => {},
-        renew: () => {}
-      };
+  const oktaAuth = new OktaAuth({
+    // to appease the OktaAuth constructor
+    issuer: 'https://fakewebsite.pqr',
+    tokenManager: {
+      autoRenew: false
     }
+  });
+  oktaAuth.signInWithCredentials = (): Promise<AuthTransaction> => {
+    setAuthState(getStateFromLocalStorage);
+    return new Promise(() => {});
   };
+  oktaAuth.signOut = (): Promise<void> => {
+    window.localStorage.removeItem(localAuthStorageKey);
+    window.location.href = '/';
+    return new Promise(() => {});
+  };
+  oktaAuth.getUser = () => {
+    return Promise.resolve({
+      name: authState.name,
+      sub: '',
+      euaId: authState.euaId,
+      groups: authState.groups
+    });
+  };
+  oktaAuth.tokenManager.off = () => {};
+  oktaAuth.tokenManager.on = () => {};
 
   useEffect(() => {
     setAuthState(getStateFromLocalStorage);
   }, []);
 
   return (
-    <OktaContext.Provider value={{ authService, authState }}>
+    <OktaContext.Provider
+      value={{ oktaAuth, authState, _onAuthRequired: () => {} }}
+    >
       {children}
     </OktaContext.Provider>
   );
