@@ -33,6 +33,8 @@ services:
       - PGUSER=postgres
       - PGPASS=""
       - PGSSLMODE=disable
+      - SERVER_CERT
+      - SERVER_KEY
     entrypoint: ['/easi/easi', 'serve']
     depends_on:
       - db_migrate
