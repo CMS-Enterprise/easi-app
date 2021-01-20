@@ -237,14 +237,14 @@ export const prepareBusinessCaseForApp = (
       estimatedLifecycleCost: lifecycleCostLines.B,
       security: {
         isApproved: businessCase.alternativeBSecurityIsApproved,
-        isBeingReviewed: businessCase.alternativeBSecurityIsBeingReviewed
+        isBeingReviewed: businessCase.alternativeBSecurityIsBeingReviewed || ''
       },
       hosting: {
-        type: businessCase.alternativeBHostingType,
-        location: businessCase.alternativeBHostingLocation,
-        cloudServiceType: businessCase.alternativeBHostingCloudServiceType
+        type: businessCase.alternativeBHostingType || '',
+        location: businessCase.alternativeBHostingLocation || '',
+        cloudServiceType: businessCase.alternativeBHostingCloudServiceType || ''
       },
-      hasUserInterface: businessCase.alternativeBHasUI
+      hasUserInterface: businessCase.alternativeBHasUI || ''
     },
     initialSubmittedAt: businessCase.initialSubmittedAt,
     lastSubmittedAt: businessCase.lastSubmittedAt
