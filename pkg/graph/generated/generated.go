@@ -11,7 +11,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/cmsgov/easi-app/graph/model"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -270,7 +270,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "graph/schema.graphql", Input: `type UserError {
+	{Name: "pkg/graph/schema.graphql", Input: `type UserError {
   message: String!
   path: [String!]!
 }
@@ -329,7 +329,7 @@ func (ec *executionContext) field_Mutation_createAccessibilityRequest_args(ctx c
 	var arg0 *model.CreateAccessibilityRequestInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOCreateAccessibilityRequestInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐCreateAccessibilityRequestInput(ctx, tmp)
+		arg0, err = ec.unmarshalOCreateAccessibilityRequestInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -567,7 +567,7 @@ func (ec *executionContext) _AccessibilityRequestEdge_node(ctx context.Context, 
 	}
 	res := resTmp.(*model.AccessibilityRequest)
 	fc.Result = res
-	return ec.marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequest(ctx, field.Selections, res)
+	return ec.marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequest(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestsConnection_totalCount(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestsConnection) (ret graphql.Marshaler) {
@@ -637,7 +637,7 @@ func (ec *executionContext) _AccessibilityRequestsConnection_edges(ctx context.C
 	}
 	res := resTmp.([]*model.AccessibilityRequestEdge)
 	fc.Result = res
-	return ec.marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequestEdgeᚄ(ctx, field.Selections, res)
+	return ec.marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdgeᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreateAccessibilityRequestPayload_accessibilityRequest(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestPayload) (ret graphql.Marshaler) {
@@ -669,7 +669,7 @@ func (ec *executionContext) _CreateAccessibilityRequestPayload_accessibilityRequ
 	}
 	res := resTmp.(*model.AccessibilityRequest)
 	fc.Result = res
-	return ec.marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequest(ctx, field.Selections, res)
+	return ec.marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequest(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreateAccessibilityRequestPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestPayload) (ret graphql.Marshaler) {
@@ -701,7 +701,7 @@ func (ec *executionContext) _CreateAccessibilityRequestPayload_userErrors(ctx co
 	}
 	res := resTmp.([]*model.UserError)
 	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_createAccessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -740,7 +740,7 @@ func (ec *executionContext) _Mutation_createAccessibilityRequest(ctx context.Con
 	}
 	res := resTmp.(*model.CreateAccessibilityRequestPayload)
 	fc.Result = res
-	return ec.marshalOCreateAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐCreateAccessibilityRequestPayload(ctx, field.Selections, res)
+	return ec.marshalOCreateAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_accessibilityRequests(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -779,7 +779,7 @@ func (ec *executionContext) _Query_accessibilityRequests(ctx context.Context, fi
 	}
 	res := resTmp.(*model.AccessibilityRequestsConnection)
 	fc.Result = res
-	return ec.marshalOAccessibilityRequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequestsConnection(ctx, field.Selections, res)
+	return ec.marshalOAccessibilityRequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestsConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -818,7 +818,7 @@ func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, fie
 	}
 	res := resTmp.(*model.AccessibilityRequest)
 	fc.Result = res
-	return ec.marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequest(ctx, field.Selections, res)
+	return ec.marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequest(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2556,7 +2556,7 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequest(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequest) graphql.Marshaler {
+func (ec *executionContext) marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequest(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequest) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -2566,7 +2566,7 @@ func (ec *executionContext) marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgo
 	return ec._AccessibilityRequest(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequestEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.AccessibilityRequestEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.AccessibilityRequestEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -2590,7 +2590,7 @@ func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcom�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNAccessibilityRequestEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequestEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalNAccessibilityRequestEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -2603,7 +2603,7 @@ func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcom�
 	return ret
 }
 
-func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequestEdge(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequestEdge) graphql.Marshaler {
+func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdge(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequestEdge) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -2703,7 +2703,7 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
-func (ec *executionContext) marshalNUserError2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐUserError(ctx context.Context, sel ast.SelectionSet, v *model.UserError) graphql.Marshaler {
+func (ec *executionContext) marshalNUserError2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserError(ctx context.Context, sel ast.SelectionSet, v *model.UserError) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
@@ -2942,14 +2942,14 @@ func (ec *executionContext) marshalN__TypeKind2string(ctx context.Context, sel a
 	return res
 }
 
-func (ec *executionContext) marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequest(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequest) graphql.Marshaler {
+func (ec *executionContext) marshalOAccessibilityRequest2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequest(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequest) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._AccessibilityRequest(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOAccessibilityRequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐAccessibilityRequestsConnection(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequestsConnection) graphql.Marshaler {
+func (ec *executionContext) marshalOAccessibilityRequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestsConnection(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequestsConnection) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -2980,7 +2980,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) unmarshalOCreateAccessibilityRequestInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐCreateAccessibilityRequestInput(ctx context.Context, v interface{}) (*model.CreateAccessibilityRequestInput, error) {
+func (ec *executionContext) unmarshalOCreateAccessibilityRequestInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestInput(ctx context.Context, v interface{}) (*model.CreateAccessibilityRequestInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -2988,7 +2988,7 @@ func (ec *executionContext) unmarshalOCreateAccessibilityRequestInput2ᚖgithub�
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOCreateAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐCreateAccessibilityRequestPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOCreateAccessibilityRequestPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -3019,7 +3019,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return graphql.MarshalString(*v)
 }
 
-func (ec *executionContext) marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐUserErrorᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserError) graphql.Marshaler {
+func (ec *executionContext) marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserError) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -3046,7 +3046,7 @@ func (ec *executionContext) marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasi
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNUserError2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋgraphᚋmodelᚐUserError(ctx, sel, v[i])
+			ret[i] = ec.marshalNUserError2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserError(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
