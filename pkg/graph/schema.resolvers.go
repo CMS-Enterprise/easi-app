@@ -7,12 +7,20 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/graph/generated"
-	"github.com/cmsgov/easi-app/graph/model"
+	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/graph/generated"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 )
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.CreateAccessibilityRequestPayload{
+		AccessibilityRequest: &model.AccessibilityRequest{
+			ID:   uuid.New().String(),
+			Name: input.Name,
+		},
+		UserErrors: nil,
+	}, nil
 }
 
 func (r *queryResolver) AccessibilityRequests(ctx context.Context, first int, after *string) (*model.AccessibilityRequestsConnection, error) {
