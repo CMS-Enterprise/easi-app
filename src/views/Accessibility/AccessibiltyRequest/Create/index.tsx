@@ -5,7 +5,6 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import CreateAccessibilityRequest from 'queries/CreateAccessibilityRequestQuery';
 import * as yup from 'yup';
-import { TypeOf } from 'yup';
 
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -41,7 +40,7 @@ const MutationForm: FunctionComponent<MutationFormProps> = ({
         validateOnChange={false}
         validateOnMount={false}
       >
-        {(formikProps: FormikProps<TypeOf<typeof schema>>) => {
+        {(formikProps: FormikProps<yup.TypeOf<typeof schema>>) => {
           const { handleSubmit, errors } = formikProps;
           const flatErrors = flattenErrors(errors);
           return (
