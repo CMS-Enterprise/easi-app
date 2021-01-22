@@ -306,6 +306,21 @@ Time: 0.016s
 postgres@localhost:postgres>
 ```
 
+##### Use case: Run database, database migrations, backend, and frontend locally
+
+Use the following to run the database, database migrations, backend server, and
+frontend client locally in docker:
+
+```console
+./scripts/run-app-local-docker
+```
+
+Run the following to shut it down:
+
+```console
+./scripts/stop-app-local-docker
+```
+
 ### Setup: Cloud Services
 
 You may need to access cloud service
