@@ -58,7 +58,7 @@ type SelectedFileProps = {
 };
 
 export const SelectedFile = ({ id, fileName }: SelectedFileProps) => (
-  <dl className="margin-y-2" id={id}>
+  <dl className="margin-y-2" id={id} aria-live="polite" aria-atomic>
     <dt className="display-inline-block margin-0">Selected file</dt>
     <span aria-hidden>{': '}</span>
     <dd className="display-inline-block margin-0">{fileName}</dd>
