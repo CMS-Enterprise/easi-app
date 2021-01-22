@@ -539,4 +539,13 @@ func (s *Server) routes(
 
 	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient, princeLambdaName)).Handle())
 
+	systemsHandler := handlers.NewSystemsHandler(
+		base,
+		services.NewFetchSystems(
+			serviceConfig,
+			store.ListSystems,
+			services.NewAuthorizeHasEASiRole(),
+		),
+	)
+	api.Handle("/systems", systemsHandler.Handle())
 }

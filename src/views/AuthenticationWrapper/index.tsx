@@ -1,7 +1,9 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { OktaAuth } from '@okta/okta-auth-js';
 import { Security } from '@okta/okta-react';
 
+import { localAuthStorageKey } from 'constants/localAuth';
 import { isLocalEnvironment } from 'utils/local';
 
 import DevSecurity from './DevSecurity';
@@ -16,20 +18,26 @@ const AuthenticationWrapper = ({ children }: ParentComponentProps) => {
   const handleAuthRequiredRedirect = () => {
     history.push('/signin');
   };
-  return isLocalEnvironment() ? (
+  return isLocalEnvironment() &&
+    window.localStorage[localAuthStorageKey] &&
+    JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth ? (
     <DevSecurity>{children}</DevSecurity>
   ) : (
     <Security
-      issuer={process.env.REACT_APP_OKTA_ISSUER}
-      clientId={process.env.REACT_APP_OKTA_CLIENT_ID}
-      redirectUri={process.env.REACT_APP_OKTA_REDIRECT_URI}
+      oktaAuth={
+        new OktaAuth({
+          issuer: process.env.REACT_APP_OKTA_ISSUER,
+          clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
+          redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
+          responseType: ['code'],
+          tokenManager: {
+            expireEarlySeconds: 0,
+            autoRenew: false
+          },
+          pkce: true
+        })
+      }
       onAuthRequired={handleAuthRequiredRedirect}
-      responseType={['code']}
-      tokenManager={{
-        expireEarlySeconds: 0,
-        autoRenew: false
-      }}
-      pkce
     >
       {children}
     </Security>
