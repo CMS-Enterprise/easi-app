@@ -66,19 +66,12 @@ const GovernanceTaskList = () => {
 
   const archiveIntake = () => {
     const redirect = () => {
-      if (systemIntake.requestName) {
-        // If system intake has a name put that in confirmation text
-        history.push('/', {
-          confirmationText: t('taskList:withdraw_modal:confirmationText', {
-            requestName: systemIntake.requestName
-          })
-        });
-      } else {
-        // If system intake does not have a name confirmation text is generic
-        history.push('/', {
-          confirmationText: t('taskList:withdraw_modal:draftConfirmationText')
-        });
-      }
+      history.push('/', {
+        confirmationText: t('taskList:withdraw_modal:confirmationText', {
+          context: systemIntake.requestName ? 'name' : 'noName',
+          requestName: systemIntake.requestName
+        })
+      });
     };
     dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
   };

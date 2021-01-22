@@ -5,8 +5,8 @@ const taskList = {
     warning: 'You will lose any information you have filled in.',
     confirm: 'Remove request',
     cancel: 'Cancel',
-    confirmationText: 'The request for {{requestName}} has been removed',
-    draftConfirmationText: 'The request has been removed'
+    confirmationText_name: 'The request for {{requestName}} has been removed',
+    confirmationText_noName: 'The request has been removed'
   },
   decision: {
     bizCaseApproved: 'Your business case has been approved.',
