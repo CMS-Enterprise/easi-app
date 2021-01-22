@@ -1,8 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
 
-import './index.scss';
-
 type FileUploadProps = {
   id: string;
   name: string;
