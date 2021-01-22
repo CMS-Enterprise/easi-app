@@ -18,7 +18,7 @@ export const updateLastActiveAt = (lastActiveAt: DateTime) => {
   return {
     type: UPDATE_LAST_ACTIVE_AT,
     payload: {
-      lastActiveAt
+      lastActiveAt: lastActiveAt.toMillis()
     }
   };
 };
@@ -29,7 +29,7 @@ export const updateLastRenewAt = (lastRenewAt: DateTime) => {
   return {
     type: UPDATE_LAST_RENEW_AT,
     payload: {
-      lastRenewAt
+      lastRenewAt: lastRenewAt.toMillis()
     }
   };
 };

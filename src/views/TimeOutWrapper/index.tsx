@@ -6,6 +6,7 @@ import { Button } from '@trussworks/react-uswds';
 import { DateTime, Duration } from 'luxon';
 
 import Modal from 'components/Modal';
+import { localAuthStorageKey } from 'constants/localAuth';
 import useInterval from 'hooks/useInterval';
 import { updateLastActiveAt, updateLastRenewAt } from 'reducers/authReducer';
 import { AppState } from 'reducers/rootReducer';
@@ -36,7 +37,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const activeSinceLastRenew = lastActiveAt > lastRenewAt;
 
   const dispatch = useDispatch();
-  const { authState, authService } = useOktaAuth();
+  const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +47,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('seconds');
 
   const registerExpire = async () => {
-    const tokenManager = await authService.getTokenManager();
+    const tokenManager = await oktaAuth.tokenManager;
 
     // clear the old listener so we don't register millions of them
     tokenManager.off('expired');
@@ -55,7 +56,8 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
         tokenManager.renew(key);
         dispatch(updateLastRenewAt(DateTime.local()));
       } else {
-        authService.logout('/login');
+        localStorage.removeItem(localAuthStorageKey);
+        oktaAuth.signOut('/login');
       }
     });
   };
