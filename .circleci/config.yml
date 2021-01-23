@@ -265,6 +265,8 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
       - restore_cache:
           keys:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
