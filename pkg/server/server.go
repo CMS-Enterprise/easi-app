@@ -88,20 +88,21 @@ func NewServer(config *viper.Viper) *Server {
 // Serve runs the server
 func Serve(config *viper.Viper) {
 	wg := &sync.WaitGroup{}
-	wg.Add(1)
 
 	s := NewServer(config)
+
 	go func() {
+		wg.Add(1)
 		s.logger.Info("Serving application on port 8080")
 		err := http.ListenAndServe(":8080", s)
 		if err != nil {
 			log.Fatal("Failed to start server")
 		}
-
 		wg.Done()
 	}()
 
 	go func() {
+		wg.Add(1)
 		serverCert, err := tls.X509KeyPair([]byte(config.GetString("SERVER_CERT")), []byte(config.GetString("SERVER_KEY")))
 		if err != nil {
 			log.Fatal("Failed to parse key pair", err)
@@ -119,7 +120,6 @@ func Serve(config *viper.Viper) {
 		if err != nil {
 			log.Fatal("Failed to start TLS server")
 		}
-
 		wg.Done()
 	}()
 
