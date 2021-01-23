@@ -91,8 +91,8 @@ func Serve(config *viper.Viper) {
 
 	s := NewServer(config)
 
+	wg.Add(1)
 	go func() {
-		wg.Add(1)
 		s.logger.Info("Serving application on port 8080")
 		err := http.ListenAndServe(":8080", s)
 		if err != nil {
@@ -101,8 +101,8 @@ func Serve(config *viper.Viper) {
 		wg.Done()
 	}()
 
+	wg.Add(1)
 	go func() {
-		wg.Add(1)
 		serverCert, err := tls.X509KeyPair([]byte(config.GetString("SERVER_CERT")), []byte(config.GetString("SERVER_KEY")))
 		if err != nil {
 			log.Fatal("Failed to parse key pair", err)
