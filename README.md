@@ -309,7 +309,12 @@ postgres@localhost:postgres>
 ##### Use case: Run database, database migrations, backend, and frontend locally
 
 Use the following to run the database, database migrations, backend server, and
-frontend client locally in docker:
+frontend client locally in docker.
+
+Note: live reloading of the backend and frontend is not currently implemented,
+so code changes require rebuilding their docker images. As such, these scripts
+are not yet intended for day-to-day, iterative development, but for as-needed
+local testing of the app.
 
 ```console
 ./scripts/run-app-local-docker
