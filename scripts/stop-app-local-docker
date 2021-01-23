@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# shut down the local app running in docker
+#
 
 set -ex
 

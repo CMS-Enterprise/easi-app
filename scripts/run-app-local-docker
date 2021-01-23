@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# run the app locally in docker
+#
 
 set -ex
 
