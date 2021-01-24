@@ -121,13 +121,20 @@ func (s *Server) routes(
 		lambdaClient = lambda.New(lambdaSession, &aws.Config{})
 	}
 
-	// WIP GraphQL server
+	store, err := storage.NewStore(
+		s.logger,
+		s.NewDBConfig(),
+	)
+	if err != nil {
+		s.logger.Fatal("Failed to connect to database", zap.Error(err))
+	}
+
 	gql := s.router.PathPrefix("/graph").Subrouter()
 
 	gql.Use(loggerMiddleware)
 	gql.Use(corsMiddleware)
 
-	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
 	gql.Handle("/query", graphqlServer)
 
 	gql.HandleFunc("/playground", playground.Handler("GraphQL playground", "/query"))
@@ -145,14 +152,6 @@ func (s *Server) routes(
 	api.Use(authorizationMiddleware)
 
 	serviceConfig := services.NewConfig(s.logger, ldClient)
-
-	store, err := storage.NewStore(
-		s.logger,
-		s.NewDBConfig(),
-	)
-	if err != nil {
-		s.logger.Fatal("Failed to connect to database", zap.Error(err))
-	}
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,

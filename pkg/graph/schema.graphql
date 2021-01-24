@@ -7,7 +7,7 @@ type UserError {
 An accessibility request represents
 """
 type AccessibilityRequest {
-  id: ID!
+  id: UUID!
   name: String!
 }
 
@@ -41,5 +41,7 @@ type Query {
     first: Int!
     after: String
   ): AccessibilityRequestsConnection
-  accessibilityRequest(id: ID!): AccessibilityRequest
+  accessibilityRequest(id: UUID!): AccessibilityRequest
 }
+
+scalar UUID

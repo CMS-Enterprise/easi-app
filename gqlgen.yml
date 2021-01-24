@@ -35,7 +35,7 @@ resolver:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-  - 'github.com/cmsgov/easi-app/graph/model'
+  - 'github.com/cmsgov/easi-app/pkg/graph/model'
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -45,6 +45,7 @@ autobind:
 models:
   ID:
     model:
+      - github.com/google/uuid.UUID
       - github.com/99designs/gqlgen/graphql.ID
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
