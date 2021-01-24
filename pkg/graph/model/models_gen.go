@@ -2,12 +2,6 @@
 
 package model
 
-// An accessibility request represents
-type AccessibilityRequest struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
 type AccessibilityRequestEdge struct {
 	Cursor string                `json:"cursor"`
 	Node   *AccessibilityRequest `json:"node"`
