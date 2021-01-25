@@ -15,7 +15,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: dev
     image: easi-backend:latest
+    environment:
+      - EMAIL_TEMPLATE_DIR=./pkg/email/templates/
+    volumes:
+      # - /private/var/folders:/var/folders:cached
+      - ${PWD}:${PWD}
+    working_dir: ${PWD}
+    entrypoint: air
     ports:
       - 8080:8080
   easi_client:
