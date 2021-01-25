@@ -68,6 +68,7 @@ const GovernanceTaskList = () => {
     const redirect = () => {
       history.push('/', {
         confirmationText: t('taskList:withdraw_modal:confirmationText', {
+          context: systemIntake.requestName ? 'name' : 'noName',
           requestName: systemIntake.requestName
         })
       });
