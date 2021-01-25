@@ -103,7 +103,7 @@ const sqlListSystems = `
 	WHERE
 		status='LCID_ISSUED' AND
 		request_type='NEW' AND
-		(lcid='') IS NOT TRUE;
+		lcid <> '';
 `
 
 func (s *Store) listSystems(ctx context.Context) ([]*models.System, error) {
