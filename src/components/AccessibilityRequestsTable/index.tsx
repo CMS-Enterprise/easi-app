@@ -52,10 +52,6 @@ const AccessibilityRequestsTable = () => {
         }
       },
       {
-        Header: t('requestTable.header.pointOfContact'),
-        accessor: 'pointOfContact'
-      },
-      {
         Header: t('requestTable.header.status'),
         accessor: 'status',
         Cell: ({ row, value }: any) => {
@@ -88,9 +84,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-        pointOfContact: {
-          name: 'Aaron Allen'
-        },
         status: 'Request Received'
       },
       {
@@ -103,9 +96,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-        pointOfContact: {
-          name: 'Aaron Allen'
-        },
         status: 'Request Received'
       },
       {
@@ -118,9 +108,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-        pointOfContact: {
-          name: 'Aaron Allen'
-        },
         status: 'Documents Received'
       },
       {
@@ -133,9 +120,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-        pointOfContact: {
-          name: 'Aaron Allen'
-        },
         status: 'Reuqest Received'
       },
       {
@@ -148,9 +132,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '',
-        pointOfContact: {
-          name: 'Aaron Allen'
-        },
         status: 'Documents Received'
       },
       {
@@ -163,9 +144,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '2021-01-19T00:00:00.000-07:00',
-        pointOfContact: {
-          name: 'Aaron Allen'
-        },
         status: 'Test Scheduled'
       },
       {
@@ -178,9 +156,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '2021-01-19T00:00:00.000-07:00',
-        pointOfContact: {
-          name: 'Aaron Allen'
-        },
         status: 'Test Scheduled'
       },
       {
@@ -193,9 +168,6 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '2021-01-07T00:00:00.000-07:00',
-        pointOfContact: {
-          name: 'Aaron Allen'
-        },
         status: 'Test Scheduled'
       },
       {
@@ -209,15 +181,12 @@ const AccessibilityRequestsTable = () => {
           component: 'Office of Information Technology'
         },
         testedAt: '2020-11-19T00:00:00.000-07:00',
-        pointOfContact: {
-          name: 'Aaron Allen'
-        },
         status: 'Test Scheduled'
       }
     ];
 
     return mockData.map(request => {
-      const { businessOwner, pointOfContact } = request;
+      const { businessOwner } = request;
 
       const component = cmsDivisionsAndOffices.find(
         c => c.name === businessOwner.component
@@ -230,8 +199,7 @@ const AccessibilityRequestsTable = () => {
       // TODO Translate Status from backend enum to human readable
       return {
         ...request,
-        businessOwner: businessOwnerWithComponent,
-        pointOfContact: pointOfContact.name
+        businessOwner: businessOwnerWithComponent
       };
     });
   }, []);
