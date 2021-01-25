@@ -134,6 +134,7 @@ func (s *Server) routes(
 	store, err := storage.NewStore(
 		s.logger,
 		s.NewDBConfig(),
+		ldClient,
 	)
 	if err != nil {
 		s.logger.Fatal("Failed to connect to database", zap.Error(err))
