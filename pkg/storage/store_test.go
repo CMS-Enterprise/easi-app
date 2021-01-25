@@ -7,8 +7,10 @@ import (
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // required for postgres driver in sqlx
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -33,7 +35,11 @@ func TestStoreTestSuite(t *testing.T) {
 		Password: config.GetString(appconfig.DBPasswordConfigKey),
 		SSLMode:  config.GetString(appconfig.DBSSLModeConfigKey),
 	}
-	store, err := NewStore(logger, dbConfig)
+
+	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	assert.NoError(t, err)
+
+	store, err := NewStore(logger, dbConfig, ldClient)
 	if err != nil {
 		fmt.Printf("Failed to get new database: %v", err)
 		t.Fail()
