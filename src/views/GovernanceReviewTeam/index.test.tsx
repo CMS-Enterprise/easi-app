@@ -15,7 +15,7 @@ jest.mock('@okta/okta-react', () => ({
       authState: {
         isAuthenticated: true
       },
-      authService: {
+      oktaAuth: {
         getAccessToken: () => Promise.resolve('test-access-token'),
         getUser: () =>
           Promise.resolve({

@@ -1,26 +1,16 @@
-import React, {
-  Fragment,
-  ReactEventHandler,
-  useContext,
-  useEffect,
-  useState
-} from 'react';
-import { useHistory } from 'react-router-dom';
-import { OktaContext } from '@okta/okta-react';
+import React, { Fragment, ReactEventHandler, useState } from 'react';
 
-const storageKey = 'dev-user-config';
+import JOB_CODES from 'constants/jobCodes';
+import { localAuthStorageKey } from 'constants/localAuth';
 
 const DevLogin = () => {
-  const history = useHistory();
-  const [euaId, setEuaId] = useState('');
-  const { authService } = useContext(OktaContext);
-  const [jobCodes, setJobCodes] = useState({ EASI_D_GOVTEAM: true });
+  const availableJobCodes: any = JOB_CODES.reduce(
+    (codes: any, code: any) => ({ ...codes, [code]: false }),
+    {}
+  );
 
-  useEffect(() => {
-    if (window.localStorage[storageKey]) {
-      history.push('/');
-    }
-  }, [history]);
+  const [euaId, setEuaId] = useState('');
+  const [jobCodes, setJobCodes] = useState(availableJobCodes);
 
   const checkboxChange: ReactEventHandler<HTMLInputElement> = event => {
     setJobCodes({
@@ -36,15 +26,15 @@ const DevLogin = () => {
       euaId,
       jobCodes: Object.keys(jobCodes).filter(
         key => jobCodes[key as keyof typeof jobCodes]
-      )
+      ),
+      favorLocalAuth: true
     };
-    localStorage.setItem(storageKey, JSON.stringify(value)); // ensure that the dev token is used
-    authService.login();
-    history.push('/');
+    localStorage.setItem(localAuthStorageKey, JSON.stringify(value));
+    window.location.href = '/';
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '1rem 3rem' }}>
+    <form onSubmit={handleSubmit}>
       <h1
         style={{
           backgroundImage: 'linear-gradient(to left, orange, red)',
@@ -87,6 +77,7 @@ const DevLogin = () => {
               />
               {code}
             </label>
+            <br />
           </Fragment>
         ))}
       </fieldset>

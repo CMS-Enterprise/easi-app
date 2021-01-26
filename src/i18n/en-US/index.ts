@@ -1,5 +1,6 @@
 import taskList from 'i18n/en-US/taskList';
 
+import accessibility from './accessibility';
 import accessibilityStatement from './accessibilityStatement';
 import action from './action';
 import auth from './auth';
@@ -17,6 +18,7 @@ import privacyPolicy from './privacyPolicy';
 import termsAndConditions from './termsAndConditions';
 
 const enUS = {
+  accessibility,
   accessibilityStatement,
   action,
   auth,

@@ -121,12 +121,13 @@ func (s *Server) routes(
 		lambdaClient = lambda.New(lambdaSession, &aws.Config{})
 	}
 
-	store, err := storage.NewStore(
+	store, storeErr := storage.NewStore(
 		s.logger,
 		s.NewDBConfig(),
+		ldClient,
 	)
-	if err != nil {
-		s.logger.Fatal("Failed to connect to database", zap.Error(err))
+	if storeErr != nil {
+		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
 	}
 
 	gql := s.router.PathPrefix("/graph").Subrouter()
@@ -152,6 +153,15 @@ func (s *Server) routes(
 	api.Use(authorizationMiddleware)
 
 	serviceConfig := services.NewConfig(s.logger, ldClient)
+
+	store, storeErr = storage.NewStore(
+		s.logger,
+		s.NewDBConfig(),
+		ldClient,
+	)
+	if storeErr != nil {
+		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
+	}
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,
@@ -553,4 +563,13 @@ func (s *Server) routes(
 
 	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient, princeLambdaName)).Handle())
 
+	systemsHandler := handlers.NewSystemsHandler(
+		base,
+		services.NewFetchSystems(
+			serviceConfig,
+			store.ListSystems,
+			services.NewAuthorizeHasEASiRole(),
+		),
+	)
+	api.Handle("/systems", systemsHandler.Handle())
 }

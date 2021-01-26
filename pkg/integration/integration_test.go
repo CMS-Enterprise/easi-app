@@ -10,8 +10,10 @@ import (
 	"testing"
 
 	"github.com/spf13/viper"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/handlers"
@@ -54,6 +56,9 @@ func TestIntegrationTestSuite(t *testing.T) {
 
 	logger := zap.NewNop()
 
+	ldClient, err := ld.MakeCustomClient("fake", ld.Config{Offline: true}, 0)
+	assert.NoError(t, err)
+
 	dbConfig := storage.DBConfig{
 		Host:     config.GetString(appconfig.DBHostConfigKey),
 		Port:     config.GetString(appconfig.DBPortConfigKey),
@@ -62,7 +67,7 @@ func TestIntegrationTestSuite(t *testing.T) {
 		Password: config.GetString(appconfig.DBPasswordConfigKey),
 		SSLMode:  config.GetString(appconfig.DBSSLModeConfigKey),
 	}
-	store, err := storage.NewStore(logger, dbConfig)
+	store, err := storage.NewStore(logger, dbConfig, ldClient)
 	if err != nil {
 		fmt.Printf("Failed to get new database: %v", err)
 		t.Fail()

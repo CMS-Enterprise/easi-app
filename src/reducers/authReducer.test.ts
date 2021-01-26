@@ -31,7 +31,7 @@ describe('The auth reducer', () => {
 
     expect(
       authReducer(initialReducer, updateLastActiveAt(now)).lastActiveAt
-    ).toEqual(now);
+    ).toEqual(now.toMillis());
   });
 
   it('handles updateLastRenewAt', () => {
@@ -47,7 +47,7 @@ describe('The auth reducer', () => {
 
     expect(
       authReducer(initialReducer, updateLastRenewAt(now)).lastRenewAt
-    ).toEqual(now);
+    ).toEqual(now.toMillis());
   });
 
   it('sets user info', () => {

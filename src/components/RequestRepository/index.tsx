@@ -302,7 +302,10 @@ const RequestRepository = () => {
       </h1>
       <Table bordered={false} {...getTableProps()} fullWidth>
         <caption className="usa-sr-only">
-          {t('requestRepository.aria.openRequestsTable')}
+          {activeTable === 'open' &&
+            t('requestRepository.aria.openTableCaption')}
+          {activeTable === 'closed' &&
+            t('requestRepository.aria.closedTableCaption')}
         </caption>
         <thead>
           {headerGroups.map(headerGroup => (
