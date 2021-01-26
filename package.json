@@ -6,7 +6,8 @@
     "@apollo/client": "^3.2.5",
     "@craco/craco": "^5.6.1",
     "@cypress/code-coverage": "^1.12.2",
-    "@okta/okta-react": "^3.0.4",
+    "@okta/okta-auth-js": "^4.5.1",
+    "@okta/okta-react": "^4.1.0",
     "@okta/okta-signin-widget": "^4.0.2",
     "@trussworks/react-uswds": "^1.7.0",
     "@types/classnames": "^2.2.9",
@@ -140,6 +141,7 @@
     "react-axe": "^3.3.0",
     "react-test-renderer": "^16.12.0",
     "redux-mock-store": "^1.5.3",
+    "sass-resources-loader": "^2.1.1",
     "start-server-and-test": "^1.11.0",
     "text-encoding": "^0.7.0",
     "ts-loader": "^7.0.5"
