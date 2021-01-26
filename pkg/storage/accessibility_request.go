@@ -75,3 +75,25 @@ func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID)
 
 	return &request, nil
 }
+
+// FetchAccessibilityRequests queries the DB for an accessibility requests.
+// TODO implement cursor pagination
+func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]model.AccessibilityRequest, error) {
+	requests := []model.AccessibilityRequest{}
+
+	err := s.db.Select(&requests, `SELECT * FROM accessibility_request`)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return requests, nil
+		}
+		appcontext.ZLogger(ctx).Error(
+			fmt.Sprintf("Failed to fetch accessibility requests %s", err),
+		)
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return requests, nil
+}

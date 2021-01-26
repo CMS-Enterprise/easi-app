@@ -35,7 +35,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     return [
       {
         Header: t('requestTable.header.requestName'),
-        accessor: 'requestName',
+        accessor: 'name',
         Cell: ({ row, value }: any) => {
           return (
             <UswdsLink
@@ -234,6 +234,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
   } = useTable(
     {
       columns,
+      data: requests,
       sortTypes: {
         alphanumeric: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
