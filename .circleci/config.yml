@@ -285,6 +285,13 @@ jobs:
       - run:
           name: Build Frontend Code
           command: yarn run build
+      - run:
+          name: Build Storybook
+          command: yarn run storybook-build
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - storybook-static
       - save_cache:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
@@ -553,6 +560,8 @@ jobs:
             echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
+      - attach_workspace:
+          at: /tmp/storybook
       - run:
           name: Deploy storybook assets
           command: |
@@ -584,6 +593,10 @@ workflows:
           requires:
             - pre_deps
       - deploy_storybook_dev:
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - client_test
       - test:

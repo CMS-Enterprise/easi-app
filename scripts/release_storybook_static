@@ -22,9 +22,7 @@ esac
 s3_err="$(aws s3 ls "$STORYBOOK_S3_BUCKET" 1>/dev/null 2>&1)"
 if [[ -z "$s3_err" ]] ; then
   ( set -x -u ;
-    yarn install
-    yarn run build-storybook || exit
-    aws s3 sync --no-progress --delete storybook-static/ s3://"$STORYBOOK_S3_BUCKET"/
+    aws s3 sync --no-progress --delete /tmp/storybook/storybook-static/ s3://"$STORYBOOK_S3_BUCKET"/
   )
 else
   echo "+ aws s3 ls $STORYBOOK_S3_BUCKET"
