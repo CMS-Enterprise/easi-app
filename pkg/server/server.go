@@ -5,9 +5,9 @@ import (
 	"crypto/tls"
 	"log"
 	"net/http"
-	"sync"
 
 	"github.com/gorilla/mux"
+	"github.com/oklog/run"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
@@ -87,27 +87,27 @@ func NewServer(config *viper.Viper) *Server {
 
 // Serve runs the server
 func Serve(config *viper.Viper) {
-	wg := &sync.WaitGroup{}
+	var g run.Group
 
 	s := NewServer(config)
 
-	wg.Add(1)
-	go func() {
-		s.logger.Info("Serving application on port 8080")
-		err := http.ListenAndServe(":8080", s)
-		if err != nil {
-			log.Fatal("Failed to start server")
+	g.Add(func() error {
+		srv := http.Server{
+			Addr:    ":8080",
+			Handler: s,
 		}
-		wg.Done()
-	}()
+		s.logger.Info("Serving application on port 8080")
+		return srv.ListenAndServe()
+	}, func(error) {
+		s.logger.Info("Entered http server interrupt function")
+	})
 
-	wg.Add(1)
-	go func() {
+	g.Add(func() error {
 		serverCert, err := tls.X509KeyPair([]byte(config.GetString("SERVER_CERT")), []byte(config.GetString("SERVER_KEY")))
 		if err != nil {
-			log.Fatal("Failed to parse key pair", err)
+			s.logger.Fatal("Failed to parse key pair", zap.Error(err))
 		}
-		srv := &http.Server{
+		srv := http.Server{
 			Addr:    ":8443",
 			Handler: s,
 			TLSConfig: &tls.Config{
@@ -116,12 +116,10 @@ func Serve(config *viper.Viper) {
 			},
 		}
 		s.logger.Info("Serving application on port 8443")
-		err = srv.ListenAndServeTLS("", "")
-		if err != nil {
-			log.Fatal("Failed to start TLS server")
-		}
-		wg.Done()
-	}()
+		return srv.ListenAndServeTLS("", "")
+	}, func(error) {
+		s.logger.Info("Entered https server interrupt function")
+	})
 
-	wg.Wait()
+	log.Fatal(g.Run())
 }
