@@ -45,7 +45,6 @@ autobind:
 models:
   ID:
     model:
-      - github.com/google/uuid.UUID
       - github.com/99designs/gqlgen/graphql.ID
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
@@ -55,3 +54,6 @@ models:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
+  UUID:
+    model:
+      - github.com/cmsgov/easi-app/pkg/graph/model.UUID
