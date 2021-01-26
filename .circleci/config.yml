@@ -593,10 +593,6 @@ workflows:
           requires:
             - pre_deps
       - deploy_storybook_dev:
-          filters:
-            branches:
-              only:
-                - master
           requires:
             - client_test
       - test:
