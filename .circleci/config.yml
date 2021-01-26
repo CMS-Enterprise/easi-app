@@ -287,7 +287,7 @@ jobs:
           command: yarn run build
       - run:
           name: Build Storybook
-          command: yarn run storybook-build
+          command: yarn run build-storybook
       - persist_to_workspace:
           root: /home/circleci/project
           paths:
