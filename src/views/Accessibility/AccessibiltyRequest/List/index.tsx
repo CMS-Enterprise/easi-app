@@ -4,6 +4,7 @@ import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery
 import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
+import ScyllaPage from 'components/ScyllaPage';
 
 const List = () => {
   const { loading, error, data } = useQuery<GetAccessibilityRequests>(
@@ -27,10 +28,14 @@ const List = () => {
     data &&
     data.accessibilityRequests &&
     data.accessibilityRequests.edges.map(edge => {
-      return { name: edge.node.name, id: edge.node.id };
+      return edge.node;
     });
 
-  return <AccessibilityRequestsTable requests={requests || []} />;
+  return (
+    <ScyllaPage>
+      <AccessibilityRequestsTable requests={requests || []} />
+    </ScyllaPage>
+  );
 };
 
 export default List;

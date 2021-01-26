@@ -3,6 +3,7 @@ package model
 import (
 	"errors"
 	"io"
+	"strconv"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/google/uuid"
@@ -11,7 +12,7 @@ import (
 // MarshalUUID allows uuid to be marshalled by graphql
 func MarshalUUID(id uuid.UUID) graphql.Marshaler {
 	return graphql.WriterFunc(func(w io.Writer) {
-		_, _ = io.WriteString(w, id.String())
+		_, _ = io.WriteString(w, strconv.Quote(id.String()))
 	})
 }
 
