@@ -8,11 +8,11 @@ import (
 	"errors"
 	"strconv"
 	"sync"
-	"sync/atomic"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/google/uuid"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -35,7 +35,6 @@ type Config struct {
 }
 
 type ResolverRoot interface {
-	AccessibilityRequest() AccessibilityRequestResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 }
@@ -69,7 +68,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		AccessibilityRequest  func(childComplexity int, id string) int
+		AccessibilityRequest  func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests func(childComplexity int, first int, after *string) int
 	}
 
@@ -79,15 +78,12 @@ type ComplexityRoot struct {
 	}
 }
 
-type AccessibilityRequestResolver interface {
-	ID(ctx context.Context, obj *model.AccessibilityRequest) (string, error)
-}
 type MutationResolver interface {
 	CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
 }
 type QueryResolver interface {
 	AccessibilityRequests(ctx context.Context, first int, after *string) (*model.AccessibilityRequestsConnection, error)
-	AccessibilityRequest(ctx context.Context, id string) (*model.AccessibilityRequest, error)
+	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*model.AccessibilityRequest, error)
 }
 
 type executableSchema struct {
@@ -183,7 +179,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.AccessibilityRequest(childComplexity, args["id"].(string)), true
+		return e.complexity.Query.AccessibilityRequest(childComplexity, args["id"].(uuid.UUID)), true
 
 	case "Query.accessibilityRequests":
 		if e.complexity.Query.AccessibilityRequests == nil {
@@ -362,10 +358,10 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_accessibilityRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
+	var arg0 uuid.UUID
 	if tmp, ok := rawArgs["id"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-		arg0, err = ec.unmarshalNUUID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -447,14 +443,14 @@ func (ec *executionContext) _AccessibilityRequest_id(ctx context.Context, field 
 		Object:     "AccessibilityRequest",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequest().ID(rctx, obj)
+		return obj.ID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -466,9 +462,9 @@ func (ec *executionContext) _AccessibilityRequest_id(ctx context.Context, field 
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(uuid.UUID)
 	fc.Result = res
-	return ec.marshalNUUID2string(ctx, field.Selections, res)
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequest_name(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequest) (ret graphql.Marshaler) {
@@ -813,7 +809,7 @@ func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, fie
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().AccessibilityRequest(rctx, args["id"].(string))
+		return ec.resolvers.Query().AccessibilityRequest(rctx, args["id"].(uuid.UUID))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2095,23 +2091,14 @@ func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.S
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccessibilityRequest")
 		case "id":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequest_id(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._AccessibilityRequest_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "name":
 			out.Values[i] = ec._AccessibilityRequest_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -2703,13 +2690,13 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
-func (ec *executionContext) unmarshalNUUID2string(ctx context.Context, v interface{}) (string, error) {
-	res, err := graphql.UnmarshalString(v)
+func (ec *executionContext) unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (uuid.UUID, error) {
+	res, err := model.UnmarshalUUID(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUUID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	res := graphql.MarshalString(v)
+func (ec *executionContext) marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v uuid.UUID) graphql.Marshaler {
+	res := model.MarshalUUID(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
