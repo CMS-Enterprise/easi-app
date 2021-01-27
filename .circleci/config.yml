@@ -123,6 +123,11 @@ jobs:
           keys:
             - v2-go-mod-sources-{{ checksum "go.sum" }}
       - run:
+          name: Generate GraphQL code
+          command: |
+            go generate ./...
+            yarn generate
+      - run:
           name: Run easi app tests
           command: |
             ./scripts/build_app
