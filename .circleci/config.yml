@@ -123,6 +123,10 @@ jobs:
           keys:
             - v2-go-mod-sources-{{ checksum "go.sum" }}
       - run:
+          name: Generate GraphQL code
+          command: |
+            go generate ./...
+      - run:
           name: Run easi app tests
           command: |
             ./scripts/build_app
@@ -279,6 +283,10 @@ jobs:
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Generate GraphQL code
+          command: |
+            yarn generate
       - run:
           name: Run Frontend Tests
           command: yarn run test
