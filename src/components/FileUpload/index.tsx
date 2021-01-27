@@ -37,14 +37,17 @@ const FileUpload = (props: FileUploadProps) => {
   const instructionsClasses = classnames('usa-file-input__instructions', {
     'display-none': !!file
   });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files.length > 0 && isFileTypeValid(e.target.files[0])) {
-      setError(false);
-      setFile(e.target.files[0]);
-      onChange(e);
-    } else {
-      setError(true);
-      setFile(null);
+    if (e.target.files.length > 0) {
+      if (isFileTypeValid(e.target.files[0])) {
+        setError(false);
+        setFile(e.target.files[0]);
+        onChange(e);
+      } else {
+        setError(true);
+        setFile(null);
+      }
     }
   };
 
@@ -79,6 +82,7 @@ const FileUpload = (props: FileUploadProps) => {
         </div>
         {file && (
           <div className="usa-file-input__preview" aria-hidden>
+            <FileTypeIcon fileName={file.name} />
             {file.name}
           </div>
         )}
@@ -105,17 +109,31 @@ const FileUpload = (props: FileUploadProps) => {
   );
 };
 
-type SelectedFileProps = {
-  id: string;
-  fileName: string;
-};
+const FileTypeIcon = (props: { fileName: string }) => {
+  const { fileName } = props;
+  const SPACER_GIF =
+    'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  const iconClasses = ['usa-file-input__preview-image'];
+  if (fileName.indexOf('.pdf') > 0) {
+    iconClasses.push('usa-file-input__preview-image--pdf');
+  } else if (fileName.indexOf('.doc') > 0 || fileName.indexOf('.pages') > 0) {
+    iconClasses.push('usa-file-input__preview-image--word');
+  } else if (fileName.indexOf('.xls') > 0 || fileName.indexOf('.numbers') > 0) {
+    iconClasses.push('usa-file-input__preview-image--excel');
+  } else if (fileName.indexOf('.mov') > 0 || fileName.indexOf('.mp4') > 0) {
+    iconClasses.push('usa-file-input__preview-image--video');
+  } else {
+    iconClasses.push('usa-file-input__preview-image--generic');
+  }
 
-export const SelectedFile = ({ id, fileName }: SelectedFileProps) => (
-  <dl className="margin-y-2" id={id} aria-live="polite" aria-atomic>
-    <dt className="display-inline-block margin-0">Selected file</dt>
-    <span aria-hidden>{': '}</span>
-    <dd className="display-inline-block margin-0">{fileName}</dd>
-  </dl>
-);
+  return (
+    <img
+      src={SPACER_GIF}
+      alt=""
+      className={iconClasses.join(' ')}
+      aria-hidden
+    />
+  );
+};
 
 export default FileUpload;
