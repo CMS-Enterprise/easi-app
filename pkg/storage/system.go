@@ -2,9 +2,12 @@ package storage
 
 import (
 	"context"
-	"fmt"
 	"time"
 
+	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -65,10 +68,51 @@ func init() {
 // ListSystems retrieves a collection of Systems, which are a subset of all SystemIntakes that
 // have been "decided" and issued an LCID.
 func (s *Store) ListSystems(ctx context.Context) ([]*models.System, error) {
-	useFake := true
-	if useFake {
+	if s.useFakeSystems(ctx) {
 		return fakeSystems, nil
 	}
+	return s.listSystems(ctx)
+}
 
-	return nil, fmt.Errorf("not yet implemented")
+func (s *Store) useFakeSystems(ctx context.Context) bool {
+	// generally, it's best to have feature flags named in such a way that their
+	// lifecycle goes from:
+	// _negation_ - indicating pre-existing functionality
+	// (which in this case means defaulting to fake data),
+	// to:
+	// _affirmation_ - indicating the new functionality to be rolled out
+	// (which in this case mean opting in to fetching the systems from the system_intake table)
+	real, err := s.ldClient.BoolVariation("systems-from-db", flags.Principal(ctx), false)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("problem evaluating flag", zap.Error(err))
+	}
+	return !real
+}
+
+const sqlListSystems = `
+	SELECT
+		lcid,
+		created_at,
+		updated_at,
+		decided_at,
+		lcid_expires_at,
+		project_name,
+		eua_user_id,
+		requester
+	FROM system_intake
+	WHERE
+		status='LCID_ISSUED' AND
+		request_type='NEW' AND
+		lcid IS NOT NULL;
+`
+
+func (s *Store) listSystems(ctx context.Context) ([]*models.System, error) {
+	results := []*models.System{}
+	err := s.db.Select(&results, sqlListSystems)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to fetch systems", zap.Error(err))
+		return nil, err
+	}
+
+	return results, nil
 }

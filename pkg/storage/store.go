@@ -7,6 +7,7 @@ import (
 	"github.com/facebookgo/clock"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
+	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 )
 
 // Store performs database operations for EASi
@@ -15,6 +16,7 @@ type Store struct {
 	logger    *zap.Logger
 	clock     clock.Clock
 	easternTZ *time.Location
+	ldClient  *ld.LDClient
 }
 
 // DBConfig holds the configurations for a database connection
@@ -31,6 +33,7 @@ type DBConfig struct {
 func NewStore(
 	logger *zap.Logger,
 	config DBConfig,
+	ldClient *ld.LDClient,
 ) (*Store, error) {
 	// LifecycleIDs are generated based on Eastern Time
 	tz, err := time.LoadLocation("America/New_York")
@@ -51,5 +54,11 @@ func NewStore(
 	if err != nil {
 		return nil, err
 	}
-	return &Store{db: db, logger: logger, clock: clock.New(), easternTZ: tz}, nil
+	return &Store{
+		db:        db,
+		logger:    logger,
+		clock:     clock.New(),
+		easternTZ: tz,
+		ldClient:  ldClient,
+	}, nil
 }
