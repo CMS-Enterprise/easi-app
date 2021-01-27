@@ -13,10 +13,17 @@ type TabPanelProps = {
  */
 const TabPanel = ({ tabName, isActive, children }: TabPanelProps) => {
   if (isActive) {
-    return <div data-tabname={tabName}>{children}</div>;
+    return (
+      <div className="easi-tabs__tab-panel" data-tabname={tabName}>
+        {children}
+      </div>
+    );
   }
   return (
-    <div className="easi-only-print" data-tabname={tabName}>
+    <div
+      className="easi-tabs__tab-panel easi-only-print"
+      data-tabname={tabName}
+    >
       {children}
     </div>
   );
