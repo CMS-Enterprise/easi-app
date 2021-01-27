@@ -3,6 +3,8 @@ package server
 import (
 	"net/http"
 
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lambda"
@@ -16,6 +18,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
+	"github.com/cmsgov/easi-app/pkg/graph"
+	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -117,6 +121,25 @@ func (s *Server) routes(
 		lambdaClient = lambda.New(lambdaSession, &aws.Config{})
 	}
 
+	store, storeErr := storage.NewStore(
+		s.logger,
+		s.NewDBConfig(),
+		ldClient,
+	)
+	if storeErr != nil {
+		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
+	}
+
+	gql := s.router.PathPrefix("/graph").Subrouter()
+
+	gql.Use(loggerMiddleware)
+	gql.Use(corsMiddleware)
+
+	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
+	gql.Handle("/query", graphqlServer)
+
+	gql.HandleFunc("/playground", playground.Handler("GraphQL playground", "/query"))
+
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 
@@ -131,13 +154,13 @@ func (s *Server) routes(
 
 	serviceConfig := services.NewConfig(s.logger, ldClient)
 
-	store, err := storage.NewStore(
+	store, storeErr = storage.NewStore(
 		s.logger,
 		s.NewDBConfig(),
 		ldClient,
 	)
-	if err != nil {
-		s.logger.Fatal("Failed to connect to database", zap.Error(err))
+	if storeErr != nil {
+		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
 	}
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
