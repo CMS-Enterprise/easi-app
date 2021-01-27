@@ -40,13 +40,13 @@ const AppRoutes = () => {
 
   return (
     <Switch>
-      <Route path="/accessibility/create" exact component={Create} />
-      <Route path="/accessibility/list" exact component={List} />
-
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
       <Route path="/governance-overview" exact component={GovernanceOverview} />
+
+      <Route path="/accessibility/create" exact component={Create} />
+      <Route path="/accessibility/list" exact component={List} />
 
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
       <SecureRoute
