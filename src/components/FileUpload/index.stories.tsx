@@ -5,7 +5,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 
-import FileUpload, { SelectedFile } from './index';
+import FileUpload from './index';
 
 export default {
   title: 'File Upload',
@@ -62,10 +62,7 @@ export const WithFormik = () => {
   return (
     <Formik onSubmit={() => {}} initialValues={{ document: null }}>
       {(formikProps: FormikProps<FileInputForm>) => {
-        const {
-          values: { document },
-          setFieldValue
-        } = formikProps;
+        const { setFieldValue } = formikProps;
 
         return (
           <Form>
@@ -78,18 +75,12 @@ export const WithFormik = () => {
               as={FileUpload}
               id="Storybook-FileInput"
               name="document"
-              ariaDescribedBy="Storybook-FileInputHelp Storybook-SelectedFile"
+              ariaDescribedBy="Storybook-FileInputHelp"
               accept=".pdf,.doc"
               onChange={event => {
                 setFieldValue('document', event.currentTarget.files[0]);
               }}
             />
-            {document && document.name && (
-              <SelectedFile
-                id="Storybook-SelectedFile"
-                fileName={document.name}
-              />
-            )}
           </Form>
         );
       }}
