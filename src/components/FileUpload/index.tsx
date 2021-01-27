@@ -68,7 +68,11 @@ const FileUpload = (props: FileUploadProps) => {
   };
 
   return (
-    <div className={fileInputWrapper} aria-disabled={disabled}>
+    <div
+      className={fileInputWrapper}
+      aria-disabled={disabled}
+      data-testid="file-upload-wrapper"
+    >
       <div className={targetWrapperClasses}>
         {file && (
           <div className="usa-file-input__preview-heading">
@@ -88,7 +92,10 @@ const FileUpload = (props: FileUploadProps) => {
         )}
         <div className="usa-file-input__box" />
         {error && (
-          <div className="usa-file-input__accepted-files-message">
+          <div
+            className="usa-file-input__accepted-files-message"
+            data-testid="file-upload-input-error"
+          >
             This is not a valid file type.
           </div>
         )}
@@ -103,6 +110,7 @@ const FileUpload = (props: FileUploadProps) => {
           aria-describedby={ariaDescribedBy}
           onChange={handleChange}
           onBlur={onBlur}
+          data-testid="file-upload-input"
         />
       </div>
     </div>
