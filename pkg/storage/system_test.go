@@ -58,6 +58,18 @@ func (s StoreTestSuite) TestListSystems() {
 		// t.Logf("%s: %s - %s\n", lcid, si.ID.String(), partial.LifecycleScope.String)
 	}
 
+	// junk data to test an SQL error:
+	// "sql: Scan error on column index 0, name "lcid": converting NULL to string is unsupported"
+	{
+		si := testhelpers.NewSystemIntake()
+		si.CreatedAt = &now
+		si.UpdatedAt = &now
+		si.Status = models.SystemIntakeStatusLCIDISSUED
+		si.ProjectName = null.StringFrom(fmt.Sprintf("%s %d", sig, -1))
+		_, err = s.store.CreateSystemIntake(ctx, &si)
+		s.NoError(err)
+	}
+
 	// retrieve the list of systems
 	results, err := s.store.listSystems(ctx)
 	s.NoError(err)
