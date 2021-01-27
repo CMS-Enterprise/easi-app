@@ -6,6 +6,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
+import Create from 'views/Accessibility/AccessibiltyRequest/Create';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -38,6 +39,7 @@ const AppRoutes = () => {
 
   return (
     <Switch>
+      <Route path="/accessibility/create" exact component={Create} />
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
