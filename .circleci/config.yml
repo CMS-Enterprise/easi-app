@@ -126,7 +126,6 @@ jobs:
           name: Generate GraphQL code
           command: |
             go generate ./...
-            yarn generate
       - run:
           name: Run easi app tests
           command: |
@@ -284,6 +283,10 @@ jobs:
       - restore_cache:
           keys:
             - v1-node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Generate GraphQL code
+          command: |
+            yarn generate
       - run:
           name: Run Frontend Tests
           command: yarn run test
