@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import axios from 'axios';
 import { detect } from 'detect-browser';
 import { TextEncoder } from 'text-encoding';
@@ -26,6 +27,11 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
+const client = new ApolloClient({
+  uri: 'http://localhost:8080/graph/query',
+  cache: new InMemoryCache()
+});
+
 let app;
 const browser: any = detect();
 if (browser.name === 'ie') {
@@ -33,7 +39,9 @@ if (browser.name === 'ie') {
 } else {
   app = (
     <Provider store={store}>
-      <App />
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
     </Provider>
   );
 }
