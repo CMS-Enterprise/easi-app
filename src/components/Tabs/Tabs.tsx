@@ -9,26 +9,32 @@ type TabsProps = {
 };
 
 const Tabs = ({ defaultActiveTab, children }: TabsProps) => {
-  const tabs = children.map(child => child.props.tabName);
-  const [activeTab, setActiveTab] = useState(defaultActiveTab || tabs[0]);
+  const tabs = children.map(child => ({
+    id: child.props.id,
+    name: child.props.tabName
+  }));
+  const [activeTab, setActiveTab] = useState(defaultActiveTab || tabs[0].name);
 
   return (
     <div className={classnames('easi-tabs')}>
       <div className="easi-tabs__navigation">
-        <ul className="easi-tabs__tab-list">
+        <ul className="easi-tabs__tab-list" role="tablist">
           {tabs.map(tab => (
             <li
-              key={tab}
+              key={tab.id}
               className={classnames('easi-tabs__tab', {
-                'easi-tabs__tab--selected': activeTab === tab
+                'easi-tabs__tab--selected': activeTab === tab.name
               })}
+              role="tab"
             >
               <button
                 type="button"
                 className="easi-tabs__tab-btn"
-                onClick={() => setActiveTab(tab)}
+                // aria-selected={activeTab === tab.name}
+                aria-controls={tab.id}
+                onClick={() => setActiveTab(tab.name)}
               >
-                <span className="easi-tabs__tab-text">{tab}</span>
+                <span className="easi-tabs__tab-text">{tab.name}</span>
               </button>
             </li>
           ))}
