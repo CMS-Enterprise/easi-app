@@ -15,7 +15,7 @@ export SERVER_KEY
 if [[ -n "${CIRCLECI+x}" ]]; then
   if (set +x -o nounset; aws ecr get-login-password --region "${AWS_DEFAULT_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_DEFAULT_REGION}".amazonaws.com) ; then
     # copy easi_client static asset build from CircleCI workspace to the 'build' directory expected by Dockerfile.client.
-    cp /tmp/builds/build /home/circleci/project/build
+    cp -r /tmp/builds/build /home/circleci/project/build
 
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml pull db_migrate easi
 
