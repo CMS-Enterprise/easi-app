@@ -159,6 +159,8 @@ jobs:
           name: Docker Hub login
           command: |
             ./scripts/dockerhub-login
+      - attach_workspace:
+          at: /tmp/builds
       - run:
           name: Run Cypress integration tests
           command: |
@@ -268,7 +270,9 @@ jobs:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_PASSWORD
         environment:
-          REACT_APP_API_ADDRESS: http://localhost:8080/api/v1
+          # Use API address needed for integration_tests so the frontend build
+          # can be reused in that job
+          REACT_APP_API_ADDRESS: http://easi:8080/api/v1
           REACT_APP_APP_ENV: test
           REACT_APP_OKTA_CLIENT_ID: 0oa2e913coDQeG19S297
           REACT_APP_OKTA_DOMAIN: https://test.idp.idm.cms.gov
@@ -299,6 +303,7 @@ jobs:
       - persist_to_workspace:
           root: /home/circleci/project
           paths:
+            - build
             - storybook-static
       - save_cache:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
@@ -569,7 +574,7 @@ jobs:
             echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
             echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
       - attach_workspace:
-          at: /tmp/storybook
+          at: /tmp/builds
       - run:
           name: Deploy storybook assets
           command: |
