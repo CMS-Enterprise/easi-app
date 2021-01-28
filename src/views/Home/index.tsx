@@ -60,11 +60,6 @@ const Home = () => {
       <Header />
       <MainContent className="grid-container margin-bottom-5">
         {isUserSet && user.isGrtReviewer(userGroups) && <RequestRepository />}
-        {/* {isUserSet &&
-          (user.isAccessibilityAdmin(userGroups) ||
-            user.isAccessibilityTester(userGroups)) && (
-            <AccessibilityRequestsTable />
-          )} */}
         {isUserSet && user.isBasicUser(userGroups) && (
           <>
             <Banners />
