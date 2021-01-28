@@ -123,6 +123,10 @@ jobs:
           keys:
             - v2-go-mod-sources-{{ checksum "go.sum" }}
       - run:
+          name: Generate GraphQL code
+          command: |
+            go generate ./...
+      - run:
           name: Run easi app tests
           command: |
             ./scripts/build_app
@@ -280,11 +284,22 @@ jobs:
           keys:
             - v1-node-modules-{{ checksum "yarn.lock" }}
       - run:
+          name: Generate GraphQL code
+          command: |
+            yarn generate
+      - run:
           name: Run Frontend Tests
           command: yarn run test
       - run:
           name: Build Frontend Code
           command: yarn run build
+      - run:
+          name: Build Storybook
+          command: yarn run build-storybook
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - storybook-static
       - save_cache:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
@@ -527,6 +542,52 @@ jobs:
             ./scripts/circleci-announce-broken-branch
           when: on_fail
 
+  deploy_storybook_dev:
+    docker:
+      - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+          APP_ENV: dev
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-deps-cache-{{ checksum "yarn.lock" }}
+      - restore_cache:
+          keys:
+            - v1-node-modules-{{ checksum "yarn.lock" }}
+      - run:
+          name: Setup custom environment variables
+          command: |
+            temp_role=$(aws sts assume-role \
+                    --role-arn arn:aws:iam::$AWS_ACCOUNT_ID_DEV:role/circleci \
+                    --role-session-name circleci)
+            echo "export AWS_ACCESS_KEY_ID=$(jq --raw-output .Credentials.AccessKeyId <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=$(jq --raw-output .Credentials.SecretAccessKey <<< "$temp_role")" >> $BASH_ENV
+            echo "export AWS_SESSION_TOKEN=$(jq --raw-output .Credentials.SessionToken <<< "$temp_role")" >> $BASH_ENV
+      - attach_workspace:
+          at: /tmp/storybook
+      - run:
+          name: Deploy storybook assets
+          command: |
+            ./scripts/release_storybook_static
+      - save_cache:
+          key: yarn-deps-cache-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - save_cache:
+          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/project/node_modules
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
+
 workflows:
   version: 2
   compile:
@@ -539,6 +600,13 @@ workflows:
       - client_test:
           requires:
             - pre_deps
+      - deploy_storybook_dev:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - client_test
       - test:
           requires:
             - pre_deps
