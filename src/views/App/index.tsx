@@ -6,6 +6,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
+import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 import Create from 'views/Accessibility/AccessibiltyRequest/Create';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
@@ -39,7 +40,13 @@ const AppRoutes = () => {
 
   return (
     <Switch>
+      {/* START: 508 Process Pages */}
       <Route path="/accessibility/create" exact component={Create} />
+      <SecureRoute
+        path="/508/:accessibilityRequestId"
+        render={() => <AccessibilityRequestDetailPage />}
+      />
+      {/* END : 508 Process Pages */}
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
