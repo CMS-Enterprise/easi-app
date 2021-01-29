@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+GO111MODULE=off go get golang.org/x/tools/cmd/goimports
+go generate ./...
+goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go
+yarn generate
