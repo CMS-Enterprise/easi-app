@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -24,7 +25,7 @@ func init() {
 			IssuedAt:    &t1,
 			ExpiresAt:   &t2,
 			ProjectName: "Three Amigos",
-			OwnerID:     "FAKE0",
+			OwnerID:     null.StringFrom("FAKE0"),
 			OwnerName:   "Lucky Dusty Ned",
 		},
 		{
@@ -34,7 +35,7 @@ func init() {
 			IssuedAt:    &t1,
 			ExpiresAt:   &t2,
 			ProjectName: "Three Musketeers",
-			OwnerID:     "FAKE1",
+			OwnerID:     null.StringFromPtr(nil),
 			OwnerName:   "Athos Porthos Aramis",
 		},
 		{
@@ -44,7 +45,7 @@ func init() {
 			IssuedAt:    &t1,
 			ExpiresAt:   &t2,
 			ProjectName: "Three Stooges",
-			OwnerID:     "FAKE2",
+			OwnerID:     null.StringFrom("FAKE2"),
 			OwnerName:   "Moe Larry Curly",
 		},
 	}
