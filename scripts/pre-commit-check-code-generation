@@ -4,5 +4,9 @@ set -e
 
 GO111MODULE=off go get golang.org/x/tools/cmd/goimports
 go generate ./...
-goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go
+if [[ -n ${CIRCLECI-} ]]; then
+  ~/go/bin/goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go
+else
+  goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go
+fi
 yarn generate
