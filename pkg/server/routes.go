@@ -38,7 +38,11 @@ func (s *Server) routes(
 		traceMiddleware, // trace all requests with an ID
 		loggerMiddleware,
 		corsMiddleware,
+<<<<<<< HEAD
 		// authorizationMiddleware, // is supposed to be authN, not authZ; TODO: those responsibilities should be split out
+=======
+		authorizationMiddleware, // is really authN, not authZ; TODO: those responsibilities should be split out
+>>>>>>> ES-274 cloudfront-friendly routes
 	)
 
 	// set up handler base
@@ -129,7 +133,10 @@ func (s *Server) routes(
 
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
+<<<<<<< HEAD
 	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
+=======
+>>>>>>> ES-274 cloudfront-friendly routes
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
 	gql.Handle("/query", graphqlServer)
 	gql.HandleFunc("/playground", playground.Handler("GraphQL playground", "/api/graph/query"))
