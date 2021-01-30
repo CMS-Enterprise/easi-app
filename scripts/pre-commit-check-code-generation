@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 
-GO111MODULE=off go get golang.org/x/tools/cmd/goimports || exit
+# Run GraphQL generation for Go files
 go generate ./... || exit
+
+# If in CirleCI environment, install goimports and specify absolute path to the binary
 if [[ -n ${CIRCLECI-} ]]; then
-  ~/go/bin/goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go || exit
+  GO111MODULE=off go get golang.org/x/tools/cmd/goimports || exit
+  "$(go env GOPATH)"/bin/goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go || exit
 else
   goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go || exit
 fi
+
+# Run GraphQL generation for Typescript files
 yarn generate
