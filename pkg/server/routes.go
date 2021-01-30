@@ -39,10 +39,14 @@ func (s *Server) routes(
 		loggerMiddleware,
 		corsMiddleware,
 <<<<<<< HEAD
+<<<<<<< HEAD
 		// authorizationMiddleware, // is supposed to be authN, not authZ; TODO: those responsibilities should be split out
 =======
 		authorizationMiddleware, // is really authN, not authZ; TODO: those responsibilities should be split out
 >>>>>>> ES-274 cloudfront-friendly routes
+=======
+		authorizationMiddleware, // is supposed to be authN, not authZ; TODO: those responsibilities should be split out
+>>>>>>> authn middleware pass thru
 	)
 
 	// set up handler base
@@ -134,16 +138,18 @@ func (s *Server) routes(
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
 <<<<<<< HEAD
+<<<<<<< HEAD
 	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
 =======
 >>>>>>> ES-274 cloudfront-friendly routes
+=======
+>>>>>>> authn middleware pass thru
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
 	gql.Handle("/query", graphqlServer)
 	gql.HandleFunc("/playground", playground.Handler("GraphQL playground", "/api/graph/query"))
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
-	api.Use(authorizationMiddleware) // TODO: see comment at top-level router
 
 	// health check goes directly on the main router
 	// does not need authZ, but authN is okay
