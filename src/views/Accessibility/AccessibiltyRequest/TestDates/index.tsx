@@ -16,7 +16,10 @@ const TestDates = ({ date, isInitial, testIndex, score }: TestDatesProps) => {
       </div>
       <div className="margin-bottom-1">
         <div className="display-inline-block margin-right-2">{date}</div>
-        <div className="display-inline-block text-base-dark">
+        <div
+          className="display-inline-block text-base-dark"
+          data-testid="score"
+        >
           {score || 'Score not added'}
         </div>
       </div>
