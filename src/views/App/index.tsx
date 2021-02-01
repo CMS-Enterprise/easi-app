@@ -43,7 +43,7 @@ const AppRoutes = () => {
       {/* START: 508 Process Pages */}
       <Route path="/accessibility/create" exact component={Create} />
       <SecureRoute
-        path="/508/:accessibilityRequestId"
+        path="/508/request/:accessibilityRequestId"
         render={() => <AccessibilityRequestDetailPage />}
       />
       {/* END : 508 Process Pages */}

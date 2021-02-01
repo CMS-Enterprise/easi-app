@@ -1,23 +1,29 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
-import { NavButton, SecondaryNav } from 'components/shared/SecondaryNav';
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 
 import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
+  const { accessibilityRequestId } = useParams<{
+    accessibilityRequestId: string;
+  }>();
   return (
     <PageWrapper className="accessibility-request">
       <Header />
       <MainContent className="margin-bottom-5">
-        <SecondaryNav defaultTab="508">
-          <NavButton name="508">{t('tabs.accessibilityRequests')}</NavButton>
+        <SecondaryNav>
+          <NavLink to={`/508/request/${accessibilityRequestId}`}>
+            {t('tabs.accessibilityRequests')}
+          </NavLink>
         </SecondaryNav>
         <div className="grid-container">
           <h1>Medicare Office of Change Initiative 1.3</h1>
