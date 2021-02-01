@@ -3,20 +3,12 @@
   // This breaks responsiveness; no plans for now
   white-space: nowrap;
 
-  &__nav-btn {
-    border: none;
-    background: none;
-  }
-
   &__nav-link {
-    color: #000;
-    text-decoration: none;
-  }
-
-  &__nav-btn,
-  &__nav-link {
+    display: inline-block;
     margin: 0 1em;
     padding: 1em 0;
+    color: #000;
+    text-decoration: none;
     font-weight: bold;
 
     &--active {
@@ -24,6 +16,7 @@
     }
 
     &:hover {
+      color: $easi-bright-blue;
       cursor: pointer;
     }
 
