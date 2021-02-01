@@ -41,15 +41,7 @@ services:
   easi_client:
     build:
       context: .
-      dockerfile: Dockerfile.client
-      args:
-        - REACT_APP_APP_ENV=$APP_ENV
-        - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
-        - REACT_APP_OKTA_CLIENT_ID=$OKTA_CLIENT_ID_DEV
-        - REACT_APP_OKTA_DOMAIN=$OKTA_DOMAIN
-        - REACT_APP_OKTA_ISSUER=$OKTA_ISSUER
-        - REACT_APP_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
-        - REACT_APP_OKTA_SERVER_ID=$OKTA_SERVER_ID_DEV
+      dockerfile: Dockerfile.client_circleci
     image: easi-frontend:latest
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
