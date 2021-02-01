@@ -60,4 +60,4 @@ repos:
         name: check-code-generation
         entry: scripts/pre-commit-check-code-generation
         language: script
-        files: pkg/graph/schema.resolvers.go
+        files: (pkg/graph/schema.graphql|pkg/graph/schema.resolvers.go|src/queries/*.ts)
