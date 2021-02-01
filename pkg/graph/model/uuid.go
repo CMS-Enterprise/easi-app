@@ -18,9 +18,5 @@ func UnmarshalUUID(v interface{}) (uuid.UUID, error) {
 	if !ok {
 		return uuid.Nil, errors.New("id should be a valid UUID")
 	}
-	id, err := uuid.Parse(idAsString)
-	if err != nil {
-		return uuid.Nil, err
-	}
-	return id, nil
+	return uuid.Parse(idAsString)
 }
