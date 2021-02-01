@@ -4,49 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import Header from 'components/Header';
 import ActionBanner from 'components/shared/ActionBanner';
 import SearchBar from 'components/shared/SearchBar';
-import SecondaryNav from 'components/shared/SecondaryNav';
 import UpcomingActions from 'components/shared/UpcomingActions';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes, fetchSystemShorts } from 'types/routines';
-
-const mockSystems: any[] = [
-  { id: 'All', name: 'All', slug: 'all', link: '/system/all' },
-  {
-    id: '1',
-    name: 'System1',
-    acronym: 'SYS1',
-    slug: 'system1',
-    link: '/system/system1'
-  },
-  {
-    id: '2',
-    name: 'System2',
-    acronym: 'SYS2',
-    slug: 'system2',
-    link: '/system/system2'
-  },
-  {
-    id: '3',
-    name: 'System3',
-    acronym: 'SYS3',
-    slug: 'system3',
-    link: '/system/system3'
-  },
-  {
-    id: '4',
-    name: 'System4',
-    acronym: 'SYS4',
-    slug: 'system4',
-    link: '/system/system4'
-  },
-  {
-    id: '5',
-    name: 'System5',
-    acronym: 'SYS5',
-    slug: 'system5',
-    link: '/system/system5'
-  }
-];
 
 export const SystemProfiles = () => {
   const onSearch = () => {};
@@ -105,15 +65,6 @@ export const SystemProfiles = () => {
             results={searchResults}
           />
         </div>
-
-        {mockSystems.length > 0 && (
-          <div className="system-profile__secondary-nav-wrapper">
-            <SecondaryNav
-              secondaryNavList={mockSystems.slice(0, 10)}
-              activeNavItem="all"
-            />
-          </div>
-        )}
       </Header>
       <div className="grid-container">
         <UpcomingActions timestamp={timeStamp}>
