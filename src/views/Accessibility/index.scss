@@ -1,41 +1,10 @@
 .accessibility-request {
-  &__nav {
-    border-bottom: 1px solid color($theme-color-base-lighter);
-    // This breaks responsiveness; no plans for now
-    white-space: nowrap;
-  }
-
-  &__nav-btn {
-    border: none;
-    background: none;
-  }
-
-  &__nav-link {
-    color: #000;
-    text-decoration: none;
-  }
-
-  &__nav-btn,
-  &__nav-link {
-    margin: 0 1em;
-    padding: 1em 0;
-    font-weight: bold;
-
-    &--active {
-      border-bottom: 4px solid $easi-bright-blue;
-    }
-
-    &:hover {
-      cursor: pointer;
-    }
-
-    &:first-child {
-      margin-left: 0;
-    }
-  }
 
   &__side-nav {
     border-top: 4px solid $easi-bright-blue;
+  }
+
+  &__other-details {
     border-bottom: 1px solid color($theme-color-base-lighter);
   }
 
