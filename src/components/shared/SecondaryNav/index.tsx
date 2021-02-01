@@ -1,38 +1,112 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, {
+  createContext,
+  ReactNode,
+  ReactNodeArray,
+  useContext,
+  useState
+} from 'react';
+import classnames from 'classnames';
 
 import './index.scss';
 
+type SecondaryNavContextType = {
+  activeTab: string;
+  onTabChange: (tabName: string) => void;
+};
+
+const SecondaryNavContext = createContext<SecondaryNavContextType>({
+  activeTab: '',
+  onTabChange: () => {}
+});
+
 type SecondaryNavProps = {
-  secondaryNavList?: any[];
-  activeNavItem?: string | undefined;
+  defaultTab: string;
+  children: ReactNode | ReactNodeArray;
+  onTabChange?: (tabName: string) => void;
 };
 
 const SecondaryNav = ({
-  secondaryNavList = [],
-  activeNavItem = ''
+  defaultTab,
+  children,
+  onTabChange
 }: SecondaryNavProps) => {
+  const [activeTab, setActiveTab] = useState(defaultTab);
+
   return (
-    <nav aria-label="Primary navigation" className="secondary-nav">
-      <div className="usa-nav__inner">
-        <ul className="usa-nav__primary usa-accordion">
-          {secondaryNavList.map(item => (
-            <li
-              key={item.id}
-              className={`usa-nav__primary-item ${
-                activeNavItem === item.slug ? 'usa-current' : ''
-              }`.trim()}
-              data-testid="header-nav-item"
-            >
-              <Link className="secondary-nav__link" to={item.link}>
-                <span>{item.name}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+    <nav aria-label="Secondary Navigation" className="easi-secondary-nav">
+      <div className="grid-container">
+        <SecondaryNavContext.Provider
+          value={{
+            activeTab,
+            onTabChange: (tabName: string) => {
+              setActiveTab(tabName);
+              if (onTabChange) {
+                onTabChange(tabName);
+              }
+            }
+          }}
+        >
+          {children}
+        </SecondaryNavContext.Provider>
       </div>
     </nav>
   );
 };
 
-export default SecondaryNav;
+type NavButtonProps = {
+  name: string;
+  children: ReactNode | ReactNodeArray;
+} & JSX.IntrinsicElements['button'];
+
+const NavButton = ({ name, children, ...props }: NavButtonProps) => {
+  const actionContext = useContext(SecondaryNavContext);
+  if (!actionContext) {
+    throw new Error(
+      'This component cannot be used outside of the Secondary Nav Context'
+    );
+  }
+
+  const classNames = classnames('easi-secondary-nav__nav-btn', {
+    'easi-secondary-nav__nav-btn--active': actionContext.activeTab === name
+  });
+
+  return (
+    <button
+      type="button"
+      className={classNames}
+      onClick={() => {
+        actionContext.onTabChange(name);
+      }}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
+
+// type NavLinkProps = {
+//   name: string;
+//   to: string;
+//   children: ReactNode | ReactNodeArray;
+// };
+
+// const NavLink = ({ name, to, children }: NavLinkProps) => {
+//   const actionContext = useContext(SecondaryNavContext);
+//   if (!actionContext) {
+//     throw new Error(
+//       'This component cannot be used outside of the Secondary Nav Context'
+//     );
+//   }
+
+//   const classNames = classnames('easi-secondary-nav__nav-link', {
+//     'easi-secondary-nav__nav-link': actionContext.activeTab === name
+//   });
+
+//   return (
+//     <Link to={to} className={classNames}>
+//       {children}
+//     </Link>
+//   );
+// };
+
+export { SecondaryNav, NavButton };
