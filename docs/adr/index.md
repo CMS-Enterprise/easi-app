@@ -27,5 +27,6 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0020](0020-do-not-implement-state-machine.md) - Do not implement state machine to handle transitions in Services
 - [ADR-0021](0021-audit-logging.md) - Audit Logging
 - [ADR-0022](0022-generate-pdfs-with-prince.md) - Generate PDFs with Prince
+- [ADR-0023](0023_508_systems_list_as_view_of_system_intakes.md) - 508 Systems List as View of `system_intakes`
 
 <!-- adrlogstop -->
