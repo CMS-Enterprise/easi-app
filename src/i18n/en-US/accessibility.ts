@@ -12,6 +12,18 @@ const accessibility = {
       status: 'Status'
     },
     lastUpdated: 'last updated on'
+  },
+  tabs: {
+    accessibilityRequests: '508 Requests'
+  },
+  requestDetails: {
+    documents: {
+      label: 'Documents',
+      none: 'No documents added to this request yet'
+    },
+    documentUpload: 'Upload a document',
+    other: 'Other request details',
+    remove: 'Remove this request from EASi'
   }
 };
 
