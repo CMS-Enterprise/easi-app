@@ -5,7 +5,6 @@ go generate ./... || exit
 
 # If in CirleCI environment, install goimports and specify absolute path to the binary
 if [[ -n ${CIRCLECI-} ]]; then
-  GO111MODULE=off go get golang.org/x/tools/cmd/goimports || exit
   "$(go env GOPATH)"/bin/goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go || exit
 else
   goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go || exit
