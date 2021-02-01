@@ -5,9 +5,9 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -28,7 +28,21 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *queryResolver) AccessibilityRequests(ctx context.Context, first int, after *string) (*model.AccessibilityRequestsConnection, error) {
-	panic(fmt.Errorf("not implemented"))
+	requests, queryErr := r.store.FetchAccessibilityRequests(ctx)
+	if queryErr != nil {
+		return nil, gqlerror.Errorf("query error: %s", queryErr)
+	}
+
+	edges := []*model.AccessibilityRequestEdge{}
+
+	for _, request := range requests {
+		node := request
+		edges = append(edges, &model.AccessibilityRequestEdge{
+			Node: &node,
+		})
+	}
+
+	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*model.AccessibilityRequest, error) {

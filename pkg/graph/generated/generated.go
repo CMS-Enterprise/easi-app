@@ -317,7 +317,8 @@ type Query {
   accessibilityRequest(id: UUID!): AccessibilityRequest
 }
 
-scalar UUID`, BuiltIn: false},
+scalar UUID
+`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
 

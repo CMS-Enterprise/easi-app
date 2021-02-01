@@ -11,7 +11,7 @@ import { CreateAccessibilityRequestInput } from "./../../types/graphql-global-ty
 
 export interface CreateAccessibilityRequest_createAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
-  id: any;
+  id: UUID;
   name: string;
 }
 
