@@ -2,8 +2,12 @@
 
 set -eu -o pipefail
 
-payload="$(jq --null-input ".repository= \"$1\" | .imageTag = \"$2\"")"
-aws lambda invoke --function-name ecr-scan-findings --cli-binary-format raw-in-base64-out --payload "$payload" scan_response.json
+repository="$1"
+image_tag="$2"
+function_qualifier="$3"
+
+payload="$(jq --null-input ".repository= \"$repository\" | .imageTag = \"$image_tag\"")"
+aws lambda invoke --function-name ecr-scan-findings --cli-binary-format raw-in-base64-out --payload "$payload" --qualifier "$function_qualifier" scan_response.json
 jq < scan_response.json
 totalFindings="$(jq "fromjson | .totalFindings" scan_response.json)"
 if [[ "$totalFindings" != 0 ]]; then

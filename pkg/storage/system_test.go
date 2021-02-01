@@ -42,6 +42,11 @@ func (s StoreTestSuite) TestListSystems() {
 		si.CreatedAt = &now
 		si.UpdatedAt = &now
 		si.ProjectName = null.StringFrom(fmt.Sprintf("%s %d", sig, ix))
+		if ix%2 == 1 {
+			// this simulates some of the backfill data in PROD that
+			// was imported without an EUAUserID
+			si.EUAUserID = null.StringFromPtr(nil)
+		}
 		_, err = s.store.CreateSystemIntake(ctx, &si)
 		s.NoError(err)
 
