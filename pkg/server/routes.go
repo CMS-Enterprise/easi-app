@@ -134,6 +134,7 @@ func (s *Server) routes(
 
 	gql.Use(loggerMiddleware)
 	gql.Use(corsMiddleware)
+	gql.Use(authorizationMiddleware)
 
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
 	gql.Handle("/query", graphqlServer)

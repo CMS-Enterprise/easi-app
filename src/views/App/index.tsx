@@ -7,6 +7,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import Create from 'views/Accessibility/AccessibiltyRequest/Create';
+import List from 'views/Accessibility/AccessibiltyRequest/List';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -39,11 +40,13 @@ const AppRoutes = () => {
 
   return (
     <Switch>
-      <Route path="/accessibility/create" exact component={Create} />
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
       <Route path="/governance-overview" exact component={GovernanceOverview} />
+
+      <Route path="/accessibility/create" exact component={Create} />
+      <Route path="/accessibility/list" exact component={List} />
 
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
       <SecureRoute
