@@ -1,8 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
+import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
+import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -17,7 +20,28 @@ const AccessibilityRequestDetailPage = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
+  const { loading, error, data } = useQuery<GetAccessibilityRequest>(
+    GetAccessibilityRequestQuery,
+    {
+      variables: {
+        id: accessibilityRequestId
+      }
+    }
+  );
+
+  // There has to be a better way to do this..
+  const requestName =
+    data && data.accessibilityRequest && data.accessibilityRequest.name;
+
   const TEMP_NUM_OF_DOCUMENTS = 0;
+
+  if (loading) {
+    return <div>Loading</div>;
+  }
+
+  if (error) {
+    return <div>{JSON.stringify(error, null, 2)}</div>;
+  }
 
   return (
     <PageWrapper className="accessibility-request">
@@ -29,7 +53,7 @@ const AccessibilityRequestDetailPage = () => {
           </NavLink>
         </SecondaryNav>
         <div className="grid-container">
-          <h1>Medicare Office of Change Initiative 1.3</h1>
+          <h1>{requestName}</h1>
           <div className="grid-row grid-gap-lg">
             <div className="grid-col-8">
               <h2>Documents</h2>
