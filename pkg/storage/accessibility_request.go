@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -45,9 +44,7 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *model.A
 		request,
 	)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to create accessibility request with error %s", err),
-		)
+		appcontext.ZLogger(ctx).Error("Failed to create accessibility request with error %s", zap.Error(err))
 		return nil, err
 	}
 	return s.FetchAccessibilityRequestByID(ctx, request.ID)
@@ -59,13 +56,10 @@ func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID)
 
 	err := s.db.Get(&request, `SELECT * FROM accessibility_request WHERE id=$1`, id)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch accessibility request %s", err),
-			zap.String("id", id.String()),
-		)
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
 		}
+		appcontext.ZLogger(ctx).Error("Failed to fetch accessibility request", zap.Error(err), zap.String("id", id.String()))
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     id,
@@ -74,4 +68,24 @@ func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID)
 	}
 
 	return &request, nil
+}
+
+// FetchAccessibilityRequests queries the DB for an accessibility requests.
+// TODO implement cursor pagination
+func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]model.AccessibilityRequest, error) {
+	requests := []model.AccessibilityRequest{}
+
+	err := s.db.Select(&requests, `SELECT * FROM accessibility_request`)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return requests, nil
+		}
+		appcontext.ZLogger(ctx).Error("Failed to fetch accessibility requests", zap.Error(err))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return requests, nil
 }
