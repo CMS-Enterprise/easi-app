@@ -194,8 +194,10 @@ jobs:
           name: Install yarn dependencies
           command: yarn install
       - run:
-          name: Install go modules
-          command: go mod download
+          name: Install go dependencies
+          command: |
+            go install
+            go mod download
       - save_cache:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
