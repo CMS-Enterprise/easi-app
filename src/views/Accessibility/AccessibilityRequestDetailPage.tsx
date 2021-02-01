@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
 import Footer from 'components/Footer';
@@ -16,6 +17,8 @@ const AccessibilityRequestDetailPage = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
+  const TEMP_NUM_OF_DOCUMENTS = 0;
+
   return (
     <PageWrapper className="accessibility-request">
       <Header />
@@ -28,7 +31,24 @@ const AccessibilityRequestDetailPage = () => {
         <div className="grid-container">
           <h1>Medicare Office of Change Initiative 1.3</h1>
           <div className="grid-row grid-gap-lg">
-            <div className="grid-col-8">yo</div>
+            <div className="grid-col-8">
+              <h2>Documents</h2>
+              <UswdsLink
+                className="usa-button"
+                variant="unstyled"
+                asCustom={Link}
+                to={`/508/request/${accessibilityRequestId}/document-upload`}
+              >
+                Upload a document
+              </UswdsLink>
+              <div className="margin-top-2">
+                {TEMP_NUM_OF_DOCUMENTS > 0 ? (
+                  <span />
+                ) : (
+                  <span>No documents added to request</span>
+                )}
+              </div>
+            </div>
             <div className="grid-col-4">
               <div className="accessibility-request__side-nav">
                 <div className="accessibility-request__other-details">
