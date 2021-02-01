@@ -44,6 +44,9 @@ func (s *Server) routes(
 	// set up handler base
 	base := handlers.NewHandlerBase(s.logger)
 
+	// health check goes directly on the main router
+	s.router.HandleFunc("/api/v1/healthcheck", handlers.NewHealthCheckHandler(base, s.Config).Handle())
+
 	// set up Feature Flagging utilities
 	ldClient, err := flags.NewLaunchDarklyClient(s.NewFlagConfig())
 	if err != nil {
@@ -137,11 +140,6 @@ func (s *Server) routes(
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 	api.Use(authorizationMiddleware) // TODO: see comment at top-level router
-
-	// health check goes directly on the main router
-	// does not need authZ, but authN is okay
-	healthCheckHandler := handlers.NewHealthCheckHandler(base, s.Config)
-	api.HandleFunc("/healthcheck", healthCheckHandler.Handle())
 
 	serviceConfig := services.NewConfig(s.logger, ldClient)
 
