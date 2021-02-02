@@ -366,7 +366,7 @@ jobs:
       - run:
           name: Check for vulnerability scan findings
           command: |
-            ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1" "1"
+            ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1" "3"
       - run:
           name: Announce failure
           command: |
