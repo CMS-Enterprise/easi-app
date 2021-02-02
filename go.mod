@@ -40,8 +40,8 @@ require (
 	go.mongodb.org/mongo-driver v1.3.3 // indirect
 	go.uber.org/zap v1.15.0
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
-	golang.org/x/net v0.0.0-20201021035429-f5854403a974
-	golang.org/x/tools v0.1.0 // indirect
+	golang.org/x/net v0.0.0-20200513185701-a91f0712d120
+	golang.org/x/sys v0.0.0-20200513112337-417ce2331b5c // indirect
 	gopkg.in/ini.v1 v1.56.0 // indirect
 	gopkg.in/launchdarkly/go-sdk-common.v2 v2.0.1
 	gopkg.in/launchdarkly/go-server-sdk.v5 v5.0.2
