@@ -3,12 +3,13 @@ package models
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 )
 
 // System represents something that may be tested for 508 compliance
 type System struct {
-	// IntakeID    uuid.UUID  `json:"intakeId" db:"id"` // TODO: is this actually necessary, if LCID is really the identifier?
+	IntakeID    uuid.UUID   `json:"intakeId" db:"id"`
 	LCID        string      `json:"lcid" db:"lcid"`
 	CreatedAt   *time.Time  `json:"createdAt" db:"created_at"`
 	UpdatedAt   *time.Time  `json:"updatedAt" db:"updated_at"`
