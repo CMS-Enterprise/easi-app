@@ -194,10 +194,8 @@ jobs:
           name: Install yarn dependencies
           command: yarn install
       - run:
-          name: Install go dependencies
-          command: |
-            go get golang.org/x/tools/cmd/goimports
-            go mod download
+          name: Install go modules
+          command: go mod download
       - save_cache:
           key: yarn-deps-cache-{{ checksum "yarn.lock" }}
           paths:
@@ -209,7 +207,6 @@ jobs:
       - save_cache:
           key: v2-go-mod-sources-{{ checksum "go.sum" }}
           paths:
-            - ~/go/bin
             - ~/go/pkg/mod
       - run:
           name: Announce failure
