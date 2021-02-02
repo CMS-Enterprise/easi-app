@@ -39,8 +39,16 @@ const AccessibilityRequestDetailPage = () => {
     return <div>Loading</div>;
   }
 
+  if (!data) {
+    return (
+      <div>{`No request found matching id: ${accessibilityRequestId}`}</div>
+    );
+  }
+
+  // What type of errors can we get/return?
+  // How can we actually use the errors?
   if (error) {
-    return <div>{JSON.stringify(error, null, 2)}</div>;
+    return <pre>{JSON.stringify(error, null, 2)}</pre>;
   }
 
   return (
@@ -56,20 +64,20 @@ const AccessibilityRequestDetailPage = () => {
           <h1>{requestName}</h1>
           <div className="grid-row grid-gap-lg">
             <div className="grid-col-8">
-              <h2>Documents</h2>
+              <h2>{t('requestDetails.documents.label')}</h2>
               <UswdsLink
                 className="usa-button"
                 variant="unstyled"
                 asCustom={Link}
                 to={`/508/request/${accessibilityRequestId}/document-upload`}
               >
-                Upload a document
+                {t('requestDetails.documentUpload')}
               </UswdsLink>
               <div className="margin-top-2">
                 {TEMP_NUM_OF_DOCUMENTS > 0 ? (
                   <span />
                 ) : (
-                  <span>No documents added to request</span>
+                  <span>{t('requestDetails.documents.none')}</span>
                 )}
               </div>
             </div>
