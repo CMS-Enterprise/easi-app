@@ -53,3 +53,11 @@ repos:
         entry: scripts/pre-commit-eslint
         language: script
         files: \.(js|jsx|ts|tsx)$
+
+  - repo: local
+    hooks:
+      - id: check-code-generation
+        name: check-code-generation
+        entry: scripts/pre-commit-check-code-generation
+        language: script
+        files: (pkg/graph/schema.graphql|pkg/graph/schema.resolvers.go|src/queries/*.ts)

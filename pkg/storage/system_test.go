@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -85,6 +86,7 @@ func (s StoreTestSuite) TestListSystems() {
 		if !strings.HasPrefix(result.ProjectName, sig) {
 			continue
 		}
+		s.NotEqual(result.IntakeID, uuid.Nil) // ensure we populate with a real IntakeID
 		if _, exp := expected[result.LCID]; !exp {
 			// unexpected collision from previously existing data,
 			// possibly from previous runs of this test
