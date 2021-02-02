@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 	"go.uber.org/zap"
 
@@ -20,6 +21,7 @@ func init() {
 	fakeSystems = []*models.System{
 		{
 			LCID:        "X990000",
+			IntakeID:    uuid.MustParse("00000000-9999-0000-0000-000000000000"),
 			CreatedAt:   &t1,
 			UpdatedAt:   &t1,
 			IssuedAt:    &t1,
@@ -30,6 +32,7 @@ func init() {
 		},
 		{
 			LCID:        "X990001",
+			IntakeID:    uuid.MustParse("00000000-8888-0000-0000-000000000000"),
 			CreatedAt:   &t1,
 			UpdatedAt:   &t1,
 			IssuedAt:    &t1,
@@ -40,6 +43,7 @@ func init() {
 		},
 		{
 			LCID:        "X990002",
+			IntakeID:    uuid.MustParse("00000000-7777-0000-0000-000000000000"),
 			CreatedAt:   &t1,
 			UpdatedAt:   &t1,
 			IssuedAt:    &t1,
@@ -92,6 +96,7 @@ func (s *Store) useFakeSystems(ctx context.Context) bool {
 
 const sqlListSystems = `
 	SELECT
+		id,
 		lcid,
 		created_at,
 		updated_at,
