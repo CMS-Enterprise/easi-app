@@ -4,16 +4,16 @@ import { DateTime } from 'luxon';
 
 type TestDateProps = {
   date: DateTime;
-  isInitial: boolean;
+  type: 'INITIAL' | 'REMEDIATION';
   testIndex: number;
   score?: string; // This type might need to be changed based on API model
 };
 
-const TestDate = ({ date, isInitial, testIndex, score }: TestDateProps) => {
+const TestDate = ({ date, type, testIndex, score }: TestDateProps) => {
   return (
     <div className="bg-gray-10 padding-2 line-height-body-4">
       <div className="text-bold margin-bottom-1">
-        Test {testIndex}: {isInitial ? 'Initial' : 'Remediation'}
+        Test {testIndex}: {type === 'INITIAL' ? 'Initial' : 'Remediation'}
       </div>
       <div className="margin-bottom-1">
         <div className="display-inline-block margin-right-2">
