@@ -19,7 +19,7 @@ const accessibility = {
   requestDetails: {
     documents: {
       label: 'Documents',
-      none: 'No documents added to this request yet'
+      none: 'No documents added to this request yet.'
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
