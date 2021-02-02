@@ -6,14 +6,14 @@ import TestDate from './index';
 
 describe('The Test Date component', () => {
   it('renders without crashing', () => {
-    shallow(<TestDate date={DateTime.local()} isInitial testIndex={1} />);
+    shallow(<TestDate date={DateTime.local()} type="INITIAL" testIndex={1} />);
   });
 
   it('renders score', () => {
     const component = mount(
       <TestDate
         date={DateTime.local()}
-        isInitial
+        type="INITIAL"
         testIndex={1}
         score="100.0%"
       />
