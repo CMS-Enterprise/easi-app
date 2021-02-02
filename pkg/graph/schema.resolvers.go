@@ -5,13 +5,17 @@ package graph
 
 import (
 	"context"
-
-	"github.com/google/uuid"
-	"github.com/vektah/gqlparser/v2/gqlerror"
+	"time"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/google/uuid"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 )
+
+func (r *accessibilityRequestResolver) SubmittedAt(ctx context.Context, obj *model.AccessibilityRequest) (string, error) {
+	return obj.CreatedAt.Format(time.RFC3339), nil
+}
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &model.AccessibilityRequest{
@@ -49,11 +53,17 @@ func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) 
 	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }
 
+// AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
+func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
+	return &accessibilityRequestResolver{r}
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type accessibilityRequestResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

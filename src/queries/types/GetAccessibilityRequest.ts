@@ -11,6 +11,7 @@ export interface GetAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
   id: UUID;
   name: string;
+  submittedAt: string;
 }
 
 export interface GetAccessibilityRequest {

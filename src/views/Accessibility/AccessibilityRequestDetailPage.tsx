@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+// import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
@@ -33,7 +33,14 @@ const AccessibilityRequestDetailPage = () => {
   const requestName =
     data && data.accessibilityRequest && data.accessibilityRequest.name;
 
-  const TEMP_NUM_OF_DOCUMENTS = 0;
+  // There has to be a better way to do this..
+  const submittedAt =
+    (data &&
+      data.accessibilityRequest &&
+      data.accessibilityRequest.submittedAt) ||
+    '';
+
+  // const TEMP_NUM_OF_DOCUMENTS = 0;
 
   if (loading) {
     return <div>Loading</div>;
@@ -64,7 +71,7 @@ const AccessibilityRequestDetailPage = () => {
           <h1>{requestName}</h1>
           <div className="grid-row grid-gap-lg">
             <div className="grid-col-8">
-              <h2>{t('requestDetails.documents.label')}</h2>
+              {/* <h2>{t('requestDetails.documents.label')}</h2>
               <UswdsLink
                 className="usa-button"
                 variant="unstyled"
@@ -79,7 +86,7 @@ const AccessibilityRequestDetailPage = () => {
                 ) : (
                   <span>{t('requestDetails.documents.none')}</span>
                 )}
-              </div>
+              </div> */}
             </div>
             <div className="grid-col-4">
               <div className="accessibility-request__side-nav">
@@ -90,11 +97,11 @@ const AccessibilityRequestDetailPage = () => {
                       {t('intake:fields.submissionDate')}
                     </dt>
                     <dd className="margin-0 margin-bottom-2">
-                      {DateTime.fromISO(
-                        new Date().toISOString()
-                      ).toLocaleString(DateTime.DATE_FULL)}
+                      {DateTime.fromISO(submittedAt).toLocaleString(
+                        DateTime.DATE_FULL
+                      )}
                     </dd>
-                    <dt className="margin-bottom-1">
+                    {/* <dt className="margin-bottom-1">
                       {t('intake:fields.businessOwner')}
                     </dt>
                     <dd className="margin-0 margin-bottom-2">
@@ -103,15 +110,15 @@ const AccessibilityRequestDetailPage = () => {
                     <dt className="margin-bottom-1">
                       {t('intake:lifecycleId')}
                     </dt>
-                    <dd className="margin-0 margin-bottom-2">X200943</dd>
+                    <dd className="margin-0 margin-bottom-2">X200943</dd> */}
                   </dl>
                 </div>
-                <button
+                {/* <button
                   type="button"
                   className="accessibility-request__remove-request"
                 >
                   {t('requestDetails.remove')}
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
