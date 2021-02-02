@@ -7,10 +7,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/cmsgov/easi-app/pkg/graph/generated"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/google/uuid"
 	"github.com/vektah/gqlparser/v2/gqlerror"
+	"github.com/cmsgov/easi-app/pkg/graph/generated"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 )
 
 func (r *accessibilityRequestResolver) SubmittedAt(ctx context.Context, obj *model.AccessibilityRequest) (string, error) {
