@@ -295,6 +295,10 @@ An accessibility request represents
 type AccessibilityRequest {
   id: UUID!
   name: String!
+  """
+  Probably should be a DateTime
+  TODO: Add scalar
+  """
   submittedAt: String!
 }
 
