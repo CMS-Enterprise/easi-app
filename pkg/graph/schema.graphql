@@ -1,0 +1,47 @@
+type UserError {
+  message: String!
+  path: [String!]!
+}
+
+"""
+An accessibility request represents
+"""
+type AccessibilityRequest {
+  id: UUID!
+  name: String!
+}
+
+input CreateAccessibilityRequestInput {
+  name: String!
+}
+
+type CreateAccessibilityRequestPayload {
+  accessibilityRequest: AccessibilityRequest
+  userErrors: [UserError!]
+}
+
+type AccessibilityRequestsConnection {
+  totalCount: Int!
+  edges: [AccessibilityRequestEdge!]!
+}
+
+type AccessibilityRequestEdge {
+  cursor: String!
+  node: AccessibilityRequest!
+}
+
+type Mutation {
+  createAccessibilityRequest(
+    input: CreateAccessibilityRequestInput
+  ): CreateAccessibilityRequestPayload
+}
+
+type Query {
+  accessibilityRequests(
+    first: Int!
+    after: String
+  ): AccessibilityRequestsConnection
+  accessibilityRequest(id: UUID!): AccessibilityRequest
+}
+
+scalar UUID

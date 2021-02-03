@@ -378,6 +378,20 @@ It should start automatically if you run `docker-compose up`.
 
 ## Build
 
+### GraphQL Generation
+
+Regenerate the go types and resolver definitions:
+
+```shell
+go generate ./...
+```
+
+Regenerate the TypeScript types and validate `schema.graphql`:
+
+```shell
+yarn generate
+```
+
 ### Swagger Generation
 
 The EASi server uses Swagger generation
@@ -459,6 +473,13 @@ The APIs reside at `localhost:8080` when running.
 To run a test request,
 you can send a GET to the health check endpoint:
 `curl localhost:8080/api/v1/healthcheck`
+
+### GraphQL Playground
+
+You can visit `http://localhost:8080/graph/playground`
+to access a GraphQL playground while
+the Go backend is running. **You will need to enter `/graph/query` as the query
+path in the UI for this to work.**
 
 #### Authorization
 
