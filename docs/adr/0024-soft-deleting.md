@@ -7,6 +7,10 @@ predetermined and unified pattern for handling soft-delete,
 i.e. the functional deletion
 of data from the user's perspective while maintaining that data in the database.
 
+An open question: how frequently do we expect to need to retrieve deleted records?
+Do we have a pattern in place for doing such a thing? What privileges are needed
+for such a thing?
+
 ## Considered Alternatives
 
 * Hard delete data
@@ -18,6 +22,12 @@ table whence the record was deleted along with a JSON blob of the deleted record
 ## Decision Outcome
 
 * Chosen Alternative: Use a `deleted_at` column
+
+This is what we've done in existing database tables. All these
+methods have some amount of upkeep they require: either giving
+every new query a `WHERE` clause, migrating a parallel deleted table
+the same as the original, etc. I don't see any alternative
+that we can set and forget, so we'll continue with our existing pattern.
 
 ## Pros and Cons of the Alternatives <!-- optional -->
 
@@ -32,8 +42,7 @@ table whence the record was deleted along with a JSON blob of the deleted record
 * `+` Records when data is deleted
 * `+` Easy to retrieve deleted data
 * `-` Requires adding a `WHERE !is_deleted` clause to most fetch queries
-* `-` Deleting a record with associations requires, in some cases,
-a manual propagation of the deletion of the associations
+* `-` Requires manual cascading deletes
 
 ### Move deleted records to alternate tables called `deleted_$TABLE_NAME`
 
