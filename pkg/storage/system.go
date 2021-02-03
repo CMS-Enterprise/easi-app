@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -19,32 +21,35 @@ func init() {
 	fakeSystems = []*models.System{
 		{
 			LCID:        "X990000",
+			IntakeID:    uuid.MustParse("00000000-9999-0000-0000-000000000000"),
 			CreatedAt:   &t1,
 			UpdatedAt:   &t1,
 			IssuedAt:    &t1,
 			ExpiresAt:   &t2,
 			ProjectName: "Three Amigos",
-			OwnerID:     "FAKE0",
+			OwnerID:     null.StringFrom("FAKE0"),
 			OwnerName:   "Lucky Dusty Ned",
 		},
 		{
 			LCID:        "X990001",
+			IntakeID:    uuid.MustParse("00000000-8888-0000-0000-000000000000"),
 			CreatedAt:   &t1,
 			UpdatedAt:   &t1,
 			IssuedAt:    &t1,
 			ExpiresAt:   &t2,
 			ProjectName: "Three Musketeers",
-			OwnerID:     "FAKE1",
+			OwnerID:     null.StringFromPtr(nil),
 			OwnerName:   "Athos Porthos Aramis",
 		},
 		{
 			LCID:        "X990002",
+			IntakeID:    uuid.MustParse("00000000-7777-0000-0000-000000000000"),
 			CreatedAt:   &t1,
 			UpdatedAt:   &t1,
 			IssuedAt:    &t1,
 			ExpiresAt:   &t2,
 			ProjectName: "Three Stooges",
-			OwnerID:     "FAKE2",
+			OwnerID:     null.StringFrom("FAKE2"),
 			OwnerName:   "Moe Larry Curly",
 		},
 	}
@@ -91,6 +96,7 @@ func (s *Store) useFakeSystems(ctx context.Context) bool {
 
 const sqlListSystems = `
 	SELECT
+		id,
 		lcid,
 		created_at,
 		updated_at,
@@ -103,7 +109,7 @@ const sqlListSystems = `
 	WHERE
 		status='LCID_ISSUED' AND
 		request_type='NEW' AND
-		(lcid='') IS NOT TRUE;
+		lcid IS NOT NULL;
 `
 
 func (s *Store) listSystems(ctx context.Context) ([]*models.System, error) {

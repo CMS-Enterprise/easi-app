@@ -3,6 +3,7 @@ import {
   ACCESSIBILITY_ADMIN_PROD,
   ACCESSIBILITY_TESTER_DEV,
   ACCESSIBILITY_TESTER_PROD,
+  BASIC_USER_PROD,
   GOVTEAM_DEV,
   GOVTEAM_PROD
 } from 'constants/jobCodes';
@@ -38,7 +39,7 @@ export const isAccessibilityAdmin = (groups: Array<String> = []) => {
 };
 
 export const isBasicUser = (groups: Array<String> = []) => {
-  return groups.length === 0;
+  return groups.includes(BASIC_USER_PROD) || groups.length === 0;
 };
 
 const user = {

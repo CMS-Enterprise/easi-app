@@ -6,9 +6,17 @@ PROJECT_NAME=easi-app
 CYPRESS_CONTAINER="${PROJECT_NAME}"_cypress_1
 EASI_CONTAINER="${PROJECT_NAME}"_easi_1
 
+SERVER_CERT="$(cat ./config/tls/devlocal-https.crt)"
+SERVER_KEY="$(cat ./config/tls/devlocal-https.key)"
+export SERVER_CERT
+export SERVER_KEY
+
 # Running in CircleCI
 if [[ -n "${CIRCLECI+x}" ]]; then
   if (set +x -o nounset; aws ecr get-login-password --region "${AWS_DEFAULT_REGION}" | docker login --username AWS --password-stdin "${AWS_ACCOUNT_ID}".dkr.ecr."${AWS_DEFAULT_REGION}".amazonaws.com) ; then
+    # copy easi_client static asset build from CircleCI workspace to the 'build' directory expected by Dockerfile.client_circleci
+    cp -r /tmp/builds/build /home/circleci/project/build || exit
+
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml pull db_migrate easi
 
     docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml build --parallel easi_client cypress
