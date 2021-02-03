@@ -3,6 +3,7 @@ version: '3.7'
 services:
   db:
     image: postgres:11.6
+    command: ['postgres', '-c', 'log_statement=all']
   db_migrate:
     image: easi-db-migrate:latest
     environment:
