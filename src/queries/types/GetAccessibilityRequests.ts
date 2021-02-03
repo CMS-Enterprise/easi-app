@@ -9,7 +9,7 @@
 
 export interface GetAccessibilityRequests_accessibilityRequests_edges_node {
   __typename: "AccessibilityRequest";
-  id: any;
+  id: UUID;
   name: string;
 }
 
