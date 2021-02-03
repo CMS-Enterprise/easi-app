@@ -11,6 +11,10 @@ export interface GetAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
   id: UUID;
   name: string;
+  /**
+   * Probably should be a DateTime
+   * TODO: Add scalar
+   */
   submittedAt: string;
 }
 
