@@ -1,4 +1,6 @@
-import React, { useMemo } from 'react';
+/* eslint-disable react/prop-types */
+
+import React, { FunctionComponent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useSortBy, useTable } from 'react-table';
@@ -6,15 +8,34 @@ import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+// import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 
-const AccessibilityRequestsTable = () => {
+type AccessibilityRequestsTableRow = {
+  id: string;
+  name: string;
+  submittedAt?: DateTime;
+  businessOwner?: {
+    name?: string;
+    component?: string;
+  };
+  testDate?: DateTime;
+  status?: string;
+  lastUpdatedAt?: DateTime;
+};
+
+type AccessibilityRequestsTableProps = {
+  requests: AccessibilityRequestsTableRow[];
+};
+
+const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTableProps> = ({
+  requests
+}) => {
   const { t } = useTranslation('accessibility');
   const columns: any = useMemo(() => {
     return [
       {
         Header: t('requestTable.header.requestName'),
-        accessor: 'requestName',
+        accessor: 'name',
         Cell: ({ row, value }: any) => {
           return (
             <UswdsLink
@@ -71,139 +92,6 @@ const AccessibilityRequestsTable = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const data = useMemo(() => {
-    // TODO: Request status text needs to be mapped from backend enum
-    const mockData = [
-      {
-        id: '1',
-        requestName: '(USDS) Dashboard for USDS 1.7',
-        submittedAt: '2021-01-11T00:00:00.000-07:00',
-        updatedAt: '2021-01-11T00:00:00.000-07:00',
-        businessOwner: {
-          name: 'Ada Sanchez',
-          component: 'Office of Information Technology'
-        },
-        testedAt: '',
-        status: 'Request Received'
-      },
-      {
-        id: '2',
-        requestName: 'OSORA FOIA Portal Project 3.0',
-        submittedAt: '2021-01-09T00:00:00.000-07:00',
-        updatedAt: '2021-01-09T00:00:00.000-07:00',
-        businessOwner: {
-          name: 'Amanda Johnson',
-          component: 'Office of Information Technology'
-        },
-        testedAt: '',
-        status: 'Request Received'
-      },
-      {
-        id: '3',
-        requestName: 'TACO 1.3',
-        submittedAt: '2021-01-05T00:00:00.000-07:00',
-        updatedAt: '2021-01-05T00:00:00.000-07:00',
-        businessOwner: {
-          name: 'Shane Clark',
-          component: 'Office of Information Technology'
-        },
-        testedAt: '',
-        status: 'Documents Received'
-      },
-      {
-        id: '4',
-        requestName: 'Impact Analysis Network',
-        submittedAt: '2020-12-28T00:00:00.000-07:00',
-        updatedAt: '2020-12-28T00:00:00.000-07:00',
-        businessOwner: {
-          name: 'Marny Land',
-          component: 'Office of Information Technology'
-        },
-        testedAt: '',
-        status: 'Reuqest Received'
-      },
-      {
-        id: '5',
-        requestName: 'Clinical Standards and Quality Migration 1.3',
-        submittedAt: '2020-12-27T00:00:00.000-07:00',
-        updatedAt: '2020-12-27T00:00:00.000-07:00',
-        businessOwner: {
-          name: 'Paul Shatto',
-          component: 'Office of Information Technology'
-        },
-        testedAt: '',
-        status: 'Documents Received'
-      },
-      {
-        id: '6',
-        requestName: 'Medicare Payments Processing 2.0',
-        submittedAt: '2020-12-20T00:00:00.000-07:00',
-        updatedAt: '2020-12-20T00:00:00.000-07:00',
-        businessOwner: {
-          name: 'Wanda McIver',
-          component: 'Office of Information Technology'
-        },
-        testedAt: '2021-01-19T00:00:00.000-07:00',
-        status: 'Test Scheduled'
-      },
-      {
-        id: '7',
-        requestName: 'Medical Redesign',
-        submittedAt: '2020-12-19T00:00:00.000-07:00',
-        updatedAt: '2020-12-19T00:00:00.000-07:00',
-        businessOwner: {
-          name: 'Aaron Heffler',
-          component: 'Office of Information Technology'
-        },
-        testedAt: '2021-01-19T00:00:00.000-07:00',
-        status: 'Test Scheduled'
-      },
-      {
-        id: '8',
-        requestName: 'Migration Pipeline 2.0',
-        submittedAt: '2020-12-15T00:00:00.000-07:00',
-        updatedAt: '2020-12-15T00:00:00.000-07:00',
-        businessOwner: {
-          name: 'Connie Leonard',
-          component: 'Office of Information Technology'
-        },
-        testedAt: '2021-01-07T00:00:00.000-07:00',
-        status: 'Test Scheduled'
-      },
-      {
-        id: '9',
-        requestName:
-          'Consumer Information and Insurance Oversight Pilot Program 1.0',
-        submittedAt: '2020-11-29T00:00:00.000-07:00',
-        updatedAt: '2020-11-29T00:00:00.000-07:00',
-        businessOwner: {
-          name: 'Blake Limmer',
-          component: 'Office of Information Technology'
-        },
-        testedAt: '2020-11-19T00:00:00.000-07:00',
-        status: 'Test Scheduled'
-      }
-    ];
-
-    return mockData.map(request => {
-      const { businessOwner } = request;
-
-      const component = cmsDivisionsAndOffices.find(
-        c => c.name === businessOwner.component
-      );
-
-      const businessOwnerWithComponent = component
-        ? `${businessOwner.name}, ${component.acronym}`
-        : businessOwner.name;
-
-      // TODO Translate Status from backend enum to human readable
-      return {
-        ...request,
-        businessOwner: businessOwnerWithComponent
-      };
-    });
-  }, []);
-
   const {
     getTableProps,
     getTableBodyProps,
@@ -213,6 +101,7 @@ const AccessibilityRequestsTable = () => {
   } = useTable(
     {
       columns,
+      data: requests,
       sortTypes: {
         alphanumeric: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
@@ -232,7 +121,7 @@ const AccessibilityRequestsTable = () => {
           return rowOneElem > rowTwoElem ? 1 : -1;
         }
       },
-      data,
+      requests,
       initialState: {
         sortBy: [{ id: 'submittedAt', desc: true }]
       }
