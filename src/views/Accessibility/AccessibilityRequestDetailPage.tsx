@@ -29,16 +29,8 @@ const AccessibilityRequestDetailPage = () => {
     }
   );
 
-  // There has to be a better way to do this..
-  const requestName =
-    data && data.accessibilityRequest && data.accessibilityRequest.name;
-
-  // There has to be a better way to do this..
-  const submittedAt =
-    (data &&
-      data.accessibilityRequest &&
-      data.accessibilityRequest.submittedAt) ||
-    '';
+  const requestName = data?.accessibilityRequest?.name;
+  const submittedAt = data?.accessibilityRequest?.submittedAt || '';
 
   // const TEMP_NUM_OF_DOCUMENTS = 0;
 
