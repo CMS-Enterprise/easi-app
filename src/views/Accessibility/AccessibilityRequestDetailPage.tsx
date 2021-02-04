@@ -55,7 +55,7 @@ const AccessibilityRequestDetailPage = () => {
       <Header />
       <MainContent className="margin-bottom-5">
         <SecondaryNav>
-          <NavLink to={`/508/request/${accessibilityRequestId}`}>
+          <NavLink to={`/508/requests/${accessibilityRequestId}`}>
             {t('tabs.accessibilityRequests')}
           </NavLink>
         </SecondaryNav>
@@ -70,7 +70,7 @@ const AccessibilityRequestDetailPage = () => {
                 className="usa-button"
                 variant="unstyled"
                 asCustom={Link}
-                to={`/508/request/${accessibilityRequestId}/document-upload`}
+                to={`/508/requests/${accessibilityRequestId}/document-upload`}
               >
                 {t('requestDetails.documentUpload')}
               </UswdsLink>
