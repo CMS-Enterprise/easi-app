@@ -9,6 +9,7 @@ An accessibility request represents
 type AccessibilityRequest {
   id: UUID!
   name: String!
+  submittedAt: Time!
 }
 
 input CreateAccessibilityRequestInput {
@@ -45,3 +46,4 @@ type Query {
 }
 
 scalar UUID
+scalar Time
