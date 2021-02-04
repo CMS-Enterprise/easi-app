@@ -100,10 +100,6 @@ func (s GraphQLTestSuite) TestQueries() {
 		}
 	}
 
-	fmt.Println(intake.ID)
-	fmt.Println(accessibilityRequest.ID)
-	// runtime.Breakpoint()
-
 	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
 	// but it wasn't working for me.
 	s.client.MustPost(fmt.Sprintf(
