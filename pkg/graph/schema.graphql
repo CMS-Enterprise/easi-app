@@ -8,6 +8,14 @@ An accessibility request represents
 """
 type AccessibilityRequest {
   id: UUID!
+  system: System!
+}
+
+"""
+A system is derived from a system intake and represents a computer system managed by CMS
+"""
+type System {
+  id: UUID!
   name: String!
 }
 

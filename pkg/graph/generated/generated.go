@@ -8,6 +8,7 @@ import (
 	"errors"
 	"strconv"
 	"sync"
+	"sync/atomic"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -35,6 +36,7 @@ type Config struct {
 }
 
 type ResolverRoot interface {
+	AccessibilityRequest() AccessibilityRequestResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 }
@@ -44,8 +46,8 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	AccessibilityRequest struct {
-		ID   func(childComplexity int) int
-		Name func(childComplexity int) int
+		ID     func(childComplexity int) int
+		System func(childComplexity int) int
 	}
 
 	AccessibilityRequestEdge struct {
@@ -72,12 +74,20 @@ type ComplexityRoot struct {
 		AccessibilityRequests func(childComplexity int, first int, after *string) int
 	}
 
+	System struct {
+		ID   func(childComplexity int) int
+		Name func(childComplexity int) int
+	}
+
 	UserError struct {
 		Message func(childComplexity int) int
 		Path    func(childComplexity int) int
 	}
 }
 
+type AccessibilityRequestResolver interface {
+	System(ctx context.Context, obj *model.AccessibilityRequest) (*model.System, error)
+}
 type MutationResolver interface {
 	CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
 }
@@ -108,12 +118,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccessibilityRequest.ID(childComplexity), true
 
-	case "AccessibilityRequest.name":
-		if e.complexity.AccessibilityRequest.Name == nil {
+	case "AccessibilityRequest.system":
+		if e.complexity.AccessibilityRequest.System == nil {
 			break
 		}
 
-		return e.complexity.AccessibilityRequest.Name(childComplexity), true
+		return e.complexity.AccessibilityRequest.System(childComplexity), true
 
 	case "AccessibilityRequestEdge.cursor":
 		if e.complexity.AccessibilityRequestEdge.Cursor == nil {
@@ -192,6 +202,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.AccessibilityRequests(childComplexity, args["first"].(int), args["after"].(*string)), true
+
+	case "System.id":
+		if e.complexity.System.ID == nil {
+			break
+		}
+
+		return e.complexity.System.ID(childComplexity), true
+
+	case "System.name":
+		if e.complexity.System.Name == nil {
+			break
+		}
+
+		return e.complexity.System.Name(childComplexity), true
 
 	case "UserError.message":
 		if e.complexity.UserError.Message == nil {
@@ -280,6 +304,14 @@ var sources = []*ast.Source{
 An accessibility request represents
 """
 type AccessibilityRequest {
+  id: UUID!
+  system: System!
+}
+
+"""
+A system is derived from a system intake and represents a computer system managed by CMS
+"""
+type System {
   id: UUID!
   name: String!
 }
@@ -468,7 +500,7 @@ func (ec *executionContext) _AccessibilityRequest_id(ctx context.Context, field 
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccessibilityRequest_name(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequest) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccessibilityRequest_system(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequest) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -479,14 +511,14 @@ func (ec *executionContext) _AccessibilityRequest_name(ctx context.Context, fiel
 		Object:     "AccessibilityRequest",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Name, nil
+		return ec.resolvers.AccessibilityRequest().System(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -498,9 +530,9 @@ func (ec *executionContext) _AccessibilityRequest_name(ctx context.Context, fiel
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*model.System)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystem(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestEdge) (ret graphql.Marshaler) {
@@ -893,6 +925,76 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _System_id(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "System",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _System_name(ctx context.Context, field graphql.CollectedField, obj *model.System) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "System",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UserError_message(ctx context.Context, field graphql.CollectedField, obj *model.UserError) (ret graphql.Marshaler) {
@@ -2094,13 +2196,22 @@ func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.S
 		case "id":
 			out.Values[i] = ec._AccessibilityRequest_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
-		case "name":
-			out.Values[i] = ec._AccessibilityRequest_name(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+		case "system":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._AccessibilityRequest_system(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2271,6 +2382,38 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemImplementors = []string{"System"}
+
+func (ec *executionContext) _System(ctx context.Context, sel ast.SelectionSet, obj *model.System) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("System")
+		case "id":
+			out.Values[i] = ec._System_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+			out.Values[i] = ec._System_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2689,6 +2832,20 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	}
 
 	return ret
+}
+
+func (ec *executionContext) marshalNSystem2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystem(ctx context.Context, sel ast.SelectionSet, v model.System) graphql.Marshaler {
+	return ec._System(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystem(ctx context.Context, sel ast.SelectionSet, v *model.System) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._System(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (uuid.UUID, error) {

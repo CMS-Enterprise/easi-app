@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	"github.com/google/uuid"
+)
+
 type AccessibilityRequestEdge struct {
 	Cursor string                `json:"cursor"`
 	Node   *AccessibilityRequest `json:"node"`
@@ -19,6 +23,12 @@ type CreateAccessibilityRequestInput struct {
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError          `json:"userErrors"`
+}
+
+// A system is derived from a system intake and represents a computer system managed by CMS
+type System struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
 }
 
 type UserError struct {
