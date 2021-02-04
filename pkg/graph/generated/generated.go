@@ -8,7 +8,7 @@ import (
 	"errors"
 	"strconv"
 	"sync"
-	"sync/atomic"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -36,7 +36,6 @@ type Config struct {
 }
 
 type ResolverRoot interface {
-	AccessibilityRequest() AccessibilityRequestResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 }
@@ -46,9 +45,9 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	AccessibilityRequest struct {
-		ID          func(childComplexity int) int
-		Name        func(childComplexity int) int
-		SubmittedAt func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
+		ID        func(childComplexity int) int
+		Name      func(childComplexity int) int
 	}
 
 	AccessibilityRequestEdge struct {
@@ -81,9 +80,6 @@ type ComplexityRoot struct {
 	}
 }
 
-type AccessibilityRequestResolver interface {
-	SubmittedAt(ctx context.Context, obj *model.AccessibilityRequest) (string, error)
-}
 type MutationResolver interface {
 	CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
 }
@@ -107,6 +103,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	_ = ec
 	switch typeName + "." + field {
 
+	case "AccessibilityRequest.submittedAt":
+		if e.complexity.AccessibilityRequest.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequest.CreatedAt(childComplexity), true
+
 	case "AccessibilityRequest.id":
 		if e.complexity.AccessibilityRequest.ID == nil {
 			break
@@ -120,13 +123,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequest.Name(childComplexity), true
-
-	case "AccessibilityRequest.submittedAt":
-		if e.complexity.AccessibilityRequest.SubmittedAt == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequest.SubmittedAt(childComplexity), true
 
 	case "AccessibilityRequestEdge.cursor":
 		if e.complexity.AccessibilityRequestEdge.Cursor == nil {
@@ -295,11 +291,7 @@ An accessibility request represents
 type AccessibilityRequest {
   id: UUID!
   name: String!
-  """
-  Probably should be a DateTime
-  TODO: Add scalar
-  """
-  submittedAt: String!
+  submittedAt: Time!
 }
 
 input CreateAccessibilityRequestInput {
@@ -336,6 +328,7 @@ type Query {
 }
 
 scalar UUID
+scalar Time
 `, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -532,14 +525,14 @@ func (ec *executionContext) _AccessibilityRequest_submittedAt(ctx context.Contex
 		Object:     "AccessibilityRequest",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.AccessibilityRequest().SubmittedAt(rctx, obj)
+		return obj.CreatedAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -551,9 +544,9 @@ func (ec *executionContext) _AccessibilityRequest_submittedAt(ctx context.Contex
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestEdge) (ret graphql.Marshaler) {
@@ -2147,27 +2140,18 @@ func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.S
 		case "id":
 			out.Values[i] = ec._AccessibilityRequest_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "name":
 			out.Values[i] = ec._AccessibilityRequest_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "submittedAt":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._AccessibilityRequest_submittedAt(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._AccessibilityRequest_submittedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2756,6 +2740,27 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	res, err := graphql.UnmarshalTime(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := graphql.MarshalTime(*v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (uuid.UUID, error) {
