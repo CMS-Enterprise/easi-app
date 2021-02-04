@@ -30,12 +30,14 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *model.A
 		INSERT INTO accessibility_request (
 			id,
 			name,
+			intake_id,
 			created_at,
 			updated_at
 		)
 		VALUES (
 			:id,
 			:name,
+			:intake_id,
 		    :created_at,
 			:updated_at
 		)`
@@ -44,7 +46,7 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *model.A
 		request,
 	)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to create accessibility request with error %s", zap.Error(err))
+		appcontext.ZLogger(ctx).Error("Failed to create accessibility request", zap.Error(err))
 		return nil, err
 	}
 	return s.FetchAccessibilityRequestByID(ctx, request.ID)

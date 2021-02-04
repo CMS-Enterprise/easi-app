@@ -10,6 +10,7 @@ import (
 type AccessibilityRequest struct {
 	ID        uuid.UUID  `json:"id"`
 	Name      string     `json:"name"`
+	IntakeID  uuid.UUID  `db:"intake_id"`
 	CreatedAt *time.Time `db:"created_at"`
 	UpdatedAt *time.Time `db:"updated_at"`
 }
