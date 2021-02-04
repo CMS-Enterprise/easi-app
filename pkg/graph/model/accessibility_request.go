@@ -8,8 +8,8 @@ import (
 
 // AccessibilityRequest models a 508 request
 type AccessibilityRequest struct {
-	ID        uuid.UUID  `json:"id"`
-	Name      string     `json:"name"`
-	CreatedAt *time.Time `db:"created_at"`
+	ID        uuid.UUID
+	Name      string
+	CreatedAt *time.Time `db:"created_at" gqlgen:"submittedAt"`
 	UpdatedAt *time.Time `db:"updated_at"`
 }
