@@ -1,11 +1,11 @@
-import React, { ReactNode, ReactNodeArray } from 'react';
+import React, { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import classnames from 'classnames';
 
 import './index.scss';
 
 type SecondaryNavProps = {
-  children: ReactNode | ReactNodeArray;
+  children: ReactNode;
 };
 
 const SecondaryNav = ({ children }: SecondaryNavProps) => {
@@ -18,7 +18,7 @@ const SecondaryNav = ({ children }: SecondaryNavProps) => {
 
 type NavLinkProps = {
   to: string;
-  children: ReactNode | ReactNodeArray;
+  children: ReactNode;
 };
 
 const NavLink = ({ to, children }: NavLinkProps) => {
