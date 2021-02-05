@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	"github.com/google/uuid"
+)
+
 type AccessibilityRequestEdge struct {
 	Cursor string                `json:"cursor"`
 	Node   *AccessibilityRequest `json:"node"`
@@ -19,6 +23,13 @@ type CreateAccessibilityRequestInput struct {
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError          `json:"userErrors"`
+}
+
+type System struct {
+	IntakeID    *uuid.UUID `json:"intakeId"`
+	LifecycleID *string    `json:"lifecycleId"`
+	ProjectName *string    `json:"projectName"`
+	OwnerName   *string    `json:"ownerName"`
 }
 
 type UserError struct {

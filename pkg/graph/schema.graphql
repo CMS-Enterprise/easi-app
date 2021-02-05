@@ -36,12 +36,20 @@ type Mutation {
   ): CreateAccessibilityRequestPayload
 }
 
+type System {
+  intakeId: UUID
+  lifecycleId: String
+  projectName: String
+  ownerName: String
+}
+
 type Query {
   accessibilityRequests(
     first: Int!
     after: String
   ): AccessibilityRequestsConnection
   accessibilityRequest(id: UUID!): AccessibilityRequest
+  systemsList: [System]
 }
 
 scalar UUID

@@ -1,6 +1,11 @@
 package graph
 
-import "github.com/cmsgov/easi-app/pkg/storage"
+import (
+	"context"
+
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/storage"
+)
 
 //go:generate go run github.com/99designs/gqlgen
 
@@ -10,10 +15,17 @@ import "github.com/cmsgov/easi-app/pkg/storage"
 
 // Resolver is a resolver.
 type Resolver struct {
-	store *storage.Store
+	store       *storage.Store
+	systemsList func(ctx context.Context) ([]*models.System, error)
 }
 
 // NewResolver constructs a resolver
-func NewResolver(store *storage.Store) *Resolver {
-	return &Resolver{store: store}
+func NewResolver(
+	store *storage.Store,
+	systemsList func(ctx context.Context) ([]*models.System, error),
+) *Resolver {
+	return &Resolver{
+		store:       store,
+		systemsList: systemsList,
+	}
 }

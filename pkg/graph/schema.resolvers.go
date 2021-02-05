@@ -49,6 +49,23 @@ func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) 
 	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }
 
+func (r *queryResolver) SystemsList(ctx context.Context) ([]*model.System, error) {
+	items, err := r.systemsList(ctx)
+	if err != nil {
+		return nil, err
+	}
+	var results []*model.System
+	for _, item := range items {
+		results = append(results, &model.System{
+			IntakeID:    &item.IntakeID,
+			LifecycleID: &item.LCID,
+			ProjectName: &item.ProjectName,
+			OwnerName:   &item.OwnerName,
+		})
+	}
+	return results, nil
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 

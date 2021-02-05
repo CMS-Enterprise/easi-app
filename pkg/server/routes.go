@@ -130,13 +130,6 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
 	}
 
-	// set up GraphQL routes
-	gql := s.router.PathPrefix("/api/graph").Subrouter()
-	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
-	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
-	gql.Handle("/query", graphqlServer)
-	gql.HandleFunc("/playground", playground.Handler("GraphQL playground", "/api/graph/query"))
-
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 	api.Use(authorizationMiddleware) // TODO: see comment at top-level router
@@ -537,10 +530,6 @@ func (s *Server) routes(
 
 	api.Handle("/file_uploads/{file_name}/download_url", presignedURLDownloadHandler.Handle())
 
-	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
-		base,
-	).Handle())
-
 	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient, princeLambdaName)).Handle())
 
 	systemsHandler := handlers.NewSystemsHandler(
@@ -552,4 +541,47 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/systems", systemsHandler.Handle())
+
+	// set up GraphQL routes
+	s.router.HandleFunc("/api/playground", playground.Handler("GraphQL playground", "/api/graph/query")) // no need for AuthN, can hang off top router
+	gql := s.router.PathPrefix("/api/graph").Subrouter()
+	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
+	resolver := graph.NewResolver(
+		store,
+		services.NewFetchSystems(
+			serviceConfig,
+			store.ListSystems,
+			services.NewAuthorizeHasEASiRole(),
+		),
+	)
+	gql.Handle("/query", handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver})))
+
+	// !! catchall should be the last route added !!
+	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(base).Handle())
+
+	// useful for debugging route issues
+	// s.router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+	// 	pathTemplate, err := route.GetPathTemplate()
+	// 	if err == nil {
+	// 		fmt.Println("ROUTE:", pathTemplate)
+	// 	}
+	// 	pathRegexp, err := route.GetPathRegexp()
+	// 	if err == nil {
+	// 		fmt.Println("Path regexp:", pathRegexp)
+	// 	}
+	// 	queriesTemplates, err := route.GetQueriesTemplates()
+	// 	if err == nil {
+	// 		fmt.Println("Queries templates:", strings.Join(queriesTemplates, ","))
+	// 	}
+	// 	queriesRegexps, err := route.GetQueriesRegexp()
+	// 	if err == nil {
+	// 		fmt.Println("Queries regexps:", strings.Join(queriesRegexps, ","))
+	// 	}
+	// 	methods, err := route.GetMethods()
+	// 	if err == nil {
+	// 		fmt.Println("Methods:", strings.Join(methods, ","))
+	// 	}
+	// 	fmt.Println()
+	// 	return nil
+	// })
 }
