@@ -131,11 +131,11 @@ func (s *Server) routes(
 	}
 
 	// set up GraphQL routes
-	gql := s.router.PathPrefix("/graph").Subrouter()
+	gql := s.router.PathPrefix("/api/graph").Subrouter()
 	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
 	gql.Handle("/query", graphqlServer)
-	gql.HandleFunc("/playground", playground.Handler("GraphQL playground", "/graph/query"))
+	gql.HandleFunc("/playground", playground.Handler("GraphQL playground", "/api/graph/query"))
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
