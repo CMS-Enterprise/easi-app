@@ -10,7 +10,6 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 )
@@ -20,7 +19,7 @@ const (
 	testGRTJobCode = "EASI_D_GOVTEAM"
 )
 
-func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtverifier.Jwt, error) {
+func (f oktaMiddlewareFactory) jwt(authHeader string) (*jwtverifier.Jwt, error) {
 	tokenParts := strings.Split(authHeader, "Bearer ")
 	if len(tokenParts) < 2 {
 		return nil, errors.New("invalid Bearer in auth header")
@@ -72,44 +71,53 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPri
 	return &authn.EUAPrincipal{EUAID: euaID, JobCodeEASi: jcEASi, JobCodeGRT: jcGRT}, nil
 }
 
-func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Handler {
+func (f oktaMiddlewareFactory) headerToPrincipal(header string) (*authn.EUAPrincipal, error) {
+	if header == "" {
+		// return nil, errors.New("empty authorization header")
+		// quietly let non-authenticated requests through
+		return nil, nil
+	}
+	jwt, err := f.jwt(header)
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse jwt: %w", err)
+	}
+	principal, err := f.newPrincipal(jwt)
+	if err != nil {
+		return nil, fmt.Errorf("unable to get Principal from jwt: %w", err)
+	}
+	return principal, nil
+}
+
+func (f oktaMiddlewareFactory) newAuthenticationMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logger := appcontext.ZLogger(r.Context())
-		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			f.WriteErrorResponse(
-				r.Context(),
-				w,
-				&apperrors.UnauthorizedError{Err: errors.New("empty authorization header")},
-			)
-			return
-		}
-
-		jwt, err := f.jwt(logger, authHeader)
-		if err != nil {
-			f.WriteErrorResponse(
-				r.Context(),
-				w,
-				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to parse jwt: %w", err)},
-			)
-			return
-		}
-
-		principal, err := f.newPrincipal(jwt)
-		if err != nil {
-			f.WriteErrorResponse(
-				r.Context(),
-				w,
-				&apperrors.UnauthorizedError{Err: fmt.Errorf("unable to get Principal from jwt: %w", err)},
-			)
-			return
-		}
-		logger = logger.With(zap.String("user", principal.ID())).With(zap.Bool("grt", principal.AllowGRT()))
-
 		ctx := r.Context()
-		ctx = appcontext.WithPrincipal(ctx, principal)
-		ctx = appcontext.WithLogger(ctx, logger)
-		next.ServeHTTP(w, r.WithContext(ctx))
+
+		// the AUTHENTICATION layer's responsibility is to answer "Do I
+		// know who this is?", and if it can figure that out, it puts the
+		// principal onto the context. Otherwise, it just lets the request
+		// continue on.
+		// (The responsibility to answer "is this requester allowed to
+		// make this request" is the responsibility of a later
+		// AUTHORIZATION layer)
+		p, err := f.headerToPrincipal(r.Header.Get("Authorization"))
+		if err != nil {
+			appcontext.ZLogger(ctx).Info("no principal found", zap.Error(err))
+		}
+		if p != nil {
+			// principal goes on the context
+			ctx = appcontext.WithPrincipal(ctx, p)
+
+			// decorate logs with the principal info
+			logger := appcontext.ZLogger(ctx).
+				With(zap.String("user", p.ID())).
+				With(zap.Bool("grt", p.AllowGRT()))
+			ctx = appcontext.WithLogger(ctx, logger)
+
+			// new principal and loggers now available to all the
+			// downstream parts of the chain via the decorated request
+			r = r.WithContext(ctx)
+		}
+		next.ServeHTTP(w, r)
 	})
 }
 
@@ -146,6 +154,6 @@ func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issu
 
 	middlewareFactory := oktaMiddlewareFactory{HandlerBase: base, verifier: verifier, codeGRT: jobCodeGRT}
 	return func(next http.Handler) http.Handler {
-		return middlewareFactory.newAuthorizeMiddleware(next)
+		return middlewareFactory.newAuthenticationMiddleware(next)
 	}
 }

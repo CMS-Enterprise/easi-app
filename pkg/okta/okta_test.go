@@ -38,7 +38,7 @@ func TestOktaTestSuite(t *testing.T) {
 	}
 }
 
-func (s OktaTestSuite) TestAuthorizeMiddleware() {
+func (s OktaTestSuite) TestAuthenticationMiddleware() {
 	accessToken, err := testhelpers.OktaAccessToken(s.config)
 	s.NoError(err, "couldn't get access token")
 	s.NotEmpty(accessToken, "empty access token")
@@ -54,40 +54,49 @@ func (s OktaTestSuite) TestAuthorizeMiddleware() {
 		req.Header.Set("AUTHORIZATION", fmt.Sprintf("Bearer %s", accessToken))
 		rr := httptest.NewRecorder()
 		handlerRun := false
+		authorized := false
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			handlerRun = true
+			authorized = appcontext.Principal(r.Context()).AllowEASi()
 		})
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)
 
 		s.True(handlerRun)
+		s.True(authorized)
 	})
 
-	s.Run("a invalid token does not execute the handler", func() {
+	s.Run("a invalid token executes handler but not authorized", func() {
 		req := httptest.NewRequest("GET", "/systems/", nil)
 		req.Header.Set("AUTHORIZATION", fmt.Sprintf("Bearer isNotABear"))
 		rr := httptest.NewRecorder()
 		handlerRun := false
+		authorized := false
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			handlerRun = true
+			authorized = appcontext.Principal(r.Context()).AllowEASi()
 		})
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)
 
-		s.False(handlerRun)
+		s.True(handlerRun)
+		s.False(authorized)
 	})
 
-	s.Run("an empty token does not execute the handler", func() {
+	s.Run("an empty token executes handler but not authorized", func() {
 		req := httptest.NewRequest("GET", "/systems/", nil)
 		rr := httptest.NewRecorder()
 		handlerRun := false
+		authorized := false
 		testHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			handlerRun = true
+			authorized = appcontext.Principal(r.Context()).AllowEASi()
 		})
 
 		authMiddleware(testHandler).ServeHTTP(rr, req)
 
-		s.False(handlerRun)
+		s.True(handlerRun)
+		s.False(authorized)
 	})
 
 	s.Run("valid token has an EUA ID in context", func() {
