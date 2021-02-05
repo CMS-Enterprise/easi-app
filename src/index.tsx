@@ -65,7 +65,7 @@ function getAuthHeader(targetUrl: string) {
 /**
  * Setup client for GraphQL
  */
-const graphQueryURL = 'http://localhost:8080/graph/query';
+const graphQueryURL = 'http://localhost:8080/api/graph/query';
 const httpLink = createHttpLink({
   uri: graphQueryURL
 });
