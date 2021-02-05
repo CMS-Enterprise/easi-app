@@ -7,7 +7,9 @@ type PageHeadingProps = {
 } & JSX.IntrinsicElements['h1'];
 
 /**
- * Default h1 used on views, primarily to standardize h1 spacing
+ * This is h1 that belongs on every page.
+ * Design wants to standardize the margins around h1 that appear at the top of the page.
+ * This gives the h1 element more room to breathe.
  */
 const PageHeading = ({ children, className, ...props }: PageHeadingProps) => {
   const classes = classnames('margin-top-6', 'margin-bottom-5', className);
