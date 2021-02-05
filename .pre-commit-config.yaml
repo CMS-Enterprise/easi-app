@@ -58,7 +58,7 @@ repos:
     hooks:
       - id: graphql-schema
         name: graphql-schema
-        entry: yarn run graphql-schema-linter
+        entry: scripts/pre-commit-graphql-schema-lint
         language: script
         files: pkg/graph/schema.graphql
 
