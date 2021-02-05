@@ -2,25 +2,31 @@
 
 package model
 
+// An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
 	Cursor string                `json:"cursor"`
 	Node   *AccessibilityRequest `json:"node"`
 }
 
+// A collection of AccessibilityRequests
 type AccessibilityRequestsConnection struct {
-	TotalCount int                         `json:"totalCount"`
 	Edges      []*AccessibilityRequestEdge `json:"edges"`
+	TotalCount int                         `json:"totalCount"`
 }
 
+// Parameters required to create an AccessibilityRequest
 type CreateAccessibilityRequestInput struct {
 	Name string `json:"name"`
 }
 
+// Result of CreateAccessibilityRequest
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError          `json:"userErrors"`
 }
 
+// UserError represents application-level errors that are the result of
+// either user or application developer error.
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
