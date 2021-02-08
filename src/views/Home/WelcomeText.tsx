@@ -16,18 +16,20 @@ const WelcomeText = () => {
       <p className="line-height-body-5 font-body-lg text-light">
         {t('home:subtitle')}
       </p>
-      <PlainInfo>
-        <Trans i18nKey="home:easiInfo">
-          zeroIndex
-          <a
-            href="https://share.cms.gov/Office/OIT/CIOCorner/Lists/Intake/NewForm.aspx"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            localeLink
-          </a>
-        </Trans>
-      </PlainInfo>
+      <div className="margin-bottom-6">
+        <PlainInfo>
+          <Trans i18nKey="home:easiInfo">
+            zeroIndex
+            <a
+              href="https://share.cms.gov/Office/OIT/CIOCorner/Lists/Intake/NewForm.aspx"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              localeLink
+            </a>
+          </Trans>
+        </PlainInfo>
+      </div>
       {authState.isAuthenticated ? (
         <UswdsLink
           className="usa-button"
