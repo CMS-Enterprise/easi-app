@@ -30,6 +30,9 @@ jobs:
           name: Restart ECS app service
           command: |
             ./scripts/deploy_service "easi-app" "7" ""
+      - run:
+          name: Check deployed image for vulnerability findings
+            ./scripts/check_deployed_image_findings "easi-backend" "1"
 
   restart_prod_ecs_app_service:
     docker:
@@ -55,6 +58,9 @@ jobs:
           name: Restart ECS app service
           command: |
             ./scripts/deploy_service "easi-app" "7" ""
+      - run:
+          name: Check deployed image for vulnerability findings
+            ./scripts/check_deployed_image_findings "easi-backend" "1"
 
   build_db_migrate_image:
     docker:
