@@ -42,7 +42,8 @@ const AppRoutes = () => {
   return (
     <Switch>
       {/* START: 508 Process Pages */}
-      <Route path="/508/requests/new" exact component={Create} />
+      <SecureRoute path="/508/requests/new" exact component={Create} />
+      <SecureRoute path="/508/requests/all" exact component={List} />
       <SecureRoute
         path="/508/requests/:accessibilityRequestId"
         render={() => <AccessibilityRequestDetailPage />}
@@ -52,9 +53,6 @@ const AppRoutes = () => {
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
       <Route path="/governance-overview" exact component={GovernanceOverview} />
-
-      <Route path="/accessibility/create" exact component={Create} />
-      <Route path="/accessibility/list" exact component={List} />
 
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
       <SecureRoute
@@ -140,7 +138,6 @@ const AppRoutes = () => {
   );
 };
 
-// eslint-disable-next-line react/prefer-stateless-function
 const App = () => {
   const handleSkipNav = () => {
     const mainContent = document.getElementById('main-content')!;
