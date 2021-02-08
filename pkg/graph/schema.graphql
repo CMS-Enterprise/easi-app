@@ -12,9 +12,19 @@ An accessibility request represents a system that needs to go through
 the 508 process.
 """
 type AccessibilityRequest {
+  businessOwner: BusinessOwner!
   id: UUID!
+  lcid: String!
   name: String!
   submittedAt: Time!
+}
+
+"""
+A business owner and their department within CMS
+"""
+type BusinessOwner {
+  component: String!
+  name: String!
 }
 
 """

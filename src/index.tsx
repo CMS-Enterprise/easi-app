@@ -82,7 +82,16 @@ const authLink = setContext((request, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  resolvers: {
+    AccessibilityRequest: {
+      businessOwner: () => ({
+        name: 'Shane Clarp',
+        component: 'OIL'
+      }),
+      lcid: () => 'ABCDEFG'
+    }
+  }
 });
 
 let app;

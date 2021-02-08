@@ -14,6 +14,12 @@ type AccessibilityRequestsConnection struct {
 	TotalCount int                         `json:"totalCount"`
 }
 
+// A business owner and their department within CMS
+type BusinessOwner struct {
+	Component string `json:"component"`
+	Name      string `json:"name"`
+}
+
 // Parameters required to create an AccessibilityRequest
 type CreateAccessibilityRequestInput struct {
 	Name string `json:"name"`

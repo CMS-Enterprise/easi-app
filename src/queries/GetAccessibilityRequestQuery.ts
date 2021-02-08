@@ -6,6 +6,11 @@ export default gql`
       id
       name
       submittedAt
+      lcid @client
+      businessOwner @client {
+        name
+        component
+      }
     }
   }
 `;

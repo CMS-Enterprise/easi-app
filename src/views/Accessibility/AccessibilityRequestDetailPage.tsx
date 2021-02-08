@@ -95,16 +95,19 @@ const AccessibilityRequestDetailPage = () => {
                         DateTime.DATE_FULL
                       )}
                     </dd>
-                    {/* <dt className="margin-bottom-1">
+                    <dt className="margin-bottom-1">
                       {t('intake:fields.businessOwner')}
                     </dt>
                     <dd className="margin-0 margin-bottom-2">
-                      Shane Clark, OIT
+                      {data?.accessibilityRequest?.businessOwner?.name},{' '}
+                      {data?.accessibilityRequest?.businessOwner?.component}
                     </dd>
                     <dt className="margin-bottom-1">
                       {t('intake:lifecycleId')}
                     </dt>
-                    <dd className="margin-0 margin-bottom-3">X200943</dd> */}
+                    <dd className="margin-0 margin-bottom-3">
+                      {data?.accessibilityRequest?.lcid}
+                    </dd>
                   </dl>
                 </div>
                 {/* <button
