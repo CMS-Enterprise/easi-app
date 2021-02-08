@@ -5,8 +5,8 @@ import { Button } from '@trussworks/react-uswds';
 import {
   Field as FormikField,
   Form as FormikForm,
-  Formik
-  // FormikProps
+  Formik,
+  FormikProps
 } from 'formik';
 
 import Footer from 'components/Footer';
@@ -22,7 +22,9 @@ import Label from 'components/shared/Label';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextField from 'components/shared/TextField';
 import { initialAccessibilityRequestFormData } from 'data/accessibility';
+import { AccessibilityRequestForm } from 'types/accessibility';
 // import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
+import flattenErrors from 'utils/flattenErrors';
 import accessibilitySchema from 'validations/accessibilitySchema';
 
 const Create = () => {
@@ -52,26 +54,26 @@ const Create = () => {
           <h1 className="margin-top-6 margin-bottom-5">Add a new request</h1>
           <Formik
             initialValues={initialAccessibilityRequestFormData}
-            onSubmit={() => {
-              console.log('submitting');
+            onSubmit={values => {
+              console.log('submitting', values);
             }}
             validationSchema={accessibilitySchema.requestForm}
             validateOnBlur={false}
             validateOnChange={false}
             validateOnMount={false}
           >
-            {() => {
+            {(formikProps: FormikProps<AccessibilityRequestForm>) => {
+              const { errors } = formikProps;
+              const flatErrors = flattenErrors(errors);
               return (
                 <div className="margin-bottom-7">
                   <FormikForm>
-                    <FieldGroup scrollElement="requester.name" error={false}>
+                    <FieldGroup scrollElement="requester.name">
                       <Label htmlFor="508Request-BusinessOwnerName">
                         Business Owner Name
                       </Label>
-                      <FieldErrorMsg />
                       <FormikField
                         as={TextField}
-                        error={false}
                         id="508Request-BusinessOwnerName"
                         maxLength={50}
                         name="businessOwner.name"
@@ -79,14 +81,10 @@ const Create = () => {
                       />
                     </FieldGroup>
 
-                    <FieldGroup
-                      scrollElement="businessOwner.component"
-                      error={false}
-                    >
+                    <FieldGroup scrollElement="businessOwner.component">
                       <Label htmlFor="508Form-BusinessOwnerComponent">
                         Business Owner Component
                       </Label>
-                      <FieldErrorMsg />
 
                       <FormikField
                         as={TextField}
@@ -95,7 +93,10 @@ const Create = () => {
                         disabled
                       />
                     </FieldGroup>
-                    <FieldGroup scrollElement="requestName" error={false}>
+                    <FieldGroup
+                      scrollElement="requestName"
+                      error={!!flatErrors.requestName}
+                    >
                       <Label htmlFor="508Request-RequestName">
                         Request Name
                       </Label>
@@ -103,10 +104,10 @@ const Create = () => {
                         This name will be shown on the Active requests page. For
                         example, ACME 1.3
                       </HelpText>
-                      <FieldErrorMsg />
+                      <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                       <FormikField
                         as={TextField}
-                        error={false}
+                        error={!!flatErrors.requestName}
                         id="508Request-RequestName"
                         maxLength={50}
                         name="requestName"
@@ -114,12 +115,14 @@ const Create = () => {
                     </FieldGroup>
 
                     <div className="tablet:grid-col-8">
-                      <PlainInfo>
-                        A request for 508 testing will be added to the list of
-                        508 requests. An email will be sent to the Business
-                        Owner and the 508 team stating that a request has been
-                        added to the system.
-                      </PlainInfo>
+                      <div className="margin-top-6 margin-bottom-2">
+                        <PlainInfo>
+                          A request for 508 testing will be added to the list of
+                          508 requests. An email will be sent to the Business
+                          Owner and the 508 team stating that a request has been
+                          added to the system.
+                        </PlainInfo>
+                      </div>
                     </div>
                     <Button type="submit">Add a new request</Button>
                   </FormikForm>
