@@ -626,20 +626,20 @@ workflows:
           requires:
             - integration_tests
             - hold_dev
-#      - deploy_impl:
-#          filters:
-#            branches:
-#              only:
-#                - master
-#          requires:
-#            - deploy_dev
-#      - hold_prod:
-#          type: approval
-#          requires:
-#            - deploy_impl
-#      - deploy_prod:
-#          requires:
-#            - hold_prod
+      - deploy_impl:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - deploy_dev
+      - hold_prod:
+          type: approval
+          requires:
+            - deploy_impl
+      - deploy_prod:
+          requires:
+            - hold_prod
   weekly:
     triggers:
       - schedule:
@@ -651,13 +651,13 @@ workflows:
     jobs:
       - build_db_clean_image
 
-#  daily:
-#    triggers:
-#      - schedule:
-#          cron: '0 7 * * *' # 2300 PST, 0200 EST
-#          filters:
-#            branches:
-#              only: master
-#    jobs:
-#      - restart_impl_ecs_app_service
-#      - restart_prod_ecs_app_service
+  daily:
+    triggers:
+      - schedule:
+          cron: '0 7 * * *' # 2300 PST, 0200 EST
+          filters:
+            branches:
+              only: master
+    jobs:
+      - restart_impl_ecs_app_service
+      - restart_prod_ecs_app_service
