@@ -7,10 +7,15 @@
 // GraphQL query operation: GetAccessibilityRequests
 // ====================================================
 
+export interface GetAccessibilityRequests_accessibilityRequests_edges_node_system {
+  __typename: "System";
+  name: string;
+}
+
 export interface GetAccessibilityRequests_accessibilityRequests_edges_node {
   __typename: "AccessibilityRequest";
   id: UUID;
-  name: string;
+  system: GetAccessibilityRequests_accessibilityRequests_edges_node_system;
 }
 
 export interface GetAccessibilityRequests_accessibilityRequests_edges {
