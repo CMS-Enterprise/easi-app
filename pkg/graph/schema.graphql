@@ -13,8 +13,16 @@ the 508 process.
 """
 type AccessibilityRequest {
   id: UUID!
-  name: String!
   submittedAt: Time!
+  system: System!
+}
+
+"""
+A system is derived from a system intake and represents a computer system managed by CMS
+"""
+type System {
+  id: UUID!
+  name: String!
 }
 
 """

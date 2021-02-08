@@ -13,6 +13,15 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 )
 
+func (r *accessibilityRequestResolver) System(ctx context.Context, obj *model.AccessibilityRequest) (*model.System, error) {
+	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
+	if systemErr != nil {
+		return nil, systemErr
+	}
+
+	return system, nil
+}
+
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &model.AccessibilityRequest{
 		Name: input.Name,
@@ -49,11 +58,17 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
+// AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
+func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
+	return &accessibilityRequestResolver{r}
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type accessibilityRequestResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
