@@ -7,11 +7,16 @@
 // GraphQL query operation: GetAccessibilityRequest
 // ====================================================
 
+export interface GetAccessibilityRequest_accessibilityRequest_system {
+  __typename: "System";
+  name: string;
+}
+
 export interface GetAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
   id: UUID;
-  name: string;
   submittedAt: Time;
+  system: GetAccessibilityRequest_accessibilityRequest_system;
 }
 
 export interface GetAccessibilityRequest {
