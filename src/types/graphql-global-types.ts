@@ -7,6 +7,9 @@
 // START Enums and Input Objects
 //==============================================================
 
+/**
+ * Parameters required to create an AccessibilityRequest
+ */
 export interface CreateAccessibilityRequestInput {
   name: string;
 }

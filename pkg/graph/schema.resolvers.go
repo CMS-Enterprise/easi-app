@@ -36,7 +36,11 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	}, nil
 }
 
-func (r *queryResolver) AccessibilityRequests(ctx context.Context, first int, after *string) (*model.AccessibilityRequestsConnection, error) {
+func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*model.AccessibilityRequest, error) {
+	return r.store.FetchAccessibilityRequestByID(ctx, id)
+}
+
+func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error) {
 	requests, queryErr := r.store.FetchAccessibilityRequests(ctx)
 	if queryErr != nil {
 		return nil, gqlerror.Errorf("query error: %s", queryErr)
@@ -52,10 +56,6 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, first int, af
 	}
 
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
-}
-
-func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*model.AccessibilityRequest, error) {
-	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.

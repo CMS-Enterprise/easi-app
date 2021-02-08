@@ -1,13 +1,19 @@
+"""
+UserError represents application-level errors that are the result of
+either user or application developer error.
+"""
 type UserError {
   message: String!
   path: [String!]!
 }
 
 """
-An accessibility request represents
+An accessibility request represents a system that needs to go through
+the 508 process.
 """
 type AccessibilityRequest {
   id: UUID!
+  submittedAt: Time!
   system: System!
 }
 
@@ -19,37 +25,63 @@ type System {
   name: String!
 }
 
+"""
+Parameters required to create an AccessibilityRequest
+"""
 input CreateAccessibilityRequestInput {
   name: String!
 }
 
+"""
+Result of CreateAccessibilityRequest
+"""
 type CreateAccessibilityRequestPayload {
   accessibilityRequest: AccessibilityRequest
   userErrors: [UserError!]
 }
 
+"""
+A collection of AccessibilityRequests
+"""
 type AccessibilityRequestsConnection {
-  totalCount: Int!
   edges: [AccessibilityRequestEdge!]!
+  totalCount: Int!
 }
 
+"""
+An edge of an AccessibilityRequestConnection
+"""
 type AccessibilityRequestEdge {
   cursor: String!
   node: AccessibilityRequest!
 }
 
+"""
+The root mutation
+"""
 type Mutation {
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput
   ): CreateAccessibilityRequestPayload
 }
 
+"""
+The root query
+"""
 type Query {
-  accessibilityRequests(
-    first: Int!
-    after: String
-  ): AccessibilityRequestsConnection
   accessibilityRequest(id: UUID!): AccessibilityRequest
+  accessibilityRequests(
+    after: String
+    first: Int!
+  ): AccessibilityRequestsConnection
 }
 
+"""
+UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
+"""
 scalar UUID
+
+"""
+Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
+"""
+scalar Time
