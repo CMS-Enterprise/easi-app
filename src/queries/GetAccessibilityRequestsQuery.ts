@@ -6,7 +6,9 @@ export default gql`
       edges {
         node {
           id
-          name
+          system {
+            name
+          }
         }
       }
     }

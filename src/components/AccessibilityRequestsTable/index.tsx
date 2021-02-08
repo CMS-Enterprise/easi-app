@@ -12,7 +12,9 @@ import { DateTime } from 'luxon';
 
 type AccessibilityRequestsTableRow = {
   id: string;
-  name: string;
+  system: {
+    name: string;
+  };
   submittedAt?: DateTime;
   businessOwner?: {
     name?: string;
@@ -35,7 +37,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     return [
       {
         Header: t('requestTable.header.requestName'),
-        accessor: 'name',
+        accessor: 'system.name',
         Cell: ({ row, value }: any) => {
           return (
             <UswdsLink

@@ -29,7 +29,7 @@ const AccessibilityRequestDetailPage = () => {
     }
   );
 
-  const requestName = data?.accessibilityRequest?.name;
+  const requestName = data?.accessibilityRequest?.system.name;
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
 
   // const TEMP_NUM_OF_DOCUMENTS = 0;
