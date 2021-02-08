@@ -7,5 +7,5 @@ export const initialAccessibilityRequestFormData = {
     name: '',
     component: ''
   },
-  lifecycleId: ''
+  requestName: ''
 };
