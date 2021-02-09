@@ -5,9 +5,9 @@ const accessibilitySchema = {
   requestForm: Yup.object().shape({
     // Don't need to validate businessOwner name or component
     intakeId: Yup.string().required(
-      'Tell us what project this request belongs to'
+      'Select the project this request belongs to'
     ),
-    requestName: Yup.string().required("Tell us your request's name")
+    requestName: Yup.string().required('Enter a name for this request')
   })
 };
 

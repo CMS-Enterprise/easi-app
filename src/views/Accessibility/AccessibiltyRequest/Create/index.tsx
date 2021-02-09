@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import {
@@ -30,6 +31,7 @@ import flattenErrors from 'utils/flattenErrors';
 import accessibilitySchema from 'validations/accessibilitySchema';
 
 const Create = () => {
+  const history = useHistory();
   const { t } = useTranslation('accessibility');
   const [mutate, mutationResult] = useMutation(CreateAccessibilityRequestQuery);
   const handleSubmit = (values: AccessibilityRequestForm) => {
@@ -40,7 +42,15 @@ const Create = () => {
           intakeID: values.intakeId
         }
       }
-    });
+    })
+      .then(() => {
+        history.push('/', {
+          confirmationText: `${values.requestName} was added to the 508 requests page`
+        });
+      })
+      .catch(err => {
+        console.warn(err);
+      });
   };
 
   return (
@@ -94,28 +104,28 @@ const Create = () => {
                           onChange={(e: any) => {
                             const selectedIntake = [
                               {
-                                id: 'Test1',
+                                id: '189c4ed7-16a3-47f8-b24b-f3966b969c6c',
                                 businessOwner: {
                                   name: 'Test 1 Business Owner',
                                   component: 'Office of Information Technology'
                                 }
                               },
                               {
-                                id: 'Test2',
+                                id: '189c4ed7-16a3-47f8-b24b-f3966b969c6c',
                                 businessOwner: {
                                   name: 'Test 2 Business Owner',
                                   component: 'Office of Information Technology'
                                 }
                               },
                               {
-                                id: 'Test3',
+                                id: '189c4ed7-16a3-47f8-b24b-f3966b969c6c',
                                 businessOwner: {
                                   name: 'Test 3 Business Owner',
                                   component: 'Office of Information Technology'
                                 }
                               },
                               {
-                                id: 'Test4',
+                                id: '189c4ed7-16a3-47f8-b24b-f3966b969c6c',
                                 businessOwner: {
                                   name: 'Test 4 Business Owner',
                                   component: 'Office of Information Technology'
@@ -142,22 +152,22 @@ const Create = () => {
                           <FormikField
                             as={DropdownItem}
                             name="Test 1"
-                            value="Test1"
+                            value="189c4ed7-16a3-47f8-b24b-f3966b969c6c"
                           />
                           <FormikField
                             as={DropdownItem}
                             name="Test 2"
-                            value="Test2"
+                            value="189c4ed7-16a3-47f8-b24b-f3966b969c6c"
                           />
                           <FormikField
                             as={DropdownItem}
                             name="Test 3"
-                            value="Test3"
+                            value="189c4ed7-16a3-47f8-b24b-f3966b969c6c"
                           />
                           <FormikField
                             as={DropdownItem}
                             name="Test 4"
-                            value="Test4"
+                            value="189c4ed7-16a3-47f8-b24b-f3966b969c6c"
                           />
                         </FormikField>
                       </FieldGroup>
