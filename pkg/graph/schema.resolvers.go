@@ -20,16 +20,7 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 }
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
-	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
-	if systemErr != nil {
-		return nil, systemErr
-	}
-	system.BusinessOwner = &models.BusinessOwner{
-		Name:      system.BusinessOwnerName.String,
-		Component: system.BusinessOwnerComponent.String,
-	}
-
-	return system, nil
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
@@ -47,7 +38,15 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	testDate, err := r.createTestDate(ctx, &models.TestDate{
+		TestType: input.TestType,
+		Date:     input.Date,
+		Score:    input.Score,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.CreateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
@@ -73,22 +72,7 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 }
 
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
-	systems, err := r.store.ListSystems(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	conn := &model.SystemConnection{}
-	for _, system := range systems {
-		system.BusinessOwner = &models.BusinessOwner{
-			Name:      system.BusinessOwnerName.String,
-			Component: system.BusinessOwnerComponent.String,
-		}
-		conn.Edges = append(conn.Edges, &model.SystemEdge{
-			Node: system,
-		})
-	}
-	return conn, nil
+	panic(fmt.Errorf("not implemented"))
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.

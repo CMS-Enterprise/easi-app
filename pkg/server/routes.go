@@ -131,17 +131,26 @@ func (s *Server) routes(
 		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
 	}
 
+	serviceConfig := services.NewConfig(s.logger, ldClient)
+
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
 	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
-	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
+	resolver := graph.NewResolver(
+		store,
+		services.NewCreateTestDate(
+			serviceConfig,
+			services.NewAuthorizeHasEASiRole(),
+			store.CreateTestDate,
+		),
+	)
+	gql.Handle("/query", handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver})))
+	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
 	gql.Handle("/query", graphqlServer)
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
 	api.Use(authorizationMiddleware) // TODO: see comment at top-level router
-
-	serviceConfig := services.NewConfig(s.logger, ldClient)
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,

@@ -54,7 +54,11 @@ func TestGraphQLTestSuite(t *testing.T) {
 		t.Fail()
 	}
 
-	graphQLClient := client.New(handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store)})))
+	graphQLClient := client.New(handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{
+		Resolvers: NewResolver(store, func(ctx context.Context, date *models.TestDate) (*models.TestDate, error) {
+			return nil, nil
+		}),
+	})))
 
 	storeTestSuite := &GraphQLTestSuite{
 		Suite:  suite.Suite{},
