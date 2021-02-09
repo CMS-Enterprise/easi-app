@@ -27,7 +27,7 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *model.A
 		request.UpdatedAt = &createAt
 	}
 	const createRequestSQL = `
-		INSERT INTO accessibility_request (
+		INSERT INTO accessibility_requests (
 			id,
 			name,
 			intake_id,
@@ -56,7 +56,7 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *model.A
 func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID) (*model.AccessibilityRequest, error) {
 	request := model.AccessibilityRequest{}
 
-	err := s.db.Get(&request, `SELECT * FROM accessibility_request WHERE id=$1`, id)
+	err := s.db.Get(&request, `SELECT * FROM accessibility_requests WHERE id=$1`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
@@ -77,7 +77,7 @@ func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID)
 func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]model.AccessibilityRequest, error) {
 	requests := []model.AccessibilityRequest{}
 
-	err := s.db.Select(&requests, `SELECT * FROM accessibility_request`)
+	err := s.db.Select(&requests, `SELECT * FROM accessibility_requests`)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return requests, nil
