@@ -7,6 +7,11 @@ export default gql`
       submittedAt
       system {
         name
+        lcid
+        businessOwner {
+          name
+          component
+        }
       }
     }
   }

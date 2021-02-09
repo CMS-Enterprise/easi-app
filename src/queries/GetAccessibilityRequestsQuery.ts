@@ -6,8 +6,14 @@ export default gql`
       edges {
         node {
           id
+          submittedAt
           system {
             name
+            lcid
+            businessOwner {
+              name
+              component
+            }
           }
         }
       }

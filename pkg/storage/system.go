@@ -120,6 +120,9 @@ func (s *Store) listSystems(ctx context.Context) ([]*models.System, error) {
 	results := []*models.System{}
 	err := s.db.Select(&results, sqlListSystems)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return results, nil
+		}
 		appcontext.ZLogger(ctx).Error("Failed to fetch systems", zap.Error(err))
 		return nil, err
 	}
@@ -130,7 +133,10 @@ func (s *Store) listSystems(ctx context.Context) ([]*models.System, error) {
 const sqlFetchSystemByIntakeID = `
 	SELECT
 		id,
-		project_name AS name
+		project_name AS name,
+		business_owner AS business_owner_name,
+		business_owner_component,
+		lcid
 	FROM system_intake
 	WHERE
 		status='LCID_ISSUED' AND
