@@ -5,13 +5,17 @@ package graph
 
 import (
 	"context"
-
-	"github.com/google/uuid"
-	"github.com/vektah/gqlparser/v2/gqlerror"
+	"fmt"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/google/uuid"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 )
+
+func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model.AccessibilityRequest) ([]*model.AccessibilityRequestDocument, error) {
+	panic(fmt.Errorf("not implemented"))
+}
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *model.AccessibilityRequest) (*model.System, error) {
 	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)

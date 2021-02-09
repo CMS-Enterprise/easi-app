@@ -13,6 +13,9 @@ export default gql`
           component
         }
       }
+      documents @client {
+        name
+      }
     }
   }
 `;
