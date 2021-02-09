@@ -1,6 +1,6 @@
 // eslint-disable-next-line
-type AccessibilityRequestForm = {
-  // projectId: string;
+export type AccessibilityRequestForm = {
+  intakeId: string;
   businessOwner: {
     name: string;
     component: string;
