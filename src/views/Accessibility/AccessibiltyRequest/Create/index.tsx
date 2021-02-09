@@ -15,6 +15,7 @@ import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQ
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import PlainInfo from 'components/PlainInfo';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
@@ -63,8 +64,7 @@ const Create = () => {
           </NavLink>
         </SecondaryNav>
         <div className="grid-container">
-          {/* TODO: Use PageHeading component */}
-          <h1 className="margin-top-6 margin-bottom-5">Add a new request</h1>
+          <PageHeading>Add a new request</PageHeading>
           <Formik
             initialValues={initialAccessibilityRequestFormData}
             onSubmit={handleSubmit}
