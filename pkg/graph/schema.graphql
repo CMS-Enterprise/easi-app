@@ -33,6 +33,23 @@ type System {
   id: UUID!
   lcid: String!
   name: String!
+  lcid: String!
+}
+
+"""
+A collection of Systems
+"""
+type SystemConnection {
+  edges: [SystemEdge!]!
+  totalCount: Int!
+}
+
+"""
+An edge of an SystemConnection
+"""
+type SystemEdge {
+  cursor: String!
+  node: System!
 }
 
 """
@@ -84,6 +101,10 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
+  systems(
+    after: String
+    first: Int!
+  ): SystemConnection
 }
 
 """
