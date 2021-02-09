@@ -62,6 +62,21 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
+func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
+	systems, err := r.store.ListSystems(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	conn := &model.SystemConnection{}
+	for _, system := range systems {
+		conn.Edges = append(conn.Edges, &model.SystemEdge{
+			Node: system,
+		})
+	}
+	return conn, nil
+}
+
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
 func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
 	return &accessibilityRequestResolver{r}

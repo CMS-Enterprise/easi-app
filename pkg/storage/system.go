@@ -4,10 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"time"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -17,66 +15,31 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-var fakeSystems []*models.System
+var fakeSystems []*model.System
 
 func init() {
-	t1 := time.Date(2020, time.January, 1, 8, 0, 0, 0, time.UTC)
-	t2 := t1.AddDate(2, 0, -1)
-	fakeSystems = []*models.System{
+	fakeSystems = []*model.System{
 		{
-			LCID:        "X990000",
-			IntakeID:    uuid.MustParse("00000000-9999-0000-0000-000000000000"),
-			CreatedAt:   &t1,
-			UpdatedAt:   &t1,
-			IssuedAt:    &t1,
-			ExpiresAt:   &t2,
-			ProjectName: "Three Amigos",
-			OwnerID:     null.StringFrom("FAKE0"),
-			OwnerName:   "Lucky Dusty Ned",
+			Lcid: "X990000",
+			ID:   uuid.MustParse("00000000-9999-0000-0000-000000000000"),
+			Name: "Three Amigos",
 		},
 		{
-			LCID:        "X990001",
-			IntakeID:    uuid.MustParse("00000000-8888-0000-0000-000000000000"),
-			CreatedAt:   &t1,
-			UpdatedAt:   &t1,
-			IssuedAt:    &t1,
-			ExpiresAt:   &t2,
-			ProjectName: "Three Musketeers",
-			OwnerID:     null.StringFromPtr(nil),
-			OwnerName:   "Athos Porthos Aramis",
+			Lcid: "X990001",
+			ID:   uuid.MustParse("00000000-8888-0000-0000-000000000000"),
+			Name: "Three Musketeers",
 		},
 		{
-			LCID:        "X990002",
-			IntakeID:    uuid.MustParse("00000000-7777-0000-0000-000000000000"),
-			CreatedAt:   &t1,
-			UpdatedAt:   &t1,
-			IssuedAt:    &t1,
-			ExpiresAt:   &t2,
-			ProjectName: "Three Stooges",
-			OwnerID:     null.StringFrom("FAKE2"),
-			OwnerName:   "Moe Larry Curly",
+			Lcid: "X990002",
+			ID:   uuid.MustParse("00000000-7777-0000-0000-000000000000"),
+			Name: "Three Stooges",
 		},
 	}
 }
 
-// // FetchSystemByLCID uses the Lifecycle ID as the unique identifier for a given System
-// func (s *Store) FetchSystemByLCID(ctx context.Context, lcid string) (*models.System, error) {
-// 	useFake := true
-// 	if useFake {
-// 		for _, sys := range fakeSystems {
-// 			if lcid == sys.LCID {
-// 				return sys, nil
-// 			}
-// 		}
-// 		return nil, fmt.Errorf("system not found: %s", lcid)
-// 	}
-// 	// TODO: this code would emulate the behavior outlined in `ListSystems(...)`
-// 	return nil, fmt.Errorf("not yet implemented")
-// }
-
 // ListSystems retrieves a collection of Systems, which are a subset of all SystemIntakes that
 // have been "decided" and issued an LCID.
-func (s *Store) ListSystems(ctx context.Context) ([]*models.System, error) {
+func (s *Store) ListSystems(ctx context.Context) ([]*model.System, error) {
 	if s.useFakeSystems(ctx) {
 		return fakeSystems, nil
 	}
@@ -102,13 +65,7 @@ const sqlListSystems = `
 	SELECT
 		id,
 		lcid,
-		created_at,
-		updated_at,
-		decided_at,
-		lcid_expires_at,
-		project_name,
-		eua_user_id,
-		requester
+		project_name AS name
 	FROM system_intakes
 	WHERE
 		status='LCID_ISSUED' AND
@@ -116,8 +73,8 @@ const sqlListSystems = `
 		lcid IS NOT NULL;
 `
 
-func (s *Store) listSystems(ctx context.Context) ([]*models.System, error) {
-	results := []*models.System{}
+func (s *Store) listSystems(ctx context.Context) ([]*model.System, error) {
+	results := []*model.System{}
 	err := s.db.Select(&results, sqlListSystems)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -83,11 +82,11 @@ func (s StoreTestSuite) TestListSystems() {
 	// verify the list of Systems that we seeded came back to us
 	found := 0
 	for _, result := range results {
-		if !strings.HasPrefix(result.ProjectName, sig) {
-			continue
-		}
-		s.NotEqual(result.IntakeID, uuid.Nil) // ensure we populate with a real IntakeID
-		if _, exp := expected[result.LCID]; !exp {
+		// if !strings.HasPrefix(result.ProjectName, sig) {
+		// 	continue
+		// }
+		s.NotEqual(result.ID, uuid.Nil) // ensure we populate with a real IntakeID
+		if _, exp := expected[result.Lcid]; !exp {
 			// unexpected collision from previously existing data,
 			// possibly from previous runs of this test
 			continue
