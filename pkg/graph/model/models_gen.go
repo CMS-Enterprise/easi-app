@@ -20,7 +20,8 @@ type AccessibilityRequestsConnection struct {
 
 // Parameters required to create an AccessibilityRequest
 type CreateAccessibilityRequestInput struct {
-	Name string `json:"name"`
+	IntakeID uuid.UUID `json:"intakeID"`
+	Name     string    `json:"name"`
 }
 
 // Result of CreateAccessibilityRequest
