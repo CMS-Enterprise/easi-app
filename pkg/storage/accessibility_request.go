@@ -16,16 +16,10 @@ import (
 
 // CreateAccessibilityRequest adds a new accessibility request in the database
 func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *model.AccessibilityRequest) (*model.AccessibilityRequest, error) {
-	if request.ID == uuid.Nil {
-		request.ID = uuid.New()
-	}
+	request.ID = uuid.New()
 	createAt := s.clock.Now()
-	if request.CreatedAt == nil {
-		request.CreatedAt = &createAt
-	}
-	if request.UpdatedAt == nil {
-		request.UpdatedAt = &createAt
-	}
+	request.CreatedAt = &createAt
+	request.UpdatedAt = &createAt
 	const createRequestSQL = `
 		INSERT INTO accessibility_request (
 			id,

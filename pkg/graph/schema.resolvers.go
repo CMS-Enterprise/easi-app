@@ -27,6 +27,18 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
+	testDate, err := r.createTestDate(ctx, &model.TestDate{
+		TestType: input.TestType,
+		Date:     input.Date,
+		Score:    input.Score,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.CreateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*model.AccessibilityRequest, error) {
 	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }

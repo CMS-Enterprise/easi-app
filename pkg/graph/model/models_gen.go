@@ -2,6 +2,10 @@
 
 package model
 
+import (
+	"time"
+)
+
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
 	Cursor string                `json:"cursor"`
@@ -23,6 +27,19 @@ type CreateAccessibilityRequestInput struct {
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError          `json:"userErrors"`
+}
+
+// Parameters for creating a test date
+type CreateTestDateInput struct {
+	Date     time.Time        `json:"date"`
+	Score    *int             `json:"score"`
+	TestType TestDateTestType `json:"testType"`
+}
+
+// Result of createTestDate
+type CreateTestDatePayload struct {
+	TestDate   *TestDate    `json:"testDate"`
+	UserErrors []*UserError `json:"userErrors"`
 }
 
 // UserError represents application-level errors that are the result of
