@@ -14,12 +14,12 @@ type AccessibilityRequestsTableRow = {
   id: string;
   system: {
     name: string;
+    businessOwner: {
+      name?: string;
+      component?: string;
+    };
   };
   submittedAt?: DateTime;
-  businessOwner?: {
-    name?: string;
-    component?: string;
-  };
   testDate?: DateTime;
   status?: string;
   lastUpdatedAt?: DateTime;
@@ -40,10 +40,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'system.name',
         Cell: ({ row, value }: any) => {
           return (
-            <UswdsLink
-              asCustom={Link}
-              to={`/some-508-request/${row.original.id}`}
-            >
+            <UswdsLink asCustom={Link} to={`/508/requests/${row.original.id}`}>
               {value}
             </UswdsLink>
           );
@@ -62,7 +59,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.businessOwner'),
-        accessor: 'businessOwner'
+        accessor: (row: AccessibilityRequestsTableRow) => {
+          return `${row.system.businessOwner.name}, ${row.system.businessOwner.component}`;
+        }
       },
       {
         Header: t('requestTable.header.testDate'),
