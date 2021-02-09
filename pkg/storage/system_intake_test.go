@@ -15,8 +15,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
-const insertBasicIntakeSQL = "INSERT INTO system_intake (id, eua_user_id, status, request_type, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
-const insertRelatedBizCaseSQL = `INSERT INTO business_case (id, eua_user_id, status, requester, system_intake)
+const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
+const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, status, requester, system_intake)
 		VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
 
 func (s StoreTestSuite) TestCreateSystemIntake() {
@@ -58,7 +58,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 			_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
 
 			s.Error(err)
-			s.Equal("pq: new row for relation \"system_intake\" violates check constraint \"eua_id_check\"", err.Error())
+			s.Equal("pq: new row for relation \"system_intakes\" violates check constraint \"eua_id_check\"", err.Error())
 		})
 	}
 
