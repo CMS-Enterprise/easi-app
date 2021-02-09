@@ -12,11 +12,17 @@ export interface GetAccessibilityRequest_accessibilityRequest_system {
   name: string;
 }
 
+export interface GetAccessibilityRequest_accessibilityRequest_documents {
+  __typename: "AccessibilityRequestDocument";
+  name: string;
+}
+
 export interface GetAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
   id: UUID;
   submittedAt: Time;
   system: GetAccessibilityRequest_accessibilityRequest_system;
+  documents: GetAccessibilityRequest_accessibilityRequest_documents[];
 }
 
 export interface GetAccessibilityRequest {

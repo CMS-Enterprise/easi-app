@@ -1,8 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-// import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
@@ -31,8 +31,7 @@ const AccessibilityRequestDetailPage = () => {
 
   const requestName = data?.accessibilityRequest?.system.name;
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
-
-  // const TEMP_NUM_OF_DOCUMENTS = 0;
+  const documents = data?.accessibilityRequest?.documents || [];
 
   if (loading) {
     return <div>Loading</div>;
@@ -63,7 +62,7 @@ const AccessibilityRequestDetailPage = () => {
           <h1 className="margin-top-6 margin-bottom-5">{requestName}</h1>
           <div className="grid-row grid-gap-lg">
             <div className="grid-col-9">
-              {/* <h2 className="margin-top-0">
+              <h2 className="margin-top-0">
                 {t('requestDetails.documents.label')}
               </h2>
               <UswdsLink
@@ -75,12 +74,12 @@ const AccessibilityRequestDetailPage = () => {
                 {t('requestDetails.documentUpload')}
               </UswdsLink>
               <div className="margin-top-6">
-                {TEMP_NUM_OF_DOCUMENTS > 0 ? (
-                  <span />
+                {documents.length > 0 ? (
+                  <span>{JSON.stringify(documents)}</span>
                 ) : (
                   <span>{t('requestDetails.documents.none')}</span>
                 )}
-              </div> */}
+              </div>
             </div>
             <div className="grid-col-3">
               <div className="accessibility-request__side-nav">

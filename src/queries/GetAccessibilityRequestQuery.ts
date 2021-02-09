@@ -8,6 +8,9 @@ export default gql`
       system {
         name
       }
+      documents @client {
+        name
+      }
     }
   }
 `;
