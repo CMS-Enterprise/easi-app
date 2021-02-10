@@ -89,7 +89,9 @@ const TestDate = () => {
         </SecondaryNav>
         <div className="grid-container">
           <h1 className="margin-top-6 margin-bottom-5">
-            Add a test date for {data?.accessibilityRequest?.name}
+            {t('createTestDate.addTestDateHeader', {
+              requestName: data?.accessibilityRequest?.name
+            })}
           </h1>
           <div className="grid-row grid-gap-lg">
             <div className="grid-col-9">
@@ -135,7 +137,7 @@ const TestDate = () => {
                         <FieldGroup error={!!flatErrors.testType}>
                           <fieldset className="usa-fieldset">
                             <legend className="usa-label margin-bottom-1">
-                              What type of test?
+                              {t('createTestDate.testTypeHeader')}
                             </legend>
                             <FieldErrorMsg>{flatErrors.testType}</FieldErrorMsg>
 
@@ -168,13 +170,13 @@ const TestDate = () => {
                         >
                           <fieldset className="usa-fieldset margin-top-4">
                             <legend className="usa-label margin-bottom-1">
-                              Test date
+                              {t('createTestDate.dateHeader')}
                             </legend>
                             <HelpText
                               id="TestDate-DateHelp"
                               className="margin-bottom-2"
                             >
-                              For example: 4 28 2020
+                              {t('createTestDate.dateHelpText')}
                             </HelpText>
                             <FieldErrorMsg>
                               {flatErrors.dateMonth}
@@ -190,7 +192,7 @@ const TestDate = () => {
                             >
                               <div className="usa-form-group usa-form-group--month">
                                 <Label htmlFor="TestDate-DateMonth">
-                                  Month
+                                  {t('general:date.month')}
                                 </Label>
                                 <Field
                                   as={TextField}
@@ -233,7 +235,7 @@ const TestDate = () => {
                         >
                           <fieldset className="usa-fieldset margin-top-4">
                             <legend className="usa-label margin-bottom-1">
-                              Does this test have a test score?
+                              {t('createTestDate.scoreHeader')}
                             </legend>
 
                             <FieldErrorMsg>
@@ -270,7 +272,7 @@ const TestDate = () => {
                                   error={!!flatErrors['score.value']}
                                 >
                                   <Label htmlFor="TestDate-ScoreValue">
-                                    Test Score
+                                    {t('createTestDate.scoreValueHeader')}
                                   </Label>
                                   <FieldErrorMsg>
                                     {flatErrors['score.value']}
@@ -298,13 +300,13 @@ const TestDate = () => {
                           className="margin-top-2 display-block"
                           type="submit"
                         >
-                          Add date
+                          {t('createTestDate.submitButton')}
                         </Button>
                         <Link
                           to={`/508/requests/${accessibilityRequestId}`}
                           className="margin-top-2 display-block"
                         >
-                          Don&apos;t add and go back to the request page
+                          {t('createTestDate.cancel')}
                         </Link>
                       </Form>
                     </>

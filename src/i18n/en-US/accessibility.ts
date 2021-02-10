@@ -24,6 +24,16 @@ const accessibility = {
     documentUpload: 'Upload a document',
     other: 'Other request details',
     remove: 'Remove this request from EASi'
+  },
+  createTestDate: {
+    addTestDateHeader: 'Add a test date for {{requestName}}',
+    testTypeHeader: 'What type of test?',
+    dateHeader: 'TestDate',
+    dateHelpText: 'For example: 4 28 2020',
+    scoreHeader: 'Does this test have a score?',
+    scoreValueHeader: 'Test Score',
+    submitButton: 'Add date',
+    cancel: "Don't add and go back to request page"
   }
 };
 
