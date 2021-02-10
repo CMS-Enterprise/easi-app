@@ -12,6 +12,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import AccessibilityDocumentsList from 'views/Accessibility/AccessibiltyRequest/Documents';
 
 import './index.scss';
 
@@ -79,11 +80,7 @@ const AccessibilityRequestDetailPage = () => {
                 {t('requestDetails.documentUpload')}
               </UswdsLink>
               <div className="margin-top-6">
-                {documents.length > 0 ? (
-                  <span>{JSON.stringify(documents)}</span>
-                ) : (
-                  <span>{t('requestDetails.documents.none')}</span>
-                )}
+                <AccessibilityDocumentsList documents={documents} />
               </div>
             </div>
             <div className="grid-col-3">
