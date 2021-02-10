@@ -2,10 +2,6 @@
 
 package model
 
-import (
-	"github.com/google/uuid"
-)
-
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
 	Cursor string                `json:"cursor"`
@@ -18,6 +14,12 @@ type AccessibilityRequestsConnection struct {
 	TotalCount int                         `json:"totalCount"`
 }
 
+// A business owner is the person at CMS responsible for a system
+type BusinessOwner struct {
+	Component string `json:"component"`
+	Name      string `json:"name"`
+}
+
 // Parameters required to create an AccessibilityRequest
 type CreateAccessibilityRequestInput struct {
 	Name string `json:"name"`
@@ -27,12 +29,6 @@ type CreateAccessibilityRequestInput struct {
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError          `json:"userErrors"`
-}
-
-// A system is derived from a system intake and represents a computer system managed by CMS
-type System struct {
-	ID   uuid.UUID `json:"id"`
-	Name string    `json:"name"`
 }
 
 // UserError represents application-level errors that are the result of
