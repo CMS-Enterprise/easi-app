@@ -72,23 +72,23 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           }
           return '';
         }
-      },
-      {
-        Header: t('requestTable.header.status'),
-        accessor: 'status',
-        Cell: ({ row, value }: any) => {
-          const date = DateTime.fromISO(row.original.updatedAt).toLocaleString(
-            DateTime.DATE_FULL
-          );
-          return (
-            <>
-              <strong>{value}</strong>
-              <br />
-              <span>{`${t('requestTable.lastUpdated')} ${date}`}</span>
-            </>
-          );
-        }
       }
+      // {
+      //   Header: t('requestTable.header.status'),
+      //   accessor: 'status',
+      //   Cell: ({ row, value }: any) => {
+      //     const date = DateTime.fromISO(row.original.updatedAt).toLocaleString(
+      //       DateTime.DATE_FULL
+      //     );
+      //     return (
+      //       <>
+      //         <strong>{value}</strong>
+      //         <br />
+      //         <span>{`${t('requestTable.lastUpdated')} ${date}`}</span>
+      //       </>
+      //     );
+      //   }
+      // }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
