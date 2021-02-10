@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 // import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
@@ -84,6 +84,17 @@ const AccessibilityRequestDetailPage = () => {
             </div>
             <div className="grid-col-3">
               <div className="accessibility-request__side-nav">
+                <div>
+                  <h2 className="margin-top-2 margin-bottom-3">
+                    Test Dates and Scores
+                  </h2>
+                  <Link
+                    to={`/508/requests/${accessibilityRequestId}/test-date`}
+                    className="margin-bottom-3 display-block"
+                  >
+                    Add a date
+                  </Link>
+                </div>
                 <div className="accessibility-request__other-details">
                   <h3>{t('requestDetails.other')}</h3>
                   <dl>
