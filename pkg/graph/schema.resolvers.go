@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/vektah/gqlparser/v2/gqlerror"
@@ -13,10 +12,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 )
-
-func (r *accessibilityRequestResolver) BusinessOwner(ctx context.Context, obj *model.AccessibilityRequest) (*model.BusinessOwner, error) {
-	panic(fmt.Errorf("not implemented"))
-}
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *model.AccessibilityRequest) (*model.System, error) {
 	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
@@ -77,13 +72,3 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 type accessibilityRequestResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *accessibilityRequestResolver) Component(ctx context.Context, obj *model.AccessibilityRequest) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}

@@ -82,10 +82,7 @@ const authLink = setContext((request, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-  resolvers: {
-    AccessibilityRequest: {}
-  }
+  cache: new InMemoryCache()
 });
 
 let app;
