@@ -6,6 +6,7 @@ export default gql`
       id
       submittedAt
       system {
+        id
         lcid
         name
         businessOwnerName

@@ -9,6 +9,7 @@
 
 export interface GetAccessibilityRequest_accessibilityRequest_system {
   __typename: "System";
+  id: UUID;
   lcid: string;
   name: string;
   businessOwnerName: string;
