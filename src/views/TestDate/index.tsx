@@ -1,11 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 import CreateTestDateQuery from 'queries/CreateTestDateQuery';
+import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
+import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -30,10 +32,18 @@ const TestDate = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
-  // eslint-disable-next-line no-unused-vars
   const [mutate, mutationResult] = useMutation(CreateTestDateQuery, {
     errorPolicy: 'all'
   });
+  const { data } = useQuery<GetAccessibilityRequest>(
+    GetAccessibilityRequestQuery,
+    {
+      variables: {
+        id: accessibilityRequestId
+      }
+    }
+  );
+  const history = useHistory();
   const initialValues: TestDateForm = {
     testType: null,
     dateMonth: '',
@@ -63,6 +73,8 @@ const TestDate = () => {
           requestID: accessibilityRequestId
         }
       }
+    }).then(() => {
+      history.push(`/508/requests/${accessibilityRequestId}`);
     });
   };
 
@@ -77,7 +89,7 @@ const TestDate = () => {
         </SecondaryNav>
         <div className="grid-container">
           <h1 className="margin-top-6 margin-bottom-5">
-            Add a test date for Medicare Change of Office Initiative 1.3
+            Add a test date for {data?.accessibilityRequest?.name}
           </h1>
           <div className="grid-row grid-gap-lg">
             <div className="grid-col-9">
