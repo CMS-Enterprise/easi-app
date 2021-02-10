@@ -65,7 +65,7 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 			business_cases.*,
 			json_agg(estimated_lifecycle_costs) as lifecycle_cost_lines
 		FROM
-			business_case.
+			business_cases
 			LEFT JOIN estimated_lifecycle_costs ON business_cases.id = estimated_lifecycle_costs.business_case
 		WHERE
 			business_cases.system_intake = $1 AND business_cases.status = 'OPEN'
