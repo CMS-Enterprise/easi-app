@@ -2,6 +2,8 @@ package storage
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -9,7 +11,9 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/flags"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -121,4 +125,39 @@ func (s *Store) listSystems(ctx context.Context) ([]*models.System, error) {
 	}
 
 	return results, nil
+}
+
+const sqlFetchSystemByIntakeID = `
+	SELECT
+		id,
+		project_name AS name,
+		lcid,
+		business_owner AS businessOwnerName,
+		business_owner_component AS businessOwnerComponent
+	FROM system_intake
+	WHERE
+		status='LCID_ISSUED' AND
+		request_type='NEW' AND
+		lcid IS NOT NULL AND
+		id = $1;
+`
+
+// FetchSystemByIntakeID queries the DB for a single system
+func (s *Store) FetchSystemByIntakeID(ctx context.Context, intakeID uuid.UUID) (*model.System, error) {
+	system := model.System{}
+
+	err := s.db.Get(&system, sqlFetchSystemByIntakeID, intakeID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.System{}}
+		}
+		appcontext.ZLogger(ctx).Error("Failed to fetch system", zap.Error(err), zap.String("intakeID", intakeID.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     system,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return &system, nil
 }

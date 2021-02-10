@@ -18,8 +18,13 @@ func (r *accessibilityRequestResolver) BusinessOwner(ctx context.Context, obj *m
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *accessibilityRequestResolver) Lcid(ctx context.Context, obj *model.AccessibilityRequest) (string, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *accessibilityRequestResolver) System(ctx context.Context, obj *model.AccessibilityRequest) (*model.System, error) {
+	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
+	if systemErr != nil {
+		return nil, systemErr
+	}
+
+	return system, nil
 }
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {

@@ -29,7 +29,7 @@ const AccessibilityRequestDetailPage = () => {
     }
   );
 
-  const requestName = data?.accessibilityRequest?.name;
+  const requestName = data?.accessibilityRequest?.system.name;
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
 
   // const TEMP_NUM_OF_DOCUMENTS = 0;
@@ -99,14 +99,13 @@ const AccessibilityRequestDetailPage = () => {
                       {t('intake:fields.businessOwner')}
                     </dt>
                     <dd className="margin-0 margin-bottom-2">
-                      {data?.accessibilityRequest?.businessOwner?.name},{' '}
-                      {data?.accessibilityRequest?.businessOwner?.component}
+                      {`${data?.accessibilityRequest?.system?.businessOwnerName}, ${data?.accessibilityRequest?.system?.businessOwnerComponent}`}
                     </dd>
                     <dt className="margin-bottom-1">
                       {t('intake:lifecycleId')}
                     </dt>
                     <dd className="margin-0 margin-bottom-3">
-                      {data?.accessibilityRequest?.lcid}
+                      {data?.accessibilityRequest?.system?.lcid}
                     </dd>
                   </dl>
                 </div>
