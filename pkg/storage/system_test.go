@@ -82,9 +82,6 @@ func (s StoreTestSuite) TestListSystems() {
 	// verify the list of Systems that we seeded came back to us
 	found := 0
 	for _, result := range results {
-		// if !strings.HasPrefix(result.ProjectName, sig) {
-		// 	continue
-		// }
 		s.NotEqual(result.ID, uuid.Nil) // ensure we populate with a real IntakeID
 		if _, exp := expected[result.Lcid]; !exp {
 			// unexpected collision from previously existing data,
