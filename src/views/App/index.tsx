@@ -29,6 +29,7 @@ import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TermsAndConditions from 'views/TermsAndConditions';
+import TestDate from 'views/TestDate';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfoWrapper from 'views/UserInfoWrapper';
 
@@ -43,6 +44,10 @@ const AppRoutes = () => {
     <Switch>
       {/* START: 508 Process Pages */}
       <Route path="/accessibility/create" exact component={Create} />
+      <SecureRoute
+        path="/508/requests/:accessibilityRequestId/test-date"
+        render={() => <TestDate />}
+      />
       <SecureRoute
         path="/508/requests/:accessibilityRequestId"
         render={() => <AccessibilityRequestDetailPage />}
