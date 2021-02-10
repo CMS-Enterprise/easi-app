@@ -29,7 +29,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		intake.UpdatedAt = &createAt
 	}
 	const createIntakeSQL = `
-		INSERT INTO system_intake (
+		INSERT INTO system_intakes (
 			id,
 			eua_user_id,
 			status,
@@ -131,7 +131,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 	const updateSystemIntakeSQL = `
-		UPDATE system_intake
+		UPDATE system_intakes
 		SET
 			status = :status,
 			request_type = :request_type,
@@ -181,7 +181,7 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			lcid_scope = :lcid_scope,
 			decision_next_steps = :decision_next_steps,
 			rejection_reason = :rejection_reason
-		WHERE system_intake.id = :id
+		WHERE system_intakes.id = :id
 	`
 	_, err := s.db.NamedExec(
 		updateSystemIntakeSQL,
@@ -206,18 +206,18 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 
 const fetchSystemIntakeSQL = `
 		SELECT
-		       system_intake.*,
-		       business_case.id as business_case_id
+		       system_intakes.*,
+		       business_cases.id as business_case_id
 		FROM
-		     system_intake
-		     LEFT JOIN business_case ON business_case.system_intake = system_intake.id
+		     system_intakes
+		     LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
 `
 
 // FetchSystemIntakeByID queries the DB for a system intake matching the given ID
 func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
 	const idMatchClause = `
-		WHERE system_intake.id=$1
+		WHERE system_intakes.id=$1
 `
 	err := s.db.Get(&intake, fetchSystemIntakeSQL+idMatchClause, id)
 	if err != nil {
@@ -242,7 +242,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
 	const byEuaIDClause = `
-		WHERE system_intake.eua_user_id=$1 AND system_intake.status != 'WITHDRAWN'
+		WHERE system_intakes.eua_user_id=$1 AND system_intakes.status != 'WITHDRAWN'
 	`
 	err := s.db.Select(&intakes, fetchSystemIntakeSQL+byEuaIDClause, euaID)
 	if err != nil {
@@ -270,7 +270,7 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
 	const byStatusClause = `
-		WHERE system_intake.status IN (?)
+		WHERE system_intakes.status IN (?)
 	`
 	query, args, err := sqlx.In(fetchSystemIntakeSQL+byStatusClause, allowedStatuses)
 	if err != nil {
@@ -302,7 +302,7 @@ func generateLifecyclePrefix(t time.Time, loc *time.Location) string {
 func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
 	prefix := generateLifecyclePrefix(s.clock.Now(), s.easternTZ)
 
-	countSQL := `SELECT COUNT(*) FROM system_intake WHERE lcid ~ $1;`
+	countSQL := `SELECT COUNT(*) FROM system_intakes WHERE lcid ~ $1;`
 	var count int
 	if err := s.db.Get(&count, countSQL, "^"+prefix); err != nil {
 		return "", err
@@ -319,7 +319,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	const startedCountSQL = `
 		WITH "started" AS (
 		    SELECT *
-		    FROM system_intake
+		    FROM system_intakes
 		    WHERE created_at >=  $1
 		      AND created_at < $2
 		)
@@ -340,7 +340,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	const fundedCountSQL = `
 		WITH "completed" AS (
 		    SELECT existing_funding
-		    FROM system_intake
+		    FROM system_intakes
 		    WHERE submitted_at >=  $1
 		      AND submitted_at < $2
 		)
