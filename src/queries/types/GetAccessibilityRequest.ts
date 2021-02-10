@@ -7,9 +7,17 @@
 // GraphQL query operation: GetAccessibilityRequest
 // ====================================================
 
+export interface GetAccessibilityRequest_accessibilityRequest_system_businessOwner {
+  __typename: "BusinessOwner";
+  name: string;
+  component: string;
+}
+
 export interface GetAccessibilityRequest_accessibilityRequest_system {
   __typename: "System";
   name: string;
+  lcid: string;
+  businessOwner: GetAccessibilityRequest_accessibilityRequest_system_businessOwner;
 }
 
 export interface GetAccessibilityRequest_accessibilityRequest {
