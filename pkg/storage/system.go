@@ -109,7 +109,7 @@ const sqlListSystems = `
 		project_name,
 		eua_user_id,
 		requester
-	FROM system_intake
+	FROM system_intakes
 	WHERE
 		status='LCID_ISSUED' AND
 		request_type='NEW' AND
@@ -131,7 +131,7 @@ const sqlFetchSystemByIntakeID = `
 	SELECT
 		id,
 		project_name AS name
-	FROM system_intake
+	FROM system_intakes
 	WHERE
 		status='LCID_ISSUED' AND
 		request_type='NEW' AND
