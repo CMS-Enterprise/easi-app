@@ -18,6 +18,10 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *model.Ac
 	if systemErr != nil {
 		return nil, systemErr
 	}
+	system.BusinessOwner = &model.BusinessOwner{
+		Name:      system.BusinessOwnerName.String,
+		Component: system.BusinessOwnerComponent.String,
+	}
 
 	return system, nil
 }

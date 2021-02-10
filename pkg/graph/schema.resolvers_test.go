@@ -71,9 +71,11 @@ func (s GraphQLTestSuite) TestQueries() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		ProjectName: null.StringFrom("Big Project"),
-		Status:      models.SystemIntakeStatusLCIDISSUED,
-		RequestType: models.SystemIntakeRequestTypeNEW,
+		ProjectName:            null.StringFrom("Big Project"),
+		Status:                 models.SystemIntakeStatusLCIDISSUED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		BusinessOwner:          null.StringFrom("Firstname Lastname"),
+		BusinessOwnerComponent: null.StringFrom("OIT"),
 	})
 	s.NoError(intakeErr)
 
@@ -94,8 +96,13 @@ func (s GraphQLTestSuite) TestQueries() {
 		AccessibilityRequest struct {
 			ID     string
 			System struct {
-				ID   string
-				Name string
+				ID            string
+				Name          string
+				LCID          string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
 			}
 		}
 	}
@@ -109,11 +116,19 @@ func (s GraphQLTestSuite) TestQueries() {
 				system {
 					id
 					name
+					lcid
+					businessOwner {
+						name
+						component
+					}
 				}
 			}
 		}`, accessibilityRequest.ID), &resp)
 
 	s.Equal(accessibilityRequest.ID.String(), resp.AccessibilityRequest.ID)
 	s.Equal(intake.ID.String(), resp.AccessibilityRequest.System.ID)
-	s.Equal(intake.ProjectName.String, resp.AccessibilityRequest.System.Name)
+	s.Equal("Big Project", resp.AccessibilityRequest.System.Name)
+	s.Equal(lifecycleID, resp.AccessibilityRequest.System.LCID)
+	s.Equal("Firstname Lastname", resp.AccessibilityRequest.System.BusinessOwner.Name)
+	s.Equal("OIT", resp.AccessibilityRequest.System.BusinessOwner.Component)
 }
