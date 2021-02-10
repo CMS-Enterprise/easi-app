@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useTable } from 'react-table';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
+
+import formatDate from 'utils/formatDate';
 
 type Document = {
   name: string;
@@ -32,7 +33,7 @@ const AccessibilityDocumentsList = ({
         accessor: 'uploadedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+            return formatDate(value);
           }
           return '';
         }

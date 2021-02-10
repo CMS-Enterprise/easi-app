@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
@@ -12,6 +11,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import formatDate from 'utils/formatDate';
 import AccessibilityDocumentsList from 'views/Accessibility/AccessibiltyRequest/Documents';
 
 import './index.scss';
@@ -95,9 +95,7 @@ const AccessibilityRequestDetailPage = () => {
                       {t('intake:fields.submissionDate')}
                     </dt>
                     <dd className="margin-0 margin-bottom-2">
-                      {DateTime.fromISO(submittedAt).toLocaleString(
-                        DateTime.DATE_FULL
-                      )}
+                      {formatDate(submittedAt)}
                     </dd>
                     <dt className="margin-bottom-1">
                       {t('intake:fields.businessOwner')}
