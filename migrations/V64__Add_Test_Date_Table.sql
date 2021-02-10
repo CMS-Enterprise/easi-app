@@ -7,5 +7,6 @@ CREATE TABLE test_date (
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
     date TIMESTAMP WITH TIME ZONE NOT NULL,
     score INT CHECK (score >= 0 AND score <= 1000),
-    test_type test_date_test_type NOT NULL
+    test_type test_date_test_type NOT NULL,
+    deleted_at TIMESTAMP WITH TIME ZONE
 );

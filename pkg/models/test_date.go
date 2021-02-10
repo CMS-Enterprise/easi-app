@@ -19,9 +19,11 @@ const (
 // TestDate models a 508 test date
 type TestDate struct {
 	ID        uuid.UUID        `json:"id"`
-	TestType  TestDateTestType `json:"testType"`
-	Date      time.Time        `json:"date"`
-	Score     *int             `json:"score"`
-	CreatedAt *time.Time
-	UpdatedAt *time.Time
+	RequestID uuid.UUID        `db:"request_id"`
+	TestType  TestDateTestType `db:"test_type"`
+	Date      time.Time
+	Score     *int
+	CreatedAt *time.Time `db:"created_at"`
+	UpdatedAt *time.Time `db:"updated_at"`
+	DeletedAt *time.Time `db:"deleted_at"`
 }
