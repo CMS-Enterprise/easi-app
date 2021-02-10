@@ -33,7 +33,6 @@ type System {
   id: UUID!
   lcid: String!
   name: String!
-  lcid: String!
 }
 
 """
