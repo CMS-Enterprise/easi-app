@@ -2,10 +2,14 @@
 
 package model
 
+import (
+	"github.com/cmsgov/easi-app/pkg/models"
+)
+
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
-	Cursor string                `json:"cursor"`
-	Node   *AccessibilityRequest `json:"node"`
+	Cursor string                       `json:"cursor"`
+	Node   *models.AccessibilityRequest `json:"node"`
 }
 
 // A collection of AccessibilityRequests
@@ -21,8 +25,8 @@ type CreateAccessibilityRequestInput struct {
 
 // Result of CreateAccessibilityRequest
 type CreateAccessibilityRequestPayload struct {
-	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
-	UserErrors           []*UserError          `json:"userErrors"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
+	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
 // UserError represents application-level errors that are the result of
