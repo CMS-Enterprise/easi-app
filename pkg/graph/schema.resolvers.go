@@ -29,9 +29,10 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
 	testDate, err := r.createTestDate(ctx, &model.TestDate{
-		TestType: input.TestType,
-		Date:     input.Date,
-		Score:    input.Score,
+		TestType:  input.TestType,
+		Date:      input.Date,
+		Score:     input.Score,
+		RequestID: input.RequestID,
 	})
 	if err != nil {
 		return nil, err

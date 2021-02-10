@@ -25,7 +25,7 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *model.TestDate) (*
 			id,
 		    request_id,
 			test_type,
-		    test_date,
+		    date,
 		    score,
 			created_at,
 			updated_at
@@ -34,8 +34,8 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *model.TestDate) (*
 			:id,
 			:request_id,
 			:test_type,
-			:test_date,
-			:score
+			:date,
+			:score,
 		    :created_at,
 			:updated_at
 		)`
@@ -54,7 +54,7 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *model.TestDate) (*
 func (s *Store) FetchTestDateByID(ctx context.Context, id uuid.UUID) (*model.TestDate, error) {
 	testDate := model.TestDate{}
 
-	err := s.db.Get(&testDate, `SELECT * FROM test_date WHERE id=$1`, id)
+	err := s.db.Get(&testDate, `SELECT * FROM test_date WHERE id=$1 AND deleted_at IS NULL`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
