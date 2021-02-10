@@ -31,6 +31,11 @@ const AccessibilityRequestDetailPage = () => {
 
   const requestName = data?.accessibilityRequest?.system.name;
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
+  const lcid = data?.accessibilityRequest?.system.lcid;
+  const businessOwnerName =
+    data?.accessibilityRequest?.system?.businessOwner?.name;
+  const businessOwnerComponent =
+    data?.accessibilityRequest?.system?.businessOwner?.component;
 
   // const TEMP_NUM_OF_DOCUMENTS = 0;
 
@@ -95,16 +100,16 @@ const AccessibilityRequestDetailPage = () => {
                         DateTime.DATE_FULL
                       )}
                     </dd>
-                    {/* <dt className="margin-bottom-1">
+                    <dt className="margin-bottom-1">
                       {t('intake:fields.businessOwner')}
                     </dt>
                     <dd className="margin-0 margin-bottom-2">
-                      Shane Clark, OIT
+                      {businessOwnerName}, {businessOwnerComponent}
                     </dd>
                     <dt className="margin-bottom-1">
                       {t('intake:lifecycleId')}
                     </dt>
-                    <dd className="margin-0 margin-bottom-3">X200943</dd> */}
+                    <dd className="margin-0 margin-bottom-3">{lcid}</dd>
                   </dl>
                 </div>
                 {/* <button

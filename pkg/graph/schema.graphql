@@ -18,10 +18,20 @@ type AccessibilityRequest {
 }
 
 """
+A business owner is the person at CMS responsible for a system
+"""
+type BusinessOwner {
+  component: String!
+  name: String!
+}
+
+"""
 A system is derived from a system intake and represents a computer system managed by CMS
 """
 type System {
+  businessOwner: BusinessOwner!
   id: UUID!
+  lcid: String!
   name: String!
 }
 
