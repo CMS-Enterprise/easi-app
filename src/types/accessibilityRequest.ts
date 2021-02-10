@@ -1,11 +1,11 @@
 // Form for reviewer to add dates
 export type TestDateForm = {
   testType: 'INITIAL' | 'REMEDIATION' | null;
-  DateMonth: string;
-  DateYear: string;
-  DateDay: string;
+  dateMonth: string;
+  dateYear: string;
+  dateDay: string;
   score: {
     isPresent: boolean | null;
-    value: number;
+    value: string;
   };
 };

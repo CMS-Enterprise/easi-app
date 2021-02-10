@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import CreateTestDateQuery from 'queries/CreateTestDateQuery';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -18,7 +20,7 @@ import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextField from 'components/shared/TextField';
 import { TestDateForm } from 'types/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
-import { DateValidationSchema } from 'validations/systemIntakeSchema';
+import { TestDateValidationSchema } from 'validations/testDateSchema';
 
 import './index.scss';
 
@@ -27,18 +29,36 @@ const TestDate = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
-
+  // eslint-disable-next-line no-unused-vars
+  const [mutate, mutationResult] = useMutation(CreateTestDateQuery);
   const initialValues: TestDateForm = {
     testType: null,
-    DateMonth: '',
-    DateDay: '',
-    DateYear: '',
+    dateMonth: '',
+    dateDay: '',
+    dateYear: '',
     score: {
       isPresent: false,
-      value: 0
+      value: ''
     }
   };
 
+  // const onSubmit = (values: TestDateForm) => {
+  //   const testDate = DateTime.fromObject({
+  //     day: Number(values.dateDay),
+  //     month: Number(values.dateMonth),
+  //     year: Number(values.dateYear)
+  //   });
+  //
+  //   mutate({
+  //     variables: {
+  //       input: {
+  //         date: testDate,
+  //         score: values.score.isPresent ? values.score.value : null,
+  //         testType: values.testType
+  //       }
+  //     }
+  //   });
+  // };
   const onSubmit = () => {};
 
   return (
@@ -59,7 +79,7 @@ const TestDate = () => {
               <Formik
                 initialValues={initialValues}
                 onSubmit={onSubmit}
-                validationSchema={DateValidationSchema}
+                validationSchema={TestDateValidationSchema}
                 validateOnBlur={false}
                 validateOnChange={false}
                 validateOnMount={false}
@@ -86,15 +106,21 @@ const TestDate = () => {
                           })}
                         </ErrorAlert>
                       )}
+                      {mutationResult.error && (
+                        <ErrorAlert heading="System error">
+                          <ErrorAlertMessage
+                            message={mutationResult.error.message}
+                            errorKey="system"
+                          />
+                        </ErrorAlert>
+                      )}
                       <Form>
-                        <FieldGroup>
+                        <FieldGroup error={!!flatErrors.testType}>
                           <fieldset className="usa-fieldset">
                             <legend className="usa-label margin-bottom-1">
                               What type of test?
                             </legend>
-                            <FieldErrorMsg>
-                              {flatErrors['preferredSolution.hasUserInterface']}
-                            </FieldErrorMsg>
+                            <FieldErrorMsg>{flatErrors.testType}</FieldErrorMsg>
 
                             <Field
                               as={RadioField}
@@ -117,9 +143,10 @@ const TestDate = () => {
                         {/* GRT Date Fields */}
                         <FieldGroup
                           error={
-                            !!flatErrors.grtDateMonth ||
-                            !!flatErrors.grtDateDay ||
-                            !!flatErrors.grtDateYear
+                            !!flatErrors.dateMonth ||
+                            !!flatErrors.dateDay ||
+                            !!flatErrors.dateYear ||
+                            !!flatErrors.validDate
                           }
                         >
                           <fieldset className="usa-fieldset margin-top-4">
@@ -133,13 +160,12 @@ const TestDate = () => {
                               For example: 4 28 2020
                             </HelpText>
                             <FieldErrorMsg>
-                              {flatErrors.grtDateMonth}
+                              {flatErrors.dateMonth}
                             </FieldErrorMsg>
+                            <FieldErrorMsg>{flatErrors.dateDay}</FieldErrorMsg>
+                            <FieldErrorMsg>{flatErrors.dateYear}</FieldErrorMsg>
                             <FieldErrorMsg>
-                              {flatErrors.grtDateDay}
-                            </FieldErrorMsg>
-                            <FieldErrorMsg>
-                              {flatErrors.grtDateYear}
+                              {flatErrors.validDate}
                             </FieldErrorMsg>
                             <div
                               className="usa-memorable-date"
@@ -151,7 +177,7 @@ const TestDate = () => {
                                 </Label>
                                 <Field
                                   as={TextField}
-                                  error={!!flatErrors.grtDateMonth}
+                                  error={!!flatErrors.dateMonth}
                                   id="TestDate-DateMonth"
                                   maxLength={2}
                                   name="dateMonth"
@@ -163,7 +189,7 @@ const TestDate = () => {
                                 </Label>
                                 <Field
                                   as={TextField}
-                                  error={!!flatErrors.grtDateDay}
+                                  error={!!flatErrors.dateDay}
                                   id="TestDate-DateDay"
                                   maxLength={2}
                                   name="dateDay"
@@ -175,7 +201,7 @@ const TestDate = () => {
                                 </Label>
                                 <Field
                                   as={TextField}
-                                  error={!!flatErrors.grtDateYear}
+                                  error={!!flatErrors.dateYear}
                                   id="TestDate-DateYear"
                                   maxLength={4}
                                   name="dateYear"
