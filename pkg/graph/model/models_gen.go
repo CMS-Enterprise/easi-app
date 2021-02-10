@@ -4,6 +4,8 @@ package model
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // An edge of an AccessibilityRequestConnection
@@ -31,9 +33,10 @@ type CreateAccessibilityRequestPayload struct {
 
 // Parameters for creating a test date
 type CreateTestDateInput struct {
-	Date     time.Time        `json:"date"`
-	Score    *int             `json:"score"`
-	TestType TestDateTestType `json:"testType"`
+	Date      time.Time        `json:"date"`
+	RequestID uuid.UUID        `json:"requestID"`
+	Score     *int             `json:"score"`
+	TestType  TestDateTestType `json:"testType"`
 }
 
 // Result of createTestDate

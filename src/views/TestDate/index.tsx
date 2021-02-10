@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { DateTime } from 'luxon';
 import CreateTestDateQuery from 'queries/CreateTestDateQuery';
 
 import Footer from 'components/Footer';
@@ -30,7 +31,9 @@ const TestDate = () => {
     accessibilityRequestId: string;
   }>();
   // eslint-disable-next-line no-unused-vars
-  const [mutate, mutationResult] = useMutation(CreateTestDateQuery);
+  const [mutate, mutationResult] = useMutation(CreateTestDateQuery, {
+    errorPolicy: 'all'
+  });
   const initialValues: TestDateForm = {
     testType: null,
     dateMonth: '',
@@ -42,24 +45,26 @@ const TestDate = () => {
     }
   };
 
-  // const onSubmit = (values: TestDateForm) => {
-  //   const testDate = DateTime.fromObject({
-  //     day: Number(values.dateDay),
-  //     month: Number(values.dateMonth),
-  //     year: Number(values.dateYear)
-  //   });
-  //
-  //   mutate({
-  //     variables: {
-  //       input: {
-  //         date: testDate,
-  //         score: values.score.isPresent ? values.score.value : null,
-  //         testType: values.testType
-  //       }
-  //     }
-  //   });
-  // };
-  const onSubmit = () => {};
+  const onSubmit = (values: TestDateForm) => {
+    const testDate = DateTime.fromObject({
+      day: Number(values.dateDay),
+      month: Number(values.dateMonth),
+      year: Number(values.dateYear)
+    });
+
+    mutate({
+      variables: {
+        input: {
+          date: testDate,
+          score: values.score.isPresent
+            ? Math.round(parseFloat(values.score.value) * 10)
+            : null,
+          testType: values.testType,
+          requestID: accessibilityRequestId
+        }
+      }
+    });
+  };
 
   return (
     <PageWrapper className="add-test-date">

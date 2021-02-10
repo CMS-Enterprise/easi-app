@@ -78,6 +78,7 @@ Parameters for creating a test date
 """
 input CreateTestDateInput {
   date: Time!
+  requestID: UUID!
   score: Int
   testType: TestDateTestType!
 }

@@ -428,6 +428,7 @@ Parameters for creating a test date
 """
 input CreateTestDateInput {
   date: Time!
+  requestID: UUID!
   score: Int
   testType: TestDateTestType!
 }
@@ -2527,6 +2528,14 @@ func (ec *executionContext) unmarshalInputCreateTestDateInput(ctx context.Contex
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("date"))
 			it.Date, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "requestID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestID"))
+			it.RequestID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
