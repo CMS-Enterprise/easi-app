@@ -2,10 +2,11 @@
 
 const accessibility = {
   documentTable: {
+    caption: 'Documents uploaded for',
     header: {
       actions: 'Actions',
-      name: 'Name',
-      uploaedAt: 'Uploaded At'
+      documentName: 'Document',
+      uploadedAt: 'Uploaded Date'
     },
     remove: 'Remove',
     view: 'View'

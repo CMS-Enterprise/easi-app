@@ -30,7 +30,7 @@ const AccessibilityRequestDetailPage = () => {
     }
   );
 
-  const requestName = data?.accessibilityRequest?.system.name;
+  const requestName = data?.accessibilityRequest?.system.name || '';
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
   const lcid = data?.accessibilityRequest?.system.lcid;
   const businessOwnerName =
@@ -80,7 +80,10 @@ const AccessibilityRequestDetailPage = () => {
                 {t('requestDetails.documentUpload')}
               </UswdsLink>
               <div className="margin-top-6">
-                <AccessibilityDocumentsList documents={documents} />
+                <AccessibilityDocumentsList
+                  documents={documents}
+                  requestName={requestName}
+                />
               </div>
             </div>
             <div className="grid-col-3">
