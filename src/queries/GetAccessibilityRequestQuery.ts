@@ -15,6 +15,7 @@ export default gql`
       }
       documents @client {
         name
+        uploadedAt
       }
     }
   }

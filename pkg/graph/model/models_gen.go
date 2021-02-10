@@ -8,8 +8,9 @@ import (
 
 // A document that belongs to an accessibility request
 type AccessibilityRequestDocument struct {
-	ID   uuid.UUID `json:"id"`
-	Name string    `json:"name"`
+	ID         uuid.UUID `json:"id"`
+	Name       string    `json:"name"`
+	UploadedAt string    `json:"uploadedAt"`
 }
 
 // An edge of an AccessibilityRequestConnection
