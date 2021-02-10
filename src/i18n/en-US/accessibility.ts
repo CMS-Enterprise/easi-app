@@ -1,6 +1,15 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
+  documentTable: {
+    header: {
+      actions: 'Actions',
+      name: 'Name',
+      uploaedAt: 'Uploaded At'
+    },
+    remove: 'Remove',
+    view: 'View'
+  },
   requestTable: {
     caption: 'Active 508 Requests',
     header: {

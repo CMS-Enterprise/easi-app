@@ -85,6 +85,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
   resolvers: {
     AccessibilityRequest: {
+      // documents: () => []
       documents: () => [
         { name: 'Testing VPAT', uploadedAt: '2021-02-02T17:28:29Z' },
         { name: 'Test Results', uploadedAt: '2021-02-06T17:28:29Z' },
