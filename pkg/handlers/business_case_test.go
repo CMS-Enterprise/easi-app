@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"github.com/guregu/null"
+	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
@@ -43,8 +44,10 @@ func newMockUpdateBusinessCase(err error) func(context context.Context, business
 }
 
 func (s HandlerTestSuite) TestBusinessCaseHandler() {
-	requestContext := context.Background()
-	requestContext = appcontext.WithPrincipal(requestContext, &authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
+	logger, lerr := zap.NewDevelopment()
+	s.NoError(lerr)
+	loggerContext := appcontext.WithLogger(context.Background(), logger)
+	requestContext := appcontext.WithPrincipal(loggerContext, &authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true})
 	id, err := uuid.NewUUID()
 	s.NoError(err)
 	s.Run("golden path GET passes", func() {
@@ -110,7 +113,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 	})
 
 	s.Run("POST fails if there is no eua ID in the context", func() {
-		badContext := context.Background()
+		badContext := loggerContext
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
 			"system_intake_id": id.String(),
@@ -123,7 +126,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			FetchBusinessCaseByID: nil,
 			CreateBusinessCase:    newMockCreateBusinessCase(nil),
 		}.Handle()(rr, req)
-		s.Equal(http.StatusInternalServerError, rr.Code)
+		s.Equal(http.StatusUnauthorized, rr.Code)
 	})
 
 	s.Run("POST fails if a validation error is thrown", func() {
@@ -215,7 +218,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 	})
 
 	s.Run("PUT fails if there is no eua ID in the context", func() {
-		badContext := context.Background()
+		badContext := loggerContext
 		rr := httptest.NewRecorder()
 		body, err := json.Marshal(map[string]string{
 			"requesterPhoneNumber": "1234567890",
@@ -231,7 +234,7 @@ func (s HandlerTestSuite) TestBusinessCaseHandler() {
 			UpdateBusinessCase:    newMockUpdateBusinessCase(nil),
 			CreateBusinessCase:    nil,
 		}.Handle()(rr, req)
-		s.Equal(http.StatusInternalServerError, rr.Code)
+		s.Equal(http.StatusUnauthorized, rr.Code)
 	})
 
 	s.Run("returns an error if there updating fails with a validation error", func() {

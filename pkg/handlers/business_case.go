@@ -92,6 +92,16 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 
 			return
 		case "POST":
+			principal := appcontext.Principal(r.Context())
+			if !principal.AllowEASi() {
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.UnauthorizedError{Err: fmt.Errorf("principal not authorized")},
+				)
+				return
+			}
+
 			if r.Body == nil {
 				h.WriteErrorResponse(
 					r.Context(),
@@ -108,17 +118,6 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				return
 			}
 
-			principal := appcontext.Principal(r.Context())
-			if !principal.AllowEASi() {
-				h.WriteErrorResponse(
-					r.Context(),
-					w,
-					&apperrors.ContextError{
-						Operation: apperrors.ContextGet,
-						Object:    "User",
-					})
-				return
-			}
 			businessCaseToCreate.EUAUserID = principal.ID()
 
 			businessCase, err := h.CreateBusinessCase(r.Context(), &businessCaseToCreate)
@@ -143,7 +142,11 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 		case "PUT":
 			principal := appcontext.Principal(r.Context())
 			if !principal.AllowEASi() {
-				h.WriteErrorResponse(r.Context(), w, &apperrors.UnauthorizedError{Err: fmt.Errorf("principal not authorized")})
+				h.WriteErrorResponse(
+					r.Context(),
+					w,
+					&apperrors.UnauthorizedError{Err: fmt.Errorf("principal not authorized")},
+				)
 				return
 			}
 
