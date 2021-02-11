@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { Button } from '@trussworks/react-uswds';
+import { Button, ComboBox } from '@trussworks/react-uswds';
 import {
   Field as FormikField,
   Form as FormikForm,
@@ -18,7 +18,7 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import PlainInfo from 'components/PlainInfo';
-import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
+// import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -89,6 +89,38 @@ const Create = () => {
                   <div className="margin-bottom-7">
                     <FormikForm>
                       <FieldGroup
+                        scrollElement="intakeId"
+                        error={!!flatErrors.intakeId}
+                      >
+                        <Label htmlFor="508Request-IntakeId">
+                          Choose the project this request will belong to
+                        </Label>
+                        <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
+                        <ComboBox
+                          name="intakeId"
+                          id="508Request-IntakeId"
+                          options={[
+                            { label: 'Blackberry', value: 'blackberry' },
+                            { label: 'Blueberry', value: 'blueberry' },
+                            { label: 'Boisenbery', value: 'boisenberry' },
+                            { label: 'Apple', value: 'apple' },
+                            { label: 'Orange', value: 'orange' }
+                          ]}
+                          onChange={intakeId => {
+                            console.log(intakeId);
+                            setFieldValue('intakeId', intakeId);
+                            // setFieldValue(
+                            //   'businessOwner.name',
+                            //   selectedIntake?.businessOwner.name
+                            // );
+                            // setFieldValue(
+                            //   'businessOwner.component',
+                            //   selectedIntake?.businessOwner.component
+                            // );
+                          }}
+                        />
+                      </FieldGroup>
+                      {/* <FieldGroup
                         scrollElement="intakeId"
                         error={!!flatErrors.intakeId}
                       >
@@ -170,7 +202,7 @@ const Create = () => {
                             value="189c4ed7-16a3-47f8-b24b-f3966b969c6c"
                           />
                         </FormikField>
-                      </FieldGroup>
+                      </FieldGroup> */}
                       <FieldGroup scrollElement="requester.name">
                         <Label htmlFor="508Request-BusinessOwnerName">
                           Business Owner Name
