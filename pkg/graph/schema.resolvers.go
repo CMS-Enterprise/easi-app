@@ -70,6 +70,10 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 
 	conn := &model.SystemConnection{}
 	for _, system := range systems {
+		system.BusinessOwner = &model.BusinessOwner{
+			Name:      system.BusinessOwnerName.String,
+			Component: system.BusinessOwnerComponent.String,
+		}
 		conn.Edges = append(conn.Edges, &model.SystemEdge{
 			Node: system,
 		})
