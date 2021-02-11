@@ -20,17 +20,17 @@ var fakeSystems []*model.System
 func init() {
 	fakeSystems = []*model.System{
 		{
-			Lcid: "X990000",
+			LCID: "X990000",
 			ID:   uuid.MustParse("00000000-9999-0000-0000-000000000000"),
 			Name: "Three Amigos",
 		},
 		{
-			Lcid: "X990001",
+			LCID: "X990001",
 			ID:   uuid.MustParse("00000000-8888-0000-0000-000000000000"),
 			Name: "Three Musketeers",
 		},
 		{
-			Lcid: "X990002",
+			LCID: "X990002",
 			ID:   uuid.MustParse("00000000-7777-0000-0000-000000000000"),
 			Name: "Three Stooges",
 		},

@@ -31,13 +31,6 @@ type CreateAccessibilityRequestPayload struct {
 	UserErrors           []*UserError          `json:"userErrors"`
 }
 
-// A system is derived from a system intake and represents a computer system managed by CMS
-type System struct {
-	ID   uuid.UUID `json:"id"`
-	Lcid string    `json:"lcid"`
-	Name string    `json:"name"`
-}
-
 // A collection of Systems
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
