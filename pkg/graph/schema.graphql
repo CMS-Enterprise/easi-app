@@ -36,6 +36,22 @@ type System {
 }
 
 """
+A collection of Systems
+"""
+type SystemConnection {
+  edges: [SystemEdge!]!
+  totalCount: Int!
+}
+
+"""
+An edge of an SystemConnection
+"""
+type SystemEdge {
+  cursor: String!
+  node: System!
+}
+
+"""
 Parameters required to create an AccessibilityRequest
 """
 input CreateAccessibilityRequestInput {
@@ -84,6 +100,10 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
+  systems(
+    after: String
+    first: Int!
+  ): SystemConnection
 }
 
 """
