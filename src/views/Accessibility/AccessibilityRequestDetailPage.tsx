@@ -75,7 +75,7 @@ const AccessibilityRequestDetailPage = () => {
                 className="usa-button"
                 variant="unstyled"
                 asCustom={Link}
-                to={`/508/requests/${accessibilityRequestId}/document-upload`}
+                to={`/508/requests/${accessibilityRequestId}/documents/new`}
               >
                 {t('requestDetails.documentUpload')}
               </UswdsLink>
