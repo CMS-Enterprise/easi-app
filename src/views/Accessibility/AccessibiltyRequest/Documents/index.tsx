@@ -36,7 +36,8 @@ const AccessibilityDocumentsList = ({
             return formatDate(value);
           }
           return '';
-        }
+        },
+        width: '25%'
       },
       {
         Header: t('documentTable.header.actions'),
@@ -92,7 +93,10 @@ const AccessibilityDocumentsList = ({
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
-              <th style={{ whiteSpace: 'nowrap' }} scope="col">
+              <th
+                style={{ whiteSpace: 'nowrap', width: column.width }}
+                scope="col"
+              >
                 {column.render('Header')}
               </th>
             ))}
