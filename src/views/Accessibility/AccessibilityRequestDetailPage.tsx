@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 // import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { Alert } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
@@ -28,6 +29,19 @@ const AccessibilityRequestDetailPage = () => {
       }
     }
   );
+  const [confirmationText, setIsConfirmationText] = useState('');
+
+  const history = useHistory();
+  const location = useLocation<any>();
+  useEffect(() => {
+    if (location.state && location.state.confirmationText) {
+      setIsConfirmationText(location.state.confirmationText);
+      history.replace({
+        state: {}
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const requestName = data?.accessibilityRequest?.name;
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
@@ -60,6 +74,11 @@ const AccessibilityRequestDetailPage = () => {
           </NavLink>
         </SecondaryNav>
         <div className="grid-container">
+          {confirmationText && (
+            <Alert className="margin-top-4" type="success">
+              {confirmationText}
+            </Alert>
+          )}
           <h1 className="margin-top-6 margin-bottom-5">{requestName}</h1>
           <div className="grid-row grid-gap-lg">
             <div className="grid-col-9">
@@ -91,6 +110,7 @@ const AccessibilityRequestDetailPage = () => {
                   <Link
                     to={`/508/requests/${accessibilityRequestId}/test-date`}
                     className="margin-bottom-3 display-block"
+                    aria-label="Add a test date"
                   >
                     Add a date
                   </Link>
