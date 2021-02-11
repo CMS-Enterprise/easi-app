@@ -2,6 +2,19 @@
 
 package model
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+// A document that belongs to an accessibility request
+type AccessibilityRequestDocument struct {
+	ID         uuid.UUID `json:"id"`
+	Name       string    `json:"name"`
+	UploadedAt time.Time `json:"uploadedAt"`
+}
+
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
 	Cursor string                `json:"cursor"`
@@ -30,6 +43,18 @@ type CreateAccessibilityRequestInput struct {
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError          `json:"userErrors"`
+}
+
+// A collection of Systems
+type SystemConnection struct {
+	Edges      []*SystemEdge `json:"edges"`
+	TotalCount int           `json:"totalCount"`
+}
+
+// An edge of an SystemConnection
+type SystemEdge struct {
+	Cursor string  `json:"cursor"`
+	Node   *System `json:"node"`
 }
 
 // UserError represents application-level errors that are the result of

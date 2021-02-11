@@ -12,6 +12,7 @@ An accessibility request represents a system that needs to go through
 the 508 process.
 """
 type AccessibilityRequest {
+  documents: [AccessibilityRequestDocument!]!
   id: UUID!
   name: String!
   submittedAt: Time!
@@ -34,6 +35,31 @@ type System {
   id: UUID!
   lcid: String!
   name: String!
+}
+
+"""
+A collection of Systems
+"""
+type SystemConnection {
+  edges: [SystemEdge!]!
+  totalCount: Int!
+}
+
+"""
+An edge of an SystemConnection
+"""
+type SystemEdge {
+  cursor: String!
+  node: System!
+}
+
+"""
+A document that belongs to an accessibility request
+"""
+type AccessibilityRequestDocument {
+  id: UUID!
+  name: String!
+  uploadedAt: Time!
 }
 
 """
@@ -86,6 +112,10 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
+  systems(
+    after: String
+    first: Int!
+  ): SystemConnection
 }
 
 """
