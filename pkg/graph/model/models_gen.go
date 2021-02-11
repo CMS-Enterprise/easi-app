@@ -29,6 +29,18 @@ type CreateAccessibilityRequestPayload struct {
 	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
+// A collection of Systems
+type SystemConnection struct {
+	Edges      []*SystemEdge `json:"edges"`
+	TotalCount int           `json:"totalCount"`
+}
+
+// An edge of an SystemConnection
+type SystemEdge struct {
+	Cursor string         `json:"cursor"`
+	Node   *models.System `json:"node"`
+}
+
 // UserError represents application-level errors that are the result of
 // either user or application developer error.
 type UserError struct {
