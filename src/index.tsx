@@ -14,7 +14,6 @@ import { TextEncoder } from 'text-encoding';
 
 import { localAuthStorageKey } from 'constants/localAuth';
 
-import 'uswds';
 import './i18n';
 
 import App from './views/App';
