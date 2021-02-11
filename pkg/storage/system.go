@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -14,69 +13,39 @@ import (
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-var fakeSystems []*models.System
+var fakeSystems []*model.System
 
 func init() {
-	t1 := time.Date(2020, time.January, 1, 8, 0, 0, 0, time.UTC)
-	t2 := t1.AddDate(2, 0, -1)
-	fakeSystems = []*models.System{
+	fakeSystems = []*model.System{
 		{
-			LCID:        "X990000",
-			IntakeID:    uuid.MustParse("00000000-9999-0000-0000-000000000000"),
-			CreatedAt:   &t1,
-			UpdatedAt:   &t1,
-			IssuedAt:    &t1,
-			ExpiresAt:   &t2,
-			ProjectName: "Three Amigos",
-			OwnerID:     null.StringFrom("FAKE0"),
-			OwnerName:   "Lucky Dusty Ned",
+			LCID:                   "X990000",
+			ID:                     uuid.MustParse("00000000-9999-0000-0000-000000000000"),
+			Name:                   "Three Amigos",
+			BusinessOwnerName:      null.StringFrom("Lucky Dusty Ned"),
+			BusinessOwnerComponent: null.StringFrom("Horsies"),
 		},
 		{
-			LCID:        "X990001",
-			IntakeID:    uuid.MustParse("00000000-8888-0000-0000-000000000000"),
-			CreatedAt:   &t1,
-			UpdatedAt:   &t1,
-			IssuedAt:    &t1,
-			ExpiresAt:   &t2,
-			ProjectName: "Three Musketeers",
-			OwnerID:     null.StringFromPtr(nil),
-			OwnerName:   "Athos Porthos Aramis",
+			LCID:                   "X990001",
+			ID:                     uuid.MustParse("00000000-8888-0000-0000-000000000000"),
+			Name:                   "Three Musketeers",
+			BusinessOwnerName:      null.StringFrom("Athos Porthos Aramis"),
+			BusinessOwnerComponent: null.StringFrom("Swordses"),
 		},
 		{
-			LCID:        "X990002",
-			IntakeID:    uuid.MustParse("00000000-7777-0000-0000-000000000000"),
-			CreatedAt:   &t1,
-			UpdatedAt:   &t1,
-			IssuedAt:    &t1,
-			ExpiresAt:   &t2,
-			ProjectName: "Three Stooges",
-			OwnerID:     null.StringFrom("FAKE2"),
-			OwnerName:   "Moe Larry Curly",
+			LCID:                   "X990002",
+			ID:                     uuid.MustParse("00000000-7777-0000-0000-000000000000"),
+			Name:                   "Three Stooges",
+			BusinessOwnerName:      null.StringFrom("Moe Larry Curly"),
+			BusinessOwnerComponent: null.StringFrom("Nyuknyuks"),
 		},
 	}
 }
 
-// // FetchSystemByLCID uses the Lifecycle ID as the unique identifier for a given System
-// func (s *Store) FetchSystemByLCID(ctx context.Context, lcid string) (*models.System, error) {
-// 	useFake := true
-// 	if useFake {
-// 		for _, sys := range fakeSystems {
-// 			if lcid == sys.LCID {
-// 				return sys, nil
-// 			}
-// 		}
-// 		return nil, fmt.Errorf("system not found: %s", lcid)
-// 	}
-// 	// TODO: this code would emulate the behavior outlined in `ListSystems(...)`
-// 	return nil, fmt.Errorf("not yet implemented")
-// }
-
 // ListSystems retrieves a collection of Systems, which are a subset of all SystemIntakes that
 // have been "decided" and issued an LCID.
-func (s *Store) ListSystems(ctx context.Context) ([]*models.System, error) {
+func (s *Store) ListSystems(ctx context.Context) ([]*model.System, error) {
 	if s.useFakeSystems(ctx) {
 		return fakeSystems, nil
 	}
@@ -102,13 +71,7 @@ const sqlListSystems = `
 	SELECT
 		id,
 		lcid,
-		created_at,
-		updated_at,
-		decided_at,
-		lcid_expires_at,
-		project_name,
-		eua_user_id,
-		requester
+		project_name AS name
 	FROM system_intakes
 	WHERE
 		status='LCID_ISSUED' AND
@@ -116,8 +79,8 @@ const sqlListSystems = `
 		lcid IS NOT NULL;
 `
 
-func (s *Store) listSystems(ctx context.Context) ([]*models.System, error) {
-	results := []*models.System{}
+func (s *Store) listSystems(ctx context.Context) ([]*model.System, error) {
+	results := []*model.System{}
 	err := s.db.Select(&results, sqlListSystems)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -152,7 +115,7 @@ func (s *Store) FetchSystemByIntakeID(ctx context.Context, intakeID uuid.UUID) (
 	err := s.db.Get(&system, sqlFetchSystemByIntakeID, intakeID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.System{}}
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: model.System{}}
 		}
 		appcontext.ZLogger(ctx).Error("Failed to fetch system", zap.Error(err), zap.String("intakeID", intakeID.String()))
 		return nil, &apperrors.QueryError{
