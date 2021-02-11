@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -17,6 +17,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
+import usePageContext from 'hooks/usePageContext';
 import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -45,6 +46,8 @@ const RequestDetails = ({
 }: RequestDetailsProps) => {
   const flags = useFlags();
   const history = useHistory();
+  const { setPage } = usePageContext();
+
   const initialValues: RequestDetailsForm = {
     requestName: systemIntake.requestName,
     fundingSource: systemIntake.fundingSource,
@@ -64,6 +67,10 @@ const RequestDetails = ({
     }
     return link;
   })();
+
+  useEffect(() => {
+    setPage('intake request details form');
+  }, [setPage]);
 
   return (
     <Formik

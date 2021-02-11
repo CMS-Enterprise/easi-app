@@ -8,6 +8,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
+import usePageContext from 'hooks/usePageContext';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 
@@ -52,8 +53,13 @@ const Banners = () => {
 
 const Home = () => {
   const { authState } = useOktaAuth();
+  const { setPage } = usePageContext();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+
+  useEffect(() => {
+    setPage('home page');
+  }, [setPage]);
 
   return (
     <PageWrapper>

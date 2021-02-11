@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -17,6 +17,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import usePageContext from 'hooks/usePageContext';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
@@ -65,6 +66,7 @@ const ContactDetails = ({
   const flags = useFlags();
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
+  const { setPage } = usePageContext();
 
   const initialValues: ContactDetailsForm = {
     requestName: systemIntake.requestName,
@@ -98,6 +100,10 @@ const ContactDetails = ({
     }
     return link;
   })();
+
+  useEffect(() => {
+    setPage('intake contact details form');
+  }, [setPage]);
 
   return (
     <Formik
