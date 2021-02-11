@@ -74,7 +74,12 @@ const TestDate = () => {
         }
       }
     }).then(() => {
-      history.push(`/508/requests/${accessibilityRequestId}`);
+      history.push(`/508/requests/${accessibilityRequestId}`, {
+        confirmationText: t('createTestDate.confirmation', {
+          date: testDate.toLocaleString(DateTime.DATE_FULL),
+          requestName: data?.accessibilityRequest?.name
+        })
+      });
     });
   };
 
@@ -274,6 +279,9 @@ const TestDate = () => {
                                   <Label htmlFor="TestDate-ScoreValue">
                                     {t('createTestDate.scoreValueHeader')}
                                   </Label>
+                                  <legend className="usa-sr-only">
+                                    {t('createTestDate.scoreValueSRHelpText')}
+                                  </legend>
                                   <FieldErrorMsg>
                                     {flatErrors['score.value']}
                                   </FieldErrorMsg>

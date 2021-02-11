@@ -32,8 +32,10 @@ const accessibility = {
     dateHelpText: 'For example: 4 28 2020',
     scoreHeader: 'Does this test have a score?',
     scoreValueHeader: 'Test Score',
+    scoreValueSRHelpText: 'Enter the test score without the percentage symbol',
     submitButton: 'Add date',
-    cancel: "Don't add and go back to request page"
+    cancel: "Don't add and go back to request page",
+    confirmation: 'Test date {{date}} added to {{requestName}} page'
   }
 };
 
