@@ -18,6 +18,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import usePageContext from 'hooks/usePageContext';
 import { AppState } from 'reducers/rootReducer';
 import { postSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
@@ -29,6 +30,7 @@ const RequestTypeForm = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const flags = useFlags();
+  const { setPage } = usePageContext();
 
   const isNewIntakeCreated = useSelector(
     (state: AppState) => state.systemIntake.isNewIntakeCreated
@@ -86,6 +88,10 @@ const RequestTypeForm = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNewIntakeCreated]);
+
+  useEffect(() => {
+    setPage('intake request type form');
+  }, [setPage]);
 
   return (
     <PageWrapper>

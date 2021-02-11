@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -21,6 +21,7 @@ import TextField from 'components/shared/TextField';
 import fundingSources from 'constants/enums/fundingSources';
 import processStages from 'constants/enums/processStages';
 import { yesNoMap } from 'data/common';
+import usePageContext from 'hooks/usePageContext';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -38,6 +39,7 @@ const ContractDetails = ({
 }: ContractDetailsProps) => {
   const flags = useFlags();
   const history = useHistory();
+  const { setPage } = usePageContext();
 
   const initialValues: ContractDetailsForm = {
     currentStage: systemIntake.currentStage,
@@ -57,6 +59,10 @@ const ContractDetails = ({
     }
     return link;
   })();
+
+  useEffect(() => {
+    setPage('intake contract details form');
+  }, [setPage]);
 
   return (
     <Formik
