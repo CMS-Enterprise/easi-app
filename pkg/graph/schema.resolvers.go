@@ -14,6 +14,19 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
+func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
+	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
+	if systemErr != nil {
+		return nil, systemErr
+	}
+	system.BusinessOwner = &models.BusinessOwner{
+		Name:      system.BusinessOwnerName.String,
+		Component: system.BusinessOwnerComponent.String,
+	}
+
+	return system, nil
+}
+
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
 		Name: input.Name,
@@ -50,11 +63,36 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
+func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
+	systems, err := r.store.ListSystems(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	conn := &model.SystemConnection{}
+	for _, system := range systems {
+		system.BusinessOwner = &models.BusinessOwner{
+			Name:      system.BusinessOwnerName.String,
+			Component: system.BusinessOwnerComponent.String,
+		}
+		conn.Edges = append(conn.Edges, &model.SystemEdge{
+			Node: system,
+		})
+	}
+	return conn, nil
+}
+
+// AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
+func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
+	return &accessibilityRequestResolver{r}
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type accessibilityRequestResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
