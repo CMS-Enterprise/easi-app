@@ -6,13 +6,13 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
-	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 var fakeSystems []*model.System
@@ -20,19 +20,25 @@ var fakeSystems []*model.System
 func init() {
 	fakeSystems = []*model.System{
 		{
-			LCID: "X990000",
-			ID:   uuid.MustParse("00000000-9999-0000-0000-000000000000"),
-			Name: "Three Amigos",
+			LCID:                   "X990000",
+			ID:                     uuid.MustParse("00000000-9999-0000-0000-000000000000"),
+			Name:                   "Three Amigos",
+			BusinessOwnerName:      null.StringFrom("Lucky Dusty Ned"),
+			BusinessOwnerComponent: null.StringFrom("Horsies"),
 		},
 		{
-			LCID: "X990001",
-			ID:   uuid.MustParse("00000000-8888-0000-0000-000000000000"),
-			Name: "Three Musketeers",
+			LCID:                   "X990001",
+			ID:                     uuid.MustParse("00000000-8888-0000-0000-000000000000"),
+			Name:                   "Three Musketeers",
+			BusinessOwnerName:      null.StringFrom("Athos Porthos Aramis"),
+			BusinessOwnerComponent: null.StringFrom("Swordses"),
 		},
 		{
-			LCID: "X990002",
-			ID:   uuid.MustParse("00000000-7777-0000-0000-000000000000"),
-			Name: "Three Stooges",
+			LCID:                   "X990002",
+			ID:                     uuid.MustParse("00000000-7777-0000-0000-000000000000"),
+			Name:                   "Three Stooges",
+			BusinessOwnerName:      null.StringFrom("Moe Larry Curly"),
+			BusinessOwnerComponent: null.StringFrom("Nyuknyuks"),
 		},
 	}
 }
@@ -109,7 +115,7 @@ func (s *Store) FetchSystemByIntakeID(ctx context.Context, intakeID uuid.UUID) (
 	err := s.db.Get(&system, sqlFetchSystemByIntakeID, intakeID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.System{}}
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: model.System{}}
 		}
 		appcontext.ZLogger(ctx).Error("Failed to fetch system", zap.Error(err), zap.String("intakeID", intakeID.String()))
 		return nil, &apperrors.QueryError{
