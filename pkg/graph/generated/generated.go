@@ -488,7 +488,7 @@ A document that belongs to an accessibility request
 type AccessibilityRequestDocument {
   id: UUID!
   name: String!
-  uploadedAt: String!
+  uploadedAt: Time!
 }
 
 """
@@ -934,9 +934,9 @@ func (ec *executionContext) _AccessibilityRequestDocument_uploadedAt(ctx context
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(time.Time)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestEdge) (ret graphql.Marshaler) {
@@ -3846,6 +3846,21 @@ func (ec *executionContext) marshalNSystemEdge2ᚖgithubᚗcomᚋcmsgovᚋeasi�
 		return graphql.Null
 	}
 	return ec._SystemEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
+	res, err := graphql.UnmarshalTime(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
+	res := graphql.MarshalTime(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {

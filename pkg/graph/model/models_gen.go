@@ -3,6 +3,8 @@
 package model
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -10,7 +12,7 @@ import (
 type AccessibilityRequestDocument struct {
 	ID         uuid.UUID `json:"id"`
 	Name       string    `json:"name"`
-	UploadedAt string    `json:"uploadedAt"`
+	UploadedAt time.Time `json:"uploadedAt"`
 }
 
 // An edge of an AccessibilityRequestConnection

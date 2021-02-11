@@ -58,7 +58,7 @@ A document that belongs to an accessibility request
 type AccessibilityRequestDocument {
   id: UUID!
   name: String!
-  uploadedAt: String!
+  uploadedAt: Time!
 }
 
 """
