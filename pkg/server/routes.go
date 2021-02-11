@@ -29,7 +29,7 @@ import (
 )
 
 func (s *Server) routes(
-	authorizationMiddleware func(handler http.Handler) http.Handler,
+	authenticationMiddleware func(handler http.Handler) http.Handler,
 	corsMiddleware func(handler http.Handler) http.Handler,
 	traceMiddleware func(handler http.Handler) http.Handler,
 	loggerMiddleware func(handler http.Handler) http.Handler) {
@@ -38,11 +38,12 @@ func (s *Server) routes(
 		traceMiddleware, // trace all requests with an ID
 		loggerMiddleware,
 		corsMiddleware,
-		authorizationMiddleware, // exclusively authN, not authZ
+		authenticationMiddleware, // exclusively authN, not authZ
 	)
 
 	// set up handler base
 	base := handlers.NewHandlerBase(s.logger)
+	authorizationMiddleware := newAuthorizeEASiMiddleware(base)
 
 	// endpoints that dont require authorization go directly on the main router
 	s.router.HandleFunc("/api/v1/healthcheck", handlers.NewHealthCheckHandler(base, s.Config).Handle())
@@ -133,11 +134,13 @@ func (s *Server) routes(
 
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
+	gql.Use(authorizationMiddleware)
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
 	gql.Handle("/query", graphqlServer)
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()
+	api.Use(authorizationMiddleware)
 
 	serviceConfig := services.NewConfig(s.logger, ldClient)
 
