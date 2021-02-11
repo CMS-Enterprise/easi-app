@@ -83,7 +83,7 @@ func (s StoreTestSuite) TestListSystems() {
 	found := 0
 	for _, result := range results {
 		s.NotEqual(result.ID, uuid.Nil) // ensure we populate with a real IntakeID
-		if _, exp := expected[result.Lcid]; !exp {
+		if _, exp := expected[result.LCID]; !exp {
 			// unexpected collision from previously existing data,
 			// possibly from previous runs of this test
 			continue
