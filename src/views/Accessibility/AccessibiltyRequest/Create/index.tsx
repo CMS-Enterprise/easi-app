@@ -2,7 +2,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Button, ComboBox } from '@trussworks/react-uswds';
 import {
   Field as FormikField,
@@ -11,6 +11,8 @@ import {
   FormikProps
 } from 'formik';
 import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
+import GetSystemsQuery from 'queries/GetSystems';
+import { GetSystems } from 'queries/types/GetSystems';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -34,6 +36,19 @@ import accessibilitySchema from 'validations/accessibilitySchema';
 const Create = () => {
   const history = useHistory();
   const { t } = useTranslation('accessibility');
+  const { data } = useQuery<GetSystems>(GetSystemsQuery, {
+    variables: {
+      // TODO: Is there a way to make this all? or change the query?
+      first: 20
+    }
+  });
+
+  const projectComboBoxOptions =
+    data?.systems?.edges.map(system => ({
+      label: `${system.node.name} - ${system.node.id}`,
+      value: system.node.id
+    })) || [];
+
   const [mutate, mutationResult] = useMutation(CreateAccessibilityRequestQuery);
   const handleSubmit = (values: AccessibilityRequestForm) => {
     mutate({
@@ -88,121 +103,35 @@ const Create = () => {
                   )}
                   <div className="margin-bottom-7">
                     <FormikForm>
-                      <FieldGroup
-                        scrollElement="intakeId"
-                        error={!!flatErrors.intakeId}
-                      >
-                        <Label htmlFor="508Request-IntakeId">
-                          Choose the project this request will belong to
-                        </Label>
-                        <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
-                        <ComboBox
-                          name="intakeId"
-                          id="508Request-IntakeId"
-                          options={[
-                            { label: 'Blackberry', value: 'blackberry' },
-                            { label: 'Blueberry', value: 'blueberry' },
-                            { label: 'Boisenbery', value: 'boisenberry' },
-                            { label: 'Apple', value: 'apple' },
-                            { label: 'Orange', value: 'orange' }
-                          ]}
-                          onChange={intakeId => {
-                            console.log(intakeId);
-                            setFieldValue('intakeId', intakeId);
-                            // setFieldValue(
-                            //   'businessOwner.name',
-                            //   selectedIntake?.businessOwner.name
-                            // );
-                            // setFieldValue(
-                            //   'businessOwner.component',
-                            //   selectedIntake?.businessOwner.component
-                            // );
-                          }}
-                        />
-                      </FieldGroup>
-                      {/* <FieldGroup
-                        scrollElement="intakeId"
-                        error={!!flatErrors.intakeId}
-                      >
-                        <Label htmlFor="508Request-IntakeId">
-                          Choose the project this request will belong to
-                        </Label>
-                        <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
-                        <FormikField
-                          as={DropdownField}
+                      {projectComboBoxOptions.length > 0 && (
+                        <FieldGroup
+                          scrollElement="intakeId"
                           error={!!flatErrors.intakeId}
-                          name="intakeId"
-                          id="508Request-IntakeId"
-                          onChange={(e: any) => {
-                            const selectedIntake = [
-                              {
-                                id: '189c4ed7-16a3-47f8-b24b-f3966b969c6c',
-                                businessOwner: {
-                                  name: 'Test 1 Business Owner',
-                                  component: 'Office of Information Technology'
-                                }
-                              },
-                              {
-                                id: '189c4ed7-16a3-47f8-b24b-f3966b969c6c',
-                                businessOwner: {
-                                  name: 'Test 2 Business Owner',
-                                  component: 'Office of Information Technology'
-                                }
-                              },
-                              {
-                                id: '189c4ed7-16a3-47f8-b24b-f3966b969c6c',
-                                businessOwner: {
-                                  name: 'Test 3 Business Owner',
-                                  component: 'Office of Information Technology'
-                                }
-                              },
-                              {
-                                id: '189c4ed7-16a3-47f8-b24b-f3966b969c6c',
-                                businessOwner: {
-                                  name: 'Test 4 Business Owner',
-                                  component: 'Office of Information Technology'
-                                }
-                              }
-                            ].find(intake => intake.id === e.target.value);
-                            setFieldValue('intakeId', e.target.value);
-                            setFieldValue(
-                              'businessOwner.name',
-                              selectedIntake?.businessOwner.name
-                            );
-                            setFieldValue(
-                              'businessOwner.component',
-                              selectedIntake?.businessOwner.component
-                            );
-                          }}
                         >
-                          <FormikField
-                            as={DropdownItem}
-                            name="Select an option"
-                            value=""
-                            disabled
+                          <Label htmlFor="508Request-IntakeId">
+                            Choose the project this request will belong to
+                          </Label>
+                          <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
+                          <ComboBox
+                            name="intakeId"
+                            id="508Request-IntakeId"
+                            options={projectComboBoxOptions}
+                            onChange={intakeId => {
+                              console.log(intakeId);
+                              setFieldValue('intakeId', intakeId);
+                              // setFieldValue(
+                              //   'businessOwner.name',
+                              //   selectedIntake?.businessOwner.name
+                              // );
+                              // setFieldValue(
+                              //   'businessOwner.component',
+                              //   selectedIntake?.businessOwner.component
+                              // );
+                            }}
                           />
-                          <FormikField
-                            as={DropdownItem}
-                            name="Test 1"
-                            value="189c4ed7-16a3-47f8-b24b-f3966b969c6c"
-                          />
-                          <FormikField
-                            as={DropdownItem}
-                            name="Test 2"
-                            value="189c4ed7-16a3-47f8-b24b-f3966b969c6c"
-                          />
-                          <FormikField
-                            as={DropdownItem}
-                            name="Test 3"
-                            value="189c4ed7-16a3-47f8-b24b-f3966b969c6c"
-                          />
-                          <FormikField
-                            as={DropdownItem}
-                            name="Test 4"
-                            value="189c4ed7-16a3-47f8-b24b-f3966b969c6c"
-                          />
-                        </FormikField>
-                      </FieldGroup> */}
+                        </FieldGroup>
+                      )}
+
                       <FieldGroup scrollElement="requester.name">
                         <Label htmlFor="508Request-BusinessOwnerName">
                           Business Owner Name
