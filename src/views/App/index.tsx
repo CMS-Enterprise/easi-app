@@ -37,120 +37,112 @@ import './index.scss';
 
 const AppRoutes = () => {
   const flags = useFlags();
-  const [pageName, setPageName] = useState('');
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   return (
-    <PageContext.Provider value={{ page: pageName, setPage: setPageName }}>
-      <div className="usa-sr-only" role="status" aria-live="polite" aria-atomic>
-        {pageName ? `Navigated to ${pageName}` : 'EASi App'}
-      </div>
-      <Switch>
-        {/* START: 508 Process Pages */}
-        <SecureRoute path="/508/requests/new" exact component={Create} />
-        <SecureRoute path="/508/requests/all" exact component={List} />
-        <SecureRoute
-          path="/508/requests/:accessibilityRequestId"
-          render={() => <AccessibilityRequestDetailPage />}
-        />
-        {/* END : 508 Process Pages */}
-        <Route path="/" exact component={Home} />
-        <Redirect exact from="/login" to="/signin" />
-        <Route path="/signin" exact component={Login} />
-        <Route
-          path="/governance-overview"
-          exact
-          component={GovernanceOverview}
-        />
+    <Switch>
+      {/* START: 508 Process Pages */}
+      <SecureRoute path="/508/requests/new" exact component={Create} />
+      <SecureRoute path="/508/requests/all" exact component={List} />
+      <SecureRoute
+        path="/508/requests/:accessibilityRequestId"
+        render={() => <AccessibilityRequestDetailPage />}
+      />
+      {/* END : 508 Process Pages */}
+      <Route path="/" exact component={Home} />
+      <Redirect exact from="/login" to="/signin" />
+      <Route path="/signin" exact component={Login} />
+      <Route path="/governance-overview" exact component={GovernanceOverview} />
 
-        {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+      {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/prepare-for-grt"
+        render={({ component }: any) => component()}
+        component={PrepareForGRT}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/prepare-for-grb"
+        render={({ component }: any) => component()}
+        component={PrepareForGRB}
+      />
+      <SecureRoute
+        exact
+        path="/governance-task-list/:systemId/request-decision"
+        render={({ component }: any) => component()}
+        component={RequestDecision}
+      />
+      {flags.taskListLite && (
+        <SecureRoute
+          path="/governance-task-list/:systemId"
+          exact
+          render={({ component }: any) => component()}
+          component={GovernanceTaskList}
+        />
+      )}
+      {flags.fileUploads && (
         <SecureRoute
           exact
-          path="/governance-task-list/:systemId/prepare-for-grt"
-          render={({ component }: any) => component()}
-          component={PrepareForGRT}
+          path="/document-prototype"
+          render={() => <DocumentPrototype />}
         />
+      )}
+      {isUserSet && user.isGrtReviewer(userGroups) && (
         <SecureRoute
-          exact
-          path="/governance-task-list/:systemId/prepare-for-grb"
-          render={({ component }: any) => component()}
-          component={PrepareForGRB}
+          path="/governance-review-team/:systemId/:activePage"
+          render={() => <GovernanceReviewTeam />}
         />
-        <SecureRoute
-          exact
-          path="/governance-task-list/:systemId/request-decision"
-          render={({ component }: any) => component()}
-          component={RequestDecision}
-        />
-        {flags.taskListLite && (
-          <SecureRoute
-            path="/governance-task-list/:systemId"
-            exact
-            render={({ component }: any) => component()}
-            component={GovernanceTaskList}
-          />
-        )}
-        {flags.fileUploads && (
-          <SecureRoute
-            exact
-            path="/document-prototype"
-            render={() => <DocumentPrototype />}
-          />
-        )}
-        {isUserSet && user.isGrtReviewer(userGroups) && (
-          <SecureRoute
-            path="/governance-review-team/:systemId/:activePage"
-            render={() => <GovernanceReviewTeam />}
-          />
-        )}
-        <SecureRoute
-          exact
-          path="/system/request-type"
-          render={({ component }: any) => component()}
-          component={RequestTypeForm}
-        />
-        <Redirect
-          exact
-          from="/system/:systemId"
-          to="/system/:systemId/contact-details"
-        />
-        <SecureRoute
-          path="/system/:systemId/:formPage"
-          render={({ component }: any) => component()}
-          component={SystemIntake}
-        />
-        <Redirect
-          exact
-          from="/business/:businessCaseId"
-          to="/business/:businessCaseId/general-request-info"
-        />
-        <SecureRoute
-          path="/business/:businessCaseId/:formPage"
-          render={({ component }: any) => component()}
-          component={BusinessCase}
-        />
-        <Route path="/implicit/callback" component={LoginCallback} />
-        <Route path="/privacy-policy" exact component={PrivacyPolicy} />
-        <Route path="/cookies" exact component={Cookies} />
-        <Route
-          path="/accessibility-statement"
-          exact
-          component={AccessibilityStatement}
-        />
-        <Route
-          exact
-          path="/terms-and-conditions"
-          component={TermsAndConditions}
-        />
-        <Route path="*" component={NotFound} />
-      </Switch>
-    </PageContext.Provider>
+      )}
+      <SecureRoute
+        exact
+        path="/system/request-type"
+        render={({ component }: any) => component()}
+        component={RequestTypeForm}
+      />
+      <Redirect
+        exact
+        from="/system/:systemId"
+        to="/system/:systemId/contact-details"
+      />
+      <SecureRoute
+        path="/system/:systemId/:formPage"
+        render={({ component }: any) => component()}
+        component={SystemIntake}
+      />
+      <Redirect
+        exact
+        from="/business/:businessCaseId"
+        to="/business/:businessCaseId/general-request-info"
+      />
+      <SecureRoute
+        path="/business/:businessCaseId/:formPage"
+        render={({ component }: any) => component()}
+        component={BusinessCase}
+      />
+      <Route path="/implicit/callback" component={LoginCallback} />
+      <Route path="/privacy-policy" exact component={PrivacyPolicy} />
+      <Route path="/cookies" exact component={Cookies} />
+      <Route
+        path="/accessibility-statement"
+        exact
+        component={AccessibilityStatement}
+      />
+      <Route
+        exact
+        path="/terms-and-conditions"
+        component={TermsAndConditions}
+      />
+      <Route path="*" component={NotFound} />
+    </Switch>
   );
 };
 
 // eslint-disable-next-line react/prefer-stateless-function
 const App = () => {
+  const [pageName, setPageName] = useState('');
+
   const handleSkipNav = () => {
     const mainContent = document.getElementById('main-content')!;
     if (mainContent) {
@@ -168,7 +160,19 @@ const App = () => {
         <AuthenticationWrapper>
           <UserInfoWrapper>
             <TimeOutWrapper>
-              <AppRoutes />
+              <PageContext.Provider
+                value={{ page: pageName, setPage: setPageName }}
+              >
+                <div
+                  className="usa-sr-only"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic
+                >
+                  {pageName ? `Navigated to ${pageName}` : 'EASi App'}
+                </div>
+                <AppRoutes />
+              </PageContext.Provider>
             </TimeOutWrapper>
           </UserInfoWrapper>
         </AuthenticationWrapper>
