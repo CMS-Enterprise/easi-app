@@ -141,6 +141,12 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 			}
 			return
 		case "PUT":
+			principal := appcontext.Principal(r.Context())
+			if !principal.AllowEASi() {
+				h.WriteErrorResponse(r.Context(), w, &apperrors.UnauthorizedError{Err: fmt.Errorf("principal not authorized")})
+				return
+			}
+
 			if r.Body == nil {
 				h.WriteErrorResponse(
 					r.Context(),
@@ -164,12 +170,6 @@ func (h BusinessCaseHandler) Handle() http.HandlerFunc {
 				return
 			}
 			businessCaseToUpdate.ID = businessCaseID
-
-			principal := appcontext.Principal(r.Context())
-			if !principal.AllowEASi() {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
 			businessCaseToUpdate.EUAUserID = principal.ID()
 
 			updatedBusinessCase, err := h.UpdateBusinessCase(r.Context(), &businessCaseToUpdate)
