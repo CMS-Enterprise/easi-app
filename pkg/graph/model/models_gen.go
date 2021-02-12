@@ -83,6 +83,56 @@ type UserError struct {
 	Path    []string `json:"path"`
 }
 
+// A user role associated with a job code
+type Role string
+
+const (
+	// A 508 Tester
+	RoleEasi508Tester Role = "EASI_508_TESTER"
+	// A 508 request owner
+	RoleEasi508User Role = "EASI_508_USER"
+	// A member of the GRT
+	RoleEasiGovteam Role = "EASI_GOVTEAM"
+	// A generic EASi user
+	RoleEasiUser Role = "EASI_USER"
+)
+
+var AllRole = []Role{
+	RoleEasi508Tester,
+	RoleEasi508User,
+	RoleEasiGovteam,
+	RoleEasiUser,
+}
+
+func (e Role) IsValid() bool {
+	switch e {
+	case RoleEasi508Tester, RoleEasi508User, RoleEasiGovteam, RoleEasiUser:
+		return true
+	}
+	return false
+}
+
+func (e Role) String() string {
+	return string(e)
+}
+
+func (e *Role) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Role(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Role", str)
+	}
+	return nil
+}
+
+func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 // The variety of a 508 test
 type TestDateTestType string
 
