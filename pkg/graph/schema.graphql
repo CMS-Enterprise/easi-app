@@ -93,12 +93,58 @@ type AccessibilityRequestEdge {
 }
 
 """
+A 508 test instance
+"""
+type TestDate {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+The variety of a 508 test
+"""
+enum TestDateTestType {
+  """
+  Represents an initial 508 test
+  """
+  INITIAL
+
+  """
+  Represents a remediation test
+  """
+  REMEDIATION
+}
+
+"""
+Parameters for creating a test date
+"""
+input CreateTestDateInput {
+  date: Time!
+  requestID: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+Result of createTestDate
+"""
+type CreateTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+"""
 The root mutation
 """
 type Mutation {
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput
   ): CreateAccessibilityRequestPayload
+  createTestDate(
+    input: CreateTestDateInput
+  ): CreateTestDatePayload
 }
 
 """
