@@ -6,17 +6,17 @@ import (
 	"net/http"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // SystemsHandler is the handler for READ operations on systems
 type SystemsHandler struct {
 	HandlerBase
-	fetch func(context.Context) ([]*model.System, error)
+	fetch func(context.Context) ([]*models.System, error)
 }
 
 // NewSystemsHandler is a constructor for SystemsHandler
-func NewSystemsHandler(base HandlerBase, fetch func(context.Context) ([]*model.System, error)) SystemsHandler {
+func NewSystemsHandler(base HandlerBase, fetch func(context.Context) ([]*models.System, error)) SystemsHandler {
 	return SystemsHandler{
 		HandlerBase: base,
 		fetch:       fetch,

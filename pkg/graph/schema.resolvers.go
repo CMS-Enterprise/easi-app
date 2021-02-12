@@ -12,18 +12,19 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model.AccessibilityRequest) ([]*model.AccessibilityRequestDocument, error) {
+func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*model.AccessibilityRequestDocument, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *accessibilityRequestResolver) System(ctx context.Context, obj *model.AccessibilityRequest) (*model.System, error) {
+func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
 	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
 	if systemErr != nil {
 		return nil, systemErr
 	}
-	system.BusinessOwner = &model.BusinessOwner{
+	system.BusinessOwner = &models.BusinessOwner{
 		Name:      system.BusinessOwnerName.String,
 		Component: system.BusinessOwnerComponent.String,
 	}
@@ -32,7 +33,7 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *model.Ac
 }
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
-	request, err := r.store.CreateAccessibilityRequest(ctx, &model.AccessibilityRequest{
+	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
 		Name:     input.Name,
 		IntakeID: input.IntakeID,
 	})
@@ -46,7 +47,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	}, nil
 }
 
-func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*model.AccessibilityRequest, error) {
+func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }
 
@@ -76,7 +77,7 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 
 	conn := &model.SystemConnection{}
 	for _, system := range systems {
-		system.BusinessOwner = &model.BusinessOwner{
+		system.BusinessOwner = &models.BusinessOwner{
 			Name:      system.BusinessOwnerName.String,
 			Component: system.BusinessOwnerComponent.String,
 		}

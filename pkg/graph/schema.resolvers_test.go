@@ -16,7 +16,6 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -87,7 +86,7 @@ func (s GraphQLTestSuite) TestQueries() {
 	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
 	s.NoError(updateErr)
 
-	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &model.AccessibilityRequest{
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
 		IntakeID: intake.ID,
 	})
 	s.NoError(requestErr)

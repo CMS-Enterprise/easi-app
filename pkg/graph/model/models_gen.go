@@ -5,6 +5,7 @@ package model
 import (
 	"time"
 
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/google/uuid"
 )
 
@@ -17,20 +18,14 @@ type AccessibilityRequestDocument struct {
 
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
-	Cursor string                `json:"cursor"`
-	Node   *AccessibilityRequest `json:"node"`
+	Cursor string                       `json:"cursor"`
+	Node   *models.AccessibilityRequest `json:"node"`
 }
 
 // A collection of AccessibilityRequests
 type AccessibilityRequestsConnection struct {
 	Edges      []*AccessibilityRequestEdge `json:"edges"`
 	TotalCount int                         `json:"totalCount"`
-}
-
-// A business owner is the person at CMS responsible for a system
-type BusinessOwner struct {
-	Component string `json:"component"`
-	Name      string `json:"name"`
 }
 
 // Parameters required to create an AccessibilityRequest
@@ -41,8 +36,8 @@ type CreateAccessibilityRequestInput struct {
 
 // Result of CreateAccessibilityRequest
 type CreateAccessibilityRequestPayload struct {
-	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
-	UserErrors           []*UserError          `json:"userErrors"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
+	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
 // A collection of Systems
@@ -53,8 +48,8 @@ type SystemConnection struct {
 
 // An edge of an SystemConnection
 type SystemEdge struct {
-	Cursor string  `json:"cursor"`
-	Node   *System `json:"node"`
+	Cursor string         `json:"cursor"`
+	Node   *models.System `json:"node"`
 }
 
 // UserError represents application-level errors that are the result of
