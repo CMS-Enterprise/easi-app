@@ -37,12 +37,33 @@ type System {
 }
 
 """
+Represents the availability of a document
+"""
+enum AccessibilityRequestDocumentStatus {
+  """
+  Passed security screen
+  """
+  AVAILABLE
+
+  """
+  Just uploaded
+  """
+  PENDING
+
+  """
+  Failed security screen
+  """
+  UNAVAILABLE
+}
+
+"""
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
   id: UUID!
   mimetype: String!
   name: String!
+  status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
 }
 
