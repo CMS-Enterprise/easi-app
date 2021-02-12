@@ -6,8 +6,52 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
+
+// HasRole authenticates a user as having a given role
+func HasRole(ctx context.Context, role model.Role) (bool, error) {
+	logger := appcontext.ZLogger(ctx)
+	principal := appcontext.Principal(ctx)
+	switch role {
+	case model.RoleEasiUser:
+		if !principal.AllowEASi() {
+			logger.Info("does not have EASi job code")
+			return false, nil
+		}
+		logger.With(zap.Bool("Authorized", true)).
+			Info("user authorized as EASi user")
+		return true, nil
+	case model.RoleEasiGovteam:
+		if !principal.AllowGRT() {
+			logger.Info("does not have Govteam job code")
+			return false, nil
+		}
+		logger.With(zap.Bool("Authorized", true)).
+			Info("user authorized as Govteam member")
+		return true, nil
+	case model.RoleEasi508Tester:
+		if !principal.Allow508Tester() {
+			logger.Info("does not have 508 tester job code")
+			return false, nil
+		}
+		logger.With(zap.Bool("Authorized", true)).
+			Info("user authorized as 508 Tester")
+		return true, nil
+	case model.RoleEasi508User:
+		if !principal.Allow508User() {
+			logger.Info("does not have 508 User job code")
+			return false, nil
+		}
+		logger.With(zap.Bool("Authorized", true)).
+			Info("user authorized as 508 User")
+		return true, nil
+	default:
+		logger.With(zap.String("Role", role.String())).Info("Unrecognized user role")
+		return false, nil
+	}
+}
 
 // NewAuthorizeUserIsIntakeRequester returns a function
 // that authorizes a user as being the requester of the given System Intake
