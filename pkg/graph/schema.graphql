@@ -144,7 +144,7 @@ type Mutation {
   ): CreateAccessibilityRequestPayload
   createTestDate(
     input: CreateTestDateInput
-  ): CreateTestDatePayload
+  ): CreateTestDatePayload @hasRole(role: EASI_508_TESTER)
 }
 
 """
@@ -171,3 +171,30 @@ scalar UUID
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
 """
 scalar Time
+
+directive @hasRole(role: Role!) on FIELD_DEFINITION
+
+"""
+A user role associated with a job code
+"""
+enum Role {
+  """
+  A 508 Tester
+  """
+  EASI_508_TESTER
+
+  """
+  A 508 request owner
+  """
+  EASI_508_USER
+
+  """
+  A member of the GRT
+  """
+  EASI_GOVTEAM
+
+  """
+  A generic EASi user
+  """
+  EASI_USER
+}
