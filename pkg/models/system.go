@@ -1,9 +1,15 @@
-package model
+package models
 
 import (
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 )
+
+// BusinessOwner holds data about a system's business owner
+type BusinessOwner struct {
+	Component string `json:"component"`
+	Name      string `json:"name"`
+}
 
 // System is derived from a system intake and represents a computer system managed by CMS
 type System struct {
