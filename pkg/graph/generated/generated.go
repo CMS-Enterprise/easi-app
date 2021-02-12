@@ -58,6 +58,7 @@ type ComplexityRoot struct {
 		ID         func(childComplexity int) int
 		Mimetype   func(childComplexity int) int
 		Name       func(childComplexity int) int
+		Status     func(childComplexity int) int
 		UploadedAt func(childComplexity int) int
 	}
 
@@ -198,6 +199,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequestDocument.Name(childComplexity), true
+
+	case "AccessibilityRequestDocument.status":
+		if e.complexity.AccessibilityRequestDocument.Status == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestDocument.Status(childComplexity), true
 
 	case "AccessibilityRequestDocument.uploadedAt":
 		if e.complexity.AccessibilityRequestDocument.UploadedAt == nil {
@@ -509,12 +517,33 @@ type System {
 }
 
 """
+Represents the availability of a document
+"""
+enum AccessibilityRequestDocumentStatus {
+  """
+  Passed security screen
+  """
+  AVAILABLE
+
+  """
+  Just uploaded
+  """
+  PENDING
+
+  """
+  Failed security screen
+  """
+  UNAVAILABLE
+}
+
+"""
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
   id: UUID!
   mimetype: String!
   name: String!
+  status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
 }
 
@@ -1010,6 +1039,41 @@ func (ec *executionContext) _AccessibilityRequestDocument_name(ctx context.Conte
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequestDocument_status(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocument) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestDocument",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.AccessibilityRequestDocumentStatus)
+	fc.Result = res
+	return ec.marshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestDocument_uploadedAt(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocument) (ret graphql.Marshaler) {
@@ -3222,6 +3286,11 @@ func (ec *executionContext) _AccessibilityRequestDocument(ctx context.Context, s
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "status":
+			out.Values[i] = ec._AccessibilityRequestDocument_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "uploadedAt":
 			out.Values[i] = ec._AccessibilityRequestDocument_uploadedAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -3917,6 +3986,16 @@ func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚖgithubᚗcom
 		return graphql.Null
 	}
 	return ec._AccessibilityRequestDocument(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentStatus(ctx context.Context, v interface{}) (model.AccessibilityRequestDocumentStatus, error) {
+	var res model.AccessibilityRequestDocumentStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentStatus(ctx context.Context, sel ast.SelectionSet, v model.AccessibilityRequestDocumentStatus) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.AccessibilityRequestEdge) graphql.Marshaler {
