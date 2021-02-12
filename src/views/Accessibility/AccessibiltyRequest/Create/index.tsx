@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
@@ -20,7 +20,6 @@ import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import PlainInfo from 'components/PlainInfo';
-// import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -43,12 +42,6 @@ const Create = () => {
     }
   });
 
-  const projectComboBoxOptions =
-    data?.systems?.edges.map(system => ({
-      label: `${system.node.name} - ${system.node.id}`,
-      value: system.node.id
-    })) || [];
-
   const [mutate, mutationResult] = useMutation(CreateAccessibilityRequestQuery);
   const handleSubmit = (values: AccessibilityRequestForm) => {
     mutate({
@@ -58,16 +51,28 @@ const Create = () => {
           intakeID: values.intakeId
         }
       }
-    })
-      .then(() => {
-        history.push('/', {
-          confirmationText: `${values.requestName} was added to the 508 requests page`
-        });
-      })
-      .catch(err => {
-        console.warn(err);
+    }).then(() => {
+      history.push('/', {
+        confirmationText: `${values.requestName} was added to the 508 requests page`
       });
+    });
   };
+
+  const systems = useMemo(() => {
+    return data?.systems?.edges || [];
+  }, [data]);
+
+  const projectComboBoxOptions = useMemo(() => {
+    return systems.map(system => {
+      const {
+        node: { id, name }
+      } = system;
+      return {
+        label: `${name} - ${id}`,
+        value: id
+      };
+    });
+  }, [systems]);
 
   return (
     <PageWrapper>
@@ -117,16 +122,19 @@ const Create = () => {
                             id="508Request-IntakeId"
                             options={projectComboBoxOptions}
                             onChange={intakeId => {
-                              console.log(intakeId);
-                              setFieldValue('intakeId', intakeId);
-                              // setFieldValue(
-                              //   'businessOwner.name',
-                              //   selectedIntake?.businessOwner.name
-                              // );
-                              // setFieldValue(
-                              //   'businessOwner.component',
-                              //   selectedIntake?.businessOwner.component
-                              // );
+                              const selectedSystem = systems.find(
+                                system => system.node.id === intakeId
+                              );
+                              setFieldValue('intakeId', intakeId || '');
+                              setFieldValue(
+                                'businessOwner.name',
+                                selectedSystem?.node.businessOwner.name || ''
+                              );
+                              setFieldValue(
+                                'businessOwner.component',
+                                selectedSystem?.node.businessOwner.component ||
+                                  ''
+                              );
                             }}
                           />
                         </FieldGroup>

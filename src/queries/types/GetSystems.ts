@@ -7,10 +7,17 @@
 // GraphQL query operation: GetSystems
 // ====================================================
 
+export interface GetSystems_systems_edges_node_businessOwner {
+  __typename: "BusinessOwner";
+  name: string;
+  component: string;
+}
+
 export interface GetSystems_systems_edges_node {
   __typename: "System";
   id: UUID;
   name: string;
+  businessOwner: GetSystems_systems_edges_node_businessOwner;
 }
 
 export interface GetSystems_systems_edges {
