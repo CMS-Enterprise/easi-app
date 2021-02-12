@@ -33,6 +33,11 @@ jobs:
       - run:
           name: Check deployed image for vulnerability findings
             ./scripts/check_deployed_image_findings "easi-backend" "1"
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   restart_prod_ecs_app_service:
     docker:
@@ -61,6 +66,11 @@ jobs:
       - run:
           name: Check deployed image for vulnerability findings
             ./scripts/check_deployed_image_findings "easi-backend" "1"
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   build_db_migrate_image:
     docker:
