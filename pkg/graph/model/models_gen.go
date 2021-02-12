@@ -3,8 +3,18 @@
 package model
 
 import (
+	"time"
+
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/google/uuid"
 )
+
+// A document that belongs to an accessibility request
+type AccessibilityRequestDocument struct {
+	ID         uuid.UUID `json:"id"`
+	Name       string    `json:"name"`
+	UploadedAt time.Time `json:"uploadedAt"`
+}
 
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
