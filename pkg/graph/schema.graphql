@@ -37,6 +37,16 @@ type System {
 }
 
 """
+A document that belongs to an accessibility request
+"""
+type AccessibilityRequestDocument {
+  id: UUID!
+  mimetype: String!
+  name: String!
+  uploadedAt: Time!
+}
+
+"""
 A collection of Systems
 """
 type SystemConnection {
@@ -53,15 +63,6 @@ type SystemEdge {
 }
 
 """
-A document that belongs to an accessibility request
-"""
-type AccessibilityRequestDocument {
-  id: UUID!
-  name: String!
-  uploadedAt: Time!
-}
-
-"""
 Parameters required to create an AccessibilityRequest
 """
 input CreateAccessibilityRequestInput {
@@ -73,6 +74,21 @@ Result of CreateAccessibilityRequest
 """
 type CreateAccessibilityRequestPayload {
   accessibilityRequest: AccessibilityRequest
+  userErrors: [UserError!]
+}
+
+"""
+Parameters required to generate a presigned upload URL
+"""
+input GeneratePresignedUploadURLInput {
+  fileType: String!
+}
+
+"""
+Result of CreateAccessibilityRequest
+"""
+type GeneratePresignedUploadURLPayload {
+  url: String
   userErrors: [UserError!]
 }
 
@@ -99,6 +115,9 @@ type Mutation {
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput
   ): CreateAccessibilityRequestPayload
+  generatePresignedUploadURL(
+    input: GeneratePresignedUploadURLInput
+  ): GeneratePresignedUploadURLPayload
 }
 
 """
@@ -110,10 +129,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  systems(
-    after: String
-    first: Int!
-  ): SystemConnection
+  systems(after: String, first: Int!): SystemConnection
 }
 
 """

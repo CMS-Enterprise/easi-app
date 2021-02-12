@@ -45,6 +45,10 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input *model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*model.AccessibilityRequest, error) {
 	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }

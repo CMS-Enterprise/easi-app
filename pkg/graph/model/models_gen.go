@@ -11,6 +11,7 @@ import (
 // A document that belongs to an accessibility request
 type AccessibilityRequestDocument struct {
 	ID         uuid.UUID `json:"id"`
+	Mimetype   string    `json:"mimetype"`
 	Name       string    `json:"name"`
 	UploadedAt time.Time `json:"uploadedAt"`
 }
@@ -42,6 +43,17 @@ type CreateAccessibilityRequestInput struct {
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError          `json:"userErrors"`
+}
+
+// Parameters required to generate a presigned upload URL
+type GeneratePresignedUploadURLInput struct {
+	FileType string `json:"fileType"`
+}
+
+// Result of CreateAccessibilityRequest
+type GeneratePresignedUploadURLPayload struct {
+	URL        *string      `json:"url"`
+	UserErrors []*UserError `json:"userErrors"`
 }
 
 // A collection of Systems
