@@ -1,8 +1,11 @@
 package server
 
 import (
+	"context"
+	"errors"
 	"net/http"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/aws/aws-sdk-go/aws"
@@ -20,6 +23,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -144,7 +148,18 @@ func (s *Server) routes(
 			store.CreateTestDate,
 		),
 	)
-	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
+	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
+		hasRole, err := services.HasRole(ctx, role)
+		if err != nil {
+			return nil, err
+		}
+		if !hasRole {
+			return nil, errors.New("not authorized")
+		}
+		return next(ctx)
+	}}
+	gqlConfig := generated.Config{Resolvers: resolver, Directives: gqlDirectives}
+	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
 	gql.Handle("/query", graphqlServer)
 
 	// API base path is versioned
