@@ -102,7 +102,7 @@ type CreateAccessibilityRequestPayload {
 Parameters required to generate a presigned upload URL
 """
 input GeneratePresignedUploadURLInput {
-  fileType: String!
+  mimeType: String!
 }
 
 """

@@ -47,7 +47,13 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input *model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	url, err := r.s3Client.NewPutPresignedURL(input.MimeType)
+	if err != nil {
+		return nil, err
+	}
+	return &model.GeneratePresignedUploadURLPayload{
+		URL: &url.URL,
+	}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {

@@ -19,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+	"github.com/cmsgov/easi-app/pkg/upload"
 )
 
 type GraphQLTestSuite struct {
@@ -54,7 +55,10 @@ func TestGraphQLTestSuite(t *testing.T) {
 		t.Fail()
 	}
 
-	graphQLClient := client.New(handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store)})))
+	s3Client := upload.NewS3Client(upload.Config{Bucket: "test", Region: "us-west", IsLocal: true})
+
+	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, &s3Client)})
+	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
 	storeTestSuite := &GraphQLTestSuite{
 		Suite:  suite.Suite{},
@@ -66,7 +70,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	suite.Run(t, storeTestSuite)
 }
 
-func (s GraphQLTestSuite) TestQueries() {
+func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -130,4 +134,30 @@ func (s GraphQLTestSuite) TestQueries() {
 	s.Equal(lifecycleID, resp.AccessibilityRequest.System.LCID)
 	s.Equal("Firstname Lastname", resp.AccessibilityRequest.System.BusinessOwner.Name)
 	s.Equal("OIT", resp.AccessibilityRequest.System.BusinessOwner.Component)
+}
+
+func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
+	var resp struct {
+		GeneratePresignedUploadURL struct {
+			URL        string
+			UserErrors []struct {
+				Message string
+				Path    []string
+			}
+		}
+	}
+
+	s.client.MustPost(
+		`mutation {
+			generatePresignedUploadURL(input: {mimeType: "application/pdf"}) {
+				url
+				userErrors {
+					message
+					path
+				}
+			}
+		}`, &resp)
+
+	s.Greater(len(resp.GeneratePresignedUploadURL.URL), 0)
+	s.Equal(0, len(resp.GeneratePresignedUploadURL.UserErrors))
 }

@@ -582,7 +582,7 @@ type CreateAccessibilityRequestPayload {
 Parameters required to generate a presigned upload URL
 """
 input GeneratePresignedUploadURLInput {
-  fileType: String!
+  mimeType: String!
 }
 
 """
@@ -3178,11 +3178,11 @@ func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx co
 
 	for k, v := range asMap {
 		switch k {
-		case "fileType":
+		case "mimeType":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileType"))
-			it.FileType, err = ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mimeType"))
+			it.MimeType, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
