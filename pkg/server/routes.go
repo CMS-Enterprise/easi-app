@@ -134,7 +134,7 @@ func (s *Server) routes(
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
 	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
-	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
+	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store, &s3Client)}))
 	gql.Handle("/query", graphqlServer)
 
 	// API base path is versioned

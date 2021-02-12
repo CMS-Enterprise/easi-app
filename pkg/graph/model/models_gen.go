@@ -46,7 +46,7 @@ type CreateAccessibilityRequestPayload struct {
 
 // Parameters required to generate a presigned upload URL
 type GeneratePresignedUploadURLInput struct {
-	FileType string `json:"fileType"`
+	MimeType string `json:"mimeType"`
 }
 
 // Result of CreateAccessibilityRequest
