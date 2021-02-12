@@ -7,6 +7,10 @@ export default gql`
         node {
           id
           name
+          businessOwner {
+            name
+            component
+          }
         }
       }
     }
