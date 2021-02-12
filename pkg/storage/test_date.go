@@ -38,7 +38,8 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *models.TestDate) (
 		    :created_at,
 			:updated_at
 		)`
-	_, err := s.db.NamedExec(
+	_, err := s.db.NamedExecContext(
+		ctx,
 		createTestDateSQL,
 		testDate,
 	)
@@ -53,7 +54,7 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *models.TestDate) (
 func (s *Store) FetchTestDateByID(ctx context.Context, id uuid.UUID) (*models.TestDate, error) {
 	testDate := models.TestDate{}
 
-	err := s.db.Get(&testDate, `SELECT * FROM test_date WHERE id=$1 AND deleted_at IS NULL`, id)
+	err := s.db.GetContext(ctx, &testDate, `SELECT * FROM test_date WHERE id=$1 AND deleted_at IS NULL`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
