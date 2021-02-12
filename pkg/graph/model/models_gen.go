@@ -5,13 +5,21 @@ package model
 import (
 	"time"
 
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/google/uuid"
 )
 
+// A document that belongs to an accessibility request
+type AccessibilityRequestDocument struct {
+	ID         uuid.UUID `json:"id"`
+	Name       string    `json:"name"`
+	UploadedAt time.Time `json:"uploadedAt"`
+}
+
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
-	Cursor string                `json:"cursor"`
-	Node   *AccessibilityRequest `json:"node"`
+	Cursor string                       `json:"cursor"`
+	Node   *models.AccessibilityRequest `json:"node"`
 }
 
 // A collection of AccessibilityRequests
@@ -27,22 +35,34 @@ type CreateAccessibilityRequestInput struct {
 
 // Result of CreateAccessibilityRequest
 type CreateAccessibilityRequestPayload struct {
-	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
-	UserErrors           []*UserError          `json:"userErrors"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
+	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
 // Parameters for creating a test date
 type CreateTestDateInput struct {
-	Date      time.Time        `json:"date"`
-	RequestID uuid.UUID        `json:"requestID"`
-	Score     *int             `json:"score"`
-	TestType  TestDateTestType `json:"testType"`
+	Date      time.Time               `json:"date"`
+	RequestID uuid.UUID               `json:"requestID"`
+	Score     *int                    `json:"score"`
+	TestType  models.TestDateTestType `json:"testType"`
 }
 
 // Result of createTestDate
 type CreateTestDatePayload struct {
-	TestDate   *TestDate    `json:"testDate"`
-	UserErrors []*UserError `json:"userErrors"`
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
+}
+
+// A collection of Systems
+type SystemConnection struct {
+	Edges      []*SystemEdge `json:"edges"`
+	TotalCount int           `json:"totalCount"`
+}
+
+// An edge of an SystemConnection
+type SystemEdge struct {
+	Cursor string         `json:"cursor"`
+	Node   *models.System `json:"node"`
 }
 
 // UserError represents application-level errors that are the result of

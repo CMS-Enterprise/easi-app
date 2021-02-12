@@ -3,7 +3,7 @@ package graph
 import (
 	"context"
 
-	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 )
 
@@ -16,13 +16,13 @@ import (
 // Resolver is a resolver.
 type Resolver struct {
 	store          *storage.Store
-	createTestDate func(context.Context, *model.TestDate) (*model.TestDate, error)
+	createTestDate func(context.Context, *models.TestDate) (*models.TestDate, error)
 }
 
 // NewResolver constructs a resolver
 func NewResolver(
 	store *storage.Store,
-	createTestDate func(context.Context, *model.TestDate) (*model.TestDate, error),
+	createTestDate func(context.Context, *models.TestDate) (*models.TestDate, error),
 ) *Resolver {
 	return &Resolver{store: store, createTestDate: createTestDate}
 }

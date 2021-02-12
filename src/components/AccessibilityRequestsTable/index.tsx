@@ -12,12 +12,14 @@ import { DateTime } from 'luxon';
 
 type AccessibilityRequestsTableRow = {
   id: string;
-  name: string;
-  submittedAt?: DateTime;
-  businessOwner?: {
-    name?: string;
-    component?: string;
+  system: {
+    name: string;
+    businessOwner: {
+      name?: string;
+      component?: string;
+    };
   };
+  submittedAt?: DateTime;
   testDate?: DateTime;
   status?: string;
   lastUpdatedAt?: DateTime;
@@ -35,13 +37,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     return [
       {
         Header: t('requestTable.header.requestName'),
-        accessor: 'name',
+        accessor: 'system.name',
         Cell: ({ row, value }: any) => {
           return (
-            <UswdsLink
-              asCustom={Link}
-              to={`/some-508-request/${row.original.id}`}
-            >
+            <UswdsLink asCustom={Link} to={`/508/requests/${row.original.id}`}>
               {value}
             </UswdsLink>
           );
@@ -60,7 +59,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.businessOwner'),
-        accessor: 'businessOwner'
+        accessor: (row: AccessibilityRequestsTableRow) => {
+          return `${row.system.businessOwner.name}, ${row.system.businessOwner.component}`;
+        }
       },
       {
         Header: t('requestTable.header.testDate'),
@@ -71,23 +72,23 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
           }
           return '';
         }
-      },
-      {
-        Header: t('requestTable.header.status'),
-        accessor: 'status',
-        Cell: ({ row, value }: any) => {
-          const date = DateTime.fromISO(row.original.updatedAt).toLocaleString(
-            DateTime.DATE_FULL
-          );
-          return (
-            <>
-              <strong>{value}</strong>
-              <br />
-              <span>{`${t('requestTable.lastUpdated')} ${date}`}</span>
-            </>
-          );
-        }
       }
+      // {
+      //   Header: t('requestTable.header.status'),
+      //   accessor: 'status',
+      //   Cell: ({ row, value }: any) => {
+      //     const date = DateTime.fromISO(row.original.updatedAt).toLocaleString(
+      //       DateTime.DATE_FULL
+      //     );
+      //     return (
+      //       <>
+      //         <strong>{value}</strong>
+      //         <br />
+      //         <span>{`${t('requestTable.lastUpdated')} ${date}`}</span>
+      //       </>
+      //     );
+      //   }
+      // }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
