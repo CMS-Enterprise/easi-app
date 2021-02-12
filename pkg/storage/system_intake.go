@@ -219,7 +219,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	const idMatchClause = `
 		WHERE system_intakes.id=$1
 `
-	err := s.db.Get(&intake, fetchSystemIntakeSQL+idMatchClause, id)
+	err := s.db.GetContext(ctx, &intake, fetchSystemIntakeSQL+idMatchClause, id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch system intake %s", err),

@@ -5,8 +5,11 @@ import (
 	"crypto/tls"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/honeycombio/beeline-go"
+	"github.com/honeycombio/beeline-go/wrappers/hnynethttp"
 	"github.com/oklog/run"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -87,14 +90,22 @@ func NewServer(config *viper.Viper) *Server {
 
 // Serve runs the server
 func Serve(config *viper.Viper) {
+	beeline.Init(beeline.Config{
+		WriteKey: os.Getenv("HNY_KEY"),
+		Dataset:  "easi-app",
+		STDOUT:   (os.Getenv("HNY_KEY") == ""),
+	})
+	defer beeline.Close()
+
 	var g run.Group
 
 	s := NewServer(config)
+	handler := hnynethttp.WrapHandler(s)
 
 	g.Add(func() error {
 		srv := http.Server{
 			Addr:    ":8080",
-			Handler: s,
+			Handler: handler,
 		}
 		s.logger.Info("Serving application on port 8080")
 		return srv.ListenAndServe()
@@ -109,7 +120,7 @@ func Serve(config *viper.Viper) {
 		}
 		srv := http.Server{
 			Addr:    ":8443",
-			Handler: s,
+			Handler: handler,
 			TLSConfig: &tls.Config{
 				Certificates: []tls.Certificate{serverCert},
 				MinVersion:   tls.VersionTLS13,

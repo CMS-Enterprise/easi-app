@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/jmoiron/sqlx"
+	"github.com/honeycombio/beeline-go/wrappers/hnysqlx"
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
@@ -109,7 +109,7 @@ func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (mo
 	return businessCases, nil
 }
 
-func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCase *models.BusinessCase) error {
+func createEstimatedLifecycleCosts(ctx context.Context, tx *hnysqlx.Tx, businessCase *models.BusinessCase) error {
 	const createEstimatedLifecycleCostSQL = `
 		INSERT INTO estimated_lifecycle_costs (
 			id,

@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/facebookgo/clock"
+	"github.com/honeycombio/beeline-go/wrappers/hnysqlx"
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
@@ -12,7 +13,7 @@ import (
 
 // Store performs database operations for EASi
 type Store struct {
-	db        *sqlx.DB
+	db        *hnysqlx.DB
 	logger    *zap.Logger
 	clock     clock.Clock
 	easternTZ *time.Location
@@ -55,7 +56,7 @@ func NewStore(
 		return nil, err
 	}
 	return &Store{
-		db:        db,
+		db:        hnysqlx.WrapDB(db),
 		logger:    logger,
 		clock:     clock.New(),
 		easternTZ: tz,
