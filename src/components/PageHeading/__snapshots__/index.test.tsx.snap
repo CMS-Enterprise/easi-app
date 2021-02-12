@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page heading component matches the snapshot 1`] = `
+<h1
+  className="margin-top-6 margin-bottom-5"
+>
+  Test Heading
+</h1>
+`;

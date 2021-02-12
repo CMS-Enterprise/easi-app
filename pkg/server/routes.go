@@ -44,8 +44,9 @@ func (s *Server) routes(
 	// set up handler base
 	base := handlers.NewHandlerBase(s.logger)
 
-	// health check goes directly on the main router
+	// endpoints that dont require authorization go directly on the main router
 	s.router.HandleFunc("/api/v1/healthcheck", handlers.NewHealthCheckHandler(base, s.Config).Handle())
+	s.router.HandleFunc("/api/graph/playground", playground.Handler("GraphQL playground", "/api/graph/query"))
 
 	// set up Feature Flagging utilities
 	ldClient, err := flags.NewLaunchDarklyClient(s.NewFlagConfig())
@@ -146,7 +147,6 @@ func (s *Server) routes(
 	gql.Handle("/query", handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver})))
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
 	gql.Handle("/query", graphqlServer)
-	gql.HandleFunc("/playground", playground.Handler("GraphQL playground", "/api/graph/query"))
 
 	// API base path is versioned
 	api := s.router.PathPrefix("/api/v1").Subrouter()

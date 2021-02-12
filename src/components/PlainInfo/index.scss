@@ -1,0 +1,16 @@
+.easi-plain-info {
+  display: flex;
+  align-items: center;
+
+  &__icon {
+    height: 40px;
+    width: 40px;
+    flex-shrink: 0;
+    margin-right: 12px;
+    background-color: #000;
+    border-radius: 50%;
+    font-size: 35px;
+    text-align: center;
+    color: #fff;
+  }
+}

@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-// import { Link as UswdsLink } from '@trussworks/react-uswds';
-import { Alert } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
+import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
@@ -13,6 +11,8 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import formatDate from 'utils/formatDate';
+import AccessibilityDocumentsList from 'views/Accessibility/AccessibiltyRequest/Documents';
 
 import './index.scss';
 
@@ -43,10 +43,14 @@ const AccessibilityRequestDetailPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const requestName = data?.accessibilityRequest?.name;
+  const requestName = data?.accessibilityRequest?.system.name || '';
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
-
-  // const TEMP_NUM_OF_DOCUMENTS = 0;
+  const lcid = data?.accessibilityRequest?.system.lcid;
+  const businessOwnerName =
+    data?.accessibilityRequest?.system?.businessOwner?.name;
+  const businessOwnerComponent =
+    data?.accessibilityRequest?.system?.businessOwner?.component;
+  const documents = data?.accessibilityRequest?.documents || [];
 
   if (loading) {
     return <div>Loading</div>;
@@ -82,7 +86,7 @@ const AccessibilityRequestDetailPage = () => {
           <h1 className="margin-top-6 margin-bottom-5">{requestName}</h1>
           <div className="grid-row grid-gap-lg">
             <div className="grid-col-9">
-              {/* <h2 className="margin-top-0">
+              <h2 className="margin-top-0">
                 {t('requestDetails.documents.label')}
               </h2>
               <UswdsLink
@@ -94,12 +98,11 @@ const AccessibilityRequestDetailPage = () => {
                 {t('requestDetails.documentUpload')}
               </UswdsLink>
               <div className="margin-top-6">
-                {TEMP_NUM_OF_DOCUMENTS > 0 ? (
-                  <span />
-                ) : (
-                  <span>{t('requestDetails.documents.none')}</span>
-                )}
-              </div> */}
+                <AccessibilityDocumentsList
+                  documents={documents}
+                  requestName={requestName}
+                />
+              </div>
             </div>
             <div className="grid-col-3">
               <div className="accessibility-request__side-nav">
@@ -122,20 +125,18 @@ const AccessibilityRequestDetailPage = () => {
                       {t('intake:fields.submissionDate')}
                     </dt>
                     <dd className="margin-0 margin-bottom-2">
-                      {DateTime.fromISO(submittedAt).toLocaleString(
-                        DateTime.DATE_FULL
-                      )}
+                      {formatDate(submittedAt)}
                     </dd>
-                    {/* <dt className="margin-bottom-1">
+                    <dt className="margin-bottom-1">
                       {t('intake:fields.businessOwner')}
                     </dt>
                     <dd className="margin-0 margin-bottom-2">
-                      Shane Clark, OIT
+                      {businessOwnerName}, {businessOwnerComponent}
                     </dd>
                     <dt className="margin-bottom-1">
                       {t('intake:lifecycleId')}
                     </dt>
-                    <dd className="margin-0 margin-bottom-3">X200943</dd> */}
+                    <dd className="margin-0 margin-bottom-3">{lcid}</dd>
                   </dl>
                 </div>
                 {/* <button

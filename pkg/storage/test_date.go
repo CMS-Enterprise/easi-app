@@ -10,12 +10,11 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // CreateTestDate creates a new Test Date object in the database
-func (s *Store) CreateTestDate(ctx context.Context, testDate *model.TestDate) (*model.TestDate, error) {
+func (s *Store) CreateTestDate(ctx context.Context, testDate *models.TestDate) (*models.TestDate, error) {
 	testDate.ID = uuid.New()
 	createAt := s.clock.Now()
 	testDate.CreatedAt = &createAt
@@ -51,8 +50,8 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *model.TestDate) (*
 }
 
 // FetchTestDateByID queries the DB for a test date matching the given ID
-func (s *Store) FetchTestDateByID(ctx context.Context, id uuid.UUID) (*model.TestDate, error) {
-	testDate := model.TestDate{}
+func (s *Store) FetchTestDateByID(ctx context.Context, id uuid.UUID) (*models.TestDate, error) {
+	testDate := models.TestDate{}
 
 	err := s.db.Get(&testDate, `SELECT * FROM test_date WHERE id=$1 AND deleted_at IS NULL`, id)
 	if err != nil {
