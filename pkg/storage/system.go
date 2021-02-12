@@ -12,13 +12,13 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/flags"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-var fakeSystems []*model.System
+var fakeSystems []*models.System
 
 func init() {
-	fakeSystems = []*model.System{
+	fakeSystems = []*models.System{
 		{
 			LCID:                   "X990000",
 			ID:                     uuid.MustParse("00000000-9999-0000-0000-000000000000"),
@@ -45,7 +45,7 @@ func init() {
 
 // ListSystems retrieves a collection of Systems, which are a subset of all SystemIntakes that
 // have been "decided" and issued an LCID.
-func (s *Store) ListSystems(ctx context.Context) ([]*model.System, error) {
+func (s *Store) ListSystems(ctx context.Context) ([]*models.System, error) {
 	if s.useFakeSystems(ctx) {
 		return fakeSystems, nil
 	}
@@ -79,8 +79,8 @@ const sqlListSystems = `
 		lcid IS NOT NULL;
 `
 
-func (s *Store) listSystems(ctx context.Context) ([]*model.System, error) {
-	results := []*model.System{}
+func (s *Store) listSystems(ctx context.Context) ([]*models.System, error) {
+	results := []*models.System{}
 	err := s.db.Select(&results, sqlListSystems)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -109,13 +109,13 @@ const sqlFetchSystemByIntakeID = `
 `
 
 // FetchSystemByIntakeID queries the DB for a single system
-func (s *Store) FetchSystemByIntakeID(ctx context.Context, intakeID uuid.UUID) (*model.System, error) {
-	system := model.System{}
+func (s *Store) FetchSystemByIntakeID(ctx context.Context, intakeID uuid.UUID) (*models.System, error) {
+	system := models.System{}
 
 	err := s.db.Get(&system, sqlFetchSystemByIntakeID, intakeID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: model.System{}}
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.System{}}
 		}
 		appcontext.ZLogger(ctx).Error("Failed to fetch system", zap.Error(err), zap.String("intakeID", intakeID.String()))
 		return nil, &apperrors.QueryError{
