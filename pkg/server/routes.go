@@ -144,7 +144,6 @@ func (s *Server) routes(
 			store.CreateTestDate,
 		),
 	)
-	gql.Handle("/query", handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver})))
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: resolver}))
 	gql.Handle("/query", graphqlServer)
 
