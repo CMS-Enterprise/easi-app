@@ -60,7 +60,7 @@ func (s *Store) useFakeSystems(ctx context.Context) bool {
 	// to:
 	// _affirmation_ - indicating the new functionality to be rolled out
 	// (which in this case mean opting in to fetching the systems from the system_intake table)
-	real, err := s.ldClient.BoolVariation("systems-from-db", flags.Principal(ctx), false)
+	real, err := s.ldClient.BoolVariation("systems-from-db", flags.Principal(ctx), true)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("problem evaluating flag", zap.Error(err))
 	}
