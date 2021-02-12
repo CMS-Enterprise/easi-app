@@ -9,7 +9,6 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -54,7 +53,7 @@ func main() {
 	must(store.CreateSystemIntake(ctx, &intake))
 	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
 
-	must(store.CreateAccessibilityRequest(ctx, &model.AccessibilityRequest{
+	must(store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
 		Name:     "Never shown",
 		IntakeID: intake.ID,
 	}))
