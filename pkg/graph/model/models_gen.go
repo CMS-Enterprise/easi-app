@@ -3,6 +3,9 @@
 package model
 
 import (
+	"fmt"
+	"io"
+	"strconv"
 	"time"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -39,6 +42,20 @@ type CreateAccessibilityRequestPayload struct {
 	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
+// Parameters for creating a test date
+type CreateTestDateInput struct {
+	Date      time.Time        `json:"date"`
+	RequestID uuid.UUID        `json:"requestID"`
+	Score     *int             `json:"score"`
+	TestType  TestDateTestType `json:"testType"`
+}
+
+// Result of createTestDate
+type CreateTestDatePayload struct {
+	TestDate   *TestDate    `json:"testDate"`
+	UserErrors []*UserError `json:"userErrors"`
+}
+
 // A collection of Systems
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
@@ -51,9 +68,61 @@ type SystemEdge struct {
 	Node   *models.System `json:"node"`
 }
 
+// A 508 test instance
+type TestDate struct {
+	Date     time.Time        `json:"date"`
+	ID       uuid.UUID        `json:"id"`
+	Score    *int             `json:"score"`
+	TestType TestDateTestType `json:"testType"`
+}
+
 // UserError represents application-level errors that are the result of
 // either user or application developer error.
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+// The variety of a 508 test
+type TestDateTestType string
+
+const (
+	// Represents an initial 508 test
+	TestDateTestTypeInitial TestDateTestType = "INITIAL"
+	// Represents a remediation test
+	TestDateTestTypeRemediation TestDateTestType = "REMEDIATION"
+)
+
+var AllTestDateTestType = []TestDateTestType{
+	TestDateTestTypeInitial,
+	TestDateTestTypeRemediation,
+}
+
+func (e TestDateTestType) IsValid() bool {
+	switch e {
+	case TestDateTestTypeInitial, TestDateTestTypeRemediation:
+		return true
+	}
+	return false
+}
+
+func (e TestDateTestType) String() string {
+	return string(e)
+}
+
+func (e *TestDateTestType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TestDateTestType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TestDateTestType", str)
+	}
+	return nil
+}
+
+func (e TestDateTestType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
