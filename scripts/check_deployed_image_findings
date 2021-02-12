@@ -23,7 +23,7 @@ case "$APP_ENV" in
 esac
 
 # Get image version currently deployed
-image_tag=$(curl --silent "$EASI_URL"/api/v1/healthcheck | jq -r .version)
+image_tag=$(curl --silent "$EASI_URL"/api/v1/healthcheck | jq -r .version) || exit
 
 # Check scan findings for image
 payload="$(jq --null-input ".repository= \"$repository\" | .imageTag = \"$image_tag\"")"
@@ -33,6 +33,7 @@ totalFindings="$(jq "fromjson | .totalFindings" scan_response.json)"
 
 # Quit if there were no findings
 if [[ "$totalFindings" = 0 ]]; then
+  echo "No findings detected"
   exit 0
 fi
 
@@ -49,25 +50,29 @@ message="$totalFindings finding(s) detected in image $image_tag. Contact infra f
 # 'color' can be any hex code or the key words 'good', 'warning', or 'danger'
 color="warning"
 
-slack_payload=$(
-cat <<EOM
-{
+slack_payload=$( jq -n \
+  --arg message "$message" \
+  --arg build_url "$CIRCLE_BUILD_URL" \
+  --arg color "$color" \
+  --arg pretext "$pretext" \
+  --arg user "$CIRCLE_USERNAME" \
+  --arg title "$title" \
+  --arg now "$NOW" \
+  '{
     "channel": "#oit-easi-alerts",
     "attachments": [
         {
-            "fallback": "$message $CIRCLE_BUILD_URL",
-            "color": "$color",
-            "pretext": "$pretext",
-            "author_name": "$CIRCLE_USERNAME",
-            "title": "$title",
-            "title_link": "$CIRCLE_BUILD_URL",
-            "text": "$message",
-            "ts": $NOW
+            "fallback": $message,
+            "color": $color,
+            "pretext": $pretext,
+            "author_name": $user,
+            "title": $title,
+            "title_link": $build_url,
+            "text": $message,
+            "ts": $now
         }
     ]
-}
-EOM
-)
+   }' ) || exit
 
 echo
 echo "Slack Payload:"
