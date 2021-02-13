@@ -19,7 +19,7 @@ COPY .eslintrc ./
 COPY public ./public
 COPY src ./src
 
-FROM app AS build
+FROM src AS build
 
 ARG REACT_APP_API_ADDRESS
 ARG REACT_APP_APP_ENV
@@ -31,7 +31,7 @@ ARG REACT_APP_OKTA_SERVER_ID
 
 RUN yarn run build
 
-FROM node:10.22.0
+FROM node:10.22.0 as srv
 
 RUN yarn global add serve
 WORKDIR /app

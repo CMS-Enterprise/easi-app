@@ -29,10 +29,6 @@ services:
       - /app/node_modules
     ports:
       - 3000:3000
-        # cypress:
-        #   volumes:
-        #     - ./cypress/videos:/cypress/videos
-        #     - ./cypress/screenshots:/cypress/screenshots
   minio:
     restart: always
     image: minio/minio:latest
