@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
-	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/guregu/null"
 
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -42,6 +42,11 @@ func (s StoreTestSuite) TestListSystems() {
 		si.CreatedAt = &now
 		si.UpdatedAt = &now
 		si.ProjectName = null.StringFrom(fmt.Sprintf("%s %d", sig, ix))
+		if ix%2 == 1 {
+			// this simulates some of the backfill data in PROD that
+			// was imported without an EUAUserID
+			si.EUAUserID = null.StringFromPtr(nil)
+		}
 		_, err = s.store.CreateSystemIntake(ctx, &si)
 		s.NoError(err)
 
@@ -77,9 +82,7 @@ func (s StoreTestSuite) TestListSystems() {
 	// verify the list of Systems that we seeded came back to us
 	found := 0
 	for _, result := range results {
-		if !strings.HasPrefix(result.ProjectName, sig) {
-			continue
-		}
+		s.NotEqual(result.ID, uuid.Nil) // ensure we populate with a real IntakeID
 		if _, exp := expected[result.LCID]; !exp {
 			// unexpected collision from previously existing data,
 			// possibly from previous runs of this test

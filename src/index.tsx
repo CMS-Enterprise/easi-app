@@ -1,6 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import {
+  ApolloClient,
+  ApolloProvider,
+  createHttpLink,
+  InMemoryCache
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import axios from 'axios';
 import { detect } from 'detect-browser';
 import { TextEncoder } from 'text-encoding';
@@ -26,6 +33,67 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
+const apiHost = new URL(process.env.REACT_APP_API_ADDRESS || '').host;
+
+/**
+ * Extract auth token from local storage and return a header
+ */
+function getAuthHeader(targetUrl: string) {
+  const targetHost = new URL(targetUrl).host;
+  if (targetHost !== apiHost) {
+    return null;
+  }
+
+  // prefer dev auth if it exists
+  if (
+    window.localStorage[localAuthStorageKey] &&
+    JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
+  ) {
+    return `Bearer ${window.localStorage[localAuthStorageKey]}`;
+  }
+
+  if (window.localStorage['okta-token-storage']) {
+    const json = JSON.parse(window.localStorage['okta-token-storage']);
+    if (json.accessToken) {
+      return `Bearer ${json.accessToken.accessToken}`;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Setup client for GraphQL
+ */
+const graphQueryURL = 'http://localhost:8080/api/graph/query';
+const httpLink = createHttpLink({
+  uri: graphQueryURL
+});
+
+const authLink = setContext((request, { headers }) => {
+  const header = getAuthHeader(graphQueryURL);
+  return {
+    headers: {
+      ...headers,
+      authorization: header
+    }
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
+  resolvers: {
+    AccessibilityRequest: {
+      documents: () => [
+        { name: 'Testing VPAT', uploadedAt: '2021-02-02T17:28:29Z' },
+        { name: 'Test Results', uploadedAt: '2021-02-06T17:28:29Z' },
+        { name: 'Remediation Plan', uploadedAt: '2021-02-08T17:28:29Z' }
+      ]
+    }
+  }
+});
+
 let app;
 const browser: any = detect();
 if (browser.name === 'ie') {
@@ -33,7 +101,9 @@ if (browser.name === 'ie') {
 } else {
   app = (
     <Provider store={store}>
-      <App />
+      <ApolloProvider client={client}>
+        <App />
+      </ApolloProvider>
     </Provider>
   );
 }
@@ -53,26 +123,13 @@ axios.interceptors.request.use(
   config => {
     const newConfig = config;
 
-    if (
-      newConfig &&
-      newConfig.url &&
-      newConfig.url.includes(process.env.REACT_APP_API_ADDRESS as string) &&
-      window.localStorage['okta-token-storage']
-    ) {
-      if (window.localStorage['okta-token-storage']) {
-        const json = JSON.parse(window.localStorage['okta-token-storage']);
-        if (json.accessToken) {
-          newConfig.headers.Authorization = `Bearer ${json.accessToken.accessToken}`;
-        }
-      }
-      // prefer dev auth if it exists
-      if (
-        window.localStorage[localAuthStorageKey] &&
-        JSON.parse(window.localStorage[localAuthStorageKey]).favorLocalAuth
-      ) {
-        newConfig.headers.Authorization = `Bearer ${window.localStorage[localAuthStorageKey]}`;
+    if (newConfig && newConfig.url) {
+      const header = getAuthHeader(newConfig.url);
+      if (header) {
+        newConfig.headers.Authorization = header;
       }
     }
+
     return newConfig;
   },
   error => {

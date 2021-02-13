@@ -1,11 +1,18 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
+	"os"
+	"strconv"
+	"strings"
 
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/lambda"
+	"github.com/gorilla/mux"
 	_ "github.com/lib/pq" // pq is required to get the postgres driver into sqlx
 	"go.uber.org/zap"
 
@@ -16,6 +23,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
+	"github.com/cmsgov/easi-app/pkg/graph"
+	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/handlers"
 	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -30,18 +39,19 @@ func (s *Server) routes(
 	traceMiddleware func(handler http.Handler) http.Handler,
 	loggerMiddleware func(handler http.Handler) http.Handler) {
 
-	// trace all requests with an ID
-	s.router.Use(traceMiddleware)
+	s.router.Use(
+		traceMiddleware, // trace all requests with an ID
+		loggerMiddleware,
+		corsMiddleware,
+		// authorizationMiddleware, // is supposed to be authN, not authZ; TODO: those responsibilities should be split out
+	)
 
 	// set up handler base
 	base := handlers.NewHandlerBase(s.logger)
 
-	// health check goes directly on the main router to avoid auth
-	healthCheckHandler := handlers.NewHealthCheckHandler(
-		base,
-		s.Config,
-	)
-	s.router.HandleFunc("/api/v1/healthcheck", healthCheckHandler.Handle())
+	// endpoints that dont require authorization go directly on the main router
+	s.router.HandleFunc("/api/v1/healthcheck", handlers.NewHealthCheckHandler(base, s.Config).Handle())
+	s.router.HandleFunc("/api/graph/playground", playground.Handler("GraphQL playground", "/api/graph/query"))
 
 	// set up Feature Flagging utilities
 	ldClient, err := flags.NewLaunchDarklyClient(s.NewFlagConfig())
@@ -117,28 +127,26 @@ func (s *Server) routes(
 		lambdaClient = lambda.New(lambdaSession, &aws.Config{})
 	}
 
-	// API base path is versioned
-	api := s.router.PathPrefix("/api/v1").Subrouter()
-
-	// add a request based logger
-	api.Use(loggerMiddleware)
-
-	// wrap with CORs
-	api.Use(corsMiddleware)
-
-	// protect all API routes with authorization middleware
-	api.Use(authorizationMiddleware)
-
-	serviceConfig := services.NewConfig(s.logger, ldClient)
-
-	store, err := storage.NewStore(
+	store, storeErr := storage.NewStore(
 		s.logger,
 		s.NewDBConfig(),
 		ldClient,
 	)
-	if err != nil {
-		s.logger.Fatal("Failed to connect to database", zap.Error(err))
+	if storeErr != nil {
+		s.logger.Fatal("Failed to create store", zap.Error(storeErr))
 	}
+
+	// set up GraphQL routes
+	gql := s.router.PathPrefix("/api/graph").Subrouter()
+	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
+	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: graph.NewResolver(store)}))
+	gql.Handle("/query", graphqlServer)
+
+	// API base path is versioned
+	api := s.router.PathPrefix("/api/v1").Subrouter()
+	api.Use(authorizationMiddleware) // TODO: see comment at top-level router
+
+	serviceConfig := services.NewConfig(s.logger, ldClient)
 
 	systemIntakeHandler := handlers.NewSystemIntakeHandler(
 		base,
@@ -549,4 +557,32 @@ func (s *Server) routes(
 		),
 	)
 	api.Handle("/systems", systemsHandler.Handle())
+
+	if ok, _ := strconv.ParseBool(os.Getenv("DEBUG_ROUTES")); ok {
+		// useful for debugging route issues
+		_ = s.router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+			pathTemplate, err := route.GetPathTemplate()
+			if err == nil {
+				fmt.Println("ROUTE:", pathTemplate)
+			}
+			pathRegexp, err := route.GetPathRegexp()
+			if err == nil {
+				fmt.Println("Path regexp:", pathRegexp)
+			}
+			queriesTemplates, err := route.GetQueriesTemplates()
+			if err == nil {
+				fmt.Println("Queries templates:", strings.Join(queriesTemplates, ","))
+			}
+			queriesRegexps, err := route.GetQueriesRegexp()
+			if err == nil {
+				fmt.Println("Queries regexps:", strings.Join(queriesRegexps, ","))
+			}
+			methods, err := route.GetMethods()
+			if err == nil {
+				fmt.Println("Methods:", strings.Join(methods, ","))
+			}
+			fmt.Println()
+			return nil
+		})
+	}
 }

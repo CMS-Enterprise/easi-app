@@ -1,6 +1,16 @@
 // This is for the CMS 508 project flow
 
 const accessibility = {
+  documentTable: {
+    caption: 'Documents uploaded for',
+    header: {
+      actions: 'Actions',
+      documentName: 'Document',
+      uploadedAt: 'Uploaded Date'
+    },
+    remove: 'Remove',
+    view: 'View'
+  },
   requestTable: {
     caption: 'Active 508 Requests',
     header: {
@@ -12,6 +22,18 @@ const accessibility = {
       status: 'Status'
     },
     lastUpdated: 'last updated on'
+  },
+  tabs: {
+    accessibilityRequests: '508 Requests'
+  },
+  requestDetails: {
+    documents: {
+      label: 'Documents',
+      none: 'No documents added to this request yet.'
+    },
+    documentUpload: 'Upload a document',
+    other: 'Other request details',
+    remove: 'Remove this request from EASi'
   }
 };
 
