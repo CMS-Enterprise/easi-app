@@ -311,19 +311,14 @@ postgres@localhost:postgres>
 Use the following to run the database, database migrations, backend server, and
 frontend client locally in docker.
 
-Note: live reloading of the backend and frontend is not currently implemented,
-so code changes require rebuilding their docker images. As such, these scripts
-are not yet intended for day-to-day, iterative development, but for as-needed
-local testing of the app.
-
 ```console
-./scripts/run-app-local-docker
+docker-compose up --build
 ```
 
 Run the following to shut it down:
 
 ```console
-./scripts/stop-app-local-docker
+docker-compose down
 ```
 
 ### Setup: Cloud Services
