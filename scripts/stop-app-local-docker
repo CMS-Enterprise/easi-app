@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-#
-# shut down the local app running in docker
-#
-
-set -ex
-
-docker-compose -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml down
