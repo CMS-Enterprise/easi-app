@@ -20,13 +20,4 @@ services:
     depends_on:
       - db_migrate
   easi_client:
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-      target: src
     image: easi-frontend:latest
-    env_file:
-      - ./config/env/client.dev.env
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    entrypoint: ['yarn', 'start']

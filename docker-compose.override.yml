@@ -24,6 +24,15 @@ services:
     ports:
       - 8080:8080
   easi_client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+      target: src
+    env_file:
+      - ./config/env/client.dev.env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    entrypoint: ['yarn', 'start']
     volumes:
       - .:/app
       - /app/node_modules
