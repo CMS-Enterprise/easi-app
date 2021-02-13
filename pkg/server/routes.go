@@ -147,11 +147,13 @@ func (s *Server) routes(
 	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
 	resolver := graph.NewResolver(
 		store,
-		services.NewCreateTestDate(
-			serviceConfig,
-			services.NewAuthorizeHasEASiRole(),
-			store.CreateTestDate,
-		),
+		graph.ResolverService{
+			CreateTestDate: services.NewCreateTestDate(
+				serviceConfig,
+				services.NewAuthorizeHasEASiRole(),
+				store.CreateTestDate,
+			),
+		},
 	)
 	gqlDirectives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
 		hasRole, err := services.HasRole(ctx, role)
