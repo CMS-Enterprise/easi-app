@@ -25,8 +25,8 @@ FROM alpine:3.11
 
 RUN apk --no-cache add ca-certificates tzdata
 WORKDIR /easi/
-COPY --from=builder /easi/bin/easi .
-COPY --from=builder /easi/pkg/email/templates ./templates
+COPY --from=build /easi/bin/easi .
+COPY --from=build /easi/pkg/email/templates ./templates
 
 ARG ARG_APPLICATION_VERSION
 ARG ARG_APPLICATION_DATETIME
