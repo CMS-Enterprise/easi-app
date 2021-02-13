@@ -24,19 +24,9 @@ services:
       context: .
       dockerfile: Dockerfile.client
       target: src
+    image: easi-frontend:latest
     env_file:
       - ./config/env/client.dev.env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     entrypoint: ['yarn', 'start']
-      # cypress:
-      #   build:
-      #     context: .
-      #     dockerfile: Dockerfile.cypress
-      #   image: easi-cypress:latest
-      #   environment:
-      #     - OKTA_TEST_USERNAME
-      #     - OKTA_TEST_PASSWORD
-      #     - OKTA_TEST_SECRET
-      #     - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
-      #   network_mode: 'service:easi_client'
-      #   depends_on:
-      #     - easi_client

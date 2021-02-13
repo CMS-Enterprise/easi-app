@@ -5,6 +5,8 @@ services:
     image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}'
   easi:
     image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}'
+    environment:
+      - APP_ENV
     entrypoint: ['/easi/easi', 'serve']
   easi_client:
     build:
@@ -12,5 +14,19 @@ services:
       dockerfile: Dockerfile.client_circleci
     image: easi-frontend:latest
     environment:
+      - APP_ENV
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
     entrypoint: ['serve', '-s', '-l', '3000']
+  cypress:
+    build:
+      context: .
+      dockerfile: Dockerfile.cypress
+    image: easi-cypress:latest
+    environment:
+      - OKTA_TEST_USERNAME
+      - OKTA_TEST_PASSWORD
+      - OKTA_TEST_SECRET
+      - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
+    network_mode: 'service:easi_client'
+    depends_on:
+      - easi_client
