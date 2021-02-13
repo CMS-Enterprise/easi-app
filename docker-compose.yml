@@ -14,6 +14,9 @@ services:
   easi:
     env_file:
       - ./config/env/server.dev.env
+    environment:
+      - SERVER_CERT
+      - SERVER_KEY
     depends_on:
       - db_migrate
   easi_client:
