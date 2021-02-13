@@ -1,10 +1,11 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
+import { Link } from '@trussworks/react-uswds';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
 import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
-import ScyllaPage from 'components/ScyllaPage';
+import PageHeading from 'components/PageHeading';
 
 const List = () => {
   const { loading, error, data } = useQuery<GetAccessibilityRequests>(
@@ -32,9 +33,19 @@ const List = () => {
     });
 
   return (
-    <ScyllaPage>
+    <>
+      <div className="display-flex flex-justify flex-wrap">
+        <PageHeading>508 Requests</PageHeading>
+        <Link
+          className="usa-button flex-align-self-center"
+          variant="unstyled"
+          href="/508/requests/new"
+        >
+          Add a new request
+        </Link>
+      </div>
       <AccessibilityRequestsTable requests={requests || []} />
-    </ScyllaPage>
+    </>
   );
 };
 
