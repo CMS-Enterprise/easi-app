@@ -1,8 +1,8 @@
 CREATE TYPE test_date_test_type AS ENUM ('INITIAL', 'REMEDIATION');
 
-CREATE TABLE test_date (
+CREATE TABLE test_dates (
     id UUID PRIMARY KEY NOT NULL,
-    request_id UUID NOT NULL REFERENCES accessibility_request(id),
+    request_id UUID NOT NULL REFERENCES accessibility_requests(id),
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL,
     date TIMESTAMP WITH TIME ZONE NOT NULL,
