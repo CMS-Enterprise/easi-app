@@ -5,9 +5,6 @@ services:
     image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}'
   easi:
     image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}'
-    environment:
-      - SERVER_CERT
-      - SERVER_KEY
     entrypoint: ['/easi/easi', 'serve']
   easi_client:
     build:
