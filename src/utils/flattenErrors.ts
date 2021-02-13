@@ -7,7 +7,7 @@ const flattedErrors = (
   errors: any,
   flattenedErrors: any = {},
   flatKey = ''
-) => {
+): { [key: string]: string } => {
   const errorKeys = Object.keys(errors);
   if (errorKeys.length === 0) {
     return {};

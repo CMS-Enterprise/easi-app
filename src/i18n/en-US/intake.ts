@@ -8,7 +8,8 @@ const intake = {
     grtDate: 'GRT Date',
     grbDate: 'GRB Date',
     status: 'Status',
-    fundingNumber: 'Funding number'
+    fundingNumber: 'Funding number',
+    businessOwner: 'Business Owner'
   },
   submission: {
     confirmation: {

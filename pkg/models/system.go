@@ -1,18 +1,22 @@
 package models
 
 import (
-	"time"
+	"github.com/google/uuid"
+	"github.com/guregu/null"
 )
 
-// System represents something that may be tested for 508 compliance
+// BusinessOwner holds data about a system's business owner
+type BusinessOwner struct {
+	Component string `json:"component"`
+	Name      string `json:"name"`
+}
+
+// System is derived from a system intake and represents a computer system managed by CMS
 type System struct {
-	// IntakeID    uuid.UUID  `json:"intakeId" db:"id"` // TODO: is this actually necessary, if LCID is really the identifier?
-	LCID        string     `json:"lcid" db:"lcid"`
-	CreatedAt   *time.Time `json:"createdAt" db:"created_at"`
-	UpdatedAt   *time.Time `json:"updatedAt" db:"updated_at"`
-	IssuedAt    *time.Time `json:"issuedAt" db:"decided_at"`
-	ExpiresAt   *time.Time `json:"expiresAt" db:"lcid_expires_at"`
-	ProjectName string     `json:"projectName" db:"project_name"`
-	OwnerID     string     `json:"ownerId" db:"eua_user_id"`
-	OwnerName   string     `json:"ownerName" db:"requester"` // TODO: wouldn't really be necessary at DB layer if we had performant access to LDAP
+	ID                     uuid.UUID   `json:"id"`
+	Name                   string      `json:"name"`
+	BusinessOwnerName      null.String `db:"business_owner_name"`
+	BusinessOwnerComponent null.String `db:"business_owner_component"`
+	BusinessOwner          *BusinessOwner
+	LCID                   string `db:"lcid"`
 }
