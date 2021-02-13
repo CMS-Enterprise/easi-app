@@ -12,7 +12,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.client_circleci
-    image: easi-frontend:latest
     environment:
       - APP_ENV
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
