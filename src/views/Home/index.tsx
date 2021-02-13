@@ -10,6 +10,7 @@ import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
+import List from 'views/Accessibility/AccessibiltyRequest/List';
 
 import SystemIntakeBanners from './SystemIntakeBanners';
 import WelcomeText from './WelcomeText';
@@ -66,6 +67,10 @@ const Home = () => {
             <WelcomeText />
           </>
         )}
+        {isUserSet &&
+          (user.isAccessibilityAdmin(userGroups) ||
+            user.isAccessibilityTester(userGroups)) && <List />}
+
         {!authState.isAuthenticated && <WelcomeText />}
       </MainContent>
       <Footer />
