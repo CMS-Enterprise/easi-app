@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
 import { Link } from '@trussworks/react-uswds';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
@@ -8,6 +9,7 @@ import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
 import PageHeading from 'components/PageHeading';
 
 const List = () => {
+  const { t } = useTranslation('home');
   const { loading, error, data } = useQuery<GetAccessibilityRequests>(
     GetAccessibilityRequestsQuery,
     {
@@ -35,13 +37,13 @@ const List = () => {
   return (
     <>
       <div className="display-flex flex-justify flex-wrap">
-        <PageHeading>508 Requests</PageHeading>
+        <PageHeading>{t('accessibility.heading')}</PageHeading>
         <Link
           className="usa-button flex-align-self-center"
           variant="unstyled"
           href="/508/requests/new"
         >
-          Add a new request
+          {t('accessibility.newRequest')}
         </Link>
       </div>
       <AccessibilityRequestsTable requests={requests || []} />
