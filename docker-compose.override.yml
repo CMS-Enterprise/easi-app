@@ -16,8 +16,6 @@ services:
       dockerfile: Dockerfile
       target: dev
     image: easi-backend:latest
-    environment:
-      - PGHOST=db
     volumes:
       - ./:/easi
     entrypoint: air
@@ -56,7 +54,7 @@ services:
       /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
       /usr/bin/mc policy set public local/easi-app-file-uploads;
       "
-  lambda:
+  prince:
     image: lambci/lambda:go1.x
     ports:
       - 9001:9001
