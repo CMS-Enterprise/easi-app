@@ -3,6 +3,7 @@ version: '3.7'
 services:
   db:
     image: postgres:11.6
+    command: ['postgres', '-c', 'log_statement=all']
   db_migrate:
     image: easi-db-migrate:latest
     env_file:
@@ -15,6 +16,7 @@ services:
     env_file:
       - ./config/env/server.dev.env
     environment:
+      - PGHOST=db
       - SERVER_CERT
       - SERVER_KEY
     depends_on:

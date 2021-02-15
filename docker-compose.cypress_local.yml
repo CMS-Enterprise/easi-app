@@ -2,41 +2,25 @@
 version: '3.7'
 services:
   db:
-    image: postgres:11.6
-    command: ['postgres', '-c', 'log_statement=all']
     ports:
       - 5432:5432
   db_migrate:
     build:
       context: .
       dockerfile: Dockerfile.db_migrations
-    image: easi-db-migrate:latest
-    env_file:
-      - ./config/env/flyway.dev.env
-    environment:
-      - FLYWAY_URL=jdbc:postgresql://db/postgres
     volumes:
       - ./migrations:/flyway/sql
-    depends_on:
-      - db
   easi:
     build:
       context: .
       dockerfile: Dockerfile
     image: easi-backend:latest
-    env_file:
-      - ./config/env/server.dev.env
     environment:
       - APP_ENV=test
-      - PGHOST=db
       - EMAIL_TEMPLATE_DIR=/easi/templates
-      - SERVER_CERT
-      - SERVER_KEY
     ports:
       - 8080:8080
     entrypoint: ['/easi/easi', 'serve']
-    depends_on:
-      - db_migrate
   easi_client:
     build:
       context: .
@@ -49,7 +33,6 @@ services:
         - REACT_APP_OKTA_ISSUER=$OKTA_ISSUER
         - REACT_APP_OKTA_REDIRECT_URI=http://localhost:3000/implicit/callback
         - REACT_APP_OKTA_SERVER_ID=$OKTA_SERVER_ID
-    image: easi-frontend:latest
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
     entrypoint: ['serve', '-s', '-l', '3000']
