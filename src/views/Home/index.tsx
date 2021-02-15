@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation, withRouter } from 'react-router-dom';
-import { useOktaAuth } from '@okta/okta-react';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -52,27 +51,46 @@ const Banners = () => {
 };
 
 const Home = () => {
-  const { authState } = useOktaAuth();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+
+  const renderView = () => {
+    if (isUserSet) {
+      if (user.isGrtReviewer(userGroups)) {
+        return (
+          <MainContent className="grid-container margin-bottom-5">
+            <RequestRepository />
+          </MainContent>
+        );
+      }
+
+      if (
+        user.isAccessibilityAdmin(userGroups) ||
+        user.isAccessibilityTester(userGroups)
+      ) {
+        return <List />;
+      }
+
+      if (user.isBasicUser(userGroups)) {
+        return (
+          <MainContent className="grid-container margin-bottom-5">
+            <Banners />
+            <WelcomeText />
+          </MainContent>
+        );
+      }
+    }
+    return (
+      <MainContent className="grid-container margin-bottom-5">
+        <WelcomeText />
+      </MainContent>
+    );
+  };
 
   return (
     <PageWrapper>
       <Header />
-      <MainContent className="grid-container margin-bottom-5">
-        {isUserSet && user.isGrtReviewer(userGroups) && <RequestRepository />}
-        {isUserSet && user.isBasicUser(userGroups) && (
-          <>
-            <Banners />
-            <WelcomeText />
-          </>
-        )}
-        {isUserSet &&
-          (user.isAccessibilityAdmin(userGroups) ||
-            user.isAccessibilityTester(userGroups)) && <List />}
-
-        {!authState.isAuthenticated && <WelcomeText />}
-      </MainContent>
+      {renderView()}
       <Footer />
     </PageWrapper>
   );
