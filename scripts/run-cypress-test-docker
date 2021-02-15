@@ -57,7 +57,7 @@ else
   CYPRESS_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${CYPRESS_CONTAINER}")
 
   # Clean up
-  docker-compose --project-name "${PROJECT_NAME}" down
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.cypress_local.yml down
 
   exit "${CYPRESS_EXIT_CODE}"
 fi
