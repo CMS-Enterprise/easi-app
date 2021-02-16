@@ -55,9 +55,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	}
 
 	graphQLClient := client.New(handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{
-		Resolvers: NewResolver(store, func(ctx context.Context, date *models.TestDate) (*models.TestDate, error) {
-			return nil, nil
-		}),
+		Resolvers: NewResolver(store, ResolverService{}),
 	})))
 
 	storeTestSuite := &GraphQLTestSuite{
@@ -72,6 +70,9 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 func (s GraphQLTestSuite) TestQueries() {
 	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),
