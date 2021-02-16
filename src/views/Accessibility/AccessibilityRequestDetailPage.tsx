@@ -30,7 +30,7 @@ const AccessibilityRequestDetailPage = () => {
     }
   );
 
-  const requestName = data?.accessibilityRequest?.system.name || '';
+  const requestName = data?.accessibilityRequest?.name || '';
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
   const lcid = data?.accessibilityRequest?.system.lcid;
   const businessOwnerName =

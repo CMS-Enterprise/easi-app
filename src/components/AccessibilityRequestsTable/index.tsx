@@ -37,7 +37,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     return [
       {
         Header: t('requestTable.header.requestName'),
-        accessor: 'system.name',
+        accessor: 'name',
         Cell: ({ row, value }: any) => {
           return (
             <UswdsLink asCustom={Link} to={`/508/requests/${row.original.id}`}>
