@@ -30,6 +30,11 @@ jobs:
           name: Restart ECS app service
           command: |
             ./scripts/deploy_service "easi-app" "7" ""
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   restart_prod_ecs_app_service:
     docker:
@@ -55,6 +60,33 @@ jobs:
           name: Restart ECS app service
           command: |
             ./scripts/deploy_service "easi-app" "7" ""
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
+
+  rescan_deployed_image:
+    docker:
+      - image: *circleci_docker_primary
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+        environment:
+          AWS_DEFAULT_REGION: us-west-2
+    steps:
+      - checkout
+      - run:
+          name: Check deployed image for vulnerability findings - impl
+            APP_ENV=impl ./scripts/check_deployed_image_findings "easi-backend" "4"
+      - run:
+          name: Check deployed image for vulnerability findings - prod
+            APP_ENV=prod ./scripts/check_deployed_image_findings "easi-backend" "4"
+      - run:
+          name: Announce failure
+          command: |
+            ./scripts/circleci-announce-broken-branch
+          when: on_fail
 
   build_db_migrate_image:
     docker:
@@ -661,3 +693,4 @@ workflows:
     jobs:
       - restart_impl_ecs_app_service
       - restart_prod_ecs_app_service
+      - rescan_deployed_image
