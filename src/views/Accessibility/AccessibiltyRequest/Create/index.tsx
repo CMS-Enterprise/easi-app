@@ -53,7 +53,9 @@ const Create = () => {
       }
     }).then(() => {
       history.push('/', {
-        confirmationText: `${values.requestName} was added to the 508 requests page`
+        confirmationText: t('newRequestForm.confirmation', {
+          requestName: values.requestName
+        })
       });
     });
   };
@@ -84,7 +86,7 @@ const Create = () => {
           </NavLink>
         </SecondaryNav>
         <div className="grid-container">
-          <PageHeading>Add a new request</PageHeading>
+          <PageHeading>{t('newRequestForm.heading')}</PageHeading>
           <Formik
             initialValues={initialAccessibilityRequestFormData}
             onSubmit={handleSubmit}
@@ -114,14 +116,14 @@ const Create = () => {
                           error={!!flatErrors.intakeId}
                         >
                           <Label htmlFor="508Request-IntakeId">
-                            Choose the project this request will belong to
+                            {t('newRequestForm.fields.project.label')}
                           </Label>
                           <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
                           <ComboBox
                             name="intakeId"
                             id="508Request-IntakeId"
                             options={projectComboBoxOptions}
-                            onChange={intakeId => {
+                            onChange={(intakeId: any) => {
                               const selectedSystem = systems.find(
                                 system => system.node.id === intakeId
                               );
@@ -142,7 +144,7 @@ const Create = () => {
 
                       <FieldGroup scrollElement="requester.name">
                         <Label htmlFor="508Request-BusinessOwnerName">
-                          Business Owner Name
+                          {t('newRequestForm.fields.businessOwnerName.label')}
                         </Label>
                         <FormikField
                           as={TextField}
@@ -155,7 +157,9 @@ const Create = () => {
 
                       <FieldGroup scrollElement="businessOwner.component">
                         <Label htmlFor="508Form-BusinessOwnerComponent">
-                          Business Owner Component
+                          {t(
+                            'newRequestForm.fields.businessOwnerComponent.label'
+                          )}
                         </Label>
 
                         <FormikField
@@ -170,11 +174,10 @@ const Create = () => {
                         error={!!flatErrors.requestName}
                       >
                         <Label htmlFor="508Request-RequestName">
-                          Request Name
+                          {t('newRequestForm.fields.requestName.label')}
                         </Label>
                         <HelpText id="508Request-RequestName">
-                          This name will be shown on the Active requests page.
-                          For example, ACME 1.3
+                          {t('newRequestForm.fields.requestName.help')}
                         </HelpText>
                         <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                         <FormikField
@@ -188,15 +191,12 @@ const Create = () => {
 
                       <div className="tablet:grid-col-8">
                         <div className="margin-top-6 margin-bottom-2">
-                          <PlainInfo>
-                            A request for 508 testing will be added to the list
-                            of 508 requests. An email will be sent to the
-                            Business Owner and the 508 team stating that a
-                            request has been added to the system.
-                          </PlainInfo>
+                          <PlainInfo>{t('newRequestForm.info')}</PlainInfo>
                         </div>
                       </div>
-                      <Button type="submit">Add a new request</Button>
+                      <Button type="submit">
+                        {t('newRequestForm.submitBtn')}
+                      </Button>
                     </FormikForm>
                   </div>
                 </>
