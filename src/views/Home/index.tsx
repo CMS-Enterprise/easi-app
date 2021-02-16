@@ -58,9 +58,9 @@ const Home = () => {
     if (isUserSet) {
       if (user.isGrtReviewer(userGroups)) {
         return (
-          <MainContent className="grid-container margin-bottom-5">
+          <div className="grid-container">
             <RequestRepository />
-          </MainContent>
+          </div>
         );
       }
 
@@ -73,24 +73,24 @@ const Home = () => {
 
       if (user.isBasicUser(userGroups)) {
         return (
-          <MainContent className="grid-container margin-bottom-5">
+          <div className="grid-container">
             <Banners />
             <WelcomeText />
-          </MainContent>
+          </div>
         );
       }
     }
     return (
-      <MainContent className="grid-container margin-bottom-5">
+      <div className="grid-container">
         <WelcomeText />
-      </MainContent>
+      </div>
     );
   };
 
   return (
     <PageWrapper>
       <Header />
-      {renderView()}
+      <MainContent className="margin-bottom-5">{renderView()}</MainContent>
       <Footer />
     </PageWrapper>
   );
