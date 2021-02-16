@@ -15,7 +15,6 @@ export interface GetAccessibilityRequests_accessibilityRequests_edges_node_syste
 
 export interface GetAccessibilityRequests_accessibilityRequests_edges_node_system {
   __typename: "System";
-  name: string;
   lcid: string;
   businessOwner: GetAccessibilityRequests_accessibilityRequests_edges_node_system_businessOwner;
 }
@@ -24,6 +23,7 @@ export interface GetAccessibilityRequests_accessibilityRequests_edges_node {
   __typename: "AccessibilityRequest";
   id: UUID;
   submittedAt: Time;
+  name: string;
   system: GetAccessibilityRequests_accessibilityRequests_edges_node_system;
 }
 
