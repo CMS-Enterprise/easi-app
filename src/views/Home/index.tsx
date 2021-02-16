@@ -56,19 +56,19 @@ const Home = () => {
 
   const renderView = () => {
     if (isUserSet) {
+      if (
+        user.isAccessibilityAdmin(userGroups) ||
+        user.isAccessibilityTester(userGroups)
+      ) {
+        return <List />;
+      }
+
       if (user.isGrtReviewer(userGroups)) {
         return (
           <div className="grid-container">
             <RequestRepository />
           </div>
         );
-      }
-
-      if (
-        user.isAccessibilityAdmin(userGroups) ||
-        user.isAccessibilityTester(userGroups)
-      ) {
-        return <List />;
       }
 
       if (user.isBasicUser(userGroups)) {
