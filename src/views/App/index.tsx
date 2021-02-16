@@ -8,6 +8,7 @@ import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 import Create from 'views/Accessibility/AccessibiltyRequest/Create';
+import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibiltyRequest/Documents/New';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
@@ -42,19 +43,22 @@ const AppRoutes = () => {
   return (
     <Switch>
       {/* START: 508 Process Pages */}
-      <Route path="/accessibility/create" exact component={Create} />
+      <SecureRoute path="/508/requests/new" exact component={Create} />
+      <SecureRoute
+        path="/508/requests/:accessibilityRequestId/documents/new"
+        component={AccessibilityRequestsDocumentsNew}
+      />
       <SecureRoute
         path="/508/requests/:accessibilityRequestId"
         render={() => <AccessibilityRequestDetailPage />}
       />
+      <SecureRoute path="/508/requests" exact component={List} />
       {/* END : 508 Process Pages */}
+
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
       <Route path="/governance-overview" exact component={GovernanceOverview} />
-
-      <Route path="/accessibility/create" exact component={Create} />
-      <Route path="/accessibility/list" exact component={List} />
 
       {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
       <SecureRoute
