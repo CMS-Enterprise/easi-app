@@ -44,6 +44,7 @@ const AppRoutes = () => {
     <Switch>
       {/* START: 508 Process Pages */}
       <SecureRoute path="/508/requests/new" exact component={Create} />
+      <SecureRoute path="/508/requests/all" exact component={List} />
       <SecureRoute
         path="/508/requests/:accessibilityRequestId/documents/new"
         component={AccessibilityRequestsDocumentsNew}
@@ -144,7 +145,6 @@ const AppRoutes = () => {
   );
 };
 
-// eslint-disable-next-line react/prefer-stateless-function
 const App = () => {
   const handleSkipNav = () => {
     const mainContent = document.getElementById('main-content')!;

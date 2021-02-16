@@ -34,7 +34,8 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.A
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
-		Name: input.Name,
+		Name:     input.Name,
+		IntakeID: input.IntakeID,
 	})
 	if err != nil {
 		return nil, err

@@ -16,7 +16,9 @@ import WelcomeText from './WelcomeText';
 
 import './index.scss';
 
-const Banners = () => {
+const Home = () => {
+  const userGroups = useSelector((state: AppState) => state.auth.groups);
+  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const history = useHistory();
   const location = useLocation<any>();
   const [confirmationText, setIsConfirmationText] = useState('');
@@ -31,28 +33,6 @@ const Banners = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  return (
-    <div className="margin-y-6">
-      {confirmationText && (
-        <div className="border-05 border-green">
-          <div className="fa fa-check fa-2x display-inline-block text-middle text-green margin-left-1 margin-right-2" />
-          <p
-            role="alert"
-            className="display-inline-block text-middle margin-y-105"
-          >
-            {confirmationText}
-          </p>
-        </div>
-      )}
-      <SystemIntakeBanners />
-    </div>
-  );
-};
-
-const Home = () => {
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   const renderView = () => {
     if (isUserSet) {
@@ -74,7 +54,9 @@ const Home = () => {
       if (user.isBasicUser(userGroups)) {
         return (
           <div className="grid-container">
-            <Banners />
+            <div className="margin-y-6">
+              <SystemIntakeBanners />
+            </div>
             <WelcomeText />
           </div>
         );
@@ -90,7 +72,22 @@ const Home = () => {
   return (
     <PageWrapper>
       <Header />
-      <MainContent className="margin-bottom-5">{renderView()}</MainContent>
+      <MainContent className="margin-bottom-5">
+        <div className="grid-container margin-top-6">
+          {confirmationText && (
+            <div className="border-05 border-green">
+              <div className="fa fa-check fa-2x display-inline-block text-middle text-green margin-left-1 margin-right-2" />
+              <p
+                role="alert"
+                className="display-inline-block text-middle margin-y-105"
+              >
+                {confirmationText}
+              </p>
+            </div>
+          )}
+        </div>
+        {renderView()}
+      </MainContent>
       <Footer />
     </PageWrapper>
   );

@@ -88,6 +88,7 @@ type SystemEdge {
 Parameters required to create an AccessibilityRequest
 """
 input CreateAccessibilityRequestInput {
+  intakeID: UUID!
   name: String!
 }
 
