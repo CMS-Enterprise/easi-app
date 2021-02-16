@@ -476,12 +476,12 @@ you can send a GET to the health check endpoint:
 
 ### GraphQL Playground
 
-You can visit `http://localhost:8080/graph/playground`
+You can visit `http://localhost:8080/api/graph/playground`
 to access a GraphQL playground while
 the Go backend is running. **You will need to enter `/graph/query` as the query
 path in the UI for this to work.**
 
-#### Authorization
+### Authorization
 
 Setting this `APP_ENV` environment variable to "local"
 will turn off API authorization.
@@ -494,3 +494,23 @@ by logging into [the development app](dev.easi.cms.gov)
 and copying `okta-token-storage/accessToken` from the browser's local storage.
 Place this in the `Authorization` header
 as `Bearer ${accessToken}`.
+
+### Routes Debugging
+
+Setting the `DEBUG_ROUTES` environment variable, and upon startup, this will
+log out a representation of all routes that have been registered.
+
+```shell
+$ DEBUG_ROUTES=1 ./bin/easi serve
+...
+ROUTE: /api/v1/healthcheck
+Path regexp: ^/api/v1/healthcheck$
+Queries templates:
+Queries regexps:
+
+ROUTE: /api/graph/playground
+Path regexp: ^/api/graph/playground$
+Queries templates:
+Queries regexps:
+...
+```

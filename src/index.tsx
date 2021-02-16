@@ -82,7 +82,16 @@ const authLink = setContext((request, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  resolvers: {
+    AccessibilityRequest: {
+      documents: () => [
+        { name: 'Testing VPAT', uploadedAt: '2021-02-02T17:28:29Z' },
+        { name: 'Test Results', uploadedAt: '2021-02-06T17:28:29Z' },
+        { name: 'Remediation Plan', uploadedAt: '2021-02-08T17:28:29Z' }
+      ]
+    }
+  }
 });
 
 let app;

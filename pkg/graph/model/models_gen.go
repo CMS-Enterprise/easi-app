@@ -2,10 +2,27 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+	"time"
+
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/google/uuid"
+)
+
+// A document that belongs to an accessibility request
+type AccessibilityRequestDocument struct {
+	ID         uuid.UUID `json:"id"`
+	Name       string    `json:"name"`
+	UploadedAt time.Time `json:"uploadedAt"`
+}
+
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
-	Cursor string                `json:"cursor"`
-	Node   *AccessibilityRequest `json:"node"`
+	Cursor string                       `json:"cursor"`
+	Node   *models.AccessibilityRequest `json:"node"`
 }
 
 // A collection of AccessibilityRequests
@@ -21,8 +38,42 @@ type CreateAccessibilityRequestInput struct {
 
 // Result of CreateAccessibilityRequest
 type CreateAccessibilityRequestPayload struct {
-	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
-	UserErrors           []*UserError          `json:"userErrors"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
+	UserErrors           []*UserError                 `json:"userErrors"`
+}
+
+// Parameters for creating a test date
+type CreateTestDateInput struct {
+	Date      time.Time        `json:"date"`
+	RequestID uuid.UUID        `json:"requestID"`
+	Score     *int             `json:"score"`
+	TestType  TestDateTestType `json:"testType"`
+}
+
+// Result of createTestDate
+type CreateTestDatePayload struct {
+	TestDate   *TestDate    `json:"testDate"`
+	UserErrors []*UserError `json:"userErrors"`
+}
+
+// A collection of Systems
+type SystemConnection struct {
+	Edges      []*SystemEdge `json:"edges"`
+	TotalCount int           `json:"totalCount"`
+}
+
+// An edge of an SystemConnection
+type SystemEdge struct {
+	Cursor string         `json:"cursor"`
+	Node   *models.System `json:"node"`
+}
+
+// A 508 test instance
+type TestDate struct {
+	Date     time.Time        `json:"date"`
+	ID       uuid.UUID        `json:"id"`
+	Score    *int             `json:"score"`
+	TestType TestDateTestType `json:"testType"`
 }
 
 // UserError represents application-level errors that are the result of
@@ -30,4 +81,98 @@ type CreateAccessibilityRequestPayload struct {
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+// A user role associated with a job code
+type Role string
+
+const (
+	// A 508 Tester
+	RoleEasi508Tester Role = "EASI_508_TESTER"
+	// A 508 request owner
+	RoleEasi508User Role = "EASI_508_USER"
+	// A member of the GRT
+	RoleEasiGovteam Role = "EASI_GOVTEAM"
+	// A generic EASi user
+	RoleEasiUser Role = "EASI_USER"
+)
+
+var AllRole = []Role{
+	RoleEasi508Tester,
+	RoleEasi508User,
+	RoleEasiGovteam,
+	RoleEasiUser,
+}
+
+func (e Role) IsValid() bool {
+	switch e {
+	case RoleEasi508Tester, RoleEasi508User, RoleEasiGovteam, RoleEasiUser:
+		return true
+	}
+	return false
+}
+
+func (e Role) String() string {
+	return string(e)
+}
+
+func (e *Role) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Role(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Role", str)
+	}
+	return nil
+}
+
+func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The variety of a 508 test
+type TestDateTestType string
+
+const (
+	// Represents an initial 508 test
+	TestDateTestTypeInitial TestDateTestType = "INITIAL"
+	// Represents a remediation test
+	TestDateTestTypeRemediation TestDateTestType = "REMEDIATION"
+)
+
+var AllTestDateTestType = []TestDateTestType{
+	TestDateTestTypeInitial,
+	TestDateTestTypeRemediation,
+}
+
+func (e TestDateTestType) IsValid() bool {
+	switch e {
+	case TestDateTestTypeInitial, TestDateTestTypeRemediation:
+		return true
+	}
+	return false
+}
+
+func (e TestDateTestType) String() string {
+	return string(e)
+}
+
+func (e *TestDateTestType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TestDateTestType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TestDateTestType", str)
+	}
+	return nil
+}
+
+func (e TestDateTestType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
