@@ -97,7 +97,14 @@ task :migrate do
   loop do
     sleep 0.5
     status = `docker-compose ps | grep easi-app_db_migrate_1`
-    break if /Exit 0/ =~ status
+    match = /Exit (\d+)/.match(status)
+    if match
+      unless match[1] == "0"
+        puts "Migration failed, check the logs!"
+        exit(1)
+      end
+      break
+    end
   end
 end
 
