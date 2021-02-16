@@ -6,7 +6,6 @@ import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery
 import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
-import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 
@@ -37,7 +36,7 @@ const List = () => {
     });
 
   return (
-    <MainContent className="margin-bottom-5">
+    <>
       <SecondaryNav>
         <NavLink to="/">508 Requests</NavLink>
       </SecondaryNav>
@@ -54,7 +53,7 @@ const List = () => {
         </div>
         <AccessibilityRequestsTable requests={requests || []} />
       </div>
-    </MainContent>
+    </>
   );
 };
 
