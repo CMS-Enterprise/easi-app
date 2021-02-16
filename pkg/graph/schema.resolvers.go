@@ -20,7 +20,16 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 }
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
-	panic(fmt.Errorf("not implemented"))
+	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
+	if systemErr != nil {
+		return nil, systemErr
+	}
+	system.BusinessOwner = &models.BusinessOwner{
+		Name:      system.BusinessOwnerName.String,
+		Component: system.BusinessOwnerComponent.String,
+	}
+
+	return system, nil
 }
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
@@ -38,7 +47,7 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
-	testDate, err := r.createTestDate(ctx, &models.TestDate{
+	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
 		TestType:  input.TestType,
 		Date:      input.Date,
 		Score:     input.Score,
@@ -73,7 +82,22 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 }
 
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
-	panic(fmt.Errorf("not implemented"))
+	systems, err := r.store.ListSystems(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	conn := &model.SystemConnection{}
+	for _, system := range systems {
+		system.BusinessOwner = &models.BusinessOwner{
+			Name:      system.BusinessOwnerName.String,
+			Component: system.BusinessOwnerComponent.String,
+		}
+		conn.Edges = append(conn.Edges, &model.SystemEdge{
+			Node: system,
+		})
+	}
+	return conn, nil
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.

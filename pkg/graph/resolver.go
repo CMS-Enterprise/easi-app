@@ -15,14 +15,19 @@ import (
 
 // Resolver is a resolver.
 type Resolver struct {
-	store          *storage.Store
-	createTestDate func(context.Context, *models.TestDate) (*models.TestDate, error)
+	store   *storage.Store
+	service ResolverService
+}
+
+// ResolverService holds service methods for use in resolvers
+type ResolverService struct {
+	CreateTestDate func(context.Context, *models.TestDate) (*models.TestDate, error)
 }
 
 // NewResolver constructs a resolver
 func NewResolver(
 	store *storage.Store,
-	createTestDate func(context.Context, *models.TestDate) (*models.TestDate, error),
+	service ResolverService,
 ) *Resolver {
-	return &Resolver{store: store, createTestDate: createTestDate}
+	return &Resolver{store: store, service: service}
 }

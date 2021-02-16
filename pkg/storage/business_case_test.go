@@ -31,6 +31,23 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.Len(fetched.LifecycleCostLines, 2)
 	})
 
+	s.Run("fetches an open business case", func() {
+		intake := testhelpers.NewSystemIntake()
+		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		s.NoError(err)
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.Status = models.BusinessCaseStatusOPEN
+		businessCase.SystemIntakeID = intake.ID
+		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
+		s.NoError(err)
+		fetched, err := s.store.FetchOpenBusinessCaseByIntakeID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch business case")
+		s.Equal(created.ID, fetched.ID)
+		s.Equal(businessCase.EUAUserID, fetched.EUAUserID)
+		s.Len(fetched.LifecycleCostLines, 2)
+	})
+
 	s.Run("cannot without an ID that exists in the db", func() {
 		badUUID, _ := uuid.Parse("")
 		fetched, err := s.store.FetchBusinessCaseByID(ctx, badUUID)
