@@ -176,7 +176,10 @@ const Create = () => {
                         <Label htmlFor="508Request-RequestName">
                           {t('newRequestForm.fields.requestName.label')}
                         </Label>
-                        <HelpText id="508Request-RequestName">
+                        <HelpText
+                          id="508Request-RequestName"
+                          className="margin-top-1"
+                        >
                           {t('newRequestForm.fields.requestName.help')}
                         </HelpText>
                         <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
