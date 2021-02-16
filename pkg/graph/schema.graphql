@@ -12,9 +12,53 @@ An accessibility request represents a system that needs to go through
 the 508 process.
 """
 type AccessibilityRequest {
+  documents: [AccessibilityRequestDocument!]!
+  id: UUID!
+  submittedAt: Time!
+  system: System!
+}
+
+"""
+A business owner is the person at CMS responsible for a system
+"""
+type BusinessOwner {
+  component: String!
+  name: String!
+}
+
+"""
+A system is derived from a system intake and represents a computer system managed by CMS
+"""
+type System {
+  businessOwner: BusinessOwner!
+  id: UUID!
+  lcid: String!
+  name: String!
+}
+
+"""
+A collection of Systems
+"""
+type SystemConnection {
+  edges: [SystemEdge!]!
+  totalCount: Int!
+}
+
+"""
+An edge of an SystemConnection
+"""
+type SystemEdge {
+  cursor: String!
+  node: System!
+}
+
+"""
+A document that belongs to an accessibility request
+"""
+type AccessibilityRequestDocument {
   id: UUID!
   name: String!
-  submittedAt: Time!
+  uploadedAt: Time!
 }
 
 """
@@ -49,12 +93,58 @@ type AccessibilityRequestEdge {
 }
 
 """
+A 508 test instance
+"""
+type TestDate {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+The variety of a 508 test
+"""
+enum TestDateTestType {
+  """
+  Represents an initial 508 test
+  """
+  INITIAL
+
+  """
+  Represents a remediation test
+  """
+  REMEDIATION
+}
+
+"""
+Parameters for creating a test date
+"""
+input CreateTestDateInput {
+  date: Time!
+  requestID: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+Result of createTestDate
+"""
+type CreateTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+"""
 The root mutation
 """
 type Mutation {
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput
   ): CreateAccessibilityRequestPayload
+  createTestDate(
+    input: CreateTestDateInput
+  ): CreateTestDatePayload @hasRole(role: EASI_508_TESTER)
 }
 
 """
@@ -66,6 +156,10 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
+  systems(
+    after: String
+    first: Int!
+  ): SystemConnection
 }
 
 """
@@ -77,3 +171,30 @@ scalar UUID
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
 """
 scalar Time
+
+directive @hasRole(role: Role!) on FIELD_DEFINITION
+
+"""
+A user role associated with a job code
+"""
+enum Role {
+  """
+  A 508 Tester
+  """
+  EASI_508_TESTER
+
+  """
+  A 508 request owner
+  """
+  EASI_508_USER
+
+  """
+  A member of the GRT
+  """
+  EASI_GOVTEAM
+
+  """
+  A generic EASi user
+  """
+  EASI_USER
+}

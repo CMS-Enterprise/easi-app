@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
+import PlainInfo from 'components/PlainInfo';
+
 const WelcomeText = () => {
   const { t } = useTranslation();
   const { authState } = useOktaAuth();
@@ -14,11 +16,8 @@ const WelcomeText = () => {
       <p className="line-height-body-5 font-body-lg text-light">
         {t('home:subtitle')}
       </p>
-      <div className="easi-home__info-wrapper">
-        <div className="easi-home__info-icon">
-          <i className="fa fa-info" />
-        </div>
-        <p className="line-height-body-5">
+      <div className="margin-bottom-6">
+        <PlainInfo>
           <Trans i18nKey="home:easiInfo">
             zeroIndex
             <a
@@ -29,7 +28,7 @@ const WelcomeText = () => {
               localeLink
             </a>
           </Trans>
-        </p>
+        </PlainInfo>
       </div>
       {authState.isAuthenticated ? (
         <UswdsLink

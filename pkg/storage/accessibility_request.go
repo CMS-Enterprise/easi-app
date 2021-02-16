@@ -10,12 +10,11 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // CreateAccessibilityRequest adds a new accessibility request in the database
-func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *model.AccessibilityRequest) (*model.AccessibilityRequest, error) {
+func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *models.AccessibilityRequest) (*models.AccessibilityRequest, error) {
 	if request.ID == uuid.Nil {
 		request.ID = uuid.New()
 	}
@@ -27,15 +26,17 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *model.A
 		request.UpdatedAt = &createAt
 	}
 	const createRequestSQL = `
-		INSERT INTO accessibility_request (
+		INSERT INTO accessibility_requests (
 			id,
 			name,
+			intake_id,
 			created_at,
 			updated_at
 		)
 		VALUES (
 			:id,
 			:name,
+			:intake_id,
 		    :created_at,
 			:updated_at
 		)`
@@ -44,17 +45,17 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *model.A
 		request,
 	)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error("Failed to create accessibility request with error %s", zap.Error(err))
+		appcontext.ZLogger(ctx).Error("Failed to create accessibility request", zap.Error(err))
 		return nil, err
 	}
 	return s.FetchAccessibilityRequestByID(ctx, request.ID)
 }
 
 // FetchAccessibilityRequestByID queries the DB for an accessibility matching the given ID
-func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID) (*model.AccessibilityRequest, error) {
-	request := model.AccessibilityRequest{}
+func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
+	request := models.AccessibilityRequest{}
 
-	err := s.db.Get(&request, `SELECT * FROM accessibility_request WHERE id=$1`, id)
+	err := s.db.Get(&request, `SELECT * FROM accessibility_requests WHERE id=$1`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
@@ -72,10 +73,10 @@ func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID)
 
 // FetchAccessibilityRequests queries the DB for an accessibility requests.
 // TODO implement cursor pagination
-func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]model.AccessibilityRequest, error) {
-	requests := []model.AccessibilityRequest{}
+func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]models.AccessibilityRequest, error) {
+	requests := []models.AccessibilityRequest{}
 
-	err := s.db.Select(&requests, `SELECT * FROM accessibility_request`)
+	err := s.db.Select(&requests, `SELECT * FROM accessibility_requests`)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return requests, nil
