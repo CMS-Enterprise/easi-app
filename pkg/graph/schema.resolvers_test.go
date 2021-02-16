@@ -3,10 +3,16 @@ package graph
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"testing"
 
 	"github.com/99designs/gqlgen/client"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/client/metadata"
+	"github.com/aws/aws-sdk-go/aws/request"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3iface"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/stretchr/testify/assert"
@@ -27,6 +33,28 @@ type GraphQLTestSuite struct {
 	logger *zap.Logger
 	store  *storage.Store
 	client *client.Client
+}
+
+type mockS3Client struct {
+	s3iface.S3API
+}
+
+func (m mockS3Client) PutObjectRequest(input *s3.PutObjectInput) (*request.Request, *s3.PutObjectOutput) {
+
+	newRequest := request.New(
+		aws.Config{},
+		metadata.ClientInfo{},
+		request.Handlers{},
+		nil,
+		&request.Operation{},
+		nil,
+		nil,
+	)
+
+	newRequest.Handlers.Sign.PushFront(func(r *request.Request) {
+		r.HTTPRequest.URL = &url.URL{Host: "signed.example.com", Path: "signed/123", Scheme: "https"}
+	})
+	return newRequest, &s3.PutObjectOutput{}
 }
 
 func TestGraphQLTestSuite(t *testing.T) {
@@ -55,7 +83,9 @@ func TestGraphQLTestSuite(t *testing.T) {
 		t.Fail()
 	}
 
-	s3Client := upload.NewS3Client(upload.Config{Bucket: "test", Region: "us-west", IsLocal: true})
+	s3Config := upload.Config{Bucket: "test", Region: "us-west", IsLocal: false}
+	mockClient := mockS3Client{}
+	s3Client := upload.NewS3ClientUsingClient(mockClient, s3Config)
 
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, &s3Client)})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
@@ -158,6 +188,6 @@ func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
 			}
 		}`, &resp)
 
-	s.Greater(len(resp.GeneratePresignedUploadURL.URL), 0)
+	s.Equal("https://signed.example.com/signed/123", resp.GeneratePresignedUploadURL.URL)
 	s.Equal(0, len(resp.GeneratePresignedUploadURL.UserErrors))
 }
