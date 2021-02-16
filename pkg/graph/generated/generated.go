@@ -646,6 +646,7 @@ type SystemEdge {
 Parameters required to create an AccessibilityRequest
 """
 input CreateAccessibilityRequestInput {
+  intakeID: UUID!
   name: String!
 }
 
@@ -3638,6 +3639,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestInput(ctx co
 
 	for k, v := range asMap {
 		switch k {
+		case "intakeID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeID"))
+			it.IntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "name":
 			var err error
 

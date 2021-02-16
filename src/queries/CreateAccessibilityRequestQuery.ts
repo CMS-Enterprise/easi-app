@@ -7,9 +7,7 @@ export default gql`
     createAccessibilityRequest(input: $input) {
       accessibilityRequest {
         id
-        system {
-          name
-        }
+        name
       }
       userErrors {
         message
