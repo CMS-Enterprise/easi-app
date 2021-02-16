@@ -46,6 +46,10 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input *model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
 	url, err := r.s3Client.NewPutPresignedURL(input.MimeType)
 	if err != nil {
