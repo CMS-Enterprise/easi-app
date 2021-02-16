@@ -20,7 +20,7 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *models.TestDate) (
 	testDate.CreatedAt = &createAt
 	testDate.UpdatedAt = &createAt
 	const createTestDateSQL = `
-		INSERT INTO test_date (
+		INSERT INTO test_dates (
 			id,
 		    request_id,
 			test_type,
@@ -54,7 +54,7 @@ func (s *Store) CreateTestDate(ctx context.Context, testDate *models.TestDate) (
 func (s *Store) FetchTestDateByID(ctx context.Context, id uuid.UUID) (*models.TestDate, error) {
 	testDate := models.TestDate{}
 
-	err := s.db.GetContext(ctx, &testDate, `SELECT * FROM test_date WHERE id=$1 AND deleted_at IS NULL`, id)
+	err := s.db.GetContext(ctx, &testDate, `SELECT * FROM test_dates WHERE id=$1 AND deleted_at IS NULL`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
