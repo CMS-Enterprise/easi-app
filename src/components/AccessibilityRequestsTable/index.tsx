@@ -8,6 +8,8 @@ import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
+import formatDate from 'utils/formatDate';
+
 // import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 
 type AccessibilityRequestsTableRow = {
@@ -52,7 +54,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+            return formatDate(value);
           }
           return '';
         }
@@ -68,7 +70,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'testedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+            return formatDate(value);
           }
           return '';
         }
