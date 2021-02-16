@@ -30,7 +30,8 @@ const AccessibilityRequestDetailPage = () => {
     }
   );
 
-  const requestName = data?.accessibilityRequest?.system.name || '';
+  const requestName = data?.accessibilityRequest?.name || '';
+  const systemName = data?.accessibilityRequest?.system.name || '';
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
   const lcid = data?.accessibilityRequest?.system.lcid;
   const businessOwnerName =
@@ -75,7 +76,7 @@ const AccessibilityRequestDetailPage = () => {
                 className="usa-button"
                 variant="unstyled"
                 asCustom={Link}
-                to={`/508/requests/${accessibilityRequestId}/document-upload`}
+                to={`/508/requests/${accessibilityRequestId}/documents/new`}
               >
                 {t('requestDetails.documentUpload')}
               </UswdsLink>
@@ -103,6 +104,10 @@ const AccessibilityRequestDetailPage = () => {
                     <dd className="margin-0 margin-bottom-2">
                       {businessOwnerName}, {businessOwnerComponent}
                     </dd>
+                    <dt className="margin-bottom-1">
+                      {t('intake:fields:projectName')}
+                    </dt>
+                    <dd className="margin-0 margin-bottom-3">{systemName}</dd>
                     <dt className="margin-bottom-1">
                       {t('intake:lifecycleId')}
                     </dt>

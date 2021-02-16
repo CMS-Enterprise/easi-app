@@ -5,6 +5,7 @@ export default gql`
     accessibilityRequest(id: $id) {
       id
       submittedAt
+      name
       system {
         name
         lcid

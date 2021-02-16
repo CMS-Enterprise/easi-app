@@ -30,6 +30,7 @@ export interface GetAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
   id: UUID;
   submittedAt: Time;
+  name: string;
   system: GetAccessibilityRequest_accessibilityRequest_system;
   documents: GetAccessibilityRequest_accessibilityRequest_documents[];
 }

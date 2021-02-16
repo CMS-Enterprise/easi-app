@@ -81,7 +81,9 @@ const FileUpload = (props: FileUploadProps) => {
           </div>
         )}
         <div className={instructionsClasses} aria-hidden>
-          <span className="usa-file-input__drag-text">Drag file here or </span>
+          <span className="usa-file-input__drag-text">
+            Drag document here or{' '}
+          </span>
           <span className="usa-file-input__choose">choose from folder</span>
         </div>
         {file && (

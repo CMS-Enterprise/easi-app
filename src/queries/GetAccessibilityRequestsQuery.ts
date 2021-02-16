@@ -7,8 +7,8 @@ export default gql`
         node {
           id
           submittedAt
+          name
           system {
-            name
             lcid
             businessOwner {
               name
