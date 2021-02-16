@@ -12,7 +12,7 @@ const accessibility = {
     view: 'View'
   },
   requestTable: {
-    caption: 'Active 508 Requests',
+    caption: 'List of 508 requests',
     header: {
       requestName: 'Request Name',
       submissionDate: 'Submission Date',
