@@ -47,6 +47,10 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }
