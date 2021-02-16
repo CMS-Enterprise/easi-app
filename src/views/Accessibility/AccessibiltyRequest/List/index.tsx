@@ -1,12 +1,16 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client';
+import { Link } from '@trussworks/react-uswds';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
 import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
 import AccessibilityRequestsTable from 'components/AccessibilityRequestsTable';
-import ScyllaPage from 'components/ScyllaPage';
+import PageHeading from 'components/PageHeading';
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 
 const List = () => {
+  const { t } = useTranslation('home');
   const { loading, error, data } = useQuery<GetAccessibilityRequests>(
     GetAccessibilityRequestsQuery,
     {
@@ -32,9 +36,24 @@ const List = () => {
     });
 
   return (
-    <ScyllaPage>
-      <AccessibilityRequestsTable requests={requests || []} />
-    </ScyllaPage>
+    <>
+      <SecondaryNav>
+        <NavLink to="/">508 Requests</NavLink>
+      </SecondaryNav>
+      <div className="grid-container">
+        <div className="display-flex flex-justify flex-wrap">
+          <PageHeading>{t('accessibility.heading')}</PageHeading>
+          <Link
+            className="usa-button flex-align-self-center"
+            variant="unstyled"
+            href="/508/requests/new"
+          >
+            {t('accessibility.newRequest')}
+          </Link>
+        </div>
+        <AccessibilityRequestsTable requests={requests || []} />
+      </div>
+    </>
   );
 };
 
