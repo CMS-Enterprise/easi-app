@@ -50,14 +50,10 @@ const AccessibilityDocumentsList = ({
               {t('documentTable.view')}
             </UswdsLink>
             <span className="usa-sr-only">{row.original.name}</span>
-            <UswdsLink
-              asCustom={Link}
-              to={`/some-508-request/${row.original.name}`}
-              className="margin-left-2"
-            >
+            {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
               {t('documentTable.remove')}
             </UswdsLink>
-            <span className="usa-sr-only">{row.original.name}</span>
+            <span className="usa-sr-only">{row.original.name}</span> */}
           </>
         )
       }
