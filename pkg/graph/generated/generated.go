@@ -1629,9 +1629,9 @@ func (ec *executionContext) _CreateTestDatePayload_testDate(ctx context.Context,
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.TestDate)
+	res := resTmp.(*models.TestDate)
 	fc.Result = res
-	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDate(ctx, field.Selections, res)
+	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreateTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateTestDatePayload) (ret graphql.Marshaler) {
@@ -2339,7 +2339,7 @@ func (ec *executionContext) _SystemEdge_node(ctx context.Context, field graphql.
 	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _TestDate_date(ctx context.Context, field graphql.CollectedField, obj *model.TestDate) (ret graphql.Marshaler) {
+func (ec *executionContext) _TestDate_date(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2374,7 +2374,7 @@ func (ec *executionContext) _TestDate_date(ctx context.Context, field graphql.Co
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _TestDate_id(ctx context.Context, field graphql.CollectedField, obj *model.TestDate) (ret graphql.Marshaler) {
+func (ec *executionContext) _TestDate_id(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2409,7 +2409,7 @@ func (ec *executionContext) _TestDate_id(ctx context.Context, field graphql.Coll
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _TestDate_score(ctx context.Context, field graphql.CollectedField, obj *model.TestDate) (ret graphql.Marshaler) {
+func (ec *executionContext) _TestDate_score(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2441,7 +2441,7 @@ func (ec *executionContext) _TestDate_score(ctx context.Context, field graphql.C
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphql.CollectedField, obj *model.TestDate) (ret graphql.Marshaler) {
+func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2471,9 +2471,9 @@ func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.TestDateTestType)
+	res := resTmp.(models.TestDateTestType)
 	fc.Result = res
-	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDateTestType(ctx, field.Selections, res)
+	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UserError_message(ctx context.Context, field graphql.CollectedField, obj *model.UserError) (ret graphql.Marshaler) {
@@ -3695,7 +3695,7 @@ func (ec *executionContext) unmarshalInputCreateTestDateInput(ctx context.Contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("testType"))
-			it.TestType, err = ec.unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDateTestType(ctx, v)
+			it.TestType, err = ec.unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4222,7 +4222,7 @@ func (ec *executionContext) _SystemEdge(ctx context.Context, sel ast.SelectionSe
 
 var testDateImplementors = []string{"TestDate"}
 
-func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet, obj *model.TestDate) graphql.Marshaler {
+func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet, obj *models.TestDate) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, testDateImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -4806,14 +4806,20 @@ func (ec *executionContext) marshalNSystemEdge2ᚖgithubᚗcomᚋcmsgovᚋeasi�
 	return ec._SystemEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDateTestType(ctx context.Context, v interface{}) (model.TestDateTestType, error) {
-	var res model.TestDateTestType
-	err := res.UnmarshalGQL(v)
+func (ec *executionContext) unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx context.Context, v interface{}) (models.TestDateTestType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TestDateTestType(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDateTestType(ctx context.Context, sel ast.SelectionSet, v model.TestDateTestType) graphql.Marshaler {
-	return v
+func (ec *executionContext) marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx context.Context, sel ast.SelectionSet, v models.TestDateTestType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
@@ -5235,7 +5241,7 @@ func (ec *executionContext) marshalOSystemConnection2ᚖgithubᚗcomᚋcmsgovᚋ
 	return ec._SystemConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDate(ctx context.Context, sel ast.SelectionSet, v *model.TestDate) graphql.Marshaler {
+func (ec *executionContext) marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx context.Context, sel ast.SelectionSet, v *models.TestDate) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

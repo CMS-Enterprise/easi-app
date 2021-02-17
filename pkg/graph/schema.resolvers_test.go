@@ -87,7 +87,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	mockClient := mockS3Client{}
 	s3Client := upload.NewS3ClientUsingClient(mockClient, s3Config)
 
-	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, &s3Client)})
+	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, ResolverService{}, &s3Client)})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
 	storeTestSuite := &GraphQLTestSuite{
@@ -102,6 +102,9 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),
