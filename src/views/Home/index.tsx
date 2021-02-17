@@ -21,9 +21,7 @@ const Home = () => {
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const history = useHistory();
   const location = useLocation<any>();
-  const [confirmationText, setIsConfirmationText] = useState(
-    'Request has been created'
-  );
+  const [confirmationText, setIsConfirmationText] = useState('');
 
   useEffect(() => {
     if (location.state && location.state.confirmationText) {
