@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -16,7 +17,37 @@ import (
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*model.AccessibilityRequestDocument, error) {
-	panic(fmt.Errorf("not implemented"))
+	files, fileErr := r.store.FetchFilesByAccessibilityRequestID(ctx, obj.ID)
+
+	if fileErr != nil {
+		return nil, fileErr
+	}
+
+	documents := []*model.AccessibilityRequestDocument{}
+
+	for i, file := range *files {
+		document := &model.AccessibilityRequestDocument{}
+		document.ID = file.ID
+		document.Name = fmt.Sprintf("Sara's Test Doc Number %+v", i+1)
+		document.UploadedAt = *file.CreatedAt
+
+		status := "PENDING"
+
+		if file.VirusScanned == null.BoolFrom(true) {
+			if file.VirusClean == null.BoolFrom(false) {
+				status = "UNAVAILABLE"
+			}
+
+			if file.VirusClean == null.BoolFrom(true) {
+				status = "AVAILABLE"
+			}
+		}
+
+		document.Status = model.AccessibilityRequestDocumentStatus(status)
+		documents = append(documents, document)
+	}
+
+	return documents, nil
 }
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
