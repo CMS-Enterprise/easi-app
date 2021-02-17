@@ -38,7 +38,7 @@ const accessibility = {
   createTestDate: {
     addTestDateHeader: 'Add a test date for {{requestName}}',
     testTypeHeader: 'What type of test?',
-    dateHeader: 'TestDate',
+    dateHeader: 'Test date',
     dateHelpText: 'For example: 4 28 2020',
     scoreHeader: 'Does this test have a score?',
     scoreValueHeader: 'Test Score',
