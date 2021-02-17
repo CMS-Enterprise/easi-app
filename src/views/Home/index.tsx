@@ -76,7 +76,7 @@ const Home = () => {
       <MainContent className="margin-bottom-5">
         {confirmationText && (
           <div className="grid-container margin-top-6">
-            <Alert type="success" slim>
+            <Alert type="success" slim role="alert">
               {confirmationText}
             </Alert>
           </div>

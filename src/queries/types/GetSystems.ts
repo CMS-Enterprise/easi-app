@@ -16,6 +16,7 @@ export interface GetSystems_systems_edges_node_businessOwner {
 export interface GetSystems_systems_edges_node {
   __typename: "System";
   id: UUID;
+  lcid: string;
   name: string;
   businessOwner: GetSystems_systems_edges_node_businessOwner;
 }
