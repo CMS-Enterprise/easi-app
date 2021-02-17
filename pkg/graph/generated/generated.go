@@ -53,12 +53,16 @@ type ComplexityRoot struct {
 		CreatedAt func(childComplexity int) int
 		Documents func(childComplexity int) int
 		ID        func(childComplexity int) int
+		Name      func(childComplexity int) int
 		System    func(childComplexity int) int
 	}
 
 	AccessibilityRequestDocument struct {
 		ID         func(childComplexity int) int
+		Mimetype   func(childComplexity int) int
 		Name       func(childComplexity int) int
+		RequestID  func(childComplexity int) int
+		Status     func(childComplexity int) int
 		UploadedAt func(childComplexity int) int
 	}
 
@@ -87,9 +91,15 @@ type ComplexityRoot struct {
 		UserErrors func(childComplexity int) int
 	}
 
+	GeneratePresignedUploadURLPayload struct {
+		URL        func(childComplexity int) int
+		UserErrors func(childComplexity int) int
+	}
+
 	Mutation struct {
 		CreateAccessibilityRequest func(childComplexity int, input *model.CreateAccessibilityRequestInput) int
 		CreateTestDate             func(childComplexity int, input *model.CreateTestDateInput) int
+		GeneratePresignedUploadURL func(childComplexity int, input *model.GeneratePresignedUploadURLInput) int
 	}
 
 	Query struct {
@@ -136,6 +146,7 @@ type AccessibilityRequestResolver interface {
 type MutationResolver interface {
 	CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
 	CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
+	GeneratePresignedUploadURL(ctx context.Context, input *model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -179,6 +190,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccessibilityRequest.ID(childComplexity), true
 
+	case "AccessibilityRequest.name":
+		if e.complexity.AccessibilityRequest.Name == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequest.Name(childComplexity), true
+
 	case "AccessibilityRequest.system":
 		if e.complexity.AccessibilityRequest.System == nil {
 			break
@@ -193,12 +211,33 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccessibilityRequestDocument.ID(childComplexity), true
 
+	case "AccessibilityRequestDocument.mimetype":
+		if e.complexity.AccessibilityRequestDocument.Mimetype == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestDocument.Mimetype(childComplexity), true
+
 	case "AccessibilityRequestDocument.name":
 		if e.complexity.AccessibilityRequestDocument.Name == nil {
 			break
 		}
 
 		return e.complexity.AccessibilityRequestDocument.Name(childComplexity), true
+
+	case "AccessibilityRequestDocument.requestId":
+		if e.complexity.AccessibilityRequestDocument.RequestID == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestDocument.RequestID(childComplexity), true
+
+	case "AccessibilityRequestDocument.status":
+		if e.complexity.AccessibilityRequestDocument.Status == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestDocument.Status(childComplexity), true
 
 	case "AccessibilityRequestDocument.uploadedAt":
 		if e.complexity.AccessibilityRequestDocument.UploadedAt == nil {
@@ -277,6 +316,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateTestDatePayload.UserErrors(childComplexity), true
 
+	case "GeneratePresignedUploadURLPayload.url":
+		if e.complexity.GeneratePresignedUploadURLPayload.URL == nil {
+			break
+		}
+
+		return e.complexity.GeneratePresignedUploadURLPayload.URL(childComplexity), true
+
+	case "GeneratePresignedUploadURLPayload.userErrors":
+		if e.complexity.GeneratePresignedUploadURLPayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
+
 	case "Mutation.createAccessibilityRequest":
 		if e.complexity.Mutation.CreateAccessibilityRequest == nil {
 			break
@@ -300,6 +353,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateTestDate(childComplexity, args["input"].(*model.CreateTestDateInput)), true
+
+	case "Mutation.generatePresignedUploadURL":
+		if e.complexity.Mutation.GeneratePresignedUploadURL == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_generatePresignedUploadURL_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.GeneratePresignedUploadURL(childComplexity, args["input"].(*model.GeneratePresignedUploadURLInput)), true
 
 	case "Query.accessibilityRequest":
 		if e.complexity.Query.AccessibilityRequest == nil {
@@ -515,6 +580,7 @@ the 508 process.
 type AccessibilityRequest {
   documents: [AccessibilityRequestDocument!]!
   id: UUID!
+  name: String!
   submittedAt: Time!
   system: System!
 }
@@ -538,6 +604,38 @@ type System {
 }
 
 """
+Represents the availability of a document
+"""
+enum AccessibilityRequestDocumentStatus {
+  """
+  Passed security screen
+  """
+  AVAILABLE
+
+  """
+  Just uploaded
+  """
+  PENDING
+
+  """
+  Failed security screen
+  """
+  UNAVAILABLE
+}
+
+"""
+A document that belongs to an accessibility request
+"""
+type AccessibilityRequestDocument {
+  id: UUID!
+  mimetype: String!
+  name: String!
+  requestId: UUID!
+  status: AccessibilityRequestDocumentStatus!
+  uploadedAt: Time!
+}
+
+"""
 A collection of Systems
 """
 type SystemConnection {
@@ -554,18 +652,10 @@ type SystemEdge {
 }
 
 """
-A document that belongs to an accessibility request
-"""
-type AccessibilityRequestDocument {
-  id: UUID!
-  name: String!
-  uploadedAt: Time!
-}
-
-"""
 Parameters required to create an AccessibilityRequest
 """
 input CreateAccessibilityRequestInput {
+  intakeID: UUID!
   name: String!
 }
 
@@ -574,6 +664,21 @@ Result of CreateAccessibilityRequest
 """
 type CreateAccessibilityRequestPayload {
   accessibilityRequest: AccessibilityRequest
+  userErrors: [UserError!]
+}
+
+"""
+Parameters required to generate a presigned upload URL
+"""
+input GeneratePresignedUploadURLInput {
+  mimeType: String!
+}
+
+"""
+Result of CreateAccessibilityRequest
+"""
+type GeneratePresignedUploadURLPayload {
+  url: String
   userErrors: [UserError!]
 }
 
@@ -643,9 +748,11 @@ type Mutation {
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput
   ): CreateAccessibilityRequestPayload
-  createTestDate(
-    input: CreateTestDateInput
-  ): CreateTestDatePayload @hasRole(role: EASI_508_TESTER)
+  createTestDate(input: CreateTestDateInput): CreateTestDatePayload
+    @hasRole(role: EASI_508_TESTER)
+  generatePresignedUploadURL(
+    input: GeneratePresignedUploadURLInput
+  ): GeneratePresignedUploadURLPayload
 }
 
 """
@@ -657,10 +764,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  systems(
-    after: String
-    first: Int!
-  ): SystemConnection
+  systems(after: String, first: Int!): SystemConnection
 }
 
 """
@@ -744,6 +848,21 @@ func (ec *executionContext) field_Mutation_createTestDate_args(ctx context.Conte
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalOCreateTestDateInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDateInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_generatePresignedUploadURL_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.GeneratePresignedUploadURLInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOGeneratePresignedUploadURLInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -938,6 +1057,41 @@ func (ec *executionContext) _AccessibilityRequest_id(ctx context.Context, field 
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AccessibilityRequest_name(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AccessibilityRequest_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1043,6 +1197,41 @@ func (ec *executionContext) _AccessibilityRequestDocument_id(ctx context.Context
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AccessibilityRequestDocument_mimetype(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocument) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestDocument",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Mimetype, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AccessibilityRequestDocument_name(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocument) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1076,6 +1265,76 @@ func (ec *executionContext) _AccessibilityRequestDocument_name(ctx context.Conte
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequestDocument_requestId(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocument) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestDocument",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.RequestID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequestDocument_status(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocument) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestDocument",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.AccessibilityRequestDocumentStatus)
+	fc.Result = res
+	return ec.marshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestDocument_uploadedAt(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocument) (ret graphql.Marshaler) {
@@ -1414,9 +1673,9 @@ func (ec *executionContext) _CreateTestDatePayload_testDate(ctx context.Context,
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.TestDate)
+	res := resTmp.(*models.TestDate)
 	fc.Result = res
-	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDate(ctx, field.Selections, res)
+	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _CreateTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.CreateTestDatePayload) (ret graphql.Marshaler) {
@@ -1428,6 +1687,70 @@ func (ec *executionContext) _CreateTestDatePayload_userErrors(ctx context.Contex
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "CreateTestDatePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _GeneratePresignedUploadURLPayload_url(ctx context.Context, field graphql.CollectedField, obj *model.GeneratePresignedUploadURLPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GeneratePresignedUploadURLPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _GeneratePresignedUploadURLPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.GeneratePresignedUploadURLPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GeneratePresignedUploadURLPayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -1551,6 +1874,45 @@ func (ec *executionContext) _Mutation_createTestDate(ctx context.Context, field 
 	res := resTmp.(*model.CreateTestDatePayload)
 	fc.Result = res
 	return ec.marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDatePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_generatePresignedUploadURL(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_generatePresignedUploadURL_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().GeneratePresignedUploadURL(rctx, args["input"].(*model.GeneratePresignedUploadURLInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.GeneratePresignedUploadURLPayload)
+	fc.Result = res
+	return ec.marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2021,7 +2383,7 @@ func (ec *executionContext) _SystemEdge_node(ctx context.Context, field graphql.
 	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _TestDate_date(ctx context.Context, field graphql.CollectedField, obj *model.TestDate) (ret graphql.Marshaler) {
+func (ec *executionContext) _TestDate_date(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2056,7 +2418,7 @@ func (ec *executionContext) _TestDate_date(ctx context.Context, field graphql.Co
 	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _TestDate_id(ctx context.Context, field graphql.CollectedField, obj *model.TestDate) (ret graphql.Marshaler) {
+func (ec *executionContext) _TestDate_id(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2091,7 +2453,7 @@ func (ec *executionContext) _TestDate_id(ctx context.Context, field graphql.Coll
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _TestDate_score(ctx context.Context, field graphql.CollectedField, obj *model.TestDate) (ret graphql.Marshaler) {
+func (ec *executionContext) _TestDate_score(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2123,7 +2485,7 @@ func (ec *executionContext) _TestDate_score(ctx context.Context, field graphql.C
 	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphql.CollectedField, obj *model.TestDate) (ret graphql.Marshaler) {
+func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2153,9 +2515,9 @@ func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphq
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.TestDateTestType)
+	res := resTmp.(models.TestDateTestType)
 	fc.Result = res
-	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDateTestType(ctx, field.Selections, res)
+	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UserError_message(ctx context.Context, field graphql.CollectedField, obj *model.UserError) (ret graphql.Marshaler) {
@@ -3321,6 +3683,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestInput(ctx co
 
 	for k, v := range asMap {
 		switch k {
+		case "intakeID":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeID"))
+			it.IntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "name":
 			var err error
 
@@ -3369,7 +3739,27 @@ func (ec *executionContext) unmarshalInputCreateTestDateInput(ctx context.Contex
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("testType"))
-			it.TestType, err = ec.unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDateTestType(ctx, v)
+			it.TestType, err = ec.unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
+	var it model.GeneratePresignedUploadURLInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "mimeType":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mimeType"))
+			it.MimeType, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3414,6 +3804,11 @@ func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.S
 			})
 		case "id":
 			out.Values[i] = ec._AccessibilityRequest_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "name":
+			out.Values[i] = ec._AccessibilityRequest_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
@@ -3463,8 +3858,23 @@ func (ec *executionContext) _AccessibilityRequestDocument(ctx context.Context, s
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "mimetype":
+			out.Values[i] = ec._AccessibilityRequestDocument_mimetype(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "name":
 			out.Values[i] = ec._AccessibilityRequestDocument_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "requestId":
+			out.Values[i] = ec._AccessibilityRequestDocument_requestId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "status":
+			out.Values[i] = ec._AccessibilityRequestDocument_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3632,6 +4042,32 @@ func (ec *executionContext) _CreateTestDatePayload(ctx context.Context, sel ast.
 	return out
 }
 
+var generatePresignedUploadURLPayloadImplementors = []string{"GeneratePresignedUploadURLPayload"}
+
+func (ec *executionContext) _GeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, obj *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, generatePresignedUploadURLPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GeneratePresignedUploadURLPayload")
+		case "url":
+			out.Values[i] = ec._GeneratePresignedUploadURLPayload_url(ctx, field, obj)
+		case "userErrors":
+			out.Values[i] = ec._GeneratePresignedUploadURLPayload_userErrors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -3651,6 +4087,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createAccessibilityRequest(ctx, field)
 		case "createTestDate":
 			out.Values[i] = ec._Mutation_createTestDate(ctx, field)
+		case "generatePresignedUploadURL":
+			out.Values[i] = ec._Mutation_generatePresignedUploadURL(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3833,7 +4271,7 @@ func (ec *executionContext) _SystemEdge(ctx context.Context, sel ast.SelectionSe
 
 var testDateImplementors = []string{"TestDate"}
 
-func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet, obj *model.TestDate) graphql.Marshaler {
+func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet, obj *models.TestDate) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, testDateImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -4204,6 +4642,16 @@ func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚖgithubᚗcom
 	return ec._AccessibilityRequestDocument(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentStatus(ctx context.Context, v interface{}) (model.AccessibilityRequestDocumentStatus, error) {
+	var res model.AccessibilityRequestDocumentStatus
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentStatus(ctx context.Context, sel ast.SelectionSet, v model.AccessibilityRequestDocumentStatus) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.AccessibilityRequestEdge) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -4407,14 +4855,20 @@ func (ec *executionContext) marshalNSystemEdge2ᚖgithubᚗcomᚋcmsgovᚋeasi�
 	return ec._SystemEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDateTestType(ctx context.Context, v interface{}) (model.TestDateTestType, error) {
-	var res model.TestDateTestType
-	err := res.UnmarshalGQL(v)
+func (ec *executionContext) unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx context.Context, v interface{}) (models.TestDateTestType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.TestDateTestType(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDateTestType(ctx context.Context, sel ast.SelectionSet, v model.TestDateTestType) graphql.Marshaler {
-	return v
+func (ec *executionContext) marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx context.Context, sel ast.SelectionSet, v models.TestDateTestType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v interface{}) (time.Time, error) {
@@ -4775,6 +5229,21 @@ func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsg
 	return ec._CreateTestDatePayload(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalOGeneratePresignedUploadURLInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx context.Context, v interface{}) (*model.GeneratePresignedUploadURLInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputGeneratePresignedUploadURLInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, v *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._GeneratePresignedUploadURLPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
 	if v == nil {
 		return nil, nil
@@ -4821,7 +5290,7 @@ func (ec *executionContext) marshalOSystemConnection2ᚖgithubᚗcomᚋcmsgovᚋ
 	return ec._SystemConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐTestDate(ctx context.Context, sel ast.SelectionSet, v *model.TestDate) graphql.Marshaler {
+func (ec *executionContext) marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx context.Context, sel ast.SelectionSet, v *models.TestDate) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
