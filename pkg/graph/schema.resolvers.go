@@ -48,7 +48,16 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
+		TestType:  input.TestType,
+		Date:      input.Date,
+		Score:     input.Score,
+		RequestID: input.RequestID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.CreateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
 }
 
 func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input *model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
