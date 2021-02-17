@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The confirmation message matches the snapshot 1`] = `
+<div
+  className="easi-confirmation-message"
+>
+  <div
+    className="fa fa-check-circle fa-2x margin-left-3 margin-right-2"
+  />
+  <p
+    className="margin-0"
+    role="alert"
+  >
+    Confirmation message without errors
+  </p>
+</div>
+`;
