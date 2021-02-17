@@ -78,9 +78,11 @@ jobs:
       - checkout
       - run:
           name: Check deployed image for vulnerability findings - impl
+          command: |
             APP_ENV=impl ./scripts/check_deployed_image_findings "easi-backend" "4"
       - run:
           name: Check deployed image for vulnerability findings - prod
+          command: |
             APP_ENV=prod ./scripts/check_deployed_image_findings "easi-backend" "4"
       - run:
           name: Announce failure
