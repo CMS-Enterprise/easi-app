@@ -28,7 +28,7 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 	for i, file := range *files {
 		document := &model.AccessibilityRequestDocument{}
 		document.ID = file.ID
-		document.Name = fmt.Sprintf("Sara's Test Doc Number %+v", i+1)
+		document.Name = fmt.Sprintf("Test Doc Number %+v", i+1)
 		document.UploadedAt = *file.CreatedAt
 
 		status := "PENDING"
