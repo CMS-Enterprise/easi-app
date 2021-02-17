@@ -73,7 +73,7 @@ func (s *Store) FetchFilesByAccessibilityRequestID(ctx context.Context, id uuid.
 
 	results := []models.UploadedFile{}
 	// eventually, we should use the id here, but we don't have the db relationship set up yet
-	err := s.db.Select(&results, "SELECT * FROM accessibility_request_files")
+	err := s.db.Select(&results, "SELECT * FROM accessibility_request_files where request_id=$1", id)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch uploaded file", zap.Error(err))
