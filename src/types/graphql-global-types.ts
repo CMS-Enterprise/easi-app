@@ -11,6 +11,7 @@
  * Parameters required to create an AccessibilityRequest
  */
 export interface CreateAccessibilityRequestInput {
+  intakeID: UUID;
   name: string;
 }
 
