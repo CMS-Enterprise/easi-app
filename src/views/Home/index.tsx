@@ -21,7 +21,9 @@ const Home = () => {
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const history = useHistory();
   const location = useLocation<any>();
-  const [confirmationText, setIsConfirmationText] = useState('');
+  const [confirmationText, setIsConfirmationText] = useState(
+    'Request has been created'
+  );
 
   useEffect(() => {
     if (location.state && location.state.confirmationText) {
@@ -75,12 +77,9 @@ const Home = () => {
       <MainContent className="margin-bottom-5">
         <div className="grid-container margin-top-6">
           {confirmationText && (
-            <div className="border-05 border-green">
-              <div className="fa fa-check fa-2x display-inline-block text-middle text-green margin-left-1 margin-right-2" />
-              <p
-                role="alert"
-                className="display-inline-block text-middle margin-y-105"
-              >
+            <div className="easi-home__confirmation">
+              <div className="fa fa-check-circle fa-2x margin-left-3 margin-right-2" />
+              <p role="alert" className="margin-0">
                 {confirmationText}
               </p>
             </div>
