@@ -17,6 +17,7 @@ type AccessibilityRequestDocument struct {
 	ID         uuid.UUID                          `json:"id"`
 	Mimetype   string                             `json:"mimetype"`
 	Name       string                             `json:"name"`
+	RequestID  uuid.UUID                          `json:"requestId"`
 	Status     AccessibilityRequestDocumentStatus `json:"status"`
 	UploadedAt time.Time                          `json:"uploadedAt"`
 }
