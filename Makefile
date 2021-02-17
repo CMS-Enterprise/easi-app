@@ -14,7 +14,7 @@ docker_cleanup: ## Cleanup resources from previous Docker Compose runs
 	docker-compose down --remove-orphans
 
 app_run_docker_local: docker_cleanup ## Run entire app locally in docker
-	docker-compose up --build
+	COMPOSE_HTTP_TIMEOUT=120 docker-compose up --build
 
 db_run_docker_local: docker_cleanup ## Run database and migrations locally in docker
 	docker-compose up --build db db_migrate
