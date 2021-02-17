@@ -8,6 +8,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -16,7 +17,39 @@ import (
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*model.AccessibilityRequestDocument, error) {
-	panic(fmt.Errorf("not implemented"))
+	files, fileErr := r.store.FetchFilesByAccessibilityRequestID(ctx, obj.ID)
+
+	if fileErr != nil {
+		return nil, fileErr
+	}
+
+	documents := []*model.AccessibilityRequestDocument{}
+
+	for i, file := range *files {
+		document := &model.AccessibilityRequestDocument{
+			ID:         file.ID,
+			RequestID:  file.RequestID,
+			Name:       fmt.Sprintf("Test Doc Number %+v", i+1),
+			UploadedAt: *file.CreatedAt,
+		}
+
+		status := "PENDING"
+
+		if file.VirusScanned == null.BoolFrom(true) {
+			if file.VirusClean == null.BoolFrom(false) {
+				status = "UNAVAILABLE"
+			}
+
+			if file.VirusClean == null.BoolFrom(true) {
+				status = "AVAILABLE"
+			}
+		}
+
+		document.Status = model.AccessibilityRequestDocumentStatus(status)
+		documents = append(documents, document)
+	}
+
+	return documents, nil
 }
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
@@ -34,7 +67,8 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.A
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
-		Name: input.Name,
+		Name:     input.Name,
+		IntakeID: input.IntakeID,
 	})
 	if err != nil {
 		return nil, err
@@ -47,7 +81,26 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
+		TestType:  input.TestType,
+		Date:      input.Date,
+		Score:     input.Score,
+		RequestID: input.RequestID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.CreateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
+func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input *model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
+	url, err := r.s3Client.NewPutPresignedURL(input.MimeType)
+	if err != nil {
+		return nil, err
+	}
+	return &model.GeneratePresignedUploadURLPayload{
+		URL: &url.URL,
+	}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {

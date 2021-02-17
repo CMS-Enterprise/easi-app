@@ -14,9 +14,12 @@ import (
 
 // A document that belongs to an accessibility request
 type AccessibilityRequestDocument struct {
-	ID         uuid.UUID `json:"id"`
-	Name       string    `json:"name"`
-	UploadedAt time.Time `json:"uploadedAt"`
+	ID         uuid.UUID                          `json:"id"`
+	Mimetype   string                             `json:"mimetype"`
+	Name       string                             `json:"name"`
+	RequestID  uuid.UUID                          `json:"requestId"`
+	Status     AccessibilityRequestDocumentStatus `json:"status"`
+	UploadedAt time.Time                          `json:"uploadedAt"`
 }
 
 // An edge of an AccessibilityRequestConnection
@@ -33,7 +36,8 @@ type AccessibilityRequestsConnection struct {
 
 // Parameters required to create an AccessibilityRequest
 type CreateAccessibilityRequestInput struct {
-	Name string `json:"name"`
+	IntakeID uuid.UUID `json:"intakeID"`
+	Name     string    `json:"name"`
 }
 
 // Result of CreateAccessibilityRequest
@@ -44,15 +48,26 @@ type CreateAccessibilityRequestPayload struct {
 
 // Parameters for creating a test date
 type CreateTestDateInput struct {
-	Date      time.Time        `json:"date"`
-	RequestID uuid.UUID        `json:"requestID"`
-	Score     *int             `json:"score"`
-	TestType  TestDateTestType `json:"testType"`
+	Date      time.Time               `json:"date"`
+	RequestID uuid.UUID               `json:"requestID"`
+	Score     *int                    `json:"score"`
+	TestType  models.TestDateTestType `json:"testType"`
 }
 
 // Result of createTestDate
 type CreateTestDatePayload struct {
-	TestDate   *TestDate    `json:"testDate"`
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
+}
+
+// Parameters required to generate a presigned upload URL
+type GeneratePresignedUploadURLInput struct {
+	MimeType string `json:"mimeType"`
+}
+
+// Result of CreateAccessibilityRequest
+type GeneratePresignedUploadURLPayload struct {
+	URL        *string      `json:"url"`
 	UserErrors []*UserError `json:"userErrors"`
 }
 
@@ -68,19 +83,58 @@ type SystemEdge struct {
 	Node   *models.System `json:"node"`
 }
 
-// A 508 test instance
-type TestDate struct {
-	Date     time.Time        `json:"date"`
-	ID       uuid.UUID        `json:"id"`
-	Score    *int             `json:"score"`
-	TestType TestDateTestType `json:"testType"`
-}
-
 // UserError represents application-level errors that are the result of
 // either user or application developer error.
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+// Represents the availability of a document
+type AccessibilityRequestDocumentStatus string
+
+const (
+	// Passed security screen
+	AccessibilityRequestDocumentStatusAvailable AccessibilityRequestDocumentStatus = "AVAILABLE"
+	// Just uploaded
+	AccessibilityRequestDocumentStatusPending AccessibilityRequestDocumentStatus = "PENDING"
+	// Failed security screen
+	AccessibilityRequestDocumentStatusUnavailable AccessibilityRequestDocumentStatus = "UNAVAILABLE"
+)
+
+var AllAccessibilityRequestDocumentStatus = []AccessibilityRequestDocumentStatus{
+	AccessibilityRequestDocumentStatusAvailable,
+	AccessibilityRequestDocumentStatusPending,
+	AccessibilityRequestDocumentStatusUnavailable,
+}
+
+func (e AccessibilityRequestDocumentStatus) IsValid() bool {
+	switch e {
+	case AccessibilityRequestDocumentStatusAvailable, AccessibilityRequestDocumentStatusPending, AccessibilityRequestDocumentStatusUnavailable:
+		return true
+	}
+	return false
+}
+
+func (e AccessibilityRequestDocumentStatus) String() string {
+	return string(e)
+}
+
+func (e *AccessibilityRequestDocumentStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccessibilityRequestDocumentStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccessibilityRequestDocumentStatus", str)
+	}
+	return nil
+}
+
+func (e AccessibilityRequestDocumentStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 // A user role associated with a job code
@@ -130,49 +184,5 @@ func (e *Role) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Role) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// The variety of a 508 test
-type TestDateTestType string
-
-const (
-	// Represents an initial 508 test
-	TestDateTestTypeInitial TestDateTestType = "INITIAL"
-	// Represents a remediation test
-	TestDateTestTypeRemediation TestDateTestType = "REMEDIATION"
-)
-
-var AllTestDateTestType = []TestDateTestType{
-	TestDateTestTypeInitial,
-	TestDateTestTypeRemediation,
-}
-
-func (e TestDateTestType) IsValid() bool {
-	switch e {
-	case TestDateTestTypeInitial, TestDateTestTypeRemediation:
-		return true
-	}
-	return false
-}
-
-func (e TestDateTestType) String() string {
-	return string(e)
-}
-
-func (e *TestDateTestType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TestDateTestType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TestDateTestType", str)
-	}
-	return nil
-}
-
-func (e TestDateTestType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
