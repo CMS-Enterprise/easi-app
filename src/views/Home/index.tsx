@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation, withRouter } from 'react-router-dom';
+import { Alert } from '@trussworks/react-uswds';
 
-import ConfirmationMessage from 'components/ConfirmationMessage';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -22,7 +22,7 @@ const Home = () => {
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const history = useHistory();
   const location = useLocation<any>();
-  const [confirmationText, setIsConfirmationText] = useState('');
+  const [confirmationText, setIsConfirmationText] = useState('whattt uppp');
 
   useEffect(() => {
     if (location.state && location.state.confirmationText) {
@@ -76,7 +76,9 @@ const Home = () => {
       <MainContent className="margin-bottom-5">
         {confirmationText && (
           <div className="grid-container margin-top-6">
-            <ConfirmationMessage>{confirmationText}</ConfirmationMessage>
+            <Alert type="success" slim>
+              {confirmationText}
+            </Alert>
           </div>
         )}
         {renderView()}
