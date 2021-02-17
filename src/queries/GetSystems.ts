@@ -6,6 +6,7 @@ export default gql`
       edges {
         node {
           id
+          lcid
           name
           businessOwner {
             name

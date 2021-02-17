@@ -67,10 +67,10 @@ const Create = () => {
   const projectComboBoxOptions = useMemo(() => {
     return systems.map(system => {
       const {
-        node: { id, name }
+        node: { id, lcid, name }
       } = system;
       return {
-        label: `${name} - ${id}`,
+        label: `${name} - ${lcid}`,
         value: id
       };
     });
@@ -146,10 +146,17 @@ const Create = () => {
                         <Label htmlFor="508Request-BusinessOwnerName">
                           {t('newRequestForm.fields.businessOwnerName.label')}
                         </Label>
+                        <HelpText
+                          id="508Request-BusinessOwnerNameHelp"
+                          className="usa-sr-only"
+                        >
+                          {t('newRequestForm.fields.businessOwnerName.help')}
+                        </HelpText>
                         <FormikField
                           as={TextField}
                           id="508Request-BusinessOwnerName"
                           name="businessOwner.name"
+                          aria-describedby="508Request-BusinessOwnerNameHelp"
                           disabled
                         />
                       </FieldGroup>
@@ -160,11 +167,19 @@ const Create = () => {
                             'newRequestForm.fields.businessOwnerComponent.label'
                           )}
                         </Label>
-
+                        <HelpText
+                          id="508Request-BusinessOwnerComponentHelp"
+                          className="usa-sr-only"
+                        >
+                          {t(
+                            'newRequestForm.fields.businessOwnerComponent.help'
+                          )}
+                        </HelpText>
                         <FormikField
                           as={TextField}
                           id="508Form-BusinessOwnerComponent"
                           name="businessOwner.component"
+                          aria-describedby="508Request-BusinessOwnerComponentHelp"
                           disabled
                         />
                       </FieldGroup>
