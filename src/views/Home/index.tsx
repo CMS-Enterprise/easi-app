@@ -22,7 +22,7 @@ const Home = () => {
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const history = useHistory();
   const location = useLocation<any>();
-  const [confirmationText, setIsConfirmationText] = useState('whattt uppp');
+  const [confirmationText, setIsConfirmationText] = useState('');
 
   useEffect(() => {
     if (location.state && location.state.confirmationText) {
