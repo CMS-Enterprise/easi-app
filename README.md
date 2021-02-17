@@ -249,12 +249,12 @@ brew install docker-compose-completion  # optional
 Multiple docker-compose files exist to support different use cases and
 environments.
 
-| File                        | Description                                                                                                                                                               |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| docker-compose.yml          | Base configuration for `db`, `db_migrate`, and `minio` service                                                                                                            |
-| docker-compose.override.yml | Additional configuration for running `db` and `db_migrate` locally. Intended to simplify the use case where someone uses docker-compose only to run `db` and `db_migrate` |
-| docker-compose.circleci.yml | Additional configuration for running all services in CircleCI                                                                                                             |
-| docker-compose.local.yml    | Additional configuration for running all services locally                                                                                                                 |
+| File                        | Description                                                                                                                       |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| docker-compose.yml          | Base configuration for `db`, `db_migrate`, `easi` and `easi_client` services                                                      |
+| docker-compose.override.yml | Additional configuration for running the above services locally. Also adds configuration for `minio` and `prince` lambda services |
+| docker-compose.circleci.yml | Additional configuration for running end-to-end Cypress tests in CircleCI                                                         |
+| docker-compose.local.yml    | Additional configuration for running end-to-end Cypress tests locally                                                             |
 
 ##### Use case: Run database and database migrations locally
 
@@ -262,7 +262,7 @@ Use the following command if you only intend to run the database and database
 migration containers locally:
 
 ```console
-$ docker-compose up --detach
+$ docker-compose up --detach db db_migrate
 Creating easi-app_db_1 ... done
 Creating easi-app_db_migrate_1 ... done
 ```
@@ -312,7 +312,7 @@ Use the following to run the database, database migrations, backend server, and
 frontend client locally in docker.
 
 ```console
-docker-compose up --build
+COMPOSE_HTTP_TIMEOUT=120 docker-compose up --build
 ```
 
 Run the following to shut it down:
