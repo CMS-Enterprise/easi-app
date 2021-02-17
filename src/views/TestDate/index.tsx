@@ -25,8 +25,6 @@ import { TestDateForm } from 'types/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { TestDateValidationSchema } from 'validations/testDateSchema';
 
-import './index.scss';
-
 const TestDate = () => {
   const { t } = useTranslation('accessibility');
   const { accessibilityRequestId } = useParams<{
@@ -77,7 +75,7 @@ const TestDate = () => {
       history.push(`/508/requests/${accessibilityRequestId}`, {
         confirmationText: t('createTestDate.confirmation', {
           date: testDate.toLocaleString(DateTime.DATE_FULL),
-          requestName: data?.accessibilityRequest?.name
+          requestName: data?.accessibilityRequest?.system?.name
         })
       });
     });
@@ -92,52 +90,52 @@ const TestDate = () => {
             {t('tabs.accessibilityRequests')}
           </NavLink>
         </SecondaryNav>
-        <div className="grid-container">
-          <h1 className="margin-top-6 margin-bottom-5">
-            {t('createTestDate.addTestDateHeader', {
-              requestName: data?.accessibilityRequest?.name
-            })}
-          </h1>
-          <div className="grid-row grid-gap-lg">
-            <div className="grid-col-9">
-              <Formik
-                initialValues={initialValues}
-                onSubmit={onSubmit}
-                validationSchema={TestDateValidationSchema}
-                validateOnBlur={false}
-                validateOnChange={false}
-                validateOnMount={false}
-              >
-                {(formikProps: FormikProps<TestDateForm>) => {
-                  const { errors, setFieldValue, values } = formikProps;
-                  const flatErrors = flattenErrors(errors);
-                  return (
-                    <>
-                      {Object.keys(errors).length > 0 && (
-                        <ErrorAlert
-                          testId="test-date-errors"
-                          classNames="margin-top-3"
-                          heading="Please check and fix the following"
-                        >
-                          {Object.keys(flatErrors).map(key => {
-                            return (
-                              <ErrorAlertMessage
-                                key={`Error.${key}`}
-                                errorKey={key}
-                                message={flatErrors[key]}
-                              />
-                            );
-                          })}
-                        </ErrorAlert>
-                      )}
-                      {mutationResult.error && (
-                        <ErrorAlert heading="System error">
+        <div className="grid-container padding-y-6">
+          <Formik
+            initialValues={initialValues}
+            onSubmit={onSubmit}
+            validationSchema={TestDateValidationSchema}
+            validateOnBlur={false}
+            validateOnChange={false}
+            validateOnMount={false}
+          >
+            {(formikProps: FormikProps<TestDateForm>) => {
+              const { errors, setFieldValue, values } = formikProps;
+              const flatErrors = flattenErrors(errors);
+              return (
+                <>
+                  {Object.keys(errors).length > 0 && (
+                    <ErrorAlert
+                      testId="test-date-errors"
+                      classNames="margin-bottom-4"
+                      heading="Please check and fix the following"
+                    >
+                      {Object.keys(flatErrors).map(key => {
+                        return (
                           <ErrorAlertMessage
-                            message={mutationResult.error.message}
-                            errorKey="system"
+                            key={`Error.${key}`}
+                            errorKey={key}
+                            message={flatErrors[key]}
                           />
-                        </ErrorAlert>
-                      )}
+                        );
+                      })}
+                    </ErrorAlert>
+                  )}
+                  {mutationResult.error && (
+                    <ErrorAlert heading="System error">
+                      <ErrorAlertMessage
+                        message={mutationResult.error.message}
+                        errorKey="system"
+                      />
+                    </ErrorAlert>
+                  )}
+                  <h1 className="margin-bottom-1">
+                    {t('createTestDate.addTestDateHeader', {
+                      requestName: data?.accessibilityRequest?.system?.name
+                    })}
+                  </h1>
+                  <div className="grid-row grid-gap-lg">
+                    <div className="grid-col-9">
                       <Form>
                         <FieldGroup error={!!flatErrors.testType}>
                           <fieldset className="usa-fieldset">
@@ -196,7 +194,10 @@ const TestDate = () => {
                               style={{ marginTop: '-2rem' }}
                             >
                               <div className="usa-form-group usa-form-group--month">
-                                <Label htmlFor="TestDate-DateMonth">
+                                <Label
+                                  htmlFor="TestDate-DateMonth"
+                                  className="text-normal"
+                                >
                                   {t('general:date.month')}
                                 </Label>
                                 <Field
@@ -208,7 +209,10 @@ const TestDate = () => {
                                 />
                               </div>
                               <div className="usa-form-group usa-form-group--day">
-                                <Label htmlFor="TestDate-DateDay">
+                                <Label
+                                  htmlFor="TestDate-DateDay"
+                                  className="text-normal"
+                                >
                                   {t('general:date.day')}
                                 </Label>
                                 <Field
@@ -220,7 +224,10 @@ const TestDate = () => {
                                 />
                               </div>
                               <div className="usa-form-group usa-form-group--year">
-                                <Label htmlFor="TestDate-DateYear">
+                                <Label
+                                  htmlFor="TestDate-DateYear"
+                                  className="text-normal"
+                                >
                                   {t('general:date.year')}
                                 </Label>
                                 <Field
@@ -279,9 +286,12 @@ const TestDate = () => {
                                   <Label htmlFor="TestDate-ScoreValue">
                                     {t('createTestDate.scoreValueHeader')}
                                   </Label>
-                                  <legend className="usa-sr-only">
+                                  <Label
+                                    htmlFor="TestDate-ScoreValue"
+                                    className="usa-sr-only"
+                                  >
                                     {t('createTestDate.scoreValueSRHelpText')}
-                                  </legend>
+                                  </Label>
                                   <FieldErrorMsg>
                                     {flatErrors['score.value']}
                                   </FieldErrorMsg>
@@ -317,12 +327,12 @@ const TestDate = () => {
                           {t('createTestDate.cancel')}
                         </Link>
                       </Form>
-                    </>
-                  );
-                }}
-              </Formik>
-            </div>
-          </div>
+                    </div>
+                  </div>
+                </>
+              );
+            }}
+          </Formik>
         </div>
       </MainContent>
       <Footer />

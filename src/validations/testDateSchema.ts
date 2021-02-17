@@ -7,12 +7,12 @@ export const TestDateValidationSchema: any = Yup.object().shape({
   testType: Yup.string()
     .nullable()
     .required('Select the type of test'),
-  dateDay: Yup.string()
-    .trim()
-    .required('Please include a day'),
   dateMonth: Yup.string()
     .trim()
     .required('Please include a month'),
+  dateDay: Yup.string()
+    .trim()
+    .required('Please include a day'),
   dateYear: Yup.string()
     .trim()
     .length(4)
@@ -33,7 +33,7 @@ export const TestDateValidationSchema: any = Yup.object().shape({
     },
     otherwise: Yup.string().test(
       'validateDate',
-      'Date: Please enter a valid date',
+      'The test date must be a real date',
       () => false
     )
   }),
