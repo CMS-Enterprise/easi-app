@@ -149,7 +149,6 @@ const Create = () => {
                         <FormikField
                           as={TextField}
                           id="508Request-BusinessOwnerName"
-                          maxLength={50}
                           name="businessOwner.name"
                           disabled
                         />
@@ -164,7 +163,7 @@ const Create = () => {
 
                         <FormikField
                           as={TextField}
-                          key="508Form-BusinessOwnerComponent"
+                          id="508Form-BusinessOwnerComponent"
                           name="businessOwner.component"
                           disabled
                         />
@@ -177,7 +176,7 @@ const Create = () => {
                           {t('newRequestForm.fields.requestName.label')}
                         </Label>
                         <HelpText
-                          id="508Request-RequestName"
+                          id="508Request-RequestNameHelp"
                           className="margin-top-1"
                         >
                           {t('newRequestForm.fields.requestName.help')}
@@ -189,6 +188,7 @@ const Create = () => {
                           id="508Request-RequestName"
                           maxLength={50}
                           name="requestName"
+                          aria-describedby="508Request-RequestNameHelp"
                         />
                       </FieldGroup>
 
