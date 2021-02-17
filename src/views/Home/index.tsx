@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation, withRouter } from 'react-router-dom';
 
+import ConfirmationMessage from 'components/ConfirmationMessage';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -73,16 +74,11 @@ const Home = () => {
     <PageWrapper>
       <Header />
       <MainContent className="margin-bottom-5">
-        <div className="grid-container margin-top-6">
-          {confirmationText && (
-            <div className="easi-home__confirmation">
-              <div className="fa fa-check-circle fa-2x margin-left-3 margin-right-2" />
-              <p role="alert" className="margin-0">
-                {confirmationText}
-              </p>
-            </div>
-          )}
-        </div>
+        {confirmationText && (
+          <div className="grid-container margin-top-6">
+            <ConfirmationMessage>{confirmationText}</ConfirmationMessage>
+          </div>
+        )}
         {renderView()}
       </MainContent>
       <Footer />
