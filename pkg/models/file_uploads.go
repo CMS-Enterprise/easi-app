@@ -23,4 +23,5 @@ type UploadedFile struct {
 	UpdatedAt    *time.Time  `json:"updatedAt" db:"updated_at"`
 	VirusScanned null.Bool   `json:"virusScanned" db:"virus_scanned"`
 	VirusClean   null.Bool   `json:"virusClean" db:"virus_clean"`
+	RequestID    uuid.UUID   `json:"requestId" db:"request_id"`
 }
