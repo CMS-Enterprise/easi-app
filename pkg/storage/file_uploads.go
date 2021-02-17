@@ -27,7 +27,8 @@ func (s *Store) CreateUploadedFile(ctx context.Context, file *models.UploadedFil
                          created_at,
                          updated_at,
                          virus_scanned,
-                         virus_clean
+                         virus_clean,
+						 request_id
                  )
                  VALUES (
                          :id,
@@ -37,7 +38,8 @@ func (s *Store) CreateUploadedFile(ctx context.Context, file *models.UploadedFil
                          :created_at,
                          :updated_at,
                          :virus_scanned,
-                         :virus_clean
+                         :virus_clean,
+						 :request_id
                  )`
 	_, err := s.db.NamedExec(createUploadedFileSQL, file)
 	if err != nil {
