@@ -34,7 +34,8 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.A
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
-		Name: input.Name,
+		Name:     input.Name,
+		IntakeID: input.IntakeID,
 	})
 	if err != nil {
 		return nil, err
@@ -57,6 +58,16 @@ func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.Crea
 		return nil, err
 	}
 	return &model.CreateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
+func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input *model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
+	url, err := r.s3Client.NewPutPresignedURL(input.MimeType)
+	if err != nil {
+		return nil, err
+	}
+	return &model.GeneratePresignedUploadURLPayload{
+		URL: &url.URL,
+	}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {

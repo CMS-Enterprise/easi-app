@@ -71,7 +71,9 @@ const sqlListSystems = `
 	SELECT
 		id,
 		lcid,
-		project_name AS name
+		project_name AS name,
+		business_owner AS business_owner_name,
+		business_owner_component
 	FROM system_intakes
 	WHERE
 		status='LCID_ISSUED' AND
