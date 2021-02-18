@@ -8,19 +8,20 @@
 //==============================================================
 
 /**
- * The variety of a 508 test
- */
-export enum TestDateTestType {
-  INITIAL = "INITIAL",
-  REMEDIATION = "REMEDIATION",
-
-/**
  * Represents the availability of a document
  */
 export enum AccessibilityRequestDocumentStatus {
   AVAILABLE = "AVAILABLE",
   PENDING = "PENDING",
   UNAVAILABLE = "UNAVAILABLE",
+}
+
+/**
+ * The variety of a 508 test
+ */
+export enum TestDateTestType {
+  INITIAL = "INITIAL",
+  REMEDIATION = "REMEDIATION",
 }
 
 /**
