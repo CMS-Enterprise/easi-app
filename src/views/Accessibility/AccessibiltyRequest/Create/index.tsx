@@ -12,7 +12,10 @@ import {
 } from 'formik';
 import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
 import GetSystemsQuery from 'queries/GetSystems';
-import { GetSystems } from 'queries/types/GetSystems';
+import {
+  GetSystems,
+  GetSystems_systems_edges_node as SystemNode
+} from 'queries/types/GetSystems';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -61,20 +64,27 @@ const Create = () => {
   };
 
   const systems = useMemo(() => {
-    return data?.systems?.edges || [];
+    const systemsObj: { [id: string]: SystemNode } = {};
+
+    data?.systems?.edges.forEach(system => {
+      systemsObj[system.node.id] = system.node;
+    });
+
+    return systemsObj;
   }, [data]);
 
   const projectComboBoxOptions = useMemo(() => {
-    return systems.map(system => {
+    const queriedSystems = data?.systems?.edges || [];
+    return queriedSystems.map(system => {
       const {
-        node: { id, name }
+        node: { id, lcid, name }
       } = system;
       return {
-        label: `${name} - ${id}`,
+        label: `${name} - ${lcid}`,
         value: id
       };
     });
-  }, [systems]);
+  }, [data]);
 
   return (
     <PageWrapper>
@@ -124,19 +134,18 @@ const Create = () => {
                             id="508Request-IntakeId"
                             options={projectComboBoxOptions}
                             onChange={(intakeId: any) => {
-                              const selectedSystem = systems.find(
-                                system => system.node.id === intakeId
-                              );
-                              setFieldValue('intakeId', intakeId || '');
-                              setFieldValue(
-                                'businessOwner.name',
-                                selectedSystem?.node.businessOwner.name || ''
-                              );
-                              setFieldValue(
-                                'businessOwner.component',
-                                selectedSystem?.node.businessOwner.component ||
-                                  ''
-                              );
+                              const selectedSystem = systems[intakeId];
+                              if (selectedSystem) {
+                                setFieldValue('intakeId', intakeId || '');
+                                setFieldValue(
+                                  'businessOwner.name',
+                                  selectedSystem.businessOwner.name || ''
+                                );
+                                setFieldValue(
+                                  'businessOwner.component',
+                                  selectedSystem.businessOwner.component || ''
+                                );
+                              }
                             }}
                           />
                         </FieldGroup>
@@ -146,11 +155,17 @@ const Create = () => {
                         <Label htmlFor="508Request-BusinessOwnerName">
                           {t('newRequestForm.fields.businessOwnerName.label')}
                         </Label>
+                        <HelpText
+                          id="508Request-BusinessOwnerNameHelp"
+                          className="usa-sr-only"
+                        >
+                          {t('newRequestForm.fields.businessOwnerName.help')}
+                        </HelpText>
                         <FormikField
                           as={TextField}
                           id="508Request-BusinessOwnerName"
-                          maxLength={50}
                           name="businessOwner.name"
+                          aria-describedby="508Request-BusinessOwnerNameHelp"
                           disabled
                         />
                       </FieldGroup>
@@ -161,11 +176,19 @@ const Create = () => {
                             'newRequestForm.fields.businessOwnerComponent.label'
                           )}
                         </Label>
-
+                        <HelpText
+                          id="508Request-BusinessOwnerComponentHelp"
+                          className="usa-sr-only"
+                        >
+                          {t(
+                            'newRequestForm.fields.businessOwnerComponent.help'
+                          )}
+                        </HelpText>
                         <FormikField
                           as={TextField}
-                          key="508Form-BusinessOwnerComponent"
+                          id="508Form-BusinessOwnerComponent"
                           name="businessOwner.component"
+                          aria-describedby="508Request-BusinessOwnerComponentHelp"
                           disabled
                         />
                       </FieldGroup>
@@ -176,7 +199,10 @@ const Create = () => {
                         <Label htmlFor="508Request-RequestName">
                           {t('newRequestForm.fields.requestName.label')}
                         </Label>
-                        <HelpText id="508Request-RequestName">
+                        <HelpText
+                          id="508Request-RequestNameHelp"
+                          className="margin-top-1"
+                        >
                           {t('newRequestForm.fields.requestName.help')}
                         </HelpText>
                         <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
@@ -186,6 +212,7 @@ const Create = () => {
                           id="508Request-RequestName"
                           maxLength={50}
                           name="requestName"
+                          aria-describedby="508Request-RequestNameHelp"
                         />
                       </FieldGroup>
 

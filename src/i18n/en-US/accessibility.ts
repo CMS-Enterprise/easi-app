@@ -35,6 +35,18 @@ const accessibility = {
     other: 'Other request details',
     remove: 'Remove this request from EASi'
   },
+  createTestDate: {
+    addTestDateHeader: 'Add a test date for {{requestName}}',
+    testTypeHeader: 'What type of test?',
+    dateHeader: 'Test date',
+    dateHelpText: 'For example: 4 28 2020',
+    scoreHeader: 'Does this test have a score?',
+    scoreValueHeader: 'Test Score',
+    scoreValueSRHelpText: 'Enter the test score without the percentage symbol',
+    submitButton: 'Add date',
+    cancel: "Don't add and go back to request page",
+    confirmation: 'Test date {{date}} added to {{requestName}} page'
+  },
   newRequestForm: {
     heading: 'Add a new request',
     fields: {
@@ -42,10 +54,14 @@ const accessibility = {
         label: 'Choose the project this request will belong to'
       },
       businessOwnerName: {
-        label: 'Business Owner Name'
+        label: 'Business Owner Name',
+        help:
+          'The business owner name field will be automatically filled based on the project you choose'
       },
       businessOwnerComponent: {
-        label: 'Business Owner Component'
+        label: 'Business Owner Component',
+        help:
+          'The business owner component field will be automatically filled based on the project you choose'
       },
       requestName: {
         label: 'Request Name',
