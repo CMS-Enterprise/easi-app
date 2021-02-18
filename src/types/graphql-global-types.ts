@@ -17,11 +17,29 @@ export enum AccessibilityRequestDocumentStatus {
 }
 
 /**
+ * The variety of a 508 test
+ */
+export enum TestDateTestType {
+  INITIAL = "INITIAL",
+  REMEDIATION = "REMEDIATION",
+}
+
+/**
  * Parameters required to create an AccessibilityRequest
  */
 export interface CreateAccessibilityRequestInput {
   intakeID: UUID;
   name: string;
+}
+
+/**
+ * Parameters for creating a test date
+ */
+export interface CreateTestDateInput {
+  date: Time;
+  requestID: UUID;
+  score?: number | null;
+  testType: TestDateTestType;
 }
 
 //==============================================================
