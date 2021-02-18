@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useLocation, withRouter } from 'react-router-dom';
+import { Alert } from '@trussworks/react-uswds';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -73,19 +74,13 @@ const Home = () => {
     <PageWrapper>
       <Header />
       <MainContent className="margin-bottom-5">
-        <div className="grid-container margin-top-6">
-          {confirmationText && (
-            <div className="border-05 border-green">
-              <div className="fa fa-check fa-2x display-inline-block text-middle text-green margin-left-1 margin-right-2" />
-              <p
-                role="alert"
-                className="display-inline-block text-middle margin-y-105"
-              >
-                {confirmationText}
-              </p>
-            </div>
-          )}
-        </div>
+        {confirmationText && (
+          <div className="grid-container margin-top-6">
+            <Alert type="success" slim role="alert">
+              {confirmationText}
+            </Alert>
+          </div>
+        )}
         {renderView()}
       </MainContent>
       <Footer />

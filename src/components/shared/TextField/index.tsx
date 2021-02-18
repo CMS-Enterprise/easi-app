@@ -13,6 +13,7 @@ type TextFieldProps = {
   onBlur: () => void;
   value: string;
   match?: RegExp;
+  inline?: boolean;
 } & JSX.IntrinsicElements['input'];
 
 const TextField = ({
@@ -25,12 +26,14 @@ const TextField = ({
   onBlur,
   value,
   match,
+  inline,
   ...props
 }: TextFieldProps) => {
   const inputClasses = classnames(
     'usa-input',
     { 'easi-textfield--disabled': disabled },
-    { 'usa-input--error': error }
+    { 'usa-input--error': error },
+    { 'display-inline-block': inline }
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
