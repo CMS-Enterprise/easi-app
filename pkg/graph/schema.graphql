@@ -15,6 +15,7 @@ type AccessibilityRequest {
   documents: [AccessibilityRequestDocument!]!
   id: UUID!
   name: String!
+  relevantTestDate: TestDate
   submittedAt: Time!
   system: System!
 }
