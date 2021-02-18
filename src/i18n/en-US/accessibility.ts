@@ -42,10 +42,14 @@ const accessibility = {
         label: 'Choose the project this request will belong to'
       },
       businessOwnerName: {
-        label: 'Business Owner Name'
+        label: 'Business Owner Name',
+        help:
+          'The business owner name field will be automatically filled based on the project you choose'
       },
       businessOwnerComponent: {
-        label: 'Business Owner Component'
+        label: 'Business Owner Component',
+        help:
+          'The business owner component field will be automatically filled based on the project you choose'
       },
       requestName: {
         label: 'Request Name',

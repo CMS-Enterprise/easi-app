@@ -67,10 +67,10 @@ const Create = () => {
   const projectComboBoxOptions = useMemo(() => {
     return systems.map(system => {
       const {
-        node: { id, name }
+        node: { id, lcid, name }
       } = system;
       return {
-        label: `${name} - ${id}`,
+        label: `${name} - ${lcid}`,
         value: id
       };
     });
@@ -146,11 +146,17 @@ const Create = () => {
                         <Label htmlFor="508Request-BusinessOwnerName">
                           {t('newRequestForm.fields.businessOwnerName.label')}
                         </Label>
+                        <HelpText
+                          id="508Request-BusinessOwnerNameHelp"
+                          className="usa-sr-only"
+                        >
+                          {t('newRequestForm.fields.businessOwnerName.help')}
+                        </HelpText>
                         <FormikField
                           as={TextField}
                           id="508Request-BusinessOwnerName"
-                          maxLength={50}
                           name="businessOwner.name"
+                          aria-describedby="508Request-BusinessOwnerNameHelp"
                           disabled
                         />
                       </FieldGroup>
@@ -161,11 +167,19 @@ const Create = () => {
                             'newRequestForm.fields.businessOwnerComponent.label'
                           )}
                         </Label>
-
+                        <HelpText
+                          id="508Request-BusinessOwnerComponentHelp"
+                          className="usa-sr-only"
+                        >
+                          {t(
+                            'newRequestForm.fields.businessOwnerComponent.help'
+                          )}
+                        </HelpText>
                         <FormikField
                           as={TextField}
-                          key="508Form-BusinessOwnerComponent"
+                          id="508Form-BusinessOwnerComponent"
                           name="businessOwner.component"
+                          aria-describedby="508Request-BusinessOwnerComponentHelp"
                           disabled
                         />
                       </FieldGroup>
@@ -176,7 +190,10 @@ const Create = () => {
                         <Label htmlFor="508Request-RequestName">
                           {t('newRequestForm.fields.requestName.label')}
                         </Label>
-                        <HelpText id="508Request-RequestName">
+                        <HelpText
+                          id="508Request-RequestNameHelp"
+                          className="margin-top-1"
+                        >
                           {t('newRequestForm.fields.requestName.help')}
                         </HelpText>
                         <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
@@ -186,6 +203,7 @@ const Create = () => {
                           id="508Request-RequestName"
                           maxLength={50}
                           name="requestName"
+                          aria-describedby="508Request-RequestNameHelp"
                         />
                       </FieldGroup>
 
