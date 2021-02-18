@@ -9,15 +9,10 @@ import { CreateAccessibilityRequestInput } from "./../../types/graphql-global-ty
 // GraphQL mutation operation: CreateAccessibilityRequest
 // ====================================================
 
-export interface CreateAccessibilityRequest_createAccessibilityRequest_accessibilityRequest_system {
-  __typename: "System";
-  name: string;
-}
-
 export interface CreateAccessibilityRequest_createAccessibilityRequest_accessibilityRequest {
   __typename: "AccessibilityRequest";
   id: UUID;
-  system: CreateAccessibilityRequest_createAccessibilityRequest_accessibilityRequest_system;
+  name: string;
 }
 
 export interface CreateAccessibilityRequest_createAccessibilityRequest_userErrors {

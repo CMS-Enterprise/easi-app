@@ -19,7 +19,7 @@ func (s *Store) CreateUploadedFile(ctx context.Context, file *models.UploadedFil
 	createAt := s.clock.Now()
 	file.CreatedAt = &createAt
 	file.UpdatedAt = &createAt
-	const createUploadedFileSQL = `INSERT INTO files (
+	const createUploadedFileSQL = `INSERT INTO accessibility_request_files (
                          id,
                          file_type,
                          bucket,
@@ -27,7 +27,8 @@ func (s *Store) CreateUploadedFile(ctx context.Context, file *models.UploadedFil
                          created_at,
                          updated_at,
                          virus_scanned,
-                         virus_clean
+                         virus_clean,
+						 request_id
                  )
                  VALUES (
                          :id,
@@ -37,7 +38,8 @@ func (s *Store) CreateUploadedFile(ctx context.Context, file *models.UploadedFil
                          :created_at,
                          :updated_at,
                          :virus_scanned,
-                         :virus_clean
+                         :virus_clean,
+						 :request_id
                  )`
 	_, err := s.db.NamedExec(createUploadedFileSQL, file)
 	if err != nil {
@@ -51,7 +53,7 @@ func (s *Store) CreateUploadedFile(ctx context.Context, file *models.UploadedFil
 func (s *Store) FetchUploadedFileByID(ctx context.Context, id uuid.UUID) (*models.UploadedFile, error) {
 	var file models.UploadedFile
 
-	err := s.db.Get(&file, "SELECT * FROM files WHERE id=$1", id)
+	err := s.db.Get(&file, "SELECT * FROM accessibility_request_files WHERE id=$1", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch uploaded file", zap.Error(err))
 
@@ -63,4 +65,27 @@ func (s *Store) FetchUploadedFileByID(ctx context.Context, id uuid.UUID) (*model
 	}
 
 	return &file, nil
+}
+
+// FetchFilesByAccessibilityRequestID retrieves the info for a file with a given accessibility request id
+func (s *Store) FetchFilesByAccessibilityRequestID(ctx context.Context, id uuid.UUID) (*[]models.UploadedFile, error) {
+	if id == uuid.Nil {
+		return nil, &apperrors.ResourceNotFoundError{Resource: models.UploadedFile{}}
+	}
+
+	results := []models.UploadedFile{}
+	// eventually, we should use the id here, but we don't have the db relationship set up yet
+	err := s.db.Select(&results, "SELECT * FROM accessibility_request_files where request_id=$1", id)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to fetch uploaded file", zap.Error(err))
+
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.UploadedFile{}}
+		}
+
+		return nil, err
+	}
+
+	return &results, nil
 }

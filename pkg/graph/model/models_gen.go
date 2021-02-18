@@ -14,9 +14,12 @@ import (
 
 // A document that belongs to an accessibility request
 type AccessibilityRequestDocument struct {
-	ID         uuid.UUID `json:"id"`
-	Name       string    `json:"name"`
-	UploadedAt time.Time `json:"uploadedAt"`
+	ID         uuid.UUID                          `json:"id"`
+	Mimetype   string                             `json:"mimetype"`
+	Name       string                             `json:"name"`
+	RequestID  uuid.UUID                          `json:"requestId"`
+	Status     AccessibilityRequestDocumentStatus `json:"status"`
+	UploadedAt time.Time                          `json:"uploadedAt"`
 }
 
 // An edge of an AccessibilityRequestConnection
@@ -33,7 +36,8 @@ type AccessibilityRequestsConnection struct {
 
 // Parameters required to create an AccessibilityRequest
 type CreateAccessibilityRequestInput struct {
-	Name string `json:"name"`
+	IntakeID uuid.UUID `json:"intakeID"`
+	Name     string    `json:"name"`
 }
 
 // Result of CreateAccessibilityRequest
@@ -56,6 +60,17 @@ type CreateTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+// Parameters required to generate a presigned upload URL
+type GeneratePresignedUploadURLInput struct {
+	MimeType string `json:"mimeType"`
+}
+
+// Result of CreateAccessibilityRequest
+type GeneratePresignedUploadURLPayload struct {
+	URL        *string      `json:"url"`
+	UserErrors []*UserError `json:"userErrors"`
+}
+
 // A collection of Systems
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
@@ -73,6 +88,53 @@ type SystemEdge struct {
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+// Represents the availability of a document
+type AccessibilityRequestDocumentStatus string
+
+const (
+	// Passed security screen
+	AccessibilityRequestDocumentStatusAvailable AccessibilityRequestDocumentStatus = "AVAILABLE"
+	// Just uploaded
+	AccessibilityRequestDocumentStatusPending AccessibilityRequestDocumentStatus = "PENDING"
+	// Failed security screen
+	AccessibilityRequestDocumentStatusUnavailable AccessibilityRequestDocumentStatus = "UNAVAILABLE"
+)
+
+var AllAccessibilityRequestDocumentStatus = []AccessibilityRequestDocumentStatus{
+	AccessibilityRequestDocumentStatusAvailable,
+	AccessibilityRequestDocumentStatusPending,
+	AccessibilityRequestDocumentStatusUnavailable,
+}
+
+func (e AccessibilityRequestDocumentStatus) IsValid() bool {
+	switch e {
+	case AccessibilityRequestDocumentStatusAvailable, AccessibilityRequestDocumentStatusPending, AccessibilityRequestDocumentStatusUnavailable:
+		return true
+	}
+	return false
+}
+
+func (e AccessibilityRequestDocumentStatus) String() string {
+	return string(e)
+}
+
+func (e *AccessibilityRequestDocumentStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccessibilityRequestDocumentStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccessibilityRequestDocumentStatus", str)
+	}
+	return nil
+}
+
+func (e AccessibilityRequestDocumentStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 // A user role associated with a job code
