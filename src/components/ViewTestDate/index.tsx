@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
-type TestDateProps = {
+type ViewTestDateProps = {
   date: DateTime;
   type: 'INITIAL' | 'REMEDIATION';
   testIndex: number;
   score?: string; // This type might need to be changed based on API model
 };
 
-const TestDate = ({ date, type, testIndex, score }: TestDateProps) => {
+const ViewTestDate = ({ date, type, testIndex, score }: ViewTestDateProps) => {
   return (
     <div className="bg-gray-10 padding-2 line-height-body-4">
       <div className="text-bold margin-bottom-1">
@@ -36,4 +36,4 @@ const TestDate = ({ date, type, testIndex, score }: TestDateProps) => {
   );
 };
 
-export default TestDate;
+export default ViewTestDate;

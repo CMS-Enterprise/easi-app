@@ -2,16 +2,18 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { DateTime } from 'luxon';
 
-import TestDate from 'components/TestDate/index';
+import ViewTestDate from 'components/ViewTestDate/index';
 
-describe('The Test Date component', () => {
+describe('The View Test Date component', () => {
   it('renders without crashing', () => {
-    shallow(<TestDate date={DateTime.local()} type="INITIAL" testIndex={1} />);
+    shallow(
+      <ViewTestDate date={DateTime.local()} type="INITIAL" testIndex={1} />
+    );
   });
 
   it('renders score', () => {
     const component = mount(
-      <TestDate
+      <ViewTestDate
         date={DateTime.local()}
         type="INITIAL"
         testIndex={1}
