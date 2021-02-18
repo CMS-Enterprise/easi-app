@@ -6,8 +6,6 @@ services:
   easi:
     image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}'
     environment:
-      - APP_ENV
-      - PGHOST=db
       - EMAIL_TEMPLATE_DIR=/easi/templates
       - SERVER_CERT
       - SERVER_KEY
