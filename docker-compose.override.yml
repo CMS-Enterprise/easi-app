@@ -26,9 +26,17 @@ services:
       context: .
       dockerfile: Dockerfile.client
       target: src
-    env_file:
-      - ./config/env/client.dev.env
     environment:
+      - REACT_APP_APP_ENV
+      - REACT_APP_API_ADDRESS
+      - REACT_APP_OKTA_CLIENT_ID
+      - REACT_APP_OKTA_DOMAIN
+      - REACT_APP_OKTA_ISSUER
+      - REACT_APP_OKTA_REDIRECT_URI
+      - REACT_APP_OKTA_SERVER_ID
+      - REACT_APP_LD_ENV_USER
+      - REACT_APP_LD_USER_HASH
+      - REACT_APP_LD_CLIENT_ID
       - CHOKIDAR_USEPOLLING=true
     entrypoint: ['yarn', 'start']
     volumes:
@@ -58,7 +66,8 @@ services:
     image: lambci/lambda:go1.x
     ports:
       - 9001:9001
-    env_file:
-      - config/env/prince.dev.env
+    environment:
+      - DOCKER_LAMBDA_STAY_OPEN
+      - LICENSE_KEY
     volumes:
       - ./../easi-infra-modules/lambda/prince/build:/var/task:ro,delegated
