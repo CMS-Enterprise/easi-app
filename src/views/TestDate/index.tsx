@@ -7,12 +7,18 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 import CreateTestDateQuery from 'queries/CreateTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
+import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import {
+  DateInputDay,
+  DateInputMonth,
+  DateInputYear
+} from 'components/shared/DateInput';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -30,9 +36,12 @@ const TestDate = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
-  const [mutate, mutationResult] = useMutation(CreateTestDateQuery, {
-    errorPolicy: 'all'
-  });
+  const [mutate, mutationResult] = useMutation<CreateTestDate>(
+    CreateTestDateQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
   const { data } = useQuery<GetAccessibilityRequest>(
     GetAccessibilityRequestQuery,
     {
@@ -201,10 +210,9 @@ const TestDate = () => {
                                   {t('general:date.month')}
                                 </Label>
                                 <Field
-                                  as={TextField}
+                                  as={DateInputMonth}
                                   error={!!flatErrors.dateMonth}
                                   id="TestDate-DateMonth"
-                                  maxLength={2}
                                   name="dateMonth"
                                 />
                               </div>
@@ -216,10 +224,9 @@ const TestDate = () => {
                                   {t('general:date.day')}
                                 </Label>
                                 <Field
-                                  as={TextField}
+                                  as={DateInputDay}
                                   error={!!flatErrors.dateDay}
                                   id="TestDate-DateDay"
-                                  maxLength={2}
                                   name="dateDay"
                                 />
                               </div>
@@ -231,10 +238,9 @@ const TestDate = () => {
                                   {t('general:date.year')}
                                 </Label>
                                 <Field
-                                  as={TextField}
+                                  as={DateInputYear}
                                   error={!!flatErrors.dateYear}
                                   id="TestDate-DateYear"
-                                  maxLength={4}
                                   name="dateYear"
                                 />
                               </div>
