@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import { useTable } from 'react-table';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 
+import { AccessibilityRequestDocumentStatus } from 'types/graphql-global-types';
 import formatDate from 'utils/formatDate';
 
 type Document = {
   name: string;
+  status: AccessibilityRequestDocumentStatus;
   uploadedAt: string;
 };
 
@@ -38,6 +40,10 @@ const AccessibilityDocumentsList = ({
           return '';
         },
         width: '25%'
+      },
+      {
+        Header: 'Status',
+        accessor: 'status'
       },
       {
         Header: t('documentTable.header.actions'),

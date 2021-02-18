@@ -14,9 +14,10 @@ export default gql`
           component
         }
       }
-      documents @client {
+      documents {
         name
         uploadedAt
+        status
       }
     }
   }
