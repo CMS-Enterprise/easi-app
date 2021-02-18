@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import { useTable } from 'react-table';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 
+import { AccessibilityRequestDocumentStatus } from 'types/graphql-global-types';
 import formatDate from 'utils/formatDate';
 
 type Document = {
   name: string;
+  status: AccessibilityRequestDocumentStatus;
   uploadedAt: string;
 };
 
@@ -40,6 +42,10 @@ const AccessibilityDocumentsList = ({
         width: '25%'
       },
       {
+        Header: 'Status',
+        accessor: 'status'
+      },
+      {
         Header: t('documentTable.header.actions'),
         Cell: ({ row }: any) => (
           <>
@@ -50,14 +56,10 @@ const AccessibilityDocumentsList = ({
               {t('documentTable.view')}
             </UswdsLink>
             <span className="usa-sr-only">{row.original.name}</span>
-            <UswdsLink
-              asCustom={Link}
-              to={`/some-508-request/${row.original.name}`}
-              className="margin-left-2"
-            >
+            {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
               {t('documentTable.remove')}
             </UswdsLink>
-            <span className="usa-sr-only">{row.original.name}</span>
+            <span className="usa-sr-only">{row.original.name}</span> */}
           </>
         )
       }

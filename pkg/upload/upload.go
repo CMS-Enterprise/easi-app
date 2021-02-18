@@ -48,10 +48,16 @@ func NewS3Client(config Config) S3Client {
 
 	s3Session := session.Must(session.NewSession(awsConfig))
 
-	// create the s3 service client
-	client := s3.New(s3Session)
+	return NewS3ClientUsingClient(s3.New(s3Session), config)
+}
 
-	return S3Client{client, config}
+// NewS3ClientUsingClient creates a new s3 wrapper using the specified s3 client
+// This is most useful for testing where the s3 client needs to be mocked out.
+func NewS3ClientUsingClient(s3Client s3iface.S3API, config Config) S3Client {
+	return S3Client{
+		s3Client,
+		config,
+	}
 }
 
 // NewPutPresignedURL returns a pre-signed URL used for PUT-ing objects
