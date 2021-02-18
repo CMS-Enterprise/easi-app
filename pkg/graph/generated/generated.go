@@ -51,11 +51,12 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	AccessibilityRequest struct {
-		CreatedAt func(childComplexity int) int
-		Documents func(childComplexity int) int
-		ID        func(childComplexity int) int
-		Name      func(childComplexity int) int
-		System    func(childComplexity int) int
+		CreatedAt        func(childComplexity int) int
+		Documents        func(childComplexity int) int
+		ID               func(childComplexity int) int
+		Name             func(childComplexity int) int
+		RelevantTestDate func(childComplexity int) int
+		System           func(childComplexity int) int
 	}
 
 	AccessibilityRequestDocument struct {
@@ -151,6 +152,8 @@ type ComplexityRoot struct {
 type AccessibilityRequestResolver interface {
 	Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error)
 
+	RelevantTestDate(ctx context.Context, obj *models.AccessibilityRequest) (*models.TestDate, error)
+
 	System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error)
 }
 type AccessibilityRequestDocumentResolver interface {
@@ -212,6 +215,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequest.Name(childComplexity), true
+
+	case "AccessibilityRequest.relevantTestDate":
+		if e.complexity.AccessibilityRequest.RelevantTestDate == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequest.RelevantTestDate(childComplexity), true
 
 	case "AccessibilityRequest.system":
 		if e.complexity.AccessibilityRequest.System == nil {
@@ -644,6 +654,7 @@ type AccessibilityRequest {
   documents: [AccessibilityRequestDocument!]!
   id: UUID!
   name: String!
+  relevantTestDate: TestDate
   submittedAt: Time!
   system: System!
 }
@@ -1196,6 +1207,38 @@ func (ec *executionContext) _AccessibilityRequest_name(ctx context.Context, fiel
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequest_relevantTestDate(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.AccessibilityRequest().RelevantTestDate(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.TestDate)
+	fc.Result = res
+	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequest_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
@@ -4202,6 +4245,17 @@ func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.S
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "relevantTestDate":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._AccessibilityRequest_relevantTestDate(ctx, field, obj)
+				return res
+			})
 		case "submittedAt":
 			out.Values[i] = ec._AccessibilityRequest_submittedAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
