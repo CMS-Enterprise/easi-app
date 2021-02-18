@@ -12,7 +12,10 @@ import {
 } from 'formik';
 import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
 import GetSystemsQuery from 'queries/GetSystems';
-import { GetSystems } from 'queries/types/GetSystems';
+import {
+  GetSystems,
+  GetSystems_systems_edges_node as SystemNode
+} from 'queries/types/GetSystems';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -61,11 +64,18 @@ const Create = () => {
   };
 
   const systems = useMemo(() => {
-    return data?.systems?.edges || [];
+    const systemsObj: { [id: string]: SystemNode } = {};
+
+    data?.systems?.edges.forEach(system => {
+      systemsObj[system.node.id] = system.node;
+    });
+
+    return systemsObj;
   }, [data]);
 
   const projectComboBoxOptions = useMemo(() => {
-    return systems.map(system => {
+    const queriedSystems = data?.systems?.edges || [];
+    return queriedSystems.map(system => {
       const {
         node: { id, lcid, name }
       } = system;
@@ -74,7 +84,7 @@ const Create = () => {
         value: id
       };
     });
-  }, [systems]);
+  }, [data]);
 
   return (
     <PageWrapper>
@@ -124,19 +134,18 @@ const Create = () => {
                             id="508Request-IntakeId"
                             options={projectComboBoxOptions}
                             onChange={(intakeId: any) => {
-                              const selectedSystem = systems.find(
-                                system => system.node.id === intakeId
-                              );
-                              setFieldValue('intakeId', intakeId || '');
-                              setFieldValue(
-                                'businessOwner.name',
-                                selectedSystem?.node.businessOwner.name || ''
-                              );
-                              setFieldValue(
-                                'businessOwner.component',
-                                selectedSystem?.node.businessOwner.component ||
-                                  ''
-                              );
+                              const selectedSystem = systems[intakeId];
+                              if (selectedSystem) {
+                                setFieldValue('intakeId', intakeId || '');
+                                setFieldValue(
+                                  'businessOwner.name',
+                                  selectedSystem.businessOwner.name || ''
+                                );
+                                setFieldValue(
+                                  'businessOwner.component',
+                                  selectedSystem.businessOwner.component || ''
+                                );
+                              }
                             }}
                           />
                         </FieldGroup>
