@@ -2,7 +2,7 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { DateTime } from 'luxon';
 
-import TestDate from './index';
+import TestDate from 'components/TestDate/index';
 
 describe('The Test Date component', () => {
   it('renders without crashing', () => {

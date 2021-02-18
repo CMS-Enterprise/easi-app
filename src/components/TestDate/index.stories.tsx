@@ -1,7 +1,7 @@
 import React from 'react';
 import { DateTime } from 'luxon';
 
-import TestDate from './index';
+import TestDate from 'components/TestDate/index';
 
 const Template = (args: any) => (
   <div className="grid-col-4">
