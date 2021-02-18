@@ -64,6 +64,7 @@ type AccessibilityRequestDocument {
   id: UUID!
   mimetype: String!
   name: String!
+  requestId: UUID!
   status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
 }
