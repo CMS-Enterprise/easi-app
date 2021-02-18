@@ -2,7 +2,7 @@ module.exports = {
   client: {
     service: {
       name: 'easi-app',
-      url: 'http://localhost:8080/graph/query'
+      url: process.env.REACT_APP_GRAPHQL_ADDRESS
     }
   }
 };
