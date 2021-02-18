@@ -15,10 +15,10 @@ import (
 type authFunc func(context.Context) (bool, error)
 
 // createFunc is a function that saves uploaded file metadata
-type createFunc func(context.Context, *models.UploadedFile) (*models.UploadedFile, error)
+type createFunc func(context.Context, *models.AccessibilityRequestDocument) (*models.AccessibilityRequestDocument, error)
 
 // fetchFunc is a function that fetches uploaded file metadata
-type fetchFunc func(context.Context, uuid.UUID) (*models.UploadedFile, error)
+type fetchFunc func(context.Context, uuid.UUID) (*models.AccessibilityRequestDocument, error)
 
 // NewCreateFileUploadURL is a service to create a file upload URL via a pre-signed URL in S3
 func NewCreateFileUploadURL(config Config, authorize authFunc, s3client upload.S3Client) func(ctx context.Context, fileType string) (*models.PreSignedURL, error) {
@@ -68,9 +68,9 @@ func NewCreateFileDownloadURL(config Config, authorize authFunc, s3client upload
 
 }
 
-// NewCreateUploadedFile returns a function that saves the metadata of an uploaded file
-func NewCreateUploadedFile(config Config, authorize authFunc, create createFunc) func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error) {
-	return func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error) {
+// NewCreateAccessibilityRequestDocument returns a function that saves the metadata of an uploaded file
+func NewCreateAccessibilityRequestDocument(config Config, authorize authFunc, create createFunc) func(ctx context.Context, file *models.AccessibilityRequestDocument) (*models.AccessibilityRequestDocument, error) {
+	return func(ctx context.Context, file *models.AccessibilityRequestDocument) (*models.AccessibilityRequestDocument, error) {
 		ok, err := authorize(ctx)
 		if err != nil {
 			return nil, err
@@ -87,9 +87,9 @@ func NewCreateUploadedFile(config Config, authorize authFunc, create createFunc)
 	}
 }
 
-// NewFetchUploadedFile returns a function that fetches the metadata of an uploaded file
-func NewFetchUploadedFile(config Config, authorize authFunc, fetch fetchFunc) func(ctx context.Context, id uuid.UUID) (*models.UploadedFile, error) {
-	return func(ctx context.Context, id uuid.UUID) (*models.UploadedFile, error) {
+// NewFetchAccessibilityRequestDocument returns a function that fetches the metadata of an uploaded file
+func NewFetchAccessibilityRequestDocument(config Config, authorize authFunc, fetch fetchFunc) func(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequestDocument, error) {
+	return func(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequestDocument, error) {
 		ok, err := authorize(ctx)
 		if err != nil {
 			return nil, err

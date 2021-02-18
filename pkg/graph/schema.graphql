@@ -61,10 +61,13 @@ enum AccessibilityRequestDocumentStatus {
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
+  bucket: String!
   id: UUID!
-  mimetype: String!
+  key: String!
+  mimeType: String!
   name: String!
-  requestId: UUID!
+  requestID: UUID!
+  size: Int!
   status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
 }
@@ -105,7 +108,9 @@ type CreateAccessibilityRequestPayload {
 Parameters required to generate a presigned upload URL
 """
 input GeneratePresignedUploadURLInput {
+  fileName: String!
   mimeType: String!
+  size: Int!
 }
 
 """
@@ -176,16 +181,39 @@ type CreateTestDatePayload {
 }
 
 """
+Parameters for createAccessibilityRequestDocument
+"""
+input CreateAccessibilityRequestDocumentInput {
+  bucket: String!
+  key: String!
+  mimeType: String!
+  name: String!
+  requestID: UUID!
+  size: Int!
+}
+
+"""
+Result of createAccessibilityRequestDocument
+"""
+type CreateAccessibilityRequestDocumentPayload {
+  accessibilityRequestDocument: AccessibilityRequestDocument
+  userErrors: [UserError!]
+}
+
+"""
 The root mutation
 """
 type Mutation {
   createAccessibilityRequest(
-    input: CreateAccessibilityRequestInput
+    input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
-  createTestDate(input: CreateTestDateInput): CreateTestDatePayload
+  createAccessibilityRequestDocument(
+    input: CreateAccessibilityRequestDocumentInput!
+  ): CreateAccessibilityRequestDocumentPayload
+  createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(
-    input: GeneratePresignedUploadURLInput
+    input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
 }
 
