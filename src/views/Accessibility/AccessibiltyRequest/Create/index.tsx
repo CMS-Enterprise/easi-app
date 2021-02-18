@@ -12,7 +12,10 @@ import {
 } from 'formik';
 import CreateAccessibilityRequestQuery from 'queries/CreateAccessibilityRequestQuery';
 import GetSystemsQuery from 'queries/GetSystems';
-import { GetSystems } from 'queries/types/GetSystems';
+import {
+  GetSystems,
+  GetSystems_systems_edges_node as SystemNode
+} from 'queries/types/GetSystems';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -61,7 +64,7 @@ const Create = () => {
   };
 
   const systems = useMemo(() => {
-    const systemsObj: { [id: string]: any } = {};
+    const systemsObj: { [id: string]: SystemNode } = {};
 
     data?.systems?.edges.forEach(system => {
       systemsObj[system.node.id] = system.node;
