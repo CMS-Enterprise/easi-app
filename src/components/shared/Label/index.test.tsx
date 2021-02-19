@@ -28,7 +28,7 @@ describe('The Link component', () => {
 
   it('renders an aria-label', () => {
     const component = shallow(
-      <Label htmlFor="test" ariaLabel="aria test">
+      <Label htmlFor="test" aria-label="aria test">
         Test
       </Label>
     );
