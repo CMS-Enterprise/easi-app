@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
@@ -40,12 +41,17 @@ func main() {
 		panic(storeErr)
 	}
 
+	makeAccessibilityRequest("TACO", store)
+	makeAccessibilityRequest("Big Project", store)
+}
+
+func makeAccessibilityRequest(name string, store *storage.Store) {
 	ctx := context.Background()
 
 	intake := models.SystemIntake{
 		Status:                 models.SystemIntakeStatusLCIDISSUED,
 		RequestType:            models.SystemIntakeRequestTypeNEW,
-		ProjectName:            null.StringFrom("LCID Issued"),
+		ProjectName:            null.StringFrom(name),
 		BusinessOwner:          null.StringFrom("Shane Clark"),
 		BusinessOwnerComponent: null.StringFrom("OIT"),
 		LifecycleID:            null.StringFrom("123456"),
@@ -54,7 +60,7 @@ func main() {
 	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
 
 	must(store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
-		Name:     "Never shown",
+		Name:     fmt.Sprintf("%s v2", name),
 		IntakeID: intake.ID,
 	}))
 }

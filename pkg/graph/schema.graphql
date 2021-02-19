@@ -61,7 +61,6 @@ enum AccessibilityRequestDocumentStatus {
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
-  bucket: String!
   id: UUID!
   key: String!
   mimeType: String!
@@ -184,7 +183,6 @@ type CreateTestDatePayload {
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
-  bucket: String!
   key: String!
   mimeType: String!
   name: String!

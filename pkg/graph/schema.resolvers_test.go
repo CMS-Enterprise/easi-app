@@ -244,7 +244,6 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 				size: 512512,
 				name: "test_file.pdf",
 				key: "path/to/file/fb1db6a1-3fd3-40b5-a93f-4b9d7245f80c.pdf",
-				bucket: "test_bucket",
 				requestID: "%s"
 			}) {
 				accessibilityRequestDocument {

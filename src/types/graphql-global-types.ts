@@ -25,6 +25,17 @@ export enum TestDateTestType {
 }
 
 /**
+ * Parameters for createAccessibilityRequestDocument
+ */
+export interface CreateAccessibilityRequestDocumentInput {
+  key: string;
+  mimeType: string;
+  name: string;
+  requestID: UUID;
+  size: number;
+}
+
+/**
  * Parameters required to create an AccessibilityRequest
  */
 export interface CreateAccessibilityRequestInput {
@@ -40,6 +51,15 @@ export interface CreateTestDateInput {
   requestID: UUID;
   score?: number | null;
   testType: TestDateTestType;
+}
+
+/**
+ * Parameters required to generate a presigned upload URL
+ */
+export interface GeneratePresignedUploadURLInput {
+  fileName: string;
+  mimeType: string;
+  size: number;
 }
 
 //==============================================================

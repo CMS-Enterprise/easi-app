@@ -26,7 +26,6 @@ type AccessibilityRequestsConnection struct {
 
 // Parameters for createAccessibilityRequestDocument
 type CreateAccessibilityRequestDocumentInput struct {
-	Bucket    string    `json:"bucket"`
 	Key       string    `json:"key"`
 	MimeType  string    `json:"mimeType"`
 	Name      string    `json:"name"`

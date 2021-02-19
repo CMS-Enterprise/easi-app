@@ -82,7 +82,6 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		Name:      input.Name,
 		FileType:  input.MimeType,
-		Bucket:    input.Bucket,
 		Key:       input.Key,
 		Size:      input.Size,
 		RequestID: input.RequestID,
