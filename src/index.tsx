@@ -64,13 +64,12 @@ function getAuthHeader(targetUrl: string) {
 /**
  * Setup client for GraphQL
  */
-const graphQueryURL = 'http://localhost:8080/api/graph/query';
 const httpLink = createHttpLink({
-  uri: graphQueryURL
+  uri: process.env.REACT_APP_GRAPHQL_ADDRESS
 });
 
 const authLink = setContext((request, { headers }) => {
-  const header = getAuthHeader(graphQueryURL);
+  const header = getAuthHeader(process.env.REACT_APP_GRAPHQL_ADDRESS as string);
   return {
     headers: {
       ...headers,
