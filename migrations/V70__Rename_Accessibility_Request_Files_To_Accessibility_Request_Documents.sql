@@ -1,0 +1,1 @@
+ALTER TABLE accessibility_request_files RENAME TO accessibility_request_documents;
