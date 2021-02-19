@@ -182,7 +182,7 @@ func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
 
 	s.client.MustPost(
 		`mutation {
-			generatePresignedUploadURL(input: {mimeType: "application/pdf"}) {
+			generatePresignedUploadURL(input: {mimeType: "application/pdf", size: 512512, fileName: "test_file.pdf"}) {
 				url
 				userErrors {
 					message
@@ -193,4 +193,85 @@ func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
 
 	s.Equal("https://signed.example.com/signed/123", resp.GeneratePresignedUploadURL.URL)
 	s.Equal(0, len(resp.GeneratePresignedUploadURL.UserErrors))
+}
+
+func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:            null.StringFrom("Big Project"),
+		Status:                 models.SystemIntakeStatusLCIDISSUED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		BusinessOwner:          null.StringFrom("Firstname Lastname"),
+		BusinessOwnerComponent: null.StringFrom("OIT"),
+	})
+	s.NoError(intakeErr)
+
+	lifecycleID, lcidErr := s.store.GenerateLifecycleID(ctx)
+	s.NoError(lcidErr)
+	intake.LifecycleID = null.StringFrom(lifecycleID)
+	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
+	s.NoError(updateErr)
+
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+		IntakeID: intake.ID,
+	})
+	s.NoError(requestErr)
+
+	var resp struct {
+		CreateAccessibilityRequestDocument struct {
+			AccessibilityRequestDocument struct {
+				ID         string
+				MimeType   string
+				Name       string
+				Status     string
+				UploadedAt string
+				RequestID  string
+				Size       int
+				Key        string
+			}
+			UserErrors []struct {
+				Message string
+				Path    []string
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			createAccessibilityRequestDocument(input: {
+				mimeType: "application/pdf",
+				size: 512512,
+				name: "test_file.pdf",
+				key: "path/to/file/fb1db6a1-3fd3-40b5-a93f-4b9d7245f80c.pdf",
+				bucket: "test_bucket",
+				requestID: "%s"
+			}) {
+				accessibilityRequestDocument {
+					id
+					mimeType
+					name
+					status
+					uploadedAt
+					requestID
+					size
+					key
+				}
+				userErrors {
+					message
+					path
+				}
+			}
+		}`, accessibilityRequest.ID.String()), &resp)
+
+	document := resp.CreateAccessibilityRequestDocument.AccessibilityRequestDocument
+
+	s.NotEmpty(document.ID)
+	s.Equal("application/pdf", document.MimeType)
+	s.Equal("test_file.pdf", document.Name)
+	s.Equal(512512, document.Size)
+	s.Equal("PENDING", document.Status)
+	s.NotEmpty(document.UploadedAt)
+	s.Equal(accessibilityRequest.ID.String(), document.RequestID)
+	s.Equal("path/to/file/fb1db6a1-3fd3-40b5-a93f-4b9d7245f80c.pdf", document.Key)
 }

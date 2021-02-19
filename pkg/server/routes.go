@@ -536,14 +536,14 @@ func (s *Server) routes(
 	// File Upload Handlers
 	fileUploadHandler := handlers.NewFileUploadHandler(
 		base,
-		services.NewCreateUploadedFile(
+		services.NewCreateAccessibilityRequestDocument(
 			serviceConfig,
 			services.NewAuthorizeRequireGRTJobCode(),
-			store.CreateUploadedFile),
-		services.NewFetchUploadedFile(
+			store.CreateAccessibilityRequestDocument),
+		services.NewFetchAccessibilityRequestDocument(
 			serviceConfig,
 			services.NewAuthorizeRequireGRTJobCode(),
-			store.FetchUploadedFileByID),
+			store.FetchAccessibilityRequestDocumentByID),
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
 

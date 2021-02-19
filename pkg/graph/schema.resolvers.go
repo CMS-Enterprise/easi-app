@@ -5,7 +5,7 @@ package graph
 
 import (
 	"context"
-	"fmt"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -16,37 +16,27 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*model.AccessibilityRequestDocument, error) {
-	files, fileErr := r.store.FetchFilesByAccessibilityRequestID(ctx, obj.ID)
+func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
+	documents, documentsErr := r.store.FetchFilesByAccessibilityRequestID(ctx, obj.ID)
 
-	if fileErr != nil {
-		return nil, fileErr
+	if documentsErr != nil {
+		return nil, documentsErr
 	}
 
-	documents := []*model.AccessibilityRequestDocument{}
-
-	for i, file := range *files {
-		document := &model.AccessibilityRequestDocument{
-			ID:         file.ID,
-			RequestID:  file.RequestID,
-			Name:       fmt.Sprintf("Test Doc Number %+v", i+1),
-			UploadedAt: *file.CreatedAt,
-		}
+	for _, document := range documents {
 
 		status := "PENDING"
-
-		if file.VirusScanned == null.BoolFrom(true) {
-			if file.VirusClean == null.BoolFrom(false) {
+		if document.VirusScanned == null.BoolFrom(true) {
+			if document.VirusClean == null.BoolFrom(false) {
 				status = "UNAVAILABLE"
 			}
 
-			if file.VirusClean == null.BoolFrom(true) {
+			if document.VirusClean == null.BoolFrom(true) {
 				status = "AVAILABLE"
 			}
 		}
 
-		document.Status = model.AccessibilityRequestDocumentStatus(status)
-		documents = append(documents, document)
+		document.Status = models.AccessibilityRequestDocumentStatus(status)
 	}
 
 	return documents, nil
@@ -65,7 +55,15 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.A
 	return system, nil
 }
 
-func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input *model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
+func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error) {
+	return obj.FileType, nil
+}
+
+func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, obj *models.AccessibilityRequestDocument) (*time.Time, error) {
+	return obj.CreatedAt, nil
+}
+
+func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
 		Name:     input.Name,
 		IntakeID: input.IntakeID,
@@ -80,7 +78,26 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 	}, nil
 }
 
-func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
+func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error) {
+	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
+		Name:      input.Name,
+		FileType:  input.MimeType,
+		Bucket:    input.Bucket,
+		Key:       input.Key,
+		Size:      input.Size,
+		RequestID: input.RequestID,
+	})
+
+	if docErr != nil {
+		return nil, docErr
+	}
+
+	return &model.CreateAccessibilityRequestDocumentPayload{
+		AccessibilityRequestDocument: doc,
+	}, nil
+}
+
+func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
 	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
 		TestType:  input.TestType,
 		Date:      input.Date,
@@ -93,7 +110,7 @@ func (r *mutationResolver) CreateTestDate(ctx context.Context, input *model.Crea
 	return &model.CreateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
 }
 
-func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input *model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
+func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
 	url, err := r.s3Client.NewPutPresignedURL(input.MimeType)
 	if err != nil {
 		return nil, err
@@ -149,6 +166,11 @@ func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver
 	return &accessibilityRequestResolver{r}
 }
 
+// AccessibilityRequestDocument returns generated.AccessibilityRequestDocumentResolver implementation.
+func (r *Resolver) AccessibilityRequestDocument() generated.AccessibilityRequestDocumentResolver {
+	return &accessibilityRequestDocumentResolver{r}
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -156,5 +178,6 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type accessibilityRequestResolver struct{ *Resolver }
+type accessibilityRequestDocumentResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
