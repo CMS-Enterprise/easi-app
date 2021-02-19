@@ -6,7 +6,7 @@ type ViewTestDateProps = {
   date: DateTime;
   type: 'INITIAL' | 'REMEDIATION';
   testIndex: number;
-  score?: string; // This type might need to be changed based on API model
+  score?: number; // A whole number representing tenths of a percent
 };
 
 const ViewTestDate = ({ date, type, testIndex, score }: ViewTestDateProps) => {
@@ -23,14 +23,20 @@ const ViewTestDate = ({ date, type, testIndex, score }: ViewTestDateProps) => {
           className="display-inline-block text-base-dark"
           data-testid="score"
         >
-          {score || 'Score not added'}
+          {score ? `${(score / 10).toFixed(1)}%` : 'Score not added'}
         </div>
       </div>
       <div>
-        <Link href="/" className="margin-right-2">
+        <Link
+          href="/"
+          className="margin-right-2"
+          aria-label={`Edit test ${testIndex} ${type}`}
+        >
           Edit
         </Link>
-        <Link href="/">Remove</Link>
+        <Link href="/" aria-label={`Remove test ${testIndex} ${type}`}>
+          Remove
+        </Link>
       </div>
     </div>
   );
