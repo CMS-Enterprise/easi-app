@@ -26,11 +26,11 @@ type AccessibilityRequestsConnection struct {
 
 // Parameters for createAccessibilityRequestDocument
 type CreateAccessibilityRequestDocumentInput struct {
-	Key       string    `json:"key"`
 	MimeType  string    `json:"mimeType"`
 	Name      string    `json:"name"`
 	RequestID uuid.UUID `json:"requestID"`
 	Size      int       `json:"size"`
+	URL       string    `json:"url"`
 }
 
 // Result of createAccessibilityRequestDocument

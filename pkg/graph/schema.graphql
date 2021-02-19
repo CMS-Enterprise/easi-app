@@ -183,11 +183,11 @@ type CreateTestDatePayload {
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
-  key: String!
   mimeType: String!
   name: String!
   requestID: UUID!
   size: Int!
+  url: String!
 }
 
 """

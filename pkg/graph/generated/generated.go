@@ -804,11 +804,11 @@ type CreateTestDatePayload {
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
-  key: String!
   mimeType: String!
   name: String!
   requestID: UUID!
   size: Int!
+  url: String!
 }
 
 """
@@ -3952,14 +3952,6 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 
 	for k, v := range asMap {
 		switch k {
-		case "key":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("key"))
-			it.Key, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "mimeType":
 			var err error
 
@@ -3989,6 +3981,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
 			it.Size, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "url":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("url"))
+			it.URL, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
