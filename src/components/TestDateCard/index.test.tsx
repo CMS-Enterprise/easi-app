@@ -2,22 +2,22 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { DateTime } from 'luxon';
 
-import ViewTestDate from 'components/ViewTestDate/index';
+import TestDateCard from 'components/TestDateCard';
 
-describe('The View Test Date component', () => {
+describe('The Test Date Card component', () => {
   it('renders without crashing', () => {
     shallow(
-      <ViewTestDate date={DateTime.local()} type="INITIAL" testIndex={1} />
+      <TestDateCard date={DateTime.local()} type="INITIAL" testIndex={1} />
     );
   });
 
   it('renders score', () => {
     const component = mount(
-      <ViewTestDate
+      <TestDateCard
         date={DateTime.local()}
         type="INITIAL"
         testIndex={1}
-        score="100.0%"
+        score={1000}
       />
     );
     expect(component.find('[data-testid="score"]').text()).toEqual('100.0%');

@@ -1,19 +1,19 @@
 import React from 'react';
 import { DateTime } from 'luxon';
 
-import ViewTestDate from 'components/ViewTestDate/index';
+import TestDateCard from 'components/TestDateCard';
 
 const Template = (args: any) => (
   <div className="grid-col-4">
-    <ViewTestDate {...args} />
+    <TestDateCard {...args} />
   </div>
 );
 
 export default {
-  title: 'View Test Date',
-  component: ViewTestDate,
+  title: 'Test Date Card',
+  component: TestDateCard,
   parameters: {
-    info: 'The View Test Date component'
+    info: 'The Test Date Card component'
   },
   args: {
     date: DateTime.local()
