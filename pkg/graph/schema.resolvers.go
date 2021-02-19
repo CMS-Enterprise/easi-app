@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -108,6 +109,10 @@ func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.Creat
 		return nil, err
 	}
 	return &model.CreateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
+func (r *mutationResolver) EditTestDate(ctx context.Context, input model.EditTestDateInput) (*model.EditTestDatePayload, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error) {
