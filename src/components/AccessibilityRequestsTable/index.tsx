@@ -71,7 +71,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       {
         Header: t('requestTable.header.testDate'),
         accessor: (row: AccessibilityRequestsTableRow) => {
-          return `${row.relevantTestDate?.date || 'Not Added'}`;
+          return `${row.relevantTestDate?.date ||
+            t('requestTable.emptyTestDate')}`;
         }
       }
       // {
