@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
-type ViewTestDateProps = {
+type TestDateCardProps = {
   date: DateTime;
   type: 'INITIAL' | 'REMEDIATION';
   testIndex: number;
   score?: number; // A whole number representing tenths of a percent
 };
 
-const ViewTestDate = ({ date, type, testIndex, score }: ViewTestDateProps) => {
+const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
   return (
     <div className="bg-gray-10 padding-2 line-height-body-4">
       <div className="text-bold margin-bottom-1">
@@ -42,4 +42,4 @@ const ViewTestDate = ({ date, type, testIndex, score }: ViewTestDateProps) => {
   );
 };
 
-export default ViewTestDate;
+export default TestDateCard;
