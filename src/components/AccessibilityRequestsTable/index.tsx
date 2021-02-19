@@ -23,6 +23,9 @@ type AccessibilityRequestsTableRow = {
   };
   submittedAt?: DateTime;
   testDate?: DateTime;
+  relevantTestDate?: {
+    date: DateTime;
+  };
   status?: string;
   lastUpdatedAt?: DateTime;
 };
@@ -67,12 +70,9 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: 'testedAt',
-        Cell: ({ value }: any) => {
-          if (value) {
-            return formatDate(value);
-          }
-          return '';
+        accessor: (row: AccessibilityRequestsTableRow) => {
+          return `${row.relevantTestDate?.date ||
+            t('requestTable.emptyTestDate')}`;
         }
       }
       // {

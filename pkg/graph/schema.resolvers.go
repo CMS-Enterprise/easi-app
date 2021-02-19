@@ -42,6 +42,44 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 	return documents, nil
 }
 
+func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj *models.AccessibilityRequest) (*models.TestDate, error) {
+	allDates := []*models.TestDate{}
+
+	if time.Now().Unix()%3 == 0 {
+		allDates = append(allDates, &models.TestDate{
+			ID:       uuid.New(),
+			Date:     time.Now().AddDate(0, 0, 1),
+			TestType: models.TestDateTestTypeInitial,
+		})
+	}
+	var nearFuture *models.TestDate
+	var recentPast *models.TestDate
+
+	now := time.Now()
+
+	for _, td := range allDates {
+		if td.Date.After(now) {
+			if nearFuture == nil || td.Date.Before(nearFuture.Date) {
+				nearFuture = td
+				continue
+			}
+		}
+		if td.Date.Before(now) {
+			if recentPast == nil || td.Date.After((recentPast.Date)) {
+				recentPast = td
+				continue
+			}
+		}
+	}
+
+	// future date takes precedence
+	if nearFuture != nil {
+		return nearFuture, nil
+	}
+	// either recentPast is defined or it is nil
+	return recentPast, nil
+}
+
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
 	system, systemErr := r.store.FetchSystemByIntakeID(ctx, obj.IntakeID)
 	if systemErr != nil {
