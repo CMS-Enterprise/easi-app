@@ -28,11 +28,11 @@ export enum TestDateTestType {
  * Parameters for createAccessibilityRequestDocument
  */
 export interface CreateAccessibilityRequestDocumentInput {
-  key: string;
   mimeType: string;
   name: string;
   requestID: UUID;
   size: number;
+  url: string;
 }
 
 /**

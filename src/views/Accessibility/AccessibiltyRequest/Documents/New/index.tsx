@@ -103,7 +103,7 @@ const New = () => {
             mimeType: selectedFile.type,
             size: selectedFile.size,
             name: selectedFile.name,
-            key: 'this is the key',
+            url: s3URL,
             requestID: accessibilityRequestId
           }
         }
