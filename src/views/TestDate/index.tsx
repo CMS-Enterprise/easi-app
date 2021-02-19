@@ -84,7 +84,7 @@ const TestDate = () => {
       history.push(`/508/requests/${accessibilityRequestId}`, {
         confirmationText: t('createTestDate.confirmation', {
           date: testDate.toLocaleString(DateTime.DATE_FULL),
-          requestName: data?.accessibilityRequest?.system?.name
+          requestName: data?.accessibilityRequest?.name
         })
       });
     });
