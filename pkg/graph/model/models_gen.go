@@ -66,6 +66,20 @@ type CreateTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+// Parameters for editing a test date
+type EditTestDateInput struct {
+	Date     time.Time               `json:"date"`
+	ID       uuid.UUID               `json:"id"`
+	Score    *int                    `json:"score"`
+	TestType models.TestDateTestType `json:"testType"`
+}
+
+// Result of editTestDate
+type EditTestDatePayload struct {
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
+}
+
 // Parameters required to generate a presigned upload URL
 type GeneratePresignedUploadURLInput struct {
 	FileName string `json:"fileName"`

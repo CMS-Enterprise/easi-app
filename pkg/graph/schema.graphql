@@ -181,6 +181,24 @@ type CreateTestDatePayload {
 }
 
 """
+Parameters for editing a test date
+"""
+input EditTestDateInput {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+Result of editTestDate
+"""
+type EditTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+"""
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
@@ -211,6 +229,8 @@ type Mutation {
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
+    @hasRole(role: EASI_508_TESTER)
+  editTestDate(input: EditTestDateInput!): EditTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
