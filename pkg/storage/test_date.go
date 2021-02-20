@@ -70,7 +70,7 @@ func (s *Store) FetchTestDateByID(ctx context.Context, id uuid.UUID) (*models.Te
 	return &testDate, nil
 }
 
-// FetchTestDatesByRequestID queries the DB for all the test dates matching the given AccessbilityRequest ID
+// FetchTestDatesByRequestID queries the DB for all the test dates matching the given AccessibilityRequest ID
 func (s *Store) FetchTestDatesByRequestID(ctx context.Context, requestID uuid.UUID) ([]*models.TestDate, error) {
 	results := []*models.TestDate{}
 

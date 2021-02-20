@@ -5,7 +5,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -201,7 +200,7 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 }
 
 func (r *queryResolver) TestDates(ctx context.Context, requestID uuid.UUID) ([]*models.TestDate, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.store.FetchTestDatesByRequestID(ctx, requestID)
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
