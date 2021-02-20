@@ -228,6 +228,7 @@ type Query {
     first: Int!
   ): AccessibilityRequestsConnection
   systems(after: String, first: Int!): SystemConnection
+  testDates(requestId: UUID!): [TestDate!]!
 }
 
 """
