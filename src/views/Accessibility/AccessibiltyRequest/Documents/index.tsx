@@ -96,6 +96,7 @@ const AccessibilityDocumentsList = ({
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
               <th
+                {...column.getHeaderProps()}
                 style={{ whiteSpace: 'nowrap', width: column.width }}
                 scope="col"
               >
