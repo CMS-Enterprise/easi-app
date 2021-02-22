@@ -90,6 +90,20 @@ type SystemEdge struct {
 	Node   *models.System `json:"node"`
 }
 
+// Parameters for editing a test date
+type UpdateTestDateInput struct {
+	Date     time.Time               `json:"date"`
+	ID       uuid.UUID               `json:"id"`
+	Score    *int                    `json:"score"`
+	TestType models.TestDateTestType `json:"testType"`
+}
+
+// Result of editTestDate
+type UpdateTestDatePayload struct {
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
+}
+
 // UserError represents application-level errors that are the result of
 // either user or application developer error.
 type UserError struct {
