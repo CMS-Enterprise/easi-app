@@ -95,6 +95,10 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.A
 	return system, nil
 }
 
+func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.TestDate, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error) {
 	return obj.FileType, nil
 }

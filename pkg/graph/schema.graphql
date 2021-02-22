@@ -18,6 +18,7 @@ type AccessibilityRequest {
   relevantTestDate: TestDate
   submittedAt: Time!
   system: System!
+  testDates: [TestDate!]!
 }
 
 """
