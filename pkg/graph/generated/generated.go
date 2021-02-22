@@ -100,11 +100,6 @@ type ComplexityRoot struct {
 		UserErrors func(childComplexity int) int
 	}
 
-	EditTestDatePayload struct {
-		TestDate   func(childComplexity int) int
-		UserErrors func(childComplexity int) int
-	}
-
 	GeneratePresignedUploadURLPayload struct {
 		URL        func(childComplexity int) int
 		UserErrors func(childComplexity int) int
@@ -115,7 +110,7 @@ type ComplexityRoot struct {
 		CreateAccessibilityRequestDocument func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
 		CreateTestDate                     func(childComplexity int, input model.CreateTestDateInput) int
 		GeneratePresignedUploadURL         func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
-		UpdateTestDate                     func(childComplexity int, input model.EditTestDateInput) int
+		UpdateTestDate                     func(childComplexity int, input model.UpdateTestDateInput) int
 	}
 
 	Query struct {
@@ -148,6 +143,11 @@ type ComplexityRoot struct {
 		TestType func(childComplexity int) int
 	}
 
+	UpdateTestDatePayload struct {
+		TestDate   func(childComplexity int) int
+		UserErrors func(childComplexity int) int
+	}
+
 	UserError struct {
 		Message func(childComplexity int) int
 		Path    func(childComplexity int) int
@@ -169,7 +169,7 @@ type MutationResolver interface {
 	CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
 	GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
-	UpdateTestDate(ctx context.Context, input model.EditTestDateInput) (*model.EditTestDatePayload, error)
+	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -374,20 +374,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateTestDatePayload.UserErrors(childComplexity), true
 
-	case "EditTestDatePayload.testDate":
-		if e.complexity.EditTestDatePayload.TestDate == nil {
-			break
-		}
-
-		return e.complexity.EditTestDatePayload.TestDate(childComplexity), true
-
-	case "EditTestDatePayload.userErrors":
-		if e.complexity.EditTestDatePayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.EditTestDatePayload.UserErrors(childComplexity), true
-
 	case "GeneratePresignedUploadURLPayload.url":
 		if e.complexity.GeneratePresignedUploadURLPayload.URL == nil {
 			break
@@ -460,7 +446,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.UpdateTestDate(childComplexity, args["input"].(model.EditTestDateInput)), true
+		return e.complexity.Mutation.UpdateTestDate(childComplexity, args["input"].(model.UpdateTestDateInput)), true
 
 	case "Query.accessibilityRequest":
 		if e.complexity.Query.AccessibilityRequest == nil {
@@ -581,6 +567,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TestDate.TestType(childComplexity), true
+
+	case "UpdateTestDatePayload.testDate":
+		if e.complexity.UpdateTestDatePayload.TestDate == nil {
+			break
+		}
+
+		return e.complexity.UpdateTestDatePayload.TestDate(childComplexity), true
+
+	case "UpdateTestDatePayload.userErrors":
+		if e.complexity.UpdateTestDatePayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.UpdateTestDatePayload.UserErrors(childComplexity), true
 
 	case "UserError.message":
 		if e.complexity.UserError.Message == nil {
@@ -845,7 +845,7 @@ type CreateTestDatePayload {
 """
 Parameters for editing a test date
 """
-input EditTestDateInput {
+input UpdateTestDateInput {
   date: Time!
   id: UUID!
   score: Int
@@ -855,7 +855,7 @@ input EditTestDateInput {
 """
 Result of editTestDate
 """
-type EditTestDatePayload {
+type UpdateTestDatePayload {
   testDate: TestDate
   userErrors: [UserError!]
 }
@@ -895,7 +895,7 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
-  updateTestDate(input: EditTestDateInput!): EditTestDatePayload
+  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
 }
 
@@ -1033,10 +1033,10 @@ func (ec *executionContext) field_Mutation_generatePresignedUploadURL_args(ctx c
 func (ec *executionContext) field_Mutation_updateTestDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.EditTestDateInput
+	var arg0 model.UpdateTestDateInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNEditTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEditTestDateInput(ctx, tmp)
+		arg0, err = ec.unmarshalNUpdateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDateInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2053,70 +2053,6 @@ func (ec *executionContext) _CreateTestDatePayload_userErrors(ctx context.Contex
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _EditTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.EditTestDatePayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "EditTestDatePayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TestDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.TestDate)
-	fc.Result = res
-	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _EditTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.EditTestDatePayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "EditTestDatePayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _GeneratePresignedUploadURLPayload_url(ctx context.Context, field graphql.CollectedField, obj *model.GeneratePresignedUploadURLPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -2387,7 +2323,7 @@ func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().UpdateTestDate(rctx, args["input"].(model.EditTestDateInput))
+			return ec.resolvers.Mutation().UpdateTestDate(rctx, args["input"].(model.UpdateTestDateInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER")
@@ -2407,10 +2343,10 @@ func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field 
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*model.EditTestDatePayload); ok {
+		if data, ok := tmp.(*model.UpdateTestDatePayload); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.EditTestDatePayload`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateTestDatePayload`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2419,9 +2355,9 @@ func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.EditTestDatePayload)
+	res := resTmp.(*model.UpdateTestDatePayload)
 	fc.Result = res
-	return ec.marshalOEditTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEditTestDatePayload(ctx, field.Selections, res)
+	return ec.marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -3027,6 +2963,70 @@ func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphq
 	res := resTmp.(models.TestDateTestType)
 	fc.Result = res
 	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.UpdateTestDatePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateTestDatePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TestDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.TestDate)
+	fc.Result = res
+	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateTestDatePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateTestDatePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UserError_message(ctx context.Context, field graphql.CollectedField, obj *model.UserError) (ret graphql.Marshaler) {
@@ -4318,8 +4318,44 @@ func (ec *executionContext) unmarshalInputCreateTestDateInput(ctx context.Contex
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputEditTestDateInput(ctx context.Context, obj interface{}) (model.EditTestDateInput, error) {
-	var it model.EditTestDateInput
+func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
+	var it model.GeneratePresignedUploadURLInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "fileName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileName"))
+			it.FileName, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "mimeType":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mimeType"))
+			it.MimeType, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "size":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
+			it.Size, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateTestDateInput(ctx context.Context, obj interface{}) (model.UpdateTestDateInput, error) {
+	var it model.UpdateTestDateInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -4353,42 +4389,6 @@ func (ec *executionContext) unmarshalInputEditTestDateInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("testType"))
 			it.TestType, err = ec.unmarshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
-	var it model.GeneratePresignedUploadURLInput
-	var asMap = obj.(map[string]interface{})
-
-	for k, v := range asMap {
-		switch k {
-		case "fileName":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("fileName"))
-			it.FileName, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "mimeType":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mimeType"))
-			it.MimeType, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "size":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
-			it.Size, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4730,32 +4730,6 @@ func (ec *executionContext) _CreateTestDatePayload(ctx context.Context, sel ast.
 	return out
 }
 
-var editTestDatePayloadImplementors = []string{"EditTestDatePayload"}
-
-func (ec *executionContext) _EditTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.EditTestDatePayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, editTestDatePayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("EditTestDatePayload")
-		case "testDate":
-			out.Values[i] = ec._EditTestDatePayload_testDate(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._EditTestDatePayload_userErrors(ctx, field, obj)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
 var generatePresignedUploadURLPayloadImplementors = []string{"GeneratePresignedUploadURLPayload"}
 
 func (ec *executionContext) _GeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, obj *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {
@@ -5015,6 +4989,32 @@ func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateTestDatePayloadImplementors = []string{"UpdateTestDatePayload"}
+
+func (ec *executionContext) _UpdateTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateTestDatePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateTestDatePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateTestDatePayload")
+		case "testDate":
+			out.Values[i] = ec._UpdateTestDatePayload_testDate(ctx, field, obj)
+		case "userErrors":
+			out.Values[i] = ec._UpdateTestDatePayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5457,11 +5457,6 @@ func (ec *executionContext) unmarshalNCreateTestDateInput2githubᚗcomᚋcmsgov�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNEditTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEditTestDateInput(ctx context.Context, v interface{}) (model.EditTestDateInput, error) {
-	res, err := ec.unmarshalInputEditTestDateInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNGeneratePresignedUploadURLInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx context.Context, v interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	res, err := ec.unmarshalInputGeneratePresignedUploadURLInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -5663,6 +5658,11 @@ func (ec *executionContext) marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDateInput(ctx context.Context, v interface{}) (model.UpdateTestDateInput, error) {
+	res, err := ec.unmarshalInputUpdateTestDateInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNUserError2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserError(ctx context.Context, sel ast.SelectionSet, v *model.UserError) graphql.Marshaler {
@@ -5970,13 +5970,6 @@ func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsg
 	return ec._CreateTestDatePayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOEditTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐEditTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.EditTestDatePayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._EditTestDatePayload(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, v *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -6035,6 +6028,13 @@ func (ec *executionContext) marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑa
 		return graphql.Null
 	}
 	return ec._TestDate(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateTestDatePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateTestDatePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.UserError) graphql.Marshaler {
