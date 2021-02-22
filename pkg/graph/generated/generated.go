@@ -57,10 +57,10 @@ type ComplexityRoot struct {
 		Name             func(childComplexity int) int
 		RelevantTestDate func(childComplexity int) int
 		System           func(childComplexity int) int
+		TestDates        func(childComplexity int) int
 	}
 
 	AccessibilityRequestDocument struct {
-		Bucket     func(childComplexity int) int
 		ID         func(childComplexity int) int
 		Key        func(childComplexity int) int
 		MimeType   func(childComplexity int) int
@@ -117,7 +117,6 @@ type ComplexityRoot struct {
 		AccessibilityRequest  func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests func(childComplexity int, after *string, first int) int
 		Systems               func(childComplexity int, after *string, first int) int
-		TestDates             func(childComplexity int, requestID uuid.UUID) int
 	}
 
 	System struct {
@@ -156,6 +155,7 @@ type AccessibilityRequestResolver interface {
 	RelevantTestDate(ctx context.Context, obj *models.AccessibilityRequest) (*models.TestDate, error)
 
 	System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error)
+	TestDates(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.TestDate, error)
 }
 type AccessibilityRequestDocumentResolver interface {
 	MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error)
@@ -172,7 +172,6 @@ type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
 	AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
-	TestDates(ctx context.Context, requestID uuid.UUID) ([]*models.TestDate, error)
 }
 
 type executableSchema struct {
@@ -232,12 +231,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccessibilityRequest.System(childComplexity), true
 
-	case "AccessibilityRequestDocument.bucket":
-		if e.complexity.AccessibilityRequestDocument.Bucket == nil {
+	case "AccessibilityRequest.testDates":
+		if e.complexity.AccessibilityRequest.TestDates == nil {
 			break
 		}
 
-		return e.complexity.AccessibilityRequestDocument.Bucket(childComplexity), true
+		return e.complexity.AccessibilityRequest.TestDates(childComplexity), true
 
 	case "AccessibilityRequestDocument.id":
 		if e.complexity.AccessibilityRequestDocument.ID == nil {
@@ -477,18 +476,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Systems(childComplexity, args["after"].(*string), args["first"].(int)), true
 
-	case "Query.testDates":
-		if e.complexity.Query.TestDates == nil {
-			break
-		}
-
-		args, err := ec.field_Query_testDates_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.TestDates(childComplexity, args["requestId"].(uuid.UUID)), true
-
 	case "System.businessOwner":
 		if e.complexity.System.BusinessOwner == nil {
 			break
@@ -671,6 +658,7 @@ type AccessibilityRequest {
   relevantTestDate: TestDate
   submittedAt: Time!
   system: System!
+  testDates: [TestDate!]!
 }
 
 """
@@ -715,7 +703,6 @@ enum AccessibilityRequestDocumentStatus {
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
-  bucket: String!
   id: UUID!
   key: String!
   mimeType: String!
@@ -838,12 +825,11 @@ type CreateTestDatePayload {
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
-  bucket: String!
-  key: String!
   mimeType: String!
   name: String!
   requestID: UUID!
   size: Int!
+  url: String!
 }
 
 """
@@ -881,7 +867,6 @@ type Query {
     first: Int!
   ): AccessibilityRequestsConnection
   systems(after: String, first: Int!): SystemConnection
-  testDates(requestId: UUID!): [TestDate!]!
 }
 
 """
@@ -1078,21 +1063,6 @@ func (ec *executionContext) field_Query_systems_args(ctx context.Context, rawArg
 		}
 	}
 	args["first"] = arg1
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_testDates_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 uuid.UUID
-	if tmp, ok := rawArgs["requestId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("requestId"))
-		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["requestId"] = arg0
 	return args, nil
 }
 
@@ -1341,7 +1311,7 @@ func (ec *executionContext) _AccessibilityRequest_system(ctx context.Context, fi
 	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccessibilityRequestDocument_bucket(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
+func (ec *executionContext) _AccessibilityRequest_testDates(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1349,17 +1319,17 @@ func (ec *executionContext) _AccessibilityRequestDocument_bucket(ctx context.Con
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
+		Object:     "AccessibilityRequest",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Bucket, nil
+		return ec.resolvers.AccessibilityRequest().TestDates(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1371,9 +1341,9 @@ func (ec *executionContext) _AccessibilityRequestDocument_bucket(ctx context.Con
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.([]*models.TestDate)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestDocument_id(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
@@ -2417,48 +2387,6 @@ func (ec *executionContext) _Query_systems(ctx context.Context, field graphql.Co
 	res := resTmp.(*model.SystemConnection)
 	fc.Result = res
 	return ec.marshalOSystemConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemConnection(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Query_testDates(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Query_testDates_args(ctx, rawArgs)
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	fc.Args = args
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().TestDates(rctx, args["requestId"].(uuid.UUID))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.TestDate)
-	fc.Result = res
-	return ec.marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -4112,22 +4040,6 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 
 	for k, v := range asMap {
 		switch k {
-		case "bucket":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("bucket"))
-			it.Bucket, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "key":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("key"))
-			it.Key, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "mimeType":
 			var err error
 
@@ -4157,6 +4069,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
 			it.Size, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "url":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("url"))
+			it.URL, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4347,6 +4267,20 @@ func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.S
 				}
 				return res
 			})
+		case "testDates":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._AccessibilityRequest_testDates(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4369,11 +4303,6 @@ func (ec *executionContext) _AccessibilityRequestDocument(ctx context.Context, s
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccessibilityRequestDocument")
-		case "bucket":
-			out.Values[i] = ec._AccessibilityRequestDocument_bucket(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "id":
 			out.Values[i] = ec._AccessibilityRequestDocument_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -4723,20 +4652,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_systems(ctx, field)
-				return res
-			})
-		case "testDates":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_testDates(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			})
 		case "__type":
