@@ -61,12 +61,12 @@ type ComplexityRoot struct {
 
 	AccessibilityRequestDocument struct {
 		ID         func(childComplexity int) int
-		Key        func(childComplexity int) int
 		MimeType   func(childComplexity int) int
 		Name       func(childComplexity int) int
 		RequestID  func(childComplexity int) int
 		Size       func(childComplexity int) int
 		Status     func(childComplexity int) int
+		URL        func(childComplexity int) int
 		UploadedAt func(childComplexity int) int
 	}
 
@@ -236,13 +236,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccessibilityRequestDocument.ID(childComplexity), true
 
-	case "AccessibilityRequestDocument.key":
-		if e.complexity.AccessibilityRequestDocument.Key == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.Key(childComplexity), true
-
 	case "AccessibilityRequestDocument.mimeType":
 		if e.complexity.AccessibilityRequestDocument.MimeType == nil {
 			break
@@ -277,6 +270,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequestDocument.Status(childComplexity), true
+
+	case "AccessibilityRequestDocument.url":
+		if e.complexity.AccessibilityRequestDocument.URL == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestDocument.URL(childComplexity), true
 
 	case "AccessibilityRequestDocument.uploadedAt":
 		if e.complexity.AccessibilityRequestDocument.UploadedAt == nil {
@@ -694,13 +694,13 @@ A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
   id: UUID!
-  key: String!
   mimeType: String!
   name: String!
   requestID: UUID!
   size: Int!
   status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
+  url: String!
 }
 
 """
@@ -1336,41 +1336,6 @@ func (ec *executionContext) _AccessibilityRequestDocument_id(ctx context.Context
 	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _AccessibilityRequestDocument_key(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Key, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _AccessibilityRequestDocument_mimeType(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1579,6 +1544,41 @@ func (ec *executionContext) _AccessibilityRequestDocument_uploadedAt(ctx context
 	res := resTmp.(*time.Time)
 	fc.Result = res
 	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequestDocument_url(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestDocument",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestEdge) (ret graphql.Marshaler) {
@@ -4249,11 +4249,6 @@ func (ec *executionContext) _AccessibilityRequestDocument(ctx context.Context, s
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "key":
-			out.Values[i] = ec._AccessibilityRequestDocument_key(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "mimeType":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -4302,6 +4297,11 @@ func (ec *executionContext) _AccessibilityRequestDocument(ctx context.Context, s
 				}
 				return res
 			})
+		case "url":
+			out.Values[i] = ec._AccessibilityRequestDocument_url(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

@@ -63,13 +63,13 @@ A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
   id: UUID!
-  key: String!
   mimeType: String!
   name: String!
   requestID: UUID!
   size: Int!
   status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
+  url: String!
 }
 
 """

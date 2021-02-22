@@ -52,9 +52,27 @@ func (m mockS3Client) PutObjectRequest(input *s3.PutObjectInput) (*request.Reque
 	)
 
 	newRequest.Handlers.Sign.PushFront(func(r *request.Request) {
-		r.HTTPRequest.URL = &url.URL{Host: "signed.example.com", Path: "signed/123", Scheme: "https"}
+		r.HTTPRequest.URL = &url.URL{Host: "signed.example.com", Path: "signed/put/123", Scheme: "https"}
 	})
 	return newRequest, &s3.PutObjectOutput{}
+}
+
+func (m mockS3Client) GetObjectRequest(input *s3.GetObjectInput) (*request.Request, *s3.GetObjectOutput) {
+
+	newRequest := request.New(
+		aws.Config{},
+		metadata.ClientInfo{},
+		request.Handlers{},
+		nil,
+		&request.Operation{},
+		nil,
+		nil,
+	)
+
+	newRequest.Handlers.Sign.PushFront(func(r *request.Request) {
+		r.HTTPRequest.URL = &url.URL{Host: "signed.example.com", Path: "signed/get/123", Scheme: "https"}
+	})
+	return newRequest, &s3.GetObjectOutput{}
 }
 
 func TestGraphQLTestSuite(t *testing.T) {
@@ -128,6 +146,17 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	})
 	s.NoError(requestErr)
 
+	document, documentErr := s.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
+		RequestID:    accessibilityRequest.ID,
+		Name:         "uploaded_doc.pdf",
+		FileType:     "application/pdf",
+		Size:         1234567,
+		VirusScanned: null.BoolFrom(true),
+		VirusClean:   null.BoolFrom(true),
+		Key:          "abcdefg1234567.pdf",
+	})
+	s.NoError(documentErr)
+
 	var resp struct {
 		AccessibilityRequest struct {
 			ID     string
@@ -140,6 +169,14 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 					Component string
 				}
 			}
+			Documents []struct {
+				ID       string
+				URL      string
+				MimeType string
+				Name     string
+				Size     int
+				Status   string
+			}
 		}
 	}
 
@@ -149,6 +186,14 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 		`query {
 			accessibilityRequest(id: "%s") {
 				id
+				documents {
+					id
+					url
+					mimeType
+					name
+					size
+					status
+				}
 				system {
 					id
 					name
@@ -167,6 +212,16 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	s.Equal(lifecycleID, resp.AccessibilityRequest.System.LCID)
 	s.Equal("Firstname Lastname", resp.AccessibilityRequest.System.BusinessOwner.Name)
 	s.Equal("OIT", resp.AccessibilityRequest.System.BusinessOwner.Component)
+
+	s.Equal(1, len(resp.AccessibilityRequest.Documents))
+
+	responseDocument := resp.AccessibilityRequest.Documents[0]
+	s.Equal(document.ID.String(), responseDocument.ID)
+	s.Equal("application/pdf", responseDocument.MimeType)
+	s.Equal(1234567, responseDocument.Size)
+	s.Equal("AVAILABLE", responseDocument.Status)
+	s.Equal("https://signed.example.com/signed/get/123", responseDocument.URL)
+	s.Equal("uploaded_doc.pdf", responseDocument.Name)
 }
 
 func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
@@ -191,7 +246,7 @@ func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
 			}
 		}`, &resp)
 
-	s.Equal("https://signed.example.com/signed/123", resp.GeneratePresignedUploadURL.URL)
+	s.Equal("https://signed.example.com/signed/put/123", resp.GeneratePresignedUploadURL.URL)
 	s.Equal(0, len(resp.GeneratePresignedUploadURL.UserErrors))
 }
 
@@ -228,7 +283,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 				UploadedAt string
 				RequestID  string
 				Size       int
-				Key        string
+				URL        string
 			}
 			UserErrors []struct {
 				Message string
@@ -254,7 +309,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 					uploadedAt
 					requestID
 					size
-					key
+					url
 				}
 				userErrors {
 					message
@@ -272,5 +327,5 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 	s.Equal("PENDING", document.Status)
 	s.NotEmpty(document.UploadedAt)
 	s.Equal(accessibilityRequest.ID.String(), document.RequestID)
-	s.Equal("e9eb4a4f-9100-416f-be5b-f141bb436cfa.pdf", document.Key)
+	s.Equal("https://signed.example.com/signed/get/123", document.URL)
 }
