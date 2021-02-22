@@ -21,7 +21,8 @@ const accessibility = {
       pointOfContact: 'Point of Contact',
       status: 'Status'
     },
-    lastUpdated: 'last updated on'
+    lastUpdated: 'last updated on',
+    emptyTestDate: 'Not Added'
   },
   tabs: {
     accessibilityRequests: '508 Requests'

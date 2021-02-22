@@ -2,14 +2,14 @@ import React from 'react';
 import { Link } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
-type TestDateProps = {
+type TestDateCardProps = {
   date: DateTime;
   type: 'INITIAL' | 'REMEDIATION';
   testIndex: number;
-  score?: string; // This type might need to be changed based on API model
+  score?: number; // A whole number representing tenths of a percent
 };
 
-const TestDate = ({ date, type, testIndex, score }: TestDateProps) => {
+const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
   return (
     <div className="bg-gray-10 padding-2 line-height-body-4">
       <div className="text-bold margin-bottom-1">
@@ -23,17 +23,23 @@ const TestDate = ({ date, type, testIndex, score }: TestDateProps) => {
           className="display-inline-block text-base-dark"
           data-testid="score"
         >
-          {score || 'Score not added'}
+          {score ? `${(score / 10).toFixed(1)}%` : 'Score not added'}
         </div>
       </div>
       <div>
-        <Link href="/" className="margin-right-2">
+        <Link
+          href="/"
+          className="margin-right-2"
+          aria-label={`Edit test ${testIndex} ${type}`}
+        >
           Edit
         </Link>
-        <Link href="/">Remove</Link>
+        <Link href="/" aria-label={`Remove test ${testIndex} ${type}`}>
+          Remove
+        </Link>
       </div>
     </div>
   );
 };
 
-export default TestDate;
+export default TestDateCard;
