@@ -82,6 +82,7 @@ const New = () => {
         result.data?.generatePresignedUploadURL?.userErrors ||
         isUndefined(url)
       ) {
+        // eslint-disable-next-line
         console.error('Could not fetch presigned S3 URL');
       } else {
         setS3URL(url || '');
