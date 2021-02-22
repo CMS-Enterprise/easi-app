@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -117,11 +118,20 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error) {
+	url, urlErr := url.Parse(input.URL)
+	if urlErr != nil {
+		return nil, urlErr
+	}
+
+	key, keyErr := r.s3Client.KeyFromURL(url)
+	if keyErr != nil {
+		return nil, keyErr
+	}
+
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		Name:      input.Name,
 		FileType:  input.MimeType,
-		Bucket:    input.Bucket,
-		Key:       input.Key,
+		Key:       key,
 		Size:      input.Size,
 		RequestID: input.RequestID,
 	})

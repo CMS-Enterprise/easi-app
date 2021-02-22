@@ -75,7 +75,8 @@ type AccessibilityRequestDocument struct {
 	Key          string                             `json:"fileKey" db:"file_key"`
 	Name         string                             `json:"name" db:"file_name"`
 	Size         int                                `json:"size" db:"file_size"`
-	Status       AccessibilityRequestDocumentStatus `json:"status" db:"status"`
+	URL          string                             `json:"url"`
+	Status       AccessibilityRequestDocumentStatus `json:"status"`
 	VirusScanned null.Bool                          `json:"virusScanned" db:"virus_scanned"`
 	VirusClean   null.Bool                          `json:"virusClean" db:"virus_clean"`
 	RequestID    uuid.UUID                          `json:"requestId" db:"request_id"`

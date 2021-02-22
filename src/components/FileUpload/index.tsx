@@ -39,6 +39,7 @@ const FileUpload = (props: FileUploadProps) => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line
     if (e.target.files.length > 0) {
       if (isFileTypeValid(e.target.files[0])) {
         setError(false);
