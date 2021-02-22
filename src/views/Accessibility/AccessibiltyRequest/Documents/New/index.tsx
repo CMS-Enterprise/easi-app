@@ -24,7 +24,6 @@ import { FileUploadForm } from 'types/files';
 const New = () => {
   const { t } = useTranslation('accessibility');
   const history = useHistory();
-
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -109,7 +108,9 @@ const New = () => {
           }
         }
       }).then(() => {
-        history.push(`/508/requests/${accessibilityRequestId}`);
+        history.push(`/508/requests/${accessibilityRequestId}`, {
+          confirmationText: `${selectedFile.name} uploaded to ${data?.accessibilityRequest?.name}`
+        });
       });
     });
   };
