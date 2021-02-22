@@ -60,7 +60,6 @@ type ComplexityRoot struct {
 	}
 
 	AccessibilityRequestDocument struct {
-		Bucket     func(childComplexity int) int
 		ID         func(childComplexity int) int
 		Key        func(childComplexity int) int
 		MimeType   func(childComplexity int) int
@@ -229,13 +228,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequest.System(childComplexity), true
-
-	case "AccessibilityRequestDocument.bucket":
-		if e.complexity.AccessibilityRequestDocument.Bucket == nil {
-			break
-		}
-
-		return e.complexity.AccessibilityRequestDocument.Bucket(childComplexity), true
 
 	case "AccessibilityRequestDocument.id":
 		if e.complexity.AccessibilityRequestDocument.ID == nil {
@@ -701,7 +693,6 @@ enum AccessibilityRequestDocumentStatus {
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
-  bucket: String!
   id: UUID!
   key: String!
   mimeType: String!
@@ -824,12 +815,11 @@ type CreateTestDatePayload {
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
-  bucket: String!
-  key: String!
   mimeType: String!
   name: String!
   requestID: UUID!
   size: Int!
+  url: String!
 }
 
 """
@@ -1309,41 +1299,6 @@ func (ec *executionContext) _AccessibilityRequest_system(ctx context.Context, fi
 	res := resTmp.(*models.System)
 	fc.Result = res
 	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _AccessibilityRequestDocument_bucket(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "AccessibilityRequestDocument",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Bucket, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestDocument_id(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
@@ -4040,22 +3995,6 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 
 	for k, v := range asMap {
 		switch k {
-		case "bucket":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("bucket"))
-			it.Bucket, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "key":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("key"))
-			it.Key, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "mimeType":
 			var err error
 
@@ -4085,6 +4024,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("size"))
 			it.Size, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "url":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("url"))
+			it.URL, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4297,11 +4244,6 @@ func (ec *executionContext) _AccessibilityRequestDocument(ctx context.Context, s
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccessibilityRequestDocument")
-		case "bucket":
-			out.Values[i] = ec._AccessibilityRequestDocument_bucket(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "id":
 			out.Values[i] = ec._AccessibilityRequestDocument_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
