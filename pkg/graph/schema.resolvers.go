@@ -94,6 +94,10 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.A
 	return system, nil
 }
 
+func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.TestDate, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error) {
 	return obj.FileType, nil
 }
@@ -198,10 +202,6 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 		})
 	}
 	return conn, nil
-}
-
-func (r *queryResolver) TestDates(ctx context.Context, requestID uuid.UUID) ([]*models.TestDate, error) {
-	panic(fmt.Errorf("not implemented"))
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
