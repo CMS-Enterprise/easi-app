@@ -7,6 +7,11 @@
 // GraphQL query operation: GetAccessibilityRequests
 // ====================================================
 
+export interface GetAccessibilityRequests_accessibilityRequests_edges_node_relevantTestDate {
+  __typename: "TestDate";
+  date: Time;
+}
+
 export interface GetAccessibilityRequests_accessibilityRequests_edges_node_system_businessOwner {
   __typename: "BusinessOwner";
   name: string;
@@ -22,8 +27,9 @@ export interface GetAccessibilityRequests_accessibilityRequests_edges_node_syste
 export interface GetAccessibilityRequests_accessibilityRequests_edges_node {
   __typename: "AccessibilityRequest";
   id: UUID;
-  submittedAt: Time;
   name: string;
+  relevantTestDate: GetAccessibilityRequests_accessibilityRequests_edges_node_relevantTestDate | null;
+  submittedAt: Time;
   system: GetAccessibilityRequests_accessibilityRequests_edges_node_system;
 }
 

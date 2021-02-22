@@ -13,6 +13,7 @@ import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import {
   DateInputDay,
@@ -30,6 +31,8 @@ import TextField from 'components/shared/TextField';
 import { TestDateForm } from 'types/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { TestDateValidationSchema } from 'validations/testDateSchema';
+
+import './index.scss';
 
 const TestDate = () => {
   const { t } = useTranslation('accessibility');
@@ -91,7 +94,7 @@ const TestDate = () => {
   };
 
   return (
-    <PageWrapper className="add-test-date">
+    <PageWrapper className="easi-508-test-date">
       <Header />
       <MainContent className="margin-bottom-5">
         <SecondaryNav>
@@ -99,7 +102,7 @@ const TestDate = () => {
             {t('tabs.accessibilityRequests')}
           </NavLink>
         </SecondaryNav>
-        <div className="grid-container padding-y-6">
+        <div className="grid-container margin-y-4">
           <Formik
             initialValues={initialValues}
             onSubmit={onSubmit}
@@ -138,11 +141,11 @@ const TestDate = () => {
                       />
                     </ErrorAlert>
                   )}
-                  <h1 className="margin-bottom-1">
+                  <PageHeading>
                     {t('createTestDate.addTestDateHeader', {
                       requestName: data?.accessibilityRequest?.system?.name
                     })}
-                  </h1>
+                  </PageHeading>
                   <div className="grid-row grid-gap-lg">
                     <div className="grid-col-9">
                       <Form>
@@ -164,6 +167,9 @@ const TestDate = () => {
                             <Field
                               as={RadioField}
                               checked={values.testType === 'REMEDIATION'}
+                              // Radios have a margin-bottom
+                              // This is changing to margin-top in USWDS 2.9
+                              className="margin-bottom-0"
                               id="TestDate-TestTypeRemediation"
                               name="testType"
                               label="Remediation"
@@ -184,10 +190,7 @@ const TestDate = () => {
                             <legend className="usa-label margin-bottom-1">
                               {t('createTestDate.dateHeader')}
                             </legend>
-                            <HelpText
-                              id="TestDate-DateHelp"
-                              className="margin-bottom-2"
-                            >
+                            <HelpText id="TestDate-DateHelp">
                               {t('createTestDate.dateHelpText')}
                             </HelpText>
                             <FieldErrorMsg>
@@ -198,14 +201,11 @@ const TestDate = () => {
                             <FieldErrorMsg>
                               {flatErrors.validDate}
                             </FieldErrorMsg>
-                            <div
-                              className="usa-memorable-date"
-                              style={{ marginTop: '-2rem' }}
-                            >
+                            <div className="usa-memorable-date">
                               <div className="usa-form-group usa-form-group--month">
                                 <Label
                                   htmlFor="TestDate-DateMonth"
-                                  className="text-normal"
+                                  className="easi-508-test-date__date-label"
                                 >
                                   {t('general:date.month')}
                                 </Label>
@@ -219,7 +219,7 @@ const TestDate = () => {
                               <div className="usa-form-group usa-form-group--day">
                                 <Label
                                   htmlFor="TestDate-DateDay"
-                                  className="text-normal"
+                                  className="easi-508-test-date__date-label"
                                 >
                                   {t('general:date.day')}
                                 </Label>
@@ -233,7 +233,7 @@ const TestDate = () => {
                               <div className="usa-form-group usa-form-group--year">
                                 <Label
                                   htmlFor="TestDate-DateYear"
-                                  className="text-normal"
+                                  className="easi-508-test-date__date-label"
                                 >
                                   {t('general:date.year')}
                                 </Label>
@@ -281,22 +281,22 @@ const TestDate = () => {
                                 setFieldValue('score.isPresent', true);
                               }}
                               value
-                              aria-describedby="TestDate-ScoreYes"
                             />
                             {values.score.isPresent && (
-                              <div className="width-card-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
+                              <div className="width-card-lg margin-left-4 margin-bottom-1">
                                 <FieldGroup
                                   scrollElement="score.value"
                                   error={!!flatErrors['score.value']}
                                 >
-                                  <Label htmlFor="TestDate-ScoreValue">
-                                    {t('createTestDate.scoreValueHeader')}
-                                  </Label>
                                   <Label
                                     htmlFor="TestDate-ScoreValue"
-                                    className="usa-sr-only"
+                                    className="margin-bottom-1"
+                                    style={{ marginTop: '0.5em' }}
+                                    aria-label={t(
+                                      'createTestDate.scoreValueSRHelpText'
+                                    )}
                                   >
-                                    {t('createTestDate.scoreValueSRHelpText')}
+                                    {t('createTestDate.scoreValueHeader')}
                                   </Label>
                                   <FieldErrorMsg>
                                     {flatErrors['score.value']}
@@ -306,12 +306,13 @@ const TestDate = () => {
                                       <Field
                                         as={TextField}
                                         error={!!flatErrors['score.value']}
+                                        className="margin-top-0"
                                         id="TestDate-ScoreValue"
                                         maxLength={4}
                                         name="score.value"
                                       />
                                     </div>
-                                    <div className="bg-black text-white width-5 margin-top-05 display-flex flex-justify-center flex-align-center">
+                                    <div className="bg-black text-white width-5 display-flex flex-justify-center flex-align-center">
                                       <span className="text-bold">%</span>
                                     </div>
                                   </div>
@@ -320,10 +321,7 @@ const TestDate = () => {
                             )}
                           </fieldset>
                         </FieldGroup>
-                        <Button
-                          className="margin-top-2 display-block"
-                          type="submit"
-                        >
+                        <Button className="margin-top-4" type="submit">
                           {t('createTestDate.submitButton')}
                         </Button>
                         <Link

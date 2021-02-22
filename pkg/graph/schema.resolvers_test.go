@@ -83,7 +83,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 		t.Fail()
 	}
 
-	s3Config := upload.Config{Bucket: "test", Region: "us-west", IsLocal: false}
+	s3Config := upload.Config{Bucket: "easi-test-bucket", Region: "us-west", IsLocal: false}
 	mockClient := mockS3Client{}
 	s3Client := upload.NewS3ClientUsingClient(mockClient, s3Config)
 
@@ -243,8 +243,7 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 				mimeType: "application/pdf",
 				size: 512512,
 				name: "test_file.pdf",
-				key: "path/to/file/fb1db6a1-3fd3-40b5-a93f-4b9d7245f80c.pdf",
-				bucket: "test_bucket",
+				url: "http://localhost:9000/easi-test-bucket/e9eb4a4f-9100-416f-be5b-f141bb436cfa.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&",
 				requestID: "%s"
 			}) {
 				accessibilityRequestDocument {
@@ -273,5 +272,5 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 	s.Equal("PENDING", document.Status)
 	s.NotEmpty(document.UploadedAt)
 	s.Equal(accessibilityRequest.ID.String(), document.RequestID)
-	s.Equal("path/to/file/fb1db6a1-3fd3-40b5-a93f-4b9d7245f80c.pdf", document.Key)
+	s.Equal("e9eb4a4f-9100-416f-be5b-f141bb436cfa.pdf", document.Key)
 }

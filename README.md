@@ -409,6 +409,10 @@ yarn generate
 
 ### Swagger Generation
 
+(Most developers will not need to do this. It is rarely done, only
+when updating our client to the CEDAR APIs. The output of these
+instructions are checked into the repository.)
+
 The EASi server uses Swagger generation
 to access APIs from CEDAR (the data source).
 Swagger specs (EASi and LDAP) can be downloaded from webMethods:
@@ -484,16 +488,21 @@ There are multiple ways to run the Cypress tests:
 
 ### APIs
 
+To start the API server: `$ ./bin/easi serve`
 The APIs reside at `localhost:8080` when running.
 To run a test request,
 you can send a GET to the health check endpoint:
 `curl localhost:8080/api/v1/healthcheck`
 
+### Front-End
+
+To start the JavaScript application serving: `$ yarn start`
+
 ### GraphQL Playground
 
 You can visit `http://localhost:8080/api/graph/playground`
 to access a GraphQL playground while
-the Go backend is running. **You will need to enter `/graph/query` as the query
+the Go backend is running. **You will need to enter `/api/graph/query` as the query
 path in the UI for this to work.**
 
 ### Authorization
