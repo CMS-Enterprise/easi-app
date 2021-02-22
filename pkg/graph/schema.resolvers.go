@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"time"
 
@@ -166,6 +167,10 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	return &model.GeneratePresignedUploadURLPayload{
 		URL: &url.URL,
 	}, nil
+}
+
+func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
