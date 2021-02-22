@@ -70,9 +70,12 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: (row: AccessibilityRequestsTableRow) => {
-          return `${row.relevantTestDate?.date ||
-            t('requestTable.emptyTestDate')}`;
+        accessor: 'relevantTestDate',
+        Cell: ({ value }: any) => {
+          if (value) {
+            return formatDate(value);
+          }
+          return t('requestTable.emptyTestDate');
         }
       }
       // {
