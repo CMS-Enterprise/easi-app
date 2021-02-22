@@ -14,6 +14,7 @@ type TextFieldProps = {
   value: string;
   match?: RegExp;
   inline?: boolean;
+  className?: string;
 } & JSX.IntrinsicElements['input'];
 
 const TextField = ({
@@ -27,13 +28,15 @@ const TextField = ({
   value,
   match,
   inline,
+  className,
   ...props
 }: TextFieldProps) => {
   const inputClasses = classnames(
     'usa-input',
     { 'easi-textfield--disabled': disabled },
     { 'usa-input--error': error },
-    { 'display-inline-block': inline }
+    { 'display-inline-block': inline },
+    className
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
