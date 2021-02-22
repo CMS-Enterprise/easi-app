@@ -32,6 +32,8 @@ import { TestDateForm } from 'types/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { TestDateValidationSchema } from 'validations/testDateSchema';
 
+import './index.scss';
+
 const TestDate = () => {
   const { t } = useTranslation('accessibility');
   const { accessibilityRequestId } = useParams<{
@@ -92,7 +94,7 @@ const TestDate = () => {
   };
 
   return (
-    <PageWrapper className="add-test-date">
+    <PageWrapper className="easi-508-test-date">
       <Header />
       <MainContent className="margin-bottom-5">
         <SecondaryNav>
@@ -203,7 +205,7 @@ const TestDate = () => {
                               <div className="usa-form-group usa-form-group--month">
                                 <Label
                                   htmlFor="TestDate-DateMonth"
-                                  style={{ marginTop: '0.5em' }}
+                                  className="easi-508-test-date__date-label"
                                 >
                                   {t('general:date.month')}
                                 </Label>
@@ -217,7 +219,7 @@ const TestDate = () => {
                               <div className="usa-form-group usa-form-group--day">
                                 <Label
                                   htmlFor="TestDate-DateDay"
-                                  style={{ marginTop: '0.5em' }}
+                                  className="easi-508-test-date__date-label"
                                 >
                                   {t('general:date.day')}
                                 </Label>
@@ -231,7 +233,7 @@ const TestDate = () => {
                               <div className="usa-form-group usa-form-group--year">
                                 <Label
                                   htmlFor="TestDate-DateYear"
-                                  style={{ marginTop: '0.5em' }}
+                                  className="easi-508-test-date__date-label"
                                 >
                                   {t('general:date.year')}
                                 </Label>
