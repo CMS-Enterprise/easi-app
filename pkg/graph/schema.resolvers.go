@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -41,6 +42,44 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 	}
 
 	return documents, nil
+}
+
+func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj *models.AccessibilityRequest) (*models.TestDate, error) {
+	allDates := []*models.TestDate{}
+
+	if time.Now().Unix()%3 == 0 {
+		allDates = append(allDates, &models.TestDate{
+			ID:       uuid.New(),
+			Date:     time.Now().AddDate(0, 0, 1),
+			TestType: models.TestDateTestTypeInitial,
+		})
+	}
+	var nearFuture *models.TestDate
+	var recentPast *models.TestDate
+
+	now := time.Now()
+
+	for _, td := range allDates {
+		if td.Date.After(now) {
+			if nearFuture == nil || td.Date.Before(nearFuture.Date) {
+				nearFuture = td
+				continue
+			}
+		}
+		if td.Date.Before(now) {
+			if recentPast == nil || td.Date.After((recentPast.Date)) {
+				recentPast = td
+				continue
+			}
+		}
+	}
+
+	// future date takes precedence
+	if nearFuture != nil {
+		return nearFuture, nil
+	}
+	// either recentPast is defined or it is nil
+	return recentPast, nil
 }
 
 func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.AccessibilityRequest) (*models.System, error) {
@@ -80,11 +119,20 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error) {
+	url, urlErr := url.Parse(input.URL)
+	if urlErr != nil {
+		return nil, urlErr
+	}
+
+	key, keyErr := r.s3Client.KeyFromURL(url)
+	if keyErr != nil {
+		return nil, keyErr
+	}
+
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		Name:      input.Name,
 		FileType:  input.MimeType,
-		Bucket:    input.Bucket,
-		Key:       input.Key,
+		Key:       key,
 		Size:      input.Size,
 		RequestID: input.RequestID,
 	})
