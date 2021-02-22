@@ -5,6 +5,8 @@ package graph
 
 import (
 	"context"
+	"fmt"
+	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -93,6 +95,10 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.A
 	return system, nil
 }
 
+func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.TestDate, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error) {
 	return obj.FileType, nil
 }
@@ -117,11 +123,20 @@ func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error) {
+	url, urlErr := url.Parse(input.URL)
+	if urlErr != nil {
+		return nil, urlErr
+	}
+
+	key, keyErr := r.s3Client.KeyFromURL(url)
+	if keyErr != nil {
+		return nil, keyErr
+	}
+
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		Name:      input.Name,
 		FileType:  input.MimeType,
-		Bucket:    input.Bucket,
-		Key:       input.Key,
+		Key:       key,
 		Size:      input.Size,
 		RequestID: input.RequestID,
 	})
@@ -197,10 +212,6 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 		})
 	}
 	return conn, nil
-}
-
-func (r *queryResolver) TestDates(ctx context.Context, requestID uuid.UUID) ([]*models.TestDate, error) {
-	return r.store.FetchTestDatesByRequestID(ctx, requestID)
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.

@@ -18,6 +18,7 @@ type AccessibilityRequest {
   relevantTestDate: TestDate
   submittedAt: Time!
   system: System!
+  testDates: [TestDate!]!
 }
 
 """
@@ -62,7 +63,6 @@ enum AccessibilityRequestDocumentStatus {
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
-  bucket: String!
   id: UUID!
   key: String!
   mimeType: String!
@@ -185,12 +185,11 @@ type CreateTestDatePayload {
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
-  bucket: String!
-  key: String!
   mimeType: String!
   name: String!
   requestID: UUID!
   size: Int!
+  url: String!
 }
 
 """
@@ -228,7 +227,6 @@ type Query {
     first: Int!
   ): AccessibilityRequestsConnection
   systems(after: String, first: Int!): SystemConnection
-  testDates(requestId: UUID!): [TestDate!]!
 }
 
 """
