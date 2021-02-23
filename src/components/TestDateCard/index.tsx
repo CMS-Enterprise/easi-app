@@ -6,7 +6,7 @@ type TestDateCardProps = {
   date: DateTime;
   type: 'INITIAL' | 'REMEDIATION';
   testIndex: number;
-  score?: number; // A whole number representing tenths of a percent
+  score: number | null; // A whole number representing tenths of a percent
 };
 
 const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
