@@ -11,13 +11,13 @@ type TestDateCardProps = {
 
 const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
   return (
-    <div className="bg-gray-10 padding-2 line-height-body-4">
+    <div className="bg-gray-10 padding-2 line-height-body-4 margin-bottom-2">
       <div className="text-bold margin-bottom-1">
         Test {testIndex}: {type === 'INITIAL' ? 'Initial' : 'Remediation'}
       </div>
       <div className="margin-bottom-1">
         <div className="display-inline-block margin-right-2">
-          {date.toLocaleString(DateTime.DATE_FULL)}
+          {date.toLocaleString(DateTime.DATE_MED)}
         </div>
         <div
           className="display-inline-block text-base-dark"
