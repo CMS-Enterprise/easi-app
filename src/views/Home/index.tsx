@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory, useLocation, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { Alert } from '@trussworks/react-uswds';
 
 import Footer from 'components/Footer';
@@ -8,6 +8,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
+import useConfirmationText from 'hooks/useConfirmationText';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
@@ -20,20 +21,7 @@ import './index.scss';
 const Home = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
-  const history = useHistory();
-  const location = useLocation<any>();
-  const [confirmationText, setIsConfirmationText] = useState('');
-
-  useEffect(() => {
-    if (location.state && location.state.confirmationText) {
-      setIsConfirmationText(location.state.confirmationText);
-      history.replace({
-        pathname: '/',
-        state: {}
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const confirmationText = useConfirmationText();
 
   const renderView = () => {
     if (isUserSet) {
