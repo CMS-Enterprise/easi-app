@@ -15,8 +15,10 @@ type AccessibilityRequest {
   documents: [AccessibilityRequestDocument!]!
   id: UUID!
   name: String!
+  relevantTestDate: TestDate
   submittedAt: Time!
   system: System!
+  testDates: [TestDate!]!
 }
 
 """
@@ -62,9 +64,11 @@ A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
   id: UUID!
-  mimetype: String!
+  key: String!
+  mimeType: String!
   name: String!
-  requestId: UUID!
+  requestID: UUID!
+  size: Int!
   status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
 }
@@ -105,7 +109,9 @@ type CreateAccessibilityRequestPayload {
 Parameters required to generate a presigned upload URL
 """
 input GeneratePresignedUploadURLInput {
+  fileName: String!
   mimeType: String!
+  size: Int!
 }
 
 """
@@ -176,17 +182,59 @@ type CreateTestDatePayload {
 }
 
 """
+Parameters for editing a test date
+"""
+input UpdateTestDateInput {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+Result of editTestDate
+"""
+type UpdateTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+"""
+Parameters for createAccessibilityRequestDocument
+"""
+input CreateAccessibilityRequestDocumentInput {
+  mimeType: String!
+  name: String!
+  requestID: UUID!
+  size: Int!
+  url: String!
+}
+
+"""
+Result of createAccessibilityRequestDocument
+"""
+type CreateAccessibilityRequestDocumentPayload {
+  accessibilityRequestDocument: AccessibilityRequestDocument
+  userErrors: [UserError!]
+}
+
+"""
 The root mutation
 """
 type Mutation {
   createAccessibilityRequest(
-    input: CreateAccessibilityRequestInput
+    input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
-  createTestDate(input: CreateTestDateInput): CreateTestDatePayload
+  createAccessibilityRequestDocument(
+    input: CreateAccessibilityRequestDocumentInput!
+  ): CreateAccessibilityRequestDocumentPayload
+  createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(
-    input: GeneratePresignedUploadURLInput
+    input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
+    @hasRole(role: EASI_508_TESTER)
 }
 
 """
