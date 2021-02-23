@@ -138,7 +138,7 @@ const New = () => {
                 <Form onSubmit={formikProps.handleSubmit}>
                   <h1>
                     Upload a document to{' '}
-                    {data?.accessibilityRequest?.system.name}
+                    {data?.accessibilityRequest?.name}
                   </h1>
                   <Label htmlFor="file-upload">
                     Choose a document to upload
