@@ -10,3 +10,65 @@ services:
       dockerfile: Dockerfile.db_migrations
     volumes:
       - ./migrations:/flyway/sql
+  easi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    image: easi-backend:latest
+    volumes:
+      - ./:/easi
+    entrypoint: air
+    ports:
+      - 8080:8080
+  easi_client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+      target: src
+    environment:
+      - REACT_APP_APP_ENV
+      - REACT_APP_API_ADDRESS
+      - REACT_APP_GRAPHQL_ADDRESS
+      - REACT_APP_OKTA_CLIENT_ID
+      - REACT_APP_OKTA_DOMAIN
+      - REACT_APP_OKTA_ISSUER
+      - REACT_APP_OKTA_REDIRECT_URI
+      - REACT_APP_OKTA_SERVER_ID
+      - REACT_APP_LD_ENV_USER
+      - REACT_APP_LD_USER_HASH
+      - REACT_APP_LD_CLIENT_ID
+      - CHOKIDAR_USEPOLLING=true
+    entrypoint: ['yarn', 'start']
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 3000:3000
+  minio:
+    restart: always
+    image: minio/minio:latest
+    ports:
+      - '9000:9000'
+    entrypoint: minio server /data
+  minio_mc:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host rm local;
+      /usr/bin/mc config host add --quiet --api s3v4 local http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc rb --force local/easi-app-file-uploads/;
+      /usr/bin/mc mb --quiet local/easi-app-file-uploads/;
+      /usr/bin/mc policy set public local/easi-app-file-uploads;
+      "
+  prince:
+    image: lambci/lambda:go1.x
+    ports:
+      - 9001:9001
+    environment:
+      - DOCKER_LAMBDA_STAY_OPEN
+      - LICENSE_KEY
+    volumes:
+      - ./../easi-infra-modules/lambda/prince/build:/var/task:ro,delegated
