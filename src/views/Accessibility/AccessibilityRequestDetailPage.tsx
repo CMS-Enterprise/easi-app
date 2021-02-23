@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory, useLocation, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
@@ -11,6 +11,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import useConfirmationText from 'hooks/useConfirmationText';
 import formatDate from 'utils/formatDate';
 import AccessibilityDocumentsList from 'views/Accessibility/AccessibiltyRequest/Documents';
 
@@ -18,6 +19,7 @@ import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
+  const confirmationText = useConfirmationText();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -29,19 +31,6 @@ const AccessibilityRequestDetailPage = () => {
       }
     }
   );
-  const [confirmationText, setIsConfirmationText] = useState('');
-
-  const history = useHistory();
-  const location = useLocation<any>();
-  useEffect(() => {
-    if (location.state && location.state.confirmationText) {
-      setIsConfirmationText(location.state.confirmationText);
-      history.replace({
-        state: {}
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const requestName = data?.accessibilityRequest?.name || '';
   const systemName = data?.accessibilityRequest?.system.name || '';
