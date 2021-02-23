@@ -94,7 +94,7 @@ func (r *accessibilityRequestResolver) System(ctx context.Context, obj *models.A
 }
 
 func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.TestDate, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.store.FetchTestDatesByRequestID(ctx, obj.ID)
 }
 
 func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error) {
