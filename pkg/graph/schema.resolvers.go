@@ -38,24 +38,22 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 		}
 
 		document.Status = models.AccessibilityRequestDocumentStatus(status)
+		if url, urlErr := r.s3Client.NewGetPresignedURL(document.Key); urlErr == nil {
+			document.URL = url.URL
+		}
 	}
 
 	return documents, nil
 }
 
 func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj *models.AccessibilityRequest) (*models.TestDate, error) {
-	allDates := []*models.TestDate{}
-
-	if time.Now().Unix()%3 == 0 {
-		allDates = append(allDates, &models.TestDate{
-			ID:       uuid.New(),
-			Date:     time.Now().AddDate(0, 0, 1),
-			TestType: models.TestDateTestTypeInitial,
-		})
+	allDates, err := r.store.FetchTestDatesByRequestID(ctx, obj.ID)
+	if err != nil {
+		return nil, err
 	}
+
 	var nearFuture *models.TestDate
 	var recentPast *models.TestDate
-
 	now := time.Now()
 
 	for _, td := range allDates {
@@ -143,6 +141,9 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	if docErr != nil {
 		return nil, docErr
 	}
+	if url, urlErr := r.s3Client.NewGetPresignedURL(key); urlErr == nil {
+		doc.URL = url.URL
+	}
 
 	return &model.CreateAccessibilityRequestDocumentPayload{
 		AccessibilityRequestDocument: doc,
@@ -170,6 +171,10 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	return &model.GeneratePresignedUploadURLPayload{
 		URL: &url.URL,
 	}, nil
+}
+
+func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
