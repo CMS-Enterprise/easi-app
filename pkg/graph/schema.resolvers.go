@@ -39,6 +39,9 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 		}
 
 		document.Status = models.AccessibilityRequestDocumentStatus(status)
+		if url, urlErr := r.s3Client.NewGetPresignedURL(document.Key); urlErr == nil {
+			document.URL = url.URL
+		}
 	}
 
 	return documents, nil
@@ -143,6 +146,9 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 
 	if docErr != nil {
 		return nil, docErr
+	}
+	if url, urlErr := r.s3Client.NewGetPresignedURL(key); urlErr == nil {
+		doc.URL = url.URL
 	}
 
 	return &model.CreateAccessibilityRequestDocumentPayload{
