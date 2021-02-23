@@ -11,8 +11,10 @@ import {
   fetchIntakeNotes,
   fetchSystemIntake,
   issueLifecycleIdForSystemIntake,
+  postAction,
   postIntakeNote,
   postSystemIntake,
+  rejectSystemIntake,
   saveSystemIntake,
   storeSystemIntake
 } from 'types/routines';
@@ -126,6 +128,14 @@ function systemIntakeReducer(
       };
     case archiveSystemIntake.SUCCESS:
       return initialState;
+    case rejectSystemIntake.SUCCESS:
+      return {
+        ...state,
+        systemIntake: {
+          ...state.systemIntake,
+          ...prepareSystemIntakeForApp(action.payload)
+        }
+      };
     case issueLifecycleIdForSystemIntake.SUCCESS:
       return {
         ...state,
@@ -162,6 +172,14 @@ function systemIntakeReducer(
       return {
         ...state,
         error: action.payload
+      };
+    case postAction.SUCCESS:
+      return {
+        ...state,
+        systemIntake: {
+          ...state.systemIntake,
+          status: action.payload
+        }
       };
     default:
       return state;

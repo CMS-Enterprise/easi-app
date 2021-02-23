@@ -73,7 +73,19 @@ func (h ActionHandler) Handle() http.HandlerFunc {
 				return
 			}
 
+			intakeStatus := action.ActionType
+			responseBody, err := json.Marshal(intakeStatus)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
+
 			w.WriteHeader(http.StatusCreated)
+			_, err = w.Write(responseBody)
+			if err != nil {
+				h.WriteErrorResponse(r.Context(), w, err)
+				return
+			}
 			return
 		case "GET":
 			notes, err := h.FetchActions(r.Context(), intakeID)
