@@ -17,6 +17,7 @@ import FileUpload from 'components/FileUpload';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import { FileUploadForm } from 'types/files';
@@ -125,6 +126,9 @@ const New = () => {
           </NavLink>
         </SecondaryNav>
         <div className="grid-container">
+          <PageHeading>
+            Upload a document to {data?.accessibilityRequest?.name}
+          </PageHeading>
           <Formik
             initialValues={{
               filename: '',
@@ -135,10 +139,7 @@ const New = () => {
           >
             {(formikProps: FormikProps<FileUploadForm>) => {
               return (
-                <Form onSubmit={formikProps.handleSubmit}>
-                  <h1>
-                    Upload a document to {data?.accessibilityRequest?.name}
-                  </h1>
+                <Form onSubmit={formikProps.handleSubmit} large>
                   <Label htmlFor="file-upload">
                     Choose a document to upload
                     <FileUpload
