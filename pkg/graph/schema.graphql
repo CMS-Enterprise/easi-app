@@ -64,13 +64,13 @@ A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
   id: UUID!
-  key: String!
   mimeType: String!
   name: String!
   requestID: UUID!
   size: Int!
   status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
+  url: String!
 }
 
 """
@@ -182,6 +182,24 @@ type CreateTestDatePayload {
 }
 
 """
+Parameters for editing a test date
+"""
+input UpdateTestDateInput {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+Result of editTestDate
+"""
+type UpdateTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+"""
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
@@ -215,6 +233,8 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
+    @hasRole(role: EASI_508_TESTER)
 }
 
 """

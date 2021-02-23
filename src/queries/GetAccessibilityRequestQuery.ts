@@ -16,6 +16,7 @@ export default gql`
       }
       documents {
         name
+        url
         uploadedAt
         status
       }
