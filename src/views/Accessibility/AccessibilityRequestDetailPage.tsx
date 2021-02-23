@@ -109,7 +109,7 @@ const AccessibilityRequestDetailPage = () => {
                       date={DateTime.fromISO(testDate.date)}
                       type={testDate.testType}
                       testIndex={index + 1}
-                      score={testDate.score || undefined}
+                      score={testDate.score}
                     />
                   ))}
                   <Link
