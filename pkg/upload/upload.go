@@ -2,7 +2,9 @@ package upload
 
 import (
 	"mime"
+	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -105,4 +107,9 @@ func (c S3Client) NewGetPresignedURL(key string) (*models.PreSignedURL, error) {
 
 	return &result, nil
 
+}
+
+// KeyFromURL extracts an S3 key from a URL.
+func (c S3Client) KeyFromURL(url *url.URL) (string, error) {
+	return strings.Replace(url.Path, "/"+c.config.Bucket+"/", "", 1), nil
 }

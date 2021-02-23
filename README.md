@@ -249,12 +249,12 @@ brew install docker-compose-completion  # optional
 Multiple docker-compose files exist to support different use cases and
 environments.
 
-| File                        | Description                                                                                                                                                               |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| docker-compose.yml          | Base configuration for `db`, `db_migrate`, and `minio` service                                                                                                            |
-| docker-compose.override.yml | Additional configuration for running `db` and `db_migrate` locally. Intended to simplify the use case where someone uses docker-compose only to run `db` and `db_migrate` |
-| docker-compose.circleci.yml | Additional configuration for running all services in CircleCI                                                                                                             |
-| docker-compose.local.yml    | Additional configuration for running all services locally                                                                                                                 |
+| File                        | Description                                                                                                                       |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| docker-compose.yml          | Base configuration for `db`, `db_migrate`, `easi` and `easi_client` services                                                      |
+| docker-compose.override.yml | Additional configuration for running the above services locally. Also adds configuration for `minio` and `prince` lambda services |
+| docker-compose.circleci.yml | Additional configuration for running end-to-end Cypress tests in CircleCI                                                         |
+| docker-compose.local.yml    | Additional configuration for running end-to-end Cypress tests locally                                                             |
 
 ##### Use case: Run database and database migrations locally
 
@@ -262,7 +262,7 @@ Use the following command if you only intend to run the database and database
 migration containers locally:
 
 ```console
-$ docker-compose up --detach
+$ docker-compose up --detach db db_migrate
 Creating easi-app_db_1 ... done
 Creating easi-app_db_migrate_1 ... done
 ```
@@ -304,6 +304,21 @@ postgres@localhost:postgres> SHOW server_version;
 SHOW
 Time: 0.016s
 postgres@localhost:postgres>
+```
+
+##### Use case: Run database, database migrations, backend, and frontend locally
+
+Use the following to run the database, database migrations, backend server, and
+frontend client locally in docker.
+
+```console
+COMPOSE_HTTP_TIMEOUT=120 docker-compose up --build
+```
+
+Run the following to shut it down:
+
+```console
+docker-compose down
 ```
 
 ### Setup: Cloud Services
@@ -394,6 +409,10 @@ yarn generate
 
 ### Swagger Generation
 
+(Most developers will not need to do this. It is rarely done, only
+when updating our client to the CEDAR APIs. The output of these
+instructions are checked into the repository.)
+
 The EASi server uses Swagger generation
 to access APIs from CEDAR (the data source).
 Swagger specs (EASi and LDAP) can be downloaded from webMethods:
@@ -469,16 +488,21 @@ There are multiple ways to run the Cypress tests:
 
 ### APIs
 
+To start the API server: `$ ./bin/easi serve`
 The APIs reside at `localhost:8080` when running.
 To run a test request,
 you can send a GET to the health check endpoint:
 `curl localhost:8080/api/v1/healthcheck`
 
+### Front-End
+
+To start the JavaScript application serving: `$ yarn start`
+
 ### GraphQL Playground
 
 You can visit `http://localhost:8080/api/graph/playground`
 to access a GraphQL playground while
-the Go backend is running. **You will need to enter `/graph/query` as the query
+the Go backend is running. **You will need to enter `/api/graph/query` as the query
 path in the UI for this to work.**
 
 ### Authorization
