@@ -48,18 +48,13 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 }
 
 func (r *accessibilityRequestResolver) RelevantTestDate(ctx context.Context, obj *models.AccessibilityRequest) (*models.TestDate, error) {
-	allDates := []*models.TestDate{}
-
-	if time.Now().Unix()%3 == 0 {
-		allDates = append(allDates, &models.TestDate{
-			ID:       uuid.New(),
-			Date:     time.Now().AddDate(0, 0, 1),
-			TestType: models.TestDateTestTypeInitial,
-		})
+	allDates, err := r.store.FetchTestDatesByRequestID(ctx, obj.ID)
+	if err != nil {
+		return nil, err
 	}
+
 	var nearFuture *models.TestDate
 	var recentPast *models.TestDate
-
 	now := time.Now()
 
 	for _, td := range allDates {
