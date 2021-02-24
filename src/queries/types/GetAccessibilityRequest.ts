@@ -32,6 +32,7 @@ export interface GetAccessibilityRequest_accessibilityRequest_documents {
 
 export interface GetAccessibilityRequest_accessibilityRequest_testDates {
   __typename: "TestDate";
+  id: UUID;
   testType: TestDateTestType;
   date: Time;
   score: number | null;
