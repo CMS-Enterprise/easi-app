@@ -21,7 +21,7 @@ RUN go get golang.org/x/tools/gopls@latest
 RUN go get github.com/cosmtrek/air
 CMD ["./bin/easi"]
 
-FROM alpine:3.11
+FROM alpine:3.12
 
 RUN apk --no-cache add ca-certificates tzdata
 WORKDIR /easi/
