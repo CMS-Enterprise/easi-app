@@ -9,4 +9,4 @@ ALTER TABLE accessibility_request_documents ADD COLUMN other_type TEXT;
 UPDATE accessibility_request_documents SET other_type = 'Other' where document_type = 'OTHER';
 
 /* Don't allow other name to be set unless document_type is null. This does not force there to be a value when document_type is OTHER. */
-ALTER TABLE accessibility_request_documents ADD CONSTRAINT other_type_is_null_unless_type_is_other CHECK (document_type::text = 'OTHER' || other_type IS NULL);
+ALTER TABLE accessibility_request_documents ADD CONSTRAINT other_type_is_null_unless_type_is_other CHECK ((document_type = 'OTHER') = (other_type IS NOT NULL AND other_type != ''));
