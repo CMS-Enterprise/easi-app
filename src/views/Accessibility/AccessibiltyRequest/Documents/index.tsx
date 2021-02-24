@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
-import { Table } from '@trussworks/react-uswds';
+import { Link, Table } from '@trussworks/react-uswds';
 
 import { AccessibilityRequestDocumentStatus } from 'types/graphql-global-types';
 import formatDate from 'utils/formatDate';
@@ -49,13 +49,13 @@ const AccessibilityDocumentsList = ({
         Header: t('documentTable.header.actions'),
         Cell: ({ row }: any) => (
           <>
-            <a target="_blank" rel="noreferrer" href={row.original.url}>
+            <Link target="_blank" rel="noreferrer" href={row.original.url}>
               {t('documentTable.view')}
               <span className="usa-sr-only">
                 document type {/* TODO replace with real doc type */}
               </span>
               <span className="usa-sr-only">in a new tab or window</span>
-            </a>
+            </Link>
             {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
               {t('documentTable.remove')}
             </UswdsLink>
