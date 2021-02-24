@@ -27,6 +27,8 @@ func (s *Store) CreateAccessibilityRequestDocument(ctx context.Context, file *mo
 						 file_name,
 						 file_size,
                          file_key,
+						 document_type,
+						 other_type,
                          created_at,
                          updated_at,
                          virus_scanned,
@@ -40,6 +42,8 @@ func (s *Store) CreateAccessibilityRequestDocument(ctx context.Context, file *mo
 						 :file_name,
 						 :file_size,
                          :file_key,
+                         :document_type,
+                         :other_type
                          :created_at,
                          :updated_at,
                          :virus_scanned,
