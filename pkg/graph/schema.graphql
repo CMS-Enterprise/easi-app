@@ -60,9 +60,53 @@ enum AccessibilityRequestDocumentStatus {
 }
 
 """
+Common document type of an Accessibility Request document
+"""
+enum AccessibilityRequestDocumentCommonType {
+  """
+  Awarded VPAT
+  """
+  AWARDED_VPAT
+
+  """
+  Other document
+  """
+  OTHER
+
+  """
+  Remediation Plan
+  """
+  REMEDIATION_PLAN
+
+  """
+  Testing VPAT
+  """
+  TESTING_VPAT
+
+  """
+  Test Plan
+  """
+  TEST_PLAN
+
+  """
+  Test Results
+  """
+  TEST_RESULTS
+}
+
+"""
+Document type of an Accessibility Request document
+"""
+type AccessibilityRequestDocumentType {
+  commonType: AccessibilityRequestDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
+  documentType: AccessibilityRequestDocumentType!
   id: UUID!
   mimeType: String!
   name: String!
@@ -203,8 +247,10 @@ type UpdateTestDatePayload {
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
+  commonDocumentType: AccessibilityRequestDocumentCommonType!
   mimeType: String!
   name: String!
+  otherDocumentTypeDescription: String
   requestID: UUID!
   size: Int!
   url: String!
