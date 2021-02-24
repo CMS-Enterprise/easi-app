@@ -30,8 +30,7 @@ const AccessibilityRequestDetailPage = () => {
     {
       variables: {
         id: accessibilityRequestId
-      },
-      fetchPolicy: 'cache-and-network'
+      }
     }
   );
 
