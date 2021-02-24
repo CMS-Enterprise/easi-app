@@ -20,6 +20,12 @@ export default gql`
         uploadedAt
         status
       }
+      testDates {
+        id
+        testType
+        date
+        score
+      }
     }
   }
 `;
