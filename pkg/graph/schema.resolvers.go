@@ -98,7 +98,10 @@ func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *model
 }
 
 func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.AccessibilityRequestDocumentType{
+		CommonType:           obj.CommonDocumentType,
+		OtherTypeDescription: &obj.OtherType,
+	}, nil
 }
 
 func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error) {
@@ -136,11 +139,13 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	}
 
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
-		Name:      input.Name,
-		FileType:  input.MimeType,
-		Key:       key,
-		Size:      input.Size,
-		RequestID: input.RequestID,
+		Name:               input.Name,
+		FileType:           input.MimeType,
+		Key:                key,
+		Size:               input.Size,
+		RequestID:          input.RequestID,
+		CommonDocumentType: input.CommonDocumentType,
+		OtherType:          *input.OtherDocumentTypeDescription,
 	})
 
 	if docErr != nil {
