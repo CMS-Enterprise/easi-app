@@ -38,7 +38,7 @@ import accessibilitySchema from 'validations/accessibilitySchema';
 const Create = () => {
   const history = useHistory();
   const { t } = useTranslation('accessibility');
-  const { data } = useQuery<GetSystems>(GetSystemsQuery, {
+  const { data, loading } = useQuery<GetSystems>(GetSystemsQuery, {
     variables: {
       // TODO: Is there a way to make this all? or change the query?
       first: 20
@@ -120,7 +120,7 @@ const Create = () => {
                   )}
                   <div className="margin-bottom-7">
                     <FormikForm>
-                      {projectComboBoxOptions.length > 0 && (
+                      {!loading && (
                         <FieldGroup
                           scrollElement="intakeId"
                           error={!!flatErrors.intakeId}
