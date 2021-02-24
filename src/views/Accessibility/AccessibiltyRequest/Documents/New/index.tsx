@@ -9,7 +9,10 @@ import { isUndefined } from 'lodash';
 import CreateAccessibilityRequestDocumentQuery from 'queries/CreateAccessibilityRequestDocumentQuery';
 import GeneratePresignedUploadURLQuery from 'queries/GeneratePresignedUploadURLQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
-import { CreateAccessibilityRequestDocument } from 'queries/types/CreateAccessibilityRequestDocument';
+import {
+  CreateAccessibilityRequestDocument,
+  CreateAccessibilityRequestDocumentVariables
+} from 'queries/types/CreateAccessibilityRequestDocument';
 import { GeneratePresignedUploadURL } from 'queries/types/GeneratePresignedUploadURL';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
@@ -24,10 +27,7 @@ import { RadioField } from 'components/shared/RadioField';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextField from 'components/shared/TextField';
 import { FileUploadForm } from 'types/files';
-import {
-  AccessibilityRequestDocumentCommonType,
-  CreateAccessibilityRequestDocumentInput
-} from 'types/graphql-global-types';
+import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 
 const New = () => {
@@ -53,7 +53,7 @@ const New = () => {
   >(GeneratePresignedUploadURLQuery);
   const [createDocument, createDocumentStatus] = useMutation<
     CreateAccessibilityRequestDocument,
-    CreateAccessibilityRequestDocumentInput
+    CreateAccessibilityRequestDocumentVariables
   >(CreateAccessibilityRequestDocumentQuery);
 
   if (loading) {
@@ -109,14 +109,16 @@ const New = () => {
     axios.put(s3URL, formData).then(() => {
       createDocument({
         variables: {
-          mimeType: selectedFile.type,
-          size: selectedFile.size,
-          name: selectedFile.name,
-          url: s3URL,
-          requestID: accessibilityRequestId,
-          commonDocumentType: values.documentType
-            .commonType as AccessibilityRequestDocumentCommonType,
-          otherDocumentTypeDescription: values.documentType.otherType
+          input: {
+            mimeType: selectedFile.type,
+            size: selectedFile.size,
+            name: selectedFile.name,
+            url: s3URL,
+            requestID: accessibilityRequestId,
+            commonDocumentType: values.documentType
+              .commonType as AccessibilityRequestDocumentCommonType,
+            otherDocumentTypeDescription: values.documentType.otherType
+          }
         }
       }).then(() => {
         history.push(`/508/requests/${accessibilityRequestId}`, {
