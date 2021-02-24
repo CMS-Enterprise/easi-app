@@ -19,6 +19,9 @@ type PreSignedURL struct {
 // AccessibilityRequestDocumentStatus represents the availability of a document
 type AccessibilityRequestDocumentStatus string
 
+// AccessibilityRequestDocumentCommonType represents the type of document
+type AccessibilityRequestDocumentCommonType string
+
 const (
 	// AccessibilityRequestDocumentStatusAvailable means that the document passed security screen
 	AccessibilityRequestDocumentStatusAvailable AccessibilityRequestDocumentStatus = "AVAILABLE"
@@ -26,14 +29,20 @@ const (
 	AccessibilityRequestDocumentStatusPending AccessibilityRequestDocumentStatus = "PENDING"
 	// AccessibilityRequestDocumentStatusUnavailable means that the document failed security screen
 	AccessibilityRequestDocumentStatusUnavailable AccessibilityRequestDocumentStatus = "UNAVAILABLE"
-)
 
-// AllAccessibilityRequestDocumentStatus is all statuses
-var AllAccessibilityRequestDocumentStatus = []AccessibilityRequestDocumentStatus{
-	AccessibilityRequestDocumentStatusAvailable,
-	AccessibilityRequestDocumentStatusPending,
-	AccessibilityRequestDocumentStatusUnavailable,
-}
+	// AccessibilityRequestDocumentCommonTypeAwardedVpat means the document is an Awarded VPAT
+	AccessibilityRequestDocumentCommonTypeAwardedVpat AccessibilityRequestDocumentCommonType = "AWARDED_VPAT"
+	// AccessibilityRequestDocumentCommonTypeOther means the document is another type
+	AccessibilityRequestDocumentCommonTypeOther AccessibilityRequestDocumentCommonType = "OTHER"
+	// AccessibilityRequestDocumentCommonTypeRemediationPlan means the document is a remediationPlan
+	AccessibilityRequestDocumentCommonTypeRemediationPlan AccessibilityRequestDocumentCommonType = "REMEDIATION_PLAN"
+	// AccessibilityRequestDocumentCommonTypeTestingVpat means the document is a testing VPAT
+	AccessibilityRequestDocumentCommonTypeTestingVpat AccessibilityRequestDocumentCommonType = "TESTING_VPAT"
+	// AccessibilityRequestDocumentCommonTypeTestPlan means the document is a test plan
+	AccessibilityRequestDocumentCommonTypeTestPlan AccessibilityRequestDocumentCommonType = "TEST_PLAN"
+	// AccessibilityRequestDocumentCommonTypeTestResults means the document is test results
+	AccessibilityRequestDocumentCommonTypeTestResults AccessibilityRequestDocumentCommonType = "TEST_RESULTS"
+)
 
 // IsValid returns if the status is valid
 func (e AccessibilityRequestDocumentStatus) IsValid() bool {
@@ -69,17 +78,19 @@ func (e AccessibilityRequestDocumentStatus) MarshalGQL(w io.Writer) {
 
 // AccessibilityRequestDocument is the representation of stored files uploaded to S3
 type AccessibilityRequestDocument struct {
-	ID           uuid.UUID                          `json:"id"`
-	FileType     string                             `json:"fileType" db:"file_type"`
-	Bucket       string                             `json:"bucket" db:"bucket"`
-	Key          string                             `json:"fileKey" db:"file_key"`
-	Name         string                             `json:"name" db:"file_name"`
-	Size         int                                `json:"size" db:"file_size"`
-	URL          string                             `json:"url"`
-	Status       AccessibilityRequestDocumentStatus `json:"status"`
-	VirusScanned null.Bool                          `json:"virusScanned" db:"virus_scanned"`
-	VirusClean   null.Bool                          `json:"virusClean" db:"virus_clean"`
-	RequestID    uuid.UUID                          `json:"requestId" db:"request_id"`
-	CreatedAt    *time.Time                         `json:"createdAt" db:"created_at"`
-	UpdatedAt    *time.Time                         `json:"updatedAt" db:"updated_at"`
+	ID                 uuid.UUID                              `json:"id"`
+	FileType           string                                 `json:"fileType" db:"file_type"`
+	Bucket             string                                 `json:"bucket" db:"bucket"`
+	Key                string                                 `json:"fileKey" db:"file_key"`
+	Name               string                                 `json:"name" db:"file_name"`
+	Size               int                                    `json:"size" db:"file_size"`
+	URL                string                                 `json:"url"`
+	Status             AccessibilityRequestDocumentStatus     `json:"status"`
+	VirusScanned       null.Bool                              `json:"virusScanned" db:"virus_scanned"`
+	VirusClean         null.Bool                              `json:"virusClean" db:"virus_clean"`
+	RequestID          uuid.UUID                              `json:"requestId" db:"request_id"`
+	CommonDocumentType AccessibilityRequestDocumentCommonType `db:"document_type"`
+	OtherType          string                                 `db:"other_type"`
+	CreatedAt          *time.Time                             `json:"createdAt" db:"created_at"`
+	UpdatedAt          *time.Time                             `json:"updatedAt" db:"updated_at"`
 }
