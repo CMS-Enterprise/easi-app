@@ -5,8 +5,6 @@ export default gql`
     createTestDate(input: $input) {
       testDate {
         id
-        date
-        score
       }
     }
   }
