@@ -21,6 +21,7 @@ export default gql`
         status
       }
       testDates {
+        id
         testType
         date
         score
