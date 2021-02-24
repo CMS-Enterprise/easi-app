@@ -25,6 +25,7 @@ export interface GetAccessibilityRequest_accessibilityRequest_system {
 export interface GetAccessibilityRequest_accessibilityRequest_documents {
   __typename: "AccessibilityRequestDocument";
   name: string;
+  url: string;
   uploadedAt: Time;
   status: AccessibilityRequestDocumentStatus;
 }
