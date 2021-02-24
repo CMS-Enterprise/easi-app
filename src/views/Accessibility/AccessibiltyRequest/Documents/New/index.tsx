@@ -4,7 +4,7 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Form, Label } from '@trussworks/react-uswds';
 import axios from 'axios';
-import { Formik, FormikProps } from 'formik';
+import { Field, Formik, FormikProps } from 'formik';
 import { isUndefined } from 'lodash';
 import CreateAccessibilityRequestDocumentQuery from 'queries/CreateAccessibilityRequestDocumentQuery';
 import GeneratePresignedUploadURLQuery from 'queries/GeneratePresignedUploadURLQuery';
@@ -18,8 +18,14 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldGroup from 'components/shared/FieldGroup';
+import { RadioField } from 'components/shared/RadioField';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import TextField from 'components/shared/TextField';
 import { FileUploadForm } from 'types/files';
+import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
+import flattenErrors from 'utils/flattenErrors';
 
 const New = () => {
   const { t } = useTranslation('accessibility');
@@ -115,6 +121,27 @@ const New = () => {
     });
   };
 
+  const getDocumentTypeLabel = (
+    commonType: AccessibilityRequestDocumentCommonType
+  ): string => {
+    switch (commonType) {
+      case 'AWARDED_VPAT':
+        return 'Awarded VPAT';
+      case 'TEST_PLAN':
+        return 'Test plan';
+      case 'TESTING_VPAT':
+        return 'Testing VPAT';
+      case 'TEST_RESULTS':
+        return 'Test results';
+      case 'REMEDIATION_PLAN':
+        return 'Remediation plan';
+      case 'OTHER':
+        return 'Other';
+      default:
+        return '';
+    }
+  };
+
   return (
     <PageWrapper className="accessibility-request">
       <Header />
@@ -129,11 +156,17 @@ const New = () => {
             initialValues={{
               filename: '',
               file: {} as File,
-              uploadURL: ''
+              uploadURL: '',
+              documentType: {
+                commonType: null,
+                otherType: ''
+              }
             }}
             onSubmit={onSubmit}
           >
             {(formikProps: FormikProps<FileUploadForm>) => {
+              const { errors, setFieldValue, values } = formikProps;
+              const flatErrors = flattenErrors(errors);
               return (
                 <Form onSubmit={formikProps.handleSubmit}>
                   <h1>
@@ -150,7 +183,91 @@ const New = () => {
                       ariaDescribedBy=""
                     />
                   </Label>
+                  {selectedFile && (
+                    <FieldGroup
+                      scrollElement="documentType.commonType"
+                      error={!!flatErrors['documentType.commonType']}
+                    >
+                      <fieldset className="usa-fieldset margin-top-4">
+                        <legend className="usa-label margin-bottom-1">
+                          What type of document are you uploading?
+                        </legend>
 
+                        <FieldErrorMsg>
+                          {flatErrors['documentType.commonType']}
+                        </FieldErrorMsg>
+                        {([
+                          'AWARDED_VPAT',
+                          'TEST_PLAN',
+                          'TESTING_VPAT',
+                          'TEST_RESULTS',
+                          'REMEDIATION_PLAN'
+                        ] as AccessibilityRequestDocumentCommonType[]).map(
+                          commonType => {
+                            return (
+                              <Field
+                                key={`FileUpload-CommonType${commonType}`}
+                                as={RadioField}
+                                checked={
+                                  values.documentType.commonType === commonType
+                                }
+                                id={`FileUpload-CommonType${commonType}`}
+                                name="documentType.commonType"
+                                label={getDocumentTypeLabel(commonType)}
+                                onChange={() => {
+                                  setFieldValue(
+                                    'documentType.commonType',
+                                    commonType
+                                  );
+                                  setFieldValue('documentType.otherType', '');
+                                }}
+                                value={commonType}
+                              />
+                            );
+                          }
+                        )}
+                        <Field
+                          as={RadioField}
+                          checked={values.documentType.commonType === 'OTHER'}
+                          id="FileUpload-CommonTypeOTHER"
+                          name="documentType.commonType"
+                          label={getDocumentTypeLabel(
+                            AccessibilityRequestDocumentCommonType.OTHER
+                          )}
+                          onChange={() => {
+                            setFieldValue('documentType.commonType', 'OTHER');
+                          }}
+                          value="OTHER"
+                        />
+                        {values.documentType.commonType === 'OTHER' && (
+                          <div className="width-card-lg margin-left-4 margin-bottom-1">
+                            <FieldGroup
+                              scrollElement="documentType.otherType"
+                              error={!!flatErrors['documentType.otherType']}
+                            >
+                              <Label
+                                htmlFor="FileUpload-OtherType"
+                                className="margin-bottom-1"
+                                style={{ marginTop: '0.5em' }}
+                              >
+                                Document name
+                              </Label>
+                              <FieldErrorMsg>
+                                {flatErrors['documentType.otherType']}
+                              </FieldErrorMsg>
+                              <Field
+                                as={TextField}
+                                error={!!flatErrors['documentType.otherType']}
+                                className="margin-top-0"
+                                id="DocumentType-OtherType"
+                                name="documentType.otherType"
+                              />
+                            </FieldGroup>
+                          </div>
+                        )}
+                      </fieldset>
+                    </FieldGroup>
+                  )}
                   {selectedFile && (
                     <div className="padding-top-2">
                       <p>
