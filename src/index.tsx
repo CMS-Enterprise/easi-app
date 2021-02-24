@@ -89,6 +89,11 @@ const client = new ApolloClient({
         { name: 'Remediation Plan', uploadedAt: '2021-02-08T17:28:29Z' }
       ]
     }
+  },
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network'
+    }
   }
 });
 
