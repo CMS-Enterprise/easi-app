@@ -103,15 +103,21 @@ const AccessibilityRequestDetailPage = () => {
                   <h2 className="margin-top-2 margin-bottom-3">
                     Test Dates and Scores
                   </h2>
-                  {testDates.map((testDate, index) => (
-                    <TestDateCard
-                      key={testDate.id}
-                      date={DateTime.fromISO(testDate.date)}
-                      type={testDate.testType}
-                      testIndex={index + 1}
-                      score={testDate.score}
-                    />
-                  ))}
+                  {[...testDates]
+                    .sort(
+                      (a, b) =>
+                        DateTime.fromISO(a.date).toMillis() -
+                        DateTime.fromISO(b.date).toMillis()
+                    )
+                    .map((testDate, index) => (
+                      <TestDateCard
+                        key={testDate.id}
+                        date={DateTime.fromISO(testDate.date)}
+                        type={testDate.testType}
+                        testIndex={index + 1}
+                        score={testDate.score}
+                      />
+                    ))}
                   <Link
                     to={`/508/requests/${accessibilityRequestId}/test-date`}
                     className="margin-bottom-3 display-block"
