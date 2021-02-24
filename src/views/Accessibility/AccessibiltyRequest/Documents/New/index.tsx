@@ -24,7 +24,10 @@ import { RadioField } from 'components/shared/RadioField';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextField from 'components/shared/TextField';
 import { FileUploadForm } from 'types/files';
-import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
+import {
+  AccessibilityRequestDocumentCommonType,
+  CreateAccessibilityRequestDocumentInput
+} from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 
 const New = () => {
@@ -49,7 +52,8 @@ const New = () => {
     GeneratePresignedUploadURL
   >(GeneratePresignedUploadURLQuery);
   const [createDocument, createDocumentStatus] = useMutation<
-    CreateAccessibilityRequestDocument
+    CreateAccessibilityRequestDocument,
+    CreateAccessibilityRequestDocumentInput
   >(CreateAccessibilityRequestDocumentQuery);
 
   if (loading) {
@@ -95,7 +99,7 @@ const New = () => {
     });
   };
 
-  const onSubmit = () => {
+  const onSubmit = (values: FileUploadForm) => {
     if (!selectedFile) {
       return;
     }
@@ -105,13 +109,14 @@ const New = () => {
     axios.put(s3URL, formData).then(() => {
       createDocument({
         variables: {
-          input: {
-            mimeType: selectedFile.type,
-            size: selectedFile.size,
-            name: selectedFile.name,
-            url: s3URL,
-            requestID: accessibilityRequestId
-          }
+          mimeType: selectedFile.type,
+          size: selectedFile.size,
+          name: selectedFile.name,
+          url: s3URL,
+          requestID: accessibilityRequestId,
+          commonDocumentType: values.documentType
+            .commonType as AccessibilityRequestDocumentCommonType,
+          otherDocumentTypeDescription: values.documentType.otherType
         }
       }).then(() => {
         history.push(`/508/requests/${accessibilityRequestId}`, {
