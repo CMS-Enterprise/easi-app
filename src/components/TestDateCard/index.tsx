@@ -1,10 +1,9 @@
 import React from 'react';
-import { DateTime } from 'luxon';
 
 import formatDate from 'utils/formatDate';
 
 type TestDateCardProps = {
-  date: DateTime;
+  date: string; // ISO string
   type: 'INITIAL' | 'REMEDIATION';
   testIndex: number;
   score: number | null; // A whole number representing tenths of a percent
