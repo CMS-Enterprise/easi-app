@@ -10,6 +10,7 @@ import formatDate from 'utils/formatDate';
 type Document = {
   name: string;
   status: AccessibilityRequestDocumentStatus;
+  url: string;
   uploadedAt: string;
 };
 
@@ -50,12 +51,17 @@ const AccessibilityDocumentsList = ({
         Cell: ({ row }: any) => (
           <>
             <UswdsLink
+              aria-describedby={`doc-link-${row.original.id}`}
+              target="_blank"
               asCustom={Link}
-              to={`/some-508-request/${row.original.name}`}
+              to={row.original.url}
             >
               {t('documentTable.view')}
+              <span className="usa-sr-only">document type</span>
             </UswdsLink>
-            <span className="usa-sr-only">{row.original.name}</span>
+            <span className="usa-sr-only" id={`doc-link-${row.original.id}`}>
+              Open file in a new tab or window
+            </span>
             {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
               {t('documentTable.remove')}
             </UswdsLink>
@@ -96,6 +102,7 @@ const AccessibilityDocumentsList = ({
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
               <th
+                {...column.getHeaderProps()}
                 style={{ whiteSpace: 'nowrap', width: column.width }}
                 scope="col"
               >

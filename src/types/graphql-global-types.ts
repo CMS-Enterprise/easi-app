@@ -8,6 +8,18 @@
 //==============================================================
 
 /**
+ * Common document type of an Accessibility Request document
+ */
+export enum AccessibilityRequestDocumentCommonType {
+  AWARDED_VPAT = "AWARDED_VPAT",
+  OTHER = "OTHER",
+  REMEDIATION_PLAN = "REMEDIATION_PLAN",
+  TESTING_VPAT = "TESTING_VPAT",
+  TEST_PLAN = "TEST_PLAN",
+  TEST_RESULTS = "TEST_RESULTS",
+}
+
+/**
  * Represents the availability of a document
  */
 export enum AccessibilityRequestDocumentStatus {
@@ -22,6 +34,19 @@ export enum AccessibilityRequestDocumentStatus {
 export enum TestDateTestType {
   INITIAL = "INITIAL",
   REMEDIATION = "REMEDIATION",
+}
+
+/**
+ * Parameters for createAccessibilityRequestDocument
+ */
+export interface CreateAccessibilityRequestDocumentInput {
+  commonDocumentType: AccessibilityRequestDocumentCommonType;
+  mimeType: string;
+  name: string;
+  otherDocumentTypeDescription?: string | null;
+  requestID: UUID;
+  size: number;
+  url: string;
 }
 
 /**
@@ -40,6 +65,15 @@ export interface CreateTestDateInput {
   requestID: UUID;
   score?: number | null;
   testType: TestDateTestType;
+}
+
+/**
+ * Parameters required to generate a presigned upload URL
+ */
+export interface GeneratePresignedUploadURLInput {
+  fileName: string;
+  mimeType: string;
+  size: number;
 }
 
 //==============================================================

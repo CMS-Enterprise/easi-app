@@ -18,6 +18,7 @@ type AccessibilityRequest {
   relevantTestDate: TestDate
   submittedAt: Time!
   system: System!
+  testDates: [TestDate!]!
 }
 
 """
@@ -59,18 +60,61 @@ enum AccessibilityRequestDocumentStatus {
 }
 
 """
+Common document type of an Accessibility Request document
+"""
+enum AccessibilityRequestDocumentCommonType {
+  """
+  Awarded VPAT
+  """
+  AWARDED_VPAT
+
+  """
+  Other document
+  """
+  OTHER
+
+  """
+  Remediation Plan
+  """
+  REMEDIATION_PLAN
+
+  """
+  Testing VPAT
+  """
+  TESTING_VPAT
+
+  """
+  Test Plan
+  """
+  TEST_PLAN
+
+  """
+  Test Results
+  """
+  TEST_RESULTS
+}
+
+"""
+Document type of an Accessibility Request document
+"""
+type AccessibilityRequestDocumentType {
+  commonType: AccessibilityRequestDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
-  bucket: String!
+  documentType: AccessibilityRequestDocumentType!
   id: UUID!
-  key: String!
   mimeType: String!
   name: String!
   requestID: UUID!
   size: Int!
   status: AccessibilityRequestDocumentStatus!
   uploadedAt: Time!
+  url: String!
 }
 
 """
@@ -182,15 +226,34 @@ type CreateTestDatePayload {
 }
 
 """
+Parameters for editing a test date
+"""
+input UpdateTestDateInput {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+Result of editTestDate
+"""
+type UpdateTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+"""
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
-  bucket: String!
-  key: String!
+  commonDocumentType: AccessibilityRequestDocumentCommonType!
   mimeType: String!
   name: String!
+  otherDocumentTypeDescription: String
   requestID: UUID!
   size: Int!
+  url: String!
 }
 
 """
@@ -216,6 +279,8 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
+    @hasRole(role: EASI_508_TESTER)
 }
 
 """

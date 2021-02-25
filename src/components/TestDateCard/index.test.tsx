@@ -7,14 +7,19 @@ import TestDateCard from 'components/TestDateCard';
 describe('The Test Date Card component', () => {
   it('renders without crashing', () => {
     shallow(
-      <TestDateCard date={DateTime.local()} type="INITIAL" testIndex={1} />
+      <TestDateCard
+        date={DateTime.local().toISO()}
+        type="INITIAL"
+        testIndex={1}
+        score={0}
+      />
     );
   });
 
   it('renders score', () => {
     const component = mount(
       <TestDateCard
-        date={DateTime.local()}
+        date={DateTime.local().toISO()}
         type="INITIAL"
         testIndex={1}
         score={1000}
