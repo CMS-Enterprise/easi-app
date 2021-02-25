@@ -9,6 +9,7 @@ import user from 'utils/user';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 import Create from 'views/Accessibility/AccessibiltyRequest/Create';
 import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibiltyRequest/Documents/New';
+import List from 'views/Accessibility/AccessibiltyRequest/List';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -44,6 +45,7 @@ const AppRoutes = () => {
     <Switch>
       {/* START: 508 Process Pages */}
       <SecureRoute path="/508/requests/new" exact component={Create} />
+      <SecureRoute path="/508/requests/all" exact component={List} />
       <SecureRoute
         path="/508/requests/:accessibilityRequestId/documents/new"
         component={AccessibilityRequestsDocumentsNew}
@@ -56,6 +58,7 @@ const AppRoutes = () => {
         path="/508/requests/:accessibilityRequestId"
         render={() => <AccessibilityRequestDetailPage />}
       />
+      <SecureRoute path="/508/requests" exact component={List} />
       {/* END : 508 Process Pages */}
 
       <Route path="/" exact component={Home} />
