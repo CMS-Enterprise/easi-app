@@ -69,3 +69,19 @@ func (s *Store) FetchTestDateByID(ctx context.Context, id uuid.UUID) (*models.Te
 
 	return &testDate, nil
 }
+
+// FetchTestDatesByRequestID queries the DB for all the test dates matching the given AccessibilityRequest ID
+func (s *Store) FetchTestDatesByRequestID(ctx context.Context, requestID uuid.UUID) ([]*models.TestDate, error) {
+	results := []*models.TestDate{}
+
+	err := s.db.SelectContext(ctx, &results, `SELECT * FROM test_dates WHERE request_id=$1 AND deleted_at IS NULL`, requestID)
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		appcontext.ZLogger(ctx).Error("Failed to fetch test dates", zap.Error(err), zap.String("requestID", requestID.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     models.TestDate{},
+			Operation: apperrors.QueryFetch,
+		}
+	}
+	return results, nil
+}

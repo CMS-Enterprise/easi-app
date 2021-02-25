@@ -16,8 +16,15 @@ export default gql`
       }
       documents {
         name
+        url
         uploadedAt
         status
+      }
+      testDates {
+        id
+        testType
+        date
+        score
       }
     }
   }

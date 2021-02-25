@@ -12,6 +12,12 @@ import (
 	"github.com/google/uuid"
 )
 
+// Document type of an Accessibility Request document
+type AccessibilityRequestDocumentType struct {
+	CommonType           AccessibilityRequestDocumentCommonType `json:"commonType"`
+	OtherTypeDescription *string                                `json:"otherTypeDescription"`
+}
+
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
 	Cursor string                       `json:"cursor"`
@@ -26,12 +32,13 @@ type AccessibilityRequestsConnection struct {
 
 // Parameters for createAccessibilityRequestDocument
 type CreateAccessibilityRequestDocumentInput struct {
-	Bucket    string    `json:"bucket"`
-	Key       string    `json:"key"`
-	MimeType  string    `json:"mimeType"`
-	Name      string    `json:"name"`
-	RequestID uuid.UUID `json:"requestID"`
-	Size      int       `json:"size"`
+	CommonDocumentType           AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
+	MimeType                     string                                 `json:"mimeType"`
+	Name                         string                                 `json:"name"`
+	OtherDocumentTypeDescription *string                                `json:"otherDocumentTypeDescription"`
+	RequestID                    uuid.UUID                              `json:"requestID"`
+	Size                         int                                    `json:"size"`
+	URL                          string                                 `json:"url"`
 }
 
 // Result of createAccessibilityRequestDocument
@@ -91,11 +98,81 @@ type SystemEdge struct {
 	Node   *models.System `json:"node"`
 }
 
+// Parameters for editing a test date
+type UpdateTestDateInput struct {
+	Date     time.Time               `json:"date"`
+	ID       uuid.UUID               `json:"id"`
+	Score    *int                    `json:"score"`
+	TestType models.TestDateTestType `json:"testType"`
+}
+
+// Result of editTestDate
+type UpdateTestDatePayload struct {
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
+}
+
 // UserError represents application-level errors that are the result of
 // either user or application developer error.
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+// Common document type of an Accessibility Request document
+type AccessibilityRequestDocumentCommonType string
+
+const (
+	// Awarded VPAT
+	AccessibilityRequestDocumentCommonTypeAwardedVpat AccessibilityRequestDocumentCommonType = "AWARDED_VPAT"
+	// Other document
+	AccessibilityRequestDocumentCommonTypeOther AccessibilityRequestDocumentCommonType = "OTHER"
+	// Remediation Plan
+	AccessibilityRequestDocumentCommonTypeRemediationPlan AccessibilityRequestDocumentCommonType = "REMEDIATION_PLAN"
+	// Testing VPAT
+	AccessibilityRequestDocumentCommonTypeTestingVpat AccessibilityRequestDocumentCommonType = "TESTING_VPAT"
+	// Test Plan
+	AccessibilityRequestDocumentCommonTypeTestPlan AccessibilityRequestDocumentCommonType = "TEST_PLAN"
+	// Test Results
+	AccessibilityRequestDocumentCommonTypeTestResults AccessibilityRequestDocumentCommonType = "TEST_RESULTS"
+)
+
+var AllAccessibilityRequestDocumentCommonType = []AccessibilityRequestDocumentCommonType{
+	AccessibilityRequestDocumentCommonTypeAwardedVpat,
+	AccessibilityRequestDocumentCommonTypeOther,
+	AccessibilityRequestDocumentCommonTypeRemediationPlan,
+	AccessibilityRequestDocumentCommonTypeTestingVpat,
+	AccessibilityRequestDocumentCommonTypeTestPlan,
+	AccessibilityRequestDocumentCommonTypeTestResults,
+}
+
+func (e AccessibilityRequestDocumentCommonType) IsValid() bool {
+	switch e {
+	case AccessibilityRequestDocumentCommonTypeAwardedVpat, AccessibilityRequestDocumentCommonTypeOther, AccessibilityRequestDocumentCommonTypeRemediationPlan, AccessibilityRequestDocumentCommonTypeTestingVpat, AccessibilityRequestDocumentCommonTypeTestPlan, AccessibilityRequestDocumentCommonTypeTestResults:
+		return true
+	}
+	return false
+}
+
+func (e AccessibilityRequestDocumentCommonType) String() string {
+	return string(e)
+}
+
+func (e *AccessibilityRequestDocumentCommonType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccessibilityRequestDocumentCommonType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccessibilityRequestDocumentCommonType", str)
+	}
+	return nil
+}
+
+func (e AccessibilityRequestDocumentCommonType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 // A user role associated with a job code
