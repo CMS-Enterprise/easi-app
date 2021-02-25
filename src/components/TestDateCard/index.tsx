@@ -10,6 +10,13 @@ type TestDateCardProps = {
 };
 
 const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
+  const testScore = () => {
+    if (score === 0) {
+      return '0%';
+    }
+
+    return score ? `${(score / 10).toFixed(1)}%` : 'Score not added';
+  };
   return (
     <div className="bg-gray-10 padding-2 line-height-body-4 margin-bottom-2">
       <div className="text-bold margin-bottom-1">
@@ -23,7 +30,7 @@ const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
           className="display-inline-block text-base-dark"
           data-testid="score"
         >
-          {score ? `${(score / 10).toFixed(1)}%` : 'Score not added'}
+          {testScore()}
         </div>
       </div>
       {/* <div>
