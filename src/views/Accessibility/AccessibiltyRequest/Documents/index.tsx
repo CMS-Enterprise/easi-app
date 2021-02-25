@@ -1,8 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useTable } from 'react-table';
-import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
+import { Link, Table } from '@trussworks/react-uswds';
 
 import { AccessibilityRequestDocumentStatus } from 'types/graphql-global-types';
 import formatDate from 'utils/formatDate';
@@ -50,18 +49,13 @@ const AccessibilityDocumentsList = ({
         Header: t('documentTable.header.actions'),
         Cell: ({ row }: any) => (
           <>
-            <UswdsLink
-              aria-describedby={`doc-link-${row.original.id}`}
-              target="_blank"
-              asCustom={Link}
-              to={row.original.url}
-            >
+            <Link target="_blank" rel="noreferrer" href={row.original.url}>
               {t('documentTable.view')}
-              <span className="usa-sr-only">document type</span>
-            </UswdsLink>
-            <span className="usa-sr-only" id={`doc-link-${row.original.id}`}>
-              Open file in a new tab or window
-            </span>
+              <span className="usa-sr-only">
+                document type {/* TODO replace with real doc type */}
+              </span>
+              <span className="usa-sr-only">in a new tab or window</span>
+            </Link>
             {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
               {t('documentTable.remove')}
             </UswdsLink>
