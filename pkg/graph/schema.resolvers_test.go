@@ -270,13 +270,14 @@ func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
 	s.NoError(requestErr)
 
 	_, documentErr := s.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
-		RequestID:    accessibilityRequest.ID,
-		Name:         "uploaded_doc.pdf",
-		FileType:     "application/pdf",
-		Size:         1234567,
-		VirusScanned: null.Bool{},
-		VirusClean:   null.Bool{},
-		Key:          "abcdefg1234567.pdf",
+		RequestID:          accessibilityRequest.ID,
+		Name:               "uploaded_doc.pdf",
+		FileType:           "application/pdf",
+		Size:               1234567,
+		CommonDocumentType: models.AccessibilityRequestDocumentCommonTypeRemediationPlan,
+		VirusScanned:       null.Bool{},
+		VirusClean:         null.Bool{},
+		Key:                "abcdefg1234567.pdf",
 	})
 	s.NoError(documentErr)
 
