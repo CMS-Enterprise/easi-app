@@ -7,7 +7,7 @@ import classnames from 'classnames';
 type FileUploadProps = {
   id: string;
   name: string;
-  accept: string;
+  accept?: string;
   // multiple?: boolean;
   disabled?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
