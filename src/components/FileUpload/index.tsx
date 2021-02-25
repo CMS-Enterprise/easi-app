@@ -53,18 +53,19 @@ const FileUpload = (props: FileUploadProps) => {
   };
 
   const isFileTypeValid = (localFile: File) => {
-    let isFileTypeAcceptable = false;
-    if (accept) {
-      const accepetedFileTypes = accept.split(',');
-      accepetedFileTypes.forEach(fileType => {
-        if (
-          localFile.name.indexOf(fileType) > 0 ||
-          localFile.type.includes(fileType.replace(/\*/g, ''))
-        ) {
-          isFileTypeAcceptable = true;
-        }
-      });
+    if (!accept) {
+      return true;
     }
+    let isFileTypeAcceptable = false;
+    const acceptedFileTypes = accept.split(',');
+    acceptedFileTypes.forEach(fileType => {
+      if (
+        localFile.name.indexOf(fileType) > 0 ||
+        localFile.type.includes(fileType.replace(/\*/g, ''))
+      ) {
+        isFileTypeAcceptable = true;
+      }
+    });
     return isFileTypeAcceptable;
   };
 
