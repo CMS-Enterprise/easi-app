@@ -1834,9 +1834,9 @@ func (ec *executionContext) _AccessibilityRequestDocumentType_commonType(ctx con
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.AccessibilityRequestDocumentCommonType)
+	res := resTmp.(models.AccessibilityRequestDocumentCommonType)
 	fc.Result = res
-	return ec.marshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentCommonType(ctx, field.Selections, res)
+	return ec.marshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentCommonType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestDocumentType_otherTypeDescription(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocumentType) (ret graphql.Marshaler) {
@@ -4416,7 +4416,7 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonDocumentType"))
-			it.CommonDocumentType, err = ec.unmarshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentCommonType(ctx, v)
+			it.CommonDocumentType, err = ec.unmarshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentCommonType(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -5651,14 +5651,20 @@ func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚖgithubᚗcom
 	return ec._AccessibilityRequestDocument(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentCommonType(ctx context.Context, v interface{}) (model.AccessibilityRequestDocumentCommonType, error) {
-	var res model.AccessibilityRequestDocumentCommonType
-	err := res.UnmarshalGQL(v)
+func (ec *executionContext) unmarshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentCommonType(ctx context.Context, v interface{}) (models.AccessibilityRequestDocumentCommonType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.AccessibilityRequestDocumentCommonType(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentCommonType(ctx context.Context, sel ast.SelectionSet, v model.AccessibilityRequestDocumentCommonType) graphql.Marshaler {
-	return v
+func (ec *executionContext) marshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentCommonType(ctx context.Context, sel ast.SelectionSet, v models.AccessibilityRequestDocumentCommonType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentStatus(ctx context.Context, v interface{}) (models.AccessibilityRequestDocumentStatus, error) {
