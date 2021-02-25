@@ -42,13 +42,12 @@ const AccessibilityDocumentsList = ({
         width: '25%'
       },
       {
-        Header: 'Status',
-        accessor: 'status'
-      },
-      {
         Header: t('documentTable.header.actions'),
         Cell: ({ row }: any) => (
           <>
+            {row.original.status === 'PENDING' && (
+              <em>Virus scan in progress...</em>
+            )}
             {row.original.status === 'AVAILABLE' && (
               <Link target="_blank" rel="noreferrer" href={row.original.url}>
                 {t('documentTable.view')}
@@ -57,6 +56,12 @@ const AccessibilityDocumentsList = ({
                 </span>
                 <span className="usa-sr-only">in a new tab or window</span>
               </Link>
+            )}
+            {row.original.status === 'UNAVAILABLE' && (
+              <>
+                <i className="fa fa-exclamation-circle text-secondary" />{' '}
+                Document failed virus scan
+              </>
             )}
             {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
               {t('documentTable.remove')}
