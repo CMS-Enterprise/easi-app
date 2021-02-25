@@ -101,6 +101,10 @@ func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *model
 	return r.store.FetchTestDatesByRequestID(ctx, obj.ID)
 }
 
+func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error) {
 	return obj.FileType, nil
 }
