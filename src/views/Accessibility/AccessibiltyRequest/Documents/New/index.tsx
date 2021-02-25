@@ -100,7 +100,7 @@ const New = () => {
   };
 
   const onSubmit = (values: FileUploadForm) => {
-    if (!values.file) {
+    if (!values.file.name) {
       return;
     }
     const formData = new FormData();
@@ -197,22 +197,18 @@ const New = () => {
                     Upload a document to {data?.accessibilityRequest?.name}
                   </PageHeading>
                   <div className="grid-col-9">
-                    <Form onSubmit={formikProps.handleSubmit}>
+                    <Form onSubmit={formikProps.handleSubmit} large>
                       <Label htmlFor="FileUpload-File">
                         Choose a document to upload
                       </Label>
                       <Field
-                        key="FileUpload-File"
                         as={FileUpload}
                         id="FileUpload-File"
                         name="FileUpload-File"
-                        accept=".pdf,.txt"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                           onChange(e);
                           setFieldValue('file', e.currentTarget?.files?.[0]);
                         }}
-                        onBlur={() => {}}
-                        ariaDescribedBy=""
                       />
                       {values.file && (
                         <>
@@ -271,12 +267,6 @@ const New = () => {
                                 label={getDocumentTypeLabel(
                                   AccessibilityRequestDocumentCommonType.OTHER
                                 )}
-                                onChange={() => {
-                                  setFieldValue(
-                                    'documentType.commonType',
-                                    'OTHER'
-                                  );
-                                }}
                                 value="OTHER"
                               />
                               {values.documentType.commonType === 'OTHER' && (
