@@ -98,9 +98,7 @@ const TestDate = () => {
       <Header />
       <MainContent className="margin-bottom-5">
         <SecondaryNav>
-          <NavLink to={`/508/requests/${accessibilityRequestId}`}>
-            {t('tabs.accessibilityRequests')}
-          </NavLink>
+          <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
         </SecondaryNav>
         <div className="grid-container margin-y-4">
           <Formik
