@@ -49,13 +49,15 @@ const AccessibilityDocumentsList = ({
         Header: t('documentTable.header.actions'),
         Cell: ({ row }: any) => (
           <>
-            <Link target="_blank" rel="noreferrer" href={row.original.url}>
-              {t('documentTable.view')}
-              <span className="usa-sr-only">
-                document type {/* TODO replace with real doc type */}
-              </span>
-              <span className="usa-sr-only">in a new tab or window</span>
-            </Link>
+            {row.original.status === 'AVAILABLE' && (
+              <Link target="_blank" rel="noreferrer" href={row.original.url}>
+                {t('documentTable.view')}
+                <span className="usa-sr-only">
+                  document type {/* TODO replace with real doc type */}
+                </span>
+                <span className="usa-sr-only">in a new tab or window</span>
+              </Link>
+            )}
             {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
               {t('documentTable.remove')}
             </UswdsLink>
