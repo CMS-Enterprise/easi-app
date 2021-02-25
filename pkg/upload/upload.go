@@ -76,8 +76,9 @@ func (c S3Client) NewPutPresignedURL(fileType string) (*models.PreSignedURL, err
 		key = key + extensions[0]
 	}
 	req, _ := c.client.PutObjectRequest(&s3.PutObjectInput{
-		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
+		Bucket:      aws.String(c.config.Bucket),
+		Key:         aws.String(key),
+		ContentType: aws.String(fileType),
 	})
 
 	url, err := req.Presign(15 * time.Minute)
