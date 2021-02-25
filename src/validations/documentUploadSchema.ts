@@ -11,7 +11,7 @@ export const DocumentUploadValidationSchema: any = Yup.object().shape({
       commonType: Yup.string()
         .nullable()
         .required('Select the type of document you are uploading'),
-      value: Yup.string().when('commonType', {
+      otherType: Yup.string().when('commonType', {
         is: 'OTHER',
         then: Yup.string()
           .trim()

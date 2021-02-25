@@ -48,8 +48,6 @@ const New = () => {
     }
   );
 
-  const [selectedFile, setSelectedFile] = useState<File>();
-
   const [s3URL, setS3URL] = useState('');
   const [generateURL, generateURLStatus] = useMutation<
     GeneratePresignedUploadURL
@@ -78,7 +76,6 @@ const New = () => {
     if (!file) {
       return;
     }
-    setSelectedFile(file);
     generateURL({
       variables: {
         input: {
@@ -103,19 +100,19 @@ const New = () => {
   };
 
   const onSubmit = (values: FileUploadForm) => {
-    if (!selectedFile) {
+    if (!values.file) {
       return;
     }
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append('file', values.file);
 
     axios.put(s3URL, formData).then(() => {
       createDocument({
         variables: {
           input: {
-            mimeType: selectedFile.type,
-            size: selectedFile.size,
-            name: selectedFile.name,
+            mimeType: values.file.type,
+            size: values.file.size,
+            name: values.file.name,
             url: s3URL,
             requestID: accessibilityRequestId,
             commonDocumentType: values.documentType
@@ -125,7 +122,7 @@ const New = () => {
         }
       }).then(() => {
         history.push(`/508/requests/${accessibilityRequestId}`, {
-          confirmationText: `${selectedFile.name} uploaded to ${data?.accessibilityRequest?.name}`
+          confirmationText: `${values.file.name} uploaded to ${data?.accessibilityRequest?.name}`
         });
       });
     });
@@ -205,18 +202,23 @@ const New = () => {
                   </PageHeading>
                   <div className="grid-col-9">
                     <Form onSubmit={formikProps.handleSubmit}>
-                      <Label htmlFor="file-upload">
+                      <Label htmlFor="FileUpload-File">
                         Choose a document to upload
-                        <FileUpload
-                          id="file-upload"
-                          name="file-upload"
-                          accept=".pdf,.txt"
-                          onChange={onChange}
-                          onBlur={() => {}}
-                          ariaDescribedBy=""
-                        />
                       </Label>
-                      {selectedFile && (
+                      <Field
+                        key="FileUpload-File"
+                        as={FileUpload}
+                        id="FileUpload-File"
+                        name="FileUpload-File"
+                        accept=".pdf,.txt"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          onChange(e);
+                          setFieldValue('file', e.currentTarget?.files?.[0]);
+                        }}
+                        onBlur={() => {}}
+                        ariaDescribedBy=""
+                      />
+                      {values.file && (
                         <>
                           <FieldGroup
                             scrollElement="documentType.commonType"
