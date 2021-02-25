@@ -61,14 +61,20 @@ type ComplexityRoot struct {
 	}
 
 	AccessibilityRequestDocument struct {
-		ID         func(childComplexity int) int
-		MimeType   func(childComplexity int) int
-		Name       func(childComplexity int) int
-		RequestID  func(childComplexity int) int
-		Size       func(childComplexity int) int
-		Status     func(childComplexity int) int
-		URL        func(childComplexity int) int
-		UploadedAt func(childComplexity int) int
+		DocumentType func(childComplexity int) int
+		ID           func(childComplexity int) int
+		MimeType     func(childComplexity int) int
+		Name         func(childComplexity int) int
+		RequestID    func(childComplexity int) int
+		Size         func(childComplexity int) int
+		Status       func(childComplexity int) int
+		URL          func(childComplexity int) int
+		UploadedAt   func(childComplexity int) int
+	}
+
+	AccessibilityRequestDocumentType struct {
+		CommonType           func(childComplexity int) int
+		OtherTypeDescription func(childComplexity int) int
 	}
 
 	AccessibilityRequestEdge struct {
@@ -164,6 +170,8 @@ type AccessibilityRequestResolver interface {
 	TestDates(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.TestDate, error)
 }
 type AccessibilityRequestDocumentResolver interface {
+	DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error)
+
 	MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error)
 
 	UploadedAt(ctx context.Context, obj *models.AccessibilityRequestDocument) (*time.Time, error)
@@ -245,6 +253,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AccessibilityRequest.TestDates(childComplexity), true
 
+	case "AccessibilityRequestDocument.documentType":
+		if e.complexity.AccessibilityRequestDocument.DocumentType == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestDocument.DocumentType(childComplexity), true
+
 	case "AccessibilityRequestDocument.id":
 		if e.complexity.AccessibilityRequestDocument.ID == nil {
 			break
@@ -300,6 +315,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequestDocument.UploadedAt(childComplexity), true
+
+	case "AccessibilityRequestDocumentType.commonType":
+		if e.complexity.AccessibilityRequestDocumentType.CommonType == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestDocumentType.CommonType(childComplexity), true
+
+	case "AccessibilityRequestDocumentType.otherTypeDescription":
+		if e.complexity.AccessibilityRequestDocumentType.OtherTypeDescription == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequestDocumentType.OtherTypeDescription(childComplexity), true
 
 	case "AccessibilityRequestEdge.cursor":
 		if e.complexity.AccessibilityRequestEdge.Cursor == nil {
@@ -733,9 +762,53 @@ enum AccessibilityRequestDocumentStatus {
 }
 
 """
+Common document type of an Accessibility Request document
+"""
+enum AccessibilityRequestDocumentCommonType {
+  """
+  Awarded VPAT
+  """
+  AWARDED_VPAT
+
+  """
+  Other document
+  """
+  OTHER
+
+  """
+  Remediation Plan
+  """
+  REMEDIATION_PLAN
+
+  """
+  Testing VPAT
+  """
+  TESTING_VPAT
+
+  """
+  Test Plan
+  """
+  TEST_PLAN
+
+  """
+  Test Results
+  """
+  TEST_RESULTS
+}
+
+"""
+Document type of an Accessibility Request document
+"""
+type AccessibilityRequestDocumentType {
+  commonType: AccessibilityRequestDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""
 A document that belongs to an accessibility request
 """
 type AccessibilityRequestDocument {
+  documentType: AccessibilityRequestDocumentType!
   id: UUID!
   mimeType: String!
   name: String!
@@ -876,8 +949,10 @@ type UpdateTestDatePayload {
 Parameters for createAccessibilityRequestDocument
 """
 input CreateAccessibilityRequestDocumentInput {
+  commonDocumentType: AccessibilityRequestDocumentCommonType!
   mimeType: String!
   name: String!
+  otherDocumentTypeDescription: String
   requestID: UUID!
   size: Int!
   url: String!
@@ -1414,6 +1489,41 @@ func (ec *executionContext) _AccessibilityRequest_testDates(ctx context.Context,
 	return ec.marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _AccessibilityRequestDocument_documentType(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestDocument",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.AccessibilityRequestDocument().DocumentType(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.AccessibilityRequestDocumentType)
+	fc.Result = res
+	return ec.marshalNAccessibilityRequestDocumentType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentType(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _AccessibilityRequestDocument_id(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -1692,6 +1802,73 @@ func (ec *executionContext) _AccessibilityRequestDocument_url(ctx context.Contex
 	res := resTmp.(string)
 	fc.Result = res
 	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequestDocumentType_commonType(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocumentType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestDocumentType",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CommonType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.AccessibilityRequestDocumentCommonType)
+	fc.Result = res
+	return ec.marshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentCommonType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequestDocumentType_otherTypeDescription(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestDocumentType) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequestDocumentType",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OtherTypeDescription, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestEdge_cursor(ctx context.Context, field graphql.CollectedField, obj *model.AccessibilityRequestEdge) (ret graphql.Marshaler) {
@@ -4235,6 +4412,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 
 	for k, v := range asMap {
 		switch k {
+		case "commonDocumentType":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("commonDocumentType"))
+			it.CommonDocumentType, err = ec.unmarshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentCommonType(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "mimeType":
 			var err error
 
@@ -4248,6 +4433,14 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInpu
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
 			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "otherDocumentTypeDescription":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("otherDocumentTypeDescription"))
+			it.OtherDocumentTypeDescription, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4542,6 +4735,20 @@ func (ec *executionContext) _AccessibilityRequestDocument(ctx context.Context, s
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("AccessibilityRequestDocument")
+		case "documentType":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._AccessibilityRequestDocument_documentType(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "id":
 			out.Values[i] = ec._AccessibilityRequestDocument_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -4600,6 +4807,35 @@ func (ec *executionContext) _AccessibilityRequestDocument(ctx context.Context, s
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var accessibilityRequestDocumentTypeImplementors = []string{"AccessibilityRequestDocumentType"}
+
+func (ec *executionContext) _AccessibilityRequestDocumentType(ctx context.Context, sel ast.SelectionSet, obj *model.AccessibilityRequestDocumentType) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, accessibilityRequestDocumentTypeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AccessibilityRequestDocumentType")
+		case "commonType":
+			out.Values[i] = ec._AccessibilityRequestDocumentType_commonType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "otherTypeDescription":
+			out.Values[i] = ec._AccessibilityRequestDocumentType_otherTypeDescription(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -5415,6 +5651,16 @@ func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚖgithubᚗcom
 	return ec._AccessibilityRequestDocument(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentCommonType(ctx context.Context, v interface{}) (model.AccessibilityRequestDocumentCommonType, error) {
+	var res model.AccessibilityRequestDocumentCommonType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNAccessibilityRequestDocumentCommonType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentCommonType(ctx context.Context, sel ast.SelectionSet, v model.AccessibilityRequestDocumentCommonType) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentStatus(ctx context.Context, v interface{}) (models.AccessibilityRequestDocumentStatus, error) {
 	var res models.AccessibilityRequestDocumentStatus
 	err := res.UnmarshalGQL(v)
@@ -5423,6 +5669,20 @@ func (ec *executionContext) unmarshalNAccessibilityRequestDocumentStatus2github�
 
 func (ec *executionContext) marshalNAccessibilityRequestDocumentStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentStatus(ctx context.Context, sel ast.SelectionSet, v models.AccessibilityRequestDocumentStatus) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) marshalNAccessibilityRequestDocumentType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentType(ctx context.Context, sel ast.SelectionSet, v model.AccessibilityRequestDocumentType) graphql.Marshaler {
+	return ec._AccessibilityRequestDocumentType(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNAccessibilityRequestDocumentType2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDocumentType(ctx context.Context, sel ast.SelectionSet, v *model.AccessibilityRequestDocumentType) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._AccessibilityRequestDocumentType(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.AccessibilityRequestEdge) graphql.Marshaler {
