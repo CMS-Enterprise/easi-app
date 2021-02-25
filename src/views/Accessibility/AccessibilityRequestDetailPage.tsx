@@ -112,7 +112,7 @@ const AccessibilityRequestDetailPage = () => {
                     .map((testDate, index) => (
                       <TestDateCard
                         key={testDate.id}
-                        date={DateTime.fromISO(testDate.date)}
+                        date={testDate.date}
                         type={testDate.testType}
                         testIndex={index + 1}
                         score={testDate.score}
