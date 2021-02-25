@@ -103,10 +103,14 @@ const New = () => {
     if (!values.file.name) {
       return;
     }
-    const formData = new FormData();
-    formData.append('file', values.file);
 
-    axios.put(s3URL, formData).then(() => {
+    const options = {
+      headers: {
+        'Content-Type': values.file.type
+      }
+    };
+
+    axios.put(s3URL, values.file, options).then(() => {
       createDocument({
         variables: {
           input: {
