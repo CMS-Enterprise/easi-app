@@ -6,7 +6,7 @@ const accessibility = {
     header: {
       actions: 'Actions',
       documentName: 'Document',
-      uploadedAt: 'Uploaded Date'
+      uploadedAt: 'Upload date'
     },
     remove: 'Remove',
     view: 'View'

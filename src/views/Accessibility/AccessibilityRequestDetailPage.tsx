@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
+import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
@@ -15,7 +16,6 @@ import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TestDateCard from 'components/TestDateCard';
 import useConfirmationText from 'hooks/useConfirmationText';
 import formatDate from 'utils/formatDate';
-import AccessibilityDocumentsList from 'views/Accessibility/AccessibiltyRequest/Documents';
 
 import './index.scss';
 
