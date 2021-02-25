@@ -161,9 +161,7 @@ const New = () => {
         <div className="grid-container">
           <Formik
             initialValues={{
-              filename: '',
               file: {} as File,
-              uploadURL: '',
               documentType: {
                 commonType: null,
                 otherType: ''
