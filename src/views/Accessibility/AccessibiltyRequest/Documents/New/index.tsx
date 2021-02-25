@@ -30,6 +30,7 @@ import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TextField from 'components/shared/TextField';
 import { FileUploadForm } from 'types/files';
 import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
+import { translateDocumentType } from 'utils/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { DocumentUploadValidationSchema } from 'validations/documentUploadSchema';
 
@@ -128,27 +129,6 @@ const New = () => {
     });
   };
 
-  const getDocumentTypeLabel = (
-    commonType: AccessibilityRequestDocumentCommonType
-  ): string => {
-    switch (commonType) {
-      case 'AWARDED_VPAT':
-        return 'Awarded VPAT';
-      case 'TEST_PLAN':
-        return 'Test plan';
-      case 'TESTING_VPAT':
-        return 'Testing VPAT';
-      case 'TEST_RESULTS':
-        return 'Test results';
-      case 'REMEDIATION_PLAN':
-        return 'Remediation plan';
-      case 'OTHER':
-        return 'Other';
-      default:
-        return '';
-    }
-  };
-
   return (
     <PageWrapper className="accessibility-request">
       <Header />
@@ -241,7 +221,7 @@ const New = () => {
                                       }
                                       id={`FileUpload-CommonType${commonType}`}
                                       name="documentType.commonType"
-                                      label={getDocumentTypeLabel(commonType)}
+                                      label={translateDocumentType(commonType)}
                                       onChange={() => {
                                         setFieldValue(
                                           'documentType.commonType',
@@ -264,7 +244,7 @@ const New = () => {
                                 }
                                 id="FileUpload-CommonTypeOTHER"
                                 name="documentType.commonType"
-                                label={getDocumentTypeLabel(
+                                label={translateDocumentType(
                                   AccessibilityRequestDocumentCommonType.OTHER
                                 )}
                                 value="OTHER"

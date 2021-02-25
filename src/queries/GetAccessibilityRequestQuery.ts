@@ -15,10 +15,13 @@ export default gql`
         }
       }
       documents {
-        name
         url
         uploadedAt
         status
+        documentType {
+          commonType
+          otherTypeDescription
+        }
       }
       testDates {
         id
