@@ -12,8 +12,6 @@ import { CreateTestDateInput } from "./../../types/graphql-global-types";
 export interface CreateTestDate_createTestDate_testDate {
   __typename: "TestDate";
   id: UUID;
-  date: Time;
-  score: number | null;
 }
 
 export interface CreateTestDate_createTestDate {
