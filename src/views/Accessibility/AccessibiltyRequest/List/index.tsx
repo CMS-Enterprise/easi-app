@@ -1,7 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Link } from '@trussworks/react-uswds';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 import GetAccessibilityRequestsQuery from 'queries/GetAccessibilityRequestsQuery';
 import { GetAccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
@@ -15,7 +16,8 @@ const List = () => {
     {
       variables: {
         first: 20
-      }
+      },
+      fetchPolicy: 'cache-and-network'
     }
   );
 
@@ -38,13 +40,14 @@ const List = () => {
     <div className="grid-container">
       <div className="display-flex flex-justify flex-wrap">
         <PageHeading>{t('accessibility.heading')}</PageHeading>
-        <Link
+        <UswdsLink
+          asCustom={Link}
           className="usa-button flex-align-self-center"
           variant="unstyled"
-          href="/508/requests/new"
+          to="/508/requests/new"
         >
           {t('accessibility.newRequest')}
-        </Link>
+        </UswdsLink>
       </div>
       <AccessibilityRequestsTable requests={requests || []} />
     </div>

@@ -91,9 +91,7 @@ const Create = () => {
       <Header />
       <MainContent className="margin-bottom-5">
         <SecondaryNav>
-          <NavLink to="/508/requests/new">
-            {t('tabs.accessibilityRequests')}
-          </NavLink>
+          <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
         </SecondaryNav>
         <div className="grid-container">
           <PageHeading>{t('newRequestForm.heading')}</PageHeading>
