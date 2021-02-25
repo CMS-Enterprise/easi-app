@@ -1,15 +1,22 @@
 import React from 'react';
-import { Link } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
+
+import formatDate from 'utils/formatDate';
 
 type TestDateCardProps = {
-  date: DateTime;
+  date: string; // ISO string
   type: 'INITIAL' | 'REMEDIATION';
   testIndex: number;
   score: number | null; // A whole number representing tenths of a percent
 };
 
 const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
+  const testScore = () => {
+    if (score === 0) {
+      return '0%';
+    }
+
+    return score ? `${(score / 10).toFixed(1)}%` : 'Score not added';
+  };
   return (
     <div className="bg-gray-10 padding-2 line-height-body-4 margin-bottom-2">
       <div className="text-bold margin-bottom-1">
@@ -17,16 +24,16 @@ const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
       </div>
       <div className="margin-bottom-1">
         <div className="display-inline-block margin-right-2">
-          {date.toLocaleString(DateTime.DATE_MED)}
+          {formatDate(date)}
         </div>
         <div
           className="display-inline-block text-base-dark"
           data-testid="score"
         >
-          {score ? `${(score / 10).toFixed(1)}%` : 'Score not added'}
+          {testScore()}
         </div>
       </div>
-      <div>
+      {/* <div>
         <Link
           href="/"
           className="margin-right-2"
@@ -37,7 +44,7 @@ const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
         <Link href="/" aria-label={`Remove test ${testIndex} ${type}`}>
           Remove
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };
