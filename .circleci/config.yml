@@ -390,10 +390,10 @@ jobs:
           name: Build the app and push to ECR
           command: |
             ./scripts/build_docker_image
-      - run:
-          name: Check for vulnerability scan findings
-          command: |
-            ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1" "4"
+            # - run:
+            #     name: Check for vulnerability scan findings
+            #     command: |
+            #       ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1" "4"
       - run:
           name: Announce failure
           command: |

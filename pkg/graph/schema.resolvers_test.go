@@ -394,7 +394,9 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 				size: 512512,
 				name: "test_file.pdf",
 				url: "http://localhost:9000/easi-test-bucket/e9eb4a4f-9100-416f-be5b-f141bb436cfa.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&",
-				requestID: "%s"
+				requestID: "%s",
+				commonDocumentType: OTHER,
+				otherDocumentTypeDescription: "My new document"
 			}) {
 				accessibilityRequestDocument {
 					id
