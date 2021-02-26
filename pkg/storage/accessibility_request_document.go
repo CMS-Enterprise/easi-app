@@ -27,6 +27,8 @@ func (s *Store) CreateAccessibilityRequestDocument(ctx context.Context, file *mo
 						 file_name,
 						 file_size,
                          file_key,
+						 document_type,
+						 other_type,
                          created_at,
                          updated_at,
                          virus_scanned,
@@ -40,6 +42,8 @@ func (s *Store) CreateAccessibilityRequestDocument(ctx context.Context, file *mo
 						 :file_name,
 						 :file_size,
                          :file_key,
+                         :document_type,
+                         :other_type,
                          :created_at,
                          :updated_at,
                          :virus_scanned,
@@ -89,8 +93,8 @@ func (s *Store) FetchAccessibilityRequestDocumentByID(ctx context.Context, id uu
 	return &document, nil
 }
 
-// FetchFilesByAccessibilityRequestID retrieves the info for a file with a given accessibility request id
-func (s *Store) FetchFilesByAccessibilityRequestID(ctx context.Context, id uuid.UUID) ([]*models.AccessibilityRequestDocument, error) {
+// FetchDocumentsByAccessibilityRequestID retrieves the info for a file with a given accessibility request id
+func (s *Store) FetchDocumentsByAccessibilityRequestID(ctx context.Context, id uuid.UUID) ([]*models.AccessibilityRequestDocument, error) {
 	if id == uuid.Nil {
 		return nil, &apperrors.ResourceNotFoundError{Resource: models.AccessibilityRequestDocument{}}
 	}

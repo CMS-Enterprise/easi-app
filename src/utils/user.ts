@@ -17,6 +17,11 @@ export const isGrtReviewer = (groups: Array<String> = []) => {
 };
 
 export const isAccessibilityTester = (groups: Array<String> = []) => {
+  // TODO: Remove after testing is complete
+  if (['impl', 'dev'].includes(process.env.REACT_APP_APP_ENV as string)) {
+    return true;
+  }
+
   if (
     groups.includes(ACCESSIBILITY_TESTER_DEV) ||
     groups.includes(ACCESSIBILITY_TESTER_PROD)
@@ -28,6 +33,11 @@ export const isAccessibilityTester = (groups: Array<String> = []) => {
 };
 
 export const isAccessibilityAdmin = (groups: Array<String> = []) => {
+  // TODO: Remove after testing is complete
+  if (['impl', 'dev'].includes(process.env.REACT_APP_APP_ENV as string)) {
+    return true;
+  }
+
   if (
     groups.includes(ACCESSIBILITY_ADMIN_DEV) ||
     groups.includes(ACCESSIBILITY_ADMIN_PROD)
