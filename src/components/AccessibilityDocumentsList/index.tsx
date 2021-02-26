@@ -69,12 +69,15 @@ const AccessibilityDocumentsList = ({
               <em>Virus scan in progress...</em>
             )}
             {row.original.status === 'AVAILABLE' && (
-              <Link target="_blank" rel="noreferrer" href={row.original.url}>
+              <Link
+                target="_blank"
+                rel="noreferrer"
+                href={row.original.url}
+                aria-label={`View ${getDocType(
+                  row.original.documentType
+                )} in a new tab or window`}
+              >
                 {t('documentTable.view')}
-                <span className="usa-sr-only">
-                  document type {row.original.documentType}
-                </span>
-                <span className="usa-sr-only">in a new tab or window</span>
               </Link>
             )}
             {row.original.status === 'UNAVAILABLE' && (
