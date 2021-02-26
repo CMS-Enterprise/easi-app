@@ -3,14 +3,21 @@ import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import { Link, Table } from '@trussworks/react-uswds';
 
-import { AccessibilityRequestDocumentStatus } from 'types/graphql-global-types';
+import {
+  AccessibilityRequestDocumentCommonType,
+  AccessibilityRequestDocumentStatus
+} from 'types/graphql-global-types';
+import { translateDocumentType } from 'utils/accessibilityRequest';
 import formatDate from 'utils/formatDate';
 
 type Document = {
-  name: string;
   status: AccessibilityRequestDocumentStatus;
   url: string;
   uploadedAt: string;
+  documentType: {
+    commonType: AccessibilityRequestDocumentCommonType;
+    otherTypeDescription: string | null;
+  };
 };
 
 type DocumentsListProps = {
@@ -24,11 +31,24 @@ const AccessibilityDocumentsList = ({
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
 
+  const getDocType = (documentType: {
+    commonType: AccessibilityRequestDocumentCommonType;
+    otherTypeDescription: string;
+  }) => {
+    if (documentType.commonType !== 'OTHER') {
+      return translateDocumentType(
+        documentType.commonType as AccessibilityRequestDocumentCommonType
+      );
+    }
+    return documentType.otherTypeDescription;
+  };
+
   const columns: any = useMemo(() => {
     return [
       {
         Header: t('documentTable.header.documentName'),
-        accessor: 'name'
+        accessor: 'documentType',
+        Cell: ({ value }: any) => getDocType(value)
       },
       {
         Header: t('documentTable.header.uploadedAt'),
@@ -49,12 +69,15 @@ const AccessibilityDocumentsList = ({
               <em>Virus scan in progress...</em>
             )}
             {row.original.status === 'AVAILABLE' && (
-              <Link target="_blank" rel="noreferrer" href={row.original.url}>
+              <Link
+                target="_blank"
+                rel="noreferrer"
+                href={row.original.url}
+                aria-label={`View ${getDocType(
+                  row.original.documentType
+                )} in a new tab or window`}
+              >
                 {t('documentTable.view')}
-                <span className="usa-sr-only">
-                  document type {/* TODO replace with real doc type */}
-                </span>
-                <span className="usa-sr-only">in a new tab or window</span>
               </Link>
             )}
             {row.original.status === 'UNAVAILABLE' && (
