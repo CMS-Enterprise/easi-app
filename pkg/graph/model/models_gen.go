@@ -12,6 +12,12 @@ import (
 	"github.com/google/uuid"
 )
 
+// Document type of an Accessibility Request document
+type AccessibilityRequestDocumentType struct {
+	CommonType           models.AccessibilityRequestDocumentCommonType `json:"commonType"`
+	OtherTypeDescription *string                                       `json:"otherTypeDescription"`
+}
+
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
 	Cursor string                       `json:"cursor"`
@@ -26,11 +32,13 @@ type AccessibilityRequestsConnection struct {
 
 // Parameters for createAccessibilityRequestDocument
 type CreateAccessibilityRequestDocumentInput struct {
-	MimeType  string    `json:"mimeType"`
-	Name      string    `json:"name"`
-	RequestID uuid.UUID `json:"requestID"`
-	Size      int       `json:"size"`
-	URL       string    `json:"url"`
+	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
+	MimeType                     string                                        `json:"mimeType"`
+	Name                         string                                        `json:"name"`
+	OtherDocumentTypeDescription *string                                       `json:"otherDocumentTypeDescription"`
+	RequestID                    uuid.UUID                                     `json:"requestID"`
+	Size                         int                                           `json:"size"`
+	URL                          string                                        `json:"url"`
 }
 
 // Result of createAccessibilityRequestDocument

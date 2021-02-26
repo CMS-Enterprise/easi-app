@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -19,28 +18,33 @@ import (
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
-	documents, documentsErr := r.store.FetchFilesByAccessibilityRequestID(ctx, obj.ID)
+	documents, documentsErr := r.store.FetchDocumentsByAccessibilityRequestID(ctx, obj.ID)
 
 	if documentsErr != nil {
 		return nil, documentsErr
 	}
 
 	for _, document := range documents {
-
-		status := "PENDING"
-		if document.VirusScanned == null.BoolFrom(true) {
-			if document.VirusClean == null.BoolFrom(false) {
-				status = "UNAVAILABLE"
-			}
-
-			if document.VirusClean == null.BoolFrom(true) {
-				status = "AVAILABLE"
-			}
-		}
-
-		document.Status = models.AccessibilityRequestDocumentStatus(status)
 		if url, urlErr := r.s3Client.NewGetPresignedURL(document.Key); urlErr == nil {
 			document.URL = url.URL
+		}
+
+		// This is not ideal- we're making a request to S3 for each document sequentially.
+		// The more documents we have on an accessibility request, the slower this resolver will get.
+		//
+		// We will either update the records in the database with the results OR implement
+		// another mechanism for doing that as a background job so that we don't need to do it here.
+		value, valueErr := r.s3Client.TagValueForKey(document.Key, "av-status")
+		if valueErr != nil {
+			return nil, valueErr
+		}
+
+		if value == "CLEAN" {
+			document.Status = models.AccessibilityRequestDocumentStatusAvailable
+		} else if value == "INFECTED" {
+			document.Status = models.AccessibilityRequestDocumentStatusUnavailable
+		} else {
+			document.Status = models.AccessibilityRequestDocumentStatusPending
 		}
 	}
 
@@ -97,6 +101,13 @@ func (r *accessibilityRequestResolver) TestDates(ctx context.Context, obj *model
 	return r.store.FetchTestDatesByRequestID(ctx, obj.ID)
 }
 
+func (r *accessibilityRequestDocumentResolver) DocumentType(ctx context.Context, obj *models.AccessibilityRequestDocument) (*model.AccessibilityRequestDocumentType, error) {
+	return &model.AccessibilityRequestDocumentType{
+		CommonType:           obj.CommonDocumentType,
+		OtherTypeDescription: &obj.OtherType,
+	}, nil
+}
+
 func (r *accessibilityRequestDocumentResolver) MimeType(ctx context.Context, obj *models.AccessibilityRequestDocument) (string, error) {
 	return obj.FileType, nil
 }
@@ -132,11 +143,13 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	}
 
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
-		Name:      input.Name,
-		FileType:  input.MimeType,
-		Key:       key,
-		Size:      input.Size,
-		RequestID: input.RequestID,
+		Name:               input.Name,
+		FileType:           input.MimeType,
+		Key:                key,
+		Size:               input.Size,
+		RequestID:          input.RequestID,
+		CommonDocumentType: input.CommonDocumentType,
+		OtherType:          *input.OtherDocumentTypeDescription,
 	})
 
 	if docErr != nil {

@@ -3,17 +3,19 @@ import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
+import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import TestDateCard from 'components/TestDateCard';
 import useConfirmationText from 'hooks/useConfirmationText';
 import formatDate from 'utils/formatDate';
-import AccessibilityDocumentsList from 'views/Accessibility/AccessibiltyRequest/Documents';
 
 import './index.scss';
 
@@ -41,6 +43,7 @@ const AccessibilityRequestDetailPage = () => {
   const businessOwnerComponent =
     data?.accessibilityRequest?.system?.businessOwner?.component;
   const documents = data?.accessibilityRequest?.documents || [];
+  const testDates = data?.accessibilityRequest?.testDates || [];
 
   if (loading) {
     return <div>Loading</div>;
@@ -63,9 +66,7 @@ const AccessibilityRequestDetailPage = () => {
       <Header />
       <MainContent className="margin-bottom-5">
         <SecondaryNav>
-          <NavLink to={`/508/requests/${accessibilityRequestId}`}>
-            {t('tabs.accessibilityRequests')}
-          </NavLink>
+          <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
         </SecondaryNav>
         <div className="grid-container">
           {confirmationText && (
@@ -100,6 +101,21 @@ const AccessibilityRequestDetailPage = () => {
                   <h2 className="margin-top-2 margin-bottom-3">
                     Test Dates and Scores
                   </h2>
+                  {[...testDates]
+                    .sort(
+                      (a, b) =>
+                        DateTime.fromISO(a.date).toMillis() -
+                        DateTime.fromISO(b.date).toMillis()
+                    )
+                    .map((testDate, index) => (
+                      <TestDateCard
+                        key={testDate.id}
+                        date={testDate.date}
+                        type={testDate.testType}
+                        testIndex={index + 1}
+                        score={testDate.score}
+                      />
+                    ))}
                   <Link
                     to={`/508/requests/${accessibilityRequestId}/test-date`}
                     className="margin-bottom-3 display-block"
