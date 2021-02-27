@@ -70,6 +70,18 @@ const RequestRepository = () => {
     accessor: 'fundingSource.fundingNumber'
   };
 
+  const adminLeadColumn = {
+    Header: t('intake:fields.adminLead'),
+    accessor: 'adminLead',
+    Cell: ({ value }: any) => {
+      if (value) {
+        return value;
+      }
+
+      return t('governanceReviewTeam:adminLeads.notAssigned');
+    }
+  };
+
   const grtDateColumn = {
     Header: t('intake:fields.grtDate'),
     accessor: 'grtDate',
@@ -124,6 +136,7 @@ const RequestRepository = () => {
         requestNameColumn,
         requesterComponentColumn,
         requestTypeColumn,
+        adminLeadColumn,
         statusColumn,
         grtDateColumn,
         grbDateColumn

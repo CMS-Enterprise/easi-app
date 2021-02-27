@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
+import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
@@ -9,10 +10,16 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import Modal from 'components/Modal';
 import PageWrapper from 'components/PageWrapper';
+import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
-import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import {
+  fetchBusinessCase,
+  fetchSystemIntake,
+  saveSystemIntake
+} from 'types/routines';
 import {
   isIntakeClosed,
   isIntakeOpen,
@@ -36,6 +43,7 @@ const GovernanceReviewTeam = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -62,6 +70,70 @@ const GovernanceReviewTeam = () => {
   const requesterNameAndComponent = component
     ? `${systemIntake.requester.name}, ${component.acronym}`
     : systemIntake.requester.name;
+
+  // Get admin lead assigned to intake
+  const getAdminLead = () => {
+    if (systemIntake.adminLead) {
+      return systemIntake.adminLead;
+    }
+    return t('governanceReviewTeam:adminLeads.notAssigned');
+  };
+
+  const [newAdminLead, setAdminLead] = useState('');
+
+  // Send newly selected admin lead to database
+  const saveAdminLead = () => {
+    const data = {
+      ...systemIntake,
+      adminLead: newAdminLead
+    };
+    dispatch(saveSystemIntake({ ...data }));
+  };
+
+  // List of current GRT admin team members
+  const grtMembers: string[] = t('governanceReviewTeam:adminLeads.members', {
+    returnObjects: true
+  });
+
+  // Set admin lead modal stuff
+  type AdminLeadContextType = {
+    name: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value: string;
+  };
+
+  const AdminLeadContext = createContext<AdminLeadContextType>({
+    name: '',
+    onChange: () => {},
+    value: ''
+  });
+
+  type AdminLeadRadioOptionProps = {
+    label: string;
+  };
+
+  const AdminLeadRadioOption = ({ label }: AdminLeadRadioOptionProps) => {
+    const radioFieldClassName = 'margin-y-3';
+
+    const adminLeadContext = useContext(AdminLeadContext);
+    if (!adminLeadContext) {
+      throw new Error(
+        'This component cannot be used outside of the Admin Lead Radio Group Context'
+      );
+    }
+
+    return (
+      <RadioField
+        id={label}
+        label={label}
+        name={adminLeadContext.name}
+        value={label}
+        onChange={adminLeadContext.onChange}
+        checked={adminLeadContext.value === label}
+        className={radioFieldClassName}
+      />
+    );
+  };
 
   const getNavLinkClasses = (page: string) =>
     classnames('easi-grt__nav-link', {
@@ -118,23 +190,94 @@ const GovernanceReviewTeam = () => {
             })}
           >
             <div className="grid-container overflow-auto">
-              <dl className="easi-grt__status-info text-gray-90">
-                <dt className="text-bold">{t('status.label')}</dt>
-                &nbsp;
-                <dd
-                  className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
-                  data-testid="grt-status"
-                >
-                  {isIntakeClosed(systemIntake.status)
-                    ? t('status.closed')
-                    : t('status.open')}
-                </dd>
-                {systemIntake.lcid && (
-                  <>
-                    <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
-                    <dd data-testid="grt-lcid">{systemIntake.lcid}</dd>
-                  </>
-                )}
+              <dl className="easi-grt__status-group">
+                <div className="easi-grt__status-info text-gray-90">
+                  <dt className="text-bold">{t('status.label')}</dt>
+                  &nbsp;
+                  <dd
+                    className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
+                    data-testid="grt-status"
+                  >
+                    {isIntakeClosed(systemIntake.status)
+                      ? t('status.closed')
+                      : t('status.open')}
+                  </dd>
+                  {systemIntake.lcid && (
+                    <>
+                      <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
+                      <dd data-testid="grt-lcid">{systemIntake.lcid}</dd>
+                    </>
+                  )}
+                </div>
+                <div className="text-gray-90">
+                  <dd>
+                    <dt className="text-bold">
+                      {t('intake:fields.adminLead')}
+                    </dt>
+                    <dt className="padding-1">{getAdminLead()}</dt>
+                    <dt>
+                      <Button
+                        type="button"
+                        unstyled
+                        onClick={() => setModalOpen(true)}
+                      >
+                        {t('governanceReviewTeam:adminLeads.changeLead')}
+                      </Button>
+                      <Modal
+                        title={t(
+                          'governanceReviewTeam:adminLeads:assignModal.title'
+                        )}
+                        isOpen={isModalOpen}
+                        closeModal={() => setModalOpen(false)}
+                      >
+                        <h1 className="margin-top-0 font-heading-2xl line-height-heading-2">
+                          {t(
+                            'governanceReviewTeam:adminLeads:assignModal.header',
+                            { requestName: systemIntake.requestName }
+                          )}
+                        </h1>
+                        <AdminLeadContext.Provider
+                          value={{
+                            name: 'Admin Leads',
+                            onChange: (
+                              e: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setAdminLead(e.target.value);
+                            },
+                            value: newAdminLead
+                          }}
+                        >
+                          <RadioGroup>
+                            {grtMembers.map(k => (
+                              <AdminLeadRadioOption key={k} label={k} />
+                            ))}
+                          </RadioGroup>
+                        </AdminLeadContext.Provider>
+                        <Button
+                          type="button"
+                          className="margin-right-4"
+                          onClick={() => {
+                            saveAdminLead();
+                            setModalOpen(false);
+                          }}
+                        >
+                          {t(
+                            'governanceReviewTeam:adminLeads:assignModal.save'
+                          )}
+                        </Button>
+                        <Button
+                          type="button"
+                          unstyled
+                          onClick={() => setModalOpen(false)}
+                        >
+                          {t(
+                            'governanceReviewTeam:adminLeads:assignModal.noChanges'
+                          )}
+                        </Button>
+                      </Modal>
+                    </dt>
+                  </dd>
+                </div>
               </dl>
             </div>
           </div>
