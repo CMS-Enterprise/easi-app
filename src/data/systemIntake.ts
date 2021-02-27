@@ -74,7 +74,8 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   decisionNextSteps: '',
   rejectionReason: '',
   grtDate: null,
-  grbDate: null
+  grbDate: null,
+  adminLead: ''
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -124,7 +125,8 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     contractEndYear: systemIntake.contract.endDate.year,
     grtDate: systemIntake.grtDate && systemIntake.grtDate.toISO(),
     grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO(),
-    submittedAt: systemIntake.submittedAt && systemIntake.submittedAt.toISO()
+    submittedAt: systemIntake.submittedAt && systemIntake.submittedAt.toISO(),
+    adminLead: systemIntake.adminLead
   };
 };
 
@@ -232,7 +234,8 @@ export const prepareSystemIntakeForApp = (
       : null,
     grbDate: systemIntake.grbDate
       ? DateTime.fromISO(systemIntake.grbDate)
-      : null
+      : null,
+    adminLead: systemIntake.adminLead || ''
   };
 };
 

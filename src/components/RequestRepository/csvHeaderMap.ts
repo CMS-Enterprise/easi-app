@@ -120,6 +120,10 @@ const csvHeaderMap = (t: any) => [
   {
     key: 'archivedAt',
     label: t('intake:csvHeadings.archivedAt')
+  },
+  {
+    key: 'adminLead',
+    label: t('intake:csvHeadings.adminLead')
   }
 ];
 
