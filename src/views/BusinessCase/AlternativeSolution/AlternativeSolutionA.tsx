@@ -12,6 +12,7 @@ import HelpText from 'components/shared/HelpText';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -93,9 +94,12 @@ const AlternativeSolutionA = ({
                 infrastructure, etc.
               </div>
             </div>
-            <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-              <MandatoryFieldsAlert />
-            </div>
+            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
+            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
+              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
+                <MandatoryFieldsAlert />
+              </div>
+            )}
             <Form>
               <div className="tablet:grid-col-9">
                 <h2>Alternative A</h2>
