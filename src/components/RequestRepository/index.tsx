@@ -12,7 +12,10 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
-import { translateRequestType } from 'utils/systemIntake';
+import {
+  getAcronymForComponent,
+  translateRequestType
+} from 'utils/systemIntake';
 
 import csvHeaderMap from './csvHeaderMap';
 
@@ -50,14 +53,14 @@ const RequestRepository = () => {
     }
   };
 
-  const requesterNameColumn = {
+  const requesterNameAndComponentColumn = {
     Header: t('intake:fields.requester'),
-    accessor: 'requester.name'
-  };
-
-  const requesterComponentColumn = {
-    Header: t('intake:fields.component'),
-    accessor: 'requester.component'
+    accessor: 'requester',
+    Cell: ({ value }: any) => {
+      // Display both the requester name and the acronym of their component
+      // TODO: might be better to just save the component's acronym in the intake?
+      return `${value.name}, ${getAcronymForComponent(value.component)}`;
+    }
   };
 
   const requestTypeColumn = {
@@ -122,7 +125,7 @@ const RequestRepository = () => {
       return [
         submissionDateColumn,
         requestNameColumn,
-        requesterComponentColumn,
+        requesterNameAndComponentColumn,
         requestTypeColumn,
         statusColumn,
         grtDateColumn,
@@ -133,8 +136,7 @@ const RequestRepository = () => {
       return [
         submissionDateColumn,
         requestNameColumn,
-        requesterNameColumn,
-        requesterComponentColumn,
+        requesterNameAndComponentColumn,
         fundingNumberColmun,
         statusColumn
       ];
