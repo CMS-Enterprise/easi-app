@@ -12,11 +12,10 @@ import (
 	"github.com/google/uuid"
 )
 
-// A document that belongs to an accessibility request
-type AccessibilityRequestDocument struct {
-	ID         uuid.UUID `json:"id"`
-	Name       string    `json:"name"`
-	UploadedAt time.Time `json:"uploadedAt"`
+// Document type of an Accessibility Request document
+type AccessibilityRequestDocumentType struct {
+	CommonType           models.AccessibilityRequestDocumentCommonType `json:"commonType"`
+	OtherTypeDescription *string                                       `json:"otherTypeDescription"`
 }
 
 // An edge of an AccessibilityRequestConnection
@@ -31,9 +30,27 @@ type AccessibilityRequestsConnection struct {
 	TotalCount int                         `json:"totalCount"`
 }
 
+// Parameters for createAccessibilityRequestDocument
+type CreateAccessibilityRequestDocumentInput struct {
+	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
+	MimeType                     string                                        `json:"mimeType"`
+	Name                         string                                        `json:"name"`
+	OtherDocumentTypeDescription *string                                       `json:"otherDocumentTypeDescription"`
+	RequestID                    uuid.UUID                                     `json:"requestID"`
+	Size                         int                                           `json:"size"`
+	URL                          string                                        `json:"url"`
+}
+
+// Result of createAccessibilityRequestDocument
+type CreateAccessibilityRequestDocumentPayload struct {
+	AccessibilityRequestDocument *models.AccessibilityRequestDocument `json:"accessibilityRequestDocument"`
+	UserErrors                   []*UserError                         `json:"userErrors"`
+}
+
 // Parameters required to create an AccessibilityRequest
 type CreateAccessibilityRequestInput struct {
-	Name string `json:"name"`
+	IntakeID uuid.UUID `json:"intakeID"`
+	Name     string    `json:"name"`
 }
 
 // Result of CreateAccessibilityRequest
@@ -44,15 +61,28 @@ type CreateAccessibilityRequestPayload struct {
 
 // Parameters for creating a test date
 type CreateTestDateInput struct {
-	Date      time.Time        `json:"date"`
-	RequestID uuid.UUID        `json:"requestID"`
-	Score     *int             `json:"score"`
-	TestType  TestDateTestType `json:"testType"`
+	Date      time.Time               `json:"date"`
+	RequestID uuid.UUID               `json:"requestID"`
+	Score     *int                    `json:"score"`
+	TestType  models.TestDateTestType `json:"testType"`
 }
 
 // Result of createTestDate
 type CreateTestDatePayload struct {
-	TestDate   *TestDate    `json:"testDate"`
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
+}
+
+// Parameters required to generate a presigned upload URL
+type GeneratePresignedUploadURLInput struct {
+	FileName string `json:"fileName"`
+	MimeType string `json:"mimeType"`
+	Size     int    `json:"size"`
+}
+
+// Result of CreateAccessibilityRequest
+type GeneratePresignedUploadURLPayload struct {
+	URL        *string      `json:"url"`
 	UserErrors []*UserError `json:"userErrors"`
 }
 
@@ -68,12 +98,18 @@ type SystemEdge struct {
 	Node   *models.System `json:"node"`
 }
 
-// A 508 test instance
-type TestDate struct {
-	Date     time.Time        `json:"date"`
-	ID       uuid.UUID        `json:"id"`
-	Score    *int             `json:"score"`
-	TestType TestDateTestType `json:"testType"`
+// Parameters for editing a test date
+type UpdateTestDateInput struct {
+	Date     time.Time               `json:"date"`
+	ID       uuid.UUID               `json:"id"`
+	Score    *int                    `json:"score"`
+	TestType models.TestDateTestType `json:"testType"`
+}
+
+// Result of editTestDate
+type UpdateTestDatePayload struct {
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
 }
 
 // UserError represents application-level errors that are the result of
@@ -130,49 +166,5 @@ func (e *Role) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Role) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-// The variety of a 508 test
-type TestDateTestType string
-
-const (
-	// Represents an initial 508 test
-	TestDateTestTypeInitial TestDateTestType = "INITIAL"
-	// Represents a remediation test
-	TestDateTestTypeRemediation TestDateTestType = "REMEDIATION"
-)
-
-var AllTestDateTestType = []TestDateTestType{
-	TestDateTestTypeInitial,
-	TestDateTestTypeRemediation,
-}
-
-func (e TestDateTestType) IsValid() bool {
-	switch e {
-	case TestDateTestTypeInitial, TestDateTestTypeRemediation:
-		return true
-	}
-	return false
-}
-
-func (e TestDateTestType) String() string {
-	return string(e)
-}
-
-func (e *TestDateTestType) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TestDateTestType(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TestDateTestType", str)
-	}
-	return nil
-}
-
-func (e TestDateTestType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

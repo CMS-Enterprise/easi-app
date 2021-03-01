@@ -19,22 +19,22 @@ type CreateFileUploadURL func(ctx context.Context, fileType string) (*models.Pre
 // CreateFileDownloadURL is a handler for creating pre-signed S3 download URLs
 type CreateFileDownloadURL func(ctx context.Context, key string) (*models.PreSignedURL, error)
 
-// CreateUploadedFile is a handler for storing file upload metadata
-type CreateUploadedFile func(ctx context.Context, file *models.UploadedFile) (*models.UploadedFile, error)
+// CreateAccessibilityRequestDocument is a handler for storing file upload metadata
+type CreateAccessibilityRequestDocument func(ctx context.Context, file *models.AccessibilityRequestDocument) (*models.AccessibilityRequestDocument, error)
 
-// FetchUploadedFile is a handler for fetching file upload metadata
-type FetchUploadedFile func(ctx context.Context, id uuid.UUID) (*models.UploadedFile, error)
+// FetchAccessibilityRequestDocument is a handler for fetching file upload metadata
+type FetchAccessibilityRequestDocument func(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequestDocument, error)
 
 // NewFileUploadHandler is a constructor for FileUploadHandler
 func NewFileUploadHandler(
 	base HandlerBase,
-	createFile CreateUploadedFile,
-	fetchFile FetchUploadedFile,
+	createFile CreateAccessibilityRequestDocument,
+	fetchFile FetchAccessibilityRequestDocument,
 ) FileUploadHandler {
 	return FileUploadHandler{
-		HandlerBase:        base,
-		CreateUploadedFile: createFile,
-		FetchUploadedFile:  fetchFile,
+		HandlerBase:                        base,
+		CreateAccessibilityRequestDocument: createFile,
+		FetchAccessibilityRequestDocument:  fetchFile,
 	}
 }
 
@@ -42,8 +42,8 @@ func NewFileUploadHandler(
 // to file uploads
 type FileUploadHandler struct {
 	HandlerBase
-	CreateUploadedFile CreateUploadedFile
-	FetchUploadedFile  FetchUploadedFile
+	CreateAccessibilityRequestDocument CreateAccessibilityRequestDocument
+	FetchAccessibilityRequestDocument  FetchAccessibilityRequestDocument
 }
 
 // NewPresignedURLUploadHandler returns a handler in this pattern
@@ -179,14 +179,14 @@ func (h FileUploadHandler) createFileMetadata(w http.ResponseWriter, r *http.Req
 	}
 	defer r.Body.Close()
 
-	var file models.UploadedFile
+	var file models.AccessibilityRequestDocument
 	err := json.NewDecoder(r.Body).Decode(&file)
 	if err != nil {
 		h.WriteErrorResponse(r.Context(), w, &apperrors.BadRequestError{Err: err})
 		return
 	}
 
-	savedFile, err := h.CreateUploadedFile(r.Context(), &file)
+	savedFile, err := h.CreateAccessibilityRequestDocument(r.Context(), &file)
 	if err != nil {
 		h.WriteErrorResponse(r.Context(), w, err)
 		return
@@ -210,7 +210,7 @@ func (h FileUploadHandler) createFileMetadata(w http.ResponseWriter, r *http.Req
 func requireFileUploadName(reqVars map[string]string) (string, error) {
 	valErr := apperrors.NewValidationError(
 		errors.New("file upload fetch failed validation"),
-		models.UploadedFile{},
+		models.AccessibilityRequestDocument{},
 		"",
 	)
 
@@ -228,7 +228,7 @@ func requireFileUploadName(reqVars map[string]string) (string, error) {
 func requireFileUploadID(reqVars map[string]string) (uuid.UUID, error) {
 	valErr := apperrors.NewValidationError(
 		errors.New("file upload fetch failed validation"),
-		models.UploadedFile{},
+		models.AccessibilityRequestDocument{},
 		"",
 	)
 
@@ -254,13 +254,13 @@ func (h FileUploadHandler) fetchFileMetadata(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	uploadedFile, err := h.FetchUploadedFile(r.Context(), fileID)
+	AccessibilityRequestDocument, err := h.FetchAccessibilityRequestDocument(r.Context(), fileID)
 	if err != nil {
 		h.WriteErrorResponse(r.Context(), w, err)
 		return
 	}
 
-	responseBody, err := json.Marshal(uploadedFile)
+	responseBody, err := json.Marshal(AccessibilityRequestDocument)
 	if err != nil {
 		h.WriteErrorResponse(r.Context(), w, err)
 		return

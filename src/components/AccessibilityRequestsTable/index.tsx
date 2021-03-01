@@ -7,26 +7,14 @@ import { useSortBy, useTable } from 'react-table';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
+import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
+
+import formatDate from 'utils/formatDate';
 
 // import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 
-type AccessibilityRequestsTableRow = {
-  id: string;
-  system: {
-    name: string;
-    businessOwner: {
-      name?: string;
-      component?: string;
-    };
-  };
-  submittedAt?: DateTime;
-  testDate?: DateTime;
-  status?: string;
-  lastUpdatedAt?: DateTime;
-};
-
 type AccessibilityRequestsTableProps = {
-  requests: AccessibilityRequestsTableRow[];
+  requests: AccessibilityRequests[];
 };
 
 const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTableProps> = ({
@@ -37,7 +25,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     return [
       {
         Header: t('requestTable.header.requestName'),
-        accessor: 'system.name',
+        accessor: 'name',
         Cell: ({ row, value }: any) => {
           return (
             <UswdsLink asCustom={Link} to={`/508/requests/${row.original.id}`}>
@@ -52,25 +40,25 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+            return formatDate(value);
           }
           return '';
         }
       },
       {
         Header: t('requestTable.header.businessOwner'),
-        accessor: (row: AccessibilityRequestsTableRow) => {
+        accessor: (row: AccessibilityRequests) => {
           return `${row.system.businessOwner.name}, ${row.system.businessOwner.component}`;
         }
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: 'testedAt',
+        accessor: 'relevantTestDate.date',
         Cell: ({ value }: any) => {
           if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+            return formatDate(value);
           }
-          return '';
+          return t('requestTable.emptyTestDate');
         }
       }
       // {
