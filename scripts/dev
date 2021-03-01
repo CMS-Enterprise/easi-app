@@ -76,72 +76,89 @@ end
 
 ### Tasks
 
-desc "Resets application to an empty state"
-task :reset do
-  # close any hanging connections to the database
-  `echo "select pg_terminate_backend(pg_stat_activity.pid) from pg_stat_activity where datname='postgres' AND state='idle'" | psql`
+desc "Starts all services in the project"
+task :up do
+  sh "docker-compose up -d"
 
-  # drop and recreate the database
-  sh "dropdb postgres && createdb postgres"
-
-  # run migrations
-  Rake::Task["migrate"].invoke
-
-  # load development data
-  Rake::Task["devdata"].invoke
+  # Avoid open file limits
+  # sh "ulimit -S -n 2048"
 end
 
-desc "Runs database migrations and wait for them to complete"
-task :migrate do
-  sh "docker-compose start db_migrate"
-  loop do
-    sleep 0.5
-    status = `docker-compose ps | grep easi-app_db_migrate_1`
-    match = /Exit (\d+)/.match(status)
-    if match
-      unless match[1] == "0"
-        puts "Migration failed, check the logs!"
-        exit(1)
+desc "Stops all services in the project"
+task :down do
+  sh "docker-compose down"
+end
+
+desc "Resets application to an empty state"
+task :reset => :up do
+  # close any hanging connections to the database
+  Rake::Task["db:drop_connections"].invoke
+
+  # drop and recreate the database
+  Rake::Task["db:recreate"].invoke
+
+  # run migrations
+  Rake::Task["db:migrate"].invoke
+
+  # load development data
+  Rake::Task["db:seed"].invoke
+end
+
+namespace :db do
+  desc "Runs database migrations and wait for them to complete"
+  task :migrate do
+    sh "docker-compose start db_migrate"
+    loop do
+      sleep 0.5
+      status = `docker-compose ps | grep easi-app_db_migrate_1`
+      match = /Exit (\d+)/.match(status)
+      if match
+        unless match[1] == "0"
+          puts "Migration failed, check the logs!"
+          exit(1)
+        end
+        break
       end
-      break
     end
+  end
+
+  desc "Destroys the database container and recreates it"
+  task :recreate do
+    sh "docker-compose kill db && docker-compose rm -fv db && docker-compose up -d db"
+  end
+
+  desc "Load development dataset"
+  task :seed do
+    sh "go run cmd/devdata/main.go"
+  end
+
+  task :drop_connections do
+    `echo "select pg_terminate_backend(pg_stat_activity.pid) from pg_stat_activity where datname='postgres' AND state='idle'" | psql`
   end
 end
 
-desc "Load development dataset"
-task :devdata do
-  sh "go run cmd/devdata/main.go"
-end
-
-desc "Starts the backend, including backing services"
-task :boot do
-  sh "docker-compose up -d --remove-orphans"
-
-  # Avoid open file limits
-  sh "ulimit -S -n 2048"
-
-  exec "air"
-end
 
 namespace :gql do
   task :lint_schema do
     sh "graphql-schema-linter pkg/graph/schema.graphql"
   end
 
-  task :yarn_generate do
-    ENV["FORCE_COLOR"] = "true"
+  namespace :generate do
+    task :yarn do
+      ENV["FORCE_COLOR"] = "true"
 
-    sh "yarn generate"
-  end
+      sh "yarn generate"
+    end
 
-  task :go_generate do
-    sh "go generate ./..." do |ok|
-      sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go" if ok
+    task :go do
+      sh "go generate ./..." do |ok|
+        sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go" if ok
+      end
     end
   end
 
   # Runs prereqs in parallel
-  multitask generate: ["gql:yarn_generate", "gql:go_generate"]
+  multitask generate: ["gql:generate:yarn", "gql:generate:go"]
 end
 
 desc "Generate code from GraphQL schema"
