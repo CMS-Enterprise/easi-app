@@ -1,14 +1,23 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useTable } from 'react-table';
-import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
+import { Link, Table } from '@trussworks/react-uswds';
 
+import {
+  AccessibilityRequestDocumentCommonType,
+  AccessibilityRequestDocumentStatus
+} from 'types/graphql-global-types';
+import { translateDocumentType } from 'utils/accessibilityRequest';
 import formatDate from 'utils/formatDate';
 
 type Document = {
-  name: string;
+  status: AccessibilityRequestDocumentStatus;
+  url: string;
   uploadedAt: string;
+  documentType: {
+    commonType: AccessibilityRequestDocumentCommonType;
+    otherTypeDescription: string | null;
+  };
 };
 
 type DocumentsListProps = {
@@ -22,11 +31,24 @@ const AccessibilityDocumentsList = ({
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
 
+  const getDocType = (documentType: {
+    commonType: AccessibilityRequestDocumentCommonType;
+    otherTypeDescription: string;
+  }) => {
+    if (documentType.commonType !== 'OTHER') {
+      return translateDocumentType(
+        documentType.commonType as AccessibilityRequestDocumentCommonType
+      );
+    }
+    return documentType.otherTypeDescription;
+  };
+
   const columns: any = useMemo(() => {
     return [
       {
         Header: t('documentTable.header.documentName'),
-        accessor: 'name'
+        accessor: 'documentType',
+        Cell: ({ value }: any) => getDocType(value)
       },
       {
         Header: t('documentTable.header.uploadedAt'),
@@ -43,21 +65,31 @@ const AccessibilityDocumentsList = ({
         Header: t('documentTable.header.actions'),
         Cell: ({ row }: any) => (
           <>
-            <UswdsLink
-              asCustom={Link}
-              to={`/some-508-request/${row.original.name}`}
-            >
-              {t('documentTable.view')}
-            </UswdsLink>
-            <span className="usa-sr-only">{row.original.name}</span>
-            <UswdsLink
-              asCustom={Link}
-              to={`/some-508-request/${row.original.name}`}
-              className="margin-left-2"
-            >
+            {row.original.status === 'PENDING' && (
+              <em>Virus scan in progress...</em>
+            )}
+            {row.original.status === 'AVAILABLE' && (
+              <Link
+                target="_blank"
+                rel="noreferrer"
+                href={row.original.url}
+                aria-label={`View ${getDocType(
+                  row.original.documentType
+                )} in a new tab or window`}
+              >
+                {t('documentTable.view')}
+              </Link>
+            )}
+            {row.original.status === 'UNAVAILABLE' && (
+              <>
+                <i className="fa fa-exclamation-circle text-secondary" />{' '}
+                Document failed virus scan
+              </>
+            )}
+            {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
               {t('documentTable.remove')}
             </UswdsLink>
-            <span className="usa-sr-only">{row.original.name}</span>
+            <span className="usa-sr-only">{row.original.name}</span> */}
           </>
         )
       }
@@ -94,6 +126,7 @@ const AccessibilityDocumentsList = ({
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map(column => (
               <th
+                {...column.getHeaderProps()}
                 style={{ whiteSpace: 'nowrap', width: column.width }}
                 scope="col"
               >

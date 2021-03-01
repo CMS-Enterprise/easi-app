@@ -46,18 +46,18 @@ if [[ -n "${CIRCLECI+x}" ]]; then
 # Running locally
 else
   # Clean up first
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml down
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml down
 
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml build --parallel
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml build --parallel
 
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up -d db db_migrate
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up -d easi easi_client
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml up cypress
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up -d db db_migrate
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up -d easi easi_client
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml up cypress
 
   CYPRESS_EXIT_CODE=$(docker container inspect --format='{{.State.ExitCode}}' "${CYPRESS_CONTAINER}")
 
   # Clean up
-  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.circleci.yml -f docker-compose.local.yml down
+  docker-compose --project-name "${PROJECT_NAME}" -f docker-compose.yml -f docker-compose.cypress_local.yml down
 
   exit "${CYPRESS_EXIT_CODE}"
 fi

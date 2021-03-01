@@ -7,7 +7,7 @@ import classnames from 'classnames';
 type FileUploadProps = {
   id: string;
   name: string;
-  accept: string;
+  accept?: string;
   // multiple?: boolean;
   disabled?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -39,6 +39,7 @@ const FileUpload = (props: FileUploadProps) => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // eslint-disable-next-line
     if (e.target.files.length > 0) {
       if (isFileTypeValid(e.target.files[0])) {
         setError(false);
@@ -52,18 +53,19 @@ const FileUpload = (props: FileUploadProps) => {
   };
 
   const isFileTypeValid = (localFile: File) => {
-    let isFileTypeAcceptable = false;
-    if (accept) {
-      const accepetedFileTypes = accept.split(',');
-      accepetedFileTypes.forEach(fileType => {
-        if (
-          localFile.name.indexOf(fileType) > 0 ||
-          localFile.type.includes(fileType.replace(/\*/g, ''))
-        ) {
-          isFileTypeAcceptable = true;
-        }
-      });
+    if (!accept) {
+      return true;
     }
+    let isFileTypeAcceptable = false;
+    const acceptedFileTypes = accept.split(',');
+    acceptedFileTypes.forEach(fileType => {
+      if (
+        localFile.name.indexOf(fileType) > 0 ||
+        localFile.type.includes(fileType.replace(/\*/g, ''))
+      ) {
+        isFileTypeAcceptable = true;
+      }
+    });
     return isFileTypeAcceptable;
   };
 
@@ -81,7 +83,9 @@ const FileUpload = (props: FileUploadProps) => {
           </div>
         )}
         <div className={instructionsClasses} aria-hidden>
-          <span className="usa-file-input__drag-text">Drag file here or </span>
+          <span className="usa-file-input__drag-text">
+            Drag document here or{' '}
+          </span>
           <span className="usa-file-input__choose">choose from folder</span>
         </div>
         {file && (
