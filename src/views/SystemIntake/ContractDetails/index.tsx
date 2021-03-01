@@ -217,15 +217,16 @@ const ContractDetails = ({
                               id="IntakeForm-FundingNumber"
                               maxLength={6}
                               name="fundingSource.fundingNumber"
+                              aria-describedby="IntakeForm-fundingNumberHelp"
                             />
                           </FieldGroup>
                         </div>
                         <HelpText
                           id="IntakeForm-FundingNumberHelp"
-                          className="margin-y-1 width"
+                          className="margin-y-1"
                         >
                           <Link
-                            aria-label="Open 'Cookies opt-out' in a new tab"
+                            aria-label="Open 'CMS Operating Plan' in a new tab"
                             href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
                             target="_blank"
                             rel="noopener noreferrer"
