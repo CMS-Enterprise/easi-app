@@ -5,8 +5,10 @@ import formatDate from './formatDate';
 describe('formatDate', () => {
   describe('string', () => {
     it('converts an ISO string to the proper date', () => {
-      const date = '2021-02-27T00:00:00.000Z';
-      expect(formatDate(date)).toEqual('February 26 2021');
+      const date = DateTime.fromObject({ year: 2020, month: 6, day: 30 });
+      const isoStringDate = date.toISO();
+
+      expect(formatDate(isoStringDate)).toEqual('June 30 2020');
     });
 
     it('returns invalid datetime when a string is not ISO string', () => {
