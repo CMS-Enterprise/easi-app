@@ -55,10 +55,25 @@ cy.businessCase = {
         .type('As is Solution Cons')
         .should('have.value', 'As is Solution Cons');
 
-      // Estimated Lifecycle Costs Years 1-3
-      [1, 2, 3].forEach(year => {
+      // Estimated Lifecycle Costs Years 1-2
+      [1, 2].forEach(year => {
         cy.get(
           `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Development`
+        )
+          .check({ force: true })
+          .should('be.checked');
+
+        cy.get(
+          `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
+        )
+          .type('0')
+          .should('have.value', '0');
+      });
+
+      // Estimated Lifecycle Costs Years 3
+      [3].forEach(year => {
+        cy.get(
+          `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Other`
         )
           .check({ force: true })
           .should('be.checked');
@@ -136,10 +151,25 @@ cy.businessCase = {
         .type('Preferred Solution Cons')
         .should('have.value', 'Preferred Solution Cons');
 
-      // Estimated Lifecycle Costs Years 1-3
-      [1, 2, 3].forEach(year => {
+      // Estimated Lifecycle Costs Years 1-2
+      [1, 2].forEach(year => {
         cy.get(
           `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Development`
+        )
+          .check({ force: true })
+          .should('be.checked');
+
+        cy.get(
+          `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
+        )
+          .type('0')
+          .should('have.value', '0');
+      });
+
+      // Estimated Lifecycle Costs Years 3
+      [1, 2].forEach(year => {
+        cy.get(
+          `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Other`
         )
           .check({ force: true })
           .should('be.checked');
@@ -217,10 +247,25 @@ cy.businessCase = {
         .type('Alternative A Cons')
         .should('have.value', 'Alternative A Cons');
 
-      // Estimated Lifecycle Costs Years 1-3
-      [1, 2, 3].forEach(year => {
+      // Estimated Lifecycle Costs Years 1-2
+      [1, 2].forEach(year => {
         cy.get(
           `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Development`
+        )
+          .check({ force: true })
+          .should('be.checked');
+
+        cy.get(
+          `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
+        )
+          .type('0')
+          .should('have.value', '0');
+      });
+
+      // Estimated Lifecycle Costs Years 3
+      [3].forEach(year => {
+        cy.get(
+          `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Other`
         )
           .check({ force: true })
           .should('be.checked');
