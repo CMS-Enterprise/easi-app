@@ -71,6 +71,16 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                       value="Operations and Maintenance"
                       inline
                     />
+
+                    <Field
+                      as={RadioField}
+                      checked={values.phase === 'Other'}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.other`}
+                      name={`${formikKey}.year${year}.${index}.phase`}
+                      label="Other"
+                      value="Other"
+                      inline
+                    />
                   </RadioGroup>
                 </div>
               </fieldset>
@@ -181,6 +191,12 @@ const EstimatedLifecycleCost = ({
             </dt>
             <dd className="margin-0 line-height-body-3">
               Costs related to running and upkeep post-production
+            </dd>
+          </dl>
+          <dl>
+            <dt className="margin-bottom-1 text-bold">Other</dt>
+            <dd className="margin-0 line-height-body-3">
+              This can be Non-IT costs like education, licenses etc.
             </dd>
           </dl>
         </div>
