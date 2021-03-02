@@ -25,7 +25,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     return [
       {
         Header: t('requestTable.header.requestName'),
-        accessor: 'name',
+        accessor: 'requestName',
         Cell: ({ row, value }: any) => {
           return (
             <UswdsLink asCustom={Link} to={`/508/requests/${row.original.id}`}>
@@ -47,13 +47,11 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.businessOwner'),
-        accessor: (row: AccessibilityRequests) => {
-          return `${row.system.businessOwner.name}, ${row.system.businessOwner.component}`;
-        }
+        accessor: 'businessOwner'
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: 'relevantTestDate.date',
+        accessor: 'relevantTestDate',
         Cell: ({ value }: any) => {
           if (value) {
             return formatDate(value);
@@ -81,6 +79,28 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const data = useMemo(() => {
+    const tableData = requests.map(request => {
+      const submittedAt = request.submittedAt
+        ? DateTime.fromISO(request.submittedAt)
+        : null;
+      const businessOwner = `${request.system.businessOwner.name}, ${request.system.businessOwner.component}`;
+      const testDate = request.relevantTestDate?.date
+        ? DateTime.fromISO(request.relevantTestDate?.date)
+        : null;
+
+      return {
+        id: request.id,
+        requestName: request.name,
+        submittedAt,
+        businessOwner,
+        relevantTestDate: testDate
+      };
+    });
+
+    return tableData;
+  }, [requests]);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -90,7 +110,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
   } = useTable(
     {
       columns,
-      data: requests,
+      data,
       sortTypes: {
         alphanumeric: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
