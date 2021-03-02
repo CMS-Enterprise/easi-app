@@ -217,7 +217,7 @@ const ContractDetails = ({
                               id="IntakeForm-FundingNumber"
                               maxLength={6}
                               name="fundingSource.fundingNumber"
-                              aria-describedby="IntakeForm-fundingNumberHelp"
+                              aria-describedby="IntakeForm-FundingNumberHelp"
                             />
                           </FieldGroup>
                         </div>
