@@ -6,7 +6,7 @@ const accessibility = {
     header: {
       actions: 'Actions',
       documentName: 'Document',
-      uploadedAt: 'Uploaded Date'
+      uploadedAt: 'Upload date'
     },
     remove: 'Remove',
     view: 'View'
@@ -74,6 +74,14 @@ const accessibility = {
       'A request for 508 testing will be added to the list of 508 requests. An email will be sent to the Business Owner and the 508 team stating that a request has been added to the system.',
     submitBtn: 'Add a new request',
     confirmation: '{{requestName}} was added to the 508 requests page'
+  },
+  documentType: {
+    awardedVpat: 'Awarded VPAT',
+    testingVpat: 'Testing VPAT',
+    testPlan: 'Test plan',
+    testResults: 'Test results',
+    remediationPlan: 'Remediation plan',
+    other: 'Other'
   }
 };
 
