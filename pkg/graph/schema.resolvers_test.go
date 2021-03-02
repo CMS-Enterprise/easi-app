@@ -30,13 +30,19 @@ import (
 
 type GraphQLTestSuite struct {
 	suite.Suite
-	logger *zap.Logger
-	store  *storage.Store
-	client *client.Client
+	logger   *zap.Logger
+	store    *storage.Store
+	client   *client.Client
+	s3Client *mockS3Client
+}
+
+func (s *GraphQLTestSuite) BeforeTest() {
+	s.s3Client.AVStatus = ""
 }
 
 type mockS3Client struct {
 	s3iface.S3API
+	AVStatus string
 }
 
 func (m mockS3Client) PutObjectRequest(input *s3.PutObjectInput) (*request.Request, *s3.PutObjectOutput) {
@@ -58,7 +64,6 @@ func (m mockS3Client) PutObjectRequest(input *s3.PutObjectInput) (*request.Reque
 }
 
 func (m mockS3Client) GetObjectRequest(input *s3.GetObjectInput) (*request.Request, *s3.GetObjectOutput) {
-
 	newRequest := request.New(
 		aws.Config{},
 		metadata.ClientInfo{},
@@ -73,6 +78,19 @@ func (m mockS3Client) GetObjectRequest(input *s3.GetObjectInput) (*request.Reque
 		r.HTTPRequest.URL = &url.URL{Host: "signed.example.com", Path: "signed/get/123", Scheme: "https"}
 	})
 	return newRequest, &s3.GetObjectOutput{}
+}
+
+func (m mockS3Client) GetObjectTagging(input *s3.GetObjectTaggingInput) (*s3.GetObjectTaggingOutput, error) {
+	if m.AVStatus == "" {
+		return &s3.GetObjectTaggingOutput{}, nil
+	}
+
+	return &s3.GetObjectTaggingOutput{
+		TagSet: []*s3.Tag{{
+			Key:   aws.String("av-status"),
+			Value: aws.String(m.AVStatus),
+		}},
+	}, nil
 }
 
 func TestGraphQLTestSuite(t *testing.T) {
@@ -103,16 +121,17 @@ func TestGraphQLTestSuite(t *testing.T) {
 
 	s3Config := upload.Config{Bucket: "easi-test-bucket", Region: "us-west", IsLocal: false}
 	mockClient := mockS3Client{}
-	s3Client := upload.NewS3ClientUsingClient(mockClient, s3Config)
+	s3Client := upload.NewS3ClientUsingClient(&mockClient, s3Config)
 
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, ResolverService{}, &s3Client)})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
 	storeTestSuite := &GraphQLTestSuite{
-		Suite:  suite.Suite{},
-		logger: logger,
-		store:  store,
-		client: graphQLClient,
+		Suite:    suite.Suite{},
+		logger:   logger,
+		store:    store,
+		client:   graphQLClient,
+		s3Client: &mockClient,
 	}
 
 	suite.Run(t, storeTestSuite)
@@ -147,13 +166,14 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	s.NoError(requestErr)
 
 	document, documentErr := s.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
-		RequestID:    accessibilityRequest.ID,
-		Name:         "uploaded_doc.pdf",
-		FileType:     "application/pdf",
-		Size:         1234567,
-		VirusScanned: null.BoolFrom(true),
-		VirusClean:   null.BoolFrom(true),
-		Key:          "abcdefg1234567.pdf",
+		RequestID:          accessibilityRequest.ID,
+		Name:               "uploaded_doc.pdf",
+		FileType:           "application/pdf",
+		Size:               1234567,
+		VirusScanned:       null.BoolFrom(true),
+		VirusClean:         null.BoolFrom(true),
+		Key:                "abcdefg1234567.pdf",
+		CommonDocumentType: models.AccessibilityRequestDocumentCommonTypeAwardedVpat,
 	})
 	s.NoError(documentErr)
 
@@ -219,9 +239,86 @@ func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	s.Equal(document.ID.String(), responseDocument.ID)
 	s.Equal("application/pdf", responseDocument.MimeType)
 	s.Equal(1234567, responseDocument.Size)
-	s.Equal("AVAILABLE", responseDocument.Status)
+	s.Equal("PENDING", responseDocument.Status)
 	s.Equal("https://signed.example.com/signed/get/123", responseDocument.URL)
 	s.Equal("uploaded_doc.pdf", responseDocument.Name)
+}
+
+func (s GraphQLTestSuite) TestAccessibilityRequestVirusStatusQuery() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:            null.StringFrom("Big Project"),
+		Status:                 models.SystemIntakeStatusLCIDISSUED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		BusinessOwner:          null.StringFrom("Firstname Lastname"),
+		BusinessOwnerComponent: null.StringFrom("OIT"),
+	})
+	s.NoError(intakeErr)
+
+	// Can't set a lifecycle ID when creating system intake, so we need to do this to set that
+	// so we can then query for the system within the resolver
+	lifecycleID, lcidErr := s.store.GenerateLifecycleID(ctx)
+	s.NoError(lcidErr)
+	intake.LifecycleID = null.StringFrom(lifecycleID)
+	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
+	s.NoError(updateErr)
+
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+		IntakeID: intake.ID,
+	})
+	s.NoError(requestErr)
+
+	_, documentErr := s.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
+		RequestID:          accessibilityRequest.ID,
+		Name:               "uploaded_doc.pdf",
+		FileType:           "application/pdf",
+		Size:               1234567,
+		CommonDocumentType: models.AccessibilityRequestDocumentCommonTypeRemediationPlan,
+		VirusScanned:       null.Bool{},
+		VirusClean:         null.Bool{},
+		Key:                "abcdefg1234567.pdf",
+	})
+	s.NoError(documentErr)
+
+	var resp struct {
+		AccessibilityRequest struct {
+			Documents []struct {
+				ID     string
+				Status string
+			}
+		}
+	}
+
+	s.s3Client.AVStatus = "CLEAN"
+
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			accessibilityRequest(id: "%s") {
+				documents {
+					id
+					status
+				}
+			}
+		}`, accessibilityRequest.ID), &resp)
+
+	responseDocument := resp.AccessibilityRequest.Documents[0]
+	s.Equal("AVAILABLE", responseDocument.Status)
+
+	s.s3Client.AVStatus = "INFECTED"
+
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			accessibilityRequest(id: "%s") {
+				documents {
+					id
+					status
+				}
+			}
+		}`, accessibilityRequest.ID), &resp)
+
+	responseDocument = resp.AccessibilityRequest.Documents[0]
+	s.Equal("UNAVAILABLE", responseDocument.Status)
 }
 
 func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {

@@ -1,17 +1,23 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { useTable } from 'react-table';
-import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
+import { Link, Table } from '@trussworks/react-uswds';
 
-import { AccessibilityRequestDocumentStatus } from 'types/graphql-global-types';
+import {
+  AccessibilityRequestDocumentCommonType,
+  AccessibilityRequestDocumentStatus
+} from 'types/graphql-global-types';
+import { translateDocumentType } from 'utils/accessibilityRequest';
 import formatDate from 'utils/formatDate';
 
 type Document = {
-  name: string;
   status: AccessibilityRequestDocumentStatus;
   url: string;
   uploadedAt: string;
+  documentType: {
+    commonType: AccessibilityRequestDocumentCommonType;
+    otherTypeDescription: string | null;
+  };
 };
 
 type DocumentsListProps = {
@@ -25,11 +31,24 @@ const AccessibilityDocumentsList = ({
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
 
+  const getDocType = (documentType: {
+    commonType: AccessibilityRequestDocumentCommonType;
+    otherTypeDescription: string;
+  }) => {
+    if (documentType.commonType !== 'OTHER') {
+      return translateDocumentType(
+        documentType.commonType as AccessibilityRequestDocumentCommonType
+      );
+    }
+    return documentType.otherTypeDescription;
+  };
+
   const columns: any = useMemo(() => {
     return [
       {
         Header: t('documentTable.header.documentName'),
-        accessor: 'name'
+        accessor: 'documentType',
+        Cell: ({ value }: any) => getDocType(value)
       },
       {
         Header: t('documentTable.header.uploadedAt'),
@@ -43,25 +62,30 @@ const AccessibilityDocumentsList = ({
         width: '25%'
       },
       {
-        Header: 'Status',
-        accessor: 'status'
-      },
-      {
         Header: t('documentTable.header.actions'),
         Cell: ({ row }: any) => (
           <>
-            <UswdsLink
-              aria-describedby={`doc-link-${row.original.id}`}
-              target="_blank"
-              asCustom={Link}
-              to={row.original.url}
-            >
-              {t('documentTable.view')}
-              <span className="usa-sr-only">document type</span>
-            </UswdsLink>
-            <span className="usa-sr-only" id={`doc-link-${row.original.id}`}>
-              Open file in a new tab or window
-            </span>
+            {row.original.status === 'PENDING' && (
+              <em>Virus scan in progress...</em>
+            )}
+            {row.original.status === 'AVAILABLE' && (
+              <Link
+                target="_blank"
+                rel="noreferrer"
+                href={row.original.url}
+                aria-label={`View ${getDocType(
+                  row.original.documentType
+                )} in a new tab or window`}
+              >
+                {t('documentTable.view')}
+              </Link>
+            )}
+            {row.original.status === 'UNAVAILABLE' && (
+              <>
+                <i className="fa fa-exclamation-circle text-secondary" />{' '}
+                Document failed virus scan
+              </>
+            )}
             {/* <UswdsLink asCustom={Link} to="#" className="margin-left-2">
               {t('documentTable.remove')}
             </UswdsLink>
