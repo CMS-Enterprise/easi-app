@@ -13,13 +13,15 @@ import (
 )
 
 type systemIntakeSubmission struct {
-	IntakeLink string
+	IntakeLink  string
+	RequestName string
 }
 
-func (c Client) systemIntakeSubmissionBody(intakeID uuid.UUID) (string, error) {
+func (c Client) systemIntakeSubmissionBody(intakeID uuid.UUID, requestName string) (string, error) {
 	intakePath := path.Join("governance-review-team", intakeID.String(), "intake-request")
 	data := systemIntakeSubmission{
-		IntakeLink: c.urlFromPath(intakePath),
+		IntakeLink:  c.urlFromPath(intakePath),
+		RequestName: requestName,
 	}
 	var b bytes.Buffer
 	if c.templates.systemIntakeSubmissionTemplate == nil {
@@ -33,9 +35,9 @@ func (c Client) systemIntakeSubmissionBody(intakeID uuid.UUID) (string, error) {
 }
 
 // SendSystemIntakeSubmissionEmail sends an email for a submitted system intake
-func (c Client) SendSystemIntakeSubmissionEmail(ctx context.Context, requester string, intakeID uuid.UUID) error {
-	subject := fmt.Sprintf("New intake request: %s", requester)
-	body, err := c.systemIntakeSubmissionBody(intakeID)
+func (c Client) SendSystemIntakeSubmissionEmail(ctx context.Context, requestName string, intakeID uuid.UUID) error {
+	subject := fmt.Sprintf("New intake request: %s", requestName)
+	body, err := c.systemIntakeSubmissionBody(intakeID, requestName)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}
