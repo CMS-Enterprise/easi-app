@@ -33,7 +33,8 @@ const EstimatedLifecycleCostReview = ({
   const sumByPhaseType = (items: LifecyclePhase[], phase: string) => {
     const phaseMap: { [key: string]: string } = {
       development: 'Development',
-      om: 'Operations and Maintenance'
+      om: 'Operations and Maintenance',
+      other: 'Other'
     };
 
     return items
@@ -62,6 +63,14 @@ const EstimatedLifecycleCostReview = ({
     year5: sumByPhaseType(data.year5, 'om')
   };
 
+  const otherCosts: { [key: string]: any } = {
+    year1: sumByPhaseType(data.year1, 'other'),
+    year2: sumByPhaseType(data.year2, 'other'),
+    year3: sumByPhaseType(data.year3, 'other'),
+    year4: sumByPhaseType(data.year4, 'other'),
+    year5: sumByPhaseType(data.year5, 'other')
+  };
+
   const totalDevelopmentCosts = Object.values(developmentCosts).reduce(
     (total, cost) => total + cost,
     0
@@ -70,18 +79,22 @@ const EstimatedLifecycleCostReview = ({
     (total, cost) => total + cost,
     0
   );
+  const totalOtherCosts = Object.values(otherCosts).reduce(
+    (total, cost) => total + cost,
+    0
+  );
 
   const totalCosts: { [key: string]: number } = {
-    year1: developmentCosts.year1 + omCosts.year1,
-    year2: developmentCosts.year2 + omCosts.year2,
-    year3: developmentCosts.year3 + omCosts.year3,
-    year4: developmentCosts.year4 + omCosts.year4,
-    year5: developmentCosts.year5 + omCosts.year5
+    year1: developmentCosts.year1 + omCosts.year1 + otherCosts.year1,
+    year2: developmentCosts.year2 + omCosts.year2 + otherCosts.year2,
+    year3: developmentCosts.year3 + omCosts.year3 + otherCosts.year3,
+    year4: developmentCosts.year4 + omCosts.year4 + otherCosts.year4,
+    year5: developmentCosts.year5 + omCosts.year5 + otherCosts.year5
   };
 
   return (
     <div>
-      {totalDevelopmentCosts + totalOmCosts === 0 && (
+      {totalDevelopmentCosts + totalOmCosts + totalOtherCosts === 0 && (
         <DescriptionTerm term="Requester indicated there is no associated cost with this solution" />
       )}
       <Media
@@ -101,7 +114,8 @@ const EstimatedLifecycleCostReview = ({
                   'margin-bottom-2',
                   {
                     'est-lifecycle-cost__review-table--blur':
-                      totalDevelopmentCosts + totalOmCosts === 0
+                      totalDevelopmentCosts + totalOmCosts + totalOtherCosts ===
+                      0
                   }
                 )}
               >
@@ -144,6 +158,16 @@ const EstimatedLifecycleCostReview = ({
                             </td>
                           </tr>
                         )}
+                        {otherCosts[year] > 0 && (
+                          <tr>
+                            <th className="padding-y-2 text-right text-normal">
+                              Other
+                            </th>
+                            <td className="padding-y-2 text-right text-normal">
+                              {formatDollars(otherCosts[year])}
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   );
@@ -159,7 +183,8 @@ const EstimatedLifecycleCostReview = ({
                 <table
                   className={classnames('est-lifecycle-cost__review-table', {
                     'est-lifecycle-cost__review-table--blur':
-                      totalDevelopmentCosts + totalOmCosts === 0
+                      totalDevelopmentCosts + totalOmCosts + totalOtherCosts ===
+                      0
                   })}
                 >
                   <caption className="est-lifecycle-cost__review-table-caption">
@@ -181,7 +206,7 @@ const EstimatedLifecycleCostReview = ({
                       <TableHead scope="row">Development</TableHead>
                       {Object.keys(yearMapping).map(year => (
                         <td
-                          key={`${year}-developmentcosts`}
+                          key={`${year}-development-costs`}
                           className="padding-y-3 text-right"
                         >
                           {formatDollars(developmentCosts[year])}
@@ -194,7 +219,7 @@ const EstimatedLifecycleCostReview = ({
                         {formatDollars(totalDevelopmentCosts)}
                       </td>
                     </tr>
-                    <tr className="est-lifecycle-cost__border">
+                    <tr>
                       <TableHead scope="row">
                         Operations and Maintenance
                       </TableHead>
@@ -208,6 +233,20 @@ const EstimatedLifecycleCostReview = ({
                       ))}
                       <td className="padding-y-3 text-right">
                         {formatDollars(totalOmCosts)}
+                      </td>
+                    </tr>
+                    <tr className="est-lifecycle-cost__border">
+                      <TableHead scope="row">Other</TableHead>
+                      {Object.keys(yearMapping).map(year => (
+                        <td
+                          key={`${year}-other-costs`}
+                          className="padding-y-3 text-right"
+                        >
+                          {formatDollars(otherCosts[year])}
+                        </td>
+                      ))}
+                      <td className="padding-y-3 text-right">
+                        {formatDollars(totalOtherCosts)}
                       </td>
                     </tr>
                     <tr>
@@ -233,7 +272,9 @@ const EstimatedLifecycleCostReview = ({
         <DescriptionList title="System total cost">
           <DescriptionTerm term="System total cost" />
           <DescriptionDefinition
-            definition={formatDollars(totalDevelopmentCosts + totalOmCosts)}
+            definition={formatDollars(
+              totalDevelopmentCosts + totalOmCosts + totalOtherCosts
+            )}
           />
         </DescriptionList>
       </div>

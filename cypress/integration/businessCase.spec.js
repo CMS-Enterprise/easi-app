@@ -147,7 +147,7 @@ describe('The Business Case Form', () => {
           estimatedLifecycleCost: {
             year1: [{ phase: 'Development', cost: '0' }],
             year2: [{ phase: 'Development', cost: '0' }],
-            year3: [{ phase: 'Development', cost: '0' }],
+            year3: [{ phase: 'Other', cost: '0' }],
             year4: [{ phase: 'Operations and Maintenance', cost: '0' }],
             year5: [{ phase: 'Operations and Maintenance', cost: '0' }]
           },
@@ -172,7 +172,7 @@ describe('The Business Case Form', () => {
           estimatedLifecycleCost: {
             year1: [{ phase: 'Development', cost: '0' }],
             year2: [{ phase: 'Development', cost: '0' }],
-            year3: [{ phase: 'Development', cost: '0' }],
+            year3: [{ phase: 'Other', cost: '0' }],
             year4: [{ phase: 'Operations and Maintenance', cost: '0' }],
             year5: [{ phase: 'Operations and Maintenance', cost: '0' }]
           },
@@ -197,7 +197,7 @@ describe('The Business Case Form', () => {
           estimatedLifecycleCost: {
             year1: [{ phase: 'Development', cost: '0' }],
             year2: [{ phase: 'Development', cost: '0' }],
-            year3: [{ phase: 'Development', cost: '0' }],
+            year3: [{ phase: 'Other', cost: '0' }],
             year4: [{ phase: 'Operations and Maintenance', cost: '0' }],
             year5: [{ phase: 'Operations and Maintenance', cost: '0' }]
           },
