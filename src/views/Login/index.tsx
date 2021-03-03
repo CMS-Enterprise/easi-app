@@ -59,12 +59,7 @@ const Login = () => {
             </button>
           </div>
         )}
-        <OktaSignInWidget
-          onSuccess={onSuccess}
-          onError={() => {
-            console.log('error sign in');
-          }}
-        />
+        <OktaSignInWidget onSuccess={onSuccess} onError={() => {}} />
       </MainContent>
       <Footer />
     </PageWrapper>
