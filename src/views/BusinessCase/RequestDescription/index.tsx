@@ -124,13 +124,13 @@ const RequestDescription = ({
                     as={TextAreaField}
                     error={!!flatErrors.businessNeed}
                     id="BusinessCase-BusinessNeed"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="businessNeed"
                     aria-describedby="BusinessCase-BusinessNeedCounter BusinessCase-BusinessNeedHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-BusinessNeedCounter"
-                    characterCount={2000 - values.businessNeed.length}
+                    characterCount={3000 - values.businessNeed.length}
                   />
                 </FieldGroup>
 
@@ -155,13 +155,13 @@ const RequestDescription = ({
                     as={TextAreaField}
                     error={!!flatErrors.cmsBenefit}
                     id="BusinessCase-CmsBenefit"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="cmsBenefit"
                     aria-describedby="BusinessCase-CmsBenefitCounter BusinessCase-CmsBenefitHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-CmsBenefitCounter"
-                    characterCount={2000 - values.cmsBenefit.length}
+                    characterCount={3000 - values.cmsBenefit.length}
                   />
                 </FieldGroup>
 
@@ -185,13 +185,13 @@ const RequestDescription = ({
                     as={TextAreaField}
                     error={!!flatErrors.priorityAlignment}
                     id="BusinessCase-PriorityAlignment"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="priorityAlignment"
                     aria-describedby="BusinessCase-PriorityAlignmentCounter BusinessCase-PriorityAlignmentHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-PriorityAlignmentCounter"
-                    characterCount={2000 - values.priorityAlignment.length}
+                    characterCount={3000 - values.priorityAlignment.length}
                   />
                 </FieldGroup>
 
@@ -215,13 +215,13 @@ const RequestDescription = ({
                     as={TextAreaField}
                     error={!!flatErrors.successIndicators}
                     id="BusinessCase-SuccessIndicators"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="successIndicators"
                     aria-describedby="BusinessCase-SuccessIndicatorsCounter BusinessCase-SuccessIndicatorsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-SuccessIndicatorsCounter"
-                    characterCount={2000 - values.successIndicators.length}
+                    characterCount={3000 - values.successIndicators.length}
                   />
                 </FieldGroup>
               </Form>

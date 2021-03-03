@@ -147,13 +147,13 @@ const AsIsSolution = ({
                     as={TextAreaField}
                     error={!!flatErrors['asIsSolution.summary']}
                     id="BusinessCase-AsIsSolutionSummary"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="asIsSolution.summary"
                     aria-describedby="BusinessCase-AsIsSolutionSummaryCounter BusinessCase-AsIsSolutionSummaryHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionSummaryCounter"
-                    characterCount={2000 - values.asIsSolution.summary.length}
+                    characterCount={3000 - values.asIsSolution.summary.length}
                   />
                 </FieldGroup>
 
@@ -178,13 +178,13 @@ const AsIsSolution = ({
                     as={TextAreaField}
                     error={!!flatErrors['asIsSolution.pros']}
                     id="BusinessCase-AsIsSolutionPros"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="asIsSolution.pros"
                     aria-describedby="BusinessCase-AsIsSolutionProsCounter BusinessCase-AsIsSolutionProsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionProsCounter"
-                    characterCount={2000 - values.asIsSolution.pros.length}
+                    characterCount={3000 - values.asIsSolution.pros.length}
                   />
                 </FieldGroup>
 
@@ -209,13 +209,13 @@ const AsIsSolution = ({
                     as={TextAreaField}
                     error={!!flatErrors['asIsSolution.cons']}
                     id="BusinessCase-AsIsSolutionCons"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="asIsSolution.cons"
                     aria-describedby="BusinessCase-AsIsSolutionConsCounter BusinessCase-AsIsSolutionConsHelp"
                   />
                   <CharacterCounter
                     id="BusinessCase-AsIsSolutionConsCounter"
-                    characterCount={2000 - values.asIsSolution.cons.length}
+                    characterCount={3000 - values.asIsSolution.cons.length}
                   />
                 </FieldGroup>
               </div>
@@ -275,7 +275,7 @@ const AsIsSolution = ({
                     as={TextAreaField}
                     error={!!flatErrors['asIsSolution.costSavings']}
                     id="BusinessCase-AsIsSolutionCostSavings"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="asIsSolution.costSavings"
                     aria-describedby="BusinessCase-AsIsSolutionCostSavingsCounter BusinessCase-AsIsSolutionCostSavingsHelp"
                   />

@@ -134,7 +134,7 @@ const Notes = () => {
                   <Field
                     as={TextAreaField}
                     id="GovernanceReviewTeam-Note"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="note"
                     className="easi-grt__note-field"
                   />

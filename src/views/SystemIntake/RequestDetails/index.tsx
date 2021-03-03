@@ -169,13 +169,13 @@ const RequestDetails = ({
                     as={TextAreaField}
                     error={!!flatErrors.businessNeed}
                     id="IntakeForm-BusinessNeed"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="businessNeed"
                     aria-describedby="IntakeForm-BusinessNeedCounter IntakeForm-BusinessNeedHelp"
                   />
                   <CharacterCounter
                     id="IntakeForm-BusinessNeedCounter"
-                    characterCount={2000 - values.businessNeed.length}
+                    characterCount={3000 - values.businessNeed.length}
                   />
                 </FieldGroup>
 
@@ -197,13 +197,13 @@ const RequestDetails = ({
                     as={TextAreaField}
                     error={!!flatErrors.businessSolution}
                     id="IntakeForm-BusinessSolution"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="businessSolution"
                     aria-describedby="IntakeForm-BusinessSolutionCounter IntakeForm-BusinessSolutionHelp"
                   />
                   <CharacterCounter
                     id="IntakeForm-BusinessSolutionCounter"
-                    characterCount={2000 - values.businessSolution.length}
+                    characterCount={3000 - values.businessSolution.length}
                   />
                 </FieldGroup>
 
