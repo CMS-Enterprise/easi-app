@@ -92,7 +92,7 @@ const RejectIntake = () => {
                     as={TextAreaField}
                     error={!!flatErrors.reason}
                     id="RejectIntakeForm-Reason"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="reason"
                   />
                 </FieldGroup>
@@ -109,7 +109,7 @@ const RejectIntake = () => {
                     as={TextAreaField}
                     error={!!flatErrors.nextSteps}
                     id="RejectIntakeForm-NextSteps"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="nextSteps"
                   />
                 </FieldGroup>
