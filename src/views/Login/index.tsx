@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useOktaAuth } from '@okta/okta-react';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -11,6 +13,9 @@ import DevLogin from 'views/AuthenticationWrapper/DevLogin';
 
 const Login = () => {
   let defaultAuth = false;
+  const { oktaAuth, authState } = useOktaAuth();
+  const history = useHistory();
+
   if (isLocalEnvironment() && window.localStorage[localAuthStorageKey]) {
     defaultAuth = JSON.parse(window.localStorage[localAuthStorageKey])
       .favorLocalAuth;
@@ -20,6 +25,18 @@ const Login = () => {
   const handleUseLocalAuth = () => {
     setIsLocalAuth(true);
   };
+
+  const onSuccess = (tokens: any) => {
+    oktaAuth.handleLoginRedirect(tokens);
+  };
+
+  useEffect(() => {
+    if (authState.isAuthenticated) {
+      history.replace('/');
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authState.isAuthenticated]);
 
   if (isLocalEnvironment() && isLocalAuth) {
     return (
@@ -42,7 +59,12 @@ const Login = () => {
             </button>
           </div>
         )}
-        <OktaSignInWidget onSuccess={() => {}} onError={() => {}} />
+        <OktaSignInWidget
+          onSuccess={onSuccess}
+          onError={() => {
+            console.log('error sign in');
+          }}
+        />
       </MainContent>
       <Footer />
     </PageWrapper>
