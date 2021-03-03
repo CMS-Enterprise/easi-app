@@ -49,9 +49,7 @@ export const getAcronymForComponent = (componentToTranslate: string) => {
   const component = cmsDivisionsAndOffices.find(
     c => c.name === componentToTranslate
   );
-  if (component) {
-    return component.acronym;
-  }
+
   // TODO: what do we return if not found? (should be impossible)
-  return 'Other';
+  return component ? component.acronym : 'Other';
 };
