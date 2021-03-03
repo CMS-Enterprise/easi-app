@@ -73,7 +73,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                     <Field
                       as={RadioField}
                       checked={values.phase === 'Other'}
-                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.other`}
+                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.Other`}
                       name={`${formikKey}.year${year}.${index}.phase`}
                       label="Other"
                       value="Other"
