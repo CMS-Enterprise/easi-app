@@ -219,7 +219,7 @@ const EstimatedLifecycleCostReview = ({
                         {formatDollars(totalDevelopmentCosts)}
                       </td>
                     </tr>
-                    <tr className="est-lifecycle-cost__border">
+                    <tr>
                       <TableHead scope="row">
                         Operations and Maintenance
                       </TableHead>

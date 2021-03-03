@@ -51,7 +51,7 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                   >
                     Phase
                   </legend>
-                  <RadioGroup inline>
+                  <RadioGroup>
                     <Field
                       as={RadioField}
                       checked={values.phase === 'Development'}
@@ -59,7 +59,6 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                       name={`${formikKey}.year${year}.${index}.phase`}
                       label="Development"
                       value="Development"
-                      inline
                     />
 
                     <Field
@@ -69,7 +68,6 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                       name={`${formikKey}.year${year}.${index}.phase`}
                       label="Operations and Maintenance"
                       value="Operations and Maintenance"
-                      inline
                     />
 
                     <Field
@@ -79,7 +77,6 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
                       name={`${formikKey}.year${year}.${index}.phase`}
                       label="Other"
                       value="Other"
-                      inline
                     />
                   </RadioGroup>
                 </div>
