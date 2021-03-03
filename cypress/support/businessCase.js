@@ -167,7 +167,7 @@ cy.businessCase = {
       });
 
       // Estimated Lifecycle Costs Years 3
-      [1, 2].forEach(year => {
+      [3].forEach(year => {
         cy.get(
           `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Other`
         )
