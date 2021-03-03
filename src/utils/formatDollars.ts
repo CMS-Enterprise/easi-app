@@ -1,12 +1,12 @@
 const formatDollars = (amount: any) => {
-  if (amount) {
+  if (amount || amount === 0) {
     return amount.toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 0
     });
   }
-  return `$${amount}`;
+  return '-';
 };
 
 export default formatDollars;

@@ -30,36 +30,33 @@ const EstimatedLifecycleCostReview = ({
     year4: 'Year 4',
     year5: 'Year 5'
   };
-  const sumByPhaseType = (items: LifecyclePhase[], phase: string) => {
+  const costForPhase = (items: LifecyclePhase[], phaseID: string) => {
     const phaseMap: { [key: string]: string } = {
       development: 'Development',
       om: 'Operations and Maintenance'
     };
 
-    return items
-      .filter(obj => obj.phase === phaseMap[phase])
-      .reduce((total, current) => {
-        if (current.cost) {
-          return total + parseFloat(current.cost);
-        }
-        return total;
-      }, 0);
+    const phase = items.find(obj => obj.phase === phaseMap[phaseID]);
+    if (phase) {
+      return parseFloat(phase.cost);
+    }
+    return undefined;
   };
 
   const developmentCosts: { [key: string]: any } = {
-    year1: sumByPhaseType(data.year1, 'development'),
-    year2: sumByPhaseType(data.year2, 'development'),
-    year3: sumByPhaseType(data.year3, 'development'),
-    year4: sumByPhaseType(data.year4, 'development'),
-    year5: sumByPhaseType(data.year5, 'development')
+    year1: costForPhase(data.year1, 'development'),
+    year2: costForPhase(data.year2, 'development'),
+    year3: costForPhase(data.year3, 'development'),
+    year4: costForPhase(data.year4, 'development'),
+    year5: costForPhase(data.year5, 'development')
   };
 
   const omCosts: { [key: string]: any } = {
-    year1: sumByPhaseType(data.year1, 'om'),
-    year2: sumByPhaseType(data.year2, 'om'),
-    year3: sumByPhaseType(data.year3, 'om'),
-    year4: sumByPhaseType(data.year4, 'om'),
-    year5: sumByPhaseType(data.year5, 'om')
+    year1: costForPhase(data.year1, 'om'),
+    year2: costForPhase(data.year2, 'om'),
+    year3: costForPhase(data.year3, 'om'),
+    year4: costForPhase(data.year4, 'om'),
+    year5: costForPhase(data.year5, 'om')
   };
 
   const totalDevelopmentCosts = Object.values(developmentCosts).reduce(
@@ -98,11 +95,7 @@ const EstimatedLifecycleCostReview = ({
                 className={classnames(
                   'bg-base-lightest',
                   'padding-3',
-                  'margin-bottom-2',
-                  {
-                    'est-lifecycle-cost__review-table--blur':
-                      totalDevelopmentCosts + totalOmCosts === 0
-                  }
+                  'margin-bottom-2'
                 )}
               >
                 <p className="est-lifecycle-cost__review-table-caption">
@@ -156,12 +149,7 @@ const EstimatedLifecycleCostReview = ({
                 data-testid="est-lifecycle--desktop"
                 className="est-lifecycle-cost__review-table-wrapper bg-base-lightest margin-bottom-2"
               >
-                <table
-                  className={classnames('est-lifecycle-cost__review-table', {
-                    'est-lifecycle-cost__review-table--blur':
-                      totalDevelopmentCosts + totalOmCosts === 0
-                  })}
-                >
+                <table className="est-lifecycle-cost__review-table">
                   <caption className="est-lifecycle-cost__review-table-caption">
                     Phase per year breakdown
                   </caption>
