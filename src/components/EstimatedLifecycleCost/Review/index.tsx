@@ -59,21 +59,22 @@ const EstimatedLifecycleCostReview = ({
     year5: costForPhase(data.year5, 'om')
   };
 
-  const totalDevelopmentCosts = Object.values(developmentCosts).reduce(
-    (total, cost) => total + cost,
-    0
-  );
-  const totalOmCosts = Object.values(omCosts).reduce(
-    (total, cost) => total + cost,
-    0
-  );
+  const sum = (values: (number | undefined)[]): number => {
+    return values.reduce(
+      (total: number, value: number | undefined) => total + (value || 0),
+      0
+    );
+  };
+
+  const totalDevelopmentCosts = sum(Object.values(developmentCosts));
+  const totalOmCosts = sum(Object.values(omCosts));
 
   const totalCosts: { [key: string]: number } = {
-    year1: developmentCosts.year1 + omCosts.year1,
-    year2: developmentCosts.year2 + omCosts.year2,
-    year3: developmentCosts.year3 + omCosts.year3,
-    year4: developmentCosts.year4 + omCosts.year4,
-    year5: developmentCosts.year5 + omCosts.year5
+    year1: sum([developmentCosts.year1, omCosts.year1]),
+    year2: sum([developmentCosts.year2, omCosts.year2]),
+    year3: sum([developmentCosts.year3, omCosts.year3]),
+    year4: sum([developmentCosts.year4, omCosts.year4]),
+    year5: sum([developmentCosts.year5, omCosts.year5])
   };
 
   return (
