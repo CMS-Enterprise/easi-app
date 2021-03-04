@@ -1,9 +1,7 @@
 import axios from 'axios';
-import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import { updateLastActiveAt } from 'reducers/authReducer';
 import { fetchSystemIntakes } from 'types/routines';
 
 function getSystemIntakesRequest(status: string | null) {
@@ -25,7 +23,6 @@ function* getSystemIntakes(action: Action<any>) {
     yield put(fetchSystemIntakes.failure(error.message));
   } finally {
     yield put(fetchSystemIntakes.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
