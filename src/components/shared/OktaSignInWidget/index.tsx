@@ -1,46 +1,47 @@
 // src/OktaSignInWidget.js
 
-import React, { Component } from 'react';
-import OktaSignIn from '@okta/okta-signin-widget/dist/js/okta-sign-in.min';
+import React, { useEffect, useRef } from 'react';
+import OktaSignIn from '@okta/okta-signin-widget';
 
 type OktaSignInWidgetProps = {
   onSuccess: (auth: any) => any;
   onError: () => void;
 };
 
-export default class OktaSignInWidget extends Component<
-  OktaSignInWidgetProps,
-  {}
-> {
-  widget: any;
+const OktaSignInWidget = ({ onSuccess, onError }: OktaSignInWidgetProps) => {
+  const widgetRef = useRef(null);
 
-  componentDidMount() {
-    this.widget = new OktaSignIn({
-      baseUrl: process.env.REACT_APP_OKTA_DOMAIN,
-      authParams: {
-        pkce: true,
-        issuer: process.env.REACT_APP_OKTA_ISSUER,
-        responseMode: 'query'
-      },
-      el: '#sign-in-widget'
-    });
-    this.widget.showSignInToGetTokens({
-      authorizationServerId: process.env.REACT_APP_OKTA_SERVER_ID,
-      clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
-      redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
-      scope: 'openid profile email'
-    });
-  }
+  useEffect(() => {
+    let signIn: any;
+    if (widgetRef.current) {
+      signIn = new OktaSignIn({
+        el: widgetRef.current,
+        baseUrl: process.env.REACT_APP_OKTA_DOMAIN,
+        clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
+        authParams: {
+          pkce: true,
+          issuer: process.env.REACT_APP_OKTA_ISSUER,
+          responseMode: 'query'
+        }
+      });
 
-  componentWillUnmount() {
-    this.widget.remove();
-  }
+      signIn
+        .showSignInToGetTokens({
+          authorizationServerId: process.env.REACT_APP_OKTA_SERVER_ID,
+          clientId: process.env.REACT_APP_OKTA_CLIENT_ID,
+          redirectUri: process.env.REACT_APP_OKTA_REDIRECT_URI,
+          scopes: ['openid', 'profile', 'email']
+        })
+        .then(onSuccess)
+        .catch(onError);
+    }
 
-  render() {
-    return (
-      <div>
-        <div id="sign-in-widget" />
-      </div>
-    );
-  }
-}
+    return () => signIn.remove();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return <div ref={widgetRef} />;
+};
+
+export default OktaSignInWidget;
