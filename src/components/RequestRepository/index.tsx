@@ -78,7 +78,14 @@ const RequestRepository = () => {
         return value;
       }
 
-      return t('governanceReviewTeam:adminLeads.notAssigned');
+      return (
+        <>
+          {/* TODO: should probably make this a button that opens up the assign admin
+                    lead automatically. Similar to the Dates functionality */}
+          <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
+          {t('governanceReviewTeam:adminLeads.notAssigned')}
+        </>
+      );
     }
   };
 
