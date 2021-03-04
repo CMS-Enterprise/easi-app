@@ -43,7 +43,14 @@ const EstimatedLifecycleCostReview = ({
     return undefined;
   };
 
-  const developmentCosts: { [key: string]: any } = {
+  const formatDollarsOrDash = (value: number | undefined): string => {
+    if (typeof value === 'undefined') {
+      return '-';
+    }
+    return formatDollars(value);
+  };
+
+  const developmentCosts: { [key: string]: number | undefined } = {
     year1: costForPhase(data.year1, 'development'),
     year2: costForPhase(data.year2, 'development'),
     year3: costForPhase(data.year3, 'development'),
@@ -51,7 +58,7 @@ const EstimatedLifecycleCostReview = ({
     year5: costForPhase(data.year5, 'development')
   };
 
-  const omCosts: { [key: string]: any } = {
+  const omCosts: { [key: string]: number | undefined } = {
     year1: costForPhase(data.year1, 'om'),
     year2: costForPhase(data.year2, 'om'),
     year3: costForPhase(data.year3, 'om'),
@@ -115,7 +122,7 @@ const EstimatedLifecycleCostReview = ({
                             {yearMapping[year]}
                           </th>
                           <td className="padding-y-2 text-right text-bold">
-                            {formatDollars(totalCosts[year])}
+                            {formatDollarsOrDash(totalCosts[year])}
                           </td>
                         </tr>
                         {developmentCosts[year] > 0 && (
@@ -124,7 +131,7 @@ const EstimatedLifecycleCostReview = ({
                               Development
                             </th>
                             <td className="padding-y-2 text-right text-normal">
-                              {formatDollars([developmentCosts[year]])}
+                              {formatDollarsOrDash([developmentCosts[year]])}
                             </td>
                           </tr>
                         )}
@@ -134,7 +141,7 @@ const EstimatedLifecycleCostReview = ({
                               Operations and Maintenance
                             </th>
                             <td className="padding-y-2 text-right text-normal">
-                              {formatDollars(omCosts[year])}
+                              {formatDollarsOrDash(omCosts[year])}
                             </td>
                           </tr>
                         )}
@@ -173,14 +180,14 @@ const EstimatedLifecycleCostReview = ({
                           key={`${year}-developmentcosts`}
                           className="padding-y-3 text-right"
                         >
-                          {formatDollars(developmentCosts[year])}
+                          {formatDollarsOrDash(developmentCosts[year])}
                         </td>
                       ))}
                       <td
                         data-testid="total-development-costs"
                         className="padding-y-3 text-right"
                       >
-                        {formatDollars(totalDevelopmentCosts)}
+                        {formatDollarsOrDash(totalDevelopmentCosts)}
                       </td>
                     </tr>
                     <tr className="est-lifecycle-cost__border">
@@ -192,11 +199,11 @@ const EstimatedLifecycleCostReview = ({
                           key={`${year}-om-costs`}
                           className="padding-y-3 text-right"
                         >
-                          {formatDollars(omCosts[year])}
+                          {formatDollarsOrDash(omCosts[year])}
                         </td>
                       ))}
                       <td className="padding-y-3 text-right">
-                        {formatDollars(totalOmCosts)}
+                        {formatDollarsOrDash(totalOmCosts)}
                       </td>
                     </tr>
                     <tr>
@@ -206,7 +213,7 @@ const EstimatedLifecycleCostReview = ({
                           key={`${year}-costs`}
                           className="padding-y-3 text-right"
                         >
-                          {formatDollars(totalCosts[year])}
+                          {formatDollarsOrDash(totalCosts[year])}
                         </td>
                       ))}
                       <td />
@@ -222,7 +229,9 @@ const EstimatedLifecycleCostReview = ({
         <DescriptionList title="System total cost">
           <DescriptionTerm term="System total cost" />
           <DescriptionDefinition
-            definition={formatDollars(totalDevelopmentCosts + totalOmCosts)}
+            definition={formatDollarsOrDash(
+              totalDevelopmentCosts + totalOmCosts
+            )}
           />
         </DescriptionList>
       </div>
