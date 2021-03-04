@@ -21,8 +21,8 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: scope</p>\n" +
-			"<p>Next Steps: nextSteps</p>\n\n<p>feedback</p>"
+		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: <pre>scope</pre></p>\n" +
+			"<p>Next Steps: <pre>nextSteps</pre></p>\n\n<p><pre>feedback</pre></p>"
 		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
 
 		s.NoError(err)
@@ -35,8 +35,8 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: scope</p>" +
-			"\n\n<p>feedback</p>"
+		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: <pre>scope</pre></p>" +
+			"\n\n<p><pre>feedback</pre></p>"
 		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, "", feedback)
 
 		s.NoError(err)
