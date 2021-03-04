@@ -46,6 +46,14 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
   const oneSecond = Duration.fromObject({ seconds: 1 }).as('milliseconds');
   const fiveMinutes = Duration.fromObject({ minutes: 5 }).as('seconds');
 
+  const forceRenew = async () => {
+    const tokenManager = await oktaAuth.tokenManager;
+    tokenManager.renew('idToken');
+    tokenManager.renew('accessToken');
+    dispatch(updateLastRenewAt(DateTime.local()));
+    dispatch(updateLastActiveAt(DateTime.local()));
+  };
+
   const registerExpire = async () => {
     const tokenManager = await oktaAuth.tokenManager;
 
@@ -83,7 +91,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   const handleModalExit = async () => {
     setIsModalOpen(false);
-    dispatch(updateLastActiveAt(DateTime.local()));
+    forceRenew();
   };
 
   useEffect(() => {
