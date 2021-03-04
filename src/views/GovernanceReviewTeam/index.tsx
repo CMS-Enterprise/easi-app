@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
@@ -76,10 +76,21 @@ const GovernanceReviewTeam = () => {
     if (systemIntake.adminLead) {
       return systemIntake.adminLead;
     }
-    return t('governanceReviewTeam:adminLeads.notAssigned');
+    return (
+      <>
+        <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
+        {t('governanceReviewTeam:adminLeads.notAssigned')}
+      </>
+    );
   };
 
   const [newAdminLead, setAdminLead] = useState('');
+
+  // Resets newAdminLead to what is in intake currently. This is used to
+  // reset state of modal upon exit without saving
+  const resetNewAdminLead = () => {
+    setAdminLead(systemIntake.adminLead);
+  };
 
   // Send newly selected admin lead to database
   const saveAdminLead = () => {
@@ -95,41 +106,28 @@ const GovernanceReviewTeam = () => {
     returnObjects: true
   });
 
-  // Set admin lead modal stuff
-  type AdminLeadContextType = {
-    name: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    value: string;
-  };
-
-  const AdminLeadContext = createContext<AdminLeadContextType>({
-    name: '',
-    onChange: () => {},
-    value: ''
-  });
-
+  // Admin lead modal radio button
   type AdminLeadRadioOptionProps = {
+    checked: boolean;
     label: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
 
-  const AdminLeadRadioOption = ({ label }: AdminLeadRadioOptionProps) => {
+  const AdminLeadRadioOption = ({
+    checked,
+    label,
+    onChange
+  }: AdminLeadRadioOptionProps) => {
     const radioFieldClassName = 'margin-y-3';
-
-    const adminLeadContext = useContext(AdminLeadContext);
-    if (!adminLeadContext) {
-      throw new Error(
-        'This component cannot be used outside of the Admin Lead Radio Group Context'
-      );
-    }
 
     return (
       <RadioField
+        checked={checked}
         id={label}
         label={label}
-        name={adminLeadContext.name}
+        name={label}
         value={label}
-        onChange={adminLeadContext.onChange}
-        checked={adminLeadContext.value === label}
+        onChange={onChange}
         className={radioFieldClassName}
       />
     );
@@ -210,73 +208,71 @@ const GovernanceReviewTeam = () => {
                   )}
                 </div>
                 <div className="text-gray-90">
-                  <dd>
-                    <dt className="text-bold">
-                      {t('intake:fields.adminLead')}
-                    </dt>
-                    <dt className="padding-1">{getAdminLead()}</dt>
-                    <dt>
+                  <dt className="text-bold">{t('intake:fields.adminLead')}</dt>
+                  <dt className="padding-1">{getAdminLead()}</dt>
+                  <dt>
+                    <Button
+                      type="button"
+                      unstyled
+                      onClick={() => {
+                        // Reset newAdminLead to value in intake
+                        resetNewAdminLead();
+                        setModalOpen(true);
+                      }}
+                    >
+                      {t('governanceReviewTeam:adminLeads.changeLead')}
+                    </Button>
+                    <Modal
+                      title={t(
+                        'governanceReviewTeam:adminLeads:assignModal.title'
+                      )}
+                      isOpen={isModalOpen}
+                      closeModal={() => {
+                        setModalOpen(false);
+                      }}
+                    >
+                      <h1 className="margin-top-0 font-heading-2xl line-height-heading-2">
+                        {t(
+                          'governanceReviewTeam:adminLeads:assignModal.header',
+                          { requestName: systemIntake.requestName }
+                        )}
+                      </h1>
+                      <RadioGroup>
+                        {grtMembers.map(k => (
+                          <AdminLeadRadioOption
+                            key={k}
+                            checked={k === newAdminLead}
+                            label={k}
+                            onChange={() => {
+                              setAdminLead(k);
+                            }}
+                          />
+                        ))}
+                      </RadioGroup>
+                      <Button
+                        type="button"
+                        className="margin-right-4"
+                        onClick={() => {
+                          // Set admin lead as newAdminLead in the intake
+                          saveAdminLead();
+                          setModalOpen(false);
+                        }}
+                      >
+                        {t('governanceReviewTeam:adminLeads:assignModal.save')}
+                      </Button>
                       <Button
                         type="button"
                         unstyled
-                        onClick={() => setModalOpen(true)}
+                        onClick={() => {
+                          setModalOpen(false);
+                        }}
                       >
-                        {t('governanceReviewTeam:adminLeads.changeLead')}
-                      </Button>
-                      <Modal
-                        title={t(
-                          'governanceReviewTeam:adminLeads:assignModal.title'
+                        {t(
+                          'governanceReviewTeam:adminLeads:assignModal.noChanges'
                         )}
-                        isOpen={isModalOpen}
-                        closeModal={() => setModalOpen(false)}
-                      >
-                        <h1 className="margin-top-0 font-heading-2xl line-height-heading-2">
-                          {t(
-                            'governanceReviewTeam:adminLeads:assignModal.header',
-                            { requestName: systemIntake.requestName }
-                          )}
-                        </h1>
-                        <AdminLeadContext.Provider
-                          value={{
-                            name: 'Admin Leads',
-                            onChange: (
-                              e: React.ChangeEvent<HTMLInputElement>
-                            ) => {
-                              setAdminLead(e.target.value);
-                            },
-                            value: newAdminLead
-                          }}
-                        >
-                          <RadioGroup>
-                            {grtMembers.map(k => (
-                              <AdminLeadRadioOption key={k} label={k} />
-                            ))}
-                          </RadioGroup>
-                        </AdminLeadContext.Provider>
-                        <Button
-                          type="button"
-                          className="margin-right-4"
-                          onClick={() => {
-                            saveAdminLead();
-                            setModalOpen(false);
-                          }}
-                        >
-                          {t(
-                            'governanceReviewTeam:adminLeads:assignModal.save'
-                          )}
-                        </Button>
-                        <Button
-                          type="button"
-                          unstyled
-                          onClick={() => setModalOpen(false)}
-                        >
-                          {t(
-                            'governanceReviewTeam:adminLeads:assignModal.noChanges'
-                          )}
-                        </Button>
-                      </Modal>
-                    </dt>
-                  </dd>
+                      </Button>
+                    </Modal>
+                  </dt>
                 </div>
               </dl>
             </div>
