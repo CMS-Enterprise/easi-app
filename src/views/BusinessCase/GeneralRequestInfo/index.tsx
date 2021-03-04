@@ -15,6 +15,7 @@ import TextField from 'components/shared/TextField';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -83,9 +84,12 @@ const GeneralRequestInfo = ({
               Admin Team who will ensure it is ready to be presented at the
               Governance Review Team (GRT) Meeting.
             </p>
-            <div className="tablet:grid-col-5">
-              <MandatoryFieldsAlert />
-            </div>
+            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
+            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
+              <div className="tablet:grid-col-5">
+                <MandatoryFieldsAlert />
+              </div>
+            )}
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>
                 <FieldGroup

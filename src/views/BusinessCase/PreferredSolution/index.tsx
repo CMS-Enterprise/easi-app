@@ -21,6 +21,7 @@ import { hasAlternativeB } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -103,9 +104,12 @@ const PreferredSolution = ({
                 infrastructure, etc.
               </div>
             </div>
-            <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-              <MandatoryFieldsAlert />
-            </div>
+            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
+            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
+              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
+                <MandatoryFieldsAlert />
+              </div>
+            )}
             <Form>
               <div className="tablet:grid-col-9">
                 <h2>Preferred solution</h2>
