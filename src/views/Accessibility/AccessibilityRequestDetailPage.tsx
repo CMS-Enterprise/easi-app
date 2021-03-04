@@ -70,7 +70,7 @@ const AccessibilityRequestDetailPage = () => {
         </SecondaryNav>
         <div className="grid-container">
           {confirmationText && (
-            <Alert className="margin-top-4" type="success">
+            <Alert className="margin-top-4" type="success" role="alert">
               {confirmationText}
             </Alert>
           )}
