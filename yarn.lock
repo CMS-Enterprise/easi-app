@@ -2961,15 +2961,14 @@
   dependencies:
     "@babel/runtime" "^7.11.2"
 
-"@okta/okta-signin-widget@^4.0.2":
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-4.2.1.tgz#3a0064141165e2f57e28ee466c8f4b73b1c3ec49"
-  integrity sha512-JruwoDv5AeoEmrQP4MXaGWD7w8jH5fHdfSISCamLzcNtSug9V0GmZ3MumzHB/NEd8ixhPBl9OK6ExUi3jytVzQ==
+"@okta/okta-signin-widget@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-5.4.0.tgz#021eeeb60c68aff8b01abe41f5df47b3ac14ab7b"
+  integrity sha512-HzhGnaJongWBiIveGyf/x03cky1AON4X+orCEntuiyK//ZCYPjbg1htMShkLuaEqpQYP3rHvbGVVSobW7kR7aQ==
   dependencies:
     "@babel/polyfill" "^7.10.1"
     "@babel/runtime" "^7.10.3"
     cross-fetch "^3.0.4"
-    eslint-plugin-jasmine "^4.1.0"
     handlebars "^4.5.3"
     q "1.4.1"
     u2f-api-polyfill "0.4.3"
@@ -9156,11 +9155,6 @@ eslint-plugin-import@^2.22.1:
     read-pkg-up "^2.0.0"
     resolve "^1.17.0"
     tsconfig-paths "^3.9.0"
-
-eslint-plugin-jasmine@^4.1.0:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jasmine/-/eslint-plugin-jasmine-4.1.1.tgz#afdf8ca6a91e85041d9e0fb650af446874bf8852"
-  integrity sha512-uS7kvt7RPUB/gLDwhJ/Ax0APrmkj7In8VJWkiZLYHafz2Ix74mMRJx82YZZ3zHRa/YOuTL+ig6dW/aKwdNzUuw==
 
 eslint-plugin-jest@^24.1.0:
   version "24.1.5"
@@ -16400,6 +16394,11 @@ react-i18next@^11.5.0:
   dependencies:
     "@babel/runtime" "^7.3.1"
     html-parse-stringify2 "2.0.1"
+
+react-idle-timer@^4.5.5:
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/react-idle-timer/-/react-idle-timer-4.5.5.tgz#73eeb816984d89fea1dda1225bd893bc4c2726be"
+  integrity sha512-hQpwbEmZq9NZyR3hsq9savk8SwKAyzBqqCpp3sjJQzMrYoQHMIxKrYy0dpCM0JbyHNmSDqD4vLTJAcA+BH47Dw==
 
 react-inspector@^5.0.1:
   version "5.1.0"
