@@ -30,14 +30,14 @@ exports[`The Business Case Confirmation page matches the snapshot 1`] = `
     </p>
     <div>
       <a
-        href="/"
+        href="/governance-task-list/12345"
         onClick={[Function]}
       >
         <i
           aria-hidden={true}
           className="fa fa-angle-left margin-x-05"
         />
-        Go back to EASi homepage
+        Go back to Governance Task List
       </a>
     </div>
   </div>
