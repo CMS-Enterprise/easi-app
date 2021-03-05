@@ -106,10 +106,12 @@ export type ContractDetailsForm = {
     vehicle: string;
     startDate: {
       month: string;
+      day: string;
       year: string;
     };
     endDate: {
       month: string;
+      day: string;
       year: string;
     };
   };

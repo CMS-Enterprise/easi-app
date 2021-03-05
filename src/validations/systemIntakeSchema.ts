@@ -148,6 +148,9 @@ const SystemIntakeValidationSchema: any = {
           month: Yup.string()
             .trim()
             .required('Tell us the contract start month'),
+          day: Yup.string()
+            .trim()
+            .required('Tell us the contract start day'),
           year: Yup.string()
             .trim()
             .required('Tell us the contract start year')
@@ -159,6 +162,9 @@ const SystemIntakeValidationSchema: any = {
           month: Yup.string()
             .trim()
             .required('Tell us the contract end month'),
+          day: Yup.string()
+            .trim()
+            .required('Tell us the contract end day'),
           year: Yup.string()
             .trim()
             .required('Tell us the contract end year')
