@@ -624,7 +624,7 @@ const ContractDetails = ({
                           )}
                         >
                           <legend className="usa-label">
-                            Period of performance
+                            Estimated period of performance
                           </legend>
                           <HelpText className="margin-bottom-1">
                             For example: 4/10/2020
