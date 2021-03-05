@@ -8,7 +8,11 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
-import { DateInputMonth, DateInputYear } from 'components/shared/DateInput';
+import {
+  DateInputDay,
+  DateInputMonth,
+  DateInputYear
+} from 'components/shared/DateInput';
 import { DropdownField, DropdownItem } from 'components/shared/DropdownField';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
@@ -471,7 +475,7 @@ const ContractDetails = ({
                                   Day
                                 </Label>
                                 <Field
-                                  as={DateInputMonth}
+                                  as={DateInputDay}
                                   error={!!flatErrors['contract.startDate.day']}
                                   id="IntakeForm-ContractStartDay"
                                   name="contract.startDate.day"
@@ -528,7 +532,7 @@ const ContractDetails = ({
                                   Day
                                 </Label>
                                 <Field
-                                  as={DateInputMonth}
+                                  as={DateInputDay}
                                   error={!!flatErrors['contract.endDate.day']}
                                   id="IntakeForm-ContractEndDay"
                                   name="contract.endDate.day"
@@ -623,10 +627,13 @@ const ContractDetails = ({
                             Period of performance
                           </legend>
                           <HelpText className="margin-bottom-1">
-                            For example: 4/2020
+                            For example: 4/10/2020
                           </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['contract.startDate.month']}
+                          </FieldErrorMsg>
+                          <FieldErrorMsg>
+                            {flatErrors['contract.startDate.day']}
                           </FieldErrorMsg>
                           <FieldErrorMsg>
                             {flatErrors['contract.startDate.year']}
@@ -635,31 +642,49 @@ const ContractDetails = ({
                             {flatErrors['contract.endDate.month']}
                           </FieldErrorMsg>
                           <FieldErrorMsg>
+                            {flatErrors['contract.endDate.day']}
+                          </FieldErrorMsg>
+                          <FieldErrorMsg>
                             {flatErrors['contract.endDate.year']}
                           </FieldErrorMsg>
                           <div className="display-flex flex-align-center">
                             <div className="usa-memorable-date">
-                              <div className="usa-form-group usa-form-group--month">
-                                <FieldGroup
-                                  className="usa-form-group--month"
-                                  scrollElement="contract.startDate.month"
+                              <FieldGroup
+                                className="usa-form-group--month"
+                                scrollElement="contract.startDate.month"
+                              >
+                                <Label
+                                  className="system-intake__label-margin-top-0"
+                                  htmlFor="IntakeForm-ContractStartMonth"
                                 >
-                                  <Label
-                                    className="system-intake__label-margin-top-0"
-                                    htmlFor="IntakeForm-ContractStartMonth"
-                                  >
-                                    Month
-                                  </Label>
-                                  <Field
-                                    as={DateInputMonth}
-                                    error={
-                                      !!flatErrors['contract.startDate.month']
-                                    }
-                                    id="IntakeForm-ContractStartMonth"
-                                    name="contract.startDate.month"
-                                  />
-                                </FieldGroup>
-                              </div>
+                                  Month
+                                </Label>
+                                <Field
+                                  as={DateInputMonth}
+                                  error={
+                                    !!flatErrors['contract.startDate.month']
+                                  }
+                                  id="IntakeForm-ContractStartMonth"
+                                  name="contract.startDate.month"
+                                />
+                              </FieldGroup>
+                              <FieldGroup
+                                className="usa-form-group--day"
+                                scrollElement="contract.startDate.day"
+                              >
+                                <Label
+                                  className="system-intake__label-margin-top-0"
+                                  htmlFor="IntakeForm-ContractStartDay"
+                                >
+                                  Day
+                                </Label>
+                                <Field
+                                  as={DateInputDay}
+                                  error={!!flatErrors['contract.startDate.day']}
+                                  id="IntakeForm-ContractStartDay"
+                                  name="contract.startDate.day"
+                                />
+                              </FieldGroup>
                               <FieldGroup
                                 className="usa-form-group--year"
                                 scrollElement="contract.startDate.year"
@@ -683,27 +708,40 @@ const ContractDetails = ({
 
                             <span className="margin-right-2">to</span>
                             <div className="usa-memorable-date">
-                              <div className="usa-form-group usa-form-group--month">
-                                <FieldGroup
-                                  className="usa-form-group--month"
-                                  scrollElement="contract.endDate.month"
+                              <FieldGroup
+                                className="usa-form-group--month"
+                                scrollElement="contract.endDate.month"
+                              >
+                                <Label
+                                  className="system-intake__label-margin-top-0"
+                                  htmlFor="IntakeForm-ContractEndMonth"
                                 >
-                                  <Label
-                                    className="system-intake__label-margin-top-0"
-                                    htmlFor="IntakeForm-ContractEndMonth"
-                                  >
-                                    Month
-                                  </Label>
-                                  <Field
-                                    as={DateInputMonth}
-                                    error={
-                                      !!flatErrors['contract.endDate.month']
-                                    }
-                                    id="IntakeForm-ContractEndMonth"
-                                    name="contract.endDate.month"
-                                  />
-                                </FieldGroup>
-                              </div>
+                                  Month
+                                </Label>
+                                <Field
+                                  as={DateInputMonth}
+                                  error={!!flatErrors['contract.endDate.month']}
+                                  id="IntakeForm-ContractEndMonth"
+                                  name="contract.endDate.month"
+                                />
+                              </FieldGroup>
+                              <FieldGroup
+                                className="usa-form-group--day"
+                                scrollElement="contract.endDate.day"
+                              >
+                                <Label
+                                  className="system-intake__label-margin-top-0"
+                                  htmlFor="IntakeForm-ContractEndDay"
+                                >
+                                  Day
+                                </Label>
+                                <Field
+                                  as={DateInputDay}
+                                  error={!!flatErrors['contract.endDate.day']}
+                                  id="IntakeForm-ContractEndDay"
+                                  name="contract.endDate.day"
+                                />
+                              </FieldGroup>
                               <FieldGroup
                                 className="usa-form-group--year"
                                 scrollElement="contract.endDate.year"
