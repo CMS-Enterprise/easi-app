@@ -1,13 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { ImproveEasiSurvey } from 'components/Survey';
 
 const Confirmation = () => {
   const { systemId } = useParams<{ systemId: string }>();
-  const flags = useFlags();
   const { t } = useTranslation('intake');
 
   return (
@@ -23,17 +21,10 @@ const Confirmation = () => {
         </h2>
         <ImproveEasiSurvey />
         <div>
-          {flags.taskListLite ? (
-            <Link to={`/governance-task-list/${systemId}`}>
-              <i className="fa fa-angle-left margin-x-05" aria-hidden />
-              {t('submission.confirmation.taskListCta')}
-            </Link>
-          ) : (
-            <Link to="/">
-              <i className="fa fa-angle-left margin-x-05" aria-hidden />
-              {t('submission.confirmation.homeCta')}
-            </Link>
-          )}
+          <Link to={`/governance-task-list/${systemId}`}>
+            <i className="fa fa-angle-left margin-x-05" aria-hidden />
+            {t('submission.confirmation.taskListCta')}
+          </Link>
         </div>
       </div>
     </div>

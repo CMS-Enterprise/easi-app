@@ -2,7 +2,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
@@ -37,7 +36,6 @@ const PreferredSolution = ({
   formikRef,
   dispatchSave
 }: PreferredSolutionProps) => {
-  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     preferredSolution: businessCase.preferredSolution
@@ -693,9 +691,7 @@ const PreferredSolution = ({
                 onClick={() => {
                   dispatchSave();
                   history.push(
-                    flags.taskListLite
-                      ? `/governance-task-list/${businessCase.systemIntakeId}`
-                      : '/'
+                    `/governance-task-list/${businessCase.systemIntakeId}`
                   );
                 }}
               >
