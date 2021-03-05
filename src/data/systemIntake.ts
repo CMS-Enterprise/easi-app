@@ -50,10 +50,12 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     vehicle: '',
     startDate: {
       month: '',
+      day: '',
       year: ''
     },
     endDate: {
       month: '',
+      day: '',
       year: ''
     }
   },
@@ -119,8 +121,10 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     contractor: systemIntake.contract.contractor,
     contractVehicle: systemIntake.contract.vehicle,
     contractStartMonth: systemIntake.contract.startDate.month,
+    contractStartDay: systemIntake.contract.startDate.day,
     contractStartYear: systemIntake.contract.startDate.year,
     contractEndMonth: systemIntake.contract.endDate.month,
+    contractEndDay: systemIntake.contract.endDate.day,
     contractEndYear: systemIntake.contract.endDate.year,
     grtDate: systemIntake.grtDate && systemIntake.grtDate.toISO(),
     grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO(),
@@ -189,10 +193,12 @@ export const prepareSystemIntakeForApp = (
       vehicle: systemIntake.contractVehicle || '',
       startDate: {
         month: systemIntake.contractStartMonth || '',
+        day: '',
         year: systemIntake.contractStartYear || ''
       },
       endDate: {
         month: systemIntake.contractEndMonth || '',
+        day: '',
         year: systemIntake.contractEndYear || ''
       }
     },
