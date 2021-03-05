@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useIdleTimer } from 'react-idle-timer';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button } from '@trussworks/react-uswds';
 import { DateTime, Duration } from 'luxon';
@@ -8,8 +8,6 @@ import { DateTime, Duration } from 'luxon';
 import Modal from 'components/Modal';
 import { localAuthStorageKey } from 'constants/localAuth';
 import useInterval from 'hooks/useInterval';
-import { updateLastActiveAt, updateLastRenewAt } from 'reducers/authReducer';
-import { AppState } from 'reducers/rootReducer';
 
 const accessTokenExpires = () => {
   const token = localStorage.getItem('okta-token-storage') || '';
@@ -30,13 +28,15 @@ type TimeOutWrapperProps = {
 };
 
 const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
-  const lastActiveAt = useSelector(
-    (state: AppState) => state.auth.lastActiveAt
-  );
-  const lastRenewAt = useSelector((state: AppState) => state.auth.lastRenewAt);
+  const [lastActiveAt, setLastActiveAt] = useState(DateTime.local());
+  const [lastRenewAt, setLastRenewAt] = useState(DateTime.local());
   const activeSinceLastRenew = lastActiveAt > lastRenewAt;
 
-  const dispatch = useDispatch();
+  useIdleTimer({
+    onAction: () => setLastActiveAt(DateTime.local()),
+    debounce: 500
+  });
+
   const { authState, oktaAuth } = useOktaAuth();
   const { t } = useTranslation();
 
@@ -50,8 +50,8 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     const tokenManager = await oktaAuth.tokenManager;
     tokenManager.renew('idToken');
     tokenManager.renew('accessToken');
-    dispatch(updateLastRenewAt(DateTime.local()));
-    dispatch(updateLastActiveAt(DateTime.local()));
+    setLastActiveAt(DateTime.local());
+    setLastRenewAt(DateTime.local());
   };
 
   const registerExpire = async () => {
@@ -62,7 +62,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
     tokenManager.on('expired', (key: any) => {
       if (activeSinceLastRenew) {
         tokenManager.renew(key);
-        dispatch(updateLastRenewAt(DateTime.local()));
+        setLastRenewAt(DateTime.local());
       } else {
         localStorage.removeItem(localAuthStorageKey);
         oktaAuth.signOut('/login');
