@@ -120,12 +120,16 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
     contractor: systemIntake.contract.contractor,
     contractVehicle: systemIntake.contract.vehicle,
-    contractStartMonth: systemIntake.contract.startDate.month,
-    contractStartDay: systemIntake.contract.startDate.day,
-    contractStartYear: systemIntake.contract.startDate.year,
-    contractEndMonth: systemIntake.contract.endDate.month,
-    contractEndDay: systemIntake.contract.endDate.day,
-    contractEndYear: systemIntake.contract.endDate.year,
+    contractStartDate: DateTime.fromObject({
+      day: Number(systemIntake.contract.startDate.day),
+      month: Number(systemIntake.contract.startDate.month),
+      year: Number(systemIntake.contract.startDate.year)
+    }),
+    contractEndDate: DateTime.fromObject({
+      day: Number(systemIntake.contract.endDate.day),
+      month: Number(systemIntake.contract.endDate.month),
+      year: Number(systemIntake.contract.endDate.year)
+    }),
     grtDate: systemIntake.grtDate && systemIntake.grtDate.toISO(),
     grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO(),
     submittedAt: systemIntake.submittedAt && systemIntake.submittedAt.toISO()
@@ -147,6 +151,9 @@ export const prepareSystemIntakeForApp = (
     });
     return teams;
   };
+
+  const contractStartDate = DateTime.fromISO(systemIntake.contractStartDate);
+  const contractEndDate = DateTime.fromISO(systemIntake.contractEndDate);
 
   return {
     id: systemIntake.id || '',
@@ -192,14 +199,16 @@ export const prepareSystemIntakeForApp = (
       contractor: systemIntake.contractor || '',
       vehicle: systemIntake.contractVehicle || '',
       startDate: {
-        month: systemIntake.contractStartMonth || '',
-        day: '',
-        year: systemIntake.contractStartYear || ''
+        month: contractStartDate.month
+          ? contractStartDate.month.toString()
+          : '',
+        day: contractStartDate.day ? contractStartDate.day.toString() : '',
+        year: contractStartDate.year ? contractStartDate.year.toString() : ''
       },
       endDate: {
-        month: systemIntake.contractEndMonth || '',
-        day: '',
-        year: systemIntake.contractEndYear || ''
+        month: contractEndDate.month ? contractEndDate.month.toString() : '',
+        day: contractEndDate.day ? contractEndDate.day.toString() : '',
+        year: contractEndDate.year ? contractEndDate.year.toString() : ''
       }
     },
     businessNeed: systemIntake.businessNeed || '',
