@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Button, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { useFlags } from 'launchdarkly-react-client-sdk';
@@ -139,7 +139,7 @@ const ContractDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
-                      Does this request have funding from an existing funding
+                      Will this project be funded out of an existing funding
                       source?
                     </legend>
                     <HelpText
@@ -165,57 +165,77 @@ const ContractDetails = ({
                       value
                     />
                     {values.fundingSource.isFunded && (
-                      <div className="width-card-lg margin-top-neg-2 margin-left-3 margin-bottom-1">
-                        <FieldGroup
-                          scrollElement="fundingSource.source"
-                          error={!!flatErrors['fundingSource.source']}
-                        >
-                          <Label htmlFor="IntakeForm-FundingSource">
-                            Funding Source
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['fundingSource.source']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={DropdownField}
+                      <div className="margin-top-neg-2 margin-left-3 margin-bottom-1">
+                        <div className="width-card-lg">
+                          <FieldGroup
+                            scrollElement="fundingSource.source"
                             error={!!flatErrors['fundingSource.source']}
-                            id="IntakeForm-FundingSource"
-                            name="fundingSource.source"
                           >
+                            <Label htmlFor="IntakeForm-FundingSource">
+                              Funding Source
+                            </Label>
+                            <FieldErrorMsg>
+                              {flatErrors['fundingSource.source']}
+                            </FieldErrorMsg>
                             <Field
-                              as={DropdownItem}
-                              name="Select an option"
-                              value=""
-                              disabled
-                            />
-                            {fundingSources.map(source => (
+                              as={DropdownField}
+                              error={!!flatErrors['fundingSource.source']}
+                              id="IntakeForm-FundingSource"
+                              name="fundingSource.source"
+                            >
                               <Field
                                 as={DropdownItem}
-                                key={source.split(' ').join('-')}
-                                name={source}
-                                value={source}
+                                name="Select an option"
+                                value=""
+                                disabled
                               />
-                            ))}
-                          </Field>
-                        </FieldGroup>
-                        <FieldGroup
-                          scrollElement="fundingSource.fundingNumber"
-                          error={!!flatErrors['fundingSource.fundingNumber']}
-                        >
-                          <Label htmlFor="IntakeForm-FundingNumber">
-                            Funding Number
-                          </Label>
-                          <FieldErrorMsg>
-                            {flatErrors['fundingSource.fundingNumber']}
-                          </FieldErrorMsg>
-                          <Field
-                            as={TextField}
+                              {fundingSources.map(source => (
+                                <Field
+                                  as={DropdownItem}
+                                  key={source.split(' ').join('-')}
+                                  name={source}
+                                  value={source}
+                                />
+                              ))}
+                            </Field>
+                          </FieldGroup>
+                          <FieldGroup
+                            scrollElement="fundingSource.fundingNumber"
                             error={!!flatErrors['fundingSource.fundingNumber']}
-                            id="IntakeForm-FundingNumber"
-                            maxLength={6}
-                            name="fundingSource.fundingNumber"
-                          />
-                        </FieldGroup>
+                          >
+                            <Label htmlFor="IntakeForm-FundingNumber">
+                              Funding Number
+                            </Label>
+                            <FieldErrorMsg>
+                              {flatErrors['fundingSource.fundingNumber']}
+                            </FieldErrorMsg>
+                            <Field
+                              as={TextField}
+                              error={
+                                !!flatErrors['fundingSource.fundingNumber']
+                              }
+                              id="IntakeForm-FundingNumber"
+                              maxLength={6}
+                              name="fundingSource.fundingNumber"
+                              aria-describedby="IntakeForm-FundingNumberHelp"
+                            />
+                          </FieldGroup>
+                        </div>
+                        <HelpText
+                          id="IntakeForm-FundingNumberHelp"
+                          className="margin-y-1"
+                        >
+                          <Link
+                            aria-label="Open 'CMS Operating Plan' in a new tab"
+                            href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            variant="external"
+                          >
+                            You can find your funding number in the CMS
+                            Operating Plan page (opens in a new tab)
+                          </Link>
+                        </HelpText>
                       </div>
                     )}
                     <Field

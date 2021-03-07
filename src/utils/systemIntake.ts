@@ -53,3 +53,15 @@ export const getAcronymForComponent = (componentToTranslate: string) => {
   // TODO: what do we return if not found? (should be impossible)
   return component ? component.acronym : 'Other';
 };
+
+/**
+ * Checks if business case is in the final stage
+ * i.e. intake state is equal to BIZ_CASE_FINAL_NEEDED or BIZ_CASE_FINAL_SUBMITTED
+ * @param intakeStatus - the intake's status
+ */
+export const isBusinessCaseFinal = (intakeStatus: string) => {
+  return (
+    intakeStatus === 'BIZ_CASE_FINAL_NEEDED' ||
+    intakeStatus === 'BIZ_CASE_FINAL_SUBMITTED'
+  );
+};

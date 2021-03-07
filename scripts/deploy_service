@@ -5,10 +5,10 @@
 set -u
 
 service_id="$1"
-function_qualifier="$2"
-image="${3:-}"
+function_name="$2"
+function_qualifier="${3:-\$LATEST}"
+image="${4:-}"
 
-function_name="$APP_ENV-ecs-manager"
 ecr_backend="${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com"
 
 if [[ -n "$image" ]]; then
