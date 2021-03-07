@@ -17,6 +17,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import { hasAlternativeB } from 'data/businessCase';
 import { BusinessCaseModel, RequestDescriptionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -79,9 +80,12 @@ const RequestDescription = ({
               </ErrorAlert>
             )}
             <h1 className="font-heading-xl">Request description</h1>
-            <div className="tablet:grid-col-5">
-              <MandatoryFieldsAlert />
-            </div>
+            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
+            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
+              <div className="tablet:grid-col-5">
+                <MandatoryFieldsAlert />
+              </div>
+            )}
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>
                 <FieldGroup

@@ -33,6 +33,18 @@ describe('The Estimated Lifecycle Cost review component', () => {
     year5: [{ phase: 'Operations and Maintenance', cost: '5000' }]
   };
 
+  const otherPhaseSampleData = {
+    year1: [
+      { phase: 'Other', cost: '5000' },
+      { phase: 'Other', cost: '5000' },
+      { phase: 'Other' }
+    ],
+    year2: [{ phase: 'Other', cost: '5000' }],
+    year3: [{ phase: 'Other', cost: '5000' }],
+    year4: [{ phase: 'Other', cost: '5000' }],
+    year5: [{ phase: 'Other', cost: '5000' }]
+  };
+
   it('renders without crashing', () => {
     shallow(<EstimatedLifecycleCostReview data={defaultEstimatedLifecycle} />);
   });
@@ -97,6 +109,10 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
     it('renders mobile view with O&M data', () => {
       mount(<EstimatedLifecycleCostReview data={omSampleData} />);
+    });
+
+    it('renders mobile view with Other data', () => {
+      mount(<EstimatedLifecycleCostReview data={otherPhaseSampleData} />);
     });
   });
 });

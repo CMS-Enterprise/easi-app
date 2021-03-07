@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
@@ -7,7 +6,6 @@ import {
   prepareSystemIntakeForApi,
   prepareSystemIntakeForApp
 } from 'data/systemIntake';
-import { updateLastActiveAt } from 'reducers/authReducer';
 import {
   archiveSystemIntake,
   fetchIntakeNotes,
@@ -44,7 +42,6 @@ function* createSystemIntake(action: Action<any>) {
     yield put(postSystemIntake.failure(error.message));
   } finally {
     yield put(postSystemIntake.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
@@ -57,7 +54,6 @@ function* putSystemIntake(action: Action<any>) {
     yield put(saveSystemIntake.failure(error.message));
   } finally {
     yield put(saveSystemIntake.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
@@ -74,7 +70,6 @@ function* getSystemIntake(action: Action<any>) {
     yield put(fetchSystemIntake.failure(error.message));
   } finally {
     yield put(fetchSystemIntake.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
@@ -97,7 +92,6 @@ function* deleteSystemIntake(action: Action<any>) {
     yield put(archiveSystemIntake.failure(error.message));
   } finally {
     yield put(archiveSystemIntake.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
