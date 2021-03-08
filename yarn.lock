@@ -2961,10 +2961,10 @@
   dependencies:
     "@babel/runtime" "^7.11.2"
 
-"@okta/okta-signin-widget@^5.4.0":
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-5.4.0.tgz#021eeeb60c68aff8b01abe41f5df47b3ac14ab7b"
-  integrity sha512-HzhGnaJongWBiIveGyf/x03cky1AON4X+orCEntuiyK//ZCYPjbg1htMShkLuaEqpQYP3rHvbGVVSobW7kR7aQ==
+"@okta/okta-signin-widget@^5.4.1":
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/@okta/okta-signin-widget/-/okta-signin-widget-5.4.2.tgz#30b13db1fd3a4c85e8229e9a05616cd2fae28060"
+  integrity sha512-XXyaVywRTjlY8G7YJAqz5AtaDRJlUp+OkyOtvxLRju0sGnpwLMlD/Pyt6cJNuH42iKmNMi1iEBVoKyA4vWqREg==
   dependencies:
     "@babel/polyfill" "^7.10.1"
     "@babel/runtime" "^7.10.3"
