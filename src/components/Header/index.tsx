@@ -23,11 +23,18 @@ export const Header = ({ children }: HeaderProps) => {
   const dropdownNode = useRef<any>();
 
   useEffect(() => {
+    let isMounted = true;
     if (authState.isAuthenticated) {
       oktaAuth.getUser().then((info: any) => {
-        setUserName(info.name);
+        if (isMounted) {
+          setUserName(info.name);
+        }
       });
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [authState, oktaAuth]);
 
   const handleClick = (e: Event) => {

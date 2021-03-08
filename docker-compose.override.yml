@@ -21,6 +21,9 @@ services:
     entrypoint: air
     ports:
       - 8080:8080
+    environment:
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
   easi_client:
     build:
       context: .
