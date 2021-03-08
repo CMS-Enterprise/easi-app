@@ -263,7 +263,7 @@ func (s ServicesTestSuite) TestSystemIntakeByIDFetcher() {
 		intake, err := fetchSystemIntakeByID(context.Background(), uuid.New())
 
 		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(&models.SystemIntake{}, intake)
+		s.Nil(intake)
 	})
 }
 
