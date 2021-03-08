@@ -2,7 +2,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
@@ -31,7 +30,6 @@ const GeneralRequestInfo = ({
   businessCase,
   dispatchSave
 }: GeneralRequestInfoProps) => {
-  const flags = useFlags();
   const history = useHistory();
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
@@ -186,9 +184,7 @@ const GeneralRequestInfo = ({
                 onClick={() => {
                   dispatchSave();
                   history.push(
-                    flags.taskListLite
-                      ? `/governance-task-list/${businessCase.systemIntakeId}`
-                      : '/'
+                    `/governance-task-list/${businessCase.systemIntakeId}`
                   );
                 }}
               >
