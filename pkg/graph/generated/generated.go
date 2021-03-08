@@ -281,7 +281,7 @@ type SystemIntakeResolver interface {
 	RequestType(ctx context.Context, obj *models.SystemIntake) (string, error)
 
 	Solution(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	Status(ctx context.Context, obj *models.SystemIntake) (string, error)
+	Status(ctx context.Context, obj *models.SystemIntake) (model.SystemIntakeStatusType, error)
 
 	TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -1406,6 +1406,84 @@ type CreateAccessibilityRequestDocumentPayload {
 }
 
 """
+The statuses for a system intake
+"""
+enum SystemIntakeStatusType {
+  """
+  Accepted
+  """
+  ACCEPTED
+  """
+  Business case needs changes
+  """
+  BIZ_CASE_CHANGES_NEEDED
+  """
+  Busness case draft
+  """
+  BIZ_CASE_DRAFT
+  """
+  Business case draft submitted
+  """
+  BIZ_CASE_DRAFT_SUBMITTED
+  """
+  Business case final needed
+  """
+  BIZ_CASE_FINAL_NEEDED
+  """
+  Business case final submitted
+  """
+  BIZ_CASE_FINAL_SUBMITTED
+  """
+  Intake is in draft
+  """
+  INTAKE_DRAFT
+  """
+  Intake is submitted
+  """
+  INTAKE_SUBMITTED
+  """
+  Lifecycle ID issued
+  """
+  LCID_ISSUED
+  """
+  Need business case
+  """
+  NEED_BIZ_CASE
+  """
+  Request not approved
+  """
+  NOT_APPROVED
+  """
+  Request is not an IT request
+  """
+  NOT_IT_REQUEST
+  """
+  Request requires no further governance
+  """
+  NO_GOVERNANCE
+  """
+  Request is ready for Governance Review Board meeting
+  """
+  READY_FOR_GRB
+  """
+  Request is ready for Governance Review Team meeting
+  """
+  READY_FOR_GRT
+  """
+  Request for shutdown of existing system is complete
+  """
+  SHUTDOWN_COMPLETE
+  """
+  Request for shutdown of existing system is in progress
+  """
+  SHUTDOWN_IN_PROGRESS
+  """
+  Request was withdrawn by business owner
+  """
+  WITHDRAWN
+}
+
+"""
 A SystemIntake instance
 """
 type SystemIntake {
@@ -1451,7 +1529,7 @@ type SystemIntake {
   requestType: String! # TODO: define enum
   requester: String
   solution: String
-  status: String! # TODO: define enum
+  status: SystemIntakeStatusType!
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
@@ -4981,9 +5059,9 @@ func (ec *executionContext) _SystemIntake_status(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(model.SystemIntakeStatusType)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeStatusType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatusType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -8477,6 +8555,16 @@ func (ec *executionContext) marshalNSystemEdge2ᚖgithubᚗcomᚋcmsgovᚋeasi�
 		return graphql.Null
 	}
 	return ec._SystemEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeStatusType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatusType(ctx context.Context, v interface{}) (model.SystemIntakeStatusType, error) {
+	var res model.SystemIntakeStatusType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeStatusType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatusType(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeStatusType) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TestDate) graphql.Marshaler {
