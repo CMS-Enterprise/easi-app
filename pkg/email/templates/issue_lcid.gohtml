@@ -1,6 +1,6 @@
 <p>Lifecycle ID: {{.LifecycleID}}</p>
 <p>Expiration Date: {{.ExpiresAt}}</p>
-<p>Scope: {{.Scope}}</p>
-{{if .NextSteps}}<p>Next Steps: {{.NextSteps}}</p>
+<p>Scope: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.Scope}}</pre></p>
+{{if .NextSteps}}<p>Next Steps: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.NextSteps}}</pre></p>
 {{end}}
-<p>{{.Feedback}}</p>
+<p>Feedback: <pre style="white-space: pre-wrap; word-break: keep-all;">{{.Feedback}}</pre></p>
