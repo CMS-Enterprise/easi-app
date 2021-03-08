@@ -15,7 +15,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-		expectedEmail := "<p>Test Text\n\nTest</p>\n"
+		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Test Text\n\nTest</pre></p>\n"
 
 		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress)
 
