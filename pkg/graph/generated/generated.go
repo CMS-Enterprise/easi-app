@@ -175,8 +175,8 @@ type ComplexityRoot struct {
 		Isso                        func(childComplexity int) int
 		IssoName                    func(childComplexity int) int
 		Lcid                        func(childComplexity int) int
-		LcidExpiresAt               func(childComplexity int) int
 		LcidScope                   func(childComplexity int) int
+		LifecycleExpiresAt          func(childComplexity int) int
 		OitSecurityCollaborator     func(childComplexity int) int
 		OitSecurityCollaboratorName func(childComplexity int) int
 		ProcessStatus               func(childComplexity int) int
@@ -268,7 +268,7 @@ type SystemIntakeResolver interface {
 	Isso(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	LcidExpiresAt(ctx context.Context, obj *models.SystemIntake) (*time.Time, error)
+
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -891,19 +891,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.Lcid(childComplexity), true
 
-	case "SystemIntake.lcidExpiresAt":
-		if e.complexity.SystemIntake.LcidExpiresAt == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.LcidExpiresAt(childComplexity), true
-
 	case "SystemIntake.lcidScope":
 		if e.complexity.SystemIntake.LcidScope == nil {
 			break
 		}
 
 		return e.complexity.SystemIntake.LcidScope(childComplexity), true
+
+	case "SystemIntake.lcidExpiresAt":
+		if e.complexity.SystemIntake.LifecycleExpiresAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.LifecycleExpiresAt(childComplexity), true
 
 	case "SystemIntake.oitSecurityCollaborator":
 		if e.complexity.SystemIntake.OitSecurityCollaborator == nil {
@@ -4665,14 +4665,14 @@ func (ec *executionContext) _SystemIntake_lcidExpiresAt(ctx context.Context, fie
 		Object:     "SystemIntake",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().LcidExpiresAt(rctx, obj)
+		return obj.LifecycleExpiresAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7749,16 +7749,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				return res
 			})
 		case "lcidExpiresAt":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_lcidExpiresAt(ctx, field, obj)
-				return res
-			})
+			out.Values[i] = ec._SystemIntake_lcidExpiresAt(ctx, field, obj)
 		case "lcidScope":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
