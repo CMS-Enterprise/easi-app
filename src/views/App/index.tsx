@@ -82,14 +82,12 @@ const AppRoutes = () => {
         render={({ component }: any) => component()}
         component={RequestDecision}
       />
-      {flags.taskListLite && (
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          render={({ component }: any) => component()}
-          component={GovernanceTaskList}
-        />
-      )}
+      <SecureRoute
+        path="/governance-task-list/:systemId"
+        exact
+        render={({ component }: any) => component()}
+        component={GovernanceTaskList}
+      />
       {flags.fileUploads && (
         <SecureRoute
           exact
