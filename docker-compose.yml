@@ -31,7 +31,7 @@ services:
       - AWS_REGION=us-west-2
       - AWS_SES_SOURCE=no-reply-$APP_ENV@info.easi.cms.gov
       - AWS_SES_SOURCE_ARN
-      - AWS_S3_FILE_UPLOAD_BUCKET=easi-app-test-file-uploads
+      - AWS_S3_FILE_UPLOAD_BUCKET=easi-app-file-uploads
       - PGHOST=db
       - PGPORT=5432
       - PGDATABASE=postgres
