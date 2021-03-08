@@ -278,7 +278,6 @@ type SystemIntakeResolver interface {
 	ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	RequestType(ctx context.Context, obj *models.SystemIntake) (string, error)
 
 	Solution(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	Status(ctx context.Context, obj *models.SystemIntake) (model.SystemIntakeStatusType, error)
@@ -1484,6 +1483,28 @@ enum SystemIntakeStatusType {
 }
 
 """
+The request types for a system intake
+"""
+enum SystemIntakeRequestType {
+  """
+  Request is for major changes to an existing system
+  """
+  MAJOR_CHANGES
+  """
+  Request is for a new system
+  """
+  NEW
+  """
+  Request is for re-competing an existing system
+  """
+  RECOMPETE
+  """
+  Request is to shut down an existing system
+  """
+  SHUTDOWN
+}
+
+"""
 A SystemIntake instance
 """
 type SystemIntake {
@@ -1526,7 +1547,7 @@ type SystemIntake {
   projectAcronym: String
   projectName: String
   rejectionReason: String
-  requestType: String! # TODO: define enum
+  requestType: SystemIntakeRequestType!
   requester: String
   solution: String
   status: SystemIntakeStatusType!
@@ -4941,14 +4962,14 @@ func (ec *executionContext) _SystemIntake_requestType(ctx context.Context, field
 		Object:     "SystemIntake",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().RequestType(rctx, obj)
+		return obj.RequestType, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4960,9 +4981,9 @@ func (ec *executionContext) _SystemIntake_requestType(ctx context.Context, field
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.SystemIntakeRequestType)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_requester(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7815,19 +7836,10 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				return res
 			})
 		case "requestType":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_requestType(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._SystemIntake_requestType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "requester":
 			out.Values[i] = ec._SystemIntake_requester(ctx, field, obj)
 		case "solution":
@@ -8555,6 +8567,22 @@ func (ec *executionContext) marshalNSystemEdge2ᚖgithubᚗcomᚋcmsgovᚋeasi�
 		return graphql.Null
 	}
 	return ec._SystemEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestType(ctx context.Context, v interface{}) (models.SystemIntakeRequestType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeRequestType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestType(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeRequestType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeStatusType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatusType(ctx context.Context, v interface{}) (model.SystemIntakeStatusType, error) {
