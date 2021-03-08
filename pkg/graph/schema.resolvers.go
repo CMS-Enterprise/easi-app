@@ -332,10 +332,6 @@ func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntak
 	return obj.LifecycleID.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) LcidExpiresAt(ctx context.Context, obj *models.SystemIntake) (*time.Time, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
 func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.LifecycleScope.Ptr(), nil
 }
