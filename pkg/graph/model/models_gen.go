@@ -168,3 +168,95 @@ func (e *Role) UnmarshalGQL(v interface{}) error {
 func (e Role) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
+
+// The statuses for a system intake
+type SystemIntakeStatusType string
+
+const (
+	// Accepted
+	SystemIntakeStatusTypeAccepted SystemIntakeStatusType = "ACCEPTED"
+	// Business case needs changes
+	SystemIntakeStatusTypeBizCaseChangesNeeded SystemIntakeStatusType = "BIZ_CASE_CHANGES_NEEDED"
+	// Busness case draft
+	SystemIntakeStatusTypeBizCaseDraft SystemIntakeStatusType = "BIZ_CASE_DRAFT"
+	// Business case draft submitted
+	SystemIntakeStatusTypeBizCaseDraftSubmitted SystemIntakeStatusType = "BIZ_CASE_DRAFT_SUBMITTED"
+	// Business case final needed
+	SystemIntakeStatusTypeBizCaseFinalNeeded SystemIntakeStatusType = "BIZ_CASE_FINAL_NEEDED"
+	// Business case final submitted
+	SystemIntakeStatusTypeBizCaseFinalSubmitted SystemIntakeStatusType = "BIZ_CASE_FINAL_SUBMITTED"
+	// Intake is in draft
+	SystemIntakeStatusTypeIntakeDraft SystemIntakeStatusType = "INTAKE_DRAFT"
+	// Intake is submitted
+	SystemIntakeStatusTypeIntakeSubmitted SystemIntakeStatusType = "INTAKE_SUBMITTED"
+	// Lifecycle ID issued
+	SystemIntakeStatusTypeLcidIssued SystemIntakeStatusType = "LCID_ISSUED"
+	// Need business case
+	SystemIntakeStatusTypeNeedBizCase SystemIntakeStatusType = "NEED_BIZ_CASE"
+	// Request not approved
+	SystemIntakeStatusTypeNotApproved SystemIntakeStatusType = "NOT_APPROVED"
+	// Request is not an IT request
+	SystemIntakeStatusTypeNotItRequest SystemIntakeStatusType = "NOT_IT_REQUEST"
+	// Request requires no further governance
+	SystemIntakeStatusTypeNoGovernance SystemIntakeStatusType = "NO_GOVERNANCE"
+	// Request is ready for Governance Review Board meeting
+	SystemIntakeStatusTypeReadyForGrb SystemIntakeStatusType = "READY_FOR_GRB"
+	// Request is ready for Governance Review Team meeting
+	SystemIntakeStatusTypeReadyForGrt SystemIntakeStatusType = "READY_FOR_GRT"
+	// Request for shutdown of existing system is complete
+	SystemIntakeStatusTypeShutdownComplete SystemIntakeStatusType = "SHUTDOWN_COMPLETE"
+	// Request for shutdown of existing system is in progress
+	SystemIntakeStatusTypeShutdownInProgress SystemIntakeStatusType = "SHUTDOWN_IN_PROGRESS"
+	// Request was withdrawn by business owner
+	SystemIntakeStatusTypeWithdrawn SystemIntakeStatusType = "WITHDRAWN"
+)
+
+var AllSystemIntakeStatusType = []SystemIntakeStatusType{
+	SystemIntakeStatusTypeAccepted,
+	SystemIntakeStatusTypeBizCaseChangesNeeded,
+	SystemIntakeStatusTypeBizCaseDraft,
+	SystemIntakeStatusTypeBizCaseDraftSubmitted,
+	SystemIntakeStatusTypeBizCaseFinalNeeded,
+	SystemIntakeStatusTypeBizCaseFinalSubmitted,
+	SystemIntakeStatusTypeIntakeDraft,
+	SystemIntakeStatusTypeIntakeSubmitted,
+	SystemIntakeStatusTypeLcidIssued,
+	SystemIntakeStatusTypeNeedBizCase,
+	SystemIntakeStatusTypeNotApproved,
+	SystemIntakeStatusTypeNotItRequest,
+	SystemIntakeStatusTypeNoGovernance,
+	SystemIntakeStatusTypeReadyForGrb,
+	SystemIntakeStatusTypeReadyForGrt,
+	SystemIntakeStatusTypeShutdownComplete,
+	SystemIntakeStatusTypeShutdownInProgress,
+	SystemIntakeStatusTypeWithdrawn,
+}
+
+func (e SystemIntakeStatusType) IsValid() bool {
+	switch e {
+	case SystemIntakeStatusTypeAccepted, SystemIntakeStatusTypeBizCaseChangesNeeded, SystemIntakeStatusTypeBizCaseDraft, SystemIntakeStatusTypeBizCaseDraftSubmitted, SystemIntakeStatusTypeBizCaseFinalNeeded, SystemIntakeStatusTypeBizCaseFinalSubmitted, SystemIntakeStatusTypeIntakeDraft, SystemIntakeStatusTypeIntakeSubmitted, SystemIntakeStatusTypeLcidIssued, SystemIntakeStatusTypeNeedBizCase, SystemIntakeStatusTypeNotApproved, SystemIntakeStatusTypeNotItRequest, SystemIntakeStatusTypeNoGovernance, SystemIntakeStatusTypeReadyForGrb, SystemIntakeStatusTypeReadyForGrt, SystemIntakeStatusTypeShutdownComplete, SystemIntakeStatusTypeShutdownInProgress, SystemIntakeStatusTypeWithdrawn:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeStatusType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeStatusType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeStatusType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeStatusType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeStatusType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}

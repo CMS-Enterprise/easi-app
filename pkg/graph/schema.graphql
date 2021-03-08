@@ -265,6 +265,84 @@ type CreateAccessibilityRequestDocumentPayload {
 }
 
 """
+The statuses for a system intake
+"""
+enum SystemIntakeStatusType {
+  """
+  Accepted
+  """
+  ACCEPTED
+  """
+  Business case needs changes
+  """
+  BIZ_CASE_CHANGES_NEEDED
+  """
+  Busness case draft
+  """
+  BIZ_CASE_DRAFT
+  """
+  Business case draft submitted
+  """
+  BIZ_CASE_DRAFT_SUBMITTED
+  """
+  Business case final needed
+  """
+  BIZ_CASE_FINAL_NEEDED
+  """
+  Business case final submitted
+  """
+  BIZ_CASE_FINAL_SUBMITTED
+  """
+  Intake is in draft
+  """
+  INTAKE_DRAFT
+  """
+  Intake is submitted
+  """
+  INTAKE_SUBMITTED
+  """
+  Lifecycle ID issued
+  """
+  LCID_ISSUED
+  """
+  Need business case
+  """
+  NEED_BIZ_CASE
+  """
+  Request not approved
+  """
+  NOT_APPROVED
+  """
+  Request is not an IT request
+  """
+  NOT_IT_REQUEST
+  """
+  Request requires no further governance
+  """
+  NO_GOVERNANCE
+  """
+  Request is ready for Governance Review Board meeting
+  """
+  READY_FOR_GRB
+  """
+  Request is ready for Governance Review Team meeting
+  """
+  READY_FOR_GRT
+  """
+  Request for shutdown of existing system is complete
+  """
+  SHUTDOWN_COMPLETE
+  """
+  Request for shutdown of existing system is in progress
+  """
+  SHUTDOWN_IN_PROGRESS
+  """
+  Request was withdrawn by business owner
+  """
+  WITHDRAWN
+}
+
+"""
 A SystemIntake instance
 """
 type SystemIntake {
@@ -310,7 +388,7 @@ type SystemIntake {
   requestType: String! # TODO: define enum
   requester: String
   solution: String
-  status: String! # TODO: define enum
+  status: SystemIntakeStatusType!
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String

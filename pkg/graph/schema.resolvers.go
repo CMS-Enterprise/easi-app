@@ -380,7 +380,7 @@ func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemI
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *systemIntakeResolver) Status(ctx context.Context, obj *models.SystemIntake) (string, error) {
+func (r *systemIntakeResolver) Status(ctx context.Context, obj *models.SystemIntake) (model.SystemIntakeStatusType, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
