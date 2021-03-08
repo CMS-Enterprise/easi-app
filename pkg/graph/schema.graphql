@@ -265,6 +265,59 @@ type CreateAccessibilityRequestDocumentPayload {
 }
 
 """
+A SystemIntake instance
+"""
+type SystemIntake {
+  archivedAt: Time
+  businessNeed: String
+  businessOwner: String
+  businessOwnerComponent: String
+  component: String
+  contractEndMonth: String
+  contractEndYear: String
+  contractStartMonth: String
+  contractStartYear: String
+  contractVehicle: String
+  contractor: String
+  costIncrease: String
+  costIncreaseAmount: String
+  createdAt: Time!
+  decisionNextSteps: String
+  eaCollaborator: String
+  eaCollaboratorName: String
+  eaSupportRequest: Boolean
+  euaUserId: String!
+  existingContract: String
+  existingFunding: Boolean
+  fundingNumber: String
+  fundingSource: String
+  grbDate: Time
+  grtDate: Time
+  id: UUID!
+  isso: String
+  issoName: String
+  lcid: String
+  lcidExpiresAt: Time
+  lcidScope: String
+  oitSecurityCollaborator: String
+  oitSecurityCollaboratorName: String
+  processStatus: String
+  productManager: String
+  productManagerComponent: String
+  projectAcronym: String
+  projectName: String
+  rejectionReason: String
+  requestType: String! # TODO: define enum
+  requester: String
+  solution: String
+  status: String! # TODO: define enum
+  submittedAt: Time
+  trbCollaborator: String
+  trbCollaboratorName: String
+  updatedAt: Time!
+}
+
+"""
 The root mutation
 """
 type Mutation {
@@ -292,6 +345,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
+  systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
 }
 

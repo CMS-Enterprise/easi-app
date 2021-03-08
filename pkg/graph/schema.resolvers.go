@@ -213,6 +213,10 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
+func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
 	systems, err := r.store.ListSystems(ctx)
 	if err != nil {
@@ -232,6 +236,162 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 	return conn, nil
 }
 
+func (r *systemIntakeResolver) BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) BusinessOwnerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) Component(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ContractEndMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ContractEndYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ContractStartMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ContractStartYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ContractVehicle(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) Contractor(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) CostIncrease(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) CostIncreaseAmount(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) EaCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ExistingContract(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) LcidExpiresAt(ctx context.Context, obj *models.SystemIntake) (*time.Time, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ProcessStatus(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ProductManagerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) RequestType(ctx context.Context, obj *models.SystemIntake) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) Status(ctx context.Context, obj *models.SystemIntake) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
 func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
 	return &accessibilityRequestResolver{r}
@@ -248,7 +408,11 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// SystemIntake returns generated.SystemIntakeResolver implementation.
+func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
+
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type systemIntakeResolver struct{ *Resolver }
