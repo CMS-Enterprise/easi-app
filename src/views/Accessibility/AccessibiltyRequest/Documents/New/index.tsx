@@ -50,9 +50,10 @@ const New = () => {
   );
 
   const [s3URL, setS3URL] = useState('');
-  const [generateURL, generateURLStatus] = useMutation<
-    GeneratePresignedUploadURL
-  >(GeneratePresignedUploadURLQuery);
+  const [
+    generateURL,
+    generateURLStatus
+  ] = useMutation<GeneratePresignedUploadURL>(GeneratePresignedUploadURLQuery);
   const [createDocument, createDocumentStatus] = useMutation<
     CreateAccessibilityRequestDocument,
     CreateAccessibilityRequestDocumentVariables
