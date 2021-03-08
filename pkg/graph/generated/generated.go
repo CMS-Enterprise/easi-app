@@ -280,7 +280,6 @@ type SystemIntakeResolver interface {
 	RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	Solution(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	Status(ctx context.Context, obj *models.SystemIntake) (model.SystemIntakeStatusType, error)
 
 	TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -1407,7 +1406,7 @@ type CreateAccessibilityRequestDocumentPayload {
 """
 The statuses for a system intake
 """
-enum SystemIntakeStatusType {
+enum SystemIntakeStatus {
   """
   Accepted
   """
@@ -1550,7 +1549,7 @@ type SystemIntake {
   requestType: SystemIntakeRequestType!
   requester: String
   solution: String
-  status: SystemIntakeStatusType!
+  status: SystemIntakeStatus!
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
@@ -1585,7 +1584,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  systemIntake(id: UUID!): SystemIntake
+  systemIntake(id: UUID!): SystemIntake @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
 }
 
@@ -3289,8 +3288,32 @@ func (ec *executionContext) _Query_systemIntake(ctx context.Context, field graph
 	}
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().SystemIntake(rctx, args["id"].(uuid.UUID))
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().SystemIntake(rctx, args["id"].(uuid.UUID))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*models.SystemIntake); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/models.SystemIntake`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5061,14 +5084,14 @@ func (ec *executionContext) _SystemIntake_status(ctx context.Context, field grap
 		Object:     "SystemIntake",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().Status(rctx, obj)
+		return obj.Status, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5080,9 +5103,9 @@ func (ec *executionContext) _SystemIntake_status(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(model.SystemIntakeStatusType)
+	res := resTmp.(models.SystemIntakeStatus)
 	fc.Result = res
-	return ec.marshalNSystemIntakeStatusType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatusType(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7854,19 +7877,10 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				return res
 			})
 		case "status":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_status(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._SystemIntake_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "submittedAt":
 			out.Values[i] = ec._SystemIntake_submittedAt(ctx, field, obj)
 		case "trbCollaborator":
@@ -8585,14 +8599,20 @@ func (ec *executionContext) marshalNSystemIntakeRequestType2githubᚗcomᚋcmsgo
 	return res
 }
 
-func (ec *executionContext) unmarshalNSystemIntakeStatusType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatusType(ctx context.Context, v interface{}) (model.SystemIntakeStatusType, error) {
-	var res model.SystemIntakeStatusType
-	err := res.UnmarshalGQL(v)
+func (ec *executionContext) unmarshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, v interface{}) (models.SystemIntakeStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.SystemIntakeStatus(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSystemIntakeStatusType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeStatusType(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeStatusType) graphql.Marshaler {
-	return v
+func (ec *executionContext) marshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, sel ast.SelectionSet, v models.SystemIntakeStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.TestDate) graphql.Marshaler {

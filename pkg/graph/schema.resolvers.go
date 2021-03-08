@@ -9,12 +9,11 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/google/uuid"
-	"github.com/vektah/gqlparser/v2/gqlerror"
-
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/google/uuid"
+	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
@@ -214,7 +213,7 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 }
 
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.store.FetchSystemIntakeByID(ctx, id)
 }
 
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
@@ -237,99 +236,99 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 }
 
 func (r *systemIntakeResolver) BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.BusinessNeed.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.BusinessOwner.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) BusinessOwnerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.BusinessOwnerComponent.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) Component(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.Component.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ContractEndMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ContractEndMonth.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ContractEndYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ContractEndYear.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ContractStartMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ContractStartMonth.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ContractStartYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ContractStartYear.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ContractVehicle(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ContractVehicle.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) Contractor(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.Contractor.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) CostIncrease(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.CostIncrease.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) CostIncreaseAmount(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.CostIncreaseAmount.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.DecisionNextSteps.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.EACollaborator.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) EaCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.EACollaboratorName.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.EASupportRequest.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.EUAUserID.String, nil
 }
 
 func (r *systemIntakeResolver) ExistingContract(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ExistingContract.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ExistingFunding.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.FundingNumber.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.FundingNumber.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ISSO.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ISSOName.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.LifecycleID.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) LcidExpiresAt(ctx context.Context, obj *models.SystemIntake) (*time.Time, error) {
@@ -337,55 +336,51 @@ func (r *systemIntakeResolver) LcidExpiresAt(ctx context.Context, obj *models.Sy
 }
 
 func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.LifecycleScope.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.OITSecurityCollaborator.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.OITSecurityCollaboratorName.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ProcessStatus(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ProcessStatus.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ProductManager.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ProductManagerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ProductManagerComponent.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ProjectAcronym.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ProjectName.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.RejectionReason.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *systemIntakeResolver) Status(ctx context.Context, obj *models.SystemIntake) (model.SystemIntakeStatusType, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.Solution.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.TRBCollaborator.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.TRBCollaboratorName.Ptr(), nil
 }
 
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
@@ -412,13 +407,3 @@ type accessibilityRequestDocumentResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *systemIntakeResolver) RequestType(ctx context.Context, obj *models.SystemIntake) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
