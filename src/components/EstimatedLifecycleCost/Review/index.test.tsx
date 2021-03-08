@@ -10,11 +10,7 @@ declare const global: any;
 
 describe('The Estimated Lifecycle Cost review component', () => {
   const developmentSampleData = {
-    year1: [
-      { phase: 'Development', cost: '5000' },
-      { phase: 'Development', cost: '5000' },
-      { phase: 'Development' }
-    ],
+    year1: [{ phase: 'Development', cost: '5000' }],
     year2: [{ phase: 'Development', cost: '5000' }],
     year3: [{ phase: 'Development', cost: '5000' }],
     year4: [{ phase: 'Development', cost: '5000' }],
@@ -22,11 +18,7 @@ describe('The Estimated Lifecycle Cost review component', () => {
   };
 
   const omSampleData = {
-    year1: [
-      { phase: 'Operations and Maintenance', cost: '5000' },
-      { phase: 'Operations and Maintenance', cost: '5000' },
-      { phase: 'Operations and Maintenance' }
-    ],
+    year1: [{ phase: 'Operations and Maintenance', cost: '5000' }],
     year2: [{ phase: 'Operations and Maintenance', cost: '5000' }],
     year3: [{ phase: 'Operations and Maintenance', cost: '5000' }],
     year4: [{ phase: 'Operations and Maintenance', cost: '5000' }],
@@ -34,11 +26,7 @@ describe('The Estimated Lifecycle Cost review component', () => {
   };
 
   const otherPhaseSampleData = {
-    year1: [
-      { phase: 'Other', cost: '5000' },
-      { phase: 'Other', cost: '5000' },
-      { phase: 'Other' }
-    ],
+    year1: [{ phase: 'Other', cost: '5000' }],
     year2: [{ phase: 'Other', cost: '5000' }],
     year3: [{ phase: 'Other', cost: '5000' }],
     year4: [{ phase: 'Other', cost: '5000' }],
@@ -78,7 +66,7 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
       expect(
         component.find("[data-testid='total-development-costs']").text()
-      ).toEqual('$30,000');
+      ).toEqual('$25,000');
     });
   });
 
