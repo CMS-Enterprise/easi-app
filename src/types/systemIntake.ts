@@ -87,6 +87,7 @@ export type SystemIntakeForm = {
   rejectionReason: string;
   grtDate: DateTime | null;
   grbDate: DateTime | null;
+  adminLead: string;
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
