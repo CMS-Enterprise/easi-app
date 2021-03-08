@@ -7,6 +7,7 @@ const intake = {
     component: 'Component',
     grtDate: 'GRT Date',
     grbDate: 'GRB Date',
+    adminLead: 'Admin Lead',
     status: 'Status',
     fundingNumber: 'Funding number',
     businessOwner: 'Business Owner'
@@ -106,7 +107,8 @@ const intake = {
     submittedAt: 'Submitted At',
     createdAt: 'Created At',
     decidedAt: 'Decided At',
-    archivedAt: 'Archived At'
+    archivedAt: 'Archived At',
+    adminLead: 'Admin Lead'
   },
   requestTypeForm: {
     heading: 'Make a System Request',
