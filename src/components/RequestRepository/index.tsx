@@ -70,6 +70,25 @@ const RequestRepository = () => {
     accessor: 'fundingSource.fundingNumber'
   };
 
+  const adminLeadColumn = {
+    Header: t('intake:fields.adminLead'),
+    accessor: 'adminLead',
+    Cell: ({ value }: any) => {
+      if (value) {
+        return value;
+      }
+
+      return (
+        <>
+          {/* TODO: should probably make this a button that opens up the assign admin
+                    lead automatically. Similar to the Dates functionality */}
+          <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
+          {t('governanceReviewTeam:adminLeads.notAssigned')}
+        </>
+      );
+    }
+  };
+
   const grtDateColumn = {
     Header: t('intake:fields.grtDate'),
     accessor: 'grtDate',
@@ -124,6 +143,7 @@ const RequestRepository = () => {
         requestNameColumn,
         requesterComponentColumn,
         requestTypeColumn,
+        adminLeadColumn,
         statusColumn,
         grtDateColumn,
         grbDateColumn

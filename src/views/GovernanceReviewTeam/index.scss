@@ -52,10 +52,18 @@
     }
   }
 
-  &__status-info {
+  &__status-group {
+    display: flex;
+    justify-content: space-between;
+
     dt, dd {
       display: inline;
     }
+  }
+
+  &__status-info {
+    display: flex;
+    justify-content: space-between;
 
     dd {
       margin: 0 1em 0 0;
