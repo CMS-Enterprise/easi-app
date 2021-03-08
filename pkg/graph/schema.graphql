@@ -267,7 +267,7 @@ type CreateAccessibilityRequestDocumentPayload {
 """
 The statuses for a system intake
 """
-enum SystemIntakeStatusType {
+enum SystemIntakeStatus {
   """
   Accepted
   """
@@ -410,7 +410,7 @@ type SystemIntake {
   requestType: SystemIntakeRequestType!
   requester: String
   solution: String
-  status: SystemIntakeStatusType!
+  status: SystemIntakeStatus!
   submittedAt: Time
   trbCollaborator: String
   trbCollaboratorName: String
@@ -445,7 +445,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  systemIntake(id: UUID!): SystemIntake
+  systemIntake(id: UUID!): SystemIntake @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
 }
 
