@@ -9,11 +9,12 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/google/uuid"
+	"github.com/vektah/gqlparser/v2/gqlerror"
+
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/google/uuid"
-	"github.com/vektah/gqlparser/v2/gqlerror"
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
