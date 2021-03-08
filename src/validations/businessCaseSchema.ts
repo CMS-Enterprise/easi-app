@@ -4,13 +4,9 @@ import * as Yup from 'yup';
 const phoneNumberRegex = /( *-*[0-9] *?){10,}/;
 export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
-    requestName: Yup.string()
-      .trim()
-      .required('Enter the Project Name'),
+    requestName: Yup.string().trim().required('Enter the Project Name'),
     requester: Yup.object().shape({
-      name: Yup.string()
-        .trim()
-        .required("Enter the Requester's name"),
+      name: Yup.string().trim().required("Enter the Requester's name"),
       phoneNumber: Yup.string()
         .trim()
         .matches(
@@ -22,9 +18,7 @@ export const BusinessCaseFinalValidationSchema = {
         )
     }),
     businessOwner: Yup.object().shape({
-      name: Yup.string()
-        .trim()
-        .required("Enter the Business Owner's name")
+      name: Yup.string().trim().required("Enter the Business Owner's name")
     })
   }),
   requestDescription: Yup.object().shape({
@@ -63,41 +57,31 @@ export const BusinessCaseFinalValidationSchema = {
         year1: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 1'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 1')
+            cost: Yup.string().trim().required('Enter the cost for Year 1')
           })
         ),
         year2: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 2'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 2')
+            cost: Yup.string().trim().required('Enter the cost for Year 2')
           })
         ),
         year3: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 3'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 3')
+            cost: Yup.string().trim().required('Enter the cost for Year 3')
           })
         ),
         year4: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 4'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 4')
+            cost: Yup.string().trim().required('Enter the cost for Year 4')
           })
         ),
         year5: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 5'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 5')
+            cost: Yup.string().trim().required('Enter the cost for Year 5')
           })
         )
       }),
@@ -173,41 +157,31 @@ export const BusinessCaseFinalValidationSchema = {
         year1: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 1'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 1')
+            cost: Yup.string().trim().required('Enter the cost for Year 1')
           })
         ),
         year2: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 2'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 2')
+            cost: Yup.string().trim().required('Enter the cost for Year 2')
           })
         ),
         year3: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 3'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 3')
+            cost: Yup.string().trim().required('Enter the cost for Year 3')
           })
         ),
         year4: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 4'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 4')
+            cost: Yup.string().trim().required('Enter the cost for Year 4')
           })
         ),
         year5: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 5'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 5')
+            cost: Yup.string().trim().required('Enter the cost for Year 5')
           })
         )
       }),
@@ -283,41 +257,31 @@ export const BusinessCaseFinalValidationSchema = {
         year1: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 1'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 1')
+            cost: Yup.string().trim().required('Enter the cost for Year 1')
           })
         ),
         year2: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 2'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 2')
+            cost: Yup.string().trim().required('Enter the cost for Year 2')
           })
         ),
         year3: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 3'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 3')
+            cost: Yup.string().trim().required('Enter the cost for Year 3')
           })
         ),
         year4: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 4'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 4')
+            cost: Yup.string().trim().required('Enter the cost for Year 4')
           })
         ),
         year5: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 5'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 5')
+            cost: Yup.string().trim().required('Enter the cost for Year 5')
           })
         )
       }),
@@ -393,41 +357,31 @@ export const BusinessCaseFinalValidationSchema = {
         year1: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 1'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 1')
+            cost: Yup.string().trim().required('Enter the cost for Year 1')
           })
         ),
         year2: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 2'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 2')
+            cost: Yup.string().trim().required('Enter the cost for Year 2')
           })
         ),
         year3: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 3'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 3')
+            cost: Yup.string().trim().required('Enter the cost for Year 3')
           })
         ),
         year4: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 4'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 4')
+            cost: Yup.string().trim().required('Enter the cost for Year 4')
           })
         ),
         year5: Yup.array().of(
           Yup.object().shape({
             phase: Yup.string().required('Select the type of phase for Year 5'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 5')
+            cost: Yup.string().trim().required('Enter the cost for Year 5')
           })
         )
       }),

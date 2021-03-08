@@ -4,19 +4,10 @@ import * as Yup from 'yup';
 const scoreRegex = /\d*\.?\d/;
 // eslint-disable-next-line import/prefer-default-export
 export const TestDateValidationSchema: any = Yup.object().shape({
-  testType: Yup.string()
-    .nullable()
-    .required('Select the type of test'),
-  dateMonth: Yup.string()
-    .trim()
-    .required('Please include a month'),
-  dateDay: Yup.string()
-    .trim()
-    .required('Please include a day'),
-  dateYear: Yup.string()
-    .trim()
-    .length(4)
-    .required('Please include a year'),
+  testType: Yup.string().nullable().required('Select the type of test'),
+  dateMonth: Yup.string().trim().required('Please include a month'),
+  dateDay: Yup.string().trim().required('Please include a day'),
+  dateYear: Yup.string().trim().length(4).required('Please include a year'),
   validDate: Yup.string().when(['dateDay', 'dateMonth', 'dateYear'], {
     is: (dateDay: string, dateMonth: string, dateYear: string) => {
       // Only check for a valid date if month, day, and year are filled

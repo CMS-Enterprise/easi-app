@@ -1,10 +1,8 @@
 import axios from 'axios';
-import { DateTime } from 'luxon';
 import { Action } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { prepareBusinessCaseForApi } from 'data/businessCase';
-import { updateLastActiveAt } from 'reducers/authReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import {
   fetchBusinessCase,
@@ -21,7 +19,6 @@ function* getBusinessCase(action: Action<any>) {
     yield put(fetchBusinessCase.request());
     const response = yield call(getBusinessCaseRequest, action.payload);
     yield put(fetchBusinessCase.success(response.data));
-    yield put(updateLastActiveAt(DateTime.local()));
   } catch (error) {
     yield put(fetchBusinessCase.failure(error.message));
   } finally {
@@ -43,7 +40,6 @@ function* createBusinessCase(action: Action<any>) {
     yield put(postBusinessCase.failure(error.message));
   } finally {
     yield put(postBusinessCase.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
@@ -65,7 +61,6 @@ function* updateBusinessCase(action: Action<any>) {
     yield put(putBusinessCase.failure(error.message));
   } finally {
     yield put(putBusinessCase.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
