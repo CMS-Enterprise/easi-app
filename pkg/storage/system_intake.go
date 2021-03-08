@@ -220,15 +220,21 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 	const idMatchClause = `
 		WHERE system_intakes.id=$1
 `
-	err := s.db.Get(&intake, fetchSystemIntakeSQL+idMatchClause, id)
+	err := s.db.GetContext(ctx, &intake, fetchSystemIntakeSQL+idMatchClause, id)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch system intake %s", err),
-			zap.String("id", id.String()),
-		)
 		if errors.Is(err, sql.ErrNoRows) {
+			appcontext.ZLogger(ctx).Info(
+				"No system intake found",
+				zap.Error(err),
+				zap.String("id", id.String()),
+			)
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
 		}
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch system intake",
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     id,
