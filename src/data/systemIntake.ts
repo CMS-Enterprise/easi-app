@@ -201,14 +201,20 @@ export const prepareSystemIntakeForApp = (
       startDate: {
         month: contractStartDate.month
           ? contractStartDate.month.toString()
-          : '',
+          : systemIntake.contractStartMonth || '',
         day: contractStartDate.day ? contractStartDate.day.toString() : '',
-        year: contractStartDate.year ? contractStartDate.year.toString() : ''
+        year: contractStartDate.year
+          ? contractStartDate.year.toString()
+          : systemIntake.contractStartYear || ''
       },
       endDate: {
-        month: contractEndDate.month ? contractEndDate.month.toString() : '',
+        month: contractEndDate.month
+          ? contractEndDate.month.toString()
+          : systemIntake.contractEndMonth || '',
         day: contractEndDate.day ? contractEndDate.day.toString() : '',
-        year: contractEndDate.year ? contractEndDate.year.toString() : ''
+        year: contractEndDate.year
+          ? contractEndDate.year.toString()
+          : systemIntake.contractEndYear || ''
       }
     },
     businessNeed: systemIntake.businessNeed || '',
