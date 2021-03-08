@@ -343,6 +343,28 @@ enum SystemIntakeStatusType {
 }
 
 """
+The request types for a system intake
+"""
+enum SystemIntakeRequestType {
+  """
+  Request is for major changes to an existing system
+  """
+  MAJOR_CHANGES
+  """
+  Request is for a new system
+  """
+  NEW
+  """
+  Request is for re-competing an existing system
+  """
+  RECOMPETE
+  """
+  Request is to shut down an existing system
+  """
+  SHUTDOWN
+}
+
+"""
 A SystemIntake instance
 """
 type SystemIntake {
@@ -385,7 +407,7 @@ type SystemIntake {
   projectAcronym: String
   projectName: String
   rejectionReason: String
-  requestType: String! # TODO: define enum
+  requestType: SystemIntakeRequestType!
   requester: String
   solution: String
   status: SystemIntakeStatusType!
