@@ -33,15 +33,11 @@ const Accessibility = () => {
     </Switch>
   );
 
-  const isAccessibilityTeam =
-    user.isAccessibilityTester(userGroups) ||
-    user.isAccessibilityAdmin(userGroups);
-
-  if (isUserSet && !isAccessibilityTeam) {
+  if (isUserSet && !user.isAccessibilityTeam(userGroups)) {
     return <NotFound />;
   }
 
-  if (isUserSet && isAccessibilityTeam) {
+  if (isUserSet && user.isAccessibilityTeam(userGroups)) {
     return <RenderPage />;
   }
 
