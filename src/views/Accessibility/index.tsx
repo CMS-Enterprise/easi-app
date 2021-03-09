@@ -33,11 +33,15 @@ const Accessibility = () => {
     </Switch>
   );
 
-  if (isUserSet && !user.isGrtReviewer(userGroups)) {
+  const isAccessibilityTeam =
+    user.isAccessibilityTester(userGroups) ||
+    user.isAccessibilityAdmin(userGroups);
+
+  if (isUserSet && !isAccessibilityTeam) {
     return <NotFound />;
   }
 
-  if (isUserSet && user.isGrtReviewer(userGroups)) {
+  if (isUserSet && isAccessibilityTeam) {
     return <RenderPage />;
   }
 
