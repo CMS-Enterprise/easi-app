@@ -103,6 +103,8 @@ const intake = {
     contractStart: 'Period of Performance Start',
     contractEnd: 'Period of Performance End',
     status: 'Status',
+    lcidScope: 'LCID Scope',
+    lastAdminNote: 'Last Admin Team Note',
     updatedAt: 'Updated At',
     submittedAt: 'Submitted At',
     createdAt: 'Created At',
