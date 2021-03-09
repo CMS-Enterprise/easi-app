@@ -70,7 +70,7 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			body: `{
 				"lcid": "123456",
 				"lcidExpiresAt": "2021-09-10",
-				"lcidNextSteps": "fuhgeddaboutit",
+				"decisionNextSteps": "fuhgeddaboutit",
 				"lcidScope": "telescope",
 				"feedback": "blah blah blah"
 			}`,
@@ -81,7 +81,7 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			intakeID: uuid.New().String(),
 			body: `{
 				"lcidExpiresAt": "2021-09-10",
-				"lcidNextSteps": "fuhgeddaboutit",
+				"decisionNextSteps": "fuhgeddaboutit",
 				"lcidScope": "telescope",
 				"feedback": "blah blah blah"
 			}`,
@@ -92,7 +92,7 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			intakeID: uuid.Nil.String(),
 			body: `{
 				"lcidExpiresAt": "2021-09-10",
-				"lcidNextSteps": "fuhgeddaboutit",
+				"decisionNextSteps": "fuhgeddaboutit",
 				"lcidScope": "telescope",
 				"feedback": "blah blah blah"
 			}`,
@@ -103,7 +103,7 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			intakeID: uuid.New().String(),
 			body: `{
 				"lcidExpiresAt": "2021-09-10",
-				"lcidNextSteps": "fuhgeddaboutit",
+				"decisionNextSteps": "fuhgeddaboutit",
 				"feedback": "blah blah blah"
 			}`,
 			status: http.StatusUnprocessableEntity,
@@ -122,7 +122,7 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			verb:     "POST",
 			intakeID: uuid.New().String(),
 			body: `{
-				"lcidNextSteps": "fuhgeddaboutit",
+				"decisionNextSteps": "fuhgeddaboutit",
 				"lcidScope": "telescope",
 				"feedback": "blah blah blah"
 			}`,
@@ -133,7 +133,7 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			intakeID: uuid.New().String(),
 			body: `{
 				"lcidExpiresAt": "2021-09-10",
-				"lcidNextSteps": "fuhgeddaboutit",
+				"decisionNextSteps": "fuhgeddaboutit",
 				"lcidScope": "telescope"
 			}`,
 			status: http.StatusUnprocessableEntity,
@@ -143,7 +143,7 @@ func (s HandlerTestSuite) TestLCIDHandler() {
 			intakeID: uuid.New().String(),
 			body: `{
 				"lcidExpiresAt": "ooga-wakka",
-				"lcidNextSteps": "fuhgeddaboutit",
+				"decisionNextSteps": "fuhgeddaboutit",
 				"lcidScope": "telescope",
 				"feedback": "blah blah blah"
 			}`,

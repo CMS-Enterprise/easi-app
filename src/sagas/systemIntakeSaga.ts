@@ -97,7 +97,7 @@ function* deleteSystemIntake(action: Action<any>) {
 
 type lifecycleIdData = {
   lcidExpiresAt: string;
-  lcidNextSteps?: string;
+  decisionNextSteps?: string;
   lcidScope: string;
   lcid: string;
 };
