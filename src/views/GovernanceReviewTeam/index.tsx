@@ -143,11 +143,7 @@ const GovernanceReviewTeam = () => {
       'easi-grt__nav-link--active': page === activePage
     });
 
-  if (isUserSet && !user.isGrtReviewer(userGroups)) {
-    return <NotFound />;
-  }
-
-  return (
+  const RenderPage = () => (
     <PageWrapper className="easi-grt">
       <Header />
       <MainContent>
@@ -508,6 +504,16 @@ const GovernanceReviewTeam = () => {
       <Footer />
     </PageWrapper>
   );
+
+  if (isUserSet && !user.isGrtReviewer(userGroups)) {
+    return <NotFound />;
+  }
+
+  if (isUserSet && user.isGrtReviewer(userGroups)) {
+    return <RenderPage />;
+  }
+
+  return <p>Loading...</p>;
 };
 
 export default GovernanceReviewTeam;
