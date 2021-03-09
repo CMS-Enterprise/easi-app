@@ -261,6 +261,8 @@ export const convertIntakeToCSV = (intake: SystemIntakeForm) => {
   return {
     ...intake,
     ...collaboratorTeams,
+    lastAdminNote: intake.lastAdminNote,
+    lcidScope: intake.lcidScope,
     contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
       intake.contract.hasContract
     )
