@@ -229,7 +229,7 @@ type lcidFields struct {
 	LCID      *string `json:"lcid"`
 	ExpiresAt string  `json:"lcidExpiresAt"`
 	Scope     string  `json:"lcidScope"`
-	NextSteps string  `json:"lcidNextSteps"`
+	NextSteps string  `json:"decisionNextSteps"`
 	Feedback  string  `json:"feedback"`
 }
 
@@ -301,7 +301,7 @@ func (h SystemIntakeLifecycleIDHandler) Handle() http.HandlerFunc {
 			}
 
 			if fields.NextSteps == "" {
-				valErr.WithValidation("body.lcidNextSteps", "is required")
+				valErr.WithValidation("body.decisionNextSteps", "is required")
 				valFail = true
 			} else {
 				intake.DecisionNextSteps = null.StringFrom(fields.NextSteps)
