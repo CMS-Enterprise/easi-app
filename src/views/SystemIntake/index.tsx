@@ -110,34 +110,19 @@ export const SystemIntake = () => {
     <PageWrapper className="system-intake">
       <Header />
       <MainContent className="grid-container margin-bottom-5">
-        {!['local', 'dev', 'impl'].includes(
-          process.env.REACT_APP_APP_ENV as string
-        ) && (
-          <BreadcrumbNav className="margin-y-2">
-            <li>
-              <Link to="/">Home</Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>Intake Request</li>
-          </BreadcrumbNav>
-        )}
-        {['local', 'dev', 'impl'].includes(
-          process.env.REACT_APP_APP_ENV as string
-        ) && (
-          <BreadcrumbNav className="margin-y-2">
-            <li>
-              <Link to="/">Home</Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>
-              <Link to={`/governance-task-list/${systemIntake.id || 'new'}`}>
-                Get governance approval
-              </Link>
-              <i className="fa fa-angle-right margin-x-05" aria-hidden />
-            </li>
-            <li>Intake Request</li>
-          </BreadcrumbNav>
-        )}
+        <BreadcrumbNav className="margin-y-2">
+          <li>
+            <Link to="/">Home</Link>
+            <i className="fa fa-angle-right margin-x-05" aria-hidden />
+          </li>
+          <li>
+            <Link to={`/governance-task-list/${systemIntake.id || 'new'}`}>
+              Get governance approval
+            </Link>
+            <i className="fa fa-angle-right margin-x-05" aria-hidden />
+          </li>
+          <li>Intake Request</li>
+        </BreadcrumbNav>
         {isLoading === false && (
           <Switch>
             <SecureRoute
