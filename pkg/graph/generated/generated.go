@@ -42,7 +42,6 @@ type ResolverRoot interface {
 	AccessibilityRequest() AccessibilityRequestResolver
 	AccessibilityRequestDocument() AccessibilityRequestDocumentResolver
 	BusinessCase() BusinessCaseResolver
-	EstimatedLifecycleCost() EstimatedLifecycleCostResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
@@ -290,21 +289,15 @@ type BusinessCaseResolver interface {
 	BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*string, error)
 	CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error)
 
-	LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) (*models.EstimatedLifecycleCost, error)
+	LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error)
 	PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
 	PriorityAlignment(ctx context.Context, obj *models.BusinessCase) (*string, error)
 	ProjectName(ctx context.Context, obj *models.BusinessCase) (*string, error)
 	Requester(ctx context.Context, obj *models.BusinessCase) (*string, error)
 	RequesterPhoneNumber(ctx context.Context, obj *models.BusinessCase) (*string, error)
-	Status(ctx context.Context, obj *models.BusinessCase) (string, error)
 
 	SuccessIndicators(ctx context.Context, obj *models.BusinessCase) (*string, error)
 	SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error)
-}
-type EstimatedLifecycleCostResolver interface {
-	Phase(ctx context.Context, obj *models.EstimatedLifecycleCost) (*string, error)
-	Solution(ctx context.Context, obj *models.EstimatedLifecycleCost) (*string, error)
-	Year(ctx context.Context, obj *models.EstimatedLifecycleCost) (*string, error)
 }
 type MutationResolver interface {
 	CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
@@ -1804,15 +1797,95 @@ type BusinessCaseSolution {
 }
 
 """
+enum 
+"""
+enum LifecycleCostPhase {
+  """
+  development
+  """
+  DEVELOPMENT
+  """
+  Operations and Maintentance
+  """
+  OPERATIONS_AND_MAINTENANCE
+  """
+  Other
+  """
+  OTHER
+}
+
+"""
+enum 
+"""
+enum LifecycleCostSolution {
+  """
+  A
+  """
+  A
+  """
+  As is
+  """
+  AS_IS
+  """
+  B
+  """
+  B
+  """
+  Preferred
+  """
+  PREFERRED
+}
+
+"""
+enum 
+"""
+enum LifecycleCostYear {
+  """
+  1
+  """
+  LIFECYCLE_COST_YEAR_1
+  """
+  2
+  """
+  LIFECYCLE_COST_YEAR_2
+  """
+  3
+  """
+  LIFECYCLE_COST_YEAR_3
+  """
+  4
+  """
+  LIFECYCLE_COST_YEAR_4
+  """
+  5
+  """
+  LIFECYCLE_COST_YEAR_5
+}
+
+"""
 The shape of an estimated lifecycle cost row
 """
 type EstimatedLifecycleCost {
   businessCaseId: UUID!
   cost: Int
   id: UUID!
-  phase: String # change to enum
-  solution: String # change to enum
-  year: String # change to enum
+  phase: LifecycleCostPhase
+  solution: LifecycleCostSolution
+  year: LifecycleCostYear
+}
+
+"""
+Business Case status options
+"""
+enum BusinessCaseStatus {
+  """
+  closed
+  """
+  CLOSED
+  """
+  open
+  """
+  OPEN
 }
 
 """
@@ -1830,13 +1903,13 @@ type BusinessCase {
   id: UUID!
   initialSubmittedAt: Time
   lastSubmittedAt: Time
-  lifecycleCostLines: EstimatedLifecycleCost
+  lifecycleCostLines: [EstimatedLifecycleCost]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
   projectName: String
   requester: String
   requesterPhoneNumber: String
-  status: String! # change to enum
+  status: BusinessCaseStatus!
   submittedAt: Time
   successIndicators: String
   systemIntake: SystemIntake!
@@ -3448,9 +3521,9 @@ func (ec *executionContext) _BusinessCase_lifecycleCostLines(ctx context.Context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*models.EstimatedLifecycleCost)
+	res := resTmp.([]*models.EstimatedLifecycleCost)
 	fc.Result = res
-	return ec.marshalOEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx, field.Selections, res)
+	return ec.marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCase_preferredSolution(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
@@ -3624,14 +3697,14 @@ func (ec *executionContext) _BusinessCase_status(ctx context.Context, field grap
 		Object:     "BusinessCase",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.BusinessCase().Status(rctx, obj)
+		return obj.Status, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3643,9 +3716,9 @@ func (ec *executionContext) _BusinessCase_status(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(models.BusinessCaseStatus)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCase_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
@@ -4541,14 +4614,14 @@ func (ec *executionContext) _EstimatedLifecycleCost_phase(ctx context.Context, f
 		Object:     "EstimatedLifecycleCost",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.EstimatedLifecycleCost().Phase(rctx, obj)
+		return obj.Phase, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4557,9 +4630,9 @@ func (ec *executionContext) _EstimatedLifecycleCost_phase(ctx context.Context, f
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.LifecycleCostPhase)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOLifecycleCostPhase2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostPhase(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _EstimatedLifecycleCost_solution(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
@@ -4573,14 +4646,14 @@ func (ec *executionContext) _EstimatedLifecycleCost_solution(ctx context.Context
 		Object:     "EstimatedLifecycleCost",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.EstimatedLifecycleCost().Solution(rctx, obj)
+		return obj.Solution, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4589,9 +4662,9 @@ func (ec *executionContext) _EstimatedLifecycleCost_solution(ctx context.Context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(models.LifecycleCostSolution)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOLifecycleCostSolution2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostSolution(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _EstimatedLifecycleCost_year(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
@@ -4605,14 +4678,14 @@ func (ec *executionContext) _EstimatedLifecycleCost_year(ctx context.Context, fi
 		Object:     "EstimatedLifecycleCost",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.EstimatedLifecycleCost().Year(rctx, obj)
+		return obj.Year, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4621,9 +4694,9 @@ func (ec *executionContext) _EstimatedLifecycleCost_year(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(models.LifecycleCostYear)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GeneratePresignedUploadURLPayload_url(ctx context.Context, field graphql.CollectedField, obj *model.GeneratePresignedUploadURLPayload) (ret graphql.Marshaler) {
@@ -9108,19 +9181,10 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 				return res
 			})
 		case "status":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._BusinessCase_status(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
-			})
+			out.Values[i] = ec._BusinessCase_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "submittedAt":
 			out.Values[i] = ec._BusinessCase_submittedAt(ctx, field, obj)
 		case "successIndicators":
@@ -9334,48 +9398,21 @@ func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast
 		case "businessCaseId":
 			out.Values[i] = ec._EstimatedLifecycleCost_businessCaseId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "cost":
 			out.Values[i] = ec._EstimatedLifecycleCost_cost(ctx, field, obj)
 		case "id":
 			out.Values[i] = ec._EstimatedLifecycleCost_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "phase":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._EstimatedLifecycleCost_phase(ctx, field, obj)
-				return res
-			})
+			out.Values[i] = ec._EstimatedLifecycleCost_phase(ctx, field, obj)
 		case "solution":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._EstimatedLifecycleCost_solution(ctx, field, obj)
-				return res
-			})
+			out.Values[i] = ec._EstimatedLifecycleCost_solution(ctx, field, obj)
 		case "year":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._EstimatedLifecycleCost_year(ctx, field, obj)
-				return res
-			})
+			out.Values[i] = ec._EstimatedLifecycleCost_year(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -10603,6 +10640,22 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx context.Context, v interface{}) (models.BusinessCaseStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.BusinessCaseStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx context.Context, sel ast.SelectionSet, v models.BusinessCaseStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) marshalNBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessOwner(ctx context.Context, sel ast.SelectionSet, v *models.BusinessOwner) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -11248,6 +11301,46 @@ func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsg
 	return ec._CreateTestDatePayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v *models.EstimatedLifecycleCost) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -11275,6 +11368,42 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
+}
+
+func (ec *executionContext) unmarshalOLifecycleCostPhase2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostPhase(ctx context.Context, v interface{}) (*models.LifecycleCostPhase, error) {
+	if v == nil {
+		return nil, nil
+	}
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.LifecycleCostPhase(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOLifecycleCostPhase2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostPhase(ctx context.Context, sel ast.SelectionSet, v *models.LifecycleCostPhase) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalString(string(*v))
+}
+
+func (ec *executionContext) unmarshalOLifecycleCostSolution2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostSolution(ctx context.Context, v interface{}) (models.LifecycleCostSolution, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.LifecycleCostSolution(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOLifecycleCostSolution2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostSolution(ctx context.Context, sel ast.SelectionSet, v models.LifecycleCostSolution) graphql.Marshaler {
+	return graphql.MarshalString(string(v))
+}
+
+func (ec *executionContext) unmarshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx context.Context, v interface{}) (models.LifecycleCostYear, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.LifecycleCostYear(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx context.Context, sel ast.SelectionSet, v models.LifecycleCostYear) graphql.Marshaler {
+	return graphql.MarshalString(string(v))
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

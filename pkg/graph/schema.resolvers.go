@@ -129,18 +129,18 @@ func (r *businessCaseResolver) AsIsSolution(ctx context.Context, obj *models.Bus
 }
 
 func (r *businessCaseResolver) BusinessNeed(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.BusinessNeed.Ptr(), nil
 }
 
 func (r *businessCaseResolver) BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.BusinessOwner.Ptr(), nil
 }
 
 func (r *businessCaseResolver) CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.CMSBenefit.Ptr(), nil
 }
 
-func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) (*models.EstimatedLifecycleCost, error) {
+func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
@@ -149,42 +149,26 @@ func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *model
 }
 
 func (r *businessCaseResolver) PriorityAlignment(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.PriorityAlignment.Ptr(), nil
 }
 
 func (r *businessCaseResolver) ProjectName(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.ProjectName.Ptr(), nil
 }
 
 func (r *businessCaseResolver) Requester(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.Requester.Ptr(), nil
 }
 
 func (r *businessCaseResolver) RequesterPhoneNumber(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *businessCaseResolver) Status(ctx context.Context, obj *models.BusinessCase) (string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.RequesterPhoneNumber.Ptr(), nil
 }
 
 func (r *businessCaseResolver) SuccessIndicators(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
+	return obj.SuccessIndicators.Ptr(), nil
 }
 
 func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *estimatedLifecycleCostResolver) Phase(ctx context.Context, obj *models.EstimatedLifecycleCost) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *estimatedLifecycleCostResolver) Solution(ctx context.Context, obj *models.EstimatedLifecycleCost) (*string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
-
-func (r *estimatedLifecycleCostResolver) Year(ctx context.Context, obj *models.EstimatedLifecycleCost) (*string, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
@@ -469,11 +453,6 @@ func (r *Resolver) AccessibilityRequestDocument() generated.AccessibilityRequest
 // BusinessCase returns generated.BusinessCaseResolver implementation.
 func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
 
-// EstimatedLifecycleCost returns generated.EstimatedLifecycleCostResolver implementation.
-func (r *Resolver) EstimatedLifecycleCost() generated.EstimatedLifecycleCostResolver {
-	return &estimatedLifecycleCostResolver{r}
-}
-
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -486,7 +465,6 @@ func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &syste
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type businessCaseResolver struct{ *Resolver }
-type estimatedLifecycleCostResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
