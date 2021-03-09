@@ -25,6 +25,8 @@ import {
   isIntakeOpen,
   translateRequestType
 } from 'utils/systemIntake';
+import user from 'utils/user';
+import NotFound from 'views/NotFound';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -44,6 +46,9 @@ const GovernanceReviewTeam = () => {
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
   const [isModalOpen, setModalOpen] = useState(false);
+
+  const userGroups = useSelector((state: AppState) => state.auth.groups);
+  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -137,6 +142,10 @@ const GovernanceReviewTeam = () => {
     classnames('easi-grt__nav-link', {
       'easi-grt__nav-link--active': page === activePage
     });
+
+  if (isUserSet && !user.isGrtReviewer(userGroups)) {
+    return <NotFound />;
+  }
 
   return (
     <PageWrapper className="easi-grt">
