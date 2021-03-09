@@ -213,6 +213,10 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
+func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	return r.store.FetchSystemIntakeByID(ctx, id)
+}
+
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
 	systems, err := r.store.ListSystems(ctx)
 	if err != nil {
@@ -232,6 +236,150 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 	return conn, nil
 }
 
+func (r *systemIntakeResolver) BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.BusinessNeed.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.BusinessOwner.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) BusinessOwnerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.BusinessOwnerComponent.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) Component(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.Component.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ContractEndMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ContractEndMonth.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ContractEndYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ContractEndYear.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ContractStartMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ContractStartMonth.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ContractStartYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ContractStartYear.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ContractVehicle(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ContractVehicle.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) Contractor(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.Contractor.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) CostIncrease(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.CostIncrease.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) CostIncreaseAmount(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.CostIncreaseAmount.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.DecisionNextSteps.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.EACollaborator.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) EaCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.EACollaboratorName.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.EASupportRequest.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error) {
+	return obj.EUAUserID.String, nil
+}
+
+func (r *systemIntakeResolver) ExistingContract(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ExistingContract.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.ExistingFunding.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.FundingNumber.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.FundingNumber.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ISSO.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ISSOName.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.LifecycleID.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.LifecycleScope.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.OITSecurityCollaborator.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.OITSecurityCollaboratorName.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ProcessStatus(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ProcessStatus.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ProductManager.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ProductManagerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ProductManagerComponent.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ProjectAcronym.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ProjectName.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.RejectionReason.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.Solution.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.TRBCollaborator.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.TRBCollaboratorName.Ptr(), nil
+}
+
 // AccessibilityRequest returns generated.AccessibilityRequestResolver implementation.
 func (r *Resolver) AccessibilityRequest() generated.AccessibilityRequestResolver {
 	return &accessibilityRequestResolver{r}
@@ -248,7 +396,11 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// SystemIntake returns generated.SystemIntakeResolver implementation.
+func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &systemIntakeResolver{r} }
+
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type systemIntakeResolver struct{ *Resolver }

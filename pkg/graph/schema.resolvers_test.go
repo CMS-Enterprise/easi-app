@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/99designs/gqlgen/client"
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/client/metadata"
@@ -22,6 +23,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -123,7 +125,11 @@ func TestGraphQLTestSuite(t *testing.T) {
 	mockClient := mockS3Client{}
 	s3Client := upload.NewS3ClientUsingClient(&mockClient, s3Config)
 
-	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, ResolverService{}, &s3Client)})
+	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
+		return next(ctx)
+	}}
+
+	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, ResolverService{}, &s3Client), Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
 	storeTestSuite := &GraphQLTestSuite{
@@ -427,4 +433,58 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 	s.NotEmpty(document.UploadedAt)
 	s.Equal(accessibilityRequest.ID.String(), document.RequestID)
 	s.Equal("https://signed.example.com/signed/get/123", document.URL)
+}
+
+func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
+	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
+	projectName := "Big Project"
+	businessOwner := "Firstname Lastname"
+	businessOwnerComponent := "OIT"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:            null.StringFrom(projectName),
+		Status:                 models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		BusinessOwner:          null.StringFrom(businessOwner),
+		BusinessOwnerComponent: null.StringFrom(businessOwnerComponent),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		SystemIntake struct {
+			ID                     string
+			ProjectName            string
+			Status                 string
+			RequestType            string
+			BusinessOwner          string
+			BusinessOwnerComponent string
+			BusinessNeed           *string
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				projectName
+				status
+				requestType
+				businessOwner
+				businessOwnerComponent
+				businessNeed
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
+	s.Equal(projectName, resp.SystemIntake.ProjectName)
+	s.Equal("INTAKE_SUBMITTED", resp.SystemIntake.Status)
+	s.Equal("NEW", resp.SystemIntake.RequestType)
+	s.Equal(businessOwner, resp.SystemIntake.BusinessOwner)
+	s.Equal(businessOwnerComponent, resp.SystemIntake.BusinessOwnerComponent)
+	s.Nil(resp.SystemIntake.BusinessNeed)
 }
