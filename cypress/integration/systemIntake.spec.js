@@ -198,6 +198,10 @@ describe('The System Intake Form', () => {
       .type('1')
       .should('have.value', '1');
 
+    cy.get('#IntakeForm-ContractStartDay')
+      .type('2')
+      .should('have.value', '2');
+
     cy.get('#IntakeForm-ContractStartYear')
       .type('2020')
       .should('have.value', '2020');
@@ -205,6 +209,10 @@ describe('The System Intake Form', () => {
     cy.get('#IntakeForm-ContractEndMonth')
       .type('12')
       .should('have.value', '12');
+
+    cy.get('#IntakeForm-ContractEndDay')
+      .type('29')
+      .should('have.value', '29');
 
     cy.get('#IntakeForm-ContractEndYear')
       .type('2021')
