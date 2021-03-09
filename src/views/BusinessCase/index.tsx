@@ -110,36 +110,19 @@ export const BusinessCase = () => {
       <Header />
       <MainContent className="margin-bottom-5">
         <div className="grid-container">
-          {!['local', 'dev', 'impl'].includes(
-            process.env.REACT_APP_APP_ENV as string
-          ) && (
-            <BreadcrumbNav className="margin-y-2">
-              <li>
-                <Link to="/">Home</Link>
-                <i className="fa fa-angle-right margin-x-05" aria-hidden />
-              </li>
-              <li>Business Case</li>
-            </BreadcrumbNav>
-          )}
-          {['local', 'dev', 'impl'].includes(
-            process.env.REACT_APP_APP_ENV as string
-          ) && (
-            <BreadcrumbNav className="margin-y-2">
-              <li>
-                <Link to="/">Home</Link>
-                <i className="fa fa-angle-right margin-x-05" aria-hidden />
-              </li>
-              <li>
-                <Link
-                  to={`/governance-task-list/${businessCase.systemIntakeId}`}
-                >
-                  Get governance approval
-                </Link>
-                <i className="fa fa-angle-right margin-x-05" aria-hidden />
-              </li>
-              <li>Business Case</li>
-            </BreadcrumbNav>
-          )}
+          <BreadcrumbNav className="margin-y-2">
+            <li>
+              <Link to="/">Home</Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>
+              <Link to={`/governance-task-list/${businessCase.systemIntakeId}`}>
+                Get governance approval
+              </Link>
+              <i className="fa fa-angle-right margin-x-05" aria-hidden />
+            </li>
+            <li>Business Case</li>
+          </BreadcrumbNav>
         </div>
         {businessCase.id && (
           <Switch>
