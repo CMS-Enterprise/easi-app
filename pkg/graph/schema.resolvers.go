@@ -117,15 +117,47 @@ func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, o
 }
 
 func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.BusinessCaseSolution{
+		AcquisitionApproach:     obj.AlternativeAAcquisitionApproach.Ptr(),
+		Cons:                    obj.AlternativeACons.Ptr(),
+		CostSavings:             obj.AlternativeACostSavings.Ptr(),
+		HasUI:                   obj.AlternativeAHasUI.Ptr(),
+		HostingCloudServiceType: obj.AlternativeAHostingCloudServiceType.Ptr(),
+		HostingLocation:         obj.AlternativeAHostingLocation.Ptr(),
+		HostingType:             obj.AlternativeAHostingType.Ptr(),
+		Pros:                    obj.AlternativeAPros.Ptr(),
+		SecurityIsApproved:      obj.AlternativeASecurityIsApproved.Ptr(),
+		SecurityIsBeingReviewed: obj.AlternativeASecurityIsBeingReviewed.Ptr(),
+		Summary:                 obj.AlternativeASummary.Ptr(),
+		Title:                   obj.AlternativeATitle.Ptr(),
+	}, nil
 }
 
 func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.BusinessCaseSolution{
+		AcquisitionApproach:     obj.AlternativeBAcquisitionApproach.Ptr(),
+		Cons:                    obj.AlternativeBCons.Ptr(),
+		CostSavings:             obj.AlternativeBCostSavings.Ptr(),
+		HasUI:                   obj.AlternativeBHasUI.Ptr(),
+		HostingCloudServiceType: obj.AlternativeBHostingCloudServiceType.Ptr(),
+		HostingLocation:         obj.AlternativeBHostingLocation.Ptr(),
+		HostingType:             obj.AlternativeBHostingType.Ptr(),
+		Pros:                    obj.AlternativeBPros.Ptr(),
+		SecurityIsApproved:      obj.AlternativeBSecurityIsApproved.Ptr(),
+		SecurityIsBeingReviewed: obj.AlternativeBSecurityIsBeingReviewed.Ptr(),
+		Summary:                 obj.AlternativeBSummary.Ptr(),
+		Title:                   obj.AlternativeBTitle.Ptr(),
+	}, nil
 }
 
 func (r *businessCaseResolver) AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.BusinessCaseSolution{
+		Cons:        obj.AsIsCons.Ptr(),
+		CostSavings: obj.AsIsCostSavings.Ptr(),
+		Pros:        obj.AsIsPros.Ptr(),
+		Summary:     obj.AsIsSummary.Ptr(),
+		Title:       obj.AsIsTitle.Ptr(),
+	}, nil
 }
 
 func (r *businessCaseResolver) BusinessNeed(ctx context.Context, obj *models.BusinessCase) (*string, error) {
@@ -145,7 +177,20 @@ func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *mode
 }
 
 func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &model.BusinessCaseSolution{
+		AcquisitionApproach:     obj.PreferredAcquisitionApproach.Ptr(),
+		Cons:                    obj.PreferredCons.Ptr(),
+		CostSavings:             obj.PreferredCostSavings.Ptr(),
+		HasUI:                   obj.PreferredHasUI.Ptr(),
+		HostingCloudServiceType: obj.PreferredHostingCloudServiceType.Ptr(),
+		HostingLocation:         obj.PreferredHostingLocation.Ptr(),
+		HostingType:             obj.PreferredHostingType.Ptr(),
+		Pros:                    obj.PreferredPros.Ptr(),
+		SecurityIsApproved:      obj.PreferredSecurityIsApproved.Ptr(),
+		SecurityIsBeingReviewed: obj.PreferredSecurityIsBeingReviewed.Ptr(),
+		Summary:                 obj.PreferredSummary.Ptr(),
+		Title:                   obj.PreferredTitle.Ptr(),
+	}, nil
 }
 
 func (r *businessCaseResolver) PriorityAlignment(ctx context.Context, obj *models.BusinessCase) (*string, error) {
@@ -169,7 +214,7 @@ func (r *businessCaseResolver) SuccessIndicators(ctx context.Context, obj *model
 }
 
 func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
 }
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
@@ -293,7 +338,7 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 }
 
 func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.store.FetchOpenBusinessCaseByIntakeID(ctx, obj.ID)
 }
 
 func (r *systemIntakeResolver) BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error) {
