@@ -116,6 +116,78 @@ func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, o
 	return obj.CreatedAt, nil
 }
 
+func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) BusinessNeed(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) (*models.EstimatedLifecycleCost, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) PriorityAlignment(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) ProjectName(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) Requester(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) RequesterPhoneNumber(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) Status(ctx context.Context, obj *models.BusinessCase) (string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) SuccessIndicators(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *estimatedLifecycleCostResolver) Phase(ctx context.Context, obj *models.EstimatedLifecycleCost) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *estimatedLifecycleCostResolver) Solution(ctx context.Context, obj *models.EstimatedLifecycleCost) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *estimatedLifecycleCostResolver) Year(ctx context.Context, obj *models.EstimatedLifecycleCost) (*string, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
 		Name:     input.Name,
@@ -234,6 +306,10 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 		})
 	}
 	return conn, nil
+}
+
+func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *systemIntakeResolver) BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error) {
@@ -390,6 +466,14 @@ func (r *Resolver) AccessibilityRequestDocument() generated.AccessibilityRequest
 	return &accessibilityRequestDocumentResolver{r}
 }
 
+// BusinessCase returns generated.BusinessCaseResolver implementation.
+func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
+
+// EstimatedLifecycleCost returns generated.EstimatedLifecycleCostResolver implementation.
+func (r *Resolver) EstimatedLifecycleCost() generated.EstimatedLifecycleCostResolver {
+	return &estimatedLifecycleCostResolver{r}
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -401,6 +485,8 @@ func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &syste
 
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
+type businessCaseResolver struct{ *Resolver }
+type estimatedLifecycleCostResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }

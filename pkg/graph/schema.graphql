@@ -265,6 +265,64 @@ type CreateAccessibilityRequestDocumentPayload {
 }
 
 """
+The shape of a solution for a business case
+"""
+type BusinessCaseSolution {
+  acquisitionApproach: String
+  cons: String
+  costSavings: String
+  hasUi: String
+  hostingCloudServiceType: String
+  hostingLocation: String
+  hostingType: String
+  pros: String
+  securityIsApproved: Boolean
+  securityIsBeingReviewed: String
+  summary: String
+  title: String
+}
+
+"""
+The shape of an estimated lifecycle cost row
+"""
+type EstimatedLifecycleCost {
+  businessCaseId: UUID!
+  cost: Int
+  id: UUID!
+  phase: String # change to enum
+  solution: String # change to enum
+  year: String # change to enum
+}
+
+"""
+A Business Case instance
+"""
+type BusinessCase {
+  alternativeASolution: BusinessCaseSolution
+  alternativeBSolution: BusinessCaseSolution
+  asIsSolution: BusinessCaseSolution
+  businessNeed: String
+  businessOwner: String
+  cmsBenefit: String
+  createdAt: Time!
+  euaUserId: String!
+  id: UUID!
+  initialSubmittedAt: Time
+  lastSubmittedAt: Time
+  lifecycleCostLines: EstimatedLifecycleCost
+  preferredSolution: BusinessCaseSolution
+  priorityAlignment: String
+  projectName: String
+  requester: String
+  requesterPhoneNumber: String
+  status: String! # change to enum
+  submittedAt: Time
+  successIndicators: String
+  systemIntake: SystemIntake!
+  updatedAt: Time!
+}
+
+"""
 The statuses for a system intake
 """
 enum SystemIntakeStatus {
@@ -369,6 +427,7 @@ A SystemIntake instance
 """
 type SystemIntake {
   archivedAt: Time
+  businessCase: BusinessCase
   businessNeed: String
   businessOwner: String
   businessOwnerComponent: String
