@@ -1,11 +1,8 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import { AppState } from 'reducers/rootReducer';
-import user from 'utils/user';
 import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
@@ -34,8 +31,6 @@ import './index.scss';
 
 const AppRoutes = () => {
   const flags = useFlags();
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   return (
     <Switch>
@@ -78,12 +73,10 @@ const AppRoutes = () => {
           render={() => <DocumentPrototype />}
         />
       )}
-      {isUserSet && user.isGrtReviewer(userGroups) && (
-        <SecureRoute
-          path="/governance-review-team/:systemId/:activePage"
-          render={() => <GovernanceReviewTeam />}
-        />
-      )}
+      <SecureRoute
+        path="/governance-review-team/:systemId/:activePage"
+        render={() => <GovernanceReviewTeam />}
+      />
       <SecureRoute
         exact
         path="/system/request-type"
