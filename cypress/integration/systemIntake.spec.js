@@ -106,10 +106,12 @@ describe('The System Intake Form', () => {
           vehicle: '',
           startDate: {
             month: '',
+            day: '',
             year: ''
           },
           endDate: {
             month: '',
+            day: '',
             year: ''
           }
         },
