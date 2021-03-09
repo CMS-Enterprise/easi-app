@@ -34,7 +34,7 @@ const AppRoutes = () => {
 
   return (
     <Switch>
-      <Route path="/508" component={Accessibility} />
+      <SecureRoute path="/508" component={Accessibility} />
 
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
