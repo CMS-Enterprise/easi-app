@@ -6,9 +6,7 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
-import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
-import Create from 'views/Accessibility/AccessibiltyRequest/Create';
-import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibiltyRequest/Documents/New';
+import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -29,7 +27,6 @@ import RequestTypeForm from 'views/RequestTypeForm';
 import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TermsAndConditions from 'views/TermsAndConditions';
-import TestDate from 'views/TestDate';
 import TimeOutWrapper from 'views/TimeOutWrapper';
 import UserInfoWrapper from 'views/UserInfoWrapper';
 
@@ -42,21 +39,7 @@ const AppRoutes = () => {
 
   return (
     <Switch>
-      {/* START: 508 Process Pages */}
-      <SecureRoute path="/508/requests/new" exact component={Create} />
-      <SecureRoute
-        path="/508/requests/:accessibilityRequestId/documents/new"
-        component={AccessibilityRequestsDocumentsNew}
-      />
-      <SecureRoute
-        path="/508/requests/:accessibilityRequestId/test-date"
-        render={() => <TestDate />}
-      />
-      <SecureRoute
-        path="/508/requests/:accessibilityRequestId"
-        render={() => <AccessibilityRequestDetailPage />}
-      />
-      {/* END : 508 Process Pages */}
+      <Route path="/508" component={Accessibility} />
 
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
