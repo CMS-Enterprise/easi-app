@@ -39,72 +39,70 @@ const AppRoutes = () => {
   const flags = useFlags();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const is508User =
+    isUserSet &&
+    (user.isAccessibilityAdmin(userGroups) ||
+      user.isAccessibilityTester(userGroups));
+  const isGrtReviewer = isUserSet && user.isGrtReviewer(userGroups);
 
   return (
     <Switch>
-      {/* START: 508 Process Pages */}
-      <SecureRoute path="/508/requests/new" exact component={Create} />
-      <SecureRoute
-        path="/508/requests/:accessibilityRequestId/documents/new"
-        component={AccessibilityRequestsDocumentsNew}
-      />
-      <SecureRoute
-        path="/508/requests/:accessibilityRequestId/test-date"
-        render={() => <TestDate />}
-      />
-      <SecureRoute
-        path="/508/requests/:accessibilityRequestId"
-        render={() => <AccessibilityRequestDetailPage />}
-      />
-      {/* END : 508 Process Pages */}
+      {/* General Pages */}
 
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
-      <Route path="/governance-overview" exact component={GovernanceOverview} />
+      <Route path="/implicit/callback" component={LoginCallback} />
 
-      {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+      {/* 508 Process Pages */}
+      {is508User && (
+        <SecureRoute path="/508/requests/new" exact component={Create} />
+      )}
+
+      {is508User && (
+        <SecureRoute
+          path="/508/requests/:accessibilityRequestId/documents/new"
+          component={AccessibilityRequestsDocumentsNew}
+        />
+      )}
+      {is508User && (
+        <SecureRoute
+          path="/508/requests/:accessibilityRequestId/test-date"
+          render={TestDate}
+        />
+      )}
+      {is508User && (
+        <SecureRoute
+          path="/508/requests/:accessibilityRequestId"
+          render={AccessibilityRequestDetailPage}
+        />
+      )}
+
+      {/* GRT/GRB */}
+      <Route path="/governance-overview" exact component={GovernanceOverview} />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grt"
-        render={({ component }: any) => component()}
         component={PrepareForGRT}
       />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grb"
-        render={({ component }: any) => component()}
         component={PrepareForGRB}
       />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/request-decision"
-        render={({ component }: any) => component()}
         component={RequestDecision}
       />
       <SecureRoute
         path="/governance-task-list/:systemId"
         exact
-        render={({ component }: any) => component()}
         component={GovernanceTaskList}
       />
-      {flags.fileUploads && (
-        <SecureRoute
-          exact
-          path="/document-prototype"
-          render={() => <DocumentPrototype />}
-        />
-      )}
-      {isUserSet && user.isGrtReviewer(userGroups) && (
-        <SecureRoute
-          path="/governance-review-team/:systemId/:activePage"
-          render={() => <GovernanceReviewTeam />}
-        />
-      )}
       <SecureRoute
         exact
         path="/system/request-type"
-        render={({ component }: any) => component()}
         component={RequestTypeForm}
       />
       <Redirect
@@ -114,7 +112,6 @@ const AppRoutes = () => {
       />
       <SecureRoute
         path="/system/:systemId/:formPage"
-        render={({ component }: any) => component()}
         component={SystemIntake}
       />
       <Redirect
@@ -124,11 +121,17 @@ const AppRoutes = () => {
       />
       <SecureRoute
         path="/business/:businessCaseId/:formPage"
-        render={({ component }: any) => component()}
         component={BusinessCase}
       />
-      <Route path="/implicit/callback" component={LoginCallback} />
-      <Route path="/privacy-policy" exact component={PrivacyPolicy} />
+      {isGrtReviewer && (
+        <SecureRoute
+          path="/governance-review-team/:systemId/:activePage"
+          component={GovernanceReviewTeam}
+        />
+      )}
+
+      {/* Static Pages */}
+      <Route path="/privacy-policy" exact render={() => <PrivacyPolicy />} />
       <Route path="/cookies" exact component={Cookies} />
       <Route
         path="/accessibility-statement"
@@ -140,6 +143,17 @@ const AppRoutes = () => {
         path="/terms-and-conditions"
         component={TermsAndConditions}
       />
+
+      {/* Misc */}
+      {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+      {flags.fileUploads && (
+        <SecureRoute
+          exact
+          path="/document-prototype"
+          component={DocumentPrototype}
+        />
+      )}
+
       <Route path="*" component={NotFound} />
     </Switch>
   );
