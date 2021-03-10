@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Switch } from 'react-router-dom';
-import { SecureRoute } from '@okta/okta-react';
+import { Route, SecureRoute } from '@okta/okta-react';
 
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
@@ -30,15 +30,15 @@ const Accessibility = () => {
         path="/508/requests/:accessibilityRequestId"
         component={AccessibilityRequestDetailPage}
       />
+      <Route path="*" component={NotFound} />
     </Switch>
   );
 
-  if (isUserSet && !user.isAccessibilityTeam(userGroups)) {
+  if (isUserSet) {
+    if (user.isAccessibilityTeam(userGroups)) {
+      return <RenderPage />;
+    }
     return <NotFound />;
-  }
-
-  if (isUserSet && user.isAccessibilityTeam(userGroups)) {
-    return <RenderPage />;
   }
 
   return <p>Loading...</p>;

@@ -505,12 +505,11 @@ const GovernanceReviewTeam = () => {
     </PageWrapper>
   );
 
-  if (isUserSet && !user.isGrtReviewer(userGroups)) {
+  if (isUserSet) {
+    if (user.isGrtReviewer(userGroups)) {
+      return <RenderPage />;
+    }
     return <NotFound />;
-  }
-
-  if (isUserSet && user.isGrtReviewer(userGroups)) {
-    return <RenderPage />;
   }
 
   return <p>Loading...</p>;
