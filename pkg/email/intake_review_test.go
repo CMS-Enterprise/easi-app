@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/google/uuid"
+
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 )
 
 func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
