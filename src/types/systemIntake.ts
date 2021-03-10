@@ -88,7 +88,10 @@ export type SystemIntakeForm = {
   grtDate: DateTime | null;
   grbDate: DateTime | null;
   adminLead: string;
-  lastAdminNote: string | null;
+  lastAdminNote: {
+    content: string;
+    createdAt: DateTime;
+  } | null;
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
