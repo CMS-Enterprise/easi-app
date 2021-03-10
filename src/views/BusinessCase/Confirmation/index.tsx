@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { ImproveEasiSurvey } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -12,7 +11,6 @@ const Confirmation = ({
   businessCase: BusinessCaseModel;
 }) => {
   const { businessCaseId } = useParams();
-  const flags = useFlags();
   const { t } = useTranslation();
 
   return (
@@ -28,17 +26,10 @@ const Confirmation = ({
         </h2>
         <ImproveEasiSurvey />
         <div>
-          {flags.taskListLite ? (
-            <Link to={`/governance-task-list/${businessCase.systemIntakeId}`}>
-              <i className="fa fa-angle-left margin-x-05" aria-hidden />
-              {t('businessCase:submission.confirmation.taskListCta')}
-            </Link>
-          ) : (
-            <Link to="/">
-              <i className="fa fa-angle-left margin-x-05" aria-hidden />
-              {t('businessCase:submission.confirmation.homeCta')}
-            </Link>
-          )}
+          <Link to={`/governance-task-list/${businessCase.systemIntakeId}`}>
+            <i className="fa fa-angle-left margin-x-05" aria-hidden />
+            {t('businessCase:submission.confirmation.taskListCta')}
+          </Link>
         </div>
       </div>
     </div>

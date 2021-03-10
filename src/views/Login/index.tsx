@@ -27,7 +27,10 @@ const Login = () => {
   };
 
   const onSuccess = (tokens: any) => {
-    oktaAuth.handleLoginRedirect(tokens);
+    const referringUri = oktaAuth.getOriginalUri();
+    oktaAuth.handleLoginRedirect(tokens).then(() => {
+      history.push(referringUri);
+    });
   };
 
   useEffect(() => {

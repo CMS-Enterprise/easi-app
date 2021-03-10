@@ -110,7 +110,7 @@ jobs:
           APP_ENV: test
           AWS_REGION: us-west-2 # easi app tests expect AWS_REGION instead of AWS_DEFAULT_REGION
           AWS_SES_SOURCE: '"EASi Test" <no-reply-test@info.easi.cms.gov>'
-          AWS_S3_FILE_UPLOAD_BUCKET: easi-app-test-file-uploads
+          AWS_S3_FILE_UPLOAD_BUCKET: easi-app-file-uploads
           CLIENT_PROTOCOL: http
           CLIENT_PORT: 3000
           CLIENT_HOSTNAME: localhost:3000
@@ -397,12 +397,12 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "2" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "2" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "4" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "4" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "2" "easi-backend"
+            ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "4" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
