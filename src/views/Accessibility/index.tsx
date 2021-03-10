@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Switch } from 'react-router-dom';
-import { Route, SecureRoute } from '@okta/okta-react';
+import { Route, Switch } from 'react-router-dom';
+import { SecureRoute } from '@okta/okta-react';
 
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
