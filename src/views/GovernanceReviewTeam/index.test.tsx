@@ -32,7 +32,7 @@ describe('The GRT Review page', () => {
     const store = mockStore({
       auth: {
         groups: ['EASI_D_GOVTEAM'],
-        userGroupsSet: true
+        isUserSet: true
       },
       systemIntake: {
         systemIntake: {
@@ -63,6 +63,10 @@ describe('The GRT Review page', () => {
   it('shows closed status', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
+      auth: {
+        groups: ['EASI_D_GOVTEAM'],
+        isUserSet: true
+      },
       systemIntake: {
         systemIntake: {
           ...initialSystemIntakeForm,
@@ -92,6 +96,10 @@ describe('The GRT Review page', () => {
   it('shows lifecycle id if it exists', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
+      auth: {
+        groups: ['EASI_D_GOVTEAM'],
+        isUserSet: true
+      },
       systemIntake: {
         systemIntake: {
           ...initialSystemIntakeForm,

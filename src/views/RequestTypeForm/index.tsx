@@ -5,7 +5,6 @@ import { Link, useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -28,7 +27,6 @@ const RequestTypeForm = () => {
   const { oktaAuth } = useOktaAuth();
   const dispatch = useDispatch();
   const history = useHistory();
-  const flags = useFlags();
 
   const isNewIntakeCreated = useSelector(
     (state: AppState) => state.systemIntake.isNewIntakeCreated
@@ -63,9 +61,7 @@ const RequestTypeForm = () => {
 
   useEffect(() => {
     if (isNewIntakeCreated) {
-      const navigationLink = flags.taskListLite
-        ? `/governance-task-list/${systemIntake.id}`
-        : `/system/${systemIntake.id}/contact-details`;
+      const navigationLink = `/governance-task-list/${systemIntake.id}`;
       switch (systemIntake.requestType) {
         case 'NEW':
           history.push(navigationLink);

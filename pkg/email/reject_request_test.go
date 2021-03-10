@@ -18,7 +18,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<p>Reason: reason</p>\n<p>Next Steps: nextSteps</p>\n\n<p>feedback</p>"
+		expectedEmail := "<p>Reason: reason</p>\n<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">nextSteps</pre></p>\n\n<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
 		err = client.SendRejectRequestEmail(ctx, recipient, reason, nextSteps, feedback)
 
 		s.NoError(err)
@@ -31,7 +31,7 @@ func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<p>Reason: reason</p>\n\n<p>feedback</p>"
+		expectedEmail := "<p>Reason: reason</p>\n\n<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
 		err = client.SendRejectRequestEmail(ctx, recipient, reason, "", feedback)
 
 		s.NoError(err)

@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { Button, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
@@ -40,7 +39,6 @@ const ContractDetails = ({
   systemIntake,
   dispatchSave
 }: ContractDetailsProps) => {
-  const flags = useFlags();
   const history = useHistory();
 
   const initialValues: ContractDetailsForm = {
@@ -55,9 +53,7 @@ const ContractDetails = ({
     if (systemIntake.requestType === 'SHUTDOWN') {
       link = '/';
     } else {
-      link = flags.taskListLite
-        ? `/governance-task-list/${systemIntake.id}`
-        : '/';
+      link = `/governance-task-list/${systemIntake.id}`;
     }
     return link;
   })();
