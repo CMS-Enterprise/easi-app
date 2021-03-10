@@ -54,7 +54,7 @@ describe('The system intake data modifiers', () => {
         decidedAt: null,
         archivedAt: null,
         adminLead: '',
-        lastAdminNote: undefined,
+        lastAdminNote: null,
         lcidScope: ''
       });
     });
@@ -157,7 +157,15 @@ describe('The system intake data modifiers', () => {
           zone: 'America/Los_Angeles'
         }),
         adminLead: 'Test Admin Lead',
-        lastAdminNote: 'last admin note',
+        lastAdminNote: {
+          content: 'last admin note',
+          createdAt: DateTime.fromObject({
+            year: 2020,
+            month: 6,
+            day: 22,
+            zone: 'America/Los_Angeles'
+          })
+        },
         lcidScope: ''
       };
 
@@ -208,7 +216,7 @@ describe('The system intake data modifiers', () => {
         updatedAt: '2020-06-23T00:00:00.000-07:00',
         archivedAt: '2020-06-28T00:00:00.000-07:00',
         adminLead: 'Test Admin Lead',
-        lastAdminNote: 'last admin note',
+        lastAdminNote: 'last admin note (June 22 2020)',
         lcidScope: ''
       });
     });
