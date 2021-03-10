@@ -384,12 +384,62 @@ export MINIO_ACCESS_KEY='minioadmin'
 export MINIO_SECRET_KEY='minioadmin'
 ```
 
-### Setup: Lambda
+### Setup: Prince XML Lambda
+
+EASi runs [Prince XML](https://www.princexml.com/) as a Lambda function to
+convert HTML to PDF.
+
+See the [easi-infra-modules](https://github.com/CMSgov/easi-infra-modules/blob/master/lambda/prince/README.md)
+repo for instructions on how to build the lambda locally.
 
 [docker-lambda](https://github.com/lambci/docker-lambda) is used to run lambda functions
 locally that execute in AWS in a deployed environment.
 
-It should start automatically if you run `docker-compose up`.
+For local development, the Prince XML Lambda should start automatically if you
+run `docker-compose up`.
+
+To generate PDFs without the watermark, add one of the following environment
+variables to `.envrc.local`:
+
+```console
+export LICENSE_KEY=abcdefg12345678 (set this equal to the signature field value from the Prince license - see 1Password)
+
+# or
+
+export LICENSE_KEY_SSM_PATH=/path/to/license/key (set this equal to the SSM path where the license key signature is stored)
+```
+
+And update `docker-compose.override.yml` to reference those variable names (do
+not include the values):
+
+```text
+ prince:
+    image: lambci/lambda:go1.x
+    ports:
+      - 9001:9001
+    environment:
+      - DOCKER_LAMBDA_STAY_OPEN=1
+      - LICENSE_KEY
+```
+
+r
+
+```text
+ prince:
+    image: lambci/lambda:go1.x
+    ports:
+      - 9001:9001
+    environment:
+      - DOCKER_LAMBDA_STAY_OPEN=1
+      - LICENSE_KEY_SSM_PATH
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - AWS_DEFAULT_REGION
+```
+
+Note: using `LICENSE_KEY_SSM_PATH` requires AWS credentials for the appropriate
+environment.
 
 ## Build
 
