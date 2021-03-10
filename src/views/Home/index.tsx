@@ -33,10 +33,7 @@ const Home = () => {
         );
       }
 
-      if (
-        user.isAccessibilityAdmin(userGroups) ||
-        user.isAccessibilityTester(userGroups)
-      ) {
+      if (user.isAccessibilityTeam(userGroups)) {
         return <List />;
       }
 
