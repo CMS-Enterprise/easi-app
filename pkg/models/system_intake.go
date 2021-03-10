@@ -108,8 +108,10 @@ type SystemIntake struct {
 	CostIncreaseAmount          null.String             `json:"costIncreaseAmount" db:"cost_increase_amount"`
 	Contractor                  null.String             `json:"contractor" db:"contractor"`
 	ContractVehicle             null.String             `json:"contractVehicle" db:"contract_vehicle"`
+	ContractStartDate           *time.Time              `json:"contractStartDate" db:"contract_start_date"`
 	ContractStartMonth          null.String             `json:"contractStartMonth" db:"contract_start_month"`
 	ContractStartYear           null.String             `json:"contractStartYear" db:"contract_start_year"`
+	ContractEndDate             *time.Time              `json:"contractEndDate" db:"contract_end_date"`
 	ContractEndMonth            null.String             `json:"contractEndMonth" db:"contract_end_month"`
 	ContractEndYear             null.String             `json:"contractEndYear" db:"contract_end_year"`
 	CreatedAt                   *time.Time              `json:"createdAt" db:"created_at"`
