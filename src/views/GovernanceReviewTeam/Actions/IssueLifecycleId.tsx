@@ -46,7 +46,7 @@ const IssueLifecycleId = () => {
     } = values;
     const lcidPayload = {
       lcidExpiresAt: `${expirationDateYear}-${expirationDateMonth}-${expirationDateDay}`,
-      lcidNextSteps: nextSteps,
+      decisionNextSteps: nextSteps,
       lcidScope: scope,
       lcid: lifecycleId,
       feedback
