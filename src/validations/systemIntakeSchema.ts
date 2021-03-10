@@ -138,6 +138,7 @@ const SystemIntakeValidationSchema: any = {
           month: Yup.string()
             .trim()
             .required('Tell us the contract start month'),
+          day: Yup.string().trim().required('Tell us the contract start day'),
           year: Yup.string().trim().required('Tell us the contract start year')
         })
       }),
@@ -145,6 +146,7 @@ const SystemIntakeValidationSchema: any = {
         is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.object().shape({
           month: Yup.string().trim().required('Tell us the contract end month'),
+          day: Yup.string().trim().required('Tell us the contract end day'),
           year: Yup.string().trim().required('Tell us the contract end year')
         })
       })

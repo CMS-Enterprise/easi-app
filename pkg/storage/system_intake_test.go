@@ -236,10 +236,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		existingContract := "IN_PROGRESS"
 		contractor := "TrussWorks, Inc."
 		contractVehicle := "Fixed price contract"
-		contractStartMonth := "1"
-		contractStartYear := "2020"
-		contractEndMonth := "12"
-		contractEndYear := "2021"
+		now := time.Now()
 		partial.ProcessStatus = null.StringFrom(processStatus)
 		partial.ExistingFunding = null.BoolFrom(existingFunding)
 		partial.FundingNumber = null.StringFrom(fundingNumber)
@@ -247,10 +244,8 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		partial.ExistingContract = null.StringFrom(existingContract)
 		partial.Contractor = null.StringFrom(contractor)
 		partial.ContractVehicle = null.StringFrom(contractVehicle)
-		partial.ContractStartMonth = null.StringFrom(contractStartMonth)
-		partial.ContractStartYear = null.StringFrom(contractStartYear)
-		partial.ContractEndMonth = null.StringFrom(contractEndMonth)
-		partial.ContractEndYear = null.StringFrom(contractEndYear)
+		partial.ContractStartDate = &now
+		partial.ContractEndDate = &now
 
 		_, err = s.store.UpdateSystemIntake(ctx, partial)
 		s.NoError(err, "failed to update system intake")
@@ -265,10 +260,8 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Equal(existingContract, updated.ExistingContract.String)
 		s.Equal(contractor, updated.Contractor.String)
 		s.Equal(contractVehicle, updated.ContractVehicle.String)
-		s.Equal(contractStartMonth, updated.ContractStartMonth.String)
-		s.Equal(contractStartYear, updated.ContractStartYear.String)
-		s.Equal(contractEndMonth, updated.ContractEndMonth.String)
-		s.Equal(contractEndYear, updated.ContractEndYear.String)
+		s.NotEmpty(updated.ContractStartDate)
+		s.NotEmpty(updated.ContractEndDate)
 	})
 
 	s.Run("LifecycleID format", func() {

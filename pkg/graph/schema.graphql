@@ -373,8 +373,10 @@ type SystemIntake {
   businessOwner: String
   businessOwnerComponent: String
   component: String
+  contractEndDate: Time
   contractEndMonth: String
   contractEndYear: String
+  contractStartDate: Time
   contractStartMonth: String
   contractStartYear: String
   contractVehicle: String
