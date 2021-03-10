@@ -2,8 +2,10 @@ package email
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/google/uuid"
 )
 
 func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
@@ -11,13 +13,21 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 	ctx := context.Background()
 	recipientAddress := "sample@test.com"
 	emailBody := "Test Text\n\nTest"
+	intakeID := uuid.New()
 
 	s.Run("successful call has the right content", func() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
-		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Test Text\n\nTest</pre></p>\n"
+		expectedEmail := "<p><pre style=\"white-space: pre-wrap; word-break: keep-all;\">Test Text\n\nTest</pre></p>\n<p>" +
+			fmt.Sprintf(
+				"<a href=\"%s://%s/governance-task-list/%s\">",
+				s.config.URLScheme,
+				s.config.URLHost,
+				intakeID.String(),
+			) +
+			"See the most recent status of your request</a></p>\n"
 
-		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress)
+		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress, intakeID)
 
 		s.NoError(err)
 		s.Equal(recipientAddress, sender.toAddress)
@@ -30,7 +40,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress)
+		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress, intakeID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -44,7 +54,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		s.NoError(err)
 		client.templates.intakeReviewTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress)
+		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress, intakeID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -59,7 +69,7 @@ func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress)
+		err = client.SendSystemIntakeReviewEmail(ctx, emailBody, recipientAddress, intakeID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
