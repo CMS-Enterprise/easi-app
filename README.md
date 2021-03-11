@@ -422,7 +422,7 @@ not include the values):
       - LICENSE_KEY
 ```
 
-r
+or
 
 ```text
  prince:
