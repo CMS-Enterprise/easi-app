@@ -102,6 +102,14 @@ const csvHeaderMap = (t: any) => [
     label: t('intake:csvHeadings.status')
   },
   {
+    key: 'lcidScope',
+    label: t('intake:csvHeadings.lcidScope')
+  },
+  {
+    key: 'lastAdminNote',
+    label: t('intake:csvHeadings.lastAdminNote')
+  },
+  {
     key: 'updatedAt',
     label: t('intake:csvHeadings.updatedAt')
   },
