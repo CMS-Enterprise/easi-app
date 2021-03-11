@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import CharacterCounter from 'components/CharacterCounter';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
@@ -44,7 +43,6 @@ const RequestDetails = ({
   systemIntake,
   dispatchSave
 }: RequestDetailsProps) => {
-  const flags = useFlags();
   const history = useHistory();
   const { setPage } = usePageContext();
 
@@ -61,9 +59,7 @@ const RequestDetails = ({
     if (systemIntake.requestType === 'SHUTDOWN') {
       link = '/';
     } else {
-      link = flags.taskListLite
-        ? `/governance-task-list/${systemIntake.id}`
-        : '/';
+      link = `/governance-task-list/${systemIntake.id}`;
     }
     return link;
   })();

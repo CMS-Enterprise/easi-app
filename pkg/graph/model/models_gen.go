@@ -3,22 +3,25 @@
 package model
 
 import (
+	"fmt"
+	"io"
+	"strconv"
 	"time"
 
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/google/uuid"
 )
 
-// A document that belongs to an accessibility request
-type AccessibilityRequestDocument struct {
-	ID         uuid.UUID `json:"id"`
-	Name       string    `json:"name"`
-	UploadedAt time.Time `json:"uploadedAt"`
+// Document type of an Accessibility Request document
+type AccessibilityRequestDocumentType struct {
+	CommonType           models.AccessibilityRequestDocumentCommonType `json:"commonType"`
+	OtherTypeDescription *string                                       `json:"otherTypeDescription"`
 }
 
 // An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
-	Cursor string                `json:"cursor"`
-	Node   *AccessibilityRequest `json:"node"`
+	Cursor string                       `json:"cursor"`
+	Node   *models.AccessibilityRequest `json:"node"`
 }
 
 // A collection of AccessibilityRequests
@@ -27,21 +30,60 @@ type AccessibilityRequestsConnection struct {
 	TotalCount int                         `json:"totalCount"`
 }
 
-// A business owner is the person at CMS responsible for a system
-type BusinessOwner struct {
-	Component string `json:"component"`
-	Name      string `json:"name"`
+// Parameters for createAccessibilityRequestDocument
+type CreateAccessibilityRequestDocumentInput struct {
+	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
+	MimeType                     string                                        `json:"mimeType"`
+	Name                         string                                        `json:"name"`
+	OtherDocumentTypeDescription *string                                       `json:"otherDocumentTypeDescription"`
+	RequestID                    uuid.UUID                                     `json:"requestID"`
+	Size                         int                                           `json:"size"`
+	URL                          string                                        `json:"url"`
+}
+
+// Result of createAccessibilityRequestDocument
+type CreateAccessibilityRequestDocumentPayload struct {
+	AccessibilityRequestDocument *models.AccessibilityRequestDocument `json:"accessibilityRequestDocument"`
+	UserErrors                   []*UserError                         `json:"userErrors"`
 }
 
 // Parameters required to create an AccessibilityRequest
 type CreateAccessibilityRequestInput struct {
-	Name string `json:"name"`
+	IntakeID uuid.UUID `json:"intakeID"`
+	Name     string    `json:"name"`
 }
 
 // Result of CreateAccessibilityRequest
 type CreateAccessibilityRequestPayload struct {
-	AccessibilityRequest *AccessibilityRequest `json:"accessibilityRequest"`
-	UserErrors           []*UserError          `json:"userErrors"`
+	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
+	UserErrors           []*UserError                 `json:"userErrors"`
+}
+
+// Parameters for creating a test date
+type CreateTestDateInput struct {
+	Date      time.Time               `json:"date"`
+	RequestID uuid.UUID               `json:"requestID"`
+	Score     *int                    `json:"score"`
+	TestType  models.TestDateTestType `json:"testType"`
+}
+
+// Result of createTestDate
+type CreateTestDatePayload struct {
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
+}
+
+// Parameters required to generate a presigned upload URL
+type GeneratePresignedUploadURLInput struct {
+	FileName string `json:"fileName"`
+	MimeType string `json:"mimeType"`
+	Size     int    `json:"size"`
+}
+
+// Result of CreateAccessibilityRequest
+type GeneratePresignedUploadURLPayload struct {
+	URL        *string      `json:"url"`
+	UserErrors []*UserError `json:"userErrors"`
 }
 
 // A collection of Systems
@@ -52,8 +94,22 @@ type SystemConnection struct {
 
 // An edge of an SystemConnection
 type SystemEdge struct {
-	Cursor string  `json:"cursor"`
-	Node   *System `json:"node"`
+	Cursor string         `json:"cursor"`
+	Node   *models.System `json:"node"`
+}
+
+// Parameters for editing a test date
+type UpdateTestDateInput struct {
+	Date     time.Time               `json:"date"`
+	ID       uuid.UUID               `json:"id"`
+	Score    *int                    `json:"score"`
+	TestType models.TestDateTestType `json:"testType"`
+}
+
+// Result of editTestDate
+type UpdateTestDatePayload struct {
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
 }
 
 // UserError represents application-level errors that are the result of
@@ -61,4 +117,54 @@ type SystemEdge struct {
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+// A user role associated with a job code
+type Role string
+
+const (
+	// A 508 Tester
+	RoleEasi508Tester Role = "EASI_508_TESTER"
+	// A 508 request owner
+	RoleEasi508User Role = "EASI_508_USER"
+	// A member of the GRT
+	RoleEasiGovteam Role = "EASI_GOVTEAM"
+	// A generic EASi user
+	RoleEasiUser Role = "EASI_USER"
+)
+
+var AllRole = []Role{
+	RoleEasi508Tester,
+	RoleEasi508User,
+	RoleEasiGovteam,
+	RoleEasiUser,
+}
+
+func (e Role) IsValid() bool {
+	switch e {
+	case RoleEasi508Tester, RoleEasi508User, RoleEasiGovteam, RoleEasiUser:
+		return true
+	}
+	return false
+}
+
+func (e Role) String() string {
+	return string(e)
+}
+
+func (e *Role) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Role(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Role", str)
+	}
+	return nil
+}
+
+func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

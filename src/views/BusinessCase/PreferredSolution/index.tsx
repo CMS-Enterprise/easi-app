@@ -2,7 +2,6 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
@@ -21,6 +20,7 @@ import { hasAlternativeB } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -36,7 +36,6 @@ const PreferredSolution = ({
   formikRef,
   dispatchSave
 }: PreferredSolutionProps) => {
-  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     preferredSolution: businessCase.preferredSolution
@@ -103,9 +102,12 @@ const PreferredSolution = ({
                 infrastructure, etc.
               </div>
             </div>
-            <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-              <MandatoryFieldsAlert />
-            </div>
+            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
+            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
+              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
+                <MandatoryFieldsAlert />
+              </div>
+            )}
             <Form>
               <div className="tablet:grid-col-9">
                 <h2>Preferred solution</h2>
@@ -689,9 +691,7 @@ const PreferredSolution = ({
                 onClick={() => {
                   dispatchSave();
                   history.push(
-                    flags.taskListLite
-                      ? `/governance-task-list/${businessCase.systemIntakeId}`
-                      : '/'
+                    `/governance-task-list/${businessCase.systemIntakeId}`
                   );
                 }}
               >

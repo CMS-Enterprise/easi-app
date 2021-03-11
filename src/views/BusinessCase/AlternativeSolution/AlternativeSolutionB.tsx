@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageNumber from 'components/PageNumber';
@@ -13,6 +12,7 @@ import { defaultProposedSolution } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -31,7 +31,6 @@ const AlternativeSolutionB = ({
   formikRef,
   dispatchSave
 }: AlternativeSolutionBProps) => {
-  const flags = useFlags();
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -95,9 +94,12 @@ const AlternativeSolutionB = ({
                 infrastructure, etc.
               </div>
             </div>
-            <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-              <MandatoryFieldsAlert />
-            </div>
+            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
+            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
+              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
+                <MandatoryFieldsAlert />
+              </div>
+            )}
             <Form>
               <div className="tablet:grid-col-9">
                 <div className="easi-business-case__name-wrapper">
@@ -171,9 +173,7 @@ const AlternativeSolutionB = ({
                 onClick={() => {
                   dispatchSave();
                   history.push(
-                    flags.taskListLite
-                      ? `/governance-task-list/${businessCase.systemIntakeId}`
-                      : '/'
+                    `/governance-task-list/${businessCase.systemIntakeId}`
                   );
                 }}
               >

@@ -38,6 +38,10 @@ export const isAccessibilityAdmin = (groups: Array<String> = []) => {
   return false;
 };
 
+export const isAccessibilityTeam = (groups: Array<String> = []) => {
+  return isAccessibilityAdmin(groups) || isAccessibilityTester(groups);
+};
+
 export const isBasicUser = (groups: Array<String> = []) => {
   return groups.includes(BASIC_USER_PROD) || groups.length === 0;
 };
@@ -46,6 +50,7 @@ const user = {
   isGrtReviewer,
   isAccessibilityTester,
   isAccessibilityAdmin,
+  isAccessibilityTeam,
   isBasicUser
 };
 

@@ -236,10 +236,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		existingContract := "IN_PROGRESS"
 		contractor := "TrussWorks, Inc."
 		contractVehicle := "Fixed price contract"
-		contractStartMonth := "1"
-		contractStartYear := "2020"
-		contractEndMonth := "12"
-		contractEndYear := "2021"
+		now := time.Now()
 		partial.ProcessStatus = null.StringFrom(processStatus)
 		partial.ExistingFunding = null.BoolFrom(existingFunding)
 		partial.FundingNumber = null.StringFrom(fundingNumber)
@@ -247,10 +244,8 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		partial.ExistingContract = null.StringFrom(existingContract)
 		partial.Contractor = null.StringFrom(contractor)
 		partial.ContractVehicle = null.StringFrom(contractVehicle)
-		partial.ContractStartMonth = null.StringFrom(contractStartMonth)
-		partial.ContractStartYear = null.StringFrom(contractStartYear)
-		partial.ContractEndMonth = null.StringFrom(contractEndMonth)
-		partial.ContractEndYear = null.StringFrom(contractEndYear)
+		partial.ContractStartDate = &now
+		partial.ContractEndDate = &now
 
 		_, err = s.store.UpdateSystemIntake(ctx, partial)
 		s.NoError(err, "failed to update system intake")
@@ -265,10 +260,8 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Equal(existingContract, updated.ExistingContract.String)
 		s.Equal(contractor, updated.Contractor.String)
 		s.Equal(contractVehicle, updated.ContractVehicle.String)
-		s.Equal(contractStartMonth, updated.ContractStartMonth.String)
-		s.Equal(contractStartYear, updated.ContractStartYear.String)
-		s.Equal(contractEndMonth, updated.ContractEndMonth.String)
-		s.Equal(contractEndYear, updated.ContractEndYear.String)
+		s.NotEmpty(updated.ContractStartDate)
+		s.NotEmpty(updated.ContractEndDate)
 	})
 
 	s.Run("LifecycleID format", func() {
@@ -642,6 +635,78 @@ func (s StoreTestSuite) TestFetchSystemIntakesByFilter() {
 			s.True(found, "did not receive expected intake", id)
 		}
 	})
+
+	s.Run("collects most recent admin notes", func() {
+		ctx := context.Background()
+
+		var intakeIDs []uuid.UUID
+
+		for i := 0; i < 5; i++ {
+			intake := testhelpers.NewSystemIntake()
+			result, err := s.store.CreateSystemIntake(ctx, &intake)
+			s.NoError(err)
+			intakeIDs = append(intakeIDs, result.ID)
+		}
+
+		intakeWithNoCommentsID := intakeIDs[0]
+		intakeWithOneCommentID := intakeIDs[1]
+		intakeWithManyCommentsID := intakeIDs[2]
+
+		_, err := s.store.CreateNote(ctx, &models.Note{
+			SystemIntakeID: intakeWithOneCommentID,
+			Content:        null.StringFrom("the only comment"),
+			CreatedAt:      mustParseTime("2021-01-01"),
+			AuthorEUAID:    "ABCD",
+		})
+		s.NoError(err)
+
+		_, err = s.store.CreateNote(ctx, &models.Note{
+			SystemIntakeID: intakeWithManyCommentsID,
+			Content:        null.StringFrom("the first comment"),
+			CreatedAt:      mustParseTime("2021-01-01"),
+			AuthorEUAID:    "ABCD",
+		})
+		s.NoError(err)
+		_, err = s.store.CreateNote(ctx, &models.Note{
+			SystemIntakeID: intakeWithManyCommentsID,
+			Content:        null.StringFrom("the third comment"),
+			CreatedAt:      mustParseTime("2021-01-03"),
+			AuthorEUAID:    "ABCD",
+		})
+		s.NoError(err)
+		_, err = s.store.CreateNote(ctx, &models.Note{
+			SystemIntakeID: intakeWithManyCommentsID,
+			Content:        null.StringFrom("the second comment"),
+			CreatedAt:      mustParseTime("2021-01-02"),
+			AuthorEUAID:    "ABCD",
+		})
+		s.NoError(err)
+
+		intakes, err := s.store.FetchSystemIntakesByStatuses(ctx, []models.SystemIntakeStatus{models.SystemIntakeStatusINTAKEDRAFT, models.SystemIntakeStatusINTAKESUBMITTED})
+		s.NoError(err)
+
+		for _, intake := range intakes {
+			if intake.ID == intakeWithNoCommentsID {
+				s.Nil(intake.LastAdminNoteContent.Ptr())
+				s.Nil(intake.LastAdminNoteCreatedAt)
+			}
+			if intake.ID == intakeWithOneCommentID {
+				s.Equal("the only comment", intake.LastAdminNoteContent.String)
+				s.Equal("2021-01-01", intake.LastAdminNoteCreatedAt.Format("2006-01-02"))
+			}
+			if intake.ID == intakeWithManyCommentsID {
+				s.Equal("the third comment", intake.LastAdminNoteContent.String)
+				s.Equal("2021-01-03", intake.LastAdminNoteCreatedAt.Format("2006-01-02"))
+			}
+		}
+	})
+}
+func mustParseTime(value string) *time.Time {
+	parsed, err := time.Parse("2006-01-02", value)
+	if err != nil {
+		panic(err)
+	}
+	return &parsed
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {

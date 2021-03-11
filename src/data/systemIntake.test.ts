@@ -52,9 +52,13 @@ describe('The system intake data modifiers', () => {
         submittedAt: null,
         createdAt: null,
         decidedAt: null,
-        archivedAt: null
+        archivedAt: null,
+        adminLead: '',
+        lastAdminNote: null,
+        lcidScope: ''
       });
     });
+
     it('converts fully executed intake', () => {
       const mockIntake = {
         ...initialSystemIntakeForm,
@@ -151,7 +155,18 @@ describe('The system intake data modifiers', () => {
           month: 6,
           day: 28,
           zone: 'America/Los_Angeles'
-        })
+        }),
+        adminLead: 'Test Admin Lead',
+        lastAdminNote: {
+          content: 'last admin note',
+          createdAt: DateTime.fromObject({
+            year: 2020,
+            month: 6,
+            day: 22,
+            zone: 'America/Los_Angeles'
+          })
+        },
+        lcidScope: ''
       };
 
       expect(convertIntakeToCSV(mockIntake)).toMatchObject({
@@ -199,7 +214,10 @@ describe('The system intake data modifiers', () => {
         decidedAt: '2020-06-27T00:00:00.000-07:00',
         createdAt: '2020-06-22T00:00:00.000-07:00',
         updatedAt: '2020-06-23T00:00:00.000-07:00',
-        archivedAt: '2020-06-28T00:00:00.000-07:00'
+        archivedAt: '2020-06-28T00:00:00.000-07:00',
+        adminLead: 'Test Admin Lead',
+        lastAdminNote: 'last admin note (June 22 2020)',
+        lcidScope: ''
       });
     });
   });

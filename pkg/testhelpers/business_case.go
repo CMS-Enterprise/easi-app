@@ -50,6 +50,7 @@ func NewEstimatedLifecycleCost(opts EstimatedLifecycleCostOptions) models.Estima
 func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 	dev := models.LifecycleCostPhaseDEVELOPMENT
 	om := models.LifecycleCostPhaseOPERATIONMAINTENANCE
+	other := models.LifecycleCostPhaseOTHER
 	cost := 100
 	return models.EstimatedLifecycleCosts{
 		models.EstimatedLifecycleCost{
@@ -64,6 +65,13 @@ func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 			Solution:       models.LifecycleCostSolutionASIS,
 			Year:           models.LifecycleCostYear1,
 			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionASIS,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &other,
 			Cost:           &cost,
 		},
 		models.EstimatedLifecycleCost{

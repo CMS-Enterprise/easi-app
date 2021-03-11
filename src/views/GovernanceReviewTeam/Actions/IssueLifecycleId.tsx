@@ -46,7 +46,7 @@ const IssueLifecycleId = () => {
     } = values;
     const lcidPayload = {
       lcidExpiresAt: `${expirationDateYear}-${expirationDateMonth}-${expirationDateDay}`,
-      lcidNextSteps: nextSteps,
+      decisionNextSteps: nextSteps,
       lcidScope: scope,
       lcid: lifecycleId,
       feedback
@@ -225,7 +225,7 @@ const IssueLifecycleId = () => {
                     as={TextAreaField}
                     error={!!flatErrors.scope}
                     id="IssueLifecycleIdForm-Scope"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="scope"
                   />
                 </FieldGroup>
@@ -242,7 +242,7 @@ const IssueLifecycleId = () => {
                     as={TextAreaField}
                     error={!!flatErrors.nextSteps}
                     id="IssueLifecycleIdForm-NextSteps"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="nextSteps"
                   />
                 </FieldGroup>

@@ -3,13 +3,19 @@ import { MemoryRouter } from 'react-router-dom';
 import renderer from 'react-test-renderer';
 import { shallow } from 'enzyme';
 
+import { businessCaseInitialData } from 'data/businessCase';
+
 import Confirmation from './index';
 
 describe('The Business Case Confirmation page', () => {
+  const testBusinessCase = {
+    ...businessCaseInitialData,
+    systemIntakeId: '12345'
+  };
   it('renders without crashing', () => {
     shallow(
       <MemoryRouter>
-        <Confirmation />
+        <Confirmation businessCase={testBusinessCase} />
       </MemoryRouter>
     );
   });
@@ -18,7 +24,7 @@ describe('The Business Case Confirmation page', () => {
     const tree = renderer
       .create(
         <MemoryRouter>
-          <Confirmation />
+          <Confirmation businessCase={testBusinessCase} />
         </MemoryRouter>
       )
       .toJSON();

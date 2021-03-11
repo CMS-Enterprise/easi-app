@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
@@ -9,7 +10,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -41,12 +42,20 @@ func main() {
 		panic(storeErr)
 	}
 
-	ctx := context.Background()
+	makeAccessibilityRequest("TACO", store)
+	makeAccessibilityRequest("Big Project", store)
+
+	makeBusinessCase("TACO", logger, store)
+}
+
+func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store) {
+	ctx := appcontext.WithLogger(context.Background(), logger)
 
 	intake := models.SystemIntake{
-		Status:                 models.SystemIntakeStatusLCIDISSUED,
+		EUAUserID:              null.StringFrom("ABCD"),
+		Status:                 models.SystemIntakeStatusBIZCASEDRAFTSUBMITTED,
 		RequestType:            models.SystemIntakeRequestTypeNEW,
-		ProjectName:            null.StringFrom("LCID Issued"),
+		ProjectName:            null.StringFrom(name),
 		BusinessOwner:          null.StringFrom("Shane Clark"),
 		BusinessOwnerComponent: null.StringFrom("OIT"),
 		LifecycleID:            null.StringFrom("123456"),
@@ -54,8 +63,55 @@ func main() {
 	must(store.CreateSystemIntake(ctx, &intake))
 	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
 
-	must(store.CreateAccessibilityRequest(ctx, &model.AccessibilityRequest{
-		Name:     "Never shown",
+	phase := models.LifecycleCostPhaseDEVELOPMENT
+	cost := 123456
+	noCost := 0
+	businessCase := models.BusinessCase{
+		SystemIntakeID:       intake.ID,
+		EUAUserID:            "ABCD",
+		Requester:            null.StringFrom("Shane Clark"),
+		RequesterPhoneNumber: null.StringFrom("3124567890"),
+		Status:               models.BusinessCaseStatusOPEN,
+		ProjectName:          null.StringFrom(name),
+		BusinessOwner:        null.StringFrom("Shane Clark"),
+		BusinessNeed:         null.StringFrom("business need"),
+		LifecycleCostLines: []models.EstimatedLifecycleCost{
+			{
+				Solution: models.LifecycleCostSolutionASIS,
+				Year:     models.LifecycleCostYear1,
+				Phase:    &phase,
+				Cost:     &cost,
+			},
+			{
+				Solution: models.LifecycleCostSolutionA,
+				Year:     models.LifecycleCostYear2,
+			},
+			{
+				Solution: models.LifecycleCostSolutionA,
+				Year:     models.LifecycleCostYear3,
+				Cost:     &noCost,
+			},
+		},
+	}
+	must(store.CreateBusinessCase(ctx, &businessCase))
+}
+
+func makeAccessibilityRequest(name string, store *storage.Store) {
+	ctx := context.Background()
+
+	intake := models.SystemIntake{
+		Status:                 models.SystemIntakeStatusLCIDISSUED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		ProjectName:            null.StringFrom(name),
+		BusinessOwner:          null.StringFrom("Shane Clark"),
+		BusinessOwnerComponent: null.StringFrom("OIT"),
+		LifecycleID:            null.StringFrom("123456"),
+	}
+	must(store.CreateSystemIntake(ctx, &intake))
+	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
+
+	must(store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+		Name:     fmt.Sprintf("%s v2", name),
 		IntakeID: intake.ID,
 	}))
 }
