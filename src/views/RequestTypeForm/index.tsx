@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import { Button } from '@trussworks/react-uswds';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
@@ -143,7 +143,13 @@ const RequestTypeForm = () => {
                         id="RequestType-HelpText"
                         className="margin-bottom-4"
                       >
-                        {t('requestTypeForm.info')}
+                        <Trans i18nKey="intake:requestTypeForm.info">
+                          indexZero
+                          <UswdsLink href="mailto:NavigatorInquiries@cms.hhs.gov">
+                            navigatorEmailLink
+                          </UswdsLink>
+                          indexTwo
+                        </Trans>
                       </HelpText>
                       <Field
                         as={RadioField}
