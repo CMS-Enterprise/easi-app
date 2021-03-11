@@ -4,7 +4,7 @@
 
 Data records from the EASi Governance workflow needs to be pushed to CEDAR,
 which then does an extract/transform/load process on the data, and pushes
-it further to the CFACTS system.
+it further to the Alfabet system.
 
 The EASi team operates in an agile methodology, and the data model of the
 governance system being built is necessarily in flux with frequently discovered
@@ -31,14 +31,14 @@ JSON "blob").
 Despite the loosely-defined nature of the JSON "blob", there still needs to be
 a well-defined schema, because the CEDAR team will continue to hold
 responsibility for reading and parsing the submitted data in order to submit it
-to CFACTS. The "blob" will allow us to move the responsibilities for defining
+to Alfabet. The "blob" will allow us to move the responsibilities for defining
 the data schema from the CEDAR team to the EASi team.
 
 To give the CEDAR team an indication as to which schema to operate against, one
 of the predefined fields in the API endpoint is used to communicate the name of
 which schema was used for constructing the information in the "blob". Upon
 submission from EASi to CEDAR, any data with a recognized schema will be
-processed and pushed to CFACTS in near real time. Submissions with schema names
+processed and pushed to Alfabet in near real time. Submissions with schema names
 unrecognized by CEDAR will be queued on the CEDAR side until the CEDAR team has
 implemented their translations for the new schema, after which the queued
 submissions will be de-queued and processed.
