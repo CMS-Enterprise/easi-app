@@ -510,23 +510,43 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	s.NoError(intakeErr)
 
 	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
-		SystemIntakeID: intake.ID,
-		Status:         models.BusinessCaseStatusOPEN,
-		EUAUserID:      "TEST",
+		SystemIntakeID:                      intake.ID,
+		Status:                              models.BusinessCaseStatusOPEN,
+		EUAUserID:                           "TEST",
+		AlternativeAAcquisitionApproach:     null.StringFrom("Aquisition Approach"),
+		AlternativeACons:                    null.StringFrom("Cons"),
+		AlternativeACostSavings:             null.StringFrom("Savings"),
+		AlternativeAHasUI:                   null.StringFrom("Has UI"),
+		AlternativeAHostingCloudServiceType: null.StringFrom("Cloud Type"),
+		AlternativeAHostingLocation:         null.StringFrom("Hosting Location"),
+		AlternativeAHostingType:             null.StringFrom("Hosting Type"),
+		AlternativeAPros:                    null.StringFrom("Pros"),
+		AlternativeASecurityIsApproved:      null.BoolFrom(true),
+		AlternativeASecurityIsBeingReviewed: null.StringFrom("Being Reviewed"),
+		AlternativeASummary:                 null.StringFrom("Summary"),
+		AlternativeATitle:                   null.StringFrom("Title"),
 	})
 	s.NoError(businessCaseErr)
 
 	var resp struct {
 		SystemIntake struct {
-			ID                     string
-			ProjectName            string
-			Status                 string
-			RequestType            string
-			BusinessOwner          string
-			BusinessOwnerComponent string
-			BusinessNeed           *string
-			BusinessCase           struct {
-				ID string
+			ID           string
+			BusinessCase struct {
+				ID                   string
+				AlternativeASolution struct {
+					AcquisitionApproach     string
+					Cons                    string
+					CostSavings             string
+					HasUI                   string
+					HostingCloudServiceType string
+					HostingLocation         string
+					HostingType             string
+					Pros                    string
+					SecurityIsApproved      bool
+					SecurityIsBeingReviewed string
+					Summary                 string
+					Title                   string
+				}
 			}
 		}
 	}
@@ -537,16 +557,42 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 		`query {
 			systemIntake(id: "%s") {
 				id
-				projectName
-				status
-				requestType
-				businessOwner
-				businessOwnerComponent
-				businessNeed
-				businessCase { id }
+				businessCase { 
+					id
+					alternativeASolution {
+						acquisitionApproach
+						cons
+						costSavings
+						hasUi
+						hostingCloudServiceType
+						hostingLocation
+						hostingType
+						pros
+						securityIsApproved
+						securityIsBeingReviewed
+						summary
+						title
+					}
+				}
 			}
 		}`, intake.ID), &resp)
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
-	s.Equal(businessCase.ID.String(), resp.SystemIntake.BusinessCase.ID)
+
+	respBusinessCase := resp.SystemIntake.BusinessCase
+	s.Equal(businessCase.ID.String(), respBusinessCase.ID)
+
+	alternativeA := respBusinessCase.AlternativeASolution
+	s.Equal(alternativeA.AcquisitionApproach, "Aquisition Approach")
+	s.Equal(alternativeA.Cons, "Cons")
+	s.Equal(alternativeA.CostSavings, "Savings")
+	s.Equal(alternativeA.HasUI, "Has UI")
+	s.Equal(alternativeA.HostingCloudServiceType, "Cloud Type")
+	s.Equal(alternativeA.HostingLocation, "Hosting Location")
+	s.Equal(alternativeA.HostingType, "Hosting Type")
+	s.Equal(alternativeA.Pros, "Pros")
+	s.True(alternativeA.SecurityIsApproved)
+	s.Equal(alternativeA.SecurityIsBeingReviewed, "Being Reviewed")
+	s.Equal(alternativeA.Summary, "Summary")
+	s.Equal(alternativeA.Title, "Title")
 }
