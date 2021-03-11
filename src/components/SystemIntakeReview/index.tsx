@@ -11,6 +11,7 @@ import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
+import { formatContractDate } from 'utils/formatDate';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
@@ -221,7 +222,9 @@ export const SystemIntakeReview = ({
               <div>
                 <DescriptionTerm term="Period of performance" />
                 <DescriptionDefinition
-                  definition={`${contract.startDate.month}/${contract.startDate.year} to ${contract.endDate.month}/${contract.endDate.year}`}
+                  definition={`${formatContractDate(
+                    contract.startDate
+                  )} to ${formatContractDate(contract.endDate)}`}
                 />
               </div>
             </ReviewRow>
