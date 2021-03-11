@@ -233,8 +233,8 @@ func NewFetchSystemIntakeByID(
 		logger := appcontext.ZLogger(ctx)
 		intake, err := fetch(ctx, id)
 		if err != nil {
-			logger.Error("failed to fetch system intake")
-			return &models.SystemIntake{}, &apperrors.QueryError{
+			logger.Info("failed to fetch system intake", zap.Error(err))
+			return nil, &apperrors.QueryError{
 				Err:       err,
 				Model:     intake,
 				Operation: apperrors.QueryFetch,
@@ -242,11 +242,11 @@ func NewFetchSystemIntakeByID(
 		}
 		ok, err := authorize(ctx)
 		if err != nil {
-			logger.Error("failed to authorize fetch system intake")
-			return &models.SystemIntake{}, err
+			logger.Info("failed to authorize fetch system intake", zap.Error(err))
+			return nil, err
 		}
 		if !ok {
-			return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
+			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 		return intake, nil
 	}
@@ -345,7 +345,7 @@ func NewUpdateLifecycleFields(
 			updated.LifecycleID.String,
 			updated.LifecycleExpiresAt,
 			updated.LifecycleScope.String,
-			updated.LifecycleNextSteps.String,
+			updated.DecisionNextSteps.String,
 			action.Feedback.String)
 		if err != nil {
 			return nil, err

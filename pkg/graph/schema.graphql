@@ -14,8 +14,11 @@ the 508 process.
 type AccessibilityRequest {
   documents: [AccessibilityRequestDocument!]!
   id: UUID!
+  name: String!
+  relevantTestDate: TestDate
   submittedAt: Time!
   system: System!
+  testDates: [TestDate!]!
 }
 
 """
@@ -37,6 +40,84 @@ type System {
 }
 
 """
+Represents the availability of a document
+"""
+enum AccessibilityRequestDocumentStatus {
+  """
+  Passed security screen
+  """
+  AVAILABLE
+
+  """
+  Just uploaded
+  """
+  PENDING
+
+  """
+  Failed security screen
+  """
+  UNAVAILABLE
+}
+
+"""
+Common document type of an Accessibility Request document
+"""
+enum AccessibilityRequestDocumentCommonType {
+  """
+  Awarded VPAT
+  """
+  AWARDED_VPAT
+
+  """
+  Other document
+  """
+  OTHER
+
+  """
+  Remediation Plan
+  """
+  REMEDIATION_PLAN
+
+  """
+  Testing VPAT
+  """
+  TESTING_VPAT
+
+  """
+  Test Plan
+  """
+  TEST_PLAN
+
+  """
+  Test Results
+  """
+  TEST_RESULTS
+}
+
+"""
+Document type of an Accessibility Request document
+"""
+type AccessibilityRequestDocumentType {
+  commonType: AccessibilityRequestDocumentCommonType!
+  otherTypeDescription: String
+}
+
+"""
+A document that belongs to an accessibility request
+"""
+type AccessibilityRequestDocument {
+  documentType: AccessibilityRequestDocumentType!
+  id: UUID!
+  mimeType: String!
+  name: String!
+  requestID: UUID!
+  size: Int!
+  status: AccessibilityRequestDocumentStatus!
+  uploadedAt: Time!
+  url: String!
+}
+
+"""
 A collection of Systems
 """
 type SystemConnection {
@@ -53,18 +134,10 @@ type SystemEdge {
 }
 
 """
-A document that belongs to an accessibility request
-"""
-type AccessibilityRequestDocument {
-  id: UUID!
-  name: String!
-  uploadedAt: Time!
-}
-
-"""
 Parameters required to create an AccessibilityRequest
 """
 input CreateAccessibilityRequestInput {
+  intakeID: UUID!
   name: String!
 }
 
@@ -73,6 +146,23 @@ Result of CreateAccessibilityRequest
 """
 type CreateAccessibilityRequestPayload {
   accessibilityRequest: AccessibilityRequest
+  userErrors: [UserError!]
+}
+
+"""
+Parameters required to generate a presigned upload URL
+"""
+input GeneratePresignedUploadURLInput {
+  fileName: String!
+  mimeType: String!
+  size: Int!
+}
+
+"""
+Result of CreateAccessibilityRequest
+"""
+type GeneratePresignedUploadURLPayload {
+  url: String
   userErrors: [UserError!]
 }
 
@@ -93,12 +183,259 @@ type AccessibilityRequestEdge {
 }
 
 """
+A 508 test instance
+"""
+type TestDate {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+The variety of a 508 test
+"""
+enum TestDateTestType {
+  """
+  Represents an initial 508 test
+  """
+  INITIAL
+
+  """
+  Represents a remediation test
+  """
+  REMEDIATION
+}
+
+"""
+Parameters for creating a test date
+"""
+input CreateTestDateInput {
+  date: Time!
+  requestID: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+Result of createTestDate
+"""
+type CreateTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+"""
+Parameters for editing a test date
+"""
+input UpdateTestDateInput {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+"""
+Result of editTestDate
+"""
+type UpdateTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+"""
+Parameters for createAccessibilityRequestDocument
+"""
+input CreateAccessibilityRequestDocumentInput {
+  commonDocumentType: AccessibilityRequestDocumentCommonType!
+  mimeType: String!
+  name: String!
+  otherDocumentTypeDescription: String
+  requestID: UUID!
+  size: Int!
+  url: String!
+}
+
+"""
+Result of createAccessibilityRequestDocument
+"""
+type CreateAccessibilityRequestDocumentPayload {
+  accessibilityRequestDocument: AccessibilityRequestDocument
+  userErrors: [UserError!]
+}
+
+"""
+The statuses for a system intake
+"""
+enum SystemIntakeStatus {
+  """
+  Accepted
+  """
+  ACCEPTED
+  """
+  Business case needs changes
+  """
+  BIZ_CASE_CHANGES_NEEDED
+  """
+  Busness case draft
+  """
+  BIZ_CASE_DRAFT
+  """
+  Business case draft submitted
+  """
+  BIZ_CASE_DRAFT_SUBMITTED
+  """
+  Business case final needed
+  """
+  BIZ_CASE_FINAL_NEEDED
+  """
+  Business case final submitted
+  """
+  BIZ_CASE_FINAL_SUBMITTED
+  """
+  Intake is in draft
+  """
+  INTAKE_DRAFT
+  """
+  Intake is submitted
+  """
+  INTAKE_SUBMITTED
+  """
+  Lifecycle ID issued
+  """
+  LCID_ISSUED
+  """
+  Need business case
+  """
+  NEED_BIZ_CASE
+  """
+  Request not approved
+  """
+  NOT_APPROVED
+  """
+  Request is not an IT request
+  """
+  NOT_IT_REQUEST
+  """
+  Request requires no further governance
+  """
+  NO_GOVERNANCE
+  """
+  Request is ready for Governance Review Board meeting
+  """
+  READY_FOR_GRB
+  """
+  Request is ready for Governance Review Team meeting
+  """
+  READY_FOR_GRT
+  """
+  Request for shutdown of existing system is complete
+  """
+  SHUTDOWN_COMPLETE
+  """
+  Request for shutdown of existing system is in progress
+  """
+  SHUTDOWN_IN_PROGRESS
+  """
+  Request was withdrawn by business owner
+  """
+  WITHDRAWN
+}
+
+"""
+The request types for a system intake
+"""
+enum SystemIntakeRequestType {
+  """
+  Request is for major changes to an existing system
+  """
+  MAJOR_CHANGES
+  """
+  Request is for a new system
+  """
+  NEW
+  """
+  Request is for re-competing an existing system
+  """
+  RECOMPETE
+  """
+  Request is to shut down an existing system
+  """
+  SHUTDOWN
+}
+
+"""
+A SystemIntake instance
+"""
+type SystemIntake {
+  archivedAt: Time
+  businessNeed: String
+  businessOwner: String
+  businessOwnerComponent: String
+  component: String
+  contractEndDate: Time
+  contractEndMonth: String
+  contractEndYear: String
+  contractStartDate: Time
+  contractStartMonth: String
+  contractStartYear: String
+  contractVehicle: String
+  contractor: String
+  costIncrease: String
+  costIncreaseAmount: String
+  createdAt: Time!
+  decisionNextSteps: String
+  eaCollaborator: String
+  eaCollaboratorName: String
+  eaSupportRequest: Boolean
+  euaUserId: String!
+  existingContract: String
+  existingFunding: Boolean
+  fundingNumber: String
+  fundingSource: String
+  grbDate: Time
+  grtDate: Time
+  id: UUID!
+  isso: String
+  issoName: String
+  lcid: String
+  lcidExpiresAt: Time
+  lcidScope: String
+  oitSecurityCollaborator: String
+  oitSecurityCollaboratorName: String
+  processStatus: String
+  productManager: String
+  productManagerComponent: String
+  projectAcronym: String
+  projectName: String
+  rejectionReason: String
+  requestType: SystemIntakeRequestType!
+  requester: String
+  solution: String
+  status: SystemIntakeStatus!
+  submittedAt: Time
+  trbCollaborator: String
+  trbCollaboratorName: String
+  updatedAt: Time!
+}
+
+"""
 The root mutation
 """
 type Mutation {
   createAccessibilityRequest(
-    input: CreateAccessibilityRequestInput
+    input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
+  createAccessibilityRequestDocument(
+    input: CreateAccessibilityRequestDocumentInput!
+  ): CreateAccessibilityRequestDocumentPayload
+  createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
+    @hasRole(role: EASI_508_TESTER)
+  generatePresignedUploadURL(
+    input: GeneratePresignedUploadURLInput!
+  ): GeneratePresignedUploadURLPayload
+  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
+    @hasRole(role: EASI_508_TESTER)
 }
 
 """
@@ -110,10 +447,8 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  systems(
-    after: String
-    first: Int!
-  ): SystemConnection
+  systemIntake(id: UUID!): SystemIntake @hasRole(role: EASI_GOVTEAM)
+  systems(after: String, first: Int!): SystemConnection
 }
 
 """
@@ -125,3 +460,30 @@ scalar UUID
 Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
 """
 scalar Time
+
+directive @hasRole(role: Role!) on FIELD_DEFINITION
+
+"""
+A user role associated with a job code
+"""
+enum Role {
+  """
+  A 508 Tester
+  """
+  EASI_508_TESTER
+
+  """
+  A 508 request owner
+  """
+  EASI_508_USER
+
+  """
+  A member of the GRT
+  """
+  EASI_GOVTEAM
+
+  """
+  A generic EASi user
+  """
+  EASI_USER
+}

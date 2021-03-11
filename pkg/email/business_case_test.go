@@ -12,7 +12,7 @@ import (
 func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
-	tester := "Test McTester"
+	testName := "Test McTest"
 	businessCaseID, _ := uuid.Parse("1abc2671-c5df-45a0-b2be-c30899b473bf")
 
 	s.Run("successful call has the right content", func() {
@@ -20,7 +20,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 		s.NoError(err)
 
 		expectedEmail := "<p>Hello,</p>\n\n" +
-			"<p>\n  You have a new draft Business Case pending in EASi.\n  " +
+			"<p>\n  You have a new Business Case pending in EASi.\n  " +
 			"Please get back to the requester as soon as possible with your response.\n</p>\n\n" +
 			fmt.Sprintf(
 				"<a href=\"%s://%s/governance-review-team/%s/business-case\" >",
@@ -28,12 +28,12 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 				s.config.URLHost,
 				businessCaseID.String(),
 			) +
-			"Open Business Case in EASi</a>\n"
-		err = client.SendBusinessCaseSubmissionEmail(ctx, tester, businessCaseID)
+			"Open Business Case for " + testName + " in EASi</a>\n"
+		err = client.SendBusinessCaseSubmissionEmail(ctx, testName, businessCaseID)
 
 		s.NoError(err)
 		s.Equal(s.config.GRTEmail, sender.toAddress)
-		s.Equal(fmt.Sprintf("New Business Case: %s", tester), sender.subject)
+		s.Equal(fmt.Sprintf("New Business Case: %s", testName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -42,7 +42,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendBusinessCaseSubmissionEmail(ctx, tester, businessCaseID)
+		err = client.SendBusinessCaseSubmissionEmail(ctx, testName, businessCaseID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -56,7 +56,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 		s.NoError(err)
 		client.templates.businessCaseSubmissionTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendBusinessCaseSubmissionEmail(ctx, tester, businessCaseID)
+		err = client.SendBusinessCaseSubmissionEmail(ctx, testName, businessCaseID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -71,7 +71,7 @@ func (s *EmailTestSuite) TestSendBusinessCaseSubmissionEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendBusinessCaseSubmissionEmail(ctx, tester, businessCaseID)
+		err = client.SendBusinessCaseSubmissionEmail(ctx, testName, businessCaseID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})

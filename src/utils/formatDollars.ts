@@ -1,4 +1,4 @@
-const formatDollars = (amount: any) => {
+const formatDollars = (amount: number | undefined): string => {
   if (amount) {
     return amount.toLocaleString('en-US', {
       style: 'currency',
@@ -6,7 +6,7 @@ const formatDollars = (amount: any) => {
       minimumFractionDigits: 0
     });
   }
-  return `$${amount}`;
+  return '$0';
 };
 
 export default formatDollars;

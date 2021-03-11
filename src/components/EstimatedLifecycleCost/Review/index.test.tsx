@@ -10,11 +10,7 @@ declare const global: any;
 
 describe('The Estimated Lifecycle Cost review component', () => {
   const developmentSampleData = {
-    year1: [
-      { phase: 'Development', cost: '5000' },
-      { phase: 'Development', cost: '5000' },
-      { phase: 'Development' }
-    ],
+    year1: [{ phase: 'Development', cost: '5000' }],
     year2: [{ phase: 'Development', cost: '5000' }],
     year3: [{ phase: 'Development', cost: '5000' }],
     year4: [{ phase: 'Development', cost: '5000' }],
@@ -22,15 +18,19 @@ describe('The Estimated Lifecycle Cost review component', () => {
   };
 
   const omSampleData = {
-    year1: [
-      { phase: 'Operations and Maintenance', cost: '5000' },
-      { phase: 'Operations and Maintenance', cost: '5000' },
-      { phase: 'Operations and Maintenance' }
-    ],
+    year1: [{ phase: 'Operations and Maintenance', cost: '5000' }],
     year2: [{ phase: 'Operations and Maintenance', cost: '5000' }],
     year3: [{ phase: 'Operations and Maintenance', cost: '5000' }],
     year4: [{ phase: 'Operations and Maintenance', cost: '5000' }],
     year5: [{ phase: 'Operations and Maintenance', cost: '5000' }]
+  };
+
+  const otherPhaseSampleData = {
+    year1: [{ phase: 'Other', cost: '5000' }],
+    year2: [{ phase: 'Other', cost: '5000' }],
+    year3: [{ phase: 'Other', cost: '5000' }],
+    year4: [{ phase: 'Other', cost: '5000' }],
+    year5: [{ phase: 'Other', cost: '5000' }]
   };
 
   it('renders without crashing', () => {
@@ -66,7 +66,7 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
       expect(
         component.find("[data-testid='total-development-costs']").text()
-      ).toEqual('$30,000');
+      ).toEqual('$25,000');
     });
   });
 
@@ -97,6 +97,10 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
     it('renders mobile view with O&M data', () => {
       mount(<EstimatedLifecycleCostReview data={omSampleData} />);
+    });
+
+    it('renders mobile view with Other data', () => {
+      mount(<EstimatedLifecycleCostReview data={otherPhaseSampleData} />);
     });
   });
 });

@@ -5,6 +5,7 @@ export default gql`
     accessibilityRequest(id: $id) {
       id
       submittedAt
+      name
       system {
         name
         lcid
@@ -13,9 +14,20 @@ export default gql`
           component
         }
       }
-      documents @client {
-        name
+      documents {
+        url
         uploadedAt
+        status
+        documentType {
+          commonType
+          otherTypeDescription
+        }
+      }
+      testDates {
+        id
+        testType
+        date
+        score
       }
     }
   }

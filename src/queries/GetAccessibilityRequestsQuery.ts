@@ -6,9 +6,12 @@ export default gql`
       edges {
         node {
           id
+          name
+          relevantTestDate {
+            date
+          }
           submittedAt
           system {
-            name
             lcid
             businessOwner {
               name

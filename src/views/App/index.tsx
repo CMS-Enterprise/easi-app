@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageContext from 'contexts/PageContext';
-import { AppState } from 'reducers/rootReducer';
-import user from 'utils/user';
-import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
-import Create from 'views/Accessibility/AccessibiltyRequest/Create';
-import List from 'views/Accessibility/AccessibiltyRequest/List';
+import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -37,19 +32,11 @@ import './index.scss';
 
 const AppRoutes = () => {
   const flags = useFlags();
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   return (
     <Switch>
-      {/* START: 508 Process Pages */}
-      <SecureRoute path="/508/requests/new" exact component={Create} />
-      <SecureRoute path="/508/requests/all" exact component={List} />
-      <SecureRoute
-        path="/508/requests/:accessibilityRequestId"
-        render={() => <AccessibilityRequestDetailPage />}
-      />
-      {/* END : 508 Process Pages */}
+      <SecureRoute path="/508" component={Accessibility} />
+
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
@@ -74,14 +61,12 @@ const AppRoutes = () => {
         render={({ component }: any) => component()}
         component={RequestDecision}
       />
-      {flags.taskListLite && (
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          render={({ component }: any) => component()}
-          component={GovernanceTaskList}
-        />
-      )}
+      <SecureRoute
+        path="/governance-task-list/:systemId"
+        exact
+        render={({ component }: any) => component()}
+        component={GovernanceTaskList}
+      />
       {flags.fileUploads && (
         <SecureRoute
           exact
@@ -89,12 +74,10 @@ const AppRoutes = () => {
           render={() => <DocumentPrototype />}
         />
       )}
-      {isUserSet && user.isGrtReviewer(userGroups) && (
-        <SecureRoute
-          path="/governance-review-team/:systemId/:activePage"
-          render={() => <GovernanceReviewTeam />}
-        />
-      )}
+      <SecureRoute
+        path="/governance-review-team/:systemId/:activePage"
+        render={() => <GovernanceReviewTeam />}
+      />
       <SecureRoute
         exact
         path="/system/request-type"
@@ -139,7 +122,6 @@ const AppRoutes = () => {
   );
 };
 
-// eslint-disable-next-line react/prefer-stateless-function
 const App = () => {
   const [pageName, setPageName] = useState('');
 

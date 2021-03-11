@@ -1,9 +1,7 @@
 import axios from 'axios';
-import { DateTime } from 'luxon';
 import { Action as ReduxAction } from 'redux-actions';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-import { updateLastActiveAt } from 'reducers/authReducer';
 import { Action } from 'types/action';
 import { fetchActions, postAction } from 'types/routines';
 
@@ -23,7 +21,6 @@ function* completeSystemIntake(action: ReduxAction<Action>) {
     yield put(postAction.failure(error.message));
   } finally {
     yield put(postAction.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 
@@ -42,7 +39,6 @@ function* getActions(actions: ReduxAction<string>) {
     yield put(fetchActions.failure(error.message));
   } finally {
     yield put(fetchActions.fulfill());
-    yield put(updateLastActiveAt(DateTime.local()));
   }
 }
 

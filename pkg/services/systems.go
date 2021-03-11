@@ -5,16 +5,16 @@ import (
 	"errors"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
-	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // NewFetchSystems returns a function that will fetch all the existing systems
 func NewFetchSystems(
 	config Config,
-	fetchAll func(context.Context) ([]*model.System, error),
+	fetchAll func(context.Context) ([]*models.System, error),
 	authorize func(context.Context) (bool, error),
-) func(context.Context) ([]*model.System, error) {
-	return func(ctx context.Context) ([]*model.System, error) {
+) func(context.Context) ([]*models.System, error) {
+	return func(ctx context.Context) ([]*models.System, error) {
 		ok, err := authorize(ctx)
 		if err != nil {
 			return nil, err

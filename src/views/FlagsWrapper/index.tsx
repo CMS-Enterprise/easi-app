@@ -24,7 +24,6 @@ const FlagsWrapper = ({ children }: FlagsWrapperProps) => {
           hash: process.env.REACT_APP_LD_USER_HASH
         },
         flags: {
-          taskListLite: 'true',
           sandbox: 'true',
           pdfExport: 'true',
           prototype508: 'true',

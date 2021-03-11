@@ -1,6 +1,12 @@
 package graph
 
-import "github.com/cmsgov/easi-app/pkg/storage"
+import (
+	"context"
+
+	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/storage"
+	"github.com/cmsgov/easi-app/pkg/upload"
+)
 
 //go:generate go run github.com/99designs/gqlgen
 
@@ -10,10 +16,21 @@ import "github.com/cmsgov/easi-app/pkg/storage"
 
 // Resolver is a resolver.
 type Resolver struct {
-	store *storage.Store
+	store    *storage.Store
+	service  ResolverService
+	s3Client *upload.S3Client
+}
+
+// ResolverService holds service methods for use in resolvers
+type ResolverService struct {
+	CreateTestDate func(context.Context, *models.TestDate) (*models.TestDate, error)
 }
 
 // NewResolver constructs a resolver
-func NewResolver(store *storage.Store) *Resolver {
-	return &Resolver{store: store}
+func NewResolver(
+	store *storage.Store,
+	service ResolverService,
+	s3Client *upload.S3Client,
+) *Resolver {
+	return &Resolver{store: store, service: service, s3Client: s3Client}
 }
