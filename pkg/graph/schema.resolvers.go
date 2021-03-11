@@ -116,6 +116,10 @@ func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, o
 	return obj.CreatedAt, nil
 }
 
+func (r *mutationResolver) AddGRTFeedback(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
 		Name:     input.Name,

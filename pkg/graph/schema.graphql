@@ -420,9 +420,28 @@ type SystemIntake {
 }
 
 """
+Input for adding GRT Feedback
+"""
+input AddGRTFeedbackInput {
+  emailBody: String!
+  feedback: String!
+  intakeID: UUID!
+}
+
+"""
+Response for adding GRT Feedback
+"""
+type AddGRTFeedbackPayload {
+  id: UUID
+}
+
+"""
 The root mutation
 """
 type Mutation {
+  addGRTFeedback(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
