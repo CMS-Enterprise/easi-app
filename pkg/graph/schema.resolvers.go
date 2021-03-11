@@ -338,7 +338,10 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 }
 
 func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
-	return r.store.FetchOpenBusinessCaseByIntakeID(ctx, obj.ID)
+	if obj.BusinessCaseID == nil {
+		return nil, nil
+	}
+	return r.store.FetchBusinessCaseByID(ctx, *obj.BusinessCaseID)
 }
 
 func (r *systemIntakeResolver) BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error) {
