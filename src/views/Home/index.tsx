@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Alert } from '@trussworks/react-uswds';
@@ -9,7 +9,6 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
 import useConfirmationText from 'hooks/useConfirmationText';
-import usePageContext from 'hooks/usePageContext';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
@@ -20,7 +19,6 @@ import WelcomeText from './WelcomeText';
 import './index.scss';
 
 const Home = () => {
-  const { setPage } = usePageContext();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const confirmationText = useConfirmationText();
@@ -56,10 +54,6 @@ const Home = () => {
       </div>
     );
   };
-
-  useEffect(() => {
-    setPage('home page');
-  }, [setPage]);
 
   return (
     <PageWrapper>

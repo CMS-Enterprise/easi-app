@@ -10,6 +10,7 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -17,7 +18,6 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import { RadioField } from 'components/shared/RadioField';
 import { initialSystemIntakeForm } from 'data/systemIntake';
-import usePageContext from 'hooks/usePageContext';
 import { AppState } from 'reducers/rootReducer';
 import { postSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
@@ -28,7 +28,6 @@ const RequestTypeForm = () => {
   const { oktaAuth } = useOktaAuth();
   const dispatch = useDispatch();
   const history = useHistory();
-  const { setPage } = usePageContext();
 
   const isNewIntakeCreated = useSelector(
     (state: AppState) => state.systemIntake.isNewIntakeCreated
@@ -85,10 +84,6 @@ const RequestTypeForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isNewIntakeCreated]);
 
-  useEffect(() => {
-    setPage('intake request type form');
-  }, [setPage]);
-
   return (
     <PageWrapper>
       <Header />
@@ -100,9 +95,7 @@ const RequestTypeForm = () => {
           </li>
           <li aria-current="location">Make a system request</li>
         </BreadcrumbNav>
-        <h1 className="font-heading-2xl margin-top-4">
-          {t('requestTypeForm.heading')}
-        </h1>
+        <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
         <Formik
           initialValues={{ requestType: '' }}
           onSubmit={handleCreateIntake}

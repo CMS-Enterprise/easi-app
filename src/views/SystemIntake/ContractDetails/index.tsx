@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import {
@@ -24,7 +25,6 @@ import TextField from 'components/shared/TextField';
 import fundingSources from 'constants/enums/fundingSources';
 import processStages from 'constants/enums/processStages';
 import { yesNoMap } from 'data/common';
-import usePageContext from 'hooks/usePageContext';
 import { ContractDetailsForm, SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -41,7 +41,6 @@ const ContractDetails = ({
   dispatchSave
 }: ContractDetailsProps) => {
   const history = useHistory();
-  const { setPage } = usePageContext();
 
   const initialValues: ContractDetailsForm = {
     currentStage: systemIntake.currentStage,
@@ -59,10 +58,6 @@ const ContractDetails = ({
     }
     return link;
   })();
-
-  useEffect(() => {
-    setPage('intake contract details form');
-  }, [setPage]);
 
   return (
     <Formik
@@ -96,7 +91,7 @@ const ContractDetails = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl margin-top-4">Contract details</h1>
+            <PageHeading>Contract details</PageHeading>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <div className="tablet:grid-col-6">
                 <MandatoryFieldsAlert />

@@ -11,6 +11,7 @@ import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
@@ -236,12 +237,12 @@ const GovernanceReviewTeam = () => {
                         setModalOpen(false);
                       }}
                     >
-                      <h1 className="margin-top-0 font-heading-2xl line-height-heading-2">
+                      <PageHeading className="margin-top-0">
                         {t(
                           'governanceReviewTeam:adminLeads:assignModal.header',
                           { requestName: systemIntake.requestName }
                         )}
-                      </h1>
+                      </PageHeading>
                       <RadioGroup>
                         {grtMembers.map(k => (
                           <AdminLeadRadioOption

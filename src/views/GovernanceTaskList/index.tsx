@@ -9,6 +9,7 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import { ImproveEasiSurvey } from 'components/Survey';
 import {
@@ -38,7 +39,7 @@ import TaskListItem, { TaskListDescription } from './TaskListItem';
 import './index.scss';
 
 const GovernanceTaskList = () => {
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation();
@@ -121,7 +122,7 @@ const GovernanceTaskList = () => {
         </div>
         <div className="grid-row">
           <div className="tablet:grid-col-9">
-            <h1 className="font-heading-2xl margin-top-4">
+            <PageHeading>
               Get governance approval
               {systemIntake.requestName && (
                 <span className="display-block line-height-body-5 font-body-lg text-light">
@@ -130,7 +131,7 @@ const GovernanceTaskList = () => {
                     : `for ${systemIntake.requestName}`}
                 </span>
               )}
-            </h1>
+            </PageHeading>
             <ol className="governance-task-list__task-list governance-task-list__task-list--primary">
               <TaskListItem
                 data-testid="task-list-intake-form"

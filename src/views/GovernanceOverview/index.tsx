@@ -6,6 +6,7 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
 
@@ -45,9 +46,7 @@ const GovernanceOverview = () => {
           <i className="fa fa-angle-left margin-right-05 text-no-underline" />
           <span>Back</span>
         </Link>
-        <h1 className="font-heading-2xl margin-top-4">
-          Add a new system or service
-        </h1>
+        <PageHeading>Add a new system or service</PageHeading>
         <p className="line-height-body-5 font-body-lg text-light">
           To add a new system or service, you need to go through a set of steps
           and get approved by the Governance Review Board (GRB).

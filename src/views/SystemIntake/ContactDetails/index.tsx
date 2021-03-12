@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -16,7 +17,6 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import usePageContext from 'hooks/usePageContext';
 import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
@@ -64,7 +64,6 @@ const ContactDetails = ({
 }: ContactDetailsProps) => {
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
-  const { setPage } = usePageContext();
 
   const initialValues: ContactDetailsForm = {
     requestName: systemIntake.requestName,
@@ -96,10 +95,6 @@ const ContactDetails = ({
     }
     return link;
   })();
-
-  useEffect(() => {
-    setPage('intake contact details form');
-  }, [setPage]);
 
   return (
     <Formik
@@ -146,7 +141,7 @@ const ContactDetails = ({
 
             <div className="tablet:grid-col-6 margin-bottom-7">
               <MandatoryFieldsAlert />
-              <h1 className="font-heading-xl margin-top-3">Contact details</h1>
+              <PageHeading>Contact details</PageHeading>
               <Form>
                 {/* Requester Name */}
                 <FieldGroup
