@@ -13,8 +13,8 @@ const UserInfo = () => {
       <>
         <h1>
           {
-            JSON.parse(window.localStorage['okta-token-storage']).idToken.claims
-              .preferred_username
+            JSON.parse(window.localStorage['okta-token-storage'])?.idToken
+              ?.claims?.preferred_username
           }
         </h1>
         <p>Job codes</p>
@@ -32,8 +32,8 @@ const UserInfo = () => {
         <h2>Raw Access Token Claims</h2>
         <pre>
           {JSON.stringify(
-            JSON.parse(window.localStorage['okta-token-storage']).accessToken
-              .claims,
+            JSON.parse(window.localStorage['okta-token-storage'])?.accessToken
+              ?.claims,
             null,
             2
           )}
