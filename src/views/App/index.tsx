@@ -25,6 +25,7 @@ import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
+import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
 
 import './index.scss';
@@ -34,6 +35,7 @@ const AppRoutes = () => {
 
   return (
     <Switch>
+      <SecureRoute path="/user-diagnostics" component={UserInfo} />
       <SecureRoute path="/508" component={Accessibility} />
 
       <Route path="/" exact component={Home} />
