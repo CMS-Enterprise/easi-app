@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -117,7 +118,21 @@ func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, o
 }
 
 func (r *mutationResolver) AddGRTFeedback(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID: input.IntakeID,
+			Feedback: input.Feedback,
+		},
+		&models.Action{
+			IntakeID: &input.IntakeID,
+			Feedback: null.StringFrom(input.EmailBody),
+		})
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
 }
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {

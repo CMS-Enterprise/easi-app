@@ -441,7 +441,7 @@ The root mutation
 type Mutation {
   addGRTFeedback(
     input: AddGRTFeedbackInput!
-  ): AddGRTFeedbackPayload
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
