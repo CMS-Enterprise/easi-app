@@ -8,12 +8,13 @@ import CollapsableList from 'components/CollapsableList';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 
 import './index.scss';
 
 const PrepareForGRT = () => {
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('governanceReviewTeam');
   return (
     <PageWrapper className="easi-prepare-for-grt">
@@ -44,9 +45,7 @@ const PrepareForGRT = () => {
           </BreadcrumbNav>
           <div className="grid-row flex-justify">
             <div className="grid-col-9">
-              <h1 className="font-heading-2xl margin-top-4 with-subhead">
-                {t('prepare.title')}
-              </h1>
+              <PageHeading>{t('prepare.title')}</PageHeading>
               <h2 className="font-heading-xl margin-top-6">
                 {t('prepare.whatToExpect.title')}
               </h2>

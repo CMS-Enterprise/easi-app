@@ -5,16 +5,14 @@ import { useOktaAuth } from '@okta/okta-react';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
 import { localAuthStorageKey } from 'constants/localAuth';
-import usePageContext from 'hooks/usePageContext';
 import { isLocalEnvironment } from 'utils/local';
 import DevLogin from 'views/AuthenticationWrapper/DevLogin';
 
 const Login = () => {
-  const { setPage } = usePageContext();
-
   let defaultAuth = false;
   const { oktaAuth, authState } = useOktaAuth();
   const history = useHistory();
@@ -35,10 +33,6 @@ const Login = () => {
       history.push(referringUri);
     });
   };
-
-  useEffect(() => {
-    setPage('login page');
-  }, [setPage]);
 
   useEffect(() => {
     if (authState.isAuthenticated) {
@@ -69,6 +63,7 @@ const Login = () => {
             </button>
           </div>
         )}
+        <PageHeading>Sign in using EUA</PageHeading>
         <OktaSignInWidget onSuccess={onSuccess} onError={() => {}} />
       </MainContent>
       <Footer />

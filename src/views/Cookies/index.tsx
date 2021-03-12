@@ -5,6 +5,7 @@ import { Link } from '@trussworks/react-uswds';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 
 const Cookies = () => {
@@ -23,7 +24,7 @@ const Cookies = () => {
     <PageWrapper>
       <Header />
       <MainContent className="grid-container line-height-body-5">
-        <h1>{t('cookies:mainTitle')}</h1>
+        <PageHeading>{t('cookies:mainTitle')}</PageHeading>
 
         {/* Information Usage */}
         <div>

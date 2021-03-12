@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import PageContext from 'contexts/PageContext';
 import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
@@ -123,8 +122,6 @@ const AppRoutes = () => {
 };
 
 const App = () => {
-  const [pageName, setPageName] = useState('');
-
   const handleSkipNav = () => {
     const mainContent = document.getElementById('main-content')!;
     if (mainContent) {
@@ -142,19 +139,7 @@ const App = () => {
         <AuthenticationWrapper>
           <UserInfoWrapper>
             <TimeOutWrapper>
-              <PageContext.Provider
-                value={{ page: pageName, setPage: setPageName }}
-              >
-                <div
-                  className="usa-sr-only"
-                  role="status"
-                  aria-live="polite"
-                  aria-atomic
-                >
-                  {pageName ? `Navigated to ${pageName}` : 'EASi App'}
-                </div>
-                <AppRoutes />
-              </PageContext.Provider>
+              <AppRoutes />
             </TimeOutWrapper>
           </UserInfoWrapper>
         </AuthenticationWrapper>

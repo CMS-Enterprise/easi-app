@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -16,7 +17,6 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import usePageContext from 'hooks/usePageContext';
 import { SystemIntakeForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import SystemIntakeValidationSchema from 'validations/systemIntakeSchema';
@@ -44,7 +44,6 @@ const RequestDetails = ({
   dispatchSave
 }: RequestDetailsProps) => {
   const history = useHistory();
-  const { setPage } = usePageContext();
 
   const initialValues: RequestDetailsForm = {
     requestName: systemIntake.requestName,
@@ -63,10 +62,6 @@ const RequestDetails = ({
     }
     return link;
   })();
-
-  useEffect(() => {
-    setPage('intake request details form');
-  }, [setPage]);
 
   return (
     <Formik
@@ -100,7 +95,7 @@ const RequestDetails = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl margin-top-4">Request details</h1>
+            <PageHeading>Request details</PageHeading>
             <p className="line-height-body-6">
               Provide a detailed explanation of the business need/issue/problem
               that the requested project will address, including any legislative

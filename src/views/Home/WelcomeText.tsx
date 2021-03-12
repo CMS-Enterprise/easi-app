@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
+import PageHeading from 'components/PageHeading';
 import PlainInfo from 'components/PlainInfo';
 
 const WelcomeText = () => {
@@ -12,7 +13,7 @@ const WelcomeText = () => {
 
   return (
     <div className="tablet:grid-col-9">
-      <h1 className="margin-top-6">{t('home:title')}</h1>
+      <PageHeading>{t('home:title')}</PageHeading>
       <p className="line-height-body-5 font-body-lg text-light">
         {t('home:subtitle')}
       </p>
