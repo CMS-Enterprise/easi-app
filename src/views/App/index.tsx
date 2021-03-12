@@ -37,6 +37,10 @@ const AppRoutes = () => {
     <Switch>
       <SecureRoute path="/user-diagnostics" component={UserInfo} />
       <SecureRoute path="/508" component={Accessibility} />
+      <SecureRoute
+        path="/governance-review-team"
+        render={() => <GovernanceReviewTeam />}
+      />
 
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
@@ -75,10 +79,6 @@ const AppRoutes = () => {
           render={() => <DocumentPrototype />}
         />
       )}
-      <SecureRoute
-        path="/governance-review-team/:systemId/:activePage"
-        render={() => <GovernanceReviewTeam />}
-      />
       <SecureRoute
         exact
         path="/system/request-type"
