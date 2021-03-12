@@ -509,6 +509,36 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	})
 	s.NoError(intakeErr)
 
+	dev := models.LifecycleCostPhaseDEVELOPMENT
+	oam := models.LifecycleCostPhaseOPERATIONMAINTENANCE
+	other := models.LifecycleCostPhaseOTHER
+	cost := 1234
+	lifecycleCostLines := models.EstimatedLifecycleCosts{
+		models.EstimatedLifecycleCost{
+			Solution: models.LifecycleCostSolutionASIS,
+			Phase:    &dev,
+			Year:     models.LifecycleCostYear1,
+			Cost:     &cost,
+		},
+		models.EstimatedLifecycleCost{
+			Solution: models.LifecycleCostSolutionPREFERRED,
+			Phase:    &oam,
+			Year:     models.LifecycleCostYear2,
+			Cost:     &cost,
+		},
+		models.EstimatedLifecycleCost{
+			Solution: models.LifecycleCostSolutionA,
+			Phase:    &other,
+			Year:     models.LifecycleCostYear3,
+			Cost:     &cost,
+		},
+		models.EstimatedLifecycleCost{
+			Solution: models.LifecycleCostSolutionB,
+			Phase:    &dev,
+			Year:     models.LifecycleCostYear4,
+			Cost:     &cost,
+		},
+	}
 	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
 		SystemIntakeID:                      intake.ID,
 		Status:                              models.BusinessCaseStatusOPEN,
@@ -525,6 +555,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 		AlternativeASecurityIsBeingReviewed: null.StringFrom("Being Reviewed"),
 		AlternativeASummary:                 null.StringFrom("Summary"),
 		AlternativeATitle:                   null.StringFrom("Title"),
+		LifecycleCostLines:                  lifecycleCostLines,
 	})
 	s.NoError(businessCaseErr)
 
@@ -546,6 +577,14 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 					SecurityIsBeingReviewed string
 					Summary                 string
 					Title                   string
+				}
+				LifecycleCostLines []struct {
+					ID             string
+					BusinessCaseID string
+					Solution       string
+					Phase          string
+					Year           string
+					Cost           int
 				}
 			}
 		}
@@ -573,6 +612,12 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 						summary
 						title
 					}
+					lifecycleCostLines {
+						cost
+						phase
+						solution
+						year
+					}
 				}
 			}
 		}`, intake.ID), &resp)
@@ -582,17 +627,39 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	respBusinessCase := resp.SystemIntake.BusinessCase
 	s.Equal(businessCase.ID.String(), respBusinessCase.ID)
 
-	alternativeA := respBusinessCase.AlternativeASolution
-	s.Equal(alternativeA.AcquisitionApproach, "Aquisition Approach")
-	s.Equal(alternativeA.Cons, "Cons")
-	s.Equal(alternativeA.CostSavings, "Savings")
-	s.Equal(alternativeA.HasUI, "Has UI")
-	s.Equal(alternativeA.HostingCloudServiceType, "Cloud Type")
-	s.Equal(alternativeA.HostingLocation, "Hosting Location")
-	s.Equal(alternativeA.HostingType, "Hosting Type")
-	s.Equal(alternativeA.Pros, "Pros")
-	s.True(alternativeA.SecurityIsApproved)
-	s.Equal(alternativeA.SecurityIsBeingReviewed, "Being Reviewed")
-	s.Equal(alternativeA.Summary, "Summary")
-	s.Equal(alternativeA.Title, "Title")
+	respAlternativeA := respBusinessCase.AlternativeASolution
+	s.Equal(respAlternativeA.AcquisitionApproach, "Aquisition Approach")
+	s.Equal(respAlternativeA.Cons, "Cons")
+	s.Equal(respAlternativeA.CostSavings, "Savings")
+	s.Equal(respAlternativeA.HasUI, "Has UI")
+	s.Equal(respAlternativeA.HostingCloudServiceType, "Cloud Type")
+	s.Equal(respAlternativeA.HostingLocation, "Hosting Location")
+	s.Equal(respAlternativeA.HostingType, "Hosting Type")
+	s.Equal(respAlternativeA.Pros, "Pros")
+	s.True(respAlternativeA.SecurityIsApproved)
+	s.Equal(respAlternativeA.SecurityIsBeingReviewed, "Being Reviewed")
+	s.Equal(respAlternativeA.Summary, "Summary")
+	s.Equal(respAlternativeA.Title, "Title")
+
+	respLifeCycleCostLines := respBusinessCase.LifecycleCostLines
+	s.Len(respLifeCycleCostLines, 4)
+	s.Equal(respLifeCycleCostLines[0].Cost, 1234)
+	s.Equal(respLifeCycleCostLines[0].Phase, "Development")
+	s.Equal(respLifeCycleCostLines[0].Solution, "As Is")
+	s.Equal(respLifeCycleCostLines[0].Year, "1")
+
+	s.Equal(respLifeCycleCostLines[1].Cost, 1234)
+	s.Equal(respLifeCycleCostLines[1].Phase, "Operations and Maintenance")
+	s.Equal(respLifeCycleCostLines[1].Solution, "Preferred")
+	s.Equal(respLifeCycleCostLines[1].Year, "2")
+
+	s.Equal(respLifeCycleCostLines[2].Cost, 1234)
+	s.Equal(respLifeCycleCostLines[2].Phase, "Other")
+	s.Equal(respLifeCycleCostLines[2].Solution, "A")
+	s.Equal(respLifeCycleCostLines[2].Year, "3")
+
+	s.Equal(respLifeCycleCostLines[3].Cost, 1234)
+	s.Equal(respLifeCycleCostLines[3].Phase, "Development")
+	s.Equal(respLifeCycleCostLines[3].Solution, "B")
+	s.Equal(respLifeCycleCostLines[3].Year, "4")
 }

@@ -173,7 +173,26 @@ func (r *businessCaseResolver) CmsBenefit(ctx context.Context, obj *models.Busin
 }
 
 func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error) {
-	panic(fmt.Errorf("not implemented"))
+	lifeCycleCostLines := obj.LifecycleCostLines
+
+	if len(lifeCycleCostLines) == 0 {
+		return nil, nil
+	}
+
+	var costLines []*models.EstimatedLifecycleCost
+	for _, cost := range lifeCycleCostLines {
+		costLine := &models.EstimatedLifecycleCost{
+			BusinessCaseID: cost.BusinessCaseID,
+			Cost:           cost.Cost,
+			ID:             cost.ID,
+			Phase:          cost.Phase,
+			Solution:       cost.Solution,
+			Year:           cost.Year,
+		}
+		costLines = append(costLines, costLine)
+	}
+
+	return costLines, nil
 }
 
 func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
