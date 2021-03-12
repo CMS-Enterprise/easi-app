@@ -494,18 +494,163 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	ctx := context.Background()
 
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
-	projectName := "Big Project"
-	businessOwner := "Firstname Lastname"
-	businessOwnerComponent := "OIT"
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
+		SystemIntakeID: intake.ID,
+		Status:         models.BusinessCaseStatusOPEN,
+		EUAUserID:      "TEST",
+	})
+	s.NoError(businessCaseErr)
+
+	var resp struct {
+		SystemIntake struct {
+			ID           string
+			BusinessCase struct {
+				ID                   string
+				AlternativeASolution struct {
+					Cons *string
+				}
+				LifecycleCostLines []struct {
+					Phase *string
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				businessCase { 
+					id
+					alternativeASolution {
+						cons
+					}
+					lifecycleCostLines {
+						phase
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
+
+	respBusinessCase := resp.SystemIntake.BusinessCase
+	s.Equal(businessCase.ID.String(), respBusinessCase.ID)
+	s.Nil(respBusinessCase.AlternativeASolution.Cons)
+	s.Nil(respBusinessCase.LifecycleCostLines[0].Phase)
+}
+
+func (s GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery() {
+	ctx := context.Background()
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
-		ProjectName:            null.StringFrom(projectName),
-		Status:                 models.SystemIntakeStatusINTAKESUBMITTED,
-		RequestType:            models.SystemIntakeRequestTypeNEW,
-		BusinessOwner:          null.StringFrom(businessOwner),
-		BusinessOwnerComponent: null.StringFrom(businessOwnerComponent),
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
+		SystemIntakeID:                      intake.ID,
+		Status:                              models.BusinessCaseStatusOPEN,
+		EUAUserID:                           "TEST",
+		AlternativeAAcquisitionApproach:     null.StringFrom("Aquisition Approach"),
+		AlternativeACons:                    null.StringFrom("Cons"),
+		AlternativeACostSavings:             null.StringFrom("Savings"),
+		AlternativeAHasUI:                   null.StringFrom("Has UI"),
+		AlternativeAHostingCloudServiceType: null.StringFrom("Cloud Type"),
+		AlternativeAHostingLocation:         null.StringFrom("Hosting Location"),
+		AlternativeAHostingType:             null.StringFrom("Hosting Type"),
+		AlternativeAPros:                    null.StringFrom("Pros"),
+		AlternativeASecurityIsApproved:      null.BoolFrom(true),
+		AlternativeASecurityIsBeingReviewed: null.StringFrom("Being Reviewed"),
+		AlternativeASummary:                 null.StringFrom("Summary"),
+		AlternativeATitle:                   null.StringFrom("Title"),
+	})
+	s.NoError(businessCaseErr)
+
+	var resp struct {
+		SystemIntake struct {
+			ID           string
+			BusinessCase struct {
+				ID                   string
+				AlternativeASolution struct {
+					AcquisitionApproach     string
+					Cons                    string
+					CostSavings             string
+					HasUI                   string
+					HostingCloudServiceType string
+					HostingLocation         string
+					HostingType             string
+					Pros                    string
+					SecurityIsApproved      bool
+					SecurityIsBeingReviewed string
+					Summary                 string
+					Title                   string
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				businessCase { 
+					id
+					alternativeASolution {
+						acquisitionApproach
+						cons
+						costSavings
+						hasUi
+						hostingCloudServiceType
+						hostingLocation
+						hostingType
+						pros
+						securityIsApproved
+						securityIsBeingReviewed
+						summary
+						title
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
+
+	respBusinessCase := resp.SystemIntake.BusinessCase
+	s.Equal(businessCase.ID.String(), respBusinessCase.ID)
+
+	respAlternativeA := respBusinessCase.AlternativeASolution
+	s.Equal(respAlternativeA.AcquisitionApproach, "Aquisition Approach")
+	s.Equal(respAlternativeA.Cons, "Cons")
+	s.Equal(respAlternativeA.CostSavings, "Savings")
+	s.Equal(respAlternativeA.HasUI, "Has UI")
+	s.Equal(respAlternativeA.HostingCloudServiceType, "Cloud Type")
+	s.Equal(respAlternativeA.HostingLocation, "Hosting Location")
+	s.Equal(respAlternativeA.HostingType, "Hosting Type")
+	s.Equal(respAlternativeA.Pros, "Pros")
+	s.True(respAlternativeA.SecurityIsApproved)
+	s.Equal(respAlternativeA.SecurityIsBeingReviewed, "Being Reviewed")
+	s.Equal(respAlternativeA.Summary, "Summary")
+	s.Equal(respAlternativeA.Title, "Title")
+}
+
+func (s GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
 	})
 	s.NoError(intakeErr)
 
@@ -540,22 +685,10 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 		},
 	}
 	businessCase, businessCaseErr := s.store.CreateBusinessCase(ctx, &models.BusinessCase{
-		SystemIntakeID:                      intake.ID,
-		Status:                              models.BusinessCaseStatusOPEN,
-		EUAUserID:                           "TEST",
-		AlternativeAAcquisitionApproach:     null.StringFrom("Aquisition Approach"),
-		AlternativeACons:                    null.StringFrom("Cons"),
-		AlternativeACostSavings:             null.StringFrom("Savings"),
-		AlternativeAHasUI:                   null.StringFrom("Has UI"),
-		AlternativeAHostingCloudServiceType: null.StringFrom("Cloud Type"),
-		AlternativeAHostingLocation:         null.StringFrom("Hosting Location"),
-		AlternativeAHostingType:             null.StringFrom("Hosting Type"),
-		AlternativeAPros:                    null.StringFrom("Pros"),
-		AlternativeASecurityIsApproved:      null.BoolFrom(true),
-		AlternativeASecurityIsBeingReviewed: null.StringFrom("Being Reviewed"),
-		AlternativeASummary:                 null.StringFrom("Summary"),
-		AlternativeATitle:                   null.StringFrom("Title"),
-		LifecycleCostLines:                  lifecycleCostLines,
+		SystemIntakeID:     intake.ID,
+		Status:             models.BusinessCaseStatusOPEN,
+		EUAUserID:          "TEST",
+		LifecycleCostLines: lifecycleCostLines,
 	})
 	s.NoError(businessCaseErr)
 
@@ -563,21 +696,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 		SystemIntake struct {
 			ID           string
 			BusinessCase struct {
-				ID                   string
-				AlternativeASolution struct {
-					AcquisitionApproach     string
-					Cons                    string
-					CostSavings             string
-					HasUI                   string
-					HostingCloudServiceType string
-					HostingLocation         string
-					HostingType             string
-					Pros                    string
-					SecurityIsApproved      bool
-					SecurityIsBeingReviewed string
-					Summary                 string
-					Title                   string
-				}
+				ID                 string
 				LifecycleCostLines []struct {
 					ID             string
 					BusinessCaseID string
@@ -598,20 +717,6 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 				id
 				businessCase { 
 					id
-					alternativeASolution {
-						acquisitionApproach
-						cons
-						costSavings
-						hasUi
-						hostingCloudServiceType
-						hostingLocation
-						hostingType
-						pros
-						securityIsApproved
-						securityIsBeingReviewed
-						summary
-						title
-					}
 					lifecycleCostLines {
 						cost
 						phase
@@ -627,39 +732,30 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	respBusinessCase := resp.SystemIntake.BusinessCase
 	s.Equal(businessCase.ID.String(), respBusinessCase.ID)
 
-	respAlternativeA := respBusinessCase.AlternativeASolution
-	s.Equal(respAlternativeA.AcquisitionApproach, "Aquisition Approach")
-	s.Equal(respAlternativeA.Cons, "Cons")
-	s.Equal(respAlternativeA.CostSavings, "Savings")
-	s.Equal(respAlternativeA.HasUI, "Has UI")
-	s.Equal(respAlternativeA.HostingCloudServiceType, "Cloud Type")
-	s.Equal(respAlternativeA.HostingLocation, "Hosting Location")
-	s.Equal(respAlternativeA.HostingType, "Hosting Type")
-	s.Equal(respAlternativeA.Pros, "Pros")
-	s.True(respAlternativeA.SecurityIsApproved)
-	s.Equal(respAlternativeA.SecurityIsBeingReviewed, "Being Reviewed")
-	s.Equal(respAlternativeA.Summary, "Summary")
-	s.Equal(respAlternativeA.Title, "Title")
-
 	respLifeCycleCostLines := respBusinessCase.LifecycleCostLines
 	s.Len(respLifeCycleCostLines, 4)
-	s.Equal(respLifeCycleCostLines[0].Cost, 1234)
-	s.Equal(respLifeCycleCostLines[0].Phase, "Development")
-	s.Equal(respLifeCycleCostLines[0].Solution, "As Is")
-	s.Equal(respLifeCycleCostLines[0].Year, "1")
 
-	s.Equal(respLifeCycleCostLines[1].Cost, 1234)
-	s.Equal(respLifeCycleCostLines[1].Phase, "Operations and Maintenance")
-	s.Equal(respLifeCycleCostLines[1].Solution, "Preferred")
-	s.Equal(respLifeCycleCostLines[1].Year, "2")
+	costLine1 := respLifeCycleCostLines[0]
+	s.Equal(costLine1.Cost, 1234)
+	s.Equal(costLine1.Phase, "Development")
+	s.Equal(costLine1.Solution, "As Is")
+	s.Equal(costLine1.Year, "1")
 
-	s.Equal(respLifeCycleCostLines[2].Cost, 1234)
-	s.Equal(respLifeCycleCostLines[2].Phase, "Other")
-	s.Equal(respLifeCycleCostLines[2].Solution, "A")
-	s.Equal(respLifeCycleCostLines[2].Year, "3")
+	costLine2 := respLifeCycleCostLines[1]
+	s.Equal(costLine2.Cost, 1234)
+	s.Equal(costLine2.Phase, "Operations and Maintenance")
+	s.Equal(costLine2.Solution, "Preferred")
+	s.Equal(costLine2.Year, "2")
 
-	s.Equal(respLifeCycleCostLines[3].Cost, 1234)
-	s.Equal(respLifeCycleCostLines[3].Phase, "Development")
-	s.Equal(respLifeCycleCostLines[3].Solution, "B")
-	s.Equal(respLifeCycleCostLines[3].Year, "4")
+	costLine3 := respLifeCycleCostLines[2]
+	s.Equal(costLine3.Cost, 1234)
+	s.Equal(costLine3.Phase, "Other")
+	s.Equal(costLine3.Solution, "A")
+	s.Equal(costLine3.Year, "3")
+
+	costLine4 := respLifeCycleCostLines[3]
+	s.Equal(costLine4.Cost, 1234)
+	s.Equal(costLine4.Phase, "Development")
+	s.Equal(costLine4.Solution, "B")
+	s.Equal(costLine4.Year, "4")
 }
