@@ -67,6 +67,285 @@ definitions:
         type: array
         items:
           type: string
+  EASIAction:
+    type: object
+    required:
+      - id
+      - createdAt
+    properties:
+      id:
+        type: string
+      actionType:
+        type: string
+      actorEUA:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      feedback:
+        type: string
+  EASIBizCase:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      userEUA:
+        type: string
+      projectName:
+        type: string
+      requester:
+        type: string
+      requesterPhoneNumber:
+        type: string
+      businessOwner:
+        type: string
+      businessNeed:
+        type: string
+      cmsBenefit:
+        type: string
+	    priorityAlignment:
+        type: string
+      successIndicators:
+        type: string
+      asIsTitle:
+        type: string
+      asIsSummary:
+        type: string
+      asIsPros:
+        type: string
+      asIsCons:
+        type: string
+      asIsCostSavings:
+        type: string
+      preferredTitle:
+        type: string
+      preferredSummary:
+        type: string
+      preferredAcquisitionApproach:
+        type: string
+      preferredSecurityIsApproved:
+        type: boolean
+      preferredSecurityIsBeingReviewed:
+        type: string
+      preferredHostingType:
+        type: string
+      preferredHostingLocation:
+        type: string
+      preferredHostingCloudServiceType:
+        type: string
+      preferredHasUI:
+        type: string
+      preferredPros:
+        type: string
+      preferredCons:
+        type: string
+      preferredCostSavings:
+        type: string
+      alternativeATitle:
+        type: string
+      alternativeASummary:
+        type: string
+      alternativeAAcquisitionApproach:
+        type: string
+      alternativeASecurityIsApproved:
+        type: boolean
+      alternativeASecurityIsBeingReviewed:
+        type: string
+      alternativeAHostingType:
+        type: string
+      alternativeAHostingLocation:
+        type: string
+      alternativeAHostingCloudServiceType:
+        type: string
+      alternativeAHasUI:
+        type: string
+      alternativeAPros:
+        type: string
+      alternativeACons:
+        type: string
+      alternativeACostSavings:
+        type: string
+      alternativeBTitle:
+        type: string
+      alternativeBSummary:
+        type: string
+      alternativeBAcquisitionApproach:
+        type: string
+      alternativeBSecurityIsApproved:
+        type: boolean
+      alternativeBSecurityIsBeingReviewed:
+        type: string
+      alternativeBHostingType:
+        type: string
+      alternativeBHostingLocation:
+        type: string
+      alternativeBHostingCloudServiceType:
+        type: string
+      alternativeBHasUI:
+        type: string
+      alternativeBPros:
+        type: string
+      alternativeBCons:
+        type: string
+      alternativeBCostSavings:
+        type: string
+      lifecycleCostLines:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      submittedAt:
+        type: string
+        format: date-time
+      archivedAt:
+        type: string
+        format: date-time
+      initialSubmittedAt:
+        type: string
+        format: date-time
+      lastSubmittedAt:
+        type: string
+        format: date-time
+  EASIGovernance:
+    type: object
+    required:
+      - intake
+    properties:
+      intake:
+        $ref: '#/definitions/EASIIntake'
+      biz:
+        $ref: '#/definitions/EASIBizCase'
+      actions:
+        type: array
+        items:
+          $ref: '#/definitions/EASIAction'
+      notes:
+        type: array
+        items:
+          $ref: '#/definitions/EASINote'
+  EASIIntake:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      userEUA:
+        type: string
+      status:
+        type: string
+      requestType:
+        type: string
+      requester:
+        type: string
+      component:
+        type: string
+      businessOwner:
+        type: string
+      cusinessOwnerComponent:
+        type: string
+      productManager:
+        type: string
+      productManagerComponent:
+        type: string
+      isso:
+        type: string
+      issoName:
+        type: string
+      trbCollaborator:
+        type: string
+      trbCollaboratorName:
+        type: string
+      oitSecurityCollaborator:
+        type: string
+      oitSecurityCollaboratorName:
+        type: string
+      eaCollaborator:
+        type: string
+      eaCollaboratorName:
+        type: string
+      projectName:
+        type: string
+      projectAcronym:
+        type: string
+      existingFunding:
+        type: boolean
+      fundingSource:
+        type: string
+      fundingNumber:
+        type: string
+      businessNeed:
+        type: string
+      solution:
+        type: string
+      processStatus:
+        type: string
+      eaSupportRequest:
+        type: boolean
+      existingContract:
+        type: string
+      costIncrease:
+        type: string
+      costIncreaseAmount:
+        type: string
+      contractor:
+        type: string
+      contractVehicle:
+        type: string
+      contractStartDate:
+        type: date-time
+      contractEndDate:
+        type: date-time
+      createdAt:
+        type: date-time
+      updatedAt:
+        type: date-time
+      submittedAt:
+        type: date-time
+      decidedAt:
+        type: date-time
+      archivedAt:
+        type: date-time
+      grtDate:
+        type: date
+      grbDate:
+        type: date
+      grtReviewEmailBody:
+        type: string
+      requesterEmailAddress:
+        type: string
+      lifecycleID:
+        type: string
+      lifecycleExpiresAt:
+        type: date
+      lifecycleScope:
+        type: string
+      decisionNextSteps:
+        type: string
+      rejectionReason:
+        type: string
+      adminLead:
+        type: string
+  EASINote:
+    type: object
+    required:
+      - id
+      - createdAt
+    properties:
+      id:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      authorEUA:
+        type: string
+      content:
+        type: string
   IntakeInput:
     type: object
     properties:
