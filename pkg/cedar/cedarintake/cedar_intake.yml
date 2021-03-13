@@ -4,7 +4,7 @@ info:
     API's to support the posting of a string (json, xml, etc.) for incoming documents.
   version: "1.0"
   title: CEDAR Intake
-host: webmethods-apigw.cedarimpl.cms.gov
+# host: webmethods-apigw.cedarimpl.cms.gov
 basePath: /gateway/CEDAR Intake/1.0
 schemes:
   - http
@@ -15,70 +15,6 @@ produces:
 security:
   - apiKey: []
 paths:
-  /intake/cedar/{id}:
-    get:
-      tags:
-        - intake
-      summary: Retrieve an intake based on a Cedar Id
-      description: Retrieve an intake based on a Cedar ID
-      operationId: intakeFindByCedarId
-      produces:
-        - application/json
-      parameters:
-        - name: id
-          in: path
-          description: An intakes ID assigned by the client system
-          required: true
-          type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/IntakeFindResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Response'
-        "401":
-          description: Access Denied
-          schema:
-            $ref: '#/definitions/Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Response'
-  /intake/client/{id}:
-    get:
-      tags:
-        - intake
-      summary: Retrieve an intake based on a client Id
-      description: Retrieve an intake based on a client Id
-      operationId: intakeFindByClientId
-      produces:
-        - application/json
-      parameters:
-        - name: id
-          in: path
-          description: An intakes ID assigned by the client system
-          required: true
-          type: string
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/IntakeFindResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/Response'
-        "401":
-          description: Access Denied
-          schema:
-            $ref: '#/definitions/Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/Response'
   /intake:
     post:
       tags:
@@ -131,11 +67,6 @@ definitions:
         type: array
         items:
           type: string
-  IntakeFindResponse:
-    type: object
-    properties:
-      Intake:
-        $ref: '#/definitions/Intake'
   IntakeInput:
     type: object
     properties:
@@ -164,21 +95,6 @@ definitions:
         type: string
         description: Customer status for the record being transmitted, i.e. Initiated, Final, etc.
     description: '{ "id": "5555", "type": "SystemTest", "schema": "SystemTestV01", "status": "Initiated", "bodyFormat": "json", "body": "{\"id\":\"5555\",\"eua_user_id\":\"test\",\"requester\":\"John Doe\",\"requester_component\":\"test\",\"system_name\":\"Test\"}", "createdDate": "2021-02-05 10:39:00", "lastUpdate": "2021-02-05 10:39:00" }'
-  Intake:
-    type: object
-    properties:
-      schema:
-        type: string
-      clientId:
-        type: string
-      bodyFormat:
-        type: string
-      body:
-        type: string
-      cedarId:
-        type: string
-      status:
-        type: string
   IntakePostResponse:
     type: object
     required:
