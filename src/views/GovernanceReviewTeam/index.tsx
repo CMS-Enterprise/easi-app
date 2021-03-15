@@ -26,6 +26,7 @@ import {
   translateRequestType
 } from 'utils/systemIntake';
 import user from 'utils/user';
+import ProvideGRTFeedback from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedback';
 import NotFound from 'views/NotFound';
 
 import ChooseAction from './Actions/ChooseAction';
@@ -403,7 +404,7 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-need-biz-case"
               render={() => (
-                <SubmitAction
+                <ProvideGRTFeedback
                   action="PROVIDE_FEEDBACK_NEED_BIZ_CASE"
                   actionName={actionsT('actions.provideFeedbackNeedBizCase')}
                 />
@@ -412,7 +413,7 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-keep-draft"
               render={() => (
-                <SubmitAction
+                <ProvideGRTFeedback
                   action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT"
                   actionName={actionsT('actions.provideGrtFeedbackKeepDraft')}
                 />
@@ -421,7 +422,7 @@ const GovernanceReviewTeam = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-need-final"
               render={() => (
-                <SubmitAction
+                <ProvideGRTFeedback
                   action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
                   actionName={actionsT('actions.provideGrtFeedbackNeedFinal')}
                 />
