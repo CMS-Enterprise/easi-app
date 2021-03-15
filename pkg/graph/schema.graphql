@@ -283,6 +283,17 @@ type BusinessCaseSolution {
 }
 
 """
+The shape of a solution for a business case
+"""
+type BusinessCaseAsIsSolution {
+  cons: String
+  costSavings: String
+  pros: String
+  summary: String
+  title: String
+}
+
+"""
 enum 
 """
 enum LifecycleCostPhase {
@@ -380,7 +391,7 @@ A Business Case instance
 type BusinessCase {
   alternativeASolution: BusinessCaseSolution
   alternativeBSolution: BusinessCaseSolution
-  asIsSolution: BusinessCaseSolution
+  asIsSolution: BusinessCaseAsIsSolution
   businessNeed: String
   businessOwner: String
   cmsBenefit: String

@@ -150,8 +150,8 @@ func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *mo
 	}, nil
 }
 
-func (r *businessCaseResolver) AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
-	return &model.BusinessCaseSolution{
+func (r *businessCaseResolver) AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseAsIsSolution, error) {
+	return &model.BusinessCaseAsIsSolution{
 		Cons:        obj.AsIsCons.Ptr(),
 		CostSavings: obj.AsIsCostSavings.Ptr(),
 		Pros:        obj.AsIsPros.Ptr(),
