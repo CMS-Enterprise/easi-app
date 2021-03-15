@@ -62,6 +62,10 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			cost_increase_amount,
 			contractor,
 			contract_vehicle,
+			contract_start_month,
+			contract_start_year,
+			contract_end_month,
+			contract_end_year,
 			contract_start_date,
 			contract_end_date,
 			grt_date,
@@ -102,6 +106,10 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:cost_increase_amount,
 			:contractor,
 			:contract_vehicle,
+			:contract_start_month,
+			:contract_start_year,
+			:contract_end_month,
+			:contract_end_year,
 			:contract_start_date,
 			:contract_end_date,
 			:grt_date,
@@ -269,20 +277,34 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 
 // FetchSystemIntakesByStatuses queries the DB for all system intakes matching a status filter
 func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
-	intakes := []models.SystemIntake{}
-	const byStatusClause = `
-		WHERE system_intakes.status IN (?)
+	var intakes models.SystemIntakes
+	query := `
+		SELECT
+			system_intakes.*,
+			business_cases.id as business_case_id,
+			intakes_and_notes.content AS last_admin_note_content,
+			intakes_and_notes.created_at AS last_admin_note_created_at
+		FROM
+			(	SELECT
+					distinct ON (system_intakes.id) system_intakes.id, notes.content, notes.created_at
+				FROM system_intakes
+					LEFT JOIN notes on notes.system_intake = system_intakes.id
+				WHERE system_intakes.status IN (?)
+				ORDER BY system_intakes.id, notes.created_at DESC
+			) AS intakes_and_notes
+		LEFT JOIN system_intakes ON system_intakes.id = intakes_and_notes.id
+		LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
 	`
-	query, args, err := sqlx.In(fetchSystemIntakeSQL+byStatusClause, allowedStatuses)
+	query, args, err := sqlx.In(query, allowedStatuses)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
-		return models.SystemIntakes{}, err
+		return nil, err
 	}
 	query = s.db.Rebind(query)
 	err = s.db.Select(&intakes, query, args...)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
-		return models.SystemIntakes{}, err
+		return nil, err
 	}
 	return intakes, nil
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
@@ -45,10 +46,34 @@ func main() {
 	makeAccessibilityRequest("TACO", store)
 	makeAccessibilityRequest("Big Project", store)
 
+	makeSystemIntake("With Contract Month and Year", logger, store, func(i *models.SystemIntake) {
+		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+		i.ContractStartMonth = null.StringFrom("10")
+		i.ContractStartYear = null.StringFrom("2021")
+		i.ContractEndMonth = null.StringFrom("10")
+		i.ContractEndYear = null.StringFrom("2022")
+	})
+
+	makeSystemIntake("With Contract Dates", logger, store, func(i *models.SystemIntake) {
+		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+		i.ContractStartDate = date(2021, 4, 5)
+		i.ContractEndDate = date(2022, 4, 5)
+	})
+
+	makeSystemIntake("With Both Contract Dates", logger, store, func(i *models.SystemIntake) {
+		i.ExistingContract = null.StringFrom("HAVE_CONTRACT")
+		i.ContractStartMonth = null.StringFrom("10")
+		i.ContractStartYear = null.StringFrom("2021")
+		i.ContractEndMonth = null.StringFrom("10")
+		i.ContractEndYear = null.StringFrom("2022")
+		i.ContractStartDate = date(2021, 4, 9)
+		i.ContractEndDate = date(2022, 4, 8)
+	})
+
 	makeBusinessCase("TACO", logger, store)
 }
 
-func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store) {
+func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 
 	intake := models.SystemIntake{
@@ -60,8 +85,19 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store) {
 		BusinessOwnerComponent: null.StringFrom("OIT"),
 		LifecycleID:            null.StringFrom("123456"),
 	}
+	for _, cb := range callbacks {
+		cb(&intake)
+	}
+
 	must(store.CreateSystemIntake(ctx, &intake))
 	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
+
+	return &intake
+}
+
+func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store) {
+	ctx := appcontext.WithLogger(context.Background(), logger)
+	intake := makeSystemIntake(name, logger, store)
 
 	phase := models.LifecycleCostPhaseDEVELOPMENT
 	cost := 123456
@@ -120,4 +156,9 @@ func must(_ interface{}, err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func date(year, month, day int) *time.Time {
+	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	return &date
 }

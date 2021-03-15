@@ -131,6 +131,8 @@ type SystemIntake struct {
 	DecisionNextSteps           null.String             `json:"decisionNextSteps" db:"decision_next_steps"`
 	RejectionReason             null.String             `json:"rejectionReason" db:"rejection_reason"`
 	AdminLead                   null.String             `json:"adminLead" db:"admin_lead"`
+	LastAdminNoteContent        null.String             `json:"lastAdminNoteContent" db:"last_admin_note_content"`
+	LastAdminNoteCreatedAt      *time.Time              `json:"lastAdminNoteCreatedAt" db:"last_admin_note_created_at"`
 }
 
 // SystemIntakes is a list of System Intakes
