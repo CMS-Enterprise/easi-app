@@ -5,7 +5,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-import formatDate from 'utils/formatDate';
+import formatDate, { formatContractDate } from 'utils/formatDate';
 
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
@@ -300,12 +300,12 @@ export const convertIntakeToCSV = (intake: SystemIntakeForm) => {
     contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
       intake.contract.hasContract
     )
-      ? `${intake.contract.startDate.month}/${intake.contract.startDate.year}`
+      ? formatContractDate(intake.contract.startDate)
       : '',
     contractEndDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
       intake.contract.hasContract
     )
-      ? `${intake.contract.endDate.month}/${intake.contract.endDate.year}`
+      ? formatContractDate(intake.contract.endDate)
       : '',
     submittedAt: intake.submittedAt && intake.submittedAt.toISO(),
     updatedAt: intake.updatedAt && intake.updatedAt.toISO(),
