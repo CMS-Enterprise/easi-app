@@ -1602,9 +1602,30 @@ type SystemIntake {
 }
 
 """
+Type of an action on a system intake
+"""
+enum ActionType {
+  """
+  Provide GRT feedback and request business case
+  """
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE
+
+  """
+  Provide GRT feedback and keep the business case in draft
+  """
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT
+
+  """
+  Provide GRT feedback and progress the business case to Final
+  """
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
+}
+
+"""
 Input for adding GRT Feedback
 """
 input AddGRTFeedbackInput {
+  actionType: ActionType!
   emailBody: String!
   feedback: String!
   intakeID: UUID!
@@ -6841,6 +6862,14 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 
 	for k, v := range asMap {
 		switch k {
+		case "actionType":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actionType"))
+			it.ActionType, err = ec.unmarshalNActionType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐActionType(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "emailBody":
 			var err error
 
@@ -8700,6 +8729,22 @@ func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚖgithubᚗcomᚋc
 		return graphql.Null
 	}
 	return ec._AccessibilityRequestEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNActionType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐActionType(ctx context.Context, v interface{}) (models.ActionType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.ActionType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNActionType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐActionType(ctx context.Context, sel ast.SelectionSet, v models.ActionType) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackInput(ctx context.Context, v interface{}) (model.AddGRTFeedbackInput, error) {

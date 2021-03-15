@@ -420,9 +420,30 @@ type SystemIntake {
 }
 
 """
+Type of an action on a system intake
+"""
+enum ActionType {
+  """
+  Provide GRT feedback and request business case
+  """
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE
+
+  """
+  Provide GRT feedback and keep the business case in draft
+  """
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT
+
+  """
+  Provide GRT feedback and progress the business case to Final
+  """
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
+}
+
+"""
 Input for adding GRT Feedback
 """
 input AddGRTFeedbackInput {
+  actionType: ActionType!
   emailBody: String!
   feedback: String!
   intakeID: UUID!

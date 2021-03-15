@@ -32,9 +32,10 @@ type AccessibilityRequestsConnection struct {
 
 // Input for adding GRT Feedback
 type AddGRTFeedbackInput struct {
-	EmailBody string    `json:"emailBody"`
-	Feedback  string    `json:"feedback"`
-	IntakeID  uuid.UUID `json:"intakeID"`
+	ActionType models.ActionType `json:"actionType"`
+	EmailBody  string            `json:"emailBody"`
+	Feedback   string            `json:"feedback"`
+	IntakeID   uuid.UUID         `json:"intakeID"`
 }
 
 // Response for adding GRT Feedback

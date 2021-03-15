@@ -29,11 +29,30 @@ export enum AccessibilityRequestDocumentStatus {
 }
 
 /**
+ * Type of an action on a system intake
+ */
+export enum ActionType {
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE = "PROVIDE_FEEDBACK_NEED_BIZ_CASE",
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT",
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL",
+}
+
+/**
  * The variety of a 508 test
  */
 export enum TestDateTestType {
   INITIAL = "INITIAL",
   REMEDIATION = "REMEDIATION",
+}
+
+/**
+ * Input for adding GRT Feedback
+ */
+export interface AddGRTFeedbackInput {
+  actionType: ActionType;
+  emailBody: string;
+  feedback: string;
+  intakeID: UUID;
 }
 
 /**
