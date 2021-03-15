@@ -6,7 +6,7 @@ import { SecureRoute } from '@okta/okta-react';
 import RequestRepository from 'components/RequestRepository';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
-import RequestOverview from 'views/GovernanceReviewTeam/requestOverview';
+import RequestOverview from 'views/GovernanceReviewTeam/RequestOverview';
 import NotFound from 'views/NotFound';
 
 const GovernanceReviewTeam = () => {

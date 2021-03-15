@@ -7,7 +7,7 @@ import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
 
-import RequestOverview from './requestOverview';
+import RequestOverview from './RequestOverview';
 
 jest.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
