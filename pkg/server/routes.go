@@ -145,6 +145,11 @@ func (s *Server) routes(
 	// set up GraphQL routes
 	gql := s.router.PathPrefix("/api/graph").Subrouter()
 	gql.Use(authorizationMiddleware) // TODO: see comment at top-level router
+
+	saveAction := services.NewSaveAction(
+		store.CreateAction,
+		cedarLDAPClient.FetchUserInfo,
+	)
 	resolver := graph.NewResolver(
 		store,
 		graph.ResolverService{
@@ -152,6 +157,15 @@ func (s *Server) routes(
 				serviceConfig,
 				services.NewAuthorizeHasEASiRole(),
 				store.CreateTestDate,
+			),
+			AddGRTFeedback: services.NewProvideGRTFeedback(
+				serviceConfig,
+				store.FetchSystemIntakeByID,
+				store.UpdateSystemIntake,
+				saveAction,
+				store.CreateGRTFeedback,
+				cedarLDAPClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
 			),
 		},
 		&s3Client,
@@ -261,10 +275,6 @@ func (s *Server) routes(
 	)
 	api.Handle("/metrics", metricsHandler.Handle())
 
-	saveAction := services.NewSaveAction(
-		store.CreateAction,
-		cedarLDAPClient.FetchUserInfo,
-	)
 	actionHandler := handlers.NewActionHandler(
 		base,
 		services.NewTakeAction(

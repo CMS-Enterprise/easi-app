@@ -436,9 +436,9 @@ func NewProvideGRTFeedback(
 	saveAction func(context.Context, *models.Action) error,
 	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string) error,
-) func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error) {
-	return func(ctx context.Context, grtFeedback *models.GRTFeedback) (*models.GRTFeedback, error) {
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string, intakeID uuid.UUID) error,
+) func(context.Context, *models.GRTFeedback, *models.Action) (*models.GRTFeedback, error) {
+	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action) (*models.GRTFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
 		if err != nil {
 			return nil, err
@@ -462,12 +462,7 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
-		action := &models.Action{
-			IntakeID:   &intake.ID,
-			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
-			Feedback:   null.String{},
-			CreatedAt:  nil,
-		}
+		action.ActionType = models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE
 		if err = saveAction(ctx, action); err != nil {
 			return nil, err
 		}
@@ -486,6 +481,7 @@ func NewProvideGRTFeedback(
 			ctx,
 			requesterInfo.Email,
 			action.Feedback.String,
+			intake.ID,
 		)
 		if err != nil {
 			return nil, err

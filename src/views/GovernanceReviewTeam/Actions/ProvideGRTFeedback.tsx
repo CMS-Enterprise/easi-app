@@ -13,6 +13,7 @@ import {
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
+import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { ActionType, ProvideGRTFeedbackForm } from 'types/action';
@@ -105,6 +106,9 @@ const ProvideGRTFeedback = ({
                   <Label htmlFor="ProvideGRTFeedbackForm-GRTFeedback">
                     {t('provideGRTFeedback.grtFeedbackLabel')}
                   </Label>
+                  <HelpText>
+                    {t('provideGRTFeedback.grtFeedbackHelpText')}
+                  </HelpText>
                   <FieldErrorMsg>{flatErrors.grtFeedback}</FieldErrorMsg>
                   <Field
                     as={TextAreaField}
