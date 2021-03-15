@@ -63,6 +63,9 @@ const action = {
     reasonHelpText:
       'Provide the exact set of reasons why their request in its current state has been rejected. Include the concerns raised about it.'
   },
+  provideGRTFeedback: {
+    submit: 'Email Decision & Progress to next step'
+  },
   submitAction: {
     backLink: 'Change',
     heading: 'Actions on request',
