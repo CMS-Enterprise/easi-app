@@ -114,6 +114,14 @@ type ComplexityRoot struct {
 		UpdatedAt            func(childComplexity int) int
 	}
 
+	BusinessCaseAsIsSolution struct {
+		Cons        func(childComplexity int) int
+		CostSavings func(childComplexity int) int
+		Pros        func(childComplexity int) int
+		Summary     func(childComplexity int) int
+		Title       func(childComplexity int) int
+	}
+
 	BusinessCaseSolution struct {
 		AcquisitionApproach     func(childComplexity int) int
 		Cons                    func(childComplexity int) int
@@ -284,7 +292,7 @@ type AccessibilityRequestDocumentResolver interface {
 type BusinessCaseResolver interface {
 	AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
 	AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
-	AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
+	AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseAsIsSolution, error)
 	BusinessNeed(ctx context.Context, obj *models.BusinessCase) (*string, error)
 	BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*string, error)
 	CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error)
@@ -681,6 +689,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BusinessCase.UpdatedAt(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.cons":
+		if e.complexity.BusinessCaseAsIsSolution.Cons == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.Cons(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.costSavings":
+		if e.complexity.BusinessCaseAsIsSolution.CostSavings == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.CostSavings(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.pros":
+		if e.complexity.BusinessCaseAsIsSolution.Pros == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.Pros(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.summary":
+		if e.complexity.BusinessCaseAsIsSolution.Summary == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.Summary(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.title":
+		if e.complexity.BusinessCaseAsIsSolution.Title == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.Title(childComplexity), true
 
 	case "BusinessCaseSolution.acquisitionApproach":
 		if e.complexity.BusinessCaseSolution.AcquisitionApproach == nil {
@@ -1797,6 +1840,17 @@ type BusinessCaseSolution {
 }
 
 """
+The shape of a solution for a business case
+"""
+type BusinessCaseAsIsSolution {
+  cons: String
+  costSavings: String
+  pros: String
+  summary: String
+  title: String
+}
+
+"""
 enum 
 """
 enum LifecycleCostPhase {
@@ -1894,7 +1948,7 @@ A Business Case instance
 type BusinessCase {
   alternativeASolution: BusinessCaseSolution
   alternativeBSolution: BusinessCaseSolution
-  asIsSolution: BusinessCaseSolution
+  asIsSolution: BusinessCaseAsIsSolution
   businessNeed: String
   businessOwner: String
   cmsBenefit: String
@@ -3224,9 +3278,9 @@ func (ec *executionContext) _BusinessCase_asIsSolution(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.BusinessCaseSolution)
+	res := resTmp.(*model.BusinessCaseAsIsSolution)
 	fc.Result = res
-	return ec.marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolution(ctx, field.Selections, res)
+	return ec.marshalOBusinessCaseAsIsSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseAsIsSolution(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCase_businessNeed(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
@@ -3853,6 +3907,166 @@ func (ec *executionContext) _BusinessCase_updatedAt(ctx context.Context, field g
 	res := resTmp.(*time.Time)
 	fc.Result = res
 	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_cons(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cons, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_costSavings(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CostSavings, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_pros(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Pros, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_summary(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Summary, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_title(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCaseSolution_acquisitionApproach(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
@@ -9228,6 +9442,38 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var businessCaseAsIsSolutionImplementors = []string{"BusinessCaseAsIsSolution"}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution(ctx context.Context, sel ast.SelectionSet, obj *model.BusinessCaseAsIsSolution) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, businessCaseAsIsSolutionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BusinessCaseAsIsSolution")
+		case "cons":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_cons(ctx, field, obj)
+		case "costSavings":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_costSavings(ctx, field, obj)
+		case "pros":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_pros(ctx, field, obj)
+		case "summary":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_summary(ctx, field, obj)
+		case "title":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_title(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var businessCaseSolutionImplementors = []string{"BusinessCaseSolution"}
 
 func (ec *executionContext) _BusinessCaseSolution(ctx context.Context, sel ast.SelectionSet, obj *model.BusinessCaseSolution) graphql.Marshaler {
@@ -11271,6 +11517,13 @@ func (ec *executionContext) marshalOBusinessCase2ᚖgithubᚗcomᚋcmsgovᚋeasi
 		return graphql.Null
 	}
 	return ec._BusinessCase(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOBusinessCaseAsIsSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseAsIsSolution(ctx context.Context, sel ast.SelectionSet, v *model.BusinessCaseAsIsSolution) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BusinessCaseAsIsSolution(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolution(ctx context.Context, sel ast.SelectionSet, v *model.BusinessCaseSolution) graphql.Marshaler {

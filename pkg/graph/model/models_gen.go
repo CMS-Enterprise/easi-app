@@ -31,6 +31,15 @@ type AccessibilityRequestsConnection struct {
 }
 
 // The shape of a solution for a business case
+type BusinessCaseAsIsSolution struct {
+	Cons        *string `json:"cons"`
+	CostSavings *string `json:"costSavings"`
+	Pros        *string `json:"pros"`
+	Summary     *string `json:"summary"`
+	Title       *string `json:"title"`
+}
+
+// The shape of a solution for a business case
 type BusinessCaseSolution struct {
 	AcquisitionApproach     *string `json:"acquisitionApproach"`
 	Cons                    *string `json:"cons"`
