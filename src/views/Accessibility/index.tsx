@@ -8,6 +8,7 @@ import user from 'utils/user';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
 import Create from 'views/Accessibility/AccessibiltyRequest/Create';
 import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibiltyRequest/Documents/New';
+import List from 'views/Accessibility/AccessibiltyRequest/List';
 import NotFound from 'views/NotFound';
 import TestDate from 'views/TestDate';
 
@@ -17,6 +18,7 @@ const Accessibility = () => {
 
   const RenderPage = () => (
     <Switch>
+      <SecureRoute path="/508/requests/all" exact component={List} />
       <SecureRoute path="/508/requests/new" exact component={Create} />
       <SecureRoute
         path="/508/requests/:accessibilityRequestId/documents/new"
