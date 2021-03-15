@@ -2,11 +2,14 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -34,6 +37,13 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
+  const { data: graphData } = useQuery<GetSystemIntake>(GetSystemIntakeQuery, {
+    variables: {
+      id: systemId
+    }
+  });
+  const intake = graphData?.systemIntake;
+  console.log(intake);
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
