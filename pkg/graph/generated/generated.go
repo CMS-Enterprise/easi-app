@@ -1957,7 +1957,7 @@ type BusinessCase {
   id: UUID!
   initialSubmittedAt: Time
   lastSubmittedAt: Time
-  lifecycleCostLines: [EstimatedLifecycleCost]
+  lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
   projectName: String
@@ -3577,7 +3577,7 @@ func (ec *executionContext) _BusinessCase_lifecycleCostLines(ctx context.Context
 	}
 	res := resTmp.([]*models.EstimatedLifecycleCost)
 	fc.Result = res
-	return ec.marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx, field.Selections, res)
+	return ec.marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCase_preferredSolution(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
@@ -10927,6 +10927,16 @@ func (ec *executionContext) unmarshalNCreateTestDateInput2githubᚗcomᚋcmsgov�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v *models.EstimatedLifecycleCost) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._EstimatedLifecycleCost(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNGeneratePresignedUploadURLInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx context.Context, v interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	res, err := ec.unmarshalInputGeneratePresignedUploadURLInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -11554,7 +11564,7 @@ func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsg
 	return ec._CreateTestDatePayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {
+func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -11581,7 +11591,7 @@ func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋ
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx, sel, v[i])
+			ret[i] = ec.marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -11592,13 +11602,6 @@ func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋ
 	}
 	wg.Wait()
 	return ret
-}
-
-func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v *models.EstimatedLifecycleCost) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._EstimatedLifecycleCost(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, v *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {

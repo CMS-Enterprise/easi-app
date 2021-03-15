@@ -400,7 +400,7 @@ type BusinessCase {
   id: UUID!
   initialSubmittedAt: Time
   lastSubmittedAt: Time
-  lifecycleCostLines: [EstimatedLifecycleCost]
+  lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
   projectName: String
