@@ -39,7 +39,7 @@ const AppRoutes = () => {
       <SecureRoute path="/508" component={Accessibility} />
       <SecureRoute
         path="/governance-review-team"
-        render={() => <GovernanceReviewTeam />}
+        component={GovernanceReviewTeam}
       />
 
       <Route path="/" exact component={Home} />
