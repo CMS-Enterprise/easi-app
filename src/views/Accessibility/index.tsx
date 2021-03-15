@@ -3,12 +3,14 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
+import { Alert } from '@trussworks/react-uswds';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import useConfirmationText from 'hooks/useConfirmationText';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
@@ -23,6 +25,7 @@ const Accessibility = () => {
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   const { t } = useTranslation('accessibility');
+  const confirmationText = useConfirmationText();
 
   const RenderPage = () => (
     <PageWrapper>
@@ -32,6 +35,11 @@ const Accessibility = () => {
           <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
         </SecondaryNav>
         <div className="grid-container">
+          {confirmationText && (
+            <Alert className="margin-top-4" type="success" role="alert">
+              {confirmationText}
+            </Alert>
+          )}
           <Switch>
             <SecureRoute path="/508/requests/all" exact component={List} />
             <SecureRoute path="/508/requests/new" exact component={Create} />

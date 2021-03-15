@@ -2,21 +2,19 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import TestDateCard from 'components/TestDateCard';
-import useConfirmationText from 'hooks/useConfirmationText';
 import formatDate from 'utils/formatDate';
 
 import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
-  const confirmationText = useConfirmationText();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -58,11 +56,6 @@ const AccessibilityRequestDetailPage = () => {
 
   return (
     <>
-      {confirmationText && (
-        <Alert className="margin-top-4" type="success" role="alert">
-          {confirmationText}
-        </Alert>
-      )}
       <h1 className="margin-top-6 margin-bottom-5">{requestName}</h1>
       <div className="grid-row grid-gap-lg">
         <div className="grid-col-9">
