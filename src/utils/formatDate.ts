@@ -14,4 +14,15 @@ const formatDate = (date: string | DateTime) => {
   return '';
 };
 
+type ContractDate = {
+  day: string;
+  month: string;
+  year: string;
+};
+
+export const formatContractDate = (date: ContractDate): string => {
+  const parts = [date.month, date.day, date.year];
+  return parts.filter((value: string) => value.length > 0).join('/');
+};
+
 export default formatDate;

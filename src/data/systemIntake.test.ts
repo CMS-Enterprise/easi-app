@@ -120,10 +120,12 @@ describe('The system intake data modifiers', () => {
           vehicle: 'Fixed price contract',
           startDate: {
             month: '1',
+            day: '4',
             year: '2015'
           },
           endDate: {
             month: '12',
+            day: '9',
             year: '2021'
           }
         },
@@ -203,8 +205,8 @@ describe('The system intake data modifiers', () => {
           contractor: 'TrussWorks, Inc.',
           vehicle: 'Fixed price contract'
         },
-        contractStartDate: '1/2015',
-        contractEndDate: '12/2021',
+        contractStartDate: '1/4/2015',
+        contractEndDate: '12/9/2021',
         businessNeed: 'Test business need',
         businessSolution: 'Test business solution',
         currentStage: 'Test current stage',
