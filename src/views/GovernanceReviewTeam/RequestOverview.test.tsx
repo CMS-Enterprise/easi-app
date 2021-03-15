@@ -7,7 +7,7 @@ import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
 
-import GovernanceReviewTeam from './index';
+import RequestOverview from './RequestOverview';
 
 jest.mock('@okta/okta-react', () => ({
   useOktaAuth: () => {
@@ -50,7 +50,7 @@ describe('The GRT Review page', () => {
       component = mount(
         <MemoryRouter>
           <Provider store={store}>
-            <GovernanceReviewTeam />
+            <RequestOverview />
           </Provider>
         </MemoryRouter>
       );
@@ -83,7 +83,7 @@ describe('The GRT Review page', () => {
       component = mount(
         <MemoryRouter>
           <Provider store={store}>
-            <GovernanceReviewTeam />
+            <RequestOverview />
           </Provider>
         </MemoryRouter>
       );
@@ -116,7 +116,7 @@ describe('The GRT Review page', () => {
       component = mount(
         <MemoryRouter>
           <Provider store={store}>
-            <GovernanceReviewTeam />
+            <RequestOverview />
           </Provider>
         </MemoryRouter>
       );
