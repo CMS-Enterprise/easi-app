@@ -2,8 +2,15 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
+<<<<<<< HEAD
+=======
+import { useQuery } from '@apollo/client';
+import { Button } from '@trussworks/react-uswds';
+>>>>>>> ab443d67 (GRT page queries intake using graph.)
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -30,6 +37,13 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
+  const { data: graphData } = useQuery<GetSystemIntake>(GetSystemIntakeQuery, {
+    variables: {
+      id: systemId
+    }
+  });
+  const intake = graphData?.systemIntake;
+  console.log(intake);
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
