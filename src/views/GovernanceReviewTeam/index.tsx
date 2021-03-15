@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 
 import RequestRepository from 'components/RequestRepository';
@@ -13,7 +14,7 @@ const GovernanceReviewTeam = () => {
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
 
   const RenderPage = () => (
-    <>
+    <Switch>
       <SecureRoute
         path="/governance-review-team/all"
         render={() => (
@@ -24,9 +25,10 @@ const GovernanceReviewTeam = () => {
       />
       <SecureRoute
         path="/governance-review-team/:systemId/:activePage"
-        render={() => <RequestOverview />}
+        component={RequestOverview}
       />
-    </>
+      <Route path="*" component={NotFound} />
+    </Switch>
   );
 
   if (isUserSet) {
