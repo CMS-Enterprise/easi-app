@@ -522,6 +522,26 @@ type SystemIntakeBusinessOwner {
 }
 
 """
+A date for a contract
+"""
+type ContractDate {
+  day: String
+  month: String
+  year: String
+}
+
+"""
+A contract for a system intake
+"""
+type SystemIntakeContract {
+  contractor: String
+  endDate: ContractDate
+  hasContract: String
+  startDate: ContractDate
+  vehicle: String
+}
+
+"""
 costs for a system intake
 """
 type SystemIntakeCosts {
@@ -572,21 +592,13 @@ type SystemIntake {
   businessNeed: String
   businessOwner: SystemIntakeBusinessOwner
   businessSolution: String
-  contractEndDate: Time
-  contractEndMonth: String
-  contractEndYear: String
-  contractStartDate: Time
-  contractStartMonth: String
-  contractStartYear: String
-  contractVehicle: String
-  contractor: String
+  contract: SystemIntakeContract
   costs: SystemIntakeCosts
   createdAt: Time!
   decisionNextSteps: String
   eaCollaborator: String
   eaCollaboratorName: String
   euaUserId: String!
-  existingContract: String
   fundingSource: SystemIntakeFundingSource
   grbDate: Time
   grtDate: Time

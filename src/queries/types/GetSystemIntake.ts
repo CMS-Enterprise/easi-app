@@ -15,6 +15,29 @@ export interface GetSystemIntake_systemIntake_businessOwner {
   name: string | null;
 }
 
+export interface GetSystemIntake_systemIntake_contract_endDate {
+  __typename: "ContractDate";
+  day: string | null;
+  month: string | null;
+  year: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_contract_startDate {
+  __typename: "ContractDate";
+  day: string | null;
+  month: string | null;
+  year: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_contract {
+  __typename: "SystemIntakeContract";
+  contractor: string | null;
+  endDate: GetSystemIntake_systemIntake_contract_endDate | null;
+  hasContract: string | null;
+  startDate: GetSystemIntake_systemIntake_contract_startDate | null;
+  vehicle: string | null;
+}
+
 export interface GetSystemIntake_systemIntake_costs {
   __typename: "SystemIntakeCosts";
   isExpectingIncrease: string | null;
@@ -53,6 +76,7 @@ export interface GetSystemIntake_systemIntake {
   businessNeed: string | null;
   businessSolution: string | null;
   businessOwner: GetSystemIntake_systemIntake_businessOwner | null;
+  contract: GetSystemIntake_systemIntake_contract | null;
   costs: GetSystemIntake_systemIntake_costs | null;
   isso: GetSystemIntake_systemIntake_isso | null;
   fundingSource: GetSystemIntake_systemIntake_fundingSource | null;
