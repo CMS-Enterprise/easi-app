@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep';
+
 import {
   BusinessCaseModel,
   EstimatedLifecycleCostLines,
@@ -21,11 +23,11 @@ const emptyPhaseValues = {
 };
 
 export const defaultEstimatedLifecycle = {
-  year1: { ...emptyPhaseValues },
-  year2: { ...emptyPhaseValues },
-  year3: { ...emptyPhaseValues },
-  year4: { ...emptyPhaseValues },
-  year5: { ...emptyPhaseValues }
+  year1: cloneDeep(emptyPhaseValues),
+  year2: cloneDeep(emptyPhaseValues),
+  year3: cloneDeep(emptyPhaseValues),
+  year4: cloneDeep(emptyPhaseValues),
+  year5: cloneDeep(emptyPhaseValues)
 };
 
 export const defaultProposedSolution = {
@@ -34,7 +36,7 @@ export const defaultProposedSolution = {
   acquisitionApproach: '',
   pros: '',
   cons: '',
-  estimatedLifecycleCost: defaultEstimatedLifecycle,
+  estimatedLifecycleCost: cloneDeep(defaultEstimatedLifecycle),
   costSavings: '',
   security: {
     isApproved: null,
@@ -69,12 +71,12 @@ export const businessCaseInitialData: BusinessCaseModel = {
     summary: '',
     pros: '',
     cons: '',
-    estimatedLifecycleCost: defaultEstimatedLifecycle,
+    estimatedLifecycleCost: cloneDeep(defaultEstimatedLifecycle),
     costSavings: ''
   },
-  preferredSolution: defaultProposedSolution,
-  alternativeA: defaultProposedSolution,
-  alternativeB: defaultProposedSolution
+  preferredSolution: cloneDeep(defaultProposedSolution),
+  alternativeA: cloneDeep(defaultProposedSolution),
+  alternativeB: cloneDeep(defaultProposedSolution)
 };
 
 type lifecycleCostLinesType = {
@@ -141,10 +143,10 @@ export const prepareBusinessCaseForApp = (
   };
 
   const lifecycleCostLines: lifecycleCostLinesType = {
-    'As Is': { ...defaultEstimatedLifecycle },
-    Preferred: { ...defaultEstimatedLifecycle },
-    A: { ...defaultEstimatedLifecycle },
-    B: { ...defaultEstimatedLifecycle }
+    'As Is': cloneDeep(defaultEstimatedLifecycle),
+    Preferred: cloneDeep(defaultEstimatedLifecycle),
+    A: cloneDeep(defaultEstimatedLifecycle),
+    B: cloneDeep(defaultEstimatedLifecycle)
   };
 
   let doesAltBHaveLifecycleCostLines = false;
@@ -161,12 +163,12 @@ export const prepareBusinessCaseForApp = (
       `year${line.year}` as keyof EstimatedLifecycleCostLines
     ][phaseType] = {
       isPresent: !!line.cost,
-      cost: (line.cost && line.cost.toString()) || ''
+      cost: line.cost ? line.cost.toString() : ''
     };
   });
 
   if (!doesAltBHaveLifecycleCostLines) {
-    lifecycleCostLines.B = defaultEstimatedLifecycle;
+    lifecycleCostLines.B = cloneDeep(defaultEstimatedLifecycle);
   }
 
   return {
