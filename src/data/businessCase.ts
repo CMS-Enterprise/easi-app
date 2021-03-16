@@ -1,18 +1,31 @@
-import cloneDeep from 'lodash/cloneDeep';
-
 import {
   BusinessCaseModel,
   EstimatedLifecycleCostLines,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import { LifecyclePhase } from 'types/estimatedLifecycle';
+import { LifecycleCosts } from 'types/estimatedLifecycle';
+
+const emptyPhaseValues = {
+  development: {
+    isPresent: false,
+    cost: ''
+  },
+  operationsMaintenance: {
+    isPresent: false,
+    cost: ''
+  },
+  other: {
+    isPresent: false,
+    cost: ''
+  }
+};
 
 export const defaultEstimatedLifecycle = {
-  year1: [{ phase: '', cost: '' }],
-  year2: [{ phase: '', cost: '' }],
-  year3: [{ phase: '', cost: '' }],
-  year4: [{ phase: '', cost: '' }],
-  year5: [{ phase: '', cost: '' }]
+  year1: { ...emptyPhaseValues },
+  year2: { ...emptyPhaseValues },
+  year3: { ...emptyPhaseValues },
+  year4: { ...emptyPhaseValues },
+  year5: { ...emptyPhaseValues }
 };
 
 export const defaultProposedSolution = {
@@ -38,6 +51,7 @@ export const defaultProposedSolution = {
 export const businessCaseInitialData: BusinessCaseModel = {
   status: 'OPEN',
   systemIntakeId: '',
+  systemIntakeStatus: '',
   requestName: '',
   requester: {
     name: '',
@@ -61,14 +75,6 @@ export const businessCaseInitialData: BusinessCaseModel = {
   preferredSolution: defaultProposedSolution,
   alternativeA: defaultProposedSolution,
   alternativeB: defaultProposedSolution
-};
-
-const emptyEstimatedLifecycle = {
-  year1: [],
-  year2: [],
-  year3: [],
-  year4: [],
-  year5: []
 };
 
 type lifecycleCostLinesType = {
@@ -98,12 +104,14 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
   } = alternativeB;
 
   let hasLineItem;
-  Object.values(estimatedLifecycleCost).forEach(phaseCost => {
-    phaseCost.forEach(lineItem => {
-      if (lineItem.phase || lineItem.cost) {
-        hasLineItem = true;
-      }
-    });
+  Object.values(estimatedLifecycleCost).forEach(phase => {
+    if (
+      phase.development.isPresent ||
+      phase.operationsMaintenance.isPresent ||
+      phase.other.isPresent
+    ) {
+      hasLineItem = true;
+    }
   });
 
   return (
@@ -126,37 +134,35 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
+  const phaseTypeMap: any = {
+    Development: 'development',
+    'Operations and Maintenance': 'operationsMaintenance',
+    Other: 'other'
+  };
+
   const lifecycleCostLines: lifecycleCostLinesType = {
-    'As Is': cloneDeep(emptyEstimatedLifecycle),
-    Preferred: cloneDeep(emptyEstimatedLifecycle),
-    A: cloneDeep(emptyEstimatedLifecycle),
-    B: cloneDeep(emptyEstimatedLifecycle)
+    'As Is': { ...defaultEstimatedLifecycle },
+    Preferred: { ...defaultEstimatedLifecycle },
+    A: { ...defaultEstimatedLifecycle },
+    B: { ...defaultEstimatedLifecycle }
   };
 
   let doesAltBHaveLifecycleCostLines = false;
-  businessCase.lifecycleCostLines.forEach((line: any) => {
-    const solution = (solutionName => {
-      switch (solutionName) {
-        case 'As Is':
-          return lifecycleCostLines['As Is'];
-        case 'Preferred':
-          return lifecycleCostLines.Preferred;
-        case 'A':
-          return lifecycleCostLines.A;
-        case 'B':
-          doesAltBHaveLifecycleCostLines = true;
-          return lifecycleCostLines.B;
-        default:
-          return null;
-      }
-    })(line.solution);
 
-    if (solution) {
-      solution[`year${line.year}` as keyof EstimatedLifecycleCostLines].push({
-        phase: line.phase || '',
-        cost: line.cost === null ? '' : line.cost.toString()
-      });
+  businessCase.lifecycleCostLines.forEach((line: any) => {
+    const phaseType: 'development' | 'operationsMaintenance' | 'other' =
+      phaseTypeMap[`${line.phase}`];
+
+    if (line.solution === 'B') {
+      doesAltBHaveLifecycleCostLines = true;
     }
+
+    lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
+      `year${line.year}` as keyof EstimatedLifecycleCostLines
+    ][phaseType] = {
+      isPresent: !!line.cost,
+      cost: (line.cost && line.cost.toString()) || ''
+    };
   });
 
   if (!doesAltBHaveLifecycleCostLines) {
@@ -287,7 +293,7 @@ export const prepareBusinessCaseForApi = (
 
   const yearMap = (
     lifecycleCostLines: EstimatedLifecycleCostLines
-  ): { phases: LifecyclePhase[]; year: string }[] => {
+  ): { phases: LifecycleCosts; year: string }[] => {
     return [
       { phases: lifecycleCostLines.year1, year: '1' },
       { phases: lifecycleCostLines.year2, year: '2' },
@@ -301,16 +307,25 @@ export const prepareBusinessCaseForApi = (
     .map(({ solutionLifecycleCostLines, solutionApiName }) => {
       return yearMap(solutionLifecycleCostLines)
         .map(({ phases, year }) => {
-          return phases.map(lifecyclePhase => {
-            return {
-              solution: solutionApiName,
-              phase: lifecyclePhase.phase || null,
-              cost: lifecyclePhase.cost
-                ? parseFloat(lifecyclePhase.cost)
-                : null,
-              year
-            };
-          });
+          const developmentCost = {
+            solution: solutionApiName,
+            phase: 'Development',
+            cost: parseFloat(phases.development.cost),
+            year
+          };
+          const omCost = {
+            solution: solutionApiName,
+            phase: 'Operations and Maintenance',
+            cost: parseFloat(phases.operationsMaintenance.cost),
+            year
+          };
+          const otherCost = {
+            solution: solutionApiName,
+            phase: 'Other',
+            cost: parseFloat(phases.other.cost),
+            year
+          };
+          return [developmentCost, omCost, otherCost];
         })
         .flat();
     })
