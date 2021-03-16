@@ -87,6 +87,7 @@ const Phase = ({
                       <Field
                         as={TextField}
                         // error={!!phaseError.cost}
+                        className="width-card-lg"
                         id={`BusinessCase-${formikKey}.Year${year}.development.cost`}
                         name={`${formikKey}.year${year}.development.cost`}
                         maxLength={10}
@@ -121,6 +122,7 @@ const Phase = ({
                       <Field
                         as={TextField}
                         // error={!!phaseError.cost}
+                        className="width-card-lg"
                         id={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.cost`}
                         name={`${formikKey}.year${year}.operationsMaintenance.cost`}
                         maxLength={10}
@@ -155,6 +157,7 @@ const Phase = ({
                       <Field
                         as={TextField}
                         // error={!!phaseError.cost}
+                        className="width-card-lg"
                         id={`BusinessCase-${formikKey}.Year${year}.other.cost`}
                         name={`${formikKey}.year${year}.other.cost`}
                         maxLength={10}
