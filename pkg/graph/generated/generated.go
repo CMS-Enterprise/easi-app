@@ -118,12 +118,14 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AddGRTFeedback                     func(childComplexity int, input model.AddGRTFeedbackInput) int
-		CreateAccessibilityRequest         func(childComplexity int, input model.CreateAccessibilityRequestInput) int
-		CreateAccessibilityRequestDocument func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
-		CreateTestDate                     func(childComplexity int, input model.CreateTestDateInput) int
-		GeneratePresignedUploadURL         func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
-		UpdateTestDate                     func(childComplexity int, input model.UpdateTestDateInput) int
+		AddGRTFeedbackAndKeepBusinessCaseInDraft     func(childComplexity int, input model.AddGRTFeedbackInput) int
+		AddGRTFeedbackAndProgressToFinalBusinessCase func(childComplexity int, input model.AddGRTFeedbackInput) int
+		AddGRTFeedbackAndRequestBusinessCase         func(childComplexity int, input model.AddGRTFeedbackInput) int
+		CreateAccessibilityRequest                   func(childComplexity int, input model.CreateAccessibilityRequestInput) int
+		CreateAccessibilityRequestDocument           func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
+		CreateTestDate                               func(childComplexity int, input model.CreateTestDateInput) int
+		GeneratePresignedUploadURL                   func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
+		UpdateTestDate                               func(childComplexity int, input model.UpdateTestDateInput) int
 	}
 
 	Query struct {
@@ -236,7 +238,9 @@ type AccessibilityRequestDocumentResolver interface {
 	UploadedAt(ctx context.Context, obj *models.AccessibilityRequestDocument) (*time.Time, error)
 }
 type MutationResolver interface {
-	AddGRTFeedback(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
+	AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
+	AddGRTFeedbackAndProgressToFinalBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
+	AddGRTFeedbackAndRequestBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
 	CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
@@ -541,17 +545,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GeneratePresignedUploadURLPayload.UserErrors(childComplexity), true
 
-	case "Mutation.addGRTFeedback":
-		if e.complexity.Mutation.AddGRTFeedback == nil {
+	case "Mutation.addGRTFeedbackAndKeepBusinessCaseInDraft":
+		if e.complexity.Mutation.AddGRTFeedbackAndKeepBusinessCaseInDraft == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_addGRTFeedback_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_addGRTFeedbackAndKeepBusinessCaseInDraft_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.AddGRTFeedback(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
+		return e.complexity.Mutation.AddGRTFeedbackAndKeepBusinessCaseInDraft(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
+
+	case "Mutation.addGRTFeedbackAndProgressToFinalBusinessCase":
+		if e.complexity.Mutation.AddGRTFeedbackAndProgressToFinalBusinessCase == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addGRTFeedbackAndProgressToFinalBusinessCase_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddGRTFeedbackAndProgressToFinalBusinessCase(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
+
+	case "Mutation.addGRTFeedbackAndRequestBusinessCase":
+		if e.complexity.Mutation.AddGRTFeedbackAndRequestBusinessCase == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_addGRTFeedbackAndRequestBusinessCase_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.AddGRTFeedbackAndRequestBusinessCase(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
 
 	case "Mutation.createAccessibilityRequest":
 		if e.complexity.Mutation.CreateAccessibilityRequest == nil {
@@ -1602,30 +1630,9 @@ type SystemIntake {
 }
 
 """
-Type of an action on a system intake
-"""
-enum ActionType {
-  """
-  Provide GRT feedback and request business case
-  """
-  PROVIDE_FEEDBACK_NEED_BIZ_CASE
-
-  """
-  Provide GRT feedback and keep the business case in draft
-  """
-  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT
-
-  """
-  Provide GRT feedback and progress the business case to Final
-  """
-  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
-}
-
-"""
 Input for adding GRT Feedback
 """
 input AddGRTFeedbackInput {
-  actionType: ActionType!
   emailBody: String!
   feedback: String!
   intakeID: UUID!
@@ -1642,7 +1649,13 @@ type AddGRTFeedbackPayload {
 The root mutation
 """
 type Mutation {
-  addGRTFeedback(
+  addGRTFeedbackAndKeepBusinessCaseInDraft(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  addGRTFeedbackAndProgressToFinalBusinessCase(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  addGRTFeedbackAndRequestBusinessCase(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   createAccessibilityRequest(
@@ -1732,7 +1745,37 @@ func (ec *executionContext) dir_hasRole_args(ctx context.Context, rawArgs map[st
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_addGRTFeedback_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_addGRTFeedbackAndKeepBusinessCaseInDraft_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.AddGRTFeedbackInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addGRTFeedbackAndProgressToFinalBusinessCase_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.AddGRTFeedbackInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_addGRTFeedbackAndRequestBusinessCase_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 model.AddGRTFeedbackInput
@@ -3075,7 +3118,7 @@ func (ec *executionContext) _GeneratePresignedUploadURLPayload_userErrors(ctx co
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_addGRTFeedback(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_addGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -3092,7 +3135,7 @@ func (ec *executionContext) _Mutation_addGRTFeedback(ctx context.Context, field 
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_addGRTFeedback_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_addGRTFeedbackAndKeepBusinessCaseInDraft_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -3101,7 +3144,133 @@ func (ec *executionContext) _Mutation_addGRTFeedback(ctx context.Context, field 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().AddGRTFeedback(rctx, args["input"].(model.AddGRTFeedbackInput))
+			return ec.resolvers.Mutation().AddGRTFeedbackAndKeepBusinessCaseInDraft(rctx, args["input"].(model.AddGRTFeedbackInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.AddGRTFeedbackPayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.AddGRTFeedbackPayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.AddGRTFeedbackPayload)
+	fc.Result = res
+	return ec.marshalOAddGRTFeedbackPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_addGRTFeedbackAndProgressToFinalBusinessCase(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_addGRTFeedbackAndProgressToFinalBusinessCase_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().AddGRTFeedbackAndProgressToFinalBusinessCase(rctx, args["input"].(model.AddGRTFeedbackInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.AddGRTFeedbackPayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.AddGRTFeedbackPayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.AddGRTFeedbackPayload)
+	fc.Result = res
+	return ec.marshalOAddGRTFeedbackPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_addGRTFeedbackAndRequestBusinessCase(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_addGRTFeedbackAndRequestBusinessCase_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().AddGRTFeedbackAndRequestBusinessCase(rctx, args["input"].(model.AddGRTFeedbackInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -6862,14 +7031,6 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 
 	for k, v := range asMap {
 		switch k {
-		case "actionType":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("actionType"))
-			it.ActionType, err = ec.unmarshalNActionType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐActionType(ctx, v)
-			if err != nil {
-				return it, err
-			}
 		case "emailBody":
 			var err error
 
@@ -7580,8 +7741,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "addGRTFeedback":
-			out.Values[i] = ec._Mutation_addGRTFeedback(ctx, field)
+		case "addGRTFeedbackAndKeepBusinessCaseInDraft":
+			out.Values[i] = ec._Mutation_addGRTFeedbackAndKeepBusinessCaseInDraft(ctx, field)
+		case "addGRTFeedbackAndProgressToFinalBusinessCase":
+			out.Values[i] = ec._Mutation_addGRTFeedbackAndProgressToFinalBusinessCase(ctx, field)
+		case "addGRTFeedbackAndRequestBusinessCase":
+			out.Values[i] = ec._Mutation_addGRTFeedbackAndRequestBusinessCase(ctx, field)
 		case "createAccessibilityRequest":
 			out.Values[i] = ec._Mutation_createAccessibilityRequest(ctx, field)
 		case "createAccessibilityRequestDocument":
@@ -8729,22 +8894,6 @@ func (ec *executionContext) marshalNAccessibilityRequestEdge2ᚖgithubᚗcomᚋc
 		return graphql.Null
 	}
 	return ec._AccessibilityRequestEdge(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNActionType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐActionType(ctx context.Context, v interface{}) (models.ActionType, error) {
-	tmp, err := graphql.UnmarshalString(v)
-	res := models.ActionType(tmp)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNActionType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐActionType(ctx context.Context, sel ast.SelectionSet, v models.ActionType) graphql.Marshaler {
-	res := graphql.MarshalString(string(v))
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-	}
-	return res
 }
 
 func (ec *executionContext) unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackInput(ctx context.Context, v interface{}) (model.AddGRTFeedbackInput, error) {
