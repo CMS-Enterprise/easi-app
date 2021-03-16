@@ -223,7 +223,6 @@ type ComplexityRoot struct {
 		DecisionNextSteps           func(childComplexity int) int
 		EaCollaborator              func(childComplexity int) int
 		EaCollaboratorName          func(childComplexity int) int
-		EaSupportRequest            func(childComplexity int) int
 		EuaUserID                   func(childComplexity int) int
 		ExistingContract            func(childComplexity int) int
 		ExistingFunding             func(childComplexity int) int
@@ -236,6 +235,7 @@ type ComplexityRoot struct {
 		Lcid                        func(childComplexity int) int
 		LcidScope                   func(childComplexity int) int
 		LifecycleExpiresAt          func(childComplexity int) int
+		NeedsEaSupport              func(childComplexity int) int
 		OitSecurityCollaborator     func(childComplexity int) int
 		OitSecurityCollaboratorName func(childComplexity int) int
 		ProcessStatus               func(childComplexity int) int
@@ -356,7 +356,6 @@ type SystemIntakeResolver interface {
 	DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EaCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 	EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error)
 	ExistingContract(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error)
@@ -367,6 +366,7 @@ type SystemIntakeResolver interface {
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 	OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	ProcessStatus(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -1232,13 +1232,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.EaCollaboratorName(childComplexity), true
 
-	case "SystemIntake.eaSupportRequest":
-		if e.complexity.SystemIntake.EaSupportRequest == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.EaSupportRequest(childComplexity), true
-
 	case "SystemIntake.euaUserId":
 		if e.complexity.SystemIntake.EuaUserID == nil {
 			break
@@ -1322,6 +1315,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.LifecycleExpiresAt(childComplexity), true
+
+	case "SystemIntake.needsEaSupport":
+		if e.complexity.SystemIntake.NeedsEaSupport == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.NeedsEaSupport(childComplexity), true
 
 	case "SystemIntake.oitSecurityCollaborator":
 		if e.complexity.SystemIntake.OitSecurityCollaborator == nil {
@@ -2175,7 +2175,6 @@ type SystemIntake {
   decisionNextSteps: String
   eaCollaborator: String
   eaCollaboratorName: String
-  eaSupportRequest: Boolean
   euaUserId: String!
   existingContract: String
   existingFunding: Boolean
@@ -2188,6 +2187,7 @@ type SystemIntake {
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
+  needsEaSupport: Boolean
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
   processStatus: String
@@ -6440,38 +6440,6 @@ func (ec *executionContext) _SystemIntake_eaCollaboratorName(ctx context.Context
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_eaSupportRequest(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().EaSupportRequest(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _SystemIntake_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6860,6 +6828,38 @@ func (ec *executionContext) _SystemIntake_lcidScope(ctx context.Context, field g
 	res := resTmp.(*string)
 	fc.Result = res
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_needsEaSupport(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().NeedsEaSupport(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_oitSecurityCollaborator(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -10343,17 +10343,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_eaCollaboratorName(ctx, field, obj)
 				return res
 			})
-		case "eaSupportRequest":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_eaSupportRequest(ctx, field, obj)
-				return res
-			})
 		case "euaUserId":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10454,6 +10443,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_lcidScope(ctx, field, obj)
+				return res
+			})
+		case "needsEaSupport":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_needsEaSupport(ctx, field, obj)
 				return res
 			})
 		case "oitSecurityCollaborator":

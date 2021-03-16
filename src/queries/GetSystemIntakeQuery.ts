@@ -24,6 +24,7 @@ export default gql`
         name
       }
       lcid
+      needsEaSupport
       requestName
       requestType
       status
