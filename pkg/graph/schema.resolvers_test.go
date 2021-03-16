@@ -641,6 +641,125 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 	s.Equal("2020", endDate.Year)
 }
 
+func (s GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
+	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
+	projectName := "My cool project"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:                 null.StringFrom(projectName),
+		Status:                      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:                 models.SystemIntakeRequestTypeNEW,
+		EACollaboratorName:          null.StringFrom(""),
+		OITSecurityCollaboratorName: null.StringFrom(""),
+		TRBCollaboratorName:         null.StringFrom(""),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		SystemIntake struct {
+			ID              string
+			GovernanceTeams struct {
+				IsPresent bool
+				Teams     []struct {
+					Acronym      string
+					Collaborator string
+					Key          string
+					Label        string
+					Name         string
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				governanceTeams {
+					isPresent
+					teams {
+						acronym
+						collaborator
+						key
+						label
+						name
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
+	s.False(resp.SystemIntake.GovernanceTeams.IsPresent)
+	s.Nil(resp.SystemIntake.GovernanceTeams.Teams)
+}
+
+func (s GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
+	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
+	projectName := "My cool project"
+	eaName := "My EA Rep"
+	oitName := "My OIT Rep"
+	trbName := "My TRB Rep"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:                 null.StringFrom(projectName),
+		Status:                      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:                 models.SystemIntakeRequestTypeNEW,
+		EACollaboratorName:          null.StringFrom(eaName),
+		OITSecurityCollaboratorName: null.StringFrom(oitName),
+		TRBCollaboratorName:         null.StringFrom(trbName),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		SystemIntake struct {
+			ID              string
+			GovernanceTeams struct {
+				IsPresent bool
+				Teams     []struct {
+					Acronym      string
+					Collaborator string
+					Key          string
+					Label        string
+					Name         string
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				governanceTeams {
+					isPresent
+					teams {
+						acronym
+						collaborator
+						key
+						label
+						name
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
+	s.True(resp.SystemIntake.GovernanceTeams.IsPresent)
+	s.Equal(eaName, resp.SystemIntake.GovernanceTeams.Teams[0].Collaborator)
+	s.Equal(oitName, resp.SystemIntake.GovernanceTeams.Teams[1].Collaborator)
+	s.Equal(trbName, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
+}
+
 func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 	ctx := context.Background()
 

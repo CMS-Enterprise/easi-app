@@ -30,6 +30,16 @@ export default gql`
         expectedIncreaseAmount
       }
       currentStage
+      governanceTeams {
+        isPresent
+        teams {
+          acronym
+          collaborator
+          key
+          label
+          name
+        }
+      }
       isso {
         isPresent
         name

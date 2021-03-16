@@ -534,6 +534,61 @@ func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.Sy
 	}, nil
 }
 
+func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error) {
+	var teams []*model.SystemIntakeCollaborator
+
+	if obj.EACollaboratorName != null.StringFrom("") {
+		key := "enterpriseArchitecture"
+		label := "Enterprise Architecture (EA)"
+		acronym := "EA"
+		name := "Enterprise Architecture"
+
+		teams = append(teams, &model.SystemIntakeCollaborator{
+			Key:          &key,
+			Label:        &label,
+			Acronym:      &acronym,
+			Name:         &name,
+			Collaborator: obj.EACollaboratorName.Ptr(),
+		})
+	}
+
+	if obj.OITSecurityCollaboratorName != null.StringFrom("") {
+		key := "securityPrivacy"
+		label := "OIT's Security and Privacy Group (ISPG)"
+		acronym := "ISPG"
+		name := "OIT's Security and Privacy Group"
+
+		teams = append(teams, &model.SystemIntakeCollaborator{
+			Key:          &key,
+			Label:        &label,
+			Acronym:      &acronym,
+			Name:         &name,
+			Collaborator: obj.OITSecurityCollaboratorName.Ptr(),
+		})
+	}
+
+	if obj.TRBCollaboratorName != null.StringFrom("") {
+		key := "technicalReviewBoard"
+		label := "Technical Review Board (TRB)"
+		acronym := "TRB"
+		name := "Technical Review Board"
+
+		teams = append(teams, &model.SystemIntakeCollaborator{
+			Key:          &key,
+			Label:        &label,
+			Acronym:      &acronym,
+			Name:         &name,
+			Collaborator: obj.TRBCollaboratorName.Ptr(),
+		})
+	}
+
+	isPresent := len(teams) > 0
+	return &model.SystemIntakeGovernanceTeam{
+		IsPresent: &isPresent,
+		Teams:     teams,
+	}, nil
+}
+
 func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {
 	isPresent := true
 	if obj.ISSOName == null.StringFrom("") {

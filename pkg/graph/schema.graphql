@@ -559,6 +559,25 @@ type SystemIntakeFundingSource {
 }
 
 """
+A collaborator for an intake
+"""
+type SystemIntakeCollaborator {
+  acronym: String
+  collaborator: String
+  key: String
+  label: String
+  name: String
+}
+
+"""
+governanceTeam for an intake
+"""
+type SystemIntakeGovernanceTeam {
+  isPresent: Boolean
+  teams: [SystemIntakeCollaborator!]
+}
+
+"""
 An isso for a system intake
 """
 type SystemIntakeISSO {
@@ -601,6 +620,7 @@ type SystemIntake {
   eaCollaboratorName: String
   euaUserId: String!
   fundingSource: SystemIntakeFundingSource
+  governanceTeams: SystemIntakeGovernanceTeam
   grbDate: Time
   grtDate: Time
   id: UUID!
