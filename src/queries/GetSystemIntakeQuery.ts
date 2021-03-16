@@ -10,6 +10,21 @@ export default gql`
         component
         name
       }
+      contract {
+        contractor
+        endDate {
+          day
+          month
+          year
+        }
+        hasContract
+        startDate {
+          day
+          month
+          year
+        }
+        vehicle
+      }
       costs {
         isExpectingIncrease
         expectedIncreaseAmount

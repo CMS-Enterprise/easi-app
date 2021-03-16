@@ -442,28 +442,46 @@ func (r *systemIntakeResolver) BusinessSolution(ctx context.Context, obj *models
 	return obj.Solution.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) ContractEndMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractEndMonth.Ptr(), nil
-}
+func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeContract, error) {
+	emptyString := ""
 
-func (r *systemIntakeResolver) ContractEndYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractEndYear.Ptr(), nil
-}
+	contractEnd := model.ContractDate{}
+	if obj.ContractEndMonth != null.StringFrom("") {
+		contractEnd.Month = obj.ContractEndMonth.Ptr()
+	}
 
-func (r *systemIntakeResolver) ContractStartMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractStartMonth.Ptr(), nil
-}
+	if obj.ContractEndYear != null.StringFrom("") {
+		contractEnd.Month = obj.ContractEndYear.Ptr()
+	}
 
-func (r *systemIntakeResolver) ContractStartYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractStartYear.Ptr(), nil
-}
+	if obj.ContractEndDate == nil {
+		contractEnd.Day = &emptyString
+		contractEnd.Month = &emptyString
+		contractEnd.Year = &emptyString
+	}
 
-func (r *systemIntakeResolver) ContractVehicle(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractVehicle.Ptr(), nil
-}
+	contractStart := model.ContractDate{}
+	if obj.ContractStartMonth != null.StringFrom("") {
+		contractStart.Month = obj.ContractStartMonth.Ptr()
+	}
 
-func (r *systemIntakeResolver) Contractor(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.Contractor.Ptr(), nil
+	if obj.ContractStartYear != null.StringFrom("") {
+		contractStart.Month = obj.ContractStartYear.Ptr()
+	}
+
+	if obj.ContractStartDate == nil {
+		contractStart.Day = &emptyString
+		contractStart.Month = &emptyString
+		contractStart.Year = &emptyString
+	}
+
+	return &model.SystemIntakeContract{
+		Contractor:  obj.Contractor.Ptr(),
+		EndDate:     &contractEnd,
+		HasContract: obj.ExistingContract.Ptr(),
+		StartDate:   &contractStart,
+		Vehicle:     obj.ContractVehicle.Ptr(),
+	}, nil
 }
 
 func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeCosts, error) {
@@ -487,10 +505,6 @@ func (r *systemIntakeResolver) EaCollaboratorName(ctx context.Context, obj *mode
 
 func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error) {
 	return obj.EUAUserID.String, nil
-}
-
-func (r *systemIntakeResolver) ExistingContract(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ExistingContract.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeFundingSource, error) {
@@ -600,40 +614,3 @@ type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *systemIntakeResolver) CostIncrease(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.CostIncrease.Ptr(), nil
-}
-func (r *systemIntakeResolver) CostIncreaseAmount(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.CostIncreaseAmount.Ptr(), nil
-}
-func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	return obj.ExistingFunding.Ptr(), nil
-}
-func (r *systemIntakeResolver) FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.FundingNumber.Ptr(), nil
-}
-func (r *systemIntakeResolver) EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	return obj.EASupportRequest.Ptr(), nil
-}
-func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.Solution.Ptr(), nil
-}
-func (r *systemIntakeResolver) IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ISSOName.Ptr(), nil
-}
-func (r *systemIntakeResolver) ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProjectName.Ptr(), nil
-}
-func (r *systemIntakeResolver) ProductManagerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProductManagerComponent.Ptr(), nil
-}
-func (r *systemIntakeResolver) BusinessOwnerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.BusinessOwnerComponent.Ptr(), nil
-}
