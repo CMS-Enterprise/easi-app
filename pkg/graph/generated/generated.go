@@ -208,6 +208,7 @@ type ComplexityRoot struct {
 		BusinessCase                func(childComplexity int) int
 		BusinessNeed                func(childComplexity int) int
 		BusinessOwner               func(childComplexity int) int
+		BusinessSolution            func(childComplexity int) int
 		ContractEndDate             func(childComplexity int) int
 		ContractEndMonth            func(childComplexity int) int
 		ContractEndYear             func(childComplexity int) int
@@ -244,7 +245,6 @@ type ComplexityRoot struct {
 		RequestName                 func(childComplexity int) int
 		RequestType                 func(childComplexity int) int
 		Requester                   func(childComplexity int) int
-		Solution                    func(childComplexity int) int
 		Status                      func(childComplexity int) int
 		SubmittedAt                 func(childComplexity int) int
 		TrbCollaborator             func(childComplexity int) int
@@ -341,6 +341,7 @@ type SystemIntakeResolver interface {
 	BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error)
 	BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeBusinessOwner, error)
+	BusinessSolution(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	ContractEndMonth(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	ContractEndYear(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -375,7 +376,6 @@ type SystemIntakeResolver interface {
 	RequestName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error)
-	Solution(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -1127,6 +1127,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.BusinessOwner(childComplexity), true
 
+	case "SystemIntake.businessSolution":
+		if e.complexity.SystemIntake.BusinessSolution == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.BusinessSolution(childComplexity), true
+
 	case "SystemIntake.contractEndDate":
 		if e.complexity.SystemIntake.ContractEndDate == nil {
 			break
@@ -1378,13 +1385,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.Requester(childComplexity), true
-
-	case "SystemIntake.solution":
-		if e.complexity.SystemIntake.Solution == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.Solution(childComplexity), true
 
 	case "SystemIntake.status":
 		if e.complexity.SystemIntake.Status == nil {
@@ -2160,6 +2160,7 @@ type SystemIntake {
   businessCase: BusinessCase
   businessNeed: String
   businessOwner: SystemIntakeBusinessOwner
+  businessSolution: String
   contractEndDate: Time
   contractEndMonth: String
   contractEndYear: String
@@ -2196,7 +2197,6 @@ type SystemIntake {
   requestName: String
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
-  solution: String
   status: SystemIntakeStatus!
   submittedAt: Time
   trbCollaborator: String
@@ -5957,6 +5957,38 @@ func (ec *executionContext) _SystemIntake_businessOwner(ctx context.Context, fie
 	return ec.marshalOSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwner(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntake_businessSolution(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().BusinessSolution(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SystemIntake_contractEndDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7122,38 +7154,6 @@ func (ec *executionContext) _SystemIntake_requester(ctx context.Context, field g
 	res := resTmp.(*model.SystemIntakeRequester)
 	fc.Result = res
 	return ec.marshalNSystemIntakeRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequester(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_solution(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().Solution(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_status(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -10202,6 +10202,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_businessOwner(ctx, field, obj)
 				return res
 			})
+		case "businessSolution":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_businessSolution(ctx, field, obj)
+				return res
+			})
 		case "contractEndDate":
 			out.Values[i] = ec._SystemIntake_contractEndDate(ctx, field, obj)
 		case "contractEndMonth":
@@ -10539,17 +10550,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
-				return res
-			})
-		case "solution":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_solution(ctx, field, obj)
 				return res
 			})
 		case "status":
