@@ -579,8 +579,8 @@ type SystemIntake {
   processStatus: String
   productManager: SystemIntakeProductManager
   projectAcronym: String
-  projectName: String
   rejectionReason: String
+  requestName: String
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
   solution: String

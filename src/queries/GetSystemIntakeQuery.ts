@@ -18,7 +18,7 @@ export default gql`
         name
       }
       lcid
-      projectName
+      requestName
       requestType
       status
       submittedAt
