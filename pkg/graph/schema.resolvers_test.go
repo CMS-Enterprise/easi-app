@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"testing"
+	"time"
 
 	"github.com/99designs/gqlgen/client"
 	"github.com/99designs/gqlgen/graphql"
@@ -455,11 +456,14 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 
 	var resp struct {
 		SystemIntake struct {
-			ID                     string
-			ProjectName            string
-			Status                 string
-			RequestType            string
-			BusinessOwner          string
+			ID            string
+			RequestName   string
+			Status        string
+			RequestType   string
+			BusinessOwner struct {
+				Name      string
+				Component string
+			}
 			BusinessOwnerComponent string
 			BusinessNeed           *string
 			BusinessCase           *string
@@ -472,23 +476,169 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 		`query {
 			systemIntake(id: "%s") {
 				id
-				projectName
+				requestName
 				status
 				requestType
-				businessOwner
-				businessOwnerComponent
+				businessOwner {
+					name
+					component
+				}
 				businessNeed
 			}
 		}`, intake.ID), &resp)
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
-	s.Equal(projectName, resp.SystemIntake.ProjectName)
+	s.Equal(projectName, resp.SystemIntake.RequestName)
 	s.Equal("INTAKE_SUBMITTED", resp.SystemIntake.Status)
 	s.Equal("NEW", resp.SystemIntake.RequestType)
-	s.Equal(businessOwner, resp.SystemIntake.BusinessOwner)
-	s.Equal(businessOwnerComponent, resp.SystemIntake.BusinessOwnerComponent)
+	s.Equal(businessOwner, resp.SystemIntake.BusinessOwner.Name)
+	s.Equal(businessOwnerComponent, resp.SystemIntake.BusinessOwner.Component)
 	s.Nil(resp.SystemIntake.BusinessNeed)
 	s.Nil(resp.SystemIntake.BusinessCase)
+}
+
+func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
+	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
+	contracStartMonth := "10"
+	contractStartYear := "2002"
+	contractEndMonth := "08"
+	contractEndYear := "2020"
+	projectName := "My cool project"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:        null.StringFrom(projectName),
+		Status:             models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:        models.SystemIntakeRequestTypeNEW,
+		ContractStartMonth: null.StringFrom(contracStartMonth),
+		ContractStartYear:  null.StringFrom(contractStartYear),
+		ContractEndMonth:   null.StringFrom(contractEndMonth),
+		ContractEndYear:    null.StringFrom(contractEndYear),
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		SystemIntake struct {
+			ID       string
+			Contract struct {
+				EndDate struct {
+					Day   string
+					Month string
+					Year  string
+				}
+				StartDate struct {
+					Day   string
+					Month string
+					Year  string
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				contract {
+					endDate {
+						day
+						month
+						year
+					}
+					startDate {
+						day
+						month
+						year
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
+
+	startDate := resp.SystemIntake.Contract.StartDate
+	s.Equal("", startDate.Day)
+	s.Equal(contracStartMonth, startDate.Month)
+	s.Equal(contractStartYear, startDate.Year)
+
+	endDate := resp.SystemIntake.Contract.EndDate
+	s.Equal("", endDate.Day)
+	s.Equal(contractEndMonth, endDate.Month)
+	s.Equal(contractEndYear, endDate.Year)
+}
+
+func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
+	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
+	projectName := "My cool project"
+	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
+	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:       null.StringFrom(projectName),
+		Status:            models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:       models.SystemIntakeRequestTypeNEW,
+		ContractStartDate: &contractStartDate,
+		ContractEndDate:   &contractEndDate,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		SystemIntake struct {
+			ID       string
+			Contract struct {
+				EndDate struct {
+					Day   string
+					Month string
+					Year  string
+				}
+				StartDate struct {
+					Day   string
+					Month string
+					Year  string
+				}
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				contract {
+					endDate {
+						day
+						month
+						year
+					}
+					startDate {
+						day
+						month
+						year
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
+
+	startDate := resp.SystemIntake.Contract.StartDate
+	s.Equal("24", startDate.Day)
+	s.Equal("8", startDate.Month)
+	s.Equal("2002", startDate.Year)
+
+	endDate := resp.SystemIntake.Contract.EndDate
+	s.Equal("31", endDate.Day)
+	s.Equal("10", endDate.Month)
+	s.Equal("2020", endDate.Year)
 }
 
 func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {

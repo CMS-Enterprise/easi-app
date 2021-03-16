@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
@@ -443,21 +444,28 @@ func (r *systemIntakeResolver) BusinessSolution(ctx context.Context, obj *models
 }
 
 func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeContract, error) {
-	emptyString := ""
-
 	contractEnd := model.ContractDate{}
 	if obj.ContractEndMonth != null.StringFrom("") {
 		contractEnd.Month = obj.ContractEndMonth.Ptr()
 	}
 
 	if obj.ContractEndYear != null.StringFrom("") {
-		contractEnd.Month = obj.ContractEndYear.Ptr()
+		contractEnd.Year = obj.ContractEndYear.Ptr()
 	}
 
-	if obj.ContractEndDate == nil {
-		contractEnd.Day = &emptyString
-		contractEnd.Month = &emptyString
-		contractEnd.Year = &emptyString
+	if obj.ContractEndDate != nil {
+		endDate := *obj.ContractEndDate
+		fmt.Println(endDate)
+		year, month, day := endDate.Date()
+		fmt.Println(year)
+
+		dayStr := strconv.Itoa(day)
+		monthStr := strconv.Itoa(int(month))
+		yearStr := strconv.Itoa(year)
+
+		contractEnd.Day = &dayStr
+		contractEnd.Month = &monthStr
+		contractEnd.Year = &yearStr
 	}
 
 	contractStart := model.ContractDate{}
@@ -466,13 +474,20 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 	}
 
 	if obj.ContractStartYear != null.StringFrom("") {
-		contractStart.Month = obj.ContractStartYear.Ptr()
+		contractStart.Year = obj.ContractStartYear.Ptr()
 	}
 
-	if obj.ContractStartDate == nil {
-		contractStart.Day = &emptyString
-		contractStart.Month = &emptyString
-		contractStart.Year = &emptyString
+	if obj.ContractStartDate != nil {
+		startDate := *obj.ContractStartDate
+		year, month, day := startDate.Date()
+
+		dayStr := strconv.Itoa(day)
+		monthStr := strconv.Itoa(int(month))
+		yearStr := strconv.Itoa(year)
+
+		contractStart.Day = &dayStr
+		contractStart.Month = &monthStr
+		contractStart.Year = &yearStr
 	}
 
 	return &model.SystemIntakeContract{
