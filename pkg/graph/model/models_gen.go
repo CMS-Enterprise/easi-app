@@ -129,6 +129,13 @@ type SystemIntakeBusinessOwner struct {
 	Name      *string `json:"name"`
 }
 
+// A funding source for a system intake
+type SystemIntakeFundingSource struct {
+	FundingNumber *string `json:"fundingNumber"`
+	IsFunded      *bool   `json:"isFunded"`
+	Source        *string `json:"source"`
+}
+
 // An isso for a system intake
 type SystemIntakeIsso struct {
 	IsPresent *bool   `json:"isPresent"`
