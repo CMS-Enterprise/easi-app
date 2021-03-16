@@ -11,7 +11,7 @@ import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
-import { formatContractDate } from 'utils/formatDate';
+import formatDate, { formatContractDate } from 'utils/formatDate';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
@@ -61,7 +61,7 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition
               definition={
                 systemIntake.submittedAt
-                  ? systemIntake.submittedAt.toLocaleString(DateTime.DATE_MED)
+                  ? formatDate(systemIntake.submittedAt)
                   : now.toLocaleString(DateTime.DATE_MED)
               }
             />
@@ -137,7 +137,7 @@ export const SystemIntakeReview = ({
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Request Details</h2>
 
-      <DescriptionList title="Request Details">
+      {/* <DescriptionList title="Request Details">
         <ReviewRow>
           <div>
             <DescriptionTerm term="Project Name" />
@@ -170,12 +170,12 @@ export const SystemIntakeReview = ({
             />
           </div>
         </ReviewRow>
-      </DescriptionList>
+      </DescriptionList> */}
 
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contract Details</h2>
 
-      <DescriptionList title="Contract Details">
+      {/* <DescriptionList title="Contract Details">
         <ReviewRow>
           <div>
             <DescriptionTerm term="Where are you in the process?" />
@@ -230,7 +230,7 @@ export const SystemIntakeReview = ({
             </ReviewRow>
           </>
         )}
-      </DescriptionList>
+      </DescriptionList> */}
     </div>
   );
 };
