@@ -10,6 +10,10 @@ export default gql`
         component
         name
       }
+      costs {
+        isExpectingIncrease
+        expectedIncreaseAmount
+      }
       isso {
         isPresent
         name

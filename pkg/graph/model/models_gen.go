@@ -129,6 +129,12 @@ type SystemIntakeBusinessOwner struct {
 	Name      *string `json:"name"`
 }
 
+// costs for a system intake
+type SystemIntakeCosts struct {
+	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
+	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
+}
+
 // A funding source for a system intake
 type SystemIntakeFundingSource struct {
 	FundingNumber *string `json:"fundingNumber"`

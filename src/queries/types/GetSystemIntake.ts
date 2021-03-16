@@ -15,6 +15,12 @@ export interface GetSystemIntake_systemIntake_businessOwner {
   name: string | null;
 }
 
+export interface GetSystemIntake_systemIntake_costs {
+  __typename: "SystemIntakeCosts";
+  isExpectingIncrease: string | null;
+  expectedIncreaseAmount: string | null;
+}
+
 export interface GetSystemIntake_systemIntake_isso {
   __typename: "SystemIntakeISSO";
   isPresent: boolean | null;
@@ -47,6 +53,7 @@ export interface GetSystemIntake_systemIntake {
   businessNeed: string | null;
   businessSolution: string | null;
   businessOwner: GetSystemIntake_systemIntake_businessOwner | null;
+  costs: GetSystemIntake_systemIntake_costs | null;
   isso: GetSystemIntake_systemIntake_isso | null;
   fundingSource: GetSystemIntake_systemIntake_fundingSource | null;
   productManager: GetSystemIntake_systemIntake_productManager | null;

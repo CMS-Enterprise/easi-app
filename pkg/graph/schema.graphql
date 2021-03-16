@@ -522,6 +522,14 @@ type SystemIntakeBusinessOwner {
 }
 
 """
+costs for a system intake
+"""
+type SystemIntakeCosts {
+  expectedIncreaseAmount: String
+  isExpectingIncrease: String
+}
+
+"""
 A funding source for a system intake
 """
 type SystemIntakeFundingSource {
@@ -572,8 +580,7 @@ type SystemIntake {
   contractStartYear: String
   contractVehicle: String
   contractor: String
-  costIncrease: String
-  costIncreaseAmount: String
+  costs: SystemIntakeCosts
   createdAt: Time!
   decisionNextSteps: String
   eaCollaborator: String

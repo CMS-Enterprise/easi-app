@@ -403,12 +403,11 @@ func (r *systemIntakeResolver) Contractor(ctx context.Context, obj *models.Syste
 	return obj.Contractor.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) CostIncrease(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.CostIncrease.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) CostIncreaseAmount(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.CostIncreaseAmount.Ptr(), nil
+func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeCosts, error) {
+	return &model.SystemIntakeCosts{
+		ExpectedIncreaseAmount: obj.CostIncreaseAmount.Ptr(),
+		IsExpectingIncrease:    obj.CostIncrease.Ptr(),
+	}, nil
 }
 
 func (r *systemIntakeResolver) DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error) {
@@ -545,6 +544,12 @@ type systemIntakeResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *systemIntakeResolver) CostIncrease(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.CostIncrease.Ptr(), nil
+}
+func (r *systemIntakeResolver) CostIncreaseAmount(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.CostIncreaseAmount.Ptr(), nil
+}
 func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
 	return obj.ExistingFunding.Ptr(), nil
 }
