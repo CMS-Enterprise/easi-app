@@ -129,6 +129,12 @@ type SystemIntakeBusinessOwner struct {
 	Name      *string `json:"name"`
 }
 
+// An isso for a system intake
+type SystemIntakeIsso struct {
+	IsPresent *bool   `json:"isPresent"`
+	Name      *string `json:"name"`
+}
+
 // A product manager for a system intake
 type SystemIntakeProductManager struct {
 	Component *string `json:"component"`

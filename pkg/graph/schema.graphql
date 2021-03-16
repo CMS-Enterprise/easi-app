@@ -522,6 +522,14 @@ type SystemIntakeBusinessOwner {
 }
 
 """
+An isso for a system intake
+"""
+type SystemIntakeISSO {
+  isPresent: Boolean
+  name: String
+}
+
+"""
 A product manager for a system intake
 """
 type SystemIntakeProductManager {
@@ -569,8 +577,7 @@ type SystemIntake {
   grbDate: Time
   grtDate: Time
   id: UUID!
-  isso: String
-  issoName: String
+  isso: SystemIntakeISSO
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String

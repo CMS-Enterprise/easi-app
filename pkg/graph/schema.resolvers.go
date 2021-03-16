@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -442,12 +443,16 @@ func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.Sy
 	return obj.FundingNumber.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ISSO.Ptr(), nil
-}
+func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {
+	isPresent := true
+	if obj.ISSOName == null.StringFrom("") {
+		isPresent = false
+	}
 
-func (r *systemIntakeResolver) IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ISSOName.Ptr(), nil
+	return &model.SystemIntakeIsso{
+		IsPresent: &isPresent,
+		Name:      obj.ISSOName.Ptr(),
+	}, nil
 }
 
 func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error) {
@@ -544,6 +549,9 @@ type systemIntakeResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *systemIntakeResolver) IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ISSOName.Ptr(), nil
+}
 func (r *systemIntakeResolver) ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.ProjectName.Ptr(), nil
 }

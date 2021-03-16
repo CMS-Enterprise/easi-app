@@ -232,7 +232,6 @@ type ComplexityRoot struct {
 		GRTDate                     func(childComplexity int) int
 		ID                          func(childComplexity int) int
 		Isso                        func(childComplexity int) int
-		IssoName                    func(childComplexity int) int
 		Lcid                        func(childComplexity int) int
 		LcidScope                   func(childComplexity int) int
 		LifecycleExpiresAt          func(childComplexity int) int
@@ -255,6 +254,11 @@ type ComplexityRoot struct {
 
 	SystemIntakeBusinessOwner struct {
 		Component func(childComplexity int) int
+		Name      func(childComplexity int) int
+	}
+
+	SystemIntakeIsso struct {
+		IsPresent func(childComplexity int) int
 		Name      func(childComplexity int) int
 	}
 
@@ -358,8 +362,7 @@ type SystemIntakeResolver interface {
 	FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	FundingSource(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
-	Isso(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -1292,13 +1295,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.Isso(childComplexity), true
 
-	case "SystemIntake.issoName":
-		if e.complexity.SystemIntake.IssoName == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.IssoName(childComplexity), true
-
 	case "SystemIntake.lcid":
 		if e.complexity.SystemIntake.Lcid == nil {
 			break
@@ -1438,6 +1434,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeBusinessOwner.Name(childComplexity), true
+
+	case "SystemIntakeISSO.isPresent":
+		if e.complexity.SystemIntakeIsso.IsPresent == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeIsso.IsPresent(childComplexity), true
+
+	case "SystemIntakeISSO.name":
+		if e.complexity.SystemIntakeIsso.Name == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeIsso.Name(childComplexity), true
 
 	case "SystemIntakeProductManager.component":
 		if e.complexity.SystemIntakeProductManager.Component == nil {
@@ -2118,6 +2128,14 @@ type SystemIntakeBusinessOwner {
 }
 
 """
+An isso for a system intake
+"""
+type SystemIntakeISSO {
+  isPresent: Boolean
+  name: String
+}
+
+"""
 A product manager for a system intake
 """
 type SystemIntakeProductManager {
@@ -2165,8 +2183,7 @@ type SystemIntake {
   grbDate: Time
   grtDate: Time
   id: UUID!
-  isso: String
-  issoName: String
+  isso: SystemIntakeISSO
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
@@ -6712,41 +6729,9 @@ func (ec *executionContext) _SystemIntake_isso(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeIsso)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_issoName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().IssoName(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_lcid(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7378,6 +7363,70 @@ func (ec *executionContext) _SystemIntakeBusinessOwner_name(ctx context.Context,
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "SystemIntakeBusinessOwner",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeISSO_isPresent(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeIsso) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeISSO",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsPresent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeISSO_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeIsso) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeISSO",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -10372,17 +10421,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_isso(ctx, field, obj)
 				return res
 			})
-		case "issoName":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_issoName(ctx, field, obj)
-				return res
-			})
 		case "lcid":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10574,6 +10612,32 @@ func (ec *executionContext) _SystemIntakeBusinessOwner(ctx context.Context, sel 
 			out.Values[i] = ec._SystemIntakeBusinessOwner_component(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._SystemIntakeBusinessOwner_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeISSOImplementors = []string{"SystemIntakeISSO"}
+
+func (ec *executionContext) _SystemIntakeISSO(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeIsso) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeISSOImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeISSO")
+		case "isPresent":
+			out.Values[i] = ec._SystemIntakeISSO_isPresent(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._SystemIntakeISSO_name(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11976,6 +12040,13 @@ func (ec *executionContext) marshalOSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeBusinessOwner(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeIsso) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeISSO(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOSystemIntakeProductManager2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeProductManager) graphql.Marshaler {

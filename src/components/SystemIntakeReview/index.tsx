@@ -120,7 +120,7 @@ export const SystemIntakeReview = ({
           </div>
           <div>
             <DescriptionTerm term="I have started collaborating with" />
-            {systemIntake.governanceTeams.isPresent ? (
+            {/* {systemIntake.governanceTeams.isPresent ? (
               systemIntake.governanceTeams.teams.map(team => (
                 <DescriptionDefinition
                   key={`GovernanceTeam-${team.name.split(' ').join('-')}`}
@@ -129,7 +129,7 @@ export const SystemIntakeReview = ({
               ))
             ) : (
               <DescriptionDefinition definition="N/A" />
-            )}
+            )} */}
           </div>
         </ReviewRow>
       </DescriptionList>
@@ -137,7 +137,7 @@ export const SystemIntakeReview = ({
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Request Details</h2>
 
-      {/* <DescriptionList title="Request Details">
+      <DescriptionList title="Request Details">
         <ReviewRow>
           <div>
             <DescriptionTerm term="Project Name" />
@@ -170,7 +170,7 @@ export const SystemIntakeReview = ({
             />
           </div>
         </ReviewRow>
-      </DescriptionList> */}
+      </DescriptionList>
 
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contract Details</h2>

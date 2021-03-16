@@ -15,6 +15,12 @@ export interface GetSystemIntake_systemIntake_businessOwner {
   name: string | null;
 }
 
+export interface GetSystemIntake_systemIntake_isso {
+  __typename: "SystemIntakeISSO";
+  isPresent: boolean | null;
+  name: string | null;
+}
+
 export interface GetSystemIntake_systemIntake_productManager {
   __typename: "SystemIntakeProductManager";
   component: string | null;
@@ -32,6 +38,7 @@ export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
   businessOwner: GetSystemIntake_systemIntake_businessOwner | null;
+  isso: GetSystemIntake_systemIntake_isso | null;
   productManager: GetSystemIntake_systemIntake_productManager | null;
   requester: GetSystemIntake_systemIntake_requester;
   lcid: string | null;
