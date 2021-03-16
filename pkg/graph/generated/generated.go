@@ -241,8 +241,8 @@ type ComplexityRoot struct {
 		ProcessStatus               func(childComplexity int) int
 		ProductManager              func(childComplexity int) int
 		ProjectAcronym              func(childComplexity int) int
-		ProjectName                 func(childComplexity int) int
 		RejectionReason             func(childComplexity int) int
+		RequestName                 func(childComplexity int) int
 		RequestType                 func(childComplexity int) int
 		Requester                   func(childComplexity int) int
 		Solution                    func(childComplexity int) int
@@ -368,8 +368,8 @@ type SystemIntakeResolver interface {
 	ProcessStatus(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	ProductManager(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeProductManager, error)
 	ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	RequestName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error)
 	Solution(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -1355,19 +1355,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.ProjectAcronym(childComplexity), true
 
-	case "SystemIntake.projectName":
-		if e.complexity.SystemIntake.ProjectName == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ProjectName(childComplexity), true
-
 	case "SystemIntake.rejectionReason":
 		if e.complexity.SystemIntake.RejectionReason == nil {
 			break
 		}
 
 		return e.complexity.SystemIntake.RejectionReason(childComplexity), true
+
+	case "SystemIntake.requestName":
+		if e.complexity.SystemIntake.RequestName == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.RequestName(childComplexity), true
 
 	case "SystemIntake.requestType":
 		if e.complexity.SystemIntake.RequestType == nil {
@@ -2175,8 +2175,8 @@ type SystemIntake {
   processStatus: String
   productManager: SystemIntakeProductManager
   projectAcronym: String
-  projectName: String
   rejectionReason: String
+  requestName: String
   requestType: SystemIntakeRequestType!
   requester: SystemIntakeRequester!
   solution: String
@@ -7005,38 +7005,6 @@ func (ec *executionContext) _SystemIntake_projectAcronym(ctx context.Context, fi
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_projectName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ProjectName(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _SystemIntake_rejectionReason(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7056,6 +7024,38 @@ func (ec *executionContext) _SystemIntake_rejectionReason(ctx context.Context, f
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.SystemIntake().RejectionReason(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_requestName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().RequestName(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10462,17 +10462,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_projectAcronym(ctx, field, obj)
 				return res
 			})
-		case "projectName":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_projectName(ctx, field, obj)
-				return res
-			})
 		case "rejectionReason":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10482,6 +10471,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_rejectionReason(ctx, field, obj)
+				return res
+			})
+		case "requestName":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_requestName(ctx, field, obj)
 				return res
 			})
 		case "requestType":
