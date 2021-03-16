@@ -491,6 +491,10 @@ func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemInta
 	}, nil
 }
 
+func (r *systemIntakeResolver) CurrentStage(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ProcessStatus.Ptr(), nil
+}
+
 func (r *systemIntakeResolver) DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.DecisionNextSteps.Ptr(), nil
 }
@@ -545,10 +549,6 @@ func (r *systemIntakeResolver) OitSecurityCollaborator(ctx context.Context, obj 
 
 func (r *systemIntakeResolver) OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.OITSecurityCollaboratorName.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) ProcessStatus(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProcessStatus.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeProductManager, error) {

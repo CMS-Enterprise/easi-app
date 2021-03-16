@@ -29,6 +29,7 @@ export default gql`
         isExpectingIncrease
         expectedIncreaseAmount
       }
+      currentStage
       isso {
         isPresent
         name

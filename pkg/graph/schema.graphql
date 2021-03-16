@@ -595,6 +595,7 @@ type SystemIntake {
   contract: SystemIntakeContract
   costs: SystemIntakeCosts
   createdAt: Time!
+  currentStage: String
   decisionNextSteps: String
   eaCollaborator: String
   eaCollaboratorName: String
@@ -610,7 +611,6 @@ type SystemIntake {
   needsEaSupport: Boolean
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
-  processStatus: String
   productManager: SystemIntakeProductManager
   projectAcronym: String
   rejectionReason: String
