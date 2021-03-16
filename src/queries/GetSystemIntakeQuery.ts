@@ -9,6 +9,10 @@ export default gql`
         email
         name
       }
+      lcid
+      projectName
+      requestType
+      status
       submittedAt
     }
   }

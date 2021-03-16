@@ -17,7 +17,21 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
+<<<<<<< HEAD
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+=======
+import {
+  fetchBusinessCase,
+  fetchSystemIntake,
+  saveSystemIntake
+} from 'types/routines';
+import formatDate from 'utils/formatDate';
+import {
+  isIntakeClosed,
+  isIntakeOpen,
+  translateRequestType
+} from 'utils/systemIntake';
+>>>>>>> 6208946d (Transition header to use the intake)
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -63,79 +77,6 @@ const RequestOverview = () => {
     }
   }, [dispatch, systemIntake.businessCaseId]);
 
-<<<<<<< HEAD
-=======
-  const component = cmsDivisionsAndOffices.find(
-    c => c.name === intake?.requester.component
-  );
-
-  const requesterNameAndComponent = component
-    ? `${intake?.requester.name}, ${component.acronym}`
-    : intake?.requester.name;
-
-  // Get admin lead assigned to intake
-  const getAdminLead = () => {
-    if (systemIntake.adminLead) {
-      return systemIntake.adminLead;
-    }
-    return (
-      <>
-        <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
-        {t('governanceReviewTeam:adminLeads.notAssigned')}
-      </>
-    );
-  };
-
-  const [newAdminLead, setAdminLead] = useState('');
-
-  // Resets newAdminLead to what is in intake currently. This is used to
-  // reset state of modal upon exit without saving
-  const resetNewAdminLead = () => {
-    setAdminLead(systemIntake.adminLead);
-  };
-
-  // Send newly selected admin lead to database
-  const saveAdminLead = () => {
-    const data = {
-      ...systemIntake,
-      adminLead: newAdminLead
-    };
-    dispatch(saveSystemIntake({ ...data }));
-  };
-
-  // List of current GRT admin team members
-  const grtMembers: string[] = t('governanceReviewTeam:adminLeads.members', {
-    returnObjects: true
-  });
-
-  // Admin lead modal radio button
-  type AdminLeadRadioOptionProps = {
-    checked: boolean;
-    label: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  };
-
-  const AdminLeadRadioOption = ({
-    checked,
-    label,
-    onChange
-  }: AdminLeadRadioOptionProps) => {
-    const radioFieldClassName = 'margin-y-3';
-
-    return (
-      <RadioField
-        checked={checked}
-        id={label}
-        label={label}
-        name={label}
-        value={label}
-        onChange={onChange}
-        className={radioFieldClassName}
-      />
-    );
-  };
-
->>>>>>> 54719a52 (Requester in schema matches how we use it in the frontend.)
   const getNavLinkClasses = (page: string) =>
     classnames('easi-grt__nav-link', {
       'easi-grt__nav-link--active': page === activePage
