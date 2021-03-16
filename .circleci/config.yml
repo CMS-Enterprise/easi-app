@@ -70,11 +70,11 @@ jobs:
       - run:
           name: Check deployed image for vulnerability findings - impl
           command: |
-            APP_ENV=impl ./scripts/check_deployed_image_findings "easi-backend" "4"
+            APP_ENV=impl ./scripts/check_deployed_image_findings "easi-backend" "5"
       - run:
           name: Check deployed image for vulnerability findings - prod
           command: |
-            APP_ENV=prod ./scripts/check_deployed_image_findings "easi-backend" "4"
+            APP_ENV=prod ./scripts/check_deployed_image_findings "easi-backend" "5"
       - run:
           name: Announce failure
           command: |
@@ -360,7 +360,7 @@ jobs:
       - run:
           name: Check for vulnerability scan findings
           command: |
-            ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1" "4"
+            ./scripts/check_ecr_findings "easi-backend" "$CIRCLE_SHA1" "5"
       - run:
           name: Announce failure
           command: |
