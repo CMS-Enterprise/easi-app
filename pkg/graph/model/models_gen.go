@@ -141,6 +141,12 @@ type SystemIntakeBusinessOwner struct {
 	Name      *string `json:"name"`
 }
 
+// A product manager for a system intake
+type SystemIntakeProductManager struct {
+	Component *string `json:"component"`
+	Name      *string `json:"name"`
+}
+
 // A requester for a system intake
 type SystemIntakeRequester struct {
 	Component *string `json:"component"`

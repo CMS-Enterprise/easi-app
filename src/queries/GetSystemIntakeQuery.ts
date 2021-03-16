@@ -8,6 +8,10 @@ export default gql`
         component
         name
       }
+      productManager {
+        component
+        name
+      }
       requester {
         component
         email

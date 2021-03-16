@@ -534,12 +534,11 @@ func (r *systemIntakeResolver) ProcessStatus(ctx context.Context, obj *models.Sy
 	return obj.ProcessStatus.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProductManager.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) ProductManagerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProductManagerComponent.Ptr(), nil
+func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeProductManager, error) {
+	return &model.SystemIntakeProductManager{
+		Component: obj.ProductManagerComponent.Ptr(),
+		Name:      obj.ProductManager.Ptr(),
+	}, nil
 }
 
 func (r *systemIntakeResolver) ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error) {
@@ -609,6 +608,9 @@ type systemIntakeResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *systemIntakeResolver) ProductManagerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ProductManagerComponent.Ptr(), nil
+}
 func (r *systemIntakeResolver) BusinessOwnerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.BusinessOwnerComponent.Ptr(), nil
 }
