@@ -14,6 +14,11 @@ export default gql`
         isPresent
         name
       }
+      fundingSource {
+        fundingNumber
+        isFunded
+        source
+      }
       productManager {
         component
         name

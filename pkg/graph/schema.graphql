@@ -522,6 +522,15 @@ type SystemIntakeBusinessOwner {
 }
 
 """
+A funding source for a system intake
+"""
+type SystemIntakeFundingSource {
+  fundingNumber: String
+  isFunded: Boolean
+  source: String
+}
+
+"""
 An isso for a system intake
 """
 type SystemIntakeISSO {
@@ -571,9 +580,7 @@ type SystemIntake {
   eaCollaboratorName: String
   euaUserId: String!
   existingContract: String
-  existingFunding: Boolean
-  fundingNumber: String
-  fundingSource: String
+  fundingSource: SystemIntakeFundingSource
   grbDate: Time
   grtDate: Time
   id: UUID!
