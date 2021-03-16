@@ -569,7 +569,6 @@ type SystemIntake {
   decisionNextSteps: String
   eaCollaborator: String
   eaCollaboratorName: String
-  eaSupportRequest: Boolean
   euaUserId: String!
   existingContract: String
   existingFunding: Boolean
@@ -582,6 +581,7 @@ type SystemIntake {
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
+  needsEaSupport: Boolean
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
   processStatus: String

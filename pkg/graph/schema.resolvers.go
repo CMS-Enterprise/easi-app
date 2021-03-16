@@ -486,10 +486,6 @@ func (r *systemIntakeResolver) EaCollaboratorName(ctx context.Context, obj *mode
 	return obj.EACollaboratorName.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	return obj.EASupportRequest.Ptr(), nil
-}
-
 func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error) {
 	return obj.EUAUserID.String, nil
 }
@@ -528,6 +524,10 @@ func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntak
 
 func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.LifecycleScope.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.EASupportRequest.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
@@ -612,6 +612,9 @@ type systemIntakeResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *systemIntakeResolver) EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.EASupportRequest.Ptr(), nil
+}
 func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.Solution.Ptr(), nil
 }

@@ -44,6 +44,7 @@ export interface GetSystemIntake_systemIntake {
   productManager: GetSystemIntake_systemIntake_productManager | null;
   requester: GetSystemIntake_systemIntake_requester;
   lcid: string | null;
+  needsEaSupport: boolean | null;
   requestName: string | null;
   requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
