@@ -78,6 +78,7 @@ export interface GetSystemIntake_systemIntake {
   businessOwner: GetSystemIntake_systemIntake_businessOwner | null;
   contract: GetSystemIntake_systemIntake_contract | null;
   costs: GetSystemIntake_systemIntake_costs | null;
+  currentStage: string | null;
   isso: GetSystemIntake_systemIntake_isso | null;
   fundingSource: GetSystemIntake_systemIntake_fundingSource | null;
   productManager: GetSystemIntake_systemIntake_productManager | null;
