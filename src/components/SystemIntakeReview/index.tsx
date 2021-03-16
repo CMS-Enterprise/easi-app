@@ -175,7 +175,7 @@ export const SystemIntakeReview = ({
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">Contract Details</h2>
 
-      {/* <DescriptionList title="Contract Details">
+      <DescriptionList title="Contract Details">
         <ReviewRow>
           <div>
             <DescriptionTerm term="Where are you in the process?" />
@@ -230,7 +230,7 @@ export const SystemIntakeReview = ({
             </ReviewRow>
           </>
         )}
-      </DescriptionList> */}
+      </DescriptionList>
     </div>
   );
 };

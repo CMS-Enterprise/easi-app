@@ -494,16 +494,12 @@ func (r *systemIntakeResolver) ExistingContract(ctx context.Context, obj *models
 	return obj.ExistingContract.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	return obj.ExistingFunding.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.FundingNumber.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.FundingNumber.Ptr(), nil
+func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeFundingSource, error) {
+	return &model.SystemIntakeFundingSource{
+		IsFunded:      obj.ExistingFunding.Ptr(),
+		FundingNumber: obj.FundingNumber.Ptr(),
+		Source:        obj.FundingSource.Ptr(),
+	}, nil
 }
 
 func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {
@@ -612,6 +608,12 @@ type systemIntakeResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.ExistingFunding.Ptr(), nil
+}
+func (r *systemIntakeResolver) FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.FundingNumber.Ptr(), nil
+}
 func (r *systemIntakeResolver) EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
 	return obj.EASupportRequest.Ptr(), nil
 }

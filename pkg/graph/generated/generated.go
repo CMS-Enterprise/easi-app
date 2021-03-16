@@ -232,8 +232,6 @@ type ComplexityRoot struct {
 		EaCollaboratorName          func(childComplexity int) int
 		EuaUserID                   func(childComplexity int) int
 		ExistingContract            func(childComplexity int) int
-		ExistingFunding             func(childComplexity int) int
-		FundingNumber               func(childComplexity int) int
 		FundingSource               func(childComplexity int) int
 		GRBDate                     func(childComplexity int) int
 		GRTDate                     func(childComplexity int) int
@@ -262,6 +260,12 @@ type ComplexityRoot struct {
 	SystemIntakeBusinessOwner struct {
 		Component func(childComplexity int) int
 		Name      func(childComplexity int) int
+	}
+
+	SystemIntakeFundingSource struct {
+		FundingNumber func(childComplexity int) int
+		IsFunded      func(childComplexity int) int
+		Source        func(childComplexity int) int
 	}
 
 	SystemIntakeIsso struct {
@@ -368,9 +372,7 @@ type SystemIntakeResolver interface {
 	EaCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error)
 	ExistingContract(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error)
-	FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	FundingSource(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	FundingSource(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeFundingSource, error)
 
 	Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -1299,20 +1301,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.ExistingContract(childComplexity), true
 
-	case "SystemIntake.existingFunding":
-		if e.complexity.SystemIntake.ExistingFunding == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ExistingFunding(childComplexity), true
-
-	case "SystemIntake.fundingNumber":
-		if e.complexity.SystemIntake.FundingNumber == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.FundingNumber(childComplexity), true
-
 	case "SystemIntake.fundingSource":
 		if e.complexity.SystemIntake.FundingSource == nil {
 			break
@@ -1487,6 +1475,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeBusinessOwner.Name(childComplexity), true
+
+	case "SystemIntakeFundingSource.fundingNumber":
+		if e.complexity.SystemIntakeFundingSource.FundingNumber == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeFundingSource.FundingNumber(childComplexity), true
+
+	case "SystemIntakeFundingSource.isFunded":
+		if e.complexity.SystemIntakeFundingSource.IsFunded == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeFundingSource.IsFunded(childComplexity), true
+
+	case "SystemIntakeFundingSource.source":
+		if e.complexity.SystemIntakeFundingSource.Source == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeFundingSource.Source(childComplexity), true
 
 	case "SystemIntakeISSO.isPresent":
 		if e.complexity.SystemIntakeIsso.IsPresent == nil {
@@ -2181,6 +2190,15 @@ type SystemIntakeBusinessOwner {
 }
 
 """
+A funding source for a system intake
+"""
+type SystemIntakeFundingSource {
+  fundingNumber: String
+  isFunded: Boolean
+  source: String
+}
+
+"""
 An isso for a system intake
 """
 type SystemIntakeISSO {
@@ -2230,9 +2248,7 @@ type SystemIntake {
   eaCollaboratorName: String
   euaUserId: String!
   existingContract: String
-  existingFunding: Boolean
-  fundingNumber: String
-  fundingSource: String
+  fundingSource: SystemIntakeFundingSource
   grbDate: Time
   grtDate: Time
   id: UUID!
@@ -6851,70 +6867,6 @@ func (ec *executionContext) _SystemIntake_existingContract(ctx context.Context, 
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_existingFunding(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ExistingFunding(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_fundingNumber(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().FundingNumber(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _SystemIntake_fundingSource(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6942,9 +6894,9 @@ func (ec *executionContext) _SystemIntake_fundingSource(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeFundingSource)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_grbDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7717,6 +7669,102 @@ func (ec *executionContext) _SystemIntakeBusinessOwner_name(ctx context.Context,
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeFundingSource_fundingNumber(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeFundingSource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FundingNumber, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeFundingSource_isFunded(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeFundingSource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsFunded, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeFundingSource_source(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeFundingSource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Source, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10778,28 +10826,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_existingContract(ctx, field, obj)
 				return res
 			})
-		case "existingFunding":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_existingFunding(ctx, field, obj)
-				return res
-			})
-		case "fundingNumber":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_fundingNumber(ctx, field, obj)
-				return res
-			})
 		case "fundingSource":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -11022,6 +11048,34 @@ func (ec *executionContext) _SystemIntakeBusinessOwner(ctx context.Context, sel 
 			out.Values[i] = ec._SystemIntakeBusinessOwner_component(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._SystemIntakeBusinessOwner_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeFundingSourceImplementors = []string{"SystemIntakeFundingSource"}
+
+func (ec *executionContext) _SystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeFundingSource) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeFundingSourceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeFundingSource")
+		case "fundingNumber":
+			out.Values[i] = ec._SystemIntakeFundingSource_fundingNumber(ctx, field, obj)
+		case "isFunded":
+			out.Values[i] = ec._SystemIntakeFundingSource_isFunded(ctx, field, obj)
+		case "source":
+			out.Values[i] = ec._SystemIntakeFundingSource_source(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12462,6 +12516,13 @@ func (ec *executionContext) marshalOSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeBusinessOwner(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeFundingSource) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeFundingSource(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeIsso) graphql.Marshaler {

@@ -21,6 +21,13 @@ export interface GetSystemIntake_systemIntake_isso {
   name: string | null;
 }
 
+export interface GetSystemIntake_systemIntake_fundingSource {
+  __typename: "SystemIntakeFundingSource";
+  fundingNumber: string | null;
+  isFunded: boolean | null;
+  source: string | null;
+}
+
 export interface GetSystemIntake_systemIntake_productManager {
   __typename: "SystemIntakeProductManager";
   component: string | null;
@@ -41,6 +48,7 @@ export interface GetSystemIntake_systemIntake {
   businessSolution: string | null;
   businessOwner: GetSystemIntake_systemIntake_businessOwner | null;
   isso: GetSystemIntake_systemIntake_isso | null;
+  fundingSource: GetSystemIntake_systemIntake_fundingSource | null;
   productManager: GetSystemIntake_systemIntake_productManager | null;
   requester: GetSystemIntake_systemIntake_requester;
   lcid: string | null;
