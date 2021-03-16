@@ -37,11 +37,14 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
-  const { loading, data: graphData } = useQuery<GetSystemIntake>(GetSystemIntakeQuery, {
-    variables: {
-      id: systemId
+  const { loading, data: graphData } = useQuery<GetSystemIntake>(
+    GetSystemIntakeQuery,
+    {
+      variables: {
+        id: systemId
+      }
     }
-  });
+  );
   const intake = graphData?.systemIntake;
   console.log(intake);
 
@@ -141,13 +144,11 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/intake-request"
               render={() => {
                 if (loading) {
-                  return <p>Loading...</p>
-                } else {
-                  return <IntakeReview
-                    systemIntake={intake}
-                    now={DateTime.local()}
-                  />
+                  return <p>Loading...</p>;
                 }
+                return (
+                  <IntakeReview systemIntake={intake} now={DateTime.local()} />
+                );
               }}
             />
             <Route

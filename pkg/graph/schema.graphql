@@ -522,6 +522,14 @@ type SystemIntakeBusinessOwner {
 }
 
 """
+A product manager for a system intake
+"""
+type SystemIntakeProductManager {
+  component: String
+  name: String
+}
+
+"""
 A requester for a system intake
 """
 type SystemIntakeRequester {
@@ -569,8 +577,7 @@ type SystemIntake {
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
   processStatus: String
-  productManager: String
-  productManagerComponent: String
+  productManager: SystemIntakeProductManager
   projectAcronym: String
   projectName: String
   rejectionReason: String
