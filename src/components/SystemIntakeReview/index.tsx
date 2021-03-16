@@ -120,7 +120,7 @@ export const SystemIntakeReview = ({
           </div>
           <div>
             <DescriptionTerm term="I have started collaborating with" />
-            {/* {systemIntake.governanceTeams.isPresent ? (
+            {systemIntake.governanceTeams.isPresent ? (
               systemIntake.governanceTeams.teams.map(team => (
                 <DescriptionDefinition
                   key={`GovernanceTeam-${team.name.split(' ').join('-')}`}
@@ -129,7 +129,7 @@ export const SystemIntakeReview = ({
               ))
             ) : (
               <DescriptionDefinition definition="N/A" />
-            )} */}
+            )}
           </div>
         </ReviewRow>
       </DescriptionList>

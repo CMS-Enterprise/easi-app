@@ -148,6 +148,15 @@ type SystemIntakeBusinessOwner struct {
 	Name      *string `json:"name"`
 }
 
+// A collaborator for an intake
+type SystemIntakeCollaborator struct {
+	Acronym      *string `json:"acronym"`
+	Collaborator *string `json:"collaborator"`
+	Key          *string `json:"key"`
+	Label        *string `json:"label"`
+	Name         *string `json:"name"`
+}
+
 // A contract for a system intake
 type SystemIntakeContract struct {
 	Contractor  *string       `json:"contractor"`
@@ -168,6 +177,12 @@ type SystemIntakeFundingSource struct {
 	FundingNumber *string `json:"fundingNumber"`
 	IsFunded      *bool   `json:"isFunded"`
 	Source        *string `json:"source"`
+}
+
+// governanceTeam for an intake
+type SystemIntakeGovernanceTeam struct {
+	IsPresent *bool                       `json:"isPresent"`
+	Teams     []*SystemIntakeCollaborator `json:"teams"`
 }
 
 // An isso for a system intake

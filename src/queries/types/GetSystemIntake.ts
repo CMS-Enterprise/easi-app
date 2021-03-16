@@ -44,6 +44,21 @@ export interface GetSystemIntake_systemIntake_costs {
   expectedIncreaseAmount: string | null;
 }
 
+export interface GetSystemIntake_systemIntake_governanceTeams_teams {
+  __typename: "SystemIntakeCollaborator";
+  acronym: string | null;
+  collaborator: string | null;
+  key: string | null;
+  label: string | null;
+  name: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_governanceTeams {
+  __typename: "SystemIntakeGovernanceTeam";
+  isPresent: boolean | null;
+  teams: GetSystemIntake_systemIntake_governanceTeams_teams[] | null;
+}
+
 export interface GetSystemIntake_systemIntake_isso {
   __typename: "SystemIntakeISSO";
   isPresent: boolean | null;
@@ -79,6 +94,7 @@ export interface GetSystemIntake_systemIntake {
   contract: GetSystemIntake_systemIntake_contract | null;
   costs: GetSystemIntake_systemIntake_costs | null;
   currentStage: string | null;
+  governanceTeams: GetSystemIntake_systemIntake_governanceTeams | null;
   isso: GetSystemIntake_systemIntake_isso | null;
   fundingSource: GetSystemIntake_systemIntake_fundingSource | null;
   lcid: string | null;
