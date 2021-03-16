@@ -135,6 +135,12 @@ type SystemEdge struct {
 	Node   *models.System `json:"node"`
 }
 
+// A business owner for a system intake
+type SystemIntakeBusinessOwner struct {
+	Component *string `json:"component"`
+	Name      *string `json:"name"`
+}
+
 // A requester for a system intake
 type SystemIntakeRequester struct {
 	Component *string `json:"component"`

@@ -9,6 +9,12 @@ import { SystemIntakeRequestType, SystemIntakeStatus } from "./../../types/graph
 // GraphQL query operation: GetSystemIntake
 // ====================================================
 
+export interface GetSystemIntake_systemIntake_businessOwner {
+  __typename: "SystemIntakeBusinessOwner";
+  component: string | null;
+  name: string | null;
+}
+
 export interface GetSystemIntake_systemIntake_requester {
   __typename: "SystemIntakeRequester";
   component: string | null;
@@ -19,6 +25,7 @@ export interface GetSystemIntake_systemIntake_requester {
 export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
+  businessOwner: GetSystemIntake_systemIntake_businessOwner | null;
   requester: GetSystemIntake_systemIntake_requester;
   lcid: string | null;
   projectName: string | null;

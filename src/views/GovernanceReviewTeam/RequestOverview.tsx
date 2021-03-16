@@ -37,7 +37,7 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
-  const { data: graphData } = useQuery<GetSystemIntake>(GetSystemIntakeQuery, {
+  const { loading, data: graphData } = useQuery<GetSystemIntake>(GetSystemIntakeQuery, {
     variables: {
       id: systemId
     }
@@ -139,12 +139,16 @@ const RequestOverview = () => {
           <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/intake-request"
-              render={() => (
-                <IntakeReview
-                  systemIntake={systemIntake}
-                  now={DateTime.local()}
-                />
-              )}
+              render={() => {
+                if (loading) {
+                  return <p>Loading...</p>
+                } else {
+                  return <IntakeReview
+                    systemIntake={intake}
+                    now={DateTime.local()}
+                  />
+                }
+              }}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
