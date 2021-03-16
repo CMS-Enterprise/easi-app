@@ -224,8 +224,7 @@ type ComplexityRoot struct {
 		ContractStartYear           func(childComplexity int) int
 		ContractVehicle             func(childComplexity int) int
 		Contractor                  func(childComplexity int) int
-		CostIncrease                func(childComplexity int) int
-		CostIncreaseAmount          func(childComplexity int) int
+		Costs                       func(childComplexity int) int
 		CreatedAt                   func(childComplexity int) int
 		DecisionNextSteps           func(childComplexity int) int
 		EaCollaborator              func(childComplexity int) int
@@ -260,6 +259,11 @@ type ComplexityRoot struct {
 	SystemIntakeBusinessOwner struct {
 		Component func(childComplexity int) int
 		Name      func(childComplexity int) int
+	}
+
+	SystemIntakeCosts struct {
+		ExpectedIncreaseAmount func(childComplexity int) int
+		IsExpectingIncrease    func(childComplexity int) int
 	}
 
 	SystemIntakeFundingSource struct {
@@ -364,8 +368,7 @@ type SystemIntakeResolver interface {
 	ContractStartYear(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	ContractVehicle(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	Contractor(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	CostIncrease(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	CostIncreaseAmount(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	Costs(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeCosts, error)
 
 	DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -1245,19 +1248,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.Contractor(childComplexity), true
 
-	case "SystemIntake.costIncrease":
-		if e.complexity.SystemIntake.CostIncrease == nil {
+	case "SystemIntake.costs":
+		if e.complexity.SystemIntake.Costs == nil {
 			break
 		}
 
-		return e.complexity.SystemIntake.CostIncrease(childComplexity), true
-
-	case "SystemIntake.costIncreaseAmount":
-		if e.complexity.SystemIntake.CostIncreaseAmount == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.CostIncreaseAmount(childComplexity), true
+		return e.complexity.SystemIntake.Costs(childComplexity), true
 
 	case "SystemIntake.createdAt":
 		if e.complexity.SystemIntake.CreatedAt == nil {
@@ -1475,6 +1471,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeBusinessOwner.Name(childComplexity), true
+
+	case "SystemIntakeCosts.expectedIncreaseAmount":
+		if e.complexity.SystemIntakeCosts.ExpectedIncreaseAmount == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeCosts.ExpectedIncreaseAmount(childComplexity), true
+
+	case "SystemIntakeCosts.isExpectingIncrease":
+		if e.complexity.SystemIntakeCosts.IsExpectingIncrease == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeCosts.IsExpectingIncrease(childComplexity), true
 
 	case "SystemIntakeFundingSource.fundingNumber":
 		if e.complexity.SystemIntakeFundingSource.FundingNumber == nil {
@@ -2190,6 +2200,14 @@ type SystemIntakeBusinessOwner {
 }
 
 """
+costs for a system intake
+"""
+type SystemIntakeCosts {
+  expectedIncreaseAmount: String
+  isExpectingIncrease: String
+}
+
+"""
 A funding source for a system intake
 """
 type SystemIntakeFundingSource {
@@ -2240,8 +2258,7 @@ type SystemIntake {
   contractStartYear: String
   contractVehicle: String
   contractor: String
-  costIncrease: String
-  costIncreaseAmount: String
+  costs: SystemIntakeCosts
   createdAt: Time!
   decisionNextSteps: String
   eaCollaborator: String
@@ -6605,7 +6622,7 @@ func (ec *executionContext) _SystemIntake_contractor(ctx context.Context, field 
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_costIncrease(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+func (ec *executionContext) _SystemIntake_costs(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6623,7 +6640,7 @@ func (ec *executionContext) _SystemIntake_costIncrease(ctx context.Context, fiel
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().CostIncrease(rctx, obj)
+		return ec.resolvers.SystemIntake().Costs(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6632,41 +6649,9 @@ func (ec *executionContext) _SystemIntake_costIncrease(ctx context.Context, fiel
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeCosts)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_costIncreaseAmount(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().CostIncreaseAmount(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7669,6 +7654,70 @@ func (ec *executionContext) _SystemIntakeBusinessOwner_name(ctx context.Context,
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeCosts_expectedIncreaseAmount(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCosts) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeCosts",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExpectedIncreaseAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeCosts_isExpectingIncrease(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCosts) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeCosts",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsExpectingIncrease, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10741,7 +10790,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_contractor(ctx, field, obj)
 				return res
 			})
-		case "costIncrease":
+		case "costs":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -10749,18 +10798,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_costIncrease(ctx, field, obj)
-				return res
-			})
-		case "costIncreaseAmount":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_costIncreaseAmount(ctx, field, obj)
+				res = ec._SystemIntake_costs(ctx, field, obj)
 				return res
 			})
 		case "createdAt":
@@ -11048,6 +11086,32 @@ func (ec *executionContext) _SystemIntakeBusinessOwner(ctx context.Context, sel 
 			out.Values[i] = ec._SystemIntakeBusinessOwner_component(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._SystemIntakeBusinessOwner_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeCostsImplementors = []string{"SystemIntakeCosts"}
+
+func (ec *executionContext) _SystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeCosts) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeCostsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeCosts")
+		case "expectedIncreaseAmount":
+			out.Values[i] = ec._SystemIntakeCosts_expectedIncreaseAmount(ctx, field, obj)
+		case "isExpectingIncrease":
+			out.Values[i] = ec._SystemIntakeCosts_isExpectingIncrease(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12516,6 +12580,13 @@ func (ec *executionContext) marshalOSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeBusinessOwner(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCosts) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeCosts(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeFundingSource) graphql.Marshaler {
