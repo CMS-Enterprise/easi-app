@@ -2,11 +2,6 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
-<<<<<<< HEAD
-=======
-import { useQuery } from '@apollo/client';
-import { Button } from '@trussworks/react-uswds';
->>>>>>> ab443d67 (GRT page queries intake using graph.)
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -17,21 +12,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
-<<<<<<< HEAD
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
-=======
-import {
-  fetchBusinessCase,
-  fetchSystemIntake,
-  saveSystemIntake
-} from 'types/routines';
-import formatDate from 'utils/formatDate';
-import {
-  isIntakeClosed,
-  isIntakeOpen,
-  translateRequestType
-} from 'utils/systemIntake';
->>>>>>> 6208946d (Transition header to use the intake)
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -51,7 +32,7 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
-  const { data: graphData } = useQuery<GetSystemIntake>(GetSystemIntakeQuery, {
+  const { loading, data: graphData } = useQuery<GetSystemIntake>(GetSystemIntakeQuery, {
     variables: {
       id: systemId
     }
@@ -153,12 +134,16 @@ const RequestOverview = () => {
           <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/intake-request"
-              render={() => (
-                <IntakeReview
-                  systemIntake={systemIntake}
-                  now={DateTime.local()}
-                />
-              )}
+              render={() => {
+                if (loading) {
+                  return <p>Loading...</p>
+                } else {
+                  return <IntakeReview
+                    systemIntake={intake}
+                    now={DateTime.local()}
+                  />
+                }
+              }}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"

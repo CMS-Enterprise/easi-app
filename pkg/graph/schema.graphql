@@ -514,6 +514,14 @@ enum SystemIntakeRequestType {
 }
 
 """
+A business owner for a system intake
+"""
+type SystemIntakeBusinessOwner {
+  component: String
+  name: String
+}
+
+"""
 A requester for a system intake
 """
 type SystemIntakeRequester {
@@ -529,8 +537,7 @@ type SystemIntake {
   archivedAt: Time
   businessCase: BusinessCase
   businessNeed: String
-  businessOwner: String
-  businessOwnerComponent: String
+  businessOwner: SystemIntakeBusinessOwner
   contractEndDate: Time
   contractEndMonth: String
   contractEndYear: String
