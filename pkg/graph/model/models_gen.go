@@ -67,6 +67,13 @@ type BusinessCaseSolution struct {
 	Title                   *string `json:"title"`
 }
 
+// A date for a contract
+type ContractDate struct {
+	Day   *string `json:"day"`
+	Month *string `json:"month"`
+	Year  *string `json:"year"`
+}
+
 // Parameters for createAccessibilityRequestDocument
 type CreateAccessibilityRequestDocumentInput struct {
 	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
@@ -139,6 +146,15 @@ type SystemEdge struct {
 type SystemIntakeBusinessOwner struct {
 	Component *string `json:"component"`
 	Name      *string `json:"name"`
+}
+
+// A contract for a system intake
+type SystemIntakeContract struct {
+	Contractor  *string       `json:"contractor"`
+	EndDate     *ContractDate `json:"endDate"`
+	HasContract *string       `json:"hasContract"`
+	StartDate   *ContractDate `json:"startDate"`
+	Vehicle     *string       `json:"vehicle"`
 }
 
 // costs for a system intake
