@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -445,19 +444,17 @@ func (r *systemIntakeResolver) BusinessSolution(ctx context.Context, obj *models
 
 func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeContract, error) {
 	contractEnd := model.ContractDate{}
-	if obj.ContractEndMonth != null.StringFrom("") {
+	if len(obj.ContractEndMonth.String) > 0 {
 		contractEnd.Month = obj.ContractEndMonth.Ptr()
 	}
 
-	if obj.ContractEndYear != null.StringFrom("") {
+	if len(obj.ContractEndYear.String) > 0 {
 		contractEnd.Year = obj.ContractEndYear.Ptr()
 	}
 
 	if obj.ContractEndDate != nil {
 		endDate := *obj.ContractEndDate
-		fmt.Println(endDate)
 		year, month, day := endDate.Date()
-		fmt.Println(year)
 
 		dayStr := strconv.Itoa(day)
 		monthStr := strconv.Itoa(int(month))
@@ -469,11 +466,11 @@ func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemI
 	}
 
 	contractStart := model.ContractDate{}
-	if obj.ContractStartMonth != null.StringFrom("") {
+	if len(obj.ContractStartMonth.String) > 0 {
 		contractStart.Month = obj.ContractStartMonth.Ptr()
 	}
 
-	if obj.ContractStartYear != null.StringFrom("") {
+	if len(obj.ContractStartYear.String) > 0 {
 		contractStart.Year = obj.ContractStartYear.Ptr()
 	}
 
@@ -537,7 +534,7 @@ func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.Sy
 func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error) {
 	var teams []*model.SystemIntakeCollaborator
 
-	if obj.EACollaboratorName != null.StringFrom("") {
+	if len(obj.EACollaboratorName.String) > 0 {
 		key := "enterpriseArchitecture"
 		label := "Enterprise Architecture (EA)"
 		acronym := "EA"
@@ -552,7 +549,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		})
 	}
 
-	if obj.OITSecurityCollaboratorName != null.StringFrom("") {
+	if len(obj.OITSecurityCollaboratorName.String) > 0 {
 		key := "securityPrivacy"
 		label := "OIT's Security and Privacy Group (ISPG)"
 		acronym := "ISPG"
@@ -567,7 +564,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		})
 	}
 
-	if obj.TRBCollaboratorName != null.StringFrom("") {
+	if len(obj.TRBCollaboratorName.String) > 0 {
 		key := "technicalReviewBoard"
 		label := "Technical Review Board (TRB)"
 		acronym := "TRB"
@@ -590,10 +587,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 }
 
 func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {
-	isPresent := true
-	if obj.ISSOName == null.StringFrom("") {
-		isPresent = false
-	}
+	isPresent := len(obj.ISSOName.String) > 0
 
 	return &model.SystemIntakeIsso{
 		IsPresent: &isPresent,
