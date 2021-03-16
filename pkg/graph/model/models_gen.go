@@ -135,6 +135,13 @@ type SystemEdge struct {
 	Node   *models.System `json:"node"`
 }
 
+// A requester for a system intake
+type SystemIntakeRequester struct {
+	Component *string `json:"component"`
+	Email     *string `json:"email"`
+	Name      string  `json:"name"`
+}
+
 // Parameters for editing a test date
 type UpdateTestDateInput struct {
 	Date     time.Time               `json:"date"`

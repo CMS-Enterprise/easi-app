@@ -514,6 +514,15 @@ enum SystemIntakeRequestType {
 }
 
 """
+A requester for a system intake
+"""
+type SystemIntakeRequester {
+  component: String
+  email: String
+  name: String!
+}
+
+"""
 A SystemIntake instance
 """
 type SystemIntake {
@@ -522,7 +531,6 @@ type SystemIntake {
   businessNeed: String
   businessOwner: String
   businessOwnerComponent: String
-  component: String
   contractEndDate: Time
   contractEndMonth: String
   contractEndYear: String
@@ -560,7 +568,7 @@ type SystemIntake {
   projectName: String
   rejectionReason: String
   requestType: SystemIntakeRequestType!
-  requester: String
+  requester: SystemIntakeRequester!
   solution: String
   status: SystemIntakeStatus!
   submittedAt: Time

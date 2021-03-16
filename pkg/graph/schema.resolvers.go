@@ -439,10 +439,6 @@ func (r *systemIntakeResolver) BusinessOwnerComponent(ctx context.Context, obj *
 	return obj.BusinessOwnerComponent.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) Component(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.Component.Ptr(), nil
-}
-
 func (r *systemIntakeResolver) ContractEndMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.ContractEndMonth.Ptr(), nil
 }
@@ -557,6 +553,14 @@ func (r *systemIntakeResolver) ProjectName(ctx context.Context, obj *models.Syst
 
 func (r *systemIntakeResolver) RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.RejectionReason.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error) {
+	return &model.SystemIntakeRequester{
+		Component: obj.Component.Ptr(),
+		Email:     obj.RequesterEmailAddress.Ptr(),
+		Name:      obj.Requester,
+	}, nil
 }
 
 func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
