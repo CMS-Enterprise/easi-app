@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { SystemIntakeRequestType, SystemIntakeStatus } from "./../../types/graphql-global-types";
+
 // ====================================================
 // GraphQL query operation: GetSystemIntake
 // ====================================================
@@ -18,6 +20,10 @@ export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
   requester: GetSystemIntake_systemIntake_requester;
+  lcid: string | null;
+  projectName: string | null;
+  requestType: SystemIntakeRequestType;
+  status: SystemIntakeStatus;
   submittedAt: Time | null;
 }
 
