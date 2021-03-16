@@ -37,6 +37,8 @@ export interface GetSystemIntake_systemIntake_requester {
 export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
+  businessNeed: string | null;
+  businessSolution: string | null;
   businessOwner: GetSystemIntake_systemIntake_businessOwner | null;
   isso: GetSystemIntake_systemIntake_isso | null;
   productManager: GetSystemIntake_systemIntake_productManager | null;
