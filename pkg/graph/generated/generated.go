@@ -240,7 +240,6 @@ type ComplexityRoot struct {
 		OitSecurityCollaboratorName func(childComplexity int) int
 		ProcessStatus               func(childComplexity int) int
 		ProductManager              func(childComplexity int) int
-		ProductManagerComponent     func(childComplexity int) int
 		ProjectAcronym              func(childComplexity int) int
 		ProjectName                 func(childComplexity int) int
 		RejectionReason             func(childComplexity int) int
@@ -255,6 +254,11 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntakeBusinessOwner struct {
+		Component func(childComplexity int) int
+		Name      func(childComplexity int) int
+	}
+
+	SystemIntakeProductManager struct {
 		Component func(childComplexity int) int
 		Name      func(childComplexity int) int
 	}
@@ -362,8 +366,7 @@ type SystemIntakeResolver interface {
 	OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	ProcessStatus(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ProductManager(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ProductManagerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	ProductManager(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeProductManager, error)
 	ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -1345,13 +1348,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.ProductManager(childComplexity), true
 
-	case "SystemIntake.productManagerComponent":
-		if e.complexity.SystemIntake.ProductManagerComponent == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ProductManagerComponent(childComplexity), true
-
 	case "SystemIntake.projectAcronym":
 		if e.complexity.SystemIntake.ProjectAcronym == nil {
 			break
@@ -1442,6 +1438,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntakeBusinessOwner.Name(childComplexity), true
+
+	case "SystemIntakeProductManager.component":
+		if e.complexity.SystemIntakeProductManager.Component == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeProductManager.Component(childComplexity), true
+
+	case "SystemIntakeProductManager.name":
+		if e.complexity.SystemIntakeProductManager.Name == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeProductManager.Name(childComplexity), true
 
 	case "SystemIntakeRequester.component":
 		if e.complexity.SystemIntakeRequester.Component == nil {
@@ -2108,6 +2118,14 @@ type SystemIntakeBusinessOwner {
 }
 
 """
+A product manager for a system intake
+"""
+type SystemIntakeProductManager {
+  component: String
+  name: String
+}
+
+"""
 A requester for a system intake
 """
 type SystemIntakeRequester {
@@ -2155,8 +2173,7 @@ type SystemIntake {
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
   processStatus: String
-  productManager: String
-  productManagerComponent: String
+  productManager: SystemIntakeProductManager
   projectAcronym: String
   projectName: String
   rejectionReason: String
@@ -6951,41 +6968,9 @@ func (ec *executionContext) _SystemIntake_productManager(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeProductManager)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_productManagerComponent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ProductManagerComponent(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeProductManager2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_projectAcronym(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7393,6 +7378,70 @@ func (ec *executionContext) _SystemIntakeBusinessOwner_name(ctx context.Context,
 	}()
 	fc := &graphql.FieldContext{
 		Object:     "SystemIntakeBusinessOwner",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeProductManager_component(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeProductManager) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeProductManager",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Component, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeProductManager_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeProductManager) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeProductManager",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -10402,17 +10451,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_productManager(ctx, field, obj)
 				return res
 			})
-		case "productManagerComponent":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_productManagerComponent(ctx, field, obj)
-				return res
-			})
 		case "projectAcronym":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10536,6 +10574,32 @@ func (ec *executionContext) _SystemIntakeBusinessOwner(ctx context.Context, sel 
 			out.Values[i] = ec._SystemIntakeBusinessOwner_component(ctx, field, obj)
 		case "name":
 			out.Values[i] = ec._SystemIntakeBusinessOwner_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeProductManagerImplementors = []string{"SystemIntakeProductManager"}
+
+func (ec *executionContext) _SystemIntakeProductManager(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeProductManager) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeProductManagerImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeProductManager")
+		case "component":
+			out.Values[i] = ec._SystemIntakeProductManager_component(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._SystemIntakeProductManager_name(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11912,6 +11976,13 @@ func (ec *executionContext) marshalOSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋ
 		return graphql.Null
 	}
 	return ec._SystemIntakeBusinessOwner(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeProductManager2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeProductManager) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeProductManager(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx context.Context, sel ast.SelectionSet, v *models.TestDate) graphql.Marshaler {
