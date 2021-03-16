@@ -5,6 +5,9 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
+import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
+import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
+import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -405,7 +408,7 @@ const GovernanceReviewTeam = () => {
               path="/governance-review-team/:systemId/actions/provide-feedback-need-biz-case"
               render={() => (
                 <ProvideGRTFeedback
-                  action="PROVIDE_FEEDBACK_NEED_BIZ_CASE"
+                  query={AddGRTFeedbackRequestBizCaseQuery}
                   actionName={actionsT('actions.provideFeedbackNeedBizCase')}
                 />
               )}
@@ -414,7 +417,7 @@ const GovernanceReviewTeam = () => {
               path="/governance-review-team/:systemId/actions/provide-feedback-keep-draft"
               render={() => (
                 <ProvideGRTFeedback
-                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT"
+                  query={AddGRTFeedbackKeepDraftBizCase}
                   actionName={actionsT('actions.provideGrtFeedbackKeepDraft')}
                 />
               )}
@@ -423,7 +426,7 @@ const GovernanceReviewTeam = () => {
               path="/governance-review-team/:systemId/actions/provide-feedback-need-final"
               render={() => (
                 <ProvideGRTFeedback
-                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
+                  query={AddGRTFeedbackProgressToFinal}
                   actionName={actionsT('actions.provideGrtFeedbackNeedFinal')}
                 />
               )}

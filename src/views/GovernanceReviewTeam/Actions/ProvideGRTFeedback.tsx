@@ -1,10 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { useMutation } from '@apollo/client';
+import { DocumentNode, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import AddGRTFeedbackQuery from 'queries/AddGRTFeedbackQuery';
 import {
   AddGRTFeedback,
   AddGRTFeedbackVariables
@@ -16,26 +15,20 @@ import FieldGroup from 'components/shared/FieldGroup';
 import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { ActionType, ProvideGRTFeedbackForm } from 'types/action';
-import { ActionType as GQLActionType } from 'types/graphql-global-types';
+import { ProvideGRTFeedbackForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { provideGRTFeedbackSchema } from 'validations/actionSchema';
 
 type ProvideGRTFeedbackProps = {
-  action: ActionType;
   actionName: string;
+  query: DocumentNode;
 };
 
-const ProvideGRTFeedback = ({
-  action,
-  actionName
-}: ProvideGRTFeedbackProps) => {
+const ProvideGRTFeedback = ({ actionName, query }: ProvideGRTFeedbackProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
-  const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(
-    AddGRTFeedbackQuery
-  );
+  const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(query);
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -51,8 +44,7 @@ const ProvideGRTFeedback = ({
         input: {
           emailBody,
           feedback: grtFeedback,
-          intakeID: systemId,
-          actionType: action as GQLActionType
+          intakeID: systemId
         }
       }
     }).then(() => {
