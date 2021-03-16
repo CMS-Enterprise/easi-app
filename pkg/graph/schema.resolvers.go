@@ -438,6 +438,10 @@ func (r *systemIntakeResolver) BusinessOwner(ctx context.Context, obj *models.Sy
 	}, nil
 }
 
+func (r *systemIntakeResolver) BusinessSolution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.Solution.Ptr(), nil
+}
+
 func (r *systemIntakeResolver) ContractEndMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.ContractEndMonth.Ptr(), nil
 }
@@ -565,10 +569,6 @@ func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.System
 	}, nil
 }
 
-func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.Solution.Ptr(), nil
-}
-
 func (r *systemIntakeResolver) TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.TRBCollaborator.Ptr(), nil
 }
@@ -612,6 +612,9 @@ type systemIntakeResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.Solution.Ptr(), nil
+}
 func (r *systemIntakeResolver) IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.ISSOName.Ptr(), nil
 }
