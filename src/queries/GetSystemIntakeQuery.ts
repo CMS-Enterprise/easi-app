@@ -8,6 +8,10 @@ export default gql`
         component
         name
       }
+      isso {
+        isPresent
+        name
+      }
       productManager {
         component
         name
