@@ -35,7 +35,7 @@ export interface GetSystemIntake_systemIntake {
   productManager: GetSystemIntake_systemIntake_productManager | null;
   requester: GetSystemIntake_systemIntake_requester;
   lcid: string | null;
-  projectName: string | null;
+  requestName: string | null;
   requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
   submittedAt: Time | null;
