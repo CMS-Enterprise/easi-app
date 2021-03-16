@@ -44,16 +44,6 @@
     padding-left: 0;
   }
 
-  &__phase-cost-row {
-    display: grid;
-    grid-gap: 16px;
-    margin-right: 1rem;
-
-    @media screen and (min-width: $desktop) {
-      grid-template-columns: minmax(100px, 250px) 150px;
-    }
-  }
-
   .help-title {
     font-size: 1.375em;
   }
