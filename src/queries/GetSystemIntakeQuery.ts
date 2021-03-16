@@ -39,6 +39,8 @@ export default gql`
         isFunded
         source
       }
+      lcid
+      needsEaSupport
       productManager {
         component
         name
@@ -48,8 +50,6 @@ export default gql`
         email
         name
       }
-      lcid
-      needsEaSupport
       requestName
       requestType
       status

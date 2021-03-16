@@ -81,10 +81,10 @@ export interface GetSystemIntake_systemIntake {
   currentStage: string | null;
   isso: GetSystemIntake_systemIntake_isso | null;
   fundingSource: GetSystemIntake_systemIntake_fundingSource | null;
-  productManager: GetSystemIntake_systemIntake_productManager | null;
-  requester: GetSystemIntake_systemIntake_requester;
   lcid: string | null;
   needsEaSupport: boolean | null;
+  productManager: GetSystemIntake_systemIntake_productManager | null;
+  requester: GetSystemIntake_systemIntake_requester;
   requestName: string | null;
   requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
