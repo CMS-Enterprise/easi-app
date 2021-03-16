@@ -437,8 +437,8 @@ func NewProvideGRTFeedback(
 	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
 	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string, intakeID uuid.UUID) error,
-) func(context.Context, *models.GRTFeedback, *models.Action) (*models.GRTFeedback, error) {
-	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action) (*models.GRTFeedback, error) {
+) func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error) {
+	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus) (*models.GRTFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
 		if err != nil {
 			return nil, err
@@ -462,7 +462,6 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
-		action.ActionType = models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE
 		if err = saveAction(ctx, action); err != nil {
 			return nil, err
 		}
@@ -471,7 +470,7 @@ func NewProvideGRTFeedback(
 		// dealing with Rejection information
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
-		intake.Status = models.SystemIntakeStatusBIZCASEFINALNEEDED
+		intake.Status = newStatus
 		intake, err = update(ctx, intake)
 		if err != nil {
 			return nil, err

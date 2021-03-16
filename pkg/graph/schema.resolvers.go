@@ -118,15 +118,63 @@ func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, o
 }
 
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID: input.IntakeID,
+			Feedback: input.Feedback,
+		},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			Feedback:   null.StringFrom(input.EmailBody),
+			ActionType: models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES,
+		},
+		models.SystemIntakeStatusBIZCASECHANGESNEEDED)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
 }
 
 func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID: input.IntakeID,
+			Feedback: input.Feedback,
+		},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			Feedback:   null.StringFrom(input.EmailBody),
+			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
+		},
+		models.SystemIntakeStatusNEEDBIZCASE)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
 }
 
 func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID: input.IntakeID,
+			Feedback: input.Feedback,
+		},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			Feedback:   null.StringFrom(input.EmailBody),
+			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
+		},
+		models.SystemIntakeStatusNEEDBIZCASE)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
 }
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
@@ -417,27 +465,3 @@ type accessibilityRequestDocumentResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *mutationResolver) AddGRTFeedback(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	grtFeedback, err := r.service.AddGRTFeedback(
-		ctx,
-		&models.GRTFeedback{
-			IntakeID: input.IntakeID,
-			Feedback: input.Feedback,
-		},
-		&models.Action{
-			IntakeID: &input.IntakeID,
-			Feedback: null.StringFrom(input.EmailBody),
-		})
-	if err != nil {
-		return nil, err
-	}
-
-	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
-}
