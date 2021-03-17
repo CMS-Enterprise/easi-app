@@ -125,6 +125,7 @@ type ComplexityRoot struct {
 		CreateAccessibilityRequestDocument           func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
 		CreateTestDate                               func(childComplexity int, input model.CreateTestDateInput) int
 		GeneratePresignedUploadURL                   func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
+		MarkSystemIntakeReadyForGrb                  func(childComplexity int, input model.AddGRTFeedbackInput) int
 		UpdateTestDate                               func(childComplexity int, input model.UpdateTestDateInput) int
 	}
 
@@ -245,6 +246,7 @@ type MutationResolver interface {
 	CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
 	GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
+	MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
 }
 type QueryResolver interface {
@@ -628,6 +630,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.GeneratePresignedUploadURL(childComplexity, args["input"].(model.GeneratePresignedUploadURLInput)), true
+
+	case "Mutation.markSystemIntakeReadyForGRB":
+		if e.complexity.Mutation.MarkSystemIntakeReadyForGrb == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_markSystemIntakeReadyForGRB_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.MarkSystemIntakeReadyForGrb(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
 
 	case "Mutation.updateTestDate":
 		if e.complexity.Mutation.UpdateTestDate == nil {
@@ -1669,6 +1683,9 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  markSystemIntakeReadyForGRB(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
 }
@@ -1842,6 +1859,21 @@ func (ec *executionContext) field_Mutation_generatePresignedUploadURL_args(ctx c
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNGeneratePresignedUploadURLInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_markSystemIntakeReadyForGRB_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.AddGRTFeedbackInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3485,6 +3517,69 @@ func (ec *executionContext) _Mutation_generatePresignedUploadURL(ctx context.Con
 	res := resTmp.(*model.GeneratePresignedUploadURLPayload)
 	fc.Result = res
 	return ec.marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_markSystemIntakeReadyForGRB(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_markSystemIntakeReadyForGRB_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().MarkSystemIntakeReadyForGrb(rctx, args["input"].(model.AddGRTFeedbackInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.AddGRTFeedbackPayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.AddGRTFeedbackPayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.AddGRTFeedbackPayload)
+	fc.Result = res
+	return ec.marshalOAddGRTFeedbackPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackPayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7755,6 +7850,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createTestDate(ctx, field)
 		case "generatePresignedUploadURL":
 			out.Values[i] = ec._Mutation_generatePresignedUploadURL(ctx, field)
+		case "markSystemIntakeReadyForGRB":
+			out.Values[i] = ec._Mutation_markSystemIntakeReadyForGRB(ctx, field)
 		case "updateTestDate":
 			out.Values[i] = ec._Mutation_updateTestDate(ctx, field)
 		default:
