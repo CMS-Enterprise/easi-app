@@ -18,7 +18,13 @@ import {
   translateRequestType
 } from 'utils/systemIntake';
 
-const RequestSummary = ({ intake }: { intake: SystemIntakeForm }) => {
+const RequestSummary = ({
+  intake,
+  oldIntake
+}: {
+  intake: SystemIntakeForm;
+  oldIntake: SystemIntakeForm;
+}) => {
   const { t } = useTranslation('governanceReviewTeam');
   const dispatch = useDispatch();
   const [isModalOpen, setModalOpen] = useState(false);
@@ -34,8 +40,8 @@ const RequestSummary = ({ intake }: { intake: SystemIntakeForm }) => {
 
   // Get admin lead assigned to intake
   const getAdminLead = () => {
-    if (intake.adminLead) {
-      return intake.adminLead;
+    if (oldIntake.adminLead) {
+      return oldIntake.adminLead;
     }
     return (
       <>
@@ -48,13 +54,13 @@ const RequestSummary = ({ intake }: { intake: SystemIntakeForm }) => {
   // Resets newAdminLead to what is in intake currently. This is used to
   // reset state of modal upon exit without saving
   const resetNewAdminLead = () => {
-    setAdminLead(intake.adminLead);
+    setAdminLead(oldIntake.adminLead);
   };
 
   // Send newly selected admin lead to database
   const saveAdminLead = () => {
     const data = {
-      ...intake,
+      ...oldIntake,
       adminLead: newAdminLead
     };
     dispatch(saveSystemIntake({ ...data }));
