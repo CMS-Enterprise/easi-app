@@ -41,6 +41,7 @@ type Config struct {
 type ResolverRoot interface {
 	AccessibilityRequest() AccessibilityRequestResolver
 	AccessibilityRequestDocument() AccessibilityRequestDocumentResolver
+	BusinessCase() BusinessCaseResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
 	SystemIntake() SystemIntakeResolver
@@ -92,6 +93,54 @@ type ComplexityRoot struct {
 		ID func(childComplexity int) int
 	}
 
+	BusinessCase struct {
+		AlternativeASolution func(childComplexity int) int
+		AlternativeBSolution func(childComplexity int) int
+		AsIsSolution         func(childComplexity int) int
+		BusinessNeed         func(childComplexity int) int
+		BusinessOwner        func(childComplexity int) int
+		CmsBenefit           func(childComplexity int) int
+		CreatedAt            func(childComplexity int) int
+		EUAUserID            func(childComplexity int) int
+		ID                   func(childComplexity int) int
+		InitialSubmittedAt   func(childComplexity int) int
+		LastSubmittedAt      func(childComplexity int) int
+		LifecycleCostLines   func(childComplexity int) int
+		PreferredSolution    func(childComplexity int) int
+		PriorityAlignment    func(childComplexity int) int
+		ProjectName          func(childComplexity int) int
+		Requester            func(childComplexity int) int
+		RequesterPhoneNumber func(childComplexity int) int
+		Status               func(childComplexity int) int
+		SubmittedAt          func(childComplexity int) int
+		SuccessIndicators    func(childComplexity int) int
+		SystemIntake         func(childComplexity int) int
+		UpdatedAt            func(childComplexity int) int
+	}
+
+	BusinessCaseAsIsSolution struct {
+		Cons        func(childComplexity int) int
+		CostSavings func(childComplexity int) int
+		Pros        func(childComplexity int) int
+		Summary     func(childComplexity int) int
+		Title       func(childComplexity int) int
+	}
+
+	BusinessCaseSolution struct {
+		AcquisitionApproach     func(childComplexity int) int
+		Cons                    func(childComplexity int) int
+		CostSavings             func(childComplexity int) int
+		HasUI                   func(childComplexity int) int
+		HostingCloudServiceType func(childComplexity int) int
+		HostingLocation         func(childComplexity int) int
+		HostingType             func(childComplexity int) int
+		Pros                    func(childComplexity int) int
+		SecurityIsApproved      func(childComplexity int) int
+		SecurityIsBeingReviewed func(childComplexity int) int
+		Summary                 func(childComplexity int) int
+		Title                   func(childComplexity int) int
+	}
+
 	BusinessOwner struct {
 		Component func(childComplexity int) int
 		Name      func(childComplexity int) int
@@ -110,6 +159,15 @@ type ComplexityRoot struct {
 	CreateTestDatePayload struct {
 		TestDate   func(childComplexity int) int
 		UserErrors func(childComplexity int) int
+	}
+
+	EstimatedLifecycleCost struct {
+		BusinessCaseID func(childComplexity int) int
+		Cost           func(childComplexity int) int
+		ID             func(childComplexity int) int
+		Phase          func(childComplexity int) int
+		Solution       func(childComplexity int) int
+		Year           func(childComplexity int) int
 	}
 
 	GeneratePresignedUploadURLPayload struct {
@@ -154,6 +212,7 @@ type ComplexityRoot struct {
 
 	SystemIntake struct {
 		ArchivedAt                  func(childComplexity int) int
+		BusinessCase                func(childComplexity int) int
 		BusinessNeed                func(childComplexity int) int
 		BusinessOwner               func(childComplexity int) int
 		BusinessOwnerComponent      func(childComplexity int) int
@@ -237,6 +296,24 @@ type AccessibilityRequestDocumentResolver interface {
 
 	UploadedAt(ctx context.Context, obj *models.AccessibilityRequestDocument) (*time.Time, error)
 }
+type BusinessCaseResolver interface {
+	AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
+	AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
+	AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseAsIsSolution, error)
+	BusinessNeed(ctx context.Context, obj *models.BusinessCase) (*string, error)
+	BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*string, error)
+	CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error)
+
+	LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error)
+	PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
+	PriorityAlignment(ctx context.Context, obj *models.BusinessCase) (*string, error)
+	ProjectName(ctx context.Context, obj *models.BusinessCase) (*string, error)
+	Requester(ctx context.Context, obj *models.BusinessCase) (*string, error)
+	RequesterPhoneNumber(ctx context.Context, obj *models.BusinessCase) (*string, error)
+
+	SuccessIndicators(ctx context.Context, obj *models.BusinessCase) (*string, error)
+	SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error)
+}
 type MutationResolver interface {
 	AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	AddGRTFeedbackAndProgressToFinalBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
@@ -254,6 +331,7 @@ type QueryResolver interface {
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 }
 type SystemIntakeResolver interface {
+	BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error)
 	BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	BusinessOwnerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -475,6 +553,279 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.AddGRTFeedbackPayload.ID(childComplexity), true
 
+	case "BusinessCase.alternativeASolution":
+		if e.complexity.BusinessCase.AlternativeASolution == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.AlternativeASolution(childComplexity), true
+
+	case "BusinessCase.alternativeBSolution":
+		if e.complexity.BusinessCase.AlternativeBSolution == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.AlternativeBSolution(childComplexity), true
+
+	case "BusinessCase.asIsSolution":
+		if e.complexity.BusinessCase.AsIsSolution == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.AsIsSolution(childComplexity), true
+
+	case "BusinessCase.businessNeed":
+		if e.complexity.BusinessCase.BusinessNeed == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.BusinessNeed(childComplexity), true
+
+	case "BusinessCase.businessOwner":
+		if e.complexity.BusinessCase.BusinessOwner == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.BusinessOwner(childComplexity), true
+
+	case "BusinessCase.cmsBenefit":
+		if e.complexity.BusinessCase.CmsBenefit == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.CmsBenefit(childComplexity), true
+
+	case "BusinessCase.createdAt":
+		if e.complexity.BusinessCase.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.CreatedAt(childComplexity), true
+
+	case "BusinessCase.euaUserId":
+		if e.complexity.BusinessCase.EUAUserID == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.EUAUserID(childComplexity), true
+
+	case "BusinessCase.id":
+		if e.complexity.BusinessCase.ID == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.ID(childComplexity), true
+
+	case "BusinessCase.initialSubmittedAt":
+		if e.complexity.BusinessCase.InitialSubmittedAt == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.InitialSubmittedAt(childComplexity), true
+
+	case "BusinessCase.lastSubmittedAt":
+		if e.complexity.BusinessCase.LastSubmittedAt == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.LastSubmittedAt(childComplexity), true
+
+	case "BusinessCase.lifecycleCostLines":
+		if e.complexity.BusinessCase.LifecycleCostLines == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.LifecycleCostLines(childComplexity), true
+
+	case "BusinessCase.preferredSolution":
+		if e.complexity.BusinessCase.PreferredSolution == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.PreferredSolution(childComplexity), true
+
+	case "BusinessCase.priorityAlignment":
+		if e.complexity.BusinessCase.PriorityAlignment == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.PriorityAlignment(childComplexity), true
+
+	case "BusinessCase.projectName":
+		if e.complexity.BusinessCase.ProjectName == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.ProjectName(childComplexity), true
+
+	case "BusinessCase.requester":
+		if e.complexity.BusinessCase.Requester == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.Requester(childComplexity), true
+
+	case "BusinessCase.requesterPhoneNumber":
+		if e.complexity.BusinessCase.RequesterPhoneNumber == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.RequesterPhoneNumber(childComplexity), true
+
+	case "BusinessCase.status":
+		if e.complexity.BusinessCase.Status == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.Status(childComplexity), true
+
+	case "BusinessCase.submittedAt":
+		if e.complexity.BusinessCase.SubmittedAt == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.SubmittedAt(childComplexity), true
+
+	case "BusinessCase.successIndicators":
+		if e.complexity.BusinessCase.SuccessIndicators == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.SuccessIndicators(childComplexity), true
+
+	case "BusinessCase.systemIntake":
+		if e.complexity.BusinessCase.SystemIntake == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.SystemIntake(childComplexity), true
+
+	case "BusinessCase.updatedAt":
+		if e.complexity.BusinessCase.UpdatedAt == nil {
+			break
+		}
+
+		return e.complexity.BusinessCase.UpdatedAt(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.cons":
+		if e.complexity.BusinessCaseAsIsSolution.Cons == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.Cons(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.costSavings":
+		if e.complexity.BusinessCaseAsIsSolution.CostSavings == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.CostSavings(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.pros":
+		if e.complexity.BusinessCaseAsIsSolution.Pros == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.Pros(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.summary":
+		if e.complexity.BusinessCaseAsIsSolution.Summary == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.Summary(childComplexity), true
+
+	case "BusinessCaseAsIsSolution.title":
+		if e.complexity.BusinessCaseAsIsSolution.Title == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseAsIsSolution.Title(childComplexity), true
+
+	case "BusinessCaseSolution.acquisitionApproach":
+		if e.complexity.BusinessCaseSolution.AcquisitionApproach == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.AcquisitionApproach(childComplexity), true
+
+	case "BusinessCaseSolution.cons":
+		if e.complexity.BusinessCaseSolution.Cons == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.Cons(childComplexity), true
+
+	case "BusinessCaseSolution.costSavings":
+		if e.complexity.BusinessCaseSolution.CostSavings == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.CostSavings(childComplexity), true
+
+	case "BusinessCaseSolution.hasUi":
+		if e.complexity.BusinessCaseSolution.HasUI == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.HasUI(childComplexity), true
+
+	case "BusinessCaseSolution.hostingCloudServiceType":
+		if e.complexity.BusinessCaseSolution.HostingCloudServiceType == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.HostingCloudServiceType(childComplexity), true
+
+	case "BusinessCaseSolution.hostingLocation":
+		if e.complexity.BusinessCaseSolution.HostingLocation == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.HostingLocation(childComplexity), true
+
+	case "BusinessCaseSolution.hostingType":
+		if e.complexity.BusinessCaseSolution.HostingType == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.HostingType(childComplexity), true
+
+	case "BusinessCaseSolution.pros":
+		if e.complexity.BusinessCaseSolution.Pros == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.Pros(childComplexity), true
+
+	case "BusinessCaseSolution.securityIsApproved":
+		if e.complexity.BusinessCaseSolution.SecurityIsApproved == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.SecurityIsApproved(childComplexity), true
+
+	case "BusinessCaseSolution.securityIsBeingReviewed":
+		if e.complexity.BusinessCaseSolution.SecurityIsBeingReviewed == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.SecurityIsBeingReviewed(childComplexity), true
+
+	case "BusinessCaseSolution.summary":
+		if e.complexity.BusinessCaseSolution.Summary == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.Summary(childComplexity), true
+
+	case "BusinessCaseSolution.title":
+		if e.complexity.BusinessCaseSolution.Title == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolution.Title(childComplexity), true
+
 	case "BusinessOwner.component":
 		if e.complexity.BusinessOwner.Component == nil {
 			break
@@ -530,6 +881,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CreateTestDatePayload.UserErrors(childComplexity), true
+
+	case "EstimatedLifecycleCost.businessCaseId":
+		if e.complexity.EstimatedLifecycleCost.BusinessCaseID == nil {
+			break
+		}
+
+		return e.complexity.EstimatedLifecycleCost.BusinessCaseID(childComplexity), true
+
+	case "EstimatedLifecycleCost.cost":
+		if e.complexity.EstimatedLifecycleCost.Cost == nil {
+			break
+		}
+
+		return e.complexity.EstimatedLifecycleCost.Cost(childComplexity), true
+
+	case "EstimatedLifecycleCost.id":
+		if e.complexity.EstimatedLifecycleCost.ID == nil {
+			break
+		}
+
+		return e.complexity.EstimatedLifecycleCost.ID(childComplexity), true
+
+	case "EstimatedLifecycleCost.phase":
+		if e.complexity.EstimatedLifecycleCost.Phase == nil {
+			break
+		}
+
+		return e.complexity.EstimatedLifecycleCost.Phase(childComplexity), true
+
+	case "EstimatedLifecycleCost.solution":
+		if e.complexity.EstimatedLifecycleCost.Solution == nil {
+			break
+		}
+
+		return e.complexity.EstimatedLifecycleCost.Solution(childComplexity), true
+
+	case "EstimatedLifecycleCost.year":
+		if e.complexity.EstimatedLifecycleCost.Year == nil {
+			break
+		}
+
+		return e.complexity.EstimatedLifecycleCost.Year(childComplexity), true
 
 	case "GeneratePresignedUploadURLPayload.url":
 		if e.complexity.GeneratePresignedUploadURLPayload.URL == nil {
@@ -751,6 +1144,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.ArchivedAt(childComplexity), true
+
+	case "SystemIntake.businessCase":
+		if e.complexity.SystemIntake.BusinessCase == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.BusinessCase(childComplexity), true
 
 	case "SystemIntake.businessNeed":
 		if e.complexity.SystemIntake.BusinessNeed == nil {
@@ -1475,6 +1875,155 @@ type CreateAccessibilityRequestDocumentPayload {
 }
 
 """
+The shape of a solution for a business case
+"""
+type BusinessCaseSolution {
+  acquisitionApproach: String
+  cons: String
+  costSavings: String
+  hasUi: String
+  hostingCloudServiceType: String
+  hostingLocation: String
+  hostingType: String
+  pros: String
+  securityIsApproved: Boolean
+  securityIsBeingReviewed: String
+  summary: String
+  title: String
+}
+
+"""
+The shape of a solution for a business case
+"""
+type BusinessCaseAsIsSolution {
+  cons: String
+  costSavings: String
+  pros: String
+  summary: String
+  title: String
+}
+
+"""
+enum 
+"""
+enum LifecycleCostPhase {
+  """
+  development
+  """
+  DEVELOPMENT
+  """
+  Operations and Maintentance
+  """
+  OPERATIONS_AND_MAINTENANCE
+  """
+  Other
+  """
+  OTHER
+}
+
+"""
+enum 
+"""
+enum LifecycleCostSolution {
+  """
+  A
+  """
+  A
+  """
+  As is
+  """
+  AS_IS
+  """
+  B
+  """
+  B
+  """
+  Preferred
+  """
+  PREFERRED
+}
+
+"""
+enum 
+"""
+enum LifecycleCostYear {
+  """
+  1
+  """
+  LIFECYCLE_COST_YEAR_1
+  """
+  2
+  """
+  LIFECYCLE_COST_YEAR_2
+  """
+  3
+  """
+  LIFECYCLE_COST_YEAR_3
+  """
+  4
+  """
+  LIFECYCLE_COST_YEAR_4
+  """
+  5
+  """
+  LIFECYCLE_COST_YEAR_5
+}
+
+"""
+The shape of an estimated lifecycle cost row
+"""
+type EstimatedLifecycleCost {
+  businessCaseId: UUID!
+  cost: Int
+  id: UUID!
+  phase: LifecycleCostPhase
+  solution: LifecycleCostSolution
+  year: LifecycleCostYear
+}
+
+"""
+Business Case status options
+"""
+enum BusinessCaseStatus {
+  """
+  closed
+  """
+  CLOSED
+  """
+  open
+  """
+  OPEN
+}
+
+"""
+A Business Case instance
+"""
+type BusinessCase {
+  alternativeASolution: BusinessCaseSolution
+  alternativeBSolution: BusinessCaseSolution
+  asIsSolution: BusinessCaseAsIsSolution
+  businessNeed: String
+  businessOwner: String
+  cmsBenefit: String
+  createdAt: Time!
+  euaUserId: String!
+  id: UUID!
+  initialSubmittedAt: Time
+  lastSubmittedAt: Time
+  lifecycleCostLines: [EstimatedLifecycleCost!]
+  preferredSolution: BusinessCaseSolution
+  priorityAlignment: String
+  projectName: String
+  requester: String
+  requesterPhoneNumber: String
+  status: BusinessCaseStatus!
+  submittedAt: Time
+  successIndicators: String
+  systemIntake: SystemIntake!
+  updatedAt: Time!
+}
+
+"""
 The statuses for a system intake
 """
 enum SystemIntakeStatus {
@@ -1579,6 +2128,7 @@ A SystemIntake instance
 """
 type SystemIntake {
   archivedAt: Time
+  businessCase: BusinessCase
   businessNeed: String
   businessOwner: String
   businessOwnerComponent: String
@@ -2792,6 +3342,1272 @@ func (ec *executionContext) _AddGRTFeedbackPayload_id(ctx context.Context, field
 	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _BusinessCase_alternativeASolution(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().AlternativeASolution(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BusinessCaseSolution)
+	fc.Result = res
+	return ec.marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolution(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_alternativeBSolution(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().AlternativeBSolution(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BusinessCaseSolution)
+	fc.Result = res
+	return ec.marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolution(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_asIsSolution(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().AsIsSolution(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BusinessCaseAsIsSolution)
+	fc.Result = res
+	return ec.marshalOBusinessCaseAsIsSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseAsIsSolution(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_businessNeed(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().BusinessNeed(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_businessOwner(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().BusinessOwner(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_cmsBenefit(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().CmsBenefit(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EUAUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_id(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_initialSubmittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.InitialSubmittedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_lastSubmittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.LastSubmittedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_lifecycleCostLines(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().LifecycleCostLines(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*models.EstimatedLifecycleCost)
+	fc.Result = res
+	return ec.marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_preferredSolution(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().PreferredSolution(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.BusinessCaseSolution)
+	fc.Result = res
+	return ec.marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolution(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_priorityAlignment(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().PriorityAlignment(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_projectName(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().ProjectName(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_requester(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().Requester(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_requesterPhoneNumber(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().RequesterPhoneNumber(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_status(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(models.BusinessCaseStatus)
+	fc.Result = res
+	return ec.marshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_submittedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SubmittedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_successIndicators(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().SuccessIndicators(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_systemIntake(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.BusinessCase().SystemIntake(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntake)
+	fc.Result = res
+	return ec.marshalNSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCase_updatedAt(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCase",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpdatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_cons(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cons, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_costSavings(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CostSavings, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_pros(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Pros, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_summary(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Summary, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution_title(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseAsIsSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseAsIsSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_acquisitionApproach(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AcquisitionApproach, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_cons(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cons, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_costSavings(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CostSavings, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_hasUi(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasUI, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_hostingCloudServiceType(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HostingCloudServiceType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_hostingLocation(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HostingLocation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_hostingType(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HostingType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_pros(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Pros, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_securityIsApproved(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SecurityIsApproved, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_securityIsBeingReviewed(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SecurityIsBeingReviewed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_summary(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Summary, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolution_title(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolution",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _BusinessOwner_component(ctx context.Context, field graphql.CollectedField, obj *models.BusinessOwner) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -3052,6 +4868,204 @@ func (ec *executionContext) _CreateTestDatePayload_userErrors(ctx context.Contex
 	res := resTmp.([]*model.UserError)
 	fc.Result = res
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _EstimatedLifecycleCost_businessCaseId(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "EstimatedLifecycleCost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.BusinessCaseID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _EstimatedLifecycleCost_cost(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "EstimatedLifecycleCost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cost, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _EstimatedLifecycleCost_id(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "EstimatedLifecycleCost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _EstimatedLifecycleCost_phase(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "EstimatedLifecycleCost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Phase, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.LifecycleCostPhase)
+	fc.Result = res
+	return ec.marshalOLifecycleCostPhase2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostPhase(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _EstimatedLifecycleCost_solution(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "EstimatedLifecycleCost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Solution, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(models.LifecycleCostSolution)
+	fc.Result = res
+	return ec.marshalOLifecycleCostSolution2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostSolution(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _EstimatedLifecycleCost_year(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "EstimatedLifecycleCost",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Year, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(models.LifecycleCostYear)
+	fc.Result = res
+	return ec.marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GeneratePresignedUploadURLPayload_url(ctx context.Context, field graphql.CollectedField, obj *model.GeneratePresignedUploadURLPayload) (ret graphql.Marshaler) {
@@ -4111,6 +6125,38 @@ func (ec *executionContext) _SystemIntake_archivedAt(ctx context.Context, field 
 	res := resTmp.(*time.Time)
 	fc.Result = res
 	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_businessCase(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().BusinessCase(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.BusinessCase)
+	fc.Result = res
+	return ec.marshalOBusinessCase2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCase(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_businessNeed(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7590,6 +9636,294 @@ func (ec *executionContext) _AddGRTFeedbackPayload(ctx context.Context, sel ast.
 	return out
 }
 
+var businessCaseImplementors = []string{"BusinessCase"}
+
+func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.SelectionSet, obj *models.BusinessCase) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, businessCaseImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BusinessCase")
+		case "alternativeASolution":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_alternativeASolution(ctx, field, obj)
+				return res
+			})
+		case "alternativeBSolution":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_alternativeBSolution(ctx, field, obj)
+				return res
+			})
+		case "asIsSolution":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_asIsSolution(ctx, field, obj)
+				return res
+			})
+		case "businessNeed":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_businessNeed(ctx, field, obj)
+				return res
+			})
+		case "businessOwner":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_businessOwner(ctx, field, obj)
+				return res
+			})
+		case "cmsBenefit":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_cmsBenefit(ctx, field, obj)
+				return res
+			})
+		case "createdAt":
+			out.Values[i] = ec._BusinessCase_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "euaUserId":
+			out.Values[i] = ec._BusinessCase_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "id":
+			out.Values[i] = ec._BusinessCase_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "initialSubmittedAt":
+			out.Values[i] = ec._BusinessCase_initialSubmittedAt(ctx, field, obj)
+		case "lastSubmittedAt":
+			out.Values[i] = ec._BusinessCase_lastSubmittedAt(ctx, field, obj)
+		case "lifecycleCostLines":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_lifecycleCostLines(ctx, field, obj)
+				return res
+			})
+		case "preferredSolution":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_preferredSolution(ctx, field, obj)
+				return res
+			})
+		case "priorityAlignment":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_priorityAlignment(ctx, field, obj)
+				return res
+			})
+		case "projectName":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_projectName(ctx, field, obj)
+				return res
+			})
+		case "requester":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_requester(ctx, field, obj)
+				return res
+			})
+		case "requesterPhoneNumber":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_requesterPhoneNumber(ctx, field, obj)
+				return res
+			})
+		case "status":
+			out.Values[i] = ec._BusinessCase_status(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "submittedAt":
+			out.Values[i] = ec._BusinessCase_submittedAt(ctx, field, obj)
+		case "successIndicators":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_successIndicators(ctx, field, obj)
+				return res
+			})
+		case "systemIntake":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._BusinessCase_systemIntake(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "updatedAt":
+			out.Values[i] = ec._BusinessCase_updatedAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var businessCaseAsIsSolutionImplementors = []string{"BusinessCaseAsIsSolution"}
+
+func (ec *executionContext) _BusinessCaseAsIsSolution(ctx context.Context, sel ast.SelectionSet, obj *model.BusinessCaseAsIsSolution) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, businessCaseAsIsSolutionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BusinessCaseAsIsSolution")
+		case "cons":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_cons(ctx, field, obj)
+		case "costSavings":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_costSavings(ctx, field, obj)
+		case "pros":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_pros(ctx, field, obj)
+		case "summary":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_summary(ctx, field, obj)
+		case "title":
+			out.Values[i] = ec._BusinessCaseAsIsSolution_title(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var businessCaseSolutionImplementors = []string{"BusinessCaseSolution"}
+
+func (ec *executionContext) _BusinessCaseSolution(ctx context.Context, sel ast.SelectionSet, obj *model.BusinessCaseSolution) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, businessCaseSolutionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BusinessCaseSolution")
+		case "acquisitionApproach":
+			out.Values[i] = ec._BusinessCaseSolution_acquisitionApproach(ctx, field, obj)
+		case "cons":
+			out.Values[i] = ec._BusinessCaseSolution_cons(ctx, field, obj)
+		case "costSavings":
+			out.Values[i] = ec._BusinessCaseSolution_costSavings(ctx, field, obj)
+		case "hasUi":
+			out.Values[i] = ec._BusinessCaseSolution_hasUi(ctx, field, obj)
+		case "hostingCloudServiceType":
+			out.Values[i] = ec._BusinessCaseSolution_hostingCloudServiceType(ctx, field, obj)
+		case "hostingLocation":
+			out.Values[i] = ec._BusinessCaseSolution_hostingLocation(ctx, field, obj)
+		case "hostingType":
+			out.Values[i] = ec._BusinessCaseSolution_hostingType(ctx, field, obj)
+		case "pros":
+			out.Values[i] = ec._BusinessCaseSolution_pros(ctx, field, obj)
+		case "securityIsApproved":
+			out.Values[i] = ec._BusinessCaseSolution_securityIsApproved(ctx, field, obj)
+		case "securityIsBeingReviewed":
+			out.Values[i] = ec._BusinessCaseSolution_securityIsBeingReviewed(ctx, field, obj)
+		case "summary":
+			out.Values[i] = ec._BusinessCaseSolution_summary(ctx, field, obj)
+		case "title":
+			out.Values[i] = ec._BusinessCaseSolution_title(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var businessOwnerImplementors = []string{"BusinessOwner"}
 
 func (ec *executionContext) _BusinessOwner(ctx context.Context, sel ast.SelectionSet, obj *models.BusinessOwner) graphql.Marshaler {
@@ -7689,6 +10023,46 @@ func (ec *executionContext) _CreateTestDatePayload(ctx context.Context, sel ast.
 			out.Values[i] = ec._CreateTestDatePayload_testDate(ctx, field, obj)
 		case "userErrors":
 			out.Values[i] = ec._CreateTestDatePayload_userErrors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var estimatedLifecycleCostImplementors = []string{"EstimatedLifecycleCost"}
+
+func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, obj *models.EstimatedLifecycleCost) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, estimatedLifecycleCostImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("EstimatedLifecycleCost")
+		case "businessCaseId":
+			out.Values[i] = ec._EstimatedLifecycleCost_businessCaseId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "cost":
+			out.Values[i] = ec._EstimatedLifecycleCost_cost(ctx, field, obj)
+		case "id":
+			out.Values[i] = ec._EstimatedLifecycleCost_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "phase":
+			out.Values[i] = ec._EstimatedLifecycleCost_phase(ctx, field, obj)
+		case "solution":
+			out.Values[i] = ec._EstimatedLifecycleCost_solution(ctx, field, obj)
+		case "year":
+			out.Values[i] = ec._EstimatedLifecycleCost_year(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7961,6 +10335,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = graphql.MarshalString("SystemIntake")
 		case "archivedAt":
 			out.Values[i] = ec._SystemIntake_archivedAt(ctx, field, obj)
+		case "businessCase":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_businessCase(ctx, field, obj)
+				return res
+			})
 		case "businessNeed":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -8916,6 +11301,22 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) unmarshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx context.Context, v interface{}) (models.BusinessCaseStatus, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.BusinessCaseStatus(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNBusinessCaseStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCaseStatus(ctx context.Context, sel ast.SelectionSet, v models.BusinessCaseStatus) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
+}
+
 func (ec *executionContext) marshalNBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessOwner(ctx context.Context, sel ast.SelectionSet, v *models.BusinessOwner) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -8939,6 +11340,16 @@ func (ec *executionContext) unmarshalNCreateAccessibilityRequestInput2githubᚗc
 func (ec *executionContext) unmarshalNCreateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDateInput(ctx context.Context, v interface{}) (model.CreateTestDateInput, error) {
 	res, err := ec.unmarshalInputCreateTestDateInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v *models.EstimatedLifecycleCost) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._EstimatedLifecycleCost(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNGeneratePresignedUploadURLInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx context.Context, v interface{}) (model.GeneratePresignedUploadURLInput, error) {
@@ -9075,6 +11486,20 @@ func (ec *executionContext) marshalNSystemEdge2ᚖgithubᚗcomᚋcmsgovᚋeasi�
 		return graphql.Null
 	}
 	return ec._SystemEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntake2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx context.Context, sel ast.SelectionSet, v models.SystemIntake) graphql.Marshaler {
+	return ec._SystemIntake(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx context.Context, sel ast.SelectionSet, v *models.SystemIntake) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntake(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestType(ctx context.Context, v interface{}) (models.SystemIntakeRequestType, error) {
@@ -9519,6 +11944,27 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
+func (ec *executionContext) marshalOBusinessCase2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐBusinessCase(ctx context.Context, sel ast.SelectionSet, v *models.BusinessCase) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BusinessCase(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOBusinessCaseAsIsSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseAsIsSolution(ctx context.Context, sel ast.SelectionSet, v *model.BusinessCaseAsIsSolution) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BusinessCaseAsIsSolution(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolution(ctx context.Context, sel ast.SelectionSet, v *model.BusinessCaseSolution) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BusinessCaseSolution(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -9538,6 +11984,46 @@ func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._CreateTestDatePayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
 }
 
 func (ec *executionContext) marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, v *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {
@@ -9560,6 +12046,42 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 		return graphql.Null
 	}
 	return graphql.MarshalInt(*v)
+}
+
+func (ec *executionContext) unmarshalOLifecycleCostPhase2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostPhase(ctx context.Context, v interface{}) (*models.LifecycleCostPhase, error) {
+	if v == nil {
+		return nil, nil
+	}
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.LifecycleCostPhase(tmp)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOLifecycleCostPhase2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostPhase(ctx context.Context, sel ast.SelectionSet, v *models.LifecycleCostPhase) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalString(string(*v))
+}
+
+func (ec *executionContext) unmarshalOLifecycleCostSolution2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostSolution(ctx context.Context, v interface{}) (models.LifecycleCostSolution, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.LifecycleCostSolution(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOLifecycleCostSolution2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostSolution(ctx context.Context, sel ast.SelectionSet, v models.LifecycleCostSolution) graphql.Marshaler {
+	return graphql.MarshalString(string(v))
+}
+
+func (ec *executionContext) unmarshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx context.Context, v interface{}) (models.LifecycleCostYear, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.LifecycleCostYear(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx context.Context, sel ast.SelectionSet, v models.LifecycleCostYear) graphql.Marshaler {
+	return graphql.MarshalString(string(v))
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

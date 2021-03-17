@@ -265,6 +265,155 @@ type CreateAccessibilityRequestDocumentPayload {
 }
 
 """
+The shape of a solution for a business case
+"""
+type BusinessCaseSolution {
+  acquisitionApproach: String
+  cons: String
+  costSavings: String
+  hasUi: String
+  hostingCloudServiceType: String
+  hostingLocation: String
+  hostingType: String
+  pros: String
+  securityIsApproved: Boolean
+  securityIsBeingReviewed: String
+  summary: String
+  title: String
+}
+
+"""
+The shape of a solution for a business case
+"""
+type BusinessCaseAsIsSolution {
+  cons: String
+  costSavings: String
+  pros: String
+  summary: String
+  title: String
+}
+
+"""
+enum 
+"""
+enum LifecycleCostPhase {
+  """
+  development
+  """
+  DEVELOPMENT
+  """
+  Operations and Maintentance
+  """
+  OPERATIONS_AND_MAINTENANCE
+  """
+  Other
+  """
+  OTHER
+}
+
+"""
+enum 
+"""
+enum LifecycleCostSolution {
+  """
+  A
+  """
+  A
+  """
+  As is
+  """
+  AS_IS
+  """
+  B
+  """
+  B
+  """
+  Preferred
+  """
+  PREFERRED
+}
+
+"""
+enum 
+"""
+enum LifecycleCostYear {
+  """
+  1
+  """
+  LIFECYCLE_COST_YEAR_1
+  """
+  2
+  """
+  LIFECYCLE_COST_YEAR_2
+  """
+  3
+  """
+  LIFECYCLE_COST_YEAR_3
+  """
+  4
+  """
+  LIFECYCLE_COST_YEAR_4
+  """
+  5
+  """
+  LIFECYCLE_COST_YEAR_5
+}
+
+"""
+The shape of an estimated lifecycle cost row
+"""
+type EstimatedLifecycleCost {
+  businessCaseId: UUID!
+  cost: Int
+  id: UUID!
+  phase: LifecycleCostPhase
+  solution: LifecycleCostSolution
+  year: LifecycleCostYear
+}
+
+"""
+Business Case status options
+"""
+enum BusinessCaseStatus {
+  """
+  closed
+  """
+  CLOSED
+  """
+  open
+  """
+  OPEN
+}
+
+"""
+A Business Case instance
+"""
+type BusinessCase {
+  alternativeASolution: BusinessCaseSolution
+  alternativeBSolution: BusinessCaseSolution
+  asIsSolution: BusinessCaseAsIsSolution
+  businessNeed: String
+  businessOwner: String
+  cmsBenefit: String
+  createdAt: Time!
+  euaUserId: String!
+  id: UUID!
+  initialSubmittedAt: Time
+  lastSubmittedAt: Time
+  lifecycleCostLines: [EstimatedLifecycleCost!]
+  preferredSolution: BusinessCaseSolution
+  priorityAlignment: String
+  projectName: String
+  requester: String
+  requesterPhoneNumber: String
+  status: BusinessCaseStatus!
+  submittedAt: Time
+  successIndicators: String
+  systemIntake: SystemIntake!
+  updatedAt: Time!
+}
+
+"""
 The statuses for a system intake
 """
 enum SystemIntakeStatus {
@@ -369,6 +518,7 @@ A SystemIntake instance
 """
 type SystemIntake {
   archivedAt: Time
+  businessCase: BusinessCase
   businessNeed: String
   businessOwner: String
   businessOwnerComponent: String

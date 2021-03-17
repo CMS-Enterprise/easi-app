@@ -117,6 +117,126 @@ func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, o
 	return obj.CreatedAt, nil
 }
 
+func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
+	return &model.BusinessCaseSolution{
+		AcquisitionApproach:     obj.AlternativeAAcquisitionApproach.Ptr(),
+		Cons:                    obj.AlternativeACons.Ptr(),
+		CostSavings:             obj.AlternativeACostSavings.Ptr(),
+		HasUI:                   obj.AlternativeAHasUI.Ptr(),
+		HostingCloudServiceType: obj.AlternativeAHostingCloudServiceType.Ptr(),
+		HostingLocation:         obj.AlternativeAHostingLocation.Ptr(),
+		HostingType:             obj.AlternativeAHostingType.Ptr(),
+		Pros:                    obj.AlternativeAPros.Ptr(),
+		SecurityIsApproved:      obj.AlternativeASecurityIsApproved.Ptr(),
+		SecurityIsBeingReviewed: obj.AlternativeASecurityIsBeingReviewed.Ptr(),
+		Summary:                 obj.AlternativeASummary.Ptr(),
+		Title:                   obj.AlternativeATitle.Ptr(),
+	}, nil
+}
+
+func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
+	return &model.BusinessCaseSolution{
+		AcquisitionApproach:     obj.AlternativeBAcquisitionApproach.Ptr(),
+		Cons:                    obj.AlternativeBCons.Ptr(),
+		CostSavings:             obj.AlternativeBCostSavings.Ptr(),
+		HasUI:                   obj.AlternativeBHasUI.Ptr(),
+		HostingCloudServiceType: obj.AlternativeBHostingCloudServiceType.Ptr(),
+		HostingLocation:         obj.AlternativeBHostingLocation.Ptr(),
+		HostingType:             obj.AlternativeBHostingType.Ptr(),
+		Pros:                    obj.AlternativeBPros.Ptr(),
+		SecurityIsApproved:      obj.AlternativeBSecurityIsApproved.Ptr(),
+		SecurityIsBeingReviewed: obj.AlternativeBSecurityIsBeingReviewed.Ptr(),
+		Summary:                 obj.AlternativeBSummary.Ptr(),
+		Title:                   obj.AlternativeBTitle.Ptr(),
+	}, nil
+}
+
+func (r *businessCaseResolver) AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseAsIsSolution, error) {
+	return &model.BusinessCaseAsIsSolution{
+		Cons:        obj.AsIsCons.Ptr(),
+		CostSavings: obj.AsIsCostSavings.Ptr(),
+		Pros:        obj.AsIsPros.Ptr(),
+		Summary:     obj.AsIsSummary.Ptr(),
+		Title:       obj.AsIsTitle.Ptr(),
+	}, nil
+}
+
+func (r *businessCaseResolver) BusinessNeed(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	return obj.BusinessNeed.Ptr(), nil
+}
+
+func (r *businessCaseResolver) BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	return obj.BusinessOwner.Ptr(), nil
+}
+
+func (r *businessCaseResolver) CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	return obj.CMSBenefit.Ptr(), nil
+}
+
+func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error) {
+	lifeCycleCostLines := obj.LifecycleCostLines
+
+	if len(lifeCycleCostLines) == 0 {
+		return nil, nil
+	}
+
+	var costLines []*models.EstimatedLifecycleCost
+	for _, cost := range lifeCycleCostLines {
+		costLine := &models.EstimatedLifecycleCost{
+			BusinessCaseID: cost.BusinessCaseID,
+			Cost:           cost.Cost,
+			ID:             cost.ID,
+			Phase:          cost.Phase,
+			Solution:       cost.Solution,
+			Year:           cost.Year,
+		}
+		costLines = append(costLines, costLine)
+	}
+
+	return costLines, nil
+}
+
+func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
+	return &model.BusinessCaseSolution{
+		AcquisitionApproach:     obj.PreferredAcquisitionApproach.Ptr(),
+		Cons:                    obj.PreferredCons.Ptr(),
+		CostSavings:             obj.PreferredCostSavings.Ptr(),
+		HasUI:                   obj.PreferredHasUI.Ptr(),
+		HostingCloudServiceType: obj.PreferredHostingCloudServiceType.Ptr(),
+		HostingLocation:         obj.PreferredHostingLocation.Ptr(),
+		HostingType:             obj.PreferredHostingType.Ptr(),
+		Pros:                    obj.PreferredPros.Ptr(),
+		SecurityIsApproved:      obj.PreferredSecurityIsApproved.Ptr(),
+		SecurityIsBeingReviewed: obj.PreferredSecurityIsBeingReviewed.Ptr(),
+		Summary:                 obj.PreferredSummary.Ptr(),
+		Title:                   obj.PreferredTitle.Ptr(),
+	}, nil
+}
+
+func (r *businessCaseResolver) PriorityAlignment(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	return obj.PriorityAlignment.Ptr(), nil
+}
+
+func (r *businessCaseResolver) ProjectName(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	return obj.ProjectName.Ptr(), nil
+}
+
+func (r *businessCaseResolver) Requester(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	return obj.Requester.Ptr(), nil
+}
+
+func (r *businessCaseResolver) RequesterPhoneNumber(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	return obj.RequesterPhoneNumber.Ptr(), nil
+}
+
+func (r *businessCaseResolver) SuccessIndicators(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+	return obj.SuccessIndicators.Ptr(), nil
+}
+
+func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error) {
+	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
+}
+
 func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
@@ -297,6 +417,13 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 	return conn, nil
 }
 
+func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
+	if obj.BusinessCaseID == nil {
+		return nil, nil
+	}
+	return r.store.FetchBusinessCaseByID(ctx, *obj.BusinessCaseID)
+}
+
 func (r *systemIntakeResolver) BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.BusinessNeed.Ptr(), nil
 }
@@ -451,6 +578,9 @@ func (r *Resolver) AccessibilityRequestDocument() generated.AccessibilityRequest
 	return &accessibilityRequestDocumentResolver{r}
 }
 
+// BusinessCase returns generated.BusinessCaseResolver implementation.
+func (r *Resolver) BusinessCase() generated.BusinessCaseResolver { return &businessCaseResolver{r} }
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
@@ -462,6 +592,7 @@ func (r *Resolver) SystemIntake() generated.SystemIntakeResolver { return &syste
 
 type accessibilityRequestResolver struct{ *Resolver }
 type accessibilityRequestDocumentResolver struct{ *Resolver }
+type businessCaseResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
 type systemIntakeResolver struct{ *Resolver }
