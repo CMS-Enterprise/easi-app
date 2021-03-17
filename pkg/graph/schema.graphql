@@ -606,6 +606,7 @@ type SystemIntakeRequester {
 A SystemIntake instance
 """
 type SystemIntake {
+  adminLead: String
   archivedAt: Time
   businessCase: BusinessCase
   businessNeed: String

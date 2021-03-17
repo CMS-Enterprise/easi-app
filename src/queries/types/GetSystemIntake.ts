@@ -88,6 +88,7 @@ export interface GetSystemIntake_systemIntake_requester {
 export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
+  adminLead: string | null;
   businessNeed: string | null;
   businessSolution: string | null;
   businessOwner: GetSystemIntake_systemIntake_businessOwner | null;

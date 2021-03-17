@@ -74,7 +74,7 @@ const RequestOverview = () => {
     <PageWrapper className="easi-grt">
       <Header />
       <MainContent>
-        <Summary intake={systemIntake} />
+        {intake && <Summary intake={intake} />}
         <section className="grid-container grid-row margin-y-5 ">
           <nav className="tablet:grid-col-2 margin-right-2">
             <ul className="easi-grt__nav-list">
