@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
+import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
@@ -22,7 +23,7 @@ const RequestSummary = ({
   intake,
   oldIntake
 }: {
-  intake: SystemIntakeForm;
+  intake: GetSystemIntake;
   oldIntake: SystemIntakeForm;
 }) => {
   const { t } = useTranslation('governanceReviewTeam');
