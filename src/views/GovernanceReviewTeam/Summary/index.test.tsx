@@ -30,7 +30,7 @@ const renderComponent = (intake: any) => {
   return mount(
     <MemoryRouter>
       <Provider store={mockStore()}>
-        <Summary intake={intake} />
+        <Summary intake={intake} oldIntake={intake} />
       </Provider>
     </MemoryRouter>
   );
