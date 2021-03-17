@@ -217,6 +217,7 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntake struct {
+		AdminLead                   func(childComplexity int) int
 		ArchivedAt                  func(childComplexity int) int
 		BusinessCase                func(childComplexity int) int
 		BusinessNeed                func(childComplexity int) int
@@ -376,6 +377,8 @@ type QueryResolver interface {
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 }
 type SystemIntakeResolver interface {
+	AdminLead(ctx context.Context, obj *models.SystemIntake) (*string, error)
+
 	BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error)
 	BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeBusinessOwner, error)
@@ -1190,6 +1193,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemEdge.Node(childComplexity), true
+
+	case "SystemIntake.adminLead":
+		if e.complexity.SystemIntake.AdminLead == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.AdminLead(childComplexity), true
 
 	case "SystemIntake.archivedAt":
 		if e.complexity.SystemIntake.ArchivedAt == nil {
@@ -2353,6 +2363,7 @@ type SystemIntakeRequester {
 A SystemIntake instance
 """
 type SystemIntake {
+  adminLead: String
   archivedAt: Time
   businessCase: BusinessCase
   businessNeed: String
@@ -6401,6 +6412,38 @@ func (ec *executionContext) _SystemEdge_node(ctx context.Context, field graphql.
 	res := resTmp.(*models.System)
 	fc.Result = res
 	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_adminLead(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().AdminLead(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_archivedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -11059,6 +11102,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("SystemIntake")
+		case "adminLead":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_adminLead(ctx, field, obj)
+				return res
+			})
 		case "archivedAt":
 			out.Values[i] = ec._SystemIntake_archivedAt(ctx, field, obj)
 		case "businessCase":
