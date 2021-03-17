@@ -5,6 +5,9 @@ import { Link, Route, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
+import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
+import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
+import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -25,6 +28,7 @@ import {
   isIntakeOpen,
   translateRequestType
 } from 'utils/systemIntake';
+import ProvideGRTFeedback from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedback';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -398,8 +402,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-need-biz-case"
               render={() => (
-                <SubmitAction
-                  action="PROVIDE_FEEDBACK_NEED_BIZ_CASE"
+                <ProvideGRTFeedback
+                  query={AddGRTFeedbackRequestBizCaseQuery}
                   actionName={actionsT('actions.provideFeedbackNeedBizCase')}
                 />
               )}
@@ -407,8 +411,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-keep-draft"
               render={() => (
-                <SubmitAction
-                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT"
+                <ProvideGRTFeedback
+                  query={AddGRTFeedbackKeepDraftBizCase}
                   actionName={actionsT('actions.provideGrtFeedbackKeepDraft')}
                 />
               )}
@@ -416,8 +420,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-need-final"
               render={() => (
-                <SubmitAction
-                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
+                <ProvideGRTFeedback
+                  query={AddGRTFeedbackProgressToFinal}
                   actionName={actionsT('actions.provideGrtFeedbackNeedFinal')}
                 />
               )}
