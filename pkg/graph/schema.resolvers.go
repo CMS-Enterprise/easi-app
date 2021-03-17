@@ -248,6 +248,10 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
 	panic(fmt.Errorf("not implemented"))
 }
