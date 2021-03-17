@@ -56,10 +56,12 @@ describe('The GRT intake review view', () => {
       vehicle: 'Sole Source',
       startDate: {
         month: '1',
+        day: '',
         year: '2020'
       },
       endDate: {
         month: '12',
+        day: '',
         year: '2020'
       }
     },
