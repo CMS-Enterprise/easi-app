@@ -8,7 +8,7 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-// import FieldErrorMsg from 'components/shared/FieldErrorMsg';
+import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
@@ -22,7 +22,7 @@ type PhaseProps = {
   year: number;
   values: LifecycleCosts;
   setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
-  errors: any[];
+  errors: any;
 };
 
 const Phase = ({
@@ -30,7 +30,7 @@ const Phase = ({
   year,
   values,
   setFieldValue,
-  errors = []
+  errors = {}
 }: PhaseProps) => {
   const handleCheckboxChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -47,13 +47,19 @@ const Phase = ({
     <FieldArray name={`${formikKey}.year${year}`}>
       {() => (
         <div className="est-lifecycle-cost__phase-cost-wrapper">
-          <FieldGroup error={errors.length > 0}>
+          <FieldGroup
+            error={Object.keys(errors).length > 0}
+            scrollElement={`${formikKey}.year${year}`}
+          >
             <div className="margin-right-2">
               <fieldset
                 className="usa-fieldset"
                 aria-describedby="BusinessCase-EstimatedLifecycleCostHelp"
               >
                 <div>
+                  <FieldErrorMsg>
+                    {typeof errors === 'string' ? errors : ''}
+                  </FieldErrorMsg>
                   <legend
                     className={classnames('usa-label', 'margin-bottom-1')}
                     aria-label={`Year ${year}`}
@@ -83,10 +89,10 @@ const Phase = ({
                       >
                         Cost
                       </Label>
-                      {/* ERROR */}
+                      <FieldErrorMsg>{errors?.development?.cost}</FieldErrorMsg>
                       <Field
                         as={TextField}
-                        // error={!!phaseError.cost}
+                        error={!!errors?.development?.cost}
                         className="width-card-lg"
                         id={`BusinessCase-${formikKey}.Year${year}.development.cost`}
                         name={`${formikKey}.year${year}.development.cost`}
@@ -118,10 +124,12 @@ const Phase = ({
                       >
                         Cost
                       </Label>
-                      {/* ERROR */}
+                      <FieldErrorMsg>
+                        {errors?.operationsMaintenance?.cost}
+                      </FieldErrorMsg>
                       <Field
                         as={TextField}
-                        // error={!!phaseError.cost}
+                        error={!!errors?.operationsMaintenance?.cost}
                         className="width-card-lg"
                         id={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.cost`}
                         name={`${formikKey}.year${year}.operationsMaintenance.cost`}
@@ -153,10 +161,10 @@ const Phase = ({
                       >
                         Cost
                       </Label>
-                      {/* ERROR */}
+                      <FieldErrorMsg>{errors?.other?.cost}</FieldErrorMsg>
                       <Field
                         as={TextField}
-                        // error={!!phaseError.cost}
+                        error={!!errors?.other?.cost}
                         className="width-card-lg"
                         id={`BusinessCase-${formikKey}.Year${year}.other.cost`}
                         name={`${formikKey}.year${year}.other.cost`}
