@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import formatDate from './formatDate';
+import formatDate, { formatContractDate } from './formatDate';
 
 describe('formatDate', () => {
   describe('string', () => {
@@ -14,6 +14,28 @@ describe('formatDate', () => {
     it('returns invalid datetime when a string is not ISO string', () => {
       const date = 'not an ISO string';
       expect(formatDate(date)).toEqual('Invalid DateTime');
+    });
+  });
+
+  describe('formatContractDate', () => {
+    it('formats a complete date', () => {
+      const input = {
+        day: '1',
+        month: '2',
+        year: '2022'
+      };
+
+      expect(formatContractDate(input)).toEqual('2/1/2022');
+    });
+
+    it('formats a date without a day', () => {
+      const input = {
+        day: '',
+        month: '2',
+        year: '2022'
+      };
+
+      expect(formatContractDate(input)).toEqual('2/2022');
     });
   });
 

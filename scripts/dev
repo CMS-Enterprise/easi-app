@@ -102,6 +102,9 @@ task :reset => :up do
 
   # load development data
   Rake::Task["db:seed"].invoke
+
+  # The backend may have lost its database connection
+  `docker-compose restart easi`
 end
 
 namespace :db do
