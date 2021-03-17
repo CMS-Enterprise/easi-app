@@ -22,8 +22,13 @@ function useConfirmationText() {
         state: {}
       });
     }
+
+    // unset confirmationText if it's null
+    if (!location.state?.confirmationText) {
+      setConfirmationText('');
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [history.location.pathname]);
 
   return confirmationText;
 }
