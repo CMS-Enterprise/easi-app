@@ -145,11 +145,76 @@ describe('The Business Case Form', () => {
           pros: 'As is Solution Pros',
           cons: 'As is Solution Cons',
           estimatedLifecycleCost: {
-            year1: [{ phase: 'Development', cost: '0' }],
-            year2: [{ phase: 'Development', cost: '0' }],
-            year3: [{ phase: 'Other', cost: '0' }],
-            year4: [{ phase: 'Operations and Maintenance', cost: '0' }],
-            year5: [{ phase: 'Operations and Maintenance', cost: '0' }]
+            year1: {
+              development: {
+                isPresent: true,
+                cost: '1'
+              },
+              operationsMaintenance: {
+                isPresent: true,
+                cost: '5'
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            },
+            year2: {
+              development: {
+                isPresent: false,
+                cost: ''
+              },
+              operationsMaintenance: {
+                isPresent: true,
+                cost: '5'
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            },
+            year3: {
+              development: {
+                isPresent: false,
+                cost: ''
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: ''
+              },
+              other: {
+                isPresent: true,
+                cost: '10'
+              }
+            },
+            year4: {
+              development: {
+                isPresent: true,
+                cost: '15'
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: ''
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            },
+            year5: {
+              development: {
+                isPresent: false,
+                cost: ''
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: ''
+              },
+              other: {
+                isPresent: true,
+                cost: '15'
+              }
+            }
           },
           costSavings: 'As is Solution Cost Savings'
         },
@@ -170,11 +235,76 @@ describe('The Business Case Form', () => {
           pros: 'Preferred Solution Pros',
           cons: 'Preferred Solution Cons',
           estimatedLifecycleCost: {
-            year1: [{ phase: 'Development', cost: '0' }],
-            year2: [{ phase: 'Development', cost: '0' }],
-            year3: [{ phase: 'Other', cost: '0' }],
-            year4: [{ phase: 'Operations and Maintenance', cost: '0' }],
-            year5: [{ phase: 'Operations and Maintenance', cost: '0' }]
+            year1: {
+              development: {
+                isPresent: false,
+                cost: ''
+              },
+              operationsMaintenance: {
+                isPresent: true,
+                cost: '5'
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            },
+            year2: {
+              development: {
+                isPresent: true,
+                cost: '10'
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: ''
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            },
+            year3: {
+              development: {
+                isPresent: false,
+                cost: ''
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: ''
+              },
+              other: {
+                isPresent: true,
+                cost: '15'
+              }
+            },
+            year4: {
+              development: {
+                isPresent: false,
+                cost: ''
+              },
+              operationsMaintenance: {
+                isPresent: true,
+                cost: '20'
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            },
+            year5: {
+              development: {
+                isPresent: true,
+                cost: '25'
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: ''
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            }
           },
           costSavings: '0'
         },
@@ -195,11 +325,76 @@ describe('The Business Case Form', () => {
           pros: 'Alternative A Pros',
           cons: 'Alternative A Cons',
           estimatedLifecycleCost: {
-            year1: [{ phase: 'Development', cost: '0' }],
-            year2: [{ phase: 'Development', cost: '0' }],
-            year3: [{ phase: 'Other', cost: '0' }],
-            year4: [{ phase: 'Operations and Maintenance', cost: '0' }],
-            year5: [{ phase: 'Operations and Maintenance', cost: '0' }]
+            year1: {
+              development: {
+                isPresent: true,
+                cost: '2'
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: ''
+              },
+              other: {
+                isPresent: true,
+                cost: '4'
+              }
+            },
+            year2: {
+              development: {
+                isPresent: false,
+                cost: ''
+              },
+              operationsMaintenance: {
+                isPresent: true,
+                cost: '6'
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            },
+            year3: {
+              development: {
+                isPresent: false,
+                cost: ''
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: ''
+              },
+              other: {
+                isPresent: true,
+                cost: '8'
+              }
+            },
+            year4: {
+              development: {
+                isPresent: false,
+                cost: ''
+              },
+              operationsMaintenance: {
+                isPresent: true,
+                cost: '10'
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            },
+            year5: {
+              development: {
+                isPresent: true,
+                cost: '12'
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: ''
+              },
+              other: {
+                isPresent: false,
+                cost: ''
+              }
+            }
           },
           costSavings: 'Alternative A Cost Savings'
         }

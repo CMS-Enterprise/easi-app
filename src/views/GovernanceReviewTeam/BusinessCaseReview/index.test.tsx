@@ -34,11 +34,76 @@ describe('The GRT business case review', () => {
       pros: 'Mock As is solution  pros',
       cons: 'Mock As is solution cons',
       estimatedLifecycleCost: {
-        year1: [{ phase: 'Development', cost: '1' }],
-        year2: [{ phase: 'Development', cost: '2' }],
-        year3: [{ phase: 'Development', cost: '3' }],
-        year4: [{ phase: 'Development', cost: '4' }],
-        year5: [{ phase: 'Development', cost: '5' }]
+        year1: {
+          development: {
+            isPresent: true,
+            cost: '1'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year2: {
+          development: {
+            isPresent: true,
+            cost: '2'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year3: {
+          development: {
+            isPresent: true,
+            cost: '3'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year4: {
+          development: {
+            isPresent: true,
+            cost: '4'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year5: {
+          development: {
+            isPresent: true,
+            cost: '5'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        }
       },
       costSavings: ''
     }

@@ -64,7 +64,7 @@ const Phase = ({
                   <Field
                     as={CheckboxField}
                     checked={values.development.isPresent}
-                    id={`BusinessCase-${formikKey}.Year${year}.Development`}
+                    id={`BusinessCase-${formikKey}.Year${year}.development.isPresent`}
                     name={`${formikKey}.year${year}.development.isPresent`}
                     label="Development"
                     value="Development"
@@ -99,7 +99,7 @@ const Phase = ({
                   <Field
                     as={CheckboxField}
                     checked={values.operationsMaintenance.isPresent}
-                    id={`BusinessCase-${formikKey}.Year${year}.opsMaintenance`}
+                    id={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.isPresent`}
                     name={`${formikKey}.year${year}.operationsMaintenance.isPresent`}
                     label="Operations and Maintenance"
                     value="Operations and Maintenance"
@@ -134,7 +134,7 @@ const Phase = ({
                   <Field
                     as={CheckboxField}
                     checked={values.other.isPresent}
-                    id={`BusinessCase-${formikKey}.Year${year}.other`}
+                    id={`BusinessCase-${formikKey}.Year${year}.other.isPresent`}
                     name={`${formikKey}.year${year}.other.isPresent`}
                     label="Other"
                     value="Other"

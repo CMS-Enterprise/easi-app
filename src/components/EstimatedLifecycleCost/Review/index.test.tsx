@@ -9,28 +9,77 @@ import EstimatedLifecycleCostReview from './index';
 declare const global: any;
 
 describe('The Estimated Lifecycle Cost review component', () => {
-  const developmentSampleData = {
-    year1: [{ phase: 'Development', cost: '5000' }],
-    year2: [{ phase: 'Development', cost: '5000' }],
-    year3: [{ phase: 'Development', cost: '5000' }],
-    year4: [{ phase: 'Development', cost: '5000' }],
-    year5: [{ phase: 'Development', cost: '5000' }]
-  };
-
-  const omSampleData = {
-    year1: [{ phase: 'Operations and Maintenance', cost: '5000' }],
-    year2: [{ phase: 'Operations and Maintenance', cost: '5000' }],
-    year3: [{ phase: 'Operations and Maintenance', cost: '5000' }],
-    year4: [{ phase: 'Operations and Maintenance', cost: '5000' }],
-    year5: [{ phase: 'Operations and Maintenance', cost: '5000' }]
-  };
-
-  const otherPhaseSampleData = {
-    year1: [{ phase: 'Other', cost: '5000' }],
-    year2: [{ phase: 'Other', cost: '5000' }],
-    year3: [{ phase: 'Other', cost: '5000' }],
-    year4: [{ phase: 'Other', cost: '5000' }],
-    year5: [{ phase: 'Other', cost: '5000' }]
+  const sampleData = {
+    year1: {
+      development: {
+        isPresent: true,
+        cost: '5000'
+      },
+      operationsMaintenance: {
+        isPresent: true,
+        cost: '5000'
+      },
+      other: {
+        isPresent: true,
+        cost: '5000'
+      }
+    },
+    year2: {
+      development: {
+        isPresent: true,
+        cost: '5000'
+      },
+      operationsMaintenance: {
+        isPresent: true,
+        cost: '5000'
+      },
+      other: {
+        isPresent: true,
+        cost: '5000'
+      }
+    },
+    year3: {
+      development: {
+        isPresent: true,
+        cost: '5000'
+      },
+      operationsMaintenance: {
+        isPresent: true,
+        cost: '5000'
+      },
+      other: {
+        isPresent: true,
+        cost: '5000'
+      }
+    },
+    year4: {
+      development: {
+        isPresent: true,
+        cost: '5000'
+      },
+      operationsMaintenance: {
+        isPresent: true,
+        cost: '5000'
+      },
+      other: {
+        isPresent: true,
+        cost: '5000'
+      }
+    },
+    year5: {
+      development: {
+        isPresent: true,
+        cost: '5000'
+      },
+      operationsMaintenance: {
+        isPresent: true,
+        cost: '5000'
+      },
+      other: {
+        isPresent: true,
+        cost: '5000'
+      }
+    }
   };
 
   it('renders without crashing', () => {
@@ -61,7 +110,7 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
     it('adds up development total correctly', () => {
       const component = mount(
-        <EstimatedLifecycleCostReview data={developmentSampleData} />
+        <EstimatedLifecycleCostReview data={sampleData} />
       );
 
       expect(
@@ -92,15 +141,15 @@ describe('The Estimated Lifecycle Cost review component', () => {
     });
 
     it('renders mobile view with development data', () => {
-      mount(<EstimatedLifecycleCostReview data={developmentSampleData} />);
+      mount(<EstimatedLifecycleCostReview data={sampleData} />);
     });
 
     it('renders mobile view with O&M data', () => {
-      mount(<EstimatedLifecycleCostReview data={omSampleData} />);
+      mount(<EstimatedLifecycleCostReview data={sampleData} />);
     });
 
     it('renders mobile view with Other data', () => {
-      mount(<EstimatedLifecycleCostReview data={otherPhaseSampleData} />);
+      mount(<EstimatedLifecycleCostReview data={sampleData} />);
     });
   });
 });

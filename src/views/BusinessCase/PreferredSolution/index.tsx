@@ -616,6 +616,7 @@ const PreferredSolution = ({
                     errors.preferredSolution &&
                     errors.preferredSolution.estimatedLifecycleCost
                   }
+                  setFieldValue={setFieldValue}
                 />
               </div>
               <div className="tablet:grid-col-9 margin-bottom-7">
