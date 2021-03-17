@@ -46,7 +46,6 @@ const RequestOverview = () => {
     }
   );
   const intake = graphData?.systemIntake;
-  console.log(intake);
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
