@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
@@ -41,7 +42,6 @@ const RequestOverview = () => {
     }
   );
   const intake = graphData?.systemIntake;
-  console.log(intake);
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
