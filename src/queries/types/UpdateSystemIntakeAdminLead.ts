@@ -12,6 +12,7 @@ import { UpdateSystemIntakeAdminLeadInput } from "./../../types/graphql-global-t
 export interface UpdateSystemIntakeAdminLead_updateSystemIntakeAdminLead_systemIntake {
   __typename: "SystemIntake";
   adminLead: string | null;
+  id: UUID;
 }
 
 export interface UpdateSystemIntakeAdminLead_updateSystemIntakeAdminLead {
