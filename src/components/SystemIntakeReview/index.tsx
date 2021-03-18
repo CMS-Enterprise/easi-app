@@ -11,7 +11,7 @@ import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
-import { formatContractDate } from 'utils/formatDate';
+import formatDate, { formatContractDate } from 'utils/formatDate';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
@@ -61,7 +61,7 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition
               definition={
                 systemIntake.submittedAt
-                  ? systemIntake.submittedAt.toLocaleString(DateTime.DATE_MED)
+                  ? formatDate(systemIntake.submittedAt)
                   : now.toLocaleString(DateTime.DATE_MED)
               }
             />
