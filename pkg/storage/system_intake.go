@@ -427,3 +427,32 @@ func (s *Store) UpdateAdminLead(ctx context.Context, id uuid.UUID, adminLead str
 	)
 	return adminLead, err
 }
+
+// UpdateReviewDates updates the admin lead for an intake
+func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *string, grtDate *string) (uuid.UUID, error) {
+	var intake struct {
+		GRBDate   *string `db:"grb_date"`
+		GRTDate   *string `db:"grt_date"`
+		ID        uuid.UUID
+		UpdatedAt time.Time `db:"updated_at"`
+	}
+
+	intake.ID = id
+	intake.GRBDate = grbDate
+	intake.GRTDate = grtDate
+	intake.UpdatedAt = time.Now()
+
+	const updateSystemIntakeSQL = `
+		UPDATE system_intakes
+		SET
+			updated_at = :updated_at,
+			grb_date = :grb_date,
+			grt_date = :grt_date
+		WHERE system_intakes.id = :id
+	`
+	_, err := s.db.NamedExec(
+		updateSystemIntakeSQL,
+		intake,
+	)
+	return intake.ID, err
+}

@@ -6,13 +6,13 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/facebookgo/clock"
-	"github.com/google/uuid"
-	"github.com/guregu/null"
-
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+
+	"github.com/facebookgo/clock"
+	"github.com/google/uuid"
+	"github.com/guregu/null"
 )
 
 const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
@@ -863,5 +863,65 @@ func (s StoreTestSuite) TestUpdateAdminLead() {
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Equal(fetchedIntake.AdminLead.String, adminLead)
+	})
+}
+
+func (s StoreTestSuite) TestUpdateReviewDates() {
+	ctx := context.Background()
+
+	s.Run("update both dates", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		grbDate := "2021-12-22T00:00:00Z"
+		grtDate := "2022-01-02T00:00:00Z"
+
+		_, err = s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, &grtDate)
+		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Equal(fetchedIntake.GRBDate.Format("2006-01-02"), "2021-12-22")
+		s.Equal(fetchedIntake.GRTDate.Format("2006-01-02"), "2022-01-02")
+	})
+
+	s.Run("update just GRB", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		grbDate := "2021-12-22T00:00:00Z"
+		_, err = s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, nil)
+		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Equal(fetchedIntake.GRBDate.Format("2006-01-02"), "2021-12-22")
+		s.Nil(fetchedIntake.GRTDate)
+	})
+
+	s.Run("update just GRT", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		grtDate := "2021-12-22T00:00:00Z"
+		_, err = s.store.UpdateReviewDates(ctx, intake.ID, nil, &grtDate)
+		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Nil(fetchedIntake.GRBDate)
+		s.Equal(fetchedIntake.GRTDate.Format("2006-01-02"), "2021-12-22")
 	})
 }
