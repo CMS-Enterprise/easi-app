@@ -24,7 +24,10 @@ type ProvideGRTFeedbackProps = {
   query: DocumentNode;
 };
 
-const ProvideGRTFeedback = ({ actionName, query }: ProvideGRTFeedbackProps) => {
+const ProvideGRTFeedbackToBusinessOwner = ({
+  actionName,
+  query
+}: ProvideGRTFeedbackProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
@@ -138,4 +141,4 @@ const ProvideGRTFeedback = ({ actionName, query }: ProvideGRTFeedbackProps) => {
   );
 };
 
-export default ProvideGRTFeedback;
+export default ProvideGRTFeedbackToBusinessOwner;
