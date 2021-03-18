@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
+import PageHeading from 'components/PageHeading';
 import { SystemIntakeReview } from 'components/SystemIntakeReview';
 import usePrevious from 'hooks/usePrevious';
 import { AppState } from 'reducers/rootReducer';
@@ -33,9 +34,7 @@ const Review = ({ systemIntake, now }: ReviewProps) => {
 
   return (
     <div className="system-intake__review">
-      <h1 className="font-heading-xl margin-top-4">
-        Check your answers before sending
-      </h1>
+      <PageHeading>Check your answers before sending</PageHeading>
       <SystemIntakeReview systemIntake={systemIntake} now={now} />
       <hr className="system-intake__hr" />
       <h2 className="font-heading-xl">What happens next?</h2>
