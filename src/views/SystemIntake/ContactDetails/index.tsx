@@ -4,6 +4,7 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -140,7 +141,7 @@ const ContactDetails = ({
 
             <div className="tablet:grid-col-6 margin-bottom-7">
               <MandatoryFieldsAlert />
-              <h1 className="font-heading-xl margin-top-3">Contact details</h1>
+              <PageHeading>Contact details</PageHeading>
               <Form>
                 {/* Requester Name */}
                 <FieldGroup

@@ -9,6 +9,7 @@ import classnames from 'classnames';
 import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
+import PageHeading from 'components/PageHeading';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
@@ -316,7 +317,15 @@ const RequestRepository = () => {
           </li>
         </ul>
       </nav>
-      <h1 className="font-heading-sm">
+      {/* h1 for screen reader */}
+      <PageHeading className="usa-sr-only">
+        {t('requestRepository.requestCount', {
+          context: activeTable,
+          count: data.length
+        })}
+      </PageHeading>
+      {/* h1 for screen devices / complicated CSS to have them together */}
+      <h1 className="font-heading-sm" aria-hidden>
         {t('requestRepository.requestCount', {
           context: activeTable,
           count: data.length
