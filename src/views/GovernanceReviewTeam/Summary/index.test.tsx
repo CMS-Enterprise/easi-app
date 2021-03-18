@@ -1,6 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { MockedProvider } from '@apollo/client/testing';
 import { mount, ReactWrapper } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
@@ -30,7 +31,9 @@ const renderComponent = (intake: any) => {
   return mount(
     <MemoryRouter>
       <Provider store={mockStore()}>
-        <Summary intake={intake} oldIntake={intake} />
+        <MockedProvider>
+          <Summary intake={intake} />
+        </MockedProvider>
       </Provider>
     </MemoryRouter>
   );
