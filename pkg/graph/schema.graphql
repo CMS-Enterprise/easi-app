@@ -514,54 +514,130 @@ enum SystemIntakeRequestType {
 }
 
 """
+A business owner for a system intake
+"""
+type SystemIntakeBusinessOwner {
+  component: String
+  name: String
+}
+
+"""
+A date for a contract
+"""
+type ContractDate {
+  day: String
+  month: String
+  year: String
+}
+
+"""
+A contract for a system intake
+"""
+type SystemIntakeContract {
+  contractor: String
+  endDate: ContractDate
+  hasContract: String
+  startDate: ContractDate
+  vehicle: String
+}
+
+"""
+costs for a system intake
+"""
+type SystemIntakeCosts {
+  expectedIncreaseAmount: String
+  isExpectingIncrease: String
+}
+
+"""
+A funding source for a system intake
+"""
+type SystemIntakeFundingSource {
+  fundingNumber: String
+  isFunded: Boolean
+  source: String
+}
+
+"""
+A collaborator for an intake
+"""
+type SystemIntakeCollaborator {
+  acronym: String
+  collaborator: String
+  key: String
+  label: String
+  name: String
+}
+
+"""
+governanceTeam for an intake
+"""
+type SystemIntakeGovernanceTeam {
+  isPresent: Boolean
+  teams: [SystemIntakeCollaborator!]
+}
+
+"""
+An isso for a system intake
+"""
+type SystemIntakeISSO {
+  isPresent: Boolean
+  name: String
+}
+
+"""
+A product manager for a system intake
+"""
+type SystemIntakeProductManager {
+  component: String
+  name: String
+}
+
+"""
+A requester for a system intake
+"""
+type SystemIntakeRequester {
+  component: String
+  email: String
+  name: String!
+}
+
+"""
 A SystemIntake instance
 """
 type SystemIntake {
+  adminLead: String
   archivedAt: Time
   businessCase: BusinessCase
   businessNeed: String
-  businessOwner: String
-  businessOwnerComponent: String
-  component: String
-  contractEndDate: Time
-  contractEndMonth: String
-  contractEndYear: String
-  contractStartDate: Time
-  contractStartMonth: String
-  contractStartYear: String
-  contractVehicle: String
-  contractor: String
-  costIncrease: String
-  costIncreaseAmount: String
+  businessOwner: SystemIntakeBusinessOwner
+  businessSolution: String
+  contract: SystemIntakeContract
+  costs: SystemIntakeCosts
   createdAt: Time!
+  currentStage: String
   decisionNextSteps: String
   eaCollaborator: String
   eaCollaboratorName: String
-  eaSupportRequest: Boolean
   euaUserId: String!
-  existingContract: String
-  existingFunding: Boolean
-  fundingNumber: String
-  fundingSource: String
+  fundingSource: SystemIntakeFundingSource
+  governanceTeams: SystemIntakeGovernanceTeam
   grbDate: Time
   grtDate: Time
   id: UUID!
-  isso: String
-  issoName: String
+  isso: SystemIntakeISSO
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
+  needsEaSupport: Boolean
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
-  processStatus: String
-  productManager: String
-  productManagerComponent: String
+  productManager: SystemIntakeProductManager
   projectAcronym: String
-  projectName: String
   rejectionReason: String
+  requestName: String
   requestType: SystemIntakeRequestType!
-  requester: String
-  solution: String
+  requester: SystemIntakeRequester!
   status: SystemIntakeStatus!
   submittedAt: Time
   trbCollaborator: String
@@ -583,6 +659,22 @@ Response for adding GRT Feedback
 """
 type AddGRTFeedbackPayload {
   id: UUID
+}
+
+"""
+Parameters required to update the admin lead for an intake
+"""
+input UpdateSystemIntakeAdminLeadInput {
+  adminLead: String!
+  id: UUID!
+}
+
+"""
+Result of UpdateSystemIntakeAdminLead
+"""
+type UpdateSystemIntakeAdminLeadPayload {
+  systemIntake: SystemIntake
+  userErrors: [UserError!]
 }
 
 """
@@ -609,6 +701,8 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
+    @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
 }
