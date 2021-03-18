@@ -15,6 +15,7 @@ import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
 import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedbackToBusinessOwner';
+import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -218,12 +219,7 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/actions/ready-for-grb"
-              render={() => (
-                <SubmitAction
-                  action="READY_FOR_GRB"
-                  actionName={actionsT('actions.readyForGrb')}
-                />
-              )}
+              render={() => <ProvideGRTRecommendationsToGRB />}
             />
             <Route
               path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
