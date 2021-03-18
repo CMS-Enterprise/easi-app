@@ -10,10 +10,10 @@ type PageHeadingProps = {
 } & JSX.IntrinsicElements['h1'];
 
 /**
- * By default, this is h1 that belongs on every page.
+ * By default, this is h1 that belongs on every view page.
  * Design wants to standardize the margins around h1 that appear at the top of the page.
  * This gives the h1 element more room to breathe.
- *
+ * It can also be used as any heading level if it needs to be read on mount on assistive tech.
  */
 const PageHeading = ({
   children,
