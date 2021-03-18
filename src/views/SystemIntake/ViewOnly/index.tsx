@@ -1,6 +1,7 @@
 import React from 'react';
 import { DateTime } from 'luxon';
 
+import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import SystemIntakeReview from 'components/SystemIntakeReview';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -13,7 +14,7 @@ const SystemIntakeView = ({ systemIntake }: SystemIntakeViewOnlyProps) => {
   const filename = `System intake for ${systemIntake.requestName}.pdf`;
   return (
     <>
-      <h1>Review your Intake Request</h1>
+      <PageHeading>Review your Intake Request</PageHeading>
       <PDFExport
         title="System Intake"
         filename={filename}
