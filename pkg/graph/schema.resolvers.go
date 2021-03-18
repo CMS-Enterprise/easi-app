@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -369,6 +370,11 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	return &model.GeneratePresignedUploadURLPayload{
 		URL: &url.URL,
 	}, nil
+}
+
+func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error) {
+	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
+	return &model.UpdateSystemIntakeAdminLeadPayload{AdminLead: &savedAdminLead}, err
 }
 
 func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {

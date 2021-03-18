@@ -119,6 +119,14 @@ export interface GeneratePresignedUploadURLInput {
   size: number;
 }
 
+/**
+ * Parameters required to update the admin lead for an intake
+ */
+export interface UpdateSystemIntakeAdminLeadInput {
+  adminLead: string;
+  id: UUID;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================
