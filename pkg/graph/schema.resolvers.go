@@ -271,7 +271,7 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 			Feedback:   null.StringFrom(input.EmailBody),
 			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
 		},
-		models.SystemIntakeStatusNEEDBIZCASE)
+		models.SystemIntakeStatusBIZCASEFINALNEEDED)
 	if err != nil {
 		return nil, err
 	}
