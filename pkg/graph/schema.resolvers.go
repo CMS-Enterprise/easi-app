@@ -372,7 +372,24 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 }
 
 func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID:     input.IntakeID,
+			Feedback:     input.Feedback,
+			FeedbackType: models.GRTFeedbackTypeGRB,
+		},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			Feedback:   null.StringFrom(input.EmailBody),
+			ActionType: models.ActionTypeREADYFORGRB,
+		},
+		models.SystemIntakeStatusREADYFORGRB)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
 }
 
 func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
