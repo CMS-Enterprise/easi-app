@@ -4,6 +4,7 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -74,7 +75,7 @@ const GeneralRequestInfo = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl">General request information</h1>
+            <PageHeading>General request information</PageHeading>
             <p className="line-height-body-6">
               Make a first draft of the various solutions you’ve thought of and
               the costs involved to build or buy them. Once you have a draft

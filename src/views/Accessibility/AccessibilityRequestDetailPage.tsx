@@ -8,6 +8,7 @@ import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
+import PageHeading from 'components/PageHeading';
 import TestDateCard from 'components/TestDateCard';
 import formatDate from 'utils/formatDate';
 
@@ -56,7 +57,7 @@ const AccessibilityRequestDetailPage = () => {
 
   return (
     <>
-      <h1 className="margin-top-6 margin-bottom-5">{requestName}</h1>
+      <PageHeading>{requestName}</PageHeading>
       <div className="grid-row grid-gap-lg">
         <div className="grid-col-9">
           <h2 className="margin-top-0">
