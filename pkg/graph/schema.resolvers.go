@@ -508,6 +508,10 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.IssueLifecycleIDInput) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
@@ -529,13 +533,13 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
 }
 
-func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error) {
+func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error) {
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{
 		AdminLead: null.StringFrom(savedAdminLead),
 		ID:        input.ID,
 	}
-	return &model.UpdateSystemIntakeAdminLeadPayload{
+	return &model.UpdateSystemIntakePayload{
 		SystemIntake: &systemIntake,
 	}, err
 }
