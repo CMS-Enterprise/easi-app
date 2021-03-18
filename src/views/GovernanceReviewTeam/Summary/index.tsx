@@ -14,20 +14,13 @@ import Modal from 'components/Modal';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import { SystemIntakeForm } from 'types/systemIntake';
 import {
   isIntakeClosed,
   isIntakeOpen,
   translateRequestType
 } from 'utils/systemIntake';
 
-const RequestSummary = ({
-  intake,
-  oldIntake
-}: {
-  intake: SystemIntake;
-  oldIntake: SystemIntakeForm;
-}) => {
+const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
   const { t } = useTranslation('governanceReviewTeam');
   const [isModalOpen, setModalOpen] = useState(false);
   const [newAdminLead, setAdminLead] = useState('');
@@ -48,8 +41,8 @@ const RequestSummary = ({
 
   // Get admin lead assigned to intake
   const getAdminLead = () => {
-    if (oldIntake.adminLead) {
-      return oldIntake.adminLead;
+    if (intake.adminLead) {
+      return intake.adminLead;
     }
     return (
       <>
@@ -62,7 +55,7 @@ const RequestSummary = ({
   // Resets newAdminLead to what is in intake currently. This is used to
   // reset state of modal upon exit without saving
   const resetNewAdminLead = () => {
-    setAdminLead(oldIntake.adminLead);
+    setAdminLead(intake.adminLead || '');
   };
 
   // Send newly selected admin lead to database
