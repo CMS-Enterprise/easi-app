@@ -878,8 +878,8 @@ func (s StoreTestSuite) TestUpdateReviewDates() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		grbDate := "2021-12-22T00:00:00Z"
-		grtDate := "2022-01-02T00:00:00Z"
+		grbDate, _ := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
+		grtDate, _ := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
 
 		_, err = s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, &grtDate)
 		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
@@ -898,7 +898,7 @@ func (s StoreTestSuite) TestUpdateReviewDates() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		grbDate := "2021-12-22T00:00:00Z"
+		grbDate, _ := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
 		_, err = s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, nil)
 		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
 
@@ -916,12 +916,12 @@ func (s StoreTestSuite) TestUpdateReviewDates() {
 		err = tx.Commit()
 		s.NoError(err)
 
-		grtDate := "2021-12-22T00:00:00Z"
+		grtDate, _ := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
 		_, err = s.store.UpdateReviewDates(ctx, intake.ID, nil, &grtDate)
 		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
 
 		s.NoError(err, "failed to fetch system intakes")
 		s.Nil(fetchedIntake.GRBDate)
-		s.Equal(fetchedIntake.GRTDate.Format("2006-01-02"), "2021-12-22")
+		s.Equal(fetchedIntake.GRTDate.Format("2006-01-02"), "2022-01-02")
 	})
 }
