@@ -212,8 +212,8 @@ type UpdateSystemIntakeAdminLeadInput struct {
 
 // Result of UpdateSystemIntakeAdminLead
 type UpdateSystemIntakeAdminLeadPayload struct {
-	AdminLead  *string      `json:"adminLead"`
-	UserErrors []*UserError `json:"userErrors"`
+	SystemIntake *models.SystemIntake `json:"systemIntake"`
+	UserErrors   []*UserError         `json:"userErrors"`
 }
 
 // Parameters for editing a test date

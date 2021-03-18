@@ -673,7 +673,7 @@ input UpdateSystemIntakeAdminLeadInput {
 Result of UpdateSystemIntakeAdminLead
 """
 type UpdateSystemIntakeAdminLeadPayload {
-  adminLead: String
+  systemIntake: SystemIntake
   userErrors: [UserError!]
 }
 

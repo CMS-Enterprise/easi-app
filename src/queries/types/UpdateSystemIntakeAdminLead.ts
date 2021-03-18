@@ -9,9 +9,14 @@ import { UpdateSystemIntakeAdminLeadInput } from "./../../types/graphql-global-t
 // GraphQL mutation operation: UpdateSystemIntakeAdminLead
 // ====================================================
 
+export interface UpdateSystemIntakeAdminLead_updateSystemIntakeAdminLead_systemIntake {
+  __typename: "SystemIntake";
+  adminLead: string | null;
+}
+
 export interface UpdateSystemIntakeAdminLead_updateSystemIntakeAdminLead {
   __typename: "UpdateSystemIntakeAdminLeadPayload";
-  adminLead: string | null;
+  systemIntake: UpdateSystemIntakeAdminLead_updateSystemIntakeAdminLead_systemIntake | null;
 }
 
 export interface UpdateSystemIntakeAdminLead {
