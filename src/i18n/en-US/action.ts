@@ -69,6 +69,11 @@ const action = {
     grtFeedbackHelpText:
       'This feedback will be added to the bottom of both the Draft Business Case and Final Business Case pages.'
   },
+  grbRecommendations: {
+    recommendationLabel: 'GRT Recommendations to the GRB',
+    recommendationHelpText:
+      'These are the Governance Review Team recommendations for the Governance Review Board.'
+  },
   submitAction: {
     backLink: 'Change',
     heading: 'Actions on request',
