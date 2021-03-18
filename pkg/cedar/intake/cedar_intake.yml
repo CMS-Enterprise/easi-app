@@ -88,6 +88,8 @@ definitions:
     type: object
     required:
       - id
+      - createdAt
+      - updatedAt
     properties:
       id:
         type: string
@@ -105,7 +107,7 @@ definitions:
         type: string
       cmsBenefit:
         type: string
-	    priorityAlignment:
+      priorityAlignment:
         type: string
       successIndicators:
         type: string
@@ -192,7 +194,9 @@ definitions:
       alternativeBCostSavings:
         type: string
       lifecycleCostLines:
-        type: string
+        type: array
+        items:
+          $ref: '#/definitions/EASILifecycleCost'
       createdAt:
         type: string
         format: date-time
@@ -201,16 +205,16 @@ definitions:
         format: date-time
       submittedAt:
         type: string
-        format: date-time
+        # format: date-time
       archivedAt:
         type: string
-        format: date-time
+        # format: date-time
       initialSubmittedAt:
         type: string
-        format: date-time
+        # format: date-time
       lastSubmittedAt:
         type: string
-        format: date-time
+        # format: date-time
   EASIGovernance:
     type: object
     required:
@@ -232,6 +236,8 @@ definitions:
     type: object
     required:
       - id
+      - createdAt
+      - updatedAt
     properties:
       id:
         type: string
@@ -247,7 +253,7 @@ definitions:
         type: string
       businessOwner:
         type: string
-      cusinessOwnerComponent:
+      businessOwnerComponent:
         type: string
       productManager:
         type: string
@@ -274,7 +280,8 @@ definitions:
       projectAcronym:
         type: string
       existingFunding:
-        type: boolean
+        # type: boolean
+        type: string
       fundingSource:
         type: string
       fundingNumber:
@@ -286,7 +293,8 @@ definitions:
       processStatus:
         type: string
       eaSupportRequest:
-        type: boolean
+        # type: boolean
+        type: string
       existingContract:
         type: string
       costIncrease:
@@ -298,23 +306,32 @@ definitions:
       contractVehicle:
         type: string
       contractStartDate:
-        type: date-time
+        type: string
+        # format: date
       contractEndDate:
-        type: date-time
+        type: string
+        # format: date
       createdAt:
-        type: date-time
+        type: string
+        format: date-time
       updatedAt:
-        type: date-time
+        type: string
+        format: date-time
       submittedAt:
-        type: date-time
+        type: string
+        # format: date-time
       decidedAt:
-        type: date-time
+        type: string
+        # format: date-time
       archivedAt:
-        type: date-time
+        type: string
+        # format: date-time
       grtDate:
-        type: date
+        type: string
+        # format: date
       grbDate:
-        type: date
+        type: string
+        # format: date
       grtReviewEmailBody:
         type: string
       requesterEmailAddress:
@@ -322,7 +339,8 @@ definitions:
       lifecycleID:
         type: string
       lifecycleExpiresAt:
-        type: date
+        type: string
+        # format: date
       lifecycleScope:
         type: string
       decisionNextSteps:
@@ -330,6 +348,21 @@ definitions:
       rejectionReason:
         type: string
       adminLead:
+        type: string
+  EASILifecycleCost:
+    type: object
+    required:
+      - id
+    properties:
+      id:
+        type: string
+      solution:
+        type: string
+      phase:
+        type: string
+      year:
+        type: string
+      cost:
         type: string
   EASINote:
     type: object
@@ -348,30 +381,50 @@ definitions:
         type: string
   IntakeInput:
     type: object
+    required:
+      - schema
+      - createdDate
+      - lastUpdate
+      - id
+      - type
+      - bodyFormat
+      - body
+      - status
     properties:
       schema:
         type: string
         description: The name and version of the corresponding schema
+        enum:
+          - EASIGovernanceV01
       createdDate:
         type: string
+        format: date
         description: Customers createDate
       lastUpdate:
         type: string
+        format: date
         description: Customers lastUpdate
       id:
         type: string
         description: Customer UUID for the record
       type:
         type: string
+        enum:
+          - EASIGovernance
         description: 'The type of record being transmitted, i.e. '
       bodyFormat:
         type: string
+        enum:
+          - json
         description: The data type of the string being transmitted, i.e. json, xml, etc
       body:
         type: string
         description: The actual record data string. For json posts, the data must be json encoded.
       status:
         type: string
+        enum:
+          - Initiated
+          - Final
         description: Customer status for the record being transmitted, i.e. Initiated, Final, etc.
     description: '{ "id": "5555", "type": "SystemTest", "schema": "SystemTestV01", "status": "Initiated", "bodyFormat": "json", "body": "{\"id\":\"5555\",\"eua_user_id\":\"test\",\"requester\":\"John Doe\",\"requester_component\":\"test\",\"system_name\":\"Test\"}", "createdDate": "2021-02-05 10:39:00", "lastUpdate": "2021-02-05 10:39:00" }'
   IntakePostResponse:
