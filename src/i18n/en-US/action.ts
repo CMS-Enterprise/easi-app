@@ -63,6 +63,12 @@ const action = {
     reasonHelpText:
       'Provide the exact set of reasons why their request in its current state has been rejected. Include the concerns raised about it.'
   },
+  provideGRTFeedback: {
+    grtFeedbackLabel: 'GRT feedback to the business owner',
+    submit: 'Email Decision & Progress to next step',
+    grtFeedbackHelpText:
+      'This feedback will be added to the bottom of both the Draft Business Case and Final Business Case pages.'
+  },
   submitAction: {
     backLink: 'Change',
     heading: 'Actions on request',

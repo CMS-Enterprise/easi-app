@@ -427,3 +427,63 @@ func NewUpdateRejectionFields(
 		return updated, nil
 	}
 }
+
+// NewProvideGRTFeedback gives a function to provide GRT Feedback to an intake
+func NewProvideGRTFeedback(
+	config Config,
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	saveAction func(context.Context, *models.Action) error,
+	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string, intakeID uuid.UUID) error,
+) func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error) {
+	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus) (*models.GRTFeedback, error) {
+		intake, err := fetch(ctx, grtFeedback.IntakeID)
+		if err != nil {
+			return nil, err
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting GRT Feedback"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		if grtFeedback, err = saveGRTFeedback(ctx, grtFeedback); err != nil {
+			return nil, err
+		}
+
+		if err = saveAction(ctx, action); err != nil {
+			return nil, err
+		}
+
+		updatedTime := config.clock.Now()
+		intake.UpdatedAt = &updatedTime
+		intake.Status = newStatus
+		intake, err = update(ctx, intake)
+		if err != nil {
+			return nil, err
+		}
+
+		err = sendReviewEmail(
+			ctx,
+			requesterInfo.Email,
+			action.Feedback.String,
+			intake.ID,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		return grtFeedback, nil
+	}
+}

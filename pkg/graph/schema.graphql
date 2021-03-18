@@ -570,9 +570,34 @@ type SystemIntake {
 }
 
 """
+Input for adding GRT Feedback
+"""
+input AddGRTFeedbackInput {
+  emailBody: String!
+  feedback: String!
+  intakeID: UUID!
+}
+
+"""
+Response for adding GRT Feedback
+"""
+type AddGRTFeedbackPayload {
+  id: UUID
+}
+
+"""
 The root mutation
 """
 type Mutation {
+  addGRTFeedbackAndKeepBusinessCaseInDraft(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  addGRTFeedbackAndProgressToFinalBusinessCase(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  addGRTFeedbackAndRequestBusinessCase(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   createAccessibilityRequest(
     input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
