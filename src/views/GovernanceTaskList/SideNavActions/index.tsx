@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 
 import './index.scss';
 
@@ -14,11 +15,6 @@ type SideNavActionsProps = {
 const SideNavActions = ({ archiveIntake }: SideNavActionsProps) => {
   const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
-  const modalHeadingRef = useRef<HTMLHeadingElement>(null);
-
-  const handleWithdrawModalOpen = () => {
-    modalHeadingRef.current?.focus();
-  };
 
   return (
     <div className="sidenav-actions grid-row flex-column">
@@ -37,16 +33,11 @@ const SideNavActions = ({ archiveIntake }: SideNavActionsProps) => {
         <Modal
           title={t('taskList:withdraw_modal:title')}
           isOpen={isModalOpen}
-          openModal={handleWithdrawModalOpen}
           closeModal={() => setModalOpen(false)}
         >
-          <h2
-            className="margin-top-0 font-heading-2xl line-height-heading-2"
-            tabIndex={-1}
-            ref={modalHeadingRef}
-          >
+          <PageHeading headingLevel="h2" className="margin-top-0">
             {t('taskList:withdraw_modal:header')}
-          </h2>
+          </PageHeading>
           <p>{t('taskList:withdraw_modal:warning')}</p>
           <Button
             type="button"
