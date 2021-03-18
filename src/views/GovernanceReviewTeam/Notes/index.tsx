@@ -6,6 +6,7 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
+import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
@@ -120,7 +121,7 @@ const Notes = () => {
 
   return (
     <>
-      <h1>{t('notes.heading')}</h1>
+      <PageHeading>{t('notes.heading')}</PageHeading>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<NoteForm>) => {
           const { values } = formikProps;
