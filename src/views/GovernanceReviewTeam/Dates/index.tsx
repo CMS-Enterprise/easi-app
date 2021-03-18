@@ -5,6 +5,7 @@ import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeReviewDates } from 'queries/types/UpdateSystemIntakeReviewDates';
 import UpdateSystemIntakeReviewDatesQuery from 'queries/UpdateSystemIntakeReviewDatesQuery';
 
@@ -15,11 +16,11 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { AnythingWrongSurvey } from 'components/Survey';
-import { SubmitDatesForm, SystemIntakeForm } from 'types/systemIntake';
+import { SubmitDatesForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import { DateValidationSchema } from 'validations/systemIntakeSchema';
 
-const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
+const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation();
@@ -31,15 +32,17 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
   );
 
   const { grtDate, grbDate } = systemIntake;
+  const parsedGrbDate = DateTime.fromISO(grbDate);
+  const parsedGrtDate = DateTime.fromISO(grtDate);
 
   // TODO: Fix Text Field so we don't have to set initial empty values
   const initialValues: SubmitDatesForm = {
-    grtDateDay: grtDate ? String(grtDate.day) : '',
-    grtDateMonth: grtDate ? String(grtDate.month) : '',
-    grtDateYear: grtDate ? String(grtDate.year) : '',
-    grbDateDay: grbDate ? String(grbDate.day) : '',
-    grbDateMonth: grbDate ? String(grbDate.month) : '',
-    grbDateYear: grbDate ? String(grbDate.year) : ''
+    grtDateDay: grtDate ? String(parsedGrtDate.day) : '',
+    grtDateMonth: grtDate ? String(parsedGrtDate.month) : '',
+    grtDateYear: grtDate ? String(parsedGrtDate.year) : '',
+    grbDateDay: grbDate ? String(parsedGrbDate.day) : '',
+    grbDateMonth: grbDate ? String(parsedGrbDate.month) : '',
+    grbDateYear: grbDate ? String(parsedGrbDate.year) : ''
   };
 
   const onSubmit = (values: SubmitDatesForm) => {
