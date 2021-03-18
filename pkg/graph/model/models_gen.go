@@ -30,6 +30,18 @@ type AccessibilityRequestsConnection struct {
 	TotalCount int                         `json:"totalCount"`
 }
 
+// Input for adding GRT Feedback
+type AddGRTFeedbackInput struct {
+	EmailBody string    `json:"emailBody"`
+	Feedback  string    `json:"feedback"`
+	IntakeID  uuid.UUID `json:"intakeID"`
+}
+
+// Response for adding GRT Feedback
+type AddGRTFeedbackPayload struct {
+	ID *uuid.UUID `json:"id"`
+}
+
 // The shape of a solution for a business case
 type BusinessCaseAsIsSolution struct {
 	Cons        *string `json:"cons"`

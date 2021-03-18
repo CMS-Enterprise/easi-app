@@ -37,6 +37,15 @@ export enum TestDateTestType {
 }
 
 /**
+ * Input for adding GRT Feedback
+ */
+export interface AddGRTFeedbackInput {
+  emailBody: string;
+  feedback: string;
+  intakeID: UUID;
+}
+
+/**
  * Parameters for createAccessibilityRequestDocument
  */
 export interface CreateAccessibilityRequestDocumentInput {
