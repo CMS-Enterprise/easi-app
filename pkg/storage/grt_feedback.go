@@ -23,6 +23,7 @@ func (s *Store) CreateGRTFeedback(ctx context.Context, grtFeedback *models.GRTFe
 		INSERT INTO grt_feedback (
 			id,
 		    intake_id,
+		    feedback_type,
 			feedback,
 			created_at,
 			updated_at
@@ -30,6 +31,7 @@ func (s *Store) CreateGRTFeedback(ctx context.Context, grtFeedback *models.GRTFe
 		VALUES (
 			:id,
 			:intake_id,
+			:feedback_type,
 			:feedback,
 		    :created_at,
 			:updated_at
