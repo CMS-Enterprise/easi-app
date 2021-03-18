@@ -8,7 +8,7 @@ type ModalProps = {
   title: string;
   children: ReactNode | ReactNodeArray;
   isOpen: boolean;
-  openModal: () => void;
+  openModal?: () => void;
   closeModal: () => void;
 };
 
@@ -21,7 +21,9 @@ const Modal = ({
 }: ModalProps) => {
   const handleOpenModal = () => {
     noScroll.on();
-    openModal();
+    if (openModal) {
+      openModal();
+    }
   };
 
   return (
