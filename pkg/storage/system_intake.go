@@ -402,3 +402,28 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 
 	return metrics, nil
 }
+
+// UpdateAdminLead updates the admin lead for an intake
+func (s *Store) UpdateAdminLead(ctx context.Context, id uuid.UUID, adminLead string) (string, error) {
+	var intake struct {
+		AdminLead string `db:"admin_lead"`
+		ID        uuid.UUID
+		UpdatedAt time.Time `db:"updated_at"`
+	}
+	intake.AdminLead = adminLead
+	intake.ID = id
+	intake.UpdatedAt = time.Now()
+
+	const updateSystemIntakeSQL = `
+		UPDATE system_intakes
+		SET
+			updated_at = :updated_at,
+			admin_lead = :admin_lead
+		WHERE system_intakes.id = :id
+	`
+	_, err := s.db.NamedExec(
+		updateSystemIntakeSQL,
+		intake,
+	)
+	return adminLead, err
+}
