@@ -241,7 +241,7 @@ exports[`The Not Found Page matches the snapshot 1`] = `
       className="margin-y-7"
     >
       <h1
-        className="easi-h1 margin-top-6 margin-bottom-5"
+        className="easi-h1"
         tabIndex={-1}
       >
         This page cannot be found.

@@ -238,7 +238,7 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
     tabIndex={-1}
   >
     <h1
-      className="easi-h1 margin-top-6 margin-bottom-5"
+      className="easi-h1"
       tabIndex={-1}
     >
       Terms & Conditions
