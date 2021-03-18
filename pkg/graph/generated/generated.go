@@ -311,8 +311,8 @@ type ComplexityRoot struct {
 	}
 
 	UpdateSystemIntakeAdminLeadPayload struct {
-		AdminLead  func(childComplexity int) int
-		UserErrors func(childComplexity int) int
+		SystemIntake func(childComplexity int) int
+		UserErrors   func(childComplexity int) int
 	}
 
 	UpdateTestDatePayload struct {
@@ -1629,12 +1629,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TestDate.TestType(childComplexity), true
 
-	case "UpdateSystemIntakeAdminLeadPayload.adminLead":
-		if e.complexity.UpdateSystemIntakeAdminLeadPayload.AdminLead == nil {
+	case "UpdateSystemIntakeAdminLeadPayload.systemIntake":
+		if e.complexity.UpdateSystemIntakeAdminLeadPayload.SystemIntake == nil {
 			break
 		}
 
-		return e.complexity.UpdateSystemIntakeAdminLeadPayload.AdminLead(childComplexity), true
+		return e.complexity.UpdateSystemIntakeAdminLeadPayload.SystemIntake(childComplexity), true
 
 	case "UpdateSystemIntakeAdminLeadPayload.userErrors":
 		if e.complexity.UpdateSystemIntakeAdminLeadPayload.UserErrors == nil {
@@ -2394,7 +2394,7 @@ input UpdateSystemIntakeAdminLeadInput {
 Result of UpdateSystemIntakeAdminLead
 """
 type UpdateSystemIntakeAdminLeadPayload {
-  adminLead: String
+  systemIntake: SystemIntake
   userErrors: [UserError!]
 }
 
@@ -8376,7 +8376,7 @@ func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphq
 	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload_adminLead(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakeAdminLeadPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakeAdminLeadPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8394,7 +8394,7 @@ func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload_adminLead(ctx co
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.AdminLead, nil
+		return obj.SystemIntake, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8403,9 +8403,9 @@ func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload_adminLead(ctx co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*models.SystemIntake)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakeAdminLeadPayload) (ret graphql.Marshaler) {
@@ -11567,8 +11567,8 @@ func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload(ctx context.Cont
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("UpdateSystemIntakeAdminLeadPayload")
-		case "adminLead":
-			out.Values[i] = ec._UpdateSystemIntakeAdminLeadPayload_adminLead(ctx, field, obj)
+		case "systemIntake":
+			out.Values[i] = ec._UpdateSystemIntakeAdminLeadPayload_systemIntake(ctx, field, obj)
 		case "userErrors":
 			out.Values[i] = ec._UpdateSystemIntakeAdminLeadPayload_userErrors(ctx, field, obj)
 		default:

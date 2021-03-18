@@ -5,7 +5,9 @@ export default gql`
     $input: UpdateSystemIntakeAdminLeadInput!
   ) {
     updateSystemIntakeAdminLead(input: $input) {
-      adminLead
+      systemIntake {
+        adminLead
+      }
     }
   }
 `;
