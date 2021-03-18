@@ -646,6 +646,22 @@ type SystemIntake {
 }
 
 """
+Parameters required to update the admin lead for an intake
+"""
+input UpdateSystemIntakeAdminLeadInput {
+  adminLead: String!
+  id: UUID!
+}
+
+"""
+Result of UpdateSystemIntakeAdminLead
+"""
+type UpdateSystemIntakeAdminLeadPayload {
+  adminLead: String
+  userErrors: [UserError!]
+}
+
+"""
 The root mutation
 """
 type Mutation {
@@ -660,6 +676,8 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
+    @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
 }

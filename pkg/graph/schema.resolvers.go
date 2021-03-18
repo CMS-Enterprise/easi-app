@@ -308,6 +308,11 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error) {
+	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
+	return &model.UpdateSystemIntakeAdminLeadPayload{AdminLead: &savedAdminLead}, err
+}
+
 func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
 	panic(fmt.Errorf("not implemented"))
 }
