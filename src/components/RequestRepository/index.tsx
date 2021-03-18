@@ -325,7 +325,7 @@ const RequestRepository = () => {
         })}
       </PageHeading>
       {/* h1 for screen devices / complicated CSS to have them together */}
-      <h1 className="font-heading-sm usa-screen" aria-hidden>
+      <h1 className="font-heading-sm" aria-hidden>
         {t('requestRepository.requestCount', {
           context: activeTable,
           count: data.length

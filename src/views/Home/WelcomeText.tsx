@@ -36,7 +36,7 @@ const WelcomeText = () => {
           className="usa-button"
           asCustom={Link}
           variant="unstyled"
-          to="/sandbox"
+          to="/system/request-type"
         >
           {t('home:startNow')}
         </UswdsLink>
