@@ -466,8 +466,6 @@ func NewProvideGRTFeedback(
 			return nil, err
 		}
 
-		// we only want to bring over the fields specifically
-		// dealing with Rejection information
 		updatedTime := config.clock.Now()
 		intake.UpdatedAt = &updatedTime
 		intake.Status = newStatus
