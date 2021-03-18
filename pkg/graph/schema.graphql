@@ -678,6 +678,23 @@ type UpdateSystemIntakeAdminLeadPayload {
 }
 
 """
+Parameters required to update the grt and grb dates for an intake
+"""
+input UpdateSystemIntakeReviewDatesInput {
+  grbDate: Time
+  grtDate: Time
+  id: UUID!
+}
+
+"""
+Result of UpdateSystemIntakeAdminLead
+"""
+type UpdateSystemIntakeReviewDatesPayload {
+  systemIntake: SystemIntake
+  userErrors: [UserError!]
+}
+
+"""
 The root mutation
 """
 type Mutation {
@@ -702,6 +719,8 @@ type Mutation {
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakeReviewDatesPayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
