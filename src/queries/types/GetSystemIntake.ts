@@ -95,6 +95,8 @@ export interface GetSystemIntake_systemIntake {
   contract: GetSystemIntake_systemIntake_contract | null;
   costs: GetSystemIntake_systemIntake_costs | null;
   currentStage: string | null;
+  grbDate: Time | null;
+  grtDate: Time | null;
   governanceTeams: GetSystemIntake_systemIntake_governanceTeams | null;
   isso: GetSystemIntake_systemIntake_isso | null;
   fundingSource: GetSystemIntake_systemIntake_fundingSource | null;
