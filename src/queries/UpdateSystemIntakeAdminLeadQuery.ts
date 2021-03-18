@@ -7,6 +7,7 @@ export default gql`
     updateSystemIntakeAdminLead(input: $input) {
       systemIntake {
         adminLead
+        id
       }
     }
   }
