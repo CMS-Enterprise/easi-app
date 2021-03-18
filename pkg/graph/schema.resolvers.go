@@ -241,8 +241,9 @@ func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		&models.GRTFeedback{
-			IntakeID: input.IntakeID,
-			Feedback: input.Feedback,
+			IntakeID:     input.IntakeID,
+			Feedback:     input.Feedback,
+			FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
 		},
 		&models.Action{
 			IntakeID:   &input.IntakeID,
@@ -261,8 +262,9 @@ func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx cont
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		&models.GRTFeedback{
-			IntakeID: input.IntakeID,
-			Feedback: input.Feedback,
+			IntakeID:     input.IntakeID,
+			Feedback:     input.Feedback,
+			FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
 		},
 		&models.Action{
 			IntakeID:   &input.IntakeID,
@@ -281,8 +283,9 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
 		&models.GRTFeedback{
-			IntakeID: input.IntakeID,
-			Feedback: input.Feedback,
+			IntakeID:     input.IntakeID,
+			Feedback:     input.Feedback,
+			FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
 		},
 		&models.Action{
 			IntakeID:   &input.IntakeID,
