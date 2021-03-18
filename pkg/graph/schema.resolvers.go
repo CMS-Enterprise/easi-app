@@ -376,6 +376,7 @@ func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, inpu
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{
 		AdminLead: null.StringFrom(savedAdminLead),
+		ID:        input.ID,
 	}
 	return &model.UpdateSystemIntakeAdminLeadPayload{
 		SystemIntake: &systemIntake,
