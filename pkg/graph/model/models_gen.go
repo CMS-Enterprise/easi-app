@@ -204,6 +204,18 @@ type SystemIntakeRequester struct {
 	Name      string  `json:"name"`
 }
 
+// Parameters required to update the admin lead for an intake
+type UpdateSystemIntakeAdminLeadInput struct {
+	AdminLead string    `json:"adminLead"`
+	ID        uuid.UUID `json:"id"`
+}
+
+// Result of UpdateSystemIntakeAdminLead
+type UpdateSystemIntakeAdminLeadPayload struct {
+	AdminLead  *string      `json:"adminLead"`
+	UserErrors []*UserError `json:"userErrors"`
+}
+
 // Parameters for editing a test date
 type UpdateTestDateInput struct {
 	Date     time.Time               `json:"date"`

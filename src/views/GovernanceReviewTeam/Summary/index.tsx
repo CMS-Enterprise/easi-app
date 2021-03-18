@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
-import { GetSystemIntake } from 'queries/types/GetSystemIntake';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
+import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import { saveSystemIntake } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 import {
   isIntakeClosed,
@@ -23,13 +25,18 @@ const RequestSummary = ({
   intake,
   oldIntake
 }: {
-  intake: GetSystemIntake;
+  intake: SystemIntake;
   oldIntake: SystemIntakeForm;
 }) => {
   const { t } = useTranslation('governanceReviewTeam');
-  const dispatch = useDispatch();
   const [isModalOpen, setModalOpen] = useState(false);
   const [newAdminLead, setAdminLead] = useState('');
+  const [mutate, mutationResult] = useMutation<UpdateSystemIntakeAdminLead>(
+    UpdateSystemIntakeAdminLeadQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
 
   const component = cmsDivisionsAndOffices.find(
     c => c.name === intake.requester.component
@@ -60,11 +67,14 @@ const RequestSummary = ({
 
   // Send newly selected admin lead to database
   const saveAdminLead = () => {
-    const data = {
-      ...oldIntake,
-      adminLead: newAdminLead
-    };
-    dispatch(saveSystemIntake({ ...data }));
+    mutate({
+      variables: {
+        input: {
+          id: intake?.id,
+          adminLead: newAdminLead
+        }
+      }
+    });
   };
 
   // List of current GRT admin team members
@@ -101,6 +111,14 @@ const RequestSummary = ({
 
   return (
     <section className="easi-grt__request-summary">
+      {mutationResult.error && (
+        <ErrorAlert heading="System error">
+          <ErrorAlertMessage
+            message={mutationResult.error.message}
+            errorKey="system"
+          />
+        </ErrorAlert>
+      )}
       <div className="grid-container padding-y-2">
         <BreadcrumbNav>
           <li>
