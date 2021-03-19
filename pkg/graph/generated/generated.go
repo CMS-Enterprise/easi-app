@@ -2691,9 +2691,9 @@ type AddGRTFeedbackPayload {
 Input for issuing a lifecycle id
 """
 input IssueLifecycleIdInput {
-  expirationDate: Time!
+  expiresAt: Time!
   feedback: String!
-  intakeID: UUID!
+  intakeId: UUID!
   lcid: String
   nextSteps: String
   scope: String!
@@ -11634,11 +11634,11 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 
 	for k, v := range asMap {
 		switch k {
-		case "expirationDate":
+		case "expiresAt":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expirationDate"))
-			it.ExpirationDate, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("expiresAt"))
+			it.ExpiresAt, err = ec.unmarshalNTime2timeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11650,10 +11650,10 @@ func (ec *executionContext) unmarshalInputIssueLifecycleIdInput(ctx context.Cont
 			if err != nil {
 				return it, err
 			}
-		case "intakeID":
+		case "intakeId":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeID"))
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeId"))
 			it.IntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
