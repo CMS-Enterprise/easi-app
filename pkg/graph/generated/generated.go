@@ -170,6 +170,12 @@ type ComplexityRoot struct {
 		Year           func(childComplexity int) int
 	}
 
+	GRTFeedback struct {
+		CreatedAt    func(childComplexity int) int
+		Feedback     func(childComplexity int) int
+		FeedbackType func(childComplexity int) int
+	}
+
 	GeneratePresignedUploadURLPayload struct {
 		URL        func(childComplexity int) int
 		UserErrors func(childComplexity int) int
@@ -190,6 +196,7 @@ type ComplexityRoot struct {
 	Query struct {
 		AccessibilityRequest  func(childComplexity int, id uuid.UUID) int
 		AccessibilityRequests func(childComplexity int, after *string, first int) int
+		GrtFeedbacks          func(childComplexity int, intakeID uuid.UUID) int
 		SystemIntake          func(childComplexity int, id uuid.UUID) int
 		Systems               func(childComplexity int, after *string, first int) int
 	}
@@ -329,6 +336,7 @@ type MutationResolver interface {
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
 	AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error)
+	GrtFeedbacks(ctx context.Context, intakeID uuid.UUID) ([]*models.GRTFeedback, error)
 	SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error)
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 }
@@ -926,6 +934,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.EstimatedLifecycleCost.Year(childComplexity), true
 
+	case "GRTFeedback.createdAt":
+		if e.complexity.GRTFeedback.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.GRTFeedback.CreatedAt(childComplexity), true
+
+	case "GRTFeedback.feedback":
+		if e.complexity.GRTFeedback.Feedback == nil {
+			break
+		}
+
+		return e.complexity.GRTFeedback.Feedback(childComplexity), true
+
+	case "GRTFeedback.feedbackType":
+		if e.complexity.GRTFeedback.FeedbackType == nil {
+			break
+		}
+
+		return e.complexity.GRTFeedback.FeedbackType(childComplexity), true
+
 	case "GeneratePresignedUploadURLPayload.url":
 		if e.complexity.GeneratePresignedUploadURLPayload.URL == nil {
 			break
@@ -1071,6 +1100,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.AccessibilityRequests(childComplexity, args["after"].(*string), args["first"].(int)), true
+
+	case "Query.grtFeedbacks":
+		if e.complexity.Query.GrtFeedbacks == nil {
+			break
+		}
+
+		args, err := ec.field_Query_grtFeedbacks_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GrtFeedbacks(childComplexity, args["intakeID"].(uuid.UUID)), true
 
 	case "Query.systemIntake":
 		if e.complexity.Query.SystemIntake == nil {
@@ -1918,7 +1959,7 @@ type BusinessCaseAsIsSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostPhase {
   """
@@ -1936,7 +1977,7 @@ enum LifecycleCostPhase {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostSolution {
   """
@@ -1958,7 +1999,7 @@ enum LifecycleCostSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostYear {
   """
@@ -2210,6 +2251,30 @@ type AddGRTFeedbackPayload {
 }
 
 """
+Type or recipient of GRT Feedback
+"""
+enum GRTFeedbackType {
+  """
+  Feedback for the business owner
+  """
+  BUSINESS_OWNER
+
+  """
+  Recommendations to the GRB
+  """
+  GRB
+}
+
+"""
+Feedback from the GRT to a business owner or GRB
+"""
+type GRTFeedback {
+  createdAt: Time
+  feedback: String
+  feedbackType: GRTFeedbackType
+}
+
+"""
 The root mutation
 """
 type Mutation {
@@ -2249,6 +2314,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
+  grtFeedbacks(intakeID: UUID!): [GRTFeedback!] @hasRole(role: EASI_GOVTEAM)
   systemIntake(id: UUID!): SystemIntake @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
 }
@@ -2498,6 +2564,21 @@ func (ec *executionContext) field_Query_accessibilityRequests_args(ctx context.C
 		}
 	}
 	args["first"] = arg1
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_grtFeedbacks_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 uuid.UUID
+	if tmp, ok := rawArgs["intakeID"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeID"))
+		arg0, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["intakeID"] = arg0
 	return args, nil
 }
 
@@ -5100,6 +5181,102 @@ func (ec *executionContext) _EstimatedLifecycleCost_year(ctx context.Context, fi
 	return ec.marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _GRTFeedback_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.GRTFeedback) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GRTFeedback",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _GRTFeedback_feedback(ctx context.Context, field graphql.CollectedField, obj *models.GRTFeedback) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GRTFeedback",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Feedback, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _GRTFeedback_feedbackType(ctx context.Context, field graphql.CollectedField, obj *models.GRTFeedback) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GRTFeedback",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FeedbackType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(models.GRTFeedbackType)
+	fc.Result = res
+	return ec.marshalOGRTFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedbackType(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _GeneratePresignedUploadURLPayload_url(ctx context.Context, field graphql.CollectedField, obj *model.GeneratePresignedUploadURLPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5735,6 +5912,69 @@ func (ec *executionContext) _Query_accessibilityRequests(ctx context.Context, fi
 	res := resTmp.(*model.AccessibilityRequestsConnection)
 	fc.Result = res
 	return ec.marshalOAccessibilityRequestsConnection2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestsConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_grtFeedbacks(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_grtFeedbacks_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Query().GrtFeedbacks(rctx, args["intakeID"].(uuid.UUID))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.([]*models.GRTFeedback); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be []*github.com/cmsgov/easi-app/pkg/models.GRTFeedback`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*models.GRTFeedback)
+	fc.Result = res
+	return ec.marshalOGRTFeedback2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedbackᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_systemIntake(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -10169,6 +10409,34 @@ func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast
 	return out
 }
 
+var gRTFeedbackImplementors = []string{"GRTFeedback"}
+
+func (ec *executionContext) _GRTFeedback(ctx context.Context, sel ast.SelectionSet, obj *models.GRTFeedback) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, gRTFeedbackImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GRTFeedback")
+		case "createdAt":
+			out.Values[i] = ec._GRTFeedback_createdAt(ctx, field, obj)
+		case "feedback":
+			out.Values[i] = ec._GRTFeedback_feedback(ctx, field, obj)
+		case "feedbackType":
+			out.Values[i] = ec._GRTFeedback_feedbackType(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var generatePresignedUploadURLPayloadImplementors = []string{"GeneratePresignedUploadURLPayload"}
 
 func (ec *executionContext) _GeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, obj *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {
@@ -10274,6 +10542,17 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_accessibilityRequests(ctx, field)
+				return res
+			})
+		case "grtFeedbacks":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_grtFeedbacks(ctx, field)
 				return res
 			})
 		case "systemIntake":
@@ -11449,6 +11728,16 @@ func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcms
 	return ec._EstimatedLifecycleCost(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNGRTFeedback2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedback(ctx context.Context, sel ast.SelectionSet, v *models.GRTFeedback) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._GRTFeedback(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNGeneratePresignedUploadURLInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLInput(ctx context.Context, v interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	res, err := ec.unmarshalInputGeneratePresignedUploadURLInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -12121,6 +12410,56 @@ func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋ
 	}
 	wg.Wait()
 	return ret
+}
+
+func (ec *executionContext) marshalOGRTFeedback2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedbackᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.GRTFeedback) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNGRTFeedback2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedback(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) unmarshalOGRTFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedbackType(ctx context.Context, v interface{}) (models.GRTFeedbackType, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.GRTFeedbackType(tmp)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOGRTFeedbackType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐGRTFeedbackType(ctx context.Context, sel ast.SelectionSet, v models.GRTFeedbackType) graphql.Marshaler {
+	return graphql.MarshalString(string(v))
 }
 
 func (ec *executionContext) marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx context.Context, sel ast.SelectionSet, v *model.GeneratePresignedUploadURLPayload) graphql.Marshaler {
