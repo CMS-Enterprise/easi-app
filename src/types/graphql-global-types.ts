@@ -29,6 +29,14 @@ export enum AccessibilityRequestDocumentStatus {
 }
 
 /**
+ * Type or recipient of GRT Feedback
+ */
+export enum GRTFeedbackType {
+  BUSINESS_OWNER = "BUSINESS_OWNER",
+  GRB = "GRB",
+}
+
+/**
  * The variety of a 508 test
  */
 export enum TestDateTestType {

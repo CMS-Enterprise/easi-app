@@ -294,7 +294,7 @@ type BusinessCaseAsIsSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostPhase {
   """
@@ -312,7 +312,7 @@ enum LifecycleCostPhase {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostSolution {
   """
@@ -334,7 +334,7 @@ enum LifecycleCostSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostYear {
   """
@@ -586,6 +586,30 @@ type AddGRTFeedbackPayload {
 }
 
 """
+Type or recipient of GRT Feedback
+"""
+enum GRTFeedbackType {
+  """
+  Feedback for the business owner
+  """
+  BUSINESS_OWNER
+
+  """
+  Recommendations to the GRB
+  """
+  GRB
+}
+
+"""
+Feedback from the GRT to a business owner or GRB
+"""
+type GRTFeedback {
+  createdAt: Time
+  feedback: String
+  feedbackType: GRTFeedbackType
+}
+
+"""
 The root mutation
 """
 type Mutation {
@@ -625,6 +649,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
+  grtFeedbacks(intakeID: UUID!): [GRTFeedback!] @hasRole(role: EASI_GOVTEAM)
   systemIntake(id: UUID!): SystemIntake @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
 }

@@ -418,6 +418,10 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 	return &model.AccessibilityRequestsConnection{Edges: edges}, nil
 }
 
+func (r *queryResolver) GrtFeedbacks(ctx context.Context, intakeID uuid.UUID) ([]*models.GRTFeedback, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	return r.store.FetchSystemIntakeByID(ctx, id)
 }
