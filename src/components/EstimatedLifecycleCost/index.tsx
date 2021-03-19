@@ -40,7 +40,6 @@ const Phase = ({
       `${formikKey}.year${year}.${phase}.isPresent`,
       e.target.checked
     );
-    setFieldValue(`${formikKey}.year${year}.${phase}.cost`, '');
   };
 
   return (

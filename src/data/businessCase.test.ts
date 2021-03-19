@@ -1,4 +1,8 @@
-import { prepareBusinessCaseForApp } from './businessCase';
+import {
+  businessCaseInitialData,
+  prepareBusinessCaseForApi,
+  prepareBusinessCaseForApp
+} from './businessCase';
 
 describe('The business case data', () => {
   describe('prepareBusinessCaseForApp', () => {
@@ -510,6 +514,142 @@ describe('The business case data', () => {
       expect(prepareBusinessCaseForApp(testDataFromApi).asIsSolution).toEqual(
         asisSolution
       );
+    });
+  });
+
+  describe('prepareBusinessCaseForApi', () => {
+    it('does not save estimated lifecycle cost if checkbox is not checked', () => {
+      // ONLY checking As is solution lifecycle lines in this test
+      // other solutions should behave the same
+      const testBusinessCase = {
+        ...businessCaseInitialData,
+        asIsSolution: {
+          title: '',
+          summary: '',
+          pros: '',
+          cons: '',
+          estimatedLifecycleCost: {
+            year1: {
+              development: {
+                isPresent: false,
+                cost: '500'
+              },
+              operationsMaintenance: {
+                isPresent: true,
+                cost: '1000'
+              },
+              other: {
+                isPresent: false,
+                cost: '1500'
+              }
+            },
+            year2: {
+              development: {
+                isPresent: true,
+                cost: '500'
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: '1000'
+              },
+              other: {
+                isPresent: false,
+                cost: '1500'
+              }
+            },
+            year3: {
+              development: {
+                isPresent: false,
+                cost: '500'
+              },
+              operationsMaintenance: {
+                isPresent: true,
+                cost: '1000'
+              },
+              other: {
+                isPresent: true,
+                cost: '1500'
+              }
+            },
+            year4: {
+              development: {
+                isPresent: false,
+                cost: '500'
+              },
+              operationsMaintenance: {
+                isPresent: false,
+                cost: '1000'
+              },
+              other: {
+                isPresent: false,
+                cost: '1500'
+              }
+            },
+            year5: {
+              development: {
+                isPresent: true,
+                cost: '500'
+              },
+              operationsMaintenance: {
+                isPresent: true,
+                cost: '1000'
+              },
+              other: {
+                isPresent: true,
+                cost: '1500'
+              }
+            }
+          },
+          costSavings: ''
+        }
+      };
+
+      const asIsLifecycleLines = [
+        { solution: 'As Is', phase: 'Development', cost: '', year: '1' },
+        {
+          solution: 'As Is',
+          phase: 'Operations and Maintenance',
+          cost: 1000,
+          year: '1'
+        },
+        { solution: 'As Is', phase: 'Other', cost: '', year: '1' },
+        { solution: 'As Is', phase: 'Development', cost: 500, year: '2' },
+        {
+          solution: 'As Is',
+          phase: 'Operations and Maintenance',
+          cost: '',
+          year: '2'
+        },
+        { solution: 'As Is', phase: 'Other', cost: '', year: '2' },
+        { solution: 'As Is', phase: 'Development', cost: '', year: '3' },
+        {
+          solution: 'As Is',
+          phase: 'Operations and Maintenance',
+          cost: 1000,
+          year: '3'
+        },
+        { solution: 'As Is', phase: 'Other', cost: 1500, year: '3' },
+        { solution: 'As Is', phase: 'Development', cost: '', year: '4' },
+        {
+          solution: 'As Is',
+          phase: 'Operations and Maintenance',
+          cost: '',
+          year: '4'
+        },
+        { solution: 'As Is', phase: 'Other', cost: '', year: '4' },
+        { solution: 'As Is', phase: 'Development', cost: 500, year: '5' },
+        {
+          solution: 'As Is',
+          phase: 'Operations and Maintenance',
+          cost: 1000,
+          year: '5'
+        },
+        { solution: 'As Is', phase: 'Other', cost: 1500, year: '5' }
+      ];
+
+      expect(
+        prepareBusinessCaseForApi(testBusinessCase).lifecycleCostLines
+      ).toEqual(expect.arrayContaining(asIsLifecycleLines));
     });
   });
 });
