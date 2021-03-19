@@ -309,22 +309,25 @@ export const prepareBusinessCaseForApi = (
     .map(({ solutionLifecycleCostLines, solutionApiName }) => {
       return yearMap(solutionLifecycleCostLines)
         .map(({ phases, year }) => {
+          const { development, operationsMaintenance, other } = phases;
           const developmentCost = {
             solution: solutionApiName,
             phase: 'Development',
-            cost: parseFloat(phases.development.cost),
+            cost: development.isPresent ? parseFloat(development.cost) : '',
             year
           };
           const omCost = {
             solution: solutionApiName,
             phase: 'Operations and Maintenance',
-            cost: parseFloat(phases.operationsMaintenance.cost),
+            cost: operationsMaintenance.isPresent
+              ? parseFloat(phases.operationsMaintenance.cost)
+              : '',
             year
           };
           const otherCost = {
             solution: solutionApiName,
             phase: 'Other',
-            cost: parseFloat(phases.other.cost),
+            cost: other.isPresent ? parseFloat(phases.other.cost) : '',
             year
           };
           return [developmentCost, omCost, otherCost];
