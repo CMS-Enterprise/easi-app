@@ -684,9 +684,9 @@ type AddGRTFeedbackPayload {
 Input for issuing a lifecycle id
 """
 input IssueLifecycleIdInput {
-  expirationDate: Time!
+  expiresAt: Time!
   feedback: String!
-  intakeID: UUID!
+  intakeId: UUID!
   lcid: String
   nextSteps: String
   scope: String!

@@ -138,12 +138,12 @@ type GeneratePresignedUploadURLPayload struct {
 
 // Input for issuing a lifecycle id
 type IssueLifecycleIDInput struct {
-	ExpirationDate time.Time `json:"expirationDate"`
-	Feedback       string    `json:"feedback"`
-	IntakeID       uuid.UUID `json:"intakeID"`
-	Lcid           *string   `json:"lcid"`
-	NextSteps      *string   `json:"nextSteps"`
-	Scope          string    `json:"scope"`
+	ExpiresAt time.Time `json:"expiresAt"`
+	Feedback  string    `json:"feedback"`
+	IntakeID  uuid.UUID `json:"intakeId"`
+	Lcid      *string   `json:"lcid"`
+	NextSteps *string   `json:"nextSteps"`
+	Scope     string    `json:"scope"`
 }
 
 // A collection of Systems
