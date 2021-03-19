@@ -623,6 +623,27 @@ func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.S
 	return obj.EASupportRequest.Ptr(), nil
 }
 
+func (r *systemIntakeResolver) Notes(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeNote, error) {
+	notes, notesErr := r.store.FetchNotesBySystemIntakeID(ctx, obj.ID)
+	if notesErr != nil {
+		return nil, notesErr
+	}
+
+	var graphNotes []*model.SystemIntakeNote
+	for _, n := range notes {
+		graphNotes = append(graphNotes, &model.SystemIntakeNote{
+			ID: n.ID,
+			Author: &model.SystemIntakeNoteAuthor{
+				Name: n.AuthorName.String,
+				Eua:  n.AuthorEUAID,
+			},
+			Content:   n.Content.String,
+			CreatedAt: *n.CreatedAt,
+		})
+	}
+	return graphNotes, nil
+}
+
 func (r *systemIntakeResolver) OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.OITSecurityCollaborator.Ptr(), nil
 }
