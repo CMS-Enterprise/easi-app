@@ -2,7 +2,7 @@
 version: 2
 
 references:
-  circleci_docker_primary: &circleci_docker_primary ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-circleci:easi-app-5a67b21fb6f82e0a27f2d905f9242f4d3f8d23c8
+  circleci_docker_primary: &circleci_docker_primary ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-circleci:easi-app-41d6969ae6511fc7076af6646be6f44b4a9c599b
   postgres: &postgres postgres:11.6
   db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}
 jobs:
