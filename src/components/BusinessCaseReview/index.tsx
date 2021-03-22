@@ -1,5 +1,8 @@
 import React from 'react';
+// eslint-disable-next-line camelcase
+import { GetGRTFeedback_grtFeedbacks } from 'queries/types/GetGRTFeedback';
 
+import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
 import { BusinessCaseModel } from 'types/businessCase';
 
@@ -11,9 +14,14 @@ import './index.scss';
 
 type BusinessCaseReviewProps = {
   values: BusinessCaseModel;
+  // eslint-disable-next-line camelcase
+  grtFeedbacks?: GetGRTFeedback_grtFeedbacks[] | null;
 };
 
-const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
+const BusinessCaseReview = ({
+  values,
+  grtFeedbacks
+}: BusinessCaseReviewProps) => {
   const filename = `Business case for ${values.requestName}.pdf`;
   return (
     <>
@@ -63,6 +71,13 @@ const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
             />
           </div>
         </div>
+        {grtFeedbacks && grtFeedbacks.length > 0 && (
+          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1">
+            <div className="grid-container">
+              <GRTFeedbackView grtFeedbacks={grtFeedbacks} />
+            </div>
+          </div>
+        )}
       </PDFExport>
     </>
   );

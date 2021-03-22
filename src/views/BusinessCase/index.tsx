@@ -7,8 +7,14 @@ import {
   useLocation,
   useParams
 } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import { SecureRoute } from '@okta/okta-react';
 import { FormikProps } from 'formik';
+import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
+import {
+  GetGRTFeedback,
+  GetGRTFeedbackVariables
+} from 'queries/types/GetGRTFeedback';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -50,6 +56,15 @@ export const BusinessCase = () => {
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
   );
+
+  const getGRTFeedbacksResponse = useQuery<
+    GetGRTFeedback,
+    GetGRTFeedbackVariables
+  >(GetGRTFeedbackQuery, {
+    variables: {
+      intakeID: businessCase.systemIntakeId
+    }
+  });
 
   const isSubmitting = useSelector((state: AppState) => state.action.isPosting);
 
@@ -192,7 +207,12 @@ export const BusinessCase = () => {
             />
             <SecureRoute
               path="/business/:businessCaseId/view"
-              render={() => <BusinessCaseView businessCase={businessCase} />}
+              render={() => (
+                <BusinessCaseView
+                  businessCase={businessCase}
+                  grtFeedbacks={getGRTFeedbacksResponse.data?.grtFeedbacks}
+                />
+              )}
             />
             <SecureRoute
               path="/business/:businessCaseId/confirmation"
