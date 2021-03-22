@@ -78,9 +78,14 @@ type lifecycleCostLinesType = {
   B: EstimatedLifecycleCostLines;
 };
 
-// Function that lets us know if a user has filled out an alternative B
-export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
-  if (!alternativeB) {
+/**
+ * This function tells us whether the parameter alternativeSolution has been started
+ * @param alternativeSolution - an alternative solution case (e.g. A, B)
+ */
+export const hasAlternativeSolution = (
+  alternativeSolution: ProposedBusinessCaseSolution
+) => {
+  if (!alternativeSolution) {
     return false;
   }
 
@@ -95,7 +100,7 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
     cons,
     costSavings,
     estimatedLifecycleCost
-  } = alternativeB;
+  } = alternativeSolution;
 
   let hasLineItem;
   Object.values(estimatedLifecycleCost).forEach(phaseCost => {
@@ -254,7 +259,7 @@ export const prepareBusinessCaseForApp = (
 export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
-  const alternativeBExists = hasAlternativeB(businessCase.alternativeB);
+  const alternativeBExists = hasAlternativeSolution(businessCase.alternativeB);
   const solutionNameMap: {
     solutionLifecycleCostLines: EstimatedLifecycleCostLines;
     solutionApiName: string;
