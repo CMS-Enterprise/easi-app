@@ -70,7 +70,12 @@ func main() {
 		i.ContractEndDate = date(2022, 4, 8)
 	})
 
-	makeBusinessCase("TACO", logger, store)
+	makeBusinessCase("TACO", logger, store, nil)
+
+	intake := makeSystemIntake("Draft Business Case", logger, store, func(i *models.SystemIntake) {
+		i.Status = models.SystemIntakeStatusBIZCASEDRAFT
+	})
+	makeBusinessCase("Draft Business Cas", logger, store, intake)
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -95,9 +100,11 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	return &intake
 }
 
-func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store) {
+func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(interface{})) {
 	ctx := appcontext.WithLogger(context.Background(), logger)
-	intake := makeSystemIntake(name, logger, store)
+	if intake == nil {
+		intake = makeSystemIntake(name, logger, store)
+	}
 
 	phase := models.LifecycleCostPhaseDEVELOPMENT
 	cost := 123456
@@ -128,7 +135,32 @@ func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store) {
 				Cost:     &noCost,
 			},
 		},
+		CMSBenefit:        null.StringFrom(""),
+		PriorityAlignment: null.StringFrom(""),
+		SuccessIndicators: null.StringFrom(""),
+
+		AsIsTitle:       null.StringFrom(""),
+		AsIsSummary:     null.StringFrom(""),
+		AsIsPros:        null.StringFrom(""),
+		AsIsCons:        null.StringFrom(""),
+		AsIsCostSavings: null.StringFrom(""),
+
+		AlternativeATitle:       null.StringFrom(""),
+		AlternativeASummary:     null.StringFrom(""),
+		AlternativeAPros:        null.StringFrom(""),
+		AlternativeACons:        null.StringFrom(""),
+		AlternativeACostSavings: null.StringFrom(""),
+
+		AlternativeBTitle:       null.StringFrom(""),
+		AlternativeBSummary:     null.StringFrom(""),
+		AlternativeBPros:        null.StringFrom(""),
+		AlternativeBCons:        null.StringFrom(""),
+		AlternativeBCostSavings: null.StringFrom(""),
 	}
+	for _, cb := range callbacks {
+		cb(&businessCase)
+	}
+
 	must(store.CreateBusinessCase(ctx, &businessCase))
 }
 
