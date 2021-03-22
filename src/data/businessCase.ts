@@ -313,7 +313,7 @@ export const prepareBusinessCaseForApi = (
           const developmentCost = {
             solution: solutionApiName,
             phase: 'Development',
-            cost: development.isPresent ? parseFloat(development.cost) : '',
+            cost: development.isPresent ? parseFloat(development.cost) : null,
             year
           };
           const omCost = {
@@ -321,13 +321,13 @@ export const prepareBusinessCaseForApi = (
             phase: 'Operations and Maintenance',
             cost: operationsMaintenance.isPresent
               ? parseFloat(phases.operationsMaintenance.cost)
-              : '',
+              : null,
             year
           };
           const otherCost = {
             solution: solutionApiName,
             phase: 'Other',
-            cost: other.isPresent ? parseFloat(phases.other.cost) : '',
+            cost: other.isPresent ? parseFloat(phases.other.cost) : null,
             year
           };
           return [developmentCost, omCost, otherCost];

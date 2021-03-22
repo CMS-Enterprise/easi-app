@@ -605,23 +605,23 @@ describe('The business case data', () => {
       };
 
       const asIsLifecycleLines = [
-        { solution: 'As Is', phase: 'Development', cost: '', year: '1' },
+        { solution: 'As Is', phase: 'Development', cost: null, year: '1' },
         {
           solution: 'As Is',
           phase: 'Operations and Maintenance',
           cost: 1000,
           year: '1'
         },
-        { solution: 'As Is', phase: 'Other', cost: '', year: '1' },
+        { solution: 'As Is', phase: 'Other', cost: null, year: '1' },
         { solution: 'As Is', phase: 'Development', cost: 500, year: '2' },
         {
           solution: 'As Is',
           phase: 'Operations and Maintenance',
-          cost: '',
+          cost: null,
           year: '2'
         },
-        { solution: 'As Is', phase: 'Other', cost: '', year: '2' },
-        { solution: 'As Is', phase: 'Development', cost: '', year: '3' },
+        { solution: 'As Is', phase: 'Other', cost: null, year: '2' },
+        { solution: 'As Is', phase: 'Development', cost: null, year: '3' },
         {
           solution: 'As Is',
           phase: 'Operations and Maintenance',
@@ -629,14 +629,14 @@ describe('The business case data', () => {
           year: '3'
         },
         { solution: 'As Is', phase: 'Other', cost: 1500, year: '3' },
-        { solution: 'As Is', phase: 'Development', cost: '', year: '4' },
+        { solution: 'As Is', phase: 'Development', cost: null, year: '4' },
         {
           solution: 'As Is',
           phase: 'Operations and Maintenance',
-          cost: '',
+          cost: null,
           year: '4'
         },
-        { solution: 'As Is', phase: 'Other', cost: '', year: '4' },
+        { solution: 'As Is', phase: 'Other', cost: null, year: '4' },
         { solution: 'As Is', phase: 'Development', cost: 500, year: '5' },
         {
           solution: 'As Is',
