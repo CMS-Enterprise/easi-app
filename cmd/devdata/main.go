@@ -75,7 +75,7 @@ func main() {
 	intake := makeSystemIntake("Draft Business Case", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusBIZCASEDRAFT
 	})
-	makeBusinessCase("Draft Business Cas", logger, store, intake)
+	makeBusinessCase("Draft Business Case", logger, store, intake)
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -100,7 +100,7 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	return &intake
 }
 
-func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(interface{})) {
+func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 	if intake == nil {
 		intake = makeSystemIntake(name, logger, store)
