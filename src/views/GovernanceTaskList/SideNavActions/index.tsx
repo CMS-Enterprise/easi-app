@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 
 import './index.scss';
 
@@ -14,6 +15,7 @@ type SideNavActionsProps = {
 const SideNavActions = ({ archiveIntake }: SideNavActionsProps) => {
   const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
+
   return (
     <div className="sidenav-actions grid-row flex-column">
       <div className="grid-col margin-top-105">
@@ -33,9 +35,9 @@ const SideNavActions = ({ archiveIntake }: SideNavActionsProps) => {
           isOpen={isModalOpen}
           closeModal={() => setModalOpen(false)}
         >
-          <h1 className="margin-top-0 font-heading-2xl line-height-heading-2">
+          <PageHeading headingLevel="h2" className="margin-top-0">
             {t('taskList:withdraw_modal:header')}
-          </h1>
+          </PageHeading>
           <p>{t('taskList:withdraw_modal:warning')}</p>
           <Button
             type="button"

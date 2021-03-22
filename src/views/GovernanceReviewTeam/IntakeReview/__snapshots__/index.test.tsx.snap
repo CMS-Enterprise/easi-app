@@ -4,7 +4,8 @@ exports[`The GRT intake review view matches the snapshot 1`] = `
 Array [
   <div>
     <h1
-      className="margin-top-0"
+      className="easi-h1 margin-top-0"
+      tabIndex={-1}
     >
       Intake Request
     </h1>
@@ -24,7 +25,7 @@ Array [
             <dd
               className="description-definition margin-0"
             >
-              Sep 30, 2020
+              September 30 2020
             </dd>
           </div>
         </div>

@@ -1,30 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { useQuery } from '@apollo/client';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
+import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
+import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
+import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
+import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 
-import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
-import Modal from 'components/Modal';
 import PageWrapper from 'components/PageWrapper';
-import { RadioField, RadioGroup } from 'components/shared/RadioField';
-import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 import { AppState } from 'reducers/rootReducer';
-import {
-  fetchBusinessCase,
-  fetchSystemIntake,
-  saveSystemIntake
-} from 'types/routines';
-import {
-  isIntakeClosed,
-  isIntakeOpen,
-  translateRequestType
-} from 'utils/systemIntake';
+import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import ProvideGRTFeedback from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedback';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -35,6 +28,7 @@ import Dates from './Dates';
 import Decision from './Decision';
 import IntakeReview from './IntakeReview';
 import Notes from './Notes';
+import Summary from './Summary';
 
 import './index.scss';
 
@@ -43,7 +37,15 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
-  const [isModalOpen, setModalOpen] = useState(false);
+  const { loading, data: graphData } = useQuery<GetSystemIntake>(
+    GetSystemIntakeQuery,
+    {
+      variables: {
+        id: systemId
+      }
+    }
+  );
+  const intake = graphData?.systemIntake;
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -63,76 +65,6 @@ const RequestOverview = () => {
     }
   }, [dispatch, systemIntake.businessCaseId]);
 
-  const component = cmsDivisionsAndOffices.find(
-    c => c.name === systemIntake.requester.component
-  );
-
-  const requesterNameAndComponent = component
-    ? `${systemIntake.requester.name}, ${component.acronym}`
-    : systemIntake.requester.name;
-
-  // Get admin lead assigned to intake
-  const getAdminLead = () => {
-    if (systemIntake.adminLead) {
-      return systemIntake.adminLead;
-    }
-    return (
-      <>
-        <i className="fa fa-exclamation-circle text-secondary margin-right-05" />
-        {t('governanceReviewTeam:adminLeads.notAssigned')}
-      </>
-    );
-  };
-
-  const [newAdminLead, setAdminLead] = useState('');
-
-  // Resets newAdminLead to what is in intake currently. This is used to
-  // reset state of modal upon exit without saving
-  const resetNewAdminLead = () => {
-    setAdminLead(systemIntake.adminLead);
-  };
-
-  // Send newly selected admin lead to database
-  const saveAdminLead = () => {
-    const data = {
-      ...systemIntake,
-      adminLead: newAdminLead
-    };
-    dispatch(saveSystemIntake({ ...data }));
-  };
-
-  // List of current GRT admin team members
-  const grtMembers: string[] = t('governanceReviewTeam:adminLeads.members', {
-    returnObjects: true
-  });
-
-  // Admin lead modal radio button
-  type AdminLeadRadioOptionProps = {
-    checked: boolean;
-    label: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  };
-
-  const AdminLeadRadioOption = ({
-    checked,
-    label,
-    onChange
-  }: AdminLeadRadioOptionProps) => {
-    const radioFieldClassName = 'margin-y-3';
-
-    return (
-      <RadioField
-        checked={checked}
-        id={label}
-        label={label}
-        name={label}
-        value={label}
-        onChange={onChange}
-        className={radioFieldClassName}
-      />
-    );
-  };
-
   const getNavLinkClasses = (page: string) =>
     classnames('easi-grt__nav-link', {
       'easi-grt__nav-link--active': page === activePage
@@ -142,142 +74,7 @@ const RequestOverview = () => {
     <PageWrapper className="easi-grt">
       <Header />
       <MainContent>
-        <section className="easi-grt__request-summary">
-          <div className="grid-container padding-y-2">
-            <BreadcrumbNav>
-              <li>
-                <Link className="text-white" to="/">
-                  Home
-                </Link>
-                <i className="fa fa-angle-right margin-x-05" aria-hidden />
-              </li>
-              <li>{systemIntake.requestName}</li>
-            </BreadcrumbNav>
-            <dl className="easi-grt__request-info">
-              <div>
-                <dt>{t('intake:fields.projectName')}</dt>
-                <dd>{systemIntake.requestName}</dd>
-              </div>
-              <div className="easi-grt__request-info-col">
-                <div className="easi-grt__description-group">
-                  <dt>{t('intake:fields.requester')}</dt>
-                  <dd>{requesterNameAndComponent}</dd>
-                </div>
-                <div className="easi-grt__description-group">
-                  <dt>{t('intake:fields.submissionDate')}</dt>
-                  <dd>
-                    {systemIntake.submittedAt
-                      ? systemIntake.submittedAt.toLocaleString(
-                          DateTime.DATE_FULL
-                        )
-                      : 'N/A'}
-                  </dd>
-                </div>
-                <div className="easi-grt__description-group">
-                  <dt>{t('intake:fields.requestFor')}</dt>
-                  <dd>{translateRequestType(systemIntake.requestType)}</dd>
-                </div>
-              </div>
-            </dl>
-          </div>
-
-          <div
-            className={classnames({
-              'bg-base-lightest': isIntakeClosed(systemIntake.status),
-              'easi-grt__status--open': isIntakeOpen(systemIntake.status)
-            })}
-          >
-            <div className="grid-container overflow-auto">
-              <dl className="easi-grt__status-group">
-                <div className="easi-grt__status-info text-gray-90">
-                  <dt className="text-bold">{t('status.label')}</dt>
-                  &nbsp;
-                  <dd
-                    className="text-uppercase text-white bg-base-dark padding-05 font-body-3xs"
-                    data-testid="grt-status"
-                  >
-                    {isIntakeClosed(systemIntake.status)
-                      ? t('status.closed')
-                      : t('status.open')}
-                  </dd>
-                  {systemIntake.lcid && (
-                    <>
-                      <dt>{t('intake:lifecycleId')}:&nbsp;</dt>
-                      <dd data-testid="grt-lcid">{systemIntake.lcid}</dd>
-                    </>
-                  )}
-                </div>
-                <div className="text-gray-90">
-                  <dt className="text-bold">{t('intake:fields.adminLead')}</dt>
-                  <dt className="padding-1">{getAdminLead()}</dt>
-                  <dt>
-                    <Button
-                      type="button"
-                      unstyled
-                      onClick={() => {
-                        // Reset newAdminLead to value in intake
-                        resetNewAdminLead();
-                        setModalOpen(true);
-                      }}
-                    >
-                      {t('governanceReviewTeam:adminLeads.changeLead')}
-                    </Button>
-                    <Modal
-                      title={t(
-                        'governanceReviewTeam:adminLeads:assignModal.title'
-                      )}
-                      isOpen={isModalOpen}
-                      closeModal={() => {
-                        setModalOpen(false);
-                      }}
-                    >
-                      <h1 className="margin-top-0 font-heading-2xl line-height-heading-2">
-                        {t(
-                          'governanceReviewTeam:adminLeads:assignModal.header',
-                          { requestName: systemIntake.requestName }
-                        )}
-                      </h1>
-                      <RadioGroup>
-                        {grtMembers.map(k => (
-                          <AdminLeadRadioOption
-                            key={k}
-                            checked={k === newAdminLead}
-                            label={k}
-                            onChange={() => {
-                              setAdminLead(k);
-                            }}
-                          />
-                        ))}
-                      </RadioGroup>
-                      <Button
-                        type="button"
-                        className="margin-right-4"
-                        onClick={() => {
-                          // Set admin lead as newAdminLead in the intake
-                          saveAdminLead();
-                          setModalOpen(false);
-                        }}
-                      >
-                        {t('governanceReviewTeam:adminLeads:assignModal.save')}
-                      </Button>
-                      <Button
-                        type="button"
-                        unstyled
-                        onClick={() => {
-                          setModalOpen(false);
-                        }}
-                      >
-                        {t(
-                          'governanceReviewTeam:adminLeads:assignModal.noChanges'
-                        )}
-                      </Button>
-                    </Modal>
-                  </dt>
-                </div>
-              </dl>
-            </div>
-          </div>
-        </section>
+        {intake && <Summary intake={intake} />}
         <section className="grid-container grid-row margin-y-5 ">
           <nav className="tablet:grid-col-2 margin-right-2">
             <ul className="easi-grt__nav-list">
@@ -344,12 +141,14 @@ const RequestOverview = () => {
           <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/intake-request"
-              render={() => (
-                <IntakeReview
-                  systemIntake={systemIntake}
-                  now={DateTime.local()}
-                />
-              )}
+              render={() => {
+                if (loading) {
+                  return <p>Loading...</p>;
+                }
+                return (
+                  <IntakeReview systemIntake={intake} now={DateTime.local()} />
+                );
+              }}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
@@ -398,8 +197,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-need-biz-case"
               render={() => (
-                <SubmitAction
-                  action="PROVIDE_FEEDBACK_NEED_BIZ_CASE"
+                <ProvideGRTFeedback
+                  query={AddGRTFeedbackRequestBizCaseQuery}
                   actionName={actionsT('actions.provideFeedbackNeedBizCase')}
                 />
               )}
@@ -407,8 +206,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-keep-draft"
               render={() => (
-                <SubmitAction
-                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT"
+                <ProvideGRTFeedback
+                  query={AddGRTFeedbackKeepDraftBizCase}
                   actionName={actionsT('actions.provideGrtFeedbackKeepDraft')}
                 />
               )}
@@ -416,8 +215,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-need-final"
               render={() => (
-                <SubmitAction
-                  action="PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
+                <ProvideGRTFeedback
+                  query={AddGRTFeedbackProgressToFinal}
                   actionName={actionsT('actions.provideGrtFeedbackNeedFinal')}
                 />
               )}

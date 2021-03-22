@@ -238,7 +238,8 @@ exports[`The Terms & Conditions page matches the snapshot 1`] = `
     tabIndex={-1}
   >
     <h1
-      className="font-heading-xl"
+      className="easi-h1"
+      tabIndex={-1}
     >
       Terms & Conditions
     </h1>

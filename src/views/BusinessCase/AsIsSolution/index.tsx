@@ -6,6 +6,7 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -81,7 +82,7 @@ const AsIsSolution = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl">Alternatives Analysis</h1>
+            <PageHeading>Alternatives Analysis</PageHeading>
             <p className="line-height-body-5">
               Below you should identify options and alternatives to meet your
               business need. Include a summary of the approaches, how you will

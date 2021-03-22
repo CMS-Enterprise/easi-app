@@ -6,6 +6,7 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 
+import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -106,7 +107,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                 })}
               </ErrorAlert>
             )}
-            <h1>{t('governanceReviewTeam:dates.heading')}</h1>
+            <PageHeading>{t('governanceReviewTeam:dates.heading')}</PageHeading>
             <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>

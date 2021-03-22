@@ -5,6 +5,7 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -77,7 +78,7 @@ const RequestDescription = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl">Request description</h1>
+            <PageHeading>Request description</PageHeading>
             {/* Only display "all fields are mandatory" alert if biz case in final stage */}
             {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
               <div className="tablet:grid-col-5">

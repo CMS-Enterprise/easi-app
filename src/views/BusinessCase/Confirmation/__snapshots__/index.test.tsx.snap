@@ -6,7 +6,8 @@ exports[`The Business Case Confirmation page matches the snapshot 1`] = `
 >
   <div>
     <h1
-      className="font-heading-xl margin-top-4"
+      className="easi-h1"
+      tabIndex={-1}
     >
       Your Business Case has been submitted
     </h1>

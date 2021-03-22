@@ -5,6 +5,7 @@ import { useOktaAuth } from '@okta/okta-react';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import OktaSignInWidget from 'components/shared/OktaSignInWidget';
 import { localAuthStorageKey } from 'constants/localAuth';
@@ -62,6 +63,7 @@ const Login = () => {
             </button>
           </div>
         )}
+        <PageHeading>Sign in using EUA</PageHeading>
         <OktaSignInWidget onSuccess={onSuccess} onError={() => {}} />
       </MainContent>
       <Footer />

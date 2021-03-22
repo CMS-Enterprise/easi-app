@@ -28,3 +28,10 @@ export const rejectIntakeSchema = Yup.object().shape({
   reason: Yup.string().trim().required('Please include a reason'),
   feedback: Yup.string().trim().required('Please fill out email')
 });
+
+export const provideGRTFeedbackSchema = Yup.object().shape({
+  grtFeedback: Yup.string()
+    .trim()
+    .required('Please include feedback for the business owner'),
+  emailBody: Yup.string().trim().required('Please fill out email')
+});

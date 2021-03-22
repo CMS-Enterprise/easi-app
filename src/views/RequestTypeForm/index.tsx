@@ -10,6 +10,7 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -94,9 +95,7 @@ const RequestTypeForm = () => {
           </li>
           <li aria-current="location">Make a system request</li>
         </BreadcrumbNav>
-        <h1 className="font-heading-2xl margin-top-4">
-          {t('requestTypeForm.heading')}
-        </h1>
+        <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
         <Formik
           initialValues={{ requestType: '' }}
           onSubmit={handleCreateIntake}

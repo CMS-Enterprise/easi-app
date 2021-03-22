@@ -2,7 +2,8 @@
 
 exports[`Page heading component matches the snapshot 1`] = `
 <h1
-  className="margin-top-6 margin-bottom-5"
+  className="easi-h1"
+  tabIndex={-1}
 >
   Test Heading
 </h1>

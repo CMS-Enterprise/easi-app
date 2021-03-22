@@ -7,6 +7,7 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntake } from 'types/routines';
@@ -49,9 +50,7 @@ const RequestDecision = () => {
         </div>
         <div className="grid-row">
           <div className="tablet:grid-col-9">
-            <h1 className="font-heading-2xl margin-top-4">
-              Decision and next steps
-            </h1>
+            <PageHeading>Decision and next steps</PageHeading>
             {systemIntake.status === 'LCID_ISSUED' && (
               <Approved intake={systemIntake} />
             )}
