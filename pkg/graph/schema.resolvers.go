@@ -7,9 +7,11 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
@@ -236,6 +238,69 @@ func (r *businessCaseResolver) SystemIntake(ctx context.Context, obj *models.Bus
 	return r.store.FetchSystemIntakeByID(ctx, obj.SystemIntakeID)
 }
 
+func (r *mutationResolver) AddGRTFeedbackAndKeepBusinessCaseInDraft(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID:     input.IntakeID,
+			Feedback:     input.Feedback,
+			FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
+		},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			Feedback:   null.StringFrom(input.EmailBody),
+			ActionType: models.ActionTypePROVIDEFEEDBACKBIZCASENEEDSCHANGES,
+		},
+		models.SystemIntakeStatusBIZCASECHANGESNEEDED)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
+}
+
+func (r *mutationResolver) AddGRTFeedbackAndProgressToFinalBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID:     input.IntakeID,
+			Feedback:     input.Feedback,
+			FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
+		},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			Feedback:   null.StringFrom(input.EmailBody),
+			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
+		},
+		models.SystemIntakeStatusBIZCASEFINALNEEDED)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
+}
+
+func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID:     input.IntakeID,
+			Feedback:     input.Feedback,
+			FeedbackType: models.GRTFeedbackTypeBUSINESSOWNER,
+		},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			Feedback:   null.StringFrom(input.EmailBody),
+			ActionType: models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
+		},
+		models.SystemIntakeStatusNEEDBIZCASE)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
+}
+
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
 		Name:     input.Name,
@@ -307,6 +372,17 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error) {
+	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
+	systemIntake := models.SystemIntake{
+		AdminLead: null.StringFrom(savedAdminLead),
+		ID:        input.ID,
+	}
+	return &model.UpdateSystemIntakeAdminLeadPayload{
+		SystemIntake: &systemIntake,
+	}, err
+}
+
 func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
 	panic(fmt.Errorf("not implemented"))
 }
@@ -356,6 +432,10 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 	return conn, nil
 }
 
+func (r *systemIntakeResolver) AdminLead(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.AdminLead.Ptr(), nil
+}
+
 func (r *systemIntakeResolver) BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error) {
 	if obj.BusinessCaseID == nil {
 		return nil, nil
@@ -367,48 +447,80 @@ func (r *systemIntakeResolver) BusinessNeed(ctx context.Context, obj *models.Sys
 	return obj.BusinessNeed.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.BusinessOwner.Ptr(), nil
+func (r *systemIntakeResolver) BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeBusinessOwner, error) {
+	return &model.SystemIntakeBusinessOwner{
+		Component: obj.BusinessOwnerComponent.Ptr(),
+		Name:      obj.BusinessOwner.Ptr(),
+	}, nil
 }
 
-func (r *systemIntakeResolver) BusinessOwnerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.BusinessOwnerComponent.Ptr(), nil
+func (r *systemIntakeResolver) BusinessSolution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.Solution.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) Component(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.Component.Ptr(), nil
+func (r *systemIntakeResolver) Contract(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeContract, error) {
+	contractEnd := model.ContractDate{}
+	if len(obj.ContractEndMonth.String) > 0 {
+		contractEnd.Month = obj.ContractEndMonth.Ptr()
+	}
+
+	if len(obj.ContractEndYear.String) > 0 {
+		contractEnd.Year = obj.ContractEndYear.Ptr()
+	}
+
+	if obj.ContractEndDate != nil {
+		endDate := *obj.ContractEndDate
+		year, month, day := endDate.Date()
+
+		dayStr := strconv.Itoa(day)
+		monthStr := strconv.Itoa(int(month))
+		yearStr := strconv.Itoa(year)
+
+		contractEnd.Day = &dayStr
+		contractEnd.Month = &monthStr
+		contractEnd.Year = &yearStr
+	}
+
+	contractStart := model.ContractDate{}
+	if len(obj.ContractStartMonth.String) > 0 {
+		contractStart.Month = obj.ContractStartMonth.Ptr()
+	}
+
+	if len(obj.ContractStartYear.String) > 0 {
+		contractStart.Year = obj.ContractStartYear.Ptr()
+	}
+
+	if obj.ContractStartDate != nil {
+		startDate := *obj.ContractStartDate
+		year, month, day := startDate.Date()
+
+		dayStr := strconv.Itoa(day)
+		monthStr := strconv.Itoa(int(month))
+		yearStr := strconv.Itoa(year)
+
+		contractStart.Day = &dayStr
+		contractStart.Month = &monthStr
+		contractStart.Year = &yearStr
+	}
+
+	return &model.SystemIntakeContract{
+		Contractor:  obj.Contractor.Ptr(),
+		EndDate:     &contractEnd,
+		HasContract: obj.ExistingContract.Ptr(),
+		StartDate:   &contractStart,
+		Vehicle:     obj.ContractVehicle.Ptr(),
+	}, nil
 }
 
-func (r *systemIntakeResolver) ContractEndMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractEndMonth.Ptr(), nil
+func (r *systemIntakeResolver) Costs(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeCosts, error) {
+	return &model.SystemIntakeCosts{
+		ExpectedIncreaseAmount: obj.CostIncreaseAmount.Ptr(),
+		IsExpectingIncrease:    obj.CostIncrease.Ptr(),
+	}, nil
 }
 
-func (r *systemIntakeResolver) ContractEndYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractEndYear.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) ContractStartMonth(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractStartMonth.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) ContractStartYear(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractStartYear.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) ContractVehicle(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ContractVehicle.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) Contractor(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.Contractor.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) CostIncrease(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.CostIncrease.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) CostIncreaseAmount(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.CostIncreaseAmount.Ptr(), nil
+func (r *systemIntakeResolver) CurrentStage(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ProcessStatus.Ptr(), nil
 }
 
 func (r *systemIntakeResolver) DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error) {
@@ -423,36 +535,80 @@ func (r *systemIntakeResolver) EaCollaboratorName(ctx context.Context, obj *mode
 	return obj.EACollaboratorName.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	return obj.EASupportRequest.Ptr(), nil
-}
-
 func (r *systemIntakeResolver) EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error) {
 	return obj.EUAUserID.String, nil
 }
 
-func (r *systemIntakeResolver) ExistingContract(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ExistingContract.Ptr(), nil
+func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeFundingSource, error) {
+	return &model.SystemIntakeFundingSource{
+		IsFunded:      obj.ExistingFunding.Ptr(),
+		FundingNumber: obj.FundingNumber.Ptr(),
+		Source:        obj.FundingSource.Ptr(),
+	}, nil
 }
 
-func (r *systemIntakeResolver) ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
-	return obj.ExistingFunding.Ptr(), nil
+func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error) {
+	var teams []*model.SystemIntakeCollaborator
+
+	if len(obj.EACollaboratorName.String) > 0 {
+		key := "enterpriseArchitecture"
+		label := "Enterprise Architecture (EA)"
+		acronym := "EA"
+		name := "Enterprise Architecture"
+
+		teams = append(teams, &model.SystemIntakeCollaborator{
+			Key:          &key,
+			Label:        &label,
+			Acronym:      &acronym,
+			Name:         &name,
+			Collaborator: obj.EACollaboratorName.Ptr(),
+		})
+	}
+
+	if len(obj.OITSecurityCollaboratorName.String) > 0 {
+		key := "securityPrivacy"
+		label := "OIT's Security and Privacy Group (ISPG)"
+		acronym := "ISPG"
+		name := "OIT's Security and Privacy Group"
+
+		teams = append(teams, &model.SystemIntakeCollaborator{
+			Key:          &key,
+			Label:        &label,
+			Acronym:      &acronym,
+			Name:         &name,
+			Collaborator: obj.OITSecurityCollaboratorName.Ptr(),
+		})
+	}
+
+	if len(obj.TRBCollaboratorName.String) > 0 {
+		key := "technicalReviewBoard"
+		label := "Technical Review Board (TRB)"
+		acronym := "TRB"
+		name := "Technical Review Board"
+
+		teams = append(teams, &model.SystemIntakeCollaborator{
+			Key:          &key,
+			Label:        &label,
+			Acronym:      &acronym,
+			Name:         &name,
+			Collaborator: obj.TRBCollaboratorName.Ptr(),
+		})
+	}
+
+	isPresent := len(teams) > 0
+	return &model.SystemIntakeGovernanceTeam{
+		IsPresent: &isPresent,
+		Teams:     teams,
+	}, nil
 }
 
-func (r *systemIntakeResolver) FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.FundingNumber.Ptr(), nil
-}
+func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {
+	isPresent := len(obj.ISSOName.String) > 0
 
-func (r *systemIntakeResolver) FundingSource(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.FundingNumber.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ISSO.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ISSOName.Ptr(), nil
+	return &model.SystemIntakeIsso{
+		IsPresent: &isPresent,
+		Name:      obj.ISSOName.Ptr(),
+	}, nil
 }
 
 func (r *systemIntakeResolver) Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error) {
@@ -463,6 +619,10 @@ func (r *systemIntakeResolver) LcidScope(ctx context.Context, obj *models.System
 	return obj.LifecycleScope.Ptr(), nil
 }
 
+func (r *systemIntakeResolver) NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error) {
+	return obj.EASupportRequest.Ptr(), nil
+}
+
 func (r *systemIntakeResolver) OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.OITSecurityCollaborator.Ptr(), nil
 }
@@ -471,32 +631,31 @@ func (r *systemIntakeResolver) OitSecurityCollaboratorName(ctx context.Context, 
 	return obj.OITSecurityCollaboratorName.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) ProcessStatus(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProcessStatus.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProductManager.Ptr(), nil
-}
-
-func (r *systemIntakeResolver) ProductManagerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProductManagerComponent.Ptr(), nil
+func (r *systemIntakeResolver) ProductManager(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeProductManager, error) {
+	return &model.SystemIntakeProductManager{
+		Component: obj.ProductManagerComponent.Ptr(),
+		Name:      obj.ProductManager.Ptr(),
+	}, nil
 }
 
 func (r *systemIntakeResolver) ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.ProjectAcronym.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.ProjectName.Ptr(), nil
-}
-
 func (r *systemIntakeResolver) RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.RejectionReason.Ptr(), nil
 }
 
-func (r *systemIntakeResolver) Solution(ctx context.Context, obj *models.SystemIntake) (*string, error) {
-	return obj.Solution.Ptr(), nil
+func (r *systemIntakeResolver) RequestName(ctx context.Context, obj *models.SystemIntake) (*string, error) {
+	return obj.ProjectName.Ptr(), nil
+}
+
+func (r *systemIntakeResolver) Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error) {
+	return &model.SystemIntakeRequester{
+		Component: obj.Component.Ptr(),
+		Email:     obj.RequesterEmailAddress.Ptr(),
+		Name:      obj.Requester,
+	}, nil
 }
 
 func (r *systemIntakeResolver) TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error) {

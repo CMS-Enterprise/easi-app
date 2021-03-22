@@ -71,3 +71,8 @@ export type RejectIntakeForm = {
   nextSteps: string;
   reason: string;
 };
+
+export type ProvideGRTFeedbackForm = {
+  grtFeedback: string;
+  emailBody: string;
+};
