@@ -497,6 +497,76 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 	s.Nil(resp.SystemIntake.BusinessCase)
 }
 
+func (s GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
+	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
+	projectName := "Big Project"
+	businessOwner := "Firstname Lastname"
+	businessOwnerComponent := "OIT"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:            null.StringFrom(projectName),
+		Status:                 models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		BusinessOwner:          null.StringFrom(businessOwner),
+		BusinessOwnerComponent: null.StringFrom(businessOwnerComponent),
+	})
+	s.NoError(intakeErr)
+
+	_, noteErr := s.store.CreateNote(ctx, &models.Note{
+		SystemIntakeID: intake.ID,
+		AuthorEUAID:    "QQQQ",
+		AuthorName:     null.StringFrom("Author Name"),
+		Content:        null.StringFrom("a clever remark"),
+	})
+	s.NoError(noteErr)
+
+	var resp struct {
+		SystemIntake struct {
+			ID    string
+			Notes []struct {
+				ID     string
+				Author struct {
+					Name string
+					EUA  string
+				}
+				Content   string
+				CreatedAt string
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				notes {
+					id
+					createdAt
+					content
+					author {
+						name
+						eua
+					}
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
+
+	s.Len(resp.SystemIntake.Notes, 1)
+
+	s.NotEmpty(resp.SystemIntake.Notes[0].ID)
+	s.Equal("a clever remark", resp.SystemIntake.Notes[0].Content)
+	s.Equal("QQQQ", resp.SystemIntake.Notes[0].Author.EUA)
+	s.Equal("Author Name", resp.SystemIntake.Notes[0].Author.Name)
+	s.NotEmpty(resp.SystemIntake.Notes[0].CreatedAt)
+}
+
 func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
 	ctx := context.Background()
 
