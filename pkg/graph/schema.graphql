@@ -586,6 +586,24 @@ type SystemIntakeISSO {
 }
 
 """
+The author of a system intake note
+"""
+type SystemIntakeNoteAuthor {
+  eua: String!
+  name: String!
+}
+
+"""
+A note on a system intake
+"""
+type SystemIntakeNote {
+  author: SystemIntakeNoteAuthor!
+  content: String!
+  createdAt: Time!
+  id: UUID!
+}
+
+"""
 A product manager for a system intake
 """
 type SystemIntakeProductManager {
@@ -630,6 +648,7 @@ type SystemIntake {
   lcidExpiresAt: Time
   lcidScope: String
   needsEaSupport: Boolean
+  notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
   productManager: SystemIntakeProductManager
