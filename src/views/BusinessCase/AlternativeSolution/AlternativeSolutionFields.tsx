@@ -448,6 +448,7 @@ const AlternativeSolutionFields = ({
             // @ts-ignore
             errors[`${altId}`].estimatedLifecycleCost
           }
+          setFieldValue={setFieldValue}
         />
       </div>
       <div className="margin-top-2 margin-bottom-7">
