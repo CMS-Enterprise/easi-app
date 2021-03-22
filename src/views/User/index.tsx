@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
+import PageHeading from 'components/PageHeading';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 
@@ -11,12 +12,12 @@ const UserInfo = () => {
   if (isUserSet) {
     return (
       <>
-        <h1>
+        <PageHeading>
           {
             JSON.parse(window.localStorage['okta-token-storage'])?.idToken
               ?.claims?.preferred_username
           }
-        </h1>
+        </PageHeading>
         <p>Job codes</p>
         <ul>
           {userGroups.map(group => (
