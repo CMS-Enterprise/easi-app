@@ -128,6 +128,18 @@ export interface GeneratePresignedUploadURLInput {
 }
 
 /**
+ * Input for issuing a lifecycle id
+ */
+export interface IssueLifecycleIdInput {
+  expiresAt: Time;
+  feedback: string;
+  intakeId: UUID;
+  lcid?: string | null;
+  nextSteps?: string | null;
+  scope: string;
+}
+
+/**
  * Parameters required to update the admin lead for an intake
  */
 export interface UpdateSystemIntakeAdminLeadInput {
