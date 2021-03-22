@@ -5,6 +5,7 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -74,7 +75,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
                 })}
               </ErrorAlert>
             )}
-            <h1>{t('submitAction.heading')}</h1>
+            <PageHeading>{t('submitAction.heading')}</PageHeading>
             <h2>{t('submitAction.subheading')}</h2>
             <p>
               {actionName} &nbsp;

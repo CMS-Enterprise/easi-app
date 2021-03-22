@@ -5,6 +5,7 @@ import { Link, useHistory, useParams } from 'react-router-dom';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -88,7 +89,7 @@ const IssueLifecycleId = () => {
                 })}
               </ErrorAlert>
             )}
-            <h1>{t('issueLCID.heading')}</h1>
+            <PageHeading>{t('issueLCID.heading')}</PageHeading>
             <h2>{t('issueLCID.subheading')}</h2>
             <p>
               Approve request and issue Lifecycle ID{' '}

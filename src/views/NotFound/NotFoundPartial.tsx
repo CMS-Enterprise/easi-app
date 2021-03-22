@@ -2,6 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 
+import PageHeading from 'components/PageHeading';
+
 import './index.scss';
 
 const NotFoundPartial = () => {
@@ -10,7 +12,7 @@ const NotFoundPartial = () => {
 
   return (
     <div className="margin-y-7">
-      <h1 className="font-heading-3xl">{t('error:notFound.heading')}</h1>
+      <PageHeading>{t('error:notFound.heading')}</PageHeading>
       <p>{t('error:notFound.thingsToTry')}</p>
 
       <ul className="easi-not-found__error_suggestions">

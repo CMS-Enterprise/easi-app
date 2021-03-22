@@ -5,6 +5,7 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 
 import CharacterCounter from 'components/CharacterCounter';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -43,6 +44,7 @@ const RequestDetails = ({
   dispatchSave
 }: RequestDetailsProps) => {
   const history = useHistory();
+
   const initialValues: RequestDetailsForm = {
     requestName: systemIntake.requestName,
     fundingSource: systemIntake.fundingSource,
@@ -93,7 +95,7 @@ const RequestDetails = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl margin-top-4">Request details</h1>
+            <PageHeading>Request details</PageHeading>
             <p className="line-height-body-6">
               Provide a detailed explanation of the business need/issue/problem
               that the requested project will address, including any legislative

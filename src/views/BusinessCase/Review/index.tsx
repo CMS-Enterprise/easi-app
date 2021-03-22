@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
+import PageHeading from 'components/PageHeading';
 import { hasAlternativeB } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -27,9 +28,7 @@ const Review = ({ businessCase }: ReviewProps) => {
   return (
     <div className="business-case-review">
       <div className="grid-container">
-        <h1 className="font-heading-xl margin-top-4">
-          Check your answers before sending
-        </h1>
+        <PageHeading>Check your answers before sending</PageHeading>
       </div>
 
       <BusinessCaseReview values={businessCase} />

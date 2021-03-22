@@ -2,7 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { mount, ReactWrapper } from 'enzyme';
+import { shallow, ShallowWrapper } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
@@ -27,7 +27,7 @@ jest.mock('@okta/okta-react', () => ({
 }));
 
 describe('The GRT Review page', () => {
-  it('shows open status', async () => {
+  it('renders the Summary component', async () => {
     const mockStore = configureMockStore();
     const store = mockStore({
       auth: {
@@ -45,9 +45,9 @@ describe('The GRT Review page', () => {
       }
     });
 
-    let component: ReactWrapper;
+    let component: ShallowWrapper;
     await act(async () => {
-      component = mount(
+      component = shallow(
         <MemoryRouter>
           <Provider store={store}>
             <RequestOverview />
@@ -55,72 +55,6 @@ describe('The GRT Review page', () => {
         </MemoryRouter>
       );
     });
-    expect(component!.find('[data-testid="grt-status"]').text()).toEqual(
-      'Open'
-    );
-  });
-
-  it('shows closed status', async () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
-      auth: {
-        groups: ['EASI_D_GOVTEAM'],
-        isUserSet: true
-      },
-      systemIntake: {
-        systemIntake: {
-          ...initialSystemIntakeForm,
-          status: 'LCID_ISSUED'
-        }
-      },
-      businessCase: {
-        form: {}
-      }
-    });
-
-    let component: ReactWrapper;
-    await act(async () => {
-      component = mount(
-        <MemoryRouter>
-          <Provider store={store}>
-            <RequestOverview />
-          </Provider>
-        </MemoryRouter>
-      );
-    });
-    expect(component!.find('[data-testid="grt-status"]').text()).toEqual(
-      'Closed'
-    );
-  });
-
-  it('shows lifecycle id if it exists', async () => {
-    const mockStore = configureMockStore();
-    const store = mockStore({
-      auth: {
-        groups: ['EASI_D_GOVTEAM'],
-        isUserSet: true
-      },
-      systemIntake: {
-        systemIntake: {
-          ...initialSystemIntakeForm,
-          lcid: '12345'
-        }
-      },
-      businessCase: {
-        form: {}
-      }
-    });
-
-    let component: ReactWrapper;
-    await act(async () => {
-      component = mount(
-        <MemoryRouter>
-          <Provider store={store}>
-            <RequestOverview />
-          </Provider>
-        </MemoryRouter>
-      );
-    });
-    expect(component!.find('[data-testid="grt-lcid"]').text()).toEqual('12345');
+    expect(component!.find('Summary').exists()).toBeFalsy();
   });
 });

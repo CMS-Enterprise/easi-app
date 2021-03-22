@@ -6,6 +6,7 @@ import { Field, Form, Formik, FormikProps } from 'formik';
 import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -83,7 +84,7 @@ const PreferredSolution = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl">Alternatives Analysis</h1>
+            <PageHeading>Alternatives Analysis</PageHeading>
             <div className="tablet:grid-col-9">
               <div className="line-height-body-6">
                 Some examples of options to consider may include:
