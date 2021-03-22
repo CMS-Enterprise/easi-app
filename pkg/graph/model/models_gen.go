@@ -191,6 +191,20 @@ type SystemIntakeIsso struct {
 	Name      *string `json:"name"`
 }
 
+// A note on a system intake
+type SystemIntakeNote struct {
+	Author    *SystemIntakeNoteAuthor `json:"author"`
+	Content   string                  `json:"content"`
+	CreatedAt time.Time               `json:"createdAt"`
+	ID        uuid.UUID               `json:"id"`
+}
+
+// The author of a system intake note
+type SystemIntakeNoteAuthor struct {
+	Eua  string `json:"eua"`
+	Name string `json:"name"`
+}
+
 // A product manager for a system intake
 type SystemIntakeProductManager struct {
 	Component *string `json:"component"`
