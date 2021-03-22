@@ -199,7 +199,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
             - v2-go-mod-sources-{{ checksum "go.sum" }}
@@ -214,7 +214,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - save_cache:
@@ -240,7 +240,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
             - v2-go-mod-sources-{{ checksum "go.sum" }}
@@ -256,7 +256,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - save_cache:
@@ -290,7 +290,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Run Frontend Tests
           command: yarn run test
@@ -310,7 +310,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
@@ -380,7 +380,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -413,7 +413,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
@@ -435,7 +435,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -468,7 +468,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
@@ -490,7 +490,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -523,7 +523,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
@@ -545,7 +545,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -566,7 +566,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
