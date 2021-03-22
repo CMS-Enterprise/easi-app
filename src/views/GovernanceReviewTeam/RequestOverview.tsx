@@ -2,11 +2,17 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, Route, useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
+import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
+import {
+  GetGRTFeedback,
+  GetGRTFeedbackVariables
+} from 'queries/types/GetGRTFeedback';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -42,6 +48,15 @@ const RequestOverview = () => {
 
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
+  );
+
+  const grtFeedbacks = useQuery<GetGRTFeedback, GetGRTFeedbackVariables>(
+    GetGRTFeedbackQuery,
+    {
+      variables: {
+        intakeID: systemId
+      }
+    }
   );
 
   useEffect(() => {
@@ -139,7 +154,12 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
-              render={() => <BusinessCaseReview businessCase={businessCase} />}
+              render={() => (
+                <BusinessCaseReview
+                  businessCase={businessCase}
+                  grtFeedbacks={grtFeedbacks?.data?.grtFeedbacks}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/notes"
