@@ -128,6 +128,23 @@ export const hasAlternativeSolution = (
   );
 };
 
+export const getBusinessCasePageCount = (businessCase: BusinessCaseModel) => {
+  // 1. General Request Information*
+  // 2. Request Description*
+  // 3. As is Solution*
+  // 4. Preferred Solution*
+  // 5. Alternative Solution A
+  // 6. Alternative Solution B
+
+  if (hasAlternativeSolution(businessCase.alternativeA)) {
+    if (hasAlternativeSolution(businessCase.alternativeB)) {
+      return 6;
+    }
+    return 5;
+  }
+  return 4;
+};
+
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {

@@ -25,6 +25,18 @@ const Review = ({ businessCase }: ReviewProps) => {
       ? 'SUBMIT_FINAL_BIZ_CASE'
       : 'SUBMIT_BIZ_CASE';
 
+  const backLink = (() => {
+    if (hasAlternativeSolution(businessCase.alternativeB)) {
+      return 'alternative-solution-b';
+    }
+
+    if (hasAlternativeSolution(businessCase.alternativeA)) {
+      return 'alternative-solution-a';
+    }
+
+    return 'preferred-solution';
+  })();
+
   return (
     <div className="business-case-review">
       <div className="grid-container">
@@ -37,9 +49,7 @@ const Review = ({ businessCase }: ReviewProps) => {
           type="button"
           outline
           onClick={() => {
-            const newUrl = hasAlternativeSolution(businessCase.alternativeB)
-              ? 'alternative-solution-b'
-              : 'alternative-solution-a';
+            const newUrl = backLink;
             history.push(newUrl);
             window.scrollTo(0, 0);
           }}

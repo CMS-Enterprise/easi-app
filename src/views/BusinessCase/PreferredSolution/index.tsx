@@ -655,6 +655,32 @@ const PreferredSolution = ({
                   />
                 </FieldGroup>
               </div>
+              {!hasAlternativeSolution(businessCase.alternativeA) && (
+                <div className="margin-bottom-7">
+                  <h2 className="margin-bottom-1">Additional alternatives</h2>
+                  <HelpText>
+                    If you are buillding a multi-year project that will require
+                    significant upkeep, you may want to include more
+                    alternatives. Keep in mind that Government off-the-shelf and
+                    Commercial off-the-shelf products are acceptable
+                    alternatives to include.
+                  </HelpText>
+                  <div className="margin-top-2">
+                    <Button
+                      type="button"
+                      base
+                      aria-label="Add new alternative solution"
+                      onClick={() => {
+                        dispatchSave();
+                        history.push('alternative-solution-a');
+                        window.scrollTo(0, 0);
+                      }}
+                    >
+                      + Alternative
+                    </Button>
+                  </div>
+                </div>
+              )}
             </Form>
 
             <Button
@@ -676,7 +702,11 @@ const PreferredSolution = ({
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {
                     dispatchSave();
-                    const newUrl = 'alternative-solution-a';
+                    const newUrl = hasAlternativeSolution(
+                      businessCase.alternativeA
+                    )
+                      ? 'alternative-solution-a'
+                      : 'review';
                     history.push(newUrl);
                   }
                 });

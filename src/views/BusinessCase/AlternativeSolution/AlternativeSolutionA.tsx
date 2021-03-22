@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
@@ -9,8 +10,12 @@ import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
-import { hasAlternativeSolution } from 'data/businessCase';
+import {
+  defaultProposedSolution,
+  hasAlternativeSolution
+} from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
+import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
@@ -31,6 +36,7 @@ const AlternativeSolutionA = ({
   formikRef,
   dispatchSave
 }: AlternativeSolutionProps) => {
+  const dispatch = useDispatch();
   const history = useHistory();
   const initialValues = {
     alternativeA: businessCase.alternativeA
@@ -101,7 +107,35 @@ const AlternativeSolutionA = ({
             )}
             <Form>
               <div className="tablet:grid-col-9">
-                <h2>Alternative A</h2>
+                <div className="easi-business-case__name-wrapper">
+                  <h2>Alternative A</h2>
+                  <Button
+                    type="button"
+                    className="margin-left-2"
+                    unstyled
+                    onClick={() => {
+                      if (
+                        // eslint-disable-next-line no-alert
+                        window.confirm(
+                          'Are you sure you want to remove Alternative A?'
+                        )
+                      ) {
+                        dispatch(
+                          putBusinessCase({
+                            ...businessCase,
+                            alternativeA: defaultProposedSolution
+                          })
+                        );
+                        history.replace(
+                          `/business/${businessCase.id}/preferred-solution`
+                        );
+                        window.scrollTo(0, 0);
+                      }
+                    }}
+                  >
+                    Remove Alternative A
+                  </Button>
+                </div>
                 <AlternativeSolutionFields
                   altLetter="A"
                   formikProps={formikProps}
@@ -121,13 +155,14 @@ const AlternativeSolutionA = ({
                       <Button
                         type="button"
                         base
+                        aria-label="Add new alternative solution"
                         onClick={() => {
                           dispatchSave();
                           history.push('alternative-solution-b');
                           window.scrollTo(0, 0);
                         }}
                       >
-                        + Alternative B
+                        + Alternative
                       </Button>
                     </div>
                   </div>

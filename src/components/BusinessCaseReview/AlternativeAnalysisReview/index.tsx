@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import PrintableTabContent from 'components/PrintableTabContent';
 import ResponsiveTabs from 'components/shared/ResponsiveTabs';
-import { alternativeSolution } from 'data/businessCase';
+import { hasAlternativeSolution } from 'data/businessCase';
 import {
   BusinessCaseSolution,
   ProposedBusinessCaseSolution
@@ -30,16 +30,18 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
   );
 
   const getFilledSolutions = () => {
-    const solutions = [
-      '"As is" solution',
-      'Preferred solution',
-      'Alternative A'
-    ];
-    if (alternativeB && alternativeSolution(alternativeB)) {
+    const solutions = ['"As is" solution', 'Preferred solution'];
+
+    if (alternativeA && hasAlternativeSolution(alternativeA)) {
+      solutions.push('Alternative A');
+    }
+
+    if (alternativeB && hasAlternativeSolution(alternativeB)) {
       solutions.push('Alternative B');
     }
     return solutions;
   };
+
   return (
     <ResponsiveTabs
       activeTab={activeSolutionTab}
@@ -66,14 +68,16 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
         </PrintableTabContent>
 
         <PrintableTabContent visible={activeSolutionTab === 'Alternative A'}>
-          <ProposedBusinessCaseSolutionReview
-            name="Alternative A"
-            solution={alternativeA}
-          />
+          {alternativeA && hasAlternativeSolution(alternativeA) && (
+            <ProposedBusinessCaseSolutionReview
+              name="Alternative A"
+              solution={alternativeA}
+            />
+          )}
         </PrintableTabContent>
 
         <PrintableTabContent visible={activeSolutionTab === 'Alternative B'}>
-          {alternativeB && alternativeSolution(alternativeB) && (
+          {alternativeB && hasAlternativeSolution(alternativeB) && (
             <ProposedBusinessCaseSolutionReview
               name="Alternative B"
               solution={alternativeB}
