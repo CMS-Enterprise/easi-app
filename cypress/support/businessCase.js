@@ -55,50 +55,82 @@ cy.businessCase = {
         .type('As is Solution Cons')
         .should('have.value', 'As is Solution Cons');
 
-      // Estimated Lifecycle Costs Years 1-2
-      [1, 2].forEach(year => {
-        cy.get(
-          `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Development`
-        )
-          .check({ force: true })
-          .should('be.checked');
+      // Estimated Lifecycle Costs Years 1
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year1\\.development\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
 
-        cy.get(
-          `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
-        )
-          .type('0')
-          .should('have.value', '0');
-      });
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year1\\.development\\.cost`
+      )
+        .type('1')
+        .should('have.value', '1');
+
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year1\\.operationsMaintenance\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year1\\.operationsMaintenance\\.cost`
+      )
+        .type('5')
+        .should('have.value', '5');
+
+      // Estimated Lifecycle Costs Years 2
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year2\\.operationsMaintenance\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year2\\.operationsMaintenance\\.cost`
+      )
+        .type('5')
+        .should('have.value', '5');
 
       // Estimated Lifecycle Costs Years 3
-      [3].forEach(year => {
-        cy.get(
-          `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Other`
-        )
-          .check({ force: true })
-          .should('be.checked');
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year3\\.other\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
 
-        cy.get(
-          `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
-        )
-          .type('0')
-          .should('have.value', '0');
-      });
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year3\\.other\\.cost`
+      )
+        .type('10')
+        .should('have.value', '10');
 
-      // Estimated Lifecycle Costs Years 4-5
-      [4, 5].forEach(year => {
-        cy.get(
-          `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.opsMaintenance`
-        )
-          .check({ force: true })
-          .should('be.checked');
+      // Estimated Lifecycle Costs Years 4
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year4\\.development\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
 
-        cy.get(
-          `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
-        )
-          .type('0')
-          .should('have.value', '0');
-      });
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year4\\.development\\.cost`
+      )
+        .type('15')
+        .should('have.value', '15');
+
+      // Estimated Lifecycle Costs Years 5
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year5\\.other\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get(
+        `#BusinessCase-asIsSolution\\.estimatedLifecycleCost\\.Year5\\.other\\.cost`
+      )
+        .type('15')
+        .should('have.value', '15');
 
       cy.get('#BusinessCase-AsIsSolutionCostSavings')
         .type('As is Solution Cost Savings')
@@ -151,50 +183,70 @@ cy.businessCase = {
         .type('Preferred Solution Cons')
         .should('have.value', 'Preferred Solution Cons');
 
-      // Estimated Lifecycle Costs Years 1-2
-      [1, 2].forEach(year => {
-        cy.get(
-          `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Development`
-        )
-          .check({ force: true })
-          .should('be.checked');
+      // Estimated Lifecycle Costs Year 1
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year1\\.operationsMaintenance\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
 
-        cy.get(
-          `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
-        )
-          .type('0')
-          .should('have.value', '0');
-      });
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year1\\.operationsMaintenance\\.cost`
+      )
+        .type('5')
+        .should('have.value', '5');
 
-      // Estimated Lifecycle Costs Years 3
-      [3].forEach(year => {
-        cy.get(
-          `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Other`
-        )
-          .check({ force: true })
-          .should('be.checked');
+      // Estimated Lifecycle Costs Year 2
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year2\\.development\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
 
-        cy.get(
-          `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
-        )
-          .type('0')
-          .should('have.value', '0');
-      });
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year2\\.development\\.cost`
+      )
+        .type('10')
+        .should('have.value', '10');
 
-      // Estimated Lifecycle Costs Years 4-5
-      [4, 5].forEach(year => {
-        cy.get(
-          `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.opsMaintenance`
-        )
-          .check({ force: true })
-          .should('be.checked');
+      // Estimated Lifecycle Costs Year 3
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year3\\.other\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
 
-        cy.get(
-          `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
-        )
-          .type('0')
-          .should('have.value', '0');
-      });
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year3\\.other\\.cost`
+      )
+        .type('15')
+        .should('have.value', '15');
+
+      // Estimated Lifecycle Costs Year 4
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year4\\.operationsMaintenance\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year4\\.operationsMaintenance\\.cost`
+      )
+        .type('20')
+        .should('have.value', '20');
+
+      // Estimated Lifecycle Costs Year 5
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year5\\.development\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get(
+        `#BusinessCase-preferredSolution\\.estimatedLifecycleCost\\.Year5\\.development\\.cost`
+      )
+        .type('25')
+        .should('have.value', '25');
 
       cy.get('#BusinessCase-PreferredSolutionCostSavings')
         .type('0')
@@ -247,50 +299,82 @@ cy.businessCase = {
         .type('Alternative A Cons')
         .should('have.value', 'Alternative A Cons');
 
-      // Estimated Lifecycle Costs Years 1-2
-      [1, 2].forEach(year => {
-        cy.get(
-          `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Development`
-        )
-          .check({ force: true })
-          .should('be.checked');
+      // Estimated Lifecycle Costs Years 1
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year1\\.development\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
 
-        cy.get(
-          `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
-        )
-          .type('0')
-          .should('have.value', '0');
-      });
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year1\\.development\\.cost`
+      )
+        .type('2')
+        .should('have.value', '2');
+
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year1\\.other\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year1\\.other\\.cost`
+      )
+        .type('4')
+        .should('have.value', '4');
+
+      // Estimated Lifecycle Costs Years 2
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year2\\.operationsMaintenance\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year2\\.operationsMaintenance\\.cost`
+      )
+        .type('6')
+        .should('have.value', '6');
 
       // Estimated Lifecycle Costs Years 3
-      [3].forEach(year => {
-        cy.get(
-          `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.Other`
-        )
-          .check({ force: true })
-          .should('be.checked');
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year3\\.other\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
 
-        cy.get(
-          `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
-        )
-          .type('0')
-          .should('have.value', '0');
-      });
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year3\\.other\\.cost`
+      )
+        .type('8')
+        .should('have.value', '8');
 
-      // Estimated Lifecycle Costs Years 4-5
-      [4, 5].forEach(year => {
-        cy.get(
-          `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.opsMaintenance`
-        )
-          .check({ force: true })
-          .should('be.checked');
+      // Estimated Lifecycle Costs Years 4
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year4\\.operationsMaintenance\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
 
-        cy.get(
-          `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year${year}\\.Phase0\\.cost`
-        )
-          .type('0')
-          .should('have.value', '0');
-      });
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year4\\.operationsMaintenance\\.cost`
+      )
+        .type('10')
+        .should('have.value', '10');
+
+      // Estimated Lifecycle Costs Years 5
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year5\\.development\\.isPresent`
+      )
+        .check({ force: true })
+        .should('be.checked');
+
+      cy.get(
+        `#BusinessCase-alternativeA\\.estimatedLifecycleCost\\.Year5\\.development\\.cost`
+      )
+        .type('12')
+        .should('have.value', '12');
 
       cy.get('#BusinessCase-alternativeACostSavings')
         .type('Alternative A Cost Savings')
