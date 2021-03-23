@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 
+import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import { AnythingWrongSurvey } from 'components/Survey';
 import SystemIntakeReview from 'components/SystemIntakeReview';
@@ -20,7 +21,7 @@ const IntakeReview = ({ systemIntake, now }: IntakeReviewProps) => {
 
   return (
     <div>
-      <h1 className="margin-top-0">{t('general:intake')}</h1>
+      <PageHeading className="margin-top-0">{t('general:intake')}</PageHeading>
       <PDFExport
         title="System Intake"
         filename={filename}

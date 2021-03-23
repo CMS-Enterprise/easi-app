@@ -274,7 +274,7 @@ exports[`The governance overview page matches the snapshot 1`] = `
       </span>
     </a>
     <h1
-      className="easi-h1 margin-top-6 margin-bottom-5"
+      className="easi-h1"
       tabIndex={-1}
     >
       Add a new system or service

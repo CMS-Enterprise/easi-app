@@ -9,10 +9,12 @@ import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCa
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
 import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
+import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
   GetGRTFeedback,
   GetGRTFeedbackVariables
 } from 'queries/types/GetGRTFeedback';
+import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -41,6 +43,15 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
+  const { loading, data: graphData } = useQuery<GetSystemIntake>(
+    GetSystemIntakeQuery,
+    {
+      variables: {
+        id: systemId
+      }
+    }
+  );
+  const intake = graphData?.systemIntake;
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -78,7 +89,7 @@ const RequestOverview = () => {
     <PageWrapper className="easi-grt">
       <Header />
       <MainContent>
-        <Summary intake={systemIntake} />
+        {intake && <Summary intake={intake} />}
         <section className="grid-container grid-row margin-y-5 ">
           <nav className="tablet:grid-col-2 margin-right-2">
             <ul className="easi-grt__nav-list">
@@ -145,12 +156,14 @@ const RequestOverview = () => {
           <section className="tablet:grid-col-9">
             <Route
               path="/governance-review-team/:systemId/intake-request"
-              render={() => (
-                <IntakeReview
-                  systemIntake={systemIntake}
-                  now={DateTime.local()}
-                />
-              )}
+              render={() => {
+                if (loading) {
+                  return <p>Loading...</p>;
+                }
+                return (
+                  <IntakeReview systemIntake={intake} now={DateTime.local()} />
+                );
+              }}
             />
             <Route
               path="/governance-review-team/:systemId/business-case"

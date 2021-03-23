@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
 
+import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
 import {
   DescriptionDefinition,
@@ -19,7 +20,9 @@ const Decision = ({ systemIntake }: DecisionProps) => {
 
   const Approved = () => (
     <>
-      <h1>{t('governanceReviewTeam:decision.titleApproved')}</h1>
+      <PageHeading>
+        {t('governanceReviewTeam:decision.titleApproved')}
+      </PageHeading>
       <DescriptionList
         title={t('governanceReviewTeam:decision.decisionSectionTitle')}
       >
@@ -74,7 +77,9 @@ const Decision = ({ systemIntake }: DecisionProps) => {
 
   const Rejected = () => (
     <>
-      <h1>{t('governanceReviewTeam:decision.titleRejected')}</h1>
+      <PageHeading>
+        {t('governanceReviewTeam:decision.titleRejected')}
+      </PageHeading>
       <DescriptionList
         title={t('governanceReviewTeam:decision.decisionSectionTitle')}
       >
@@ -106,21 +111,27 @@ const Decision = ({ systemIntake }: DecisionProps) => {
 
   const NotItRequest = () => (
     <>
-      <h1>{t('governanceReviewTeam:decision.titleClosed')}</h1>
+      <PageHeading>
+        {t('governanceReviewTeam:decision.titleClosed')}
+      </PageHeading>
       <p>{t('governanceReviewTeam:decision.descriptionNotItRequest')}</p>
     </>
   );
 
   const NoGovernance = () => (
     <>
-      <h1>{t('governanceReviewTeam:decision.titleClosed')}</h1>
+      <PageHeading>
+        {t('governanceReviewTeam:decision.titleClosed')}
+      </PageHeading>
       <p>{t('governanceReviewTeam:decision.descriptionNoGovernance')}</p>
     </>
   );
 
   const ShutdownComplete = () => (
     <>
-      <h1>{t('governanceReviewTeam:decision.titleClosed')}</h1>
+      <PageHeading>
+        {t('governanceReviewTeam:decision.titleClosed')}
+      </PageHeading>
       <p>{t('governanceReviewTeam:decision.shutdownComplete')}</p>
     </>
   );
@@ -141,7 +152,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
 
   return (
     <>
-      <h1>{t('governanceReviewTeam:decision.title')}</h1>
+      <PageHeading>{t('governanceReviewTeam:decision.title')}</PageHeading>
       <p>{t('governanceReviewTeam:decision.noDecision')}</p>
     </>
   );

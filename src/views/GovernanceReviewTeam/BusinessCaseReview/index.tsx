@@ -9,6 +9,7 @@ import AlternativeAnalysisReview from 'components/BusinessCaseReview/Alternative
 import GeneralRequestInfoReview from 'components/BusinessCaseReview/GeneralRequestInfoReview';
 import RequestDescriptionReview from 'components/BusinessCaseReview/RequestDescriptionReview';
 import GRTFeedbackView from 'components/GRTFeedbackView';
+import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -28,7 +29,9 @@ const BusinessCaseReview = ({
   if (!businessCase.id) {
     return (
       <div>
-        <h1 className="margin-top-0">{t('general:businessCase')}</h1>
+        <PageHeading className="margin-top-0">
+          {t('general:businessCase')}
+        </PageHeading>
         <p>Business Case has not been submitted</p>
       </div>
     );
@@ -41,7 +44,9 @@ const BusinessCaseReview = ({
         filename={filename}
         label="Download Business Case as PDF"
       >
-        <h1 className="margin-top-0">{t('general:businessCase')}</h1>
+        <PageHeading className="margin-top-0">
+          {t('general:businessCase')}
+        </PageHeading>
         <h2 className="font-heading-xl">General request information</h2>
         <GeneralRequestInfoReview
           values={{

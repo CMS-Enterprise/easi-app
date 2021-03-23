@@ -35,55 +35,47 @@ const AppRoutes = () => {
 
   return (
     <Switch>
+      {/* General Routes */}
+      <Route path="/" exact component={Home} />
+      <Redirect exact from="/login" to="/signin" />
+      <Route path="/signin" exact component={Login} />
       <SecureRoute path="/user-diagnostics" component={UserInfo} />
+
+      {/* 508 / Accessibility Team Routes */}
       <SecureRoute path="/508" component={Accessibility} />
+
+      {/* GRT/GRB Routes */}
       <SecureRoute
         path="/governance-review-team"
         component={GovernanceReviewTeam}
       />
 
-      <Route path="/" exact component={Home} />
-      <Redirect exact from="/login" to="/signin" />
-      <Route path="/signin" exact component={Login} />
+      {/* Requester / Business Owner Routes */}
+      <SecureRoute
+        exact
+        path="/system/request-type"
+        component={RequestTypeForm}
+      />
       <Route path="/governance-overview" exact component={GovernanceOverview} />
-
-      {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+      <SecureRoute
+        path="/governance-task-list/:systemId"
+        exact
+        component={GovernanceTaskList}
+      />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grt"
-        render={({ component }: any) => component()}
         component={PrepareForGRT}
       />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grb"
-        render={({ component }: any) => component()}
         component={PrepareForGRB}
       />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/request-decision"
-        render={({ component }: any) => component()}
         component={RequestDecision}
-      />
-      <SecureRoute
-        path="/governance-task-list/:systemId"
-        exact
-        render={({ component }: any) => component()}
-        component={GovernanceTaskList}
-      />
-      {flags.fileUploads && (
-        <SecureRoute
-          exact
-          path="/document-prototype"
-          render={() => <DocumentPrototype />}
-        />
-      )}
-      <SecureRoute
-        exact
-        path="/system/request-type"
-        render={({ component }: any) => component()}
-        component={RequestTypeForm}
       />
       <Redirect
         exact
@@ -92,7 +84,6 @@ const AppRoutes = () => {
       />
       <SecureRoute
         path="/system/:systemId/:formPage"
-        render={({ component }: any) => component()}
         component={SystemIntake}
       />
       <Redirect
@@ -102,10 +93,10 @@ const AppRoutes = () => {
       />
       <SecureRoute
         path="/business/:businessCaseId/:formPage"
-        render={({ component }: any) => component()}
         component={BusinessCase}
       />
-      <Route path="/implicit/callback" component={LoginCallback} />
+
+      {/* Static Page Routes  */}
       <Route path="/privacy-policy" exact component={PrivacyPolicy} />
       <Route path="/cookies" exact component={Cookies} />
       <Route
@@ -118,6 +109,19 @@ const AppRoutes = () => {
         path="/terms-and-conditions"
         component={TermsAndConditions}
       />
+
+      {/* Misc Routes */}
+      {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+      {flags.fileUploads && (
+        <SecureRoute
+          exact
+          path="/document-prototype"
+          render={() => <DocumentPrototype />}
+        />
+      )}
+      <Route path="/implicit/callback" component={LoginCallback} />
+
+      {/* 404 */}
       <Route path="*" component={NotFound} />
     </Switch>
   );
