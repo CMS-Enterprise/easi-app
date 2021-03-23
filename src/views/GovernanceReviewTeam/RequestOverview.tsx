@@ -17,7 +17,8 @@ import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
 import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
-import ProvideGRTFeedback from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedback';
+import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedbackToBusinessOwner';
+import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
 
 import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
@@ -197,7 +198,7 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-need-biz-case"
               render={() => (
-                <ProvideGRTFeedback
+                <ProvideGRTFeedbackToBusinessOwner
                   query={AddGRTFeedbackRequestBizCaseQuery}
                   actionName={actionsT('actions.provideFeedbackNeedBizCase')}
                 />
@@ -206,7 +207,7 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-keep-draft"
               render={() => (
-                <ProvideGRTFeedback
+                <ProvideGRTFeedbackToBusinessOwner
                   query={AddGRTFeedbackKeepDraftBizCase}
                   actionName={actionsT('actions.provideGrtFeedbackKeepDraft')}
                 />
@@ -215,7 +216,7 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/provide-feedback-need-final"
               render={() => (
-                <ProvideGRTFeedback
+                <ProvideGRTFeedbackToBusinessOwner
                   query={AddGRTFeedbackProgressToFinal}
                   actionName={actionsT('actions.provideGrtFeedbackNeedFinal')}
                 />
@@ -232,12 +233,7 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/actions/ready-for-grb"
-              render={() => (
-                <SubmitAction
-                  action="READY_FOR_GRB"
-                  actionName={actionsT('actions.readyForGrb')}
-                />
-              )}
+              render={() => <ProvideGRTRecommendationsToGRB />}
             />
             <Route
               path="/governance-review-team/:systemId/actions/biz-case-needs-changes"

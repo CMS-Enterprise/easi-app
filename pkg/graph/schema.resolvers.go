@@ -372,6 +372,27 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID:     input.IntakeID,
+			Feedback:     input.Feedback,
+			FeedbackType: models.GRTFeedbackTypeGRB,
+		},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			Feedback:   null.StringFrom(input.EmailBody),
+			ActionType: models.ActionTypeREADYFORGRB,
+		},
+		models.SystemIntakeStatusREADYFORGRB)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
+}
+
 func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error) {
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{
