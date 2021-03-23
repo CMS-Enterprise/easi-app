@@ -899,12 +899,11 @@ func (s StoreTestSuite) TestUpdateReviewDates() {
 		s.NoError(err)
 
 		grbDate, _ := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
-		_, err = s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, nil)
-		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+		updatedIntake, err := s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, nil)
 
 		s.NoError(err, "failed to fetch system intakes")
-		s.Equal(fetchedIntake.GRBDate.Format("2006-01-02"), "2021-12-22")
-		s.Nil(fetchedIntake.GRTDate)
+		s.Equal(updatedIntake.GRBDate.Format("2006-01-02"), "2021-12-22")
+		s.Nil(updatedIntake.GRTDate)
 	})
 
 	s.Run("update just GRT", func() {
@@ -917,11 +916,10 @@ func (s StoreTestSuite) TestUpdateReviewDates() {
 		s.NoError(err)
 
 		grtDate, _ := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
-		_, err = s.store.UpdateReviewDates(ctx, intake.ID, nil, &grtDate)
-		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+		updatedIntake, err := s.store.UpdateReviewDates(ctx, intake.ID, nil, &grtDate)
 
 		s.NoError(err, "failed to fetch system intakes")
-		s.Nil(fetchedIntake.GRBDate)
-		s.Equal(fetchedIntake.GRTDate.Format("2006-01-02"), "2022-01-02")
+		s.Nil(updatedIntake.GRBDate)
+		s.Equal(updatedIntake.GRTDate.Format("2006-01-02"), "2022-01-02")
 	})
 }

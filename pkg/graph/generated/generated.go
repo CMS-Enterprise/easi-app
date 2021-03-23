@@ -323,7 +323,7 @@ type ComplexityRoot struct {
 		UserErrors   func(childComplexity int) int
 	}
 
-	UpdateSystemIntakeReviewDatesPayload struct {
+	UpdateSystemIntakePayload struct {
 		SystemIntake func(childComplexity int) int
 		UserErrors   func(childComplexity int) int
 	}
@@ -381,7 +381,7 @@ type MutationResolver interface {
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
 	GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
 	UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error)
-	UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakeReviewDatesPayload, error)
+	UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
 }
 type QueryResolver interface {
@@ -1715,19 +1715,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateSystemIntakeAdminLeadPayload.UserErrors(childComplexity), true
 
-	case "UpdateSystemIntakeReviewDatesPayload.systemIntake":
-		if e.complexity.UpdateSystemIntakeReviewDatesPayload.SystemIntake == nil {
+	case "UpdateSystemIntakePayload.systemIntake":
+		if e.complexity.UpdateSystemIntakePayload.SystemIntake == nil {
 			break
 		}
 
-		return e.complexity.UpdateSystemIntakeReviewDatesPayload.SystemIntake(childComplexity), true
+		return e.complexity.UpdateSystemIntakePayload.SystemIntake(childComplexity), true
 
-	case "UpdateSystemIntakeReviewDatesPayload.userErrors":
-		if e.complexity.UpdateSystemIntakeReviewDatesPayload.UserErrors == nil {
+	case "UpdateSystemIntakePayload.userErrors":
+		if e.complexity.UpdateSystemIntakePayload.UserErrors == nil {
 			break
 		}
 
-		return e.complexity.UpdateSystemIntakeReviewDatesPayload.UserErrors(childComplexity), true
+		return e.complexity.UpdateSystemIntakePayload.UserErrors(childComplexity), true
 
 	case "UpdateTestDatePayload.testDate":
 		if e.complexity.UpdateTestDatePayload.TestDate == nil {
@@ -2510,9 +2510,9 @@ input UpdateSystemIntakeReviewDatesInput {
 }
 
 """
-Result of UpdateSystemIntakeAdminLead
+Result of UpdateSystemIntake mutations
 """
-type UpdateSystemIntakeReviewDatesPayload {
+type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
@@ -2543,7 +2543,7 @@ type Mutation {
   ): GeneratePresignedUploadURLPayload
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
     @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakeReviewDatesPayload
+  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
@@ -6062,10 +6062,10 @@ func (ec *executionContext) _Mutation_updateSystemIntakeReviewDates(ctx context.
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*model.UpdateSystemIntakeReviewDatesPayload); ok {
+		if data, ok := tmp.(*model.UpdateSystemIntakePayload); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakeReviewDatesPayload`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakePayload`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6074,9 +6074,9 @@ func (ec *executionContext) _Mutation_updateSystemIntakeReviewDates(ctx context.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.UpdateSystemIntakeReviewDatesPayload)
+	res := resTmp.(*model.UpdateSystemIntakePayload)
 	fc.Result = res
-	return ec.marshalOUpdateSystemIntakeReviewDatesPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeReviewDatesPayload(ctx, field.Selections, res)
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -8914,7 +8914,7 @@ func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload_userErrors(ctx c
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateSystemIntakeReviewDatesPayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakeReviewDatesPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateSystemIntakePayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8922,7 +8922,7 @@ func (ec *executionContext) _UpdateSystemIntakeReviewDatesPayload_systemIntake(c
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "UpdateSystemIntakeReviewDatesPayload",
+		Object:     "UpdateSystemIntakePayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -8946,7 +8946,7 @@ func (ec *executionContext) _UpdateSystemIntakeReviewDatesPayload_systemIntake(c
 	return ec.marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _UpdateSystemIntakeReviewDatesPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakeReviewDatesPayload) (ret graphql.Marshaler) {
+func (ec *executionContext) _UpdateSystemIntakePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -8954,7 +8954,7 @@ func (ec *executionContext) _UpdateSystemIntakeReviewDatesPayload_userErrors(ctx
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "UpdateSystemIntakeReviewDatesPayload",
+		Object:     "UpdateSystemIntakePayload",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -12224,21 +12224,21 @@ func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload(ctx context.Cont
 	return out
 }
 
-var updateSystemIntakeReviewDatesPayloadImplementors = []string{"UpdateSystemIntakeReviewDatesPayload"}
+var updateSystemIntakePayloadImplementors = []string{"UpdateSystemIntakePayload"}
 
-func (ec *executionContext) _UpdateSystemIntakeReviewDatesPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateSystemIntakeReviewDatesPayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, updateSystemIntakeReviewDatesPayloadImplementors)
+func (ec *executionContext) _UpdateSystemIntakePayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateSystemIntakePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateSystemIntakePayloadImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("UpdateSystemIntakeReviewDatesPayload")
+			out.Values[i] = graphql.MarshalString("UpdateSystemIntakePayload")
 		case "systemIntake":
-			out.Values[i] = ec._UpdateSystemIntakeReviewDatesPayload_systemIntake(ctx, field, obj)
+			out.Values[i] = ec._UpdateSystemIntakePayload_systemIntake(ctx, field, obj)
 		case "userErrors":
-			out.Values[i] = ec._UpdateSystemIntakeReviewDatesPayload_userErrors(ctx, field, obj)
+			out.Values[i] = ec._UpdateSystemIntakePayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13712,11 +13712,11 @@ func (ec *executionContext) marshalOUpdateSystemIntakeAdminLeadPayload2ᚖgithub
 	return ec._UpdateSystemIntakeAdminLeadPayload(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUpdateSystemIntakeReviewDatesPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeReviewDatesPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateSystemIntakeReviewDatesPayload) graphql.Marshaler {
+func (ec *executionContext) marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateSystemIntakePayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
-	return ec._UpdateSystemIntakeReviewDatesPayload(ctx, sel, v)
+	return ec._UpdateSystemIntakePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateTestDatePayload) graphql.Marshaler {

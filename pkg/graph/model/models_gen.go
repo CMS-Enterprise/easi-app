@@ -216,17 +216,17 @@ type UpdateSystemIntakeAdminLeadPayload struct {
 	UserErrors   []*UserError         `json:"userErrors"`
 }
 
+// Result of UpdateSystemIntake mutations
+type UpdateSystemIntakePayload struct {
+	SystemIntake *models.SystemIntake `json:"systemIntake"`
+	UserErrors   []*UserError         `json:"userErrors"`
+}
+
 // Parameters required to update the grt and grb dates for an intake
 type UpdateSystemIntakeReviewDatesInput struct {
 	GrbDate *time.Time `json:"grbDate"`
 	GrtDate *time.Time `json:"grtDate"`
 	ID      uuid.UUID  `json:"id"`
-}
-
-// Result of UpdateSystemIntakeAdminLead
-type UpdateSystemIntakeReviewDatesPayload struct {
-	SystemIntake *models.SystemIntake `json:"systemIntake"`
-	UserErrors   []*UserError         `json:"userErrors"`
 }
 
 // Parameters for editing a test date
