@@ -6,7 +6,10 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
-import { UpdateSystemIntakeReviewDates } from 'queries/types/UpdateSystemIntakeReviewDates';
+import {
+  UpdateSystemIntakeReviewDates,
+  UpdateSystemIntakeReviewDatesVariables
+} from 'queries/types/UpdateSystemIntakeReviewDates';
 import UpdateSystemIntakeReviewDatesQuery from 'queries/UpdateSystemIntakeReviewDatesQuery';
 
 import PageHeading from 'components/PageHeading';
@@ -24,12 +27,12 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation();
-  const [mutate, mutationResult] = useMutation<UpdateSystemIntakeReviewDates>(
-    UpdateSystemIntakeReviewDatesQuery,
-    {
-      errorPolicy: 'all'
-    }
-  );
+  const [mutate, mutationResult] = useMutation<
+    UpdateSystemIntakeReviewDates,
+    UpdateSystemIntakeReviewDatesVariables
+  >(UpdateSystemIntakeReviewDatesQuery, {
+    errorPolicy: 'all'
+  });
 
   const { grtDate, grbDate } = systemIntake;
   const parsedGrbDate = DateTime.fromISO(grbDate);
