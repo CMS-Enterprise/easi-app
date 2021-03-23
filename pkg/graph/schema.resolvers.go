@@ -14,9 +14,11 @@ import (
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
@@ -431,7 +433,19 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 }
 
 func (r *queryResolver) GrtFeedbacks(ctx context.Context, intakeID uuid.UUID) ([]*models.GRTFeedback, error) {
-	panic(fmt.Errorf("not implemented"))
+	existingIntake, err := r.store.FetchSystemIntakeByID(ctx, intakeID)
+	if err != nil {
+		return nil, err
+	}
+
+	ok, err := services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx, existingIntake)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{}
+	}
+	return r.store.FetchGRTFeedbacksByIntakeID(ctx, intakeID)
 }
 
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {

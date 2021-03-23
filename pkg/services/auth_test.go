@@ -127,7 +127,7 @@ func (s ServicesTestSuite) TestAuthorizeRequireGRTJobCode() {
 }
 
 func (s ServicesTestSuite) NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode() {
-	fnAuth := NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode()
+	fnAuth := AuthorizeUserIsIntakeRequesterOrHasGRTJobCode
 	nonEASI := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: false, JobCodeGRT: false}
 	nonGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
 	yesGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
