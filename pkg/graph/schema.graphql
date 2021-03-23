@@ -294,7 +294,7 @@ type BusinessCaseAsIsSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostPhase {
   """
@@ -312,7 +312,7 @@ enum LifecycleCostPhase {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostSolution {
   """
@@ -334,7 +334,7 @@ enum LifecycleCostSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostYear {
   """
@@ -720,6 +720,9 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  markSystemIntakeReadyForGRB(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload

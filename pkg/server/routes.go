@@ -333,21 +333,6 @@ func (s *Server) routes(
 						store.UpdateBusinessCase,
 					),
 				),
-				models.ActionTypeREADYFORGRB: services.NewTakeActionUpdateStatus(
-					serviceConfig,
-					models.SystemIntakeStatusREADYFORGRB,
-					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
-					saveAction,
-					cedarLDAPClient.FetchUserInfo,
-					emailClient.SendSystemIntakeReviewEmail,
-					false,
-					services.NewCloseBusinessCase(
-						serviceConfig,
-						store.FetchBusinessCaseByID,
-						store.UpdateBusinessCase,
-					),
-				),
 				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
 					services.NewAuthorizeUserIsIntakeRequester(),
