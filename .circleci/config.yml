@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Restart ECS app service
           command: |
-            ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "3" ""
+            ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "4" ""
       - run:
           name: Announce failure
           command: |
@@ -53,7 +53,7 @@ jobs:
       - run:
           name: Restart ECS app service
           command: |
-            ./scripts/deploy_service "easi-app" "prod-ecs-manager-docker" "2" ""
+            ./scripts/deploy_service "easi-app" "prod-ecs-manager-docker" "3" ""
       - run:
           name: Announce failure
           command: |
@@ -397,12 +397,12 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "4" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "4" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "5" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "5" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "4" "easi-backend"
+            ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "5" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
@@ -452,12 +452,12 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "impl-ecs-manager-docker" "3" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "impl-ecs-manager-docker" "3" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "impl-ecs-manager-docker" "4" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "impl-ecs-manager-docker" "4" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "3" "easi-backend"
+            ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "4" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
@@ -507,12 +507,12 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "prod-ecs-manager-docker" "2" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "prod-ecs-manager-docker" "2" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "prod-ecs-manager-docker" "3" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "prod-ecs-manager-docker" "3" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "prod-ecs-manager-docker" "2" "easi-backend"
+            ./scripts/deploy_service "easi-app" "prod-ecs-manager-docker" "3" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
