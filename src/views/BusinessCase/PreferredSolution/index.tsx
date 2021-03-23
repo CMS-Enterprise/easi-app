@@ -17,7 +17,10 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { hasAlternativeSolution } from 'data/businessCase';
+import {
+  getBusinessCasePageCount,
+  hasAlternativeSolution
+} from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -734,9 +737,7 @@ const PreferredSolution = ({
             </div>
             <PageNumber
               currentPage={4}
-              totalPages={
-                hasAlternativeSolution(businessCase.alternativeB) ? 6 : 5
-              }
+              totalPages={getBusinessCasePageCount(businessCase)}
             />
             <AutoSave
               values={values}

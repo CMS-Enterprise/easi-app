@@ -12,6 +12,7 @@ import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
 import {
   defaultProposedSolution,
+  getBusinessCasePageCount,
   hasAlternativeSolution
 } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
@@ -219,9 +220,7 @@ const AlternativeSolutionA = ({
             </div>
             <PageNumber
               currentPage={5}
-              totalPages={
-                hasAlternativeSolution(businessCase.alternativeB) ? 6 : 5
-              }
+              totalPages={getBusinessCasePageCount(businessCase)}
             />
             <AutoSave
               values={values}

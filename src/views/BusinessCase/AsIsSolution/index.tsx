@@ -16,7 +16,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { hasAlternativeSolution } from 'data/businessCase';
+import { getBusinessCasePageCount } from 'data/businessCase';
 import { AsIsSolutionForm, BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { isBusinessCaseFinal } from 'utils/systemIntake';
@@ -344,9 +344,7 @@ const AsIsSolution = ({
             </div>
             <PageNumber
               currentPage={3}
-              totalPages={
-                hasAlternativeSolution(businessCase.alternativeB) ? 6 : 5
-              }
+              totalPages={getBusinessCasePageCount(businessCase)}
             />
             <AutoSave
               values={values}
