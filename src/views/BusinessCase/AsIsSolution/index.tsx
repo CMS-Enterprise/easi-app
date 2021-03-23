@@ -56,7 +56,13 @@ const AsIsSolution = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<AsIsSolutionForm>) => {
-        const { values, errors, setErrors, validateForm } = formikProps;
+        const {
+          values,
+          errors,
+          setErrors,
+          setFieldValue,
+          validateForm
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <div className="grid-container">
@@ -247,6 +253,7 @@ const AsIsSolution = ({
                 </HelpText>
                 <EstimatedLifecycleCost
                   formikKey="asIsSolution.estimatedLifecycleCost"
+                  setFieldValue={setFieldValue}
                   years={values.asIsSolution.estimatedLifecycleCost}
                   errors={
                     errors.asIsSolution &&
