@@ -1,6 +1,5 @@
 import React from 'react';
-// eslint-disable-next-line camelcase
-import { GetGRTFeedback_grtFeedbacks } from 'queries/types/GetGRTFeedback';
+import { GetGRTFeedback_grtFeedbacks as GRTFeedback } from 'queries/types/GetGRTFeedback';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
 import PageHeading from 'components/PageHeading';
@@ -8,8 +7,7 @@ import { BusinessCaseModel } from 'types/businessCase';
 
 type BusinessCaseViewOnlyProps = {
   businessCase: BusinessCaseModel;
-  // eslint-disable-next-line camelcase
-  grtFeedbacks?: GetGRTFeedback_grtFeedbacks[] | null;
+  grtFeedbacks?: GRTFeedback[] | null;
 };
 
 const BusinessCaseView = ({

@@ -1,14 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
-// eslint-disable-next-line camelcase
-import { GetGRTFeedback_grtFeedbacks } from 'queries/types/GetGRTFeedback';
+import { GetGRTFeedback_grtFeedbacks as GRTFeedback } from 'queries/types/GetGRTFeedback';
 
 import HelpText from 'components/shared/HelpText';
 
 type GRTFeedbackViewProps = {
-  // eslint-disable-next-line camelcase
-  grtFeedbacks: GetGRTFeedback_grtFeedbacks[];
+  grtFeedbacks: GRTFeedback[];
 };
 
 const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
