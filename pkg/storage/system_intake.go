@@ -429,7 +429,7 @@ func (s *Store) UpdateAdminLead(ctx context.Context, id uuid.UUID, adminLead str
 }
 
 // UpdateReviewDates updates the admin lead for an intake
-func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *time.Time, grtDate *time.Time) (uuid.UUID, error) {
+func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *time.Time, grtDate *time.Time) (*models.SystemIntake, error) {
 	var intake struct {
 		GRBDate   *time.Time `db:"grb_date"`
 		GRTDate   *time.Time `db:"grt_date"`
@@ -460,5 +460,10 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 		updateSystemIntakeSQL,
 		intake,
 	)
-	return intake.ID, err
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }

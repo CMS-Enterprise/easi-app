@@ -16,7 +16,7 @@ export interface UpdateSystemIntakeReviewDates_updateSystemIntakeReviewDates_sys
 }
 
 export interface UpdateSystemIntakeReviewDates_updateSystemIntakeReviewDates {
-  __typename: "UpdateSystemIntakeReviewDatesPayload";
+  __typename: "UpdateSystemIntakePayload";
   systemIntake: UpdateSystemIntakeReviewDates_updateSystemIntakeReviewDates_systemIntake | null;
 }
 

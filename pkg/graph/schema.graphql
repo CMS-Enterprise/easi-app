@@ -687,9 +687,9 @@ input UpdateSystemIntakeReviewDatesInput {
 }
 
 """
-Result of UpdateSystemIntakeAdminLead
+Result of UpdateSystemIntake mutations
 """
-type UpdateSystemIntakeReviewDatesPayload {
+type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
@@ -720,7 +720,7 @@ type Mutation {
   ): GeneratePresignedUploadURLPayload
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
     @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakeReviewDatesPayload
+  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
