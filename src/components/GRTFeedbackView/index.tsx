@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
 // eslint-disable-next-line camelcase
 import { GetGRTFeedback_grtFeedbacks } from 'queries/types/GetGRTFeedback';
@@ -11,15 +12,18 @@ type GRTFeedbackViewProps = {
 };
 
 const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
+  const { t } = useTranslation('businessCase');
+
   return (
     <>
-      <h2 className="margin-bottom-3 margin-top-0">Recommendations</h2>
+      <h2 className="margin-bottom-3 margin-top-0">
+        {t('grtFeedback.header')}
+      </h2>
       {grtFeedbacks.some(grtFeedback => grtFeedback.feedbackType === 'GRB') && (
         <div>
-          <h3 className="margin-bottom-1">GRT recommendations to the GRB</h3>
+          <h3 className="margin-bottom-1">{t('grtFeedback.grbSubhead')}</h3>
           <HelpText className="margin-bottom-2">
-            These are the Governance Review Team recommendations for the
-            Governance Review Board.
+            {t('grtFeedback.grbHelpText')}
           </HelpText>
           {grtFeedbacks
             .filter(grtFeedback => grtFeedback.feedbackType === 'GRB')
@@ -49,11 +53,10 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
       ) && (
         <div>
           <h3 className="margin-bottom-1">
-            GRT recommendations to the Business Owner
+            {t('grtFeedback.businessOwnerSubhead')}
           </h3>
           <HelpText className="margin-bottom-2">
-            These are the Governance Review Team recommendations for the
-            Business Owner.
+            {t('grtFeedback.businessOwnerHelpText')}
           </HelpText>
           {grtFeedbacks
             .filter(
