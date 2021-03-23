@@ -42,6 +42,12 @@ type AddGRTFeedbackPayload struct {
 	ID *uuid.UUID `json:"id"`
 }
 
+// Parameters for actions without additional fields
+type BasicActionInput struct {
+	Feedback string    `json:"feedback"`
+	IntakeID uuid.UUID `json:"intakeId"`
+}
+
 // The shape of a solution for a business case
 type BusinessCaseAsIsSolution struct {
 	Cons        *string `json:"cons"`

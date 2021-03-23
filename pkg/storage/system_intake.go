@@ -467,3 +467,33 @@ func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *ti
 
 	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }
+
+// UpdateSystemIntakeStatus updates the status for an intake
+func (s *Store) UpdateSystemIntakeStatus(ctx context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
+	var intake struct {
+		Status    models.SystemIntakeStatus
+		ID        uuid.UUID
+		UpdatedAt time.Time `db:"updated_at"`
+	}
+	intake.Status = newStatus
+	intake.ID = id
+	intake.UpdatedAt = time.Now()
+
+	const updateSystemIntakeSQL = `
+		UPDATE system_intakes
+		SET
+			updated_at = :updated_at,
+			status = :status
+		WHERE system_intakes.id = :id
+	`
+	_, err := s.db.NamedExec(
+		updateSystemIntakeSQL,
+		intake,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.FetchSystemIntakeByID(ctx, intake.ID)
+}
