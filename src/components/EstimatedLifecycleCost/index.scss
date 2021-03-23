@@ -24,17 +24,6 @@
     }
   }
 
-  &__phase-btn-wrapper {
-    display: flex;
-    align-items: flex-end;
-  }
-
-  &__remove-phase-btn {
-    &.usa-button--unstyled {
-      padding: 0.75rem 0;
-    }
-  }
-
   .usa-label {
     margin-top: 0;
   }
@@ -42,16 +31,6 @@
   // Override padding because labels are inline
   .usa-radio__input {
     padding-left: 0;
-  }
-
-  &__phase-cost-row {
-    display: grid;
-    grid-gap: 16px;
-    margin-right: 1rem;
-
-    @media screen and (min-width: $desktop) {
-      grid-template-columns: minmax(100px, 250px) 150px;
-    }
   }
 
   .help-title {

@@ -843,3 +843,25 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 		})
 	}
 }
+
+func (s StoreTestSuite) TestUpdateAdminLead() {
+	ctx := context.Background()
+
+	s.Run("golden path to update admin lead", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		adminLead := "Test Lead"
+
+		_, err = s.store.UpdateAdminLead(ctx, intake.ID, adminLead)
+		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Equal(fetchedIntake.AdminLead.String, adminLead)
+	})
+}
