@@ -762,7 +762,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  grtFeedbacks(intakeID: UUID!): [GRTFeedback!] @hasRole(role: EASI_GOVTEAM)
+  grtFeedbacks(intakeID: UUID!): [GRTFeedback!]
   systemIntake(id: UUID!): SystemIntake @hasRole(role: EASI_GOVTEAM)
   systems(after: String, first: Int!): SystemConnection
 }
