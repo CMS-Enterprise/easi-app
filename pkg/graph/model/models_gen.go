@@ -67,6 +67,13 @@ type BusinessCaseSolution struct {
 	Title                   *string `json:"title"`
 }
 
+// A date for a contract
+type ContractDate struct {
+	Day   *string `json:"day"`
+	Month *string `json:"month"`
+	Year  *string `json:"year"`
+}
+
 // Parameters for createAccessibilityRequestDocument
 type CreateAccessibilityRequestDocumentInput struct {
 	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
@@ -133,6 +140,94 @@ type SystemConnection struct {
 type SystemEdge struct {
 	Cursor string         `json:"cursor"`
 	Node   *models.System `json:"node"`
+}
+
+// A business owner for a system intake
+type SystemIntakeBusinessOwner struct {
+	Component *string `json:"component"`
+	Name      *string `json:"name"`
+}
+
+// A collaborator for an intake
+type SystemIntakeCollaborator struct {
+	Acronym      *string `json:"acronym"`
+	Collaborator *string `json:"collaborator"`
+	Key          *string `json:"key"`
+	Label        *string `json:"label"`
+	Name         *string `json:"name"`
+}
+
+// A contract for a system intake
+type SystemIntakeContract struct {
+	Contractor  *string       `json:"contractor"`
+	EndDate     *ContractDate `json:"endDate"`
+	HasContract *string       `json:"hasContract"`
+	StartDate   *ContractDate `json:"startDate"`
+	Vehicle     *string       `json:"vehicle"`
+}
+
+// costs for a system intake
+type SystemIntakeCosts struct {
+	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
+	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
+}
+
+// A funding source for a system intake
+type SystemIntakeFundingSource struct {
+	FundingNumber *string `json:"fundingNumber"`
+	IsFunded      *bool   `json:"isFunded"`
+	Source        *string `json:"source"`
+}
+
+// governanceTeam for an intake
+type SystemIntakeGovernanceTeam struct {
+	IsPresent *bool                       `json:"isPresent"`
+	Teams     []*SystemIntakeCollaborator `json:"teams"`
+}
+
+// An isso for a system intake
+type SystemIntakeIsso struct {
+	IsPresent *bool   `json:"isPresent"`
+	Name      *string `json:"name"`
+}
+
+// A note on a system intake
+type SystemIntakeNote struct {
+	Author    *SystemIntakeNoteAuthor `json:"author"`
+	Content   string                  `json:"content"`
+	CreatedAt time.Time               `json:"createdAt"`
+	ID        uuid.UUID               `json:"id"`
+}
+
+// The author of a system intake note
+type SystemIntakeNoteAuthor struct {
+	Eua  string `json:"eua"`
+	Name string `json:"name"`
+}
+
+// A product manager for a system intake
+type SystemIntakeProductManager struct {
+	Component *string `json:"component"`
+	Name      *string `json:"name"`
+}
+
+// A requester for a system intake
+type SystemIntakeRequester struct {
+	Component *string `json:"component"`
+	Email     *string `json:"email"`
+	Name      string  `json:"name"`
+}
+
+// Parameters required to update the admin lead for an intake
+type UpdateSystemIntakeAdminLeadInput struct {
+	AdminLead string    `json:"adminLead"`
+	ID        uuid.UUID `json:"id"`
+}
+
+// Result of UpdateSystemIntakeAdminLead
+type UpdateSystemIntakeAdminLeadPayload struct {
+	SystemIntake *models.SystemIntake `json:"systemIntake"`
+	UserErrors   []*UserError         `json:"userErrors"`
 }
 
 // Parameters for editing a test date

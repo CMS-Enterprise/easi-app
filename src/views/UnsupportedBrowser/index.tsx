@@ -1,8 +1,10 @@
 import React from 'react';
 
+import PageHeading from 'components/PageHeading';
+
 const UnsupportedBrowser = () => (
   <div>
-    <h1>This browser is not supported</h1>
+    <PageHeading>This browser is not supported</PageHeading>
     <h2>Please use a supported modern browser.</h2>
     <h2>Google Chrome, Mozilla Firefox, Microsoft Edge</h2>
   </div>

@@ -146,6 +146,12 @@ type ComplexityRoot struct {
 		Name      func(childComplexity int) int
 	}
 
+	ContractDate struct {
+		Day   func(childComplexity int) int
+		Month func(childComplexity int) int
+		Year  func(childComplexity int) int
+	}
+
 	CreateAccessibilityRequestDocumentPayload struct {
 		AccessibilityRequestDocument func(childComplexity int) int
 		UserErrors                   func(childComplexity int) int
@@ -184,6 +190,7 @@ type ComplexityRoot struct {
 		CreateTestDate                               func(childComplexity int, input model.CreateTestDateInput) int
 		GeneratePresignedUploadURL                   func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		MarkSystemIntakeReadyForGrb                  func(childComplexity int, input model.AddGRTFeedbackInput) int
+		UpdateSystemIntakeAdminLead                  func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
 		UpdateTestDate                               func(childComplexity int, input model.UpdateTestDateInput) int
 	}
 
@@ -212,51 +219,39 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntake struct {
+		AdminLead                   func(childComplexity int) int
 		ArchivedAt                  func(childComplexity int) int
 		BusinessCase                func(childComplexity int) int
 		BusinessNeed                func(childComplexity int) int
 		BusinessOwner               func(childComplexity int) int
-		BusinessOwnerComponent      func(childComplexity int) int
-		Component                   func(childComplexity int) int
-		ContractEndDate             func(childComplexity int) int
-		ContractEndMonth            func(childComplexity int) int
-		ContractEndYear             func(childComplexity int) int
-		ContractStartDate           func(childComplexity int) int
-		ContractStartMonth          func(childComplexity int) int
-		ContractStartYear           func(childComplexity int) int
-		ContractVehicle             func(childComplexity int) int
-		Contractor                  func(childComplexity int) int
-		CostIncrease                func(childComplexity int) int
-		CostIncreaseAmount          func(childComplexity int) int
+		BusinessSolution            func(childComplexity int) int
+		Contract                    func(childComplexity int) int
+		Costs                       func(childComplexity int) int
 		CreatedAt                   func(childComplexity int) int
+		CurrentStage                func(childComplexity int) int
 		DecisionNextSteps           func(childComplexity int) int
 		EaCollaborator              func(childComplexity int) int
 		EaCollaboratorName          func(childComplexity int) int
-		EaSupportRequest            func(childComplexity int) int
 		EuaUserID                   func(childComplexity int) int
-		ExistingContract            func(childComplexity int) int
-		ExistingFunding             func(childComplexity int) int
-		FundingNumber               func(childComplexity int) int
 		FundingSource               func(childComplexity int) int
 		GRBDate                     func(childComplexity int) int
 		GRTDate                     func(childComplexity int) int
+		GovernanceTeams             func(childComplexity int) int
 		ID                          func(childComplexity int) int
 		Isso                        func(childComplexity int) int
-		IssoName                    func(childComplexity int) int
 		Lcid                        func(childComplexity int) int
 		LcidScope                   func(childComplexity int) int
 		LifecycleExpiresAt          func(childComplexity int) int
+		NeedsEaSupport              func(childComplexity int) int
+		Notes                       func(childComplexity int) int
 		OitSecurityCollaborator     func(childComplexity int) int
 		OitSecurityCollaboratorName func(childComplexity int) int
-		ProcessStatus               func(childComplexity int) int
 		ProductManager              func(childComplexity int) int
-		ProductManagerComponent     func(childComplexity int) int
 		ProjectAcronym              func(childComplexity int) int
-		ProjectName                 func(childComplexity int) int
 		RejectionReason             func(childComplexity int) int
+		RequestName                 func(childComplexity int) int
 		RequestType                 func(childComplexity int) int
 		Requester                   func(childComplexity int) int
-		Solution                    func(childComplexity int) int
 		Status                      func(childComplexity int) int
 		SubmittedAt                 func(childComplexity int) int
 		TrbCollaborator             func(childComplexity int) int
@@ -264,11 +259,81 @@ type ComplexityRoot struct {
 		UpdatedAt                   func(childComplexity int) int
 	}
 
+	SystemIntakeBusinessOwner struct {
+		Component func(childComplexity int) int
+		Name      func(childComplexity int) int
+	}
+
+	SystemIntakeCollaborator struct {
+		Acronym      func(childComplexity int) int
+		Collaborator func(childComplexity int) int
+		Key          func(childComplexity int) int
+		Label        func(childComplexity int) int
+		Name         func(childComplexity int) int
+	}
+
+	SystemIntakeContract struct {
+		Contractor  func(childComplexity int) int
+		EndDate     func(childComplexity int) int
+		HasContract func(childComplexity int) int
+		StartDate   func(childComplexity int) int
+		Vehicle     func(childComplexity int) int
+	}
+
+	SystemIntakeCosts struct {
+		ExpectedIncreaseAmount func(childComplexity int) int
+		IsExpectingIncrease    func(childComplexity int) int
+	}
+
+	SystemIntakeFundingSource struct {
+		FundingNumber func(childComplexity int) int
+		IsFunded      func(childComplexity int) int
+		Source        func(childComplexity int) int
+	}
+
+	SystemIntakeGovernanceTeam struct {
+		IsPresent func(childComplexity int) int
+		Teams     func(childComplexity int) int
+	}
+
+	SystemIntakeIsso struct {
+		IsPresent func(childComplexity int) int
+		Name      func(childComplexity int) int
+	}
+
+	SystemIntakeNote struct {
+		Author    func(childComplexity int) int
+		Content   func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
+		ID        func(childComplexity int) int
+	}
+
+	SystemIntakeNoteAuthor struct {
+		Eua  func(childComplexity int) int
+		Name func(childComplexity int) int
+	}
+
+	SystemIntakeProductManager struct {
+		Component func(childComplexity int) int
+		Name      func(childComplexity int) int
+	}
+
+	SystemIntakeRequester struct {
+		Component func(childComplexity int) int
+		Email     func(childComplexity int) int
+		Name      func(childComplexity int) int
+	}
+
 	TestDate struct {
 		Date     func(childComplexity int) int
 		ID       func(childComplexity int) int
 		Score    func(childComplexity int) int
 		TestType func(childComplexity int) int
+	}
+
+	UpdateSystemIntakeAdminLeadPayload struct {
+		SystemIntake func(childComplexity int) int
+		UserErrors   func(childComplexity int) int
 	}
 
 	UpdateTestDatePayload struct {
@@ -324,6 +389,7 @@ type MutationResolver interface {
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
 	GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
 	MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
+	UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error)
 	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
 }
 type QueryResolver interface {
@@ -333,47 +399,37 @@ type QueryResolver interface {
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 }
 type SystemIntakeResolver interface {
+	AdminLead(ctx context.Context, obj *models.SystemIntake) (*string, error)
+
 	BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error)
 	BusinessNeed(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	BusinessOwnerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	Component(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	BusinessOwner(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeBusinessOwner, error)
+	BusinessSolution(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	Contract(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeContract, error)
+	Costs(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeCosts, error)
 
-	ContractEndMonth(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ContractEndYear(ctx context.Context, obj *models.SystemIntake) (*string, error)
-
-	ContractStartMonth(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ContractStartYear(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ContractVehicle(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	Contractor(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	CostIncrease(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	CostIncreaseAmount(ctx context.Context, obj *models.SystemIntake) (*string, error)
-
+	CurrentStage(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	DecisionNextSteps(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EaCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	EaCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	EaSupportRequest(ctx context.Context, obj *models.SystemIntake) (*bool, error)
 	EuaUserID(ctx context.Context, obj *models.SystemIntake) (string, error)
-	ExistingContract(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ExistingFunding(ctx context.Context, obj *models.SystemIntake) (*bool, error)
-	FundingNumber(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	FundingSource(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	FundingSource(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeFundingSource, error)
+	GovernanceTeams(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeGovernanceTeam, error)
 
-	Isso(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	IssoName(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error)
 	Lcid(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	LcidScope(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	NeedsEaSupport(ctx context.Context, obj *models.SystemIntake) (*bool, error)
+	Notes(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeNote, error)
 	OitSecurityCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	OitSecurityCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ProcessStatus(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ProductManager(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ProductManagerComponent(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	ProductManager(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeProductManager, error)
 	ProjectAcronym(ctx context.Context, obj *models.SystemIntake) (*string, error)
-	ProjectName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	RejectionReason(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	RequestName(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
-	Solution(ctx context.Context, obj *models.SystemIntake) (*string, error)
+	Requester(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeRequester, error)
 
 	TrbCollaborator(ctx context.Context, obj *models.SystemIntake) (*string, error)
 	TrbCollaboratorName(ctx context.Context, obj *models.SystemIntake) (*string, error)
@@ -842,6 +898,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BusinessOwner.Name(childComplexity), true
 
+	case "ContractDate.day":
+		if e.complexity.ContractDate.Day == nil {
+			break
+		}
+
+		return e.complexity.ContractDate.Day(childComplexity), true
+
+	case "ContractDate.month":
+		if e.complexity.ContractDate.Month == nil {
+			break
+		}
+
+		return e.complexity.ContractDate.Month(childComplexity), true
+
+	case "ContractDate.year":
+		if e.complexity.ContractDate.Year == nil {
+			break
+		}
+
+		return e.complexity.ContractDate.Year(childComplexity), true
+
 	case "CreateAccessibilityRequestDocumentPayload.accessibilityRequestDocument":
 		if e.complexity.CreateAccessibilityRequestDocumentPayload.AccessibilityRequestDocument == nil {
 			break
@@ -1036,6 +1113,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.MarkSystemIntakeReadyForGrb(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
 
+	case "Mutation.updateSystemIntakeAdminLead":
+		if e.complexity.Mutation.UpdateSystemIntakeAdminLead == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeAdminLead_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeAdminLead(childComplexity, args["input"].(model.UpdateSystemIntakeAdminLeadInput)), true
+
 	case "Mutation.updateTestDate":
 		if e.complexity.Mutation.UpdateTestDate == nil {
 			break
@@ -1152,6 +1241,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemEdge.Node(childComplexity), true
 
+	case "SystemIntake.adminLead":
+		if e.complexity.SystemIntake.AdminLead == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.AdminLead(childComplexity), true
+
 	case "SystemIntake.archivedAt":
 		if e.complexity.SystemIntake.ArchivedAt == nil {
 			break
@@ -1180,89 +1276,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.BusinessOwner(childComplexity), true
 
-	case "SystemIntake.businessOwnerComponent":
-		if e.complexity.SystemIntake.BusinessOwnerComponent == nil {
+	case "SystemIntake.businessSolution":
+		if e.complexity.SystemIntake.BusinessSolution == nil {
 			break
 		}
 
-		return e.complexity.SystemIntake.BusinessOwnerComponent(childComplexity), true
+		return e.complexity.SystemIntake.BusinessSolution(childComplexity), true
 
-	case "SystemIntake.component":
-		if e.complexity.SystemIntake.Component == nil {
+	case "SystemIntake.contract":
+		if e.complexity.SystemIntake.Contract == nil {
 			break
 		}
 
-		return e.complexity.SystemIntake.Component(childComplexity), true
+		return e.complexity.SystemIntake.Contract(childComplexity), true
 
-	case "SystemIntake.contractEndDate":
-		if e.complexity.SystemIntake.ContractEndDate == nil {
+	case "SystemIntake.costs":
+		if e.complexity.SystemIntake.Costs == nil {
 			break
 		}
 
-		return e.complexity.SystemIntake.ContractEndDate(childComplexity), true
-
-	case "SystemIntake.contractEndMonth":
-		if e.complexity.SystemIntake.ContractEndMonth == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ContractEndMonth(childComplexity), true
-
-	case "SystemIntake.contractEndYear":
-		if e.complexity.SystemIntake.ContractEndYear == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ContractEndYear(childComplexity), true
-
-	case "SystemIntake.contractStartDate":
-		if e.complexity.SystemIntake.ContractStartDate == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ContractStartDate(childComplexity), true
-
-	case "SystemIntake.contractStartMonth":
-		if e.complexity.SystemIntake.ContractStartMonth == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ContractStartMonth(childComplexity), true
-
-	case "SystemIntake.contractStartYear":
-		if e.complexity.SystemIntake.ContractStartYear == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ContractStartYear(childComplexity), true
-
-	case "SystemIntake.contractVehicle":
-		if e.complexity.SystemIntake.ContractVehicle == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ContractVehicle(childComplexity), true
-
-	case "SystemIntake.contractor":
-		if e.complexity.SystemIntake.Contractor == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.Contractor(childComplexity), true
-
-	case "SystemIntake.costIncrease":
-		if e.complexity.SystemIntake.CostIncrease == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.CostIncrease(childComplexity), true
-
-	case "SystemIntake.costIncreaseAmount":
-		if e.complexity.SystemIntake.CostIncreaseAmount == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.CostIncreaseAmount(childComplexity), true
+		return e.complexity.SystemIntake.Costs(childComplexity), true
 
 	case "SystemIntake.createdAt":
 		if e.complexity.SystemIntake.CreatedAt == nil {
@@ -1270,6 +1303,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.CreatedAt(childComplexity), true
+
+	case "SystemIntake.currentStage":
+		if e.complexity.SystemIntake.CurrentStage == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.CurrentStage(childComplexity), true
 
 	case "SystemIntake.decisionNextSteps":
 		if e.complexity.SystemIntake.DecisionNextSteps == nil {
@@ -1292,40 +1332,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.EaCollaboratorName(childComplexity), true
 
-	case "SystemIntake.eaSupportRequest":
-		if e.complexity.SystemIntake.EaSupportRequest == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.EaSupportRequest(childComplexity), true
-
 	case "SystemIntake.euaUserId":
 		if e.complexity.SystemIntake.EuaUserID == nil {
 			break
 		}
 
 		return e.complexity.SystemIntake.EuaUserID(childComplexity), true
-
-	case "SystemIntake.existingContract":
-		if e.complexity.SystemIntake.ExistingContract == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ExistingContract(childComplexity), true
-
-	case "SystemIntake.existingFunding":
-		if e.complexity.SystemIntake.ExistingFunding == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ExistingFunding(childComplexity), true
-
-	case "SystemIntake.fundingNumber":
-		if e.complexity.SystemIntake.FundingNumber == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.FundingNumber(childComplexity), true
 
 	case "SystemIntake.fundingSource":
 		if e.complexity.SystemIntake.FundingSource == nil {
@@ -1348,6 +1360,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.GRTDate(childComplexity), true
 
+	case "SystemIntake.governanceTeams":
+		if e.complexity.SystemIntake.GovernanceTeams == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.GovernanceTeams(childComplexity), true
+
 	case "SystemIntake.id":
 		if e.complexity.SystemIntake.ID == nil {
 			break
@@ -1361,13 +1380,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.Isso(childComplexity), true
-
-	case "SystemIntake.issoName":
-		if e.complexity.SystemIntake.IssoName == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.IssoName(childComplexity), true
 
 	case "SystemIntake.lcid":
 		if e.complexity.SystemIntake.Lcid == nil {
@@ -1390,6 +1402,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.LifecycleExpiresAt(childComplexity), true
 
+	case "SystemIntake.needsEaSupport":
+		if e.complexity.SystemIntake.NeedsEaSupport == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.NeedsEaSupport(childComplexity), true
+
+	case "SystemIntake.notes":
+		if e.complexity.SystemIntake.Notes == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.Notes(childComplexity), true
+
 	case "SystemIntake.oitSecurityCollaborator":
 		if e.complexity.SystemIntake.OitSecurityCollaborator == nil {
 			break
@@ -1404,26 +1430,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.OitSecurityCollaboratorName(childComplexity), true
 
-	case "SystemIntake.processStatus":
-		if e.complexity.SystemIntake.ProcessStatus == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ProcessStatus(childComplexity), true
-
 	case "SystemIntake.productManager":
 		if e.complexity.SystemIntake.ProductManager == nil {
 			break
 		}
 
 		return e.complexity.SystemIntake.ProductManager(childComplexity), true
-
-	case "SystemIntake.productManagerComponent":
-		if e.complexity.SystemIntake.ProductManagerComponent == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ProductManagerComponent(childComplexity), true
 
 	case "SystemIntake.projectAcronym":
 		if e.complexity.SystemIntake.ProjectAcronym == nil {
@@ -1432,19 +1444,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.ProjectAcronym(childComplexity), true
 
-	case "SystemIntake.projectName":
-		if e.complexity.SystemIntake.ProjectName == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.ProjectName(childComplexity), true
-
 	case "SystemIntake.rejectionReason":
 		if e.complexity.SystemIntake.RejectionReason == nil {
 			break
 		}
 
 		return e.complexity.SystemIntake.RejectionReason(childComplexity), true
+
+	case "SystemIntake.requestName":
+		if e.complexity.SystemIntake.RequestName == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.RequestName(childComplexity), true
 
 	case "SystemIntake.requestType":
 		if e.complexity.SystemIntake.RequestType == nil {
@@ -1459,13 +1471,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.Requester(childComplexity), true
-
-	case "SystemIntake.solution":
-		if e.complexity.SystemIntake.Solution == nil {
-			break
-		}
-
-		return e.complexity.SystemIntake.Solution(childComplexity), true
 
 	case "SystemIntake.status":
 		if e.complexity.SystemIntake.Status == nil {
@@ -1502,6 +1507,230 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemIntake.UpdatedAt(childComplexity), true
 
+	case "SystemIntakeBusinessOwner.component":
+		if e.complexity.SystemIntakeBusinessOwner.Component == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeBusinessOwner.Component(childComplexity), true
+
+	case "SystemIntakeBusinessOwner.name":
+		if e.complexity.SystemIntakeBusinessOwner.Name == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeBusinessOwner.Name(childComplexity), true
+
+	case "SystemIntakeCollaborator.acronym":
+		if e.complexity.SystemIntakeCollaborator.Acronym == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeCollaborator.Acronym(childComplexity), true
+
+	case "SystemIntakeCollaborator.collaborator":
+		if e.complexity.SystemIntakeCollaborator.Collaborator == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeCollaborator.Collaborator(childComplexity), true
+
+	case "SystemIntakeCollaborator.key":
+		if e.complexity.SystemIntakeCollaborator.Key == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeCollaborator.Key(childComplexity), true
+
+	case "SystemIntakeCollaborator.label":
+		if e.complexity.SystemIntakeCollaborator.Label == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeCollaborator.Label(childComplexity), true
+
+	case "SystemIntakeCollaborator.name":
+		if e.complexity.SystemIntakeCollaborator.Name == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeCollaborator.Name(childComplexity), true
+
+	case "SystemIntakeContract.contractor":
+		if e.complexity.SystemIntakeContract.Contractor == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContract.Contractor(childComplexity), true
+
+	case "SystemIntakeContract.endDate":
+		if e.complexity.SystemIntakeContract.EndDate == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContract.EndDate(childComplexity), true
+
+	case "SystemIntakeContract.hasContract":
+		if e.complexity.SystemIntakeContract.HasContract == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContract.HasContract(childComplexity), true
+
+	case "SystemIntakeContract.startDate":
+		if e.complexity.SystemIntakeContract.StartDate == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContract.StartDate(childComplexity), true
+
+	case "SystemIntakeContract.vehicle":
+		if e.complexity.SystemIntakeContract.Vehicle == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeContract.Vehicle(childComplexity), true
+
+	case "SystemIntakeCosts.expectedIncreaseAmount":
+		if e.complexity.SystemIntakeCosts.ExpectedIncreaseAmount == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeCosts.ExpectedIncreaseAmount(childComplexity), true
+
+	case "SystemIntakeCosts.isExpectingIncrease":
+		if e.complexity.SystemIntakeCosts.IsExpectingIncrease == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeCosts.IsExpectingIncrease(childComplexity), true
+
+	case "SystemIntakeFundingSource.fundingNumber":
+		if e.complexity.SystemIntakeFundingSource.FundingNumber == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeFundingSource.FundingNumber(childComplexity), true
+
+	case "SystemIntakeFundingSource.isFunded":
+		if e.complexity.SystemIntakeFundingSource.IsFunded == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeFundingSource.IsFunded(childComplexity), true
+
+	case "SystemIntakeFundingSource.source":
+		if e.complexity.SystemIntakeFundingSource.Source == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeFundingSource.Source(childComplexity), true
+
+	case "SystemIntakeGovernanceTeam.isPresent":
+		if e.complexity.SystemIntakeGovernanceTeam.IsPresent == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeGovernanceTeam.IsPresent(childComplexity), true
+
+	case "SystemIntakeGovernanceTeam.teams":
+		if e.complexity.SystemIntakeGovernanceTeam.Teams == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeGovernanceTeam.Teams(childComplexity), true
+
+	case "SystemIntakeISSO.isPresent":
+		if e.complexity.SystemIntakeIsso.IsPresent == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeIsso.IsPresent(childComplexity), true
+
+	case "SystemIntakeISSO.name":
+		if e.complexity.SystemIntakeIsso.Name == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeIsso.Name(childComplexity), true
+
+	case "SystemIntakeNote.author":
+		if e.complexity.SystemIntakeNote.Author == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeNote.Author(childComplexity), true
+
+	case "SystemIntakeNote.content":
+		if e.complexity.SystemIntakeNote.Content == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeNote.Content(childComplexity), true
+
+	case "SystemIntakeNote.createdAt":
+		if e.complexity.SystemIntakeNote.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeNote.CreatedAt(childComplexity), true
+
+	case "SystemIntakeNote.id":
+		if e.complexity.SystemIntakeNote.ID == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeNote.ID(childComplexity), true
+
+	case "SystemIntakeNoteAuthor.eua":
+		if e.complexity.SystemIntakeNoteAuthor.Eua == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeNoteAuthor.Eua(childComplexity), true
+
+	case "SystemIntakeNoteAuthor.name":
+		if e.complexity.SystemIntakeNoteAuthor.Name == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeNoteAuthor.Name(childComplexity), true
+
+	case "SystemIntakeProductManager.component":
+		if e.complexity.SystemIntakeProductManager.Component == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeProductManager.Component(childComplexity), true
+
+	case "SystemIntakeProductManager.name":
+		if e.complexity.SystemIntakeProductManager.Name == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeProductManager.Name(childComplexity), true
+
+	case "SystemIntakeRequester.component":
+		if e.complexity.SystemIntakeRequester.Component == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeRequester.Component(childComplexity), true
+
+	case "SystemIntakeRequester.email":
+		if e.complexity.SystemIntakeRequester.Email == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeRequester.Email(childComplexity), true
+
+	case "SystemIntakeRequester.name":
+		if e.complexity.SystemIntakeRequester.Name == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeRequester.Name(childComplexity), true
+
 	case "TestDate.date":
 		if e.complexity.TestDate.Date == nil {
 			break
@@ -1529,6 +1758,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.TestDate.TestType(childComplexity), true
+
+	case "UpdateSystemIntakeAdminLeadPayload.systemIntake":
+		if e.complexity.UpdateSystemIntakeAdminLeadPayload.SystemIntake == nil {
+			break
+		}
+
+		return e.complexity.UpdateSystemIntakeAdminLeadPayload.SystemIntake(childComplexity), true
+
+	case "UpdateSystemIntakeAdminLeadPayload.userErrors":
+		if e.complexity.UpdateSystemIntakeAdminLeadPayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.UpdateSystemIntakeAdminLeadPayload.UserErrors(childComplexity), true
 
 	case "UpdateTestDatePayload.testDate":
 		if e.complexity.UpdateTestDatePayload.TestDate == nil {
@@ -1918,7 +2161,7 @@ type BusinessCaseAsIsSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostPhase {
   """
@@ -1936,7 +2179,7 @@ enum LifecycleCostPhase {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostSolution {
   """
@@ -1958,7 +2201,7 @@ enum LifecycleCostSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostYear {
   """
@@ -2138,54 +2381,149 @@ enum SystemIntakeRequestType {
 }
 
 """
+A business owner for a system intake
+"""
+type SystemIntakeBusinessOwner {
+  component: String
+  name: String
+}
+
+"""
+A date for a contract
+"""
+type ContractDate {
+  day: String
+  month: String
+  year: String
+}
+
+"""
+A contract for a system intake
+"""
+type SystemIntakeContract {
+  contractor: String
+  endDate: ContractDate
+  hasContract: String
+  startDate: ContractDate
+  vehicle: String
+}
+
+"""
+costs for a system intake
+"""
+type SystemIntakeCosts {
+  expectedIncreaseAmount: String
+  isExpectingIncrease: String
+}
+
+"""
+A funding source for a system intake
+"""
+type SystemIntakeFundingSource {
+  fundingNumber: String
+  isFunded: Boolean
+  source: String
+}
+
+"""
+A collaborator for an intake
+"""
+type SystemIntakeCollaborator {
+  acronym: String
+  collaborator: String
+  key: String
+  label: String
+  name: String
+}
+
+"""
+governanceTeam for an intake
+"""
+type SystemIntakeGovernanceTeam {
+  isPresent: Boolean
+  teams: [SystemIntakeCollaborator!]
+}
+
+"""
+An isso for a system intake
+"""
+type SystemIntakeISSO {
+  isPresent: Boolean
+  name: String
+}
+
+"""
+The author of a system intake note
+"""
+type SystemIntakeNoteAuthor {
+  eua: String!
+  name: String!
+}
+
+"""
+A note on a system intake
+"""
+type SystemIntakeNote {
+  author: SystemIntakeNoteAuthor!
+  content: String!
+  createdAt: Time!
+  id: UUID!
+}
+
+"""
+A product manager for a system intake
+"""
+type SystemIntakeProductManager {
+  component: String
+  name: String
+}
+
+"""
+A requester for a system intake
+"""
+type SystemIntakeRequester {
+  component: String
+  email: String
+  name: String!
+}
+
+"""
 A SystemIntake instance
 """
 type SystemIntake {
+  adminLead: String
   archivedAt: Time
   businessCase: BusinessCase
   businessNeed: String
-  businessOwner: String
-  businessOwnerComponent: String
-  component: String
-  contractEndDate: Time
-  contractEndMonth: String
-  contractEndYear: String
-  contractStartDate: Time
-  contractStartMonth: String
-  contractStartYear: String
-  contractVehicle: String
-  contractor: String
-  costIncrease: String
-  costIncreaseAmount: String
+  businessOwner: SystemIntakeBusinessOwner
+  businessSolution: String
+  contract: SystemIntakeContract
+  costs: SystemIntakeCosts
   createdAt: Time!
+  currentStage: String
   decisionNextSteps: String
   eaCollaborator: String
   eaCollaboratorName: String
-  eaSupportRequest: Boolean
   euaUserId: String!
-  existingContract: String
-  existingFunding: Boolean
-  fundingNumber: String
-  fundingSource: String
+  fundingSource: SystemIntakeFundingSource
+  governanceTeams: SystemIntakeGovernanceTeam
   grbDate: Time
   grtDate: Time
   id: UUID!
-  isso: String
-  issoName: String
+  isso: SystemIntakeISSO
   lcid: String
   lcidExpiresAt: Time
   lcidScope: String
+  needsEaSupport: Boolean
+  notes: [SystemIntakeNote!]!
   oitSecurityCollaborator: String
   oitSecurityCollaboratorName: String
-  processStatus: String
-  productManager: String
-  productManagerComponent: String
+  productManager: SystemIntakeProductManager
   projectAcronym: String
-  projectName: String
   rejectionReason: String
+  requestName: String
   requestType: SystemIntakeRequestType!
-  requester: String
-  solution: String
+  requester: SystemIntakeRequester!
   status: SystemIntakeStatus!
   submittedAt: Time
   trbCollaborator: String
@@ -2207,6 +2545,22 @@ Response for adding GRT Feedback
 """
 type AddGRTFeedbackPayload {
   id: UUID
+}
+
+"""
+Parameters required to update the admin lead for an intake
+"""
+input UpdateSystemIntakeAdminLeadInput {
+  adminLead: String!
+  id: UUID!
+}
+
+"""
+Result of UpdateSystemIntakeAdminLead
+"""
+type UpdateSystemIntakeAdminLeadPayload {
+  systemIntake: SystemIntake
+  userErrors: [UserError!]
 }
 
 """
@@ -2236,6 +2590,8 @@ type Mutation {
   markSystemIntakeReadyForGRB(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
+    @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
 }
@@ -2424,6 +2780,21 @@ func (ec *executionContext) field_Mutation_markSystemIntakeReadyForGRB_args(ctx 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeAdminLead_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateSystemIntakeAdminLeadInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4710,6 +5081,102 @@ func (ec *executionContext) _BusinessOwner_name(ctx context.Context, field graph
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _ContractDate_day(ctx context.Context, field graphql.CollectedField, obj *model.ContractDate) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ContractDate",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Day, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ContractDate_month(ctx context.Context, field graphql.CollectedField, obj *model.ContractDate) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ContractDate",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Month, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _ContractDate_year(ctx context.Context, field graphql.CollectedField, obj *model.ContractDate) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "ContractDate",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Year, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _CreateAccessibilityRequestDocumentPayload_accessibilityRequestDocument(ctx context.Context, field graphql.CollectedField, obj *model.CreateAccessibilityRequestDocumentPayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5596,6 +6063,69 @@ func (ec *executionContext) _Mutation_markSystemIntakeReadyForGRB(ctx context.Co
 	return ec.marshalOAddGRTFeedbackPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_updateSystemIntakeAdminLead(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateSystemIntakeAdminLead_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateSystemIntakeAdminLead(rctx, args["input"].(model.UpdateSystemIntakeAdminLeadInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.UpdateSystemIntakeAdminLeadPayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakeAdminLeadPayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakeAdminLeadPayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakeAdminLeadPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6190,6 +6720,38 @@ func (ec *executionContext) _SystemEdge_node(ctx context.Context, field graphql.
 	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntake_adminLead(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().AdminLead(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SystemIntake_archivedAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6313,12 +6875,12 @@ func (ec *executionContext) _SystemIntake_businessOwner(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeBusinessOwner)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwner(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_businessOwnerComponent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+func (ec *executionContext) _SystemIntake_businessSolution(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6336,7 +6898,7 @@ func (ec *executionContext) _SystemIntake_businessOwnerComponent(ctx context.Con
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().BusinessOwnerComponent(rctx, obj)
+		return ec.resolvers.SystemIntake().BusinessSolution(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6350,7 +6912,7 @@ func (ec *executionContext) _SystemIntake_businessOwnerComponent(ctx context.Con
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_component(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+func (ec *executionContext) _SystemIntake_contract(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6368,7 +6930,7 @@ func (ec *executionContext) _SystemIntake_component(ctx context.Context, field g
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().Component(rctx, obj)
+		return ec.resolvers.SystemIntake().Contract(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6377,44 +6939,12 @@ func (ec *executionContext) _SystemIntake_component(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeContract)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeContract2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_contractEndDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ContractEndDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_contractEndMonth(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+func (ec *executionContext) _SystemIntake_costs(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -6432,7 +6962,7 @@ func (ec *executionContext) _SystemIntake_contractEndMonth(ctx context.Context, 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ContractEndMonth(rctx, obj)
+		return ec.resolvers.SystemIntake().Costs(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6441,265 +6971,9 @@ func (ec *executionContext) _SystemIntake_contractEndMonth(ctx context.Context, 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeCosts)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_contractEndYear(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ContractEndYear(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_contractStartDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.ContractStartDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*time.Time)
-	fc.Result = res
-	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_contractStartMonth(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ContractStartMonth(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_contractStartYear(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ContractStartYear(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_contractVehicle(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ContractVehicle(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_contractor(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().Contractor(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_costIncrease(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().CostIncrease(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_costIncreaseAmount(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().CostIncreaseAmount(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -6735,6 +7009,38 @@ func (ec *executionContext) _SystemIntake_createdAt(ctx context.Context, field g
 	res := resTmp.(*time.Time)
 	fc.Result = res
 	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_currentStage(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().CurrentStage(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_decisionNextSteps(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -6833,38 +7139,6 @@ func (ec *executionContext) _SystemIntake_eaCollaboratorName(ctx context.Context
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_eaSupportRequest(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().EaSupportRequest(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _SystemIntake_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6900,102 +7174,6 @@ func (ec *executionContext) _SystemIntake_euaUserId(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_existingContract(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ExistingContract(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_existingFunding(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ExistingFunding(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*bool)
-	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_fundingNumber(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().FundingNumber(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _SystemIntake_fundingSource(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7023,9 +7201,41 @@ func (ec *executionContext) _SystemIntake_fundingSource(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeFundingSource)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_governanceTeams(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().GovernanceTeams(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.SystemIntakeGovernanceTeam)
+	fc.Result = res
+	return ec.marshalOSystemIntakeGovernanceTeam2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeam(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_grbDate(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7154,41 +7364,9 @@ func (ec *executionContext) _SystemIntake_isso(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeIsso)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_issoName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().IssoName(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_lcid(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7287,6 +7465,73 @@ func (ec *executionContext) _SystemIntake_lcidScope(ctx context.Context, field g
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntake_needsEaSupport(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().NeedsEaSupport(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_notes(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().Notes(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SystemIntakeNote)
+	fc.Result = res
+	return ec.marshalNSystemIntakeNote2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNoteᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SystemIntake_oitSecurityCollaborator(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7351,38 +7596,6 @@ func (ec *executionContext) _SystemIntake_oitSecurityCollaboratorName(ctx contex
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_processStatus(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ProcessStatus(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _SystemIntake_productManager(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7410,41 +7623,9 @@ func (ec *executionContext) _SystemIntake_productManager(ctx context.Context, fi
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeProductManager)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_productManagerComponent(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ProductManagerComponent(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOSystemIntakeProductManager2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_projectAcronym(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7479,38 +7660,6 @@ func (ec *executionContext) _SystemIntake_projectAcronym(ctx context.Context, fi
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SystemIntake_projectName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().ProjectName(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _SystemIntake_rejectionReason(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7530,6 +7679,38 @@ func (ec *executionContext) _SystemIntake_rejectionReason(ctx context.Context, f
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return ec.resolvers.SystemIntake().RejectionReason(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntake_requestName(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().RequestName(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7589,38 +7770,6 @@ func (ec *executionContext) _SystemIntake_requester(ctx context.Context, field g
 		Object:     "SystemIntake",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Requester, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _SystemIntake_solution(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "SystemIntake",
-		Field:      field,
-		Args:       nil,
 		IsMethod:   true,
 		IsResolver: true,
 	}
@@ -7628,18 +7777,21 @@ func (ec *executionContext) _SystemIntake_solution(ctx context.Context, field gr
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SystemIntake().Solution(rctx, obj)
+		return ec.resolvers.SystemIntake().Requester(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.SystemIntakeRequester)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNSystemIntakeRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequester(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntake_status(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
@@ -7808,6 +7960,1051 @@ func (ec *executionContext) _SystemIntake_updatedAt(ctx context.Context, field g
 	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntakeBusinessOwner_component(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeBusinessOwner) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeBusinessOwner",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Component, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeBusinessOwner_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeBusinessOwner) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeBusinessOwner",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeCollaborator_acronym(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCollaborator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeCollaborator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Acronym, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeCollaborator_collaborator(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCollaborator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeCollaborator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Collaborator, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeCollaborator_key(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCollaborator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeCollaborator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Key, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeCollaborator_label(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCollaborator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeCollaborator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Label, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeCollaborator_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCollaborator) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeCollaborator",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeContract_contractor(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContract",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Contractor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeContract_endDate(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContract",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EndDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.ContractDate)
+	fc.Result = res
+	return ec.marshalOContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeContract_hasContract(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContract",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasContract, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeContract_startDate(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContract",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.StartDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.ContractDate)
+	fc.Result = res
+	return ec.marshalOContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeContract_vehicle(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeContract) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeContract",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Vehicle, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeCosts_expectedIncreaseAmount(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCosts) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeCosts",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ExpectedIncreaseAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeCosts_isExpectingIncrease(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeCosts) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeCosts",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsExpectingIncrease, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeFundingSource_fundingNumber(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeFundingSource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FundingNumber, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeFundingSource_isFunded(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeFundingSource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsFunded, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeFundingSource_source(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeFundingSource) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeFundingSource",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Source, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeGovernanceTeam_isPresent(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeGovernanceTeam) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeGovernanceTeam",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsPresent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeGovernanceTeam_teams(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeGovernanceTeam) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeGovernanceTeam",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Teams, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SystemIntakeCollaborator)
+	fc.Result = res
+	return ec.marshalOSystemIntakeCollaborator2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeISSO_isPresent(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeIsso) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeISSO",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsPresent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeISSO_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeIsso) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeISSO",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeNote_author(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Author, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.SystemIntakeNoteAuthor)
+	fc.Result = res
+	return ec.marshalNSystemIntakeNoteAuthor2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNoteAuthor(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeNote_content(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Content, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeNote_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeNote_id(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNote) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeNote",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeNoteAuthor_eua(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNoteAuthor) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeNoteAuthor",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Eua, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeNoteAuthor_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeNoteAuthor) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeNoteAuthor",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeProductManager_component(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeProductManager) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeProductManager",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Component, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeProductManager_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeProductManager) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeProductManager",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeRequester_component(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeRequester) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeRequester",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Component, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeRequester_email(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeRequester) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeRequester",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeRequester_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeRequester) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeRequester",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _TestDate_date(ctx context.Context, field graphql.CollectedField, obj *models.TestDate) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7943,6 +9140,70 @@ func (ec *executionContext) _TestDate_testType(ctx context.Context, field graphq
 	res := resTmp.(models.TestDateTestType)
 	fc.Result = res
 	return ec.marshalNTestDateTestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateTestType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakeAdminLeadPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateSystemIntakeAdminLeadPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemIntake, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntake)
+	fc.Result = res
+	return ec.marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakeAdminLeadPayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateSystemIntakeAdminLeadPayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _UpdateTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.UpdateTestDatePayload) (ret graphql.Marshaler) {
@@ -9378,6 +10639,34 @@ func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx co
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeAdminLeadInput, error) {
+	var it model.UpdateSystemIntakeAdminLeadInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "adminLead":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminLead"))
+			it.AdminLead, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateTestDateInput(ctx context.Context, obj interface{}) (model.UpdateTestDateInput, error) {
 	var it model.UpdateTestDateInput
 	var asMap = obj.(map[string]interface{})
@@ -10051,6 +11340,34 @@ func (ec *executionContext) _BusinessOwner(ctx context.Context, sel ast.Selectio
 	return out
 }
 
+var contractDateImplementors = []string{"ContractDate"}
+
+func (ec *executionContext) _ContractDate(ctx context.Context, sel ast.SelectionSet, obj *model.ContractDate) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, contractDateImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ContractDate")
+		case "day":
+			out.Values[i] = ec._ContractDate_day(ctx, field, obj)
+		case "month":
+			out.Values[i] = ec._ContractDate_month(ctx, field, obj)
+		case "year":
+			out.Values[i] = ec._ContractDate_year(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var createAccessibilityRequestDocumentPayloadImplementors = []string{"CreateAccessibilityRequestDocumentPayload"}
 
 func (ec *executionContext) _CreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, obj *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
@@ -10226,6 +11543,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_generatePresignedUploadURL(ctx, field)
 		case "markSystemIntakeReadyForGRB":
 			out.Values[i] = ec._Mutation_markSystemIntakeReadyForGRB(ctx, field)
+		case "updateSystemIntakeAdminLead":
+			out.Values[i] = ec._Mutation_updateSystemIntakeAdminLead(ctx, field)
 		case "updateTestDate":
 			out.Values[i] = ec._Mutation_updateTestDate(ctx, field)
 		default:
@@ -10430,6 +11749,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("SystemIntake")
+		case "adminLead":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_adminLead(ctx, field, obj)
+				return res
+			})
 		case "archivedAt":
 			out.Values[i] = ec._SystemIntake_archivedAt(ctx, field, obj)
 		case "businessCase":
@@ -10465,7 +11795,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_businessOwner(ctx, field, obj)
 				return res
 			})
-		case "businessOwnerComponent":
+		case "businessSolution":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -10473,10 +11803,10 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_businessOwnerComponent(ctx, field, obj)
+				res = ec._SystemIntake_businessSolution(ctx, field, obj)
 				return res
 			})
-		case "component":
+		case "contract":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -10484,12 +11814,10 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_component(ctx, field, obj)
+				res = ec._SystemIntake_contract(ctx, field, obj)
 				return res
 			})
-		case "contractEndDate":
-			out.Values[i] = ec._SystemIntake_contractEndDate(ctx, field, obj)
-		case "contractEndMonth":
+		case "costs":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -10497,86 +11825,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_contractEndMonth(ctx, field, obj)
-				return res
-			})
-		case "contractEndYear":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_contractEndYear(ctx, field, obj)
-				return res
-			})
-		case "contractStartDate":
-			out.Values[i] = ec._SystemIntake_contractStartDate(ctx, field, obj)
-		case "contractStartMonth":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_contractStartMonth(ctx, field, obj)
-				return res
-			})
-		case "contractStartYear":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_contractStartYear(ctx, field, obj)
-				return res
-			})
-		case "contractVehicle":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_contractVehicle(ctx, field, obj)
-				return res
-			})
-		case "contractor":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_contractor(ctx, field, obj)
-				return res
-			})
-		case "costIncrease":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_costIncrease(ctx, field, obj)
-				return res
-			})
-		case "costIncreaseAmount":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_costIncreaseAmount(ctx, field, obj)
+				res = ec._SystemIntake_costs(ctx, field, obj)
 				return res
 			})
 		case "createdAt":
@@ -10584,6 +11833,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "currentStage":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_currentStage(ctx, field, obj)
+				return res
+			})
 		case "decisionNextSteps":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10617,17 +11877,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_eaCollaboratorName(ctx, field, obj)
 				return res
 			})
-		case "eaSupportRequest":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_eaSupportRequest(ctx, field, obj)
-				return res
-			})
 		case "euaUserId":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10642,39 +11891,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				}
 				return res
 			})
-		case "existingContract":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_existingContract(ctx, field, obj)
-				return res
-			})
-		case "existingFunding":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_existingFunding(ctx, field, obj)
-				return res
-			})
-		case "fundingNumber":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_fundingNumber(ctx, field, obj)
-				return res
-			})
 		case "fundingSource":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10684,6 +11900,17 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_fundingSource(ctx, field, obj)
+				return res
+			})
+		case "governanceTeams":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_governanceTeams(ctx, field, obj)
 				return res
 			})
 		case "grbDate":
@@ -10704,17 +11931,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_isso(ctx, field, obj)
-				return res
-			})
-		case "issoName":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_issoName(ctx, field, obj)
 				return res
 			})
 		case "lcid":
@@ -10741,6 +11957,31 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_lcidScope(ctx, field, obj)
 				return res
 			})
+		case "needsEaSupport":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_needsEaSupport(ctx, field, obj)
+				return res
+			})
+		case "notes":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_notes(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "oitSecurityCollaborator":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10763,17 +12004,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_oitSecurityCollaboratorName(ctx, field, obj)
 				return res
 			})
-		case "processStatus":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_processStatus(ctx, field, obj)
-				return res
-			})
 		case "productManager":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10783,17 +12013,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._SystemIntake_productManager(ctx, field, obj)
-				return res
-			})
-		case "productManagerComponent":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_productManagerComponent(ctx, field, obj)
 				return res
 			})
 		case "projectAcronym":
@@ -10807,17 +12026,6 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_projectAcronym(ctx, field, obj)
 				return res
 			})
-		case "projectName":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._SystemIntake_projectName(ctx, field, obj)
-				return res
-			})
 		case "rejectionReason":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -10829,14 +12037,7 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 				res = ec._SystemIntake_rejectionReason(ctx, field, obj)
 				return res
 			})
-		case "requestType":
-			out.Values[i] = ec._SystemIntake_requestType(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "requester":
-			out.Values[i] = ec._SystemIntake_requester(ctx, field, obj)
-		case "solution":
+		case "requestName":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -10844,7 +12045,26 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._SystemIntake_solution(ctx, field, obj)
+				res = ec._SystemIntake_requestName(ctx, field, obj)
+				return res
+			})
+		case "requestType":
+			out.Values[i] = ec._SystemIntake_requestType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "requester":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_requester(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			})
 		case "status":
@@ -10892,6 +12112,333 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var systemIntakeBusinessOwnerImplementors = []string{"SystemIntakeBusinessOwner"}
+
+func (ec *executionContext) _SystemIntakeBusinessOwner(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeBusinessOwner) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeBusinessOwnerImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeBusinessOwner")
+		case "component":
+			out.Values[i] = ec._SystemIntakeBusinessOwner_component(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._SystemIntakeBusinessOwner_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeCollaboratorImplementors = []string{"SystemIntakeCollaborator"}
+
+func (ec *executionContext) _SystemIntakeCollaborator(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeCollaborator) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeCollaboratorImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeCollaborator")
+		case "acronym":
+			out.Values[i] = ec._SystemIntakeCollaborator_acronym(ctx, field, obj)
+		case "collaborator":
+			out.Values[i] = ec._SystemIntakeCollaborator_collaborator(ctx, field, obj)
+		case "key":
+			out.Values[i] = ec._SystemIntakeCollaborator_key(ctx, field, obj)
+		case "label":
+			out.Values[i] = ec._SystemIntakeCollaborator_label(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._SystemIntakeCollaborator_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeContractImplementors = []string{"SystemIntakeContract"}
+
+func (ec *executionContext) _SystemIntakeContract(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeContract) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeContractImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeContract")
+		case "contractor":
+			out.Values[i] = ec._SystemIntakeContract_contractor(ctx, field, obj)
+		case "endDate":
+			out.Values[i] = ec._SystemIntakeContract_endDate(ctx, field, obj)
+		case "hasContract":
+			out.Values[i] = ec._SystemIntakeContract_hasContract(ctx, field, obj)
+		case "startDate":
+			out.Values[i] = ec._SystemIntakeContract_startDate(ctx, field, obj)
+		case "vehicle":
+			out.Values[i] = ec._SystemIntakeContract_vehicle(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeCostsImplementors = []string{"SystemIntakeCosts"}
+
+func (ec *executionContext) _SystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeCosts) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeCostsImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeCosts")
+		case "expectedIncreaseAmount":
+			out.Values[i] = ec._SystemIntakeCosts_expectedIncreaseAmount(ctx, field, obj)
+		case "isExpectingIncrease":
+			out.Values[i] = ec._SystemIntakeCosts_isExpectingIncrease(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeFundingSourceImplementors = []string{"SystemIntakeFundingSource"}
+
+func (ec *executionContext) _SystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeFundingSource) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeFundingSourceImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeFundingSource")
+		case "fundingNumber":
+			out.Values[i] = ec._SystemIntakeFundingSource_fundingNumber(ctx, field, obj)
+		case "isFunded":
+			out.Values[i] = ec._SystemIntakeFundingSource_isFunded(ctx, field, obj)
+		case "source":
+			out.Values[i] = ec._SystemIntakeFundingSource_source(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeGovernanceTeamImplementors = []string{"SystemIntakeGovernanceTeam"}
+
+func (ec *executionContext) _SystemIntakeGovernanceTeam(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeGovernanceTeam) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeGovernanceTeamImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeGovernanceTeam")
+		case "isPresent":
+			out.Values[i] = ec._SystemIntakeGovernanceTeam_isPresent(ctx, field, obj)
+		case "teams":
+			out.Values[i] = ec._SystemIntakeGovernanceTeam_teams(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeISSOImplementors = []string{"SystemIntakeISSO"}
+
+func (ec *executionContext) _SystemIntakeISSO(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeIsso) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeISSOImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeISSO")
+		case "isPresent":
+			out.Values[i] = ec._SystemIntakeISSO_isPresent(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._SystemIntakeISSO_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeNoteImplementors = []string{"SystemIntakeNote"}
+
+func (ec *executionContext) _SystemIntakeNote(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeNote) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeNoteImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeNote")
+		case "author":
+			out.Values[i] = ec._SystemIntakeNote_author(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "content":
+			out.Values[i] = ec._SystemIntakeNote_content(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createdAt":
+			out.Values[i] = ec._SystemIntakeNote_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "id":
+			out.Values[i] = ec._SystemIntakeNote_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeNoteAuthorImplementors = []string{"SystemIntakeNoteAuthor"}
+
+func (ec *executionContext) _SystemIntakeNoteAuthor(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeNoteAuthor) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeNoteAuthorImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeNoteAuthor")
+		case "eua":
+			out.Values[i] = ec._SystemIntakeNoteAuthor_eua(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+			out.Values[i] = ec._SystemIntakeNoteAuthor_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeProductManagerImplementors = []string{"SystemIntakeProductManager"}
+
+func (ec *executionContext) _SystemIntakeProductManager(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeProductManager) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeProductManagerImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeProductManager")
+		case "component":
+			out.Values[i] = ec._SystemIntakeProductManager_component(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._SystemIntakeProductManager_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeRequesterImplementors = []string{"SystemIntakeRequester"}
+
+func (ec *executionContext) _SystemIntakeRequester(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeRequester) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeRequesterImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeRequester")
+		case "component":
+			out.Values[i] = ec._SystemIntakeRequester_component(ctx, field, obj)
+		case "email":
+			out.Values[i] = ec._SystemIntakeRequester_email(ctx, field, obj)
+		case "name":
+			out.Values[i] = ec._SystemIntakeRequester_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var testDateImplementors = []string{"TestDate"}
 
 func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet, obj *models.TestDate) graphql.Marshaler {
@@ -10920,6 +12467,32 @@ func (ec *executionContext) _TestDate(ctx context.Context, sel ast.SelectionSet,
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateSystemIntakeAdminLeadPayloadImplementors = []string{"UpdateSystemIntakeAdminLeadPayload"}
+
+func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateSystemIntakeAdminLeadPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateSystemIntakeAdminLeadPayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateSystemIntakeAdminLeadPayload")
+		case "systemIntake":
+			out.Values[i] = ec._UpdateSystemIntakeAdminLeadPayload_systemIntake(ctx, field, obj)
+		case "userErrors":
+			out.Values[i] = ec._UpdateSystemIntakeAdminLeadPayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11599,6 +13172,73 @@ func (ec *executionContext) marshalNSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasi
 	return ec._SystemIntake(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNSystemIntakeCollaborator2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaborator(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCollaborator) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeCollaborator(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeNote2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNoteᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SystemIntakeNote) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNote(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNote(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeNote) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeNote(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeNoteAuthor2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeNoteAuthor(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeNoteAuthor) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeNoteAuthor(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNSystemIntakeRequestType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeRequestType(ctx context.Context, v interface{}) (models.SystemIntakeRequestType, error) {
 	tmp, err := graphql.UnmarshalString(v)
 	res := models.SystemIntakeRequestType(tmp)
@@ -11613,6 +13253,20 @@ func (ec *executionContext) marshalNSystemIntakeRequestType2githubᚗcomᚋcmsgo
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNSystemIntakeRequester2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequester(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeRequester) graphql.Marshaler {
+	return ec._SystemIntakeRequester(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeRequester(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeRequester) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeRequester(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNSystemIntakeStatus2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntakeStatus(ctx context.Context, v interface{}) (models.SystemIntakeStatus, error) {
@@ -11743,6 +13397,11 @@ func (ec *executionContext) marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeAdminLeadInput, error) {
+	res, err := ec.unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNUpdateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDateInput(ctx context.Context, v interface{}) (model.UpdateTestDateInput, error) {
@@ -12062,6 +13721,13 @@ func (ec *executionContext) marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgo
 	return ec._BusinessCaseSolution(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx context.Context, sel ast.SelectionSet, v *model.ContractDate) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ContractDate(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateAccessibilityRequestDocumentPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -12219,6 +13885,95 @@ func (ec *executionContext) marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasi
 	return ec._SystemIntake(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOSystemIntakeBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeBusinessOwner(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeBusinessOwner) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeBusinessOwner(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeCollaborator2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaboratorᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SystemIntakeCollaborator) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeCollaborator2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaborator(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalOSystemIntakeContract2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeContract(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeContract) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeContract(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeCosts2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCosts(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCosts) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeCosts(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeFundingSource2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeFundingSource(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeFundingSource) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeFundingSource(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeGovernanceTeam2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeGovernanceTeam(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeGovernanceTeam) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeGovernanceTeam(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeISSO2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeIsso(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeIsso) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeISSO(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSystemIntakeProductManager2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeProductManager(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeProductManager) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SystemIntakeProductManager(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx context.Context, sel ast.SelectionSet, v *models.TestDate) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -12254,6 +14009,13 @@ func (ec *executionContext) marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(
 		return graphql.Null
 	}
 	return models.MarshalUUID(*v)
+}
+
+func (ec *executionContext) marshalOUpdateSystemIntakeAdminLeadPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadPayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateSystemIntakeAdminLeadPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateSystemIntakeAdminLeadPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateTestDatePayload) graphql.Marshaler {
