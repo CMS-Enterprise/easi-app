@@ -2,11 +2,15 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
+import GetAdminNotesQuery from 'queries/GetAdminNotesQuery';
+import { GetAdminNotes } from 'queries/types/GetAdminNotes';
 
 import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
@@ -14,7 +18,7 @@ import TextAreaField from 'components/shared/TextAreaField';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { AppState } from 'reducers/rootReducer';
 import { Action } from 'types/action';
-import { fetchActions, fetchIntakeNotes, postIntakeNote } from 'types/routines';
+import { fetchActions, postIntakeNote } from 'types/routines';
 import { IntakeNote } from 'types/systemIntake';
 
 type NoteForm = {
@@ -29,10 +33,12 @@ const NoteListItem = ({ note }: { note: IntakeNote }) => {
           {note.content}
         </p>
         <span className="text-base-dark font-body-2xs">{`by: ${
-          note.authorName
-        } | ${note.createdAt.toLocaleString(
+          note.author.name
+        } | ${DateTime.fromISO(note.createdAt).toLocaleString(
           DateTime.DATE_FULL
-        )} at ${note.createdAt.toLocaleString(DateTime.TIME_SIMPLE)}`}</span>
+        )} at ${DateTime.fromISO(note.createdAt).toLocaleString(
+          DateTime.TIME_SIMPLE
+        )}`}</span>
       </div>
     </li>
   );
@@ -73,9 +79,17 @@ const Notes = () => {
   const dispatch = useDispatch();
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
-  const notes = useSelector((state: AppState) => state.systemIntake.notes);
   const actions = useSelector((state: AppState) => state.action.actions);
 
+  const {
+    error: notesError,
+    data: notesData,
+    refetch: notesRefetch
+  } = useQuery<GetAdminNotes>(GetAdminNotesQuery, {
+    variables: {
+      id: systemId
+    }
+  });
   const { t } = useTranslation('governanceReviewTeam');
   const onSubmit = async (
     values: NoteForm,
@@ -89,11 +103,11 @@ const Notes = () => {
         content: values.note
       })
     );
+    notesRefetch({ variables: { id: systemId } });
     await resetForm();
   };
 
   useEffect(() => {
-    dispatch(fetchIntakeNotes(systemId));
     dispatch(fetchActions(systemId));
   }, [dispatch, systemId]);
 
@@ -101,12 +115,13 @@ const Notes = () => {
     note: ''
   };
 
-  const notesByTimestamp = notes.map((note: IntakeNote) => {
-    return {
-      createdAt: note.createdAt,
-      element: <NoteListItem note={note} key={note.id} />
-    };
-  });
+  const notesByTimestamp =
+    notesData?.systemIntake?.notes.map(note => {
+      return {
+        createdAt: note.createdAt,
+        element: <NoteListItem note={note} key={note.id} />
+      };
+    }) || [];
 
   const actionsByTimestamp = actions.map((action: Action) => {
     return {
@@ -116,7 +131,7 @@ const Notes = () => {
   });
 
   const interleavedList = [...notesByTimestamp, ...actionsByTimestamp]
-    .sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis())
+    .sort()
     .map(a => a.element);
 
   return (
@@ -148,7 +163,12 @@ const Notes = () => {
                   {t('notes.addNoteCta')}
                 </Button>
               </Form>
-              <ul className="easi-grt__history">{interleavedList}</ul>
+              {notesError && (
+                <Alert type="error">The notes could not be loaded.</Alert>
+              )}
+              {!notesError && notesData && (
+                <ul className="easi-grt__history">{interleavedList}</ul>
+              )}
               <AnythingWrongSurvey />
             </div>
           );
