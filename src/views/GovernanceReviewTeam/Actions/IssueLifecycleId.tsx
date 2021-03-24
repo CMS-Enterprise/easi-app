@@ -55,7 +55,7 @@ const IssueLifecycleId = () => {
     const payload = { id: systemId, lcidPayload };
     dispatch(issueLifecycleIdForSystemIntake(payload));
 
-    history.push(`/governance-review-team/${systemId}/intake-request`);
+    history.push(`/governance-review-team/${systemId}/notes`);
   };
 
   return (

@@ -404,6 +404,13 @@ func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, inpu
 	}, err
 }
 
+func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.UpdateReviewDates(ctx, input.ID, input.GrbDate, input.GrtDate)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
 	panic(fmt.Errorf("not implemented"))
 }
