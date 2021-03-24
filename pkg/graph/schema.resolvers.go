@@ -352,7 +352,11 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
-		&models.Action{},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNOTITREQUEST,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
 		input.IntakeID,
 		models.SystemIntakeStatusNOTITREQUEST,
 		false,

@@ -8,6 +8,7 @@ import { DateTime } from 'luxon';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
+import CreateSystemIntakeActionNotItRequest from 'queries/CreateSystemIntakeActionNotItRequest';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 
@@ -187,6 +188,7 @@ const RequestOverview = () => {
               render={() => (
                 <SubmitAction
                   action="NOT_IT_REQUEST"
+                  query={CreateSystemIntakeActionNotItRequest}
                   actionName={actionsT('actions.notItRequest')}
                 />
               )}
