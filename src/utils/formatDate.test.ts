@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import formatDate, { formatContractDate } from './formatDate';
+import formatDate, { formatContractDate, getFiscalYear } from './formatDate';
 
 describe('formatDate', () => {
   describe('string', () => {
@@ -51,5 +51,25 @@ describe('formatDate', () => {
 
       expect(formatDate(date)).toEqual('Invalid DateTime');
     });
+  });
+});
+
+describe('getFiscalYear', () => {
+  it('returns fiscal year for a random date in the middle of the year', () => {
+    const date = DateTime.fromObject({ year: 2021, month: 3, day: 1 });
+
+    expect(getFiscalYear(date)).toEqual('2021');
+  });
+
+  it('returns fiscal year for a date at the beginning of the fiscal year', () => {
+    const date = DateTime.fromObject({ year: 2024, month: 10, day: 1 });
+
+    expect(getFiscalYear(date)).toEqual('2025');
+  });
+
+  it('returns fiscal year for a date at the end of the fiscal year', () => {
+    const date = DateTime.fromObject({ year: 2029, month: 9, day: 30 });
+
+    expect(getFiscalYear(date)).toEqual('2029');
   });
 });
