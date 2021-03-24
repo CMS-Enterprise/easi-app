@@ -61,14 +61,14 @@ const RequestOverview = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  const grtFeedbacks = useQuery<GetGRTFeedback, GetGRTFeedbackVariables>(
-    GetGRTFeedbackQuery,
-    {
-      variables: {
-        intakeID: systemId
-      }
+  const { data: grtFeedbackPayload } = useQuery<
+    GetGRTFeedback,
+    GetGRTFeedbackVariables
+  >(GetGRTFeedbackQuery, {
+    variables: {
+      intakeID: systemId
     }
-  );
+  });
 
   useEffect(() => {
     dispatch(fetchSystemIntake(systemId));
@@ -170,7 +170,7 @@ const RequestOverview = () => {
               render={() => (
                 <BusinessCaseReview
                   businessCase={businessCase}
-                  grtFeedbacks={grtFeedbacks?.data?.grtFeedbacks}
+                  grtFeedbacks={grtFeedbackPayload?.grtFeedbacks}
                 />
               )}
             />
