@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -14,9 +15,11 @@ import (
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
@@ -438,6 +441,19 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 }
 
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
+	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	ok, err := services.NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode()(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+	}
+
 	return r.store.FetchSystemIntakeByID(ctx, id)
 }
 
