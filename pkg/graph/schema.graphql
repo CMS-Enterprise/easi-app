@@ -714,6 +714,14 @@ type UpdateSystemIntakePayload {
 }
 
 """
+Parameters for actions without additional fields
+"""
+input BasicActionInput {
+  feedback: String!
+  intakeId: UUID!
+}
+
+"""
 The root mutation
 """
 type Mutation {
@@ -732,6 +740,7 @@ type Mutation {
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
+  createSystemIntakeActionNotItRequest(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(

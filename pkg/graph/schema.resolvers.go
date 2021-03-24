@@ -349,6 +349,23 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	}, nil
 }
 
+func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNOTITREQUEST,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusNOTITREQUEST,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
 	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
 		TestType:  input.TestType,

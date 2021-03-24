@@ -80,6 +80,14 @@ export interface AddGRTFeedbackInput {
 }
 
 /**
+ * Parameters for actions without additional fields
+ */
+export interface BasicActionInput {
+  feedback: string;
+  intakeId: UUID;
+}
+
+/**
  * Parameters for createAccessibilityRequestDocument
  */
 export interface CreateAccessibilityRequestDocumentInput {
