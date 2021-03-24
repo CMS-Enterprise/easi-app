@@ -150,6 +150,7 @@ func (s *Server) routes(
 		store.CreateAction,
 		cedarLDAPClient.FetchUserInfo,
 	)
+
 	resolver := graph.NewResolver(
 		store,
 		graph.ResolverService{
@@ -166,6 +167,18 @@ func (s *Server) routes(
 				store.CreateGRTFeedback,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+			),
+			CreateActionUpdateStatus: services.NewCreateActionUpdateStatus(
+				serviceConfig,
+				store.UpdateSystemIntakeStatus,
+				saveAction,
+				cedarLDAPClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+				services.NewCloseBusinessCase(
+					serviceConfig,
+					store.FetchBusinessCaseByID,
+					store.UpdateBusinessCase,
+				),
 			),
 		},
 		&s3Client,
