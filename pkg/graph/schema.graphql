@@ -697,6 +697,23 @@ type UpdateSystemIntakeAdminLeadPayload {
 }
 
 """
+Parameters required to update the grt and grb dates for an intake
+"""
+input UpdateSystemIntakeReviewDatesInput {
+  grbDate: Time
+  grtDate: Time
+  id: UUID!
+}
+
+"""
+Result of UpdateSystemIntake mutations
+"""
+type UpdateSystemIntakePayload {
+  systemIntake: SystemIntake
+  userErrors: [UserError!]
+}
+
+"""
 The root mutation
 """
 type Mutation {
@@ -724,6 +741,8 @@ type Mutation {
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)

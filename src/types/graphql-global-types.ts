@@ -127,6 +127,15 @@ export interface UpdateSystemIntakeAdminLeadInput {
   id: UUID;
 }
 
+/**
+ * Parameters required to update the grt and grb dates for an intake
+ */
+export interface UpdateSystemIntakeReviewDatesInput {
+  grbDate?: Time | null;
+  grtDate?: Time | null;
+  id: UUID;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

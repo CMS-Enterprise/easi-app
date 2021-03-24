@@ -1,10 +1,16 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
+import {
+  UpdateSystemIntakeReviewDates,
+  UpdateSystemIntakeReviewDatesVariables
+} from 'queries/types/UpdateSystemIntakeReviewDates';
+import UpdateSystemIntakeReviewDatesQuery from 'queries/UpdateSystemIntakeReviewDatesQuery';
 
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -13,31 +19,33 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { AnythingWrongSurvey } from 'components/Survey';
-import { AppState } from 'reducers/rootReducer';
-import { saveSystemIntake } from 'types/routines';
-import { SubmitDatesForm, SystemIntakeForm } from 'types/systemIntake';
+import { SubmitDatesForm } from 'types/systemIntake';
 import flattenErrors from 'utils/flattenErrors';
 import { DateValidationSchema } from 'validations/systemIntakeSchema';
 
-const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
+const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
   const { systemId } = useParams<{ systemId: string }>();
-  const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation();
-  const intakeIsLoading = useSelector(
-    (state: AppState) => state.systemIntake.isLoading
-  );
+  const [mutate, mutationResult] = useMutation<
+    UpdateSystemIntakeReviewDates,
+    UpdateSystemIntakeReviewDatesVariables
+  >(UpdateSystemIntakeReviewDatesQuery, {
+    errorPolicy: 'all'
+  });
 
   const { grtDate, grbDate } = systemIntake;
+  const parsedGrbDate = DateTime.fromISO(grbDate);
+  const parsedGrtDate = DateTime.fromISO(grtDate);
 
   // TODO: Fix Text Field so we don't have to set initial empty values
   const initialValues: SubmitDatesForm = {
-    grtDateDay: grtDate ? String(grtDate.day) : '',
-    grtDateMonth: grtDate ? String(grtDate.month) : '',
-    grtDateYear: grtDate ? String(grtDate.year) : '',
-    grbDateDay: grbDate ? String(grbDate.day) : '',
-    grbDateMonth: grbDate ? String(grbDate.month) : '',
-    grbDateYear: grbDate ? String(grbDate.year) : ''
+    grtDateDay: grtDate ? String(parsedGrtDate.day) : '',
+    grtDateMonth: grtDate ? String(parsedGrtDate.month) : '',
+    grtDateYear: grtDate ? String(parsedGrtDate.year) : '',
+    grbDateDay: grbDate ? String(parsedGrbDate.day) : '',
+    grbDateMonth: grbDate ? String(parsedGrbDate.month) : '',
+    grbDateYear: grbDate ? String(parsedGrbDate.year) : ''
   };
 
   const onSubmit = (values: SubmitDatesForm) => {
@@ -53,28 +61,29 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
     const newGrtDate = DateTime.fromObject({
       day: Number(grtDateDay),
       month: Number(grtDateMonth),
-      year: Number(grtDateYear)
+      year: Number(grtDateYear),
+      zone: 'UTC'
     });
+
     const newGrbDate = DateTime.fromObject({
       day: Number(grbDateDay),
       month: Number(grbDateMonth),
-      year: Number(grbDateYear)
+      year: Number(grbDateYear),
+      zone: 'UTC'
     });
 
-    const data = {
-      ...systemIntake,
-      grtDate: newGrtDate,
-      grbDate: newGrbDate,
-      id: systemId
-    };
-    dispatch(saveSystemIntake({ ...data }));
-
-    history.push(`/governance-review-team/${systemId}/intake-request`);
+    mutate({
+      variables: {
+        input: {
+          id: systemId,
+          grtDate: newGrtDate,
+          grbDate: newGrbDate
+        }
+      }
+    }).then(() => {
+      history.push(`/governance-review-team/${systemId}/intake-request`);
+    });
   };
-
-  if (intakeIsLoading) {
-    return <></>;
-  }
 
   return (
     <Formik
@@ -105,6 +114,14 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntakeForm }) => {
                     />
                   );
                 })}
+              </ErrorAlert>
+            )}
+            {mutationResult.error && (
+              <ErrorAlert heading="Error">
+                <ErrorAlertMessage
+                  message={mutationResult.error.message}
+                  errorKey="systemIntake"
+                />
               </ErrorAlert>
             )}
             <PageHeading>{t('governanceReviewTeam:dates.heading')}</PageHeading>
