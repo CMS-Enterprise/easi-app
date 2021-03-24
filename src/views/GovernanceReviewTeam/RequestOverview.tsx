@@ -8,13 +8,11 @@ import { DateTime } from 'luxon';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import {
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
-import { GetSystemIntake } from 'queries/types/GetSystemIntake';
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -43,14 +41,14 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
-  const { loading, data: graphData } = useQuery<GetSystemIntake>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  const { loading, data: graphData } = useQuery<
+    GetSystemIntake,
+    GetSystemIntakeVariables
+  >(GetSystemIntakeQuery, {
+    variables: {
+      id: systemId
     }
-  );
+  });
   const intake = graphData?.systemIntake;
 
   const systemIntake = useSelector(
@@ -60,15 +58,6 @@ const RequestOverview = () => {
   const businessCase = useSelector(
     (state: AppState) => state.businessCase.form
   );
-
-  const { data: grtFeedbackPayload } = useQuery<
-    GetGRTFeedback,
-    GetGRTFeedbackVariables
-  >(GetGRTFeedbackQuery, {
-    variables: {
-      intakeID: systemId
-    }
-  });
 
   useEffect(() => {
     dispatch(fetchSystemIntake(systemId));
@@ -170,7 +159,7 @@ const RequestOverview = () => {
               render={() => (
                 <BusinessCaseReview
                   businessCase={businessCase}
-                  grtFeedbacks={grtFeedbackPayload?.grtFeedbacks}
+                  grtFeedbacks={intake?.grtFeedbacks}
                 />
               )}
             />

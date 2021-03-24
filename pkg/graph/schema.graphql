@@ -642,6 +642,7 @@ type SystemIntake {
   governanceTeams: SystemIntakeGovernanceTeam
   grbDate: Time
   grtDate: Time
+  grtFeedbacks: [GRTFeedback!]!
   id: UUID!
   isso: SystemIntakeISSO
   lcid: String
@@ -781,8 +782,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  grtFeedbacks(intakeID: UUID!): [GRTFeedback!] @hasRole(role: EASI_GOVTEAM)
-  systemIntake(id: UUID!): SystemIntake @hasRole(role: EASI_GOVTEAM)
+  systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
 }
 
