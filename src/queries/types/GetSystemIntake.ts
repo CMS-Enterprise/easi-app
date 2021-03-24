@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeRequestType, SystemIntakeStatus } from "./../../types/graphql-global-types";
+import { GRTFeedbackType, SystemIntakeRequestType, SystemIntakeStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntake
@@ -42,6 +42,13 @@ export interface GetSystemIntake_systemIntake_costs {
   __typename: "SystemIntakeCosts";
   isExpectingIncrease: string | null;
   expectedIncreaseAmount: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_grtFeedbacks {
+  __typename: "GRTFeedback";
+  feedback: string | null;
+  feedbackType: GRTFeedbackType | null;
+  createdAt: Time | null;
 }
 
 export interface GetSystemIntake_systemIntake_governanceTeams_teams {
@@ -97,6 +104,7 @@ export interface GetSystemIntake_systemIntake {
   currentStage: string | null;
   grbDate: Time | null;
   grtDate: Time | null;
+  grtFeedbacks: GetSystemIntake_systemIntake_grtFeedbacks[];
   governanceTeams: GetSystemIntake_systemIntake_governanceTeams | null;
   isso: GetSystemIntake_systemIntake_isso | null;
   fundingSource: GetSystemIntake_systemIntake_fundingSource | null;

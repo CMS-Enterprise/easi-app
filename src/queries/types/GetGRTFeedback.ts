@@ -9,15 +9,20 @@ import { GRTFeedbackType } from "./../../types/graphql-global-types";
 // GraphQL query operation: GetGRTFeedback
 // ====================================================
 
-export interface GetGRTFeedback_grtFeedbacks {
+export interface GetGRTFeedback_systemIntake_grtFeedbacks {
   __typename: "GRTFeedback";
-  feedback: string | null;
   feedbackType: GRTFeedbackType | null;
+  feedback: string | null;
   createdAt: Time | null;
 }
 
+export interface GetGRTFeedback_systemIntake {
+  __typename: "SystemIntake";
+  grtFeedbacks: GetGRTFeedback_systemIntake_grtFeedbacks[];
+}
+
 export interface GetGRTFeedback {
-  grtFeedbacks: GetGRTFeedback_grtFeedbacks[] | null;
+  systemIntake: GetGRTFeedback_systemIntake | null;
 }
 
 export interface GetGRTFeedbackVariables {

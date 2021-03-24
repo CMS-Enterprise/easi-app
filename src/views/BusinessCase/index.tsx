@@ -210,7 +210,7 @@ export const BusinessCase = () => {
               render={() => (
                 <BusinessCaseView
                   businessCase={businessCase}
-                  grtFeedbacks={grtFeedbackPayload?.grtFeedbacks}
+                  grtFeedbacks={grtFeedbackPayload?.systemIntake?.grtFeedbacks}
                 />
               )}
             />
