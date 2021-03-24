@@ -25,4 +25,18 @@ export const formatContractDate = (date: ContractDate): string => {
   return parts.filter((value: string) => value.length > 0).join('/');
 };
 
+/**
+ * Returns the input parameter's fiscal year
+ * FY 2021 : October 1 2020 - September 30 2021
+ * FY 2022 : October 1 2021 - September 30 2022
+ * @param date DateTime date object
+ */
+export const getFiscalYear = (date: DateTime): string => {
+  const { month, year } = date;
+  if (month >= 10) {
+    return String(year + 1);
+  }
+  return String(year);
+};
+
 export default formatDate;
