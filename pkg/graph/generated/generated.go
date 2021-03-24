@@ -187,14 +187,14 @@ type ComplexityRoot struct {
 		AddGRTFeedbackAndRequestBusinessCase             func(childComplexity int, input model.AddGRTFeedbackInput) int
 		CreateAccessibilityRequest                       func(childComplexity int, input model.CreateAccessibilityRequestInput) int
 		CreateAccessibilityRequestDocument               func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
-		CreateSystemIntakeActionBusinessCaseNeeded       func(childComplexity int, input *model.BasicActionInput) int
-		CreateSystemIntakeActionBusinessCaseNeedsChanges func(childComplexity int, input *model.BasicActionInput) int
-		CreateSystemIntakeActionGuideReceievedClose      func(childComplexity int, input *model.BasicActionInput) int
-		CreateSystemIntakeActionNoGovernanceNeeded       func(childComplexity int, input *model.BasicActionInput) int
-		CreateSystemIntakeActionNotItRequest             func(childComplexity int, input *model.BasicActionInput) int
-		CreateSystemIntakeActionNotRespondingClose       func(childComplexity int, input *model.BasicActionInput) int
-		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input *model.BasicActionInput) int
-		CreateSystemIntakeActionSendEmail                func(childComplexity int, input *model.BasicActionInput) int
+		CreateSystemIntakeActionBusinessCaseNeeded       func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionBusinessCaseNeedsChanges func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionGuideReceievedClose      func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionNoGovernanceNeeded       func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionNotItRequest             func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionNotRespondingClose       func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input model.BasicActionInput) int
+		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
 		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
 		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
@@ -400,14 +400,14 @@ type MutationResolver interface {
 	AddGRTFeedbackAndRequestBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
 	CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error)
-	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionNoGovernanceNeeded(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionNotItRequest(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionNotRespondingClose(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionReadyForGrt(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeActionSendEmail(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionNoGovernanceNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionNotItRequest(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionNotRespondingClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionReadyForGrt(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
+	CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
 	GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
 	MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
@@ -1110,7 +1110,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionBusinessCaseNeeded(childComplexity, args["input"].(*model.BasicActionInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionBusinessCaseNeeded(childComplexity, args["input"].(model.BasicActionInput)), true
 
 	case "Mutation.createSystemIntakeActionBusinessCaseNeedsChanges":
 		if e.complexity.Mutation.CreateSystemIntakeActionBusinessCaseNeedsChanges == nil {
@@ -1122,7 +1122,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionBusinessCaseNeedsChanges(childComplexity, args["input"].(*model.BasicActionInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionBusinessCaseNeedsChanges(childComplexity, args["input"].(model.BasicActionInput)), true
 
 	case "Mutation.createSystemIntakeActionGuideReceievedClose":
 		if e.complexity.Mutation.CreateSystemIntakeActionGuideReceievedClose == nil {
@@ -1134,7 +1134,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionGuideReceievedClose(childComplexity, args["input"].(*model.BasicActionInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionGuideReceievedClose(childComplexity, args["input"].(model.BasicActionInput)), true
 
 	case "Mutation.createSystemIntakeActionNoGovernanceNeeded":
 		if e.complexity.Mutation.CreateSystemIntakeActionNoGovernanceNeeded == nil {
@@ -1146,7 +1146,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionNoGovernanceNeeded(childComplexity, args["input"].(*model.BasicActionInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionNoGovernanceNeeded(childComplexity, args["input"].(model.BasicActionInput)), true
 
 	case "Mutation.createSystemIntakeActionNotItRequest":
 		if e.complexity.Mutation.CreateSystemIntakeActionNotItRequest == nil {
@@ -1158,7 +1158,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionNotItRequest(childComplexity, args["input"].(*model.BasicActionInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionNotItRequest(childComplexity, args["input"].(model.BasicActionInput)), true
 
 	case "Mutation.createSystemIntakeActionNotRespondingClose":
 		if e.complexity.Mutation.CreateSystemIntakeActionNotRespondingClose == nil {
@@ -1170,7 +1170,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionNotRespondingClose(childComplexity, args["input"].(*model.BasicActionInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionNotRespondingClose(childComplexity, args["input"].(model.BasicActionInput)), true
 
 	case "Mutation.createSystemIntakeActionReadyForGRT":
 		if e.complexity.Mutation.CreateSystemIntakeActionReadyForGrt == nil {
@@ -1182,7 +1182,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionReadyForGrt(childComplexity, args["input"].(*model.BasicActionInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionReadyForGrt(childComplexity, args["input"].(model.BasicActionInput)), true
 
 	case "Mutation.createSystemIntakeActionSendEmail":
 		if e.complexity.Mutation.CreateSystemIntakeActionSendEmail == nil {
@@ -1194,7 +1194,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeActionSendEmail(childComplexity, args["input"].(*model.BasicActionInput)), true
+		return e.complexity.Mutation.CreateSystemIntakeActionSendEmail(childComplexity, args["input"].(model.BasicActionInput)), true
 
 	case "Mutation.createTestDate":
 		if e.complexity.Mutation.CreateTestDate == nil {
@@ -2752,14 +2752,14 @@ type Mutation {
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
-  createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionGuideReceievedClose(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNoGovernanceNeeded(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNotItRequest(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionNotRespondingClose(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionReadyForGRT(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeActionSendEmail(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionGuideReceievedClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNoGovernanceNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNotItRequest(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNotRespondingClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(
@@ -2926,10 +2926,10 @@ func (ec *executionContext) field_Mutation_createAccessibilityRequest_args(ctx c
 func (ec *executionContext) field_Mutation_createSystemIntakeActionBusinessCaseNeeded_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.BasicActionInput
+	var arg0 model.BasicActionInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2941,10 +2941,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionBusinessCaseN
 func (ec *executionContext) field_Mutation_createSystemIntakeActionBusinessCaseNeedsChanges_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.BasicActionInput
+	var arg0 model.BasicActionInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2956,10 +2956,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionBusinessCaseN
 func (ec *executionContext) field_Mutation_createSystemIntakeActionGuideReceievedClose_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.BasicActionInput
+	var arg0 model.BasicActionInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2971,10 +2971,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionGuideReceieve
 func (ec *executionContext) field_Mutation_createSystemIntakeActionNoGovernanceNeeded_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.BasicActionInput
+	var arg0 model.BasicActionInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2986,10 +2986,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionNoGovernanceN
 func (ec *executionContext) field_Mutation_createSystemIntakeActionNotItRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.BasicActionInput
+	var arg0 model.BasicActionInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3001,10 +3001,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionNotItRequest_
 func (ec *executionContext) field_Mutation_createSystemIntakeActionNotRespondingClose_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.BasicActionInput
+	var arg0 model.BasicActionInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3016,10 +3016,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionNotResponding
 func (ec *executionContext) field_Mutation_createSystemIntakeActionReadyForGRT_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.BasicActionInput
+	var arg0 model.BasicActionInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3031,10 +3031,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionReadyForGRT_a
 func (ec *executionContext) field_Mutation_createSystemIntakeActionSendEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.BasicActionInput
+	var arg0 model.BasicActionInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		arg0, err = ec.unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -6239,7 +6239,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionBusinessCaseNeeded
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionBusinessCaseNeeded(rctx, args["input"].(*model.BasicActionInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionBusinessCaseNeeded(rctx, args["input"].(model.BasicActionInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -6302,7 +6302,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionBusinessCaseNeedsC
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionBusinessCaseNeedsChanges(rctx, args["input"].(*model.BasicActionInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionBusinessCaseNeedsChanges(rctx, args["input"].(model.BasicActionInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -6365,7 +6365,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionGuideReceievedClos
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionGuideReceievedClose(rctx, args["input"].(*model.BasicActionInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionGuideReceievedClose(rctx, args["input"].(model.BasicActionInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -6428,7 +6428,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionNoGovernanceNeeded
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionNoGovernanceNeeded(rctx, args["input"].(*model.BasicActionInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionNoGovernanceNeeded(rctx, args["input"].(model.BasicActionInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -6491,7 +6491,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionNotItRequest(ctx c
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionNotItRequest(rctx, args["input"].(*model.BasicActionInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionNotItRequest(rctx, args["input"].(model.BasicActionInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -6554,7 +6554,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionNotRespondingClose
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionNotRespondingClose(rctx, args["input"].(*model.BasicActionInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionNotRespondingClose(rctx, args["input"].(model.BasicActionInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -6617,7 +6617,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionReadyForGRT(ctx co
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionReadyForGrt(rctx, args["input"].(*model.BasicActionInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionReadyForGrt(rctx, args["input"].(model.BasicActionInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -6680,7 +6680,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeActionSendEmail(ctx cont
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeActionSendEmail(rctx, args["input"].(*model.BasicActionInput))
+			return ec.resolvers.Mutation().CreateSystemIntakeActionSendEmail(rctx, args["input"].(model.BasicActionInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -14010,6 +14010,11 @@ func (ec *executionContext) unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgov�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNBasicActionInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx context.Context, v interface{}) (model.BasicActionInput, error) {
+	res, err := ec.unmarshalInputBasicActionInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -14733,14 +14738,6 @@ func (ec *executionContext) marshalOAddGRTFeedbackPayload2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._AddGRTFeedbackPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx context.Context, v interface{}) (*model.BasicActionInput, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputBasicActionInput(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
