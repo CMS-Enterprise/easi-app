@@ -31,6 +31,8 @@ export default gql`
         expectedIncreaseAmount
       }
       currentStage
+      grbDate
+      grtDate
       governanceTeams {
         isPresent
         teams {

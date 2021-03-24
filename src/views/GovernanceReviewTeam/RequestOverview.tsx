@@ -161,7 +161,12 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/dates"
-              render={() => <Dates systemIntake={systemIntake} />}
+              render={() => {
+                if (loading) {
+                  return <p>Loading...</p>;
+                }
+                return <Dates systemIntake={intake} />;
+              }}
             />
             <Route
               path="/governance-review-team/:systemId/decision"
