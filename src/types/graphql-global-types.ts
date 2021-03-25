@@ -148,6 +148,16 @@ export interface IssueLifecycleIdInput {
 }
 
 /**
+ * Input for rejecting an intake
+ */
+export interface RejectIntakeInput {
+  feedback: string;
+  intakeId: UUID;
+  nextSteps?: string | null;
+  reason: string;
+}
+
+/**
  * Parameters required to update the admin lead for an intake
  */
 export interface UpdateSystemIntakeAdminLeadInput {
