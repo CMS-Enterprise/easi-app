@@ -228,6 +228,7 @@ type ComplexityRoot struct {
 	}
 
 	SystemIntake struct {
+		Actions                     func(childComplexity int) int
 		AdminLead                   func(childComplexity int) int
 		ArchivedAt                  func(childComplexity int) int
 		BusinessCase                func(childComplexity int) int
@@ -266,6 +267,20 @@ type ComplexityRoot struct {
 		TrbCollaborator             func(childComplexity int) int
 		TrbCollaboratorName         func(childComplexity int) int
 		UpdatedAt                   func(childComplexity int) int
+	}
+
+	SystemIntakeAction struct {
+		Actor        func(childComplexity int) int
+		CreatedAt    func(childComplexity int) int
+		Feedback     func(childComplexity int) int
+		SystemIntake func(childComplexity int) int
+		Type         func(childComplexity int) int
+	}
+
+	SystemIntakeActionActor struct {
+		Email func(childComplexity int) int
+		Eua   func(childComplexity int) int
+		Name  func(childComplexity int) int
 	}
 
 	SystemIntakeBusinessOwner struct {
@@ -422,6 +437,7 @@ type QueryResolver interface {
 	Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error)
 }
 type SystemIntakeResolver interface {
+	Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error)
 	AdminLead(ctx context.Context, obj *models.SystemIntake) (*string, error)
 
 	BusinessCase(ctx context.Context, obj *models.SystemIntake) (*models.BusinessCase, error)
@@ -1372,6 +1388,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SystemEdge.Node(childComplexity), true
 
+	case "SystemIntake.actions":
+		if e.complexity.SystemIntake.Actions == nil {
+			break
+		}
+
+		return e.complexity.SystemIntake.Actions(childComplexity), true
+
 	case "SystemIntake.adminLead":
 		if e.complexity.SystemIntake.AdminLead == nil {
 			break
@@ -1637,6 +1660,62 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SystemIntake.UpdatedAt(childComplexity), true
+
+	case "SystemIntakeAction.actor":
+		if e.complexity.SystemIntakeAction.Actor == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAction.Actor(childComplexity), true
+
+	case "SystemIntakeAction.createdAt":
+		if e.complexity.SystemIntakeAction.CreatedAt == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAction.CreatedAt(childComplexity), true
+
+	case "SystemIntakeAction.feedback":
+		if e.complexity.SystemIntakeAction.Feedback == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAction.Feedback(childComplexity), true
+
+	case "SystemIntakeAction.systemIntake":
+		if e.complexity.SystemIntakeAction.SystemIntake == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAction.SystemIntake(childComplexity), true
+
+	case "SystemIntakeAction.type":
+		if e.complexity.SystemIntakeAction.Type == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeAction.Type(childComplexity), true
+
+	case "SystemIntakeActionActor.email":
+		if e.complexity.SystemIntakeActionActor.Email == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeActionActor.Email(childComplexity), true
+
+	case "SystemIntakeActionActor.eua":
+		if e.complexity.SystemIntakeActionActor.Eua == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeActionActor.Eua(childComplexity), true
+
+	case "SystemIntakeActionActor.name":
+		if e.complexity.SystemIntakeActionActor.Name == nil {
+			break
+		}
+
+		return e.complexity.SystemIntakeActionActor.Name(childComplexity), true
 
 	case "SystemIntakeBusinessOwner.component":
 		if e.complexity.SystemIntakeBusinessOwner.Component == nil {
@@ -2636,6 +2715,7 @@ type SystemIntakeRequester {
 A SystemIntake instance
 """
 type SystemIntake {
+  actions: [SystemIntakeAction!]!
   adminLead: String
   archivedAt: Time
   businessCase: BusinessCase
@@ -2674,6 +2754,50 @@ type SystemIntake {
   trbCollaborator: String
   trbCollaboratorName: String
   updatedAt: Time!
+}
+
+"""
+Indicates which action should be taken
+"""
+enum SystemIntakeActionType {
+  BIZ_CASE_NEEDS_CHANGES
+  CREATE_BIZ_CASE
+  GUIDE_RECEIVED_CLOSE
+  ISSUE_LCID
+  NEED_BIZ_CASE
+  NO_GOVERNANCE_NEEDED
+  NOT_IT_REQUEST
+  NOT_RESPONDING_CLOSE
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
+  READY_FOR_GRB
+  READY_FOR_GRT
+  REJECT
+  SEND_EMAIL
+  SUBMIT_BIZ_CASE
+  SUBMIT_FINAL_BIZ_CASE
+  SUBMIT_INTAKE
+}
+
+"""
+An action taken on a system intake, often resulting in a change in status.
+"""
+type SystemIntakeAction {
+  systemIntake: SystemIntake!
+  type: SystemIntakeActionType!
+  actor: SystemIntakeActionActor!
+  feedback: String
+  createdAt: Time!
+}
+
+"""
+A person performing an action on a system intake
+"""
+type SystemIntakeActionActor {
+  name: String!
+  email: String!
+  eua: String!
 }
 
 """
@@ -7602,6 +7726,41 @@ func (ec *executionContext) _SystemEdge_node(ctx context.Context, field graphql.
 	return ec.marshalNSystem2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystem(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SystemIntake_actions(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntake",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SystemIntake().Actions(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SystemIntakeAction)
+	fc.Result = res
+	return ec.marshalNSystemIntakeAction2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeActionᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SystemIntake_adminLead(ctx context.Context, field graphql.CollectedField, obj *models.SystemIntake) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -8840,6 +8999,283 @@ func (ec *executionContext) _SystemIntake_updatedAt(ctx context.Context, field g
 	res := resTmp.(*time.Time)
 	fc.Result = res
 	return ec.marshalNTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeAction_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeAction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemIntake, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntake)
+	fc.Result = res
+	return ec.marshalNSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeAction_type(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeAction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(model.SystemIntakeActionType)
+	fc.Result = res
+	return ec.marshalNSystemIntakeActionType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeActionType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeAction_actor(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeAction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Actor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.SystemIntakeActionActor)
+	fc.Result = res
+	return ec.marshalNSystemIntakeActionActor2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeActionActor(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeAction_feedback(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeAction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Feedback, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeAction_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeAction) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeAction",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CreatedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeActionActor_name(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeActionActor) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeActionActor",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeActionActor_email(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeActionActor) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeActionActor",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Email, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SystemIntakeActionActor_eua(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeActionActor) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SystemIntakeActionActor",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Eua, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SystemIntakeBusinessOwner_component(ctx context.Context, field graphql.CollectedField, obj *model.SystemIntakeBusinessOwner) (ret graphql.Marshaler) {
@@ -12777,6 +13213,20 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("SystemIntake")
+		case "actions":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SystemIntake_actions(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "adminLead":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
@@ -13128,6 +13578,87 @@ func (ec *executionContext) _SystemIntake(ctx context.Context, sel ast.Selection
 			out.Values[i] = ec._SystemIntake_updatedAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeActionImplementors = []string{"SystemIntakeAction"}
+
+func (ec *executionContext) _SystemIntakeAction(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeAction) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeActionImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeAction")
+		case "systemIntake":
+			out.Values[i] = ec._SystemIntakeAction_systemIntake(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "type":
+			out.Values[i] = ec._SystemIntakeAction_type(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "actor":
+			out.Values[i] = ec._SystemIntakeAction_actor(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "feedback":
+			out.Values[i] = ec._SystemIntakeAction_feedback(ctx, field, obj)
+		case "createdAt":
+			out.Values[i] = ec._SystemIntakeAction_createdAt(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var systemIntakeActionActorImplementors = []string{"SystemIntakeActionActor"}
+
+func (ec *executionContext) _SystemIntakeActionActor(ctx context.Context, sel ast.SelectionSet, obj *model.SystemIntakeActionActor) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, systemIntakeActionActorImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SystemIntakeActionActor")
+		case "name":
+			out.Values[i] = ec._SystemIntakeActionActor_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "email":
+			out.Values[i] = ec._SystemIntakeActionActor_email(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "eua":
+			out.Values[i] = ec._SystemIntakeActionActor_eua(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -14229,6 +14760,73 @@ func (ec *executionContext) marshalNSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasi
 		return graphql.Null
 	}
 	return ec._SystemIntake(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeAction2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeActionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SystemIntakeAction) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNSystemIntakeAction2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeAction(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
+func (ec *executionContext) marshalNSystemIntakeAction2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeAction(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeAction) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeAction(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSystemIntakeActionActor2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeActionActor(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeActionActor) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	return ec._SystemIntakeActionActor(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSystemIntakeActionType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeActionType(ctx context.Context, v interface{}) (model.SystemIntakeActionType, error) {
+	var res model.SystemIntakeActionType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNSystemIntakeActionType2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeActionType(ctx context.Context, sel ast.SelectionSet, v model.SystemIntakeActionType) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNSystemIntakeCollaborator2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐSystemIntakeCollaborator(ctx context.Context, sel ast.SelectionSet, v *model.SystemIntakeCollaborator) graphql.Marshaler {

@@ -624,6 +624,7 @@ type SystemIntakeRequester {
 A SystemIntake instance
 """
 type SystemIntake {
+  actions: [SystemIntakeAction!]!
   adminLead: String
   archivedAt: Time
   businessCase: BusinessCase
@@ -662,6 +663,50 @@ type SystemIntake {
   trbCollaborator: String
   trbCollaboratorName: String
   updatedAt: Time!
+}
+
+"""
+Indicates which action should be taken
+"""
+enum SystemIntakeActionType {
+  BIZ_CASE_NEEDS_CHANGES
+  CREATE_BIZ_CASE
+  GUIDE_RECEIVED_CLOSE
+  ISSUE_LCID
+  NEED_BIZ_CASE
+  NO_GOVERNANCE_NEEDED
+  NOT_IT_REQUEST
+  NOT_RESPONDING_CLOSE
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
+  READY_FOR_GRB
+  READY_FOR_GRT
+  REJECT
+  SEND_EMAIL
+  SUBMIT_BIZ_CASE
+  SUBMIT_FINAL_BIZ_CASE
+  SUBMIT_INTAKE
+}
+
+"""
+An action taken on a system intake, often resulting in a change in status.
+"""
+type SystemIntakeAction {
+  systemIntake: SystemIntake!
+  type: SystemIntakeActionType!
+  actor: SystemIntakeActionActor!
+  feedback: String
+  createdAt: Time!
+}
+
+"""
+A person performing an action on a system intake
+"""
+type SystemIntakeActionActor {
+  name: String!
+  email: String!
+  eua: String!
 }
 
 """

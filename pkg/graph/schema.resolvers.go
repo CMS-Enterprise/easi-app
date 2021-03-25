@@ -596,6 +596,10 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 	return conn, nil
 }
 
+func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *systemIntakeResolver) AdminLead(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.AdminLead.Ptr(), nil
 }
