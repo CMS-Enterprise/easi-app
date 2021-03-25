@@ -72,10 +72,10 @@ func (s *Store) FetchGRTFeedbackByID(ctx context.Context, id uuid.UUID) (*models
 func (s *Store) FetchGRTFeedbacksByIntakeID(ctx context.Context, intakeID uuid.UUID) ([]*models.GRTFeedback, error) {
 	grtFeedbacks := []*models.GRTFeedback{}
 
-	err := s.db.GetContext(ctx, &grtFeedbacks, `SELECT * FROM grt_feedback WHERE intake_id=$1`, intakeID)
+	err := s.db.GetContext(ctx, &grtFeedbacks, `SELECT * FROM grt_feedback WHERE intake_id=$1 ORDER BY created_at`, intakeID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.GRTFeedback{}}
+			return grtFeedbacks, nil
 		}
 		appcontext.ZLogger(ctx).Error("Failed to fetch GRT Feedbacks", zap.Error(err), zap.String("intake id", intakeID.String()))
 		return nil, &apperrors.QueryError{
