@@ -178,7 +178,7 @@ namespace :test do
   namespace :go do
     desc "Run targeted Go tests (pass packages as additional options)"
     task :only => :consume_args do |t, args|
-      sh "gotest", "-short", "-count=1", *args
+      sh "gotest", "-short", "-count=1", "-v", *args
     end
   end
 
