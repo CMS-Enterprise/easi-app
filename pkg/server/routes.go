@@ -180,6 +180,16 @@ func (s *Server) routes(
 					store.UpdateBusinessCase,
 				),
 			),
+			IssueLifecycleID: services.NewUpdateLifecycleFields(
+				serviceConfig,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.FetchSystemIntakeByID,
+				store.UpdateSystemIntake,
+				saveAction,
+				cedarLDAPClient.FetchUserInfo,
+				emailClient.SendIssueLCIDEmail,
+				store.GenerateLifecycleID,
+			),
 		},
 		&s3Client,
 	)

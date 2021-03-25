@@ -136,6 +136,16 @@ type GeneratePresignedUploadURLPayload struct {
 	UserErrors []*UserError `json:"userErrors"`
 }
 
+// Input for issuing a lifecycle id
+type IssueLifecycleIDInput struct {
+	ExpiresAt time.Time `json:"expiresAt"`
+	Feedback  string    `json:"feedback"`
+	IntakeID  uuid.UUID `json:"intakeId"`
+	Lcid      *string   `json:"lcid"`
+	NextSteps *string   `json:"nextSteps"`
+	Scope     string    `json:"scope"`
+}
+
 // A collection of Systems
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
@@ -228,12 +238,6 @@ type SystemIntakeRequester struct {
 type UpdateSystemIntakeAdminLeadInput struct {
 	AdminLead string    `json:"adminLead"`
 	ID        uuid.UUID `json:"id"`
-}
-
-// Result of UpdateSystemIntakeAdminLead
-type UpdateSystemIntakeAdminLeadPayload struct {
-	SystemIntake *models.SystemIntake `json:"systemIntake"`
-	UserErrors   []*UserError         `json:"userErrors"`
 }
 
 // Result of UpdateSystemIntake mutations

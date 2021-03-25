@@ -681,19 +681,23 @@ type AddGRTFeedbackPayload {
 }
 
 """
+Input for issuing a lifecycle id
+"""
+input IssueLifecycleIdInput {
+  expiresAt: Time!
+  feedback: String!
+  intakeId: UUID!
+  lcid: String
+  nextSteps: String
+  scope: String!
+}
+
+"""
 Parameters required to update the admin lead for an intake
 """
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
-}
-
-"""
-Result of UpdateSystemIntakeAdminLead
-"""
-type UpdateSystemIntakeAdminLeadPayload {
-  systemIntake: SystemIntake
-  userErrors: [UserError!]
 }
 
 """
@@ -753,10 +757,12 @@ type Mutation {
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  issueLifecycleId(input: IssueLifecycleIdInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
   markSystemIntakeReadyForGRB(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
+  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
