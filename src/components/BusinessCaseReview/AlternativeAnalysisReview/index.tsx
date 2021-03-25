@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import PrintableTabContent from 'components/PrintableTabContent';
 import ResponsiveTabs from 'components/shared/ResponsiveTabs';
-import { hasAlternativeSolution } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import {
   BusinessCaseSolution,
   ProposedBusinessCaseSolution
@@ -35,7 +35,7 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
       'Preferred solution',
       'Alternative A'
     ];
-    if (alternativeB && hasAlternativeSolution(alternativeB)) {
+    if (alternativeB && alternativeSolutionHasFilledFields(alternativeB)) {
       solutions.push('Alternative B');
     }
     return solutions;
@@ -73,7 +73,7 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
         </PrintableTabContent>
 
         <PrintableTabContent visible={activeSolutionTab === 'Alternative B'}>
-          {alternativeB && hasAlternativeSolution(alternativeB) && (
+          {alternativeB && alternativeSolutionHasFilledFields(alternativeB) && (
             <ProposedBusinessCaseSolutionReview
               name="Alternative B"
               solution={alternativeB}

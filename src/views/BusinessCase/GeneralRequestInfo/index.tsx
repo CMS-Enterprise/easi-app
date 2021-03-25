@@ -12,7 +12,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
-import { hasAlternativeSolution } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { isBusinessCaseFinal } from 'utils/systemIntake';
@@ -197,7 +197,9 @@ const GeneralRequestInfo = ({
             <PageNumber
               currentPage={1}
               totalPages={
-                hasAlternativeSolution(businessCase.alternativeB) ? 6 : 5
+                alternativeSolutionHasFilledFields(businessCase.alternativeB)
+                  ? 6
+                  : 5
               }
             />
             <AutoSave
