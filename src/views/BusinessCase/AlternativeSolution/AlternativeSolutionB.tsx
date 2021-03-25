@@ -135,6 +135,7 @@ const AlternativeSolutionB = ({
 
                 <AlternativeSolutionFields
                   altLetter="B"
+                  businessCaseCreatedAt={businessCase.createdAt}
                   formikProps={formikProps}
                 />
               </div>
