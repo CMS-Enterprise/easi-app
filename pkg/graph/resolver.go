@@ -23,8 +23,9 @@ type Resolver struct {
 
 // ResolverService holds service methods for use in resolvers
 type ResolverService struct {
-	CreateTestDate func(context.Context, *models.TestDate) (*models.TestDate, error)
-	AddGRTFeedback func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error)
+	CreateTestDate                             func(context.Context, *models.TestDate) (*models.TestDate, error)
+	AddGRTFeedback                             func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error)
+	AuthorizeUserIsReviewTeamOrIntakeRequester func(ctx context.Context, existingIntake *models.SystemIntake) (bool, error)
 }
 
 // NewResolver constructs a resolver
