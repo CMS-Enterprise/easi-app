@@ -349,7 +349,75 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	}, nil
 }
 
-func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNEEDBIZCASE,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusNEEDBIZCASE,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeBIZCASENEEDSCHANGES,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeGUIDERECEIVEDCLOSE,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusSHUTDOWNCOMPLETE,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNOGOVERNANCENEEDED,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusNOGOVERNANCE,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
 	intake, err := r.service.CreateActionUpdateStatus(
 		ctx,
 		&models.Action{
@@ -359,6 +427,57 @@ func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Cont
 		},
 		input.IntakeID,
 		models.SystemIntakeStatusNOTITREQUEST,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNOTRESPONDINGCLOSE,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusNOGOVERNANCE,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeREADYFORGRT,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusREADYFORGRT,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeSENDEMAIL,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusSHUTDOWNINPROGRESS,
 		false,
 	)
 	return &model.UpdateSystemIntakePayload{

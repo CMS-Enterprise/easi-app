@@ -8,7 +8,14 @@ import { DateTime } from 'luxon';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
-import CreateSystemIntakeActionNotItRequest from 'queries/CreateSystemIntakeActionNotItRequest';
+import CreateSystemIntakeActionBusinessCaseNeeded from 'queries/CreateSystemIntakeActionBusinessCaseNeededQuery';
+import CreateSystemIntakeActionBusinessCaseNeedsChanges from 'queries/CreateSystemIntakeActionBusinessCaseNeedsChangesQuery';
+import CreateSystemIntakeActionGuideReceievedClose from 'queries/CreateSystemIntakeActionGuideReceievedCloseQuery';
+import CreateSystemIntakeActionNoGovernanceNeeded from 'queries/CreateSystemIntakeActionNoGovernanceNeededQuery';
+import CreateSystemIntakeActionNotItRequest from 'queries/CreateSystemIntakeActionNotItRequestQuery';
+import CreateSystemIntakeActionNotRespondingClose from 'queries/CreateSystemIntakeActionNotRespondingCloseQuery';
+import CreateSystemIntakeActionReadyForGRT from 'queries/CreateSystemIntakeActionReadyForGRTQuery';
+import CreateSystemIntakeActionSendEmail from 'queries/CreateSystemIntakeActionSendEmailQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
 import { GetSystemIntake } from 'queries/types/GetSystemIntake';
 
@@ -25,7 +32,6 @@ import ChooseAction from './Actions/ChooseAction';
 import IssueLifecycleId from './Actions/IssueLifecycleId';
 import RejectIntake from './Actions/RejectIntake';
 import SubmitAction from './Actions/SubmitAction';
-import SubmitActionDeprecated from './Actions/SubmitActionDeprecated';
 import BusinessCaseReview from './BusinessCaseReview';
 import Dates from './Dates';
 import Decision from './Decision';
@@ -196,8 +202,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/need-biz-case"
               render={() => (
-                <SubmitActionDeprecated
-                  action="NEED_BIZ_CASE"
+                <SubmitAction
+                  query={CreateSystemIntakeActionBusinessCaseNeeded}
                   actionName={actionsT('actions.needBizCase')}
                 />
               )}
@@ -232,8 +238,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/ready-for-grt"
               render={() => (
-                <SubmitActionDeprecated
-                  action="READY_FOR_GRT"
+                <SubmitAction
+                  query={CreateSystemIntakeActionReadyForGRT}
                   actionName={actionsT('actions.readyForGrt')}
                 />
               )}
@@ -245,8 +251,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
               render={() => (
-                <SubmitActionDeprecated
-                  action="BIZ_CASE_NEEDS_CHANGES"
+                <SubmitAction
+                  query={CreateSystemIntakeActionBusinessCaseNeedsChanges}
                   actionName={actionsT('actions.bizCaseNeedsChanges')}
                 />
               )}
@@ -254,8 +260,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/no-governance"
               render={() => (
-                <SubmitActionDeprecated
-                  action="NO_GOVERNANCE_NEEDED"
+                <SubmitAction
+                  query={CreateSystemIntakeActionNoGovernanceNeeded}
                   actionName={actionsT('actions.noGovernance')}
                 />
               )}
@@ -263,8 +269,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/send-email"
               render={() => (
-                <SubmitActionDeprecated
-                  action="SEND_EMAIL"
+                <SubmitAction
+                  query={CreateSystemIntakeActionSendEmail}
                   actionName={actionsT('actions.sendEmail')}
                 />
               )}
@@ -272,8 +278,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/guide-received-close"
               render={() => (
-                <SubmitActionDeprecated
-                  action="GUIDE_RECEIVED_CLOSE"
+                <SubmitAction
+                  query={CreateSystemIntakeActionGuideReceievedClose}
                   actionName={actionsT('actions.guideReceivedClose')}
                 />
               )}
@@ -281,8 +287,8 @@ const RequestOverview = () => {
             <Route
               path="/governance-review-team/:systemId/actions/not-responding-close"
               render={() => (
-                <SubmitActionDeprecated
-                  action="NOT_RESPONDING_CLOSE"
+                <SubmitAction
+                  query={CreateSystemIntakeActionNotRespondingClose}
                   actionName={actionsT('actions.notRespondingClose')}
                 />
               )}
