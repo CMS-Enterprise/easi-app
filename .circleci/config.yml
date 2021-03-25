@@ -2,7 +2,7 @@
 version: 2
 
 references:
-  circleci_docker_primary: &circleci_docker_primary ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-circleci:easi-app-5a67b21fb6f82e0a27f2d905f9242f4d3f8d23c8
+  circleci_docker_primary: &circleci_docker_primary ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-circleci:easi-app-41d6969ae6511fc7076af6646be6f44b4a9c599b
   postgres: &postgres postgres:11.6
   db_migrate: &db_migrate ${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-db-migrate:${CIRCLE_SHA1}
 jobs:
@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Restart ECS app service
           command: |
-            ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "3" ""
+            ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "4" ""
       - run:
           name: Announce failure
           command: |
@@ -53,7 +53,7 @@ jobs:
       - run:
           name: Restart ECS app service
           command: |
-            ./scripts/deploy_service "easi-app" "prod-ecs-manager-docker" "2" ""
+            ./scripts/deploy_service "easi-app" "prod-ecs-manager-docker" "3" ""
       - run:
           name: Announce failure
           command: |
@@ -199,7 +199,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
             - v2-go-mod-sources-{{ checksum "go.sum" }}
@@ -214,7 +214,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - save_cache:
@@ -240,7 +240,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
             - v2-go-mod-sources-{{ checksum "go.sum" }}
@@ -256,7 +256,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - save_cache:
@@ -290,7 +290,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Run Frontend Tests
           command: yarn run test
@@ -310,7 +310,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
@@ -380,7 +380,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -397,12 +397,12 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "4" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "4" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "dev-ecs-manager-docker" "5" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "dev-ecs-manager-docker" "5" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "4" "easi-backend"
+            ./scripts/deploy_service "easi-app" "dev-ecs-manager-docker" "5" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
@@ -413,7 +413,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
@@ -435,7 +435,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -452,12 +452,12 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "impl-ecs-manager-docker" "3" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "impl-ecs-manager-docker" "3" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "impl-ecs-manager-docker" "4" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "impl-ecs-manager-docker" "4" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "3" "easi-backend"
+            ./scripts/deploy_service "easi-app" "impl-ecs-manager-docker" "4" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
@@ -468,7 +468,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
@@ -490,7 +490,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -507,12 +507,12 @@ jobs:
       - run:
           name: Run migrations
           command: |
-            ./scripts/deploy_service "easi-app-db-migrate" "prod-ecs-manager-docker" "2" "easi-db-migrate"
-            ./scripts/db_lambda_invoke "prod-ecs-manager-docker" "2" "easi-app-db-migrate"
+            ./scripts/deploy_service "easi-app-db-migrate" "prod-ecs-manager-docker" "3" "easi-db-migrate"
+            ./scripts/db_lambda_invoke "prod-ecs-manager-docker" "3" "easi-app-db-migrate"
       - run:
           name: Deploy ECS service
           command: |
-            ./scripts/deploy_service "easi-app" "prod-ecs-manager-docker" "2" "easi-backend"
+            ./scripts/deploy_service "easi-app" "prod-ecs-manager-docker" "3" "easi-backend"
             ./scripts/healthcheck
       - run:
           name: Build static assets and release to S3
@@ -523,7 +523,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:
@@ -545,7 +545,7 @@ jobs:
             - yarn-deps-cache-{{ checksum "yarn.lock" }}
       - restore_cache:
           keys:
-            - v1-node-modules-{{ checksum "yarn.lock" }}
+            - v2-node-modules-{{ checksum "yarn.lock" }}
       - run:
           name: Setup custom environment variables
           command: |
@@ -566,7 +566,7 @@ jobs:
           paths:
             - ~/.cache/yarn
       - save_cache:
-          key: v1-node-modules-{{ checksum "yarn.lock" }}
+          key: v2-node-modules-{{ checksum "yarn.lock" }}
           paths:
             - ~/project/node_modules
       - run:

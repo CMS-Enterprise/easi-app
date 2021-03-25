@@ -17,7 +17,7 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { hasAlternativeB } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
@@ -617,6 +617,7 @@ const PreferredSolution = ({
                     errors.preferredSolution &&
                     errors.preferredSolution.estimatedLifecycleCost
                   }
+                  setFieldValue={setFieldValue}
                 />
               </div>
               <div className="tablet:grid-col-9 margin-bottom-7">
@@ -703,7 +704,11 @@ const PreferredSolution = ({
             </div>
             <PageNumber
               currentPage={4}
-              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
+              totalPages={
+                alternativeSolutionHasFilledFields(businessCase.alternativeB)
+                  ? 6
+                  : 5
+              }
             />
             <AutoSave
               values={values}

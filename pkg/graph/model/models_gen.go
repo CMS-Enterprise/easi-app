@@ -42,6 +42,12 @@ type AddGRTFeedbackPayload struct {
 	ID *uuid.UUID `json:"id"`
 }
 
+// Parameters for actions without additional fields
+type BasicActionInput struct {
+	Feedback string    `json:"feedback"`
+	IntakeID uuid.UUID `json:"intakeId"`
+}
+
 // The shape of a solution for a business case
 type BusinessCaseAsIsSolution struct {
 	Cons        *string `json:"cons"`
@@ -228,6 +234,19 @@ type UpdateSystemIntakeAdminLeadInput struct {
 type UpdateSystemIntakeAdminLeadPayload struct {
 	SystemIntake *models.SystemIntake `json:"systemIntake"`
 	UserErrors   []*UserError         `json:"userErrors"`
+}
+
+// Result of UpdateSystemIntake mutations
+type UpdateSystemIntakePayload struct {
+	SystemIntake *models.SystemIntake `json:"systemIntake"`
+	UserErrors   []*UserError         `json:"userErrors"`
+}
+
+// Parameters required to update the grt and grb dates for an intake
+type UpdateSystemIntakeReviewDatesInput struct {
+	GrbDate *time.Time `json:"grbDate"`
+	GrtDate *time.Time `json:"grtDate"`
+	ID      uuid.UUID  `json:"id"`
 }
 
 // Parameters for editing a test date
