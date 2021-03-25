@@ -613,6 +613,7 @@ const PreferredSolution = ({
                 <EstimatedLifecycleCost
                   formikKey="preferredSolution.estimatedLifecycleCost"
                   years={values.preferredSolution.estimatedLifecycleCost}
+                  businessCaseCreatedAt={businessCase.createdAt}
                   errors={
                     errors.preferredSolution &&
                     errors.preferredSolution.estimatedLifecycleCost

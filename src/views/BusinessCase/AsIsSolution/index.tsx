@@ -254,6 +254,7 @@ const AsIsSolution = ({
                 <EstimatedLifecycleCost
                   formikKey="asIsSolution.estimatedLifecycleCost"
                   setFieldValue={setFieldValue}
+                  businessCaseCreatedAt={businessCase.createdAt}
                   years={values.asIsSolution.estimatedLifecycleCost}
                   errors={
                     errors.asIsSolution &&
