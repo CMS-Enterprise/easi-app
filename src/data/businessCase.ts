@@ -90,7 +90,7 @@ type lifecycleCostLinesType = {
  * This function tells us whether the parameter alternativeSolution has been started
  * @param alternativeSolution - an alternative solution case (e.g. A, B)
  */
-export const hasAlternativeSolution = (
+export const alternativeSolutionHasFilledFields = (
   alternativeSolution: ProposedBusinessCaseSolution
 ) => {
   if (!alternativeSolution) {
@@ -267,7 +267,9 @@ export const prepareBusinessCaseForApp = (
 export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
-  const alternativeBExists = hasAlternativeSolution(businessCase.alternativeB);
+  const alternativeBExists = alternativeSolutionHasFilledFields(
+    businessCase.alternativeB
+  );
   const solutionNameMap: {
     solutionLifecycleCostLines: EstimatedLifecycleCostLines;
     solutionApiName: string;
