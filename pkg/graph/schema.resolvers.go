@@ -551,7 +551,20 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 }
 
 func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	intake, err := r.service.RejectIntake(
+		ctx,
+		&models.SystemIntake{
+			ID:                input.IntakeID,
+			DecisionNextSteps: null.StringFrom(*input.NextSteps),
+			RejectionReason:   null.StringFrom(*&input.Reason),
+		},
+		&models.Action{
+			IntakeID: &input.IntakeID,
+			Feedback: null.StringFrom(input.Feedback),
+		})
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
 }
 
 func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error) {
