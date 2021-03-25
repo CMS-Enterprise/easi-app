@@ -80,6 +80,14 @@ export interface AddGRTFeedbackInput {
 }
 
 /**
+ * Parameters for actions without additional fields
+ */
+export interface BasicActionInput {
+  feedback: string;
+  intakeId: UUID;
+}
+
+/**
  * Parameters for createAccessibilityRequestDocument
  */
 export interface CreateAccessibilityRequestDocumentInput {
@@ -124,6 +132,15 @@ export interface GeneratePresignedUploadURLInput {
  */
 export interface UpdateSystemIntakeAdminLeadInput {
   adminLead: string;
+  id: UUID;
+}
+
+/**
+ * Parameters required to update the grt and grb dates for an intake
+ */
+export interface UpdateSystemIntakeReviewDatesInput {
+  grbDate?: Time | null;
+  grtDate?: Time | null;
   id: UUID;
 }
 

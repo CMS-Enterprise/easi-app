@@ -6,6 +6,8 @@ import (
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/upload"
+
+	"github.com/google/uuid"
 )
 
 //go:generate go run github.com/99designs/gqlgen
@@ -23,8 +25,9 @@ type Resolver struct {
 
 // ResolverService holds service methods for use in resolvers
 type ResolverService struct {
-	CreateTestDate func(context.Context, *models.TestDate) (*models.TestDate, error)
-	AddGRTFeedback func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error)
+	CreateTestDate           func(context.Context, *models.TestDate) (*models.TestDate, error)
+	AddGRTFeedback           func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error)
+	CreateActionUpdateStatus func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool) (*models.SystemIntake, error)
 }
 
 // NewResolver constructs a resolver

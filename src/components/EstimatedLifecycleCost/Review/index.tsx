@@ -7,16 +7,16 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import { LifecyclePhase } from 'types/estimatedLifecycle';
+import { LifecycleCosts } from 'types/estimatedLifecycle';
 import formatDollars from 'utils/formatDollars';
 
 type EstimatedLifecycleCostReviewProps = {
   data: {
-    year1: LifecyclePhase[];
-    year2: LifecyclePhase[];
-    year3: LifecyclePhase[];
-    year4: LifecyclePhase[];
-    year5: LifecyclePhase[];
+    year1: LifecycleCosts;
+    year2: LifecycleCosts;
+    year3: LifecycleCosts;
+    year4: LifecycleCosts;
+    year5: LifecycleCosts;
   };
 };
 
@@ -30,64 +30,80 @@ const EstimatedLifecycleCostReview = ({
     year4: 'Year 4',
     year5: 'Year 5'
   };
-  const costForPhase = (items: LifecyclePhase[], phaseID: string) => {
-    const phaseMap: { [key: string]: string } = {
-      development: 'Development',
-      om: 'Operations and Maintenance',
-      other: 'Other'
-    };
-
-    const phase = items.find(obj => obj.phase === phaseMap[phaseID]);
-    if (phase) {
-      return parseFloat(phase.cost);
-    }
-    return undefined;
-  };
 
   const formatDollarsOrDash = (value: number | undefined): string => {
-    if (typeof value === 'undefined') {
+    if (Number.isNaN(value)) {
       return '-';
     }
     return formatDollars(value);
   };
 
-  const sum = (values: (number | undefined)[]): number => {
+  const sum = (values: number[]): number => {
     return values.reduce(
-      (total: number, value: number | undefined) => total + (value || 0),
+      (total: number, value: number) => total + (value || 0),
       0
     );
   };
 
-  const developmentCosts: { [key: string]: number | undefined } = {
-    year1: costForPhase(data.year1, 'development'),
-    year2: costForPhase(data.year2, 'development'),
-    year3: costForPhase(data.year3, 'development'),
-    year4: costForPhase(data.year4, 'development'),
-    year5: costForPhase(data.year5, 'development')
+  // Can be float or NaN
+  const developmentCosts: { [key: string]: number } = {
+    year1: parseFloat(data.year1.development.cost),
+    year2: parseFloat(data.year2.development.cost),
+    year3: parseFloat(data.year3.development.cost),
+    year4: parseFloat(data.year4.development.cost),
+    year5: parseFloat(data.year5.development.cost)
   };
 
-  const omCosts: { [key: string]: number | undefined } = {
-    year1: costForPhase(data.year1, 'om'),
-    year2: costForPhase(data.year2, 'om'),
-    year3: costForPhase(data.year3, 'om'),
-    year4: costForPhase(data.year4, 'om'),
-    year5: costForPhase(data.year5, 'om')
+  // Can be float or NaN
+  const omCosts: { [key: string]: number } = {
+    year1: parseFloat(data.year1.operationsMaintenance.cost),
+    year2: parseFloat(data.year2.operationsMaintenance.cost),
+    year3: parseFloat(data.year3.operationsMaintenance.cost),
+    year4: parseFloat(data.year4.operationsMaintenance.cost),
+    year5: parseFloat(data.year5.operationsMaintenance.cost)
   };
 
-  const otherCosts: { [key: string]: any } = {
-    year1: costForPhase(data.year1, 'other'),
-    year2: costForPhase(data.year2, 'other'),
-    year3: costForPhase(data.year3, 'other'),
-    year4: costForPhase(data.year4, 'other'),
-    year5: costForPhase(data.year5, 'other')
+  // Can be float or NaN
+  const otherCosts: { [key: string]: number } = {
+    year1: parseFloat(data.year1.other.cost),
+    year2: parseFloat(data.year2.other.cost),
+    year3: parseFloat(data.year3.other.cost),
+    year4: parseFloat(data.year4.other.cost),
+    year5: parseFloat(data.year5.other.cost)
   };
 
-  const totalCosts: { [key: string]: number } = {
-    year1: sum([developmentCosts.year1, omCosts.year1, otherCosts.year1]),
-    year2: sum([developmentCosts.year2, omCosts.year2, otherCosts.year2]),
-    year3: sum([developmentCosts.year3, omCosts.year3, otherCosts.year3]),
-    year4: sum([developmentCosts.year4, omCosts.year4, otherCosts.year4]),
-    year5: sum([developmentCosts.year5, omCosts.year5, otherCosts.year5])
+  const totalCosts: {
+    [key: string]: {
+      development: number;
+      operationsMaintenance: number;
+      other: number;
+    };
+  } = {
+    year1: {
+      development: developmentCosts.year1 || 0,
+      operationsMaintenance: omCosts.year1 || 0,
+      other: otherCosts.year1 || 0
+    },
+    year2: {
+      development: developmentCosts.year2 || 0,
+      operationsMaintenance: omCosts.year2 || 0,
+      other: otherCosts.year2 || 0
+    },
+    year3: {
+      development: developmentCosts.year3 || 0,
+      operationsMaintenance: omCosts.year3 || 0,
+      other: otherCosts.year3 || 0
+    },
+    year4: {
+      development: developmentCosts.year4 || 0,
+      operationsMaintenance: omCosts.year4 || 0,
+      other: otherCosts.year4 || 0
+    },
+    year5: {
+      development: developmentCosts.year5 || 0,
+      operationsMaintenance: omCosts.year5 || 0,
+      other: otherCosts.year5 || 0
+    }
   };
 
   const totalDevelopmentCosts = sum(Object.values(developmentCosts));
@@ -135,7 +151,9 @@ const EstimatedLifecycleCostReview = ({
                             {yearMapping[year]}
                           </th>
                           <td className="padding-y-2 text-right text-bold">
-                            {formatDollarsOrDash(totalCosts[year])}
+                            {formatDollarsOrDash(
+                              sum(Object.values(totalCosts[year]))
+                            )}
                           </td>
                         </tr>
                         {developmentCosts[year] > 0 && (
@@ -144,7 +162,7 @@ const EstimatedLifecycleCostReview = ({
                               Development
                             </th>
                             <td className="padding-y-2 text-right text-normal">
-                              {formatDollarsOrDash([developmentCosts[year]])}
+                              {formatDollarsOrDash(developmentCosts[year])}
                             </td>
                           </tr>
                         )}
@@ -250,7 +268,9 @@ const EstimatedLifecycleCostReview = ({
                           key={`${year}-costs`}
                           className="padding-y-3 text-right"
                         >
-                          {formatDollarsOrDash(totalCosts[year])}
+                          {formatDollarsOrDash(
+                            sum(Object.values(totalCosts[year]))
+                          )}
                         </td>
                       ))}
                       <td />

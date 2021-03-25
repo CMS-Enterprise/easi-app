@@ -1,9 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import { DocumentNode, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import MarkReadyForGRBQuery from 'queries/MarkReadyForGRBQuery';
 import {
   AddGRTFeedback,
   AddGRTFeedbackVariables
@@ -19,16 +20,13 @@ import { ProvideGRTFeedbackForm } from 'types/action';
 import flattenErrors from 'utils/flattenErrors';
 import { provideGRTFeedbackSchema } from 'validations/actionSchema';
 
-type ProvideGRTFeedbackProps = {
-  actionName: string;
-  query: DocumentNode;
-};
-
-const ProvideGRTFeedback = ({ actionName, query }: ProvideGRTFeedbackProps) => {
+const ProvideGRTRecommendationsToGRB = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const history = useHistory();
   const { t } = useTranslation('action');
-  const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(query);
+  const [mutate] = useMutation<AddGRTFeedback, AddGRTFeedbackVariables>(
+    MarkReadyForGRBQuery
+  );
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -86,7 +84,7 @@ const ProvideGRTFeedback = ({ actionName, query }: ProvideGRTFeedbackProps) => {
             <h1>{t('submitAction.heading')}</h1>
             <h2>{t('submitAction.subheading')}</h2>
             <p>
-              {actionName} &nbsp;
+              {t('actions.readyForGrb')} &nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">
@@ -96,10 +94,10 @@ const ProvideGRTFeedback = ({ actionName, query }: ProvideGRTFeedbackProps) => {
                   error={!!flatErrors.grtFeedback}
                 >
                   <Label htmlFor="ProvideGRTFeedbackForm-GRTFeedback">
-                    {t('provideGRTFeedback.grtFeedbackLabel')}
+                    {t('grbRecommendations.recommendationLabel')}
                   </Label>
                   <HelpText>
-                    {t('provideGRTFeedback.grtFeedbackHelpText')}
+                    {t('grbRecommendations.recommendationHelpText')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.grtFeedback}</FieldErrorMsg>
                   <Field
@@ -138,4 +136,4 @@ const ProvideGRTFeedback = ({ actionName, query }: ProvideGRTFeedbackProps) => {
   );
 };
 
-export default ProvideGRTFeedback;
+export default ProvideGRTRecommendationsToGRB;

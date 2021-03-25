@@ -5,14 +5,29 @@ import {
   EstimatedLifecycleCostLines,
   ProposedBusinessCaseSolution
 } from 'types/businessCase';
-import { LifecyclePhase } from 'types/estimatedLifecycle';
+import { LifecycleCosts } from 'types/estimatedLifecycle';
+
+const emptyPhaseValues = {
+  development: {
+    isPresent: false,
+    cost: ''
+  },
+  operationsMaintenance: {
+    isPresent: false,
+    cost: ''
+  },
+  other: {
+    isPresent: false,
+    cost: ''
+  }
+};
 
 export const defaultEstimatedLifecycle = {
-  year1: [{ phase: '', cost: '' }],
-  year2: [{ phase: '', cost: '' }],
-  year3: [{ phase: '', cost: '' }],
-  year4: [{ phase: '', cost: '' }],
-  year5: [{ phase: '', cost: '' }]
+  year1: cloneDeep(emptyPhaseValues),
+  year2: cloneDeep(emptyPhaseValues),
+  year3: cloneDeep(emptyPhaseValues),
+  year4: cloneDeep(emptyPhaseValues),
+  year5: cloneDeep(emptyPhaseValues)
 };
 
 export const defaultProposedSolution = {
@@ -21,7 +36,7 @@ export const defaultProposedSolution = {
   acquisitionApproach: '',
   pros: '',
   cons: '',
-  estimatedLifecycleCost: defaultEstimatedLifecycle,
+  estimatedLifecycleCost: cloneDeep(defaultEstimatedLifecycle),
   costSavings: '',
   security: {
     isApproved: null,
@@ -38,6 +53,7 @@ export const defaultProposedSolution = {
 export const businessCaseInitialData: BusinessCaseModel = {
   status: 'OPEN',
   systemIntakeId: '',
+  systemIntakeStatus: '',
   requestName: '',
   requester: {
     name: '',
@@ -55,20 +71,12 @@ export const businessCaseInitialData: BusinessCaseModel = {
     summary: '',
     pros: '',
     cons: '',
-    estimatedLifecycleCost: defaultEstimatedLifecycle,
+    estimatedLifecycleCost: cloneDeep(defaultEstimatedLifecycle),
     costSavings: ''
   },
-  preferredSolution: defaultProposedSolution,
-  alternativeA: defaultProposedSolution,
-  alternativeB: defaultProposedSolution
-};
-
-const emptyEstimatedLifecycle = {
-  year1: [],
-  year2: [],
-  year3: [],
-  year4: [],
-  year5: []
+  preferredSolution: cloneDeep(defaultProposedSolution),
+  alternativeA: cloneDeep(defaultProposedSolution),
+  alternativeB: cloneDeep(defaultProposedSolution)
 };
 
 type lifecycleCostLinesType = {
@@ -78,9 +86,14 @@ type lifecycleCostLinesType = {
   B: EstimatedLifecycleCostLines;
 };
 
-// Function that lets us know if a user has filled out an alternative B
-export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
-  if (!alternativeB) {
+/**
+ * This function tells us whether the parameter alternativeSolution has been started
+ * @param alternativeSolution - an alternative solution case (e.g. A, B)
+ */
+export const alternativeSolutionHasFilledFields = (
+  alternativeSolution: ProposedBusinessCaseSolution
+) => {
+  if (!alternativeSolution) {
     return false;
   }
 
@@ -95,15 +108,17 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
     cons,
     costSavings,
     estimatedLifecycleCost
-  } = alternativeB;
+  } = alternativeSolution;
 
   let hasLineItem;
-  Object.values(estimatedLifecycleCost).forEach(phaseCost => {
-    phaseCost.forEach(lineItem => {
-      if (lineItem.phase || lineItem.cost) {
-        hasLineItem = true;
-      }
-    });
+  Object.values(estimatedLifecycleCost).forEach(phase => {
+    if (
+      phase.development.isPresent ||
+      phase.operationsMaintenance.isPresent ||
+      phase.other.isPresent
+    ) {
+      hasLineItem = true;
+    }
   });
 
   return (
@@ -126,41 +141,39 @@ export const hasAlternativeB = (alternativeB: ProposedBusinessCaseSolution) => {
 export const prepareBusinessCaseForApp = (
   businessCase: any
 ): BusinessCaseModel => {
+  const phaseTypeMap: any = {
+    Development: 'development',
+    'Operations and Maintenance': 'operationsMaintenance',
+    Other: 'other'
+  };
+
   const lifecycleCostLines: lifecycleCostLinesType = {
-    'As Is': cloneDeep(emptyEstimatedLifecycle),
-    Preferred: cloneDeep(emptyEstimatedLifecycle),
-    A: cloneDeep(emptyEstimatedLifecycle),
-    B: cloneDeep(emptyEstimatedLifecycle)
+    'As Is': cloneDeep(defaultEstimatedLifecycle),
+    Preferred: cloneDeep(defaultEstimatedLifecycle),
+    A: cloneDeep(defaultEstimatedLifecycle),
+    B: cloneDeep(defaultEstimatedLifecycle)
   };
 
   let doesAltBHaveLifecycleCostLines = false;
-  businessCase.lifecycleCostLines.forEach((line: any) => {
-    const solution = (solutionName => {
-      switch (solutionName) {
-        case 'As Is':
-          return lifecycleCostLines['As Is'];
-        case 'Preferred':
-          return lifecycleCostLines.Preferred;
-        case 'A':
-          return lifecycleCostLines.A;
-        case 'B':
-          doesAltBHaveLifecycleCostLines = true;
-          return lifecycleCostLines.B;
-        default:
-          return null;
-      }
-    })(line.solution);
 
-    if (solution) {
-      solution[`year${line.year}` as keyof EstimatedLifecycleCostLines].push({
-        phase: line.phase || '',
-        cost: line.cost === null ? '' : line.cost.toString()
-      });
+  businessCase.lifecycleCostLines.forEach((line: any) => {
+    const phaseType: 'development' | 'operationsMaintenance' | 'other' =
+      phaseTypeMap[`${line.phase}`];
+
+    if (line.solution === 'B') {
+      doesAltBHaveLifecycleCostLines = true;
     }
+
+    lifecycleCostLines[line.solution as keyof lifecycleCostLinesType][
+      `year${line.year}` as keyof EstimatedLifecycleCostLines
+    ][phaseType] = {
+      isPresent: !!line.cost,
+      cost: line.cost ? line.cost.toString() : ''
+    };
   });
 
   if (!doesAltBHaveLifecycleCostLines) {
-    lifecycleCostLines.B = defaultEstimatedLifecycle;
+    lifecycleCostLines.B = cloneDeep(defaultEstimatedLifecycle);
   }
 
   return {
@@ -254,7 +267,9 @@ export const prepareBusinessCaseForApp = (
 export const prepareBusinessCaseForApi = (
   businessCase: BusinessCaseModel
 ): any => {
-  const alternativeBExists = hasAlternativeB(businessCase.alternativeB);
+  const alternativeBExists = alternativeSolutionHasFilledFields(
+    businessCase.alternativeB
+  );
   const solutionNameMap: {
     solutionLifecycleCostLines: EstimatedLifecycleCostLines;
     solutionApiName: string;
@@ -287,7 +302,7 @@ export const prepareBusinessCaseForApi = (
 
   const yearMap = (
     lifecycleCostLines: EstimatedLifecycleCostLines
-  ): { phases: LifecyclePhase[]; year: string }[] => {
+  ): { phases: LifecycleCosts; year: string }[] => {
     return [
       { phases: lifecycleCostLines.year1, year: '1' },
       { phases: lifecycleCostLines.year2, year: '2' },
@@ -301,16 +316,28 @@ export const prepareBusinessCaseForApi = (
     .map(({ solutionLifecycleCostLines, solutionApiName }) => {
       return yearMap(solutionLifecycleCostLines)
         .map(({ phases, year }) => {
-          return phases.map(lifecyclePhase => {
-            return {
-              solution: solutionApiName,
-              phase: lifecyclePhase.phase || null,
-              cost: lifecyclePhase.cost
-                ? parseFloat(lifecyclePhase.cost)
-                : null,
-              year
-            };
-          });
+          const { development, operationsMaintenance, other } = phases;
+          const developmentCost = {
+            solution: solutionApiName,
+            phase: 'Development',
+            cost: development.isPresent ? parseFloat(development.cost) : null,
+            year
+          };
+          const omCost = {
+            solution: solutionApiName,
+            phase: 'Operations and Maintenance',
+            cost: operationsMaintenance.isPresent
+              ? parseFloat(phases.operationsMaintenance.cost)
+              : null,
+            year
+          };
+          const otherCost = {
+            solution: solutionApiName,
+            phase: 'Other',
+            cost: other.isPresent ? parseFloat(phases.other.cost) : null,
+            year
+          };
+          return [developmentCost, omCost, otherCost];
         })
         .flat();
     })

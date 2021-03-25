@@ -187,9 +187,12 @@ type ComplexityRoot struct {
 		AddGRTFeedbackAndRequestBusinessCase         func(childComplexity int, input model.AddGRTFeedbackInput) int
 		CreateAccessibilityRequest                   func(childComplexity int, input model.CreateAccessibilityRequestInput) int
 		CreateAccessibilityRequestDocument           func(childComplexity int, input model.CreateAccessibilityRequestDocumentInput) int
+		CreateSystemIntakeActionNotItRequest         func(childComplexity int, input *model.BasicActionInput) int
 		CreateTestDate                               func(childComplexity int, input model.CreateTestDateInput) int
 		GeneratePresignedUploadURL                   func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
+		MarkSystemIntakeReadyForGrb                  func(childComplexity int, input model.AddGRTFeedbackInput) int
 		UpdateSystemIntakeAdminLead                  func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
+		UpdateSystemIntakeReviewDates                func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTestDate                               func(childComplexity int, input model.UpdateTestDateInput) int
 	}
 
@@ -335,6 +338,11 @@ type ComplexityRoot struct {
 		UserErrors   func(childComplexity int) int
 	}
 
+	UpdateSystemIntakePayload struct {
+		SystemIntake func(childComplexity int) int
+		UserErrors   func(childComplexity int) int
+	}
+
 	UpdateTestDatePayload struct {
 		TestDate   func(childComplexity int) int
 		UserErrors func(childComplexity int) int
@@ -385,9 +393,12 @@ type MutationResolver interface {
 	AddGRTFeedbackAndRequestBusinessCase(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error)
 	CreateAccessibilityRequestDocument(ctx context.Context, input model.CreateAccessibilityRequestDocumentInput) (*model.CreateAccessibilityRequestDocumentPayload, error)
+	CreateSystemIntakeActionNotItRequest(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
 	GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
+	MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error)
 	UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error)
+	UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
 }
 type QueryResolver interface {
@@ -1075,6 +1086,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateAccessibilityRequestDocument(childComplexity, args["input"].(model.CreateAccessibilityRequestDocumentInput)), true
 
+	case "Mutation.createSystemIntakeActionNotItRequest":
+		if e.complexity.Mutation.CreateSystemIntakeActionNotItRequest == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createSystemIntakeActionNotItRequest_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateSystemIntakeActionNotItRequest(childComplexity, args["input"].(*model.BasicActionInput)), true
+
 	case "Mutation.createTestDate":
 		if e.complexity.Mutation.CreateTestDate == nil {
 			break
@@ -1099,6 +1122,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.GeneratePresignedUploadURL(childComplexity, args["input"].(model.GeneratePresignedUploadURLInput)), true
 
+	case "Mutation.markSystemIntakeReadyForGRB":
+		if e.complexity.Mutation.MarkSystemIntakeReadyForGrb == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_markSystemIntakeReadyForGRB_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.MarkSystemIntakeReadyForGrb(childComplexity, args["input"].(model.AddGRTFeedbackInput)), true
+
 	case "Mutation.updateSystemIntakeAdminLead":
 		if e.complexity.Mutation.UpdateSystemIntakeAdminLead == nil {
 			break
@@ -1110,6 +1145,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateSystemIntakeAdminLead(childComplexity, args["input"].(model.UpdateSystemIntakeAdminLeadInput)), true
+
+	case "Mutation.updateSystemIntakeReviewDates":
+		if e.complexity.Mutation.UpdateSystemIntakeReviewDates == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateSystemIntakeReviewDates_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateSystemIntakeReviewDates(childComplexity, args["input"].(model.UpdateSystemIntakeReviewDatesInput)), true
 
 	case "Mutation.updateTestDate":
 		if e.complexity.Mutation.UpdateTestDate == nil {
@@ -1759,6 +1806,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateSystemIntakeAdminLeadPayload.UserErrors(childComplexity), true
 
+	case "UpdateSystemIntakePayload.systemIntake":
+		if e.complexity.UpdateSystemIntakePayload.SystemIntake == nil {
+			break
+		}
+
+		return e.complexity.UpdateSystemIntakePayload.SystemIntake(childComplexity), true
+
+	case "UpdateSystemIntakePayload.userErrors":
+		if e.complexity.UpdateSystemIntakePayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.UpdateSystemIntakePayload.UserErrors(childComplexity), true
+
 	case "UpdateTestDatePayload.testDate":
 		if e.complexity.UpdateTestDatePayload.TestDate == nil {
 			break
@@ -2147,7 +2208,7 @@ type BusinessCaseAsIsSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostPhase {
   """
@@ -2165,7 +2226,7 @@ enum LifecycleCostPhase {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostSolution {
   """
@@ -2187,7 +2248,7 @@ enum LifecycleCostSolution {
 }
 
 """
-enum 
+enum
 """
 enum LifecycleCostYear {
   """
@@ -2550,6 +2611,31 @@ type UpdateSystemIntakeAdminLeadPayload {
 }
 
 """
+Parameters required to update the grt and grb dates for an intake
+"""
+input UpdateSystemIntakeReviewDatesInput {
+  grbDate: Time
+  grtDate: Time
+  id: UUID!
+}
+
+"""
+Result of UpdateSystemIntake mutations
+"""
+type UpdateSystemIntakePayload {
+  systemIntake: SystemIntake
+  userErrors: [UserError!]
+}
+
+"""
+Parameters for actions without additional fields
+"""
+input BasicActionInput {
+  feedback: String!
+  intakeId: UUID!
+}
+
+"""
 The root mutation
 """
 type Mutation {
@@ -2568,12 +2654,18 @@ type Mutation {
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
+  createSystemIntakeActionNotItRequest(input: BasicActionInput): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  markSystemIntakeReadyForGRB(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
@@ -2726,6 +2818,21 @@ func (ec *executionContext) field_Mutation_createAccessibilityRequest_args(ctx c
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createSystemIntakeActionNotItRequest_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.BasicActionInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createTestDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2756,6 +2863,21 @@ func (ec *executionContext) field_Mutation_generatePresignedUploadURL_args(ctx c
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_markSystemIntakeReadyForGRB_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.AddGRTFeedbackInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAddGRTFeedbackInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateSystemIntakeAdminLead_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2763,6 +2885,21 @@ func (ec *executionContext) field_Mutation_updateSystemIntakeAdminLead_args(ctx 
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateSystemIntakeReviewDates_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateSystemIntakeReviewDatesInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateSystemIntakeReviewDatesInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeReviewDatesInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5866,6 +6003,69 @@ func (ec *executionContext) _Mutation_createAccessibilityRequestDocument(ctx con
 	return ec.marshalOCreateAccessibilityRequestDocumentPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateAccessibilityRequestDocumentPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_createSystemIntakeActionNotItRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_createSystemIntakeActionNotItRequest_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().CreateSystemIntakeActionNotItRequest(rctx, args["input"].(*model.BasicActionInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_createTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5968,6 +6168,69 @@ func (ec *executionContext) _Mutation_generatePresignedUploadURL(ctx context.Con
 	return ec.marshalOGeneratePresignedUploadURLPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐGeneratePresignedUploadURLPayload(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Mutation_markSystemIntakeReadyForGRB(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_markSystemIntakeReadyForGRB_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().MarkSystemIntakeReadyForGrb(rctx, args["input"].(model.AddGRTFeedbackInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.AddGRTFeedbackPayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.AddGRTFeedbackPayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.AddGRTFeedbackPayload)
+	fc.Result = res
+	return ec.marshalOAddGRTFeedbackPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAddGRTFeedbackPayload(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Mutation_updateSystemIntakeAdminLead(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -6029,6 +6292,69 @@ func (ec *executionContext) _Mutation_updateSystemIntakeAdminLead(ctx context.Co
 	res := resTmp.(*model.UpdateSystemIntakeAdminLeadPayload)
 	fc.Result = res
 	return ec.marshalOUpdateSystemIntakeAdminLeadPayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeAdminLeadPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_updateSystemIntakeReviewDates(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_updateSystemIntakeReviewDates_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().UpdateSystemIntakeReviewDates(rctx, args["input"].(model.UpdateSystemIntakeReviewDatesInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.UpdateSystemIntakePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.UpdateSystemIntakePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateSystemIntakePayload)
+	fc.Result = res
+	return ec.marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -9111,6 +9437,70 @@ func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload_userErrors(ctx c
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _UpdateSystemIntakePayload_systemIntake(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateSystemIntakePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SystemIntake, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.SystemIntake)
+	fc.Result = res
+	return ec.marshalOSystemIntake2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐSystemIntake(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _UpdateSystemIntakePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.UpdateSystemIntakePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "UpdateSystemIntakePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _UpdateTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.UpdateTestDatePayload) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -10368,6 +10758,34 @@ func (ec *executionContext) unmarshalInputAddGRTFeedbackInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputBasicActionInput(ctx context.Context, obj interface{}) (model.BasicActionInput, error) {
+	var it model.BasicActionInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "feedback":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("feedback"))
+			it.Feedback, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "intakeId":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("intakeId"))
+			it.IntakeID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateAccessibilityRequestDocumentInput(ctx context.Context, obj interface{}) (model.CreateAccessibilityRequestDocumentInput, error) {
 	var it model.CreateAccessibilityRequestDocumentInput
 	var asMap = obj.(map[string]interface{})
@@ -10555,6 +10973,42 @@ func (ec *executionContext) unmarshalInputUpdateSystemIntakeAdminLeadInput(ctx c
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("adminLead"))
 			it.AdminLead, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateSystemIntakeReviewDatesInput(ctx context.Context, obj interface{}) (model.UpdateSystemIntakeReviewDatesInput, error) {
+	var it model.UpdateSystemIntakeReviewDatesInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "grbDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grbDate"))
+			it.GrbDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "grtDate":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("grtDate"))
+			it.GrtDate, err = ec.unmarshalOTime2ᚖtimeᚐTime(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11442,12 +11896,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_createAccessibilityRequest(ctx, field)
 		case "createAccessibilityRequestDocument":
 			out.Values[i] = ec._Mutation_createAccessibilityRequestDocument(ctx, field)
+		case "createSystemIntakeActionNotItRequest":
+			out.Values[i] = ec._Mutation_createSystemIntakeActionNotItRequest(ctx, field)
 		case "createTestDate":
 			out.Values[i] = ec._Mutation_createTestDate(ctx, field)
 		case "generatePresignedUploadURL":
 			out.Values[i] = ec._Mutation_generatePresignedUploadURL(ctx, field)
+		case "markSystemIntakeReadyForGRB":
+			out.Values[i] = ec._Mutation_markSystemIntakeReadyForGRB(ctx, field)
 		case "updateSystemIntakeAdminLead":
 			out.Values[i] = ec._Mutation_updateSystemIntakeAdminLead(ctx, field)
+		case "updateSystemIntakeReviewDates":
+			out.Values[i] = ec._Mutation_updateSystemIntakeReviewDates(ctx, field)
 		case "updateTestDate":
 			out.Values[i] = ec._Mutation_updateTestDate(ctx, field)
 		default:
@@ -12407,6 +12867,32 @@ func (ec *executionContext) _UpdateSystemIntakeAdminLeadPayload(ctx context.Cont
 	return out
 }
 
+var updateSystemIntakePayloadImplementors = []string{"UpdateSystemIntakePayload"}
+
+func (ec *executionContext) _UpdateSystemIntakePayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateSystemIntakePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateSystemIntakePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateSystemIntakePayload")
+		case "systemIntake":
+			out.Values[i] = ec._UpdateSystemIntakePayload_systemIntake(ctx, field, obj)
+		case "userErrors":
+			out.Values[i] = ec._UpdateSystemIntakePayload_userErrors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var updateTestDatePayloadImplementors = []string{"UpdateTestDatePayload"}
 
 func (ec *executionContext) _UpdateTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateTestDatePayload) graphql.Marshaler {
@@ -13307,6 +13793,11 @@ func (ec *executionContext) unmarshalNUpdateSystemIntakeAdminLeadInput2githubᚗ
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpdateSystemIntakeReviewDatesInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakeReviewDatesInput(ctx context.Context, v interface{}) (model.UpdateSystemIntakeReviewDatesInput, error) {
+	res, err := ec.unmarshalInputUpdateSystemIntakeReviewDatesInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUpdateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDateInput(ctx context.Context, v interface{}) (model.UpdateTestDateInput, error) {
 	res, err := ec.unmarshalInputUpdateTestDateInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -13577,6 +14068,14 @@ func (ec *executionContext) marshalOAddGRTFeedbackPayload2ᚖgithubᚗcomᚋcmsg
 		return graphql.Null
 	}
 	return ec._AddGRTFeedbackPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOBasicActionInput2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBasicActionInput(ctx context.Context, v interface{}) (*model.BasicActionInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputBasicActionInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
@@ -13919,6 +14418,13 @@ func (ec *executionContext) marshalOUpdateSystemIntakeAdminLeadPayload2ᚖgithub
 		return graphql.Null
 	}
 	return ec._UpdateSystemIntakeAdminLeadPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateSystemIntakePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateSystemIntakePayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateSystemIntakePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateSystemIntakePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.UpdateTestDatePayload) graphql.Marshaler {

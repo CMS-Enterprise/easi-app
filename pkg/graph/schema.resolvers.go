@@ -349,6 +349,23 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	}, nil
 }
 
+func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Context, input *model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNOTITREQUEST,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusNOTITREQUEST,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
 	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
 		TestType:  input.TestType,
@@ -372,6 +389,27 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
+	grtFeedback, err := r.service.AddGRTFeedback(
+		ctx,
+		&models.GRTFeedback{
+			IntakeID:     input.IntakeID,
+			Feedback:     input.Feedback,
+			FeedbackType: models.GRTFeedbackTypeGRB,
+		},
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			Feedback:   null.StringFrom(input.EmailBody),
+			ActionType: models.ActionTypeREADYFORGRB,
+		},
+		models.SystemIntakeStatusREADYFORGRB)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
+}
+
 func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error) {
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{
@@ -380,6 +418,13 @@ func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, inpu
 	}
 	return &model.UpdateSystemIntakeAdminLeadPayload{
 		SystemIntake: &systemIntake,
+	}, err
+}
+
+func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.UpdateReviewDates(ctx, input.ID, input.GrbDate, input.GrtDate)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
 	}, err
 }
 
