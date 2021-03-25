@@ -30,6 +30,7 @@ type ResolverService struct {
 	AuthorizeUserIsReviewTeamOrIntakeRequester func(ctx context.Context, existingIntake *models.SystemIntake) (bool, error)
 	CreateActionUpdateStatus                   func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool) (*models.SystemIntake, error)
 	IssueLifecycleID                           func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
+	RejectIntake                               func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error)
 }
 
 // NewResolver constructs a resolver

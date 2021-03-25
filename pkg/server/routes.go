@@ -191,6 +191,15 @@ func (s *Server) routes(
 				store.GenerateLifecycleID,
 			),
 			AuthorizeUserIsReviewTeamOrIntakeRequester: services.NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode(),
+			RejectIntake: services.NewUpdateRejectionFields(
+				serviceConfig,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.FetchSystemIntakeByID,
+				store.UpdateSystemIntake,
+				saveAction,
+				cedarLDAPClient.FetchUserInfo,
+				emailClient.SendRejectRequestEmail,
+			),
 		},
 		&s3Client,
 	)
