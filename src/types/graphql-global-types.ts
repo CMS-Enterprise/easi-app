@@ -88,6 +88,14 @@ export interface AddGRTFeedbackInput {
 }
 
 /**
+ * Parameters for actions without additional fields
+ */
+export interface BasicActionInput {
+  feedback: string;
+  intakeId: UUID;
+}
+
+/**
  * Parameters for createAccessibilityRequestDocument
  */
 export interface CreateAccessibilityRequestDocumentInput {
@@ -125,6 +133,18 @@ export interface GeneratePresignedUploadURLInput {
   fileName: string;
   mimeType: string;
   size: number;
+}
+
+/**
+ * Input for issuing a lifecycle id
+ */
+export interface IssueLifecycleIdInput {
+  expiresAt: Time;
+  feedback: string;
+  intakeId: UUID;
+  lcid?: string | null;
+  nextSteps?: string | null;
+  scope: string;
 }
 
 /**
