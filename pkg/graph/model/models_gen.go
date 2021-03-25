@@ -150,6 +150,7 @@ type SystemEdge struct {
 
 // An action taken on a system intake, often resulting in a change in status.
 type SystemIntakeAction struct {
+	ID           uuid.UUID                `json:"id"`
 	SystemIntake *models.SystemIntake     `json:"systemIntake"`
 	Type         SystemIntakeActionType   `json:"type"`
 	Actor        *SystemIntakeActionActor `json:"actor"`

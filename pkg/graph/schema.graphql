@@ -693,6 +693,7 @@ enum SystemIntakeActionType {
 An action taken on a system intake, often resulting in a change in status.
 """
 type SystemIntakeAction {
+  id: UUID!
   systemIntake: SystemIntake!
   type: SystemIntakeActionType!
   actor: SystemIntakeActionActor!

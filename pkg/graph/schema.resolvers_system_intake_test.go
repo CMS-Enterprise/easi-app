@@ -404,3 +404,90 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 	s.Equal(oitName, resp.SystemIntake.GovernanceTeams.Teams[1].Collaborator)
 	s.Equal(trbName, resp.SystemIntake.GovernanceTeams.Teams[2].Collaborator)
 }
+
+func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName: null.StringFrom("Test Project"),
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	action1, action1Err := s.store.CreateAction(ctx, &models.Action{
+		IntakeID:       &intake.ID,
+		ActionType:     models.ActionTypeSUBMITINTAKE,
+		ActorName:      "First Actor",
+		ActorEmail:     "first.actor@example.com",
+		ActorEUAUserID: "ACT1",
+	})
+	s.NoError(action1Err)
+
+	action2, action2Err := s.store.CreateAction(ctx, &models.Action{
+		IntakeID:       &intake.ID,
+		ActionType:     models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
+		ActorName:      "Second Actor",
+		ActorEmail:     "second.actor@example.com",
+		ActorEUAUserID: "ACT2",
+		Feedback:       null.StringFrom("feedback for action two"),
+	})
+	s.NoError(action2Err)
+
+	var resp struct {
+		SystemIntake struct {
+			ID      string
+			Actions []struct {
+				ID    string
+				Type  string
+				Actor struct {
+					Name  string
+					Email string
+					EUA   string
+				}
+				Feedback  *string
+				CreatedAt string
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				actions {
+					id
+					type
+					actor {
+						name
+						email
+						eua
+					}
+					feedback
+					createdAt
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(2, len(resp.SystemIntake.Actions))
+
+	respAction1 := resp.SystemIntake.Actions[0]
+	s.Equal(action1.ID.String(), respAction1.ID)
+	s.Nil(respAction1.Feedback)
+	s.Equal(action1.CreatedAt.UTC().Format(time.RFC3339), respAction1.CreatedAt)
+	s.Equal("SUBMIT_INTAKE", respAction1.Type)
+	s.Equal("First Actor", respAction1.Actor.Name)
+	s.Equal("first.actor@example.com", respAction1.Actor.Email)
+	s.Equal("ACT1", respAction1.Actor.EUA)
+
+	respAction2 := resp.SystemIntake.Actions[1]
+	s.Equal(action2.ID.String(), respAction2.ID)
+	s.Equal("feedback for action two", *respAction2.Feedback)
+	s.Equal(action2.CreatedAt.UTC().Format(time.RFC3339), respAction2.CreatedAt)
+	s.Equal("PROVIDE_FEEDBACK_NEED_BIZ_CASE", respAction2.Type)
+	s.Equal("Second Actor", respAction2.Actor.Name)
+	s.Equal("second.actor@example.com", respAction2.Actor.Email)
+	s.Equal("ACT2", respAction2.Actor.EUA)
+}
