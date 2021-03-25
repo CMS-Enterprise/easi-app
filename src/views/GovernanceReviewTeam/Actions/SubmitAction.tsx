@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { DocumentNode, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
@@ -11,31 +11,41 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { ActionForm, ActionType, CreateActionPayload } from 'types/action';
-import { postAction } from 'types/routines';
+import { ActionForm } from 'types/action';
+import { BasicActionInput } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import { actionSchema } from 'validations/actionSchema';
 
-type SubmitActionProps = {
-  action: ActionType;
-  actionName: string;
+type ActionInput = {
+  input: BasicActionInput;
 };
 
-const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
+type SubmitActionProps = {
+  actionName: string;
+  query: DocumentNode;
+};
+
+const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('action');
   const history = useHistory();
-  const dispatch = useDispatch();
+
+  const [mutate, mutationResult] = useMutation<ActionInput>(query);
 
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
-    const payload: CreateActionPayload = {
-      intakeId: systemId,
-      actionType: action,
-      feedback
-    };
-    dispatch(postAction(payload));
-    history.push(`/governance-review-team/${systemId}/intake-request`);
+    mutate({
+      variables: {
+        input: {
+          intakeId: systemId,
+          feedback
+        }
+      }
+    }).then(response => {
+      if (!response.errors) {
+        history.push(`/governance-review-team/${systemId}/intake-request`);
+      }
+    });
   };
 
   const initialValues: ActionForm = {
@@ -73,6 +83,14 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
                     />
                   );
                 })}
+              </ErrorAlert>
+            )}
+            {mutationResult && mutationResult.error && (
+              <ErrorAlert heading="Error">
+                <ErrorAlertMessage
+                  message={mutationResult.error.message}
+                  errorKey="systemIntake"
+                />
               </ErrorAlert>
             )}
             <PageHeading>{t('submitAction.heading')}</PageHeading>
