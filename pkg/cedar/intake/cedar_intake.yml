@@ -70,28 +70,98 @@ definitions:
   EASIAction:
     type: object
     required:
-      - id
-      - createdAt
+      # - id
+      - intakeId
+      - actionType
+      - actorEUA
+      # - createdAt
+      - feedback
     properties:
-      id:
+      # id:
+      #   type: string
+      intakeId:
         type: string
       actionType:
         type: string
       actorEUA:
         type: string
-      createdAt:
-        type: string
-        format: date-time
+      # createdAt:
+      #   type: string
+        # format: date-time
       feedback:
         type: string
   EASIBizCase:
     type: object
     required:
-      - id
-      - createdAt
-      - updatedAt
+      # - id
+      # - createdAt
+      # - updatedAt
+      - intakeId
+      - userEUA
+      - projectName
+      - requester
+      - requesterPhoneNumber
+      - businessOwner
+      - businessNeed
+      - cmsBenefit
+      - priorityAlignment
+      - successIndicators
+      - asIsTitle
+      - asIsSummary
+      - asIsPros
+      - asIsCons
+      - asIsCostSavings
+      - preferredTitle
+      - preferredSummary
+      - preferredAcquisitionApproach
+      - preferredSecurityIsApproved
+      - preferredSecurityIsBeingReviewed
+      - preferredHostingType
+      - preferredHostingLocation
+      - preferredHostingCloudServiceType
+      - preferredHasUI
+      - preferredPros
+      - preferredCons
+      - preferredCostSavings
+      - alternativeATitle
+      - alternativeASummary
+      - alternativeAAcquisitionApproach
+      - alternativeASecurityIsApproved
+      - alternativeASecurityIsBeingReviewed
+      - alternativeAHostingType
+      - alternativeAHostingLocation
+      - alternativeAHostingCloudServiceType
+      - alternativeAHasUI
+      - alternativeAPros
+      - alternativeACons
+      - alternativeACostSavings
+      - alternativeBTitle
+      - alternativeBSummary
+      - alternativeBAcquisitionApproach
+      - alternativeBSecurityIsApproved
+      - alternativeBSecurityIsBeingReviewed
+      - alternativeBHostingType
+      - alternativeBHostingLocation
+      - alternativeBHostingCloudServiceType
+      - alternativeBHasUI
+      - alternativeBPros
+      - alternativeBCons
+      - alternativeBCostSavings
+      - lifecycleCostLines
+      - submittedAt
+      - archivedAt
+      - initialSubmittedAt
+      - lastSubmittedAt
     properties:
-      id:
+      # id:
+      #   type: string
+      # createdAt:
+      #   type: string
+      #   format: date-time
+      # updatedAt:
+      #   type: string
+      #   format: date-time
+      intakeId:
         type: string
       userEUA:
         type: string
@@ -128,7 +198,12 @@ definitions:
       preferredAcquisitionApproach:
         type: string
       preferredSecurityIsApproved:
-        type: boolean
+        # type: boolean
+        type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
       preferredSecurityIsBeingReviewed:
         type: string
       preferredHostingType:
@@ -152,7 +227,12 @@ definitions:
       alternativeAAcquisitionApproach:
         type: string
       alternativeASecurityIsApproved:
-        type: boolean
+        # type: boolean
+        type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
       alternativeASecurityIsBeingReviewed:
         type: string
       alternativeAHostingType:
@@ -176,7 +256,12 @@ definitions:
       alternativeBAcquisitionApproach:
         type: string
       alternativeBSecurityIsApproved:
-        type: boolean
+        # type: boolean
+        type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
       alternativeBSecurityIsBeingReviewed:
         type: string
       alternativeBHostingType:
@@ -197,12 +282,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/EASILifecycleCost'
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
       submittedAt:
         type: string
         # format: date-time
@@ -215,32 +294,74 @@ definitions:
       lastSubmittedAt:
         type: string
         # format: date-time
-  EASIGovernance:
+  EASIGrtFeedback:
     type: object
     required:
-      - intake
+      - intakeId
+      - feedback
+      - feedbackType
     properties:
-      intake:
-        $ref: '#/definitions/EASIIntake'
-      biz:
-        $ref: '#/definitions/EASIBizCase'
-      actions:
-        type: array
-        items:
-          $ref: '#/definitions/EASIAction'
-      notes:
-        type: array
-        items:
-          $ref: '#/definitions/EASINote'
+      intakeId:
+        type: string
+      feedback:
+        type: string
+      feedbackType:
+        type: string
   EASIIntake:
     type: object
     required:
-      - id
-      - createdAt
-      - updatedAt
+    #   - id
+    #   - createdAt
+    #   - updatedAt
+      - userEUA
+      - status
+      - requestType
+      - requester
+      - component
+      - businessOwner
+      - businessOwnerComponent
+      - productManager
+      - productManagerComponent
+      - isso
+      - issoName
+      - trbCollaborator
+      - trbCollaboratorName
+      - oitSecurityCollaborator
+      - oitSecurityCollaboratorName
+      - eaCollaborator
+      - eaCollaboratorName
+      - projectName
+      - projectAcronym
+      - existingFunding
+      - fundingSource
+      - fundingNumber
+      - businessNeed
+      - solution
+      - processStatus
+      - eaSupportRequest
+      - existingContract
+      - costIncrease
+      - costIncreaseAmount
+      - contractor
+      - contractVehicle
+      - contractStartDate
+      - contractEndDate
+      - submittedAt
+      - decidedAt
+      - archivedAt
+      - grtDate
+      - grbDate
+      - grtReviewEmailBody
+      - requesterEmailAddress
+      - lifecycleID
+      - lifecycleExpiresAt
+      - lifecycleScope
+      - decisionNextSteps
+      - rejectionReason
+      - adminLead
     properties:
-      id:
-        type: string
+      # id:
+      #   type: string
       userEUA:
         type: string
       status:
@@ -282,6 +403,10 @@ definitions:
       existingFunding:
         # type: boolean
         type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
       fundingSource:
         type: string
       fundingNumber:
@@ -295,6 +420,10 @@ definitions:
       eaSupportRequest:
         # type: boolean
         type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
       existingContract:
         type: string
       costIncrease:
@@ -311,12 +440,12 @@ definitions:
       contractEndDate:
         type: string
         # format: date
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
+      # createdAt:
+      #   type: string
+      #   format: date-time
+      # updatedAt:
+      #   type: string
+      #   format: date-time
       submittedAt:
         type: string
         # format: date-time
@@ -352,9 +481,16 @@ definitions:
   EASILifecycleCost:
     type: object
     required:
-      - id
+      # - id
+      - businessCaseId
+      - solution
+      - phase
+      - year
+      - cost
     properties:
-      id:
+      # id:
+      #   type: string
+      businessCaseId:
         type: string
       solution:
         type: string
@@ -367,14 +503,19 @@ definitions:
   EASINote:
     type: object
     required:
-      - id
-      - createdAt
+      # - id
+      # - createdAt
+      - intakeId
+      - authorEUA
+      - content
     properties:
-      id:
+      # id:
+      #   type: string
+      # createdAt:
+      #   type: string
+      #   format: date-time
+      intakeId:
         type: string
-      createdAt:
-        type: string
-        format: date-time
       authorEUA:
         type: string
       content:
@@ -395,14 +536,19 @@ definitions:
         type: string
         description: The name and version of the corresponding schema
         enum:
-          - EASIGovernanceV01
+          - EASIActionV01
+          - EASIBizCaseV01
+          - EASIGrtFeedbackV01
+          - EASIIntakeV01
+          - EASILifecycleCostV01
+          - EASINoteV01
       createdDate:
         type: string
-        format: date
+        format: date-time
         description: Customers createDate
       lastUpdate:
         type: string
-        format: date
+        format: date-time
         description: Customers lastUpdate
       id:
         type: string
@@ -410,7 +556,12 @@ definitions:
       type:
         type: string
         enum:
-          - EASIGovernance
+          - EASIAction
+          - EASIBizCase
+          - EASIGrtFeedback
+          - EASIIntake
+          - EASILifecycleCost
+          - EASINote
         description: 'The type of record being transmitted, i.e. '
       bodyFormat:
         type: string
