@@ -7,7 +7,10 @@ import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
 import GetAdminNotesQuery from 'queries/GetAdminNotesQuery';
-import { GetAdminNotes } from 'queries/types/GetAdminNotes';
+import {
+  GetAdminNotes,
+  GetAdminNotesVariables
+} from 'queries/types/GetAdminNotes';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
@@ -85,7 +88,7 @@ const Notes = () => {
     error: notesError,
     data: notesData,
     refetch: notesRefetch
-  } = useQuery<GetAdminNotes>(GetAdminNotesQuery, {
+  } = useQuery<GetAdminNotes, GetAdminNotesVariables>(GetAdminNotesQuery, {
     variables: {
       id: systemId
     }
