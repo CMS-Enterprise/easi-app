@@ -2,8 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
-// eslint-disable-next-line camelcase
-import { GetGRTFeedback_grtFeedbacks } from 'queries/types/GetGRTFeedback';
+import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
 import AlternativeAnalysisReview from 'components/BusinessCaseReview/AlternativeAnalysisReview';
 import GeneralRequestInfoReview from 'components/BusinessCaseReview/GeneralRequestInfoReview';
@@ -16,8 +15,7 @@ import { BusinessCaseModel } from 'types/businessCase';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;
-  // eslint-disable-next-line camelcase
-  grtFeedbacks?: GetGRTFeedback_grtFeedbacks[] | null;
+  grtFeedbacks?: GRTFeedback[] | null;
 };
 const BusinessCaseReview = ({
   businessCase,

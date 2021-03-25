@@ -42,6 +42,12 @@ type AddGRTFeedbackPayload struct {
 	ID *uuid.UUID `json:"id"`
 }
 
+// Parameters for actions without additional fields
+type BasicActionInput struct {
+	Feedback string    `json:"feedback"`
+	IntakeID uuid.UUID `json:"intakeId"`
+}
+
 // The shape of a solution for a business case
 type BusinessCaseAsIsSolution struct {
 	Cons        *string `json:"cons"`
@@ -128,6 +134,16 @@ type GeneratePresignedUploadURLInput struct {
 type GeneratePresignedUploadURLPayload struct {
 	URL        *string      `json:"url"`
 	UserErrors []*UserError `json:"userErrors"`
+}
+
+// Input for issuing a lifecycle id
+type IssueLifecycleIDInput struct {
+	ExpiresAt time.Time `json:"expiresAt"`
+	Feedback  string    `json:"feedback"`
+	IntakeID  uuid.UUID `json:"intakeId"`
+	Lcid      *string   `json:"lcid"`
+	NextSteps *string   `json:"nextSteps"`
+	Scope     string    `json:"scope"`
 }
 
 // A collection of Systems
@@ -224,10 +240,17 @@ type UpdateSystemIntakeAdminLeadInput struct {
 	ID        uuid.UUID `json:"id"`
 }
 
-// Result of UpdateSystemIntakeAdminLead
-type UpdateSystemIntakeAdminLeadPayload struct {
+// Result of UpdateSystemIntake mutations
+type UpdateSystemIntakePayload struct {
 	SystemIntake *models.SystemIntake `json:"systemIntake"`
 	UserErrors   []*UserError         `json:"userErrors"`
+}
+
+// Parameters required to update the grt and grb dates for an intake
+type UpdateSystemIntakeReviewDatesInput struct {
+	GrbDate *time.Time `json:"grbDate"`
+	GrtDate *time.Time `json:"grtDate"`
+	ID      uuid.UUID  `json:"id"`
 }
 
 // Parameters for editing a test date
