@@ -106,7 +106,7 @@ const Notes = () => {
         content: values.note
       })
     );
-    notesRefetch({ variables: { id: systemId } });
+    notesRefetch();
     await resetForm();
   };
 
