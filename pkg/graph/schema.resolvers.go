@@ -19,7 +19,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
-	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
@@ -446,7 +445,7 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, err
 	}
 
-	ok, err := services.NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode()(ctx, intake)
+	ok, err := r.service.AuthorizeUserIsReviewTeamOrIntakeRequester(ctx, intake)
 	if err != nil {
 		return nil, err
 	}
@@ -454,7 +453,7 @@ func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models
 		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
 	}
 
-	return r.store.FetchSystemIntakeByID(ctx, id)
+	return intake, nil
 }
 
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {

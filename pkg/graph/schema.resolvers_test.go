@@ -130,7 +130,13 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return next(ctx)
 	}}
 
-	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, ResolverService{}, &s3Client), Directives: directives})
+	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		return true, nil
+	}
+	var resolverService ResolverService
+	resolverService.AuthorizeUserIsReviewTeamOrIntakeRequester = authorize
+
+	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client), Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
 	storeTestSuite := &GraphQLTestSuite{
@@ -867,7 +873,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 		`query {
 			systemIntake(id: "%s") {
 				id
-				businessCase { 
+				businessCase {
 					id
 					alternativeASolution {
 						cons
@@ -944,7 +950,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery
 		`query {
 			systemIntake(id: "%s") {
 				id
-				businessCase { 
+				businessCase {
 					id
 					alternativeASolution {
 						acquisitionApproach
@@ -1054,7 +1060,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery
 		`query {
 			systemIntake(id: "%s") {
 				id
-				businessCase { 
+				businessCase {
 					id
 					lifecycleCostLines {
 						cost

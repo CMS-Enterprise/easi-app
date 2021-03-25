@@ -167,6 +167,7 @@ func (s *Server) routes(
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
 			),
+			AuthorizeUserIsReviewTeamOrIntakeRequester: services.NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode(),
 		},
 		&s3Client,
 	)
