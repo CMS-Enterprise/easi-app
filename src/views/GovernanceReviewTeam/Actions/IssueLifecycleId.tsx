@@ -1,9 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { DateTime } from 'luxon';
+import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
+import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -15,15 +18,22 @@ import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import { SubmitLifecycleIdForm } from 'types/action';
-import { issueLifecycleIdForSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
+const RADIX = 10;
+
 const IssueLifecycleId = () => {
   const { systemId } = useParams<{ systemId: string }>();
-  const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('action');
+
+  const [mutate, mutationResult] = useMutation<IssueLifecycleIdType>(
+    IssueLifecycleIdQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -38,24 +48,34 @@ const IssueLifecycleId = () => {
   const onSubmit = (values: SubmitLifecycleIdForm) => {
     const {
       feedback,
-      expirationDateMonth,
-      expirationDateDay,
-      expirationDateYear,
+      expirationDateMonth = '',
+      expirationDateDay = '',
+      expirationDateYear = '',
       nextSteps,
       scope,
       lifecycleId
     } = values;
-    const lcidPayload = {
-      lcidExpiresAt: `${expirationDateYear}-${expirationDateMonth}-${expirationDateDay}`,
-      decisionNextSteps: nextSteps,
-      lcidScope: scope,
+    const expiresAt = DateTime.utc(
+      parseInt(expirationDateYear, RADIX),
+      parseInt(expirationDateMonth, RADIX),
+      parseInt(expirationDateDay, RADIX)
+    );
+    const input = {
+      intakeId: systemId,
+      expiresAt: expiresAt.toISO(),
+      nextSteps,
+      scope,
       lcid: lifecycleId,
       feedback
     };
-    const payload = { id: systemId, lcidPayload };
-    dispatch(issueLifecycleIdForSystemIntake(payload));
 
-    history.push(`/governance-review-team/${systemId}/intake-request`);
+    mutate({
+      variables: { input }
+    }).then(response => {
+      if (!response.errors) {
+        history.push(`/governance-review-team/${systemId}/notes`);
+      }
+    });
   };
 
   return (
@@ -87,6 +107,14 @@ const IssueLifecycleId = () => {
                     />
                   );
                 })}
+              </ErrorAlert>
+            )}
+            {mutationResult.error && (
+              <ErrorAlert heading="Error issuing lifecycle id">
+                <ErrorAlertMessage
+                  message={mutationResult.error.message}
+                  errorKey="systemIntake"
+                />
               </ErrorAlert>
             )}
             <PageHeading>{t('issueLCID.heading')}</PageHeading>

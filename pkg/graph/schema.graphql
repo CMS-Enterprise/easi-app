@@ -642,6 +642,7 @@ type SystemIntake {
   governanceTeams: SystemIntakeGovernanceTeam
   grbDate: Time
   grtDate: Time
+  grtFeedbacks: [GRTFeedback!]!
   id: UUID!
   isso: SystemIntakeISSO
   lcid: String
@@ -681,19 +682,23 @@ type AddGRTFeedbackPayload {
 }
 
 """
+Input for issuing a lifecycle id
+"""
+input IssueLifecycleIdInput {
+  expiresAt: Time!
+  feedback: String!
+  intakeId: UUID!
+  lcid: String
+  nextSteps: String
+  scope: String!
+}
+
+"""
 Parameters required to update the admin lead for an intake
 """
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
-}
-
-"""
-Result of UpdateSystemIntakeAdminLead
-"""
-type UpdateSystemIntakeAdminLeadPayload {
-  systemIntake: SystemIntake
-  userErrors: [UserError!]
 }
 
 """
@@ -721,6 +726,31 @@ type GRTFeedback {
 }
 
 """
+Parameters required to update the grt and grb dates for an intake
+"""
+input UpdateSystemIntakeReviewDatesInput {
+  grbDate: Time
+  grtDate: Time
+  id: UUID!
+}
+
+"""
+Result of UpdateSystemIntake mutations
+"""
+type UpdateSystemIntakePayload {
+  systemIntake: SystemIntake
+  userErrors: [UserError!]
+}
+
+"""
+Parameters for actions without additional fields
+"""
+input BasicActionInput {
+  feedback: String!
+  intakeId: UUID!
+}
+
+"""
 The root mutation
 """
 type Mutation {
@@ -739,15 +769,27 @@ type Mutation {
   createAccessibilityRequestDocument(
     input: CreateAccessibilityRequestDocumentInput!
   ): CreateAccessibilityRequestDocumentPayload
+  createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionGuideReceievedClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNoGovernanceNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNotItRequest(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNotRespondingClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
+  issueLifecycleId(input: IssueLifecycleIdInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
   markSystemIntakeReadyForGRB(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
-  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakeAdminLeadPayload
+  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
@@ -762,8 +804,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  grtFeedbacks(intakeID: UUID!): [GRTFeedback!]
-  systemIntake(id: UUID!): SystemIntake @hasRole(role: EASI_GOVTEAM)
+  systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
 }
 

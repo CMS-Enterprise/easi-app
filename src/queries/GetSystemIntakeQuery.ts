@@ -31,6 +31,13 @@ export default gql`
         expectedIncreaseAmount
       }
       currentStage
+      grbDate
+      grtDate
+      grtFeedbacks @client {
+        feedback
+        feedbackType
+        createdAt
+      }
       governanceTeams {
         isPresent
         teams {

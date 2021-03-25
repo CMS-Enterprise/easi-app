@@ -1,6 +1,5 @@
 import React from 'react';
-// eslint-disable-next-line camelcase
-import { GetGRTFeedback_grtFeedbacks } from 'queries/types/GetGRTFeedback';
+import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
@@ -14,8 +13,7 @@ import './index.scss';
 
 type BusinessCaseReviewProps = {
   values: BusinessCaseModel;
-  // eslint-disable-next-line camelcase
-  grtFeedbacks?: GetGRTFeedback_grtFeedbacks[] | null;
+  grtFeedbacks?: GRTFeedback[] | null;
 };
 
 const BusinessCaseReview = ({
@@ -61,7 +59,7 @@ const BusinessCaseReview = ({
             Alternatives analysis
           </h2>
         </div>
-        <div className="bg-base-lightest padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
+        <div className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
           <div className="grid-container">
             <AlternativeAnalysisReview
               asIsSolution={values.asIsSolution}

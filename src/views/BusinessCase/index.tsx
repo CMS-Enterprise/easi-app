@@ -57,7 +57,7 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  const getGRTFeedbacksResponse = useQuery<
+  const { data: grtFeedbackPayload } = useQuery<
     GetGRTFeedback,
     GetGRTFeedbackVariables
   >(GetGRTFeedbackQuery, {
@@ -210,7 +210,7 @@ export const BusinessCase = () => {
               render={() => (
                 <BusinessCaseView
                   businessCase={businessCase}
-                  grtFeedbacks={getGRTFeedbacksResponse.data?.grtFeedbacks}
+                  grtFeedbacks={grtFeedbackPayload?.systemIntake?.grtFeedbacks}
                 />
               )}
             />
