@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
-import { GetGRTFeedback_grtFeedbacks as GRTFeedback } from 'queries/types/GetGRTFeedback';
+import { GetGRTFeedback_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetGRTFeedback';
 
 import HelpText from 'components/shared/HelpText';
 
@@ -20,12 +20,14 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
   );
 
   const formatGRTFeedback = (feedback: GRTFeedback) => {
+    const formattedDate = DateTime.fromISO(feedback.createdAt).toLocaleString(
+      DateTime.DATE_MED
+    );
     return (
       <div className="margin-bottom-3">
-        <div className="text-bold">
-          {DateTime.fromISO(feedback.createdAt).toLocaleString(
-            DateTime.DATE_MED
-          )}
+        <div className="text-bold">{formattedDate}</div>
+        <div className="usa-sr-only">
+          {t('grtFeedback.dateSRHelpText', { date: formattedDate })}
         </div>
         <p className="margin-top-1 line-height-body-3">{feedback.feedback}</p>
       </div>
@@ -34,7 +36,7 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
 
   return (
     <>
-      <h2 className="margin-bottom-3 margin-top-0">
+      <h2 className="margin-bottom-3 margin-top-0 font-heading-xl">
         {t('grtFeedback.header')}
       </h2>
       {feedbacksForGRB.length > 0 && (

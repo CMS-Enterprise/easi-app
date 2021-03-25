@@ -59,7 +59,7 @@ const BusinessCaseReview = ({
             Alternatives analysis
           </h2>
         </div>
-        <div className="bg-base-lightest padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
+        <div className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
           <div className="grid-container">
             <AlternativeAnalysisReview
               asIsSolution={values.asIsSolution}

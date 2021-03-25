@@ -10,6 +10,7 @@ const businessCase = {
   grtFeedback: {
     header: 'Recommendations',
     grbSubhead: 'GRT recommendations to the GRB',
+    dateSRHelpText: 'Feedback from the meeting on {{date}}',
     grbHelpText:
       'These are the Governance Review Team recommendations for the Governance Review Board.',
     businessOwnerSubhead: 'GRT recommendations to the Business Owner',

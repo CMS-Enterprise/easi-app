@@ -79,7 +79,7 @@ const authLink = setContext((request, { headers }) => {
 });
 
 const typePolicies = {
-  Query: {
+  SystemIntake: {
     fields: {
       grtFeedbacks: {
         read() {
