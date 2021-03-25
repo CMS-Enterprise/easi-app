@@ -642,6 +642,7 @@ type SystemIntake {
   governanceTeams: SystemIntakeGovernanceTeam
   grbDate: Time
   grtDate: Time
+  grtFeedbacks: [GRTFeedback!]!
   id: UUID!
   isso: SystemIntakeISSO
   lcid: String
@@ -698,6 +699,30 @@ Parameters required to update the admin lead for an intake
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
+}
+
+"""
+Type or recipient of GRT Feedback
+"""
+enum GRTFeedbackType {
+  """
+  Feedback for the business owner
+  """
+  BUSINESS_OWNER
+
+  """
+  Recommendations to the GRB
+  """
+  GRB
+}
+
+"""
+Feedback from the GRT to a business owner or GRB
+"""
+type GRTFeedback {
+  createdAt: Time
+  feedback: String
+  feedbackType: GRTFeedbackType
 }
 
 """
@@ -779,7 +804,7 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
-  systemIntake(id: UUID!): SystemIntake @hasRole(role: EASI_GOVTEAM)
+  systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
 }
 
