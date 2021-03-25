@@ -190,6 +190,7 @@ func (s *Server) routes(
 				emailClient.SendIssueLCIDEmail,
 				store.GenerateLifecycleID,
 			),
+			AuthorizeUserIsReviewTeamOrIntakeRequester: services.NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode(),
 		},
 		&s3Client,
 	)

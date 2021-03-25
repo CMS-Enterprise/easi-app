@@ -138,6 +138,10 @@ func TestGraphQLTestSuite(t *testing.T) {
 	}
 	var resolverService ResolverService
 	resolverService.IssueLifecycleID = issueLifecycleID
+	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		return true, nil
+	}
+	resolverService.AuthorizeUserIsReviewTeamOrIntakeRequester = authorize
 
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client), Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
@@ -876,7 +880,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseForSystemIntakeQuery() {
 		`query {
 			systemIntake(id: "%s") {
 				id
-				businessCase { 
+				businessCase {
 					id
 					alternativeASolution {
 						cons
@@ -953,7 +957,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithSolutionAForSystemIntakeQuery
 		`query {
 			systemIntake(id: "%s") {
 				id
-				businessCase { 
+				businessCase {
 					id
 					alternativeASolution {
 						acquisitionApproach
@@ -1063,7 +1067,7 @@ func (s GraphQLTestSuite) TestFetchBusinessCaseWithCostLinesForSystemIntakeQuery
 		`query {
 			systemIntake(id: "%s") {
 				id
-				businessCase { 
+				businessCase {
 					id
 					lifecycleCostLines {
 						cost
@@ -1140,8 +1144,8 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
 	s.client.MustPost(fmt.Sprintf(
 		`mutation {
 			issueLifecycleId(input: {
-				intakeId: "%s", 
-				expiresAt: "2021-03-18T00:00:00Z", 
+				intakeId: "%s",
+				expiresAt: "2021-03-18T00:00:00Z",
 				scope: "Your scope",
 				feedback: "My feedback",
 				lcid: "123456A"
@@ -1197,8 +1201,8 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 	s.client.MustPost(fmt.Sprintf(
 		`mutation {
 			issueLifecycleId(input: {
-				intakeId: "%s", 
-				expiresAt: "2021-03-18T00:00:00Z", 
+				intakeId: "%s",
+				expiresAt: "2021-03-18T00:00:00Z",
 				scope: "Your scope",
 				feedback: "My feedback",
 				lcid: ""

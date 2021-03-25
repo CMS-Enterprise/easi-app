@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -14,6 +15,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -593,7 +595,20 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 }
 
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	return r.store.FetchSystemIntakeByID(ctx, id)
+	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	ok, err := r.service.AuthorizeUserIsReviewTeamOrIntakeRequester(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+	}
+
+	return intake, nil
 }
 
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
@@ -783,6 +798,10 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		IsPresent: &isPresent,
 		Teams:     teams,
 	}, nil
+}
+
+func (r *systemIntakeResolver) GrtFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GRTFeedback, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {
