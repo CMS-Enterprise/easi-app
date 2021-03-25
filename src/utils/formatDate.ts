@@ -31,12 +31,12 @@ export const formatContractDate = (date: ContractDate): string => {
  * FY 2022 : October 1 2021 - September 30 2022
  * @param date DateTime date object
  */
-export const getFiscalYear = (date: DateTime): string => {
+export const getFiscalYear = (date: DateTime): number => {
   const { month, year } = date;
   if (month >= 10) {
-    return String(year + 1);
+    return year + 1;
   }
-  return String(year);
+  return year;
 };
 
 export default formatDate;
