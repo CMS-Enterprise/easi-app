@@ -9,7 +9,7 @@ import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
-import { hasAlternativeB } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { isBusinessCaseFinal } from 'utils/systemIntake';
@@ -107,7 +107,9 @@ const AlternativeSolutionA = ({
                   formikProps={formikProps}
                 />
 
-                {!hasAlternativeB(businessCase.alternativeB) && (
+                {!alternativeSolutionHasFilledFields(
+                  businessCase.alternativeB
+                ) && (
                   <div className="margin-bottom-7">
                     <h2 className="margin-bottom-1">Additional alternatives</h2>
                     <HelpText>
@@ -153,7 +155,9 @@ const AlternativeSolutionA = ({
                 validateForm().then(err => {
                   if (Object.keys(err).length === 0) {
                     dispatchSave();
-                    const newUrl = hasAlternativeB(businessCase.alternativeB)
+                    const newUrl = alternativeSolutionHasFilledFields(
+                      businessCase.alternativeB
+                    )
                       ? 'alternative-solution-b'
                       : 'review';
                     history.push(newUrl);
@@ -182,7 +186,11 @@ const AlternativeSolutionA = ({
             </div>
             <PageNumber
               currentPage={5}
-              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
+              totalPages={
+                alternativeSolutionHasFilledFields(businessCase.alternativeB)
+                  ? 6
+                  : 5
+              }
             />
             <AutoSave
               values={values}
