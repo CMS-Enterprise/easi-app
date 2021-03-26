@@ -25,9 +25,11 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
     );
     return (
       <div className="margin-bottom-3" key={feedback.id}>
-        <div className="text-bold">{formattedDate}</div>
-        <div className="usa-sr-only">
-          {t('grtFeedback.dateSRHelpText', { date: formattedDate })}
+        <div
+          className="text-bold"
+          aria-label={t('grtFeedback.dateSRHelpText', { date: formattedDate })}
+        >
+          {formattedDate}
         </div>
         <p className="margin-top-1 line-height-body-3">{feedback.feedback}</p>
       </div>
