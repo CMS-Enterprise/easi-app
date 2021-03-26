@@ -9,15 +9,15 @@ import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import { defaultProposedSolution } from 'data/businessCase';
+import {
+  alternativeSolutionHasFilledFields,
+  defaultProposedSolution
+} from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { isBusinessCaseFinal } from 'utils/systemIntake';
-import {
-  BusinessCaseDraftValidationSchema,
-  BusinessCaseFinalValidationSchema
-} from 'validations/businessCaseSchema';
+import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import AlternativeSolutionFields from './AlternativeSolutionFields';
 
@@ -39,16 +39,11 @@ const AlternativeSolutionB = ({
     alternativeB: businessCase.alternativeB
   };
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={ValidationSchema.alternativeB}
+      validationSchema={BusinessCaseFinalValidationSchema.alternativeB}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -104,7 +99,7 @@ const AlternativeSolutionB = ({
             <Form>
               <div className="tablet:grid-col-9">
                 <div className="easi-business-case__name-wrapper">
-                  <h2 className="margin-0">Alternative B</h2>
+                  <h2 className="margin-0">Alternative B (Optional)</h2>
                   <Button
                     type="button"
                     className="margin-left-2"
@@ -155,13 +150,22 @@ const AlternativeSolutionB = ({
             <Button
               type="button"
               onClick={() => {
-                validateForm().then(err => {
-                  if (Object.keys(err).length === 0) {
-                    dispatchSave();
-                    const newUrl = 'review';
-                    history.push(newUrl);
-                  }
-                });
+                dispatchSave();
+                // If final business case OR any field is filled
+                if (
+                  businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED' &&
+                  alternativeSolutionHasFilledFields(
+                    formikRef?.current?.values?.alternativeB
+                  )
+                ) {
+                  validateForm().then(err => {
+                    if (Object.keys(err).length === 0) {
+                      history.push('review');
+                    }
+                  });
+                } else {
+                  history.push('review');
+                }
                 window.scrollTo(0, 0);
               }}
             >
