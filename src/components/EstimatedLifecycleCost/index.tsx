@@ -52,10 +52,7 @@ const Phase = ({
               <FieldErrorMsg>
                 {typeof errors === 'string' ? errors : ''}
               </FieldErrorMsg>
-              <legend
-                className={classnames('usa-label', 'margin-bottom-1')}
-                aria-label={`Year ${year}`}
-              >
+              <legend className={classnames('usa-label', 'margin-bottom-1')}>
                 {`Fiscal year ${fiscalYear} phase costs`}
               </legend>
 
@@ -80,7 +77,7 @@ const Phase = ({
                 >
                   <Label
                     htmlFor={`BusinessCase-${formikKey}.Year${year}.development.cost`}
-                    aria-label={`Enter year ${year} development cost`}
+                    aria-label={`Enter year ${fiscalYear} development cost`}
                   >
                     Development costs
                   </Label>
@@ -118,7 +115,7 @@ const Phase = ({
                 >
                   <Label
                     htmlFor={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.cost`}
-                    aria-label={`Enter year ${year} operations and maintenance cost`}
+                    aria-label={`Enter year ${fiscalYear} operations and maintenance cost`}
                   >
                     Operations and Maintenance costs
                   </Label>
@@ -158,7 +155,7 @@ const Phase = ({
                 >
                   <Label
                     htmlFor={`BusinessCase-${formikKey}.Year${year}.other.cost`}
-                    aria-label={`Enter year ${year} other cost`}
+                    aria-label={`Enter year ${fiscalYear} other cost`}
                   >
                     Other costs
                   </Label>
