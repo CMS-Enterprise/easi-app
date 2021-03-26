@@ -806,7 +806,6 @@ const ContractDetails = ({
                     formikProps.setErrors({});
                     const newUrl = 'request-details';
                     history.push(newUrl);
-                    window.scrollTo(0, 0);
                   }}
                 >
                   Back
@@ -819,8 +818,9 @@ const ContractDetails = ({
                         dispatchSave();
                         const newUrl = 'review';
                         history.push(newUrl);
+                      } else {
+                        window.scrollTo(0, 0);
                       }
-                      window.scrollTo(0, 0);
                     });
                   }}
                 >

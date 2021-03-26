@@ -237,7 +237,6 @@ const RequestDescription = ({
                 setErrors({});
                 const newUrl = 'general-request-info';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -250,9 +249,10 @@ const RequestDescription = ({
                     dispatchSave();
                     const newUrl = 'as-is-solution';
                     history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
                   }
                 });
-                window.scrollTo(0, 0);
               }}
             >
               Next

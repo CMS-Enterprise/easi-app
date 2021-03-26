@@ -286,7 +286,6 @@ const RequestDetails = ({
                     formikProps.setErrors({});
                     const newUrl = 'contact-details';
                     history.push(newUrl);
-                    window.scrollTo(0, 0);
                   }}
                 >
                   Back
@@ -299,8 +298,9 @@ const RequestDetails = ({
                         dispatchSave();
                         const newUrl = 'contract-details';
                         history.push(newUrl);
+                      } else {
+                        window.scrollTo(0, 0);
                       }
-                      window.scrollTo(0, 0);
                     });
                   }}
                 >
