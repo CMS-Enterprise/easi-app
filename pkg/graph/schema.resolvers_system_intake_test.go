@@ -13,9 +13,6 @@ import (
 
 func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 	ctx := context.Background()
-
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
 	projectName := "Big Project"
 	businessOwner := "Firstname Lastname"
 	businessOwnerComponent := "OIT"
@@ -74,9 +71,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeQuery() {
 
 func (s GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 	ctx := context.Background()
-
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
 	projectName := "Big Project"
 	businessOwner := "Firstname Lastname"
 	businessOwnerComponent := "OIT"
@@ -144,9 +138,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 
 func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
 	ctx := context.Background()
-
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
 	contracStartMonth := "10"
 	contractStartYear := "2002"
 	contractEndMonth := "08"
@@ -218,9 +209,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
 
 func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 	ctx := context.Background()
-
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
 	projectName := "My cool project"
 	contractStartDate, _ := time.Parse("2006-1-2", "2002-8-24")
 	contractEndDate, _ := time.Parse("2006-1-2", "2020-10-31")
@@ -288,9 +276,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractDatesQuery() {
 
 func (s GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 	ctx := context.Background()
-
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
 	projectName := "My cool project"
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -345,9 +330,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithNoCollaboratorsQuery() {
 
 func (s GraphQLTestSuite) TestFetchSystemIntakeWithCollaboratorsQuery() {
 	ctx := context.Background()
-
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
 	projectName := "My cool project"
 	eaName := "My EA Rep"
 	oitName := "My OIT Rep"
@@ -494,9 +476,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 
 func (s GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
 	ctx := context.Background()
-
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
 	projectName := "My cool project"
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
@@ -551,9 +530,6 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
 
 func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 	ctx := context.Background()
-
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
 	projectName := "My cool project"
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{

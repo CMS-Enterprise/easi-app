@@ -13,9 +13,6 @@ import (
 func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
 	ctx := context.Background()
 
-	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
-	// functionality and not have to reinitialize all the services here
-
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),
 		Status:                 models.SystemIntakeStatusLCIDISSUED,
