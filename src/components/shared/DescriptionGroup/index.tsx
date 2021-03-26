@@ -31,7 +31,7 @@ export const DescriptionTerm = ({ className, term }: DescriptionTermProps) => (
 
 type DescriptionDefinitionProps = {
   className?: string;
-  definition: string;
+  definition?: string | null;
 };
 
 export const DescriptionDefinition = ({
