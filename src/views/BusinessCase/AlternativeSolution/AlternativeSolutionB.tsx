@@ -1,10 +1,9 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Alert, Button } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
@@ -16,7 +15,6 @@ import {
 import { BusinessCaseModel } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
 import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import AlternativeSolutionFields from './AlternativeSolutionFields';
@@ -90,16 +88,16 @@ const AlternativeSolutionB = ({
                 infrastructure, etc.
               </div>
             </div>
-            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
-            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
-              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-                <MandatoryFieldsAlert />
-              </div>
-            )}
+            <div className="tablet:grid-col-8 margin-top-2">
+              <Alert type="info" slim>
+                This section is optional. You can skip it if you don&apos;t have
+                any alternative solutions.
+              </Alert>
+            </div>
             <Form>
               <div className="tablet:grid-col-9">
                 <div className="easi-business-case__name-wrapper">
-                  <h2 className="margin-0">Alternative B (Optional)</h2>
+                  <h2 className="margin-0">Alternative B</h2>
                   <Button
                     type="button"
                     className="margin-left-2"
