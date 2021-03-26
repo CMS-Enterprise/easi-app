@@ -1,9 +1,14 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import RejectIntakeQuery from 'queries/RejectIntakeQuery';
+import {
+  RejectIntake as RejectIntakeType,
+  RejectIntakeVariables
+} from 'queries/types/RejectIntake';
 
 import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -13,15 +18,20 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { RejectIntakeForm } from 'types/action';
-import { rejectSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { rejectIntakeSchema } from 'validations/actionSchema';
 
 const RejectIntake = () => {
   const { systemId } = useParams<{ systemId: string }>();
-  const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('action');
+
+  const [mutate, mutationResult] = useMutation<
+    RejectIntakeType,
+    RejectIntakeVariables
+  >(RejectIntakeQuery, {
+    errorPolicy: 'all'
+  });
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -33,15 +43,21 @@ const RejectIntake = () => {
 
   const onSubmit = (values: RejectIntakeForm) => {
     const { feedback, nextSteps, reason } = values;
-    const rejectPayload = {
-      rejectionNextSteps: nextSteps,
-      rejectionReason: reason,
-      feedback
-    };
-    const payload = { id: systemId, rejectPayload };
-    dispatch(rejectSystemIntake(payload));
 
-    history.push(`/governance-review-team/${systemId}/intake-request`);
+    const input = {
+      feedback,
+      intakeId: systemId,
+      nextSteps,
+      reason
+    };
+
+    mutate({
+      variables: { input }
+    }).then(response => {
+      if (!response.errors) {
+        history.push(`/governance-review-team/${systemId}/notes`);
+      }
+    });
   };
 
   return (
@@ -73,6 +89,14 @@ const RejectIntake = () => {
                     />
                   );
                 })}
+              </ErrorAlert>
+            )}
+            {mutationResult.error && (
+              <ErrorAlert heading="Error issuing lifecycle id">
+                <ErrorAlertMessage
+                  message={mutationResult.error.message}
+                  errorKey="systemIntake"
+                />
               </ErrorAlert>
             )}
             <PageHeading>{t('rejectIntake.heading')}</PageHeading>
