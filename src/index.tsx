@@ -78,9 +78,48 @@ const authLink = setContext((request, { headers }) => {
   };
 });
 
+const typePolicies = {
+  SystemIntake: {
+    fields: {
+      grtFeedbacks: {
+        read() {
+          return [
+            {
+              feedbackType: 'GRB',
+              createdAt: '2021-02-08T17:28:29Z',
+              feedback: Array(100).fill('feedback ').join(),
+              __typename: 'GRTFeedback'
+            },
+            {
+              feedbackType: 'GRB',
+              createdAt: '2021-02-09T17:28:29Z',
+              feedback: Array(100).fill('feedback ').join(),
+              __typename: 'GRTFeedback'
+            },
+            {
+              feedbackType: 'BUSINESS_OWNER',
+              createdAt: '2021-02-09T17:28:29Z',
+              feedback: Array(100).fill('feedback ').join(),
+              __typename: 'GRTFeedback'
+            },
+            {
+              feedbackType: 'BUSINESS_OWNER',
+              createdAt: '2021-02-09T17:28:29Z',
+              feedback: Array(100).fill('feedback ').join(),
+              __typename: 'GRTFeedback'
+            }
+          ];
+        }
+      }
+    }
+  }
+};
+
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies
+  }),
   resolvers: {
     AccessibilityRequest: {
       documents: () => [

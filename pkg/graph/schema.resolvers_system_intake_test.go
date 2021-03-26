@@ -491,3 +491,117 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 	s.Equal("second.actor@example.com", respAction2.Actor.Email)
 	s.Equal("ACT2", respAction2.Actor.EUA)
 }
+
+func (s GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
+	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
+	projectName := "My cool project"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName: null.StringFrom(projectName),
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		IssueLifecycleID struct {
+			SystemIntake struct {
+				ID                string
+				Lcid              string
+				LcidExpiresAt     string
+				LcidScope         string
+				DecisionNextSteps string
+				Status            string
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			issueLifecycleId(input: {
+				intakeId: "%s",
+				expiresAt: "2021-03-18T00:00:00Z",
+				scope: "Your scope",
+				feedback: "My feedback",
+				lcid: "123456A"
+				nextSteps: "Your next steps"
+			}) {
+				systemIntake {
+					id
+					lcid
+					lcidExpiresAt
+					lcidScope
+					decisionNextSteps
+					status
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.IssueLifecycleID.SystemIntake.ID)
+
+	respIntake := resp.IssueLifecycleID.SystemIntake
+	s.Equal(respIntake.LcidExpiresAt, "2021-03-18T00:00:00Z")
+	s.Equal(respIntake.Lcid, "123456A")
+}
+
+func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
+	ctx := context.Background()
+
+	// ToDo: This whole test would probably be better as an integration test in pkg/integration, so we can see the real
+	// functionality and not have to reinitialize all the services here
+	projectName := "My cool project"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName: null.StringFrom(projectName),
+		Status:      models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType: models.SystemIntakeRequestTypeNEW,
+	})
+	s.NoError(intakeErr)
+
+	var resp struct {
+		IssueLifecycleID struct {
+			SystemIntake struct {
+				ID                string
+				Lcid              string
+				LcidExpiresAt     string
+				LcidScope         string
+				DecisionNextSteps string
+				Status            string
+			}
+		}
+	}
+
+	// TODO we're supposed to be able to pass variables as additional arguments using client.Var()
+	// but it wasn't working for me.
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			issueLifecycleId(input: {
+				intakeId: "%s",
+				expiresAt: "2021-03-18T00:00:00Z",
+				scope: "Your scope",
+				feedback: "My feedback",
+				lcid: ""
+				nextSteps: "Your next steps"
+			}) {
+				systemIntake {
+					id
+					lcid
+					lcidExpiresAt
+					lcidScope
+					decisionNextSteps
+					status
+				}
+			}
+		}`, intake.ID), &resp)
+
+	s.Equal(intake.ID.String(), resp.IssueLifecycleID.SystemIntake.ID)
+
+	respIntake := resp.IssueLifecycleID.SystemIntake
+	s.Equal(respIntake.LcidExpiresAt, "2021-03-18T00:00:00Z")
+	s.Equal(respIntake.Lcid, "654321B")
+}

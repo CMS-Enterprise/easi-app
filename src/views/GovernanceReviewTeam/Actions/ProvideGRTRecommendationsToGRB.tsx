@@ -46,7 +46,7 @@ const ProvideGRTRecommendationsToGRB = () => {
         }
       }
     }).then(() => {
-      history.push(`/governance-review-team/${systemId}/intake-request`);
+      history.push(`/governance-review-team/${systemId}/notes`);
     });
   };
 

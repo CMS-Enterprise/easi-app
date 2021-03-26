@@ -14,6 +14,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/request"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
@@ -23,6 +24,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 	"github.com/cmsgov/easi-app/pkg/upload"
@@ -127,7 +129,20 @@ func TestGraphQLTestSuite(t *testing.T) {
 		return next(ctx)
 	}}
 
-	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, ResolverService{}, &s3Client), Directives: directives})
+	issueLifecycleID := func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
+		if intake.LifecycleID.ValueOrZero() == "" {
+			intake.LifecycleID = null.StringFrom("654321B")
+		}
+		return intake, nil
+	}
+	var resolverService ResolverService
+	resolverService.IssueLifecycleID = issueLifecycleID
+	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+		return true, nil
+	}
+	resolverService.AuthorizeUserIsReviewTeamOrIntakeRequester = authorize
+
+	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client), Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
 	storeTestSuite := &GraphQLTestSuite{

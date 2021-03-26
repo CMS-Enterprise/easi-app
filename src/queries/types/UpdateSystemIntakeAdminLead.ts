@@ -16,7 +16,7 @@ export interface UpdateSystemIntakeAdminLead_updateSystemIntakeAdminLead_systemI
 }
 
 export interface UpdateSystemIntakeAdminLead_updateSystemIntakeAdminLead {
-  __typename: "UpdateSystemIntakeAdminLeadPayload";
+  __typename: "UpdateSystemIntakePayload";
   systemIntake: UpdateSystemIntakeAdminLead_updateSystemIntakeAdminLead_systemIntake | null;
 }
 
