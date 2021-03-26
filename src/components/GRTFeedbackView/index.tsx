@@ -24,7 +24,7 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
       DateTime.DATE_MED
     );
     return (
-      <div className="margin-bottom-3">
+      <div className="margin-bottom-3" key={feedback.id}>
         <div className="text-bold">{formattedDate}</div>
         <div className="usa-sr-only">
           {t('grtFeedback.dateSRHelpText', { date: formattedDate })}

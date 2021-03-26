@@ -72,7 +72,7 @@ func (s *Store) FetchGRTFeedbackByID(ctx context.Context, id uuid.UUID) (*models
 func (s *Store) FetchGRTFeedbacksByIntakeID(ctx context.Context, intakeID uuid.UUID) ([]*models.GRTFeedback, error) {
 	grtFeedbacks := []*models.GRTFeedback{}
 
-	err := s.db.GetContext(ctx, &grtFeedbacks, `SELECT * FROM grt_feedback WHERE intake_id=$1 ORDER BY created_at`, intakeID)
+	err := s.db.SelectContext(ctx, &grtFeedbacks, `SELECT * FROM grt_feedback WHERE intake_id=$1 ORDER BY created_at`, intakeID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return grtFeedbacks, nil

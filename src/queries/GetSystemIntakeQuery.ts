@@ -33,7 +33,7 @@ export default gql`
       currentStage
       grbDate
       grtDate
-      grtFeedbacks @client {
+      grtFeedbacks {
         feedback
         feedbackType
         createdAt
