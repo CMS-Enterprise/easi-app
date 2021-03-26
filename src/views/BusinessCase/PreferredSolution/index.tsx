@@ -666,7 +666,6 @@ const PreferredSolution = ({
                 setErrors({});
                 const newUrl = 'as-is-solution';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -679,9 +678,10 @@ const PreferredSolution = ({
                     dispatchSave();
                     const newUrl = 'alternative-solution-a';
                     history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
                   }
                 });
-                window.scrollTo(0, 0);
               }}
             >
               Next
