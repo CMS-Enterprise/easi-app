@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { DateTime } from 'luxon';
+import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 
 import PageHeading from 'components/PageHeading';
 import ReviewRow from 'components/ReviewRow';
@@ -9,10 +10,9 @@ import {
   DescriptionList,
   DescriptionTerm
 } from 'components/shared/DescriptionGroup';
-import { SystemIntakeForm } from 'types/systemIntake';
 
 type DecisionProps = {
-  systemIntake: SystemIntakeForm;
+  systemIntake?: SystemIntake | null;
 };
 
 const Decision = ({ systemIntake }: DecisionProps) => {
@@ -31,7 +31,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             <DescriptionTerm term={t('governanceReviewTeam:decision.lcid')} />
             <DescriptionDefinition
               className="text-pre-wrap"
-              definition={systemIntake.lcid}
+              definition={systemIntake?.lcid}
             />
           </div>
         </ReviewRow>
@@ -42,10 +42,10 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             />
             <DescriptionDefinition
               definition={
-                systemIntake.lcidExpiration
-                  ? systemIntake.lcidExpiration.toLocaleString(
-                      DateTime.DATE_FULL
-                    )
+                systemIntake?.lcidExpiresAt
+                  ? DateTime.fromISO(
+                      systemIntake?.lcidExpiresAt
+                    ).toLocaleString(DateTime.DATE_FULL)
                   : ''
               }
             />
@@ -56,7 +56,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             <DescriptionTerm term={t('governanceReviewTeam:decision.scope')} />
             <DescriptionDefinition
               className="text-pre-wrap"
-              definition={systemIntake.lcidScope}
+              definition={systemIntake?.lcidScope}
             />
           </div>
         </ReviewRow>
@@ -67,7 +67,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             />
             <DescriptionDefinition
               className="text-pre-wrap"
-              definition={systemIntake.decisionNextSteps}
+              definition={systemIntake?.decisionNextSteps}
             />
           </div>
         </ReviewRow>
@@ -90,7 +90,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             />
             <DescriptionDefinition
               className="text-pre-wrap"
-              definition={systemIntake.rejectionReason}
+              definition={systemIntake?.rejectionReason}
             />
           </div>
         </ReviewRow>
@@ -101,7 +101,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
             />
             <DescriptionDefinition
               className="text-pre-wrap"
-              definition={systemIntake.decisionNextSteps}
+              definition={systemIntake?.decisionNextSteps}
             />
           </div>
         </ReviewRow>
@@ -136,7 +136,7 @@ const Decision = ({ systemIntake }: DecisionProps) => {
     </>
   );
 
-  switch (systemIntake.status) {
+  switch (systemIntake?.status) {
     case 'LCID_ISSUED':
       return <Approved />;
     case 'NOT_APPROVED':

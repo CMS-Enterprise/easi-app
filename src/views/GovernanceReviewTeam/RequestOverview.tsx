@@ -186,7 +186,7 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/decision"
-              render={() => <Decision systemIntake={systemIntake} />}
+              render={() => <Decision systemIntake={intake} />}
             />
             <Route
               path="/governance-review-team/:systemId/actions"
