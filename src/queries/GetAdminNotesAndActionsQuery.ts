@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  query GetAdminNotes($id: UUID!) {
+  query GetAdminNotesAndActions($id: UUID!) {
     systemIntake(id: $id) {
       notes {
         id
@@ -10,6 +10,16 @@ export default gql`
         author {
           name
           eua
+        }
+      }
+      actions {
+        id
+        createdAt
+        feedback
+        type
+        actor {
+          name
+          email
         }
       }
     }

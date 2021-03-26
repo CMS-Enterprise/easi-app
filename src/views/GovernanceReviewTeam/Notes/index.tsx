@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -6,11 +6,13 @@ import { useQuery } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
-import GetAdminNotesQuery from 'queries/GetAdminNotesQuery';
+import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
 import {
-  GetAdminNotes,
-  GetAdminNotesVariables
-} from 'queries/types/GetAdminNotes';
+  GetAdminNotesAndActions,
+  GetAdminNotesAndActions_systemIntake_actions as GetAdminNotesAndActionsSystemIntakeAction,
+  GetAdminNotesAndActions_systemIntake_notes as GetAdminNotesAndActionsSystemIntakeNote,
+  GetAdminNotesAndActionsVariables
+} from 'queries/types/GetAdminNotesAndActions';
 
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
@@ -20,15 +22,24 @@ import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { AppState } from 'reducers/rootReducer';
-import { Action } from 'types/action';
-import { fetchActions, postIntakeNote } from 'types/routines';
-import { IntakeNote } from 'types/systemIntake';
+import { postIntakeNote } from 'types/routines';
 
 type NoteForm = {
   note: string;
 };
 
-const NoteListItem = ({ note }: { note: IntakeNote }) => {
+function formatRFC3393Time(time: string): string {
+  const parsed = DateTime.fromISO(time);
+  return `${parsed.toLocaleString(
+    DateTime.DATE_FULL
+  )} at ${parsed.toLocaleString(DateTime.TIME_SIMPLE)}`;
+}
+
+const NoteListItem = ({
+  note
+}: {
+  note: GetAdminNotesAndActionsSystemIntakeNote;
+}) => {
   return (
     <li className="easi-grt__history-item">
       <div className="easi-grt__history-item-content">
@@ -37,29 +48,27 @@ const NoteListItem = ({ note }: { note: IntakeNote }) => {
         </p>
         <span className="text-base-dark font-body-2xs">{`by: ${
           note.author.name
-        } | ${DateTime.fromISO(note.createdAt).toLocaleString(
-          DateTime.DATE_FULL
-        )} at ${DateTime.fromISO(note.createdAt).toLocaleString(
-          DateTime.TIME_SIMPLE
-        )}`}</span>
+        } | ${formatRFC3393Time(note.createdAt)}`}</span>
       </div>
     </li>
   );
 };
 
-const ActionListItem = ({ action }: { action: Action }) => {
+const ActionListItem = ({
+  action
+}: {
+  action: GetAdminNotesAndActionsSystemIntakeAction;
+}) => {
   const { t } = useTranslation('governanceReviewTeam');
 
   return (
     <li className="easi-grt__history-item">
       <div className="easi-grt__history-item-content">
         <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
-          {t(`notes.actionName.${action.actionType}`)}
+          {t(`notes.actionName.${action.type}`)}
         </p>
         <span className="text-base-dark font-body-2xs display-block">
-          {`by: ${action.actorName} | ${action.createdAt.toLocaleString(
-            DateTime.DATE_FULL
-          )} at ${action.createdAt.toLocaleString(DateTime.TIME_SIMPLE)}`}
+          {`by: ${action.actor.name} | ${formatRFC3393Time(action.createdAt)}}`}
         </span>
         {action.feedback && (
           <div className="margin-top-2">
@@ -82,13 +91,11 @@ const Notes = () => {
   const dispatch = useDispatch();
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
-  const actions = useSelector((state: AppState) => state.action.actions);
 
-  const {
-    error: notesError,
-    data: notesData,
-    refetch: notesRefetch
-  } = useQuery<GetAdminNotes, GetAdminNotesVariables>(GetAdminNotesQuery, {
+  const { error, data, refetch } = useQuery<
+    GetAdminNotesAndActions,
+    GetAdminNotesAndActionsVariables
+  >(GetAdminNotesAndActionsQuery, {
     variables: {
       id: systemId
     }
@@ -106,35 +113,37 @@ const Notes = () => {
         content: values.note
       })
     );
-    notesRefetch();
     await resetForm();
+    if (refetch) {
+      // I was having an issue where sometimes refetch would be undefined.
+      // This may be related to a bug in Apollo Client, so the check here is
+      // to prevent that from breaking the app should it occur.
+      refetch();
+    }
   };
-
-  useEffect(() => {
-    dispatch(fetchActions(systemId));
-  }, [dispatch, systemId]);
 
   const initialValues = {
     note: ''
   };
 
   const notesByTimestamp =
-    notesData?.systemIntake?.notes.map(note => {
+    data?.systemIntake?.notes.map(note => {
       return {
         createdAt: note.createdAt,
         element: <NoteListItem note={note} key={note.id} />
       };
     }) || [];
 
-  const actionsByTimestamp = actions.map((action: Action) => {
-    return {
-      createdAt: action.createdAt,
-      element: <ActionListItem action={action} key={action.id} />
-    };
-  });
+  const actionsByTimestamp =
+    data?.systemIntake?.actions.map(action => {
+      return {
+        createdAt: action.createdAt,
+        element: <ActionListItem action={action} key={action.id} />
+      };
+    }) || [];
 
   const interleavedList = [...notesByTimestamp, ...actionsByTimestamp]
-    .sort()
+    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
     .map(a => a.element);
 
   return (
@@ -166,10 +175,10 @@ const Notes = () => {
                   {t('notes.addNoteCta')}
                 </Button>
               </Form>
-              {notesError && (
+              {error && (
                 <Alert type="error">The notes could not be loaded.</Alert>
               )}
-              {!notesError && notesData && (
+              {!error && data && (
                 <ul className="easi-grt__history">{interleavedList}</ul>
               )}
               <AnythingWrongSurvey />
