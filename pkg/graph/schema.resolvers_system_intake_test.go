@@ -425,7 +425,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 				Actor struct {
 					Name  string
 					Email string
-					EUA   string
 				}
 				Feedback  *string
 				CreatedAt string
@@ -445,7 +444,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 					actor {
 						name
 						email
-						eua
 					}
 					feedback
 					createdAt
@@ -462,7 +460,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 	s.Equal("SUBMIT_INTAKE", respAction1.Type)
 	s.Equal("First Actor", respAction1.Actor.Name)
 	s.Equal("first.actor@example.com", respAction1.Actor.Email)
-	s.Equal("ACT1", respAction1.Actor.EUA)
 
 	respAction2 := resp.SystemIntake.Actions[1]
 	s.Equal(action2.ID.String(), respAction2.ID)
@@ -471,7 +468,6 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 	s.Equal("PROVIDE_FEEDBACK_NEED_BIZ_CASE", respAction2.Type)
 	s.Equal("Second Actor", respAction2.Actor.Name)
 	s.Equal("second.actor@example.com", respAction2.Actor.Email)
-	s.Equal("ACT2", respAction2.Actor.EUA)
 }
 
 func (s GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
