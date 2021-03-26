@@ -146,6 +146,14 @@ type IssueLifecycleIDInput struct {
 	Scope     string    `json:"scope"`
 }
 
+// Input for rejecting an intake
+type RejectIntakeInput struct {
+	Feedback  string    `json:"feedback"`
+	IntakeID  uuid.UUID `json:"intakeId"`
+	NextSteps *string   `json:"nextSteps"`
+	Reason    string    `json:"reason"`
+}
+
 // A collection of Systems
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
