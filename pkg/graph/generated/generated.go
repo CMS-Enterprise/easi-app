@@ -180,6 +180,7 @@ type ComplexityRoot struct {
 		CreatedAt    func(childComplexity int) int
 		Feedback     func(childComplexity int) int
 		FeedbackType func(childComplexity int) int
+		ID           func(childComplexity int) int
 	}
 
 	GeneratePresignedUploadURLPayload struct {
@@ -1052,6 +1053,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GRTFeedback.FeedbackType(childComplexity), true
+
+	case "GRTFeedback.id":
+		if e.complexity.GRTFeedback.ID == nil {
+			break
+		}
+
+		return e.complexity.GRTFeedback.ID(childComplexity), true
 
 	case "GeneratePresignedUploadURLPayload.url":
 		if e.complexity.GeneratePresignedUploadURLPayload.URL == nil {
@@ -2764,6 +2772,7 @@ enum GRTFeedbackType {
 Feedback from the GRT to a business owner or GRB
 """
 type GRTFeedback {
+  id: UUID
   createdAt: Time
   feedback: String
   feedbackType: GRTFeedbackType
@@ -5958,6 +5967,38 @@ func (ec *executionContext) _EstimatedLifecycleCost_year(ctx context.Context, fi
 	res := resTmp.(models.LifecycleCostYear)
 	fc.Result = res
 	return ec.marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _GRTFeedback_id(ctx context.Context, field graphql.CollectedField, obj *models.GRTFeedback) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "GRTFeedback",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(uuid.UUID)
+	fc.Result = res
+	return ec.marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _GRTFeedback_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.GRTFeedback) (ret graphql.Marshaler) {
@@ -12751,6 +12792,8 @@ func (ec *executionContext) _GRTFeedback(ctx context.Context, sel ast.SelectionS
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GRTFeedback")
+		case "id":
+			out.Values[i] = ec._GRTFeedback_id(ctx, field, obj)
 		case "createdAt":
 			out.Values[i] = ec._GRTFeedback_createdAt(ctx, field, obj)
 		case "feedback":
@@ -15382,6 +15425,15 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 		return graphql.Null
 	}
 	return graphql.MarshalTime(*v)
+}
+
+func (ec *executionContext) unmarshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (uuid.UUID, error) {
+	res, err := models.UnmarshalUUID(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v uuid.UUID) graphql.Marshaler {
+	return models.MarshalUUID(v)
 }
 
 func (ec *executionContext) unmarshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (*uuid.UUID, error) {
