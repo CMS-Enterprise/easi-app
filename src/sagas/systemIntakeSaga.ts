@@ -47,7 +47,7 @@ function* createSystemIntake(action: Action<any>) {
 
 function* putSystemIntake(action: Action<any>) {
   try {
-    yield put(saveSystemIntake.request());
+    yield put(saveSystemIntake.request(action.payload));
     const response = yield call(putSystemIntakeRequest, action.payload);
     yield put(saveSystemIntake.success(response.data));
   } catch (error) {
