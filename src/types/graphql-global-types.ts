@@ -29,6 +29,14 @@ export enum AccessibilityRequestDocumentStatus {
 }
 
 /**
+ * Type or recipient of GRT Feedback
+ */
+export enum GRTFeedbackType {
+  BUSINESS_OWNER = "BUSINESS_OWNER",
+  GRB = "GRB",
+}
+
+/**
  * Indicates which action should be taken
  */
 export enum SystemIntakeActionType {
@@ -149,6 +157,18 @@ export interface GeneratePresignedUploadURLInput {
   fileName: string;
   mimeType: string;
   size: number;
+}
+
+/**
+ * Input for issuing a lifecycle id
+ */
+export interface IssueLifecycleIdInput {
+  expiresAt: Time;
+  feedback: string;
+  intakeId: UUID;
+  lcid?: string | null;
+  nextSteps?: string | null;
+  scope: string;
 }
 
 /**

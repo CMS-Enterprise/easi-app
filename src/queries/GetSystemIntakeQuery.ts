@@ -33,6 +33,11 @@ export default gql`
       currentStage
       grbDate
       grtDate
+      grtFeedbacks @client {
+        feedback
+        feedbackType
+        createdAt
+      }
       governanceTeams {
         isPresent
         teams {
