@@ -694,6 +694,16 @@ input IssueLifecycleIdInput {
 }
 
 """
+Input for rejecting an intake
+"""
+input RejectIntakeInput {
+  feedback: String!
+  intakeId: UUID!
+  nextSteps: String
+  reason: String!
+}
+
+"""
 Parameters required to update the admin lead for an intake
 """
 input UpdateSystemIntakeAdminLeadInput {
@@ -788,6 +798,8 @@ type Mutation {
   markSystemIntakeReadyForGRB(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload

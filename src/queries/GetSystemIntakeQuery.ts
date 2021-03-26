@@ -31,6 +31,7 @@ export default gql`
         expectedIncreaseAmount
       }
       currentStage
+      decisionNextSteps
       grbDate
       grtDate
       grtFeedbacks {
@@ -58,11 +59,14 @@ export default gql`
         source
       }
       lcid
+      lcidExpiresAt
+      lcidScope
       needsEaSupport
       productManager {
         component
         name
       }
+      rejectionReason
       requester {
         component
         email

@@ -550,6 +550,23 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
 }
 
+func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.RejectIntake(
+		ctx,
+		&models.SystemIntake{
+			ID:                input.IntakeID,
+			DecisionNextSteps: null.StringFrom(*input.NextSteps),
+			RejectionReason:   null.StringFrom(*&input.Reason),
+		},
+		&models.Action{
+			IntakeID: &input.IntakeID,
+			Feedback: null.StringFrom(input.Feedback),
+		})
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error) {
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{

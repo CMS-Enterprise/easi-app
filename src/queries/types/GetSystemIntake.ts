@@ -102,6 +102,7 @@ export interface GetSystemIntake_systemIntake {
   contract: GetSystemIntake_systemIntake_contract | null;
   costs: GetSystemIntake_systemIntake_costs | null;
   currentStage: string | null;
+  decisionNextSteps: string | null;
   grbDate: Time | null;
   grtDate: Time | null;
   grtFeedbacks: GetSystemIntake_systemIntake_grtFeedbacks[];
@@ -109,8 +110,11 @@ export interface GetSystemIntake_systemIntake {
   isso: GetSystemIntake_systemIntake_isso | null;
   fundingSource: GetSystemIntake_systemIntake_fundingSource | null;
   lcid: string | null;
+  lcidExpiresAt: Time | null;
+  lcidScope: string | null;
   needsEaSupport: boolean | null;
   productManager: GetSystemIntake_systemIntake_productManager | null;
+  rejectionReason: string | null;
   requester: GetSystemIntake_systemIntake_requester;
   requestName: string | null;
   requestType: SystemIntakeRequestType;
