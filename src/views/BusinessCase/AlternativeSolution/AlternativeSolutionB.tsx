@@ -89,7 +89,7 @@ const AlternativeSolutionB = ({
               </div>
             </div>
             <div className="tablet:grid-col-8 margin-top-2">
-              <Alert type="info" slim>
+              <Alert type="info" slim role="alert" aria-live="polite">
                 This section is optional. You can skip it if you don&apos;t have
                 any alternative solutions.
               </Alert>
