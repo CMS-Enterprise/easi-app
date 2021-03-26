@@ -172,7 +172,6 @@ type SystemIntakeAction struct {
 type SystemIntakeActionActor struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
-	Eua   string `json:"eua"`
 }
 
 // A business owner for a system intake

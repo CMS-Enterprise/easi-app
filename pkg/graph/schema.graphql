@@ -708,7 +708,6 @@ A person performing an action on a system intake
 type SystemIntakeActionActor {
   name: String!
   email: String!
-  eua: String!
 }
 
 """
