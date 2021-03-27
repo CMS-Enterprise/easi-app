@@ -87,7 +87,7 @@
     "lint:fix": "eslint --fix '**/*.{ts,tsx}'",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "generate": "apollo client:codegen --passthroughCustomScalars --localSchemaFile=pkg/graph/schema.graphql --target typescript  --tagName=gql --addTypename --globalTypesFile=src/types/graphql-global-types.ts types",
+    "generate": "graphql-codegen --config codegen.yml",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },
@@ -115,6 +115,7 @@
   "devDependencies": {
     "@cypress/instrument-cra": "^1.1.0",
     "@cypress/webpack-preprocessor": "^5.4.1",
+    "@graphql-codegen/cli": "1.21.3",
     "@storybook/addon-actions": "^6.1.11",
     "@storybook/addon-controls": "^6.1.11",
     "@storybook/addon-essentials": "^6.1.11",
@@ -146,6 +147,10 @@
     "sass-resources-loader": "^2.1.1",
     "start-server-and-test": "^1.11.0",
     "text-encoding": "^0.7.0",
-    "ts-loader": "^7.0.5"
+    "ts-loader": "^7.0.5",
+    "@graphql-codegen/typescript-operations": "1.17.15",
+    "@graphql-codegen/typescript-react-apollo": "2.2.3",
+    "@graphql-codegen/typescript": "1.21.1",
+    "@graphql-codegen/introspection": "1.18.1"
   }
 }
