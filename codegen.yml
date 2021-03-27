@@ -1,0 +1,12 @@
+overwrite: true
+schema: "pkg/graph/schema.graphql"
+documents: "src/graph/queries/*.graphql"
+generates:
+  src/graph/generated/generated.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+  src/graph/graphql.schema.json:
+    plugins:
+      - "introspection"

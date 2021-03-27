@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["**/*.d.ts", "serviceWorker.ts"],
+  "ignorePatterns": ["**/*.d.ts", "serviceWorker.ts", "**/generated/**"],
   "globals" : {
     "JSX" : "readonly"
   },
