@@ -775,6 +775,7 @@ enum GRTFeedbackType {
 Feedback from the GRT to a business owner or GRB
 """
 type GRTFeedback {
+  id: UUID
   createdAt: Time
   feedback: String
   feedbackType: GRTFeedbackType

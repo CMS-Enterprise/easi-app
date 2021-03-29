@@ -841,7 +841,7 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 }
 
 func (r *systemIntakeResolver) GrtFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GRTFeedback, error) {
-	panic(fmt.Errorf("not implemented"))
+	return r.store.FetchGRTFeedbacksByIntakeID(ctx, obj.ID)
 }
 
 func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {
