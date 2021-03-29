@@ -793,8 +793,9 @@ input UpdateSystemIntakeReviewDatesInput {
 """
 Parameters required to create a note for an intake
 """
-input CreateSystemIntakeNote {
+input CreateSystemIntakeNoteInput {
   content: String!
+  authorName: String!
   intakeId: UUID!
 }
 
@@ -841,7 +842,7 @@ type Mutation {
   createSystemIntakeActionNotRespondingClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeNote(input: CreateSystemIntakeNote): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(

@@ -1,12 +1,17 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
+import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
 import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
+import {
+  CreateSystemIntakeNote,
+  CreateSystemIntakeNoteVariables
+} from 'queries/types/CreateSystemIntakeNote';
 import {
   GetAdminNotesAndActions,
   GetAdminNotesAndActions_systemIntake_actions as GetAdminNotesAndActionsSystemIntakeAction,
@@ -17,12 +22,12 @@ import {
 import PageHeading from 'components/PageHeading';
 import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { AppState } from 'reducers/rootReducer';
-import { postIntakeNote } from 'types/routines';
 
 type NoteForm = {
   note: string;
@@ -88,9 +93,12 @@ const ActionListItem = ({
 };
 
 const Notes = () => {
-  const dispatch = useDispatch();
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
+  const [mutate, mutationResult] = useMutation<
+    CreateSystemIntakeNote,
+    CreateSystemIntakeNoteVariables
+  >(CreateSystemIntakeNoteQuery);
 
   const { error, data, refetch } = useQuery<
     GetAdminNotesAndActions,
@@ -101,25 +109,26 @@ const Notes = () => {
     }
   });
   const { t } = useTranslation('governanceReviewTeam');
-  const onSubmit = async (
+  const onSubmit = (
     values: NoteForm,
     { resetForm }: FormikHelpers<NoteForm>
   ) => {
-    await dispatch(
-      postIntakeNote({
-        intakeId: systemId,
-        authorName: authState.name,
-        authorId: authState.euaId,
-        content: values.note
-      })
-    );
-    await resetForm();
-    if (refetch) {
-      // I was having an issue where sometimes refetch would be undefined.
-      // This may be related to a bug in Apollo Client, so the check here is
-      // to prevent that from breaking the app should it occur.
-      refetch();
-    }
+    const input = {
+      intakeId: systemId,
+      authorName: authState.name,
+      content: values.note
+    };
+    mutate({ variables: { input } }).then(response => {
+      if (!response.errors) {
+        resetForm();
+        if (refetch) {
+          // I was having an issue where sometimes refetch would be undefined.
+          // This may be related to a bug in Apollo Client, so the check here is
+          // to prevent that from breaking the app should it occur.
+          refetch();
+        }
+      }
+    });
   };
 
   const initialValues = {
@@ -154,6 +163,14 @@ const Notes = () => {
           const { values } = formikProps;
           return (
             <div className="tablet:grid-col-9 margin-bottom-7">
+              {mutationResult && mutationResult.error && (
+                <ErrorAlert heading="Error">
+                  <ErrorAlertMessage
+                    message={mutationResult.error.message}
+                    errorKey="note"
+                  />
+                </ErrorAlert>
+              )}
               <Form>
                 <FieldGroup>
                   <Label htmlFor="GovernanceReviewTeam-Note">
