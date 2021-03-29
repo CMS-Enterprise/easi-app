@@ -471,7 +471,6 @@ const ContactDetails = ({
                         const newUrl = 'request-details';
                         history.push(newUrl);
                       }
-                      window.scrollTo(0, 0);
                     });
                   }}
                 >

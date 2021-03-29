@@ -306,7 +306,6 @@ const AsIsSolution = ({
                 setErrors({});
                 const newUrl = 'request-description';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -319,9 +318,10 @@ const AsIsSolution = ({
                     dispatchSave();
                     const newUrl = 'preferred-solution';
                     history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
                   }
                 });
-                window.scrollTo(0, 0);
               }}
             >
               Next
