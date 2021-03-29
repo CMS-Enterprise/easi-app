@@ -34,7 +34,7 @@ export default gql`
       decisionNextSteps
       grbDate
       grtDate
-      grtFeedbacks @client {
+      grtFeedbacks {
         feedback
         feedbackType
         createdAt

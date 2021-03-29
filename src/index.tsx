@@ -78,57 +78,13 @@ const authLink = setContext((request, { headers }) => {
   };
 });
 
-const typePolicies = {
-  SystemIntake: {
-    fields: {
-      grtFeedbacks: {
-        read() {
-          return [
-            {
-              feedbackType: 'GRB',
-              createdAt: '2021-02-08T17:28:29Z',
-              feedback: Array(100).fill('feedback ').join(),
-              __typename: 'GRTFeedback'
-            },
-            {
-              feedbackType: 'GRB',
-              createdAt: '2021-02-09T17:28:29Z',
-              feedback: Array(100).fill('feedback ').join(),
-              __typename: 'GRTFeedback'
-            },
-            {
-              feedbackType: 'BUSINESS_OWNER',
-              createdAt: '2021-02-09T17:28:29Z',
-              feedback: Array(100).fill('feedback ').join(),
-              __typename: 'GRTFeedback'
-            },
-            {
-              feedbackType: 'BUSINESS_OWNER',
-              createdAt: '2021-02-09T17:28:29Z',
-              feedback: Array(100).fill('feedback ').join(),
-              __typename: 'GRTFeedback'
-            }
-          ];
-        }
-      }
-    }
-  }
-};
+const typePolicies = {};
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache({
     typePolicies
   }),
-  resolvers: {
-    AccessibilityRequest: {
-      documents: () => [
-        { name: 'Testing VPAT', uploadedAt: '2021-02-02T17:28:29Z' },
-        { name: 'Test Results', uploadedAt: '2021-02-06T17:28:29Z' },
-        { name: 'Remediation Plan', uploadedAt: '2021-02-08T17:28:29Z' }
-      ]
-    }
-  },
   defaultOptions: {
     watchQuery: {
       fetchPolicy: 'cache-and-network'
