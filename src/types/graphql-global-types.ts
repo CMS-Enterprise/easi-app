@@ -141,6 +141,15 @@ export interface CreateAccessibilityRequestInput {
 }
 
 /**
+ * Parameters required to create a note for an intake
+ */
+export interface CreateSystemIntakeNoteInput {
+  content: string;
+  authorName: string;
+  intakeId: UUID;
+}
+
+/**
  * Parameters for creating a test date
  */
 export interface CreateTestDateInput {
