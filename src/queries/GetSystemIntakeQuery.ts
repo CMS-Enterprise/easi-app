@@ -31,8 +31,14 @@ export default gql`
         expectedIncreaseAmount
       }
       currentStage
+      decisionNextSteps
       grbDate
       grtDate
+      grtFeedbacks {
+        feedback
+        feedbackType
+        createdAt
+      }
       governanceTeams {
         isPresent
         teams {
@@ -53,11 +59,14 @@ export default gql`
         source
       }
       lcid
+      lcidExpiresAt
+      lcidScope
       needsEaSupport
       productManager {
         component
         name
       }
+      rejectionReason
       requester {
         component
         email

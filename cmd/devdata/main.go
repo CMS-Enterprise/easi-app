@@ -75,7 +75,7 @@ func main() {
 	intake := makeSystemIntake("Draft Business Case", logger, store, func(i *models.SystemIntake) {
 		i.Status = models.SystemIntakeStatusBIZCASEDRAFT
 	})
-	makeBusinessCase("Draft Business Cas", logger, store, intake)
+	makeBusinessCase("Draft Business Case", logger, store, intake)
 }
 
 func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, callbacks ...func(*models.SystemIntake)) *models.SystemIntake {
@@ -97,10 +97,38 @@ func makeSystemIntake(name string, logger *zap.Logger, store *storage.Store, cal
 	must(store.CreateSystemIntake(ctx, &intake))
 	must(store.UpdateSystemIntake(ctx, &intake)) // required to set lifecycle id
 
+	tenMinutesAgo := time.Now().Add(-10 * time.Minute)
+	fiveMinutesAgo := time.Now().Add(-5 * time.Minute)
+
+	must(store.CreateAction(ctx, &models.Action{
+		IntakeID:       &intake.ID,
+		ActionType:     models.ActionTypeSUBMITINTAKE,
+		ActorName:      "Actor Name",
+		ActorEmail:     "actor@example.com",
+		ActorEUAUserID: "ACT1",
+		CreatedAt:      &tenMinutesAgo,
+	}))
+	must(store.CreateAction(ctx, &models.Action{
+		IntakeID:       &intake.ID,
+		ActionType:     models.ActionTypePROVIDEFEEDBACKNEEDBIZCASE,
+		ActorName:      "Actor Name",
+		ActorEmail:     "actor@example.com",
+		ActorEUAUserID: "ACT2",
+		Feedback:       null.StringFrom("This business case needs feedback"),
+	}))
+
+	must(store.CreateNote(ctx, &models.Note{
+		SystemIntakeID: intake.ID,
+		AuthorEUAID:    "QQQQ",
+		AuthorName:     null.StringFrom("Author Name"),
+		Content:        null.StringFrom("a clever remark"),
+		CreatedAt:      &fiveMinutesAgo,
+	}))
+
 	return &intake
 }
 
-func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(interface{})) {
+func makeBusinessCase(name string, logger *zap.Logger, store *storage.Store, intake *models.SystemIntake, callbacks ...func(*models.BusinessCase)) {
 	ctx := appcontext.WithLogger(context.Background(), logger)
 	if intake == nil {
 		intake = makeSystemIntake(name, logger, store)

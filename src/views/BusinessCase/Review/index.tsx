@@ -43,7 +43,6 @@ const Review = ({ businessCase }: ReviewProps) => {
               ? 'alternative-solution-b'
               : 'alternative-solution-a';
             history.push(newUrl);
-            window.scrollTo(0, 0);
           }}
         >
           Back

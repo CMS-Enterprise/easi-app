@@ -1,5 +1,7 @@
 import React from 'react';
+import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
+import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
 import { BusinessCaseModel } from 'types/businessCase';
 
@@ -11,9 +13,13 @@ import './index.scss';
 
 type BusinessCaseReviewProps = {
   values: BusinessCaseModel;
+  grtFeedbacks?: GRTFeedback[] | null;
 };
 
-const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
+const BusinessCaseReview = ({
+  values,
+  grtFeedbacks
+}: BusinessCaseReviewProps) => {
   const filename = `Business case for ${values.requestName}.pdf`;
   return (
     <>
@@ -53,7 +59,7 @@ const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
             Alternatives analysis
           </h2>
         </div>
-        <div className="bg-base-lightest padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
+        <div className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
           <div className="grid-container">
             <AlternativeAnalysisReview
               asIsSolution={values.asIsSolution}
@@ -63,6 +69,13 @@ const BusinessCaseReview = ({ values }: BusinessCaseReviewProps) => {
             />
           </div>
         </div>
+        {grtFeedbacks && grtFeedbacks.length > 0 && (
+          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1">
+            <div className="grid-container">
+              <GRTFeedbackView grtFeedbacks={grtFeedbacks} />
+            </div>
+          </div>
+        )}
       </PDFExport>
     </>
   );

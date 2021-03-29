@@ -109,6 +109,13 @@ type CreateAccessibilityRequestPayload struct {
 	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
+// Parameters required to create a note for an intake
+type CreateSystemIntakeNoteInput struct {
+	Content    string    `json:"content"`
+	AuthorName string    `json:"authorName"`
+	IntakeID   uuid.UUID `json:"intakeId"`
+}
+
 // Parameters for creating a test date
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
@@ -146,6 +153,14 @@ type IssueLifecycleIDInput struct {
 	Scope     string    `json:"scope"`
 }
 
+// Input for rejecting an intake
+type RejectIntakeInput struct {
+	Feedback  string    `json:"feedback"`
+	IntakeID  uuid.UUID `json:"intakeId"`
+	NextSteps *string   `json:"nextSteps"`
+	Reason    string    `json:"reason"`
+}
+
 // A collection of Systems
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
@@ -156,6 +171,22 @@ type SystemConnection struct {
 type SystemEdge struct {
 	Cursor string         `json:"cursor"`
 	Node   *models.System `json:"node"`
+}
+
+// An action taken on a system intake, often resulting in a change in status.
+type SystemIntakeAction struct {
+	ID           uuid.UUID                `json:"id"`
+	SystemIntake *models.SystemIntake     `json:"systemIntake"`
+	Type         SystemIntakeActionType   `json:"type"`
+	Actor        *SystemIntakeActionActor `json:"actor"`
+	Feedback     *string                  `json:"feedback"`
+	CreatedAt    time.Time                `json:"createdAt"`
+}
+
+// A person performing an action on a system intake
+type SystemIntakeActionActor struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 // A business owner for a system intake
@@ -321,5 +352,79 @@ func (e *Role) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Role) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Indicates which action should be taken
+type SystemIntakeActionType string
+
+const (
+	SystemIntakeActionTypeBizCaseNeedsChanges            SystemIntakeActionType = "BIZ_CASE_NEEDS_CHANGES"
+	SystemIntakeActionTypeCreateBizCase                  SystemIntakeActionType = "CREATE_BIZ_CASE"
+	SystemIntakeActionTypeGUIDEReceivedClose             SystemIntakeActionType = "GUIDE_RECEIVED_CLOSE"
+	SystemIntakeActionTypeIssueLcid                      SystemIntakeActionType = "ISSUE_LCID"
+	SystemIntakeActionTypeNeedBizCase                    SystemIntakeActionType = "NEED_BIZ_CASE"
+	SystemIntakeActionTypeNoGovernanceNeeded             SystemIntakeActionType = "NO_GOVERNANCE_NEEDED"
+	SystemIntakeActionTypeNotItRequest                   SystemIntakeActionType = "NOT_IT_REQUEST"
+	SystemIntakeActionTypeNotRespondingClose             SystemIntakeActionType = "NOT_RESPONDING_CLOSE"
+	SystemIntakeActionTypeProvideFeedbackNeedBizCase     SystemIntakeActionType = "PROVIDE_FEEDBACK_NEED_BIZ_CASE"
+	SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft SystemIntakeActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT"
+	SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal SystemIntakeActionType = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL"
+	SystemIntakeActionTypeReadyForGrb                    SystemIntakeActionType = "READY_FOR_GRB"
+	SystemIntakeActionTypeReadyForGrt                    SystemIntakeActionType = "READY_FOR_GRT"
+	SystemIntakeActionTypeReject                         SystemIntakeActionType = "REJECT"
+	SystemIntakeActionTypeSendEmail                      SystemIntakeActionType = "SEND_EMAIL"
+	SystemIntakeActionTypeSubmitBizCase                  SystemIntakeActionType = "SUBMIT_BIZ_CASE"
+	SystemIntakeActionTypeSubmitFinalBizCase             SystemIntakeActionType = "SUBMIT_FINAL_BIZ_CASE"
+	SystemIntakeActionTypeSubmitIntake                   SystemIntakeActionType = "SUBMIT_INTAKE"
+)
+
+var AllSystemIntakeActionType = []SystemIntakeActionType{
+	SystemIntakeActionTypeBizCaseNeedsChanges,
+	SystemIntakeActionTypeCreateBizCase,
+	SystemIntakeActionTypeGUIDEReceivedClose,
+	SystemIntakeActionTypeIssueLcid,
+	SystemIntakeActionTypeNeedBizCase,
+	SystemIntakeActionTypeNoGovernanceNeeded,
+	SystemIntakeActionTypeNotItRequest,
+	SystemIntakeActionTypeNotRespondingClose,
+	SystemIntakeActionTypeProvideFeedbackNeedBizCase,
+	SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft,
+	SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal,
+	SystemIntakeActionTypeReadyForGrb,
+	SystemIntakeActionTypeReadyForGrt,
+	SystemIntakeActionTypeReject,
+	SystemIntakeActionTypeSendEmail,
+	SystemIntakeActionTypeSubmitBizCase,
+	SystemIntakeActionTypeSubmitFinalBizCase,
+	SystemIntakeActionTypeSubmitIntake,
+}
+
+func (e SystemIntakeActionType) IsValid() bool {
+	switch e {
+	case SystemIntakeActionTypeBizCaseNeedsChanges, SystemIntakeActionTypeCreateBizCase, SystemIntakeActionTypeGUIDEReceivedClose, SystemIntakeActionTypeIssueLcid, SystemIntakeActionTypeNeedBizCase, SystemIntakeActionTypeNoGovernanceNeeded, SystemIntakeActionTypeNotItRequest, SystemIntakeActionTypeNotRespondingClose, SystemIntakeActionTypeProvideFeedbackNeedBizCase, SystemIntakeActionTypeProvideGrtFeedbackBizCaseDraft, SystemIntakeActionTypeProvideGrtFeedbackBizCaseFinal, SystemIntakeActionTypeReadyForGrb, SystemIntakeActionTypeReadyForGrt, SystemIntakeActionTypeReject, SystemIntakeActionTypeSendEmail, SystemIntakeActionTypeSubmitBizCase, SystemIntakeActionTypeSubmitFinalBizCase, SystemIntakeActionTypeSubmitIntake:
+		return true
+	}
+	return false
+}
+
+func (e SystemIntakeActionType) String() string {
+	return string(e)
+}
+
+func (e *SystemIntakeActionType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SystemIntakeActionType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SystemIntakeActionType", str)
+	}
+	return nil
+}
+
+func (e SystemIntakeActionType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
