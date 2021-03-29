@@ -487,6 +487,10 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 	}, err
 }
 
+func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, inout *model.CreateSystemIntakeNote) (*model.UpdateSystemIntakePayload, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
 	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
 		TestType:  input.TestType,
