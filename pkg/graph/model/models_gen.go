@@ -109,6 +109,13 @@ type CreateAccessibilityRequestPayload struct {
 	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
+// Parameters required to create a note for an intake
+type CreateSystemIntakeNoteInput struct {
+	Content    string    `json:"content"`
+	AuthorName string    `json:"authorName"`
+	IntakeID   uuid.UUID `json:"intakeId"`
+}
+
 // Parameters for creating a test date
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
