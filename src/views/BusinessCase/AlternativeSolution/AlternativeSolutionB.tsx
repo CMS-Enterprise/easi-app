@@ -1,23 +1,21 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Alert, Button } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
-import { defaultProposedSolution } from 'data/businessCase';
+import {
+  alternativeSolutionHasFilledFields,
+  defaultProposedSolution
+} from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import { putBusinessCase } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
-import {
-  BusinessCaseDraftValidationSchema,
-  BusinessCaseFinalValidationSchema
-} from 'validations/businessCaseSchema';
+import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import AlternativeSolutionFields from './AlternativeSolutionFields';
 
@@ -39,16 +37,11 @@ const AlternativeSolutionB = ({
     alternativeB: businessCase.alternativeB
   };
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={ValidationSchema.alternativeB}
+      validationSchema={BusinessCaseFinalValidationSchema.alternativeB}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -95,12 +88,12 @@ const AlternativeSolutionB = ({
                 infrastructure, etc.
               </div>
             </div>
-            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
-            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
-              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-                <MandatoryFieldsAlert />
-              </div>
-            )}
+            <div className="tablet:grid-col-8 margin-top-2">
+              <Alert type="info" slim role="alert" aria-live="polite">
+                This section is optional. You can skip it if you don&apos;t have
+                any alternative solutions.
+              </Alert>
+            </div>
             <Form>
               <div className="tablet:grid-col-9">
                 <div className="easi-business-case__name-wrapper">
@@ -153,15 +146,24 @@ const AlternativeSolutionB = ({
             <Button
               type="button"
               onClick={() => {
-                validateForm().then(err => {
-                  if (Object.keys(err).length === 0) {
-                    dispatchSave();
-                    const newUrl = 'review';
-                    history.push(newUrl);
-                  } else {
-                    window.scrollTo(0, 0);
-                  }
-                });
+                dispatchSave();
+                // If final business case OR any field is filled
+                if (
+                  businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED' &&
+                  alternativeSolutionHasFilledFields(
+                    formikRef?.current?.values?.alternativeB
+                  )
+                ) {
+                  validateForm().then(err => {
+                    if (Object.keys(err).length === 0) {
+                      history.push('review');
+                    } else {
+                      window.scrollTo(0, 0);
+                    }
+                  });
+                } else {
+                  history.push('review');
+                }
               }}
             >
               Next
