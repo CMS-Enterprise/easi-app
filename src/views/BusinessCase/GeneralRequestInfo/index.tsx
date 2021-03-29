@@ -171,9 +171,10 @@ const GeneralRequestInfo = ({
                     dispatchSave();
                     const newUrl = 'request-description';
                     history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
                   }
                 });
-                window.scrollTo(0, 0);
               }}
             >
               Next

@@ -53,7 +53,6 @@ const Review = ({ systemIntake, now }: ReviewProps) => {
         onClick={() => {
           const newUrl = 'contract-details';
           history.push(newUrl);
-          window.scrollTo(0, 0);
         }}
       >
         Back
