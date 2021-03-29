@@ -202,7 +202,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionNotRespondingClose       func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionReadyForGrt              func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
-		CreateSystemIntakeNote                           func(childComplexity int, input *model.CreateSystemIntakeNote) int
+		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
 		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
 		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
@@ -429,7 +429,7 @@ type MutationResolver interface {
 	CreateSystemIntakeActionNotRespondingClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionReadyForGrt(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
 	CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error)
-	CreateSystemIntakeNote(ctx context.Context, input *model.CreateSystemIntakeNote) (*model.SystemIntakeNote, error)
+	CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error)
 	CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error)
 	GeneratePresignedUploadURL(ctx context.Context, input model.GeneratePresignedUploadURLInput) (*model.GeneratePresignedUploadURLPayload, error)
 	IssueLifecycleID(ctx context.Context, input model.IssueLifecycleIDInput) (*model.UpdateSystemIntakePayload, error)
@@ -1261,7 +1261,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateSystemIntakeNote(childComplexity, args["input"].(*model.CreateSystemIntakeNote)), true
+		return e.complexity.Mutation.CreateSystemIntakeNote(childComplexity, args["input"].(model.CreateSystemIntakeNoteInput)), true
 
 	case "Mutation.createTestDate":
 		if e.complexity.Mutation.CreateTestDate == nil {
@@ -2952,8 +2952,9 @@ input UpdateSystemIntakeReviewDatesInput {
 """
 Parameters required to create a note for an intake
 """
-input CreateSystemIntakeNote {
+input CreateSystemIntakeNoteInput {
   content: String!
+  authorName: String!
   intakeId: UUID!
 }
 
@@ -3000,7 +3001,7 @@ type Mutation {
   createSystemIntakeActionNotRespondingClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
-  createSystemIntakeNote(input: CreateSystemIntakeNote): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(
@@ -3291,10 +3292,10 @@ func (ec *executionContext) field_Mutation_createSystemIntakeActionSendEmail_arg
 func (ec *executionContext) field_Mutation_createSystemIntakeNote_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.CreateSystemIntakeNote
+	var arg0 model.CreateSystemIntakeNoteInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOCreateSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeNote(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateSystemIntakeNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeNoteInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -7161,7 +7162,7 @@ func (ec *executionContext) _Mutation_createSystemIntakeNote(ctx context.Context
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().CreateSystemIntakeNote(rctx, args["input"].(*model.CreateSystemIntakeNote))
+			return ec.resolvers.Mutation().CreateSystemIntakeNote(rctx, args["input"].(model.CreateSystemIntakeNoteInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_GOVTEAM")
@@ -12399,8 +12400,8 @@ func (ec *executionContext) unmarshalInputCreateAccessibilityRequestInput(ctx co
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputCreateSystemIntakeNote(ctx context.Context, obj interface{}) (model.CreateSystemIntakeNote, error) {
-	var it model.CreateSystemIntakeNote
+func (ec *executionContext) unmarshalInputCreateSystemIntakeNoteInput(ctx context.Context, obj interface{}) (model.CreateSystemIntakeNoteInput, error) {
+	var it model.CreateSystemIntakeNoteInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -12410,6 +12411,14 @@ func (ec *executionContext) unmarshalInputCreateSystemIntakeNote(ctx context.Con
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
 			it.Content, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "authorName":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("authorName"))
+			it.AuthorName, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15183,6 +15192,11 @@ func (ec *executionContext) unmarshalNCreateAccessibilityRequestInput2githubᚗc
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNCreateSystemIntakeNoteInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeNoteInput(ctx context.Context, v interface{}) (model.CreateSystemIntakeNoteInput, error) {
+	res, err := ec.unmarshalInputCreateSystemIntakeNoteInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNCreateTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDateInput(ctx context.Context, v interface{}) (model.CreateTestDateInput, error) {
 	res, err := ec.unmarshalInputCreateTestDateInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -16045,14 +16059,6 @@ func (ec *executionContext) marshalOCreateAccessibilityRequestPayload2ᚖgithub�
 		return graphql.Null
 	}
 	return ec._CreateAccessibilityRequestPayload(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOCreateSystemIntakeNote2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateSystemIntakeNote(ctx context.Context, v interface{}) (*model.CreateSystemIntakeNote, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputCreateSystemIntakeNote(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐCreateTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.CreateTestDatePayload) graphql.Marshaler {

@@ -488,10 +488,12 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 	}, err
 }
 
-func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input *model.CreateSystemIntakeNote) (*model.SystemIntakeNote, error) {
+func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error) {
 	note, err := r.store.CreateNote(ctx, &models.Note{
-		AuthorEUAID: appcontext.Principal(ctx).ID(),
-		Content:     null.StringFrom(input.Content),
+		AuthorEUAID:    appcontext.Principal(ctx).ID(),
+		AuthorName:     null.StringFrom(input.AuthorName),
+		Content:        null.StringFrom(input.Content),
+		SystemIntakeID: input.IntakeID,
 	})
 	return &model.SystemIntakeNote{
 		ID: note.ID,

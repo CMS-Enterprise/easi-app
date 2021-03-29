@@ -110,9 +110,10 @@ type CreateAccessibilityRequestPayload struct {
 }
 
 // Parameters required to create a note for an intake
-type CreateSystemIntakeNote struct {
-	Content  string    `json:"content"`
-	IntakeID uuid.UUID `json:"intakeId"`
+type CreateSystemIntakeNoteInput struct {
+	Content    string    `json:"content"`
+	AuthorName string    `json:"authorName"`
+	IntakeID   uuid.UUID `json:"intakeId"`
 }
 
 // Parameters for creating a test date
