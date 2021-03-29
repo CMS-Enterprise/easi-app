@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -95,12 +95,15 @@ const ActionListItem = ({
 const Notes = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
+  const [notes, setNotes] = useState<
+    GetAdminNotesAndActionsSystemIntakeNote[] | []
+  >([]);
   const [mutate, mutationResult] = useMutation<
     CreateSystemIntakeNote,
     CreateSystemIntakeNoteVariables
   >(CreateSystemIntakeNoteQuery);
 
-  const { error, data, refetch } = useQuery<
+  const { error, data } = useQuery<
     GetAdminNotesAndActions,
     GetAdminNotesAndActionsVariables
   >(GetAdminNotesAndActionsQuery, {
@@ -121,11 +124,9 @@ const Notes = () => {
     mutate({ variables: { input } }).then(response => {
       if (!response.errors) {
         resetForm();
-        if (refetch) {
-          // I was having an issue where sometimes refetch would be undefined.
-          // This may be related to a bug in Apollo Client, so the check here is
-          // to prevent that from breaking the app should it occur.
-          refetch();
+        const newNote = response.data?.createSystemIntakeNote;
+        if (newNote) {
+          setNotes([...notes, newNote]);
         }
       }
     });
@@ -135,13 +136,22 @@ const Notes = () => {
     note: ''
   };
 
-  const notesByTimestamp =
-    data?.systemIntake?.notes.map(note => {
-      return {
-        createdAt: note.createdAt,
-        element: <NoteListItem note={note} key={note.id} />
-      };
-    }) || [];
+  useMemo(() => {
+    if (data?.systemIntake) {
+      setNotes(data?.systemIntake?.notes);
+    }
+  }, [data]);
+
+  const notesByTimestamp = useMemo(
+    () =>
+      notes.map(note => {
+        return {
+          createdAt: note.createdAt,
+          element: <NoteListItem note={note} key={note.id} />
+        };
+      }),
+    [notes]
+  );
 
   const actionsByTimestamp =
     data?.systemIntake?.actions.map(action => {
