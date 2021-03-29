@@ -15,6 +15,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -487,8 +488,20 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 	}, err
 }
 
-func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, inout *model.CreateSystemIntakeNote) (*model.UpdateSystemIntakePayload, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input *model.CreateSystemIntakeNote) (*model.SystemIntakeNote, error) {
+	note, err := r.store.CreateNote(ctx, &models.Note{
+		AuthorEUAID: appcontext.Principal(ctx).ID(),
+		Content:     null.StringFrom(input.Content),
+	})
+	return &model.SystemIntakeNote{
+		ID: note.ID,
+		Author: &model.SystemIntakeNoteAuthor{
+			Name: note.AuthorName.String,
+			Eua:  note.AuthorEUAID,
+		},
+		Content:   note.Content.String,
+		CreatedAt: *note.CreatedAt,
+	}, err
 }
 
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
