@@ -190,6 +190,16 @@ func (s *Server) routes(
 				emailClient.SendIssueLCIDEmail,
 				store.GenerateLifecycleID,
 			),
+			AuthorizeUserIsReviewTeamOrIntakeRequester: services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
+			RejectIntake: services.NewUpdateRejectionFields(
+				serviceConfig,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.FetchSystemIntakeByID,
+				store.UpdateSystemIntake,
+				saveAction,
+				cedarLDAPClient.FetchUserInfo,
+				emailClient.SendRejectRequestEmail,
+			),
 		},
 		&s3Client,
 	)
@@ -221,7 +231,7 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
-			services.NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode(),
+			services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,

@@ -131,25 +131,22 @@ func NewAuthorizeRequireGRTJobCode() func(context.Context) (bool, error) {
 	}
 }
 
-// NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode returns a function
-// that authorizes a user as being a member of the
-// GRT (Governance Review Team)
-func NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode() func(context.Context, *models.SystemIntake) (bool, error) {
-	return func(ctx context.Context, existingIntake *models.SystemIntake) (bool, error) {
-		authorIsAuthed, errAuthor := NewAuthorizeUserIsIntakeRequester()(ctx, existingIntake)
-		if errAuthor != nil {
-			return false, errAuthor
-		}
-
-		reviewerIsAuthed, errReviewer := NewAuthorizeRequireGRTJobCode()(ctx)
-		if errReviewer != nil {
-			return false, errReviewer
-		}
-
-		if !authorIsAuthed && !reviewerIsAuthed {
-			return false, errAuthor
-		}
-
-		return true, nil
+// AuthorizeUserIsIntakeRequesterOrHasGRTJobCode  authorizes a user as being a member of the
+// GRT (Governance Review Team) or being the owner of the system intake
+func AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx context.Context, existingIntake *models.SystemIntake) (bool, error) {
+	authorIsAuthed, errAuthor := NewAuthorizeUserIsIntakeRequester()(ctx, existingIntake)
+	if errAuthor != nil {
+		return false, errAuthor
 	}
+
+	reviewerIsAuthed, errReviewer := NewAuthorizeRequireGRTJobCode()(ctx)
+	if errReviewer != nil {
+		return false, errReviewer
+	}
+
+	if !authorIsAuthed && !reviewerIsAuthed {
+		return false, errAuthor
+	}
+
+	return true, nil
 }

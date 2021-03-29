@@ -765,7 +765,7 @@ const ContractDetails = ({
                       as={RadioField}
                       checked={values.contract.hasContract === 'NOT_STARTED'}
                       id="IntakeForm-ContractNotStarted"
-                      name="contract.status"
+                      name="contract.hasContract"
                       label="I haven't started acquisition planning yet"
                       value="NOT_STARTED"
                       onChange={() => {
@@ -782,7 +782,7 @@ const ContractDetails = ({
                       as={RadioField}
                       checked={values.contract.hasContract === 'NOT_NEEDED'}
                       id="IntakeForm-ContractNotNeeded"
-                      name="contract.status"
+                      name="contract.hasContract"
                       label="I don't anticipate needing contractor support"
                       value="NOT_NEEDED"
                       onChange={() => {
@@ -806,7 +806,6 @@ const ContractDetails = ({
                     formikProps.setErrors({});
                     const newUrl = 'request-details';
                     history.push(newUrl);
-                    window.scrollTo(0, 0);
                   }}
                 >
                   Back
@@ -819,8 +818,9 @@ const ContractDetails = ({
                         dispatchSave();
                         const newUrl = 'review';
                         history.push(newUrl);
+                      } else {
+                        window.scrollTo(0, 0);
                       }
-                      window.scrollTo(0, 0);
                     });
                   }}
                 >

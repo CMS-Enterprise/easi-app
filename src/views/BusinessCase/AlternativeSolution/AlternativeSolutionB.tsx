@@ -118,7 +118,6 @@ const AlternativeSolutionB = ({
                         history.replace(
                           `/business/${businessCase.id}/alternative-solution-a`
                         );
-                        window.scrollTo(0, 0);
                       }
                     }}
                   >
@@ -140,7 +139,6 @@ const AlternativeSolutionB = ({
                 setErrors({});
                 const newUrl = 'alternative-solution-a';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -159,12 +157,13 @@ const AlternativeSolutionB = ({
                   validateForm().then(err => {
                     if (Object.keys(err).length === 0) {
                       history.push('review');
+                    } else {
+                      window.scrollTo(0, 0);
                     }
                   });
                 } else {
                   history.push('review');
                 }
-                window.scrollTo(0, 0);
               }}
             >
               Next

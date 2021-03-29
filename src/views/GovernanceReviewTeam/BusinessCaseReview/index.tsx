@@ -2,10 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
 import AlternativeAnalysisReview from 'components/BusinessCaseReview/AlternativeAnalysisReview';
 import GeneralRequestInfoReview from 'components/BusinessCaseReview/GeneralRequestInfoReview';
 import RequestDescriptionReview from 'components/BusinessCaseReview/RequestDescriptionReview';
+import GRTFeedbackView from 'components/GRTFeedbackView';
 import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import { AnythingWrongSurvey } from 'components/Survey';
@@ -13,8 +15,12 @@ import { BusinessCaseModel } from 'types/businessCase';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;
+  grtFeedbacks?: GRTFeedback[] | null;
 };
-const BusinessCaseReview = ({ businessCase }: BusinessCaseReviewProps) => {
+const BusinessCaseReview = ({
+  businessCase,
+  grtFeedbacks
+}: BusinessCaseReviewProps) => {
   const { t } = useTranslation('governanceReviewTeam');
   const filename = `Business case for ${businessCase.requestName}.pdf`;
 
@@ -71,6 +77,11 @@ const BusinessCaseReview = ({ businessCase }: BusinessCaseReviewProps) => {
           alternativeA={businessCase.alternativeA}
           alternativeB={businessCase.alternativeB}
         />
+        {grtFeedbacks && grtFeedbacks.length > 0 && (
+          <div className="bg-gray-10 margin-top-3 padding-x-3 padding-top-3 padding-bottom-1">
+            <GRTFeedbackView grtFeedbacks={grtFeedbacks} />
+          </div>
+        )}
       </PDFExport>
       <UswdsLink
         className="usa-button margin-top-5"

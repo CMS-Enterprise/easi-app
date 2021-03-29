@@ -17,7 +17,10 @@ import CreateSystemIntakeActionNotRespondingClose from 'queries/CreateSystemInta
 import CreateSystemIntakeActionReadyForGRT from 'queries/CreateSystemIntakeActionReadyForGRTQuery';
 import CreateSystemIntakeActionSendEmail from 'queries/CreateSystemIntakeActionSendEmailQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import { GetSystemIntake } from 'queries/types/GetSystemIntake';
+import {
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -46,14 +49,14 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
-  const { loading, data: graphData } = useQuery<GetSystemIntake>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  const { loading, data: graphData } = useQuery<
+    GetSystemIntake,
+    GetSystemIntakeVariables
+  >(GetSystemIntakeQuery, {
+    variables: {
+      id: systemId
     }
-  );
+  });
   const intake = graphData?.systemIntake;
 
   const systemIntake = useSelector(
@@ -161,7 +164,12 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
-              render={() => <BusinessCaseReview businessCase={businessCase} />}
+              render={() => (
+                <BusinessCaseReview
+                  businessCase={businessCase}
+                  grtFeedbacks={intake?.grtFeedbacks}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/notes"
@@ -178,7 +186,7 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/decision"
-              render={() => <Decision systemIntake={systemIntake} />}
+              render={() => <Decision systemIntake={intake} />}
             />
             <Route
               path="/governance-review-team/:systemId/actions"

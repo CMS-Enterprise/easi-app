@@ -117,7 +117,6 @@ const AlternativeSolutionA = ({
                         onClick={() => {
                           dispatchSave();
                           history.push('alternative-solution-b');
-                          window.scrollTo(0, 0);
                         }}
                       >
                         + Alternative B
@@ -135,7 +134,6 @@ const AlternativeSolutionA = ({
                 setErrors({});
                 const newUrl = 'preferred-solution';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -160,12 +158,13 @@ const AlternativeSolutionA = ({
                   validateForm().then(err => {
                     if (Object.keys(err).length === 0) {
                       history.push(newUrl);
+                    } else {
+                      window.scrollTo(0, 0);
                     }
                   });
                 } else {
                   history.push(newUrl);
                 }
-                window.scrollTo(0, 0);
               }}
             >
               Next

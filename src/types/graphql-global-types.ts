@@ -29,6 +29,38 @@ export enum AccessibilityRequestDocumentStatus {
 }
 
 /**
+ * Type or recipient of GRT Feedback
+ */
+export enum GRTFeedbackType {
+  BUSINESS_OWNER = "BUSINESS_OWNER",
+  GRB = "GRB",
+}
+
+/**
+ * Indicates which action should be taken
+ */
+export enum SystemIntakeActionType {
+  BIZ_CASE_NEEDS_CHANGES = "BIZ_CASE_NEEDS_CHANGES",
+  CREATE_BIZ_CASE = "CREATE_BIZ_CASE",
+  GUIDE_RECEIVED_CLOSE = "GUIDE_RECEIVED_CLOSE",
+  ISSUE_LCID = "ISSUE_LCID",
+  NEED_BIZ_CASE = "NEED_BIZ_CASE",
+  NOT_IT_REQUEST = "NOT_IT_REQUEST",
+  NOT_RESPONDING_CLOSE = "NOT_RESPONDING_CLOSE",
+  NO_GOVERNANCE_NEEDED = "NO_GOVERNANCE_NEEDED",
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE = "PROVIDE_FEEDBACK_NEED_BIZ_CASE",
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT",
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL = "PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL",
+  READY_FOR_GRB = "READY_FOR_GRB",
+  READY_FOR_GRT = "READY_FOR_GRT",
+  REJECT = "REJECT",
+  SEND_EMAIL = "SEND_EMAIL",
+  SUBMIT_BIZ_CASE = "SUBMIT_BIZ_CASE",
+  SUBMIT_FINAL_BIZ_CASE = "SUBMIT_FINAL_BIZ_CASE",
+  SUBMIT_INTAKE = "SUBMIT_INTAKE",
+}
+
+/**
  * The request types for a system intake
  */
 export enum SystemIntakeRequestType {
@@ -109,6 +141,15 @@ export interface CreateAccessibilityRequestInput {
 }
 
 /**
+ * Parameters required to create a note for an intake
+ */
+export interface CreateSystemIntakeNoteInput {
+  content: string;
+  authorName: string;
+  intakeId: UUID;
+}
+
+/**
  * Parameters for creating a test date
  */
 export interface CreateTestDateInput {
@@ -137,6 +178,16 @@ export interface IssueLifecycleIdInput {
   lcid?: string | null;
   nextSteps?: string | null;
   scope: string;
+}
+
+/**
+ * Input for rejecting an intake
+ */
+export interface RejectIntakeInput {
+  feedback: string;
+  intakeId: UUID;
+  nextSteps?: string | null;
+  reason: string;
 }
 
 /**
