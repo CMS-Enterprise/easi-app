@@ -1,9 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Alert, Button } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
 
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
 import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
@@ -12,11 +11,7 @@ import HelpText from 'components/shared/HelpText';
 import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import { isBusinessCaseFinal } from 'utils/systemIntake';
-import {
-  BusinessCaseDraftValidationSchema,
-  BusinessCaseFinalValidationSchema
-} from 'validations/businessCaseSchema';
+import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import AlternativeSolutionFields from './AlternativeSolutionFields';
 
@@ -36,16 +31,11 @@ const AlternativeSolutionA = ({
     alternativeA: businessCase.alternativeA
   };
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={ValidationSchema.alternativeA}
+      validationSchema={BusinessCaseFinalValidationSchema.alternativeA}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -75,6 +65,7 @@ const AlternativeSolutionA = ({
               </ErrorAlert>
             )}
             <PageHeading>Alternatives Analysis</PageHeading>
+
             <div className="tablet:grid-col-9">
               <div className="line-height-body-6">
                 Some examples of options to consider may include:
@@ -93,15 +84,15 @@ const AlternativeSolutionA = ({
                 infrastructure, etc.
               </div>
             </div>
-            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
-            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
-              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-                <MandatoryFieldsAlert />
-              </div>
-            )}
+            <div className="tablet:grid-col-8 margin-top-2">
+              <Alert type="info" slim role="alert" aria-live="polite">
+                This section is optional. You can skip it if you don&apos;t have
+                any alternative solutions.
+              </Alert>
+            </div>
             <Form>
               <div className="tablet:grid-col-9">
-                <h2>Alternative A</h2>
+                <h2 className="margin-y-4">Alternative A</h2>
                 <AlternativeSolutionFields
                   altLetter="A"
                   formikProps={formikProps}
@@ -150,19 +141,30 @@ const AlternativeSolutionA = ({
             <Button
               type="button"
               onClick={() => {
-                validateForm().then(err => {
-                  if (Object.keys(err).length === 0) {
-                    dispatchSave();
-                    const newUrl = alternativeSolutionHasFilledFields(
-                      businessCase.alternativeB
-                    )
-                      ? 'alternative-solution-b'
-                      : 'review';
-                    history.push(newUrl);
-                  } else {
-                    window.scrollTo(0, 0);
-                  }
-                });
+                dispatchSave();
+                const newUrl = alternativeSolutionHasFilledFields(
+                  businessCase.alternativeB
+                )
+                  ? 'alternative-solution-b'
+                  : 'review';
+
+                // If final business case OR any field is filled
+                if (
+                  businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED' &&
+                  alternativeSolutionHasFilledFields(
+                    formikRef?.current?.values?.alternativeA
+                  )
+                ) {
+                  validateForm().then(err => {
+                    if (Object.keys(err).length === 0) {
+                      history.push(newUrl);
+                    } else {
+                      window.scrollTo(0, 0);
+                    }
+                  });
+                } else {
+                  history.push(newUrl);
+                }
               }}
             >
               Next
