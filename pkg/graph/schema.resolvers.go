@@ -647,6 +647,29 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 	return conn, nil
 }
 
+func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
+	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
+	if actionsErr != nil {
+		return nil, actionsErr
+	}
+
+	var results []*model.SystemIntakeAction
+	for _, action := range actions {
+		graphAction := model.SystemIntakeAction{
+			ID:   action.ID,
+			Type: model.SystemIntakeActionType(action.ActionType),
+			Actor: &model.SystemIntakeActionActor{
+				Name:  action.ActorName,
+				Email: action.ActorEmail,
+			},
+			Feedback:  action.Feedback.Ptr(),
+			CreatedAt: *action.CreatedAt,
+		}
+		results = append(results, &graphAction)
+	}
+	return results, nil
+}
+
 func (r *systemIntakeResolver) AdminLead(ctx context.Context, obj *models.SystemIntake) (*string, error) {
 	return obj.AdminLead.Ptr(), nil
 }
