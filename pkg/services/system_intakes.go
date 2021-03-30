@@ -476,8 +476,8 @@ func NewProvideGRTFeedback(
 
 		err = sendReviewEmail(
 			ctx,
-			requesterInfo.Email,
 			action.Feedback.String,
+			requesterInfo.Email,
 			intake.ID,
 		)
 		if err != nil {
