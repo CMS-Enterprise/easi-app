@@ -200,10 +200,13 @@ const EstimatedLifecycleCost = ({
   businessCaseCreatedAt = ''
 }: EstimatedLifecycleCostProps) => {
   const sumCostinYear = (phases: LifecycleCosts) => {
+    const { development, operationsMaintenance, other } = phases;
     return (
-      parseFloat(phases.development.cost || '0') +
-      parseFloat(phases.operationsMaintenance.cost || '0') +
-      parseFloat(phases.other.cost || '0')
+      (development.isPresent ? parseFloat(development.cost || '0') : 0) +
+      (operationsMaintenance.isPresent
+        ? parseFloat(operationsMaintenance.cost || '0')
+        : 0) +
+      (other.isPresent ? parseFloat(other.cost || '0') : 0)
     );
   };
   const year1Cost = sumCostinYear(years.year1);
