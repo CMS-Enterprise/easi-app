@@ -1,9 +1,17 @@
 # CEDAR Intake API Client
 
-## Swagger Generation
+## Tools / Helpers
+
+### Swagger Generation
 
 ```terminal
 swagger generate client -f cedar_intake.yml -c ./gen/client -m ./gen/models
+```
+
+### Convert JSON to YAML
+
+```terminal
+ yq eval --prettyPrint ./intake.json > intake.yml
 ```
 
 ## Wire Representation
