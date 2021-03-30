@@ -11,6 +11,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -215,6 +216,9 @@ func (s *Server) routes(
 	}}
 	gqlConfig := generated.Config{Resolvers: resolver, Directives: gqlDirectives}
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
+	graphqlServer.Use(extension.FixedComplexityLimit(1000))
+	graphqlServer.AroundResponses(NewGQLResponseMiddleware(s.logger))
+
 	gql.Handle("/query", graphqlServer)
 
 	// API base path is versioned
