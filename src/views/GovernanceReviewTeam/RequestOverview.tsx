@@ -8,8 +8,19 @@ import { DateTime } from 'luxon';
 import AddGRTFeedbackKeepDraftBizCase from 'queries/AddGRTFeedbackKeepDraftBizCase';
 import AddGRTFeedbackProgressToFinal from 'queries/AddGRTFeedbackProgressToFinal';
 import AddGRTFeedbackRequestBizCaseQuery from 'queries/AddGRTFeedbackRequestBizCaseQuery';
+import CreateSystemIntakeActionBusinessCaseNeeded from 'queries/CreateSystemIntakeActionBusinessCaseNeededQuery';
+import CreateSystemIntakeActionBusinessCaseNeedsChanges from 'queries/CreateSystemIntakeActionBusinessCaseNeedsChangesQuery';
+import CreateSystemIntakeActionGuideReceievedClose from 'queries/CreateSystemIntakeActionGuideReceievedCloseQuery';
+import CreateSystemIntakeActionNoGovernanceNeeded from 'queries/CreateSystemIntakeActionNoGovernanceNeededQuery';
+import CreateSystemIntakeActionNotItRequest from 'queries/CreateSystemIntakeActionNotItRequestQuery';
+import CreateSystemIntakeActionNotRespondingClose from 'queries/CreateSystemIntakeActionNotRespondingCloseQuery';
+import CreateSystemIntakeActionReadyForGRT from 'queries/CreateSystemIntakeActionReadyForGRTQuery';
+import CreateSystemIntakeActionSendEmail from 'queries/CreateSystemIntakeActionSendEmailQuery';
 import GetSystemIntakeQuery from 'queries/GetSystemIntakeQuery';
-import { GetSystemIntake } from 'queries/types/GetSystemIntake';
+import {
+  GetSystemIntake,
+  GetSystemIntakeVariables
+} from 'queries/types/GetSystemIntake';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -38,14 +49,14 @@ const RequestOverview = () => {
   const { t: actionsT } = useTranslation('action');
   const dispatch = useDispatch();
   const { systemId, activePage } = useParams();
-  const { loading, data: graphData } = useQuery<GetSystemIntake>(
-    GetSystemIntakeQuery,
-    {
-      variables: {
-        id: systemId
-      }
+  const { loading, data: graphData } = useQuery<
+    GetSystemIntake,
+    GetSystemIntakeVariables
+  >(GetSystemIntakeQuery, {
+    variables: {
+      id: systemId
     }
-  );
+  });
   const intake = graphData?.systemIntake;
 
   const systemIntake = useSelector(
@@ -153,7 +164,12 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
-              render={() => <BusinessCaseReview businessCase={businessCase} />}
+              render={() => (
+                <BusinessCaseReview
+                  businessCase={businessCase}
+                  grtFeedbacks={intake?.grtFeedbacks}
+                />
+              )}
             />
             <Route
               path="/governance-review-team/:systemId/notes"
@@ -161,11 +177,16 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/dates"
-              render={() => <Dates systemIntake={systemIntake} />}
+              render={() => {
+                if (loading) {
+                  return <p>Loading...</p>;
+                }
+                return <Dates systemIntake={intake} />;
+              }}
             />
             <Route
               path="/governance-review-team/:systemId/decision"
-              render={() => <Decision systemIntake={systemIntake} />}
+              render={() => <Decision systemIntake={intake} />}
             />
             <Route
               path="/governance-review-team/:systemId/actions"
@@ -181,7 +202,7 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/actions/not-it-request"
               render={() => (
                 <SubmitAction
-                  action="NOT_IT_REQUEST"
+                  query={CreateSystemIntakeActionNotItRequest}
                   actionName={actionsT('actions.notItRequest')}
                 />
               )}
@@ -190,7 +211,7 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/actions/need-biz-case"
               render={() => (
                 <SubmitAction
-                  action="NEED_BIZ_CASE"
+                  query={CreateSystemIntakeActionBusinessCaseNeeded}
                   actionName={actionsT('actions.needBizCase')}
                 />
               )}
@@ -226,7 +247,7 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/actions/ready-for-grt"
               render={() => (
                 <SubmitAction
-                  action="READY_FOR_GRT"
+                  query={CreateSystemIntakeActionReadyForGRT}
                   actionName={actionsT('actions.readyForGrt')}
                 />
               )}
@@ -239,7 +260,7 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/actions/biz-case-needs-changes"
               render={() => (
                 <SubmitAction
-                  action="BIZ_CASE_NEEDS_CHANGES"
+                  query={CreateSystemIntakeActionBusinessCaseNeedsChanges}
                   actionName={actionsT('actions.bizCaseNeedsChanges')}
                 />
               )}
@@ -248,7 +269,7 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/actions/no-governance"
               render={() => (
                 <SubmitAction
-                  action="NO_GOVERNANCE_NEEDED"
+                  query={CreateSystemIntakeActionNoGovernanceNeeded}
                   actionName={actionsT('actions.noGovernance')}
                 />
               )}
@@ -257,7 +278,7 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/actions/send-email"
               render={() => (
                 <SubmitAction
-                  action="SEND_EMAIL"
+                  query={CreateSystemIntakeActionSendEmail}
                   actionName={actionsT('actions.sendEmail')}
                 />
               )}
@@ -266,7 +287,7 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/actions/guide-received-close"
               render={() => (
                 <SubmitAction
-                  action="GUIDE_RECEIVED_CLOSE"
+                  query={CreateSystemIntakeActionGuideReceievedClose}
                   actionName={actionsT('actions.guideReceivedClose')}
                 />
               )}
@@ -275,7 +296,7 @@ const RequestOverview = () => {
               path="/governance-review-team/:systemId/actions/not-responding-close"
               render={() => (
                 <SubmitAction
-                  action="NOT_RESPONDING_CLOSE"
+                  query={CreateSystemIntakeActionNotRespondingClose}
                   actionName={actionsT('actions.notRespondingClose')}
                 />
               )}

@@ -298,6 +298,66 @@ func NewTakeActionUpdateStatus(
 	}
 }
 
+// NewCreateActionUpdateStatus returns a function that
+// persists an action and updates a request
+func NewCreateActionUpdateStatus(
+	config Config,
+	updateStatus func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error),
+	saveAction func(context.Context, *models.Action) error,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string, intakeID uuid.UUID) error,
+	closeBusinessCase func(context.Context, uuid.UUID) error,
+) func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool) (*models.SystemIntake, error) {
+	return func(
+		ctx context.Context,
+		action *models.Action,
+		id uuid.UUID,
+		newStatus models.SystemIntakeStatus,
+		shouldCloseBusinessCase bool,
+	) (*models.SystemIntake, error) {
+		err := saveAction(ctx, action)
+		if err != nil {
+			return nil, err
+		}
+
+		intake, err := updateStatus(ctx, id, newStatus)
+		if err != nil {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
+			}
+		}
+
+		if shouldCloseBusinessCase && intake.BusinessCaseID != nil {
+			if err = closeBusinessCase(ctx, *intake.BusinessCaseID); err != nil {
+				return nil, err
+			}
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		return intake, err
+	}
+}
+
 // NewFetchActionsByRequestID returns a function that fetches actions for a specific request
 func NewFetchActionsByRequestID(
 	authorize func(context.Context) (bool, error),

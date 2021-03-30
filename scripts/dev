@@ -138,6 +138,24 @@ namespace :db do
   task :drop_connections do
     `echo "select pg_terminate_backend(pg_stat_activity.pid) from pg_stat_activity where datname='postgres' AND state='idle'" | psql`
   end
+
+  desc "Deletes all rows from all tables"
+  task :clean do
+    tables = %w{
+      accessibility_request_documents
+      accessibility_requests
+      notes
+      actions
+      estimated_lifecycle_costs
+      business_cases
+      test_dates
+      grt_feedback
+      system_intakes
+    }
+    sql = tables.map { |table| "DELETE FROM #{table};" }.join
+    puts "Cleaning database..."
+    `echo "#{sql}" | psql`
+  end
 end
 
 
@@ -172,13 +190,13 @@ multitask test: ["test:go", "test:js"]
 
 namespace :test do
   desc "Runs Go tests"
-  task :go do
+  task :go => "db:clean" do
     sh "gotest -short -count=1 ./..."
   end
   namespace :go do
     desc "Run targeted Go tests (pass packages as additional options)"
-    task :only => :consume_args do |t, args|
-      sh "gotest", "-short", "-count=1", *args
+    task :only => ["db:clean", :consume_args] do |t, args|
+      sh "gotest", "-short", "-count=1", "-v", *args
     end
   end
 

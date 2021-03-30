@@ -150,6 +150,7 @@ func (s *Server) routes(
 		store.CreateAction,
 		cedarLDAPClient.FetchUserInfo,
 	)
+
 	resolver := graph.NewResolver(
 		store,
 		graph.ResolverService{
@@ -166,6 +167,38 @@ func (s *Server) routes(
 				store.CreateGRTFeedback,
 				cedarLDAPClient.FetchUserInfo,
 				emailClient.SendSystemIntakeReviewEmail,
+			),
+			CreateActionUpdateStatus: services.NewCreateActionUpdateStatus(
+				serviceConfig,
+				store.UpdateSystemIntakeStatus,
+				saveAction,
+				cedarLDAPClient.FetchUserInfo,
+				emailClient.SendSystemIntakeReviewEmail,
+				services.NewCloseBusinessCase(
+					serviceConfig,
+					store.FetchBusinessCaseByID,
+					store.UpdateBusinessCase,
+				),
+			),
+			IssueLifecycleID: services.NewUpdateLifecycleFields(
+				serviceConfig,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.FetchSystemIntakeByID,
+				store.UpdateSystemIntake,
+				saveAction,
+				cedarLDAPClient.FetchUserInfo,
+				emailClient.SendIssueLCIDEmail,
+				store.GenerateLifecycleID,
+			),
+			AuthorizeUserIsReviewTeamOrIntakeRequester: services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
+			RejectIntake: services.NewUpdateRejectionFields(
+				serviceConfig,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.FetchSystemIntakeByID,
+				store.UpdateSystemIntake,
+				saveAction,
+				cedarLDAPClient.FetchUserInfo,
+				emailClient.SendRejectRequestEmail,
 			),
 		},
 		&s3Client,
@@ -198,7 +231,7 @@ func (s *Server) routes(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
-			services.NewAuthorizeUserIsIntakeRequesterOrHasGRTJobCode(),
+			services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
 		),
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,

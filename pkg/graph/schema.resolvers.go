@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -14,6 +15,8 @@ import (
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -349,6 +352,160 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	}, nil
 }
 
+func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNEEDBIZCASE,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusNEEDBIZCASE,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionBusinessCaseNeedsChanges(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeBIZCASENEEDSCHANGES,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusBIZCASECHANGESNEEDED,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionGuideReceievedClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeGUIDERECEIVEDCLOSE,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusSHUTDOWNCOMPLETE,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionNoGovernanceNeeded(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNOGOVERNANCENEEDED,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusNOGOVERNANCE,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionNotItRequest(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNOTITREQUEST,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusNOTITREQUEST,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionNotRespondingClose(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeNOTRESPONDINGCLOSE,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusNOGOVERNANCE,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionReadyForGrt(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeREADYFORGRT,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusREADYFORGRT,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context, input model.BasicActionInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.CreateActionUpdateStatus(
+		ctx,
+		&models.Action{
+			IntakeID:   &input.IntakeID,
+			ActionType: models.ActionTypeSENDEMAIL,
+			Feedback:   null.StringFrom(input.Feedback),
+		},
+		input.IntakeID,
+		models.SystemIntakeStatusSHUTDOWNINPROGRESS,
+		false,
+	)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error) {
+	note, err := r.store.CreateNote(ctx, &models.Note{
+		AuthorEUAID:    appcontext.Principal(ctx).ID(),
+		AuthorName:     null.StringFrom(input.AuthorName),
+		Content:        null.StringFrom(input.Content),
+		SystemIntakeID: input.IntakeID,
+	})
+	return &model.SystemIntakeNote{
+		ID: note.ID,
+		Author: &model.SystemIntakeNoteAuthor{
+			Name: note.AuthorName.String,
+			Eua:  note.AuthorEUAID,
+		},
+		Content:   note.Content.String,
+		CreatedAt: *note.CreatedAt,
+	}, err
+}
+
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
 	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
 		TestType:  input.TestType,
@@ -372,6 +529,25 @@ func (r *mutationResolver) GeneratePresignedUploadURL(ctx context.Context, input
 	}, nil
 }
 
+func (r *mutationResolver) IssueLifecycleID(ctx context.Context, input model.IssueLifecycleIDInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.IssueLifecycleID(
+		ctx,
+		&models.SystemIntake{
+			ID:                 input.IntakeID,
+			LifecycleExpiresAt: &input.ExpiresAt,
+			LifecycleScope:     null.StringFrom(input.Scope),
+			DecisionNextSteps:  null.StringFrom(*input.NextSteps),
+			LifecycleID:        null.StringFrom(*input.Lcid),
+		},
+		&models.Action{
+			IntakeID: &input.IntakeID,
+			Feedback: null.StringFrom(input.Feedback),
+		})
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
 func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, input model.AddGRTFeedbackInput) (*model.AddGRTFeedbackPayload, error) {
 	grtFeedback, err := r.service.AddGRTFeedback(
 		ctx,
@@ -393,14 +569,38 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
 }
 
-func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakeAdminLeadPayload, error) {
+func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.RejectIntake(
+		ctx,
+		&models.SystemIntake{
+			ID:                input.IntakeID,
+			DecisionNextSteps: null.StringFrom(*input.NextSteps),
+			RejectionReason:   null.StringFrom(*&input.Reason),
+		},
+		&models.Action{
+			IntakeID: &input.IntakeID,
+			Feedback: null.StringFrom(input.Feedback),
+		})
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
+}
+
+func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error) {
 	savedAdminLead, err := r.store.UpdateAdminLead(ctx, input.ID, input.AdminLead)
 	systemIntake := models.SystemIntake{
 		AdminLead: null.StringFrom(savedAdminLead),
 		ID:        input.ID,
 	}
-	return &model.UpdateSystemIntakeAdminLeadPayload{
+	return &model.UpdateSystemIntakePayload{
 		SystemIntake: &systemIntake,
+	}, err
+}
+
+func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.store.UpdateReviewDates(ctx, input.ID, input.GrbDate, input.GrtDate)
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
 	}, err
 }
 
@@ -431,7 +631,20 @@ func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string
 }
 
 func (r *queryResolver) SystemIntake(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
-	return r.store.FetchSystemIntakeByID(ctx, id)
+	intake, err := r.store.FetchSystemIntakeByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	ok, err := r.service.AuthorizeUserIsReviewTeamOrIntakeRequester(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to fetch system intake")}
+	}
+
+	return intake, nil
 }
 
 func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (*model.SystemConnection, error) {
@@ -451,6 +664,29 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 		})
 	}
 	return conn, nil
+}
+
+func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
+	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
+	if actionsErr != nil {
+		return nil, actionsErr
+	}
+
+	var results []*model.SystemIntakeAction
+	for _, action := range actions {
+		graphAction := model.SystemIntakeAction{
+			ID:   action.ID,
+			Type: model.SystemIntakeActionType(action.ActionType),
+			Actor: &model.SystemIntakeActionActor{
+				Name:  action.ActorName,
+				Email: action.ActorEmail,
+			},
+			Feedback:  action.Feedback.Ptr(),
+			CreatedAt: *action.CreatedAt,
+		}
+		results = append(results, &graphAction)
+	}
+	return results, nil
 }
 
 func (r *systemIntakeResolver) AdminLead(ctx context.Context, obj *models.SystemIntake) (*string, error) {
@@ -621,6 +857,10 @@ func (r *systemIntakeResolver) GovernanceTeams(ctx context.Context, obj *models.
 		IsPresent: &isPresent,
 		Teams:     teams,
 	}, nil
+}
+
+func (r *systemIntakeResolver) GrtFeedbacks(ctx context.Context, obj *models.SystemIntake) ([]*models.GRTFeedback, error) {
+	return r.store.FetchGRTFeedbacksByIntakeID(ctx, obj.ID)
 }
 
 func (r *systemIntakeResolver) Isso(ctx context.Context, obj *models.SystemIntake) (*model.SystemIntakeIsso, error) {

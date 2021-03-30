@@ -16,7 +16,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { hasAlternativeB } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { AsIsSolutionForm, BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
 import { isBusinessCaseFinal } from 'utils/systemIntake';
@@ -307,7 +307,6 @@ const AsIsSolution = ({
                 setErrors({});
                 const newUrl = 'request-description';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -320,9 +319,10 @@ const AsIsSolution = ({
                     dispatchSave();
                     const newUrl = 'preferred-solution';
                     history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
                   }
                 });
-                window.scrollTo(0, 0);
               }}
             >
               Next
@@ -345,7 +345,11 @@ const AsIsSolution = ({
             </div>
             <PageNumber
               currentPage={3}
-              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
+              totalPages={
+                alternativeSolutionHasFilledFields(businessCase.alternativeB)
+                  ? 6
+                  : 5
+              }
             />
             <AutoSave
               values={values}

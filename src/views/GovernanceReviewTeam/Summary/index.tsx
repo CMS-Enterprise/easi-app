@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
 import { GetSystemIntake_systemIntake as SystemIntake } from 'queries/types/GetSystemIntake';
 import { UpdateSystemIntakeAdminLead } from 'queries/types/UpdateSystemIntakeAdminLead';
 import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLeadQuery';
@@ -14,6 +13,7 @@ import Modal from 'components/Modal';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
+import formatDate from 'utils/formatDate';
 import {
   isIntakeClosed,
   isIntakeOpen,
@@ -135,9 +135,7 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
             <div className="easi-grt__description-group">
               <dt>{t('intake:fields.submissionDate')}</dt>
               <dd>
-                {intake.submittedAt
-                  ? intake.submittedAt.toLocaleString(DateTime.DATE_FULL)
-                  : 'N/A'}
+                {intake.submittedAt ? formatDate(intake.submittedAt) : 'N/A'}
               </dd>
             </div>
             <div className="easi-grt__description-group">

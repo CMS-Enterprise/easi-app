@@ -67,3 +67,23 @@ func (s *Store) FetchGRTFeedbackByID(ctx context.Context, id uuid.UUID) (*models
 
 	return &grtFeedback, nil
 }
+
+// FetchGRTFeedbacksByIntakeID gets all GRT Feedback with a given Intake ID
+func (s *Store) FetchGRTFeedbacksByIntakeID(ctx context.Context, intakeID uuid.UUID) ([]*models.GRTFeedback, error) {
+	grtFeedbacks := []*models.GRTFeedback{}
+
+	err := s.db.SelectContext(ctx, &grtFeedbacks, `SELECT * FROM grt_feedback WHERE intake_id=$1 ORDER BY created_at`, intakeID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return grtFeedbacks, nil
+		}
+		appcontext.ZLogger(ctx).Error("Failed to fetch GRT Feedbacks", zap.Error(err), zap.String("intake id", intakeID.String()))
+		return nil, &apperrors.QueryError{
+			Err:       err,
+			Model:     intakeID,
+			Operation: apperrors.QueryFetch,
+		}
+	}
+
+	return grtFeedbacks, nil
+}
