@@ -5,7 +5,7 @@ import { Button } from '@trussworks/react-uswds';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
 import PageHeading from 'components/PageHeading';
-import { hasAlternativeB } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { AppState } from 'reducers/rootReducer';
 import { BusinessCaseModel } from 'types/businessCase';
 import { postAction } from 'types/routines';
@@ -37,11 +37,12 @@ const Review = ({ businessCase }: ReviewProps) => {
           type="button"
           outline
           onClick={() => {
-            const newUrl = hasAlternativeB(businessCase.alternativeB)
+            const newUrl = alternativeSolutionHasFilledFields(
+              businessCase.alternativeB
+            )
               ? 'alternative-solution-b'
               : 'alternative-solution-a';
             history.push(newUrl);
-            window.scrollTo(0, 0);
           }}
         >
           Back

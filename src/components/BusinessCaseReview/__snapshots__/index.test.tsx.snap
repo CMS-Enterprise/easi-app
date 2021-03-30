@@ -162,7 +162,7 @@ Array [
     </h2>
   </div>,
   <div
-    className="bg-base-lightest padding-top-2 padding-bottom-8 alternative-analysis-wrapper"
+    className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper"
   >
     <div
       className="grid-container"

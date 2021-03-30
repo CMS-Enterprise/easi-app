@@ -84,16 +84,14 @@ function systemIntakeReducer(
     case saveSystemIntake.REQUEST:
       return {
         ...state,
+        systemIntake: {
+          ...state.systemIntake,
+          ...action.payload
+        },
         isSaving: true
       };
     case saveSystemIntake.SUCCESS:
-      return {
-        ...state,
-        systemIntake: {
-          ...state.systemIntake,
-          ...prepareSystemIntakeForApp(action.payload)
-        }
-      };
+      return state;
     case saveSystemIntake.FAILURE:
       return {
         ...state,

@@ -124,10 +124,11 @@ export type ContractDetailsForm = {
 
 export type IntakeNote = {
   id: string;
-  authorName: string;
-  authorId: string;
+  author: {
+    name: string;
+    eua: string;
+  };
   content: string;
-  systemIntakeId: string;
   createdAt: DateTime;
 };
 

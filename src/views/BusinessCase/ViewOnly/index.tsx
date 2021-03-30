@@ -1,4 +1,5 @@
 import React from 'react';
+import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
 import BusinessCaseReview from 'components/BusinessCaseReview';
 import PageHeading from 'components/PageHeading';
@@ -6,15 +7,19 @@ import { BusinessCaseModel } from 'types/businessCase';
 
 type BusinessCaseViewOnlyProps = {
   businessCase: BusinessCaseModel;
+  grtFeedbacks?: GRTFeedback[] | null;
 };
 
-const BusinessCaseView = ({ businessCase }: BusinessCaseViewOnlyProps) => (
+const BusinessCaseView = ({
+  businessCase,
+  grtFeedbacks
+}: BusinessCaseViewOnlyProps) => (
   <>
     <div className="grid-container">
       <PageHeading>Review your Business Case</PageHeading>
     </div>
     <div className="business-case-review">
-      <BusinessCaseReview values={businessCase} />
+      <BusinessCaseReview values={businessCase} grtFeedbacks={grtFeedbacks} />
     </div>
   </>
 );
