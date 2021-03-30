@@ -4,7 +4,7 @@ info:
     API's to support the posting of a string (json, xml, etc.) for incoming documents.
   version: "1.0"
   title: CEDAR Intake
-# host: webmethods-apigw.cedarimpl.cms.gov
+# host: webmethods-apigw.cedardev.cms.gov
 basePath: /gateway/CEDAR Intake/1.0
 schemes:
   - http
@@ -15,10 +15,27 @@ produces:
 security:
   - apiKey: []
 paths:
+  /healthCheck:
+    get:
+      # tags:
+      #   - healthCheck
+      summary: Returns a status and current date/time
+      description: Returns a status and current date/time
+      operationId: healthCheckGet
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/healthCheck_GET_response'
+        "401":
+          description: Access Denied
   /intake:
     post:
-      tags:
-        - intake
+      # tags:
+      #   - intake
       summary: Add an intake
       description: Add an intake
       operationId: intakeAdd
@@ -31,7 +48,12 @@ paths:
           name: body
           required: true
           schema:
-            $ref: '#/definitions/IntakeInput'
+            type: object
+            properties:
+              documents:
+                type: array
+                items:
+                  $ref: '#/definitions/IntakeInput'
       responses:
         "200":
           description: OK
@@ -520,6 +542,22 @@ definitions:
         type: string
       content:
         type: string
+  healthCheck_GET_response:
+    type: object
+    required:
+      - datetime
+      - status
+      - timestamp
+      - version
+    properties:
+      datetime:
+        type: string
+      version:
+        type: string
+      status:
+        type: string
+      timestamp:
+        type: string
   IntakeInput:
     type: object
     required:
@@ -544,11 +582,11 @@ definitions:
           - EASINoteV01
       createdDate:
         type: string
-        format: date-time
+        # format: date-time
         description: Customers createDate
       lastUpdate:
         type: string
-        format: date-time
+        # format: date-time
         description: Customers lastUpdate
       id:
         type: string
