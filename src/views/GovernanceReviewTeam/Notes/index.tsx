@@ -98,9 +98,18 @@ const Notes = () => {
   const [mutate, mutationResult] = useMutation<
     CreateSystemIntakeNote,
     CreateSystemIntakeNoteVariables
-  >(CreateSystemIntakeNoteQuery);
+  >(CreateSystemIntakeNoteQuery, {
+    refetchQueries: [
+      {
+        query: GetAdminNotesAndActionsQuery,
+        variables: {
+          id: systemId
+        }
+      }
+    ]
+  });
 
-  const { error, data, refetch } = useQuery<
+  const { error, data } = useQuery<
     GetAdminNotesAndActions,
     GetAdminNotesAndActionsVariables
   >(GetAdminNotesAndActionsQuery, {
@@ -121,12 +130,6 @@ const Notes = () => {
     mutate({ variables: { input } }).then(response => {
       if (!response.errors) {
         resetForm();
-        if (refetch) {
-          // I was having an issue where sometimes refetch would be undefined.
-          // This may be related to a bug in Apollo Client, so the check here is
-          // to prevent that from breaking the app should it occur.
-          refetch();
-        }
       }
     });
   };
