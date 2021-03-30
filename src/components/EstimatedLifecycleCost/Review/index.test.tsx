@@ -83,7 +83,12 @@ describe('The Estimated Lifecycle Cost review component', () => {
   };
 
   it('renders without crashing', () => {
-    shallow(<EstimatedLifecycleCostReview data={defaultEstimatedLifecycle} />);
+    shallow(
+      <EstimatedLifecycleCostReview
+        fiscalYear={2021}
+        data={defaultEstimatedLifecycle}
+      />
+    );
   });
 
   describe('Desktop', () => {
@@ -97,7 +102,10 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
     it('renders the desktop view', () => {
       const component = mount(
-        <EstimatedLifecycleCostReview data={defaultEstimatedLifecycle} />
+        <EstimatedLifecycleCostReview
+          fiscalYear={2021}
+          data={defaultEstimatedLifecycle}
+        />
       );
 
       expect(
@@ -110,7 +118,7 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
     it('adds up development total correctly', () => {
       const component = mount(
-        <EstimatedLifecycleCostReview data={sampleData} />
+        <EstimatedLifecycleCostReview fiscalYear={2021} data={sampleData} />
       );
 
       expect(
@@ -130,7 +138,10 @@ describe('The Estimated Lifecycle Cost review component', () => {
 
     it('renders the mobile view', () => {
       const component = mount(
-        <EstimatedLifecycleCostReview data={defaultEstimatedLifecycle} />
+        <EstimatedLifecycleCostReview
+          fiscalYear={2021}
+          data={defaultEstimatedLifecycle}
+        />
       );
       expect(
         component.find("[data-testid='est-lifecycle--mobile']").exists()
@@ -141,15 +152,21 @@ describe('The Estimated Lifecycle Cost review component', () => {
     });
 
     it('renders mobile view with development data', () => {
-      mount(<EstimatedLifecycleCostReview data={sampleData} />);
+      mount(
+        <EstimatedLifecycleCostReview fiscalYear={2021} data={sampleData} />
+      );
     });
 
     it('renders mobile view with O&M data', () => {
-      mount(<EstimatedLifecycleCostReview data={sampleData} />);
+      mount(
+        <EstimatedLifecycleCostReview fiscalYear={2021} data={sampleData} />
+      );
     });
 
     it('renders mobile view with Other data', () => {
-      mount(<EstimatedLifecycleCostReview data={sampleData} />);
+      mount(
+        <EstimatedLifecycleCostReview fiscalYear={2021} data={sampleData} />
+      );
     });
   });
 });

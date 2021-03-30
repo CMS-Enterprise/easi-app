@@ -1,9 +1,11 @@
 import React from 'react';
+import { DateTime } from 'luxon';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
 import { BusinessCaseModel } from 'types/businessCase';
+import { getFiscalYear } from 'utils/formatDate';
 
 import AlternativeAnalysisReview from './AlternativeAnalysisReview';
 import GeneralRequestInfoReview from './GeneralRequestInfoReview';
@@ -62,6 +64,7 @@ const BusinessCaseReview = ({
         <div className="padding-top-2 padding-bottom-8 alternative-analysis-wrapper">
           <div className="grid-container">
             <AlternativeAnalysisReview
+              fiscalYear={getFiscalYear(DateTime.fromISO(values.createdAt))}
               asIsSolution={values.asIsSolution}
               preferredSolution={values.preferredSolution}
               alternativeA={values.alternativeA}
