@@ -166,11 +166,11 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
                   setModalOpen(false);
                 }}
               >
-                <h1 className="margin-top-0 font-heading-2xl line-height-heading-2">
+                <h2 className="margin-top-0 font-heading-2xl line-height-heading-2">
                   {t('governanceReviewTeam:adminLeads:assignModal.header', {
                     requestName: intake.requestName
                   })}
-                </h1>
+                </h2>
                 <RadioGroup>
                   {grtMembers.map(name => (
                     <RadioField
