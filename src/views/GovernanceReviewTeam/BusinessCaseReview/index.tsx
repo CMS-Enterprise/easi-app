@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
 import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
 
 import AlternativeAnalysisReview from 'components/BusinessCaseReview/AlternativeAnalysisReview';
@@ -12,6 +13,7 @@ import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
+import { getFiscalYear } from 'utils/formatDate';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;
@@ -72,6 +74,7 @@ const BusinessCaseReview = ({
           Alternatives analysis
         </h2>
         <AlternativeAnalysisReview
+          fiscalYear={getFiscalYear(DateTime.fromISO(businessCase.createdAt))}
           asIsSolution={businessCase.asIsSolution}
           preferredSolution={businessCase.preferredSolution}
           alternativeA={businessCase.alternativeA}
