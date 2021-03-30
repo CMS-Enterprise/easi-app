@@ -183,7 +183,10 @@ const EstimatedLifecycleCostReview = ({
                         </tr>
                         {developmentCosts[year] > 0 && (
                           <tr>
-                            <th className="padding-y-2 text-right text-normal">
+                            <th
+                              className="padding-y-2 text-right text-normal"
+                              aria-label={`Fiscal year ${yearMapping[year]} development costs`}
+                            >
                               Development
                             </th>
                             <td className="padding-y-2 text-right text-normal">
@@ -193,7 +196,10 @@ const EstimatedLifecycleCostReview = ({
                         )}
                         {omCosts[year] > 0 && (
                           <tr>
-                            <th className="padding-y-2 text-right text-normal">
+                            <th
+                              className="padding-y-2 text-right text-normal"
+                              aria-label={`Fiscal year ${yearMapping[year]} operations and maintenance costs`}
+                            >
                               Operations and Maintenance
                             </th>
                             <td className="padding-y-2 text-right text-normal">
@@ -206,7 +212,10 @@ const EstimatedLifecycleCostReview = ({
                             <th className="padding-y-2 text-right text-normal">
                               Other
                             </th>
-                            <td className="padding-y-2 text-right text-normal">
+                            <td
+                              className="padding-y-2 text-right text-normal"
+                              aria-label={`Fiscal year ${yearMapping[year]} other costs`}
+                            >
                               {formatDollarsOrDash(otherCosts[year])}
                             </td>
                           </tr>
