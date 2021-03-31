@@ -166,77 +166,75 @@ const ContractDetails = ({
                       value
                     />
                     {values.fundingSource.isFunded && (
-                      <div className="margin-top-neg-2 margin-left-3 margin-bottom-1">
-                        <div className="width-card-lg">
-                          <FieldGroup
-                            scrollElement="fundingSource.source"
+                      <div className="margin-top-neg-2 margin-left-4 margin-bottom-1">
+                        <FieldGroup
+                          scrollElement="fundingSource.source"
+                          error={!!flatErrors['fundingSource.source']}
+                        >
+                          <Label htmlFor="IntakeForm-FundingSource">
+                            Funding Source
+                          </Label>
+                          <FieldErrorMsg>
+                            {flatErrors['fundingSource.source']}
+                          </FieldErrorMsg>
+                          <Field
+                            as={DropdownField}
                             error={!!flatErrors['fundingSource.source']}
+                            id="IntakeForm-FundingSource"
+                            name="fundingSource.source"
                           >
-                            <Label htmlFor="IntakeForm-FundingSource">
-                              Funding Source
-                            </Label>
-                            <FieldErrorMsg>
-                              {flatErrors['fundingSource.source']}
-                            </FieldErrorMsg>
                             <Field
-                              as={DropdownField}
-                              error={!!flatErrors['fundingSource.source']}
-                              id="IntakeForm-FundingSource"
-                              name="fundingSource.source"
-                            >
+                              as={DropdownItem}
+                              name="Select an option"
+                              value=""
+                              disabled
+                            />
+                            {fundingSources.map(source => (
                               <Field
                                 as={DropdownItem}
-                                name="Select an option"
-                                value=""
-                                disabled
+                                key={source.split(' ').join('-')}
+                                name={source}
+                                value={source}
                               />
-                              {fundingSources.map(source => (
-                                <Field
-                                  as={DropdownItem}
-                                  key={source.split(' ').join('-')}
-                                  name={source}
-                                  value={source}
-                                />
-                              ))}
-                            </Field>
-                          </FieldGroup>
-                          <FieldGroup
-                            scrollElement="fundingSource.fundingNumber"
-                            error={!!flatErrors['fundingSource.fundingNumber']}
-                          >
-                            <Label htmlFor="IntakeForm-FundingNumber">
-                              Funding Number
-                            </Label>
-                            <FieldErrorMsg>
-                              {flatErrors['fundingSource.fundingNumber']}
-                            </FieldErrorMsg>
-                            <Field
-                              as={TextField}
-                              error={
-                                !!flatErrors['fundingSource.fundingNumber']
-                              }
-                              id="IntakeForm-FundingNumber"
-                              maxLength={6}
-                              name="fundingSource.fundingNumber"
-                              aria-describedby="IntakeForm-FundingNumberHelp"
-                            />
-                          </FieldGroup>
-                        </div>
-                        <HelpText
-                          id="IntakeForm-FundingNumberHelp"
-                          className="margin-y-1"
+                            ))}
+                          </Field>
+                        </FieldGroup>
+                        <FieldGroup
+                          className="margin-top-neg-2"
+                          scrollElement="fundingSource.fundingNumber"
+                          error={!!flatErrors['fundingSource.fundingNumber']}
                         >
-                          <Link
-                            aria-label="Open 'CMS Operating Plan' in a new tab"
-                            href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            variant="external"
+                          <Label htmlFor="IntakeForm-FundingNumber">
+                            Funding Number
+                          </Label>
+                          <HelpText
+                            id="IntakeForm-FundingNumberHelp"
+                            className="margin-y-1"
                           >
-                            You can find your funding number in the CMS
-                            Operating Plan page (opens in a new tab)
-                          </Link>
-                        </HelpText>
+                            <Link
+                              aria-label="Open 'CMS Operating Plan' in a new tab"
+                              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              variant="external"
+                            >
+                              You can find your funding number in the CMS
+                              Operating Plan page (opens in a new tab)
+                            </Link>
+                          </HelpText>
+                          <FieldErrorMsg>
+                            {flatErrors['fundingSource.fundingNumber']}
+                          </FieldErrorMsg>
+                          <Field
+                            className="width-card-lg"
+                            as={TextField}
+                            error={!!flatErrors['fundingSource.fundingNumber']}
+                            id="IntakeForm-FundingNumber"
+                            maxLength={6}
+                            name="fundingSource.fundingNumber"
+                            aria-describedby="IntakeForm-FundingNumberHelp"
+                          />
+                        </FieldGroup>
                       </div>
                     )}
                     <Field
@@ -283,7 +281,7 @@ const ContractDetails = ({
                       aria-describedby="IntakeForm-IncreasedCostsHelp"
                     />
                     {values.costs.isExpectingIncrease === 'YES' && (
-                      <div className="width-mobile margin-top-neg-2 margin-left-3 margin-bottom-1">
+                      <div className="width-mobile margin-top-neg-2 margin-left-4 margin-bottom-1">
                         <FieldGroup
                           scrollElement="costs.expectedIncreaseAmount"
                           error={!!flatErrors['costs.expectedIncreaseAmount']}
