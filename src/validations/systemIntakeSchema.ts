@@ -139,7 +139,26 @@ const SystemIntakeValidationSchema: any = {
             .trim()
             .required('Tell us the contract start month'),
           day: Yup.string().trim().required('Tell us the contract start day'),
-          year: Yup.string().trim().required('Tell us the contract start year')
+          year: Yup.string().trim().required('Tell us the contract start year'),
+          validDate: Yup.string().when(['month', 'day', 'year'], {
+            is: (month: string, day: string, year: string) => {
+              if (
+                DateTime.fromObject({
+                  month: Number(month) || 0,
+                  day: Number(day) || 0,
+                  year: Number(year) || 0
+                }).isValid
+              ) {
+                return true;
+              }
+              return false;
+            },
+            otherwise: Yup.string().test(
+              'validStartDate',
+              'Period of performance date: Please enter a valid start date',
+              () => false
+            )
+          })
         })
       }),
       endDate: Yup.mixed().when('hasContract', {
@@ -147,7 +166,26 @@ const SystemIntakeValidationSchema: any = {
         then: Yup.object().shape({
           month: Yup.string().trim().required('Tell us the contract end month'),
           day: Yup.string().trim().required('Tell us the contract end day'),
-          year: Yup.string().trim().required('Tell us the contract end year')
+          year: Yup.string().trim().required('Tell us the contract end year'),
+          validDate: Yup.string().when(['month', 'day', 'year'], {
+            is: (month: string, day: string, year: string) => {
+              if (
+                DateTime.fromObject({
+                  month: Number(month) || 0,
+                  day: Number(day) || 0,
+                  year: Number(year) || 0
+                }).isValid
+              ) {
+                return true;
+              }
+              return false;
+            },
+            otherwise: Yup.string().test(
+              'validStartDate',
+              'Period of performance date: Please enter a valid end date',
+              () => false
+            )
+          })
         })
       })
     })
