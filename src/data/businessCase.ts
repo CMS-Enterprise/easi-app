@@ -76,7 +76,8 @@ export const businessCaseInitialData: BusinessCaseModel = {
   },
   preferredSolution: cloneDeep(defaultProposedSolution),
   alternativeA: cloneDeep(defaultProposedSolution),
-  alternativeB: cloneDeep(defaultProposedSolution)
+  alternativeB: cloneDeep(defaultProposedSolution),
+  createdAt: ''
 };
 
 type lifecycleCostLinesType = {
@@ -259,6 +260,7 @@ export const prepareBusinessCaseForApp = (
       },
       hasUserInterface: businessCase.alternativeBHasUI || ''
     },
+    createdAt: businessCase.createdAt,
     initialSubmittedAt: businessCase.initialSubmittedAt,
     lastSubmittedAt: businessCase.lastSubmittedAt
   };

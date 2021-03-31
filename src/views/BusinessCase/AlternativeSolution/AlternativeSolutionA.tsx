@@ -95,6 +95,7 @@ const AlternativeSolutionA = ({
                 <h2 className="margin-y-4">Alternative A</h2>
                 <AlternativeSolutionFields
                   altLetter="A"
+                  businessCaseCreatedAt={businessCase.createdAt}
                   formikProps={formikProps}
                 />
 

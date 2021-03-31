@@ -11,6 +11,7 @@ import { LifecycleCosts } from 'types/estimatedLifecycle';
 import formatDollars from 'utils/formatDollars';
 
 type EstimatedLifecycleCostReviewProps = {
+  fiscalYear: number;
   data: {
     year1: LifecycleCosts;
     year2: LifecycleCosts;
@@ -21,17 +22,18 @@ type EstimatedLifecycleCostReviewProps = {
 };
 
 const EstimatedLifecycleCostReview = ({
+  fiscalYear,
   data
 }: EstimatedLifecycleCostReviewProps) => {
   const yearMapping: { [key: string]: string } = {
-    year1: 'Year 1',
-    year2: 'Year 2',
-    year3: 'Year 3',
-    year4: 'Year 4',
-    year5: 'Year 5'
+    year1: String(fiscalYear),
+    year2: String(fiscalYear + 1),
+    year3: String(fiscalYear + 2),
+    year4: String(fiscalYear + 3),
+    year5: String(fiscalYear + 4)
   };
 
-  const formatDollarsOrDash = (value: number | undefined): string => {
+  const formatDollarsOrDash = (value: number): string => {
     if (Number.isNaN(value)) {
       return '-';
     }
@@ -47,29 +49,49 @@ const EstimatedLifecycleCostReview = ({
 
   // Can be float or NaN
   const developmentCosts: { [key: string]: number } = {
-    year1: parseFloat(data.year1.development.cost),
-    year2: parseFloat(data.year2.development.cost),
-    year3: parseFloat(data.year3.development.cost),
-    year4: parseFloat(data.year4.development.cost),
-    year5: parseFloat(data.year5.development.cost)
+    year1: data.year1.development.isPresent
+      ? parseFloat(data.year1.development.cost)
+      : NaN,
+    year2: data.year2.development.isPresent
+      ? parseFloat(data.year2.development.cost)
+      : NaN,
+    year3: data.year3.development.isPresent
+      ? parseFloat(data.year3.development.cost)
+      : NaN,
+    year4: data.year4.development.isPresent
+      ? parseFloat(data.year4.development.cost)
+      : NaN,
+    year5: data.year5.development.isPresent
+      ? parseFloat(data.year5.development.cost)
+      : NaN
   };
 
   // Can be float or NaN
   const omCosts: { [key: string]: number } = {
-    year1: parseFloat(data.year1.operationsMaintenance.cost),
-    year2: parseFloat(data.year2.operationsMaintenance.cost),
-    year3: parseFloat(data.year3.operationsMaintenance.cost),
-    year4: parseFloat(data.year4.operationsMaintenance.cost),
-    year5: parseFloat(data.year5.operationsMaintenance.cost)
+    year1: data.year1.operationsMaintenance.isPresent
+      ? parseFloat(data.year1.operationsMaintenance.cost)
+      : NaN,
+    year2: data.year2.operationsMaintenance.isPresent
+      ? parseFloat(data.year2.operationsMaintenance.cost)
+      : NaN,
+    year3: data.year3.operationsMaintenance.isPresent
+      ? parseFloat(data.year3.operationsMaintenance.cost)
+      : NaN,
+    year4: data.year4.operationsMaintenance.isPresent
+      ? parseFloat(data.year4.operationsMaintenance.cost)
+      : NaN,
+    year5: data.year5.operationsMaintenance.isPresent
+      ? parseFloat(data.year5.operationsMaintenance.cost)
+      : NaN
   };
 
   // Can be float or NaN
   const otherCosts: { [key: string]: number } = {
-    year1: parseFloat(data.year1.other.cost),
-    year2: parseFloat(data.year2.other.cost),
-    year3: parseFloat(data.year3.other.cost),
-    year4: parseFloat(data.year4.other.cost),
-    year5: parseFloat(data.year5.other.cost)
+    year1: data.year1.other.isPresent ? parseFloat(data.year1.other.cost) : NaN,
+    year2: data.year2.other.isPresent ? parseFloat(data.year2.other.cost) : NaN,
+    year3: data.year3.other.isPresent ? parseFloat(data.year3.other.cost) : NaN,
+    year4: data.year4.other.isPresent ? parseFloat(data.year4.other.cost) : NaN,
+    year5: data.year5.other.isPresent ? parseFloat(data.year5.other.cost) : NaN
   };
 
   const totalCosts: {
@@ -144,11 +166,14 @@ const EstimatedLifecycleCostReview = ({
                       key={year}
                       className="est-lifecycle-cost__review-table est-lifecycle-cost__review-table--mobile"
                     >
-                      <caption className="usa-sr-only">{`Cost breakdown for ${yearMapping[year]}`}</caption>
+                      <caption className="usa-sr-only">{`Cost breakdown for fiscal year ${yearMapping[year]}`}</caption>
                       <tbody>
                         <tr>
-                          <th className="padding-y-2 text-right">
-                            {yearMapping[year]}
+                          <th
+                            className="padding-y-2 text-right"
+                            aria-label={`Fiscal year ${yearMapping[year]}`}
+                          >
+                            {`FY ${yearMapping[year]}`}
                           </th>
                           <td className="padding-y-2 text-right text-bold">
                             {formatDollarsOrDash(
@@ -158,7 +183,10 @@ const EstimatedLifecycleCostReview = ({
                         </tr>
                         {developmentCosts[year] > 0 && (
                           <tr>
-                            <th className="padding-y-2 text-right text-normal">
+                            <th
+                              className="padding-y-2 text-right text-normal"
+                              aria-label={`Fiscal year ${yearMapping[year]} development costs`}
+                            >
                               Development
                             </th>
                             <td className="padding-y-2 text-right text-normal">
@@ -168,7 +196,10 @@ const EstimatedLifecycleCostReview = ({
                         )}
                         {omCosts[year] > 0 && (
                           <tr>
-                            <th className="padding-y-2 text-right text-normal">
+                            <th
+                              className="padding-y-2 text-right text-normal"
+                              aria-label={`Fiscal year ${yearMapping[year]} operations and maintenance costs`}
+                            >
                               Operations and Maintenance
                             </th>
                             <td className="padding-y-2 text-right text-normal">
@@ -181,7 +212,10 @@ const EstimatedLifecycleCostReview = ({
                             <th className="padding-y-2 text-right text-normal">
                               Other
                             </th>
-                            <td className="padding-y-2 text-right text-normal">
+                            <td
+                              className="padding-y-2 text-right text-normal"
+                              aria-label={`Fiscal year ${yearMapping[year]} other costs`}
+                            >
                               {formatDollarsOrDash(otherCosts[year])}
                             </td>
                           </tr>
@@ -206,8 +240,12 @@ const EstimatedLifecycleCostReview = ({
                     <tr className="est-lifecycle-cost__border">
                       <td className="est-lifecycle-cost__review-th--row" />
                       {Object.keys(yearMapping).map(year => (
-                        <TableHead key={`${year}-label`} scope="col">
-                          {yearMapping[year]}
+                        <TableHead
+                          key={`${year}-label`}
+                          scope="col"
+                          aria-label={`Fiscal Year ${yearMapping[year]}`}
+                        >
+                          {`FY ${yearMapping[year]}`}
                         </TableHead>
                       ))}
                       <TableHead scope="col">Total</TableHead>
@@ -296,7 +334,8 @@ const EstimatedLifecycleCostReview = ({
 
 const TableHead = ({
   scope,
-  children
+  children,
+  ...props
 }: {
   scope: 'row' | 'col';
   children: React.ReactNode;
@@ -307,6 +346,7 @@ const TableHead = ({
       'est-lifecycle-cost__review-th--col': scope === 'col',
       'est-lifecycle-cost__review-th--row': scope === 'row'
     })}
+    {...props}
   >
     {children}
   </th>

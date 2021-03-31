@@ -86,6 +86,7 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
     systemIntakeStatus: SystemIntakeStatus;
     initialSubmittedAt?: string;
     lastSubmittedAt?: string;
+    createdAt: string;
   };
 
 export type BusinessCasesState = {
