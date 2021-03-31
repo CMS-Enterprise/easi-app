@@ -12,6 +12,7 @@ const taskList = {
     bizCaseApproved: 'Your business case has been approved.',
     bizCaseRejected: 'Your business case has been rejected.',
     lcid: 'Project Lifecycle ID',
+    lcidScope: 'Lifecycle ID Scope',
     lcidExpiration: 'This ID expires on {{date}}',
     reasons: 'Reasons',
     nextSteps: 'Next steps',
