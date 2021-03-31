@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
@@ -71,6 +72,11 @@ func (c *Client) PublishSnapshot(
 	fbs []*models.GRTFeedback,
 ) error {
 	if !c.emitToCedar(ctx) {
+		id := uuid.Nil
+		if si != nil {
+			id = si.ID
+		}
+		appcontext.ZLogger(ctx).Info("snapshot publishing disabled", zap.String("intakeID", id.String()))
 		return nil
 	}
 	return fmt.Errorf("not yet implemented")
