@@ -10,6 +10,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -20,12 +21,12 @@ type EmailTestSuite struct {
 }
 
 type mockSender struct {
-	toAddress string
+	toAddress models.EmailAddress
 	subject   string
 	body      string
 }
 
-func (s *mockSender) Send(ctx context.Context, toAddress string, subject string, body string) error {
+func (s *mockSender) Send(ctx context.Context, toAddress models.EmailAddress, subject string, body string) error {
 	s.toAddress = toAddress
 	s.subject = subject
 	s.body = body
@@ -34,7 +35,7 @@ func (s *mockSender) Send(ctx context.Context, toAddress string, subject string,
 
 type mockFailedSender struct{}
 
-func (s *mockFailedSender) Send(ctx context.Context, toAddress string, subject string, body string) error {
+func (s *mockFailedSender) Send(ctx context.Context, toAddress models.EmailAddress, subject string, body string) error {
 	return errors.New("sender had an error")
 }
 
@@ -49,7 +50,7 @@ func TestEmailTestSuite(t *testing.T) {
 	config := testhelpers.NewConfig()
 
 	emailConfig := Config{
-		GRTEmail:          config.GetString(appconfig.GRTEmailKey),
+		GRTEmail:          models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
 		URLHost:           config.GetString(appconfig.ClientHostKey),
 		URLScheme:         config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: config.GetString(appconfig.EmailTemplateDirectoryKey),

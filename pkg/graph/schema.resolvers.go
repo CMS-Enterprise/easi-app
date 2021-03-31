@@ -679,7 +679,7 @@ func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIn
 			Type: model.SystemIntakeActionType(action.ActionType),
 			Actor: &model.SystemIntakeActionActor{
 				Name:  action.ActorName,
-				Email: action.ActorEmail,
+				Email: action.ActorEmail.String(),
 			},
 			Feedback:  action.Feedback.Ptr(),
 			CreatedAt: *action.CreatedAt,

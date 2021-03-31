@@ -238,7 +238,7 @@ func NewTakeActionUpdateStatus(
 	authorize func(context.Context) (bool, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string, intakeID uuid.UUID) error,
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
 	shouldCloseBusinessCase bool,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) ActionExecuter {
@@ -305,7 +305,7 @@ func NewCreateActionUpdateStatus(
 	updateStatus func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string, intakeID uuid.UUID) error,
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool) (*models.SystemIntake, error) {
 	return func(
