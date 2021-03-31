@@ -264,7 +264,10 @@ const GovernanceTaskList = () => {
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">
-            <SideNavActions archiveIntake={archiveIntake} />
+            <SideNavActions
+              intakeStatus={systemIntake.status}
+              archiveIntake={archiveIntake}
+            />
           </div>
         </div>
         <ImproveEasiSurvey />
