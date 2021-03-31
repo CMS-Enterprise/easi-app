@@ -7,12 +7,14 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"go.uber.org/zap"
+
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 )
 
 // NewGQLResponseMiddleware returns a handler with a request based logger
-func NewGQLResponseMiddleware(logger *zap.Logger) graphql.ResponseMiddleware {
+func NewGQLResponseMiddleware() graphql.ResponseMiddleware {
 	return func(ctx context.Context, next graphql.ResponseHandler) *graphql.Response {
-
+		logger := appcontext.ZLogger(ctx)
 		result := next(ctx)
 
 		requestContext := graphql.GetRequestContext(ctx)
