@@ -10,6 +10,7 @@ import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLea
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
@@ -166,11 +167,11 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
                   setModalOpen(false);
                 }}
               >
-                <h2 className="margin-top-0 font-heading-2xl line-height-heading-2">
+                <PageHeading headingLevel="h2" className="margin-top-0">
                   {t('governanceReviewTeam:adminLeads:assignModal.header', {
                     requestName: intake.requestName
                   })}
-                </h2>
+                </PageHeading>
                 <RadioGroup>
                   {grtMembers.map(name => (
                     <RadioField
