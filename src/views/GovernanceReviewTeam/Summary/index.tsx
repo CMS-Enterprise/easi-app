@@ -10,6 +10,7 @@ import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLea
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
@@ -74,33 +75,6 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
   const grtMembers: string[] = t('governanceReviewTeam:adminLeads.members', {
     returnObjects: true
   });
-
-  // Admin lead modal radio button
-  type AdminLeadRadioOptionProps = {
-    checked: boolean;
-    label: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  };
-
-  const AdminLeadRadioOption = ({
-    checked,
-    label,
-    onChange
-  }: AdminLeadRadioOptionProps) => {
-    const radioFieldClassName = 'margin-y-3';
-
-    return (
-      <RadioField
-        checked={checked}
-        id={label}
-        label={label}
-        name={label}
-        value={label}
-        onChange={onChange}
-        className={radioFieldClassName}
-      />
-    );
-  };
 
   return (
     <section className="easi-grt__request-summary">
@@ -174,65 +148,65 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
             </div>
             <div className="text-gray-90">
               <dt className="text-bold">{t('intake:fields.adminLead')}</dt>
-              <dt className="padding-1">{getAdminLead()}</dt>
-              <dt>
+              <dd className="margin-left-0 padding-1">{getAdminLead()}</dd>
+              <Button
+                type="button"
+                unstyled
+                onClick={() => {
+                  // Reset newAdminLead to value in intake
+                  resetNewAdminLead();
+                  setModalOpen(true);
+                }}
+              >
+                {t('governanceReviewTeam:adminLeads.changeLead')}
+              </Button>
+              <Modal
+                title={t('governanceReviewTeam:adminLeads:assignModal.title')}
+                isOpen={isModalOpen}
+                closeModal={() => {
+                  setModalOpen(false);
+                }}
+              >
+                <PageHeading headingLevel="h2" className="margin-top-0">
+                  {t('governanceReviewTeam:adminLeads:assignModal.header', {
+                    requestName: intake.requestName
+                  })}
+                </PageHeading>
+                <RadioGroup>
+                  {grtMembers.map(name => (
+                    <RadioField
+                      id={`admin-lead-${name}`}
+                      key={`admin-lead-${name}`}
+                      checked={name === newAdminLead}
+                      label={name}
+                      name="admin-lead"
+                      value={name}
+                      onChange={e => setAdminLead(e.target.value)}
+                      className="margin-y-3"
+                    />
+                  ))}
+                </RadioGroup>
+                <Button
+                  type="button"
+                  className="margin-right-4"
+                  onClick={() => {
+                    // Set admin lead as newAdminLead in the intake
+                    saveAdminLead();
+                    setModalOpen(false);
+                  }}
+                >
+                  {t('governanceReviewTeam:adminLeads:assignModal.save')}
+                </Button>
                 <Button
                   type="button"
                   unstyled
                   onClick={() => {
-                    // Reset newAdminLead to value in intake
-                    resetNewAdminLead();
-                    setModalOpen(true);
-                  }}
-                >
-                  {t('governanceReviewTeam:adminLeads.changeLead')}
-                </Button>
-                <Modal
-                  title={t('governanceReviewTeam:adminLeads:assignModal.title')}
-                  isOpen={isModalOpen}
-                  closeModal={() => {
                     setModalOpen(false);
                   }}
                 >
-                  <h1 className="margin-top-0 font-heading-2xl line-height-heading-2">
-                    {t('governanceReviewTeam:adminLeads:assignModal.header', {
-                      requestName: intake.requestName
-                    })}
-                  </h1>
-                  <RadioGroup>
-                    {grtMembers.map(k => (
-                      <AdminLeadRadioOption
-                        key={k}
-                        checked={k === newAdminLead}
-                        label={k}
-                        onChange={() => {
-                          setAdminLead(k);
-                        }}
-                      />
-                    ))}
-                  </RadioGroup>
-                  <Button
-                    type="button"
-                    className="margin-right-4"
-                    onClick={() => {
-                      // Set admin lead as newAdminLead in the intake
-                      saveAdminLead();
-                      setModalOpen(false);
-                    }}
-                  >
-                    {t('governanceReviewTeam:adminLeads:assignModal.save')}
-                  </Button>
-                  <Button
-                    type="button"
-                    unstyled
-                    onClick={() => {
-                      setModalOpen(false);
-                    }}
-                  >
-                    {t('governanceReviewTeam:adminLeads:assignModal.noChanges')}
-                  </Button>
-                </Modal>
-              </dt>
+                  {t('governanceReviewTeam:adminLeads:assignModal.noChanges')}
+                </Button>
+              </Modal>
             </div>
           </dl>
         </div>
