@@ -5,14 +5,20 @@ import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import { SystemIntakeStatus } from 'types/systemIntake';
+import { isIntakeOpen } from 'utils/systemIntake';
 
 import './index.scss';
 
 type SideNavActionsProps = {
+  intakeStatus: SystemIntakeStatus;
   archiveIntake: () => void;
 };
 
-const SideNavActions = ({ archiveIntake }: SideNavActionsProps) => {
+const SideNavActions = ({
+  intakeStatus,
+  archiveIntake
+}: SideNavActionsProps) => {
   const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -21,36 +27,38 @@ const SideNavActions = ({ archiveIntake }: SideNavActionsProps) => {
       <div className="grid-col margin-top-105">
         <Link to="/">Save & Exit</Link>
       </div>
-      <div className="grid-col margin-top-2">
-        <Button
-          className="line-height-body-5 test-withdraw-request"
-          type="button"
-          unstyled
-          onClick={() => setModalOpen(true)}
-        >
-          Remove your request to add a new system
-        </Button>
-        <Modal
-          title={t('taskList:withdraw_modal:title')}
-          isOpen={isModalOpen}
-          closeModal={() => setModalOpen(false)}
-        >
-          <PageHeading headingLevel="h2" className="margin-top-0">
-            {t('taskList:withdraw_modal:header')}
-          </PageHeading>
-          <p>{t('taskList:withdraw_modal:warning')}</p>
+      {isIntakeOpen(intakeStatus) && (
+        <div className="grid-col margin-top-2">
           <Button
+            className="line-height-body-5 test-withdraw-request"
             type="button"
-            className="margin-right-4"
-            onClick={archiveIntake}
+            unstyled
+            onClick={() => setModalOpen(true)}
           >
-            {t('taskList:withdraw_modal:confirm')}
+            Remove your request to add a new system
           </Button>
-          <Button type="button" unstyled onClick={() => setModalOpen(false)}>
-            {t('taskList:withdraw_modal:cancel')}
-          </Button>
-        </Modal>
-      </div>
+          <Modal
+            title={t('taskList:withdraw_modal:title')}
+            isOpen={isModalOpen}
+            closeModal={() => setModalOpen(false)}
+          >
+            <PageHeading headingLevel="h2" className="margin-top-0">
+              {t('taskList:withdraw_modal:header')}
+            </PageHeading>
+            <p>{t('taskList:withdraw_modal:warning')}</p>
+            <Button
+              type="button"
+              className="margin-right-4"
+              onClick={archiveIntake}
+            >
+              {t('taskList:withdraw_modal:confirm')}
+            </Button>
+            <Button type="button" unstyled onClick={() => setModalOpen(false)}>
+              {t('taskList:withdraw_modal:cancel')}
+            </Button>
+          </Modal>
+        </div>
+      )}
       <div className="grid-col margin-top-5">
         <h4>Related Content</h4>
         <UswdsLink

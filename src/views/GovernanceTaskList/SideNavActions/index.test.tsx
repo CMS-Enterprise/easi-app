@@ -7,7 +7,9 @@ import Modal from 'components/Modal';
 import SideNavActions from './index';
 
 const renderComponent = () => {
-  return shallow(<SideNavActions archiveIntake={() => {}} />);
+  return shallow(
+    <SideNavActions intakeStatus="INTAKE_DRAFT" archiveIntake={() => {}} />
+  );
 };
 
 describe('The TaskListSideNavActions', () => {
