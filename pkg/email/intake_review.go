@@ -9,6 +9,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type intakeReview struct {
@@ -33,7 +34,7 @@ func (c Client) systemIntakeReviewBody(EmailText string, taskListPath string) (s
 }
 
 // SendSystemIntakeReviewEmail sends an email for a submitted system intake
-func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText string, recipientAddress string, intakeID uuid.UUID) error {
+func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
 	subject := "Feedback on your intake request"
 	taskListPath := path.Join("governance-task-list", intakeID.String())
 	body, err := c.systemIntakeReviewBody(emailText, taskListPath)

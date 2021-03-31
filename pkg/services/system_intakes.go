@@ -261,7 +261,7 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendIssueLCIDEmail func(context.Context, string, string, *time.Time, string, string, string) error,
+	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string) error,
 	generateLCID func(context.Context) (string, error),
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
@@ -365,7 +365,7 @@ func NewUpdateRejectionFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendRejectRequestEmail func(ctx context.Context, recipient string, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmail func(ctx context.Context, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
@@ -436,7 +436,7 @@ func NewProvideGRTFeedback(
 	saveAction func(context.Context, *models.Action) error,
 	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string, intakeID uuid.UUID) error,
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
 ) func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error) {
 	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus) (*models.GRTFeedback, error) {
 		intake, err := fetch(ctx, grtFeedback.IntakeID)
