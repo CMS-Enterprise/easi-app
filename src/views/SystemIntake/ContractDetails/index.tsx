@@ -771,8 +771,10 @@ const ContractDetails = ({
                         setFieldValue('contract.contractor', '');
                         setFieldValue('contract.vehicle', '');
                         setFieldValue('contract.startDate.month', '');
+                        setFieldValue('contract.startDate.day', '');
                         setFieldValue('contract.startDate.year', '');
                         setFieldValue('contract.endDate.month', '');
+                        setFieldValue('contract.endDate.day', '');
                         setFieldValue('contract.endDate.year', '');
                       }}
                     />
@@ -788,8 +790,10 @@ const ContractDetails = ({
                         setFieldValue('contract.contractor', '');
                         setFieldValue('contract.vehicle', '');
                         setFieldValue('contract.startDate.month', '');
+                        setFieldValue('contract.startDate.day', '');
                         setFieldValue('contract.startDate.year', '');
                         setFieldValue('contract.endDate.month', '');
+                        setFieldValue('contract.endDate.day', '');
                         setFieldValue('contract.endDate.year', '');
                       }}
                     />
