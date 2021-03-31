@@ -217,7 +217,7 @@ func (s *Server) routes(
 	gqlConfig := generated.Config{Resolvers: resolver, Directives: gqlDirectives}
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
 	graphqlServer.Use(extension.FixedComplexityLimit(1000))
-	graphqlServer.AroundResponses(NewGQLResponseMiddleware(s.logger))
+	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
 
 	gql.Handle("/query", graphqlServer)
 
