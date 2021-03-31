@@ -185,16 +185,18 @@ const ContractDetails = ({
                             // manual onChange to catch case where user selects 'Unknown' funding source
                             // TODO: I feel like there should be a better option for this use case
                             //       but I could not find anything cleaner then this solution
-                            onChange={(e: any) => {
-                              formikProps.handleChange(e);
+                            onChange={(changeEvent: React.ChangeEvent<any>) => {
+                              formikProps.handleChange(changeEvent);
 
-                              // If funding source is 'Unknown' set funding number to 'N/A' (funding number
-                              // field is disabled in this case), for any other funding source it is set
-                              // to empty string and the user can enter funding number normally
-                              setFieldValue(
-                                'fundingSource.fundingNumber',
-                                e.target.value === 'Unknown' ? 'N/A' : ''
-                              );
+                              // If funding source is changed to 'Unkown' set funding number to '', this is due to
+                              // the 'Unknown' source not requiring a funding number (funding number field is
+                              // disabled in this case)
+                              if (changeEvent.target.value === 'Unknown') {
+                                setFieldValue(
+                                  'fundingSource.fundingNumber',
+                                  ''
+                                );
+                              }
                             }}
                           >
                             <Field
@@ -248,7 +250,7 @@ const ContractDetails = ({
                             name="fundingSource.fundingNumber"
                             aria-describedby="IntakeForm-FundingNumberHelp"
                             // If funding source is 'Unknown' disable funding number input and set
-                            // placeholder to 'N/A' (actual field value is set to 'N/A' as well)
+                            // placeholder to 'N/A' (funding number value is set to '')
                             disabled={values.fundingSource.source === 'Unknown'}
                             placeholder={
                               values.fundingSource.source === 'Unknown'
