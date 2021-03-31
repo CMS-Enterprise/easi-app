@@ -182,6 +182,20 @@ const ContractDetails = ({
                             error={!!flatErrors['fundingSource.source']}
                             id="IntakeForm-FundingSource"
                             name="fundingSource.source"
+                            // manual onChange to catch case where user selects 'Unknown' funding source
+                            // TODO: I feel like there should be a better option for this use case
+                            //       but I could not find anything cleaner then this solution
+                            onChange={(e: any) => {
+                              formikProps.handleChange(e);
+
+                              // If funding source is 'Unknown' set funding number to 'N/A' (funding number
+                              // field is disabled in this case), for any other funding source it is set
+                              // to empty string and the user can enter funding number normally
+                              setFieldValue(
+                                'fundingSource.fundingNumber',
+                                e.target.value === 'Unknown' ? 'N/A' : ''
+                              );
+                            }}
                           >
                             <Field
                               as={DropdownItem}
@@ -233,6 +247,14 @@ const ContractDetails = ({
                             maxLength={6}
                             name="fundingSource.fundingNumber"
                             aria-describedby="IntakeForm-FundingNumberHelp"
+                            // If funding source is 'Unknown' disable funding number input and set
+                            // placeholder to 'N/A' (actual field value is set to 'N/A' as well)
+                            disabled={values.fundingSource.source === 'Unknown'}
+                            placeholder={
+                              values.fundingSource.source === 'Unknown'
+                                ? 'N/A'
+                                : ''
+                            }
                           />
                         </FieldGroup>
                       </div>
