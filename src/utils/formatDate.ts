@@ -21,8 +21,9 @@ type ContractDate = {
 };
 
 export const formatContractDate = (date: ContractDate): string => {
-  const parts = [date.month, date.day, date.year];
-  return parts.filter((value: string) => value.length > 0).join('/');
+  const { month, day, year } = date;
+  const parts = [month, day, year];
+  return parts.filter((value: string) => value && value.length > 0).join('/');
 };
 
 /**
