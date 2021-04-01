@@ -5,12 +5,13 @@ import (
 	"time"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
-	recipient := "fake@fake.com"
+	recipient := models.NewEmailAddress("fake@fake.com")
 	lcid := "123456"
 	expiresAt, _ := time.Parse("2020-12-25", "2021-12-25")
 	scope := "scope"

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type issueLCID struct {
@@ -37,7 +38,7 @@ func (c Client) issueLCIDBody(lcid string, expiresAt *time.Time, scope string, n
 }
 
 // SendIssueLCIDEmail sends an email for issuing an LCID
-func (c Client) SendIssueLCIDEmail(ctx context.Context, recipient string, lcid string, expirationDate *time.Time, scope string, nextSteps string, feedback string) error {
+func (c Client) SendIssueLCIDEmail(ctx context.Context, recipient models.EmailAddress, lcid string, expirationDate *time.Time, scope string, nextSteps string, feedback string) error {
 	subject := "Your request has been approved"
 	body, err := c.issueLCIDBody(lcid, expirationDate, scope, nextSteps, feedback)
 	if err != nil {

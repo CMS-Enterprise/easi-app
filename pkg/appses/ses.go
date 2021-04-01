@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // Config is email configs used only for SES
@@ -38,14 +39,14 @@ func NewSender(config Config) Sender {
 // Send sends an email
 func (s Sender) Send(
 	ctx context.Context,
-	toAddress string,
+	toAddress models.EmailAddress,
 	subject string,
 	body string,
 ) error {
 	input := &ses.SendEmailInput{
 		Destination: &ses.Destination{
 			ToAddresses: []*string{
-				aws.String(toAddress),
+				aws.String(toAddress.String()),
 			},
 		},
 		Message: &ses.Message{
@@ -66,7 +67,7 @@ func (s Sender) Send(
 	_, err := s.client.SendEmail(input)
 	if err == nil {
 		appcontext.ZLogger(ctx).Info("Sending email with SES",
-			zap.String("To", toAddress),
+			zap.String("To", toAddress.String()),
 			zap.String("Subject", subject),
 		)
 	}

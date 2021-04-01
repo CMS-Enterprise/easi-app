@@ -8,6 +8,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/upload"
 )
@@ -48,7 +49,7 @@ func (s Server) NewEmailConfig() email.Config {
 	s.checkRequiredConfig(appconfig.EmailTemplateDirectoryKey)
 
 	return email.Config{
-		GRTEmail:          s.Config.GetString(appconfig.GRTEmailKey),
+		GRTEmail:          models.NewEmailAddress(s.Config.GetString(appconfig.GRTEmailKey)),
 		URLHost:           s.Config.GetString(appconfig.ClientHostKey),
 		URLScheme:         s.Config.GetString(appconfig.ClientProtocolKey),
 		TemplateDirectory: s.Config.GetString(appconfig.EmailTemplateDirectoryKey),

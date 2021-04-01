@@ -70,7 +70,7 @@ func (c TranslatedClient) FetchUserInfo(ctx context.Context, euaID string) (*mod
 
 	return &models2.UserInfo{
 		CommonName: resp.Payload.CommonName,
-		Email:      resp.Payload.Email,
+		Email:      models2.NewEmailAddress(resp.Payload.Email),
 		EuaUserID:  resp.Payload.UserName,
 	}, nil
 }
