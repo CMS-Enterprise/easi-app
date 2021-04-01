@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
@@ -65,7 +66,7 @@ func (s SESTestSuite) TestSend() {
 	s.Run("Sends successfully", func() {
 		err := s.sender.Send(
 			context.Background(),
-			"success@simulator.amazonses.com",
+			models.NewEmailAddress("success@simulator.amazonses.com"),
 			"Test Subject",
 			"Test Body",
 		)

@@ -4,12 +4,13 @@ import (
 	"context"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendRejectRequestEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
-	recipient := "fake@fake.com"
+	recipient := models.NewEmailAddress("fake@fake.com")
 	reason := "reason"
 	nextSteps := "nextSteps"
 	feedback := "feedback"

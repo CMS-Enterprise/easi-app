@@ -7,12 +7,13 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendIntakeReviewEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
-	recipientAddress := "sample@test.com"
+	recipientAddress := models.NewEmailAddress("sample@test.com")
 	emailBody := "Test Text\n\nTest"
 	intakeID := uuid.New()
 

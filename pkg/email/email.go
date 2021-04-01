@@ -7,11 +7,13 @@ import (
 	"io"
 	"net/url"
 	"path"
+
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // Config holds EASi application specific configs for SES
 type Config struct {
-	GRTEmail          string
+	GRTEmail          models.EmailAddress
 	URLHost           string
 	URLScheme         string
 	TemplateDirectory string
@@ -36,7 +38,7 @@ type templates struct {
 
 // sender is an interface for swapping out email provider implementations
 type sender interface {
-	Send(ctx context.Context, toAddress string, subject string, body string) error
+	Send(ctx context.Context, toAddress models.EmailAddress, subject string, body string) error
 }
 
 // Client is an EASi SES client wrapper
@@ -128,6 +130,6 @@ func (c Client) urlFromPath(path string) string {
 
 // SendTestEmail sends an email to a no-reply address
 func (c Client) SendTestEmail(ctx context.Context) error {
-	const testToAddress = "success@simulator.amazonses.com"
+	testToAddress := models.NewEmailAddress("success@simulator.amazonses.com")
 	return c.sender.Send(ctx, testToAddress, "test", "test")
 }

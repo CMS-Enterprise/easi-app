@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type rejectRequest struct {
@@ -32,7 +33,7 @@ func (c Client) rejectRequestBody(reason string, nextSteps string, feedback stri
 }
 
 // SendRejectRequestEmail sends an email for rejecting a request
-func (c Client) SendRejectRequestEmail(ctx context.Context, recipient string, reason string, nextSteps string, feedback string) error {
+func (c Client) SendRejectRequestEmail(ctx context.Context, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error {
 	subject := "Your request has not been approved"
 	body, err := c.rejectRequestBody(reason, nextSteps, feedback)
 	if err != nil {
