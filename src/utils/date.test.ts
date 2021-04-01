@@ -1,6 +1,24 @@
 import { DateTime } from 'luxon';
 
-import { formatContractDate, formatDate, getFiscalYear } from './date';
+import {
+  formatContractDate,
+  formatDate,
+  getFiscalYear,
+  parseDate
+} from './date';
+
+describe('parseDate', () => {
+  const date = '2022-10-22T00:00:00Z';
+
+  it('converts a date from an ISO string to a luxon datetime', () => {
+    const parsedDate: any = parseDate(date);
+    expect(parsedDate instanceof DateTime).toBeTruthy();
+  });
+
+  it('converts dates from the utc timezone instead of local', () => {
+    expect(parseDate(date).day).toEqual(22);
+  });
+});
 
 describe('formatDate', () => {
   describe('string', () => {
