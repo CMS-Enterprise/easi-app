@@ -10,7 +10,7 @@ import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import PageHeading from 'components/PageHeading';
 import TestDateCard from 'components/TestDateCard';
-import formatDate from 'utils/formatDate';
+import { formatDate } from 'utils/date';
 
 import './index.scss';
 

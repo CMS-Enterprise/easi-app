@@ -5,7 +5,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-import formatDate, { formatContractDate } from 'utils/formatDate';
+import { formatContractDate, formatDate } from 'utils/date';
 
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.

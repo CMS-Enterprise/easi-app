@@ -14,7 +14,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
-import { getFiscalYear } from 'utils/formatDate';
+import { getFiscalYear } from 'utils/date';
 import formatDollars from 'utils/formatDollars';
 
 import './index.scss';

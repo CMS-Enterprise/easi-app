@@ -13,7 +13,7 @@ import PageHeading from 'components/PageHeading';
 import PDFExport from 'components/PDFExport';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { BusinessCaseModel } from 'types/businessCase';
-import { getFiscalYear } from 'utils/formatDate';
+import { getFiscalYear } from 'utils/date';
 
 type BusinessCaseReviewProps = {
   businessCase: BusinessCaseModel;

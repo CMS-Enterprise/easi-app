@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import formatDate, { formatContractDate, getFiscalYear } from './formatDate';
+import { formatContractDate, formatDate, getFiscalYear } from './date';
 
 describe('formatDate', () => {
   describe('string', () => {

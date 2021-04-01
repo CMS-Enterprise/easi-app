@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-const formatDate = (date: string | DateTime) => {
+export const formatDate = (date: string | DateTime) => {
   // ISO String
   if (typeof date === 'string') {
     return DateTime.fromISO(date).toFormat('MMMM d yyyy');
@@ -39,5 +39,3 @@ export const getFiscalYear = (date: DateTime): number => {
   }
   return year;
 };
-
-export default formatDate;

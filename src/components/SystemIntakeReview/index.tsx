@@ -11,7 +11,7 @@ import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
-import formatDate, { formatContractDate } from 'utils/formatDate';
+import { formatContractDate, formatDate } from 'utils/date';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
