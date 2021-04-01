@@ -226,21 +226,17 @@ const EstimatedLifecycleCost = ({
           </h3>
           <dl className="margin-bottom-105">
             <dt className="margin-bottom-1 text-bold">Development</dt>
-            <dd className="margin-0 line-height-body-3">
+            <dd className="margin-bottom-2 margin-left-0 line-height-body-3">
               Costs related to current development that is pre-production
             </dd>
-          </dl>
-          <dl>
             <dt className="margin-bottom-1 text-bold">
               Operations and Maintenance
             </dt>
-            <dd className="margin-0 line-height-body-3">
+            <dd className="margin-bottom-2 margin-left-0 line-height-body-3">
               Costs related to running and upkeep post-production
             </dd>
-          </dl>
-          <dl>
             <dt className="margin-bottom-1 text-bold">Other</dt>
-            <dd className="margin-0 line-height-body-3">
+            <dd className="margin-bottom-2 margin-left-0 line-height-body-3">
               This can be Non-IT costs like education, licenses etc.
             </dd>
           </dl>
