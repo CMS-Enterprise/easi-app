@@ -155,7 +155,7 @@ const Notes = () => {
     }) || [];
 
   const interleavedList = [...notesByTimestamp, ...actionsByTimestamp]
-    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
+    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .map(a => a.element);
 
   return (
