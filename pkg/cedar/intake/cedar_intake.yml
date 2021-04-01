@@ -1,0 +1,627 @@
+swagger: "2.0"
+info:
+  description: |
+    API's to support the posting of a string (json, xml, etc.) for incoming documents.
+  version: "1.0"
+  title: CEDAR Intake
+# host: webmethods-apigw.cedardev.cms.gov
+basePath: /gateway/CEDAR Intake/1.0
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+security:
+  - apiKey: []
+paths:
+  /healthCheck:
+    get:
+      # tags:
+      #   - healthCheck
+      summary: Returns a status and current date/time
+      description: Returns a status and current date/time
+      operationId: healthCheckGet
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/healthCheck_GET_response'
+        "401":
+          description: Access Denied
+  /intake:
+    post:
+      # tags:
+      #   - intake
+      summary: Add an intake
+      description: Add an intake
+      operationId: intakeAdd
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            properties:
+              documents:
+                type: array
+                items:
+                  $ref: '#/definitions/IntakeInput'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/IntakePostResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Response'
+        "401":
+          description: Access Denied
+          schema:
+            $ref: '#/definitions/Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Response'
+securityDefinitions:
+  apiKey:
+    type: apiKey
+    name: x-Gateway-APIKey
+    in: header
+definitions:
+  Response:
+    type: object
+    required:
+      - message
+      - result
+    properties:
+      result:
+        type: string
+      message:
+        type: array
+        items:
+          type: string
+  EASIAction:
+    type: object
+    required:
+      # - id
+      - intakeId
+      - actionType
+      - actorEUA
+      # - createdAt
+      - feedback
+    properties:
+      # id:
+      #   type: string
+      intakeId:
+        type: string
+      actionType:
+        type: string
+      actorEUA:
+        type: string
+      # createdAt:
+      #   type: string
+        # format: date-time
+      feedback:
+        type: string
+  EASIBizCase:
+    type: object
+    required:
+      # - id
+      # - createdAt
+      # - updatedAt
+      - intakeId
+      - userEUA
+      - projectName
+      - requester
+      - requesterPhoneNumber
+      - businessOwner
+      - businessNeed
+      - cmsBenefit
+      - priorityAlignment
+      - successIndicators
+      - asIsTitle
+      - asIsSummary
+      - asIsPros
+      - asIsCons
+      - asIsCostSavings
+      - preferredTitle
+      - preferredSummary
+      - preferredAcquisitionApproach
+      - preferredSecurityIsApproved
+      - preferredSecurityIsBeingReviewed
+      - preferredHostingType
+      - preferredHostingLocation
+      - preferredHostingCloudServiceType
+      - preferredHasUI
+      - preferredPros
+      - preferredCons
+      - preferredCostSavings
+      - alternativeATitle
+      - alternativeASummary
+      - alternativeAAcquisitionApproach
+      - alternativeASecurityIsApproved
+      - alternativeASecurityIsBeingReviewed
+      - alternativeAHostingType
+      - alternativeAHostingLocation
+      - alternativeAHostingCloudServiceType
+      - alternativeAHasUI
+      - alternativeAPros
+      - alternativeACons
+      - alternativeACostSavings
+      - alternativeBTitle
+      - alternativeBSummary
+      - alternativeBAcquisitionApproach
+      - alternativeBSecurityIsApproved
+      - alternativeBSecurityIsBeingReviewed
+      - alternativeBHostingType
+      - alternativeBHostingLocation
+      - alternativeBHostingCloudServiceType
+      - alternativeBHasUI
+      - alternativeBPros
+      - alternativeBCons
+      - alternativeBCostSavings
+      - lifecycleCostLines
+      - submittedAt
+      - archivedAt
+      - initialSubmittedAt
+      - lastSubmittedAt
+    properties:
+      # id:
+      #   type: string
+      # createdAt:
+      #   type: string
+      #   format: date-time
+      # updatedAt:
+      #   type: string
+      #   format: date-time
+      intakeId:
+        type: string
+      userEUA:
+        type: string
+      projectName:
+        type: string
+      requester:
+        type: string
+      requesterPhoneNumber:
+        type: string
+      businessOwner:
+        type: string
+      businessNeed:
+        type: string
+      cmsBenefit:
+        type: string
+      priorityAlignment:
+        type: string
+      successIndicators:
+        type: string
+      asIsTitle:
+        type: string
+      asIsSummary:
+        type: string
+      asIsPros:
+        type: string
+      asIsCons:
+        type: string
+      asIsCostSavings:
+        type: string
+      preferredTitle:
+        type: string
+      preferredSummary:
+        type: string
+      preferredAcquisitionApproach:
+        type: string
+      preferredSecurityIsApproved:
+        # type: boolean
+        type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
+      preferredSecurityIsBeingReviewed:
+        type: string
+      preferredHostingType:
+        type: string
+      preferredHostingLocation:
+        type: string
+      preferredHostingCloudServiceType:
+        type: string
+      preferredHasUI:
+        type: string
+      preferredPros:
+        type: string
+      preferredCons:
+        type: string
+      preferredCostSavings:
+        type: string
+      alternativeATitle:
+        type: string
+      alternativeASummary:
+        type: string
+      alternativeAAcquisitionApproach:
+        type: string
+      alternativeASecurityIsApproved:
+        # type: boolean
+        type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
+      alternativeASecurityIsBeingReviewed:
+        type: string
+      alternativeAHostingType:
+        type: string
+      alternativeAHostingLocation:
+        type: string
+      alternativeAHostingCloudServiceType:
+        type: string
+      alternativeAHasUI:
+        type: string
+      alternativeAPros:
+        type: string
+      alternativeACons:
+        type: string
+      alternativeACostSavings:
+        type: string
+      alternativeBTitle:
+        type: string
+      alternativeBSummary:
+        type: string
+      alternativeBAcquisitionApproach:
+        type: string
+      alternativeBSecurityIsApproved:
+        # type: boolean
+        type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
+      alternativeBSecurityIsBeingReviewed:
+        type: string
+      alternativeBHostingType:
+        type: string
+      alternativeBHostingLocation:
+        type: string
+      alternativeBHostingCloudServiceType:
+        type: string
+      alternativeBHasUI:
+        type: string
+      alternativeBPros:
+        type: string
+      alternativeBCons:
+        type: string
+      alternativeBCostSavings:
+        type: string
+      lifecycleCostLines:
+        type: array
+        items:
+          $ref: '#/definitions/EASILifecycleCost'
+      submittedAt:
+        type: string
+        # format: date-time
+      archivedAt:
+        type: string
+        # format: date-time
+      initialSubmittedAt:
+        type: string
+        # format: date-time
+      lastSubmittedAt:
+        type: string
+        # format: date-time
+  EASIGrtFeedback:
+    type: object
+    required:
+      - intakeId
+      - feedback
+      - feedbackType
+    properties:
+      intakeId:
+        type: string
+      feedback:
+        type: string
+      feedbackType:
+        type: string
+  EASIIntake:
+    type: object
+    required:
+    #   - id
+    #   - createdAt
+    #   - updatedAt
+      - userEUA
+      - status
+      - requestType
+      - requester
+      - component
+      - businessOwner
+      - businessOwnerComponent
+      - productManager
+      - productManagerComponent
+      - isso
+      - issoName
+      - trbCollaborator
+      - trbCollaboratorName
+      - oitSecurityCollaborator
+      - oitSecurityCollaboratorName
+      - eaCollaborator
+      - eaCollaboratorName
+      - projectName
+      - projectAcronym
+      - existingFunding
+      - fundingSource
+      - fundingNumber
+      - businessNeed
+      - solution
+      - processStatus
+      - eaSupportRequest
+      - existingContract
+      - costIncrease
+      - costIncreaseAmount
+      - contractor
+      - contractVehicle
+      - contractStartDate
+      - contractEndDate
+      - submittedAt
+      - decidedAt
+      - archivedAt
+      - grtDate
+      - grbDate
+      - grtReviewEmailBody
+      - requesterEmailAddress
+      - lifecycleID
+      - lifecycleExpiresAt
+      - lifecycleScope
+      - decisionNextSteps
+      - rejectionReason
+      - adminLead
+    properties:
+      # id:
+      #   type: string
+      userEUA:
+        type: string
+      status:
+        type: string
+      requestType:
+        type: string
+      requester:
+        type: string
+      component:
+        type: string
+      businessOwner:
+        type: string
+      businessOwnerComponent:
+        type: string
+      productManager:
+        type: string
+      productManagerComponent:
+        type: string
+      isso:
+        type: string
+      issoName:
+        type: string
+      trbCollaborator:
+        type: string
+      trbCollaboratorName:
+        type: string
+      oitSecurityCollaborator:
+        type: string
+      oitSecurityCollaboratorName:
+        type: string
+      eaCollaborator:
+        type: string
+      eaCollaboratorName:
+        type: string
+      projectName:
+        type: string
+      projectAcronym:
+        type: string
+      existingFunding:
+        # type: boolean
+        type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
+      fundingSource:
+        type: string
+      fundingNumber:
+        type: string
+      businessNeed:
+        type: string
+      solution:
+        type: string
+      processStatus:
+        type: string
+      eaSupportRequest:
+        # type: boolean
+        type: string
+        enum:
+          - ""
+          - "false"
+          - "true"
+      existingContract:
+        type: string
+      costIncrease:
+        type: string
+      costIncreaseAmount:
+        type: string
+      contractor:
+        type: string
+      contractVehicle:
+        type: string
+      contractStartDate:
+        type: string
+        # format: date
+      contractEndDate:
+        type: string
+        # format: date
+      # createdAt:
+      #   type: string
+      #   format: date-time
+      # updatedAt:
+      #   type: string
+      #   format: date-time
+      submittedAt:
+        type: string
+        # format: date-time
+      decidedAt:
+        type: string
+        # format: date-time
+      archivedAt:
+        type: string
+        # format: date-time
+      grtDate:
+        type: string
+        # format: date
+      grbDate:
+        type: string
+        # format: date
+      grtReviewEmailBody:
+        type: string
+      requesterEmailAddress:
+        type: string
+      lifecycleID:
+        type: string
+      lifecycleExpiresAt:
+        type: string
+        # format: date
+      lifecycleScope:
+        type: string
+      decisionNextSteps:
+        type: string
+      rejectionReason:
+        type: string
+      adminLead:
+        type: string
+  EASILifecycleCost:
+    type: object
+    required:
+      # - id
+      - businessCaseId
+      - solution
+      - phase
+      - year
+      - cost
+    properties:
+      # id:
+      #   type: string
+      businessCaseId:
+        type: string
+      solution:
+        type: string
+      phase:
+        type: string
+      year:
+        type: string
+      cost:
+        type: string
+  EASINote:
+    type: object
+    required:
+      # - id
+      # - createdAt
+      - intakeId
+      - authorEUA
+      - content
+    properties:
+      # id:
+      #   type: string
+      # createdAt:
+      #   type: string
+      #   format: date-time
+      intakeId:
+        type: string
+      authorEUA:
+        type: string
+      content:
+        type: string
+  healthCheck_GET_response:
+    type: object
+    required:
+      - datetime
+      - status
+      - timestamp
+      - version
+    properties:
+      datetime:
+        type: string
+      version:
+        type: string
+      status:
+        type: string
+      timestamp:
+        type: string
+  IntakeInput:
+    type: object
+    required:
+      - schema
+      - createdDate
+      - lastUpdate
+      - id
+      - type
+      - bodyFormat
+      - body
+      - status
+    properties:
+      schema:
+        type: string
+        description: The name and version of the corresponding schema
+        enum:
+          - EASIActionV01
+          - EASIBizCaseV01
+          - EASIGrtFeedbackV01
+          - EASIIntakeV01
+          - EASILifecycleCostV01
+          - EASINoteV01
+      createdDate:
+        type: string
+        # format: date-time
+        description: Customers createDate
+      lastUpdate:
+        type: string
+        # format: date-time
+        description: Customers lastUpdate
+      id:
+        type: string
+        description: Customer UUID for the record
+      type:
+        type: string
+        enum:
+          - EASIAction
+          - EASIBizCase
+          - EASIGrtFeedback
+          - EASIIntake
+          - EASILifecycleCost
+          - EASINote
+        description: 'The type of record being transmitted, i.e. '
+      bodyFormat:
+        type: string
+        enum:
+          - json
+        description: The data type of the string being transmitted, i.e. json, xml, etc
+      body:
+        type: string
+        description: The actual record data string. For json posts, the data must be json encoded.
+      status:
+        type: string
+        enum:
+          - Initiated
+          - Final
+        description: Customer status for the record being transmitted, i.e. Initiated, Final, etc.
+    description: '{ "id": "5555", "type": "SystemTest", "schema": "SystemTestV01", "status": "Initiated", "bodyFormat": "json", "body": "{\"id\":\"5555\",\"eua_user_id\":\"test\",\"requester\":\"John Doe\",\"requester_component\":\"test\",\"system_name\":\"Test\"}", "createdDate": "2021-02-05 10:39:00", "lastUpdate": "2021-02-05 10:39:00" }'
+  IntakePostResponse:
+    type: object
+    required:
+      - Response
+    properties:
+      Response:
+        $ref: '#/definitions/Response'
+      cedarId:
+        type: string
