@@ -7,7 +7,7 @@ info:
 # host: webmethods-apigw.cedardev.cms.gov
 basePath: /gateway/CEDAR Intake/1.0
 schemes:
-  - http
+  - https
 consumes:
   - application/json
 produces:

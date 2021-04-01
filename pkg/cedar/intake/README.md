@@ -60,3 +60,28 @@ To alleviate this challenge, it is possible to define the field only as a
 the wire as defined, or an unset value will result in an empty string. Note
 however, that the formatting of the date in this case is left to the code that
 populates the field.
+
+At one point the CEDAR API wasn't able to parse date-time in RFC3339 format
+(which is what `strfmt.DateTime` emits, e.g. `2021-03-29T17:19:37.970Z`),
+instead preferring a looser version of ISO8601 that looks like
+`2021-03-29 20:46:11Z` (without the "T").
+
+## Debugging
+
+### URLs
+
+Some versions of the API are hosted at a URL that has a space character in it.
+If the space doesn't get properly converted to a "%20" appropriately by
+whatever tools, the not-very-helpful message you get from the CEDAR load
+balancer looks like this:
+
+```terminal
+< HTTP/1.0 400 Bad request
+< Cache-Control: no-cache
+< Connection: close
+< Content-Type: text/html
+<
+<html><body><h1>400 Bad request</h1>
+Your browser sent an invalid request.
+</body></html>
+```
