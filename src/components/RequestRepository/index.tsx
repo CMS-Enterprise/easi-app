@@ -168,11 +168,8 @@ const RequestRepository = () => {
         return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
       }
 
-      // TODO: NJD fix sort so that N/A goes after the dates, that way gov team
-      //       can use the sort feature to see the 'closest' lcid first
-
-      // If no LCID Expiration exists, display 'N/A'
-      return 'N/A';
+      // If no LCID Expiration exists, display 'No LCID Issued'
+      return 'No LCID Issued';
     }
   };
 
@@ -194,8 +191,8 @@ const RequestRepository = () => {
         );
       }
 
-      // If no admin note exits, display 'N/A'
-      return 'N/A';
+      // If no admin note exits, display 'No Admin Notes'
+      return 'No Admin Notes';
     }
   };
 
@@ -268,17 +265,32 @@ const RequestRepository = () => {
           const rowOneElem = rowOne.values[columnName];
           const rowTwoElem = rowTwo.values[columnName];
 
-          // If item is a string, enforce capitalization (temporarily) and then compare
-          if (typeof rowOneElem === 'string') {
+          // Null checks for columns with data potentially empty (LCID Expiration, Admin Notes, etc.)
+          if (rowOneElem === null) {
+            return 1;
+          }
+
+          if (rowTwoElem === null) {
+            return -1;
+          }
+
+          // If both items are strings, enforce capitalization (temporarily) and then compare
+          if (
+            typeof rowOneElem === 'string' &&
+            typeof rowTwoElem === 'string'
+          ) {
             return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
           }
 
-          // If item is a DateTime, convert to Number and compare
-          if (rowOneElem instanceof DateTime) {
+          // If both items are DateTimes, convert to Number and compare
+          if (
+            rowOneElem instanceof DateTime &&
+            rowTwoElem instanceof DateTime
+          ) {
             return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
           }
 
-          // If neither string nor DateTime, return bare comparison
+          // If items are different types and/or neither string nor DateTime, return bare comparison
           return rowOneElem > rowTwoElem ? 1 : -1;
         }
       },
