@@ -90,8 +90,16 @@ const SystemIntakeValidationSchema: any = {
       isFunded: Yup.boolean()
         .nullable()
         .required('Select Yes or No to indicate if you have funding'),
-      fundingNumber: Yup.string().when('isFunded', {
-        is: true,
+      fundingNumber: Yup.string().when(['isFunded', 'source'], {
+        is: (isFunded: boolean, source: string) => {
+          if (isFunded) {
+            // If funding source is Unknown then no funding number is required
+            if (source !== 'Unknown') {
+              return true;
+            }
+          }
+          return false;
+        },
         then: Yup.string()
           .trim()
           .length(6, 'Funding number must be exactly 6 digits')
