@@ -1,5 +1,8 @@
 import { DateTime } from 'luxon';
 
+export const parseDate = (date: string) =>
+  DateTime.fromISO(date, { zone: 'utc' });
+
 export const formatDate = (date: string | DateTime) => {
   // ISO String
   if (typeof date === 'string') {
