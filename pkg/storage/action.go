@@ -64,6 +64,7 @@ func (s *Store) GetActionsByRequestID(ctx context.Context, id uuid.UUID) ([]mode
 		FROM
 		     actions
 		WHERE actions.intake_id=$1
+		ORDER BY created_at DESC
 	`
 	err := s.db.Select(&actions, fetchActionsByRequestIDSQL, id)
 	if err != nil {
