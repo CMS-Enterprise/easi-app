@@ -597,3 +597,8 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 	s.Equal(respIntake.LcidExpiresAt, "2021-03-18T00:00:00Z")
 	s.Equal(respIntake.Lcid, "654321B")
 }
+
+func date(year, month, day int) *time.Time {
+	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	return &date
+}
