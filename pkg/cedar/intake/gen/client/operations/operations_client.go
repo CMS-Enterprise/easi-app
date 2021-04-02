@@ -29,7 +29,7 @@ type Client struct {
 type ClientService interface {
 	HealthCheckGet(params *HealthCheckGetParams, authInfo runtime.ClientAuthInfoWriter) (*HealthCheckGetOK, error)
 
-	IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthInfoWriter) (*IntakeAddOK, error)
+	IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthInfoWriter) (*IntakeAddAccepted, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -76,7 +76,7 @@ func (a *Client) HealthCheckGet(params *HealthCheckGetParams, authInfo runtime.C
 
   Add an intake
 */
-func (a *Client) IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthInfoWriter) (*IntakeAddOK, error) {
+func (a *Client) IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthInfoWriter) (*IntakeAddAccepted, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewIntakeAddParams()
@@ -98,7 +98,7 @@ func (a *Client) IntakeAdd(params *IntakeAddParams, authInfo runtime.ClientAuthI
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*IntakeAddOK)
+	success, ok := result.(*IntakeAddAccepted)
 	if ok {
 		return success, nil
 	}

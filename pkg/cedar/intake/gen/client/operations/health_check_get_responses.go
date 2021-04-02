@@ -51,20 +51,20 @@ func NewHealthCheckGetOK() *HealthCheckGetOK {
 OK
 */
 type HealthCheckGetOK struct {
-	Payload *models.HealthCheckGETResponse
+	Payload *models.HealthCheckResponse
 }
 
 func (o *HealthCheckGetOK) Error() string {
 	return fmt.Sprintf("[GET /healthCheck][%d] healthCheckGetOK  %+v", 200, o.Payload)
 }
 
-func (o *HealthCheckGetOK) GetPayload() *models.HealthCheckGETResponse {
+func (o *HealthCheckGetOK) GetPayload() *models.HealthCheckResponse {
 	return o.Payload
 }
 
 func (o *HealthCheckGetOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.HealthCheckGETResponse)
+	o.Payload = new(models.HealthCheckResponse)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
