@@ -26,8 +26,8 @@ type IntakeAddReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *IntakeAddReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 200:
-		result := NewIntakeAddOK()
+	case 202:
+		result := NewIntakeAddAccepted()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -56,30 +56,30 @@ func (o *IntakeAddReader) ReadResponse(response runtime.ClientResponse, consumer
 	}
 }
 
-// NewIntakeAddOK creates a IntakeAddOK with default headers values
-func NewIntakeAddOK() *IntakeAddOK {
-	return &IntakeAddOK{}
+// NewIntakeAddAccepted creates a IntakeAddAccepted with default headers values
+func NewIntakeAddAccepted() *IntakeAddAccepted {
+	return &IntakeAddAccepted{}
 }
 
-/*IntakeAddOK handles this case with default header values.
+/*IntakeAddAccepted handles this case with default header values.
 
-OK
+Accepted
 */
-type IntakeAddOK struct {
-	Payload *models.IntakePostResponse
+type IntakeAddAccepted struct {
+	Payload *IntakeAddAcceptedBody
 }
 
-func (o *IntakeAddOK) Error() string {
-	return fmt.Sprintf("[POST /intake][%d] intakeAddOK  %+v", 200, o.Payload)
+func (o *IntakeAddAccepted) Error() string {
+	return fmt.Sprintf("[POST /intake][%d] intakeAddAccepted  %+v", 202, o.Payload)
 }
 
-func (o *IntakeAddOK) GetPayload() *models.IntakePostResponse {
+func (o *IntakeAddAccepted) GetPayload() *IntakeAddAcceptedBody {
 	return o.Payload
 }
 
-func (o *IntakeAddOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *IntakeAddAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.IntakePostResponse)
+	o.Payload = new(IntakeAddAcceptedBody)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -188,20 +188,20 @@ func (o *IntakeAddInternalServerError) readResponse(response runtime.ClientRespo
 	return nil
 }
 
-/*IntakeAddBody intake add body
-swagger:model IntakeAddBody
+/*IntakeAddAcceptedBody intake add accepted body
+swagger:model IntakeAddAcceptedBody
 */
-type IntakeAddBody struct {
+type IntakeAddAcceptedBody struct {
 
-	// documents
-	Documents []*models.IntakeInput `json:"documents"`
+	// responses
+	Responses []*models.IntakePostResponse `json:"Responses"`
 }
 
-// Validate validates this intake add body
-func (o *IntakeAddBody) Validate(formats strfmt.Registry) error {
+// Validate validates this intake add accepted body
+func (o *IntakeAddAcceptedBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := o.validateDocuments(formats); err != nil {
+	if err := o.validateResponses(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -211,21 +211,87 @@ func (o *IntakeAddBody) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (o *IntakeAddBody) validateDocuments(formats strfmt.Registry) error {
+func (o *IntakeAddAcceptedBody) validateResponses(formats strfmt.Registry) error {
 
-	if swag.IsZero(o.Documents) { // not required
+	if swag.IsZero(o.Responses) { // not required
 		return nil
 	}
 
-	for i := 0; i < len(o.Documents); i++ {
-		if swag.IsZero(o.Documents[i]) { // not required
+	for i := 0; i < len(o.Responses); i++ {
+		if swag.IsZero(o.Responses[i]) { // not required
 			continue
 		}
 
-		if o.Documents[i] != nil {
-			if err := o.Documents[i].Validate(formats); err != nil {
+		if o.Responses[i] != nil {
+			if err := o.Responses[i].Validate(formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("body" + "." + "documents" + "." + strconv.Itoa(i))
+					return ve.ValidateName("intakeAddAccepted" + "." + "Responses" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *IntakeAddAcceptedBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *IntakeAddAcceptedBody) UnmarshalBinary(b []byte) error {
+	var res IntakeAddAcceptedBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*IntakeAddBody intake add body
+swagger:model IntakeAddBody
+*/
+type IntakeAddBody struct {
+
+	// intakes
+	Intakes []*models.IntakeInput `json:"Intakes"`
+}
+
+// Validate validates this intake add body
+func (o *IntakeAddBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateIntakes(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *IntakeAddBody) validateIntakes(formats strfmt.Registry) error {
+
+	if swag.IsZero(o.Intakes) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Intakes); i++ {
+		if swag.IsZero(o.Intakes[i]) { // not required
+			continue
+		}
+
+		if o.Intakes[i] != nil {
+			if err := o.Intakes[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("body" + "." + "Intakes" + "." + strconv.Itoa(i))
 				}
 				return err
 			}

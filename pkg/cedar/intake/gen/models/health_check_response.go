@@ -12,10 +12,10 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// HealthCheckGETResponse health check g e t response
+// HealthCheckResponse health check response
 //
-// swagger:model healthCheck_GET_response
-type HealthCheckGETResponse struct {
+// swagger:model HealthCheckResponse
+type HealthCheckResponse struct {
 
 	// datetime
 	// Required: true
@@ -34,8 +34,8 @@ type HealthCheckGETResponse struct {
 	Version *string `json:"version"`
 }
 
-// Validate validates this health check g e t response
-func (m *HealthCheckGETResponse) Validate(formats strfmt.Registry) error {
+// Validate validates this health check response
+func (m *HealthCheckResponse) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateDatetime(formats); err != nil {
@@ -60,7 +60,7 @@ func (m *HealthCheckGETResponse) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *HealthCheckGETResponse) validateDatetime(formats strfmt.Registry) error {
+func (m *HealthCheckResponse) validateDatetime(formats strfmt.Registry) error {
 
 	if err := validate.Required("datetime", "body", m.Datetime); err != nil {
 		return err
@@ -69,7 +69,7 @@ func (m *HealthCheckGETResponse) validateDatetime(formats strfmt.Registry) error
 	return nil
 }
 
-func (m *HealthCheckGETResponse) validateStatus(formats strfmt.Registry) error {
+func (m *HealthCheckResponse) validateStatus(formats strfmt.Registry) error {
 
 	if err := validate.Required("status", "body", m.Status); err != nil {
 		return err
@@ -78,7 +78,7 @@ func (m *HealthCheckGETResponse) validateStatus(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *HealthCheckGETResponse) validateTimestamp(formats strfmt.Registry) error {
+func (m *HealthCheckResponse) validateTimestamp(formats strfmt.Registry) error {
 
 	if err := validate.Required("timestamp", "body", m.Timestamp); err != nil {
 		return err
@@ -87,7 +87,7 @@ func (m *HealthCheckGETResponse) validateTimestamp(formats strfmt.Registry) erro
 	return nil
 }
 
-func (m *HealthCheckGETResponse) validateVersion(formats strfmt.Registry) error {
+func (m *HealthCheckResponse) validateVersion(formats strfmt.Registry) error {
 
 	if err := validate.Required("version", "body", m.Version); err != nil {
 		return err
@@ -97,7 +97,7 @@ func (m *HealthCheckGETResponse) validateVersion(formats strfmt.Registry) error 
 }
 
 // MarshalBinary interface implementation
-func (m *HealthCheckGETResponse) MarshalBinary() ([]byte, error) {
+func (m *HealthCheckResponse) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -105,8 +105,8 @@ func (m *HealthCheckGETResponse) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *HealthCheckGETResponse) UnmarshalBinary(b []byte) error {
-	var res HealthCheckGETResponse
+func (m *HealthCheckResponse) UnmarshalBinary(b []byte) error {
+	var res HealthCheckResponse
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
