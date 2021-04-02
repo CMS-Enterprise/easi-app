@@ -5,7 +5,7 @@ import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'querie
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
 import { BusinessCaseModel } from 'types/businessCase';
-import { getFiscalYear } from 'utils/formatDate';
+import { getFiscalYear } from 'utils/date';
 
 import AlternativeAnalysisReview from './AlternativeAnalysisReview';
 import GeneralRequestInfoReview from './GeneralRequestInfoReview';

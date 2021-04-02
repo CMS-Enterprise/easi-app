@@ -8,7 +8,7 @@ import {
   AccessibilityRequestDocumentStatus
 } from 'types/graphql-global-types';
 import { translateDocumentType } from 'utils/accessibilityRequest';
-import formatDate from 'utils/formatDate';
+import { formatDate } from 'utils/date';
 
 type Document = {
   status: AccessibilityRequestDocumentStatus;
