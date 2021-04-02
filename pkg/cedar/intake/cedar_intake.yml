@@ -5,7 +5,7 @@ info:
   version: "1.0"
   title: CEDAR Intake
 # host: webmethods-apigw.cedardev.cms.gov
-basePath: /gateway/CEDAR Intake/1.0
+basePath: /gateway/CEDARIntake/1.0
 schemes:
   - https
 consumes:
@@ -29,7 +29,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/healthCheck_GET_response'
+            $ref: '#/definitions/HealthCheckResponse'
         "401":
           description: Access Denied
   /intake:
@@ -50,15 +50,20 @@ paths:
           schema:
             type: object
             properties:
-              documents:
+              Intakes:
                 type: array
                 items:
                   $ref: '#/definitions/IntakeInput'
       responses:
-        "200":
-          description: OK
+        "202":
+          description: Accepted
           schema:
-            $ref: '#/definitions/IntakePostResponse'
+            type: object
+            properties:
+              Responses:
+                type: array
+                items:
+                  $ref: '#/definitions/IntakePostResponse'
         "400":
           description: Bad Request
           schema:
@@ -77,18 +82,6 @@ securityDefinitions:
     name: x-Gateway-APIKey
     in: header
 definitions:
-  Response:
-    type: object
-    required:
-      - message
-      - result
-    properties:
-      result:
-        type: string
-      message:
-        type: array
-        items:
-          type: string
   EASIAction:
     type: object
     required:
@@ -542,7 +535,7 @@ definitions:
         type: string
       content:
         type: string
-  healthCheck_GET_response:
+  HealthCheckResponse:
     type: object
     required:
       - datetime
@@ -625,3 +618,15 @@ definitions:
         $ref: '#/definitions/Response'
       cedarId:
         type: string
+  Response:
+    type: object
+    required:
+      - message
+      - result
+    properties:
+      result:
+        type: string
+      message:
+        type: array
+        items:
+          type: string
