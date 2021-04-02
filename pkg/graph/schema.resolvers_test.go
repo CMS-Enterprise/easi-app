@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 	"testing"
-	"time"
 
 	"github.com/99designs/gqlgen/client"
 	"github.com/99designs/gqlgen/graphql"
@@ -155,9 +154,4 @@ func TestGraphQLTestSuite(t *testing.T) {
 	}
 
 	suite.Run(t, storeTestSuite)
-}
-
-func date(year, month, day int) *time.Time {
-	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
-	return &date
 }
