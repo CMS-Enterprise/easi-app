@@ -22,6 +22,7 @@ export const Header = ({ children }: HeaderProps) => {
   const [displayDropdown, setDisplayDropdown] = useState(false);
   const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
   const dropdownNode = useRef<any>();
+  const mobileSideNav = useRef<any>();
 
   useEffect(() => {
     let isMounted = true;
@@ -47,7 +48,16 @@ export const Header = ({ children }: HeaderProps) => {
       return;
     }
 
+    if (
+      mobileSideNav &&
+      mobileSideNav.current &&
+      mobileSideNav.current.contains(e.target)
+    ) {
+      return;
+    }
+
     setDisplayDropdown(false);
+    setIsMobileSideNavExpanded(false);
   };
 
   useEffect(() => {
@@ -150,7 +160,7 @@ export const Header = ({ children }: HeaderProps) => {
         })}
       />
       {/* Mobile Display */}
-      <div className={mobileSideNavClasses}>
+      <div ref={mobileSideNav} className={mobileSideNavClasses}>
         <button
           type="button"
           className="usa-nav__close"
