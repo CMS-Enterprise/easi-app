@@ -20,7 +20,9 @@ export const Header = ({ children }: HeaderProps) => {
   const { t } = useTranslation();
   const [userName, setUserName] = useState('');
   const [displayDropdown, setDisplayDropdown] = useState(false);
+  const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
   const dropdownNode = useRef<any>();
+  const mobileSideNav = useRef<any>();
 
   useEffect(() => {
     let isMounted = true;
@@ -46,7 +48,16 @@ export const Header = ({ children }: HeaderProps) => {
       return;
     }
 
+    if (
+      mobileSideNav &&
+      mobileSideNav.current &&
+      mobileSideNav.current.contains(e.target)
+    ) {
+      return;
+    }
+
     setDisplayDropdown(false);
+    setIsMobileSideNavExpanded(false);
   };
 
   useEffect(() => {
@@ -57,6 +68,18 @@ export const Header = ({ children }: HeaderProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (isMobileSideNavExpanded && window.innerWidth > 1023) {
+        setIsMobileSideNavExpanded(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const arrowClassname = classnames(
     'fa',
     'fa-angle-down',
@@ -65,6 +88,11 @@ export const Header = ({ children }: HeaderProps) => {
       'easi-header__caret--rotate': displayDropdown
     }
   );
+
+  const mobileSideNavClasses = classnames('usa-nav', 'sidenav-mobile', {
+    'is-visible': isMobileSideNavExpanded
+  });
+
   return (
     <header className="usa-header easi-header" role="banner">
       <UsGovBanner />
@@ -76,7 +104,11 @@ export const Header = ({ children }: HeaderProps) => {
             </em>
           </Link>
         </div>
-        <button type="button" className="usa-menu-btn">
+        <button
+          type="button"
+          className="usa-menu-btn"
+          onClick={() => setIsMobileSideNavExpanded(true)}
+        >
           <span className="fa fa-bars" />
         </button>
         <div className="navbar--container">
@@ -122,10 +154,19 @@ export const Header = ({ children }: HeaderProps) => {
       </div>
 
       <div className="grid-container easi-header--desktop ">{children}</div>
-
+      <div
+        className={classnames('usa-overlay', {
+          'is-visible': isMobileSideNavExpanded
+        })}
+      />
       {/* Mobile Display */}
-      <div className="usa-nav sidenav-mobile">
-        <button type="button" className="usa-nav__close" aria-label="Close">
+      <div ref={mobileSideNav} className={mobileSideNavClasses}>
+        <button
+          type="button"
+          className="usa-nav__close"
+          aria-label="Close"
+          onClick={() => setIsMobileSideNavExpanded(false)}
+        >
           <span className="fa fa-close" />
         </button>
         <div className="usa-nav__inner">
