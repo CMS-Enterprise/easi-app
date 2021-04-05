@@ -223,21 +223,6 @@ const ContractDetails = ({
                           <Label htmlFor="IntakeForm-FundingNumber">
                             Funding Number
                           </Label>
-                          <HelpText
-                            id="IntakeForm-FundingNumberHelp"
-                            className="margin-y-1"
-                          >
-                            <Link
-                              aria-label="Open 'CMS Operating Plan' in a new tab"
-                              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              variant="external"
-                            >
-                              You can find your funding number in the CMS
-                              Operating Plan page (opens in a new tab)
-                            </Link>
-                          </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['fundingSource.fundingNumber']}
                           </FieldErrorMsg>
@@ -258,6 +243,20 @@ const ContractDetails = ({
                                 : ''
                             }
                           />
+                          <HelpText
+                            id="IntakeForm-FundingNumberHelp"
+                            className="margin-y-1"
+                          >
+                            <Link
+                              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              variant="external"
+                            >
+                              You can find your funding number in the CMS
+                              Operating Plan page (opens in a new tab)
+                            </Link>
+                          </HelpText>
                         </FieldGroup>
                       </div>
                     )}
