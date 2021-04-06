@@ -29,7 +29,7 @@ const Home = () => {
         return (
           // Changed GRT table from grid-container to just slight margins. This is take up
           // entire screen to better fit the more expansive data in the table.
-          <div className="margin-left-10 margin-right-10">
+          <div className="padding-x-4">
             <RequestRepository />
           </div>
         );
