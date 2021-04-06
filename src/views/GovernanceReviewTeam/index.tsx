@@ -18,7 +18,10 @@ const GovernanceReviewTeam = () => {
       <SecureRoute
         path="/governance-review-team/all"
         render={() => (
-          <div className="grid-container">
+          // Changed GRT table from grid-container to just slight margins. This is take up
+          // entire screen to better fit the more expansive data in the table.
+          // NOTE: not sure this is ever used (deprecated for Home/index.tsx ?)
+          <div className="margin-left-10 margin-right-10">
             <RequestRepository />
           </div>
         )}
