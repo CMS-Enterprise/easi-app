@@ -31,5 +31,6 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0024](0024-soft-deleting.md) - Use `deleted_at` column for handling soft-delete of data
 - [ADR-0025](0025-provide-testing-environments.md) - *Provide a Testing Environment for Non-Engineers*
 - [ADR-0026](0026-cedar-data-definition.md) - CEDAR Data Model Definition
+- [ADR-0027](0027-cicd-system.md) - Use GitHub Actions for CI/CD
 
 <!-- adrlogstop -->
