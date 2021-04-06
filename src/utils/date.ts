@@ -11,7 +11,7 @@ export const parseDateInUTC = (date: string) =>
 export const formatDate = (date: string | DateTime) => {
   // ISO String
   if (typeof date === 'string') {
-    return DateTime.fromISO(date).toFormat('MMMM d yyyy');
+    return parseDate(date).toFormat('MMMM d yyyy');
   }
 
   // luxon DateTime
