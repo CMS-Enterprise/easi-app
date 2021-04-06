@@ -2,11 +2,18 @@ overwrite: true
 schema: "pkg/graph/schema.graphql"
 documents: "src/graph/queries/*.graphql"
 generates:
-  src/graph/generated/generated.tsx:
+  src/graph/generated/generated.ts:
     plugins:
       - "typescript"
+  src/graph/queries:
+    preset: near-operation-file
+    presetConfig:
+      baseTypesPath: "../generated/generated.ts"
+    plugins:
       - "typescript-operations"
       - "typescript-react-apollo"
+    config:
+      exportFragmentSpreadSubTypes: true
   src/graph/graphql.schema.json:
     plugins:
       - "introspection"

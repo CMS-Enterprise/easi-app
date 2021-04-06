@@ -2354,7 +2354,7 @@ enum LifecycleCostPhase {
   """
   DEVELOPMENT
   """
-  Operations and Maintentance
+  Operations and Maintenance
   """
   OPERATIONS_AND_MAINTENANCE
   """

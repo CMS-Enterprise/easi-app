@@ -1,12 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { GrtFeedbackFieldsFragment } from 'graph/queries/GetGRTFeedbackQuery.generated';
 import { DateTime } from 'luxon';
-import { GetGRTFeedback_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetGRTFeedback';
 
 import HelpText from 'components/shared/HelpText';
 
 type GRTFeedbackViewProps = {
-  grtFeedbacks: GRTFeedback[];
+  grtFeedbacks: GrtFeedbackFieldsFragment[];
 };
 
 const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
@@ -19,7 +19,7 @@ const GRTFeedbackView = ({ grtFeedbacks }: GRTFeedbackViewProps) => {
     grtFeedback => grtFeedback.feedbackType === 'BUSINESS_OWNER'
   );
 
-  const formatGRTFeedback = (feedback: GRTFeedback) => {
+  const formatGRTFeedback = (feedback: GrtFeedbackFieldsFragment) => {
     const formattedDate = DateTime.fromISO(feedback.createdAt).toLocaleString(
       DateTime.DATE_MED
     );

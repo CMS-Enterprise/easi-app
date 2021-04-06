@@ -1,0 +1,14 @@
+fragment GRTFeedbackFields on GRTFeedback {
+  id
+  feedbackType
+  feedback
+  createdAt
+}
+
+query GetGRTFeedback($intakeID: UUID!) {
+  systemIntake(id: $intakeID) {
+    grtFeedbacks {
+      ...GRTFeedbackFields
+    }
+  }
+}

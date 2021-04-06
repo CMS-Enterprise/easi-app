@@ -7,14 +7,9 @@ import {
   useLocation,
   useParams
 } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
 import { SecureRoute } from '@okta/okta-react';
 import { FormikProps } from 'formik';
-import GetGRTFeedbackQuery from 'queries/GetGRTFeedbackQuery';
-import {
-  GetGRTFeedback,
-  GetGRTFeedbackVariables
-} from 'queries/types/GetGRTFeedback';
+import { useGetGrtFeedbackQuery } from 'graph/queries/GetGRTFeedbackQuery.generated';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
@@ -57,10 +52,7 @@ export const BusinessCase = () => {
     (state: AppState) => state.businessCase.form
   );
 
-  const { data: grtFeedbackPayload } = useQuery<
-    GetGRTFeedback,
-    GetGRTFeedbackVariables
-  >(GetGRTFeedbackQuery, {
+  const { data: grtFeedbackPayload } = useGetGrtFeedbackQuery({
     variables: {
       intakeID: businessCase.systemIntakeId
     }

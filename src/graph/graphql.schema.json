@@ -2006,7 +2006,7 @@
           },
           {
             "name": "OPERATIONS_AND_MAINTENANCE",
-            "description": "Operations and Maintentance",
+            "description": "Operations and Maintenance",
             "isDeprecated": false,
             "deprecationReason": null
           },

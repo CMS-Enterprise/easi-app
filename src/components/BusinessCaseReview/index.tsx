@@ -1,5 +1,5 @@
 import React from 'react';
-import { GetSystemIntake_systemIntake_grtFeedbacks as GRTFeedback } from 'queries/types/GetSystemIntake';
+import { GrtFeedbackFieldsFragment } from 'graph/queries/GetGRTFeedbackQuery.generated';
 
 import GRTFeedbackView from 'components/GRTFeedbackView';
 import PDFExport from 'components/PDFExport';
@@ -13,7 +13,7 @@ import './index.scss';
 
 type BusinessCaseReviewProps = {
   values: BusinessCaseModel;
-  grtFeedbacks?: GRTFeedback[] | null;
+  grtFeedbacks?: GrtFeedbackFieldsFragment[] | null;
 };
 
 const BusinessCaseReview = ({
