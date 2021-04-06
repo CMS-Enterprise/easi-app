@@ -1,5 +1,11 @@
-import React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import React, { useLayoutEffect } from 'react';
+import {
+  BrowserRouter,
+  Redirect,
+  Route,
+  Switch,
+  useLocation
+} from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
@@ -31,7 +37,13 @@ import UserInfoWrapper from 'views/UserInfoWrapper';
 import './index.scss';
 
 const AppRoutes = () => {
+  const location = useLocation();
   const flags = useFlags();
+
+  // Scroll to top
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <Switch>

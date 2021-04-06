@@ -16,8 +16,10 @@ import (
 func (s *Store) CreateAction(ctx context.Context, action *models.Action) (*models.Action, error) {
 	id := uuid.New()
 	action.ID = id
-	createAt := s.clock.Now()
-	action.CreatedAt = &createAt
+	if action.CreatedAt == nil {
+		createAt := s.clock.Now()
+		action.CreatedAt = &createAt
+	}
 	const createActionSQL = `
 		INSERT INTO actions (
 			id,
@@ -62,6 +64,7 @@ func (s *Store) GetActionsByRequestID(ctx context.Context, id uuid.UUID) ([]mode
 		FROM
 		     actions
 		WHERE actions.intake_id=$1
+		ORDER BY created_at DESC
 	`
 	err := s.db.Select(&actions, fetchActionsByRequestIDSQL, id)
 	if err != nil {

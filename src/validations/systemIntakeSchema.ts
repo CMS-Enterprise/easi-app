@@ -90,8 +90,16 @@ const SystemIntakeValidationSchema: any = {
       isFunded: Yup.boolean()
         .nullable()
         .required('Select Yes or No to indicate if you have funding'),
-      fundingNumber: Yup.string().when('isFunded', {
-        is: true,
+      fundingNumber: Yup.string().when(['isFunded', 'source'], {
+        is: (isFunded: boolean, source: string) => {
+          if (isFunded) {
+            // If funding source is Unknown then no funding number is required
+            if (source !== 'Unknown') {
+              return true;
+            }
+          }
+          return false;
+        },
         then: Yup.string()
           .trim()
           .length(6, 'Funding number must be exactly 6 digits')
@@ -139,7 +147,26 @@ const SystemIntakeValidationSchema: any = {
             .trim()
             .required('Tell us the contract start month'),
           day: Yup.string().trim().required('Tell us the contract start day'),
-          year: Yup.string().trim().required('Tell us the contract start year')
+          year: Yup.string().trim().required('Tell us the contract start year'),
+          validDate: Yup.string().when(['month', 'day', 'year'], {
+            is: (month: string, day: string, year: string) => {
+              if (
+                DateTime.fromObject({
+                  month: Number(month) || 0,
+                  day: Number(day) || 0,
+                  year: Number(year) || 0
+                }).isValid
+              ) {
+                return true;
+              }
+              return false;
+            },
+            otherwise: Yup.string().test(
+              'validStartDate',
+              'Period of performance date: Please enter a valid start date',
+              () => false
+            )
+          })
         })
       }),
       endDate: Yup.mixed().when('hasContract', {
@@ -147,7 +174,26 @@ const SystemIntakeValidationSchema: any = {
         then: Yup.object().shape({
           month: Yup.string().trim().required('Tell us the contract end month'),
           day: Yup.string().trim().required('Tell us the contract end day'),
-          year: Yup.string().trim().required('Tell us the contract end year')
+          year: Yup.string().trim().required('Tell us the contract end year'),
+          validDate: Yup.string().when(['month', 'day', 'year'], {
+            is: (month: string, day: string, year: string) => {
+              if (
+                DateTime.fromObject({
+                  month: Number(month) || 0,
+                  day: Number(day) || 0,
+                  year: Number(year) || 0
+                }).isValid
+              ) {
+                return true;
+              }
+              return false;
+            },
+            otherwise: Yup.string().test(
+              'validStartDate',
+              'Period of performance date: Please enter a valid end date',
+              () => false
+            )
+          })
         })
       })
     })

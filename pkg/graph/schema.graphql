@@ -624,6 +624,7 @@ type SystemIntakeRequester {
 A SystemIntake instance
 """
 type SystemIntake {
+  actions: [SystemIntakeAction!]!
   adminLead: String
   archivedAt: Time
   businessCase: BusinessCase
@@ -666,6 +667,50 @@ type SystemIntake {
 }
 
 """
+Indicates which action should be taken
+"""
+enum SystemIntakeActionType {
+  BIZ_CASE_NEEDS_CHANGES
+  CREATE_BIZ_CASE
+  GUIDE_RECEIVED_CLOSE
+  ISSUE_LCID
+  NEED_BIZ_CASE
+  NO_GOVERNANCE_NEEDED
+  NOT_IT_REQUEST
+  NOT_RESPONDING_CLOSE
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
+  READY_FOR_GRB
+  READY_FOR_GRT
+  REJECT
+  SEND_EMAIL
+  SUBMIT_BIZ_CASE
+  SUBMIT_FINAL_BIZ_CASE
+  SUBMIT_INTAKE
+}
+
+"""
+An action taken on a system intake, often resulting in a change in status.
+"""
+type SystemIntakeAction {
+  id: UUID!
+  systemIntake: SystemIntake!
+  type: SystemIntakeActionType!
+  actor: SystemIntakeActionActor!
+  feedback: String
+  createdAt: Time!
+}
+
+"""
+A person performing an action on a system intake
+"""
+type SystemIntakeActionActor {
+  name: String!
+  email: String!
+}
+
+"""
 Input for adding GRT Feedback
 """
 input AddGRTFeedbackInput {
@@ -691,6 +736,16 @@ input IssueLifecycleIdInput {
   lcid: String
   nextSteps: String
   scope: String!
+}
+
+"""
+Input for rejecting an intake
+"""
+input RejectIntakeInput {
+  feedback: String!
+  intakeId: UUID!
+  nextSteps: String
+  reason: String!
 }
 
 """
@@ -736,6 +791,15 @@ input UpdateSystemIntakeReviewDatesInput {
 }
 
 """
+Parameters required to create a note for an intake
+"""
+input CreateSystemIntakeNoteInput {
+  content: String!
+  authorName: String!
+  intakeId: UUID!
+}
+
+"""
 Result of UpdateSystemIntake mutations
 """
 type UpdateSystemIntakePayload {
@@ -778,6 +842,7 @@ type Mutation {
   createSystemIntakeActionNotRespondingClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   generatePresignedUploadURL(
@@ -788,6 +853,8 @@ type Mutation {
   markSystemIntakeReadyForGRB(
     input: AddGRTFeedbackInput!
   ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload

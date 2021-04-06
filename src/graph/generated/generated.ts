@@ -219,6 +219,13 @@ export type CreateAccessibilityRequestPayload = {
   userErrors?: Maybe<Array<UserError>>;
 };
 
+/** Parameters required to create a note for an intake */
+export type CreateSystemIntakeNoteInput = {
+  content: Scalars['String'];
+  authorName: Scalars['String'];
+  intakeId: Scalars['UUID'];
+};
+
 /** Parameters for creating a test date */
 export type CreateTestDateInput = {
   date: Scalars['Time'];
@@ -338,10 +345,12 @@ export type Mutation = {
   createSystemIntakeActionNotRespondingClose?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeActionReadyForGRT?: Maybe<UpdateSystemIntakePayload>;
   createSystemIntakeActionSendEmail?: Maybe<UpdateSystemIntakePayload>;
+  createSystemIntakeNote?: Maybe<SystemIntakeNote>;
   createTestDate?: Maybe<CreateTestDatePayload>;
   generatePresignedUploadURL?: Maybe<GeneratePresignedUploadUrlPayload>;
   issueLifecycleId?: Maybe<UpdateSystemIntakePayload>;
   markSystemIntakeReadyForGRB?: Maybe<AddGrtFeedbackPayload>;
+  rejectIntake?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeAdminLead?: Maybe<UpdateSystemIntakePayload>;
   updateSystemIntakeReviewDates?: Maybe<UpdateSystemIntakePayload>;
   updateTestDate?: Maybe<UpdateTestDatePayload>;
@@ -427,6 +436,12 @@ export type MutationCreateSystemIntakeActionSendEmailArgs = {
 
 
 /** The root mutation */
+export type MutationCreateSystemIntakeNoteArgs = {
+  input: CreateSystemIntakeNoteInput;
+};
+
+
+/** The root mutation */
 export type MutationCreateTestDateArgs = {
   input: CreateTestDateInput;
 };
@@ -447,6 +462,12 @@ export type MutationIssueLifecycleIdArgs = {
 /** The root mutation */
 export type MutationMarkSystemIntakeReadyForGrbArgs = {
   input: AddGrtFeedbackInput;
+};
+
+
+/** The root mutation */
+export type MutationRejectIntakeArgs = {
+  input: RejectIntakeInput;
 };
 
 
@@ -502,6 +523,14 @@ export type QuerySystemsArgs = {
   first: Scalars['Int'];
 };
 
+/** Input for rejecting an intake */
+export type RejectIntakeInput = {
+  feedback: Scalars['String'];
+  intakeId: Scalars['UUID'];
+  nextSteps?: Maybe<Scalars['String']>;
+  reason: Scalars['String'];
+};
+
 /** A user role associated with a job code */
 export enum Role {
   /** A 508 Tester */
@@ -540,6 +569,7 @@ export type SystemEdge = {
 /** A SystemIntake instance */
 export type SystemIntake = {
   __typename?: 'SystemIntake';
+  actions: Array<SystemIntakeAction>;
   adminLead?: Maybe<Scalars['String']>;
   archivedAt?: Maybe<Scalars['Time']>;
   businessCase?: Maybe<BusinessCase>;
@@ -580,6 +610,46 @@ export type SystemIntake = {
   trbCollaboratorName?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Time'];
 };
+
+/** An action taken on a system intake, often resulting in a change in status. */
+export type SystemIntakeAction = {
+  __typename?: 'SystemIntakeAction';
+  id: Scalars['UUID'];
+  systemIntake: SystemIntake;
+  type: SystemIntakeActionType;
+  actor: SystemIntakeActionActor;
+  feedback?: Maybe<Scalars['String']>;
+  createdAt: Scalars['Time'];
+};
+
+/** A person performing an action on a system intake */
+export type SystemIntakeActionActor = {
+  __typename?: 'SystemIntakeActionActor';
+  name: Scalars['String'];
+  email: Scalars['String'];
+};
+
+/** Indicates which action should be taken */
+export enum SystemIntakeActionType {
+  BizCaseNeedsChanges = 'BIZ_CASE_NEEDS_CHANGES',
+  CreateBizCase = 'CREATE_BIZ_CASE',
+  GuideReceivedClose = 'GUIDE_RECEIVED_CLOSE',
+  IssueLcid = 'ISSUE_LCID',
+  NeedBizCase = 'NEED_BIZ_CASE',
+  NoGovernanceNeeded = 'NO_GOVERNANCE_NEEDED',
+  NotItRequest = 'NOT_IT_REQUEST',
+  NotRespondingClose = 'NOT_RESPONDING_CLOSE',
+  ProvideFeedbackNeedBizCase = 'PROVIDE_FEEDBACK_NEED_BIZ_CASE',
+  ProvideGrtFeedbackBizCaseDraft = 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT',
+  ProvideGrtFeedbackBizCaseFinal = 'PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL',
+  ReadyForGrb = 'READY_FOR_GRB',
+  ReadyForGrt = 'READY_FOR_GRT',
+  Reject = 'REJECT',
+  SendEmail = 'SEND_EMAIL',
+  SubmitBizCase = 'SUBMIT_BIZ_CASE',
+  SubmitFinalBizCase = 'SUBMIT_FINAL_BIZ_CASE',
+  SubmitIntake = 'SUBMIT_INTAKE'
+}
 
 /** A business owner for a system intake */
 export type SystemIntakeBusinessOwner = {

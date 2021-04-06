@@ -11,7 +11,7 @@ import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
-import formatDate, { formatContractDate } from 'utils/formatDate';
+import { formatContractDate, formatDate } from 'utils/date';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
@@ -31,7 +31,10 @@ export const SystemIntakeReview = ({
     const isFundedText = convertBoolToYesNo(isFunded);
 
     if (isFunded) {
-      return `${isFundedText}, ${source}, ${fundingNumber}`;
+      // In case of 'Unknown', no funding number is required
+      return source === 'Unknown'
+        ? `${isFundedText}, but funding source and number are unknown`
+        : `${isFundedText}, ${source}, ${fundingNumber}`;
     }
     return isFundedText;
   };

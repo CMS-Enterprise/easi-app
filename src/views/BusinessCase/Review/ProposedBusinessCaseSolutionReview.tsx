@@ -27,10 +27,15 @@ import { ProposedBusinessCaseSolution } from 'types/businessCase';
 
 type ReviewProps = {
   name: string;
+  fiscalYear: number;
   solution: ProposedBusinessCaseSolution;
 };
 
-const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
+const PropsedBusinessCaseSolutionReview = ({
+  name,
+  fiscalYear,
+  solution
+}: ReviewProps) => (
   <>
     <h3 className="easi-only-print business-case-solution-header">{name}</h3>
     <DescriptionList title={name}>
@@ -115,7 +120,10 @@ const PropsedBusinessCaseSolutionReview = ({ name, solution }: ReviewProps) => (
         </div>
       </ReviewRow>
       <ReviewRow>
-        <EstimatedLifecycleCostReview data={solution.estimatedLifecycleCost} />
+        <EstimatedLifecycleCostReview
+          fiscalYear={fiscalYear}
+          data={solution.estimatedLifecycleCost}
+        />
       </ReviewRow>
       <ReviewRow>
         <div className="line-height-body-3">

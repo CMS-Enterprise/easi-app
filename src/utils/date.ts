@@ -1,6 +1,9 @@
 import { DateTime } from 'luxon';
 
-const formatDate = (date: string | DateTime) => {
+export const parseDate = (date: string) =>
+  DateTime.fromISO(date, { zone: 'utc' });
+
+export const formatDate = (date: string | DateTime) => {
   // ISO String
   if (typeof date === 'string') {
     return DateTime.fromISO(date).toFormat('MMMM d yyyy');
@@ -21,8 +24,9 @@ type ContractDate = {
 };
 
 export const formatContractDate = (date: ContractDate): string => {
-  const parts = [date.month, date.day, date.year];
-  return parts.filter((value: string) => value.length > 0).join('/');
+  const { month, day, year } = date;
+  const parts = [month, day, year];
+  return parts.filter((value: string) => value && value.length > 0).join('/');
 };
 
 /**
@@ -38,5 +42,3 @@ export const getFiscalYear = (date: DateTime): number => {
   }
   return year;
 };
-
-export default formatDate;

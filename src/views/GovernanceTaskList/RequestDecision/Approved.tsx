@@ -22,6 +22,7 @@ const Approved = ({ intake }: ApprovedProps) => {
             {intake.lcid}
           </dd>
         </dl>
+        <h3>{t('decision.lcidScope')}</h3>
         <p className="text-pre-wrap">{intake.lcidScope}</p>
         {intake.lcidExpiration && (
           <p className="text-bold">

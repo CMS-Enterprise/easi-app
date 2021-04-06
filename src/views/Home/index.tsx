@@ -27,7 +27,9 @@ const Home = () => {
     if (isUserSet) {
       if (user.isGrtReviewer(userGroups)) {
         return (
-          <div className="grid-container">
+          // Changed GRT table from grid-container to just slight margins. This is take up
+          // entire screen to better fit the more expansive data in the table.
+          <div className="padding-x-4">
             <RequestRepository />
           </div>
         );

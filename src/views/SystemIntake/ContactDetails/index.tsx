@@ -64,6 +64,9 @@ const ContactDetails = ({
 }: ContactDetailsProps) => {
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
+  const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState(
+    false
+  );
 
   const initialValues: ContactDetailsForm = {
     requestName: systemIntake.requestName,
@@ -183,6 +186,12 @@ const ContactDetails = ({
                           e.target.value
                         );
                       }
+                      if (isReqAndProductManagerSame) {
+                        setFieldValue(
+                          'productManager.component',
+                          e.target.value
+                        );
+                      }
                       setFieldValue('requester.component', e.target.value);
                     }}
                   >
@@ -219,7 +228,7 @@ const ContactDetails = ({
                     id="IntakeForm-IsBusinessOwnerSameAsRequester"
                     label="CMS Business/Product Owner is same as requester"
                     name="isBusinessOwnerSameAsRequester"
-                    onChange={(e: any) => {
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       if (e.target.checked) {
                         setReqAndBusOwnerSame(true);
                         setFieldValue(
@@ -289,10 +298,35 @@ const ContactDetails = ({
                   >
                     CMS Project/Product Manager, or lead
                   </Label>
-                  <HelpText id="IntakeForm-ProductManagerHelp">
+                  <HelpText
+                    id="IntakeForm-ProductManagerHelp"
+                    className="margin-bottom-105"
+                  >
                     This person may be contacted for follow ups and to
                     understand the state of the contract
                   </HelpText>
+                  <Field
+                    as={CheckboxField}
+                    id="IntakeForm-IsProductManagerSameAsRequester"
+                    label="CMS Project/Product Manager, or lead is same as requester"
+                    name="isProductManagerSameAsRequester"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      if (e.target.checked) {
+                        setReqAndProductManagerSame(true);
+                        setFieldValue(
+                          'productManager.name',
+                          values.requester.name
+                        );
+                        setFieldValue(
+                          'productManager.component',
+                          values.requester.component
+                        );
+                      } else {
+                        setReqAndProductManagerSame(false);
+                      }
+                    }}
+                    value=""
+                  />
                   <FieldErrorMsg>
                     {flatErrors['productManager.name']}
                   </FieldErrorMsg>
@@ -303,6 +337,7 @@ const ContactDetails = ({
                     maxLength={50}
                     name="productManager.name"
                     aria-describedby="IntakeForm-ProductManagerHelp"
+                    disabled={isReqAndProductManagerSame}
                   />
                 </FieldGroup>
 
@@ -323,6 +358,7 @@ const ContactDetails = ({
                     id="IntakeForm-ProductManagerComponent"
                     label="Product Manager Component"
                     name="productManager.component"
+                    disabled={isReqAndProductManagerSame}
                   >
                     <Field
                       as={DropdownItem}
@@ -405,7 +441,7 @@ const ContactDetails = ({
                 {/* Governance Teams */}
                 <FieldGroup
                   scrollElement="governanceTeams.isPresent"
-                  error={flatErrors['governanceTeams.isPresent']}
+                  error={!!flatErrors['governanceTeams.isPresent']}
                 >
                   <fieldset className="usa-fieldset margin-top-3">
                     <legend className="usa-label margin-bottom-1">
@@ -471,7 +507,6 @@ const ContactDetails = ({
                         const newUrl = 'request-details';
                         history.push(newUrl);
                       }
-                      window.scrollTo(0, 0);
                     });
                   }}
                 >

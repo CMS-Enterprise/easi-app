@@ -11,6 +11,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -24,6 +25,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
+	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
 	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/graph"
@@ -64,6 +66,18 @@ func (s *Server) routes(
 	}
 
 	// set up CEDAR client
+	publisher := cedarintake.NewClient(
+		s.Config.GetString(appconfig.CEDARAPIURL),
+		s.Config.GetString(appconfig.CEDARAPIKey),
+		ldClient,
+	)
+	if s.environment.Deployed() {
+		s.NewCEDARClientCheck()
+		if cerr := publisher.CheckConnection(context.Background()); cerr != nil {
+			s.logger.Info("Non-Fatal - Failed to connect to CEDAR Intake API on startup", zap.Error(cerr))
+		}
+	}
+
 	var cedarEasiClient cedareasi.Client = local.NewCedarEasiClient()
 	if !(s.environment.Local() || s.environment.Test()) {
 		// check we have all of the configs for CEDAR clients
@@ -78,6 +92,7 @@ func (s *Server) routes(
 			s.CheckCEDAREasiClientConnection(cedarEasiClient)
 		}
 	}
+	_ = cedarEasiClient
 
 	var cedarLDAPClient cedarldap.Client
 	cedarLDAPClient = cedarldap.NewTranslatedClient(
@@ -191,6 +206,15 @@ func (s *Server) routes(
 				store.GenerateLifecycleID,
 			),
 			AuthorizeUserIsReviewTeamOrIntakeRequester: services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
+			RejectIntake: services.NewUpdateRejectionFields(
+				serviceConfig,
+				services.NewAuthorizeRequireGRTJobCode(),
+				store.FetchSystemIntakeByID,
+				store.UpdateSystemIntake,
+				saveAction,
+				cedarLDAPClient.FetchUserInfo,
+				emailClient.SendRejectRequestEmail,
+			),
 		},
 		&s3Client,
 	)
@@ -206,6 +230,9 @@ func (s *Server) routes(
 	}}
 	gqlConfig := generated.Config{Resolvers: resolver, Directives: gqlDirectives}
 	graphqlServer := handler.NewDefaultServer(generated.NewExecutableSchema(gqlConfig))
+	graphqlServer.Use(extension.FixedComplexityLimit(1000))
+	graphqlServer.AroundResponses(NewGQLResponseMiddleware())
+
 	gql.Handle("/query", graphqlServer)
 
 	// API base path is versioned
@@ -308,7 +335,12 @@ func (s *Server) routes(
 					serviceConfig,
 					services.NewAuthorizeUserIsIntakeRequester(),
 					store.UpdateSystemIntake,
-					cedarEasiClient.ValidateAndSubmitSystemIntake,
+					func(c context.Context, si *models.SystemIntake) (string, error) {
+						// quick adapter to retrofit the new interface to take the place
+						// of the old interface
+						err := publisher.PublishSnapshot(c, si, nil, nil, nil, nil)
+						return "", err
+					},
 					saveAction,
 					emailClient.SendSystemIntakeSubmissionEmail,
 				),

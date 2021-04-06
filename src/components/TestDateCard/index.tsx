@@ -1,6 +1,6 @@
 import React from 'react';
 
-import formatDate from 'utils/formatDate';
+import { formatDate } from 'utils/date';
 
 type TestDateCardProps = {
   date: string; // ISO string

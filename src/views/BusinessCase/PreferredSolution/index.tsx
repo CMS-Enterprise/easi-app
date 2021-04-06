@@ -613,6 +613,7 @@ const PreferredSolution = ({
                 <EstimatedLifecycleCost
                   formikKey="preferredSolution.estimatedLifecycleCost"
                   years={values.preferredSolution.estimatedLifecycleCost}
+                  businessCaseCreatedAt={businessCase.createdAt}
                   errors={
                     errors.preferredSolution &&
                     errors.preferredSolution.estimatedLifecycleCost
@@ -666,7 +667,6 @@ const PreferredSolution = ({
                 setErrors({});
                 const newUrl = 'as-is-solution';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -679,9 +679,10 @@ const PreferredSolution = ({
                     dispatchSave();
                     const newUrl = 'alternative-solution-a';
                     history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
                   }
                 });
-                window.scrollTo(0, 0);
               }}
             >
               Next

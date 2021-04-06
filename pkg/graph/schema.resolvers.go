@@ -15,6 +15,7 @@ import (
 	"github.com/guregu/null"
 	"github.com/vektah/gqlparser/v2/gqlerror"
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
@@ -487,6 +488,24 @@ func (r *mutationResolver) CreateSystemIntakeActionSendEmail(ctx context.Context
 	}, err
 }
 
+func (r *mutationResolver) CreateSystemIntakeNote(ctx context.Context, input model.CreateSystemIntakeNoteInput) (*model.SystemIntakeNote, error) {
+	note, err := r.store.CreateNote(ctx, &models.Note{
+		AuthorEUAID:    appcontext.Principal(ctx).ID(),
+		AuthorName:     null.StringFrom(input.AuthorName),
+		Content:        null.StringFrom(input.Content),
+		SystemIntakeID: input.IntakeID,
+	})
+	return &model.SystemIntakeNote{
+		ID: note.ID,
+		Author: &model.SystemIntakeNoteAuthor{
+			Name: note.AuthorName.String,
+			Eua:  note.AuthorEUAID,
+		},
+		Content:   note.Content.String,
+		CreatedAt: *note.CreatedAt,
+	}, err
+}
+
 func (r *mutationResolver) CreateTestDate(ctx context.Context, input model.CreateTestDateInput) (*model.CreateTestDatePayload, error) {
 	testDate, err := r.service.CreateTestDate(ctx, &models.TestDate{
 		TestType:  input.TestType,
@@ -548,6 +567,23 @@ func (r *mutationResolver) MarkSystemIntakeReadyForGrb(ctx context.Context, inpu
 	}
 
 	return &model.AddGRTFeedbackPayload{ID: &grtFeedback.ID}, nil
+}
+
+func (r *mutationResolver) RejectIntake(ctx context.Context, input model.RejectIntakeInput) (*model.UpdateSystemIntakePayload, error) {
+	intake, err := r.service.RejectIntake(
+		ctx,
+		&models.SystemIntake{
+			ID:                input.IntakeID,
+			DecisionNextSteps: null.StringFrom(*input.NextSteps),
+			RejectionReason:   null.StringFrom(*&input.Reason),
+		},
+		&models.Action{
+			IntakeID: &input.IntakeID,
+			Feedback: null.StringFrom(input.Feedback),
+		})
+	return &model.UpdateSystemIntakePayload{
+		SystemIntake: intake,
+	}, err
 }
 
 func (r *mutationResolver) UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error) {
@@ -628,6 +664,29 @@ func (r *queryResolver) Systems(ctx context.Context, after *string, first int) (
 		})
 	}
 	return conn, nil
+}
+
+func (r *systemIntakeResolver) Actions(ctx context.Context, obj *models.SystemIntake) ([]*model.SystemIntakeAction, error) {
+	actions, actionsErr := r.store.GetActionsByRequestID(ctx, obj.ID)
+	if actionsErr != nil {
+		return nil, actionsErr
+	}
+
+	var results []*model.SystemIntakeAction
+	for _, action := range actions {
+		graphAction := model.SystemIntakeAction{
+			ID:   action.ID,
+			Type: model.SystemIntakeActionType(action.ActionType),
+			Actor: &model.SystemIntakeActionActor{
+				Name:  action.ActorName,
+				Email: action.ActorEmail.String(),
+			},
+			Feedback:  action.Feedback.Ptr(),
+			CreatedAt: *action.CreatedAt,
+		}
+		results = append(results, &graphAction)
+	}
+	return results, nil
 }
 
 func (r *systemIntakeResolver) AdminLead(ctx context.Context, obj *models.SystemIntake) (*string, error) {
