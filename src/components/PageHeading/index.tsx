@@ -30,7 +30,13 @@ const PageHeading = ({
   }, []);
 
   return (
-    <Component className={classes} tabIndex={-1} ref={headingRef} {...props}>
+    <Component
+      className={classes}
+      tabIndex={-1}
+      ref={headingRef}
+      aria-live="polite"
+      {...props}
+    >
       {children}
     </Component>
   );
