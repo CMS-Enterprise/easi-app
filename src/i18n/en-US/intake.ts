@@ -10,7 +10,9 @@ const intake = {
     adminLead: 'Admin Lead',
     status: 'Status',
     fundingNumber: 'Funding number',
-    businessOwner: 'Business Owner'
+    businessOwner: 'Business Owner',
+    lcidExpirationDate: 'LCID Expiration Date',
+    lastAdminNote: 'Last Admin Note'
   },
   submission: {
     confirmation: {
