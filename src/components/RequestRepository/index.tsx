@@ -435,13 +435,22 @@ const RequestRepository = () => {
                 {row.cells.map((cell, i) => {
                   if (i === 0) {
                     return (
-                      <th {...cell.getCellProps()} scope="row">
+                      <th
+                        {...cell.getCellProps()}
+                        style={{ verticalAlign: 'top' }}
+                        scope="row"
+                      >
                         {cell.render('Cell')}
                       </th>
                     );
                   }
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td
+                      {...cell.getCellProps()}
+                      style={{ verticalAlign: 'top' }}
+                    >
+                      {cell.render('Cell')}
+                    </td>
                   );
                 })}
               </tr>
