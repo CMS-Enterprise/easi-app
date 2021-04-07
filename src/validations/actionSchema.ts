@@ -10,7 +10,7 @@ export const lifecycleIdSchema = Yup.object().shape({
     .nullable()
     .matches(
       /^[A-Za-z]?[0-9]{6}$/,
-      'Must be 6 digits with optional preceding character'
+      'Must be 6 digits with optional preceding letter'
     ),
   expirationDateDay: Yup.string()
     .trim()
