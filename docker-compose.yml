@@ -21,8 +21,8 @@ services:
       - CLIENT_PROTOCOL=http
       - CLIENT_DOMAIN=localhost
       - CLIENT_PORT=3000
-      - CLIENT_HOSTNAME=localhost:3000
-      - CLIENT_ADDRESS=http://localhost:3000
+      - CLIENT_HOSTNAME
+      - CLIENT_ADDRESS
       - API_PORT=8080
       - OKTA_CLIENT_ID=0oa2e913coDQeG19S297
       - OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297

@@ -89,6 +89,24 @@ task :down do
   sh "docker-compose down"
 end
 
+desc "Run app and expose to other machines over Tailscale"
+task :tailscale do
+
+  puts "Running app on #{ENV["TAILSCALE_CLIENT_ADDRESS"]}"
+  environment = {
+    "COMPOSE_HTTP_TIMEOUT" => "120"
+  }
+  command = "docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.tailscale.yml up"
+  sh(environment, command, verbose: true)
+end
+
+namespace :docker do
+  desc "Delete all dangling volumes"
+  task :sweep do
+    sh "docker volume rm $(docker volume ls -qf dangling=true)"
+  end
+end
+
 desc "Resets application to an empty state"
 task :reset => :up do
   # close any hanging connections to the database
@@ -104,7 +122,7 @@ task :reset => :up do
   Rake::Task["db:seed"].invoke
 
   # The backend may have lost its database connection
-  `docker-compose restart easi`
+  sh("docker-compose restart easi", verbose: true) 
 end
 
 namespace :db do
