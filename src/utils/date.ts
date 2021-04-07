@@ -1,6 +1,11 @@
 import { DateTime } from 'luxon';
 
-export const parseDate = (date: string) =>
+/**
+ * Parsing date as if you are in UTC
+ * @param date ISO string
+ * @returns DateTime
+ */
+export const parseDateInUTC = (date: string) =>
   DateTime.fromISO(date, { zone: 'utc' });
 
 export const formatDate = (date: string | DateTime) => {

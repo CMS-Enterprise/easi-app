@@ -20,7 +20,7 @@ import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { SubmitDatesForm } from 'types/systemIntake';
-import { parseDate } from 'utils/date';
+import { parseDateInUTC } from 'utils/date';
 import flattenErrors from 'utils/flattenErrors';
 import { DateValidationSchema } from 'validations/systemIntakeSchema';
 
@@ -36,8 +36,8 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
   });
 
   const { grtDate, grbDate } = systemIntake;
-  const parsedGrbDate = parseDate(grbDate);
-  const parsedGrtDate = parseDate(grtDate);
+  const parsedGrbDate = parseDateInUTC(grbDate);
+  const parsedGrtDate = parseDateInUTC(grtDate);
 
   // TODO: Fix Text Field so we don't have to set initial empty values
   const initialValues: SubmitDatesForm = {
