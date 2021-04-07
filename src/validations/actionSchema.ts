@@ -5,7 +5,13 @@ export const actionSchema = Yup.object().shape({
 });
 
 export const lifecycleIdSchema = Yup.object().shape({
-  lifecycleId: Yup.string().trim().nullable().length(7),
+  lifecycleId: Yup.string()
+    .trim()
+    .nullable()
+    .matches(
+      /^[A-Za-z]?[0-9]{6}$/,
+      'Must be 6 digits with optional preceding letter'
+    ),
   expirationDateDay: Yup.string()
     .trim()
     .length(2)
