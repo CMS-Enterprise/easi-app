@@ -8,6 +8,19 @@ import { DateTime } from 'luxon';
 export const parseDateInUTC = (date: string) =>
   DateTime.fromISO(date, { zone: 'utc' });
 
+/**
+ * Formats ISO String (UTC+0) into MMMM d YYYY
+ * @param date ISO String
+ */
+export const formatDateInUTC = (date: string) => {
+  return parseDateInUTC(date).toFormat('MMMM d yyyy');
+};
+
+/**
+ * Formats ISO String or luxon.DateTime into local timezone
+ * @param date string | DateTime
+ * @returns string
+ */
 export const formatDate = (date: string | DateTime) => {
   // ISO String
   if (typeof date === 'string') {

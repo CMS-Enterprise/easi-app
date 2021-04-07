@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import {
   formatContractDate,
   formatDate,
+  formatDateInUTC,
   getFiscalYear,
   parseDateInUTC
 } from './date';
@@ -22,6 +23,18 @@ describe('parseDateInUTC', () => {
   it('converts ISO string with offset to utc', () => {
     const date = '2022-10-22T00:00:00+07:00';
     expect(parseDateInUTC(date).day).toEqual(21);
+  });
+});
+
+describe('formatDateInUTC', () => {
+  it('converts an ISO string to the proper date', () => {
+    const date = '2022-10-22T00:00:00Z';
+    expect(formatDateInUTC(date)).toEqual('October 22 2022');
+  });
+
+  it('returns invalid datetime when a string is not a valid ISO string', () => {
+    const date = '';
+    expect(formatDateInUTC(date)).toEqual('Invalid DateTime');
   });
 });
 
