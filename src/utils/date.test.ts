@@ -8,15 +8,20 @@ import {
 } from './date';
 
 describe('parseDate', () => {
-  const date = '2022-10-22T00:00:00Z';
-
   it('converts a date from an ISO string to a luxon datetime', () => {
+    const date = '2022-10-22T00:00:00Z';
     const parsedDate: any = parseDate(date);
     expect(parsedDate instanceof DateTime).toBeTruthy();
   });
 
   it('converts dates from the utc timezone instead of local', () => {
+    const date = '2022-10-22T00:00:00Z';
     expect(parseDate(date).day).toEqual(22);
+  });
+
+  it('converts ISO string with offset to utc', () => {
+    const date = '2022-10-22T00:00:00+07:00';
+    expect(parseDate(date).day).toEqual(21);
   });
 });
 
