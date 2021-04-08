@@ -246,6 +246,7 @@ exports[`The Not Found Page matches the snapshot 1`] = `
       className="margin-y-7"
     >
       <h1
+        aria-live="polite"
         className="easi-h1"
         tabIndex={-1}
       >
