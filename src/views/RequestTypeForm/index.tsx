@@ -105,7 +105,7 @@ const RequestTypeForm = () => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<{ requestType: string }>) => {
-            const { values, errors } = formikProps;
+            const { values, errors, handleSubmit } = formikProps;
             const flatErrors = flattenErrors(errors);
             return (
               <>
@@ -126,7 +126,12 @@ const RequestTypeForm = () => {
                     })}
                   </ErrorAlert>
                 )}
-                <Form>
+                <Form
+                  onSubmit={e => {
+                    handleSubmit(e);
+                    window.scrollTo(0, 0);
+                  }}
+                >
                   <FieldGroup
                     error={!!flatErrors.requestType}
                     scrollElement="requestType"
