@@ -18,6 +18,6 @@ module.exports = {
     // "relay-connection-types-spec",
     // "relay-page-info-spec",
     // 'type-fields-sorted-alphabetically',
-    'types-are-capitalized',
+    'types-are-capitalized'
   ]
 };
