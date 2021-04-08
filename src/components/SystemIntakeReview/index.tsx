@@ -90,7 +90,7 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="CMS Business/Product Owner's Name" />
+            <DescriptionTerm term="CMS Business Owner's Name" />
             <DescriptionDefinition
               definition={systemIntake.businessOwner.name}
             />
