@@ -19,6 +19,5 @@ module.exports = {
     // "relay-page-info-spec",
     // 'type-fields-sorted-alphabetically',
     'types-are-capitalized',
-    'types-have-descriptions'
   ]
 };
