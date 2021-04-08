@@ -304,14 +304,15 @@ const ContractDetails = ({
                       aria-describedby="IntakeForm-IncreasedCostsHelp"
                     />
                     {values.costs.isExpectingIncrease === 'YES' && (
-                      <div className="width-mobile margin-top-neg-2 margin-left-4 margin-bottom-1">
+                      <div className="width-mobile-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
                         <FieldGroup
                           scrollElement="costs.expectedIncreaseAmount"
                           error={!!flatErrors['costs.expectedIncreaseAmount']}
                         >
                           <Label htmlFor="IntakeForm-CostsExpectedIncrease">
                             Approximately how much do you expect the cost to
-                            increase?
+                            increase over what you are currently spending to
+                            meet your business need?
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['costs.expectedIncreaseAmount']}
