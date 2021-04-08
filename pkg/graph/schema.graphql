@@ -418,10 +418,6 @@ The statuses for a system intake
 """
 enum SystemIntakeStatus {
   """
-  Accepted
-  """
-  ACCEPTED
-  """
   Business case needs changes
   """
   BIZ_CASE_CHANGES_NEEDED
