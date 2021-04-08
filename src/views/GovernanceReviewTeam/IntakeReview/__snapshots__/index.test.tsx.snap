@@ -4,6 +4,7 @@ exports[`The GRT intake review view matches the snapshot 1`] = `
 Array [
   <div>
     <h1
+      aria-live="polite"
       className="easi-h1 margin-top-0"
       tabIndex={-1}
     >
