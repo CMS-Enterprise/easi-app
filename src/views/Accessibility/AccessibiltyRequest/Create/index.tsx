@@ -41,7 +41,7 @@ const Create = () => {
   });
 
   const [mutate, mutationResult] = useMutation(CreateAccessibilityRequestQuery);
-  const handleSubmit = (values: AccessibilityRequestForm) => {
+  const handleSubmitForm = (values: AccessibilityRequestForm) => {
     mutate({
       variables: {
         input: {
@@ -86,14 +86,14 @@ const Create = () => {
       <PageHeading>{t('newRequestForm.heading')}</PageHeading>
       <Formik
         initialValues={initialAccessibilityRequestFormData}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmitForm}
         validationSchema={accessibilitySchema.requestForm}
         validateOnBlur={false}
         validateOnChange={false}
         validateOnMount={false}
       >
         {(formikProps: FormikProps<AccessibilityRequestForm>) => {
-          const { errors, setFieldValue } = formikProps;
+          const { errors, setFieldValue, handleSubmit } = formikProps;
           const flatErrors = flattenErrors(errors);
           return (
             <>
@@ -106,7 +106,12 @@ const Create = () => {
                 </ErrorAlert>
               )}
               <div className="margin-bottom-7">
-                <FormikForm>
+                <FormikForm
+                  onSubmit={e => {
+                    handleSubmit(e);
+                    window.scrollTo(0, 0);
+                  }}
+                >
                   {!loading && (
                     <FieldGroup
                       scrollElement="intakeId"
