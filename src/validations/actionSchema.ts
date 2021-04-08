@@ -20,7 +20,9 @@ export const lifecycleIdSchema = Yup.object().shape({
   scope: Yup.string().trim().required('Please include a scope'),
   nextSteps: Yup.string().trim().required('Please fill out next steps'),
   feedback: Yup.string().trim().required('Please fill out email'),
-  newLifecycleId: Yup.boolean().required('Choose the type of Lifecycle ID'),
+  newLifecycleId: Yup.boolean().required(
+    'Choose if you need a new Lifecycle ID or if you will use an existing Lifecycle ID'
+  ),
   lifecycleId: Yup.string().when('newLifecycleId', {
     is: false,
     then: Yup.string()
