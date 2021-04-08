@@ -10,9 +10,9 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z */
-  Time: any;
+  Time: string;
   /** UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A */
-  UUID: any;
+  UUID: string;
 };
 
 

@@ -5,6 +5,10 @@ generates:
   src/graph/generated/generated.ts:
     plugins:
       - "typescript"
+    config:
+      scalars:
+        Time: string
+        UUID: string
   src/graph/queries:
     preset: near-operation-file
     presetConfig:
