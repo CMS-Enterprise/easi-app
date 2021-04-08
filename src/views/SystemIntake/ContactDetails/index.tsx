@@ -214,7 +214,7 @@ const ContactDetails = ({
                     className="margin-bottom-1"
                     htmlFor="IntakeForm-BusinessOwner"
                   >
-                    CMS Business/Product Owner&apos;s Name
+                    CMS Business Owner&apos;s Name
                   </Label>
                   <HelpText
                     id="IntakeForm-BusinessOwnerHelp"
@@ -226,7 +226,7 @@ const ContactDetails = ({
                   <Field
                     as={CheckboxField}
                     id="IntakeForm-IsBusinessOwnerSameAsRequester"
-                    label="CMS Business/Product Owner is same as requester"
+                    label="CMS Business Owner is same as requester"
                     name="isBusinessOwnerSameAsRequester"
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       if (e.target.checked) {
@@ -265,7 +265,7 @@ const ContactDetails = ({
                   error={!!flatErrors['businessOwner.component']}
                 >
                   <Label htmlFor="IntakeForm-BusinessOwnerComponent">
-                    Business Owner Component
+                    CMS Business Owner&apos;s Component
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['businessOwner.component']}
