@@ -1,7 +1,7 @@
 const action = {
   actions: {
     notItRequest: 'Not an IT governance request',
-    needBizCase: 'Request a business case',
+    needBizCase: 'Request a draft business case',
     readyForGrt: 'Mark as ready for GRT',
     readyForGrb: 'Mark as ready for GRB',
     provideFeedbackNeedBizCase:
@@ -9,11 +9,11 @@ const action = {
     issueLcid: 'Issue Lifecycle ID with no further governance',
     bizCaseNeedsChanges: 'Business case needs changes and is not ready for GRT',
     provideGrtFeedbackKeepDraft:
-      'Provide GRT feedback and keep business case draft',
+      'Provide GRT feedback and keep working on draft business case',
     provideGrtFeedbackNeedFinal:
-      'Provide GRT feedback and move business case to final',
-    noGovernance: 'No further governance needed',
-    rejectIntake: 'Business case not approved',
+      'Provide GRT feedback and request final business case for GRB',
+    noGovernance: 'Close project',
+    rejectIntake: 'Project not approved by GRB',
     sendEmail: 'Send email',
     guideReceivedClose: 'Decomission guide received. Close the request',
     notRespondingClose: 'Project team not responding. Close the request'
