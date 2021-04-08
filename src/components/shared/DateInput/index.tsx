@@ -27,18 +27,24 @@ const DateInputMonth = ({
   );
 
   return (
-    <input
-      className={classes}
-      id={id}
-      name={name}
-      type="text"
-      maxLength={2}
-      pattern="[0-9]*"
-      inputMode="numeric"
-      value={value}
-      onChange={onChange}
-      {...props}
-    />
+    <>
+      <span id="DateMonthHelp" className="usa-sr-only">
+        Month, two digits. For example, zero three
+      </span>
+      <input
+        className={classes}
+        id={id}
+        name={name}
+        type="text"
+        maxLength={2}
+        pattern="[0-9]*"
+        inputMode="numeric"
+        value={value}
+        onChange={onChange}
+        aria-describedby="DateMonthHelp"
+        {...props}
+      />
+    </>
   );
 };
 
@@ -59,18 +65,24 @@ const DateInputDay = ({
   );
 
   return (
-    <input
-      className={classes}
-      id={id}
-      name={name}
-      type="text"
-      maxLength={2}
-      pattern="[0-9]*"
-      inputMode="numeric"
-      value={value}
-      onChange={onChange}
-      {...props}
-    />
+    <>
+      <span id="DateDayHelp" className="usa-sr-only">
+        Day, two digits. For example, two three
+      </span>
+      <input
+        className={classes}
+        id={id}
+        name={name}
+        type="text"
+        maxLength={2}
+        pattern="[0-9]*"
+        inputMode="numeric"
+        value={value}
+        onChange={onChange}
+        aria-describedby="DateDayHelp"
+        {...props}
+      />
+    </>
   );
 };
 
@@ -91,19 +103,25 @@ const DateInputYear = ({
   );
 
   return (
-    <input
-      className={classes}
-      id={id}
-      name={name}
-      type="text"
-      minLength={4}
-      maxLength={4}
-      pattern="[0-9]*"
-      inputMode="numeric"
-      value={value}
-      onChange={onChange}
-      {...props}
-    />
+    <>
+      <span id="DateYearHelp" className="usa-sr-only">
+        Year, four digits. For example, two zero two one
+      </span>
+      <input
+        className={classes}
+        id={id}
+        name={name}
+        type="text"
+        minLength={4}
+        maxLength={4}
+        pattern="[0-9]*"
+        inputMode="numeric"
+        value={value}
+        onChange={onChange}
+        aria-describedby="DateYearHelp"
+        {...props}
+      />
+    </>
   );
 };
 
