@@ -37,11 +37,7 @@ const SideNavActions = ({
           >
             Remove your request to add a new system
           </Button>
-          <Modal
-            title={t('taskList:withdraw_modal:title')}
-            isOpen={isModalOpen}
-            closeModal={() => setModalOpen(false)}
-          >
+          <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
             <PageHeading headingLevel="h2" className="margin-top-0">
               {t('taskList:withdraw_modal:header')}
             </PageHeading>
