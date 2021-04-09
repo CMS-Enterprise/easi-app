@@ -5,20 +5,17 @@ import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
-import { SystemIntakeStatus } from 'types/systemIntake';
+import { SystemIntakeForm } from 'types/systemIntake';
 import { isIntakeOpen } from 'utils/systemIntake';
 
 import './index.scss';
 
 type SideNavActionsProps = {
-  intakeStatus: SystemIntakeStatus;
+  intake: SystemIntakeForm;
   archiveIntake: () => void;
 };
 
-const SideNavActions = ({
-  intakeStatus,
-  archiveIntake
-}: SideNavActionsProps) => {
+const SideNavActions = ({ intake, archiveIntake }: SideNavActionsProps) => {
   const { t } = useTranslation();
   const [isModalOpen, setModalOpen] = useState(false);
 
@@ -27,7 +24,7 @@ const SideNavActions = ({
       <div className="grid-col margin-top-105">
         <Link to="/">Save & Exit</Link>
       </div>
-      {isIntakeOpen(intakeStatus) && (
+      {isIntakeOpen(intake.status) && (
         <div className="grid-col margin-top-2">
           <Button
             className="line-height-body-5 test-withdraw-request"
@@ -39,7 +36,9 @@ const SideNavActions = ({
           </Button>
           <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
             <PageHeading headingLevel="h2" className="margin-top-0">
-              {t('taskList:withdraw_modal:header')}
+              {t('taskList:withdraw_modal:header', {
+                requestName: intake.requestName
+              })}
             </PageHeading>
             <p>{t('taskList:withdraw_modal:warning')}</p>
             <Button
