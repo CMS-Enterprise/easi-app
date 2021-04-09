@@ -1,6 +1,6 @@
 const taskList = {
   withdraw_modal: {
-    header: 'Are you sure you want to remove your request?',
+    header: 'Confirm you want to remove {{requestName}}.',
     warning: 'You will lose any information you have filled in.',
     confirm: 'Remove request',
     cancel: 'Cancel',
