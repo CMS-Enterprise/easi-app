@@ -135,17 +135,13 @@ const GovernanceTaskList = () => {
             {['NO_GOVERNANCE', 'NOT_IT_REQUEST'].includes(
               systemIntake.status
             ) && (
-              <>
-                <Alert type="error" className="width-card-lg" noIcon slim>
-                  Request is closed
-                </Alert>
-                <Alert type="info">
-                  <span>
-                    The governance team closed your request. Please check the
-                    email sent to you for further information.
-                  </span>
-                </Alert>
-              </>
+              <Alert type="warning">
+                <span>
+                  The governance team closed your request, you can view their
+                  decision at the bottom of this page. Please check the email
+                  sent to you for further information.
+                </span>
+              </Alert>
             )}
             <ol className="governance-task-list__task-list governance-task-list__task-list--primary">
               <TaskListItem
