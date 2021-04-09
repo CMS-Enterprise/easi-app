@@ -135,7 +135,7 @@ const GovernanceTaskList = () => {
             {['NO_GOVERNANCE', 'NOT_IT_REQUEST'].includes(
               systemIntake.status
             ) && (
-              <Alert type="warning">
+              <Alert type="warning" className="margin-bottom-5">
                 <span>
                   The governance team closed your request, you can view their
                   decision at the bottom of this page. Please check the email
