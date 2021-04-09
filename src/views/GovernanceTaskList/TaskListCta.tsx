@@ -207,12 +207,20 @@ export const DecisionCta = ({ intake }: { intake: SystemIntakeForm }) => {
   }
 
   if (intake.status === 'NOT_IT_REQUEST') {
-    return <span>{`Decision: ${t('taskList:decision.notItRequest')}`}</span>;
+    return (
+      <span>
+        <b>Decision: </b>
+        {t('taskList:decision.notItRequest')}
+      </span>
+    );
   }
 
   if (intake.status === 'NO_GOVERNANCE') {
     return (
-      <span>{`Decision: ${t('taskList:decision.noGovernanceNeeded')}`}</span>
+      <span>
+        <b>Decision: </b>
+        {t('taskList:decision.noGovernanceNeeded')}
+      </span>
     );
   }
 
