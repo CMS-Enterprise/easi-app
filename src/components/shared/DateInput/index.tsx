@@ -29,7 +29,7 @@ const DateInputMonth = ({
   return (
     <>
       <span id="DateMonthHelp" className="usa-sr-only">
-        Month, two digits. For example, zero three
+        Month, this field requies two digits. For example, zero three
       </span>
       <input
         className={classes}
@@ -67,7 +67,7 @@ const DateInputDay = ({
   return (
     <>
       <span id="DateDayHelp" className="usa-sr-only">
-        Day, two digits. For example, two three
+        Day, this field requies two digits. For example, two three
       </span>
       <input
         className={classes}
@@ -105,7 +105,7 @@ const DateInputYear = ({
   return (
     <>
       <span id="DateYearHelp" className="usa-sr-only">
-        Year, four digits. For example, two zero two one
+        Year, this field requies four digits. For example, two zero two one
       </span>
       <input
         className={classes}
