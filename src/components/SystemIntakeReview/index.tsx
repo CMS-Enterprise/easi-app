@@ -96,7 +96,7 @@ export const SystemIntakeReview = ({
             />
           </div>
           <div>
-            <DescriptionTerm term="Business Owner Component" />
+            <DescriptionTerm term="CMS Business Owner Component" />
             <DescriptionDefinition
               definition={systemIntake.businessOwner.component}
             />
