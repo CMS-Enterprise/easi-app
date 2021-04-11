@@ -937,5 +937,109 @@ describe('The Goveranance Task List', () => {
           .exists()
       ).toEqual(false);
     });
+
+    it('renders proper buttons for NO_GOVERNANCE', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'NO_GOVERNANCE'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="task-list-closed-alert"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="plain-text-no-governance-decision"]')
+          .exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for NOT_IT_REQUEST', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'NOT_IT_REQUEST'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <GovernanceTaskList />
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="task-list-closed-alert"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="plain-text-not-it-request-decision"]')
+          .exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
   });
 });
