@@ -5,9 +5,8 @@ export const parseAsDate = (date: string) =>
 
 export const parseAsLocalTime = (date: string) => DateTime.fromISO(date);
 
-export const formatDateAndIgnoreTimezone = (date: string) => {
-  return parseAsDate(date).toFormat('MMMM d yyyy');
-};
+export const formatDateAndIgnoreTimezone = (date: string) =>
+  parseAsDate(date).toFormat('MMMM d yyyy');
 
 export const formatDate = (date: string | DateTime) => {
   // ISO String
