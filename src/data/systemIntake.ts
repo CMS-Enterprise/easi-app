@@ -5,7 +5,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
-import { formatContractDate, formatDate, parseDateInUTC } from 'utils/date';
+import { formatContractDate, formatDate, parseAsDate } from 'utils/date';
 
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
@@ -252,8 +252,8 @@ export const prepareSystemIntakeForApp = (
     lcidScope: systemIntake.lcidScope || '',
     decisionNextSteps: systemIntake.decisionNextSteps || '',
     rejectionReason: systemIntake.rejectionReason || '',
-    grtDate: systemIntake.grtDate ? parseDateInUTC(systemIntake.grtDate) : null,
-    grbDate: systemIntake.grbDate ? parseDateInUTC(systemIntake.grbDate) : null,
+    grtDate: systemIntake.grtDate ? parseAsDate(systemIntake.grtDate) : null,
+    grbDate: systemIntake.grbDate ? parseAsDate(systemIntake.grbDate) : null,
     adminLead: systemIntake.adminLead || '',
     lastAdminNote: systemIntake.lastAdminNoteContent
       ? {
