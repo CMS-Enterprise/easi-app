@@ -14,7 +14,7 @@ import TruncatedText from 'components/shared/TruncatedText';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
-import { formatDate } from 'utils/date';
+import { formatDateAndIgnoreTimezone } from 'utils/date';
 import {
   getAcronymForComponent,
   translateRequestType
@@ -95,7 +95,7 @@ const RequestRepository = () => {
     accessor: 'grtDate',
     Cell: ({ row, value }: any) => {
       if (value) {
-        return formatDate(value);
+        return formatDateAndIgnoreTimezone(value);
       }
 
       // If date is null, return button that takes user to page to add date
@@ -116,7 +116,7 @@ const RequestRepository = () => {
     accessor: 'grbDate',
     Cell: ({ row, value }: any) => {
       if (value) {
-        return formatDate(value);
+        return formatDateAndIgnoreTimezone(value);
       }
 
       // If date is null, return button that takes user to page to add date
