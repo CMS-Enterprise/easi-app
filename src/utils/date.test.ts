@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { DateTime, Settings } from 'luxon';
 
 import {
   formatContractDate,
@@ -31,6 +31,7 @@ describe('parseAsLocalTime', () => {
   });
 
   it('converts dates to the local timezone', () => {
+    Settings.defaultZoneName = 'UTC-8';
     expect(parseAsLocalTime(time).day).toEqual(21);
   });
 });
@@ -52,6 +53,7 @@ describe('formatDateAndIgnoreTimezone', () => {
 describe('formatDate', () => {
   describe('string', () => {
     it('converts an ISO string to the proper date in the appropriate timezone', () => {
+      Settings.defaultZoneName = 'UTC-8';
       const isoStringDate = '2022-10-22T00:00:00Z';
       expect(formatDate(isoStringDate)).toEqual('October 21 2022');
     });
