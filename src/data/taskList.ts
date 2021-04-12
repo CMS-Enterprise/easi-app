@@ -20,7 +20,6 @@ export const initialReviewTag = (intakeStatus: string): TagEnum => {
     'READY_FOR_GRB',
     'READY_FOR_GRT',
     'LCID_ISSUED',
-    'NO_GOVERNANCE',
     'NOT_IT_REQUEST'
   ];
 
@@ -98,12 +97,12 @@ export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
 
   switch (intake.status) {
     case 'READY_FOR_GRB':
-    case 'NO_GOVERNANCE':
-    case 'NOT_IT_REQUEST':
       return '';
     case 'LCID_ISSUED':
     case 'WITHDRAWN':
+    case 'NOT_IT_REQUEST':
     case 'NOT_APPROVED':
+    case 'NO_GOVERNANCE':
       return 'COMPLETED';
     default:
       return 'CANNOT_START';

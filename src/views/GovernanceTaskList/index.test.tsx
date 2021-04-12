@@ -987,6 +987,13 @@ describe('The Goveranance Task List', () => {
           .find('[data-testid="task-list-intake-review"]')
           .find('.governance-task-list__task-tag')
           .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
       ).toEqual('Completed');
     });
 
@@ -1037,6 +1044,13 @@ describe('The Goveranance Task List', () => {
       expect(
         component!
           .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
           .find('.governance-task-list__task-tag')
           .text()
       ).toEqual('Completed');
