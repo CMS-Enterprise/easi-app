@@ -12,43 +12,36 @@ import (
 	"github.com/google/uuid"
 )
 
-// Document type of an Accessibility Request document
 type AccessibilityRequestDocumentType struct {
 	CommonType           models.AccessibilityRequestDocumentCommonType `json:"commonType"`
 	OtherTypeDescription *string                                       `json:"otherTypeDescription"`
 }
 
-// An edge of an AccessibilityRequestConnection
 type AccessibilityRequestEdge struct {
 	Cursor string                       `json:"cursor"`
 	Node   *models.AccessibilityRequest `json:"node"`
 }
 
-// A collection of AccessibilityRequests
 type AccessibilityRequestsConnection struct {
 	Edges      []*AccessibilityRequestEdge `json:"edges"`
 	TotalCount int                         `json:"totalCount"`
 }
 
-// Input for adding GRT Feedback
 type AddGRTFeedbackInput struct {
 	EmailBody string    `json:"emailBody"`
 	Feedback  string    `json:"feedback"`
 	IntakeID  uuid.UUID `json:"intakeID"`
 }
 
-// Response for adding GRT Feedback
 type AddGRTFeedbackPayload struct {
 	ID *uuid.UUID `json:"id"`
 }
 
-// Parameters for actions without additional fields
 type BasicActionInput struct {
 	Feedback string    `json:"feedback"`
 	IntakeID uuid.UUID `json:"intakeId"`
 }
 
-// The shape of a solution for a business case
 type BusinessCaseAsIsSolution struct {
 	Cons        *string `json:"cons"`
 	CostSavings *string `json:"costSavings"`
@@ -57,7 +50,7 @@ type BusinessCaseAsIsSolution struct {
 	Title       *string `json:"title"`
 }
 
-// The shape of a solution for a business case
+// A solution proposal within a business case
 type BusinessCaseSolution struct {
 	AcquisitionApproach     *string `json:"acquisitionApproach"`
 	Cons                    *string `json:"cons"`
@@ -73,14 +66,12 @@ type BusinessCaseSolution struct {
 	Title                   *string `json:"title"`
 }
 
-// A date for a contract
 type ContractDate struct {
 	Day   *string `json:"day"`
 	Month *string `json:"month"`
 	Year  *string `json:"year"`
 }
 
-// Parameters for createAccessibilityRequestDocument
 type CreateAccessibilityRequestDocumentInput struct {
 	CommonDocumentType           models.AccessibilityRequestDocumentCommonType `json:"commonDocumentType"`
 	MimeType                     string                                        `json:"mimeType"`
@@ -91,32 +82,27 @@ type CreateAccessibilityRequestDocumentInput struct {
 	URL                          string                                        `json:"url"`
 }
 
-// Result of createAccessibilityRequestDocument
 type CreateAccessibilityRequestDocumentPayload struct {
 	AccessibilityRequestDocument *models.AccessibilityRequestDocument `json:"accessibilityRequestDocument"`
 	UserErrors                   []*UserError                         `json:"userErrors"`
 }
 
-// Parameters required to create an AccessibilityRequest
 type CreateAccessibilityRequestInput struct {
 	IntakeID uuid.UUID `json:"intakeID"`
 	Name     string    `json:"name"`
 }
 
-// Result of CreateAccessibilityRequest
 type CreateAccessibilityRequestPayload struct {
 	AccessibilityRequest *models.AccessibilityRequest `json:"accessibilityRequest"`
 	UserErrors           []*UserError                 `json:"userErrors"`
 }
 
-// Parameters required to create a note for an intake
 type CreateSystemIntakeNoteInput struct {
 	Content    string    `json:"content"`
 	AuthorName string    `json:"authorName"`
 	IntakeID   uuid.UUID `json:"intakeId"`
 }
 
-// Parameters for creating a test date
 type CreateTestDateInput struct {
 	Date      time.Time               `json:"date"`
 	RequestID uuid.UUID               `json:"requestID"`
@@ -124,26 +110,22 @@ type CreateTestDateInput struct {
 	TestType  models.TestDateTestType `json:"testType"`
 }
 
-// Result of createTestDate
 type CreateTestDatePayload struct {
 	TestDate   *models.TestDate `json:"testDate"`
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
-// Parameters required to generate a presigned upload URL
 type GeneratePresignedUploadURLInput struct {
 	FileName string `json:"fileName"`
 	MimeType string `json:"mimeType"`
 	Size     int    `json:"size"`
 }
 
-// Result of CreateAccessibilityRequest
 type GeneratePresignedUploadURLPayload struct {
 	URL        *string      `json:"url"`
 	UserErrors []*UserError `json:"userErrors"`
 }
 
-// Input for issuing a lifecycle id
 type IssueLifecycleIDInput struct {
 	ExpiresAt time.Time `json:"expiresAt"`
 	Feedback  string    `json:"feedback"`
@@ -153,7 +135,6 @@ type IssueLifecycleIDInput struct {
 	Scope     string    `json:"scope"`
 }
 
-// Input for rejecting an intake
 type RejectIntakeInput struct {
 	Feedback  string    `json:"feedback"`
 	IntakeID  uuid.UUID `json:"intakeId"`
@@ -161,13 +142,11 @@ type RejectIntakeInput struct {
 	Reason    string    `json:"reason"`
 }
 
-// A collection of Systems
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
 	TotalCount int           `json:"totalCount"`
 }
 
-// An edge of an SystemConnection
 type SystemEdge struct {
 	Cursor string         `json:"cursor"`
 	Node   *models.System `json:"node"`
@@ -183,19 +162,16 @@ type SystemIntakeAction struct {
 	CreatedAt    time.Time                `json:"createdAt"`
 }
 
-// A person performing an action on a system intake
 type SystemIntakeActionActor struct {
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
-// A business owner for a system intake
 type SystemIntakeBusinessOwner struct {
 	Component *string `json:"component"`
 	Name      *string `json:"name"`
 }
 
-// A collaborator for an intake
 type SystemIntakeCollaborator struct {
 	Acronym      *string `json:"acronym"`
 	Collaborator *string `json:"collaborator"`
@@ -204,7 +180,6 @@ type SystemIntakeCollaborator struct {
 	Name         *string `json:"name"`
 }
 
-// A contract for a system intake
 type SystemIntakeContract struct {
 	Contractor  *string       `json:"contractor"`
 	EndDate     *ContractDate `json:"endDate"`
@@ -213,32 +188,27 @@ type SystemIntakeContract struct {
 	Vehicle     *string       `json:"vehicle"`
 }
 
-// costs for a system intake
 type SystemIntakeCosts struct {
 	ExpectedIncreaseAmount *string `json:"expectedIncreaseAmount"`
 	IsExpectingIncrease    *string `json:"isExpectingIncrease"`
 }
 
-// A funding source for a system intake
 type SystemIntakeFundingSource struct {
 	FundingNumber *string `json:"fundingNumber"`
 	IsFunded      *bool   `json:"isFunded"`
 	Source        *string `json:"source"`
 }
 
-// governanceTeam for an intake
 type SystemIntakeGovernanceTeam struct {
 	IsPresent *bool                       `json:"isPresent"`
 	Teams     []*SystemIntakeCollaborator `json:"teams"`
 }
 
-// An isso for a system intake
 type SystemIntakeIsso struct {
 	IsPresent *bool   `json:"isPresent"`
 	Name      *string `json:"name"`
 }
 
-// A note on a system intake
 type SystemIntakeNote struct {
 	Author    *SystemIntakeNoteAuthor `json:"author"`
 	Content   string                  `json:"content"`
@@ -246,45 +216,38 @@ type SystemIntakeNote struct {
 	ID        uuid.UUID               `json:"id"`
 }
 
-// The author of a system intake note
 type SystemIntakeNoteAuthor struct {
 	Eua  string `json:"eua"`
 	Name string `json:"name"`
 }
 
-// A product manager for a system intake
 type SystemIntakeProductManager struct {
 	Component *string `json:"component"`
 	Name      *string `json:"name"`
 }
 
-// A requester for a system intake
 type SystemIntakeRequester struct {
 	Component *string `json:"component"`
 	Email     *string `json:"email"`
 	Name      string  `json:"name"`
 }
 
-// Parameters required to update the admin lead for an intake
 type UpdateSystemIntakeAdminLeadInput struct {
 	AdminLead string    `json:"adminLead"`
 	ID        uuid.UUID `json:"id"`
 }
 
-// Result of UpdateSystemIntake mutations
 type UpdateSystemIntakePayload struct {
 	SystemIntake *models.SystemIntake `json:"systemIntake"`
 	UserErrors   []*UserError         `json:"userErrors"`
 }
 
-// Parameters required to update the grt and grb dates for an intake
 type UpdateSystemIntakeReviewDatesInput struct {
 	GrbDate *time.Time `json:"grbDate"`
 	GrtDate *time.Time `json:"grtDate"`
 	ID      uuid.UUID  `json:"id"`
 }
 
-// Parameters for editing a test date
 type UpdateTestDateInput struct {
 	Date     time.Time               `json:"date"`
 	ID       uuid.UUID               `json:"id"`
@@ -292,7 +255,6 @@ type UpdateTestDateInput struct {
 	TestType models.TestDateTestType `json:"testType"`
 }
 
-// Result of editTestDate
 type UpdateTestDatePayload struct {
 	TestDate   *models.TestDate `json:"testDate"`
 	UserErrors []*UserError     `json:"userErrors"`
@@ -355,7 +317,6 @@ func (e Role) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-// Indicates which action should be taken
 type SystemIntakeActionType string
 
 const (
