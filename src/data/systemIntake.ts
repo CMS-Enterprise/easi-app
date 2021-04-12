@@ -252,13 +252,8 @@ export const prepareSystemIntakeForApp = (
     lcidScope: systemIntake.lcidScope || '',
     decisionNextSteps: systemIntake.decisionNextSteps || '',
     rejectionReason: systemIntake.rejectionReason || '',
-<<<<<<< HEAD
-    grtDate: systemIntake.grtDate ? parseDateInUTC(systemIntake.grtDate) : null,
-    grbDate: systemIntake.grbDate ? parseDateInUTC(systemIntake.grbDate) : null,
-=======
     grtDate: systemIntake.grtDate ? parseAsDate(systemIntake.grtDate) : null,
     grbDate: systemIntake.grbDate ? parseAsDate(systemIntake.grbDate) : null,
->>>>>>> f5ec7e63 (Be more descriptive with the type of parsing we are doing.)
     adminLead: systemIntake.adminLead || '',
     lastAdminNote: systemIntake.lastAdminNoteContent
       ? {
