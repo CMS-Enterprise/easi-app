@@ -2416,7 +2416,6 @@ type BusinessCase {
 }
 
 enum SystemIntakeStatus {
-  ACCEPTED
   BIZ_CASE_CHANGES_NEEDED
   BIZ_CASE_DRAFT
   BIZ_CASE_DRAFT_SUBMITTED
