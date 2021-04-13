@@ -171,7 +171,7 @@ func (s *Server) routes(
 		graph.ResolverService{
 			CreateTestDate: services.NewCreateTestDate(
 				serviceConfig,
-				services.NewAuthorizeHasEASiRole(),
+				services.AuthorizeHasEASiRole,
 				store.CreateTestDate,
 			),
 			AddGRTFeedback: services.NewProvideGRTFeedback(
@@ -254,7 +254,7 @@ func (s *Server) routes(
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 		services.NewArchiveSystemIntake(
 			serviceConfig,
@@ -279,7 +279,7 @@ func (s *Server) routes(
 			store.FetchSystemIntakesByEuaID,
 			store.FetchSystemIntakes,
 			store.FetchSystemIntakesByStatuses,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
@@ -289,7 +289,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCaseByID(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 		services.NewCreateBusinessCase(
 			serviceConfig,
@@ -315,7 +315,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
@@ -585,7 +585,7 @@ func (s *Server) routes(
 		services.NewFetchSystems(
 			serviceConfig,
 			store.ListSystems,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 	)
 	api.Handle("/systems", systemsHandler.Handle())
