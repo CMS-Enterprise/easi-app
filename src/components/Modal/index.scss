@@ -27,24 +27,22 @@
     }
   }
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 35px;
-    align-items: center;
-    background-color: #000;
-    color: #fff;
-  }
-
   &__x-button {
+    display: block;
+    margin: 1rem 1rem 1rem auto;
     padding: 0;
     background: none;
     border: 0;
-    font-size: 26px;
-    color: #fff;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    color: #000;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   &__body {
-    padding: 35px;
+    padding: 0 2rem 2rem;
   }
 }
