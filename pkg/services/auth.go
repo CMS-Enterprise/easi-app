@@ -116,19 +116,10 @@ func NewAuthorizeHasEASiRole() func(
 	}
 }
 
-// NewAuthorizeRequireGRTJobCode returns a function
-// that authorizes a user as being a member of the
+// AuthorizeRequireGRTJobCode authorizes a user as being a member of the
 // GRT (Governance Review Team)
-func NewAuthorizeRequireGRTJobCode() func(context.Context) (bool, error) {
-	return func(ctx context.Context) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowGRT() {
-			logger.Info("not a member of the GRT")
-			return false, nil
-		}
-		return true, nil
-	}
+func AuthorizeRequireGRTJobCode(ctx context.Context) (bool, error) {
+	return HasRole(ctx, model.RoleEasiUser)
 }
 
 // AuthorizeUserIsIntakeRequesterOrHasGRTJobCode  authorizes a user as being a member of the
@@ -139,7 +130,7 @@ func AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx context.Context, existing
 		return false, errAuthor
 	}
 
-	reviewerIsAuthed, errReviewer := NewAuthorizeRequireGRTJobCode()(ctx)
+	reviewerIsAuthed, errReviewer := AuthorizeRequireGRTJobCode(ctx)
 	if errReviewer != nil {
 		return false, errReviewer
 	}

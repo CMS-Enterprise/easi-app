@@ -95,7 +95,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
 }
 
 func (s ServicesTestSuite) TestAuthorizeRequireGRTJobCode() {
-	fnAuth := NewAuthorizeRequireGRTJobCode()
+	fnAuth := AuthorizeRequireGRTJobCode
 	nonGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
 	yesGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
 
