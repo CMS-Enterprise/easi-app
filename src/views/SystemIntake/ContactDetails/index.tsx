@@ -506,6 +506,8 @@ const ContactDetails = ({
                         dispatchSave();
                         const newUrl = 'request-details';
                         history.push(newUrl);
+                      } else {
+                        window.scrollTo(0, 0);
                       }
                     });
                   }}
