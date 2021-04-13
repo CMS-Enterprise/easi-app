@@ -3,12 +3,13 @@ import { Button, Link } from '@trussworks/react-uswds';
 import { shallow } from 'enzyme';
 
 import Modal from 'components/Modal';
+import { initialSystemIntakeForm } from 'data/systemIntake';
 
 import SideNavActions from './index';
 
 const renderComponent = () => {
   return shallow(
-    <SideNavActions intakeStatus="INTAKE_DRAFT" archiveIntake={() => {}} />
+    <SideNavActions intake={initialSystemIntakeForm} archiveIntake={() => {}} />
   );
 };
 
