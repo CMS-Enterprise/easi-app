@@ -64,7 +64,7 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ActionForm>) => {
-        const { errors } = formikProps;
+        const { errors, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -100,7 +100,12 @@ const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">
-              <Form>
+              <Form
+                onSubmit={e => {
+                  handleSubmit(e);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}

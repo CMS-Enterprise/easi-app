@@ -89,7 +89,7 @@ const IssueLifecycleId = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitLifecycleIdForm>) => {
-        const { errors, setFieldValue, values } = formikProps;
+        const { errors, setFieldValue, values, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -125,7 +125,12 @@ const IssueLifecycleId = () => {
               <Link to={backLink}>Change</Link>
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">
-              <Form>
+              <Form
+                onSubmit={e => {
+                  handleSubmit(e);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 <FieldGroup
                   scrollElement="newLifecycleId"
                   error={!!flatErrors.newLifecycleId}

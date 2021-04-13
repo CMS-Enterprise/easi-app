@@ -144,7 +144,7 @@ const New = () => {
         validateOnMount={false}
       >
         {(formikProps: FormikProps<FileUploadForm>) => {
-          const { errors, setFieldValue, values } = formikProps;
+          const { errors, setFieldValue, values, handleSubmit } = formikProps;
           const flatErrors = flattenErrors(errors);
           return (
             <>
@@ -169,7 +169,13 @@ const New = () => {
                 Upload a document to {data?.accessibilityRequest?.name}
               </PageHeading>
               <div className="grid-col-9">
-                <Form onSubmit={formikProps.handleSubmit} large>
+                <Form
+                  onSubmit={e => {
+                    handleSubmit(e);
+                    window.scrollTo(0, 0);
+                  }}
+                  large
+                >
                   <Label htmlFor="FileUpload-File">
                     Choose a document to upload
                   </Label>
