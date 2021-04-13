@@ -98,7 +98,7 @@ const TestDate = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<TestDateForm>) => {
-        const { errors, setFieldValue, values } = formikProps;
+        const { errors, setFieldValue, values, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -134,7 +134,12 @@ const TestDate = () => {
             </PageHeading>
             <div className="grid-row grid-gap-lg">
               <div className="grid-col-9">
-                <Form>
+                <Form
+                  onSubmit={e => {
+                    handleSubmit(e);
+                    window.scrollTo(0, 0);
+                  }}
+                >
                   <FieldGroup error={!!flatErrors.testType}>
                     <fieldset className="usa-fieldset">
                       <legend className="usa-label margin-bottom-1">

@@ -96,7 +96,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitDatesForm>) => {
-        const { errors } = formikProps;
+        const { errors, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -128,7 +128,12 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
             <PageHeading>{t('governanceReviewTeam:dates.heading')}</PageHeading>
             <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
             <div className="tablet:grid-col-9 margin-bottom-7">
-              <Form>
+              <Form
+                onSubmit={e => {
+                  handleSubmit(e);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 {/* GRT Date Fields */}
                 <FieldGroup
                   error={
