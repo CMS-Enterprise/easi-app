@@ -56,7 +56,6 @@ export enum SystemIntakeRequestType {
 }
 
 export enum SystemIntakeStatus {
-  ACCEPTED = "ACCEPTED",
   BIZ_CASE_CHANGES_NEEDED = "BIZ_CASE_CHANGES_NEEDED",
   BIZ_CASE_DRAFT = "BIZ_CASE_DRAFT",
   BIZ_CASE_DRAFT_SUBMITTED = "BIZ_CASE_DRAFT_SUBMITTED",
