@@ -9,6 +9,11 @@ import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
 import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 
 import PageHeading from 'components/PageHeading';
+import {
+  DateInputDay,
+  DateInputMonth,
+  DateInputYear
+} from 'components/shared/DateInput';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -210,10 +215,9 @@ const IssueLifecycleId = () => {
                           {flatErrors.expirationDateMonth}
                         </FieldErrorMsg>
                         <Field
-                          as={TextField}
+                          as={DateInputMonth}
                           error={!!flatErrors.expirationDateMonth}
                           id="IssueLifecycleIdForm-ExpirationDateMonth"
-                          maxLength={2}
                           name="expirationDateMonth"
                         />
                       </div>
@@ -225,10 +229,9 @@ const IssueLifecycleId = () => {
                           {flatErrors.expirationDateDay}
                         </FieldErrorMsg>
                         <Field
-                          as={TextField}
+                          as={DateInputDay}
                           error={!!flatErrors.expirationDateDay}
                           id="IssueLifecycleIdForm-ExpirationDateDay"
-                          maxLength={2}
                           name="expirationDateDay"
                         />
                       </div>
@@ -240,10 +243,9 @@ const IssueLifecycleId = () => {
                           {flatErrors.expirationDateYear}
                         </FieldErrorMsg>
                         <Field
-                          as={TextField}
+                          as={DateInputYear}
                           error={!!flatErrors.expirationDateYear}
                           id="IssueLifecycleIdForm-ExpirationDateYear"
-                          maxLength={4}
                           name="expirationDateYear"
                         />
                       </div>
