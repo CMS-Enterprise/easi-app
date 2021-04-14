@@ -173,7 +173,7 @@ const New = () => {
                     scrollElement="file"
                     error={!!flatErrors['file.name']}
                   >
-                    <Label htmlFor="FileUpload-File">File Upload</Label>
+                    <Label htmlFor="FileUpload-File">Document Upload</Label>
                     <FieldErrorMsg>{flatErrors['file.name']}</FieldErrorMsg>
                     <Field
                       as={FileUpload}
