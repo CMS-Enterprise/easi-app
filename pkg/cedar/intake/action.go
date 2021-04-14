@@ -3,24 +3,17 @@ package intake
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-// func translateActions(c context.Context, actions []*models.Action) ([]*wire.IntakeInput, error) {
-// 	var results []*wire.IntakeInput
-// 	for _, action := range actions {
-// 		ii, err := translateAction(c, action)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		results = append(results, ii)
-// 	}
-// 	return results, nil
-// }
-
 func translateAction(_ context.Context, action *models.Action) (*wire.IntakeInput, error) {
+	if action == nil {
+		return nil, fmt.Errorf("nil action received")
+	}
+
 	obj := wire.EASIAction{
 		IntakeID:   pStr(action.IntakeID.String()),
 		ActionType: pStr(string(action.ActionType)),

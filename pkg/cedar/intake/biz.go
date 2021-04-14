@@ -3,16 +3,22 @@ package intake
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func translateBizCase(ctx context.Context, bc *models.BusinessCase) ([]*wire.IntakeInput, error) {
+	if bc == nil {
+		return nil, fmt.Errorf("nil bizcase received")
+	}
+
 	bcID := bc.ID.String()
 
 	obj := wire.EASIBizCase{
 		UserEUA:              pStr(bc.EUAUserID),
+		IntakeID:             pStr(bc.SystemIntakeID.String()),
 		ProjectName:          pStr(bc.ProjectName.ValueOrZero()),
 		Requester:            pStr(bc.Requester.ValueOrZero()),
 		RequesterPhoneNumber: pStr(bc.RequesterPhoneNumber.ValueOrZero()),

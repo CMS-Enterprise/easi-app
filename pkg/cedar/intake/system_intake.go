@@ -3,12 +3,17 @@ package intake
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func translateSystemIntake(_ context.Context, si *models.SystemIntake) (*wire.IntakeInput, error) {
+	if si == nil {
+		return nil, fmt.Errorf("nil system intake received")
+	}
+
 	obj := &wire.EASIIntake{
 		UserEUA:                     pStr(si.EUAUserID.ValueOrZero()),
 		Status:                      pStr(string(si.Status)),
