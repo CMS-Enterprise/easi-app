@@ -164,8 +164,7 @@ const intake = {
     collaboration: {
       collaboratingWith:
         'For this request, I have started collaborating/consulting with:',
-      disclosure:
-        'Please disclose the name of each person you&apos;ve worked with. This helps us locate any additional information on your request',
+      disclosure: `Please disclose the name of each person you've worked with. This helps us locate any additional information on your request`,
       oneOrMore: '1 or more of the following in OIT (select all that apply)',
       noOne: 'No one in OIT'
     }
@@ -192,7 +191,7 @@ const intake = {
       unsure:
         'If you are unsure, mark "Yes" and someone from the EA team will assess your needs.',
       howCanTheyHelp: 'How can the Enterprise Architecture team help me?',
-      howWillTheyHelp: `"'CMS' Enterprise Architecture (EA) function will help you build your Business Case by addressing the following:"`,
+      howWillTheyHelp: `CMS' Enterprise Architecture (EA) function will help you build your Business Case by addressing the following:`,
       helpIncludes: [
         'Explore business solutions that might exist elsewhere within CMS',
         'Discuss lessons learned from similar projects',

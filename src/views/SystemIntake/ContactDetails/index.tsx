@@ -440,16 +440,13 @@ const ContactDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-3">
                     <legend className="usa-label margin-bottom-1">
-                      For this request, I have started collaborating/consulting
-                      with:
+                      {t('contactDetailsForm.collaboration.collaboratingWith')}
                     </legend>
                     <HelpText
                       id="IntakeForm-Collaborators"
                       className="margin-bottom-2"
                     >
-                      Please disclose the name of each person you&apos;ve worked
-                      with. This helps us locate any additional information on
-                      your request
+                      {t('contactDetailsForm.collaboration.disclosure')}
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['governanceTeams.isPresent']}
@@ -460,7 +457,7 @@ const ContactDetails = ({
                       checked={values.governanceTeams.isPresent === true}
                       id="IntakeForm-YesGovernanceTeams"
                       name="governanceTeams.isPresent"
-                      label="1 or more of the following in OIT (select all that apply)"
+                      label={t('contactDetailsForm.collaboration.oneOrMore')}
                       onChange={() => {
                         setFieldValue('governanceTeams.isPresent', true);
                       }}
@@ -484,7 +481,7 @@ const ContactDetails = ({
                       checked={values.governanceTeams.isPresent === false}
                       id="IntakeForm-NoGovernanceTeam"
                       name="governanceTeams.isPresent"
-                      label="No one in OIT"
+                      label={t('contactDetailsForm.collaboration.noOne')}
                       onChange={() => {
                         setFieldValue('governanceTeams.isPresent', false);
                         setFieldValue('governanceTeams.teams', []);
