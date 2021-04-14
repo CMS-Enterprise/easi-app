@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -43,6 +44,7 @@ const RequestDetails = ({
   systemIntake,
   dispatchSave
 }: RequestDetailsProps) => {
+  const { t } = useTranslation('intake');
   const history = useHistory();
 
   const initialValues: RequestDetailsForm = {
@@ -62,6 +64,16 @@ const RequestDetails = ({
     }
     return link;
   })();
+
+  const businessNeedExampleList: string[] = t(
+    'requestDetailsForm.businessNeed.examples',
+    { returnObjects: true }
+  );
+
+  const enterpriseArchitectureHelpList: string[] = t(
+    'requestDetailsForm.enterpriseArchitecture.helpIncludes',
+    { returnObjects: true }
+  );
 
   return (
     <Formik
@@ -95,15 +107,9 @@ const RequestDetails = ({
                 })}
               </ErrorAlert>
             )}
-            <PageHeading>Request details</PageHeading>
+            <PageHeading>{t('requestDetailsForm.heading')}</PageHeading>
             <p className="line-height-body-6">
-              Provide a detailed explanation of the business need/issue/problem
-              that the requested project will address, including any legislative
-              mandates, regulations, etc. Include any expected benefits from the
-              investment of organizational resources into this project. Please
-              be sure to indicate clearly any/all relevant deadlines (e.g.,
-              statutory deadlines that CMS must meet). Explain the benefits of
-              developing an IT solution for this need.
+              {t('requestDetailsForm.description')}
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <div className="tablet:grid-col-6">
@@ -114,7 +120,9 @@ const RequestDetails = ({
                   scrollElement="requestName"
                   error={!!flatErrors.requestName}
                 >
-                  <Label htmlFor="IntakeForm-RequestName">Project Name</Label>
+                  <Label htmlFor="IntakeForm-RequestName">
+                    {t('csvHeadings.projectName')}
+                  </Label>
                   <FieldErrorMsg>{flatErrors.requestName}</FieldErrorMsg>
                   <Field
                     as={TextField}
@@ -130,35 +138,20 @@ const RequestDetails = ({
                   error={!!flatErrors.businessNeed}
                 >
                   <Label htmlFor="IntakeForm-BusinessNeed">
-                    What is your business need?
+                    {t('requestDetailsForm.businessNeed.whatIsIt')}
                   </Label>
                   <HelpText
                     id="IntakeForm-BusinessNeedHelp"
                     className="margin-top-105"
                   >
                     <>
-                      <span>Include:</span>
+                      <span>
+                        {t('requestDetailsForm.businessNeed.include')}
+                      </span>
                       <ul className="margin-top-1 padding-left-205">
-                        <li>
-                          a detailed explanation of the business
-                          need/issue/problem that the request will address
-                        </li>
-                        <li>
-                          any legislative mandates or regulations that needs to
-                          be met
-                        </li>
-                        <li>
-                          any expected benefits from the investment of
-                          organizational resources into the request
-                        </li>
-                        <li>
-                          relevant deadlines (e.g., statutory deadlines that CMS
-                          must meet)
-                        </li>
-                        <li>
-                          and the benefits of developing an IT solution for this
-                          need.
-                        </li>
+                        {businessNeedExampleList.map(k => (
+                          <li key={k}>{k}</li>
+                        ))}
                       </ul>
                     </>
                   </HelpText>
@@ -182,13 +175,13 @@ const RequestDetails = ({
                   error={!!flatErrors.businessSolution}
                 >
                   <Label htmlFor="IntakeForm-BusinessSolution">
-                    How are you thinking of solving it?
+                    {t('requestDetailsForm.businessNeed.howWillYouSolveIt')}
                   </Label>
                   <HelpText
                     id="IntakeForm-BusinessSolutionHelp"
                     className="margin-y-1"
                   >
-                    Let us know if you have a solution in mind
+                    {t('requestDetailsForm.businessNeed.solution')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.businessSolution}</FieldErrorMsg>
                   <Field
@@ -212,14 +205,15 @@ const RequestDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
-                      Does your request need Enterprise Architecture support?
+                      {t(
+                        'requestDetailsForm.enterpriseArchitecture.needSupport'
+                      )}
                     </legend>
                     <HelpText
                       id="IntakeForm-EAHelp"
                       className="margin-bottom-1"
                     >
-                      If you are unsure, mark &quot;Yes&quot; and someone from
-                      the EA team will assess your needs.
+                      {t('requestDetailsForm.enterpriseArchitecture.unsure')}
                     </HelpText>
                     <FieldErrorMsg>{flatErrors.needsEaSupport}</FieldErrorMsg>
                     <Field
@@ -249,29 +243,18 @@ const RequestDetails = ({
 
                     <CollapsableLink
                       id="SystemIntake-WhatsEA"
-                      label="How can the Enterprise Architecture team help me?"
+                      label={t(
+                        'requestDetailsForm.enterpriseArchitecture.howCanTheyHelp'
+                      )}
                     >
                       <>
-                        CMS&apos; Enterprise Architecture (EA) function will
-                        help you build your Business Case by addressing the
-                        following:
+                        {t(
+                          'requestDetailsForm.enterpriseArchitecture.howWillTheyHelp'
+                        )}
                         <ul className="margin-bottom-0">
-                          <li>
-                            Explore business solutions that might exist
-                            elsewhere within CMS
-                          </li>
-                          <li>Discuss lessons learned from similar projects</li>
-                          <li>
-                            Give you and your team an enterprise-level view of
-                            the agency to avoid duplication of projects
-                          </li>
-                          <li>
-                            Help you explore alternatives you might not have
-                            thought of
-                          </li>
-                          <li>
-                            Model your business processes and document workflows
-                          </li>
+                          {enterpriseArchitectureHelpList.map(k => (
+                            <li key={k}>{k}</li>
+                          ))}
                         </ul>
                       </>
                     </CollapsableLink>

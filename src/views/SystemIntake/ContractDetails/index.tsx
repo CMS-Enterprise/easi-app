@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Link } from '@trussworks/react-uswds';
 import classnames from 'classnames';
@@ -40,6 +41,7 @@ const ContractDetails = ({
   systemIntake,
   dispatchSave
 }: ContractDetailsProps) => {
+  const { t } = useTranslation('intake');
   const history = useHistory();
 
   const initialValues: ContractDetailsForm = {
@@ -91,7 +93,7 @@ const ContractDetails = ({
                 })}
               </ErrorAlert>
             )}
-            <PageHeading>Contract details</PageHeading>
+            <PageHeading>{t('contractDetailsForm.heading')}</PageHeading>
             <div className="tablet:grid-col-9 margin-bottom-7">
               <div className="tablet:grid-col-6">
                 <MandatoryFieldsAlert />
@@ -103,11 +105,10 @@ const ContractDetails = ({
                   error={!!flatErrors.currentStage}
                 >
                   <Label htmlFor="IntakeForm-CurrentStage">
-                    Where are you in the process?
+                    {t('contractDetailsForm.currentStage')}
                   </Label>
                   <HelpText id="IntakeForm-ProcessHelp" className="margin-y-1">
-                    This helps the governance team provide the right type of
-                    guidance for your request
+                    {t('contractDetailsForm.processHelp')}
                   </HelpText>
                   <FieldErrorMsg>{flatErrors.CurrentStage}</FieldErrorMsg>
                   <Field
@@ -140,15 +141,13 @@ const ContractDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
-                      Will this project be funded out of an existing funding
-                      source?
+                      {t('contractDetailsForm.funding.existingFundingQuestion')}
                     </legend>
                     <HelpText
                       id="Intake-Form-ExistingFundingHelp"
                       className="margin-bottom-1"
                     >
-                      If you are unsure, please get in touch with your
-                      Contracting Officer Representative
+                      {t('contractDetailsForm.funding.existingFundingHelp')}
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['fundingSource.isFunded']}
@@ -172,7 +171,7 @@ const ContractDetails = ({
                           error={!!flatErrors['fundingSource.source']}
                         >
                           <Label htmlFor="IntakeForm-FundingSource">
-                            Funding Source
+                            {t('csvHeadings.fundingSource')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['fundingSource.source']}
@@ -221,7 +220,7 @@ const ContractDetails = ({
                           error={!!flatErrors['fundingSource.fundingNumber']}
                         >
                           <Label htmlFor="IntakeForm-FundingNumber">
-                            Funding Number
+                            {t('csvHeadings.fundingNumber')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['fundingSource.fundingNumber']}
@@ -253,8 +252,9 @@ const ContractDetails = ({
                               rel="noopener noreferrer"
                               variant="external"
                             >
-                              You can find your funding number in the CMS
-                              Operating Plan page (opens in a new tab)
+                              {t(
+                                'contractDetailsForm.funding.cmsOperatingPlan'
+                              )}
                             </Link>
                           </HelpText>
                         </FieldGroup>
@@ -282,14 +282,15 @@ const ContractDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
-                      Do you expect costs for this request to increase?
+                      {t(
+                        'contractDetailsForm.costIncrease.expectIncreaseQuestion'
+                      )}
                     </legend>
                     <HelpText
                       id="IntakeForm-IncreasedCostsHelp"
                       className="margin-bottom-1"
                     >
-                      This information helps the team decide on the right
-                      approval process for this request
+                      {t('contractDetailsForm.costIncrease.description')}
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['costs.isExpectingIncrease']}
@@ -310,9 +311,7 @@ const ContractDetails = ({
                           error={!!flatErrors['costs.expectedIncreaseAmount']}
                         >
                           <Label htmlFor="IntakeForm-CostsExpectedIncrease">
-                            Approximately how much do you expect the cost to
-                            increase over what you are currently spending to
-                            meet your business need?
+                            {t('contractDetailsForm.costIncrease.howMuch')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['costs.expectedIncreaseAmount']}
@@ -361,15 +360,15 @@ const ContractDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
-                      Do you already have a contract in place to support this
-                      effort?
+                      {t(
+                        'contractDetailsForm.existingContract.contractInPlaceQuestion'
+                      )}
                     </legend>
                     <HelpText
                       id="IntakeForm-HasContractHelp"
                       className="margin-bottom-1"
                     >
-                      This information helps the Office of Acquisition and
-                      Grants Management (OAGM) track work
+                      {t('contractDetailsForm.existingContract.description')}
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['contract.hasContract']}
@@ -390,7 +389,7 @@ const ContractDetails = ({
                           error={!!flatErrors['contract.contractor']}
                         >
                           <Label htmlFor="IntakeForm-Contractor">
-                            Contractor(s)
+                            {t('csvHeadings.contractors')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['contract.contractor']}
@@ -411,7 +410,7 @@ const ContractDetails = ({
                             className="system-intake__label-margin-top-1"
                             htmlFor="IntakeForm-Vehicle"
                           >
-                            Contract vehicle
+                            {t('csvHeadings.contractVehicle')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['contract.vehicle']}
@@ -439,10 +438,14 @@ const ContractDetails = ({
                           )}
                         >
                           <legend className="usa-label">
-                            Period of performance
+                            {t(
+                              'contractDetailsForm.existingContract.periodOfPerformance.actual'
+                            )}
                           </legend>
                           <HelpText className="margin-bottom-1">
-                            For example: 4/10/2020
+                            {t(
+                              'contractDetailsForm.existingContract.periodOfPerformance.example'
+                            )}
                           </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['contract.startDate.month']}
@@ -472,7 +475,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractStartMonth"
                                 >
-                                  Month
+                                  {t('general:date.month')}
                                 </Label>
                                 <Field
                                   as={DateInputMonth}
@@ -491,7 +494,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractStartDay"
                                 >
-                                  Day
+                                  {t('general:date.day')}
                                 </Label>
                                 <Field
                                   as={DateInputDay}
@@ -508,7 +511,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractStartYear"
                                 >
-                                  Year
+                                  {t('general:date.year')}
                                 </Label>
                                 <Field
                                   as={DateInputYear}
@@ -531,7 +534,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractEndMonth"
                                 >
-                                  Month
+                                  {t('general:date.month')}
                                 </Label>
                                 <Field
                                   as={DateInputMonth}
@@ -548,7 +551,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractEndDay"
                                 >
-                                  Day
+                                  {t('general:date.day')}
                                 </Label>
                                 <Field
                                   as={DateInputDay}
@@ -565,7 +568,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractEndYear"
                                 >
-                                  Year
+                                  {t('general:date.year')}
                                 </Label>
                                 <Field
                                   as={DateInputYear}
@@ -594,7 +597,7 @@ const ContractDetails = ({
                           error={!!flatErrors['contract.contractor']}
                         >
                           <Label htmlFor="IntakeForm-Contractor">
-                            Contractor(s)
+                            {t('csvHeadings.contractors')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['contract.contractor']}
@@ -615,7 +618,7 @@ const ContractDetails = ({
                             className="system-intake__label-margin-top-1"
                             htmlFor="IntakeForm-Vehicle"
                           >
-                            Contract vehicle
+                            {t('csvHeadings.contractVehicle')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['contract.vehicle']}
@@ -643,10 +646,14 @@ const ContractDetails = ({
                           )}
                         >
                           <legend className="usa-label">
-                            Estimated period of performance
+                            {t(
+                              'contractDetailsForm.existingContract.periodOfPerformance.estimated'
+                            )}
                           </legend>
                           <HelpText className="margin-bottom-1">
-                            For example: 4/10/2020
+                            {t(
+                              'contractDetailsForm.existingContract.periodOfPerformance.example'
+                            )}
                           </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['contract.startDate.month']}
@@ -679,7 +686,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractStartMonth"
                                 >
-                                  Month
+                                  {t('general:date.month')}
                                 </Label>
                                 <Field
                                   as={DateInputMonth}
@@ -699,7 +706,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractStartDay"
                                 >
-                                  Day
+                                  {t('general:date.day')}
                                 </Label>
                                 <Field
                                   as={DateInputDay}
@@ -719,7 +726,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractStartYear"
                                 >
-                                  Year
+                                  {t('general:date.year')}
                                 </Label>
                                 <Field
                                   as={DateInputYear}
@@ -746,7 +753,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractEndMonth"
                                 >
-                                  Month
+                                  {t('general:date.month')}
                                 </Label>
                                 <Field
                                   as={DateInputMonth}
@@ -766,7 +773,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractEndDay"
                                 >
-                                  Day
+                                  {t('general:date.day')}
                                 </Label>
                                 <Field
                                   as={DateInputDay}
@@ -786,7 +793,7 @@ const ContractDetails = ({
                                   className="system-intake__label-margin-top-0"
                                   htmlFor="IntakeForm-ContractEndYear"
                                 >
-                                  Year
+                                  {t('general:date.year')}
                                 </Label>
                                 <Field
                                   as={DateInputYear}

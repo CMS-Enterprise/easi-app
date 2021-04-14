@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
@@ -62,6 +63,7 @@ const ContactDetails = ({
   systemIntake,
   dispatchSave
 }: ContactDetailsProps) => {
+  const { t } = useTranslation('intake');
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
   const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState(
@@ -132,26 +134,21 @@ const ContactDetails = ({
               </ErrorAlert>
             )}
             <p className="line-height-body-5">
-              The EASi System Intake process can guide you through all stages of
-              your project, connecting you with the resources, people and
-              services that you need. Please complete and submit this CMS IT
-              Intake form to engage with the CMS IT Governance review process.
-              This is the first step to receive a CMS IT LifeCycle ID. Upon
-              submission, you will receive an email promptly from the
-              IT_Governance mailbox, and an IT Governance Team member will reach
-              out regarding next steps.
+              {t('contactDetailsForm.systemDescription')}
             </p>
 
             <div className="tablet:grid-col-6 margin-bottom-7">
               <MandatoryFieldsAlert />
-              <PageHeading>Contact details</PageHeading>
+              <PageHeading>{t('contactDetailsForm.heading')}</PageHeading>
               <Form>
                 {/* Requester Name */}
                 <FieldGroup
                   scrollElement="requester.name"
                   error={!!flatErrors['requester.name']}
                 >
-                  <Label htmlFor="IntakeForm-Requester">Requester</Label>
+                  <Label htmlFor="IntakeForm-Requester">
+                    {t('csvHeadings.requesterName')}
+                  </Label>
                   <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
                   <Field
                     as={TextField}
@@ -169,7 +166,7 @@ const ContactDetails = ({
                   error={!!flatErrors['requester.component']}
                 >
                   <Label htmlFor="IntakeForm-RequesterComponent">
-                    Requester Component
+                    {t('csvHeadings.requesterComponent')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['requester.component']}
@@ -214,14 +211,13 @@ const ContactDetails = ({
                     className="margin-bottom-1"
                     htmlFor="IntakeForm-BusinessOwner"
                   >
-                    CMS Business Owner&apos;s Name
+                    {t('contactDetailsForm.businessOwner.name')}
                   </Label>
                   <HelpText
                     id="IntakeForm-BusinessOwnerHelp"
                     className="margin-bottom-105"
                   >
-                    This person owns a line of business related to this request
-                    and will champion the request moving forward
+                    {t('contactDetailsForm.businessOwner.description')}
                   </HelpText>
                   <Field
                     as={CheckboxField}
@@ -265,7 +261,7 @@ const ContactDetails = ({
                   error={!!flatErrors['businessOwner.component']}
                 >
                   <Label htmlFor="IntakeForm-BusinessOwnerComponent">
-                    CMS Business Owner&apos;s Component
+                    {t('contactDetailsForm.businessOwner.component')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['businessOwner.component']}
@@ -296,14 +292,13 @@ const ContactDetails = ({
                     htmlFor="IntakeForm-ProductManager"
                     className="margin-bottom-1"
                   >
-                    CMS Project/Product Manager, or lead
+                    {t('contactDetailsForm.productManager.name')}
                   </Label>
                   <HelpText
                     id="IntakeForm-ProductManagerHelp"
                     className="margin-bottom-105"
                   >
-                    This person may be contacted for follow ups and to
-                    understand the state of the contract
+                    {t('contactDetailsForm.productManager.description')}
                   </HelpText>
                   <Field
                     as={CheckboxField}
@@ -347,7 +342,7 @@ const ContactDetails = ({
                   error={!!flatErrors['productManager.component']}
                 >
                   <Label htmlFor="IntakeForm-ProductManagerComponent">
-                    Product Manager Component
+                    {t('contactDetailsForm.productManager.component')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['productManager.component']}
@@ -377,15 +372,13 @@ const ContactDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
-                      Does your project have an Information System Security
-                      Officer (ISSO)?
+                      {t('contactDetailsForm.isso.doYouHaveAnISSO')}
                     </legend>
                     <HelpText
                       id="IntakeForm-ISSOHelp"
                       className="margin-bottom-2"
                     >
-                      If yes, please tell us the name of your Information System
-                      Security Officer so we can get in touch with them
+                      {t('contactDetailsForm.isso.ifYes')}
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['isso.isPresent']}
@@ -409,7 +402,9 @@ const ContactDetails = ({
                           scrollElement="isso.name"
                           error={!!flatErrors['isso.name']}
                         >
-                          <Label htmlFor="IntakeForm-IssoName">ISSO Name</Label>
+                          <Label htmlFor="IntakeForm-IssoName">
+                            {t('contactDetailsForm.isso.name')}
+                          </Label>
                           <FieldErrorMsg>
                             {flatErrors['isso.name']}
                           </FieldErrorMsg>
