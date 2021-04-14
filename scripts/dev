@@ -1,6 +1,7 @@
 #! /usr/bin/ruby
 
 require "rake"
+require "json"
 require "irb"        # debugging
 require "io/console" # for IO#getch
 
@@ -104,6 +105,50 @@ namespace :docker do
   desc "Delete all dangling volumes"
   task :sweep do
     sh "docker volume rm $(docker volume ls -qf dangling=true)"
+  end
+end
+
+def each_minio_file(&block)
+  output = `docker-compose run --entrypoint="mc --no-color --json ls -r local/easi-app-file-uploads" minio_mc`
+  json = "[#{output.gsub(/\}\s*\{/, "},{")}]" # convert sort-of-jsonl into conventional json
+  files = JSON.parse(json)
+
+  files.each do |file|
+    yield file
+  end
+end
+
+def set_file_tag(key, status)
+  command = %Q{mc tag set 'local/easi-app-file-uploads/#{key}' 'av-status=#{status}'}
+  sh %Q{docker-compose run --entrypoint="#{command}" minio_mc}
+end
+
+namespace :minio do
+  task :list do
+    each_minio_file do |file|
+      puts file["key"]
+    end
+  end
+
+  desc "Mark all files in minio as clean (no viruses found)"
+  task :clean do
+    each_minio_file do |file|
+      set_file_tag(file["key"], "CLEAN")
+    end
+  end
+
+  desc "Mark all files in minio as infected (virus found)"
+  task :infected do
+    each_minio_file do |file|
+      set_file_tag(file["key"], "INFECTED")
+    end
+  end
+
+  desc "Mark all files in minio as pending (waiting for scan)"
+  task :pending do
+    each_minio_file do |file|
+      set_file_tag(file["key"], "")
+    end
   end
 end
 
