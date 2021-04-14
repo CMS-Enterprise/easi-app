@@ -155,7 +155,7 @@ const Notes = () => {
     }) || [];
 
   const interleavedList = [...notesByTimestamp, ...actionsByTimestamp]
-    .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
+    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .map(a => a.element);
 
   return (
@@ -163,7 +163,7 @@ const Notes = () => {
       <PageHeading>{t('notes.heading')}</PageHeading>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<NoteForm>) => {
-          const { values } = formikProps;
+          const { values, handleSubmit } = formikProps;
           return (
             <div className="tablet:grid-col-9 margin-bottom-7">
               {mutationResult && mutationResult.error && (
@@ -174,7 +174,12 @@ const Notes = () => {
                   />
                 </ErrorAlert>
               )}
-              <Form>
+              <Form
+                onSubmit={e => {
+                  handleSubmit(e);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 <FieldGroup>
                   <Label htmlFor="GovernanceReviewTeam-Note">
                     {t('notes.addNote')}

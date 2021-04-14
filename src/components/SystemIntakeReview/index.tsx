@@ -11,7 +11,7 @@ import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
-import formatDate, { formatContractDate } from 'utils/formatDate';
+import { formatContractDate, formatDate } from 'utils/date';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
@@ -90,13 +90,13 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="CMS Business/Product Owner's Name" />
+            <DescriptionTerm term="CMS Business Owner's Name" />
             <DescriptionDefinition
               definition={systemIntake.businessOwner.name}
             />
           </div>
           <div>
-            <DescriptionTerm term="Business Owner Component" />
+            <DescriptionTerm term="CMS Business Owner Component" />
             <DescriptionDefinition
               definition={systemIntake.businessOwner.component}
             />

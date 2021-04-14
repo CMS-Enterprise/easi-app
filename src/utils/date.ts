@@ -1,9 +1,17 @@
 import { DateTime } from 'luxon';
 
-const formatDate = (date: string | DateTime) => {
+export const parseAsDate = (date: string) =>
+  DateTime.fromISO(date, { zone: 'utc' });
+
+export const parseAsLocalTime = (date: string) => DateTime.fromISO(date);
+
+export const formatDateAndIgnoreTimezone = (date: string) =>
+  parseAsDate(date).toFormat('MMMM d yyyy');
+
+export const formatDate = (date: string | DateTime) => {
   // ISO String
   if (typeof date === 'string') {
-    return DateTime.fromISO(date).toFormat('MMMM d yyyy');
+    return parseAsLocalTime(date).toFormat('MMMM d yyyy');
   }
 
   // luxon DateTime
@@ -39,5 +47,3 @@ export const getFiscalYear = (date: DateTime): number => {
   }
   return year;
 };
-
-export default formatDate;

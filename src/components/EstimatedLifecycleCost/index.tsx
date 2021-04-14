@@ -14,7 +14,7 @@ import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { LifecycleCosts } from 'types/estimatedLifecycle';
-import { getFiscalYear } from 'utils/formatDate';
+import { getFiscalYear } from 'utils/date';
 import formatDollars from 'utils/formatDollars';
 
 import './index.scss';
@@ -90,6 +90,7 @@ const Phase = ({
                     name={`${formikKey}.year${year}.development.cost`}
                     maxLength={10}
                     match={/^[0-9\b]+$/}
+                    aria-describedby="DevelopmentCostsDefinition"
                   />
                 </FieldGroup>
               )}
@@ -130,6 +131,7 @@ const Phase = ({
                     name={`${formikKey}.year${year}.operationsMaintenance.cost`}
                     maxLength={10}
                     match={/^[0-9\b]+$/}
+                    aria-describedby="OperationsMaintenanceCostsDefinition"
                   />
                 </FieldGroup>
               )}
@@ -168,6 +170,7 @@ const Phase = ({
                     name={`${formikKey}.year${year}.other.cost`}
                     maxLength={10}
                     match={/^[0-9\b]+$/}
+                    aria-describedby="OtherCostsDefinition"
                   />
                 </FieldGroup>
               )}
@@ -226,17 +229,27 @@ const EstimatedLifecycleCost = ({
           </h3>
           <dl className="margin-bottom-105">
             <dt className="margin-bottom-1 text-bold">Development</dt>
-            <dd className="margin-bottom-2 margin-left-0 line-height-body-3">
-              Costs related to current development that is pre-production
+            <dd
+              id="DevelopmentCostsDefinition"
+              className="margin-bottom-2 margin-left-0 line-height-body-3"
+            >
+              These are costs related to current development that is
+              pre-production.
             </dd>
             <dt className="margin-bottom-1 text-bold">
               Operations and Maintenance
             </dt>
-            <dd className="margin-bottom-2 margin-left-0 line-height-body-3">
-              Costs related to running and upkeep post-production
+            <dd
+              id="OperationsMaintenanceCostsDefinition"
+              className="margin-bottom-2 margin-left-0 line-height-body-3"
+            >
+              These are costs related to running and upkeep post-production.
             </dd>
             <dt className="margin-bottom-1 text-bold">Other</dt>
-            <dd className="margin-bottom-2 margin-left-0 line-height-body-3">
+            <dd
+              id="OtherCostsDefinition"
+              className="margin-bottom-2 margin-left-0 line-height-body-3"
+            >
               This can be Non-IT costs like education, licenses etc.
             </dd>
           </dl>

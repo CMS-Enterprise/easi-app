@@ -9,7 +9,7 @@ import classnames from 'classnames';
 import { DateTime } from 'luxon';
 import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
-import formatDate from 'utils/formatDate';
+import { formatDate } from 'utils/date';
 
 // import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 
