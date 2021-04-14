@@ -40,7 +40,7 @@ func NewS3Client(config Config) S3Client {
 
 	// if we are in a local dev environment we use Minio for s3
 	if config.IsLocal {
-		awsConfig.Endpoint = aws.String("http://localhost:9000")
+		awsConfig.Endpoint = aws.String(os.Getenv(appconfig.LocalMinioAddressKey))
 		awsConfig.Credentials = credentials.NewStaticCredentials(
 			os.Getenv(appconfig.LocalMinioS3AccessKey),
 			os.Getenv(appconfig.LocalMinioS3SecretKey),

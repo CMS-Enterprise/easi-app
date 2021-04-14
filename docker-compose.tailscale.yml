@@ -4,6 +4,7 @@ services:
   easi:
     environment:
       - CLIENT_ADDRESS=$TAILSCALE_CLIENT_ADDRESS
+      - MINIO_ADDRESS=$TAILSCALE_MINIO_ADDRESS
   easi_client:
     environment:
       - REACT_APP_API_ADDRESS=$TAILSCALE_REACT_APP_API_ADDRESS
