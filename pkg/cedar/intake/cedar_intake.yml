@@ -162,7 +162,7 @@ definitions:
       - alternativeBPros
       - alternativeBCons
       - alternativeBCostSavings
-      - lifecycleCostLines
+      # - lifecycleCostLines
       - submittedAt
       - archivedAt
       - initialSubmittedAt
@@ -293,10 +293,10 @@ definitions:
         type: string
       alternativeBCostSavings:
         type: string
-      lifecycleCostLines:
-        type: array
-        items:
-          $ref: '#/definitions/EASILifecycleCost'
+      # lifecycleCostLines:
+      #   type: array
+      #   items:
+      #     $ref: '#/definitions/EASILifecycleCost'
       submittedAt:
         type: string
         # format: date-time

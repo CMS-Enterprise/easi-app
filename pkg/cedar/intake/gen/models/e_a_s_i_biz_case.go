@@ -7,7 +7,6 @@ package models
 
 import (
 	"encoding/json"
-	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -165,10 +164,6 @@ type EASIBizCase struct {
 	// last submitted at
 	// Required: true
 	LastSubmittedAt *string `json:"lastSubmittedAt"`
-
-	// lifecycle cost lines
-	// Required: true
-	LifecycleCostLines []*EASILifecycleCost `json:"lifecycleCostLines"`
 
 	// preferred acquisition approach
 	// Required: true
@@ -393,10 +388,6 @@ func (m *EASIBizCase) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateLastSubmittedAt(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateLifecycleCostLines(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -875,31 +866,6 @@ func (m *EASIBizCase) validateLastSubmittedAt(formats strfmt.Registry) error {
 
 	if err := validate.Required("lastSubmittedAt", "body", m.LastSubmittedAt); err != nil {
 		return err
-	}
-
-	return nil
-}
-
-func (m *EASIBizCase) validateLifecycleCostLines(formats strfmt.Registry) error {
-
-	if err := validate.Required("lifecycleCostLines", "body", m.LifecycleCostLines); err != nil {
-		return err
-	}
-
-	for i := 0; i < len(m.LifecycleCostLines); i++ {
-		if swag.IsZero(m.LifecycleCostLines[i]) { // not required
-			continue
-		}
-
-		if m.LifecycleCostLines[i] != nil {
-			if err := m.LifecycleCostLines[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
-					return ve.ValidateName("lifecycleCostLines" + "." + strconv.Itoa(i))
-				}
-				return err
-			}
-		}
-
 	}
 
 	return nil
