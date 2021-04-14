@@ -10,6 +10,10 @@ import (
 )
 
 func translateNote(_ context.Context, note *models.Note) (*wire.IntakeInput, error) {
+	if note == nil {
+		return nil, fmt.Errorf("nil note received")
+	}
+
 	obj := wire.EASINote{
 		IntakeID:  pStr(note.SystemIntakeID.String()),
 		AuthorEUA: pStr(note.AuthorEUAID),
@@ -37,5 +41,5 @@ func translateNote(_ context.Context, note *models.Note) (*wire.IntakeInput, err
 		result.LastUpdate = pDateTime(note.CreatedAt)
 	}
 
-	return nil, fmt.Errorf("not yet implemented")
+	return &result, nil
 }
