@@ -223,21 +223,6 @@ const ContractDetails = ({
                           <Label htmlFor="IntakeForm-FundingNumber">
                             Funding Number
                           </Label>
-                          <HelpText
-                            id="IntakeForm-FundingNumberHelp"
-                            className="margin-y-1"
-                          >
-                            <Link
-                              aria-label="Open 'CMS Operating Plan' in a new tab"
-                              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              variant="external"
-                            >
-                              You can find your funding number in the CMS
-                              Operating Plan page (opens in a new tab)
-                            </Link>
-                          </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['fundingSource.fundingNumber']}
                           </FieldErrorMsg>
@@ -258,6 +243,20 @@ const ContractDetails = ({
                                 : ''
                             }
                           />
+                          <HelpText
+                            id="IntakeForm-FundingNumberHelp"
+                            className="margin-y-1"
+                          >
+                            <Link
+                              href="https://cmsintranet.share.cms.gov/JT/Pages/Budget.aspx"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              variant="external"
+                            >
+                              You can find your funding number in the CMS
+                              Operating Plan page (opens in a new tab)
+                            </Link>
+                          </HelpText>
                         </FieldGroup>
                       </div>
                     )}
@@ -305,14 +304,15 @@ const ContractDetails = ({
                       aria-describedby="IntakeForm-IncreasedCostsHelp"
                     />
                     {values.costs.isExpectingIncrease === 'YES' && (
-                      <div className="width-mobile margin-top-neg-2 margin-left-4 margin-bottom-1">
+                      <div className="width-mobile-lg margin-top-neg-2 margin-left-4 margin-bottom-1">
                         <FieldGroup
                           scrollElement="costs.expectedIncreaseAmount"
                           error={!!flatErrors['costs.expectedIncreaseAmount']}
                         >
                           <Label htmlFor="IntakeForm-CostsExpectedIncrease">
                             Approximately how much do you expect the cost to
-                            increase?
+                            increase over what you are currently spending to
+                            meet your business need?
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['costs.expectedIncreaseAmount']}
@@ -667,7 +667,10 @@ const ContractDetails = ({
                             {flatErrors['contract.endDate.year']}
                           </FieldErrorMsg>
                           <div className="display-flex flex-align-center">
-                            <div className="usa-memorable-date">
+                            <div
+                              className="usa-memorable-date"
+                              data-scroll="contract.startDate.validDate"
+                            >
                               <FieldGroup
                                 className="usa-form-group--month"
                                 scrollElement="contract.startDate.month"
@@ -681,7 +684,8 @@ const ContractDetails = ({
                                 <Field
                                   as={DateInputMonth}
                                   error={
-                                    !!flatErrors['contract.startDate.month']
+                                    !!flatErrors['contract.startDate.month'] ||
+                                    !!flatErrors['contract.startDate.validDate']
                                   }
                                   id="IntakeForm-ContractStartMonth"
                                   name="contract.startDate.month"
@@ -699,7 +703,10 @@ const ContractDetails = ({
                                 </Label>
                                 <Field
                                   as={DateInputDay}
-                                  error={!!flatErrors['contract.startDate.day']}
+                                  error={
+                                    !!flatErrors['contract.startDate.day'] ||
+                                    !!flatErrors['contract.startDate.validDate']
+                                  }
                                   id="IntakeForm-ContractStartDay"
                                   name="contract.startDate.day"
                                 />
@@ -717,7 +724,8 @@ const ContractDetails = ({
                                 <Field
                                   as={DateInputYear}
                                   error={
-                                    !!flatErrors['contract.startDate.year']
+                                    !!flatErrors['contract.startDate.year'] ||
+                                    !!flatErrors['contract.startDate.validDate']
                                   }
                                   id="IntakeForm-ContractStartYear"
                                   name="contract.startDate.year"
@@ -726,7 +734,10 @@ const ContractDetails = ({
                             </div>
 
                             <span className="margin-right-2">to</span>
-                            <div className="usa-memorable-date">
+                            <div
+                              className="usa-memorable-date"
+                              data-scroll="contract.endDate.validDate"
+                            >
                               <FieldGroup
                                 className="usa-form-group--month"
                                 scrollElement="contract.endDate.month"
@@ -739,7 +750,10 @@ const ContractDetails = ({
                                 </Label>
                                 <Field
                                   as={DateInputMonth}
-                                  error={!!flatErrors['contract.endDate.month']}
+                                  error={
+                                    !!flatErrors['contract.endDate.month'] ||
+                                    !!flatErrors['contract.endDate.validDate']
+                                  }
                                   id="IntakeForm-ContractEndMonth"
                                   name="contract.endDate.month"
                                 />
@@ -756,7 +770,10 @@ const ContractDetails = ({
                                 </Label>
                                 <Field
                                   as={DateInputDay}
-                                  error={!!flatErrors['contract.endDate.day']}
+                                  error={
+                                    !!flatErrors['contract.endDate.day'] ||
+                                    !!flatErrors['contract.endDate.validDate']
+                                  }
                                   id="IntakeForm-ContractEndDay"
                                   name="contract.endDate.day"
                                 />
@@ -773,7 +790,10 @@ const ContractDetails = ({
                                 </Label>
                                 <Field
                                   as={DateInputYear}
-                                  error={!!flatErrors['contract.endDate.year']}
+                                  error={
+                                    !!flatErrors['contract.endDate.year'] ||
+                                    !!flatErrors['contract.endDate.validDate']
+                                  }
                                   id="IntakeForm-ContractEndYear"
                                   name="contract.endDate.year"
                                 />

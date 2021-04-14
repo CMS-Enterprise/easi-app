@@ -84,11 +84,21 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 	})
 	s.NoError(intakeErr)
 
-	_, noteErr := s.store.CreateNote(ctx, &models.Note{
+	note1, noteErr := s.store.CreateNote(ctx, &models.Note{
 		SystemIntakeID: intake.ID,
 		AuthorEUAID:    "QQQQ",
-		AuthorName:     null.StringFrom("Author Name"),
+		AuthorName:     null.StringFrom("Author Name Q"),
 		Content:        null.StringFrom("a clever remark"),
+		CreatedAt:      date(2021, 5, 2),
+	})
+	s.NoError(noteErr)
+
+	note2, noteErr := s.store.CreateNote(ctx, &models.Note{
+		SystemIntakeID: intake.ID,
+		AuthorEUAID:    "WWWW",
+		AuthorName:     null.StringFrom("Author Name W"),
+		Content:        null.StringFrom("a cleverer remark"),
+		CreatedAt:      date(2021, 5, 3),
 	})
 	s.NoError(noteErr)
 
@@ -127,13 +137,21 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithNotesQuery() {
 
 	s.Equal(intake.ID.String(), resp.SystemIntake.ID)
 
-	s.Len(resp.SystemIntake.Notes, 1)
+	s.Len(resp.SystemIntake.Notes, 2)
 
-	s.NotEmpty(resp.SystemIntake.Notes[0].ID)
-	s.Equal("a clever remark", resp.SystemIntake.Notes[0].Content)
-	s.Equal("QQQQ", resp.SystemIntake.Notes[0].Author.EUA)
-	s.Equal("Author Name", resp.SystemIntake.Notes[0].Author.Name)
-	s.NotEmpty(resp.SystemIntake.Notes[0].CreatedAt)
+	respNote2 := resp.SystemIntake.Notes[0]
+	s.Equal(note2.ID.String(), respNote2.ID)
+	s.Equal("a cleverer remark", respNote2.Content)
+	s.Equal("WWWW", respNote2.Author.EUA)
+	s.Equal("Author Name W", respNote2.Author.Name)
+	s.NotEmpty(respNote2.CreatedAt)
+
+	respNote1 := resp.SystemIntake.Notes[1]
+	s.Equal(note1.ID.String(), respNote1.ID)
+	s.Equal("a clever remark", respNote1.Content)
+	s.Equal("QQQQ", respNote1.Author.EUA)
+	s.Equal("Author Name Q", respNote1.Author.Name)
+	s.NotEmpty(respNote1.CreatedAt)
 }
 
 func (s GraphQLTestSuite) TestFetchSystemIntakeWithContractMonthAndYearQuery() {
@@ -403,6 +421,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 		ActorName:      "First Actor",
 		ActorEmail:     "first.actor@example.com",
 		ActorEUAUserID: "ACT1",
+		CreatedAt:      date(2021, 4, 1),
 	})
 	s.NoError(action1Err)
 
@@ -413,6 +432,7 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 		ActorEmail:     "second.actor@example.com",
 		ActorEUAUserID: "ACT2",
 		Feedback:       null.StringFrom("feedback for action two"),
+		CreatedAt:      date(2021, 4, 2),
 	})
 	s.NoError(action2Err)
 
@@ -453,21 +473,21 @@ func (s GraphQLTestSuite) TestFetchSystemIntakeWithActionsQuery() {
 
 	s.Equal(2, len(resp.SystemIntake.Actions))
 
-	respAction1 := resp.SystemIntake.Actions[0]
-	s.Equal(action1.ID.String(), respAction1.ID)
-	s.Nil(respAction1.Feedback)
-	s.Equal(action1.CreatedAt.UTC().Format(time.RFC3339), respAction1.CreatedAt)
-	s.Equal("SUBMIT_INTAKE", respAction1.Type)
-	s.Equal("First Actor", respAction1.Actor.Name)
-	s.Equal("first.actor@example.com", respAction1.Actor.Email)
-
-	respAction2 := resp.SystemIntake.Actions[1]
+	respAction2 := resp.SystemIntake.Actions[0]
 	s.Equal(action2.ID.String(), respAction2.ID)
 	s.Equal("feedback for action two", *respAction2.Feedback)
 	s.Equal(action2.CreatedAt.UTC().Format(time.RFC3339), respAction2.CreatedAt)
 	s.Equal("PROVIDE_FEEDBACK_NEED_BIZ_CASE", respAction2.Type)
 	s.Equal("Second Actor", respAction2.Actor.Name)
 	s.Equal("second.actor@example.com", respAction2.Actor.Email)
+
+	respAction1 := resp.SystemIntake.Actions[1]
+	s.Equal(action1.ID.String(), respAction1.ID)
+	s.Nil(respAction1.Feedback)
+	s.Equal(action1.CreatedAt.UTC().Format(time.RFC3339), respAction1.CreatedAt)
+	s.Equal("SUBMIT_INTAKE", respAction1.Type)
+	s.Equal("First Actor", respAction1.Actor.Name)
+	s.Equal("first.actor@example.com", respAction1.Actor.Email)
 }
 
 func (s GraphQLTestSuite) TestIssueLifecycleIDWithPassedLCID() {
@@ -576,4 +596,9 @@ func (s GraphQLTestSuite) TestIssueLifecycleIDSetNewLCID() {
 	respIntake := resp.IssueLifecycleID.SystemIntake
 	s.Equal(respIntake.LcidExpiresAt, "2021-03-18T00:00:00Z")
 	s.Equal(respIntake.Lcid, "654321B")
+}
+
+func date(year, month, day int) *time.Time {
+	date := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	return &date
 }

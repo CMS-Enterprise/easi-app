@@ -5,7 +5,6 @@ export const actionSchema = Yup.object().shape({
 });
 
 export const lifecycleIdSchema = Yup.object().shape({
-  lifecycleId: Yup.string().trim().nullable().length(7),
   expirationDateDay: Yup.string()
     .trim()
     .length(2)
@@ -19,8 +18,21 @@ export const lifecycleIdSchema = Yup.object().shape({
     .length(4)
     .required('Please include a year'),
   scope: Yup.string().trim().required('Please include a scope'),
-  nextSteps: Yup.string().trim(),
-  feedback: Yup.string().trim().required('Please fill out email')
+  nextSteps: Yup.string().trim().required('Please fill out next steps'),
+  feedback: Yup.string().trim().required('Please fill out email'),
+  newLifecycleId: Yup.boolean().required(
+    'Choose if you need a new Lifecycle ID or if you will use an existing Lifecycle ID'
+  ),
+  lifecycleId: Yup.string().when('newLifecycleId', {
+    is: false,
+    then: Yup.string()
+      .trim()
+      .matches(
+        /^[A-Za-z]?[0-9]{6}$/,
+        'Must be 6 digits with optional preceding letter'
+      )
+      .required('Please enter the existing Lifecycle ID')
+  })
 });
 
 export const rejectIntakeSchema = Yup.object().shape({

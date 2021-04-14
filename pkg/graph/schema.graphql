@@ -39,72 +39,26 @@ type System {
   name: String!
 }
 
-"""
-Represents the availability of a document
-"""
 enum AccessibilityRequestDocumentStatus {
-  """
-  Passed security screen
-  """
   AVAILABLE
-
-  """
-  Just uploaded
-  """
   PENDING
-
-  """
-  Failed security screen
-  """
   UNAVAILABLE
 }
 
-"""
-Common document type of an Accessibility Request document
-"""
 enum AccessibilityRequestDocumentCommonType {
-  """
-  Awarded VPAT
-  """
   AWARDED_VPAT
-
-  """
-  Other document
-  """
   OTHER
-
-  """
-  Remediation Plan
-  """
   REMEDIATION_PLAN
-
-  """
-  Testing VPAT
-  """
   TESTING_VPAT
-
-  """
-  Test Plan
-  """
   TEST_PLAN
-
-  """
-  Test Results
-  """
   TEST_RESULTS
 }
 
-"""
-Document type of an Accessibility Request document
-"""
 type AccessibilityRequestDocumentType {
   commonType: AccessibilityRequestDocumentCommonType!
   otherTypeDescription: String
 }
 
-"""
-A document that belongs to an accessibility request
-"""
 type AccessibilityRequestDocument {
   documentType: AccessibilityRequestDocumentType!
   id: UUID!
@@ -117,66 +71,42 @@ type AccessibilityRequestDocument {
   url: String!
 }
 
-"""
-A collection of Systems
-"""
 type SystemConnection {
   edges: [SystemEdge!]!
   totalCount: Int!
 }
 
-"""
-An edge of an SystemConnection
-"""
 type SystemEdge {
   cursor: String!
   node: System!
 }
 
-"""
-Parameters required to create an AccessibilityRequest
-"""
 input CreateAccessibilityRequestInput {
   intakeID: UUID!
   name: String!
 }
 
-"""
-Result of CreateAccessibilityRequest
-"""
 type CreateAccessibilityRequestPayload {
   accessibilityRequest: AccessibilityRequest
   userErrors: [UserError!]
 }
 
-"""
-Parameters required to generate a presigned upload URL
-"""
 input GeneratePresignedUploadURLInput {
   fileName: String!
   mimeType: String!
   size: Int!
 }
 
-"""
-Result of CreateAccessibilityRequest
-"""
 type GeneratePresignedUploadURLPayload {
   url: String
   userErrors: [UserError!]
 }
 
-"""
-A collection of AccessibilityRequests
-"""
 type AccessibilityRequestsConnection {
   edges: [AccessibilityRequestEdge!]!
   totalCount: Int!
 }
 
-"""
-An edge of an AccessibilityRequestConnection
-"""
 type AccessibilityRequestEdge {
   cursor: String!
   node: AccessibilityRequest!
@@ -192,24 +122,11 @@ type TestDate {
   testType: TestDateTestType!
 }
 
-"""
-The variety of a 508 test
-"""
 enum TestDateTestType {
-  """
-  Represents an initial 508 test
-  """
   INITIAL
-
-  """
-  Represents a remediation test
-  """
   REMEDIATION
 }
 
-"""
-Parameters for creating a test date
-"""
 input CreateTestDateInput {
   date: Time!
   requestID: UUID!
@@ -217,17 +134,11 @@ input CreateTestDateInput {
   testType: TestDateTestType!
 }
 
-"""
-Result of createTestDate
-"""
 type CreateTestDatePayload {
   testDate: TestDate
   userErrors: [UserError!]
 }
 
-"""
-Parameters for editing a test date
-"""
 input UpdateTestDateInput {
   date: Time!
   id: UUID!
@@ -235,17 +146,11 @@ input UpdateTestDateInput {
   testType: TestDateTestType!
 }
 
-"""
-Result of editTestDate
-"""
 type UpdateTestDatePayload {
   testDate: TestDate
   userErrors: [UserError!]
 }
 
-"""
-Parameters for createAccessibilityRequestDocument
-"""
 input CreateAccessibilityRequestDocumentInput {
   commonDocumentType: AccessibilityRequestDocumentCommonType!
   mimeType: String!
@@ -256,16 +161,13 @@ input CreateAccessibilityRequestDocumentInput {
   url: String!
 }
 
-"""
-Result of createAccessibilityRequestDocument
-"""
 type CreateAccessibilityRequestDocumentPayload {
   accessibilityRequestDocument: AccessibilityRequestDocument
   userErrors: [UserError!]
 }
 
 """
-The shape of a solution for a business case
+A solution proposal within a business case
 """
 type BusinessCaseSolution {
   acquisitionApproach: String
@@ -282,9 +184,6 @@ type BusinessCaseSolution {
   title: String
 }
 
-"""
-The shape of a solution for a business case
-"""
 type BusinessCaseAsIsSolution {
   cons: String
   costSavings: String
@@ -293,74 +192,30 @@ type BusinessCaseAsIsSolution {
   title: String
 }
 
-"""
-enum
-"""
 enum LifecycleCostPhase {
-  """
-  development
-  """
   DEVELOPMENT
-  """
-  Operations and Maintentance
-  """
   OPERATIONS_AND_MAINTENANCE
-  """
-  Other
-  """
   OTHER
 }
 
-"""
-enum
-"""
 enum LifecycleCostSolution {
-  """
   A
-  """
-  A
-  """
-  As is
-  """
   AS_IS
-  """
   B
-  """
-  B
-  """
-  Preferred
-  """
   PREFERRED
 }
 
-"""
-enum
-"""
 enum LifecycleCostYear {
-  """
-  1
-  """
+
   LIFECYCLE_COST_YEAR_1
-  """
-  2
-  """
   LIFECYCLE_COST_YEAR_2
-  """
-  3
-  """
   LIFECYCLE_COST_YEAR_3
-  """
-  4
-  """
   LIFECYCLE_COST_YEAR_4
-  """
-  5
-  """
   LIFECYCLE_COST_YEAR_5
 }
 
 """
-The shape of an estimated lifecycle cost row
+An estimated Lifecycle cost row
 """
 type EstimatedLifecycleCost {
   businessCaseId: UUID!
@@ -371,23 +226,11 @@ type EstimatedLifecycleCost {
   year: LifecycleCostYear
 }
 
-"""
-Business Case status options
-"""
 enum BusinessCaseStatus {
-  """
-  closed
-  """
   CLOSED
-  """
-  open
-  """
   OPEN
 }
 
-"""
-A Business Case instance
-"""
 type BusinessCase {
   alternativeASolution: BusinessCaseSolution
   alternativeBSolution: BusinessCaseSolution
@@ -413,53 +256,16 @@ type BusinessCase {
   updatedAt: Time!
 }
 
-"""
-The statuses for a system intake
-"""
 enum SystemIntakeStatus {
-  """
-  Accepted
-  """
-  ACCEPTED
-  """
-  Business case needs changes
-  """
   BIZ_CASE_CHANGES_NEEDED
-  """
-  Busness case draft
-  """
   BIZ_CASE_DRAFT
-  """
-  Business case draft submitted
-  """
   BIZ_CASE_DRAFT_SUBMITTED
-  """
-  Business case final needed
-  """
   BIZ_CASE_FINAL_NEEDED
-  """
-  Business case final submitted
-  """
   BIZ_CASE_FINAL_SUBMITTED
-  """
-  Intake is in draft
-  """
   INTAKE_DRAFT
-  """
-  Intake is submitted
-  """
   INTAKE_SUBMITTED
-  """
-  Lifecycle ID issued
-  """
   LCID_ISSUED
-  """
-  Need business case
-  """
   NEED_BIZ_CASE
-  """
-  Request not approved
-  """
   NOT_APPROVED
   """
   Request is not an IT request
@@ -485,54 +291,27 @@ enum SystemIntakeStatus {
   Request for shutdown of existing system is in progress
   """
   SHUTDOWN_IN_PROGRESS
-  """
-  Request was withdrawn by business owner
-  """
   WITHDRAWN
 }
 
-"""
-The request types for a system intake
-"""
 enum SystemIntakeRequestType {
-  """
-  Request is for major changes to an existing system
-  """
   MAJOR_CHANGES
-  """
-  Request is for a new system
-  """
   NEW
-  """
-  Request is for re-competing an existing system
-  """
   RECOMPETE
-  """
-  Request is to shut down an existing system
-  """
   SHUTDOWN
 }
 
-"""
-A business owner for a system intake
-"""
 type SystemIntakeBusinessOwner {
   component: String
   name: String
 }
 
-"""
-A date for a contract
-"""
 type ContractDate {
   day: String
   month: String
   year: String
 }
 
-"""
-A contract for a system intake
-"""
 type SystemIntakeContract {
   contractor: String
   endDate: ContractDate
@@ -541,26 +320,17 @@ type SystemIntakeContract {
   vehicle: String
 }
 
-"""
-costs for a system intake
-"""
 type SystemIntakeCosts {
   expectedIncreaseAmount: String
   isExpectingIncrease: String
 }
 
-"""
-A funding source for a system intake
-"""
 type SystemIntakeFundingSource {
   fundingNumber: String
   isFunded: Boolean
   source: String
 }
 
-"""
-A collaborator for an intake
-"""
 type SystemIntakeCollaborator {
   acronym: String
   collaborator: String
@@ -569,33 +339,21 @@ type SystemIntakeCollaborator {
   name: String
 }
 
-"""
-governanceTeam for an intake
-"""
 type SystemIntakeGovernanceTeam {
   isPresent: Boolean
   teams: [SystemIntakeCollaborator!]
 }
 
-"""
-An isso for a system intake
-"""
 type SystemIntakeISSO {
   isPresent: Boolean
   name: String
 }
 
-"""
-The author of a system intake note
-"""
 type SystemIntakeNoteAuthor {
   eua: String!
   name: String!
 }
 
-"""
-A note on a system intake
-"""
 type SystemIntakeNote {
   author: SystemIntakeNoteAuthor!
   content: String!
@@ -603,26 +361,17 @@ type SystemIntakeNote {
   id: UUID!
 }
 
-"""
-A product manager for a system intake
-"""
 type SystemIntakeProductManager {
   component: String
   name: String
 }
 
-"""
-A requester for a system intake
-"""
 type SystemIntakeRequester {
   component: String
   email: String
   name: String!
 }
 
-"""
-A SystemIntake instance
-"""
 type SystemIntake {
   actions: [SystemIntakeAction!]!
   adminLead: String
@@ -666,9 +415,6 @@ type SystemIntake {
   updatedAt: Time!
 }
 
-"""
-Indicates which action should be taken
-"""
 enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES
   CREATE_BIZ_CASE
@@ -702,33 +448,21 @@ type SystemIntakeAction {
   createdAt: Time!
 }
 
-"""
-A person performing an action on a system intake
-"""
 type SystemIntakeActionActor {
   name: String!
   email: String!
 }
 
-"""
-Input for adding GRT Feedback
-"""
 input AddGRTFeedbackInput {
   emailBody: String!
   feedback: String!
   intakeID: UUID!
 }
 
-"""
-Response for adding GRT Feedback
-"""
 type AddGRTFeedbackPayload {
   id: UUID
 }
 
-"""
-Input for issuing a lifecycle id
-"""
 input IssueLifecycleIdInput {
   expiresAt: Time!
   feedback: String!
@@ -738,9 +472,6 @@ input IssueLifecycleIdInput {
   scope: String!
 }
 
-"""
-Input for rejecting an intake
-"""
 input RejectIntakeInput {
   feedback: String!
   intakeId: UUID!
@@ -748,26 +479,13 @@ input RejectIntakeInput {
   reason: String!
 }
 
-"""
-Parameters required to update the admin lead for an intake
-"""
 input UpdateSystemIntakeAdminLeadInput {
   adminLead: String!
   id: UUID!
 }
 
-"""
-Type or recipient of GRT Feedback
-"""
 enum GRTFeedbackType {
-  """
-  Feedback for the business owner
-  """
   BUSINESS_OWNER
-
-  """
-  Recommendations to the GRB
-  """
   GRB
 }
 
@@ -781,43 +499,27 @@ type GRTFeedback {
   feedbackType: GRTFeedbackType
 }
 
-"""
-Parameters required to update the grt and grb dates for an intake
-"""
 input UpdateSystemIntakeReviewDatesInput {
   grbDate: Time
   grtDate: Time
   id: UUID!
 }
 
-"""
-Parameters required to create a note for an intake
-"""
 input CreateSystemIntakeNoteInput {
   content: String!
   authorName: String!
   intakeId: UUID!
 }
 
-"""
-Result of UpdateSystemIntake mutations
-"""
 type UpdateSystemIntakePayload {
   systemIntake: SystemIntake
   userErrors: [UserError!]
 }
-
-"""
-Parameters for actions without additional fields
-"""
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
 }
 
-"""
-The root mutation
-"""
 type Mutation {
   addGRTFeedbackAndKeepBusinessCaseInDraft(
     input: AddGRTFeedbackInput!
@@ -863,9 +565,6 @@ type Mutation {
     @hasRole(role: EASI_508_TESTER)
 }
 
-"""
-The root query
-"""
 type Query {
   accessibilityRequest(id: UUID!): AccessibilityRequest
   accessibilityRequests(

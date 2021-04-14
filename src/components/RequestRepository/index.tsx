@@ -10,9 +10,11 @@ import { DateTime } from 'luxon';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import PageHeading from 'components/PageHeading';
+import TruncatedText from 'components/shared/TruncatedText';
 import { convertIntakeToCSV } from 'data/systemIntake';
 import { AppState } from 'reducers/rootReducer';
 import { fetchSystemIntakes } from 'types/routines';
+import { formatDateAndIgnoreTimezone } from 'utils/date';
 import {
   getAcronymForComponent,
   translateRequestType
@@ -30,6 +32,11 @@ const RequestRepository = () => {
   const systemIntakes = useSelector(
     (state: AppState) => state.systemIntakes.systemIntakes
   );
+
+  // Character limit for length of free text (Admin Note, LCID Scope, etc.), any
+  // text longer then this limit will be displayed with a button to allow users
+  // to expand/unexpand the text
+  const freeFormTextCharLimit = 25;
 
   const submissionDateColumn = {
     Header: t('intake:fields.submissionDate'),
@@ -64,16 +71,6 @@ const RequestRepository = () => {
     }
   };
 
-  const requestTypeColumn = {
-    Header: t('requestRepository.table.requestType'),
-    accessor: 'requestType'
-  };
-
-  const fundingNumberColmun = {
-    Header: t('intake:fields.fundingNumber'),
-    accessor: 'fundingSource.fundingNumber'
-  };
-
   const adminLeadColumn = {
     Header: t('intake:fields.adminLead'),
     accessor: 'adminLead',
@@ -98,7 +95,7 @@ const RequestRepository = () => {
     accessor: 'grtDate',
     Cell: ({ row, value }: any) => {
       if (value) {
-        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+        return formatDateAndIgnoreTimezone(value);
       }
 
       // If date is null, return button that takes user to page to add date
@@ -119,7 +116,7 @@ const RequestRepository = () => {
     accessor: 'grbDate',
     Cell: ({ row, value }: any) => {
       if (value) {
-        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+        return formatDateAndIgnoreTimezone(value);
       }
 
       // If date is null, return button that takes user to page to add date
@@ -137,7 +134,67 @@ const RequestRepository = () => {
 
   const statusColumn = {
     Header: t('intake:fields.status'),
-    accessor: 'status'
+    accessor: 'status',
+    Cell: ({ row, value }: any) => {
+      // Check if status is LCID_ISSUED (need to check for translation)
+
+      // If LCID_ISSUED append LCID Scope to status
+      if (value === `LCID: ${row.original.lcid}`) {
+        return (
+          <>
+            {value}
+            <br />
+            <TruncatedText
+              id="lcid-scope"
+              label="less"
+              closeLabel="more"
+              text={`Scope: ${row.original.lcidScope}`}
+              charLimit={freeFormTextCharLimit}
+              className="margin-top-2"
+            />
+          </>
+        );
+      }
+
+      // If any other value just display status
+      return value;
+    }
+  };
+
+  const lcidExpirationDateColumn = {
+    Header: t('intake:fields.lcidExpirationDate'),
+    accessor: 'lcidExpiration',
+    Cell: ({ value }: any) => {
+      if (value) {
+        return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+      }
+
+      // If no LCID Expiration exists, display 'No LCID Issued'
+      return 'No LCID Issued';
+    }
+  };
+
+  const lastAdminNoteColumn = {
+    Header: t('intake:fields.lastAdminNote'),
+    accessor: 'lastAdminNote',
+    Cell: ({ value }: any) => {
+      if (value) {
+        return (
+          // Display admin note using truncated text field that
+          // will display note with expandable extra text (if applicable)
+          <TruncatedText
+            id="last-admin-note"
+            label="less"
+            closeLabel="more"
+            text={value.content}
+            charLimit={freeFormTextCharLimit}
+          />
+        );
+      }
+
+      // If no admin note exits, display 'No Admin Notes'
+      return 'No Admin Notes';
+    }
   };
 
   const columns: any = useMemo(() => {
@@ -146,7 +203,6 @@ const RequestRepository = () => {
         submissionDateColumn,
         requestNameColumn,
         requesterNameAndComponentColumn,
-        requestTypeColumn,
         adminLeadColumn,
         statusColumn,
         grtDateColumn,
@@ -158,8 +214,9 @@ const RequestRepository = () => {
         submissionDateColumn,
         requestNameColumn,
         requesterNameAndComponentColumn,
-        fundingNumberColmun,
-        statusColumn
+        lcidExpirationDateColumn,
+        statusColumn,
+        lastAdminNoteColumn
       ];
     }
     return [];
@@ -209,17 +266,32 @@ const RequestRepository = () => {
           const rowOneElem = rowOne.values[columnName];
           const rowTwoElem = rowTwo.values[columnName];
 
-          // If item is a string, enforce capitalization (temporarily) and then compare
-          if (typeof rowOneElem === 'string') {
+          // Null checks for columns with data potentially empty (LCID Expiration, Admin Notes, etc.)
+          if (rowOneElem === null) {
+            return 1;
+          }
+
+          if (rowTwoElem === null) {
+            return -1;
+          }
+
+          // If both items are strings, enforce capitalization (temporarily) and then compare
+          if (
+            typeof rowOneElem === 'string' &&
+            typeof rowTwoElem === 'string'
+          ) {
             return rowOneElem.toUpperCase() > rowTwoElem.toUpperCase() ? 1 : -1;
           }
 
-          // If item is a DateTime, convert to Number and compare
-          if (rowOneElem instanceof DateTime) {
+          // If both items are DateTimes, convert to Number and compare
+          if (
+            rowOneElem instanceof DateTime &&
+            rowTwoElem instanceof DateTime
+          ) {
             return Number(rowOneElem) > Number(rowTwoElem) ? 1 : -1;
           }
 
-          // If neither string nor DateTime, return bare comparison
+          // If items are different types and/or neither string nor DateTime, return bare comparison
           return rowOneElem > rowTwoElem ? 1 : -1;
         }
       },
@@ -331,7 +403,7 @@ const RequestRepository = () => {
           count: data.length
         })}
       </h1>
-      <Table bordered={false} {...getTableProps()} fullWidth>
+      <Table fixed bordered={false} {...getTableProps()} fullWidth>
         <caption className="usa-sr-only">
           {activeTable === 'open' &&
             t('requestRepository.aria.openTableCaption')}
@@ -364,13 +436,22 @@ const RequestRepository = () => {
                 {row.cells.map((cell, i) => {
                   if (i === 0) {
                     return (
-                      <th {...cell.getCellProps()} scope="row">
+                      <th
+                        {...cell.getCellProps()}
+                        style={{ verticalAlign: 'top' }}
+                        scope="row"
+                      >
                         {cell.render('Cell')}
                       </th>
                     );
                   }
                   return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    <td
+                      {...cell.getCellProps()}
+                      style={{ verticalAlign: 'top' }}
+                    >
+                      {cell.render('Cell')}
+                    </td>
                   );
                 })}
               </tr>

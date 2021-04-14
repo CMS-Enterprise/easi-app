@@ -14,7 +14,7 @@ import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
-import formatDate from 'utils/formatDate';
+import { formatDate } from 'utils/date';
 import {
   isIntakeClosed,
   isIntakeOpen,
@@ -161,7 +161,6 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
                 {t('governanceReviewTeam:adminLeads.changeLead')}
               </Button>
               <Modal
-                title={t('governanceReviewTeam:adminLeads:assignModal.title')}
                 isOpen={isModalOpen}
                 closeModal={() => {
                   setModalOpen(false);

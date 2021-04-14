@@ -5,20 +5,13 @@ import noScroll from 'no-scroll';
 import './index.scss';
 
 type ModalProps = {
-  title: string;
   children: ReactNode | ReactNodeArray;
   isOpen: boolean;
   openModal?: () => void;
   closeModal: () => void;
 };
 
-const Modal = ({
-  title,
-  children,
-  isOpen,
-  openModal,
-  closeModal
-}: ModalProps) => {
+const Modal = ({ children, isOpen, openModal, closeModal }: ModalProps) => {
   const handleOpenModal = () => {
     noScroll.on();
     if (openModal) {
@@ -37,17 +30,14 @@ const Modal = ({
       shouldCloseOnOverlayClick={false}
       appElement={document.getElementById('root')!}
     >
-      <div className="easi-modal__header">
-        <div className="easi-modal__title">{title}</div>
-        <button
-          type="button"
-          className="easi-modal__x-button"
-          aria-label="Close Modal"
-          onClick={closeModal}
-        >
-          <i className="fa fa-times" />
-        </button>
-      </div>
+      <button
+        type="button"
+        className="easi-modal__x-button"
+        aria-label="Close Modal"
+        onClick={closeModal}
+      >
+        <i className="fa fa-times" />
+      </button>
       <div className="easi-modal__body">{children}</div>
     </ReactModal>
   );

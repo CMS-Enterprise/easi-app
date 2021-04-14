@@ -7,9 +7,6 @@
 // START Enums and Input Objects
 //==============================================================
 
-/**
- * Common document type of an Accessibility Request document
- */
 export enum AccessibilityRequestDocumentCommonType {
   AWARDED_VPAT = "AWARDED_VPAT",
   OTHER = "OTHER",
@@ -19,26 +16,17 @@ export enum AccessibilityRequestDocumentCommonType {
   TEST_RESULTS = "TEST_RESULTS",
 }
 
-/**
- * Represents the availability of a document
- */
 export enum AccessibilityRequestDocumentStatus {
   AVAILABLE = "AVAILABLE",
   PENDING = "PENDING",
   UNAVAILABLE = "UNAVAILABLE",
 }
 
-/**
- * Type or recipient of GRT Feedback
- */
 export enum GRTFeedbackType {
   BUSINESS_OWNER = "BUSINESS_OWNER",
   GRB = "GRB",
 }
 
-/**
- * Indicates which action should be taken
- */
 export enum SystemIntakeActionType {
   BIZ_CASE_NEEDS_CHANGES = "BIZ_CASE_NEEDS_CHANGES",
   CREATE_BIZ_CASE = "CREATE_BIZ_CASE",
@@ -60,9 +48,6 @@ export enum SystemIntakeActionType {
   SUBMIT_INTAKE = "SUBMIT_INTAKE",
 }
 
-/**
- * The request types for a system intake
- */
 export enum SystemIntakeRequestType {
   MAJOR_CHANGES = "MAJOR_CHANGES",
   NEW = "NEW",
@@ -70,11 +55,7 @@ export enum SystemIntakeRequestType {
   SHUTDOWN = "SHUTDOWN",
 }
 
-/**
- * The statuses for a system intake
- */
 export enum SystemIntakeStatus {
-  ACCEPTED = "ACCEPTED",
   BIZ_CASE_CHANGES_NEEDED = "BIZ_CASE_CHANGES_NEEDED",
   BIZ_CASE_DRAFT = "BIZ_CASE_DRAFT",
   BIZ_CASE_DRAFT_SUBMITTED = "BIZ_CASE_DRAFT_SUBMITTED",
@@ -94,34 +75,22 @@ export enum SystemIntakeStatus {
   WITHDRAWN = "WITHDRAWN",
 }
 
-/**
- * The variety of a 508 test
- */
 export enum TestDateTestType {
   INITIAL = "INITIAL",
   REMEDIATION = "REMEDIATION",
 }
 
-/**
- * Input for adding GRT Feedback
- */
 export interface AddGRTFeedbackInput {
   emailBody: string;
   feedback: string;
   intakeID: UUID;
 }
 
-/**
- * Parameters for actions without additional fields
- */
 export interface BasicActionInput {
   feedback: string;
   intakeId: UUID;
 }
 
-/**
- * Parameters for createAccessibilityRequestDocument
- */
 export interface CreateAccessibilityRequestDocumentInput {
   commonDocumentType: AccessibilityRequestDocumentCommonType;
   mimeType: string;
@@ -132,26 +101,17 @@ export interface CreateAccessibilityRequestDocumentInput {
   url: string;
 }
 
-/**
- * Parameters required to create an AccessibilityRequest
- */
 export interface CreateAccessibilityRequestInput {
   intakeID: UUID;
   name: string;
 }
 
-/**
- * Parameters required to create a note for an intake
- */
 export interface CreateSystemIntakeNoteInput {
   content: string;
   authorName: string;
   intakeId: UUID;
 }
 
-/**
- * Parameters for creating a test date
- */
 export interface CreateTestDateInput {
   date: Time;
   requestID: UUID;
@@ -159,18 +119,12 @@ export interface CreateTestDateInput {
   testType: TestDateTestType;
 }
 
-/**
- * Parameters required to generate a presigned upload URL
- */
 export interface GeneratePresignedUploadURLInput {
   fileName: string;
   mimeType: string;
   size: number;
 }
 
-/**
- * Input for issuing a lifecycle id
- */
 export interface IssueLifecycleIdInput {
   expiresAt: Time;
   feedback: string;
@@ -180,9 +134,6 @@ export interface IssueLifecycleIdInput {
   scope: string;
 }
 
-/**
- * Input for rejecting an intake
- */
 export interface RejectIntakeInput {
   feedback: string;
   intakeId: UUID;
@@ -190,17 +141,11 @@ export interface RejectIntakeInput {
   reason: string;
 }
 
-/**
- * Parameters required to update the admin lead for an intake
- */
 export interface UpdateSystemIntakeAdminLeadInput {
   adminLead: string;
   id: UUID;
 }
 
-/**
- * Parameters required to update the grt and grb dates for an intake
- */
 export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
   grtDate?: Time | null;
