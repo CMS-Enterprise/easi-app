@@ -4,6 +4,7 @@ services:
   easi:
     environment:
       - CLIENT_ADDRESS=$TAILSCALE_CLIENT_ADDRESS
+      - CLIENT_HOSTNAME
       - MINIO_ADDRESS=$TAILSCALE_MINIO_ADDRESS
   easi_client:
     environment:
