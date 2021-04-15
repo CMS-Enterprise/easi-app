@@ -12,15 +12,19 @@
 
 ## Reviewer Notes
 
-Is there anything you would like reviewers to give additional scrutiny?
+<!--
+    Is there anything you would like reviewers to give additional scrutiny?
+--->
 
 ## Setup
 
-Add any steps or code to run in this section to help others prepare to run your code:
+<!--
+    Add any steps or code to run in this section to help others run your code:
 
-```sh
-echo "Code goes here"
-```
+    ```sh
+    echo "Code goes here"
+    ```
+--->
 
 ## Code Review Verification Steps
 
