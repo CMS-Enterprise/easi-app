@@ -122,8 +122,11 @@ const Create = () => {
                       </Label>
                       <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
                       <ComboBox
+                        id="508Request-IntakeComboBox"
                         name="intakeId"
-                        id="508Request-IntakeId"
+                        inputProps={{
+                          id: '508Request-IntakeId'
+                        }}
                         options={projectComboBoxOptions}
                         onChange={(intakeId: any) => {
                           const selectedSystem = systems[intakeId];
