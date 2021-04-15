@@ -138,6 +138,38 @@ const intake = {
         ]
       }
     }
+  },
+  contactDetailsForm: {
+    intakeProcessDescription:
+      'The EASi System Intake process can guide you through all stages of your project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT LifeCycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
+    heading: 'Contact details',
+    requesterComponent: 'Requester Component',
+    businessOwner: {
+      name: 'CMS Business Owner Name',
+      helpText:
+        'This person owns a line of business related to this request and will champion the request moving forward',
+      component: 'CMS Business Owner Component'
+    },
+    productManager: {
+      name: 'CMS Project/Product Manager, or lead',
+      helpText:
+        'This person may be contacted for follow ups and to understand the state of the contract',
+      component: 'CMS Product Manager Component'
+    },
+    isso: {
+      question:
+        'Does your project have an Information System Security Officer (ISSO)?',
+      helpText:
+        'If yes, please tell us the name of your Information System Security Officer so we can get in touch with them',
+      name: 'ISSO Name'
+    },
+    collaboration: {
+      question:
+        'For this request, I have started collaborating/consulting with:',
+      helpText: `Please disclose the name of each person you've worked with. This helps us locate any additional information on your request`,
+      oneOrMore: '1 or more of the following in OIT (select all that apply)',
+      noOne: 'No one in OIT'
+    }
   }
 };
 
