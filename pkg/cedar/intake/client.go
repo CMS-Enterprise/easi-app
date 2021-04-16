@@ -8,12 +8,18 @@ package intake
 import (
 	"context"
 	"fmt"
+	"net/http"
 
+	"github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
+	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	apiclient "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client"
+	apioperations "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/client/operations"
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
@@ -26,9 +32,6 @@ const (
 
 // NewClient builds the type that holds a connection to the CEDAR Intake API
 func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Client {
-	_ = cedarHost
-	_ = cedarAPIKey
-
 	fnEmit := func(ctx context.Context) bool {
 		// this is the conditional way of stopping us from submitting to CEDAR; see EASI-1025
 		lduser := flags.Principal(ctx)
@@ -45,12 +48,42 @@ func NewClient(cedarHost string, cedarAPIKey string, ldClient *ld.LDClient) *Cli
 		return result
 	}
 
-	return &Client{emitToCedar: fnEmit}
+	hc := http.DefaultClient
+	// if insecure, _ := strconv.ParseBool(os.Getenv("CEDAR_INSECURE")); insecure {
+	// 	// CEDAR certificates are weird/incorrect in DEV environment,
+	// 	// this can help you get around that problem
+	// 	hc = &http.Client{
+	// 		Transport: &http.Transport{
+	// 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	// 		},
+	// 	}
+	// }
+
+	return &Client{
+		emitToCedar: fnEmit,
+		auth: httptransport.APIKeyAuth(
+			"x-Gateway-APIKey",
+			"header",
+			cedarAPIKey,
+		),
+		sdk: apiclient.New(
+			httptransport.New(
+				cedarHost,
+				apiclient.DefaultBasePath,
+				apiclient.DefaultSchemes,
+			),
+			strfmt.Default,
+		),
+		hc: hc,
+	}
 }
 
 // Client represents a connection to the CEDAR Intake API
 type Client struct {
 	emitToCedar func(context.Context) bool
+	auth        runtime.ClientAuthInfoWriter
+	sdk         *apiclient.CEDARIntake
+	hc          *http.Client
 }
 
 // CheckConnection hits the CEDAR Intake API `/healthcheck` endpoint to verify
@@ -59,7 +92,18 @@ func (c *Client) CheckConnection(ctx context.Context) error {
 	if !c.emitToCedar(ctx) {
 		return nil
 	}
-	return fmt.Errorf("not yet implemented")
+
+	params := apioperations.NewHealthCheckGetParamsWithContext(ctx)
+	params.HTTPClient = c.hc
+
+	resp, err := c.sdk.Operations.HealthCheckGet(params, c.auth)
+	if err != nil {
+		return err
+	}
+	if resp.Payload == nil {
+		return fmt.Errorf("no response body received")
+	}
+	return nil
 }
 
 // PublishSnapshot sends the given current state of a SystemIntake and all its
@@ -101,7 +145,25 @@ func (c *Client) PublishSnapshot(
 		appcontext.ZLogger(ctx).Info("snapshot publishing disabled", zap.String("intakeID", id.String()))
 		return nil
 	}
-	return fmt.Errorf("not yet implemented")
+
+	params := apioperations.NewIntakeAddParamsWithContext(ctx)
+	params.HTTPClient = c.hc
+	params.Body.Intakes = inputs
+
+	resp, err := c.sdk.Operations.IntakeAdd(params, c.auth)
+	if err != nil {
+		return err
+	}
+
+	// TODO: we may need to read through the results for any "duplicate entry" error codes
+	// that CEDAR _may_ send us, especially if we are re-transmitting entities... We
+	// don't really care if there are dupes on their side, because we do NOT want to hold
+	// any state on our side about who/what/when may have transmitted a previous copy
+	// of the info to CEDAR.
+	// appcontext.ZLogger(ctx).Info(fmt.Sprintf("results: %v", resp.Payload))
+	_ = resp
+
+	return nil
 }
 
 func buildIntakes(
