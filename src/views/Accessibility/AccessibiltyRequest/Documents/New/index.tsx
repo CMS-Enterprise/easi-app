@@ -143,7 +143,7 @@ const New = () => {
         validateOnMount={false}
       >
         {(formikProps: FormikProps<FileUploadForm>) => {
-          const { errors, setFieldValue, values } = formikProps;
+          const { errors, setFieldValue, values, handleSubmit } = formikProps;
           const flatErrors = flattenErrors(errors);
           return (
             <>
@@ -168,7 +168,13 @@ const New = () => {
                 Upload a document to {data?.accessibilityRequest?.name}
               </PageHeading>
               <div className="grid-col-9">
-                <Form className="usa-form usa-form--large">
+                <Form
+                  className="usa-form usa-form--large"
+                  onSubmit={e => {
+                    handleSubmit(e);
+                    window.scrollTo(0, 0);
+                  }}
+                >
                   <FieldGroup scrollElement="file" error={!!flatErrors.file}>
                     <Label htmlFor="FileUpload-File">Document Upload</Label>
                     <FieldErrorMsg>{flatErrors.file}</FieldErrorMsg>

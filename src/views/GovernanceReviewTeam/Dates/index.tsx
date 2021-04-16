@@ -13,6 +13,11 @@ import {
 import UpdateSystemIntakeReviewDatesQuery from 'queries/UpdateSystemIntakeReviewDatesQuery';
 
 import PageHeading from 'components/PageHeading';
+import {
+  DateInputDay,
+  DateInputMonth,
+  DateInputYear
+} from 'components/shared/DateInput';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -96,7 +101,7 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitDatesForm>) => {
-        const { errors } = formikProps;
+        const { errors, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -128,7 +133,12 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
             <PageHeading>{t('governanceReviewTeam:dates.heading')}</PageHeading>
             <h2>{t('governanceReviewTeam:dates.subheading')}</h2>
             <div className="tablet:grid-col-9 margin-bottom-7">
-              <Form>
+              <Form
+                onSubmit={e => {
+                  handleSubmit(e);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 {/* GRT Date Fields */}
                 <FieldGroup
                   error={
@@ -153,10 +163,9 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                           {t('general:date.month')}
                         </Label>
                         <Field
-                          as={TextField}
+                          as={DateInputMonth}
                           error={!!flatErrors.grtDateMonth}
                           id="Dates-GrtDateMonth"
-                          maxLength={2}
                           name="grtDateMonth"
                         />
                       </div>
@@ -165,10 +174,9 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                           {t('general:date.day')}
                         </Label>
                         <Field
-                          as={TextField}
+                          as={DateInputDay}
                           error={!!flatErrors.grtDateDay}
                           id="Dates-GrtDateDay"
-                          maxLength={2}
                           name="grtDateDay"
                         />
                       </div>
@@ -177,10 +185,9 @@ const Dates = ({ systemIntake }: { systemIntake: SystemIntake }) => {
                           {t('general:date.year')}
                         </Label>
                         <Field
-                          as={TextField}
+                          as={DateInputYear}
                           error={!!flatErrors.grtDateYear}
                           id="Dates-GrtDateYear"
-                          maxLength={4}
                           name="grtDateYear"
                         />
                       </div>

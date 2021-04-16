@@ -131,7 +131,7 @@ const TimeOutWrapper = ({ children }: TimeOutWrapperProps) => {
 
   return (
     <>
-      <Modal title="EASi" isOpen={isModalOpen} closeModal={handleModalExit}>
+      <Modal isOpen={isModalOpen} closeModal={handleModalExit}>
         <h3
           className="margin-top-0"
           role="timer"
