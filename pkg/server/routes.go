@@ -23,7 +23,6 @@ import (
 	"github.com/cmsgov/easi-app/pkg/appconfig"
 	"github.com/cmsgov/easi-app/pkg/appses"
 	"github.com/cmsgov/easi-app/pkg/appvalidation"
-	"github.com/cmsgov/easi-app/pkg/cedar/cedareasi"
 	"github.com/cmsgov/easi-app/pkg/cedar/cedarldap"
 	cedarintake "github.com/cmsgov/easi-app/pkg/cedar/intake"
 	"github.com/cmsgov/easi-app/pkg/email"
@@ -77,22 +76,6 @@ func (s *Server) routes(
 			s.logger.Info("Non-Fatal - Failed to connect to CEDAR Intake API on startup", zap.Error(cerr))
 		}
 	}
-
-	var cedarEasiClient cedareasi.Client = local.NewCedarEasiClient()
-	if !(s.environment.Local() || s.environment.Test()) {
-		// check we have all of the configs for CEDAR clients
-		s.NewCEDARClientCheck()
-
-		cedarEasiClient = cedareasi.NewTranslatedClient(
-			s.Config.GetString(appconfig.CEDARAPIURL),
-			s.Config.GetString(appconfig.CEDARAPIKey),
-			ldClient,
-		)
-		if s.environment.Deployed() {
-			s.CheckCEDAREasiClientConnection(cedarEasiClient)
-		}
-	}
-	_ = cedarEasiClient
 
 	var cedarLDAPClient cedarldap.Client
 	cedarLDAPClient = cedarldap.NewTranslatedClient(
