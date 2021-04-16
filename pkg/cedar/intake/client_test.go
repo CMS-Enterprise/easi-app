@@ -96,10 +96,10 @@ func (s ClientTestSuite) TestTranslation() {
 	s.Run("biz case", func() {
 		bc := testhelpers.NewBusinessCase()
 
-		iis, err := translateBizCase(ctx, &bc)
+		ii, err := translateBizCase(ctx, &bc)
 		s.NoError(err)
 
-		err = validateInputs(ctx, iis)
+		err = validateInputs(ctx, []*wire.IntakeInput{ii})
 		s.NoError(err)
 	})
 

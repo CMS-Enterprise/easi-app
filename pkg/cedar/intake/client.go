@@ -119,11 +119,11 @@ func buildIntakes(
 	results := []*wire.IntakeInput{ii}
 
 	if bc != nil {
-		iis, ierr := translateBizCase(ctx, bc)
-		if ierr != nil {
-			return nil, fmt.Errorf("unable to translate business case: %w", ierr)
+		ii, err = translateBizCase(ctx, bc)
+		if err != nil {
+			return nil, fmt.Errorf("unable to translate business case: %w", err)
 		}
-		results = append(results, iis...)
+		results = append(results, ii)
 	}
 
 	for _, act := range acts {

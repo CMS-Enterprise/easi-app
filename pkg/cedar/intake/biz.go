@@ -4,18 +4,18 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
-func translateBizCase(ctx context.Context, bc *models.BusinessCase) ([]*wire.IntakeInput, error) {
+func translateBizCase(ctx context.Context, bc *models.BusinessCase) (*wire.IntakeInput, error) {
 	if bc == nil {
 		return nil, fmt.Errorf("nil bizcase received")
 	}
 
 	bcID := bc.ID.String()
-
 	obj := wire.EASIBizCase{
 		UserEUA:              pStr(bc.EUAUserID),
 		IntakeID:             pStr(bc.SystemIntakeID.String()),
@@ -77,6 +77,34 @@ func translateBizCase(ctx context.Context, bc *models.BusinessCase) ([]*wire.Int
 		ArchivedAt:         pDateTime(bc.ArchivedAt),
 		InitialSubmittedAt: pDateTime(bc.InitialSubmittedAt),
 		LastSubmittedAt:    pDateTime(bc.LastSubmittedAt),
+
+		// 0-length slice instead of nil, because property is required even if
+		// empty, i.e. in JSON want an empty array rather than a null or an
+		// absent property
+		LifecycleCostLines: []*wire.EASILifecycleCost{},
+	}
+
+	// build the collection of embedded objects
+	for _, line := range bc.LifecycleCostLines {
+		lc := &wire.EASILifecycleCost{
+			ID:             pStr(line.ID.String()),
+			BusinessCaseID: pStr(bcID),
+			Solution:       pStr(string(line.Solution)),
+			Year:           pStr(string(line.Year)),
+		}
+		phase := ""
+		if line.Phase != nil {
+			phase = string(*line.Phase)
+		}
+		lc.Phase = pStr(phase)
+
+		cost := ""
+		if line.Cost != nil {
+			cost = strconv.Itoa(*line.Cost)
+		}
+		lc.Cost = pStr(cost)
+
+		obj.LifecycleCostLines = append(obj.LifecycleCostLines, lc)
 	}
 
 	blob, err := json.Marshal(&obj)
@@ -90,7 +118,7 @@ func translateBizCase(ctx context.Context, bc *models.BusinessCase) ([]*wire.Int
 	// 	return nil, fmt.Errorf("not yet implemented")
 	// }
 
-	result := wire.IntakeInput{
+	result := &wire.IntakeInput{
 		ID:     pStr(bcID),
 		Body:   pStr(string(blob)),
 		Status: pStr(status),
@@ -108,20 +136,5 @@ func translateBizCase(ctx context.Context, bc *models.BusinessCase) ([]*wire.Int
 		result.LastUpdate = pDateTime(bc.UpdatedAt)
 	}
 
-	results := []*wire.IntakeInput{&result}
-	for _, lc := range bc.LifecycleCostLines {
-		ii, err := translateLifecycleCost(ctx, bcID, lc)
-		if err != nil {
-			return nil, err
-		}
-
-		// Lifecycle cost inherits these values from the parent BusinessCase
-		ii.Status = pStr(status)
-		ii.CreatedDate = result.CreatedDate
-		ii.LastUpdate = result.LastUpdate
-
-		results = append(results, ii)
-	}
-	// return nil, fmt.Errorf("not yet implemented")
-	return results, nil
+	return result, nil
 }
