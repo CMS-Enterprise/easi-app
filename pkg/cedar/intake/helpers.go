@@ -107,8 +107,6 @@ func validateInput(_ context.Context, ii *wire.IntakeInput) error {
 		v = &wire.EASIGrtFeedback{}
 	case wire.IntakeInputSchemaEASIIntakeV01:
 		v = &wire.EASIIntake{}
-	case wire.IntakeInputSchemaEASILifecycleCostV01:
-		v = &wire.EASILifecycleCost{}
 	case wire.IntakeInputSchemaEASINoteV01:
 		v = &wire.EASINote{}
 	default:
