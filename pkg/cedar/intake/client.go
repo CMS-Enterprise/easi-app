@@ -14,6 +14,7 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	wire "github.com/cmsgov/easi-app/pkg/cedar/intake/gen/models"
 	"github.com/cmsgov/easi-app/pkg/flags"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -71,13 +72,83 @@ func (c *Client) PublishSnapshot(
 	notes []*models.Note,
 	fbs []*models.GRTFeedback,
 ) error {
+	id := uuid.Nil
+	if si != nil {
+		id = si.ID
+	}
+
+	inputs, err := buildIntakes(ctx, si, bc, acts, notes, fbs)
+	if err != nil {
+		appcontext.ZLogger(ctx).Info(
+			"problem building cedar payload",
+			zap.String("intakeID", id.String()),
+			zap.Error(err),
+		)
+		return nil
+	}
+
+	err = validateInputs(ctx, inputs)
+	if err != nil {
+		appcontext.ZLogger(ctx).Info(
+			"problem validating cedar payload",
+			zap.String("intakeID", id.String()),
+			zap.Error(err),
+		)
+		return nil
+	}
+
 	if !c.emitToCedar(ctx) {
-		id := uuid.Nil
-		if si != nil {
-			id = si.ID
-		}
 		appcontext.ZLogger(ctx).Info("snapshot publishing disabled", zap.String("intakeID", id.String()))
 		return nil
 	}
 	return fmt.Errorf("not yet implemented")
+}
+
+func buildIntakes(
+	ctx context.Context,
+	si *models.SystemIntake,
+	bc *models.BusinessCase,
+	acts []*models.Action,
+	notes []*models.Note,
+	fbs []*models.GRTFeedback,
+) ([]*wire.IntakeInput, error) {
+	ii, err := translateSystemIntake(ctx, si)
+	if err != nil {
+		return nil, fmt.Errorf("unable to translate system intake: %w", err)
+	}
+	results := []*wire.IntakeInput{ii}
+
+	if bc != nil {
+		iis, ierr := translateBizCase(ctx, bc)
+		if ierr != nil {
+			return nil, fmt.Errorf("unable to translate business case: %w", ierr)
+		}
+		results = append(results, iis...)
+	}
+
+	for _, act := range acts {
+		ii, err = translateAction(ctx, act)
+		if err != nil {
+			return nil, fmt.Errorf("unable to translate action: %w", err)
+		}
+		results = append(results, ii)
+	}
+
+	for _, note := range notes {
+		ii, err = translateNote(ctx, note)
+		if err != nil {
+			return nil, fmt.Errorf("unable to translate note: %w", err)
+		}
+		results = append(results, ii)
+	}
+
+	for _, fb := range fbs {
+		ii, err = translateFeedback(ctx, fb)
+		if err != nil {
+			return nil, fmt.Errorf("unable to translate grt feedback: %w", err)
+		}
+		results = append(results, ii)
+	}
+
+	return results, nil
 }
