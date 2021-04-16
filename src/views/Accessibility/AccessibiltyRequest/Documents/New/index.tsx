@@ -169,16 +169,13 @@ const New = () => {
               </PageHeading>
               <div className="grid-col-9">
                 <Form className="usa-form usa-form--large">
-                  <FieldGroup
-                    scrollElement="file"
-                    error={!!flatErrors['file.name']}
-                  >
+                  <FieldGroup scrollElement="file" error={!!flatErrors.file}>
                     <Label htmlFor="FileUpload-File">Document Upload</Label>
-                    <FieldErrorMsg>{flatErrors['file.name']}</FieldErrorMsg>
+                    <FieldErrorMsg>{flatErrors.file}</FieldErrorMsg>
                     <Field
                       as={FileUpload}
                       id="FileUpload-File"
-                      name="file.name"
+                      name="file"
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                         onChange(e);
                         setFieldValue('file', e.currentTarget?.files?.[0]);
@@ -275,7 +272,6 @@ const New = () => {
                     <Button
                       type="submit"
                       disabled={
-                        !values.file ||
                         generateURLStatus.loading ||
                         createDocumentStatus.loading
                       }
