@@ -161,7 +161,6 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
                 {t('governanceReviewTeam:adminLeads.changeLead')}
               </Button>
               <Modal
-                title={t('governanceReviewTeam:adminLeads:assignModal.title')}
                 isOpen={isModalOpen}
                 closeModal={() => {
                   setModalOpen(false);
