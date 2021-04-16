@@ -113,10 +113,9 @@ func translateBizCase(ctx context.Context, bc *models.BusinessCase) (*wire.Intak
 	}
 
 	status := wire.IntakeInputStatusInitiated
-	// if true {
-	// 	// TODO: what defines a bizcase as being Final|Initiated?
-	// 	return nil, fmt.Errorf("not yet implemented")
-	// }
+	if bc.Status == models.BusinessCaseStatusCLOSED {
+		status = wire.IntakeInputStatusFinal
+	}
 
 	result := &wire.IntakeInput{
 		ID:     pStr(bcID),
