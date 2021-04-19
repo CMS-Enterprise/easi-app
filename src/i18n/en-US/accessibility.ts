@@ -48,6 +48,11 @@ const accessibility = {
     cancel: "Don't add and go back to request page",
     confirmation: 'Test date {{date}} added to {{requestName}} page'
   },
+  updateTestDate: {
+    addTestDateHeader: 'Update a test date for {{requestName}}',
+    confirmation: 'Test date {{date}} has been updated',
+    submitButton: 'Update date'
+  },
   newRequestForm: {
     heading: 'Add a new request',
     fields: {
