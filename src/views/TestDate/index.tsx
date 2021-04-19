@@ -9,6 +9,8 @@ import CreateTestDateQuery from 'queries/CreateTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
+import { UpdateTestDate } from 'queries/types/UpdateTestDate';
+import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
 import PageHeading from 'components/PageHeading';
 import {
@@ -31,16 +33,23 @@ import './index.scss';
 
 const TestDate = () => {
   const { t } = useTranslation('accessibility');
-  const { accessibilityRequestId } = useParams<{
+  const { accessibilityRequestId, testDateId } = useParams<{
     accessibilityRequestId: string;
+    testDateId: string;
   }>();
-  const [mutate, mutationResult] = useMutation<CreateTestDate>(
+  const [create, createResult] = useMutation<CreateTestDate>(
     CreateTestDateQuery,
     {
       errorPolicy: 'all'
     }
   );
-  const { data } = useQuery<GetAccessibilityRequest>(
+  const [update, updateResult] = useMutation<UpdateTestDate>(
+    UpdateTestDateQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
+  const { data, loading } = useQuery<GetAccessibilityRequest>(
     GetAccessibilityRequestQuery,
     {
       variables: {
@@ -49,7 +58,9 @@ const TestDate = () => {
     }
   );
   const history = useHistory();
-  const initialValues: TestDateForm = {
+
+  let initialValues: TestDateForm;
+  const defaultValues = {
     testType: null,
     dateMonth: '',
     dateDay: '',
@@ -60,14 +71,35 @@ const TestDate = () => {
     }
   };
 
-  const onSubmit = (values: TestDateForm) => {
+  if (testDateId) {
+    const test = data?.accessibilityRequest?.testDates.find(
+      date => date.id === testDateId
+    );
+    if (test) {
+      const testDate = DateTime.fromISO(test.date);
+      initialValues = {
+        dateMonth: String(testDate.month),
+        dateDay: String(testDate.day),
+        dateYear: String(testDate.year),
+        testType: test.testType,
+        score: {
+          isPresent: Boolean(test.score),
+          value: test.score ? `${test.score && test.score / 10}` : ''
+        }
+      };
+    } else initialValues = defaultValues;
+  } else {
+    initialValues = defaultValues;
+  }
+
+  const onCreate = (values: TestDateForm) => {
     const testDate = DateTime.fromObject({
       day: Number(values.dateDay),
       month: Number(values.dateMonth),
       year: Number(values.dateYear)
     });
 
-    mutate({
+    create({
       variables: {
         input: {
           date: testDate,
@@ -88,10 +120,42 @@ const TestDate = () => {
     });
   };
 
+  const onUpdate = (values: TestDateForm) => {
+    const testDate = DateTime.fromObject({
+      day: Number(values.dateDay),
+      month: Number(values.dateMonth),
+      year: Number(values.dateYear)
+    });
+
+    update({
+      variables: {
+        input: {
+          date: testDate,
+          score: values.score.isPresent
+            ? Math.round(parseFloat(values.score.value) * 10)
+            : null,
+          testType: values.testType,
+          id: testDateId
+        }
+      }
+    }).then(() => {
+      history.push(`/508/requests/${accessibilityRequestId}`, {
+        confirmationText: t('updateTestDate.confirmation', {
+          date: testDate.toLocaleString(DateTime.DATE_FULL),
+          requestName: data?.accessibilityRequest?.name
+        })
+      });
+    });
+  };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={onSubmit}
+      onSubmit={testDateId ? onUpdate : onCreate}
       validationSchema={TestDateValidationSchema}
       validateOnBlur={false}
       validateOnChange={false}
@@ -119,18 +183,30 @@ const TestDate = () => {
                 })}
               </ErrorAlert>
             )}
-            {mutationResult.error && (
+            {createResult.error && (
               <ErrorAlert heading="System error">
                 <ErrorAlertMessage
-                  message={mutationResult.error.message}
+                  message={createResult.error.message}
+                  errorKey="system"
+                />
+              </ErrorAlert>
+            )}
+            {updateResult.error && (
+              <ErrorAlert heading="System error">
+                <ErrorAlertMessage
+                  message={updateResult.error.message}
                   errorKey="system"
                 />
               </ErrorAlert>
             )}
             <PageHeading>
-              {t('createTestDate.addTestDateHeader', {
-                requestName: data?.accessibilityRequest?.system?.name
-              })}
+              {testDateId
+                ? t('updateTestDate.addTestDateHeader', {
+                    requestName: data?.accessibilityRequest?.system?.name
+                  })
+                : t('createTestDate.addTestDateHeader', {
+                    requestName: data?.accessibilityRequest?.system?.name
+                  })}
             </PageHeading>
             <div className="grid-row grid-gap-lg">
               <div className="grid-col-9">
@@ -309,7 +385,9 @@ const TestDate = () => {
                     </fieldset>
                   </FieldGroup>
                   <Button className="margin-top-4" type="submit">
-                    {t('createTestDate.submitButton')}
+                    {testDateId
+                      ? t('updateTestDate.submitButton')
+                      : t('createTestDate.submitButton')}
                   </Button>
                   <Link
                     to={`/508/requests/${accessibilityRequestId}`}

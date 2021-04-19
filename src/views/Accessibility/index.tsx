@@ -48,6 +48,10 @@ const Accessibility = () => {
               component={AccessibilityRequestsDocumentsNew}
             />
             <SecureRoute
+              path="/508/requests/:accessibilityRequestId/test-date/:testDateId"
+              component={TestDate}
+            />
+            <SecureRoute
               path="/508/requests/:accessibilityRequestId/test-date"
               component={TestDate}
             />
