@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -605,7 +604,16 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 }
 
 func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	testDate, err := r.store.UpdateTestDate(ctx, &models.TestDate{
+		TestType: input.TestType,
+		Date:     input.Date,
+		Score:    input.Score,
+		ID:       input.ID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.UpdateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
