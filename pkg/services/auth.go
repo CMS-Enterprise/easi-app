@@ -150,3 +150,27 @@ func AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx context.Context, existing
 
 	return true, nil
 }
+
+// AuthorizeUserIsRequestOwnerOr508Team authorizes the user owns the system intake or is a member of the 508 team
+func AuthorizeUserIsRequestOwnerOr508Team(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+	userIsIntakeRequester, err := NewAuthorizeUserIsIntakeRequester()(ctx, intake)
+	if err != nil {
+		return false, err
+	}
+
+	userIs508Tester, err := HasRole(ctx, model.RoleEasi508Tester)
+	if err != nil {
+		return false, err
+	}
+
+	userIs508User, err := HasRole(ctx, model.RoleEasi508User)
+	if err != nil {
+		return false, err
+	}
+
+	if !userIsIntakeRequester && !userIs508User && !userIs508Tester {
+		return false, nil
+	}
+
+	return true, nil
+}
