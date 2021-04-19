@@ -608,6 +608,30 @@ func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.Updat
 	panic(fmt.Errorf("not implemented"))
 }
 
+func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	intake, err := r.store.FetchSystemIntakeByID(ctx, accessibilityRequest.RequestID)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := r.service.AuthorizeUserIsRequestOwnerOr508Team(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
+	}
+	err = r.store.ArchiveAccessibilityRequestDocument(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }

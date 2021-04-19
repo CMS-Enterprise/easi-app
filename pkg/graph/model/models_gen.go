@@ -115,6 +115,14 @@ type CreateTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+type DeleteAccessibilityRequestDocumentInput struct {
+	ID uuid.UUID `json:"id"`
+}
+
+type DeleteAccessibilityRequestDocumentPayload struct {
+	ID *uuid.UUID `json:"id"`
+}
+
 type GeneratePresignedUploadURLInput struct {
 	FileName string `json:"fileName"`
 	MimeType string `json:"mimeType"`

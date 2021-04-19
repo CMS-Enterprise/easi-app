@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/guregu/null"
@@ -120,4 +121,14 @@ func (s *Store) FetchDocumentsByAccessibilityRequestID(ctx context.Context, id u
 	}
 
 	return results, nil
+}
+
+// ArchiveAccessibilityRequestDocument archives a document
+func (s *Store) ArchiveAccessibilityRequestDocument(_ context.Context, id uuid.UUID) error {
+	const archiveAccessibilityRequestDocumentSQL = `UPDATE accessibility_request_documents
+SET archived_at = $2
+WHERE id = $1
+`
+	_, err := s.db.Exec(archiveAccessibilityRequestDocumentSQL, id, time.Now())
+	return err
 }
