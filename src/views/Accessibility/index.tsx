@@ -18,7 +18,7 @@ import Create from 'views/Accessibility/AccessibiltyRequest/Create';
 import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibiltyRequest/Documents/New';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
 import NotFound from 'views/NotFound';
-import TestDate from 'views/TestDate';
+import TestDate from 'views/TestDate/NewTestDate';
 
 const Accessibility = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
