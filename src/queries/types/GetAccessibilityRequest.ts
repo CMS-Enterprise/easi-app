@@ -30,6 +30,7 @@ export interface GetAccessibilityRequest_accessibilityRequest_documents_document
 
 export interface GetAccessibilityRequest_accessibilityRequest_documents {
   __typename: "AccessibilityRequestDocument";
+  id: UUID;
   url: string;
   uploadedAt: Time;
   status: AccessibilityRequestDocumentStatus;
