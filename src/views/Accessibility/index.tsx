@@ -18,7 +18,8 @@ import Create from 'views/Accessibility/AccessibiltyRequest/Create';
 import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibiltyRequest/Documents/New';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
 import NotFound from 'views/NotFound';
-import TestDate from 'views/TestDate/NewTestDate';
+import NewTestDate from 'views/TestDate/NewTestDate';
+import UpdateTestDate from 'views/TestDate/UpdateTestDate';
 
 const Accessibility = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
@@ -49,11 +50,11 @@ const Accessibility = () => {
             />
             <SecureRoute
               path="/508/requests/:accessibilityRequestId/test-date/:testDateId"
-              component={TestDate}
+              component={UpdateTestDate}
             />
             <SecureRoute
               path="/508/requests/:accessibilityRequestId/test-date"
-              component={TestDate}
+              component={NewTestDate}
             />
             <SecureRoute
               path="/508/requests/:accessibilityRequestId"
