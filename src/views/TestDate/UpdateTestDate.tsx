@@ -5,9 +5,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
-import CreateTestDateQuery from 'queries/CreateTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
-import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
@@ -37,13 +35,7 @@ const TestDate = () => {
     accessibilityRequestId: string;
     testDateId: string;
   }>();
-  const [create, createResult] = useMutation<CreateTestDate>(
-    CreateTestDateQuery,
-    {
-      errorPolicy: 'all'
-    }
-  );
-  const [update, updateResult] = useMutation<UpdateTestDate>(
+  const [mutate, mutateResult] = useMutation<UpdateTestDate>(
     UpdateTestDateQuery,
     {
       errorPolicy: 'all'
@@ -92,42 +84,14 @@ const TestDate = () => {
     initialValues = defaultValues;
   }
 
-  const onCreate = (values: TestDateForm) => {
+  const onSubmit = (values: TestDateForm) => {
     const testDate = DateTime.fromObject({
       day: Number(values.dateDay),
       month: Number(values.dateMonth),
       year: Number(values.dateYear)
     });
 
-    create({
-      variables: {
-        input: {
-          date: testDate,
-          score: values.score.isPresent
-            ? Math.round(parseFloat(values.score.value) * 10)
-            : null,
-          testType: values.testType,
-          requestID: accessibilityRequestId
-        }
-      }
-    }).then(() => {
-      history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText: t('createTestDate.confirmation', {
-          date: testDate.toLocaleString(DateTime.DATE_FULL),
-          requestName: data?.accessibilityRequest?.name
-        })
-      });
-    });
-  };
-
-  const onUpdate = (values: TestDateForm) => {
-    const testDate = DateTime.fromObject({
-      day: Number(values.dateDay),
-      month: Number(values.dateMonth),
-      year: Number(values.dateYear)
-    });
-
-    update({
+    mutate({
       variables: {
         input: {
           date: testDate,
@@ -140,7 +104,7 @@ const TestDate = () => {
       }
     }).then(() => {
       history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText: t('updateTestDate.confirmation', {
+        confirmationText: t('testDateForm.confirmation.update', {
           date: testDate.toLocaleString(DateTime.DATE_FULL),
           requestName: data?.accessibilityRequest?.name
         })
@@ -155,7 +119,7 @@ const TestDate = () => {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={testDateId ? onUpdate : onCreate}
+      onSubmit={onSubmit}
       validationSchema={TestDateValidationSchema}
       validateOnBlur={false}
       validateOnChange={false}
@@ -183,30 +147,18 @@ const TestDate = () => {
                 })}
               </ErrorAlert>
             )}
-            {createResult.error && (
+            {mutateResult.error && (
               <ErrorAlert heading="System error">
                 <ErrorAlertMessage
-                  message={createResult.error.message}
-                  errorKey="system"
-                />
-              </ErrorAlert>
-            )}
-            {updateResult.error && (
-              <ErrorAlert heading="System error">
-                <ErrorAlertMessage
-                  message={updateResult.error.message}
+                  message={mutateResult.error.message}
                   errorKey="system"
                 />
               </ErrorAlert>
             )}
             <PageHeading>
-              {testDateId
-                ? t('updateTestDate.addTestDateHeader', {
-                    requestName: data?.accessibilityRequest?.system?.name
-                  })
-                : t('createTestDate.addTestDateHeader', {
-                    requestName: data?.accessibilityRequest?.system?.name
-                  })}
+              {t('testDateForm.header.update', {
+                requestName: data?.accessibilityRequest?.system?.name
+              })}
             </PageHeading>
             <div className="grid-row grid-gap-lg">
               <div className="grid-col-9">
@@ -219,7 +171,7 @@ const TestDate = () => {
                   <FieldGroup error={!!flatErrors.testType}>
                     <fieldset className="usa-fieldset">
                       <legend className="usa-label margin-bottom-1">
-                        {t('createTestDate.testTypeHeader')}
+                        {t('testDateForm.testTypeHeader')}
                       </legend>
                       <FieldErrorMsg>{flatErrors.testType}</FieldErrorMsg>
 
@@ -255,10 +207,10 @@ const TestDate = () => {
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label margin-bottom-1">
-                        {t('createTestDate.dateHeader')}
+                        {t('testDateForm.dateHeader')}
                       </legend>
                       <HelpText id="TestDate-DateHelp">
-                        {t('createTestDate.dateHelpText')}
+                        {t('testDateForm.dateHelpText')}
                       </HelpText>
                       <FieldErrorMsg>{flatErrors.dateMonth}</FieldErrorMsg>
                       <FieldErrorMsg>{flatErrors.dateDay}</FieldErrorMsg>
@@ -316,7 +268,7 @@ const TestDate = () => {
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label margin-bottom-1">
-                        {t('createTestDate.scoreHeader')}
+                        {t('testDateForm.scoreHeader')}
                       </legend>
 
                       <FieldErrorMsg>
@@ -356,10 +308,10 @@ const TestDate = () => {
                               className="margin-bottom-1"
                               style={{ marginTop: '0.5em' }}
                               aria-label={t(
-                                'createTestDate.scoreValueSRHelpText'
+                                'testDateForm.scoreValueSRHelpText'
                               )}
                             >
-                              {t('createTestDate.scoreValueHeader')}
+                              {t('testDateForm.scoreValueHeader')}
                             </Label>
                             <FieldErrorMsg>
                               {flatErrors['score.value']}
@@ -385,15 +337,13 @@ const TestDate = () => {
                     </fieldset>
                   </FieldGroup>
                   <Button className="margin-top-4" type="submit">
-                    {testDateId
-                      ? t('updateTestDate.submitButton')
-                      : t('createTestDate.submitButton')}
+                    {t('testDateForm.submitButton.update')}
                   </Button>
                   <Link
                     to={`/508/requests/${accessibilityRequestId}`}
                     className="margin-top-2 display-block"
                   >
-                    {t('createTestDate.cancel')}
+                    {t('testDateForm.cancel')}
                   </Link>
                 </Form>
               </div>

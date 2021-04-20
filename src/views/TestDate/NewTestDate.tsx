@@ -81,7 +81,7 @@ const NewTestDate = () => {
       }
     }).then(() => {
       history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText: t('createTestDate.confirmation', {
+        confirmationText: t('testDateForm.confirmation.create', {
           date: testDate.toLocaleString(DateTime.DATE_FULL),
           requestName: data?.accessibilityRequest?.name
         })
@@ -133,7 +133,7 @@ const NewTestDate = () => {
               </ErrorAlert>
             )}
             <PageHeading>
-              {t('createTestDate.addTestDateHeader', {
+              {t('testDateForm.header.create', {
                 requestName: data?.accessibilityRequest?.system?.name
               })}
             </PageHeading>
@@ -148,7 +148,7 @@ const NewTestDate = () => {
                   <FieldGroup error={!!flatErrors.testType}>
                     <fieldset className="usa-fieldset">
                       <legend className="usa-label margin-bottom-1">
-                        {t('createTestDate.testTypeHeader')}
+                        {t('testDateForm.testTypeHeader')}
                       </legend>
                       <FieldErrorMsg>{flatErrors.testType}</FieldErrorMsg>
 
@@ -184,10 +184,10 @@ const NewTestDate = () => {
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label margin-bottom-1">
-                        {t('createTestDate.dateHeader')}
+                        {t('testDateForm.dateHeader')}
                       </legend>
                       <HelpText id="TestDate-DateHelp">
-                        {t('createTestDate.dateHelpText')}
+                        {t('testDateForm.dateHelpText')}
                       </HelpText>
                       <FieldErrorMsg>{flatErrors.dateMonth}</FieldErrorMsg>
                       <FieldErrorMsg>{flatErrors.dateDay}</FieldErrorMsg>
@@ -245,7 +245,7 @@ const NewTestDate = () => {
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label margin-bottom-1">
-                        {t('createTestDate.scoreHeader')}
+                        {t('testDateForm.scoreHeader')}
                       </legend>
 
                       <FieldErrorMsg>
@@ -285,10 +285,10 @@ const NewTestDate = () => {
                               className="margin-bottom-1"
                               style={{ marginTop: '0.5em' }}
                               aria-label={t(
-                                'createTestDate.scoreValueSRHelpText'
+                                'testDateForm.scoreValueSRHelpText'
                               )}
                             >
-                              {t('createTestDate.scoreValueHeader')}
+                              {t('testDateForm.scoreValueHeader')}
                             </Label>
                             <FieldErrorMsg>
                               {flatErrors['score.value']}
@@ -314,13 +314,13 @@ const NewTestDate = () => {
                     </fieldset>
                   </FieldGroup>
                   <Button className="margin-top-4" type="submit">
-                    {t('createTestDate.submitButton')}
+                    {t('testDateForm.submitButton.create')}
                   </Button>
                   <Link
                     to={`/508/requests/${accessibilityRequestId}`}
                     className="margin-top-2 display-block"
                   >
-                    {t('createTestDate.cancel')}
+                    {t('testDateForm.cancel')}
                   </Link>
                 </Form>
               </div>
