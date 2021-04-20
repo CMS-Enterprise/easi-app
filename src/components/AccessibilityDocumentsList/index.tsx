@@ -8,6 +8,8 @@ import {
   DeleteAccessibilityRequestDocument,
   DeleteAccessibilityRequestDocumentVariables
 } from 'queries/types/DeleteAccessibilityRequestDocument';
+// eslint-disable-next-line camelcase
+import { GetAccessibilityRequest_accessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import Modal from 'components/Modal';
 import {
@@ -31,11 +33,14 @@ type Document = {
 type DocumentsListProps = {
   documents: Document[];
   requestName: string;
+  // eslint-disable-next-line camelcase
+  request: GetAccessibilityRequest_accessibilityRequest;
 };
 
 const AccessibilityDocumentsList = ({
   documents,
-  requestName
+  requestName,
+  request
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
@@ -56,14 +61,28 @@ const AccessibilityDocumentsList = ({
     DeleteAccessibilityRequestDocument,
     DeleteAccessibilityRequestDocumentVariables
   >(DeleteAccessibilityRequestDocumentQuery);
+
   const submitDelete = (id: string) => {
     mutate({
       variables: {
         input: {
           id
         }
+      },
+      update(cache) {
+        cache.modify({
+          id: cache.identify(request),
+          fields: {
+            documents(cachedDocuments, { readField }) {
+              return cachedDocuments.filter(
+                (documentRef: any) => id !== readField('id', documentRef)
+              );
+            }
+          }
+        });
       }
     });
+    setModalOpen(false);
   };
 
   const columns: any = useMemo(() => {

@@ -75,6 +75,7 @@ const AccessibilityRequestDetailPage = () => {
             <AccessibilityDocumentsList
               documents={documents}
               requestName={requestName}
+              request={data?.accessibilityRequest}
             />
           </div>
         </div>
