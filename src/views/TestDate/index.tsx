@@ -29,7 +29,7 @@ import { TestDateForm } from 'types/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { TestDateValidationSchema } from 'validations/testDateSchema';
 
-import './index.scss';
+import './styles.scss';
 
 const TestDate = () => {
   const { t } = useTranslation('accessibility');
