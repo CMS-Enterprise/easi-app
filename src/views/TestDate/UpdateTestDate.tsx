@@ -116,6 +116,8 @@ const TestDate = () => {
     return <p>Loading...</p>;
   }
 
+  const formType = 'update';
+
   return (
     <Formik
       initialValues={initialValues}
@@ -156,7 +158,7 @@ const TestDate = () => {
               </ErrorAlert>
             )}
             <PageHeading>
-              {t('testDateForm.header.update', {
+              {t(`testDateForm.header.${formType}`, {
                 requestName: data?.accessibilityRequest?.system?.name
               })}
             </PageHeading>
@@ -337,7 +339,7 @@ const TestDate = () => {
                     </fieldset>
                   </FieldGroup>
                   <Button className="margin-top-4" type="submit">
-                    {t('testDateForm.submitButton.update')}
+                    {t(`testDateForm.submitButton.${formType}`)}
                   </Button>
                   <Link
                     to={`/508/requests/${accessibilityRequestId}`}
