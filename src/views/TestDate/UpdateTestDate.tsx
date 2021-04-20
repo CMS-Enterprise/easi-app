@@ -4,7 +4,10 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
-import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
+import {
+  GetAccessibilityRequest,
+  GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType
+} from 'queries/types/GetAccessibilityRequest';
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
@@ -36,41 +39,23 @@ const TestDate = () => {
   );
   const history = useHistory();
 
-  let initialValues: TestDateForm;
-  const defaultValues = {
-    testType: null,
-    dateMonth: '',
-    dateDay: '',
-    dateYear: '',
+  const test: TestDateType = data?.accessibilityRequest?.testDates.find(
+    date => date.id === testDateId
+  );
+  const testDate = DateTime.fromISO(test?.date);
+  const initialValues: TestDateForm = {
+    dateMonth: String(testDate.month),
+    dateDay: String(testDate.day),
+    dateYear: String(testDate.year),
+    testType: test?.testType,
     score: {
-      isPresent: false,
-      value: ''
+      isPresent: Boolean(test?.score),
+      value: test?.score ? `${test?.score && test?.score / 10}` : ''
     }
   };
 
-  if (testDateId) {
-    const test = data?.accessibilityRequest?.testDates.find(
-      date => date.id === testDateId
-    );
-    if (test) {
-      const testDate = DateTime.fromISO(test.date);
-      initialValues = {
-        dateMonth: String(testDate.month),
-        dateDay: String(testDate.day),
-        dateYear: String(testDate.year),
-        testType: test.testType,
-        score: {
-          isPresent: Boolean(test.score),
-          value: test.score ? `${test.score && test.score / 10}` : ''
-        }
-      };
-    } else initialValues = defaultValues;
-  } else {
-    initialValues = defaultValues;
-  }
-
   const onSubmit = (values: TestDateForm) => {
-    const testDate = DateTime.fromObject({
+    const date = DateTime.fromObject({
       day: Number(values.dateDay),
       month: Number(values.dateMonth),
       year: Number(values.dateYear)
@@ -79,7 +64,7 @@ const TestDate = () => {
     mutate({
       variables: {
         input: {
-          date: testDate,
+          date,
           score: values.score.isPresent
             ? Math.round(parseFloat(values.score.value) * 10)
             : null,
