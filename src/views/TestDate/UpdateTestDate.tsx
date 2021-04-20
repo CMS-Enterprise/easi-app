@@ -12,6 +12,7 @@ import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
 import { TestDateForm } from 'types/accessibilityRequest';
+import { formatDate } from 'utils/date';
 
 import Form from './Form';
 
@@ -75,7 +76,7 @@ const TestDate = () => {
     }).then(() => {
       history.push(`/508/requests/${accessibilityRequestId}`, {
         confirmationText: t('testDateForm.confirmation.update', {
-          date: testDate.toLocaleString(DateTime.DATE_FULL),
+          date: formatDate(date),
           requestName: data?.accessibilityRequest?.name
         })
       });
