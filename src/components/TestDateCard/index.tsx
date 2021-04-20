@@ -48,7 +48,6 @@ const TestDateCard = ({
         <UswdsLink
           asCustom={Link}
           to={`/508/requests/${requestId}/test-date/${id}`}
-          className="margin-left-2"
           aria-label={`Edit test ${testIndex} ${type}`}
         >
           Edit
