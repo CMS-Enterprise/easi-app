@@ -39,6 +39,8 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 		//
 		// We will either update the records in the database with the results OR implement
 		// another mechanism for doing that as a background job so that we don't need to do it here.
+		// Furthermore, locally this will always return "", since we are not interfacing with the
+		// real S3.
 		value, valueErr := r.s3Client.TagValueForKey(document.Key, "av-status")
 		if valueErr != nil {
 			return nil, valueErr
@@ -49,7 +51,7 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 		} else if value == "INFECTED" {
 			document.Status = models.AccessibilityRequestDocumentStatusUnavailable
 		} else {
-			document.Status = models.AccessibilityRequestDocumentStatusPending
+			document.Status = models.AccessibilityRequestDocumentStatusAvailable
 		}
 	}
 
@@ -609,15 +611,19 @@ func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.Updat
 }
 
 func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {
-	accessibilityRequest, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
+	accessibilityRequestDocument, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
 	if err != nil {
 		return nil, err
 	}
-	intake, err := r.store.FetchSystemIntakeByID(ctx, accessibilityRequest.RequestID)
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, accessibilityRequestDocument.RequestID)
 	if err != nil {
 		return nil, err
 	}
-	ok, err := r.service.AuthorizeUserIsRequestOwnerOr508Team(ctx, intake)
+	intake, err := r.store.FetchSystemIntakeByID(ctx, accessibilityRequest.IntakeID)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := r.service.AuthorizeUserIs508TeamOrIntakeRequester(ctx, intake)
 	if err != nil {
 		return nil, err
 	}

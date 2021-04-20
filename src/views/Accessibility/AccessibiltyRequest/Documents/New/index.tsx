@@ -5,7 +5,7 @@ import { Button, Form, Label } from '@trussworks/react-uswds';
 import axios from 'axios';
 import { Field, Formik, FormikProps } from 'formik';
 import { isUndefined } from 'lodash';
-import CreateAccessibilityRequestDocumentQuery from 'queries/CreateAccessibilityRequestDocumentQuery';
+import { CreateAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
 import GeneratePresignedUploadURLQuery from 'queries/GeneratePresignedUploadURLQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {

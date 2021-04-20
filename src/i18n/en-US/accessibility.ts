@@ -9,7 +9,14 @@ const accessibility = {
       uploadedAt: 'Upload date'
     },
     remove: 'Remove',
-    view: 'View'
+    view: 'View',
+    modal: {
+      header: 'Confirm you want to remove {{name}}.',
+      warning:
+        'You will not be able to access this document after it is removed.',
+      proceedButton: 'Remove document',
+      declineButton: 'Keep document'
+    }
   },
   requestTable: {
     caption: 'List of 508 requests',
