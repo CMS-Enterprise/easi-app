@@ -48,29 +48,32 @@ const NewTestDate = () => {
   };
 
   const onSubmit = (values: TestDateForm) => {
-    const testDate = DateTime.fromObject({
+    const date = DateTime.fromObject({
       day: Number(values.dateDay),
       month: Number(values.dateMonth),
       year: Number(values.dateYear)
     });
+    const hasScore = values.score.isPresent;
+    const score = values.score.value;
+
+    const confirmationText = `
+      ${t('testDateForm.confirmation.date', { date: formatDate(date) })}
+      ${hasScore ? t('testDateForm.confirmation.score', { score }) : ''}
+      ${t('testDateForm.confirmation.create')}
+    `;
 
     mutate({
       variables: {
         input: {
-          date: testDate,
-          score: values.score.isPresent
-            ? Math.round(parseFloat(values.score.value) * 10)
-            : null,
+          date,
+          score: hasScore ? Math.round(parseFloat(score) * 10) : null,
           testType: values.testType,
           requestID: accessibilityRequestId
         }
       }
     }).then(() => {
       history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText: t('testDateForm.confirmation.create', {
-          date: formatDate(testDate),
-          requestName: data?.accessibilityRequest?.name
-        })
+        confirmationText
       });
     });
   };
