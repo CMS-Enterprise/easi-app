@@ -53,8 +53,10 @@ const accessibility = {
     },
     cancel: "Don't add and go back to request page",
     confirmation: {
-      create: 'Test date {{date}} added to {{requestName}} page',
-      update: 'Test date {{date}} has been updated'
+      date: 'Test date {{date}}',
+      score: ' with score {{score}}%',
+      create: ' was added',
+      update: ' was updated'
     }
   },
   newRequestForm: {
