@@ -481,7 +481,7 @@ const ContactDetails = ({
                       checked={values.governanceTeams.isPresent === false}
                       id="IntakeForm-NoGovernanceTeam"
                       name="governanceTeams.isPresent"
-                      label={t('contactDetails.collaboration.noOne')}
+                      label={t('contactDetails.collaboration.none')}
                       onChange={() => {
                         setFieldValue('governanceTeams.isPresent', false);
                         setFieldValue('governanceTeams.teams', []);
