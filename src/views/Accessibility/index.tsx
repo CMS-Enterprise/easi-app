@@ -18,9 +18,9 @@ import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityReq
 import Create from 'views/Accessibility/AccessibiltyRequest/Create';
 import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibiltyRequest/Documents/New';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
-import NotFound from 'views/NotFound';
-import NewTestDate from 'views/TestDate/NewTestDate';
-import UpdateTestDate from 'views/TestDate/UpdateTestDate';
+import NotFoundPartial from 'views/NotFound/NotFoundPartial';
+import NewTestDateView from 'views/TestDate/NewTestDate';
+import UpdateTestDateView from 'views/TestDate/UpdateTestDate';
 
 const Accessibility = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
@@ -30,7 +30,39 @@ const Accessibility = () => {
   const { t } = useTranslation('accessibility');
   const confirmationText = useConfirmationText();
 
-  const RenderPage = () => (
+  const NewRequest = (
+    <SecureRoute path="/508/requests/new" exact component={Create} />
+  );
+  const AllRequests = (
+    <SecureRoute path="/508/requests/all" exact component={List} />
+  );
+  const RequestDetails = (
+    <SecureRoute
+      path="/508/requests/:accessibilityRequestId"
+      component={AccessibilityRequestDetailPage}
+    />
+  );
+  const NewDocument = (
+    <SecureRoute
+      path="/508/requests/:accessibilityRequestId/documents/new"
+      component={AccessibilityRequestsDocumentsNew}
+    />
+  );
+  const NewTestDate = (
+    <SecureRoute
+      path="/508/requests/:accessibilityRequestId/test-date"
+      component={NewTestDateView}
+    />
+  );
+  const UpdateTestDate = (
+    <SecureRoute
+      path="/508/requests/:accessibilityRequestId/test-date/:testDateId"
+      component={UpdateTestDateView}
+    />
+  );
+  const Default = <Route path="*" component={NotFoundPartial} />;
+
+  const PageTemplate = ({ children }: { children: any }) => (
     <PageWrapper>
       <Header />
       <MainContent className="margin-bottom-5">
@@ -43,27 +75,7 @@ const Accessibility = () => {
               {confirmationText}
             </Alert>
           )}
-          <Switch>
-            <SecureRoute path="/508/requests/all" exact component={List} />
-            <SecureRoute path="/508/requests/new" exact component={Create} />
-            <SecureRoute
-              path="/508/requests/:accessibilityRequestId/documents/new"
-              component={AccessibilityRequestsDocumentsNew}
-            />
-            <SecureRoute
-              path="/508/requests/:accessibilityRequestId/test-date/:testDateId"
-              component={UpdateTestDate}
-            />
-            <SecureRoute
-              path="/508/requests/:accessibilityRequestId/test-date"
-              component={NewTestDate}
-            />
-            <SecureRoute
-              path="/508/requests/:accessibilityRequestId"
-              component={AccessibilityRequestDetailPage}
-            />
-            <Route path="*" component={NotFound} />
-          </Switch>
+          <Switch>{children}</Switch>
         </div>
       </MainContent>
       <Footer />
@@ -72,9 +84,25 @@ const Accessibility = () => {
 
   if (isUserSet) {
     if (user.isAccessibilityTeam(userGroups, flags)) {
-      return <RenderPage />;
+      return (
+        <PageTemplate>
+          {[
+            NewRequest,
+            AllRequests,
+            RequestDetails,
+            NewDocument,
+            NewTestDate,
+            UpdateTestDate,
+            Default
+          ]}
+        </PageTemplate>
+      );
     }
-    return <NotFound />;
+    return (
+      <PageTemplate>
+        {[NewRequest, RequestDetails, NewDocument, Default]}
+      </PageTemplate>
+    );
   }
 
   return <p>Loading...</p>;
