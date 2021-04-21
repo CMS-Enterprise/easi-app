@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
 import { Alert } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -23,6 +24,7 @@ import TestDate from 'views/TestDate';
 const Accessibility = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const flags = useFlags();
 
   const { t } = useTranslation('accessibility');
   const confirmationText = useConfirmationText();
@@ -64,7 +66,7 @@ const Accessibility = () => {
   );
 
   if (isUserSet) {
-    if (user.isAccessibilityTeam(userGroups)) {
+    if (user.isAccessibilityTeam(userGroups, flags)) {
       return <RenderPage />;
     }
     return <NotFound />;

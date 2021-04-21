@@ -8,7 +8,18 @@ import {
   GOVTEAM_PROD
 } from 'constants/jobCodes';
 
-export const isGrtReviewer = (groups: Array<String> = []) => {
+type FlagObject = {
+  [key: string]: boolean;
+};
+
+export const isGrtReviewer = (
+  groups: Array<String> = [],
+  flags: FlagObject
+) => {
+  if (flags.downgradeGovTeam) {
+    return false;
+  }
+
   if (groups.includes(GOVTEAM_DEV) || groups.includes(GOVTEAM_PROD)) {
     return true;
   }
@@ -16,7 +27,14 @@ export const isGrtReviewer = (groups: Array<String> = []) => {
   return false;
 };
 
-export const isAccessibilityTester = (groups: Array<String> = []) => {
+export const isAccessibilityTester = (
+  groups: Array<String> = [],
+  flags: FlagObject
+) => {
+  if (flags.downgrade508Tester) {
+    return false;
+  }
+
   if (
     groups.includes(ACCESSIBILITY_TESTER_DEV) ||
     groups.includes(ACCESSIBILITY_TESTER_PROD)
@@ -27,7 +45,14 @@ export const isAccessibilityTester = (groups: Array<String> = []) => {
   return false;
 };
 
-export const isAccessibilityAdmin = (groups: Array<String> = []) => {
+export const isAccessibilityAdmin = (
+  groups: Array<String> = [],
+  flags: FlagObject
+) => {
+  if (flags.downgrade508User) {
+    return false;
+  }
+
   if (
     groups.includes(ACCESSIBILITY_ADMIN_DEV) ||
     groups.includes(ACCESSIBILITY_ADMIN_PROD)
@@ -38,8 +63,13 @@ export const isAccessibilityAdmin = (groups: Array<String> = []) => {
   return false;
 };
 
-export const isAccessibilityTeam = (groups: Array<String> = []) => {
-  return isAccessibilityAdmin(groups) || isAccessibilityTester(groups);
+export const isAccessibilityTeam = (
+  groups: Array<String> = [],
+  flags: FlagObject
+) => {
+  return (
+    isAccessibilityAdmin(groups, flags) || isAccessibilityTester(groups, flags)
+  );
 };
 
 export const isBasicUser = (groups: Array<String> = []) => {
