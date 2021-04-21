@@ -154,7 +154,7 @@ func (s *Server) routes(
 		graph.ResolverService{
 			CreateTestDate: services.NewCreateTestDate(
 				serviceConfig,
-				services.NewAuthorizeHasEASiRole(),
+				services.AuthorizeHasEASiRole,
 				store.CreateTestDate,
 			),
 			AddGRTFeedback: services.NewProvideGRTFeedback(
@@ -180,7 +180,7 @@ func (s *Server) routes(
 			),
 			IssueLifecycleID: services.NewUpdateLifecycleFields(
 				serviceConfig,
-				services.NewAuthorizeRequireGRTJobCode(),
+				services.AuthorizeRequireGRTJobCode,
 				store.FetchSystemIntakeByID,
 				store.UpdateSystemIntake,
 				saveAction,
@@ -191,7 +191,7 @@ func (s *Server) routes(
 			AuthorizeUserIsReviewTeamOrIntakeRequester: services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
 			RejectIntake: services.NewUpdateRejectionFields(
 				serviceConfig,
-				services.NewAuthorizeRequireGRTJobCode(),
+				services.AuthorizeRequireGRTJobCode,
 				store.FetchSystemIntakeByID,
 				store.UpdateSystemIntake,
 				saveAction,
@@ -237,7 +237,7 @@ func (s *Server) routes(
 		services.NewFetchSystemIntakeByID(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 		services.NewArchiveSystemIntake(
 			serviceConfig,
@@ -262,7 +262,7 @@ func (s *Server) routes(
 			store.FetchSystemIntakesByEuaID,
 			store.FetchSystemIntakes,
 			store.FetchSystemIntakesByStatuses,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 	)
 	api.Handle("/system_intakes", systemIntakesHandler.Handle())
@@ -272,7 +272,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCaseByID(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 		services.NewCreateBusinessCase(
 			serviceConfig,
@@ -298,7 +298,7 @@ func (s *Server) routes(
 		services.NewFetchBusinessCasesByEuaID(
 			serviceConfig,
 			store.FetchBusinessCasesByEuaID,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 	)
 	api.Handle("/business_cases", businessCasesHandler.Handle())
@@ -331,7 +331,7 @@ func (s *Server) routes(
 					serviceConfig,
 					models.SystemIntakeStatusNOTITREQUEST,
 					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
+					services.AuthorizeRequireGRTJobCode,
 					saveAction,
 					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
@@ -346,7 +346,7 @@ func (s *Server) routes(
 					serviceConfig,
 					models.SystemIntakeStatusNEEDBIZCASE,
 					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
+					services.AuthorizeRequireGRTJobCode,
 					saveAction,
 					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
@@ -361,7 +361,7 @@ func (s *Server) routes(
 					serviceConfig,
 					models.SystemIntakeStatusREADYFORGRT,
 					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
+					services.AuthorizeRequireGRTJobCode,
 					saveAction,
 					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
@@ -398,7 +398,7 @@ func (s *Server) routes(
 					serviceConfig,
 					models.SystemIntakeStatusBIZCASECHANGESNEEDED,
 					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
+					services.AuthorizeRequireGRTJobCode,
 					saveAction,
 					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
@@ -413,7 +413,7 @@ func (s *Server) routes(
 					serviceConfig,
 					models.SystemIntakeStatusNOGOVERNANCE,
 					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
+					services.AuthorizeRequireGRTJobCode,
 					saveAction,
 					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
@@ -428,7 +428,7 @@ func (s *Server) routes(
 					serviceConfig,
 					models.SystemIntakeStatusSHUTDOWNINPROGRESS,
 					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
+					services.AuthorizeRequireGRTJobCode,
 					saveAction,
 					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
@@ -443,7 +443,7 @@ func (s *Server) routes(
 					serviceConfig,
 					models.SystemIntakeStatusSHUTDOWNCOMPLETE,
 					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
+					services.AuthorizeRequireGRTJobCode,
 					saveAction,
 					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
@@ -458,7 +458,7 @@ func (s *Server) routes(
 					serviceConfig,
 					models.SystemIntakeStatusNOGOVERNANCE,
 					store.UpdateSystemIntake,
-					services.NewAuthorizeRequireGRTJobCode(),
+					services.AuthorizeRequireGRTJobCode,
 					saveAction,
 					cedarLDAPClient.FetchUserInfo,
 					emailClient.SendSystemIntakeReviewEmail,
@@ -472,7 +472,7 @@ func (s *Server) routes(
 			},
 		),
 		services.NewFetchActionsByRequestID(
-			services.NewAuthorizeRequireGRTJobCode(),
+			services.AuthorizeRequireGRTJobCode,
 			store.GetActionsByRequestID,
 		),
 	)
@@ -482,7 +482,7 @@ func (s *Server) routes(
 		base,
 		services.NewUpdateLifecycleFields(
 			serviceConfig,
-			services.NewAuthorizeRequireGRTJobCode(),
+			services.AuthorizeRequireGRTJobCode,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
 			saveAction,
@@ -497,7 +497,7 @@ func (s *Server) routes(
 		base,
 		services.NewUpdateRejectionFields(
 			serviceConfig,
-			services.NewAuthorizeRequireGRTJobCode(),
+			services.AuthorizeRequireGRTJobCode,
 			store.FetchSystemIntakeByID,
 			store.UpdateSystemIntake,
 			saveAction,
@@ -512,12 +512,12 @@ func (s *Server) routes(
 		services.NewFetchNotes(
 			serviceConfig,
 			store.FetchNotesBySystemIntakeID,
-			services.NewAuthorizeRequireGRTJobCode(),
+			services.AuthorizeRequireGRTJobCode,
 		),
 		services.NewCreateNote(
 			serviceConfig,
 			store.CreateNote,
-			services.NewAuthorizeRequireGRTJobCode(),
+			services.AuthorizeRequireGRTJobCode,
 		),
 	)
 	api.Handle("/system_intake/{intake_id}/notes", notesHandler.Handle())
@@ -527,11 +527,11 @@ func (s *Server) routes(
 		base,
 		services.NewCreateAccessibilityRequestDocument(
 			serviceConfig,
-			services.NewAuthorizeRequireGRTJobCode(),
+			services.AuthorizeRequireGRTJobCode,
 			store.CreateAccessibilityRequestDocument),
 		services.NewFetchAccessibilityRequestDocument(
 			serviceConfig,
-			services.NewAuthorizeRequireGRTJobCode(),
+			services.AuthorizeRequireGRTJobCode,
 			store.FetchAccessibilityRequestDocumentByID),
 	)
 	api.Handle("/file_uploads", fileUploadHandler.Handle())
@@ -540,7 +540,7 @@ func (s *Server) routes(
 		base,
 		services.NewCreateFileUploadURL(
 			serviceConfig,
-			services.NewAuthorizeRequireGRTJobCode(),
+			services.AuthorizeRequireGRTJobCode,
 			s3Client,
 		),
 	)
@@ -550,7 +550,7 @@ func (s *Server) routes(
 		base,
 		services.NewCreateFileDownloadURL(
 			serviceConfig,
-			services.NewAuthorizeRequireGRTJobCode(),
+			services.AuthorizeRequireGRTJobCode,
 			s3Client,
 		),
 	)
@@ -568,7 +568,7 @@ func (s *Server) routes(
 		services.NewFetchSystems(
 			serviceConfig,
 			store.ListSystems,
-			services.NewAuthorizeHasEASiRole(),
+			services.AuthorizeHasEASiRole,
 		),
 	)
 	api.Handle("/systems", systemsHandler.Handle())
