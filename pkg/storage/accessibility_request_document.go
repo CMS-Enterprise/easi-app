@@ -123,8 +123,8 @@ func (s *Store) FetchDocumentsByAccessibilityRequestID(ctx context.Context, id u
 	return results, nil
 }
 
-// ArchiveAccessibilityRequestDocument archives a document
-func (s *Store) ArchiveAccessibilityRequestDocument(_ context.Context, id uuid.UUID) error {
+// DeleteAccessibilityRequestDocument archives a document
+func (s *Store) DeleteAccessibilityRequestDocument(_ context.Context, id uuid.UUID) error {
 	const archiveAccessibilityRequestDocumentSQL = `UPDATE accessibility_request_documents
 SET deleted_at = $2
 WHERE id = $1

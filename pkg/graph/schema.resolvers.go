@@ -630,7 +630,7 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 	if !ok {
 		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
 	}
-	err = r.store.ArchiveAccessibilityRequestDocument(ctx, input.ID)
+	err = r.store.DeleteAccessibilityRequestDocument(ctx, input.ID)
 	if err != nil {
 		return nil, err
 	}
