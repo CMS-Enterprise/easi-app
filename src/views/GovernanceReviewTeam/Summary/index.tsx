@@ -103,7 +103,7 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
           </div>
           <div className="easi-grt__request-info-col">
             <div className="easi-grt__description-group">
-              <dt>{t('intake:fields.requester')}</dt>
+              <dt>{t('intake:contactDetails.requester')}</dt>
               <dd>{requesterNameAndComponent}</dd>
             </div>
             <div className="easi-grt__description-group">
