@@ -616,6 +616,16 @@ func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.Updat
 	return &model.UpdateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
 }
 
+func (r *mutationResolver) RemoveTestDate(ctx context.Context, input model.RemoveTestDateInput) (*model.RemoveTestDatePayload, error) {
+	testDate, err := r.store.RemoveTestDate(ctx, &models.TestDate{
+		ID: input.ID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.RemoveTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }

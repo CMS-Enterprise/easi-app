@@ -141,6 +141,10 @@ export interface RejectIntakeInput {
   reason: string;
 }
 
+export interface RemoveTestDateInput {
+  id: UUID;
+}
+
 export interface UpdateSystemIntakeAdminLeadInput {
   adminLead: string;
   id: UUID;
