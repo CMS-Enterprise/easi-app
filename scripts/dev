@@ -188,7 +188,7 @@ namespace :hosts do
   desc "Verify that hosts for local development are configured"
   task :check do
     lookup = `dscacheutil -q host -a name minio`.strip
-    if lookup.size == 0 && ask?("host minio can't be resolved. Do you want to configure it now? (Y/n)")
+    if lookup.size == 0 && ask?("Host 'minio' can't be resolved. Do you want to configure it now? (Y/n)")
       Rake::Task["hosts:install"].invoke
 
       Rake::Task["hosts:install"].reenable
