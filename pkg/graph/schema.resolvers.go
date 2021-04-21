@@ -51,7 +51,7 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 		} else if value == "INFECTED" {
 			document.Status = models.AccessibilityRequestDocumentStatusUnavailable
 		} else {
-			document.Status = models.AccessibilityRequestDocumentStatusAvailable
+			document.Status = models.AccessibilityRequestDocumentStatusPending
 		}
 	}
 
