@@ -78,7 +78,7 @@ func assignDocumentStatus(document *models.AccessibilityRequestDocument) {
 func (s *Store) FetchAccessibilityRequestDocumentByID(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequestDocument, error) {
 	var document models.AccessibilityRequestDocument
 
-	err := s.db.Get(&document, "SELECT * FROM accessibility_request_documents WHERE id=$1 AND archived_at IS NULL", id)
+	err := s.db.Get(&document, "SELECT * FROM accessibility_request_documents WHERE id=$1 AND deleted_at IS NULL", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch uploaded file", zap.Error(err))
 
@@ -103,7 +103,7 @@ func (s *Store) FetchDocumentsByAccessibilityRequestID(ctx context.Context, id u
 	results := []*models.AccessibilityRequestDocument{}
 
 	// eventually, we should use the id here, but we don't have the db relationship set up yet
-	err := s.db.Select(&results, "SELECT * FROM accessibility_request_documents where request_id=$1 AND archived_at IS NULL", id)
+	err := s.db.Select(&results, "SELECT * FROM accessibility_request_documents where request_id=$1 AND deleted_at IS NULL", id)
 
 	if err != nil {
 		appcontext.ZLogger(ctx).Error("Failed to fetch uploaded file", zap.Error(err))
@@ -126,7 +126,7 @@ func (s *Store) FetchDocumentsByAccessibilityRequestID(ctx context.Context, id u
 // ArchiveAccessibilityRequestDocument archives a document
 func (s *Store) ArchiveAccessibilityRequestDocument(_ context.Context, id uuid.UUID) error {
 	const archiveAccessibilityRequestDocumentSQL = `UPDATE accessibility_request_documents
-SET archived_at = $2
+SET deleted_at = $2
 WHERE id = $1
 `
 	_, err := s.db.Exec(archiveAccessibilityRequestDocumentSQL, id, time.Now())
