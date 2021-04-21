@@ -217,55 +217,53 @@ const AccessibilityDocumentsList = ({
   }
 
   return (
-    <>
-      <Table bordered={false} {...getTableProps()} fullWidth>
-        <caption className="usa-sr-only">
-          {`${t('documentTable.caption')} ${requestName}`}
-        </caption>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th
-                  {...column.getHeaderProps()}
-                  style={{ whiteSpace: 'nowrap', width: column.width }}
-                  scope="col"
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell, i) => {
-                  if (i === 0) {
-                    return (
-                      <th
-                        {...cell.getCellProps()}
-                        scope="row"
-                        style={{ maxWidth: '16rem' }}
-                      >
-                        {cell.render('Cell')}
-                      </th>
-                    );
-                  }
+    <Table bordered={false} {...getTableProps()} fullWidth>
+      <caption className="usa-sr-only">
+        {`${t('documentTable.caption')} ${requestName}`}
+      </caption>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th
+                {...column.getHeaderProps()}
+                style={{ whiteSpace: 'nowrap', width: column.width }}
+                scope="col"
+              >
+                {column.render('Header')}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map(row => {
+          prepareRow(row);
+          return (
+            <tr {...row.getRowProps()}>
+              {row.cells.map((cell, i) => {
+                if (i === 0) {
                   return (
-                    <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
+                    <th
+                      {...cell.getCellProps()}
+                      scope="row"
+                      style={{ maxWidth: '16rem' }}
+                    >
                       {cell.render('Cell')}
-                    </td>
+                    </th>
                   );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
-    </>
+                }
+                return (
+                  <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
+                    {cell.render('Cell')}
+                  </td>
+                );
+              })}
+            </tr>
+          );
+        })}
+      </tbody>
+    </Table>
   );
 };
 
