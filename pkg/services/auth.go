@@ -107,7 +107,7 @@ func AuthorizeHasEASiRole(ctx context.Context) (bool, error) {
 // AuthorizeRequireGRTJobCode authorizes a user as being a member of the
 // GRT (Governance Review Team)
 func AuthorizeRequireGRTJobCode(ctx context.Context) (bool, error) {
-	return HasRole(ctx, model.RoleEasiUser)
+	return HasRole(ctx, model.RoleEasiGovteam)
 }
 
 // AuthorizeUserIsIntakeRequesterOrHasGRTJobCode  authorizes a user as being a member of the
