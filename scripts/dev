@@ -44,10 +44,14 @@ needs "ulimit"
 
 Rake.application.init("scripts/dev")
 
-def ask_to_install(executable, install_with)
-  puts "Do you want to install it? (Y/n)"
+def ask?(question)
+  puts question
   response = STDIN.getch
-  if ["y", "Y", "\r"].include?(response)
+  ["y", "Y", "\r"].include?(response)
+end
+
+def ask_to_install(executable, install_with)
+  if ask?("Do you want to install it? (Y/n)")
     sh install_with
     check_bin(executable)
     # TODO let the user know that their path is not configured correctly
@@ -68,6 +72,7 @@ task :prereqs do
   @needed.each do |executable, install_with|
     check_bin(executable, install_with: install_with)
   end
+  Rake::Task["hosts:check"].invoke
 end
 
 task :consume_args do |t, args|
@@ -168,6 +173,31 @@ task :reset => :up do
 
   # The backend may have lost its database connection
   sh("docker-compose restart easi", verbose: true) 
+end
+
+namespace :hosts do
+  desc "Verify that hosts for local development are configured"
+  task :check do
+    lookup = `dscacheutil -q host -a name minio`.strip
+    if lookup.size == 0 && ask?("host minio can't be resolved. Do you want to configure it now? (Y/n)")
+      Rake::Task["hosts:install"].invoke
+
+      Rake::Task["hosts:install"].reenable
+      Rake::Task["hosts:check"].invoke
+    elsif lookup.include?("ip_address: 127.0.0.1")
+      puts "Host 'minio' is resolving correctly."
+    else
+      puts "Host 'minio' resolved, but not to the correct IP:"
+      puts lookup
+      exit(1)
+    end
+  end
+
+  task :install do
+    sh("echo '127.0.0.1 minio' | sudo tee -a /etc/hosts") &&
+      sh("sudo killall -HUP mDNSResponder") &&
+      sh("sudo dscacheutil -flushcache")
+  end
 end
 
 namespace :db do
