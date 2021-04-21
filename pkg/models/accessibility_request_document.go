@@ -93,5 +93,5 @@ type AccessibilityRequestDocument struct {
 	OtherType          string                                 `db:"other_type"`
 	CreatedAt          *time.Time                             `json:"createdAt" db:"created_at"`
 	UpdatedAt          *time.Time                             `json:"updatedAt" db:"updated_at"`
-	ArchivedAt         *time.Time                             `json:"archivedAt" db:"archived_at"`
+	DeletedAt          *time.Time                             `json:"deletedAt" db:"deleted_at"`
 }
