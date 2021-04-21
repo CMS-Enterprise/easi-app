@@ -1,7 +1,14 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import { DateTime } from 'luxon';
+import RemoveTestDateQuery from 'queries/RemoveTestDateQuery';
+import { RemoveTestDate } from 'queries/types/RemoveTestDate';
 
+import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import { formatDate } from 'utils/date';
 
 type TestDateCardProps = {
@@ -10,6 +17,7 @@ type TestDateCardProps = {
   testIndex: number;
   score: number | null; // A whole number representing tenths of a percent
   requestId: string;
+  requestName: string;
   id: string;
 };
 
@@ -19,8 +27,41 @@ const TestDateCard = ({
   testIndex,
   score,
   requestId,
+  requestName,
   id
 }: TestDateCardProps) => {
+  const { t } = useTranslation('accessibility');
+  const history = useHistory();
+
+  // TODO: should we do something w/ mutationResult here?
+  const [mutate] = useMutation<RemoveTestDate>(RemoveTestDateQuery, {
+    errorPolicy: 'all'
+  });
+
+  const [isRemoveTestDateModalOpen, setRemoveTestDateModalOpen] = useState(
+    false
+  );
+
+  const removeTestDate = () => {
+    mutate({
+      variables: {
+        input: {
+          id
+        }
+      }
+    }).then(() => {
+      history.push(`/508/requests/${requestId}`, {
+        confirmationText: t('removeTestDate.confirmation', {
+          date: DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL),
+          requestName
+        })
+      });
+
+      // TODO: why doesn't the confirmationText do an auto refresh here like in other places?
+      history.go(0);
+    });
+  };
+
   const testScore = () => {
     if (score === 0) {
       return '0%';
@@ -52,9 +93,52 @@ const TestDateCard = ({
         >
           Edit
         </UswdsLink>
-        {/* <Link href="/" aria-label={`Remove test ${testIndex} ${type}`}>
+        <Button
+          className="margin-left-1"
+          type="button"
+          unstyled
+          onClick={() => {
+            setRemoveTestDateModalOpen(true);
+          }}
+        >
           Remove
-        </Link> */}
+        </Button>
+        <Modal
+          title="Title"
+          isOpen={isRemoveTestDateModalOpen}
+          closeModal={() => {
+            setRemoveTestDateModalOpen(false);
+          }}
+        >
+          <PageHeading headingLevel="h2" className="margin-top-0">
+            {t('removeTestDate.modalHeader', {
+              testNumber: testIndex,
+              testType: type,
+              testDate: formatDate(date),
+              requestName
+            })}
+          </PageHeading>
+          <p>{t('removeTestDate.modalText')}</p>
+          <Button
+            type="button"
+            className="margin-right-4"
+            onClick={() => {
+              removeTestDate();
+              setRemoveTestDateModalOpen(false);
+            }}
+          >
+            {t('removeTestDate.modalRemoveButton')}
+          </Button>
+          <Button
+            type="button"
+            unstyled
+            onClick={() => {
+              setRemoveTestDateModalOpen(false);
+            }}
+          >
+            {t('removeTestDate.modalCancelButton')}
+          </Button>
+        </Modal>
       </div>
     </div>
   );
