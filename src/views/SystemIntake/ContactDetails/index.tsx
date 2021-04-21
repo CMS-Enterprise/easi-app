@@ -134,12 +134,12 @@ const ContactDetails = ({
               </ErrorAlert>
             )}
             <p className="line-height-body-5">
-              {t('contactDetailsForm.intakeProcessDescription')}
+              {t('contactDetails.intakeProcessDescription')}
             </p>
 
             <div className="tablet:grid-col-6 margin-bottom-7">
               <MandatoryFieldsAlert />
-              <PageHeading>{t('contactDetailsForm.heading')}</PageHeading>
+              <PageHeading>{t('contactDetails.heading')}</PageHeading>
               <Form>
                 {/* Requester Name */}
                 <FieldGroup
@@ -147,7 +147,7 @@ const ContactDetails = ({
                   error={!!flatErrors['requester.name']}
                 >
                   <Label htmlFor="IntakeForm-Requester">
-                    {t('fields.requester')}
+                    {t('contactDetails.requester')}
                   </Label>
                   <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
                   <Field
@@ -166,7 +166,7 @@ const ContactDetails = ({
                   error={!!flatErrors['requester.component']}
                 >
                   <Label htmlFor="IntakeForm-RequesterComponent">
-                    {t('contactDetailsForm.requesterComponent')}
+                    {t('contactDetails.requesterComponent')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['requester.component']}
@@ -211,13 +211,13 @@ const ContactDetails = ({
                     className="margin-bottom-1"
                     htmlFor="IntakeForm-BusinessOwner"
                   >
-                    {t('contactDetailsForm.businessOwner.name')}
+                    {t('contactDetails.businessOwner.name')}
                   </Label>
                   <HelpText
                     id="IntakeForm-BusinessOwnerHelp"
                     className="margin-bottom-105"
                   >
-                    {t('contactDetailsForm.businessOwner.helpText')}
+                    {t('contactDetails.businessOwner.helpText')}
                   </HelpText>
                   <Field
                     as={CheckboxField}
@@ -261,7 +261,7 @@ const ContactDetails = ({
                   error={!!flatErrors['businessOwner.component']}
                 >
                   <Label htmlFor="IntakeForm-BusinessOwnerComponent">
-                    {t('contactDetailsForm.businessOwner.component')}
+                    {t('contactDetails.businessOwner.component')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['businessOwner.component']}
@@ -292,13 +292,13 @@ const ContactDetails = ({
                     htmlFor="IntakeForm-ProductManager"
                     className="margin-bottom-1"
                   >
-                    {t('contactDetailsForm.productManager.name')}
+                    {t('contactDetails.productManager.name')}
                   </Label>
                   <HelpText
                     id="IntakeForm-ProductManagerHelp"
                     className="margin-bottom-105"
                   >
-                    {t('contactDetailsForm.productManager.helpText')}
+                    {t('contactDetails.productManager.helpText')}
                   </HelpText>
                   <Field
                     as={CheckboxField}
@@ -342,7 +342,7 @@ const ContactDetails = ({
                   error={!!flatErrors['productManager.component']}
                 >
                   <Label htmlFor="IntakeForm-ProductManagerComponent">
-                    {t('contactDetailsForm.productManager.component')}
+                    {t('contactDetails.productManager.component')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['productManager.component']}
@@ -372,13 +372,13 @@ const ContactDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
-                      {t('contactDetailsForm.isso.question')}
+                      {t('contactDetails.isso.label')}
                     </legend>
                     <HelpText
                       id="IntakeForm-ISSOHelp"
                       className="margin-bottom-2"
                     >
-                      {t('contactDetailsForm.isso.helpText')}
+                      {t('contactDetails.isso.helpText')}
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['isso.isPresent']}
@@ -403,7 +403,7 @@ const ContactDetails = ({
                           error={!!flatErrors['isso.name']}
                         >
                           <Label htmlFor="IntakeForm-IssoName">
-                            {t('contactDetailsForm.isso.name')}
+                            {t('contactDetails.isso.name')}
                           </Label>
                           <FieldErrorMsg>
                             {flatErrors['isso.name']}
@@ -440,13 +440,13 @@ const ContactDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-3">
                     <legend className="usa-label margin-bottom-1">
-                      {t('contactDetailsForm.collaboration.question')}
+                      {t('contactDetails.collaboration.label')}
                     </legend>
                     <HelpText
                       id="IntakeForm-Collaborators"
                       className="margin-bottom-2"
                     >
-                      {t('contactDetailsForm.collaboration.helpText')}
+                      {t('contactDetails.collaboration.helpText')}
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['governanceTeams.isPresent']}
@@ -457,7 +457,7 @@ const ContactDetails = ({
                       checked={values.governanceTeams.isPresent === true}
                       id="IntakeForm-YesGovernanceTeams"
                       name="governanceTeams.isPresent"
-                      label={t('contactDetailsForm.collaboration.oneOrMore')}
+                      label={t('contactDetails.collaboration.oneOrMore')}
                       onChange={() => {
                         setFieldValue('governanceTeams.isPresent', true);
                       }}
@@ -481,7 +481,7 @@ const ContactDetails = ({
                       checked={values.governanceTeams.isPresent === false}
                       id="IntakeForm-NoGovernanceTeam"
                       name="governanceTeams.isPresent"
-                      label={t('contactDetailsForm.collaboration.noOne')}
+                      label={t('contactDetails.collaboration.noOne')}
                       onChange={() => {
                         setFieldValue('governanceTeams.isPresent', false);
                         setFieldValue('governanceTeams.teams', []);
