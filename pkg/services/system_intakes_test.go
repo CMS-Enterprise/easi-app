@@ -26,7 +26,7 @@ func (s ServicesTestSuite) TestFetchSystemIntakes() {
 	reviewer := &authn.EUAPrincipal{EUAID: reviewerID, JobCodeEASi: true, JobCodeGRT: true}
 	serviceConfig := NewConfig(nil, nil)
 
-	fnAuth := NewAuthorizeHasEASiRole()
+	fnAuth := AuthorizeHasEASiRole
 
 	fnByID := func(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 		return models.SystemIntakes{
