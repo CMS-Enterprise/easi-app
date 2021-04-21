@@ -15,6 +15,7 @@ import {
 } from 'queries/types/GetAccessibilityRequest';
 
 import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import {
   AccessibilityRequestDocumentCommonType,
   AccessibilityRequestDocumentStatus
@@ -151,11 +152,14 @@ const AccessibilityDocumentsList = ({
                   isOpen={isModalOpen}
                   closeModal={() => setModalOpen(false)}
                 >
-                  <h1 className="line-height-heading-2 margin-bottom-2">
+                  <PageHeading
+                    headingLevel="h1"
+                    className="line-height-heading-2 margin-bottom-2"
+                  >
                     {t('documentTable.modal.header', {
                       name: getDocType(row.original.documentType)
                     })}
-                  </h1>
+                  </PageHeading>
                   <span>{t('documentTable.modal.warning')}</span>
                   <div className="display-flex margin-top-2">
                     <Button
