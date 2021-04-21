@@ -105,6 +105,23 @@ const Create = () => {
                   />
                 </ErrorAlert>
               )}
+              {Object.keys(errors).length > 0 && (
+                <ErrorAlert
+                  testId="508-request-errors"
+                  classNames="margin-bottom-4 margin-top-4"
+                  heading="There is a problem"
+                >
+                  {Object.keys(flatErrors).map(key => {
+                    return (
+                      <ErrorAlertMessage
+                        key={`Error.${key}`}
+                        errorKey={key}
+                        message={flatErrors[key]}
+                      />
+                    );
+                  })}
+                </ErrorAlert>
+              )}
               <div className="margin-bottom-7">
                 <FormikForm
                   onSubmit={e => {
@@ -122,8 +139,12 @@ const Create = () => {
                       </Label>
                       <FieldErrorMsg>{flatErrors.intakeId}</FieldErrorMsg>
                       <ComboBox
-                        name="intakeId"
-                        id="508Request-IntakeId"
+                        id="508Request-IntakeComboBox"
+                        name="intakeComboBox"
+                        inputProps={{
+                          id: '508Request-IntakeId',
+                          name: 'intakeId'
+                        }}
                         options={projectComboBoxOptions}
                         onChange={(intakeId: any) => {
                           const selectedSystem = systems[intakeId];

@@ -384,6 +384,10 @@ export MINIO_ACCESS_KEY='minioadmin'
 export MINIO_SECRET_KEY='minioadmin'
 ```
 
+The container is accessed from the browser using the hostname 'minio'. To make
+this work, run `scripts/dev hosts:check` and press enter to setup this hostname
+on your machine.
+
 ### Setup: Prince XML Lambda
 
 EASi runs [Prince XML](https://www.princexml.com/) as a Lambda function to
