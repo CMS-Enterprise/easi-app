@@ -4,12 +4,15 @@ import { useTable } from 'react-table';
 import { useMutation } from '@apollo/client';
 import { Button, Link, Table } from '@trussworks/react-uswds';
 import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
+import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   DeleteAccessibilityRequestDocument,
   DeleteAccessibilityRequestDocumentVariables
 } from 'queries/types/DeleteAccessibilityRequestDocument';
-// eslint-disable-next-line camelcase
-import { GetAccessibilityRequest_accessibilityRequest } from 'queries/types/GetAccessibilityRequest';
+import {
+  GetAccessibilityRequest,
+  GetAccessibilityRequestVariables
+} from 'queries/types/GetAccessibilityRequest';
 
 import Modal from 'components/Modal';
 import {
@@ -33,14 +36,13 @@ type Document = {
 type DocumentsListProps = {
   documents: Document[];
   requestName: string;
-  // eslint-disable-next-line camelcase
-  request: GetAccessibilityRequest_accessibilityRequest;
+  requestId: string;
 };
 
 const AccessibilityDocumentsList = ({
   documents,
   requestName,
-  request
+  requestId
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
@@ -70,16 +72,30 @@ const AccessibilityDocumentsList = ({
         }
       },
       update(cache) {
-        cache.modify({
-          id: cache.identify(request),
-          fields: {
-            documents(cachedDocuments, { readField }) {
-              return cachedDocuments.filter(
-                (documentRef: any) => id !== readField('id', documentRef)
-              );
-            }
-          }
+        const cachedAccessibilityRequest = cache.readQuery<
+          GetAccessibilityRequest,
+          GetAccessibilityRequestVariables
+        >({
+          query: GetAccessibilityRequestQuery,
+          variables: { id: requestId }
         });
+        if (cachedAccessibilityRequest?.accessibilityRequest?.documents) {
+          cache.writeQuery<
+            GetAccessibilityRequest,
+            GetAccessibilityRequestVariables
+          >({
+            query: GetAccessibilityRequestQuery,
+            data: {
+              ...cachedAccessibilityRequest,
+              accessibilityRequest: {
+                ...cachedAccessibilityRequest.accessibilityRequest,
+                documents: cachedAccessibilityRequest.accessibilityRequest.documents.filter(
+                  document => document.id !== id
+                )
+              }
+            }
+          });
+        }
       }
     });
     setModalOpen(false);
