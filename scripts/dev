@@ -42,6 +42,15 @@ needs "gotest", install_with: "go get -u github.com/rakyll/gotest"
 needs "goimports", install_with: "go get -u golang.org/x/tools/cmd/goimports"
 needs "ulimit"
 
+# Gracefully handle folks trying to explore using common help flags
+["--help", "-help", "--h", "-h"].each do |flag|
+  if ARGV == [flag]
+    puts "** Showing the available tasks. If you really want to see rake's command line options, use rake --help. **"
+    puts
+    ARGV.delete(flag)
+  end
+end
+
 Rake.application.init("scripts/dev")
 
 def ask?(question)
