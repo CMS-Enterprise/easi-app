@@ -142,6 +142,15 @@ type RejectIntakeInput struct {
 	Reason    string    `json:"reason"`
 }
 
+type RemoveTestDateInput struct {
+	ID uuid.UUID `json:"id"`
+}
+
+type RemoveTestDatePayload struct {
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
+}
+
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
 	TotalCount int           `json:"totalCount"`
