@@ -36,17 +36,28 @@ const accessibility = {
     other: 'Other request details',
     remove: 'Remove this request from EASi'
   },
-  createTestDate: {
-    addTestDateHeader: 'Add a test date for {{requestName}}',
+  testDateForm: {
+    header: {
+      create: 'Add a test date for {{requestName}}',
+      update: 'Update a test date for {{requestName}}'
+    },
     testTypeHeader: 'What type of test?',
     dateHeader: 'Test date',
     dateHelpText: 'For example: 4 28 2020',
     scoreHeader: 'Does this test have a score?',
     scoreValueHeader: 'Test Score',
     scoreValueSRHelpText: 'Enter the test score without the percentage symbol',
-    submitButton: 'Add date',
+    submitButton: {
+      create: 'Add date',
+      update: 'Update date'
+    },
     cancel: "Don't add and go back to request page",
-    confirmation: 'Test date {{date}} added to {{requestName}} page'
+    confirmation: {
+      date: 'Test date {{date}}',
+      score: ' with score {{score}}%',
+      create: ' was added',
+      update: ' was updated'
+    }
   },
   newRequestForm: {
     heading: 'Add a new request',
