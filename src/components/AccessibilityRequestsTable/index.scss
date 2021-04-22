@@ -1,0 +1,11 @@
+.accessibility-requests-table {
+    .caret {
+        width: 12px;
+        &.fa-caret-up {
+            vertical-align: 0;
+       }
+        &.fa-caret-down {
+            vertical-align: -8%;
+       }
+    }
+}

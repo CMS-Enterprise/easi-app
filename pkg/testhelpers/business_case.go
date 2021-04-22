@@ -1,6 +1,8 @@
 package testhelpers
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
@@ -233,6 +235,7 @@ func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 
 // NewBusinessCase allows us to generate a business case for tests
 func NewBusinessCase() models.BusinessCase {
+	now := time.Now().UTC()
 	year2 := models.LifecycleCostYear2
 	return models.BusinessCase{
 		ID:                              uuid.New(),
@@ -284,5 +287,7 @@ func NewBusinessCase() models.BusinessCase {
 		},
 		InitialSubmittedAt: nil,
 		LastSubmittedAt:    nil,
+		CreatedAt:          &now,
+		UpdatedAt:          &now,
 	}
 }
