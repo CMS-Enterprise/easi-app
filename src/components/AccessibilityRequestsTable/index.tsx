@@ -11,6 +11,7 @@ import { GetAccessibilityRequests_accessibilityRequests_edges_node as Accessibil
 
 import { formatDate } from 'utils/date';
 
+import './index.scss';
 // import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 
 type AccessibilityRequestsTableProps = {
@@ -140,8 +141,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
 
   const getHeaderSortIcon = (isDesc: boolean | undefined) => {
     return classnames('margin-left-1', {
-      'fa fa-caret-down': isDesc,
-      'fa fa-caret-up': !isDesc
+      'fa fa-caret-down fa-lg caret': isDesc,
+      'fa fa-caret-up fa-lg caret': !isDesc
     });
   };
 
@@ -159,55 +160,85 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
   };
 
   return (
-    <Table bordered={false} {...getTableProps()} fullWidth>
-      <caption className="usa-sr-only">{t('requestTable.caption')}</caption>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                aria-sort={getColumnSortStatus(column)}
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                {column.render('Header')}
-                {column.isSorted && (
-                  <span className={getHeaderSortIcon(column.isSortedDesc)} />
-                )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell, i) => {
-                if (i === 0) {
-                  return (
-                    <th
-                      {...cell.getCellProps()}
-                      scope="row"
-                      style={{ maxWidth: '16rem' }}
-                    >
-                      {cell.render('Cell')}
-                    </th>
-                  );
-                }
-                return (
-                  <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
-                    {cell.render('Cell')}
-                  </td>
-                );
-              })}
+    <div className="accessibility-requests-table">
+      <Table bordered={false} {...getTableProps()} fullWidth>
+        <caption className="usa-sr-only">{t('requestTable.caption')}</caption>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th
+                  {...column.getHeaderProps()}
+                  aria-sort={getColumnSortStatus(column)}
+                  style={{ whiteSpace: 'nowrap' }}
+                  scope="col"
+                >
+                  <button
+                    className="usa-button usa-button--unstyled"
+                    type="button"
+                    {...column.getSortByToggleProps()}
+                  >
+                    {column.render('Header')}
+                    {column.isSorted && (
+                      <span
+                        className={getHeaderSortIcon(column.isSortedDesc)}
+                      />
+                    )}
+                    {!column.isSorted && (
+                      <span className="margin-left-1 fa fa-sort caret" />
+                    )}
+                  </button>
+                </th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </Table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell, i) => {
+                  if (i === 0) {
+                    return (
+                      <th
+                        {...cell.getCellProps()}
+                        scope="row"
+                        style={{ maxWidth: '16rem' }}
+                      >
+                        {cell.render('Cell')}
+                      </th>
+                    );
+                  }
+                  return (
+                    <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+      <div
+        className="usa-sr-only usa-table__announcement-region"
+        aria-live="polite"
+      >
+        {currentTableSortDescription(headerGroups[0])}
+      </div>
+    </div>
   );
+};
+
+const currentTableSortDescription = headerGroup => {
+  const sortedHeader = headerGroup.headers.find(header => header.isSorted);
+
+  if (sortedHeader) {
+    const direction = sortedHeader.isSortedDesc ? 'descending' : 'ascending';
+    return `Requests table sorted by ${sortedHeader.Header} ${direction}`;
+  }
+  return 'Requests table reset to default sort order';
 };
 
 export default AccessibilityRequestsTable;
