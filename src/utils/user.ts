@@ -7,15 +7,9 @@ import {
   GOVTEAM_DEV,
   GOVTEAM_PROD
 } from 'constants/jobCodes';
+import { Flags } from 'types/flags';
 
-type FlagObject = {
-  [key: string]: boolean;
-};
-
-export const isGrtReviewer = (
-  groups: Array<String> = [],
-  flags: FlagObject
-) => {
+export const isGrtReviewer = (groups: Array<String> = [], flags: Flags) => {
   if (flags.downgradeGovTeam) {
     return false;
   }
@@ -29,7 +23,7 @@ export const isGrtReviewer = (
 
 export const isAccessibilityTester = (
   groups: Array<String> = [],
-  flags: FlagObject
+  flags: Flags
 ) => {
   if (flags.downgrade508Tester) {
     return false;
@@ -47,7 +41,7 @@ export const isAccessibilityTester = (
 
 export const isAccessibilityAdmin = (
   groups: Array<String> = [],
-  flags: FlagObject
+  flags: Flags
 ) => {
   if (flags.downgrade508User) {
     return false;
@@ -65,7 +59,7 @@ export const isAccessibilityAdmin = (
 
 export const isAccessibilityTeam = (
   groups: Array<String> = [],
-  flags: FlagObject
+  flags: Flags
 ) => {
   return (
     isAccessibilityAdmin(groups, flags) || isAccessibilityTester(groups, flags)
