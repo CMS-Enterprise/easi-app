@@ -48,6 +48,9 @@ const UserInfo = () => {
             2
           )}
         </pre>
+
+        <h2>Raw LaunchDarkly Flags</h2>
+        <pre>{JSON.stringify(flags, null, 2)}</pre>
       </>
     );
   }
