@@ -102,7 +102,7 @@ export const attendGrbMeetingTag = (intake: SystemIntakeForm): TagEnum => {
     case 'WITHDRAWN':
     case 'NOT_IT_REQUEST':
     case 'NOT_APPROVED':
-    case 'NOT_GOVERNANCE':
+    case 'NO_GOVERNANCE':
       return 'COMPLETED';
     default:
       return 'CANNOT_START';

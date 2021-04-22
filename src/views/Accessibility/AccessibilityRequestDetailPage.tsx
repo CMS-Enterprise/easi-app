@@ -101,6 +101,8 @@ const AccessibilityRequestDetailPage = () => {
                     type={testDate.testType}
                     testIndex={index + 1}
                     score={testDate.score}
+                    id={testDate.id}
+                    requestId={accessibilityRequestId}
                   />
                 ))}
               <Link

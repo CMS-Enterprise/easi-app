@@ -156,6 +156,13 @@ export interface UpdateSystemIntakeReviewDatesInput {
   id: UUID;
 }
 
+export interface UpdateTestDateInput {
+  date: Time;
+  id: UUID;
+  score?: number | null;
+  testType: TestDateTestType;
+}
+
 //==============================================================
 // END Enums and Input Objects
 //==============================================================

@@ -7,6 +7,7 @@ import (
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/authn"
+	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -94,8 +95,8 @@ func (s ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
 	})
 }
 
-func (s ServicesTestSuite) TestAuthorizeRequireGRTJobCode() {
-	fnAuth := NewAuthorizeRequireGRTJobCode()
+func (s ServicesTestSuite) TestHasRole() {
+	fnAuth := HasRole
 	nonGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: false}
 	yesGRT := authn.EUAPrincipal{EUAID: "FAKE", JobCodeEASi: true, JobCodeGRT: true}
 
@@ -119,7 +120,7 @@ func (s ServicesTestSuite) TestAuthorizeRequireGRTJobCode() {
 
 	for name, tc := range testCases {
 		s.Run(name, func() {
-			ok, err := fnAuth(tc.ctx)
+			ok, err := fnAuth(tc.ctx, model.RoleEasiGovteam)
 			s.NoError(err)
 			s.Equal(tc.allowed, ok)
 		})
