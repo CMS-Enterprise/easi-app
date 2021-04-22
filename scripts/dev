@@ -76,6 +76,16 @@ def check_bin(executable, install_with: nil)
   end
 end
 
+def wait_for_success(message,   command)
+  printf(message)
+  loop do
+    break if system(command)
+    printf(".")
+    sleep 3
+  end
+  puts "done"
+end
+
 desc "Check to see if the app's prerequisites are installed"
 task :prereqs do
   @needed.each do |executable, install_with|
@@ -97,6 +107,8 @@ task :up do
 
   # Avoid open file limits
   # sh "ulimit -S -n 2048"
+
+  wait_for_success("Waiting for the front end to build...", "curl --silent --output /dev/null -m 1 localhost:3000")
 end
 
 desc "Stops all services in the project"
