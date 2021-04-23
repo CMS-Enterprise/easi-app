@@ -129,6 +129,6 @@ func (s *Store) DeleteAccessibilityRequestDocument(_ context.Context, id uuid.UU
 SET deleted_at = $2
 WHERE id = $1
 `
-	_, err := s.db.Exec(archiveAccessibilityRequestDocumentSQL, id, time.Now())
+	_, err := s.db.Exec(archiveAccessibilityRequestDocumentSQL, id, time.Now().UTC())
 	return err
 }
