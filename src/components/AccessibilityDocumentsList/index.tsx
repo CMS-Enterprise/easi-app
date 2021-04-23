@@ -4,15 +4,10 @@ import { useTable } from 'react-table';
 import { useMutation } from '@apollo/client';
 import { Button, Link, Table } from '@trussworks/react-uswds';
 import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
-import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   DeleteAccessibilityRequestDocument,
   DeleteAccessibilityRequestDocumentVariables
 } from 'queries/types/DeleteAccessibilityRequestDocument';
-import {
-  GetAccessibilityRequest,
-  GetAccessibilityRequestVariables
-} from 'queries/types/GetAccessibilityRequest';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -37,13 +32,13 @@ type Document = {
 type DocumentsListProps = {
   documents: Document[];
   requestName: string;
-  requestId: string;
+  refetchRequest: () => any;
 };
 
 const AccessibilityDocumentsList = ({
   documents,
   requestName,
-  requestId
+  refetchRequest
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
@@ -71,34 +66,8 @@ const AccessibilityDocumentsList = ({
         input: {
           id
         }
-      },
-      update(cache) {
-        const cachedAccessibilityRequest = cache.readQuery<
-          GetAccessibilityRequest,
-          GetAccessibilityRequestVariables
-        >({
-          query: GetAccessibilityRequestQuery,
-          variables: { id: requestId }
-        });
-        if (cachedAccessibilityRequest?.accessibilityRequest?.documents) {
-          cache.writeQuery<
-            GetAccessibilityRequest,
-            GetAccessibilityRequestVariables
-          >({
-            query: GetAccessibilityRequestQuery,
-            data: {
-              ...cachedAccessibilityRequest,
-              accessibilityRequest: {
-                ...cachedAccessibilityRequest.accessibilityRequest,
-                documents: cachedAccessibilityRequest.accessibilityRequest.documents.filter(
-                  document => document.id !== id
-                )
-              }
-            }
-          });
-        }
       }
-    });
+    }).then(refetchRequest);
     setModalOpen(false);
   };
 

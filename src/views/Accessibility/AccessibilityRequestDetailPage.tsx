@@ -22,7 +22,7 @@ const AccessibilityRequestDetailPage = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
-  const { loading, error, data } = useQuery<
+  const { loading, error, data, refetch } = useQuery<
     GetAccessibilityRequest,
     GetAccessibilityRequestVariables
   >(GetAccessibilityRequestQuery, {
@@ -78,7 +78,7 @@ const AccessibilityRequestDetailPage = () => {
             <AccessibilityDocumentsList
               documents={documents}
               requestName={requestName}
-              requestId={accessibilityRequestId}
+              refetchRequest={refetch}
             />
           </div>
         </div>
