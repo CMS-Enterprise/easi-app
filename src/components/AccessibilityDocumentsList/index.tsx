@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTable } from 'react-table';
+import { Cell, Column, useTable } from 'react-table';
 import { useMutation } from '@apollo/client';
 import { Button, Link, Table } from '@trussworks/react-uswds';
 import { DeleteAccessibilityRequestDocumentQuery } from 'queries/AccessibilityRequestDocumentQueries';
@@ -41,7 +41,10 @@ const AccessibilityDocumentsList = ({
   refetchRequest
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [
+    documentWithModalOpen,
+    setDocumentWithModalOpen
+  ] = useState<Document | null>(null);
 
   const getDocType = (documentType: {
     commonType: AccessibilityRequestDocumentCommonType;
@@ -68,18 +71,18 @@ const AccessibilityDocumentsList = ({
         }
       }
     }).then(refetchRequest);
-    setModalOpen(false);
+    setDocumentWithModalOpen(null);
   };
 
-  const columns: any = useMemo(() => {
+  const columns = useMemo<Column<Document>[]>(() => {
     return [
       {
-        Header: t('documentTable.header.documentName'),
+        Header: t<string>('documentTable.header.documentName'),
         accessor: 'documentType',
         Cell: ({ value }: any) => getDocType(value)
       },
       {
-        Header: t('documentTable.header.uploadedAt'),
+        Header: t<string>('documentTable.header.uploadedAt'),
         accessor: 'uploadedAt',
         Cell: ({ value }: any) => {
           if (value) {
@@ -90,8 +93,8 @@ const AccessibilityDocumentsList = ({
         width: '25%'
       },
       {
-        Header: t('documentTable.header.actions'),
-        Cell: ({ row }: any) => (
+        Header: t<string>('documentTable.header.actions'),
+        Cell: ({ row }: Cell<Document>) => (
           <>
             {row.original.status === 'PENDING' && (
               <em>Virus scan in progress...</em>
@@ -113,13 +116,13 @@ const AccessibilityDocumentsList = ({
                   aria-label={`Remove ${getDocType(row.original.documentType)}`}
                   type="button"
                   unstyled
-                  onClick={() => setModalOpen(true)}
+                  onClick={() => setDocumentWithModalOpen(row.original)}
                 >
                   {t('documentTable.remove')}
                 </Button>
                 <Modal
-                  isOpen={isModalOpen}
-                  closeModal={() => setModalOpen(false)}
+                  isOpen={documentWithModalOpen === row.original}
+                  closeModal={() => setDocumentWithModalOpen(null)}
                 >
                   <PageHeading
                     headingLevel="h1"
@@ -141,7 +144,7 @@ const AccessibilityDocumentsList = ({
                     <Button
                       type="button"
                       unstyled
-                      onClick={() => setModalOpen(false)}
+                      onClick={() => setDocumentWithModalOpen(null)}
                     >
                       {t('documentTable.modal.declineButton')}
                     </Button>
@@ -164,7 +167,7 @@ const AccessibilityDocumentsList = ({
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isModalOpen]);
+  }, [documentWithModalOpen]);
 
   const {
     getTableProps,
