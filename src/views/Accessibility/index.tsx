@@ -90,8 +90,8 @@ const Accessibility = () => {
             NewRequest,
             AllRequests,
             NewDocument,
-            NewTestDate,
             UpdateTestDate,
+            NewTestDate,
             RequestDetails,
             Default
           ]}
