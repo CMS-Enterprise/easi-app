@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import PageHeading from 'components/PageHeading';
 import { AppState } from 'reducers/rootReducer';
@@ -8,6 +9,7 @@ import user from 'utils/user';
 const UserInfo = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const flags = useFlags();
 
   if (isUserSet) {
     return (
@@ -25,10 +27,17 @@ const UserInfo = () => {
           ))}
         </ul>
         <p>User is basic user: {`${user.isBasicUser(userGroups)}`}</p>
-        <p>User is GRT user: {`${user.isGrtReviewer(userGroups)}`}</p>
-        <p>User is 508 user: {`${user.isAccessibilityTeam(userGroups)}`}</p>
-        <p>User is 508 admin: {`${user.isAccessibilityAdmin(userGroups)}`}</p>
-        <p>User is 508 tester: {`${user.isAccessibilityTester(userGroups)}`}</p>
+        <p>User is GRT user: {`${user.isGrtReviewer(userGroups, flags)}`}</p>
+        <p>
+          User is 508 user: {`${user.isAccessibilityTeam(userGroups, flags)}`}
+        </p>
+        <p>
+          User is 508 admin: {`${user.isAccessibilityAdmin(userGroups, flags)}`}
+        </p>
+        <p>
+          User is 508 tester:{' '}
+          {`${user.isAccessibilityTester(userGroups, flags)}`}
+        </p>
 
         <h2>Raw Access Token Claims</h2>
         <pre>
@@ -39,6 +48,9 @@ const UserInfo = () => {
             2
           )}
         </pre>
+
+        <h2>Raw LaunchDarkly Flags</h2>
+        <pre>{JSON.stringify(flags, null, 2)}</pre>
       </>
     );
   }
