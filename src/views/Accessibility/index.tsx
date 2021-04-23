@@ -36,16 +36,16 @@ const Accessibility = () => {
   const AllRequests = (
     <SecureRoute path="/508/requests/all" exact component={List} />
   );
-  const RequestDetails = (
-    <SecureRoute
-      path="/508/requests/:accessibilityRequestId"
-      component={AccessibilityRequestDetailPage}
-    />
-  );
   const NewDocument = (
     <SecureRoute
       path="/508/requests/:accessibilityRequestId/documents/new"
       component={AccessibilityRequestsDocumentsNew}
+    />
+  );
+  const UpdateTestDate = (
+    <SecureRoute
+      path="/508/requests/:accessibilityRequestId/test-date/:testDateId"
+      component={UpdateTestDateView}
     />
   );
   const NewTestDate = (
@@ -54,10 +54,10 @@ const Accessibility = () => {
       component={NewTestDateView}
     />
   );
-  const UpdateTestDate = (
+  const RequestDetails = (
     <SecureRoute
-      path="/508/requests/:accessibilityRequestId/test-date/:testDateId"
-      component={UpdateTestDateView}
+      path="/508/requests/:accessibilityRequestId"
+      component={AccessibilityRequestDetailPage}
     />
   );
   const Default = <Route path="*" component={NotFoundPartial} />;
@@ -89,10 +89,10 @@ const Accessibility = () => {
           {[
             NewRequest,
             AllRequests,
-            RequestDetails,
             NewDocument,
-            NewTestDate,
             UpdateTestDate,
+            NewTestDate,
+            RequestDetails,
             Default
           ]}
         </PageTemplate>
@@ -100,7 +100,7 @@ const Accessibility = () => {
     }
     return (
       <PageTemplate>
-        {[NewRequest, RequestDetails, NewDocument, Default]}
+        {[NewRequest, NewDocument, RequestDetails, Default]}
       </PageTemplate>
     );
   }
