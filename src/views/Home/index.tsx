@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Alert } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import Footer from 'components/Footer';
 import Header from 'components/Header';
@@ -21,11 +22,12 @@ import './index.scss';
 const Home = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const flags = useFlags();
   const confirmationText = useConfirmationText();
 
   const renderView = () => {
     if (isUserSet) {
-      if (user.isGrtReviewer(userGroups)) {
+      if (user.isGrtReviewer(userGroups, flags)) {
         return (
           // Changed GRT table from grid-container to just slight margins. This is take up
           // entire screen to better fit the more expansive data in the table.
@@ -35,7 +37,7 @@ const Home = () => {
         );
       }
 
-      if (user.isAccessibilityTeam(userGroups)) {
+      if (user.isAccessibilityTeam(userGroups, flags)) {
         return <List />;
       }
 
