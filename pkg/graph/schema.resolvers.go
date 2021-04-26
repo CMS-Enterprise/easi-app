@@ -38,6 +38,8 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 		//
 		// We will either update the records in the database with the results OR implement
 		// another mechanism for doing that as a background job so that we don't need to do it here.
+		// Furthermore, locally this will always return "", since we are not interfacing with the
+		// real S3.
 		value, valueErr := r.s3Client.TagValueForKey(document.Key, "av-status")
 		if valueErr != nil {
 			return nil, valueErr
@@ -614,6 +616,34 @@ func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.Updat
 		return nil, err
 	}
 	return &model.UpdateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
+func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {
+	accessibilityRequestDocument, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, accessibilityRequestDocument.RequestID)
+	if err != nil {
+		return nil, err
+	}
+	intake, err := r.store.FetchSystemIntakeByID(ctx, accessibilityRequest.IntakeID)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := r.service.AuthorizeUserIs508TeamOrIntakeRequester(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
+	}
+	err = r.store.DeleteAccessibilityRequestDocument(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
