@@ -1,14 +1,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
+import { Link } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { DateTime } from 'luxon';
-import CreateTestDateQuery from 'queries/CreateTestDateQuery';
-import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
-import { CreateTestDate } from 'queries/types/CreateTestDate';
-import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
 import PageHeading from 'components/PageHeading';
 import {
@@ -23,70 +17,30 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
-import { TestDateForm } from 'types/accessibilityRequest';
+import { TestDateForm as TestDateFormType } from 'types/accessibilityRequest';
 import flattenErrors from 'utils/flattenErrors';
 import { TestDateValidationSchema } from 'validations/testDateSchema';
 
-import './index.scss';
+import './styles.scss';
 
-const TestDate = () => {
+type TestDateFormProps = {
+  initialValues: TestDateFormType;
+  onSubmit: any;
+  formType: string;
+  error: any;
+  requestName: string;
+  requestId: string;
+};
+
+const TestDateForm = ({
+  initialValues,
+  onSubmit,
+  formType,
+  error,
+  requestName,
+  requestId
+}: TestDateFormProps) => {
   const { t } = useTranslation('accessibility');
-  const { accessibilityRequestId } = useParams<{
-    accessibilityRequestId: string;
-  }>();
-  const [mutate, mutationResult] = useMutation<CreateTestDate>(
-    CreateTestDateQuery,
-    {
-      errorPolicy: 'all'
-    }
-  );
-  const { data } = useQuery<GetAccessibilityRequest>(
-    GetAccessibilityRequestQuery,
-    {
-      variables: {
-        id: accessibilityRequestId
-      }
-    }
-  );
-  const history = useHistory();
-  const initialValues: TestDateForm = {
-    testType: null,
-    dateMonth: '',
-    dateDay: '',
-    dateYear: '',
-    score: {
-      isPresent: false,
-      value: ''
-    }
-  };
-
-  const onSubmit = (values: TestDateForm) => {
-    const testDate = DateTime.fromObject({
-      day: Number(values.dateDay),
-      month: Number(values.dateMonth),
-      year: Number(values.dateYear)
-    });
-
-    mutate({
-      variables: {
-        input: {
-          date: testDate,
-          score: values.score.isPresent
-            ? Math.round(parseFloat(values.score.value) * 10)
-            : null,
-          testType: values.testType,
-          requestID: accessibilityRequestId
-        }
-      }
-    }).then(() => {
-      history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText: t('createTestDate.confirmation', {
-          date: testDate.toLocaleString(DateTime.DATE_FULL),
-          requestName: data?.accessibilityRequest?.name
-        })
-      });
-    });
-  };
 
   return (
     <Formik
@@ -97,7 +51,7 @@ const TestDate = () => {
       validateOnChange={false}
       validateOnMount={false}
     >
-      {(formikProps: FormikProps<TestDateForm>) => {
+      {(formikProps: FormikProps<TestDateFormType>) => {
         const { errors, setFieldValue, values, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
@@ -119,18 +73,13 @@ const TestDate = () => {
                 })}
               </ErrorAlert>
             )}
-            {mutationResult.error && (
+            {error && (
               <ErrorAlert heading="System error">
-                <ErrorAlertMessage
-                  message={mutationResult.error.message}
-                  errorKey="system"
-                />
+                <ErrorAlertMessage message={error.message} errorKey="system" />
               </ErrorAlert>
             )}
             <PageHeading>
-              {t('createTestDate.addTestDateHeader', {
-                requestName: data?.accessibilityRequest?.system?.name
-              })}
+              {t(`testDateForm.header.${formType}`, { requestName })}
             </PageHeading>
             <div className="grid-row grid-gap-lg">
               <div className="grid-col-9">
@@ -143,7 +92,7 @@ const TestDate = () => {
                   <FieldGroup error={!!flatErrors.testType}>
                     <fieldset className="usa-fieldset">
                       <legend className="usa-label margin-bottom-1">
-                        {t('createTestDate.testTypeHeader')}
+                        {t('testDateForm.testTypeHeader')}
                       </legend>
                       <FieldErrorMsg>{flatErrors.testType}</FieldErrorMsg>
 
@@ -179,10 +128,10 @@ const TestDate = () => {
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label margin-bottom-1">
-                        {t('createTestDate.dateHeader')}
+                        {t('testDateForm.dateHeader')}
                       </legend>
                       <HelpText id="TestDate-DateHelp">
-                        {t('createTestDate.dateHelpText')}
+                        {t('testDateForm.dateHelpText')}
                       </HelpText>
                       <FieldErrorMsg>{flatErrors.dateMonth}</FieldErrorMsg>
                       <FieldErrorMsg>{flatErrors.dateDay}</FieldErrorMsg>
@@ -240,7 +189,7 @@ const TestDate = () => {
                   >
                     <fieldset className="usa-fieldset margin-top-4">
                       <legend className="usa-label margin-bottom-1">
-                        {t('createTestDate.scoreHeader')}
+                        {t('testDateForm.scoreHeader')}
                       </legend>
 
                       <FieldErrorMsg>
@@ -280,10 +229,10 @@ const TestDate = () => {
                               className="margin-bottom-1"
                               style={{ marginTop: '0.5em' }}
                               aria-label={t(
-                                'createTestDate.scoreValueSRHelpText'
+                                'testDateForm.scoreValueSRHelpText'
                               )}
                             >
-                              {t('createTestDate.scoreValueHeader')}
+                              {t('testDateForm.scoreValueHeader')}
                             </Label>
                             <FieldErrorMsg>
                               {flatErrors['score.value']}
@@ -309,13 +258,13 @@ const TestDate = () => {
                     </fieldset>
                   </FieldGroup>
                   <Button className="margin-top-4" type="submit">
-                    {t('createTestDate.submitButton')}
+                    {t(`testDateForm.submitButton.${formType}`)}
                   </Button>
                   <Link
-                    to={`/508/requests/${accessibilityRequestId}`}
+                    to={`/508/requests/${requestId}`}
                     className="margin-top-2 display-block"
                   >
-                    {t('createTestDate.cancel')}
+                    {t('testDateForm.cancel')}
                   </Link>
                 </Form>
               </div>
@@ -327,4 +276,4 @@ const TestDate = () => {
   );
 };
 
-export default TestDate;
+export default TestDateForm;

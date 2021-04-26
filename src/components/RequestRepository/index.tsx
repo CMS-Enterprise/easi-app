@@ -62,7 +62,7 @@ const RequestRepository = () => {
   };
 
   const requesterNameAndComponentColumn = {
-    Header: t('intake:fields.requester'),
+    Header: t('intake:contactDetails.requester'),
     accessor: 'requester',
     Cell: ({ value }: any) => {
       // Display both the requester name and the acronym of their component

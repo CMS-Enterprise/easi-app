@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 
 // eslint-disable-next-line import/prefer-default-export
 export const DocumentUploadValidationSchema: any = Yup.object().shape({
-  file: Yup.string().nullable().required('Choose a document to upload'),
+  file: Yup.mixed().nullable().required('Choose a document to upload'),
   documentType: Yup.object().when('file', {
     is: (value: string) => value,
     then: Yup.object().shape({
