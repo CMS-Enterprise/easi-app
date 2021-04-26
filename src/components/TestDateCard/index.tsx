@@ -96,6 +96,7 @@ const TestDateCard = ({
         <Button
           className="margin-left-1"
           type="button"
+          aria-label={`Remove test ${testIndex} ${type}`}
           unstyled
           onClick={() => {
             setRemoveTestDateModalOpen(true);
