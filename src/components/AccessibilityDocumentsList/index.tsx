@@ -11,6 +11,7 @@ import {
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
+import useConfirmationText from 'hooks/useConfirmationText';
 import {
   AccessibilityRequestDocumentCommonType,
   AccessibilityRequestDocumentStatus
@@ -40,6 +41,7 @@ const AccessibilityDocumentsList = ({
   requestName,
   refetchRequest
 }: DocumentsListProps) => {
+  const { setConfirmationText } = useConfirmationText();
   const { t } = useTranslation('accessibility');
   const [
     documentWithModalOpen,
@@ -70,8 +72,11 @@ const AccessibilityDocumentsList = ({
           id
         }
       }
-    }).then(refetchRequest);
-    setDocumentWithModalOpen(null);
+    }).then(() => {
+      refetchRequest();
+      setDocumentWithModalOpen(null);
+      setConfirmationText('its done');
+    });
   };
 
   const columns = useMemo<Column<Document>[]>(() => {
@@ -125,7 +130,7 @@ const AccessibilityDocumentsList = ({
                   closeModal={() => setDocumentWithModalOpen(null)}
                 >
                   <PageHeading
-                    headingLevel="h1"
+                    headingLevel="h2"
                     className="line-height-heading-2 margin-bottom-2"
                   >
                     {t('documentTable.modal.header', {

@@ -23,7 +23,7 @@ const Home = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
-  const confirmationText = useConfirmationText();
+  const { confirmationText } = useConfirmationText();
 
   const renderView = () => {
     if (isUserSet) {

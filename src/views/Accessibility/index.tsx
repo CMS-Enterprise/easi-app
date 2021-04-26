@@ -28,7 +28,7 @@ const Accessibility = () => {
   const flags = useFlags();
 
   const { t } = useTranslation('accessibility');
-  const confirmationText = useConfirmationText();
+  const { confirmationText } = useConfirmationText();
 
   const NewRequest = (
     <SecureRoute path="/508/requests/new" exact component={Create} />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 // useConfirmationText is a hook used to get the confirmation text
@@ -10,7 +10,10 @@ import { useHistory, useLocation } from 'react-router-dom';
 // or
 // const location = { pathname: '/some/url', state: { confirmationText: 'Confirmed' }};
 // <Link to={location} />
-function useConfirmationText() {
+function useConfirmationText(): {
+  confirmationText: string;
+  setConfirmationText: React.Dispatch<React.SetStateAction<string>>;
+} {
   const location = useLocation<any>();
   const history = useHistory();
   const [confirmationText, setConfirmationText] = useState('');
@@ -30,7 +33,7 @@ function useConfirmationText() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history.location.pathname]);
 
-  return confirmationText;
+  return { confirmationText, setConfirmationText };
 }
 
 export default useConfirmationText;
