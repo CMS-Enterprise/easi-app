@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
@@ -18,6 +18,7 @@ type TestDateCardProps = {
   requestId: string;
   requestName: string;
   id: string;
+  refetchRequest: () => any;
 };
 
 const TestDateCard = ({
@@ -27,10 +28,10 @@ const TestDateCard = ({
   score,
   requestId,
   requestName,
-  id
+  id,
+  refetchRequest
 }: TestDateCardProps) => {
   const { t } = useTranslation('accessibility');
-  const history = useHistory();
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
     DeleteTestDateQuery,
@@ -50,10 +51,7 @@ const TestDateCard = ({
           id
         }
       }
-    });
-
-    // Refresh page
-    history.go(0);
+    }).then(refetchRequest);
 
     // TODO: display confirmation banner if mutation successful (removeTestDate.confirmation)
     // cannot use useConfirmationText hook since we are not changing URL - useContext()?

@@ -19,7 +19,7 @@ const AccessibilityRequestDetailPage = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
-  const { loading, error, data } = useQuery<GetAccessibilityRequest>(
+  const { loading, error, data, refetch } = useQuery<GetAccessibilityRequest>(
     GetAccessibilityRequestQuery,
     {
       variables: {
@@ -100,6 +100,7 @@ const AccessibilityRequestDetailPage = () => {
                     id={testDate.id}
                     requestName={requestName}
                     requestId={accessibilityRequestId}
+                    refetchRequest={refetch}
                   />
                 ))}
               <Link
