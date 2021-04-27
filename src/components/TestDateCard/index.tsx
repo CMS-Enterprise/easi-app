@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 
 import { formatDate } from 'utils/date';
 
@@ -7,9 +9,18 @@ type TestDateCardProps = {
   type: 'INITIAL' | 'REMEDIATION';
   testIndex: number;
   score: number | null; // A whole number representing tenths of a percent
+  requestId: string;
+  id: string;
 };
 
-const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
+const TestDateCard = ({
+  date,
+  type,
+  testIndex,
+  score,
+  requestId,
+  id
+}: TestDateCardProps) => {
   const testScore = () => {
     if (score === 0) {
       return '0%';
@@ -33,18 +44,18 @@ const TestDateCard = ({ date, type, testIndex, score }: TestDateCardProps) => {
           {testScore()}
         </div>
       </div>
-      {/* <div>
-        <Link
-          href="/"
-          className="margin-right-2"
+      <div>
+        <UswdsLink
+          asCustom={Link}
+          to={`/508/requests/${requestId}/test-date/${id}`}
           aria-label={`Edit test ${testIndex} ${type}`}
         >
           Edit
-        </Link>
-        <Link href="/" aria-label={`Remove test ${testIndex} ${type}`}>
+        </UswdsLink>
+        {/* <Link href="/" aria-label={`Remove test ${testIndex} ${type}`}>
           Remove
-        </Link>
-      </div> */}
+        </Link> */}
+      </div>
     </div>
   );
 };

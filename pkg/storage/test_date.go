@@ -85,3 +85,27 @@ func (s *Store) FetchTestDatesByRequestID(ctx context.Context, requestID uuid.UU
 	}
 	return results, nil
 }
+
+// UpdateTestDate updates an existing Test Date object in the database
+func (s *Store) UpdateTestDate(ctx context.Context, testDate *models.TestDate) (*models.TestDate, error) {
+	updatedAt := s.clock.Now()
+	testDate.UpdatedAt = &updatedAt
+	const createTestDateSQL = `
+		UPDATE test_dates
+		SET
+			test_type = :test_type,
+		    date = :date,
+		    score = :score,
+			updated_at = :updated_at
+		WHERE test_dates.id = :id`
+	_, err := s.db.NamedExecContext(
+		ctx,
+		createTestDateSQL,
+		testDate,
+	)
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to update test date with error %s", zap.Error(err))
+		return nil, err
+	}
+	return s.FetchTestDateByID(ctx, testDate.ID)
+}

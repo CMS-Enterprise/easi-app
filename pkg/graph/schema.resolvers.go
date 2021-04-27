@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -39,6 +38,8 @@ func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *model
 		//
 		// We will either update the records in the database with the results OR implement
 		// another mechanism for doing that as a background job so that we don't need to do it here.
+		// Furthermore, locally this will always return "", since we are not interfacing with the
+		// real S3.
 		value, valueErr := r.s3Client.TagValueForKey(document.Key, "av-status")
 		if valueErr != nil {
 			return nil, valueErr
@@ -306,8 +307,9 @@ func (r *mutationResolver) AddGRTFeedbackAndRequestBusinessCase(ctx context.Cont
 
 func (r *mutationResolver) CreateAccessibilityRequest(ctx context.Context, input model.CreateAccessibilityRequestInput) (*model.CreateAccessibilityRequestPayload, error) {
 	request, err := r.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
-		Name:     input.Name,
-		IntakeID: input.IntakeID,
+		EUAUserID: appcontext.Principal(ctx).ID(),
+		Name:      input.Name,
+		IntakeID:  input.IntakeID,
 	})
 	if err != nil {
 		return nil, err
@@ -605,7 +607,44 @@ func (r *mutationResolver) UpdateSystemIntakeReviewDates(ctx context.Context, in
 }
 
 func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	testDate, err := r.store.UpdateTestDate(ctx, &models.TestDate{
+		TestType: input.TestType,
+		Date:     input.Date,
+		Score:    input.Score,
+		ID:       input.ID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.UpdateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
+func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {
+	accessibilityRequestDocument, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, accessibilityRequestDocument.RequestID)
+	if err != nil {
+		return nil, err
+	}
+	intake, err := r.store.FetchSystemIntakeByID(ctx, accessibilityRequest.IntakeID)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := r.service.AuthorizeUserIs508TeamOrIntakeRequester(ctx, intake)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
+	}
+	err = r.store.DeleteAccessibilityRequestDocument(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {

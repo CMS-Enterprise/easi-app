@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { SecureRoute } from '@okta/okta-react';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import RequestRepository from 'components/RequestRepository';
 import { AppState } from 'reducers/rootReducer';
@@ -12,6 +13,7 @@ import NotFound from 'views/NotFound';
 const GovernanceReviewTeam = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+  const flags = useFlags();
 
   const RenderPage = () => (
     <Switch>
@@ -35,7 +37,7 @@ const GovernanceReviewTeam = () => {
   );
 
   if (isUserSet) {
-    if (user.isGrtReviewer(userGroups)) {
+    if (user.isGrtReviewer(userGroups, flags)) {
       return <RenderPage />;
     }
     return <NotFound />;
