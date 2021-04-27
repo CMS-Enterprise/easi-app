@@ -119,6 +119,10 @@ export interface CreateTestDateInput {
   testType: TestDateTestType;
 }
 
+export interface DeleteTestDateInput {
+  id: UUID;
+}
+
 export interface GeneratePresignedUploadURLInput {
   fileName: string;
   mimeType: string;
@@ -139,10 +143,6 @@ export interface RejectIntakeInput {
   intakeId: UUID;
   nextSteps?: string | null;
   reason: string;
-}
-
-export interface RemoveTestDateInput {
-  id: UUID;
 }
 
 export interface UpdateSystemIntakeAdminLeadInput {
