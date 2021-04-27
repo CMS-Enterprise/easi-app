@@ -529,6 +529,13 @@ input BasicActionInput {
   intakeId: UUID!
 }
 
+input DeleteAccessibilityRequestDocumentInput {
+  id: UUID!
+}
+type DeleteAccessibilityRequestDocumentPayload {
+  id: UUID
+}
+
 type Mutation {
   addGRTFeedbackAndKeepBusinessCaseInDraft(
     input: AddGRTFeedbackInput!
@@ -573,7 +580,8 @@ type Mutation {
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
-    @hasRole(role: EASI_508_TESTER)  
+    @hasRole(role: EASI_508_TESTER)
+  deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
 }
 
 type Query {

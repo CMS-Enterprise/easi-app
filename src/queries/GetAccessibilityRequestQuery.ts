@@ -15,6 +15,7 @@ export default gql`
         }
       }
       documents {
+        id
         url
         uploadedAt
         status

@@ -4,6 +4,9 @@ export type Flags = {
   pdfExport: Boolean;
   prototype508: Boolean;
   prototypeTRB: Boolean;
+  downgradeGovTeam: Boolean;
+  downgrade508User: Boolean;
+  downgrade508Tester: Boolean;
 };
 
 export type FlagsState = {
