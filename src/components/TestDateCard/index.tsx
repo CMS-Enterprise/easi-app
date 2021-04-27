@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
-import { DateTime } from 'luxon';
-import RemoveTestDateQuery from 'queries/RemoveTestDateQuery';
-import { RemoveTestDate } from 'queries/types/RemoveTestDate';
+import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
+import { DeleteTestDate } from 'queries/types/DeleteTestDate';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
@@ -33,33 +32,31 @@ const TestDateCard = ({
   const { t } = useTranslation('accessibility');
   const history = useHistory();
 
-  // TODO: should we do something w/ mutationResult here?
-  const [mutate] = useMutation<RemoveTestDate>(RemoveTestDateQuery, {
-    errorPolicy: 'all'
-  });
+  const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
+    DeleteTestDateQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
 
   const [isRemoveTestDateModalOpen, setRemoveTestDateModalOpen] = useState(
     false
   );
 
-  const removeTestDate = () => {
-    mutate({
+  const deleteTestDate = () => {
+    deleteTestDateMutation({
       variables: {
         input: {
           id
         }
       }
-    }).then(() => {
-      history.push(`/508/requests/${requestId}`, {
-        confirmationText: t('removeTestDate.confirmation', {
-          date: DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL),
-          requestName
-        })
-      });
-
-      // TODO: why doesn't the confirmationText do an auto refresh here like in other places?
-      history.go(0);
     });
+
+    // Refresh page
+    history.go(0);
+
+    // TODO: display confirmation banner if mutation successful (removeTestDate.confirmation)
+    // cannot use useConfirmationText hook since we are not changing URL - useContext()?
   };
 
   const testScore = () => {
@@ -124,7 +121,7 @@ const TestDateCard = ({
             type="button"
             className="margin-right-4"
             onClick={() => {
-              removeTestDate();
+              deleteTestDate();
               setRemoveTestDateModalOpen(false);
             }}
           >
