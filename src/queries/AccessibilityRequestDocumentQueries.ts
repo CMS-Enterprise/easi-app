@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export default gql`
+export const CreateAccessibilityRequestDocumentQuery = gql`
   mutation CreateAccessibilityRequestDocument(
     $input: CreateAccessibilityRequestDocumentInput!
   ) {
@@ -17,6 +17,16 @@ export default gql`
         message
         path
       }
+    }
+  }
+`;
+
+export const DeleteAccessibilityRequestDocumentQuery = gql`
+  mutation DeleteAccessibilityRequestDocument(
+    $input: DeleteAccessibilityRequestDocumentInput!
+  ) {
+    deleteAccessibilityRequestDocument(input: $input) {
+      id
     }
   }
 `;

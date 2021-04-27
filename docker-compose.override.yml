@@ -24,7 +24,7 @@ services:
     environment:
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
-      - MINIO_ADDRESS=http://localhost:9000
+      - MINIO_ADDRESS=http://minio:9000
   easi_client:
     build:
       context: .

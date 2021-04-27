@@ -49,17 +49,17 @@ func (s ServicesTestSuite) TestFetchNotes() {
 			"anonymous user": {
 				ctx: context.Background(),
 				id:  idFound,
-				fn:  NewFetchNotes(cfg, fetcher, NewAuthorizeRequireGRTJobCode()),
+				fn:  NewFetchNotes(cfg, fetcher, AuthorizeRequireGRTJobCode),
 			},
 			"not reviewer": {
 				ctx: appcontext.WithPrincipal(context.Background(), testhelpers.NewRequesterPrincipal()),
 				id:  idFound,
-				fn:  NewFetchNotes(cfg, fetcher, NewAuthorizeRequireGRTJobCode()),
+				fn:  NewFetchNotes(cfg, fetcher, AuthorizeRequireGRTJobCode),
 			},
 			"errors when talking to storage layer": {
 				ctx: appcontext.WithPrincipal(context.Background(), testhelpers.NewReviewerPrincipal()),
 				id:  idError,
-				fn:  NewFetchNotes(cfg, fetcher, NewAuthorizeRequireGRTJobCode()),
+				fn:  NewFetchNotes(cfg, fetcher, AuthorizeRequireGRTJobCode),
 			},
 		}
 
@@ -79,12 +79,12 @@ func (s ServicesTestSuite) TestFetchNotes() {
 		}{
 			"zero length": {
 				id:    uuid.New(),
-				fn:    NewFetchNotes(cfg, fetcher, NewAuthorizeRequireGRTJobCode()),
+				fn:    NewFetchNotes(cfg, fetcher, AuthorizeRequireGRTJobCode),
 				count: 0,
 			},
 			"several results": {
 				id:    uuid.New(),
-				fn:    NewFetchNotes(cfg, fetcher, NewAuthorizeRequireGRTJobCode()),
+				fn:    NewFetchNotes(cfg, fetcher, AuthorizeRequireGRTJobCode),
 				count: 0,
 			},
 		}
@@ -136,17 +136,17 @@ func (s ServicesTestSuite) TestCreateNote() {
 			"anonymous user": {
 				ctx:  context.Background(),
 				note: &noteCreated,
-				fn:   NewCreateNote(cfg, creator, NewAuthorizeRequireGRTJobCode()),
+				fn:   NewCreateNote(cfg, creator, AuthorizeRequireGRTJobCode),
 			},
 			"not reviewer": {
 				ctx:  appcontext.WithPrincipal(context.Background(), testhelpers.NewRequesterPrincipal()),
 				note: &noteCreated,
-				fn:   NewCreateNote(cfg, creator, NewAuthorizeRequireGRTJobCode()),
+				fn:   NewCreateNote(cfg, creator, AuthorizeRequireGRTJobCode),
 			},
 			"errors when talking to storage layer": {
 				ctx:  appcontext.WithPrincipal(context.Background(), testhelpers.NewReviewerPrincipal()),
 				note: &noteError,
-				fn:   NewCreateNote(cfg, creator, NewAuthorizeRequireGRTJobCode()),
+				fn:   NewCreateNote(cfg, creator, AuthorizeRequireGRTJobCode),
 			},
 		}
 
@@ -170,7 +170,7 @@ func (s ServicesTestSuite) TestCreateNote() {
 				Content:        content,
 			}, nil
 		}
-		createNote := NewCreateNote(cfg, create, NewAuthorizeRequireGRTJobCode())
+		createNote := NewCreateNote(cfg, create, AuthorizeRequireGRTJobCode)
 		note, err := createNote(ctx, &models.Note{
 			SystemIntakeID: systemIntakeID,
 			Content:        content,

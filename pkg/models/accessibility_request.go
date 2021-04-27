@@ -13,4 +13,5 @@ type AccessibilityRequest struct {
 	IntakeID  uuid.UUID  `db:"intake_id"`
 	CreatedAt *time.Time `db:"created_at" gqlgen:"submittedAt"`
 	UpdatedAt *time.Time `db:"updated_at"`
+	EUAUserID string     `json:"euaUserId" db:"eua_user_id"`
 }

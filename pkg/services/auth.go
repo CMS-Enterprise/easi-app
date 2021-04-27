@@ -99,36 +99,15 @@ func NewAuthorizeUserIsBusinessCaseRequester() func(
 	}
 }
 
-// NewAuthorizeHasEASiRole creates an authorizer that the user can use EASi
-func NewAuthorizeHasEASiRole() func(
-	context.Context,
-) (bool, error) {
-	return func(ctx context.Context) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowEASi() {
-			logger.Error("does not have EASi job code")
-			return false, nil
-		}
-		logger.With(zap.Bool("Authorized", true)).
-			Info("user authorized as EASi user")
-		return true, nil
-	}
+// AuthorizeHasEASiRole authorizes that the user can use EASi
+func AuthorizeHasEASiRole(ctx context.Context) (bool, error) {
+	return HasRole(ctx, model.RoleEasiUser)
 }
 
-// NewAuthorizeRequireGRTJobCode returns a function
-// that authorizes a user as being a member of the
+// AuthorizeRequireGRTJobCode authorizes a user as being a member of the
 // GRT (Governance Review Team)
-func NewAuthorizeRequireGRTJobCode() func(context.Context) (bool, error) {
-	return func(ctx context.Context) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowGRT() {
-			logger.Info("not a member of the GRT")
-			return false, nil
-		}
-		return true, nil
-	}
+func AuthorizeRequireGRTJobCode(ctx context.Context) (bool, error) {
+	return HasRole(ctx, model.RoleEasiGovteam)
 }
 
 // AuthorizeUserIsIntakeRequesterOrHasGRTJobCode  authorizes a user as being a member of the
@@ -139,13 +118,37 @@ func AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx context.Context, existing
 		return false, errAuthor
 	}
 
-	reviewerIsAuthed, errReviewer := NewAuthorizeRequireGRTJobCode()(ctx)
+	reviewerIsAuthed, errReviewer := AuthorizeRequireGRTJobCode(ctx)
 	if errReviewer != nil {
 		return false, errReviewer
 	}
 
 	if !authorIsAuthed && !reviewerIsAuthed {
 		return false, errAuthor
+	}
+
+	return true, nil
+}
+
+// AuthorizeUserIsRequestOwnerOr508Team authorizes the user owns the system intake or is a member of the 508 team
+func AuthorizeUserIsRequestOwnerOr508Team(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+	userIsIntakeRequester, err := NewAuthorizeUserIsIntakeRequester()(ctx, intake)
+	if err != nil {
+		return false, err
+	}
+
+	userIs508Tester, err := HasRole(ctx, model.RoleEasi508Tester)
+	if err != nil {
+		return false, err
+	}
+
+	userIs508User, err := HasRole(ctx, model.RoleEasi508User)
+	if err != nil {
+		return false, err
+	}
+
+	if !userIsIntakeRequester && !userIs508User && !userIs508Tester {
+		return false, nil
 	}
 
 	return true, nil

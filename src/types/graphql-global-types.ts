@@ -119,6 +119,10 @@ export interface CreateTestDateInput {
   testType: TestDateTestType;
 }
 
+export interface DeleteAccessibilityRequestDocumentInput {
+  id: UUID;
+}
+
 export interface GeneratePresignedUploadURLInput {
   fileName: string;
   mimeType: string;
@@ -150,6 +154,13 @@ export interface UpdateSystemIntakeReviewDatesInput {
   grbDate?: Time | null;
   grtDate?: Time | null;
   id: UUID;
+}
+
+export interface UpdateTestDateInput {
+  date: Time;
+  id: UUID;
+  score?: number | null;
+  testType: TestDateTestType;
 }
 
 //==============================================================

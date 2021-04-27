@@ -5,7 +5,10 @@ import { useQuery } from '@apollo/client';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
-import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
+import {
+  GetAccessibilityRequest,
+  GetAccessibilityRequestVariables
+} from 'queries/types/GetAccessibilityRequest';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import PageHeading from 'components/PageHeading';
@@ -19,14 +22,14 @@ const AccessibilityRequestDetailPage = () => {
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
-  const { loading, error, data } = useQuery<GetAccessibilityRequest>(
-    GetAccessibilityRequestQuery,
-    {
-      variables: {
-        id: accessibilityRequestId
-      }
+  const { loading, error, data, refetch } = useQuery<
+    GetAccessibilityRequest,
+    GetAccessibilityRequestVariables
+  >(GetAccessibilityRequestQuery, {
+    variables: {
+      id: accessibilityRequestId
     }
-  );
+  });
 
   const requestName = data?.accessibilityRequest?.name || '';
   const systemName = data?.accessibilityRequest?.system.name || '';
@@ -75,6 +78,7 @@ const AccessibilityRequestDetailPage = () => {
             <AccessibilityDocumentsList
               documents={documents}
               requestName={requestName}
+              refetchRequest={refetch}
             />
           </div>
         </div>
@@ -97,6 +101,8 @@ const AccessibilityRequestDetailPage = () => {
                     type={testDate.testType}
                     testIndex={index + 1}
                     score={testDate.score}
+                    id={testDate.id}
+                    requestId={accessibilityRequestId}
                   />
                 ))}
               <Link
