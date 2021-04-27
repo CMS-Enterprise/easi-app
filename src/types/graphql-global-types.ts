@@ -119,6 +119,10 @@ export interface CreateTestDateInput {
   testType: TestDateTestType;
 }
 
+export interface DeleteAccessibilityRequestDocumentInput {
+  id: UUID;
+}
+
 export interface DeleteTestDateInput {
   id: UUID;
 }

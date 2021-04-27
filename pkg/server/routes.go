@@ -189,6 +189,7 @@ func (s *Server) routes(
 				store.GenerateLifecycleID,
 			),
 			AuthorizeUserIsReviewTeamOrIntakeRequester: services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
+			AuthorizeUserIs508TeamOrIntakeRequester:    services.AuthorizeUserIsRequestOwnerOr508Team,
 			RejectIntake: services.NewUpdateRejectionFields(
 				serviceConfig,
 				services.AuthorizeRequireGRTJobCode,

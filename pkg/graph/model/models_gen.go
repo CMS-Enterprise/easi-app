@@ -115,6 +115,14 @@ type CreateTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+type DeleteAccessibilityRequestDocumentInput struct {
+	ID uuid.UUID `json:"id"`
+}
+
+type DeleteAccessibilityRequestDocumentPayload struct {
+	ID *uuid.UUID `json:"id"`
+}
+
 type DeleteTestDateInput struct {
 	ID uuid.UUID `json:"id"`
 }
