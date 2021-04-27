@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export default gql`
-  mutation RemoveTestDate($input: RemoveTestDateInput!) {
-    removeTestDate(input: $input) {
+  mutation DeleteTestDate($input: DeleteTestDateInput!) {
+    deleteTestDate(input: $input) {
       testDate {
         id
       }

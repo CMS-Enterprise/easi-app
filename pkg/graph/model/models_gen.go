@@ -115,6 +115,15 @@ type CreateTestDatePayload struct {
 	UserErrors []*UserError     `json:"userErrors"`
 }
 
+type DeleteTestDateInput struct {
+	ID uuid.UUID `json:"id"`
+}
+
+type DeleteTestDatePayload struct {
+	TestDate   *models.TestDate `json:"testDate"`
+	UserErrors []*UserError     `json:"userErrors"`
+}
+
 type GeneratePresignedUploadURLInput struct {
 	FileName string `json:"fileName"`
 	MimeType string `json:"mimeType"`
@@ -140,15 +149,6 @@ type RejectIntakeInput struct {
 	IntakeID  uuid.UUID `json:"intakeId"`
 	NextSteps *string   `json:"nextSteps"`
 	Reason    string    `json:"reason"`
-}
-
-type RemoveTestDateInput struct {
-	ID uuid.UUID `json:"id"`
-}
-
-type RemoveTestDatePayload struct {
-	TestDate   *models.TestDate `json:"testDate"`
-	UserErrors []*UserError     `json:"userErrors"`
 }
 
 type SystemConnection struct {

@@ -167,6 +167,11 @@ type ComplexityRoot struct {
 		UserErrors func(childComplexity int) int
 	}
 
+	DeleteTestDatePayload struct {
+		TestDate   func(childComplexity int) int
+		UserErrors func(childComplexity int) int
+	}
+
 	EstimatedLifecycleCost struct {
 		BusinessCaseID func(childComplexity int) int
 		Cost           func(childComplexity int) int
@@ -204,11 +209,11 @@ type ComplexityRoot struct {
 		CreateSystemIntakeActionSendEmail                func(childComplexity int, input model.BasicActionInput) int
 		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
 		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
+		DeleteTestDate                                   func(childComplexity int, input model.DeleteTestDateInput) int
 		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
 		RejectIntake                                     func(childComplexity int, input model.RejectIntakeInput) int
-		RemoveTestDate                                   func(childComplexity int, input model.RemoveTestDateInput) int
 		UpdateSystemIntakeAdminLead                      func(childComplexity int, input model.UpdateSystemIntakeAdminLeadInput) int
 		UpdateSystemIntakeReviewDates                    func(childComplexity int, input model.UpdateSystemIntakeReviewDatesInput) int
 		UpdateTestDate                                   func(childComplexity int, input model.UpdateTestDateInput) int
@@ -219,11 +224,6 @@ type ComplexityRoot struct {
 		AccessibilityRequests func(childComplexity int, after *string, first int) int
 		SystemIntake          func(childComplexity int, id uuid.UUID) int
 		Systems               func(childComplexity int, after *string, first int) int
-	}
-
-	RemoveTestDatePayload struct {
-		TestDate   func(childComplexity int) int
-		UserErrors func(childComplexity int) int
 	}
 
 	System struct {
@@ -444,7 +444,7 @@ type MutationResolver interface {
 	UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
-	RemoveTestDate(ctx context.Context, input model.RemoveTestDateInput) (*model.RemoveTestDatePayload, error)
+	DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error)
 }
 type QueryResolver interface {
 	AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error)
@@ -1018,6 +1018,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CreateTestDatePayload.UserErrors(childComplexity), true
 
+	case "DeleteTestDatePayload.testDate":
+		if e.complexity.DeleteTestDatePayload.TestDate == nil {
+			break
+		}
+
+		return e.complexity.DeleteTestDatePayload.TestDate(childComplexity), true
+
+	case "DeleteTestDatePayload.userErrors":
+		if e.complexity.DeleteTestDatePayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.DeleteTestDatePayload.UserErrors(childComplexity), true
+
 	case "EstimatedLifecycleCost.businessCaseId":
 		if e.complexity.EstimatedLifecycleCost.BusinessCaseID == nil {
 			break
@@ -1282,6 +1296,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateTestDate(childComplexity, args["input"].(model.CreateTestDateInput)), true
 
+	case "Mutation.deleteTestDate":
+		if e.complexity.Mutation.DeleteTestDate == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteTestDate_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteTestDate(childComplexity, args["input"].(model.DeleteTestDateInput)), true
+
 	case "Mutation.generatePresignedUploadURL":
 		if e.complexity.Mutation.GeneratePresignedUploadURL == nil {
 			break
@@ -1329,18 +1355,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.RejectIntake(childComplexity, args["input"].(model.RejectIntakeInput)), true
-
-	case "Mutation.removeTestDate":
-		if e.complexity.Mutation.RemoveTestDate == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_removeTestDate_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.RemoveTestDate(childComplexity, args["input"].(model.RemoveTestDateInput)), true
 
 	case "Mutation.updateSystemIntakeAdminLead":
 		if e.complexity.Mutation.UpdateSystemIntakeAdminLead == nil {
@@ -1425,20 +1439,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Systems(childComplexity, args["after"].(*string), args["first"].(int)), true
-
-	case "RemoveTestDatePayload.testDate":
-		if e.complexity.RemoveTestDatePayload.TestDate == nil {
-			break
-		}
-
-		return e.complexity.RemoveTestDatePayload.TestDate(childComplexity), true
-
-	case "RemoveTestDatePayload.userErrors":
-		if e.complexity.RemoveTestDatePayload.UserErrors == nil {
-			break
-		}
-
-		return e.complexity.RemoveTestDatePayload.UserErrors(childComplexity), true
 
 	case "System.businessOwner":
 		if e.complexity.System.BusinessOwner == nil {
@@ -2343,11 +2343,11 @@ type UpdateTestDatePayload {
   userErrors: [UserError!]
 }
 
-input RemoveTestDateInput {
+input DeleteTestDateInput {
   id: UUID!
 }
 
-type RemoveTestDatePayload {
+type DeleteTestDatePayload {
   testDate: TestDate
   userErrors: [UserError!]
 }
@@ -2764,7 +2764,7 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
-  removeTestDate(input: RemoveTestDateInput!): RemoveTestDatePayload
+  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
     @hasRole(role: EASI_508_TESTER)  
 }
 
@@ -3062,6 +3062,21 @@ func (ec *executionContext) field_Mutation_createTestDate_args(ctx context.Conte
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_deleteTestDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.DeleteTestDateInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDateInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_generatePresignedUploadURL_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -3114,21 +3129,6 @@ func (ec *executionContext) field_Mutation_rejectIntake_args(ctx context.Context
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNRejectIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRejectIntakeInput(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Mutation_removeTestDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 model.RemoveTestDateInput
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNRemoveTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRemoveTestDateInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5733,6 +5733,70 @@ func (ec *executionContext) _CreateTestDatePayload_userErrors(ctx context.Contex
 	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _DeleteTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.DeleteTestDatePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DeleteTestDatePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TestDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.TestDate)
+	fc.Result = res
+	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DeleteTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.DeleteTestDatePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DeleteTestDatePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _EstimatedLifecycleCost_businessCaseId(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7437,7 +7501,7 @@ func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field 
 	return ec.marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Mutation_removeTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Mutation_deleteTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -7454,7 +7518,7 @@ func (ec *executionContext) _Mutation_removeTestDate(ctx context.Context, field 
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	rawArgs := field.ArgumentMap(ec.Variables)
-	args, err := ec.field_Mutation_removeTestDate_args(ctx, rawArgs)
+	args, err := ec.field_Mutation_deleteTestDate_args(ctx, rawArgs)
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
@@ -7463,7 +7527,7 @@ func (ec *executionContext) _Mutation_removeTestDate(ctx context.Context, field 
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		directive0 := func(rctx context.Context) (interface{}, error) {
 			ctx = rctx // use context from middleware stack in children
-			return ec.resolvers.Mutation().RemoveTestDate(rctx, args["input"].(model.RemoveTestDateInput))
+			return ec.resolvers.Mutation().DeleteTestDate(rctx, args["input"].(model.DeleteTestDateInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
 			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER")
@@ -7483,10 +7547,10 @@ func (ec *executionContext) _Mutation_removeTestDate(ctx context.Context, field 
 		if tmp == nil {
 			return nil, nil
 		}
-		if data, ok := tmp.(*model.RemoveTestDatePayload); ok {
+		if data, ok := tmp.(*model.DeleteTestDatePayload); ok {
 			return data, nil
 		}
-		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.RemoveTestDatePayload`, tmp)
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.DeleteTestDatePayload`, tmp)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7495,9 +7559,9 @@ func (ec *executionContext) _Mutation_removeTestDate(ctx context.Context, field 
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.RemoveTestDatePayload)
+	res := resTmp.(*model.DeleteTestDatePayload)
 	fc.Result = res
-	return ec.marshalORemoveTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRemoveTestDatePayload(ctx, field.Selections, res)
+	return ec.marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDatePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_accessibilityRequest(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -7725,70 +7789,6 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _RemoveTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.RemoveTestDatePayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "RemoveTestDatePayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.TestDate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*models.TestDate)
-	fc.Result = res
-	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _RemoveTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.RemoveTestDatePayload) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "RemoveTestDatePayload",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.UserErrors, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.([]*model.UserError)
-	fc.Result = res
-	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _System_businessOwner(ctx context.Context, field graphql.CollectedField, obj *models.System) (ret graphql.Marshaler) {
@@ -12365,6 +12365,26 @@ func (ec *executionContext) unmarshalInputCreateTestDateInput(ctx context.Contex
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Context, obj interface{}) (model.DeleteTestDateInput, error) {
+	var it model.DeleteTestDateInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	var it model.GeneratePresignedUploadURLInput
 	var asMap = obj.(map[string]interface{})
@@ -12496,26 +12516,6 @@ func (ec *executionContext) unmarshalInputRejectIntakeInput(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
 			it.Reason, err = ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		}
-	}
-
-	return it, nil
-}
-
-func (ec *executionContext) unmarshalInputRemoveTestDateInput(ctx context.Context, obj interface{}) (model.RemoveTestDateInput, error) {
-	var it model.RemoveTestDateInput
-	var asMap = obj.(map[string]interface{})
-
-	for k, v := range asMap {
-		switch k {
-		case "id":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
-			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13368,6 +13368,32 @@ func (ec *executionContext) _CreateTestDatePayload(ctx context.Context, sel ast.
 	return out
 }
 
+var deleteTestDatePayloadImplementors = []string{"DeleteTestDatePayload"}
+
+func (ec *executionContext) _DeleteTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteTestDatePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deleteTestDatePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeleteTestDatePayload")
+		case "testDate":
+			out.Values[i] = ec._DeleteTestDatePayload_testDate(ctx, field, obj)
+		case "userErrors":
+			out.Values[i] = ec._DeleteTestDatePayload_userErrors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var estimatedLifecycleCostImplementors = []string{"EstimatedLifecycleCost"}
 
 func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, obj *models.EstimatedLifecycleCost) graphql.Marshaler {
@@ -13523,8 +13549,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_updateSystemIntakeReviewDates(ctx, field)
 		case "updateTestDate":
 			out.Values[i] = ec._Mutation_updateTestDate(ctx, field)
-		case "removeTestDate":
-			out.Values[i] = ec._Mutation_removeTestDate(ctx, field)
+		case "deleteTestDate":
+			out.Values[i] = ec._Mutation_deleteTestDate(ctx, field)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13599,32 +13625,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
-		default:
-			panic("unknown field " + strconv.Quote(field.Name))
-		}
-	}
-	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
-	return out
-}
-
-var removeTestDatePayloadImplementors = []string{"RemoveTestDatePayload"}
-
-func (ec *executionContext) _RemoveTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.RemoveTestDatePayload) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, removeTestDatePayloadImplementors)
-
-	out := graphql.NewFieldSet(fields)
-	var invalids uint32
-	for i, field := range fields {
-		switch field.Name {
-		case "__typename":
-			out.Values[i] = graphql.MarshalString("RemoveTestDatePayload")
-		case "testDate":
-			out.Values[i] = ec._RemoveTestDatePayload_testDate(ctx, field, obj)
-		case "userErrors":
-			out.Values[i] = ec._RemoveTestDatePayload_userErrors(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -15135,6 +15135,11 @@ func (ec *executionContext) unmarshalNCreateTestDateInput2githubᚗcomᚋcmsgov�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNDeleteTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDateInput(ctx context.Context, v interface{}) (model.DeleteTestDateInput, error) {
+	res, err := ec.unmarshalInputDeleteTestDateInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v *models.EstimatedLifecycleCost) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -15219,11 +15224,6 @@ func (ec *executionContext) unmarshalNIssueLifecycleIdInput2githubᚗcomᚋcmsgo
 
 func (ec *executionContext) unmarshalNRejectIntakeInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRejectIntakeInput(ctx context.Context, v interface{}) (model.RejectIntakeInput, error) {
 	res, err := ec.unmarshalInputRejectIntakeInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) unmarshalNRemoveTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRemoveTestDateInput(ctx context.Context, v interface{}) (model.RemoveTestDateInput, error) {
-	res, err := ec.unmarshalInputRemoveTestDateInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -16006,6 +16006,13 @@ func (ec *executionContext) marshalOCreateTestDatePayload2ᚖgithubᚗcomᚋcmsg
 	return ec._CreateTestDatePayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteTestDatePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeleteTestDatePayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -16112,13 +16119,6 @@ func (ec *executionContext) unmarshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋ
 
 func (ec *executionContext) marshalOLifecycleCostYear2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐLifecycleCostYear(ctx context.Context, sel ast.SelectionSet, v models.LifecycleCostYear) graphql.Marshaler {
 	return graphql.MarshalString(string(v))
-}
-
-func (ec *executionContext) marshalORemoveTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRemoveTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.RemoveTestDatePayload) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._RemoveTestDatePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

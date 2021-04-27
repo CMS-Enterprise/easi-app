@@ -151,11 +151,11 @@ type UpdateTestDatePayload {
   userErrors: [UserError!]
 }
 
-input RemoveTestDateInput {
+input DeleteTestDateInput {
   id: UUID!
 }
 
-type RemoveTestDatePayload {
+type DeleteTestDatePayload {
   testDate: TestDate
   userErrors: [UserError!]
 }
@@ -572,7 +572,7 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
-  removeTestDate(input: RemoveTestDateInput!): RemoveTestDatePayload
+  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
     @hasRole(role: EASI_508_TESTER)  
 }
 
