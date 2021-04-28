@@ -9,7 +9,6 @@ services:
       - EMAIL_TEMPLATE_DIR=/easi/templates
       - SERVER_CERT
       - SERVER_KEY
-    entrypoint: ['/easi/easi', 'serve']
   easi_client:
     build:
       context: .
