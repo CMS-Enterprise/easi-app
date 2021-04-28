@@ -523,41 +523,6 @@ func (s *Server) routes(
 	)
 	api.Handle("/system_intake/{intake_id}/notes", notesHandler.Handle())
 
-	// File Upload Handlers
-	fileUploadHandler := handlers.NewFileUploadHandler(
-		base,
-		services.NewCreateAccessibilityRequestDocument(
-			serviceConfig,
-			services.AuthorizeRequireGRTJobCode,
-			store.CreateAccessibilityRequestDocument),
-		services.NewFetchAccessibilityRequestDocument(
-			serviceConfig,
-			services.AuthorizeRequireGRTJobCode,
-			store.FetchAccessibilityRequestDocumentByID),
-	)
-	api.Handle("/file_uploads", fileUploadHandler.Handle())
-
-	presignedURLUploadHandler := handlers.NewPresignedURLUploadHandler(
-		base,
-		services.NewCreateFileUploadURL(
-			serviceConfig,
-			services.AuthorizeRequireGRTJobCode,
-			s3Client,
-		),
-	)
-	api.Handle("/file_uploads/upload_url", presignedURLUploadHandler.Handle())
-
-	presignedURLDownloadHandler := handlers.NewPresignedURLDownloadHandler(
-		base,
-		services.NewCreateFileDownloadURL(
-			serviceConfig,
-			services.AuthorizeRequireGRTJobCode,
-			s3Client,
-		),
-	)
-
-	api.Handle("/file_uploads/{file_name}/download_url", presignedURLDownloadHandler.Handle())
-
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
