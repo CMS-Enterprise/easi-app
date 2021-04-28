@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Button, Label } from '@trussworks/react-uswds';
+import { Alert, Button, Label } from '@trussworks/react-uswds';
 import axios from 'axios';
 import { Field, Form, Formik, FormikProps } from 'formik';
 import { isUndefined } from 'lodash';
@@ -22,6 +22,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
+import useConfirmationText from 'hooks/useConfirmationText';
 import { FileUploadForm } from 'types/files';
 import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
 import { translateDocumentType } from 'utils/accessibilityRequest';
@@ -30,6 +31,7 @@ import { DocumentUploadValidationSchema } from 'validations/documentUploadSchema
 
 const New = () => {
   const history = useHistory();
+  const { confirmationText } = useConfirmationText();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -128,6 +130,11 @@ const New = () => {
 
   return (
     <>
+      {confirmationText && (
+        <Alert className="margin-top-4" type="success" role="alert">
+          {confirmationText}
+        </Alert>
+      )}
       <Formik
         initialValues={{
           file: null,
