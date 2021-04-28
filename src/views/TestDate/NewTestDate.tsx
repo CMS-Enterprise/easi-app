@@ -8,7 +8,7 @@ import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
-import { TestDateForm } from 'types/accessibilityRequest';
+import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
 import Form from './Form';
@@ -36,7 +36,7 @@ const NewTestDate = () => {
   );
   const history = useHistory();
 
-  const initialValues: TestDateForm = {
+  const initialValues: TestDateFormType = {
     testType: null,
     dateMonth: '',
     dateDay: '',
@@ -47,7 +47,7 @@ const NewTestDate = () => {
     }
   };
 
-  const onSubmit = (values: TestDateForm) => {
+  const onSubmit = (values: TestDateFormType) => {
     const date = DateTime.fromObject({
       day: Number(values.dateDay),
       month: Number(values.dateMonth),
