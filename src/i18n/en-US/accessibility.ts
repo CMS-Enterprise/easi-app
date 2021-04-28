@@ -66,6 +66,14 @@ const accessibility = {
       update: ' was updated'
     }
   },
+  removeTestDate: {
+    modalHeader:
+      'Confirm you want to remove Test {{testNumber}} {{testType}}, {{testDate}} from {{requestName}}',
+    modalText: 'This test date and score will be removed from the request page',
+    modalRemoveButton: 'Remove test date',
+    modalCancelButton: 'Keep test date',
+    confirmation: '{{date}} test date was removed from {{requestName}} page'
+  },
   newRequestForm: {
     heading: 'Add a new request',
     fields: {

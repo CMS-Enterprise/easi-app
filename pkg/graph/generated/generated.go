@@ -171,6 +171,11 @@ type ComplexityRoot struct {
 		ID func(childComplexity int) int
 	}
 
+	DeleteTestDatePayload struct {
+		TestDate   func(childComplexity int) int
+		UserErrors func(childComplexity int) int
+	}
+
 	EstimatedLifecycleCost struct {
 		BusinessCaseID func(childComplexity int) int
 		Cost           func(childComplexity int) int
@@ -209,6 +214,7 @@ type ComplexityRoot struct {
 		CreateSystemIntakeNote                           func(childComplexity int, input model.CreateSystemIntakeNoteInput) int
 		CreateTestDate                                   func(childComplexity int, input model.CreateTestDateInput) int
 		DeleteAccessibilityRequestDocument               func(childComplexity int, input model.DeleteAccessibilityRequestDocumentInput) int
+		DeleteTestDate                                   func(childComplexity int, input model.DeleteTestDateInput) int
 		GeneratePresignedUploadURL                       func(childComplexity int, input model.GeneratePresignedUploadURLInput) int
 		IssueLifecycleID                                 func(childComplexity int, input model.IssueLifecycleIDInput) int
 		MarkSystemIntakeReadyForGrb                      func(childComplexity int, input model.AddGRTFeedbackInput) int
@@ -443,6 +449,7 @@ type MutationResolver interface {
 	UpdateSystemIntakeAdminLead(ctx context.Context, input model.UpdateSystemIntakeAdminLeadInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateSystemIntakeReviewDates(ctx context.Context, input model.UpdateSystemIntakeReviewDatesInput) (*model.UpdateSystemIntakePayload, error)
 	UpdateTestDate(ctx context.Context, input model.UpdateTestDateInput) (*model.UpdateTestDatePayload, error)
+	DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error)
 	DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error)
 }
 type QueryResolver interface {
@@ -1024,6 +1031,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.DeleteAccessibilityRequestDocumentPayload.ID(childComplexity), true
 
+	case "DeleteTestDatePayload.testDate":
+		if e.complexity.DeleteTestDatePayload.TestDate == nil {
+			break
+		}
+
+		return e.complexity.DeleteTestDatePayload.TestDate(childComplexity), true
+
+	case "DeleteTestDatePayload.userErrors":
+		if e.complexity.DeleteTestDatePayload.UserErrors == nil {
+			break
+		}
+
+		return e.complexity.DeleteTestDatePayload.UserErrors(childComplexity), true
+
 	case "EstimatedLifecycleCost.businessCaseId":
 		if e.complexity.EstimatedLifecycleCost.BusinessCaseID == nil {
 			break
@@ -1299,6 +1320,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.DeleteAccessibilityRequestDocument(childComplexity, args["input"].(model.DeleteAccessibilityRequestDocumentInput)), true
+
+	case "Mutation.deleteTestDate":
+		if e.complexity.Mutation.DeleteTestDate == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteTestDate_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteTestDate(childComplexity, args["input"].(model.DeleteTestDateInput)), true
 
 	case "Mutation.generatePresignedUploadURL":
 		if e.complexity.Mutation.GeneratePresignedUploadURL == nil {
@@ -2335,6 +2368,15 @@ type UpdateTestDatePayload {
   userErrors: [UserError!]
 }
 
+input DeleteTestDateInput {
+  id: UUID!
+}
+
+type DeleteTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
 input CreateAccessibilityRequestDocumentInput {
   commonDocumentType: AccessibilityRequestDocumentCommonType!
   mimeType: String!
@@ -2754,6 +2796,8 @@ type Mutation {
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
     @hasRole(role: EASI_508_TESTER)
+  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
+    @hasRole(role: EASI_508_TESTER)
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
 }
 
@@ -3058,6 +3102,21 @@ func (ec *executionContext) field_Mutation_deleteAccessibilityRequestDocument_ar
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNDeleteAccessibilityRequestDocumentInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteAccessibilityRequestDocumentInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteTestDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.DeleteTestDateInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNDeleteTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDateInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5754,6 +5813,70 @@ func (ec *executionContext) _DeleteAccessibilityRequestDocumentPayload_id(ctx co
 	return ec.marshalOUUID2ᚖgithubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _DeleteTestDatePayload_testDate(ctx context.Context, field graphql.CollectedField, obj *model.DeleteTestDatePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DeleteTestDatePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TestDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*models.TestDate)
+	fc.Result = res
+	return ec.marshalOTestDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDate(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _DeleteTestDatePayload_userErrors(ctx context.Context, field graphql.CollectedField, obj *model.DeleteTestDatePayload) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "DeleteTestDatePayload",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UserErrors, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.UserError)
+	fc.Result = res
+	return ec.marshalOUserError2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUserErrorᚄ(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _EstimatedLifecycleCost_businessCaseId(ctx context.Context, field graphql.CollectedField, obj *models.EstimatedLifecycleCost) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -7456,6 +7579,69 @@ func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field 
 	res := resTmp.(*model.UpdateTestDatePayload)
 	fc.Result = res
 	return ec.marshalOUpdateTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐUpdateTestDatePayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Mutation_deleteTestDate(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Mutation_deleteTestDate_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		directive0 := func(rctx context.Context) (interface{}, error) {
+			ctx = rctx // use context from middleware stack in children
+			return ec.resolvers.Mutation().DeleteTestDate(rctx, args["input"].(model.DeleteTestDateInput))
+		}
+		directive1 := func(ctx context.Context) (interface{}, error) {
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER")
+			if err != nil {
+				return nil, err
+			}
+			if ec.directives.HasRole == nil {
+				return nil, errors.New("directive hasRole is not implemented")
+			}
+			return ec.directives.HasRole(ctx, nil, directive0, role)
+		}
+
+		tmp, err := directive1(rctx)
+		if err != nil {
+			return nil, graphql.ErrorOnPath(ctx, err)
+		}
+		if tmp == nil {
+			return nil, nil
+		}
+		if data, ok := tmp.(*model.DeleteTestDatePayload); ok {
+			return data, nil
+		}
+		return nil, fmt.Errorf(`unexpected type %T from directive, should be *github.com/cmsgov/easi-app/pkg/graph/model.DeleteTestDatePayload`, tmp)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.DeleteTestDatePayload)
+	fc.Result = res
+	return ec.marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDatePayload(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Mutation_deleteAccessibilityRequestDocument(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -12318,6 +12504,26 @@ func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestDocumentInpu
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputDeleteTestDateInput(ctx context.Context, obj interface{}) (model.DeleteTestDateInput, error) {
+	var it model.DeleteTestDateInput
+	var asMap = obj.(map[string]interface{})
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputGeneratePresignedUploadURLInput(ctx context.Context, obj interface{}) (model.GeneratePresignedUploadURLInput, error) {
 	var it model.GeneratePresignedUploadURLInput
 	var asMap = obj.(map[string]interface{})
@@ -13325,6 +13531,32 @@ func (ec *executionContext) _DeleteAccessibilityRequestDocumentPayload(ctx conte
 	return out
 }
 
+var deleteTestDatePayloadImplementors = []string{"DeleteTestDatePayload"}
+
+func (ec *executionContext) _DeleteTestDatePayload(ctx context.Context, sel ast.SelectionSet, obj *model.DeleteTestDatePayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, deleteTestDatePayloadImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("DeleteTestDatePayload")
+		case "testDate":
+			out.Values[i] = ec._DeleteTestDatePayload_testDate(ctx, field, obj)
+		case "userErrors":
+			out.Values[i] = ec._DeleteTestDatePayload_userErrors(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var estimatedLifecycleCostImplementors = []string{"EstimatedLifecycleCost"}
 
 func (ec *executionContext) _EstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, obj *models.EstimatedLifecycleCost) graphql.Marshaler {
@@ -13480,6 +13712,8 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec._Mutation_updateSystemIntakeReviewDates(ctx, field)
 		case "updateTestDate":
 			out.Values[i] = ec._Mutation_updateTestDate(ctx, field)
+		case "deleteTestDate":
+			out.Values[i] = ec._Mutation_deleteTestDate(ctx, field)
 		case "deleteAccessibilityRequestDocument":
 			out.Values[i] = ec._Mutation_deleteAccessibilityRequestDocument(ctx, field)
 		default:
@@ -15071,6 +15305,11 @@ func (ec *executionContext) unmarshalNDeleteAccessibilityRequestDocumentInput2gi
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNDeleteTestDateInput2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDateInput(ctx context.Context, v interface{}) (model.DeleteTestDateInput, error) {
+	res, err := ec.unmarshalInputDeleteTestDateInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNEstimatedLifecycleCost2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCost(ctx context.Context, sel ast.SelectionSet, v *models.EstimatedLifecycleCost) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -15942,6 +16181,13 @@ func (ec *executionContext) marshalODeleteAccessibilityRequestDocumentPayload2�
 		return graphql.Null
 	}
 	return ec._DeleteAccessibilityRequestDocumentPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalODeleteTestDatePayload2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐDeleteTestDatePayload(ctx context.Context, sel ast.SelectionSet, v *model.DeleteTestDatePayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._DeleteTestDatePayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOEstimatedLifecycleCost2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐEstimatedLifecycleCostᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.EstimatedLifecycleCost) graphql.Marshaler {
