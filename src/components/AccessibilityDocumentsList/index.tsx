@@ -71,9 +71,11 @@ const AccessibilityDocumentsList = ({
       }
     }).then(() => {
       refetchRequest();
-      setConfirmationText(
-        `${getDocType(document?.documentType)} removed from ${requestName}`
-      );
+      if (document) {
+        setConfirmationText(
+          `${getDocType(document.documentType)} removed from ${requestName}`
+        );
+      }
       setDocument(null);
     });
   };

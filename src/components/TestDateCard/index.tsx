@@ -19,6 +19,7 @@ type TestDateCardProps = {
   requestName: string;
   id: string;
   refetchRequest: () => any;
+  setConfirmationText: (text: string) => void;
 };
 
 const TestDateCard = ({
@@ -29,7 +30,8 @@ const TestDateCard = ({
   requestId,
   requestName,
   id,
-  refetchRequest
+  refetchRequest,
+  setConfirmationText
 }: TestDateCardProps) => {
   const { t } = useTranslation('accessibility');
 
@@ -51,10 +53,16 @@ const TestDateCard = ({
           id
         }
       }
-    }).then(refetchRequest);
-
-    // TODO: display confirmation banner if mutation successful (removeTestDate.confirmation)
-    // cannot use useConfirmationText hook since we are not changing URL - useContext()?
+    }).then(() => {
+      refetchRequest();
+      setRemoveTestDateModalOpen(false);
+      setConfirmationText(
+        t('removeTestDate.confirmation', {
+          date: formatDate(date),
+          requestName
+        })
+      );
+    });
   };
 
   const testScore = () => {
@@ -100,7 +108,6 @@ const TestDateCard = ({
           Remove
         </Button>
         <Modal
-          title="Title"
           isOpen={isRemoveTestDateModalOpen}
           closeModal={() => {
             setRemoveTestDateModalOpen(false);
@@ -118,10 +125,7 @@ const TestDateCard = ({
           <Button
             type="button"
             className="margin-right-4"
-            onClick={() => {
-              deleteTestDate();
-              setRemoveTestDateModalOpen(false);
-            }}
+            onClick={deleteTestDate}
           >
             {t('removeTestDate.modalRemoveButton')}
           </Button>
