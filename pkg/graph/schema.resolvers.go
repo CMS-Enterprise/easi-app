@@ -619,6 +619,16 @@ func (r *mutationResolver) UpdateTestDate(ctx context.Context, input model.Updat
 	return &model.UpdateTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
 }
 
+func (r *mutationResolver) DeleteTestDate(ctx context.Context, input model.DeleteTestDateInput) (*model.DeleteTestDatePayload, error) {
+	testDate, err := r.store.DeleteTestDate(ctx, &models.TestDate{
+		ID: input.ID,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &model.DeleteTestDatePayload{TestDate: testDate, UserErrors: nil}, nil
+}
+
 func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Context, input model.DeleteAccessibilityRequestDocumentInput) (*model.DeleteAccessibilityRequestDocumentPayload, error) {
 	accessibilityRequestDocument, err := r.store.FetchAccessibilityRequestDocumentByID(ctx, input.ID)
 	if err != nil {
