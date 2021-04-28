@@ -18,7 +18,8 @@ const renderComponent = (score: number | null) => {
           requestId="Request ID"
           requestName="Initial Request"
           id="ID"
-          refetchRequest={() => 0}
+          refetchRequest={jest.fn()}
+          setConfirmationText={jest.fn()}
         />
       </MockedProvider>
     </MemoryRouter>
@@ -37,7 +38,8 @@ describe('The Test Date Card component', () => {
           requestId="Request ID"
           requestName="Initial Request"
           id="ID"
-          refetchRequest={() => 0}
+          refetchRequest={jest.fn()}
+          setConfirmationText={jest.fn()}
         />
       </MockedProvider>
     );

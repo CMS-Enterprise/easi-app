@@ -113,6 +113,7 @@ const AccessibilityRequestDetailPage = () => {
                     requestName={requestName}
                     requestId={accessibilityRequestId}
                     refetchRequest={refetch}
+                    setConfirmationText={setConfirmationText}
                   />
                 ))}
               <Link
