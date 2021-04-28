@@ -66,7 +66,6 @@ const accessibility = {
       update: ' was updated'
     }
   },
-  // TODO: move this to the above section?
   removeTestDate: {
     modalHeader:
       'Confirm you want to remove Test {{testNumber}} {{testType}}, {{testDate}} from {{requestName}}',
