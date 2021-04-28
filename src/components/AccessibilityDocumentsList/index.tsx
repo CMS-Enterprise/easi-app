@@ -33,18 +33,17 @@ type DocumentsListProps = {
   documents: Document[];
   requestName: string;
   refetchRequest: () => any;
+  setConfirmationText: (text: string) => void;
 };
 
 const AccessibilityDocumentsList = ({
   documents,
   requestName,
-  refetchRequest
+  refetchRequest,
+  setConfirmationText
 }: DocumentsListProps) => {
   const { t } = useTranslation('accessibility');
-  const [
-    documentWithModalOpen,
-    setDocumentWithModalOpen
-  ] = useState<Document | null>(null);
+  const [document, setDocument] = useState<Document | null>(null);
 
   const getDocType = (documentType: {
     commonType: AccessibilityRequestDocumentCommonType;
@@ -70,8 +69,13 @@ const AccessibilityDocumentsList = ({
           id
         }
       }
-    }).then(refetchRequest);
-    setDocumentWithModalOpen(null);
+    }).then(() => {
+      refetchRequest();
+      setConfirmationText(
+        `${getDocType(document?.documentType)} removed from ${requestName}`
+      );
+      setDocument(null);
+    });
   };
 
   const columns = useMemo<Column<Document>[]>(() => {
@@ -116,17 +120,17 @@ const AccessibilityDocumentsList = ({
                   aria-label={`Remove ${getDocType(row.original.documentType)}`}
                   type="button"
                   unstyled
-                  onClick={() => setDocumentWithModalOpen(row.original)}
+                  onClick={() => setDocument(row.original)}
                 >
                   {t('documentTable.remove')}
                 </Button>
                 <Modal
-                  isOpen={documentWithModalOpen === row.original}
-                  closeModal={() => setDocumentWithModalOpen(null)}
+                  isOpen={document === row.original}
+                  closeModal={() => setDocument(null)}
                 >
                   <PageHeading
-                    headingLevel="h1"
-                    className="line-height-heading-2 margin-bottom-2"
+                    headingLevel="h2"
+                    className="margin-top-0 line-height-heading-2 margin-bottom-2"
                   >
                     {t('documentTable.modal.header', {
                       name: getDocType(row.original.documentType)
@@ -144,7 +148,7 @@ const AccessibilityDocumentsList = ({
                     <Button
                       type="button"
                       unstyled
-                      onClick={() => setDocumentWithModalOpen(null)}
+                      onClick={() => setDocument(null)}
                     >
                       {t('documentTable.modal.declineButton')}
                     </Button>
@@ -167,7 +171,7 @@ const AccessibilityDocumentsList = ({
       }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [documentWithModalOpen]);
+  }, [document]);
 
   const {
     getTableProps,

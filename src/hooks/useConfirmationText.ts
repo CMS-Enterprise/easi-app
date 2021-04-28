@@ -18,19 +18,12 @@ function useConfirmationText() {
   useEffect(() => {
     if (location.state && location.state.confirmationText) {
       setConfirmationText(location.state.confirmationText);
-      history.replace({
-        state: {}
-      });
     }
 
-    // unset confirmationText if it's null
-    if (!location.state?.confirmationText) {
-      setConfirmationText('');
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history.location.pathname]);
 
-  return confirmationText;
+  return { confirmationText, setConfirmationText };
 }
 
 export default useConfirmationText;

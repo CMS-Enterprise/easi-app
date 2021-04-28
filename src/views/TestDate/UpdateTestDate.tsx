@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
+import { Alert } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
@@ -11,6 +12,7 @@ import {
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
+import useConfirmationText from 'hooks/useConfirmationText';
 import { TestDateForm } from 'types/accessibilityRequest';
 import { formatDate } from 'utils/date';
 
@@ -20,6 +22,7 @@ import './styles.scss';
 
 const TestDate = () => {
   const { t } = useTranslation('accessibility');
+  const { confirmationText } = useConfirmationText();
   const { accessibilityRequestId, testDateId } = useParams<{
     accessibilityRequestId: string;
     testDateId: string;
@@ -64,7 +67,7 @@ const TestDate = () => {
     const hasScore = values.score.isPresent;
     const score = values.score.value;
 
-    const confirmationText = `
+    const confirmation = `
       ${t('testDateForm.confirmation.date', { date: formatDate(date) })}
       ${hasScore ? t('testDateForm.confirmation.score', { score }) : ''}
       ${t('testDateForm.confirmation.update')}
@@ -81,7 +84,7 @@ const TestDate = () => {
       }
     }).then(() => {
       history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText
+        confirmationText: confirmation
       });
     });
   };
@@ -91,14 +94,21 @@ const TestDate = () => {
   }
 
   return (
-    <Form
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      error={mutateResult.error}
-      requestName={data?.accessibilityRequest?.name}
-      requestId={accessibilityRequestId}
-      formType="update"
-    />
+    <>
+      {confirmationText && (
+        <Alert className="margin-top-4" type="success" role="alert">
+          {confirmationText}
+        </Alert>
+      )}
+      <Form
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        error={mutateResult.error}
+        requestName={data?.accessibilityRequest?.name}
+        requestId={accessibilityRequestId}
+        formType="update"
+      />
+    </>
   );
 };
 
