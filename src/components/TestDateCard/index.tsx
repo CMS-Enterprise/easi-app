@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { useMutation } from '@apollo/client';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
+import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
+import { DeleteTestDate } from 'queries/types/DeleteTestDate';
 
+import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import { formatDate } from 'utils/date';
 
 type TestDateCardProps = {
@@ -10,7 +16,9 @@ type TestDateCardProps = {
   testIndex: number;
   score: number | null; // A whole number representing tenths of a percent
   requestId: string;
+  requestName: string;
   id: string;
+  refetchRequest: () => any;
 };
 
 const TestDateCard = ({
@@ -19,8 +27,36 @@ const TestDateCard = ({
   testIndex,
   score,
   requestId,
-  id
+  requestName,
+  id,
+  refetchRequest
 }: TestDateCardProps) => {
+  const { t } = useTranslation('accessibility');
+
+  const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
+    DeleteTestDateQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
+
+  const [isRemoveTestDateModalOpen, setRemoveTestDateModalOpen] = useState(
+    false
+  );
+
+  const deleteTestDate = () => {
+    deleteTestDateMutation({
+      variables: {
+        input: {
+          id
+        }
+      }
+    }).then(refetchRequest);
+
+    // TODO: display confirmation banner if mutation successful (removeTestDate.confirmation)
+    // cannot use useConfirmationText hook since we are not changing URL - useContext()?
+  };
+
   const testScore = () => {
     if (score === 0) {
       return '0%';
@@ -52,9 +88,53 @@ const TestDateCard = ({
         >
           Edit
         </UswdsLink>
-        {/* <Link href="/" aria-label={`Remove test ${testIndex} ${type}`}>
+        <Button
+          className="margin-left-1"
+          type="button"
+          aria-label={`Remove test ${testIndex} ${type}`}
+          unstyled
+          onClick={() => {
+            setRemoveTestDateModalOpen(true);
+          }}
+        >
           Remove
-        </Link> */}
+        </Button>
+        <Modal
+          title="Title"
+          isOpen={isRemoveTestDateModalOpen}
+          closeModal={() => {
+            setRemoveTestDateModalOpen(false);
+          }}
+        >
+          <PageHeading headingLevel="h2" className="margin-top-0">
+            {t('removeTestDate.modalHeader', {
+              testNumber: testIndex,
+              testType: type,
+              testDate: formatDate(date),
+              requestName
+            })}
+          </PageHeading>
+          <p>{t('removeTestDate.modalText')}</p>
+          <Button
+            type="button"
+            className="margin-right-4"
+            onClick={() => {
+              deleteTestDate();
+              setRemoveTestDateModalOpen(false);
+            }}
+          >
+            {t('removeTestDate.modalRemoveButton')}
+          </Button>
+          <Button
+            type="button"
+            unstyled
+            onClick={() => {
+              setRemoveTestDateModalOpen(false);
+            }}
+          >
+            {t('removeTestDate.modalCancelButton')}
+          </Button>
+        </Modal>
       </div>
     </div>
   );
