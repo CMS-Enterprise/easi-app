@@ -102,7 +102,9 @@ const AccessibilityRequestDetailPage = () => {
                     testIndex={index + 1}
                     score={testDate.score}
                     id={testDate.id}
+                    requestName={requestName}
                     requestId={accessibilityRequestId}
+                    refetchRequest={refetch}
                   />
                 ))}
               <Link
