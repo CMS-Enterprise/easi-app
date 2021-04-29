@@ -97,12 +97,11 @@ const AccessibilityRequestDetailPage = () => {
                 .map((testDate, index) => (
                   <TestDateCard
                     key={testDate.id}
-                    date={testDate.date}
-                    type={testDate.testType}
+                    testDate={testDate}
                     testIndex={index + 1}
-                    score={testDate.score}
-                    id={testDate.id}
+                    requestName={requestName}
                     requestId={accessibilityRequestId}
+                    refetchRequest={refetch}
                   />
                 ))}
               <Link

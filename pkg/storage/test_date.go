@@ -16,7 +16,7 @@ import (
 // CreateTestDate creates a new Test Date object in the database
 func (s *Store) CreateTestDate(ctx context.Context, testDate *models.TestDate) (*models.TestDate, error) {
 	testDate.ID = uuid.New()
-	createAt := s.clock.Now()
+	createAt := s.clock.Now().UTC()
 	testDate.CreatedAt = &createAt
 	testDate.UpdatedAt = &createAt
 	const createTestDateSQL = `
@@ -88,7 +88,7 @@ func (s *Store) FetchTestDatesByRequestID(ctx context.Context, requestID uuid.UU
 
 // UpdateTestDate updates an existing Test Date object in the database
 func (s *Store) UpdateTestDate(ctx context.Context, testDate *models.TestDate) (*models.TestDate, error) {
-	updatedAt := s.clock.Now()
+	updatedAt := s.clock.Now().UTC()
 	testDate.UpdatedAt = &updatedAt
 	const createTestDateSQL = `
 		UPDATE test_dates
@@ -107,5 +107,32 @@ func (s *Store) UpdateTestDate(ctx context.Context, testDate *models.TestDate) (
 		appcontext.ZLogger(ctx).Error("Failed to update test date with error %s", zap.Error(err))
 		return nil, err
 	}
+	return s.FetchTestDateByID(ctx, testDate.ID)
+}
+
+// DeleteTestDate deletes (soft delete - set deleted_at field) an existing test date object in the database
+func (s *Store) DeleteTestDate(ctx context.Context, testDate *models.TestDate) (*models.TestDate, error) {
+	updatedAt := s.clock.Now().UTC()
+	testDate.UpdatedAt = &updatedAt
+	testDate.DeletedAt = &updatedAt
+
+	const deleteTestDateSQL = `
+		UPDATE test_dates
+		SET
+			deleted_at = :updated_at,
+			updated_at = :updated_at
+		WHERE test_dates.id = :id`
+
+	_, err := s.db.NamedExecContext(
+		ctx,
+		deleteTestDateSQL,
+		testDate,
+	)
+
+	if err != nil {
+		appcontext.ZLogger(ctx).Error("Failed to update test date with error %s", zap.Error(err))
+		return nil, err
+	}
+
 	return s.FetchTestDateByID(ctx, testDate.ID)
 }
