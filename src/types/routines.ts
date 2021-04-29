@@ -12,9 +12,6 @@ export const saveSystemIntake = createRoutine('PUT_SYSTEM_INTAKE');
 export const storeSystemIntake = createRoutine('STORE_SYSTEM_INTAKE');
 export const clearSystemIntake = createRoutine('CLEAR_SYSTEM_INTAKE');
 export const archiveSystemIntake = createRoutine('ARCHIVE_SYSTEM_INTAKE');
-export const issueLifecycleIdForSystemIntake = createRoutine(
-  'ISSUE_LIFECYCLE_ID_FOR_SYSTEM_INTAKE'
-);
 
 // BusinessCase routines
 export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');

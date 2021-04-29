@@ -9,7 +9,6 @@ import {
 import {
   archiveSystemIntake,
   fetchSystemIntake,
-  issueLifecycleIdForSystemIntake,
   postSystemIntake,
   saveSystemIntake
 } from 'types/routines';
@@ -92,42 +91,9 @@ function* deleteSystemIntake(action: Action<any>) {
   }
 }
 
-type lifecycleIdData = {
-  lcidExpiresAt: string;
-  decisionNextSteps?: string;
-  lcidScope: string;
-  lcid: string;
-};
-
-function postLifecycleId({
-  id,
-  lcidPayload
-}: {
-  id: string;
-  lcidPayload: lifecycleIdData;
-}) {
-  return axios.post(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}/lcid`,
-    lcidPayload
-  );
-}
-
-function* issueLifecycleId(action: Action<any>) {
-  try {
-    yield put(issueLifecycleIdForSystemIntake.request());
-    const response = yield call(postLifecycleId, action.payload);
-    yield put(issueLifecycleIdForSystemIntake.success(response.data));
-  } catch (error) {
-    yield put(issueLifecycleIdForSystemIntake.failure(error.message));
-  } finally {
-    yield put(issueLifecycleIdForSystemIntake.fulfill());
-  }
-}
-
 export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
   yield takeLatest(postSystemIntake.TRIGGER, createSystemIntake);
   yield takeLatest(archiveSystemIntake.TRIGGER, deleteSystemIntake);
-  yield takeLatest(issueLifecycleIdForSystemIntake.TRIGGER, issueLifecycleId);
 }

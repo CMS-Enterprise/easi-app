@@ -8,7 +8,6 @@ import {
   archiveSystemIntake,
   clearSystemIntake,
   fetchSystemIntake,
-  issueLifecycleIdForSystemIntake,
   postSystemIntake,
   saveSystemIntake,
   storeSystemIntake
@@ -121,14 +120,6 @@ function systemIntakeReducer(
       };
     case archiveSystemIntake.SUCCESS:
       return initialState;
-    case issueLifecycleIdForSystemIntake.SUCCESS:
-      return {
-        ...state,
-        systemIntake: {
-          ...state.systemIntake,
-          ...prepareSystemIntakeForApp(action.payload)
-        }
-      };
     default:
       return state;
   }
