@@ -345,21 +345,6 @@ func (s *Server) routes(
 	)
 	api.Handle("/system_intake/{intake_id}/actions", actionHandler.Handle())
 
-	systemIntakeLifecycleIDHandler := handlers.NewSystemIntakeLifecycleIDHandler(
-		base,
-		services.NewUpdateLifecycleFields(
-			serviceConfig,
-			services.AuthorizeRequireGRTJobCode,
-			store.FetchSystemIntakeByID,
-			store.UpdateSystemIntake,
-			saveAction,
-			cedarLDAPClient.FetchUserInfo,
-			emailClient.SendIssueLCIDEmail,
-			store.GenerateLifecycleID,
-		),
-	)
-	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
-
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
