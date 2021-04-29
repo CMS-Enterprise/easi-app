@@ -638,11 +638,7 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
-	intake, err := r.store.FetchSystemIntakeByID(ctx, accessibilityRequest.IntakeID)
-	if err != nil {
-		return nil, err
-	}
-	ok, err := r.service.AuthorizeUserIs508TeamOrIntakeRequester(ctx, intake)
+	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
 	if err != nil {
 		return nil, err
 	}
