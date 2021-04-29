@@ -1,5 +1,3 @@
-import { DateTime } from 'luxon';
-
 import {
   initialSystemIntakeForm,
   prepareSystemIntakeForApp
@@ -7,7 +5,6 @@ import {
 import systemIntakeReducer from 'reducers/systemIntakeReducer';
 import {
   clearSystemIntake,
-  fetchIntakeNotes,
   fetchSystemIntake,
   postSystemIntake,
   saveSystemIntake,
@@ -332,111 +329,6 @@ describe('The system intake reducer', () => {
         isNewIntakeCreated: null,
         error: null,
         notes: []
-      });
-    });
-  });
-
-  describe('fetchIntakeNotes', () => {
-    let dateSpy: jest.SpyInstance;
-    beforeAll(() => {
-      // September 30, 2020
-      dateSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1601449200000);
-    });
-
-    afterAll(() => {
-      dateSpy.mockRestore();
-    });
-
-    it('handles fetchIntakeNotes.TRIGGER', () => {
-      const initialState = {
-        systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        isSaving: true,
-        isNewIntakeCreated: null,
-        error: null,
-        notes: [
-          {
-            id: '12345',
-            authorName: 'John Brown',
-            authorId: 'ABCD',
-            content: 'Test Note 1',
-            systemIntakeId: 'test-uuid-note-1',
-            createdAt: DateTime.fromISO('2020-11-17 08:13:18.936399+00')
-          }
-        ]
-      };
-
-      const mockTriggerAction = {
-        type: fetchIntakeNotes.TRIGGER,
-        payload: undefined
-      };
-
-      expect(systemIntakeReducer(initialState, mockTriggerAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        isSaving: true,
-        isNewIntakeCreated: null,
-        error: null,
-        notes: []
-      });
-    });
-
-    it('handles fetchIntakeNotes.SUCCESS', () => {
-      const initialState = {
-        systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        isSaving: true,
-        isNewIntakeCreated: null,
-        error: null,
-        notes: []
-      };
-
-      const mockSuccessAction = {
-        type: fetchIntakeNotes.SUCCESS,
-        payload: [
-          {
-            id: '12345',
-            authorName: 'John Brown',
-            authorId: 'ABCD',
-            content: 'Test Note 1',
-            systemIntakeId: 'test-uuid-note-1',
-            createdAt: '2020-11-17 08:13:18.936399+00'
-          },
-          {
-            id: '67890',
-            authorName: 'John Brown',
-            authorId: 'ABCD',
-            content: 'Test Note 2',
-            systemIntakeId: 'test-uuid-note-2',
-            createdAt: '2020-11-17 08:13:18.936399+00'
-          }
-        ]
-      };
-
-      expect(systemIntakeReducer(initialState, mockSuccessAction)).toEqual({
-        systemIntake: initialSystemIntakeForm,
-        isLoading: false,
-        isSaving: true,
-        isNewIntakeCreated: null,
-        error: null,
-        notes: [
-          {
-            id: '12345',
-            authorName: 'John Brown',
-            authorId: 'ABCD',
-            content: 'Test Note 1',
-            systemIntakeId: 'test-uuid-note-1',
-            createdAt: DateTime.fromISO('2020-11-17 08:13:18.936399+00')
-          },
-          {
-            id: '67890',
-            authorName: 'John Brown',
-            authorId: 'ABCD',
-            content: 'Test Note 2',
-            systemIntakeId: 'test-uuid-note-2',
-            createdAt: DateTime.fromISO('2020-11-17 08:13:18.936399+00')
-          }
-        ]
       });
     });
   });

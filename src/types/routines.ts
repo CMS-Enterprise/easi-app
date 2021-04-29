@@ -15,7 +15,6 @@ export const archiveSystemIntake = createRoutine('ARCHIVE_SYSTEM_INTAKE');
 export const issueLifecycleIdForSystemIntake = createRoutine(
   'ISSUE_LIFECYCLE_ID_FOR_SYSTEM_INTAKE'
 );
-export const fetchIntakeNotes = createRoutine('FETCH_INTAKE_NOTES');
 
 // BusinessCase routines
 export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');

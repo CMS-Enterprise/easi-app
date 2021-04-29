@@ -1,7 +1,7 @@
 import { Action as ReduxAction } from 'redux-actions';
 
 import { ActionState } from 'types/action';
-import { fetchIntakeNotes, postAction } from 'types/routines';
+import { postAction } from 'types/routines';
 
 const initialState: ActionState = {
   isPosting: false,
@@ -29,11 +29,6 @@ function actionReducer(
       return {
         ...state,
         isPosting: false
-      };
-    case fetchIntakeNotes.FAILURE:
-      return {
-        ...state,
-        error: action.payload
       };
     default:
       return state;
