@@ -8,7 +8,6 @@ import {
 } from 'data/systemIntake';
 import {
   archiveSystemIntake,
-  fetchIntakeNotes,
   fetchSystemIntake,
   issueLifecycleIdForSystemIntake,
   postSystemIntake,
@@ -125,29 +124,10 @@ function* issueLifecycleId(action: Action<any>) {
   }
 }
 
-function getIntakeNotesRequest(intakeId: string) {
-  return axios.get(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${intakeId}/notes`
-  );
-}
-
-function* getIntakeNotes(action: Action<any>) {
-  try {
-    yield put(fetchIntakeNotes.request());
-    const response = yield call(getIntakeNotesRequest, action.payload);
-    yield put(fetchIntakeNotes.success(response.data));
-  } catch (error) {
-    yield put(fetchIntakeNotes.failure(error.message));
-  } finally {
-    yield put(fetchIntakeNotes.fulfill());
-  }
-}
-
 export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
   yield takeLatest(postSystemIntake.TRIGGER, createSystemIntake);
   yield takeLatest(archiveSystemIntake.TRIGGER, deleteSystemIntake);
   yield takeLatest(issueLifecycleIdForSystemIntake.TRIGGER, issueLifecycleId);
-  yield takeLatest(fetchIntakeNotes.TRIGGER, getIntakeNotes);
 }

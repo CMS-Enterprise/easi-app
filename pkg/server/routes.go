@@ -360,16 +360,6 @@ func (s *Server) routes(
 	)
 	api.Handle("/system_intake/{intake_id}/lcid", systemIntakeLifecycleIDHandler.Handle())
 
-	notesHandler := handlers.NewNotesHandler(
-		base,
-		services.NewFetchNotes(
-			serviceConfig,
-			store.FetchNotesBySystemIntakeID,
-			services.AuthorizeRequireGRTJobCode,
-		),
-	)
-	api.Handle("/system_intake/{intake_id}/notes", notesHandler.Handle())
-
 	s.router.PathPrefix("/").Handler(handlers.NewCatchAllHandler(
 		base,
 	).Handle())
