@@ -5,33 +5,29 @@ import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
 import { DeleteTestDate } from 'queries/types/DeleteTestDate';
+import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { formatDate } from 'utils/date';
 
 type TestDateCardProps = {
-  date: string; // ISO string
-  type: 'INITIAL' | 'REMEDIATION';
+  testDate: TestDateType;
   testIndex: number;
-  score: number | null; // A whole number representing tenths of a percent
   requestId: string;
   requestName: string;
-  id: string;
   refetchRequest: () => any;
 };
 
 const TestDateCard = ({
-  date,
-  type,
+  testDate,
   testIndex,
-  score,
   requestId,
   requestName,
-  id,
   refetchRequest
 }: TestDateCardProps) => {
   const { t } = useTranslation('accessibility');
+  const { id, testType, date, score } = testDate;
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
     DeleteTestDateQuery,
@@ -67,7 +63,7 @@ const TestDateCard = ({
   return (
     <div className="bg-gray-10 padding-2 line-height-body-4 margin-bottom-2">
       <div className="text-bold margin-bottom-1">
-        Test {testIndex}: {type === 'INITIAL' ? 'Initial' : 'Remediation'}
+        Test {testIndex}: {testType === 'INITIAL' ? 'Initial' : 'Remediation'}
       </div>
       <div className="margin-bottom-1">
         <div className="display-inline-block margin-right-2">
@@ -84,14 +80,14 @@ const TestDateCard = ({
         <UswdsLink
           asCustom={Link}
           to={`/508/requests/${requestId}/test-date/${id}`}
-          aria-label={`Edit test ${testIndex} ${type}`}
+          aria-label={`Edit test ${testIndex} ${testType}`}
         >
           Edit
         </UswdsLink>
         <Button
           className="margin-left-1"
           type="button"
-          aria-label={`Remove test ${testIndex} ${type}`}
+          aria-label={`Remove test ${testIndex} ${testType}`}
           unstyled
           onClick={() => {
             setRemoveTestDateModalOpen(true);
@@ -100,7 +96,6 @@ const TestDateCard = ({
           Remove
         </Button>
         <Modal
-          title="Title"
           isOpen={isRemoveTestDateModalOpen}
           closeModal={() => {
             setRemoveTestDateModalOpen(false);
@@ -109,7 +104,7 @@ const TestDateCard = ({
           <PageHeading headingLevel="h2" className="margin-top-0">
             {t('removeTestDate.modalHeader', {
               testNumber: testIndex,
-              testType: type,
+              testType,
               testDate: formatDate(date),
               requestName
             })}
