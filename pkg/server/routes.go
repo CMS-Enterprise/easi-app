@@ -472,10 +472,6 @@ func (s *Server) routes(
 				),
 			},
 		),
-		services.NewFetchActionsByRequestID(
-			services.AuthorizeRequireGRTJobCode,
-			store.GetActionsByRequestID,
-		),
 	)
 	api.Handle("/system_intake/{intake_id}/actions", actionHandler.Handle())
 
