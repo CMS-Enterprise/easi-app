@@ -49,54 +49,70 @@ func HasRole(ctx context.Context, role model.Role) (bool, error) {
 	}
 }
 
-// NewAuthorizeUserIsIntakeRequester returns a function
-// that authorizes a user as being the requester of the given System Intake
-func NewAuthorizeUserIsIntakeRequester() func(
-	context.Context,
-	*models.SystemIntake,
+// AuthorizeUserIsIntakeRequester authorizes a user as being the requester of the given System Intake
+func AuthorizeUserIsIntakeRequester(
+	ctx context.Context,
+	intake *models.SystemIntake,
 ) (bool, error) {
-	return func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowEASi() {
-			logger.Info("does not have EASi job code")
-			return false, nil
-		}
-
-		// If intake is owned by user, authorize
-		if principal.ID() == intake.EUAUserID.ValueOrZero() {
-			return true, nil
-		}
-		// Default to failure to authorize and create a quick audit log
-		logger.With(zap.Bool("Authorized", false)).
-			Info("user unauthorized as owning the system intake")
+	logger := appcontext.ZLogger(ctx)
+	principal := appcontext.Principal(ctx)
+	if !principal.AllowEASi() {
+		logger.Info("does not have EASi job code")
 		return false, nil
 	}
+
+	// If intake is owned by user, authorize
+	if principal.ID() == intake.EUAUserID.ValueOrZero() {
+		return true, nil
+	}
+	// Default to failure to authorize and create a quick audit log
+	logger.With(zap.Bool("Authorized", false)).
+		Info("user unauthorized as owning the system intake")
+	return false, nil
 }
 
-// NewAuthorizeUserIsBusinessCaseRequester returns a function
-// that authorizes a user as being the requester of the given Business Case
-func NewAuthorizeUserIsBusinessCaseRequester() func(
-	context.Context,
-	*models.BusinessCase,
+// AuthorizeUserIs508RequestOwner authorizes a user as being the owner of the given accessibility request
+func AuthorizeUserIs508RequestOwner(
+	ctx context.Context,
+	request *models.AccessibilityRequest,
 ) (bool, error) {
-	return func(ctx context.Context, bizCase *models.BusinessCase) (bool, error) {
-		logger := appcontext.ZLogger(ctx)
-		principal := appcontext.Principal(ctx)
-		if !principal.AllowEASi() {
-			logger.Info("does not have EASi job code")
-			return false, nil
-		}
-
-		// If business case is owned by user, authorize
-		if principal.ID() == bizCase.EUAUserID {
-			return true, nil
-		}
-		// Default to failure to authorize and create a quick audit log
-		logger.With(zap.Bool("Authorized", false)).
-			Info("user unauthorized as owning the business case")
+	logger := appcontext.ZLogger(ctx)
+	principal := appcontext.Principal(ctx)
+	if !principal.AllowEASi() {
+		logger.Info("does not have EASi job code")
 		return false, nil
 	}
+
+	// If intake is owned by user, authorize
+	if principal.ID() == request.EUAUserID {
+		return true, nil
+	}
+	// Default to failure to authorize and create a quick audit log
+	logger.With(zap.Bool("Authorized", false)).
+		Info("user unauthorized as owning the system intake")
+	return false, nil
+}
+
+// AuthorizeUserIsBusinessCaseRequester authorizes a user as being the requester of the given Business Case
+func AuthorizeUserIsBusinessCaseRequester(
+	ctx context.Context,
+	bizCase *models.BusinessCase,
+) (bool, error) {
+	logger := appcontext.ZLogger(ctx)
+	principal := appcontext.Principal(ctx)
+	if !principal.AllowEASi() {
+		logger.Info("does not have EASi job code")
+		return false, nil
+	}
+
+	// If business case is owned by user, authorize
+	if principal.ID() == bizCase.EUAUserID {
+		return true, nil
+	}
+	// Default to failure to authorize and create a quick audit log
+	logger.With(zap.Bool("Authorized", false)).
+		Info("user unauthorized as owning the business case")
+	return false, nil
 }
 
 // AuthorizeHasEASiRole authorizes that the user can use EASi
@@ -113,7 +129,7 @@ func AuthorizeRequireGRTJobCode(ctx context.Context) (bool, error) {
 // AuthorizeUserIsIntakeRequesterOrHasGRTJobCode  authorizes a user as being a member of the
 // GRT (Governance Review Team) or being the owner of the system intake
 func AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx context.Context, existingIntake *models.SystemIntake) (bool, error) {
-	authorIsAuthed, errAuthor := NewAuthorizeUserIsIntakeRequester()(ctx, existingIntake)
+	authorIsAuthed, errAuthor := AuthorizeUserIsIntakeRequester(ctx, existingIntake)
 	if errAuthor != nil {
 		return false, errAuthor
 	}
@@ -131,8 +147,8 @@ func AuthorizeUserIsIntakeRequesterOrHasGRTJobCode(ctx context.Context, existing
 }
 
 // AuthorizeUserIsRequestOwnerOr508Team authorizes the user owns the system intake or is a member of the 508 team
-func AuthorizeUserIsRequestOwnerOr508Team(ctx context.Context, intake *models.SystemIntake) (bool, error) {
-	userIsIntakeRequester, err := NewAuthorizeUserIsIntakeRequester()(ctx, intake)
+func AuthorizeUserIsRequestOwnerOr508Team(ctx context.Context, request *models.AccessibilityRequest) (bool, error) {
+	userIsIntakeRequester, err := AuthorizeUserIs508RequestOwner(ctx, request)
 	if err != nil {
 		return false, err
 	}
