@@ -151,6 +151,15 @@ type UpdateTestDatePayload {
   userErrors: [UserError!]
 }
 
+input DeleteTestDateInput {
+  id: UUID!
+}
+
+type DeleteTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
 input CreateAccessibilityRequestDocumentInput {
   commonDocumentType: AccessibilityRequestDocumentCommonType!
   mimeType: String!
@@ -569,6 +578,8 @@ type Mutation {
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
+    @hasRole(role: EASI_508_TESTER)
+  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
     @hasRole(role: EASI_508_TESTER)
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
 }
