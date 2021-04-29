@@ -525,16 +525,6 @@ func (s *Server) routes(
 
 	api.Handle("/pdf/generate", handlers.NewPDFHandler(services.NewInvokeGeneratePDF(serviceConfig, lambdaClient, princeLambdaName)).Handle())
 
-	systemsHandler := handlers.NewSystemsHandler(
-		base,
-		services.NewFetchSystems(
-			serviceConfig,
-			store.ListSystems,
-			services.AuthorizeHasEASiRole,
-		),
-	)
-	api.Handle("/systems", systemsHandler.Handle())
-
 	if ok, _ := strconv.ParseBool(os.Getenv("DEBUG_ROUTES")); ok {
 		// useful for debugging route issues
 		_ = s.router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {

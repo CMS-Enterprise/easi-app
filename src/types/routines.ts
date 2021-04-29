@@ -19,9 +19,6 @@ export const fetchIntakeNotes = createRoutine('FETCH_INTAKE_NOTES');
 export const postIntakeNote = createRoutine('POST_INTAKE_NOTE');
 export const rejectSystemIntake = createRoutine('REJECT_SYSTEM_INTAKE');
 
-// SystemShorts routines
-export const fetchSystemShorts = createRoutine('FETCH_SYSTEM_SHORTS');
-
 // BusinessCase routines
 export const fetchBusinessCases = createRoutine('FETCH_BUSINESS_CASES');
 export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');
