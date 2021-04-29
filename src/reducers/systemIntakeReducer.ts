@@ -11,7 +11,6 @@ import {
   fetchIntakeNotes,
   fetchSystemIntake,
   issueLifecycleIdForSystemIntake,
-  postIntakeNote,
   postSystemIntake,
   saveSystemIntake,
   storeSystemIntake
@@ -131,17 +130,6 @@ function systemIntakeReducer(
           ...state.systemIntake,
           ...prepareSystemIntakeForApp(action.payload)
         }
-      };
-    case postIntakeNote.SUCCESS:
-      return {
-        ...state,
-        notes: [
-          {
-            ...action.payload,
-            createdAt: DateTime.fromISO(action.payload.createdAt)
-          },
-          ...state.notes
-        ]
       };
     case fetchIntakeNotes.TRIGGER:
       return {

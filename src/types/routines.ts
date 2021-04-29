@@ -16,7 +16,6 @@ export const issueLifecycleIdForSystemIntake = createRoutine(
   'ISSUE_LIFECYCLE_ID_FOR_SYSTEM_INTAKE'
 );
 export const fetchIntakeNotes = createRoutine('FETCH_INTAKE_NOTES');
-export const postIntakeNote = createRoutine('POST_INTAKE_NOTE');
 
 // BusinessCase routines
 export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');

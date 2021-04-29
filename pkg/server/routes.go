@@ -367,11 +367,6 @@ func (s *Server) routes(
 			store.FetchNotesBySystemIntakeID,
 			services.AuthorizeRequireGRTJobCode,
 		),
-		services.NewCreateNote(
-			serviceConfig,
-			store.CreateNote,
-			services.AuthorizeRequireGRTJobCode,
-		),
 	)
 	api.Handle("/system_intake/{intake_id}/notes", notesHandler.Handle())
 

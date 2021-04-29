@@ -6,7 +6,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
@@ -30,29 +29,5 @@ func NewFetchNotes(
 			}
 		}
 		return fetchBySystemIntakeID(ctx, id)
-	}
-}
-
-// NewCreateNote is a service to create and return a new note
-// associated with a given SystemIntake
-func NewCreateNote(
-	config Config,
-	create func(context.Context, *models.Note) (*models.Note, error),
-	authorize func(context.Context) (bool, error),
-) func(context.Context, *models.Note) (*models.Note, error) {
-	return func(ctx context.Context, note *models.Note) (*models.Note, error) {
-		ok, err := authorize(ctx)
-		if err != nil {
-			return nil, err
-		}
-		if !ok {
-			return nil, &apperrors.ResourceNotFoundError{
-				Err:      errors.New("failed to authorize create note"),
-				Resource: models.Note{},
-			}
-		}
-		note.AuthorEUAID = appcontext.Principal(ctx).ID()
-
-		return create(ctx, note)
 	}
 }

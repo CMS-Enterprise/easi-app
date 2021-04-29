@@ -11,7 +11,6 @@ import {
   fetchIntakeNotes,
   fetchSystemIntake,
   issueLifecycleIdForSystemIntake,
-  postIntakeNote,
   postSystemIntake,
   saveSystemIntake
 } from 'types/routines';
@@ -144,36 +143,6 @@ function* getIntakeNotes(action: Action<any>) {
   }
 }
 
-type NoteRequestBody = {
-  intakeId: string;
-  content: string;
-  authorId: string;
-  authorName: string;
-};
-
-function postIntakeNoteRequest(data: NoteRequestBody) {
-  const { content, authorId, authorName, intakeId } = data;
-  return axios.post(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${intakeId}/notes`,
-    {
-      authorId,
-      authorName,
-      content
-    }
-  );
-}
-function* createIntakeNote(action: Action<any>) {
-  try {
-    yield put(postIntakeNote.request());
-    const response = yield call(postIntakeNoteRequest, action.payload);
-    yield put(postIntakeNote.success(response.data));
-  } catch (error) {
-    yield put(postIntakeNote.failure(error.message));
-  } finally {
-    yield put(postIntakeNote.fulfill());
-  }
-}
-
 export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
@@ -181,5 +150,4 @@ export default function* systemIntakeSaga() {
   yield takeLatest(archiveSystemIntake.TRIGGER, deleteSystemIntake);
   yield takeLatest(issueLifecycleIdForSystemIntake.TRIGGER, issueLifecycleId);
   yield takeLatest(fetchIntakeNotes.TRIGGER, getIntakeNotes);
-  yield takeLatest(postIntakeNote.TRIGGER, createIntakeNote);
 }
