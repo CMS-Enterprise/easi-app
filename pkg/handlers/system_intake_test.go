@@ -3,7 +3,6 @@ package handlers
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -377,84 +376,4 @@ func (s HandlerTestSuite) TestSystemIntakeHandler() {
 		s.NoError(err)
 		s.Equal("Resource not found", responseErr.Message)
 	})
-}
-
-func (s HandlerTestSuite) TestRejectionHandler() {
-
-	testCases := map[string]struct {
-		verb     string
-		intakeID string
-		body     string
-		status   int
-	}{
-		"happy path": {
-			verb:     "POST",
-			intakeID: uuid.New().String(),
-			body: `{
-				"rejectionReason": "I don't like it",
-				"rejectionNextSteps": "Do better",
-				"feedback": "feedback"
-			}`,
-			status: http.StatusCreated,
-		},
-		"write error": {
-			verb:     "POST",
-			intakeID: uuid.Nil.String(),
-			body: `{
-				"rejectionReason": "I don't like it",
-				"rejectionNextSteps": "Do better",
-				"feedback": "feedback"
-			}`,
-			status: http.StatusInternalServerError,
-		},
-		"missing reason": {
-			verb:     "POST",
-			intakeID: uuid.New().String(),
-			body: `{
-				"rejectionNextSteps": "Do better",
-				"feedback": "feedback"
-			}`,
-			status: http.StatusUnprocessableEntity,
-		},
-		"missing next steps": {
-			verb:     "POST",
-			intakeID: uuid.New().String(),
-			body: `{
-				"rejectionReason": "I don't like it",
-				"feedback": "feedback"
-			}`,
-			status: http.StatusUnprocessableEntity,
-		},
-		"missing feedback": {
-			verb:     "POST",
-			intakeID: uuid.New().String(),
-			body: `{
-				"rejectionReason": "I don't like it",
-				"rejectionNextSteps": "Do better"
-			}`,
-			status: http.StatusUnprocessableEntity,
-		},
-	}
-
-	fnReject := func(c context.Context, i *models.SystemIntake, a *models.Action) (*models.SystemIntake, error) {
-		if i.ID == uuid.Nil {
-			return nil, errors.New("forced error")
-		}
-		return nil, nil
-	}
-	var handler http.Handler = NewSystemIntakeRejectionHandler(s.base, fnReject).Handle()
-
-	for name, tc := range testCases {
-		s.Run(name, func() {
-			rr := httptest.NewRecorder()
-			req, err := http.NewRequest(tc.verb, "/system_intake/{intake_id}/reject", bytes.NewBufferString(tc.body))
-			s.NoError(err)
-			req = mux.SetURLVars(req, map[string]string{
-				"intake_id": tc.intakeID,
-			})
-			handler.ServeHTTP(rr, req)
-
-			s.Equal(tc.status, rr.Code)
-		})
-	}
 }
