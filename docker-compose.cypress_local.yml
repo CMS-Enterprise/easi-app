@@ -20,7 +20,6 @@ services:
       - EMAIL_TEMPLATE_DIR=/easi/templates
     ports:
       - 8080:8080
-    entrypoint: ['/easi/easi', 'serve']
   easi_client:
     build:
       context: .

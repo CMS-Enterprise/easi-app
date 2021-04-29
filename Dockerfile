@@ -42,3 +42,7 @@ RUN update-ca-certificates
 
 RUN adduser -D -H easi
 USER easi
+
+ENTRYPOINT ["/easi/easi"]
+
+CMD ["serve"]
