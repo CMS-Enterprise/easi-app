@@ -654,6 +654,17 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
+	}
 	return r.store.FetchAccessibilityRequestByID(ctx, id)
 }
 
