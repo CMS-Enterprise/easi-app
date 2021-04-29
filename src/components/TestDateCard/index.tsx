@@ -17,7 +17,7 @@ type TestDateCardProps = {
   requestId: string;
   requestName: string;
   id: string;
-  isEditableDeletable: boolean;
+  isEditableDeletable?: boolean;
   refetchRequest: () => any;
 };
 
@@ -26,7 +26,7 @@ const TestDateCard = ({
   testIndex,
   requestId,
   requestName,
-  isEditableDeletable,
+  isEditableDeletable = true,
   refetchRequest
 }: TestDateCardProps) => {
   const { t } = useTranslation('accessibility');
