@@ -294,16 +294,6 @@ func (s *Server) routes(
 	api.Handle("/business_case/{business_case_id}", businessCaseHandler.Handle())
 	api.Handle("/business_case", businessCaseHandler.Handle())
 
-	businessCasesHandler := handlers.NewBusinessCasesHandler(
-		base,
-		services.NewFetchBusinessCasesByEuaID(
-			serviceConfig,
-			store.FetchBusinessCasesByEuaID,
-			services.AuthorizeHasEASiRole,
-		),
-	)
-	api.Handle("/business_cases", businessCasesHandler.Handle())
-
 	metricsHandler := handlers.NewMetricsHandler(
 		base,
 		services.NewFetchMetrics(serviceConfig, store.FetchSystemIntakeMetrics),
