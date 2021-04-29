@@ -24,7 +24,6 @@ export const fetchBusinessCases = createRoutine('FETCH_BUSINESS_CASES');
 export const fetchBusinessCase = createRoutine('FETCH_BUSINESS_CASE');
 export const postBusinessCase = createRoutine('POST_BUSINESS_CASE');
 export const putBusinessCase = createRoutine('PUT_BUSINESS_CASE');
-export const storeBusinessCase = createRoutine('STORE_BUSINESS_CASE');
 export const clearBusinessCase = createRoutine('CLEAR_BUSINESS_CASE');
 
 // Action routines
