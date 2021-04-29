@@ -9,8 +9,7 @@ import {
   clearBusinessCase,
   fetchBusinessCase,
   postBusinessCase,
-  putBusinessCase,
-  storeBusinessCase
+  putBusinessCase
 } from 'types/routines';
 
 const initialState: BusinessCaseState = {
@@ -88,15 +87,6 @@ function businessCaseReducer(
       return {
         ...state,
         isSaving: false
-      };
-    case storeBusinessCase.TRIGGER:
-      return {
-        ...state,
-        form: {
-          ...state.form,
-          ...action.payload
-        },
-        isLoading: false
       };
     case clearBusinessCase.TRIGGER:
       return initialState;
