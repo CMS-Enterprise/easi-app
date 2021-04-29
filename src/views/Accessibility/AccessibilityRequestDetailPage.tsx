@@ -17,7 +17,13 @@ import { formatDate } from 'utils/date';
 
 import './index.scss';
 
-const AccessibilityRequestDetailPage = () => {
+type AccessibilityRequestDetailPageProps = {
+  isAccessibilityTeam: boolean;
+};
+
+const AccessibilityRequestDetailPage = ({
+  isAccessibilityTeam
+}: AccessibilityRequestDetailPageProps) => {
   const { t } = useTranslation('accessibility');
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
@@ -101,6 +107,7 @@ const AccessibilityRequestDetailPage = () => {
                     testIndex={index + 1}
                     requestName={requestName}
                     requestId={accessibilityRequestId}
+                    isEditableDeletable={isAccessibilityTeam}
                     refetchRequest={refetch}
                   />
                 ))}

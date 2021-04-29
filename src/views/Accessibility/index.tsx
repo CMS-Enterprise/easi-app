@@ -57,7 +57,13 @@ const Accessibility = () => {
   const RequestDetails = (
     <SecureRoute
       path="/508/requests/:accessibilityRequestId"
-      component={AccessibilityRequestDetailPage}
+      render={() => {
+        return (
+          <AccessibilityRequestDetailPage
+            isAccessibilityTeam={user.isAccessibilityTeam(userGroups, flags)}
+          />
+        );
+      }}
     />
   );
   const Default = <Route path="*" component={NotFoundPartial} />;
