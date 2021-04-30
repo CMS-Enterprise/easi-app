@@ -17,7 +17,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
-import { TestDateForm as TestDateFormType } from 'types/accessibilityRequest';
+import { TestDateFormType } from 'types/accessibility';
 import flattenErrors from 'utils/flattenErrors';
 import { TestDateValidationSchema } from 'validations/testDateSchema';
 
