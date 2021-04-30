@@ -665,7 +665,7 @@ func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) 
 	if !ok {
 		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
 	}
-	return r.store.FetchAccessibilityRequestByID(ctx, id)
+	return accessibilityRequest, nil
 }
 
 func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error) {

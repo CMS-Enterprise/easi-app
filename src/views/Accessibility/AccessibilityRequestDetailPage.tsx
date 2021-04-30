@@ -14,6 +14,7 @@ import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import PageHeading from 'components/PageHeading';
 import TestDateCard from 'components/TestDateCard';
 import { formatDate } from 'utils/date';
+import { NotFoundPartial } from 'views/NotFound';
 
 import './index.scss';
 
@@ -47,9 +48,7 @@ const AccessibilityRequestDetailPage = () => {
   }
 
   if (!data) {
-    return (
-      <div>{`No request found matching id: ${accessibilityRequestId}`}</div>
-    );
+    return <NotFoundPartial />;
   }
 
   // What type of errors can we get/return?
