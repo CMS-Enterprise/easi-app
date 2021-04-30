@@ -13,7 +13,7 @@ import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
 import useConfirmationText from 'hooks/useConfirmationText';
-import { TestDateForm } from 'types/accessibilityRequest';
+import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
 import Form from './Form';
@@ -47,7 +47,7 @@ const TestDate = () => {
     date => date.id === testDateId
   );
   const testDate = DateTime.fromISO(test?.date);
-  const initialValues: TestDateForm = {
+  const initialValues: TestDateFormType = {
     dateMonth: String(testDate.month),
     dateDay: String(testDate.day),
     dateYear: String(testDate.year),
@@ -58,7 +58,7 @@ const TestDate = () => {
     }
   };
 
-  const onSubmit = (values: TestDateForm) => {
+  const onSubmit = (values: TestDateFormType) => {
     const date = DateTime.fromObject({
       day: Number(values.dateDay),
       month: Number(values.dateMonth),

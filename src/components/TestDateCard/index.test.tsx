@@ -5,19 +5,23 @@ import { mount, shallow } from 'enzyme';
 import { DateTime } from 'luxon';
 
 import TestDateCard from 'components/TestDateCard';
+import { TestDateTestType } from 'types/graphql-global-types';
 
 const renderComponent = (score: number | null) => {
   return mount(
     <MemoryRouter>
       <MockedProvider>
         <TestDateCard
-          date={DateTime.local().toISO()}
-          type="INITIAL"
+          testDate={{
+            __typename: 'TestDate',
+            id: 'ID',
+            date: DateTime.local().toISO(),
+            testType: TestDateTestType.INITIAL,
+            score
+          }}
           testIndex={1}
-          score={score}
           requestId="Request ID"
           requestName="Initial Request"
-          id="ID"
           refetchRequest={jest.fn()}
           setConfirmationText={jest.fn()}
         />
@@ -31,13 +35,16 @@ describe('The Test Date Card component', () => {
     shallow(
       <MockedProvider>
         <TestDateCard
-          date={DateTime.local().toISO()}
-          type="INITIAL"
+          testDate={{
+            __typename: 'TestDate',
+            id: 'ID',
+            date: DateTime.local().toISO(),
+            testType: TestDateTestType.INITIAL,
+            score: 0
+          }}
           testIndex={1}
-          score={0}
           requestId="Request ID"
           requestName="Initial Request"
-          id="ID"
           refetchRequest={jest.fn()}
           setConfirmationText={jest.fn()}
         />
