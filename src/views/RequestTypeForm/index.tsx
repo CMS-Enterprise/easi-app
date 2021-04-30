@@ -136,21 +136,9 @@ const RequestTypeForm = () => {
                       className="usa-fieldset"
                       aria-describedby="RequestType-HelpText"
                     >
-                      <legend className="font-heading-xl">
+                      <legend className="font-heading-xl margin-bottom-4">
                         {t('requestTypeForm.subheading')}
                       </legend>
-                      <HelpText
-                        id="RequestType-HelpText"
-                        className="margin-bottom-4"
-                      >
-                        <Trans i18nKey="intake:requestTypeForm.info">
-                          indexZero
-                          <UswdsLink href="mailto:NavigatorInquiries@cms.hhs.gov">
-                            navigatorEmailLink
-                          </UswdsLink>
-                          indexTwo
-                        </Trans>
-                      </HelpText>
                       <Field
                         as={RadioField}
                         id="RequestType-NewSystem"
@@ -204,7 +192,16 @@ const RequestTypeForm = () => {
                       ))}
                     </ul>
                   </CollapsableLink>
-                  <Button className="margin-top-5" type="submit">
+                  <HelpText id="RequestType-HelpText" className="margin-top-4">
+                    <Trans i18nKey="intake:requestTypeForm.info">
+                      indexZero
+                      <UswdsLink href="mailto:NavigatorInquiries@cms.hhs.gov">
+                        navigatorEmailLink
+                      </UswdsLink>
+                      indexTwo
+                    </Trans>
+                  </HelpText>
+                  <Button className="margin-top-5 display-block" type="submit">
                     Continue
                   </Button>
                 </Form>
