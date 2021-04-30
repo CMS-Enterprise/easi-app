@@ -114,7 +114,7 @@ const intake = {
     heading: 'Make a System Request',
     subheading: 'What is this request for?',
     info:
-      'If you are unsure or do not see an option for your use-case, send an email to the <1>IT Navigator Mailbox</1> and a navigator will get back to you.',
+      'If you are not sure send an email to the <1>IT Navigator Mailbox</1> describing your request and a navigator will get back to you.',
     fields: {
       addNewSystem: 'Add a new system',
       majorChanges: 'Major changes or upgrades to an existing system',
