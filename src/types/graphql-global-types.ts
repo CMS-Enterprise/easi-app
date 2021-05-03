@@ -123,6 +123,10 @@ export interface DeleteAccessibilityRequestDocumentInput {
   id: UUID;
 }
 
+export interface DeleteAccessibilityRequestInput {
+  id: UUID;
+}
+
 export interface DeleteTestDateInput {
   id: UUID;
 }
