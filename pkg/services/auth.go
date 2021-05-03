@@ -74,6 +74,28 @@ func NewAuthorizeUserIsIntakeRequester() func(
 	}
 }
 
+// AuthorizeUserIs508RequestOwner authorizes a user as being the owner of the given accessibility request
+func AuthorizeUserIs508RequestOwner(
+	ctx context.Context,
+	request *models.AccessibilityRequest,
+) (bool, error) {
+	logger := appcontext.ZLogger(ctx)
+	principal := appcontext.Principal(ctx)
+	if !principal.AllowEASi() {
+		logger.Info("does not have EASi job code")
+		return false, nil
+	}
+
+	// If intake is owned by user, authorize
+	if principal.ID() == request.EUAUserID {
+		return true, nil
+	}
+	// Default to failure to authorize and create a quick audit log
+	logger.With(zap.Bool("Authorized", false)).
+		Info("user unauthorized as owning the system intake")
+	return false, nil
+}
+
 // NewAuthorizeUserIsBusinessCaseRequester returns a function
 // that authorizes a user as being the requester of the given Business Case
 func NewAuthorizeUserIsBusinessCaseRequester() func(
