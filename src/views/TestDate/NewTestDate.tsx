@@ -71,10 +71,12 @@ const NewTestDate = () => {
           requestID: accessibilityRequestId
         }
       }
-    }).then(() => {
-      history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText
-      });
+    }).then(result => {
+      if (!result.errors) {
+        history.push(`/508/requests/${accessibilityRequestId}`, {
+          confirmationText
+        });
+      }
     });
   };
 
