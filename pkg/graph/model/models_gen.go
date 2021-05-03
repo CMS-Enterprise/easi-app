@@ -123,6 +123,14 @@ type DeleteAccessibilityRequestDocumentPayload struct {
 	ID *uuid.UUID `json:"id"`
 }
 
+type DeleteAccessibilityRequestInput struct {
+	ID uuid.UUID `json:"id"`
+}
+
+type DeleteAccessibilityRequestPayload struct {
+	ID *uuid.UUID `json:"id"`
+}
+
 type DeleteTestDateInput struct {
 	ID uuid.UUID `json:"id"`
 }
