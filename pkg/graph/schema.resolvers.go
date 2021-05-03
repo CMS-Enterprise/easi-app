@@ -6,7 +6,6 @@ package graph
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -20,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
@@ -659,7 +659,25 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 }
 
 func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error) {
-	panic(fmt.Errorf("not implemented"))
+	request, err := r.store.FetchAccessibilityRequestByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	ok, err := services.AuthorizeUserIs508RequestOwner(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
+	}
+
+	err = r.store.DeleteAccessibilityRequest(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteAccessibilityRequestPayload{ID: &input.ID}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
