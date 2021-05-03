@@ -332,6 +332,18 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 		return nil, keyErr
 	}
 
+	accessibilityRequest, requestErr := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
+	if requestErr != nil {
+		return nil, requestErr
+	}
+	ok, authErr := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	if authErr != nil {
+		return nil, authErr
+	}
+	if !ok {
+		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("request with the given id not found"), Resource: models.AccessibilityRequest{}}
+	}
+
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		Name:               input.Name,
 		FileType:           input.MimeType,
