@@ -58,11 +58,7 @@ const Accessibility = () => {
     <SecureRoute
       path="/508/requests/:accessibilityRequestId"
       render={() => {
-        return (
-          <AccessibilityRequestDetailPage
-            isAccessibilityTeam={user.isAccessibilityTeam(userGroups, flags)}
-          />
-        );
+        return <AccessibilityRequestDetailPage />;
       }}
     />
   );
