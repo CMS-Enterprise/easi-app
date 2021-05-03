@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
@@ -26,6 +26,7 @@ import './index.scss';
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
+  const history = useHistory();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -60,6 +61,12 @@ const AccessibilityRequestDetailPage = () => {
           id: accessibilityRequestId
         }
       }
+    }).then(() => {
+      history.push('/', {
+        confirmationText: t('requestDetails.removeConfirmationText', {
+          requestName
+        })
+      });
     });
   };
 

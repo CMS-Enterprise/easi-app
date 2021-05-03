@@ -48,7 +48,8 @@ const accessibility = {
         'You will not be able to access this request and its documents after it is removed.',
       confirm: 'Remove request',
       cancel: 'Keep request'
-    }
+    },
+    removeConfirmationText: '{{requestName}} successfully removed'
   },
   testDateForm: {
     header: {
