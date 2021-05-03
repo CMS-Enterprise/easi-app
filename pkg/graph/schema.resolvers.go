@@ -6,6 +6,7 @@ package graph
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/url"
 	"strconv"
 	"time"
@@ -655,6 +656,10 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 	}
 
 	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
+}
+
+func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
