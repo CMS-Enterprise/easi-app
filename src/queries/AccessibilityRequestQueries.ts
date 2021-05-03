@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 
-export const CreateAccessibilityRequest = gql`
+export const CreateAccessibilityRequestQuery = gql`
   mutation CreateAccessibilityRequest(
     $input: CreateAccessibilityRequestInput!
   ) {
@@ -17,7 +17,7 @@ export const CreateAccessibilityRequest = gql`
   }
 `;
 
-export const DeleteAccessibilityRequest = gql`
+export const DeleteAccessibilityRequestQuery = gql`
   mutation DeleteAccessibilityRequest(
     $input: DeleteAccessibilityRequestInput!
   ) {

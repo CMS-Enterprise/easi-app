@@ -137,6 +137,7 @@ const AccessibilityRequestDetailPage = () => {
                 <dt className="margin-bottom-1">{t('intake:lifecycleId')}</dt>
                 <dd className="margin-0 margin-bottom-3">{lcid}</dd>
               </dl>
+              <div>Remove this request from EASi</div>
             </div>
             {/* <button
               type="button"
