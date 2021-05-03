@@ -113,13 +113,15 @@ const AccessibilityRequestDetailPage = () => {
                     refetchRequest={refetch}
                   />
                 ))}
-              <Link
-                to={`/508/requests/${accessibilityRequestId}/test-date`}
-                className="margin-bottom-3 display-block"
-                aria-label="Add a test date"
-              >
-                Add a date
-              </Link>
+              {isAccessibilityTeam && (
+                <Link
+                  to={`/508/requests/${accessibilityRequestId}/test-date`}
+                  className="margin-bottom-3 display-block"
+                  aria-label="Add a test date"
+                >
+                  Add a date
+                </Link>
+              )}
             </div>
             <div className="accessibility-request__other-details">
               <h3>{t('requestDetails.other')}</h3>
