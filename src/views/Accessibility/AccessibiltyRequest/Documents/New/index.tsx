@@ -117,10 +117,12 @@ const New = () => {
               otherDocumentTypeDescription: values.documentType.otherType
             }
           }
-        }).then(() => {
-          history.push(`/508/requests/${accessibilityRequestId}`, {
-            confirmationText: `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
-          });
+        }).then(response => {
+          if (!response.errors) {
+            history.push(`/508/requests/${accessibilityRequestId}`, {
+              confirmationText: `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
+            });
+          }
         });
       });
     }
@@ -162,6 +164,14 @@ const New = () => {
                       />
                     );
                   })}
+                </ErrorAlert>
+              )}
+              {createDocumentStatus.error && (
+                <ErrorAlert heading="Error uploading document">
+                  <ErrorAlertMessage
+                    message={createDocumentStatus.error.message}
+                    errorKey="accessibilityRequest"
+                  />
                 </ErrorAlert>
               )}
               <PageHeading>

@@ -103,7 +103,11 @@ end
 
 desc "Starts all services in the project"
 task :up do
-  sh "docker-compose up -d"
+  environment = {
+    "COMPOSE_HTTP_TIMEOUT" => "120"
+  }
+  command = "docker-compose up -d"
+  sh(environment, command, verbose: true)
 
   # Avoid open file limits
   # sh "ulimit -S -n 2048"
