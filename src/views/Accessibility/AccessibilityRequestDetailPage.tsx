@@ -1,18 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
-import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
+import { DeleteAccessibilityRequestQuery } from 'queries/AccessibilityRequestQueries';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
+import {
+  DeleteAccessibilityRequest,
+  DeleteAccessibilityRequestVariables
+} from 'queries/types/DeleteAccessibilityRequest';
 import {
   GetAccessibilityRequest,
   GetAccessibilityRequestVariables
 } from 'queries/types/GetAccessibilityRequest';
 
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
+import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import TestDateCard from 'components/TestDateCard';
 import { AppState } from 'reducers/rootReducer';
@@ -24,6 +30,8 @@ import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
+  const [isModalOpen, setModalOpen] = useState(false);
+  const history = useHistory();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -35,6 +43,10 @@ const AccessibilityRequestDetailPage = () => {
       id: accessibilityRequestId
     }
   });
+  const [mutate] = useMutation<
+    DeleteAccessibilityRequest,
+    DeleteAccessibilityRequestVariables
+  >(DeleteAccessibilityRequestQuery);
 
   const requestName = data?.accessibilityRequest?.name || '';
   const systemName = data?.accessibilityRequest?.system.name || '';
@@ -46,6 +58,24 @@ const AccessibilityRequestDetailPage = () => {
     data?.accessibilityRequest?.system?.businessOwner?.component;
   const documents = data?.accessibilityRequest?.documents || [];
   const testDates = data?.accessibilityRequest?.testDates || [];
+
+  const removeRequest = () => {
+    mutate({
+      variables: {
+        input: {
+          id: accessibilityRequestId
+        }
+      }
+    }).then(response => {
+      if (response.errors && response.errors.length === 0) {
+        history.push('/', {
+          confirmationText: t('requestDetails.removeConfirmationText', {
+            requestName
+          })
+        });
+      }
+    });
+  };
 
   const flags = useFlags();
   const userGroups = useSelector((state: AppState) => state.auth.groups);
@@ -145,12 +175,40 @@ const AccessibilityRequestDetailPage = () => {
                 <dd className="margin-0 margin-bottom-3">{lcid}</dd>
               </dl>
             </div>
-            {/* <button
+            <button
               type="button"
               className="accessibility-request__remove-request"
+              onClick={() => setModalOpen(true)}
             >
               {t('requestDetails.remove')}
-            </button> */}
+            </button>
+            <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
+              <PageHeading
+                headingLevel="h1"
+                className="line-height-heading-2 margin-bottom-2"
+              >
+                {t('requestDetails.modal.header', {
+                  requestName
+                })}
+              </PageHeading>
+              <span>{t('requestDetails.modal.subhead')}</span>
+              <div className="display-flex margin-top-2">
+                <Button
+                  type="button"
+                  className="margin-right-5"
+                  onClick={removeRequest}
+                >
+                  {t('requestDetails.modal.confirm')}
+                </Button>
+                <Button
+                  type="button"
+                  unstyled
+                  onClick={() => setModalOpen(false)}
+                >
+                  {t('requestDetails.modal.cancel')}
+                </Button>
+              </div>
+            </Modal>
           </div>
         </div>
       </div>
