@@ -15,3 +15,15 @@ func NewRequesterPrincipal() authn.Principal {
 func NewReviewerPrincipal() authn.Principal {
 	return &authn.EUAPrincipal{EUAID: "REV", JobCodeEASi: true, JobCodeGRT: true}
 }
+
+// New508AdminPrincipal returns what represents an EASi user
+// that is empowered as a member of the GRT.
+func New508AdminPrincipal() authn.Principal {
+	return &authn.EUAPrincipal{
+		EUAID:            "508A",
+		JobCodeEASi:      true,
+		JobCodeGRT:       false,
+		JobCode508User:   true,
+		JobCode508Tester: false,
+	}
+}

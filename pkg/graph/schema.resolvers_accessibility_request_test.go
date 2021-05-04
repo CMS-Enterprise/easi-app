@@ -7,7 +7,9 @@ import (
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/testhelpers"
 )
 
 func (s GraphQLTestSuite) TestAccessibilityRequestQuery() {
@@ -220,7 +222,7 @@ func (s GraphQLTestSuite) TestGeneratePresignedUploadURLMutation() {
 }
 
 func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
-	ctx := context.Background()
+	ctx := appcontext.WithPrincipal(context.Background(), testhelpers.New508AdminPrincipal())
 
 	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
 		ProjectName:            null.StringFrom("Big Project"),
