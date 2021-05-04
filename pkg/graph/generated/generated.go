@@ -2779,7 +2779,7 @@ type Mutation {
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
-    @hasRole(role: EASI_508_TESTER)
+    @hasRole(role: EASI_508_TESTER_OR_USER)
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
@@ -2795,9 +2795,9 @@ type Mutation {
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
-    @hasRole(role: EASI_508_TESTER)
+    @hasRole(role: EASI_508_TESTER_OR_USER)
   deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
-    @hasRole(role: EASI_508_TESTER)
+    @hasRole(role: EASI_508_TESTER_OR_USER)
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
 }
 
@@ -2833,9 +2833,14 @@ enum Role {
   EASI_508_TESTER
 
   """
-  A 508 request owner
+  A 508 request program team member
   """
   EASI_508_USER
+
+  """
+  A 508 request program team member or tester
+  """
+  EASI_508_TESTER_OR_USER
 
   """
   A member of the GRT
@@ -7130,7 +7135,7 @@ func (ec *executionContext) _Mutation_createTestDate(ctx context.Context, field 
 			return ec.resolvers.Mutation().CreateTestDate(rctx, args["input"].(model.CreateTestDateInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER")
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
 			if err != nil {
 				return nil, err
 			}
@@ -7547,7 +7552,7 @@ func (ec *executionContext) _Mutation_updateTestDate(ctx context.Context, field 
 			return ec.resolvers.Mutation().UpdateTestDate(rctx, args["input"].(model.UpdateTestDateInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER")
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
 			if err != nil {
 				return nil, err
 			}
@@ -7610,7 +7615,7 @@ func (ec *executionContext) _Mutation_deleteTestDate(ctx context.Context, field 
 			return ec.resolvers.Mutation().DeleteTestDate(rctx, args["input"].(model.DeleteTestDateInput))
 		}
 		directive1 := func(ctx context.Context) (interface{}, error) {
-			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER")
+			role, err := ec.unmarshalNRole2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐRole(ctx, "EASI_508_TESTER_OR_USER")
 			if err != nil {
 				return nil, err
 			}

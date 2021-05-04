@@ -43,6 +43,13 @@ func HasRole(ctx context.Context, role model.Role) (bool, error) {
 		}
 		logger.Info("user authorized as 508 User", zap.Bool("Authorized", true))
 		return true, nil
+	case model.RoleEasi508TesterOrUser:
+		is508UserOrTester := principal.Allow508Tester() || principal.Allow508User()
+		if !is508UserOrTester {
+			logger.Info("does not have 508 User nor Tester job code")
+			return false, nil
+		}
+		return true, nil
 	default:
 		logger.With(zap.String("Role", role.String())).Info("Unrecognized user role")
 		return false, nil
