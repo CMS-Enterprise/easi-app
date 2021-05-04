@@ -237,7 +237,7 @@ const TestDateForm = ({
                             <FieldErrorMsg>
                               {flatErrors['score.value']}
                             </FieldErrorMsg>
-                            <div className="display-flex">
+                            <div className="display-flex margin-bottom-1">
                               <div className="width-10">
                                 <Field
                                   as={TextField}
@@ -246,12 +246,16 @@ const TestDateForm = ({
                                   id="TestDate-ScoreValue"
                                   maxLength={4}
                                   name="score.value"
+                                  aria-describedby="TestDate-ScoreValueHelpText"
                                 />
                               </div>
                               <div className="bg-black text-white width-5 display-flex flex-justify-center flex-align-center">
                                 <span className="text-bold">%</span>
                               </div>
                             </div>
+                            <HelpText id="TestDate-ScoreValueHelpText">
+                              {t('testDateForm.scoreHelpText')}
+                            </HelpText>
                           </FieldGroup>
                         </div>
                       )}
