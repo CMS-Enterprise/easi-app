@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { Link as UswdsLink } from '@trussworks/react-uswds';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
@@ -13,7 +15,10 @@ import {
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import PageHeading from 'components/PageHeading';
 import TestDateCard from 'components/TestDateCard';
+import { AppState } from 'reducers/rootReducer';
 import { formatDate } from 'utils/date';
+import user from 'utils/user';
+import { NotFoundPartial } from 'views/NotFound';
 
 import './index.scss';
 
@@ -42,14 +47,16 @@ const AccessibilityRequestDetailPage = () => {
   const documents = data?.accessibilityRequest?.documents || [];
   const testDates = data?.accessibilityRequest?.testDates || [];
 
+  const flags = useFlags();
+  const userGroups = useSelector((state: AppState) => state.auth.groups);
+  const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
+
   if (loading) {
     return <div>Loading</div>;
   }
 
   if (!data) {
-    return (
-      <div>{`No request found matching id: ${accessibilityRequestId}`}</div>
-    );
+    return <NotFoundPartial />;
   }
 
   // What type of errors can we get/return?
@@ -101,16 +108,19 @@ const AccessibilityRequestDetailPage = () => {
                     testIndex={index + 1}
                     requestName={requestName}
                     requestId={accessibilityRequestId}
+                    isEditableDeletable={isAccessibilityTeam}
                     refetchRequest={refetch}
                   />
                 ))}
-              <Link
-                to={`/508/requests/${accessibilityRequestId}/test-date`}
-                className="margin-bottom-3 display-block"
-                aria-label="Add a test date"
-              >
-                Add a date
-              </Link>
+              {isAccessibilityTeam && (
+                <Link
+                  to={`/508/requests/${accessibilityRequestId}/test-date`}
+                  className="margin-bottom-3 display-block"
+                  aria-label="Add a test date"
+                >
+                  Add a date
+                </Link>
+              )}
             </div>
             <div className="accessibility-request__other-details">
               <h3>{t('requestDetails.other')}</h3>

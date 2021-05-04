@@ -638,11 +638,7 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
-	intake, err := r.store.FetchSystemIntakeByID(ctx, accessibilityRequest.IntakeID)
-	if err != nil {
-		return nil, err
-	}
-	ok, err := r.service.AuthorizeUserIs508TeamOrIntakeRequester(ctx, intake)
+	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -658,7 +654,18 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
-	return r.store.FetchAccessibilityRequestByID(ctx, id)
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("unauthorized to fetch accessibility request")}
+	}
+	return accessibilityRequest, nil
 }
 
 func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error) {
