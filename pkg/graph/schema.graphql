@@ -562,7 +562,7 @@ type Mutation {
   createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
   createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
   createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
-    @hasRole(role: EASI_508_TESTER)
+    @hasRole(role: EASI_508_TESTER_OR_USER)
   generatePresignedUploadURL(
     input: GeneratePresignedUploadURLInput!
   ): GeneratePresignedUploadURLPayload
@@ -578,9 +578,9 @@ type Mutation {
   updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
     @hasRole(role: EASI_GOVTEAM)
   updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
-    @hasRole(role: EASI_508_TESTER)
+    @hasRole(role: EASI_508_TESTER_OR_USER)
   deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
-    @hasRole(role: EASI_508_TESTER)
+    @hasRole(role: EASI_508_TESTER_OR_USER)
   deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
 }
 
@@ -616,9 +616,14 @@ enum Role {
   EASI_508_TESTER
 
   """
-  A 508 request owner
+  A 508 request program team member
   """
   EASI_508_USER
+
+  """
+  A 508 request program team member or tester
+  """
+  EASI_508_TESTER_OR_USER
 
   """
   A member of the GRT

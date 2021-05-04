@@ -19,7 +19,7 @@ import './styles.scss';
 
 const NewTestDate = () => {
   const { t } = useTranslation('accessibility');
-  const { confirmationText } = useConfirmationText();
+  const confirmationText = useConfirmationText();
 
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
@@ -75,10 +75,12 @@ const NewTestDate = () => {
           requestID: accessibilityRequestId
         }
       }
-    }).then(() => {
-      history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText: confirmation
-      });
+    }).then(result => {
+      if (!result.errors) {
+        history.push(`/508/requests/${accessibilityRequestId}`, {
+          confirmationText: confirmation
+        });
+      }
     });
   };
 
@@ -97,7 +99,7 @@ const NewTestDate = () => {
         initialValues={initialValues}
         onSubmit={onSubmit}
         error={mutateResult.error}
-        requestName={data?.accessibilityRequest?.name}
+        requestName={data?.accessibilityRequest?.name || ''}
         requestId={accessibilityRequestId}
         formType="create"
       />

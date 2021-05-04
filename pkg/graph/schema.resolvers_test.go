@@ -137,10 +137,14 @@ func TestGraphQLTestSuite(t *testing.T) {
 	}
 	var resolverService ResolverService
 	resolverService.IssueLifecycleID = issueLifecycleID
-	authorize := func(ctx context.Context, intake *models.SystemIntake) (bool, error) {
+	authorizeIntake := func(_ context.Context, _ *models.SystemIntake) (bool, error) {
 		return true, nil
 	}
-	resolverService.AuthorizeUserIsReviewTeamOrIntakeRequester = authorize
+	authorize508 := func(_ context.Context, _ *models.AccessibilityRequest) (bool, error) {
+		return true, nil
+	}
+	resolverService.AuthorizeUserIsReviewTeamOrIntakeRequester = authorizeIntake
+	resolverService.AuthorizeUserIs508TeamOrRequestOwner = authorize508
 
 	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client), Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
