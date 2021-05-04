@@ -5,33 +5,32 @@ import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
 import { DeleteTestDate } from 'queries/types/DeleteTestDate';
+import { GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType } from 'queries/types/GetAccessibilityRequest';
 
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import { formatDate } from 'utils/date';
 
 type TestDateCardProps = {
-  date: string; // ISO string
-  type: 'INITIAL' | 'REMEDIATION';
+  testDate: TestDateType;
   testIndex: number;
-  score: number | null; // A whole number representing tenths of a percent
   requestId: string;
   requestName: string;
   id: string;
+  isEditableDeletable?: boolean;
   refetchRequest: () => any;
 };
 
 const TestDateCard = ({
-  date,
-  type,
+  testDate,
   testIndex,
-  score,
   requestId,
   requestName,
-  id,
+  isEditableDeletable = true,
   refetchRequest
 }: TestDateCardProps) => {
   const { t } = useTranslation('accessibility');
+  const { id, testType, date, score } = testDate;
 
   const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
     DeleteTestDateQuery,
@@ -67,7 +66,7 @@ const TestDateCard = ({
   return (
     <div className="bg-gray-10 padding-2 line-height-body-4 margin-bottom-2">
       <div className="text-bold margin-bottom-1">
-        Test {testIndex}: {type === 'INITIAL' ? 'Initial' : 'Remediation'}
+        Test {testIndex}: {testType === 'INITIAL' ? 'Initial' : 'Remediation'}
       </div>
       <div className="margin-bottom-1">
         <div className="display-inline-block margin-right-2">
@@ -80,62 +79,66 @@ const TestDateCard = ({
           {testScore()}
         </div>
       </div>
-      <div>
-        <UswdsLink
-          asCustom={Link}
-          to={`/508/requests/${requestId}/test-date/${id}`}
-          aria-label={`Edit test ${testIndex} ${type}`}
-        >
-          Edit
-        </UswdsLink>
-        <Button
-          className="margin-left-1"
-          type="button"
-          aria-label={`Remove test ${testIndex} ${type}`}
-          unstyled
-          onClick={() => {
-            setRemoveTestDateModalOpen(true);
-          }}
-        >
-          Remove
-        </Button>
-        <Modal
-          title="Title"
-          isOpen={isRemoveTestDateModalOpen}
-          closeModal={() => {
-            setRemoveTestDateModalOpen(false);
-          }}
-        >
-          <PageHeading headingLevel="h2" className="margin-top-0">
-            {t('removeTestDate.modalHeader', {
-              testNumber: testIndex,
-              testType: type,
-              testDate: formatDate(date),
-              requestName
-            })}
-          </PageHeading>
-          <p>{t('removeTestDate.modalText')}</p>
-          <Button
-            type="button"
-            className="margin-right-4"
-            onClick={() => {
-              deleteTestDate();
-              setRemoveTestDateModalOpen(false);
-            }}
+
+      {isEditableDeletable && (
+        <div>
+          <UswdsLink
+            asCustom={Link}
+            to={`/508/requests/${requestId}/test-date/${id}`}
+            aria-label={`Edit test ${testIndex} ${testType}`}
+            data-testid="test-date-edit-link"
           >
-            {t('removeTestDate.modalRemoveButton')}
-          </Button>
+            Edit
+          </UswdsLink>
           <Button
+            className="margin-left-1"
             type="button"
+            aria-label={`Remove test ${testIndex} ${testType}`}
             unstyled
             onClick={() => {
+              setRemoveTestDateModalOpen(true);
+            }}
+            data-testid="test-date-delete-button"
+          >
+            Remove
+          </Button>
+          <Modal
+            isOpen={isRemoveTestDateModalOpen}
+            closeModal={() => {
               setRemoveTestDateModalOpen(false);
             }}
           >
-            {t('removeTestDate.modalCancelButton')}
-          </Button>
-        </Modal>
-      </div>
+            <PageHeading headingLevel="h2" className="margin-top-0">
+              {t('removeTestDate.modalHeader', {
+                testNumber: testIndex,
+                testType,
+                testDate: formatDate(date),
+                requestName
+              })}
+            </PageHeading>
+            <p>{t('removeTestDate.modalText')}</p>
+            <Button
+              type="button"
+              className="margin-right-4"
+              onClick={() => {
+                deleteTestDate();
+                setRemoveTestDateModalOpen(false);
+              }}
+            >
+              {t('removeTestDate.modalRemoveButton')}
+            </Button>
+            <Button
+              type="button"
+              unstyled
+              onClick={() => {
+                setRemoveTestDateModalOpen(false);
+              }}
+            >
+              {t('removeTestDate.modalCancelButton')}
+            </Button>
+          </Modal>
+        </div>
+      )}
     </div>
   );
 };

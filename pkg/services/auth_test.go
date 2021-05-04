@@ -12,7 +12,7 @@ import (
 )
 
 func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
-	authorizeSaveSystemIntake := NewAuthorizeUserIsIntakeRequester()
+	authorizeSaveSystemIntake := AuthorizeUserIsIntakeRequester
 
 	s.Run("No EASi job code fails auth", func() {
 		ctx := context.Background()
@@ -54,7 +54,7 @@ func (s ServicesTestSuite) TestAuthorizeUserIsIntakeRequester() {
 }
 
 func (s ServicesTestSuite) TestAuthorizeUserIsBusinessCaseRequester() {
-	authorizeSaveBizCase := NewAuthorizeUserIsBusinessCaseRequester()
+	authorizeSaveBizCase := AuthorizeUserIsBusinessCaseRequester
 
 	s.Run("No EASi job code fails auth", func() {
 		ctx := context.Background()
@@ -182,39 +182,39 @@ func (s ServicesTestSuite) TestAuthorizeUserIsRequestOwnerOr508Team() {
 
 	testCases := map[string]struct {
 		ctx     context.Context
-		intake  *models.SystemIntake
+		request *models.AccessibilityRequest
 		allowed bool
 	}{
 		"anonymous": {
 			ctx:     context.Background(),
-			intake:  &models.SystemIntake{},
+			request: &models.AccessibilityRequest{},
 			allowed: false,
 		},
 		"non easi": {
 			ctx:     appcontext.WithPrincipal(context.Background(), &nonEASI),
-			intake:  &models.SystemIntake{},
+			request: &models.AccessibilityRequest{},
 			allowed: false,
 		},
 		"is not 508, is not author": {
 			ctx:     appcontext.WithPrincipal(context.Background(), &non508),
-			intake:  &models.SystemIntake{EUAUserID: null.StringFrom("NOPE")},
+			request: &models.AccessibilityRequest{EUAUserID: "NOPE"},
 			allowed: false,
 		},
 		"is author, is not 508": {
 			ctx:     appcontext.WithPrincipal(context.Background(), &non508),
-			intake:  &models.SystemIntake{EUAUserID: null.StringFrom("FAKE")},
+			request: &models.AccessibilityRequest{EUAUserID: "FAKE"},
 			allowed: true,
 		},
 		"is 508, is not author": {
 			ctx:     appcontext.WithPrincipal(context.Background(), &yes508tester),
-			intake:  &models.SystemIntake{EUAUserID: null.StringFrom("NOPE")},
+			request: &models.AccessibilityRequest{EUAUserID: "NOPE"},
 			allowed: true,
 		},
 	}
 
 	for name, tc := range testCases {
 		s.Run(name, func() {
-			ok, err := fnAuth(tc.ctx, tc.intake)
+			ok, err := fnAuth(tc.ctx, tc.request)
 			s.NoError(err)
 			s.Equal(tc.allowed, ok)
 		})

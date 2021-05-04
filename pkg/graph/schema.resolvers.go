@@ -333,6 +333,18 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 		return nil, keyErr
 	}
 
+	accessibilityRequest, requestErr := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
+	if requestErr != nil {
+		return nil, requestErr
+	}
+	ok, authErr := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	if authErr != nil {
+		return nil, authErr
+	}
+	if !ok {
+		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("request with the given id not found"), Resource: models.AccessibilityRequest{}}
+	}
+
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
 		Name:               input.Name,
 		FileType:           input.MimeType,
@@ -639,11 +651,7 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 	if err != nil {
 		return nil, err
 	}
-	intake, err := r.store.FetchSystemIntakeByID(ctx, accessibilityRequest.IntakeID)
-	if err != nil {
-		return nil, err
-	}
-	ok, err := r.service.AuthorizeUserIs508TeamOrIntakeRequester(ctx, intake)
+	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -681,7 +689,18 @@ func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
-	return r.store.FetchAccessibilityRequestByID(ctx, id)
+	accessibilityRequest, err := r.store.FetchAccessibilityRequestByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	ok, err := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("unauthorized to fetch accessibility request")}
+	}
+	return accessibilityRequest, nil
 }
 
 func (r *queryResolver) AccessibilityRequests(ctx context.Context, after *string, first int) (*model.AccessibilityRequestsConnection, error) {
