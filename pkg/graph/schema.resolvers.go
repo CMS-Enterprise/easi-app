@@ -19,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
@@ -336,7 +337,7 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	if requestErr != nil {
 		return nil, requestErr
 	}
-	ok, authErr := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	ok, authErr := services.AuthorizeUserIsRequestOwnerOr508Team(ctx, accessibilityRequest)
 	if authErr != nil {
 		return nil, authErr
 	}
