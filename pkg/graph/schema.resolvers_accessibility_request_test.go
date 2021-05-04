@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/99designs/gqlgen/client"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
@@ -264,6 +265,14 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 		}
 	}
 
+	fakeToken := `
+	{
+		"claims":{
+			"groups":["EASI_D_508_USER"]
+		}
+	}
+	`
+
 	s.client.MustPost(fmt.Sprintf(
 		`mutation {
 			createAccessibilityRequestDocument(input: {
@@ -290,7 +299,10 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 					path
 				}
 			}
-		}`, accessibilityRequest.ID.String()), &resp)
+		}`, accessibilityRequest.ID.String()),
+		&resp,
+		client.AddHeader("Authorization", fmt.Sprintf("Bearer %s", fakeToken)),
+	)
 
 	document := resp.CreateAccessibilityRequestDocument.AccessibilityRequestDocument
 
