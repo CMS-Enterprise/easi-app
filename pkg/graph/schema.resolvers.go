@@ -663,7 +663,7 @@ func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) 
 		return nil, err
 	}
 	if !ok {
-		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
+		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("unauthorized to fetch accessibility request")}
 	}
 	return accessibilityRequest, nil
 }
