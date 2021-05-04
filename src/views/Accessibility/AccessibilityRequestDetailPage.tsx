@@ -61,12 +61,14 @@ const AccessibilityRequestDetailPage = () => {
           id: accessibilityRequestId
         }
       }
-    }).then(() => {
-      history.push('/', {
-        confirmationText: t('requestDetails.removeConfirmationText', {
-          requestName
-        })
-      });
+    }).then(response => {
+      if (response.errors && response.errors.length === 0) {
+        history.push('/', {
+          confirmationText: t('requestDetails.removeConfirmationText', {
+            requestName
+          })
+        });
+      }
     });
   };
 
