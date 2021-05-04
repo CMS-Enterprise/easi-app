@@ -51,6 +51,7 @@ const accessibility = {
     testTypeHeader: 'What type of test?',
     dateHeader: 'Test date',
     dateHelpText: 'For example: 4 28 2020',
+    scoreHelpText: 'The test score must be a number between 0 and 100',
     scoreHeader: 'Does this test have a score?',
     scoreValueHeader: 'Test Score',
     scoreValueSRHelpText: 'Enter the test score without the percentage symbol',
