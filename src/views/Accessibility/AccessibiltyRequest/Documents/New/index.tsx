@@ -22,7 +22,7 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import { RadioField } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
-import { useFlash } from 'hooks/useFlash';
+import { useMessage } from 'hooks/useMessage';
 import { FileUploadForm } from 'types/files';
 import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
 import { translateDocumentType } from 'utils/accessibilityRequest';
@@ -31,7 +31,7 @@ import { DocumentUploadValidationSchema } from 'validations/documentUploadSchema
 
 const New = () => {
   const history = useHistory();
-  const { setQueuedMessage } = useFlash();
+  const { showMessageOnNextPage } = useMessage();
 
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
@@ -122,7 +122,7 @@ const New = () => {
           }
         }).then(response => {
           if (!response.errors) {
-            setQueuedMessage(
+            showMessageOnNextPage(
               `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
             );
             history.push(`/508/requests/${accessibilityRequestId}`);

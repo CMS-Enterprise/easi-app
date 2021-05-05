@@ -11,7 +11,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
-import { useFlash } from 'hooks/useFlash';
+import { useMessage } from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
@@ -73,7 +73,7 @@ const Default = (
 
 const PageTemplate = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslation('accessibility');
-  const { message } = useFlash();
+  const { message } = useMessage();
 
   return (
     <PageWrapper>

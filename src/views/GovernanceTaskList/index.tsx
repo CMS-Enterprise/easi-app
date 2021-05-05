@@ -20,7 +20,7 @@ import {
   initialReviewTag,
   intakeTag
 } from 'data/taskList';
-import useFlash from 'hooks/useFlash';
+import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import {
   archiveSystemIntake,
@@ -43,7 +43,7 @@ const GovernanceTaskList = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
-  const { setQueuedMessage } = useFlash();
+  const { showMessageOnNextPage } = useMessage();
   const { t } = useTranslation();
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -73,7 +73,7 @@ const GovernanceTaskList = () => {
         context: systemIntake.requestName ? 'name' : 'noName',
         requestName: systemIntake.requestName
       });
-      setQueuedMessage(message);
+      showMessageOnNextPage(message);
       history.push('/');
     };
     dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));

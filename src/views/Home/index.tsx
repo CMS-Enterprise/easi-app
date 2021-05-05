@@ -9,7 +9,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
-import useFlash from 'hooks/useFlash';
+import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
@@ -24,7 +24,7 @@ const Home = () => {
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
 
-  const { message } = useFlash();
+  const { message } = useMessage();
 
   const renderView = () => {
     if (isUserSet) {

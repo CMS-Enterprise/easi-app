@@ -11,7 +11,7 @@ import {
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
-import useFlash from 'hooks/useFlash';
+import useMessage from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
@@ -40,7 +40,7 @@ const TestDate = () => {
     }
   );
   const history = useHistory();
-  const { setQueuedMessage } = useFlash();
+  const { showMessageOnNextPage } = useMessage();
 
   const test: TestDateType = data?.accessibilityRequest?.testDates.find(
     date => date.id === testDateId
@@ -82,7 +82,7 @@ const TestDate = () => {
         }
       }
     }).then(() => {
-      setQueuedMessage(confirmation);
+      showMessageOnNextPage(confirmation);
       history.push(`/508/requests/${accessibilityRequestId}`);
     });
   };
