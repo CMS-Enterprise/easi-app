@@ -78,7 +78,7 @@ const NewTestDate = () => {
     }).then(result => {
       if (!result.errors) {
         history.push(`/508/requests/${accessibilityRequestId}`, {
-          submitConfirmation
+          confirmationText: submitConfirmation
         });
       }
     });

@@ -18,10 +18,13 @@ function useConfirmationText() {
   useEffect(() => {
     if (location.state && location.state.confirmationText) {
       setConfirmationText(location.state.confirmationText);
+      history.replace({
+        state: {}
+      });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history.location.pathname]);
+  }, []);
 
   return { confirmationText, setConfirmationText };
 }
