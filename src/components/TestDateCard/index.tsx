@@ -16,6 +16,7 @@ type TestDateCardProps = {
   testIndex: number;
   requestId: string;
   requestName: string;
+  isEditableDeletable?: boolean;
   refetchRequest: () => any;
   setConfirmationText: (text: string) => void;
 };
@@ -26,7 +27,8 @@ const TestDateCard = ({
   requestId,
   requestName,
   refetchRequest,
-  setConfirmationText
+  setConfirmationText,
+  isEditableDeletable = true
 }: TestDateCardProps) => {
   const { t } = useTranslation('accessibility');
   const { id, testType, date, score } = testDate;
@@ -84,58 +86,64 @@ const TestDateCard = ({
           {testScore()}
         </div>
       </div>
-      <div>
-        <UswdsLink
-          asCustom={Link}
-          to={`/508/requests/${requestId}/test-date/${id}`}
-          aria-label={`Edit test ${testIndex} ${testType}`}
-        >
-          Edit
-        </UswdsLink>
-        <Button
-          className="margin-left-1"
-          type="button"
-          aria-label={`Remove test ${testIndex} ${testType}`}
-          unstyled
-          onClick={() => {
-            setRemoveTestDateModalOpen(true);
-          }}
-        >
-          Remove
-        </Button>
-        <Modal
-          isOpen={isRemoveTestDateModalOpen}
-          closeModal={() => {
-            setRemoveTestDateModalOpen(false);
-          }}
-        >
-          <PageHeading headingLevel="h2" className="margin-top-0">
-            {t('removeTestDate.modalHeader', {
-              testNumber: testIndex,
-              testType,
-              testDate: formatDate(date),
-              requestName
-            })}
-          </PageHeading>
-          <p>{t('removeTestDate.modalText')}</p>
-          <Button
-            type="button"
-            className="margin-right-4"
-            onClick={deleteTestDate}
+
+      {isEditableDeletable && (
+        <div>
+          <UswdsLink
+            asCustom={Link}
+            to={`/508/requests/${requestId}/test-date/${id}`}
+            aria-label={`Edit test ${testIndex} ${testType}`}
+            data-testid="test-date-edit-link"
           >
-            {t('removeTestDate.modalRemoveButton')}
-          </Button>
+            Edit
+          </UswdsLink>
           <Button
+            className="margin-left-1"
             type="button"
+            onClick={deleteTestDate}
+            aria-label={`Remove test ${testIndex} ${testType}`}
             unstyled
-            onClick={() => {
+            data-testid="test-date-delete-button"
+          >
+            Remove
+          </Button>
+          <Modal
+            isOpen={isRemoveTestDateModalOpen}
+            closeModal={() => {
               setRemoveTestDateModalOpen(false);
             }}
           >
-            {t('removeTestDate.modalCancelButton')}
-          </Button>
-        </Modal>
-      </div>
+            <PageHeading headingLevel="h2" className="margin-top-0">
+              {t('removeTestDate.modalHeader', {
+                testNumber: testIndex,
+                testType,
+                testDate: formatDate(date),
+                requestName
+              })}
+            </PageHeading>
+            <p>{t('removeTestDate.modalText')}</p>
+            <Button
+              type="button"
+              className="margin-right-4"
+              onClick={() => {
+                deleteTestDate();
+                setRemoveTestDateModalOpen(false);
+              }}
+            >
+              {t('removeTestDate.modalRemoveButton')}
+            </Button>
+            <Button
+              type="button"
+              unstyled
+              onClick={() => {
+                setRemoveTestDateModalOpen(false);
+              }}
+            >
+              {t('removeTestDate.modalCancelButton')}
+            </Button>
+          </Modal>
+        </div>
+      )}
     </div>
   );
 };

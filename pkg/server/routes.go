@@ -189,7 +189,7 @@ func (s *Server) routes(
 				store.GenerateLifecycleID,
 			),
 			AuthorizeUserIsReviewTeamOrIntakeRequester: services.AuthorizeUserIsIntakeRequesterOrHasGRTJobCode,
-			AuthorizeUserIs508TeamOrIntakeRequester:    services.AuthorizeUserIsRequestOwnerOr508Team,
+			AuthorizeUserIs508TeamOrRequestOwner:       services.AuthorizeUserIsRequestOwnerOr508Team,
 			RejectIntake: services.NewUpdateRejectionFields(
 				serviceConfig,
 				services.AuthorizeRequireGRTJobCode,
@@ -249,7 +249,7 @@ func (s *Server) routes(
 				store.FetchBusinessCaseByID,
 				store.UpdateBusinessCase,
 			),
-			services.NewAuthorizeUserIsIntakeRequester(),
+			services.AuthorizeUserIsIntakeRequester,
 			emailClient.SendWithdrawRequestEmail,
 		),
 	)
@@ -278,7 +278,7 @@ func (s *Server) routes(
 		services.NewCreateBusinessCase(
 			serviceConfig,
 			store.FetchSystemIntakeByID,
-			services.NewAuthorizeUserIsIntakeRequester(),
+			services.AuthorizeUserIsIntakeRequester,
 			store.CreateAction,
 			cedarLDAPClient.FetchUserInfo,
 			store.CreateBusinessCase,
@@ -287,7 +287,7 @@ func (s *Server) routes(
 		services.NewUpdateBusinessCase(
 			serviceConfig,
 			store.FetchBusinessCaseByID,
-			services.NewAuthorizeUserIsBusinessCaseRequester(),
+			services.AuthorizeUserIsBusinessCaseRequester,
 			store.UpdateBusinessCase,
 		),
 	)
@@ -317,7 +317,7 @@ func (s *Server) routes(
 			map[models.ActionType]services.ActionExecuter{
 				models.ActionTypeSUBMITINTAKE: services.NewSubmitSystemIntake(
 					serviceConfig,
-					services.NewAuthorizeUserIsIntakeRequester(),
+					services.AuthorizeUserIsIntakeRequester,
 					store.UpdateSystemIntake,
 					func(c context.Context, si *models.SystemIntake) (string, error) {
 						// quick adapter to retrofit the new interface to take the place
@@ -375,7 +375,7 @@ func (s *Server) routes(
 				),
 				models.ActionTypeSUBMITBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
-					services.NewAuthorizeUserIsIntakeRequester(),
+					services.AuthorizeUserIsIntakeRequester,
 					store.FetchOpenBusinessCaseByIntakeID,
 					appvalidation.BusinessCaseForSubmit,
 					saveAction,
@@ -386,7 +386,7 @@ func (s *Server) routes(
 				),
 				models.ActionTypeSUBMITFINALBIZCASE: services.NewSubmitBusinessCase(
 					serviceConfig,
-					services.NewAuthorizeUserIsIntakeRequester(),
+					services.AuthorizeUserIsIntakeRequester,
 					store.FetchOpenBusinessCaseByIntakeID,
 					appvalidation.BusinessCaseForSubmit,
 					saveAction,
