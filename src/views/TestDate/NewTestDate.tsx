@@ -60,7 +60,7 @@ const NewTestDate = () => {
     const hasScore = values.score.isPresent;
     const score = values.score.value;
 
-    const confirmation = `
+    const submitConfirmation = `
       ${t('testDateForm.confirmation.date', { date: formatDate(date) })}
       ${hasScore ? t('testDateForm.confirmation.score', { score }) : ''}
       ${t('testDateForm.confirmation.create')}
@@ -77,7 +77,7 @@ const NewTestDate = () => {
       }
     }).then(result => {
       if (!result.errors) {
-        setQueuedMessage(confirmation);
+        setQueuedMessage(submitConfirmation);
         history.push(`/508/requests/${accessibilityRequestId}`);
       }
     });

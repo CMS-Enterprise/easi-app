@@ -19,6 +19,7 @@ import (
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
 	"github.com/cmsgov/easi-app/pkg/models"
+	"github.com/cmsgov/easi-app/pkg/services"
 )
 
 func (r *accessibilityRequestResolver) Documents(ctx context.Context, obj *models.AccessibilityRequest) ([]*models.AccessibilityRequestDocument, error) {
@@ -330,6 +331,18 @@ func (r *mutationResolver) CreateAccessibilityRequestDocument(ctx context.Contex
 	key, keyErr := r.s3Client.KeyFromURL(url)
 	if keyErr != nil {
 		return nil, keyErr
+	}
+
+	accessibilityRequest, requestErr := r.store.FetchAccessibilityRequestByID(ctx, input.RequestID)
+	if requestErr != nil {
+		return nil, requestErr
+	}
+	ok, authErr := r.service.AuthorizeUserIs508TeamOrRequestOwner(ctx, accessibilityRequest)
+	if authErr != nil {
+		return nil, authErr
+	}
+	if !ok {
+		return nil, &apperrors.ResourceNotFoundError{Err: errors.New("request with the given id not found"), Resource: models.AccessibilityRequest{}}
 	}
 
 	doc, docErr := r.store.CreateAccessibilityRequestDocument(ctx, &models.AccessibilityRequestDocument{
@@ -651,6 +664,28 @@ func (r *mutationResolver) DeleteAccessibilityRequestDocument(ctx context.Contex
 	}
 
 	return &model.DeleteAccessibilityRequestDocumentPayload{ID: &input.ID}, nil
+}
+
+func (r *mutationResolver) DeleteAccessibilityRequest(ctx context.Context, input model.DeleteAccessibilityRequestInput) (*model.DeleteAccessibilityRequestPayload, error) {
+	request, err := r.store.FetchAccessibilityRequestByID(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	ok, err := services.AuthorizeUserIs508RequestOwner(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+	if !ok {
+		return nil, &apperrors.UnauthorizedError{Err: errors.New("unauthorized to delete accessibility request document")}
+	}
+
+	err = r.store.DeleteAccessibilityRequest(ctx, input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.DeleteAccessibilityRequestPayload{ID: &input.ID}, nil
 }
 
 func (r *queryResolver) AccessibilityRequest(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {

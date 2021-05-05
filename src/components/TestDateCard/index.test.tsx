@@ -23,10 +23,9 @@ const renderComponent = (customProps?: any) => {
           testIndex={1}
           requestId="Request ID"
           requestName="Initial Request"
-          setConfirmationText={jest.fn()}
-          id="ID"
           isEditableDeletable
           refetchRequest={jest.fn()}
+          setConfirmationText={jest.fn()}
           {...customProps}
         />
       </MockedProvider>
@@ -51,10 +50,9 @@ describe('The Test Date Card component', () => {
           testIndex={1}
           requestId="Request ID"
           requestName="Initial Request"
+          isEditableDeletable
           refetchRequest={jest.fn()}
           setConfirmationText={jest.fn()}
-          id="ID"
-          isEditableDeletable
         />
       </MockedProvider>
     );
