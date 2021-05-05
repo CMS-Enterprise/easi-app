@@ -16,7 +16,6 @@ type TestDateCardProps = {
   testIndex: number;
   requestId: string;
   requestName: string;
-  id: string;
   isEditableDeletable?: boolean;
   refetchRequest: () => any;
   setConfirmationText: (text: string) => void;
@@ -27,9 +26,9 @@ const TestDateCard = ({
   testIndex,
   requestId,
   requestName,
+  refetchRequest,
   setConfirmationText,
-  isEditableDeletable = true,
-  refetchRequest
+  isEditableDeletable = true
 }: TestDateCardProps) => {
   const { t } = useTranslation('accessibility');
   const { id, testType, date, score } = testDate;
@@ -101,11 +100,9 @@ const TestDateCard = ({
           <Button
             className="margin-left-1"
             type="button"
+            onClick={deleteTestDate}
             aria-label={`Remove test ${testIndex} ${testType}`}
             unstyled
-            onClick={() => {
-              setRemoveTestDateModalOpen(true);
-            }}
             data-testid="test-date-delete-button"
           >
             Remove

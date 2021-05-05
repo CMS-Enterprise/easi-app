@@ -120,11 +120,13 @@ const New = () => {
               otherDocumentTypeDescription: values.documentType.otherType
             }
           }
-        }).then(() => {
-          setQueuedMessage(
-            `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
-          );
-          history.push(`/508/requests/${accessibilityRequestId}`);
+        }).then(response => {
+          if (!response.errors) {
+            setQueuedMessage(
+              `${file.name} uploaded to ${data?.accessibilityRequest?.name}`
+            );
+            history.push(`/508/requests/${accessibilityRequestId}`);
+          }
         });
       });
     }
@@ -166,6 +168,14 @@ const New = () => {
                       />
                     );
                   })}
+                </ErrorAlert>
+              )}
+              {createDocumentStatus.error && (
+                <ErrorAlert heading="Error uploading document">
+                  <ErrorAlertMessage
+                    message={createDocumentStatus.error.message}
+                    errorKey="accessibilityRequest"
+                  />
                 </ErrorAlert>
               )}
               <PageHeading>
