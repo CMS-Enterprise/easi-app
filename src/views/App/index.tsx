@@ -9,7 +9,7 @@ import {
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import { FlashProvider } from 'hooks/useFlash';
+import { MessageProvider } from 'hooks/useMessage';
 import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
@@ -148,7 +148,7 @@ const App = () => {
         Skip to main content
       </button>
       <BrowserRouter>
-        <FlashProvider>
+        <MessageProvider>
           <AuthenticationWrapper>
             <UserInfoWrapper>
               <TimeOutWrapper>
@@ -156,7 +156,7 @@ const App = () => {
               </TimeOutWrapper>
             </UserInfoWrapper>
           </AuthenticationWrapper>
-        </FlashProvider>
+        </MessageProvider>
       </BrowserRouter>
     </FlagsWrapper>
   );

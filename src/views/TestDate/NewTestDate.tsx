@@ -9,7 +9,7 @@ import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
-import { useFlash } from 'hooks/useFlash';
+import { useMessage } from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
@@ -19,7 +19,7 @@ import './styles.scss';
 
 const NewTestDate = () => {
   const { t } = useTranslation('accessibility');
-  const { message, setQueuedMessage } = useFlash();
+  const { message, showMessageOnNextPage } = useMessage();
 
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
@@ -77,7 +77,7 @@ const NewTestDate = () => {
       }
     }).then(result => {
       if (!result.errors) {
-        setQueuedMessage(submitConfirmation);
+        showMessageOnNextPage(submitConfirmation);
         history.push(`/508/requests/${accessibilityRequestId}`);
       }
     });
