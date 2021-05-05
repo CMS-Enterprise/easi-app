@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Alert, Button, ComboBox } from '@trussworks/react-uswds';
+import { Button, ComboBox } from '@trussworks/react-uswds';
 import {
   Field as FormikField,
   Form as FormikForm,
@@ -26,7 +26,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { initialAccessibilityRequestFormData } from 'data/accessibility';
-import useConfirmationText from 'hooks/useConfirmationText';
+import useFlash from 'hooks/useFlash';
 import { AccessibilityRequestForm } from 'types/accessibility';
 import flattenErrors from 'utils/flattenErrors';
 import accessibilitySchema from 'validations/accessibilitySchema';
@@ -34,7 +34,7 @@ import accessibilitySchema from 'validations/accessibilitySchema';
 const Create = () => {
   const history = useHistory();
   const { t } = useTranslation('accessibility');
-  const { confirmationText } = useConfirmationText();
+  const { setQueuedMessage } = useFlash();
 
   const { data, loading } = useQuery<GetSystems>(GetSystemsQuery, {
     variables: {
@@ -53,11 +53,12 @@ const Create = () => {
         }
       }
     }).then(() => {
-      history.push('/', {
-        confirmationText: t('newRequestForm.confirmation', {
+      setQueuedMessage(
+        t('newRequestForm.confirmation', {
           requestName: values.requestName
         })
-      });
+      );
+      history.push('/');
     });
   };
 
@@ -86,11 +87,6 @@ const Create = () => {
 
   return (
     <>
-      {confirmationText && (
-        <Alert className="margin-top-4" type="success" role="alert">
-          {confirmationText}
-        </Alert>
-      )}
       <PageHeading>{t('newRequestForm.heading')}</PageHeading>
       <Formik
         initialValues={initialAccessibilityRequestFormData}

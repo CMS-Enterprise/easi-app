@@ -9,7 +9,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import RequestRepository from 'components/RequestRepository';
-import useConfirmationText from 'hooks/useConfirmationText';
+import useFlash from 'hooks/useFlash';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
@@ -23,7 +23,8 @@ const Home = () => {
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
   const flags = useFlags();
-  const { confirmationText } = useConfirmationText();
+
+  const { message } = useFlash();
 
   const renderView = () => {
     if (isUserSet) {
@@ -63,10 +64,10 @@ const Home = () => {
     <PageWrapper>
       <Header />
       <MainContent className="margin-bottom-5">
-        {confirmationText && (
+        {message && (
           <div className="grid-container margin-top-6">
             <Alert type="success" slim role="alert">
-              {confirmationText}
+              {message}
             </Alert>
           </div>
         )}

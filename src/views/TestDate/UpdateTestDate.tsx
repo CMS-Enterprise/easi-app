@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
-import { Alert } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
@@ -12,7 +11,7 @@ import {
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
-import useConfirmationText from 'hooks/useConfirmationText';
+import useFlash from 'hooks/useFlash';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
@@ -22,7 +21,6 @@ import './styles.scss';
 
 const TestDate = () => {
   const { t } = useTranslation('accessibility');
-  const { confirmationText } = useConfirmationText();
   const { accessibilityRequestId, testDateId } = useParams<{
     accessibilityRequestId: string;
     testDateId: string;
@@ -42,6 +40,7 @@ const TestDate = () => {
     }
   );
   const history = useHistory();
+  const { setQueuedMessage } = useFlash();
 
   const test: TestDateType = data?.accessibilityRequest?.testDates.find(
     date => date.id === testDateId
@@ -83,9 +82,8 @@ const TestDate = () => {
         }
       }
     }).then(() => {
-      history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText: confirmation
-      });
+      setQueuedMessage(confirmation);
+      history.push(`/508/requests/${accessibilityRequestId}`);
     });
   };
 
@@ -95,11 +93,6 @@ const TestDate = () => {
 
   return (
     <>
-      {confirmationText && (
-        <Alert className="margin-top-4" type="success" role="alert">
-          {confirmationText}
-        </Alert>
-      )}
       <Form
         initialValues={initialValues}
         onSubmit={onSubmit}
