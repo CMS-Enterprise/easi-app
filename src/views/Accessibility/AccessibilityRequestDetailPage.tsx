@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { Alert, Link as UswdsLink } from '@trussworks/react-uswds';
+import { Link as UswdsLink } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
@@ -15,7 +15,7 @@ import {
 import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import PageHeading from 'components/PageHeading';
 import TestDateCard from 'components/TestDateCard';
-import useConfirmationText from 'hooks/useConfirmationText';
+import { useFlash } from 'hooks/useFlash';
 import { AppState } from 'reducers/rootReducer';
 import { Flags } from 'types/flags';
 import { formatDate } from 'utils/date';
@@ -26,7 +26,7 @@ import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
-  const { confirmationText, setConfirmationText } = useConfirmationText();
+  const { setMessage, setQueuedMessage } = useFlash();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -70,11 +70,6 @@ const AccessibilityRequestDetailPage = () => {
 
   return (
     <>
-      {confirmationText && (
-        <Alert className="margin-top-4" type="success" role="alert">
-          {confirmationText}
-        </Alert>
-      )}
       <PageHeading>{requestName}</PageHeading>
       <div className="grid-row grid-gap-lg">
         <div className="grid-col-9">
@@ -93,7 +88,7 @@ const AccessibilityRequestDetailPage = () => {
             <AccessibilityDocumentsList
               documents={documents}
               requestName={requestName}
-              setConfirmationText={setConfirmationText}
+              setConfirmationText={setMessage}
               refetchRequest={refetch}
             />
           </div>
@@ -120,7 +115,7 @@ const AccessibilityRequestDetailPage = () => {
                     requestId={accessibilityRequestId}
                     isEditableDeletable={isAccessibilityTeam}
                     refetchRequest={refetch}
-                    setConfirmationText={setConfirmationText}
+                    setConfirmationText={setQueuedMessage}
                   />
                 ))}
               {isAccessibilityTeam && (

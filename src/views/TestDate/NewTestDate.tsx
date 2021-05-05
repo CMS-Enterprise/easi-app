@@ -9,7 +9,7 @@ import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
-import useConfirmationText from 'hooks/useConfirmationText';
+import { useFlash } from 'hooks/useFlash';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
@@ -19,7 +19,7 @@ import './styles.scss';
 
 const NewTestDate = () => {
   const { t } = useTranslation('accessibility');
-  const confirmationText = useConfirmationText();
+  const { message, setQueuedMessage } = useFlash();
 
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
@@ -77,9 +77,8 @@ const NewTestDate = () => {
       }
     }).then(result => {
       if (!result.errors) {
-        history.push(`/508/requests/${accessibilityRequestId}`, {
-          confirmationText: confirmation
-        });
+        setQueuedMessage(confirmation);
+        history.push(`/508/requests/${accessibilityRequestId}`);
       }
     });
   };
@@ -90,9 +89,9 @@ const NewTestDate = () => {
 
   return (
     <>
-      {confirmationText && (
+      {message && (
         <Alert className="margin-top-4" type="success" role="alert">
-          {confirmationText}
+          {message}
         </Alert>
       )}
       <Form
