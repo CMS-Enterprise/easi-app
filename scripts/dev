@@ -101,18 +101,34 @@ end
 
 ### Tasks
 
-desc "Starts all services in the project"
-task :up do
+def up(*args)
   environment = {
     "COMPOSE_HTTP_TIMEOUT" => "120"
   }
-  command = "docker-compose up -d"
+  command = "docker-compose up"
+  
+  if args.any?
+    command = "${command} ${args.join(' ')}"
+  end
+  
   sh(environment, command, verbose: true)
 
   # Avoid open file limits
   # sh "ulimit -S -n 2048"
 
   wait_for_success("Waiting for the front end to build...", "curl --silent --output /dev/null -m 1 localhost:3000")
+end
+
+desc "Starts all services in the project"
+task :up do
+  up("-d")
+end
+
+namespace :up do
+  desc "Starts all services in the project in the foreground"
+  task :watch do
+    up
+  end
 end
 
 desc "Stops all services in the project"
