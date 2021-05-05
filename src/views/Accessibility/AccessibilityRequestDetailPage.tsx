@@ -26,7 +26,7 @@ import './index.scss';
 
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
-  const { setMessage, setQueuedMessage } = useFlash();
+  const { setMessage } = useFlash();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -115,7 +115,7 @@ const AccessibilityRequestDetailPage = () => {
                     requestId={accessibilityRequestId}
                     isEditableDeletable={isAccessibilityTeam}
                     refetchRequest={refetch}
-                    setConfirmationText={setQueuedMessage}
+                    setConfirmationText={setMessage}
                   />
                 ))}
               {isAccessibilityTeam && (

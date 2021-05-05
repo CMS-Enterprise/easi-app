@@ -24,9 +24,7 @@ const FlashProvider = ({ children }: { children: ReactNode }) => {
   const [lastPathname, setLastPathname] = useState(location.pathname);
 
   useEffect(() => {
-    console.debug(lastPathname, location.pathname, queuedMessage, message);
     if (lastPathname !== location.pathname) {
-      console.debug('shift');
       setMessage(queuedMessage);
       setQueuedMessage('');
       setLastPathname(location.pathname);
