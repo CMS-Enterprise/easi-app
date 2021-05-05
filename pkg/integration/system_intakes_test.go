@@ -2,6 +2,7 @@ package integration
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -202,4 +203,90 @@ func (s IntegrationTestSuite) TestSystemIntakeEndpoints() {
 		s.Equal(id, actualIntake.ID)
 		s.Equal("Test Requester", actualIntake.Requester)
 	})
+}
+
+func (s IntegrationTestSuite) TestGraphQLSystemIntakeQueries() {
+	apiURL, err := url.Parse(s.server.URL)
+	s.NoError(err, "failed to parse URL")
+	apiURL.Path = path.Join(apiURL.Path, "/api/graph/query")
+	graphQLURL, err := url.Parse(apiURL.String())
+	s.NoError(err)
+
+	client := &http.Client{}
+
+	ctx := context.Background()
+	projectName := "Big Project"
+	businessOwner := "Firstname Lastname"
+	businessOwnerComponent := "OIT"
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:            null.StringFrom(projectName),
+		Status:                 models.SystemIntakeStatusINTAKESUBMITTED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		BusinessOwner:          null.StringFrom(businessOwner),
+		BusinessOwnerComponent: null.StringFrom(businessOwnerComponent),
+	})
+	s.NoError(intakeErr)
+
+	myQuery := fmt.Sprintf(
+		`query {
+			systemIntake(id: "%s") {
+				id
+				requestName
+				status
+				requestType
+				businessOwner {
+					name
+					component
+				}
+				businessNeed
+			}
+		}`, intake.ID)
+
+	body, err := json.Marshal(map[string]string{
+		"query": myQuery,
+	})
+	s.NoError(err)
+
+	req, err := http.NewRequest(http.MethodPost, graphQLURL.String(), bytes.NewBuffer(body))
+	s.NoError(err)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", s.user.accessToken))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := client.Do(req)
+
+	s.NoError(err)
+	defer resp.Body.Close()
+
+	s.Equal(http.StatusOK, resp.StatusCode)
+	actualBody, err := ioutil.ReadAll(resp.Body)
+	s.NoError(err)
+
+	var respStruct struct {
+		Data struct {
+			SystemIntake struct {
+				ID            string
+				RequestName   string
+				Status        string
+				RequestType   string
+				BusinessOwner struct {
+					Name      string
+					Component string
+				}
+				BusinessOwnerComponent string
+				BusinessNeed           *string
+				BusinessCase           *string
+			}
+		}
+	}
+	err = json.Unmarshal(actualBody, &respStruct)
+	s.NoError(err)
+
+	s.Equal(intake.ID.String(), respStruct.Data.SystemIntake.ID)
+	s.Equal(projectName, respStruct.Data.SystemIntake.RequestName)
+	s.Equal("INTAKE_SUBMITTED", respStruct.Data.SystemIntake.Status)
+	s.Equal("NEW", respStruct.Data.SystemIntake.RequestType)
+	s.Equal(businessOwner, respStruct.Data.SystemIntake.BusinessOwner.Name)
+	s.Equal(businessOwnerComponent, respStruct.Data.SystemIntake.BusinessOwner.Component)
+	s.Nil(respStruct.Data.SystemIntake.BusinessNeed)
+	s.Nil(respStruct.Data.SystemIntake.BusinessCase)
 }
