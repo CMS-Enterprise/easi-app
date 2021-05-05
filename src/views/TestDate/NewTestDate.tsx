@@ -60,7 +60,7 @@ const NewTestDate = () => {
     const hasScore = values.score.isPresent;
     const score = values.score.value;
 
-    const confirmation = `
+    const submitConfirmation = `
       ${t('testDateForm.confirmation.date', { date: formatDate(date) })}
       ${hasScore ? t('testDateForm.confirmation.score', { score }) : ''}
       ${t('testDateForm.confirmation.create')}
@@ -75,10 +75,12 @@ const NewTestDate = () => {
           requestID: accessibilityRequestId
         }
       }
-    }).then(() => {
-      history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText: confirmation
-      });
+    }).then(result => {
+      if (!result.errors) {
+        history.push(`/508/requests/${accessibilityRequestId}`, {
+          submitConfirmation
+        });
+      }
     });
   };
 

@@ -41,7 +41,15 @@ const accessibility = {
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
-    remove: 'Remove this request from EASi'
+    remove: 'Remove this request from EASi',
+    modal: {
+      header: 'Confirm you want to remove {{requestName}}?',
+      subhead:
+        'You will not be able to access this request and its documents after it is removed.',
+      confirm: 'Remove request',
+      cancel: 'Keep request'
+    },
+    removeConfirmationText: '{{requestName}} successfully removed'
   },
   testDateForm: {
     header: {
@@ -51,6 +59,7 @@ const accessibility = {
     testTypeHeader: 'What type of test?',
     dateHeader: 'Test date',
     dateHelpText: 'For example: 4 28 2020',
+    scoreHelpText: 'The test score must be a number between 0 and 100',
     scoreHeader: 'Does this test have a score?',
     scoreValueHeader: 'Test Score',
     scoreValueSRHelpText: 'Enter the test score without the percentage symbol',

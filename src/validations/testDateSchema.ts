@@ -38,6 +38,14 @@ export const TestDateValidationSchema: any = Yup.object().shape({
         .trim()
         .required('Enter a test score')
         .matches(scoreRegex, 'The test score must be a number, like 85.5')
+        .test(
+          'score',
+          'The test score must be no less than 0 and no more than 100',
+          number => {
+            const float = parseFloat(number);
+            return float >= 0 && float <= 100;
+          }
+        )
     })
   })
 });

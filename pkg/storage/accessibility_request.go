@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -57,7 +58,7 @@ func (s *Store) CreateAccessibilityRequest(ctx context.Context, request *models.
 func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID) (*models.AccessibilityRequest, error) {
 	request := models.AccessibilityRequest{}
 
-	err := s.db.Get(&request, `SELECT * FROM accessibility_requests WHERE id=$1`, id)
+	err := s.db.Get(&request, `SELECT * FROM accessibility_requests WHERE id=$1 AND deleted_at IS NULL`, id)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
@@ -78,7 +79,7 @@ func (s *Store) FetchAccessibilityRequestByID(ctx context.Context, id uuid.UUID)
 func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]models.AccessibilityRequest, error) {
 	requests := []models.AccessibilityRequest{}
 
-	err := s.db.Select(&requests, `SELECT * FROM accessibility_requests`)
+	err := s.db.Select(&requests, `SELECT * FROM accessibility_requests WHERE deleted_at IS NULL`)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return requests, nil
@@ -91,4 +92,15 @@ func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]models.Access
 	}
 
 	return requests, nil
+}
+
+// DeleteAccessibilityRequest marks an accessibility request as deleted
+func (s *Store) DeleteAccessibilityRequest(ctx context.Context, id uuid.UUID) error {
+	const archiveAccessibilityRequestSQL = `UPDATE accessibility_requests
+		SET deleted_at = $2
+		WHERE id = $1
+`
+
+	_, err := s.db.Exec(archiveAccessibilityRequestSQL, id, time.Now().UTC())
+	return err
 }
