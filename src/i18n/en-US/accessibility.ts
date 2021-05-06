@@ -43,18 +43,18 @@ const accessibility = {
     other: 'Other request details',
     remove: 'Remove this request from EASi',
     modal: {
-      header: 'Confirm you want to remove {{requestName}}?',
+      header: 'Confirm you want to remove {{-requestName}}?',
       subhead:
         'You will not be able to access this request and its documents after it is removed.',
       confirm: 'Remove request',
       cancel: 'Keep request'
     },
-    removeConfirmationText: '{{requestName}} successfully removed'
+    removeConfirmationText: '{{-requestName}} successfully removed'
   },
   testDateForm: {
     header: {
-      create: 'Add a test date for {{requestName}}',
-      update: 'Update a test date for {{requestName}}'
+      create: 'Add a test date for {{-requestName}}',
+      update: 'Update a test date for {{-requestName}}'
     },
     testTypeHeader: 'What type of test?',
     dateHeader: 'Test date',
@@ -77,11 +77,11 @@ const accessibility = {
   },
   removeTestDate: {
     modalHeader:
-      'Confirm you want to remove Test {{testNumber}} {{testType}}, {{testDate}} from {{requestName}}',
+      'Confirm you want to remove Test {{testNumber}} {{testType}}, {{testDate}} from {{-requestName}}',
     modalText: 'This test date and score will be removed from the request page',
     modalRemoveButton: 'Remove test date',
     modalCancelButton: 'Keep test date',
-    confirmation: '{{date}} test date was removed from {{requestName}} page'
+    confirmation: '{{date}} test date was removed from {{-requestName}} page'
   },
   newRequestForm: {
     heading: 'Add a new request',
@@ -108,7 +108,7 @@ const accessibility = {
     info:
       'A request for 508 testing will be added to the list of 508 requests. An email will be sent to the Business Owner and the 508 team stating that a request has been added to the system.',
     submitBtn: 'Add a new request',
-    confirmation: '{{requestName}} was added to the 508 requests page'
+    confirmation: '{{-requestName}} was added to the 508 requests page'
   },
   documentType: {
     awardedVpat: 'Awarded VPAT',
