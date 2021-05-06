@@ -47,39 +47,6 @@ func (s ServicesTestSuite) TestBusinessCaseByIDFetcher() {
 	})
 }
 
-func (s ServicesTestSuite) TestBusinessCasesByEuaIDFetcher() {
-	logger := zap.NewNop()
-	fakeEuaID := "FAKE"
-	serviceConfig := NewConfig(logger, nil)
-	serviceConfig.clock = clock.NewMock()
-	authorize := func(context context.Context) (bool, error) { return true, nil }
-
-	s.Run("successfully fetches Business Cases by EUA ID without an error", func() {
-		fetch := func(ctx context.Context, euaID string) (models.BusinessCases, error) {
-			return models.BusinessCases{
-				models.BusinessCase{
-					EUAUserID: fakeEuaID,
-				},
-			}, nil
-		}
-		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(serviceConfig, fetch, authorize)
-		businessCases, err := fetchBusinessCasesByEuaID(context.Background(), fakeEuaID)
-		s.NoError(err)
-		s.Equal(fakeEuaID, businessCases[0].EUAUserID)
-	})
-
-	s.Run("returns query error when fetch fails", func() {
-		fetch := func(ctx context.Context, euaID string) (models.BusinessCases, error) {
-			return models.BusinessCases{}, errors.New("fetch failed")
-		}
-		fetchBusinessCasesByEuaID := NewFetchBusinessCasesByEuaID(serviceConfig, fetch, authorize)
-		businessCases, err := fetchBusinessCasesByEuaID(context.Background(), "FAKE")
-
-		s.IsType(&apperrors.QueryError{}, err)
-		s.Equal(models.BusinessCases{}, businessCases)
-	})
-}
-
 func (s ServicesTestSuite) TestBusinessCaseCreator() {
 	ctx := context.Background()
 	logger := zap.NewNop()
