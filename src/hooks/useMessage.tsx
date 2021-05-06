@@ -19,16 +19,16 @@ const MessageContext = createContext<
 // MessageProvider manages the state necessary for child components to
 // use the useMessage hook.
 const MessageProvider = ({ children }: { children: ReactNode }) => {
-  const [queuedMessage, showMessageOnNextPage] = useState<string>();
-  const [message, showMessage] = useState<string>();
+  const [queuedMessage, setQueuedMessage] = useState<string>();
+  const [message, setMessage] = useState<string>();
   const location = useLocation();
 
   const [lastPathname, setLastPathname] = useState(location.pathname);
 
   useEffect(() => {
     if (lastPathname !== location.pathname) {
-      showMessage(queuedMessage);
-      showMessageOnNextPage('');
+      setMessage(queuedMessage);
+      setQueuedMessage('');
       setLastPathname(location.pathname);
     }
   }, [message, queuedMessage, lastPathname, location.pathname]);
@@ -37,8 +37,8 @@ const MessageProvider = ({ children }: { children: ReactNode }) => {
     <MessageContext.Provider
       value={{
         message,
-        showMessage,
-        showMessageOnNextPage
+        showMessage: setMessage,
+        showMessageOnNextPage: setQueuedMessage
       }}
     >
       {children}
