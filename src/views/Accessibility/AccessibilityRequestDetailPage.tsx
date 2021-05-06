@@ -69,7 +69,7 @@ const AccessibilityRequestDetailPage = () => {
         }
       }
     }).then(response => {
-      if (response.errors && response.errors.length === 0) {
+      if (!response.errors) {
         history.push('/', {
           confirmationText: t('requestDetails.removeConfirmationText', {
             requestName
