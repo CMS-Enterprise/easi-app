@@ -19,6 +19,7 @@ type AccessibilityRequest {
   submittedAt: Time!
   system: System!
   testDates: [TestDate!]!
+  euaUserId: String!
 }
 
 """

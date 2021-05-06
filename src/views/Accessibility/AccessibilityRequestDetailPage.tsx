@@ -47,8 +47,10 @@ const AccessibilityRequestDetailPage = () => {
     DeleteAccessibilityRequest,
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
+  const userEuaId = useSelector((state: AppState) => state.auth.euaId);
 
   const requestName = data?.accessibilityRequest?.name || '';
+  const requestOwnerEuaId = data?.accessibilityRequest?.euaUserId || '';
   const systemName = data?.accessibilityRequest?.system.name || '';
   const submittedAt = data?.accessibilityRequest?.submittedAt || '';
   const lcid = data?.accessibilityRequest?.system.lcid;
@@ -175,13 +177,15 @@ const AccessibilityRequestDetailPage = () => {
                 <dd className="margin-0 margin-bottom-3">{lcid}</dd>
               </dl>
             </div>
-            <button
-              type="button"
-              className="accessibility-request__remove-request"
-              onClick={() => setModalOpen(true)}
-            >
-              {t('requestDetails.remove')}
-            </button>
+            {userEuaId === requestOwnerEuaId && (
+              <button
+                type="button"
+                className="accessibility-request__remove-request"
+                onClick={() => setModalOpen(true)}
+              >
+                {t('requestDetails.remove')}
+              </button>
+            )}
             <Modal isOpen={isModalOpen} closeModal={() => setModalOpen(false)}>
               <PageHeading
                 headingLevel="h1"
