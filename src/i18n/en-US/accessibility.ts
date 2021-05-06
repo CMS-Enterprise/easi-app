@@ -117,6 +117,64 @@ const accessibility = {
     testResults: 'Test results',
     remediationPlan: 'Remediation plan',
     other: 'Other'
+  },
+  testingStepsOverview: {
+    heading: 'Request 508 testing for your application',
+    description:
+      'Most applications will need to go through 508 testing unless a project team needs an exception.',
+    stepListHeading: 'Steps involved in 508 testing',
+    fillForm: {
+      heading: 'Fill the request form',
+      description: 'Tell the 508 team which application you plan to test'
+    },
+    prepareVPAT: {
+      heading: 'Prepare the VPAT and Test plan',
+      fillOutVPAT:
+        '<0>Fill in the VPAT and Test plan templates (opens in new tab)</0>. These documents will help the 508 team prepare for testing. Uploaded your completed documents to EASi for the 508 team to review.',
+      changesVPAT:
+        'The 508 team will get back to you via email about any changes needed prior to testing.'
+    },
+    testingSession: {
+      heading: 'Attend the testing session',
+      description:
+        'The 508 team will work with you to schedule a testing session and you will test your application together. Depending on the results, you may need to address any issues and retest.'
+    },
+    results: {
+      heading: 'Receive results',
+      description: 'Your test score will determine your next steps:',
+      score: {
+        above99: {
+          heading: '99% and above',
+          description:
+            '508 testing is complete and you can release your application.'
+        },
+        interval75: {
+          heading: 'Between 99% and 75%',
+          description:
+            'You can release your application but you will need fix the issues and retest within a year. You need to submit a <1>remediation plan</1> as a part of retesting.'
+        },
+        below75: {
+          heading: '75% and below',
+          description:
+            'You cannot release your application. You need to fix all issues right away and retest.'
+        }
+      }
+    },
+    exception: {
+      label: 'What if I need an exception from 508 testing?',
+      description:
+        'On rare occasions, the Section 508 team may grant a testing exception for software, systems or applications. The reasons include:',
+      reasons: [
+        'National Security System',
+        'Software/System acquired by a contractor, or incidental to a contract',
+        'Undue Burden for CMS (e.g. - extreme cost)',
+        'Fundamental alteration'
+      ],
+      exceptionFineprint:
+        'Exceptions are only valid for one release. Future releases will be re-evaluated for additional exceptions.',
+      contact:
+        'To apply for an exception or for more information, contact the CMS Section 508 team at <1>CMS_Section508@cms.hhs.gov<1/>.'
+    }
   }
 };
 
