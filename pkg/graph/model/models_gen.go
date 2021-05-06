@@ -123,6 +123,14 @@ type DeleteAccessibilityRequestDocumentPayload struct {
 	ID *uuid.UUID `json:"id"`
 }
 
+type DeleteAccessibilityRequestInput struct {
+	ID uuid.UUID `json:"id"`
+}
+
+type DeleteAccessibilityRequestPayload struct {
+	ID *uuid.UUID `json:"id"`
+}
+
 type DeleteTestDateInput struct {
 	ID uuid.UUID `json:"id"`
 }
@@ -290,8 +298,10 @@ type Role string
 const (
 	// A 508 Tester
 	RoleEasi508Tester Role = "EASI_508_TESTER"
-	// A 508 request owner
+	// A 508 request program team member
 	RoleEasi508User Role = "EASI_508_USER"
+	// A 508 request program team member or tester
+	RoleEasi508TesterOrUser Role = "EASI_508_TESTER_OR_USER"
 	// A member of the GRT
 	RoleEasiGovteam Role = "EASI_GOVTEAM"
 	// A generic EASi user
@@ -301,13 +311,14 @@ const (
 var AllRole = []Role{
 	RoleEasi508Tester,
 	RoleEasi508User,
+	RoleEasi508TesterOrUser,
 	RoleEasiGovteam,
 	RoleEasiUser,
 }
 
 func (e Role) IsValid() bool {
 	switch e {
-	case RoleEasi508Tester, RoleEasi508User, RoleEasiGovteam, RoleEasiUser:
+	case RoleEasi508Tester, RoleEasi508User, RoleEasi508TesterOrUser, RoleEasiGovteam, RoleEasiUser:
 		return true
 	}
 	return false
