@@ -84,31 +84,6 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 	return &businessCase, nil
 }
 
-// FetchBusinessCasesByEuaID queries the DB for a list of business case matching the given EUA ID
-func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (models.BusinessCases, error) {
-	businessCases := []models.BusinessCase{}
-	const fetchBusinessCaseSQL = `
-		SELECT
-			business_cases.*,
-			json_agg(estimated_lifecycle_costs) as lifecycle_cost_lines
-		FROM
-			business_cases
-			LEFT JOIN estimated_lifecycle_costs ON business_cases.id = estimated_lifecycle_costs.business_case
-		WHERE
-			business_cases.eua_user_id = $1
-		GROUP BY estimated_lifecycle_costs.business_case, business_cases.id`
-
-	err := s.db.Select(&businessCases, fetchBusinessCaseSQL, euaID)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business cases %s", err),
-			zap.String("euaID", euaID),
-		)
-		return nil, err
-	}
-	return businessCases, nil
-}
-
 func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCase *models.BusinessCase) error {
 	const createEstimatedLifecycleCostSQL = `
 		INSERT INTO estimated_lifecycle_costs (

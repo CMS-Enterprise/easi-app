@@ -181,7 +181,7 @@ const governanceReviewTeam = {
   },
   adminLeads: {
     assignModal: {
-      header: 'Choose an Admin Lead for {{requestName}}',
+      header: 'Choose an Admin Lead for {{-requestName}}',
       save: 'Save',
       noChanges: "Don't make changes and return to request page"
     },
