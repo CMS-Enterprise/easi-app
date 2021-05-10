@@ -127,34 +127,6 @@ func NewCreateBusinessCase(
 	}
 }
 
-// NewFetchBusinessCasesByEuaID is a service to fetch a list of business cases by EUA ID
-func NewFetchBusinessCasesByEuaID(
-	config Config,
-	fetch func(c context.Context, euaID string) (models.BusinessCases, error),
-	authorize func(c context.Context) (bool, error),
-) func(c context.Context, euaID string) (models.BusinessCases, error) {
-	return func(ctx context.Context, euaID string) (models.BusinessCases, error) {
-		ok, err := authorize(ctx)
-		if err != nil {
-			appcontext.ZLogger(ctx).Error("failed to authorize fetch system intakes")
-			return models.BusinessCases{}, err
-		}
-		if !ok {
-			return models.BusinessCases{}, &apperrors.UnauthorizedError{Err: err}
-		}
-		businessCases, err := fetch(ctx, euaID)
-		if err != nil {
-			appcontext.ZLogger(ctx).Error("failed to fetch business cases")
-			return models.BusinessCases{}, &apperrors.QueryError{
-				Err:       err,
-				Model:     "business cases",
-				Operation: "fetch",
-			}
-		}
-		return businessCases, nil
-	}
-}
-
 // NewUpdateBusinessCase is a service to create a business case
 func NewUpdateBusinessCase(
 	config Config,
