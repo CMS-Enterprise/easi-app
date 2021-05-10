@@ -33,7 +33,7 @@ const AccessibilityTestingStepsOverview = () => {
               {t('testingStepsOverview.description')}
             </p>
           </div>
-          <div className="tablet:grid-col-8 margin-top-6">
+          <div className="tablet:grid-col-6 margin-top-6">
             <h2>{t('testingStepsOverview.stepListHeading')}</h2>
             <StepList>
               <Step>
@@ -55,6 +55,7 @@ const AccessibilityTestingStepsOverview = () => {
                     i18nKey="accessibility:testingStepsOverview.prepareVPAT.fillOutVPAT"
                     className="margin-0"
                   >
+                    indexZero
                     <Link
                       href="/vpat/link"
                       target="_blank"
@@ -62,7 +63,7 @@ const AccessibilityTestingStepsOverview = () => {
                     >
                       vpatFormLink
                     </Link>
-                    indexOne
+                    indexTwo
                   </Trans>
                   <p className="margin-bottom-0">
                     {t('testingStepsOverview.prepareVPAT.changesVPAT')}
@@ -102,17 +103,9 @@ const AccessibilityTestingStepsOverview = () => {
                       )}
                     </dt>
                     <dd className="margin-left-0 margin-bottom-2">
-                      <Trans i18nKey="accessibility:testingStepsOverview.results.score.interval75.description">
-                        indexZero
-                        <Link
-                          href="/external"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          remediationPlan
-                        </Link>
-                        indexTwo
-                      </Trans>
+                      {t(
+                        'testingStepsOverview.results.score.interval75.description'
+                      )}
                     </dd>
                     <dt className="text-bold margin-bottom-1">
                       {t('testingStepsOverview.results.score.below75.heading')}
