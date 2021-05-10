@@ -357,24 +357,3 @@ func NewCreateActionUpdateStatus(
 		return intake, err
 	}
 }
-
-// NewFetchActionsByRequestID returns a function that fetches actions for a specific request
-func NewFetchActionsByRequestID(
-	authorize func(context.Context) (bool, error),
-	fetch func(context.Context, uuid.UUID) ([]models.Action, error),
-) func(context.Context, uuid.UUID) ([]models.Action, error) {
-	return func(ctx context.Context, intakeID uuid.UUID) ([]models.Action, error) {
-		ok, err := authorize(ctx)
-		if err != nil {
-			return nil, err
-		}
-		if !ok {
-			return nil, &apperrors.UnauthorizedError{Err: errors.New("failed to authorize fetch actions")}
-		}
-		fetchedActions, err := fetch(ctx, intakeID)
-		if err != nil {
-			return nil, err
-		}
-		return fetchedActions, nil
-	}
-}

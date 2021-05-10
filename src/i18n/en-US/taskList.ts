@@ -1,10 +1,10 @@
 const taskList = {
   withdraw_modal: {
-    header: 'Confirm you want to remove {{requestName}}.',
+    header: 'Confirm you want to remove {{-requestName}}.',
     warning: 'You will lose any information you have filled in.',
     confirm: 'Remove request',
     cancel: 'Cancel',
-    confirmationText_name: 'The request for {{requestName}} has been removed',
+    confirmationText_name: 'The request for {{-requestName}} has been removed',
     confirmationText_noName: 'The request has been removed'
   },
   decision: {
