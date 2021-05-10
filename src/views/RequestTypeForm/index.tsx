@@ -92,7 +92,7 @@ const RequestTypeForm = () => {
             <Link to="/">Home</Link>
             <i className="fa fa-angle-right margin-x-05" aria-hidden />
           </li>
-          <li aria-current="location">Make a system request</li>
+          <li aria-current="location">Make a request</li>
         </BreadcrumbNav>
         <h1 className="font-heading-2xl margin-top-4">
           {t('requestTypeForm.heading')}

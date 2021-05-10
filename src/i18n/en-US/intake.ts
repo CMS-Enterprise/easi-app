@@ -111,7 +111,7 @@ const intake = {
     adminLead: 'Admin Lead'
   },
   requestTypeForm: {
-    heading: 'Make a System Request',
+    heading: 'Make a Request',
     subheading: 'What is this request for?',
     info:
       'If you are not sure send an email to the <1>IT Navigator Mailbox</1> describing your request and a navigator will get back to you.',
