@@ -26,6 +26,7 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
 import { initialAccessibilityRequestFormData } from 'data/accessibility';
+import useMessage from 'hooks/useMessage';
 import { AccessibilityRequestForm } from 'types/accessibility';
 import flattenErrors from 'utils/flattenErrors';
 import accessibilitySchema from 'validations/accessibilitySchema';
@@ -33,6 +34,8 @@ import accessibilitySchema from 'validations/accessibilitySchema';
 const Create = () => {
   const history = useHistory();
   const { t } = useTranslation('accessibility');
+  const { showMessageOnNextPage } = useMessage();
+
   const { data, loading } = useQuery<GetSystems>(GetSystemsQuery, {
     variables: {
       // TODO: Is there a way to make this all? or change the query?
@@ -50,11 +53,12 @@ const Create = () => {
         }
       }
     }).then(() => {
-      history.push('/', {
-        confirmationText: t('newRequestForm.confirmation', {
+      showMessageOnNextPage(
+        t('newRequestForm.confirmation', {
           requestName: values.requestName
         })
-      });
+      );
+      history.push('/');
     });
   };
 

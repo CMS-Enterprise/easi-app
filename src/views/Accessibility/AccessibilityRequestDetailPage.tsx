@@ -21,6 +21,7 @@ import AccessibilityDocumentsList from 'components/AccessibilityDocumentsList';
 import Modal from 'components/Modal';
 import PageHeading from 'components/PageHeading';
 import TestDateCard from 'components/TestDateCard';
+import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import { formatDate } from 'utils/date';
 import user from 'utils/user';
@@ -31,6 +32,7 @@ import './index.scss';
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
+  const { showMessage, showMessageOnNextPage } = useMessage();
   const history = useHistory();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
@@ -68,11 +70,12 @@ const AccessibilityRequestDetailPage = () => {
       }
     }).then(response => {
       if (response.errors && response.errors.length === 0) {
-        history.push('/', {
-          confirmationText: t('requestDetails.removeConfirmationText', {
+        showMessageOnNextPage(
+          t('requestDetails.removeConfirmationText', {
             requestName
           })
-        });
+        );
+        history.push('/');
       }
     });
   };
@@ -115,6 +118,7 @@ const AccessibilityRequestDetailPage = () => {
             <AccessibilityDocumentsList
               documents={documents}
               requestName={requestName}
+              setConfirmationText={showMessage}
               refetchRequest={refetch}
             />
           </div>
@@ -140,6 +144,7 @@ const AccessibilityRequestDetailPage = () => {
                     requestId={accessibilityRequestId}
                     isEditableDeletable={isAccessibilityTeam}
                     refetchRequest={refetch}
+                    setConfirmationText={showMessage}
                   />
                 ))}
               {isAccessibilityTeam && (

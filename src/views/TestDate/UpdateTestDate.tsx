@@ -11,6 +11,7 @@ import {
 import { UpdateTestDate } from 'queries/types/UpdateTestDate';
 import UpdateTestDateQuery from 'queries/UpdateTestDateQuery';
 
+import useMessage from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
@@ -39,6 +40,7 @@ const TestDate = () => {
     }
   );
   const history = useHistory();
+  const { showMessageOnNextPage } = useMessage();
 
   const test: TestDateType = data?.accessibilityRequest?.testDates.find(
     date => date.id === testDateId
@@ -64,7 +66,7 @@ const TestDate = () => {
     const hasScore = values.score.isPresent;
     const score = values.score.value;
 
-    const confirmationText = `
+    const confirmation = `
       ${t('testDateForm.confirmation.date', { date: formatDate(date) })}
       ${hasScore ? t('testDateForm.confirmation.score', { score }) : ''}
       ${t('testDateForm.confirmation.update')}
@@ -80,9 +82,8 @@ const TestDate = () => {
         }
       }
     }).then(() => {
-      history.push(`/508/requests/${accessibilityRequestId}`, {
-        confirmationText
-      });
+      showMessageOnNextPage(confirmation);
+      history.push(`/508/requests/${accessibilityRequestId}`);
     });
   };
 
@@ -91,14 +92,16 @@ const TestDate = () => {
   }
 
   return (
-    <Form
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      error={mutateResult.error}
-      requestName={data?.accessibilityRequest?.name}
-      requestId={accessibilityRequestId}
-      formType="update"
-    />
+    <>
+      <Form
+        initialValues={initialValues}
+        onSubmit={onSubmit}
+        error={mutateResult.error}
+        requestName={data?.accessibilityRequest?.name}
+        requestId={accessibilityRequestId}
+        formType="update"
+      />
+    </>
   );
 };
 
