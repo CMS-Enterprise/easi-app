@@ -71,8 +71,7 @@ const AccessibilityRequestDetailPage = () => {
         }
       }
     }).then(response => {
-      console.log(response.errors);
-      if (response.errors && response.errors.length === 0) {
+      if (!response.errors) {
         showMessageOnNextPage(
           t('requestDetails.removeConfirmationText', {
             requestName
