@@ -11,6 +11,7 @@ import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
 import user from 'utils/user';
 import AccessibilityRequestDetailPage from 'views/Accessibility/AccessibilityRequestDetailPage';
+import AccessibilityTestingStepsOverview from 'views/Accessibility/AccessibilityTestingStepsOverview';
 import Create from 'views/Accessibility/AccessibiltyRequest/Create';
 import AccessibilityRequestsDocumentsNew from 'views/Accessibility/AccessibiltyRequest/Documents/New';
 import List from 'views/Accessibility/AccessibiltyRequest/List';
@@ -34,6 +35,16 @@ const AllRequests = (
     component={List}
   />
 );
+
+const AccessibilityTestingOverview = (
+  <SecureRoute
+    key="508-request-testing-overview"
+    path="/508/requests/steps-involved"
+    exact
+    component={AccessibilityTestingStepsOverview}
+  />
+);
+
 const NewDocument = (
   <SecureRoute
     key="upload-508-document"
@@ -55,6 +66,7 @@ const NewTestDate = (
     component={NewTestDateView}
   />
 );
+
 const RequestDetails = (
   <SecureRoute
     key="508-request-detail"
@@ -95,6 +107,7 @@ const Accessibility = () => {
           {[
             NewRequest,
             AllRequests,
+            AccessibilityTestingOverview,
             NewDocument,
             UpdateTestDate,
             NewTestDate,
@@ -106,7 +119,13 @@ const Accessibility = () => {
     }
     return (
       <PageTemplate>
-        {[NewRequest, NewDocument, RequestDetails, Default]}
+        {[
+          NewRequest,
+          AccessibilityTestingOverview,
+          NewDocument,
+          RequestDetails,
+          Default
+        ]}
       </PageTemplate>
     );
   }

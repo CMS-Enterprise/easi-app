@@ -2,11 +2,7 @@ import React from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link } from '@trussworks/react-uswds';
 
-import Footer from 'components/Footer';
-import Header from 'components/Header';
-import MainContent from 'components/MainContent';
 import PageHeading from 'components/PageHeading';
-import PageWrapper from 'components/PageWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { Step, StepBody, StepHeading, StepList } from 'components/StepList';
 
@@ -23,131 +19,118 @@ const AccessibilityTestingStepsOverview = () => {
   );
 
   return (
-    <PageWrapper className="accessibility-testing-overview">
-      <Header />
-      <MainContent className="margin-bottom-5">
-        <div className="grid-container">
-          <div className="tablet:grid-col-10">
-            <PageHeading>{t('testingStepsOverview.heading')}</PageHeading>
-            <p className="accessibility-testing-overview__description">
-              {t('testingStepsOverview.description')}
+    <div className="grid-container">
+      <div className="tablet:grid-col-10">
+        <PageHeading>{t('testingStepsOverview.heading')}</PageHeading>
+        <p className="accessibility-testing-overview__description">
+          {t('testingStepsOverview.description')}
+        </p>
+      </div>
+      <div className="tablet:grid-col-6 margin-top-6">
+        <StepList>
+          <Step>
+            <StepHeading>
+              {t('testingStepsOverview.fillForm.heading')}
+            </StepHeading>
+            <StepBody>
+              <p className="margin-0">
+                {t('testingStepsOverview.fillForm.description')}
+              </p>
+            </StepBody>
+          </Step>
+          <Step>
+            <StepHeading>
+              {t('testingStepsOverview.prepareVPAT.heading')}
+            </StepHeading>
+            <StepBody>
+              <Trans
+                i18nKey="accessibility:testingStepsOverview.prepareVPAT.fillOutVPAT"
+                className="margin-0"
+              >
+                indexZero
+                <Link
+                  href="/vpat/link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  vpatFormLink
+                </Link>
+                indexTwo
+              </Trans>
+              <p className="margin-bottom-0">
+                {t('testingStepsOverview.prepareVPAT.changesVPAT')}
+              </p>
+            </StepBody>
+          </Step>
+          <Step>
+            <StepHeading>
+              {t('testingStepsOverview.testingSession.heading')}
+            </StepHeading>
+            <StepBody>
+              <p className="margin-0">
+                {t('testingStepsOverview.testingSession.description')}
+              </p>
+            </StepBody>
+          </Step>
+          <Step>
+            <StepHeading>
+              {t('testingStepsOverview.results.heading')}
+            </StepHeading>
+            <StepBody>
+              <p className="margin-0">
+                {t('testingStepsOverview.results.description')}
+              </p>
+              <dl title="508 test scores">
+                <dt className="text-bold margin-bottom-1">
+                  {t('testingStepsOverview.results.score.above99.heading')}
+                </dt>
+                <dd className="margin-left-0 margin-bottom-2">
+                  {t('testingStepsOverview.results.score.above99.description')}
+                </dd>
+                <dt className="text-bold margin-bottom-1">
+                  {t('testingStepsOverview.results.score.interval75.heading')}
+                </dt>
+                <dd className="margin-left-0 margin-bottom-2">
+                  {t(
+                    'testingStepsOverview.results.score.interval75.description'
+                  )}
+                </dd>
+                <dt className="text-bold margin-bottom-1">
+                  {t('testingStepsOverview.results.score.below75.heading')}
+                </dt>
+                <dd className="margin-left-0">
+                  {t('testingStepsOverview.results.score.below75.description')}
+                </dd>
+              </dl>
+            </StepBody>
+          </Step>
+        </StepList>
+        <CollapsableLink
+          id="easi-508-testing-exception"
+          label={t('testingStepsOverview.exception.label')}
+          styleLeftBar={false}
+        >
+          <div className="line-height-body-5">
+            <p className="margin-top-0">
+              {t('testingStepsOverview.exception.description')}
+            </p>
+            <ul>
+              {exceptionReasons.map(reason => (
+                <li key={reason}>{reason}</li>
+              ))}
+            </ul>
+            <p>{t('testingStepsOverview.exception.exceptionFineprint')}</p>
+            <p>
+              <Trans i18nKey="accessibility:testingStepsOverview.exception.contact">
+                indexZero
+                <Link href="mailto:CMS_Section508@cms.hhs.gov">email</Link>
+                indexTwo
+              </Trans>
             </p>
           </div>
-          <div className="tablet:grid-col-6 margin-top-6">
-            <h2>{t('testingStepsOverview.stepListHeading')}</h2>
-            <StepList>
-              <Step>
-                <StepHeading>
-                  {t('testingStepsOverview.fillForm.heading')}
-                </StepHeading>
-                <StepBody>
-                  <p className="margin-0">
-                    {t('testingStepsOverview.fillForm.description')}
-                  </p>
-                </StepBody>
-              </Step>
-              <Step>
-                <StepHeading>
-                  {t('testingStepsOverview.prepareVPAT.heading')}
-                </StepHeading>
-                <StepBody>
-                  <Trans
-                    i18nKey="accessibility:testingStepsOverview.prepareVPAT.fillOutVPAT"
-                    className="margin-0"
-                  >
-                    indexZero
-                    <Link
-                      href="/vpat/link"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      vpatFormLink
-                    </Link>
-                    indexTwo
-                  </Trans>
-                  <p className="margin-bottom-0">
-                    {t('testingStepsOverview.prepareVPAT.changesVPAT')}
-                  </p>
-                </StepBody>
-              </Step>
-              <Step>
-                <StepHeading>
-                  {t('testingStepsOverview.testingSession.heading')}
-                </StepHeading>
-                <StepBody>
-                  <p className="margin-0">
-                    {t('testingStepsOverview.testingSession.description')}
-                  </p>
-                </StepBody>
-              </Step>
-              <Step>
-                <StepHeading>
-                  {t('testingStepsOverview.results.heading')}
-                </StepHeading>
-                <StepBody>
-                  <p className="margin-0">
-                    {t('testingStepsOverview.results.description')}
-                  </p>
-                  <dl title="508 test scores">
-                    <dt className="text-bold margin-bottom-1">
-                      {t('testingStepsOverview.results.score.above99.heading')}
-                    </dt>
-                    <dd className="margin-left-0 margin-bottom-2">
-                      {t(
-                        'testingStepsOverview.results.score.above99.description'
-                      )}
-                    </dd>
-                    <dt className="text-bold margin-bottom-1">
-                      {t(
-                        'testingStepsOverview.results.score.interval75.heading'
-                      )}
-                    </dt>
-                    <dd className="margin-left-0 margin-bottom-2">
-                      {t(
-                        'testingStepsOverview.results.score.interval75.description'
-                      )}
-                    </dd>
-                    <dt className="text-bold margin-bottom-1">
-                      {t('testingStepsOverview.results.score.below75.heading')}
-                    </dt>
-                    <dd className="margin-left-0">
-                      {t(
-                        'testingStepsOverview.results.score.below75.description'
-                      )}
-                    </dd>
-                  </dl>
-                </StepBody>
-              </Step>
-            </StepList>
-            <CollapsableLink
-              id="easi-508-testing-exception"
-              label={t('testingStepsOverview.exception.label')}
-              styleLeftBar={false}
-            >
-              <div className="line-height-body-5">
-                <p className="margin-top-0">
-                  {t('testingStepsOverview.exception.description')}
-                </p>
-                <ul>
-                  {exceptionReasons.map(reason => (
-                    <li key={reason}>{reason}</li>
-                  ))}
-                </ul>
-                <p>{t('testingStepsOverview.exception.exceptionFineprint')}</p>
-                <p>
-                  <Trans i18nKey="accessibility:testingStepsOverview.exception.contact">
-                    indexZero
-                    <Link href="mailto:CMS_Section508@cms.hhs.gov">email</Link>
-                    indexTwo
-                  </Trans>
-                </p>
-              </div>
-            </CollapsableLink>
-          </div>
-        </div>
-      </MainContent>
-      <Footer />
-    </PageWrapper>
+        </CollapsableLink>
+      </div>
+    </div>
   );
 };
 
