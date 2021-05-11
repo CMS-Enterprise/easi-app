@@ -55,6 +55,7 @@ type ComplexityRoot struct {
 	AccessibilityRequest struct {
 		CreatedAt        func(childComplexity int) int
 		Documents        func(childComplexity int) int
+		EUAUserID        func(childComplexity int) int
 		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
 		RelevantTestDate func(childComplexity int) int
@@ -532,6 +533,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AccessibilityRequest.Documents(childComplexity), true
+
+	case "AccessibilityRequest.euaUserId":
+		if e.complexity.AccessibilityRequest.EUAUserID == nil {
+			break
+		}
+
+		return e.complexity.AccessibilityRequest.EUAUserID(childComplexity), true
 
 	case "AccessibilityRequest.id":
 		if e.complexity.AccessibilityRequest.ID == nil {
@@ -2261,6 +2269,7 @@ type AccessibilityRequest {
   submittedAt: Time!
   system: System!
   testDates: [TestDate!]!
+  euaUserId: String!
 }
 
 """
@@ -3665,6 +3674,41 @@ func (ec *executionContext) _AccessibilityRequest_testDates(ctx context.Context,
 	res := resTmp.([]*models.TestDate)
 	fc.Result = res
 	return ec.marshalNTestDate2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐTestDateᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _AccessibilityRequest_euaUserId(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequest) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "AccessibilityRequest",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.EUAUserID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _AccessibilityRequestDocument_documentType(ctx context.Context, field graphql.CollectedField, obj *models.AccessibilityRequestDocument) (ret graphql.Marshaler) {
@@ -13022,6 +13066,11 @@ func (ec *executionContext) _AccessibilityRequest(ctx context.Context, sel ast.S
 				}
 				return res
 			})
+		case "euaUserId":
+			out.Values[i] = ec._AccessibilityRequest_euaUserId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
