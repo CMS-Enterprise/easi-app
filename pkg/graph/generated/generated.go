@@ -2333,6 +2333,23 @@ type CreateAccessibilityRequestPayload {
   userErrors: [UserError!]
 }
 
+enum AccessibilityRequestDeletionReason {
+  INCORRECT_APPLICATION_AND_LIFECYCLE_ID
+  NO_TESTING_NEEDED
+  OTHER
+
+  " For 508 requests that predate collecting this field "
+  UNKNOWN
+}
+
+input DeleteAccessibilityRequestInput {
+  id: UUID!
+  reason: AccessibilityRequestDeletionReason!
+}
+type DeleteAccessibilityRequestPayload {
+  id: UUID
+}
+
 input GeneratePresignedUploadURLInput {
   fileName: String!
   mimeType: String!
@@ -2416,6 +2433,14 @@ type CreateAccessibilityRequestDocumentPayload {
   accessibilityRequestDocument: AccessibilityRequestDocument
   userErrors: [UserError!]
 }
+
+input DeleteAccessibilityRequestDocumentInput {
+  id: UUID!
+}
+type DeleteAccessibilityRequestDocumentPayload {
+  id: UUID
+}
+
 
 """
 A solution proposal within a business case
@@ -2769,20 +2794,6 @@ type UpdateSystemIntakePayload {
 input BasicActionInput {
   feedback: String!
   intakeId: UUID!
-}
-
-input DeleteAccessibilityRequestDocumentInput {
-  id: UUID!
-}
-type DeleteAccessibilityRequestDocumentPayload {
-  id: UUID
-}
-
-input DeleteAccessibilityRequestInput {
-  id: UUID!
-}
-type DeleteAccessibilityRequestPayload {
-  id: UUID
 }
 
 type Mutation {
@@ -12642,6 +12653,14 @@ func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestInput(ctx co
 			if err != nil {
 				return it, err
 			}
+		case "reason":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
+			it.Reason, err = ec.unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDeletionReason(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -15263,6 +15282,16 @@ func (ec *executionContext) marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgo
 		return graphql.Null
 	}
 	return ec._AccessibilityRequest(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDeletionReason(ctx context.Context, v interface{}) (model.AccessibilityRequestDeletionReason, error) {
+	var res model.AccessibilityRequestDeletionReason
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDeletionReason(ctx context.Context, sel ast.SelectionSet, v model.AccessibilityRequestDeletionReason) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.AccessibilityRequestDocument) graphql.Marshaler {

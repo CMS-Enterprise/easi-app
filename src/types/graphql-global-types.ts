@@ -7,6 +7,13 @@
 // START Enums and Input Objects
 //==============================================================
 
+export enum AccessibilityRequestDeletionReason {
+  INCORRECT_APPLICATION_AND_LIFECYCLE_ID = "INCORRECT_APPLICATION_AND_LIFECYCLE_ID",
+  NO_TESTING_NEEDED = "NO_TESTING_NEEDED",
+  OTHER = "OTHER",
+  UNKNOWN = "UNKNOWN",
+}
+
 export enum AccessibilityRequestDocumentCommonType {
   AWARDED_VPAT = "AWARDED_VPAT",
   OTHER = "OTHER",
@@ -125,6 +132,7 @@ export interface DeleteAccessibilityRequestDocumentInput {
 
 export interface DeleteAccessibilityRequestInput {
   id: UUID;
+  reason: AccessibilityRequestDeletionReason;
 }
 
 export interface DeleteTestDateInput {
