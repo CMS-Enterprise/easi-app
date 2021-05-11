@@ -122,7 +122,6 @@ const accessibility = {
     heading: 'Steps involved in 508 testing',
     description:
       'Here is an overview of the 508 process for testing your application.',
-    stepListHeading: 'Steps involved in 508 testing',
     fillForm: {
       heading: 'Fill the request form in EASi',
       description: 'Tell the 508 team which application you plan to test.'

@@ -11,7 +11,6 @@ import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import { MessageProvider } from 'hooks/useMessage';
 import Accessibility from 'views/Accessibility';
-import AccessibilityTestingStepsOverview from 'views/Accessibility/AccessibilityTestingStepsOverview';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
@@ -55,10 +54,6 @@ const AppRoutes = () => {
       <SecureRoute path="/user-diagnostics" component={UserInfo} />
 
       {/* 508 / Accessibility Team Routes */}
-      <Route
-        path="/508/requests/steps-involved"
-        component={AccessibilityTestingStepsOverview}
-      />
       <SecureRoute path="/508" component={Accessibility} />
 
       {/* GRT/GRB Routes */}
