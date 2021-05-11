@@ -73,11 +73,13 @@ const accessibility = {
       score: ' with score {{score}}%',
       create: ' was added',
       update: ' was updated'
-    }
+    },
+    inital: 'Initial',
+    remediation: 'Remediation'
   },
   removeTestDate: {
     modalHeader:
-      'Confirm you want to remove Test {{testNumber}} {{testType}}, {{testDate}} from {{-requestName}}',
+      'Confirm you want to remove {{testType}}, {{testDate}} from {{-requestName}}',
     modalText: 'This test date and score will be removed from the request page',
     modalRemoveButton: 'Remove test date',
     modalCancelButton: 'Keep test date',
