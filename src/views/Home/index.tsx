@@ -33,6 +33,13 @@ const Home = () => {
           // Changed GRT table from grid-container to just slight margins. This is take up
           // entire screen to better fit the more expansive data in the table.
           <div className="padding-x-4">
+            {message && (
+              <div className="grid-container margin-top-6">
+                <Alert type="success" slim role="alert">
+                  {message}
+                </Alert>
+              </div>
+            )}
             <RequestRepository />
           </div>
         );
@@ -45,6 +52,13 @@ const Home = () => {
       if (user.isBasicUser(userGroups)) {
         return (
           <div className="grid-container">
+            {message && (
+              <div className="grid-container margin-top-6">
+                <Alert type="success" slim role="alert">
+                  {message}
+                </Alert>
+              </div>
+            )}
             <div className="margin-y-6">
               <SystemIntakeBanners />
             </div>
@@ -63,16 +77,7 @@ const Home = () => {
   return (
     <PageWrapper>
       <Header />
-      <MainContent className="margin-bottom-5">
-        {message && (
-          <div className="grid-container margin-top-6">
-            <Alert type="success" slim role="alert">
-              {message}
-            </Alert>
-          </div>
-        )}
-        {renderView()}
-      </MainContent>
+      <MainContent className="margin-bottom-5">{renderView()}</MainContent>
       <Footer />
     </PageWrapper>
   );
