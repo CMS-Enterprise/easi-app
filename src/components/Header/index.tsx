@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
 import classnames from 'classnames';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import UsGovBanner from 'components/UsGovBanner';
 import { localAuthStorageKey } from 'constants/localAuth';
@@ -23,6 +24,7 @@ export const Header = ({ children }: HeaderProps) => {
   const [isMobileSideNavExpanded, setIsMobileSideNavExpanded] = useState(false);
   const dropdownNode = useRef<any>();
   const mobileSideNav = useRef<any>();
+  const flags = useFlags();
 
   useEffect(() => {
     let isMounted = true;
@@ -134,6 +136,11 @@ export const Header = ({ children }: HeaderProps) => {
                   <UserAction link="/governance-overview">
                     {t('header:addSystem')}
                   </UserAction>
+                  {flags.add508Request && (
+                    <UserAction link="/508/requests/new">
+                      {t('header:add508Request')}
+                    </UserAction>
+                  )}
                   <UserAction
                     onClick={() => {
                       localStorage.removeItem(localAuthStorageKey);

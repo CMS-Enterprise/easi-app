@@ -8,12 +8,8 @@ import {
 } from 'data/systemIntake';
 import {
   archiveSystemIntake,
-  fetchIntakeNotes,
   fetchSystemIntake,
-  issueLifecycleIdForSystemIntake,
-  postIntakeNote,
   postSystemIntake,
-  rejectSystemIntake,
   saveSystemIntake
 } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
@@ -95,123 +91,9 @@ function* deleteSystemIntake(action: Action<any>) {
   }
 }
 
-type lifecycleIdData = {
-  lcidExpiresAt: string;
-  decisionNextSteps?: string;
-  lcidScope: string;
-  lcid: string;
-};
-
-function postLifecycleId({
-  id,
-  lcidPayload
-}: {
-  id: string;
-  lcidPayload: lifecycleIdData;
-}) {
-  return axios.post(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}/lcid`,
-    lcidPayload
-  );
-}
-
-function* issueLifecycleId(action: Action<any>) {
-  try {
-    yield put(issueLifecycleIdForSystemIntake.request());
-    const response = yield call(postLifecycleId, action.payload);
-    yield put(issueLifecycleIdForSystemIntake.success(response.data));
-  } catch (error) {
-    yield put(issueLifecycleIdForSystemIntake.failure(error.message));
-  } finally {
-    yield put(issueLifecycleIdForSystemIntake.fulfill());
-  }
-}
-
-function getIntakeNotesRequest(intakeId: string) {
-  return axios.get(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${intakeId}/notes`
-  );
-}
-
-function* getIntakeNotes(action: Action<any>) {
-  try {
-    yield put(fetchIntakeNotes.request());
-    const response = yield call(getIntakeNotesRequest, action.payload);
-    yield put(fetchIntakeNotes.success(response.data));
-  } catch (error) {
-    yield put(fetchIntakeNotes.failure(error.message));
-  } finally {
-    yield put(fetchIntakeNotes.fulfill());
-  }
-}
-
-type NoteRequestBody = {
-  intakeId: string;
-  content: string;
-  authorId: string;
-  authorName: string;
-};
-
-function postIntakeNoteRequest(data: NoteRequestBody) {
-  const { content, authorId, authorName, intakeId } = data;
-  return axios.post(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${intakeId}/notes`,
-    {
-      authorId,
-      authorName,
-      content
-    }
-  );
-}
-function* createIntakeNote(action: Action<any>) {
-  try {
-    yield put(postIntakeNote.request());
-    const response = yield call(postIntakeNoteRequest, action.payload);
-    yield put(postIntakeNote.success(response.data));
-  } catch (error) {
-    yield put(postIntakeNote.failure(error.message));
-  } finally {
-    yield put(postIntakeNote.fulfill());
-  }
-}
-
-type rejectData = {
-  rejectionNextSteps?: string;
-  reejectionReason: string;
-};
-
-function postRejection({
-  id,
-  rejectPayload
-}: {
-  id: string;
-  rejectPayload: rejectData;
-}) {
-  return axios.post(
-    `${process.env.REACT_APP_API_ADDRESS}/system_intake/${id}/reject`,
-    rejectPayload
-  );
-}
-
-function* rejectIntake(action: Action<any>) {
-  try {
-    yield put(rejectSystemIntake.request());
-    const response = yield call(postRejection, action.payload);
-    yield put(rejectSystemIntake.success(response.data));
-  } catch (error) {
-    yield put(rejectSystemIntake.failure(error.message));
-  } finally {
-    yield put(rejectSystemIntake.fulfill());
-  }
-}
-
 export default function* systemIntakeSaga() {
   yield takeLatest(fetchSystemIntake.TRIGGER, getSystemIntake);
   yield takeLatest(saveSystemIntake.TRIGGER, putSystemIntake);
   yield takeLatest(postSystemIntake.TRIGGER, createSystemIntake);
   yield takeLatest(archiveSystemIntake.TRIGGER, deleteSystemIntake);
-  yield takeLatest(issueLifecycleIdForSystemIntake.TRIGGER, issueLifecycleId);
-  yield takeLatest(fetchIntakeNotes.TRIGGER, getIntakeNotes);
-  yield takeLatest(postIntakeNote.TRIGGER, createIntakeNote);
-  yield takeLatest(rejectSystemIntake.TRIGGER, rejectIntake);
 }

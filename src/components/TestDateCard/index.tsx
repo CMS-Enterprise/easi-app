@@ -16,9 +16,9 @@ type TestDateCardProps = {
   testIndex: number;
   requestId: string;
   requestName: string;
-  id: string;
   isEditableDeletable?: boolean;
   refetchRequest: () => any;
+  setConfirmationText: (text: string) => void;
 };
 
 const TestDateCard = ({
@@ -26,8 +26,9 @@ const TestDateCard = ({
   testIndex,
   requestId,
   requestName,
-  isEditableDeletable = true,
-  refetchRequest
+  refetchRequest,
+  setConfirmationText,
+  isEditableDeletable = true
 }: TestDateCardProps) => {
   const { t } = useTranslation('accessibility');
   const { id, testType, date, score } = testDate;
@@ -50,10 +51,16 @@ const TestDateCard = ({
           id
         }
       }
-    }).then(refetchRequest);
-
-    // TODO: display confirmation banner if mutation successful (removeTestDate.confirmation)
-    // cannot use useConfirmationText hook since we are not changing URL - useContext()?
+    }).then(() => {
+      refetchRequest();
+      setRemoveTestDateModalOpen(false);
+      setConfirmationText(
+        t('removeTestDate.confirmation', {
+          date: formatDate(date),
+          requestName
+        })
+      );
+    });
   };
 
   const testScore = () => {
@@ -93,11 +100,9 @@ const TestDateCard = ({
           <Button
             className="margin-left-1"
             type="button"
+            onClick={deleteTestDate}
             aria-label={`Remove test ${testIndex} ${testType}`}
             unstyled
-            onClick={() => {
-              setRemoveTestDateModalOpen(true);
-            }}
             data-testid="test-date-delete-button"
           >
             Remove
