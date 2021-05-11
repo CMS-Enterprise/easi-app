@@ -124,7 +124,8 @@ type DeleteAccessibilityRequestDocumentPayload struct {
 }
 
 type DeleteAccessibilityRequestInput struct {
-	ID uuid.UUID `json:"id"`
+	ID     uuid.UUID                          `json:"id"`
+	Reason AccessibilityRequestDeletionReason `json:"reason"`
 }
 
 type DeleteAccessibilityRequestPayload struct {
@@ -290,6 +291,52 @@ type UpdateTestDatePayload struct {
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+type AccessibilityRequestDeletionReason string
+
+const (
+	AccessibilityRequestDeletionReasonIncorrectApplicationAndLifecycleID AccessibilityRequestDeletionReason = "INCORRECT_APPLICATION_AND_LIFECYCLE_ID"
+	AccessibilityRequestDeletionReasonNoTestingNeeded                    AccessibilityRequestDeletionReason = "NO_TESTING_NEEDED"
+	AccessibilityRequestDeletionReasonOther                              AccessibilityRequestDeletionReason = "OTHER"
+	//  For 508 requests that predate collecting this field
+	AccessibilityRequestDeletionReasonUnknown AccessibilityRequestDeletionReason = "UNKNOWN"
+)
+
+var AllAccessibilityRequestDeletionReason = []AccessibilityRequestDeletionReason{
+	AccessibilityRequestDeletionReasonIncorrectApplicationAndLifecycleID,
+	AccessibilityRequestDeletionReasonNoTestingNeeded,
+	AccessibilityRequestDeletionReasonOther,
+	AccessibilityRequestDeletionReasonUnknown,
+}
+
+func (e AccessibilityRequestDeletionReason) IsValid() bool {
+	switch e {
+	case AccessibilityRequestDeletionReasonIncorrectApplicationAndLifecycleID, AccessibilityRequestDeletionReasonNoTestingNeeded, AccessibilityRequestDeletionReasonOther, AccessibilityRequestDeletionReasonUnknown:
+		return true
+	}
+	return false
+}
+
+func (e AccessibilityRequestDeletionReason) String() string {
+	return string(e)
+}
+
+func (e *AccessibilityRequestDeletionReason) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AccessibilityRequestDeletionReason(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AccessibilityRequestDeletionReason", str)
+	}
+	return nil
+}
+
+func (e AccessibilityRequestDeletionReason) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 // A user role associated with a job code
