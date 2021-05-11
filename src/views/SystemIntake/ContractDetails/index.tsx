@@ -282,7 +282,8 @@ const ContractDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
-                      Do you expect costs for this request to increase?
+                      Do the costs for this request exceed what you are
+                      currently spending to meet your business need?
                     </legend>
                     <HelpText
                       id="IntakeForm-IncreasedCostsHelp"
@@ -309,11 +310,17 @@ const ContractDetails = ({
                           scrollElement="costs.expectedIncreaseAmount"
                           error={!!flatErrors['costs.expectedIncreaseAmount']}
                         >
-                          <Label htmlFor="IntakeForm-CostsExpectedIncrease">
+                          <Label
+                            htmlFor="IntakeForm-CostsExpectedIncrease"
+                            className="margin-bottom-1"
+                          >
                             Approximately how much do you expect the cost to
-                            increase over what you are currently spending to
-                            meet your business need?
+                            increase?
                           </Label>
+                          <HelpText id="IntakeForm-ExpectedIncreaseHelp">
+                            Compare the first year of new contract spending to
+                            current annual spending
+                          </HelpText>
                           <FieldErrorMsg>
                             {flatErrors['costs.expectedIncreaseAmount']}
                           </FieldErrorMsg>
@@ -323,6 +330,7 @@ const ContractDetails = ({
                             error={!!flatErrors['costs.expectedIncreaseAmount']}
                             id="IntakeForm-CostsExpectedIncrease"
                             name="costs.expectedIncreaseAmount"
+                            aria-describedby="IntakeForm-ExpectedIncreaseHelp"
                             maxLength={100}
                           />
                         </FieldGroup>
