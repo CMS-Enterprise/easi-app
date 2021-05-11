@@ -41,6 +41,7 @@ const accessibility = {
     },
     documentUpload: 'Upload a document',
     other: 'Other request details',
+    testingSteps: 'Steps involved in 508 testing',
     remove: 'Remove this request from EASi',
     modal: {
       header: 'Confirm you want to remove {{-requestName}}?',

@@ -195,6 +195,13 @@ const AccessibilityRequestDetailPage = () => {
                   <dd className="margin-0 margin-bottom-3">{lcid}</dd>
                 </dl>
               </div>
+              <UswdsLink
+                className="display-inline-block margin-top-3"
+                asCustom={Link}
+                to="/508/requests/steps-involved"
+              >
+                {t('requestDetails.testingSteps')}
+              </UswdsLink>
               <button
                 type="button"
                 className="accessibility-request__remove-request"
