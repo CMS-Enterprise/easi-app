@@ -9,6 +9,7 @@ import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import { useMessage } from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
@@ -89,19 +90,24 @@ const NewTestDate = () => {
 
   return (
     <>
-      {message && (
-        <Alert className="margin-top-4" type="success" role="alert">
-          {message}
-        </Alert>
-      )}
-      <Form
-        initialValues={initialValues}
-        onSubmit={onSubmit}
-        error={mutateResult.error}
-        requestName={data?.accessibilityRequest?.name || ''}
-        requestId={accessibilityRequestId}
-        formType="create"
-      />
+      <SecondaryNav>
+        <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
+      </SecondaryNav>
+      <div className="grid-container">
+        {message && (
+          <Alert className="margin-top-4" type="success" role="alert">
+            {message}
+          </Alert>
+        )}
+        <Form
+          initialValues={initialValues}
+          onSubmit={onSubmit}
+          error={mutateResult.error}
+          requestName={data?.accessibilityRequest?.name || ''}
+          requestId={accessibilityRequestId}
+          formType="create"
+        />
+      </div>
     </>
   );
 };
