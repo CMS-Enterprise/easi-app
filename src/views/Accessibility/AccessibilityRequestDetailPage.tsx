@@ -7,13 +7,16 @@ import { Alert, Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import { DeleteAccessibilityRequestQuery } from 'queries/AccessibilityRequestQueries';
+import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   DeleteAccessibilityRequest,
   DeleteAccessibilityRequestVariables
 } from 'queries/types/DeleteAccessibilityRequest';
+import { DeleteTestDate } from 'queries/types/DeleteTestDate';
 import {
   GetAccessibilityRequest,
+  GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType,
   GetAccessibilityRequestVariables
 } from 'queries/types/GetAccessibilityRequest';
 
@@ -24,6 +27,7 @@ import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TestDateCard from 'components/TestDateCard';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
+import { translateTestType } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 import user from 'utils/user';
 import { NotFoundPartial } from 'views/NotFound';
@@ -33,8 +37,11 @@ import './index.scss';
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedTestDateForRemoval, setSelectedTestDateForRemoval] = useState<
+    TestDateType | undefined
+  >();
   const { message, showMessage, showMessageOnNextPage } = useMessage();
-
+  const flags = useFlags();
   const history = useHistory();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
@@ -52,18 +59,6 @@ const AccessibilityRequestDetailPage = () => {
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
   const userEuaId = useSelector((state: AppState) => state.auth.euaId);
-
-  const requestName = data?.accessibilityRequest?.name || '';
-  const requestOwnerEuaId = data?.accessibilityRequest?.euaUserId || '';
-  const systemName = data?.accessibilityRequest?.system.name || '';
-  const submittedAt = data?.accessibilityRequest?.submittedAt || '';
-  const lcid = data?.accessibilityRequest?.system.lcid;
-  const businessOwnerName =
-    data?.accessibilityRequest?.system?.businessOwner?.name;
-  const businessOwnerComponent =
-    data?.accessibilityRequest?.system?.businessOwner?.component;
-  const documents = data?.accessibilityRequest?.documents || [];
-  const testDates = data?.accessibilityRequest?.testDates || [];
 
   const removeRequest = () => {
     mutate({
@@ -84,7 +79,44 @@ const AccessibilityRequestDetailPage = () => {
     });
   };
 
-  const flags = useFlags();
+  const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
+    DeleteTestDateQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
+
+  const deleteTestDate = (testDate: TestDateType) => {
+    deleteTestDateMutation({
+      variables: {
+        input: {
+          id: testDate.id
+        }
+      }
+    }).then(() => {
+      refetch();
+      setSelectedTestDateForRemoval(undefined);
+      showMessage(
+        t('removeTestDate.confirmation', {
+          date: formatDate(testDate.date),
+          requestName
+        })
+      );
+    });
+  };
+
+  const requestName = data?.accessibilityRequest?.name || '';
+  const requestOwnerEuaId = data?.accessibilityRequest?.euaUserId || '';
+  const systemName = data?.accessibilityRequest?.system.name || '';
+  const submittedAt = data?.accessibilityRequest?.submittedAt || '';
+  const lcid = data?.accessibilityRequest?.system.lcid;
+  const businessOwnerName =
+    data?.accessibilityRequest?.system?.businessOwner?.name;
+  const businessOwnerComponent =
+    data?.accessibilityRequest?.system?.businessOwner?.component;
+  const documents = data?.accessibilityRequest?.documents || [];
+  const testDates = data?.accessibilityRequest?.testDates || [];
+
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
 
@@ -136,6 +168,7 @@ const AccessibilityRequestDetailPage = () => {
                 documents={documents}
                 requestName={requestName}
                 refetchRequest={refetch}
+                setConfirmationText={showMessage}
               />
             </div>
           </div>
@@ -156,11 +189,9 @@ const AccessibilityRequestDetailPage = () => {
                       key={testDate.id}
                       testDate={testDate}
                       testIndex={index + 1}
-                      requestName={requestName}
                       requestId={accessibilityRequestId}
                       isEditableDeletable={isAccessibilityTeam}
-                      refetchRequest={refetch}
-                      setConfirmationText={showMessage}
+                      handleDeleteTestDate={setSelectedTestDateForRemoval}
                     />
                   ))}
                 {isAccessibilityTeam && (
@@ -239,6 +270,49 @@ const AccessibilityRequestDetailPage = () => {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={!!selectedTestDateForRemoval}
+        closeModal={() => {
+          setSelectedTestDateForRemoval(undefined);
+        }}
+      >
+        {/*
+         * Conditional satisfies Typescript because selectedTestDateForRemoval
+         * can be undefined
+         */}
+        {!!selectedTestDateForRemoval && (
+          <>
+            <PageHeading headingLevel="h2" className="margin-top-0">
+              {t('removeTestDate.modalHeader', {
+                testType: translateTestType(
+                  selectedTestDateForRemoval.testType
+                ),
+                testDate: formatDate(selectedTestDateForRemoval.date),
+                requestName
+              })}
+            </PageHeading>
+            <p>{t('removeTestDate.modalText')}</p>
+            <Button
+              type="button"
+              className="margin-right-4"
+              onClick={() => {
+                deleteTestDate(selectedTestDateForRemoval);
+              }}
+            >
+              {t('removeTestDate.modalRemoveButton')}
+            </Button>
+            <Button
+              type="button"
+              unstyled
+              onClick={() => {
+                setSelectedTestDateForRemoval(undefined);
+              }}
+            >
+              {t('removeTestDate.modalCancelButton')}
+            </Button>
+          </>
+        )}
+      </Modal>
     </>
   );
 };
