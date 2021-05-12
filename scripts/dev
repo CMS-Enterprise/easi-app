@@ -108,7 +108,7 @@ def up(*args)
   command = "docker-compose up"
   
   if args.any?
-    command = "${command} ${args.join(' ')}"
+    command = "#{command} #{args.join(' ')}"
   end
   
   sh(environment, command, verbose: true)

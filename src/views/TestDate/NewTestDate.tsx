@@ -2,12 +2,15 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@apollo/client';
+import { Alert } from '@trussworks/react-uswds';
 import { DateTime } from 'luxon';
 import CreateTestDateQuery from 'queries/CreateTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import { CreateTestDate } from 'queries/types/CreateTestDate';
 import { GetAccessibilityRequest } from 'queries/types/GetAccessibilityRequest';
 
+import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
+import { useMessage } from 'hooks/useMessage';
 import { TestDateFormType } from 'types/accessibility';
 import { formatDate } from 'utils/date';
 
@@ -17,6 +20,8 @@ import './styles.scss';
 
 const NewTestDate = () => {
   const { t } = useTranslation('accessibility');
+  const { message, showMessageOnNextPage } = useMessage();
+
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
   }>();
@@ -56,7 +61,7 @@ const NewTestDate = () => {
     const hasScore = values.score.isPresent;
     const score = values.score.value;
 
-    const confirmationText = `
+    const submitConfirmation = `
       ${t('testDateForm.confirmation.date', { date: formatDate(date) })}
       ${hasScore ? t('testDateForm.confirmation.score', { score }) : ''}
       ${t('testDateForm.confirmation.create')}
@@ -73,9 +78,8 @@ const NewTestDate = () => {
       }
     }).then(result => {
       if (!result.errors) {
-        history.push(`/508/requests/${accessibilityRequestId}`, {
-          confirmationText
-        });
+        showMessageOnNextPage(submitConfirmation);
+        history.push(`/508/requests/${accessibilityRequestId}`);
       }
     });
   };
@@ -85,14 +89,26 @@ const NewTestDate = () => {
   }
 
   return (
-    <Form
-      initialValues={initialValues}
-      onSubmit={onSubmit}
-      error={mutateResult.error}
-      requestName={data?.accessibilityRequest?.name}
-      requestId={accessibilityRequestId}
-      formType="create"
-    />
+    <>
+      <SecondaryNav>
+        <NavLink to="/">{t('tabs.accessibilityRequests')}</NavLink>
+      </SecondaryNav>
+      <div className="grid-container">
+        {message && (
+          <Alert className="margin-top-4" type="success" role="alert">
+            {message}
+          </Alert>
+        )}
+        <Form
+          initialValues={initialValues}
+          onSubmit={onSubmit}
+          error={mutateResult.error}
+          requestName={data?.accessibilityRequest?.name || ''}
+          requestId={accessibilityRequestId}
+          formType="create"
+        />
+      </div>
+    </>
   );
 };
 

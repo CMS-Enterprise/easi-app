@@ -2,13 +2,15 @@
 version: '3.7'
 services:
   db:
-    image: postgres:11.6
+    image: postgres:11.10
     command: ['postgres', '-c', 'log_statement=all']
+    environment:
+      - POSTGRES_PASSWORD=mysecretpassword
   db_migrate:
     image: easi-db-migrate:latest
     environment:
       - FLYWAY_USER=postgres
-      - FLYWAY_PASSWORD=
+      - FLYWAY_PASSWORD=mysecretpassword
       - FLYWAY_URL=jdbc:postgresql://db/postgres
     depends_on:
       - db
@@ -36,7 +38,7 @@ services:
       - PGPORT=5432
       - PGDATABASE=postgres
       - PGUSER=postgres
-      - PGPASS=""
+      - PGPASS=mysecretpassword
       - PGSSLMODE=disable
       - FLAG_SOURCE
       - LD_SDK_KEY
