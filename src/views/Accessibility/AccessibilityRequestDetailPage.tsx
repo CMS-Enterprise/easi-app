@@ -6,7 +6,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { Alert, Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
-import { DeleteAccessibilityRequestQuery } from 'queries/AccessibilityRequestQueries';
+import DeleteAccessibilityRequestQuery from 'queries/DeleteAccessibilityRequestQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   DeleteAccessibilityRequest,
@@ -24,6 +24,7 @@ import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TestDateCard from 'components/TestDateCard';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
+import { AccessibilityRequestDeletionReason } from 'types/graphql-global-types';
 import { formatDate } from 'utils/date';
 import user from 'utils/user';
 import { NotFoundPartial } from 'views/NotFound';
@@ -69,7 +70,8 @@ const AccessibilityRequestDetailPage = () => {
     mutate({
       variables: {
         input: {
-          id: accessibilityRequestId
+          id: accessibilityRequestId,
+          reason: 'OTHER' as AccessibilityRequestDeletionReason
         }
       }
     }).then(response => {
