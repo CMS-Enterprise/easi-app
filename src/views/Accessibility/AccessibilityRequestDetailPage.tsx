@@ -27,7 +27,6 @@ import { NavLink, SecondaryNav } from 'components/shared/SecondaryNav';
 import TestDateCard from 'components/TestDateCard';
 import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
-import { translateTestType } from 'utils/accessibilityRequest';
 import { formatDate } from 'utils/date';
 import user from 'utils/user';
 import { NotFoundPartial } from 'views/NotFound';
@@ -37,9 +36,6 @@ import './index.scss';
 const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedTestDateForRemoval, setSelectedTestDateForRemoval] = useState<
-    TestDateType | undefined
-  >();
   const { message, showMessage, showMessageOnNextPage } = useMessage();
   const flags = useFlags();
   const history = useHistory();
@@ -95,7 +91,6 @@ const AccessibilityRequestDetailPage = () => {
       }
     }).then(() => {
       refetch();
-      setSelectedTestDateForRemoval(undefined);
       showMessage(
         t('removeTestDate.confirmation', {
           date: formatDate(testDate.date),
@@ -189,9 +184,10 @@ const AccessibilityRequestDetailPage = () => {
                       key={testDate.id}
                       testDate={testDate}
                       testIndex={index + 1}
+                      requestName={requestName}
                       requestId={accessibilityRequestId}
                       isEditableDeletable={isAccessibilityTeam}
-                      handleDeleteTestDate={setSelectedTestDateForRemoval}
+                      handleDeleteTestDate={deleteTestDate}
                     />
                   ))}
                 {isAccessibilityTeam && (
@@ -270,49 +266,6 @@ const AccessibilityRequestDetailPage = () => {
           </div>
         </div>
       </div>
-      <Modal
-        isOpen={!!selectedTestDateForRemoval}
-        closeModal={() => {
-          setSelectedTestDateForRemoval(undefined);
-        }}
-      >
-        {/*
-         * Conditional satisfies Typescript because selectedTestDateForRemoval
-         * can be undefined
-         */}
-        {!!selectedTestDateForRemoval && (
-          <>
-            <PageHeading headingLevel="h2" className="margin-top-0">
-              {t('removeTestDate.modalHeader', {
-                testType: translateTestType(
-                  selectedTestDateForRemoval.testType
-                ),
-                testDate: formatDate(selectedTestDateForRemoval.date),
-                requestName
-              })}
-            </PageHeading>
-            <p>{t('removeTestDate.modalText')}</p>
-            <Button
-              type="button"
-              className="margin-right-4"
-              onClick={() => {
-                deleteTestDate(selectedTestDateForRemoval);
-              }}
-            >
-              {t('removeTestDate.modalRemoveButton')}
-            </Button>
-            <Button
-              type="button"
-              unstyled
-              onClick={() => {
-                setSelectedTestDateForRemoval(undefined);
-              }}
-            >
-              {t('removeTestDate.modalCancelButton')}
-            </Button>
-          </>
-        )}
-      </Modal>
     </>
   );
 };
