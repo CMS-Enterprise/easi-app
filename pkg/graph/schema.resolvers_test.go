@@ -22,8 +22,10 @@ import (
 	ld "gopkg.in/launchdarkly/go-server-sdk.v5"
 
 	"github.com/cmsgov/easi-app/pkg/appconfig"
+	"github.com/cmsgov/easi-app/pkg/email"
 	"github.com/cmsgov/easi-app/pkg/graph/generated"
 	"github.com/cmsgov/easi-app/pkg/graph/model"
+	"github.com/cmsgov/easi-app/pkg/local"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/storage"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
@@ -125,6 +127,20 @@ func TestGraphQLTestSuite(t *testing.T) {
 	mockClient := mockS3Client{}
 	s3Client := upload.NewS3ClientUsingClient(&mockClient, s3Config)
 
+	// set up Email Client
+	emailConfig := email.Config{
+		GRTEmail:               models.NewEmailAddress(config.GetString(appconfig.GRTEmailKey)),
+		AccessibilityTeamEmail: models.NewEmailAddress(config.GetString(appconfig.AccessibilityTeamEmailKey)),
+		URLHost:                config.GetString(appconfig.ClientHostKey),
+		URLScheme:              config.GetString(appconfig.ClientProtocolKey),
+		TemplateDirectory:      config.GetString(appconfig.EmailTemplateDirectoryKey),
+	}
+	localSender := local.NewSender()
+	emailClient, err := email.NewClient(emailConfig, localSender)
+	if err != nil {
+		t.Fail()
+	}
+
 	directives := generated.DirectiveRoot{HasRole: func(ctx context.Context, obj interface{}, next graphql.Resolver, role model.Role) (res interface{}, err error) {
 		return next(ctx)
 	}}
@@ -146,7 +162,7 @@ func TestGraphQLTestSuite(t *testing.T) {
 	resolverService.AuthorizeUserIsReviewTeamOrIntakeRequester = authorizeIntake
 	resolverService.AuthorizeUserIs508TeamOrRequestOwner = authorize508
 
-	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client), Directives: directives})
+	schema := generated.NewExecutableSchema(generated.Config{Resolvers: NewResolver(store, resolverService, &s3Client, &emailClient), Directives: directives})
 	graphQLClient := client.New(handler.NewDefaultServer(schema))
 
 	storeTestSuite := &GraphQLTestSuite{
