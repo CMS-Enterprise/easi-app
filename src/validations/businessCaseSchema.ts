@@ -2,15 +2,172 @@ import * as Yup from 'yup';
 
 //
 const phoneNumberRegex = /( *-*[0-9] *?){10,}/;
+
+const estimatedLifecycleCostSchema = Yup.object().shape({
+  year1: Yup.object()
+    .test(
+      'requiredPhase',
+      'Select at least one of: Phase, Operations and Maintenance, or Other',
+      (value: any) => {
+        if (
+          value.development.isPresent ||
+          value.operationsMaintenance.isPresent ||
+          value.other.isPresent
+        ) {
+          return true;
+        }
+        return false;
+      }
+    )
+    .shape({
+      development: Yup.object().shape({
+        cost: Yup.string().when('isPresent', {
+          is: true,
+          then: Yup.string().required('Enter the development cost for Year 1')
+        })
+      }),
+      operationsMaintenance: Yup.object().shape({
+        cost: Yup.string().when('isPresent', {
+          is: true,
+          then: Yup.string().required(
+            'Enter the operations and maintenance cost for Year 1'
+          )
+        })
+      }),
+      other: Yup.object().shape({
+        cost: Yup.string().when('isPresent', {
+          is: true,
+          then: Yup.string().required('Enter the other cost for Year 1')
+        })
+      })
+    }),
+  year2: Yup.object()
+    .test(
+      'requiredPhase',
+      'Select at least one of: Phase, Operations and Maintenance, or Other',
+      (value: any) => {
+        if (
+          value.development.isPresent ||
+          value.operationsMaintenance.isPresent ||
+          value.other.isPresent
+        ) {
+          return true;
+        }
+        return false;
+      }
+    )
+    .shape({
+      development: Yup.object().shape({
+        cost: Yup.string().when('isPresent', {
+          is: true,
+          then: Yup.string().required('Enter the development cost for Year 2')
+        })
+      }),
+      operationsMaintenance: Yup.object().shape({
+        cost: Yup.string().when('isPresent', {
+          is: true,
+          then: Yup.string().required(
+            'Enter the operations and maintenance cost for Year 2'
+          )
+        })
+      }),
+      other: Yup.object().shape({
+        cost: Yup.string().when('isPresent', {
+          is: true,
+          then: Yup.string().required('Enter the other cost for Year 2')
+        })
+      })
+    }),
+  year3: Yup.object()
+    .test(
+      'requiredPhase',
+      'Select at least one of: Phase, Operations and Maintenance, or Other',
+      (value: any) => {
+        if (
+          value.development.isPresent ||
+          value.operationsMaintenance.isPresent ||
+          value.other.isPresent
+        ) {
+          return true;
+        }
+        return false;
+      }
+    )
+    .shape({
+      development: Yup.object().shape({
+        cost: Yup.string().when('isPresent', {
+          is: true,
+          then: Yup.string().required('Enter the development cost for Year 3')
+        })
+      }),
+      operationsMaintenance: Yup.object().shape({
+        cost: Yup.string().when('isPresent', {
+          is: true,
+          then: Yup.string().required(
+            'Enter the operations and maintenance cost for Year 3'
+          )
+        })
+      }),
+      other: Yup.object().shape({
+        cost: Yup.string().when('isPresent', {
+          is: true,
+          then: Yup.string().required('Enter the other cost for Year 3')
+        })
+      })
+    }),
+  // Year 4 is not required
+  year4: Yup.object().shape({
+    development: Yup.object().shape({
+      cost: Yup.string().when('isPresent', {
+        is: true,
+        then: Yup.string().required('Enter the development cost for Year 4')
+      })
+    }),
+    operationsMaintenance: Yup.object().shape({
+      cost: Yup.string().when('isPresent', {
+        is: true,
+        then: Yup.string().required(
+          'Enter the operations and maintenance cost for Year 4'
+        )
+      })
+    }),
+    other: Yup.object().shape({
+      cost: Yup.string().when('isPresent', {
+        is: true,
+        then: Yup.string().required('Enter the other cost for Year 4')
+      })
+    })
+  }),
+  // Year 5 is not required
+  year5: Yup.object().shape({
+    development: Yup.object().shape({
+      cost: Yup.string().when('isPresent', {
+        is: true,
+        then: Yup.string().required('Enter the development cost for Year 5')
+      })
+    }),
+    operationsMaintenance: Yup.object().shape({
+      cost: Yup.string().when('isPresent', {
+        is: true,
+        then: Yup.string().required(
+          'Enter the operations and maintenance cost for Year 5'
+        )
+      })
+    }),
+    other: Yup.object().shape({
+      cost: Yup.string().when('isPresent', {
+        is: true,
+        then: Yup.string().required('Enter the other cost for Year 5')
+      })
+    })
+  })
+});
+
 export const BusinessCaseFinalValidationSchema = {
   generalRequestInfo: Yup.object().shape({
-    requestName: Yup.string()
-      .trim()
-      .required('Enter the Project Name'),
+    requestName: Yup.string().trim().required('Enter the Project Name'),
     requester: Yup.object().shape({
-      name: Yup.string()
-        .trim()
-        .required("Enter the Requester's name"),
+      name: Yup.string().trim().required("Enter the Requester's name"),
       phoneNumber: Yup.string()
         .trim()
         .matches(
@@ -22,9 +179,7 @@ export const BusinessCaseFinalValidationSchema = {
         )
     }),
     businessOwner: Yup.object().shape({
-      name: Yup.string()
-        .trim()
-        .required("Enter the Business Owner's name")
+      name: Yup.string().trim().required("Enter the Business Owner's name")
     })
   }),
   requestDescription: Yup.object().shape({
@@ -59,48 +214,7 @@ export const BusinessCaseFinalValidationSchema = {
       cons: Yup.string()
         .trim()
         .required('Tell us about the cons of "As is" solution'),
-      estimatedLifecycleCost: Yup.object().shape({
-        year1: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 1'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 1')
-          })
-        ),
-        year2: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 2'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 2')
-          })
-        ),
-        year3: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 3'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 3')
-          })
-        ),
-        year4: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 4'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 4')
-          })
-        ),
-        year5: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 5'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 5')
-          })
-        )
-      }),
+      estimatedLifecycleCost: estimatedLifecycleCostSchema,
       costSavings: Yup.string()
         .trim()
         .required(
@@ -169,48 +283,7 @@ export const BusinessCaseFinalValidationSchema = {
       cons: Yup.string()
         .trim()
         .required('Tell us about the cons of Preferred solution'),
-      estimatedLifecycleCost: Yup.object().shape({
-        year1: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 1'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 1')
-          })
-        ),
-        year2: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 2'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 2')
-          })
-        ),
-        year3: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 3'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 3')
-          })
-        ),
-        year4: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 4'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 4')
-          })
-        ),
-        year5: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 5'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 5')
-          })
-        )
-      }),
+      estimatedLifecycleCost: estimatedLifecycleCostSchema,
       costSavings: Yup.string()
         .trim()
         .required(
@@ -279,48 +352,7 @@ export const BusinessCaseFinalValidationSchema = {
       cons: Yup.string()
         .trim()
         .required('Tell us about the cons of Alternative A solution'),
-      estimatedLifecycleCost: Yup.object().shape({
-        year1: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 1'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 1')
-          })
-        ),
-        year2: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 2'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 2')
-          })
-        ),
-        year3: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 3'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 3')
-          })
-        ),
-        year4: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 4'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 4')
-          })
-        ),
-        year5: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 5'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 5')
-          })
-        )
-      }),
+      estimatedLifecycleCost: estimatedLifecycleCostSchema,
       costSavings: Yup.string()
         .trim()
         .required(
@@ -389,48 +421,7 @@ export const BusinessCaseFinalValidationSchema = {
       cons: Yup.string()
         .trim()
         .required('Tell us about the cons of Alternative B solution'),
-      estimatedLifecycleCost: Yup.object().shape({
-        year1: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 1'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 1')
-          })
-        ),
-        year2: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 2'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 2')
-          })
-        ),
-        year3: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 3'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 3')
-          })
-        ),
-        year4: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 4'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 4')
-          })
-        ),
-        year5: Yup.array().of(
-          Yup.object().shape({
-            phase: Yup.string().required('Select the type of phase for Year 5'),
-            cost: Yup.string()
-              .trim()
-              .required('Enter the cost for Year 5')
-          })
-        )
-      }),
+      estimatedLifecycleCost: estimatedLifecycleCostSchema,
       costSavings: Yup.string()
         .trim()
         .required(

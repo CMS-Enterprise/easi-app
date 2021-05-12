@@ -1,7 +1,11 @@
+import { AccessibilityRequestDocumentCommonType } from 'types/graphql-global-types';
+
 export type FileUploadForm = {
-  file: File;
-  filename: string;
-  uploadURL: string;
+  file: File | null;
+  documentType: {
+    commonType: AccessibilityRequestDocumentCommonType | null;
+    otherType: string;
+  };
 };
 
 export type UploadedFile = {

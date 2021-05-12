@@ -7,8 +7,12 @@ const intake = {
     component: 'Component',
     grtDate: 'GRT Date',
     grbDate: 'GRB Date',
+    adminLead: 'Admin Lead',
     status: 'Status',
-    fundingNumber: 'Funding number'
+    fundingNumber: 'Funding number',
+    businessOwner: 'Business Owner',
+    lcidExpirationDate: 'LCID Expiration Date',
+    lastAdminNote: 'Last Admin Note'
   },
   submission: {
     confirmation: {
@@ -101,17 +105,20 @@ const intake = {
     contractStart: 'Period of Performance Start',
     contractEnd: 'Period of Performance End',
     status: 'Status',
+    lcidScope: 'LCID Scope',
+    lastAdminNote: 'Last Admin Team Note',
     updatedAt: 'Updated At',
     submittedAt: 'Submitted At',
     createdAt: 'Created At',
     decidedAt: 'Decided At',
-    archivedAt: 'Archived At'
+    archivedAt: 'Archived At',
+    adminLead: 'Admin Lead'
   },
   requestTypeForm: {
-    heading: 'Make a System Request',
+    heading: 'Make a Request',
     subheading: 'What is this request for?',
     info:
-      'If you are unsure or do not see an option for your use-case, mark "I\'m not sure" and someone from the Governance Team will assist you',
+      'If you are not sure send an email to the <1>IT Navigator Mailbox</1> describing your request and a navigator will get back to you.',
     fields: {
       addNewSystem: 'Add a new system',
       majorChanges: 'Major changes or upgrades to an existing system',
@@ -130,6 +137,38 @@ const intake = {
           'Changes in Major Function Alignments or the Data Categories a system supports'
         ]
       }
+    }
+  },
+  contactDetails: {
+    intakeProcessDescription:
+      'The EASi System Intake process can guide you through all stages of your project, connecting you with the resources, people and services that you need. Please complete and submit this CMS IT Intake form to engage with the CMS IT Governance review process. This is the first step to receive a CMS IT LifeCycle ID. Upon submission, you will receive an email promptly from the IT_Governance mailbox, and an IT Governance Team member will reach out regarding next steps.',
+    heading: 'Contact details',
+    requester: 'Requester',
+    requesterComponent: 'Requester Component',
+    businessOwner: {
+      name: 'CMS Business Owner Name',
+      helpText:
+        'This person owns a line of business related to this request and will champion the request moving forward',
+      component: 'CMS Business Owner Component'
+    },
+    productManager: {
+      name: 'CMS Project/Product Manager, or lead',
+      helpText:
+        'This person may be contacted for follow ups and to understand the state of the contract',
+      component: 'CMS Product Manager Component'
+    },
+    isso: {
+      label:
+        'Does your project have an Information System Security Officer (ISSO)?',
+      helpText:
+        'If yes, please tell us the name of your Information System Security Officer so we can get in touch with them',
+      name: 'ISSO Name'
+    },
+    collaboration: {
+      label: 'For this request, I have started collaborating/consulting with:',
+      helpText: `Please disclose the name of each person you've worked with. This helps us locate any additional information on your request`,
+      oneOrMore: '1 or more of the following in OIT (select all that apply)',
+      none: 'No one in OIT'
     }
   }
 };

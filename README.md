@@ -249,12 +249,12 @@ brew install docker-compose-completion  # optional
 Multiple docker-compose files exist to support different use cases and
 environments.
 
-| File                        | Description                                                                                                                                                               |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| docker-compose.yml          | Base configuration for `db`, `db_migrate`, and `minio` service                                                                                                            |
-| docker-compose.override.yml | Additional configuration for running `db` and `db_migrate` locally. Intended to simplify the use case where someone uses docker-compose only to run `db` and `db_migrate` |
-| docker-compose.circleci.yml | Additional configuration for running all services in CircleCI                                                                                                             |
-| docker-compose.local.yml    | Additional configuration for running all services locally                                                                                                                 |
+| File                        | Description                                                                                                                       |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| docker-compose.yml          | Base configuration for `db`, `db_migrate`, `easi` and `easi_client` services                                                      |
+| docker-compose.override.yml | Additional configuration for running the above services locally. Also adds configuration for `minio` and `prince` lambda services |
+| docker-compose.circleci.yml | Additional configuration for running end-to-end Cypress tests in CircleCI                                                         |
+| docker-compose.local.yml    | Additional configuration for running end-to-end Cypress tests locally                                                             |
 
 ##### Use case: Run database and database migrations locally
 
@@ -262,7 +262,7 @@ Use the following command if you only intend to run the database and database
 migration containers locally:
 
 ```console
-$ docker-compose up --detach
+$ docker-compose up --detach db db_migrate
 Creating easi-app_db_1 ... done
 Creating easi-app_db_migrate_1 ... done
 ```
@@ -304,6 +304,21 @@ postgres@localhost:postgres> SHOW server_version;
 SHOW
 Time: 0.016s
 postgres@localhost:postgres>
+```
+
+##### Use case: Run database, database migrations, backend, and frontend locally
+
+Use the following to run the database, database migrations, backend server, and
+frontend client locally in docker.
+
+```console
+COMPOSE_HTTP_TIMEOUT=120 docker-compose up --build
+```
+
+Run the following to shut it down:
+
+```console
+docker-compose down
 ```
 
 ### Setup: Cloud Services
@@ -369,12 +384,66 @@ export MINIO_ACCESS_KEY='minioadmin'
 export MINIO_SECRET_KEY='minioadmin'
 ```
 
-### Setup: Lambda
+The container is accessed from the browser using the hostname 'minio'. To make
+this work, run `scripts/dev hosts:check` and press enter to setup this hostname
+on your machine.
+
+### Setup: Prince XML Lambda
+
+EASi runs [Prince XML](https://www.princexml.com/) as a Lambda function to
+convert HTML to PDF.
+
+See the [easi-infra-modules](https://github.com/CMSgov/easi-infra-modules/blob/master/lambda/prince/README.md)
+repo for instructions on how to build the lambda locally.
 
 [docker-lambda](https://github.com/lambci/docker-lambda) is used to run lambda functions
 locally that execute in AWS in a deployed environment.
 
-It should start automatically if you run `docker-compose up`.
+For local development, the Prince XML Lambda should start automatically if you
+run `docker-compose up`.
+
+To generate PDFs without the watermark, add one of the following environment
+variables to `.envrc.local`:
+
+```console
+export LICENSE_KEY=abcdefg12345678 (set this equal to the signature field value from the Prince license - see 1Password)
+
+# or
+
+export LICENSE_KEY_SSM_PATH=/path/to/license/key (set this equal to the SSM path where the license key signature is stored)
+```
+
+And update `docker-compose.override.yml` to reference those variable names (do
+not include the values):
+
+```text
+ prince:
+    image: lambci/lambda:go1.x
+    ports:
+      - 9001:9001
+    environment:
+      - DOCKER_LAMBDA_STAY_OPEN=1
+      - LICENSE_KEY
+```
+
+or
+
+```text
+ prince:
+    image: lambci/lambda:go1.x
+    ports:
+      - 9001:9001
+    environment:
+      - DOCKER_LAMBDA_STAY_OPEN=1
+      - LICENSE_KEY_SSM_PATH
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
+      - AWS_DEFAULT_REGION
+```
+
+Note: using `LICENSE_KEY_SSM_PATH` requires AWS credentials for the appropriate
+environment.
 
 ## Build
 
@@ -393,6 +462,10 @@ yarn generate
 ```
 
 ### Swagger Generation
+
+(Most developers will not need to do this. It is rarely done, only
+when updating our client to the CEDAR APIs. The output of these
+instructions are checked into the repository.)
 
 The EASi server uses Swagger generation
 to access APIs from CEDAR (the data source).
@@ -469,19 +542,24 @@ There are multiple ways to run the Cypress tests:
 
 ### APIs
 
+To start the API server: `$ ./bin/easi serve`
 The APIs reside at `localhost:8080` when running.
 To run a test request,
 you can send a GET to the health check endpoint:
 `curl localhost:8080/api/v1/healthcheck`
 
+### Front-End
+
+To start the JavaScript application serving: `$ yarn start`
+
 ### GraphQL Playground
 
-You can visit `http://localhost:8080/graph/playground`
+You can visit `http://localhost:8080/api/graph/playground`
 to access a GraphQL playground while
-the Go backend is running. **You will need to enter `/graph/query` as the query
+the Go backend is running. **You will need to enter `/api/graph/query` as the query
 path in the UI for this to work.**
 
-#### Authorization
+### Authorization
 
 Setting this `APP_ENV` environment variable to "local"
 will turn off API authorization.
@@ -494,3 +572,23 @@ by logging into [the development app](dev.easi.cms.gov)
 and copying `okta-token-storage/accessToken` from the browser's local storage.
 Place this in the `Authorization` header
 as `Bearer ${accessToken}`.
+
+### Routes Debugging
+
+Setting the `DEBUG_ROUTES` environment variable, and upon startup, this will
+log out a representation of all routes that have been registered.
+
+```shell
+$ DEBUG_ROUTES=1 ./bin/easi serve
+...
+ROUTE: /api/v1/healthcheck
+Path regexp: ^/api/v1/healthcheck$
+Queries templates:
+Queries regexps:
+
+ROUTE: /api/graph/playground
+Path regexp: ^/api/graph/playground$
+Queries templates:
+Queries regexps:
+...
+```

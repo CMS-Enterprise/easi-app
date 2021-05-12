@@ -1,17 +1,89 @@
+"""
+UserError represents application-level errors that are the result of
+either user or application developer error.
+"""
 type UserError {
   message: String!
   path: [String!]!
 }
 
 """
-An accessibility request represents
+An accessibility request represents a system that needs to go through
+the 508 process.
 """
 type AccessibilityRequest {
+  documents: [AccessibilityRequestDocument!]!
   id: UUID!
+  name: String!
+  relevantTestDate: TestDate
+  submittedAt: Time!
+  system: System!
+  testDates: [TestDate!]!
+  euaUserId: String!
+}
+
+"""
+A business owner is the person at CMS responsible for a system
+"""
+type BusinessOwner {
+  component: String!
   name: String!
 }
 
+"""
+A system is derived from a system intake and represents a computer system managed by CMS
+"""
+type System {
+  businessOwner: BusinessOwner!
+  id: UUID!
+  lcid: String!
+  name: String!
+}
+
+enum AccessibilityRequestDocumentStatus {
+  AVAILABLE
+  PENDING
+  UNAVAILABLE
+}
+
+enum AccessibilityRequestDocumentCommonType {
+  AWARDED_VPAT
+  OTHER
+  REMEDIATION_PLAN
+  TESTING_VPAT
+  TEST_PLAN
+  TEST_RESULTS
+}
+
+type AccessibilityRequestDocumentType {
+  commonType: AccessibilityRequestDocumentCommonType!
+  otherTypeDescription: String
+}
+
+type AccessibilityRequestDocument {
+  documentType: AccessibilityRequestDocumentType!
+  id: UUID!
+  mimeType: String!
+  name: String!
+  requestID: UUID!
+  size: Int!
+  status: AccessibilityRequestDocumentStatus!
+  uploadedAt: Time!
+  url: String!
+}
+
+type SystemConnection {
+  edges: [SystemEdge!]!
+  totalCount: Int!
+}
+
+type SystemEdge {
+  cursor: String!
+  node: System!
+}
+
 input CreateAccessibilityRequestInput {
+  intakeID: UUID!
   name: String!
 }
 
@@ -20,9 +92,20 @@ type CreateAccessibilityRequestPayload {
   userErrors: [UserError!]
 }
 
+input GeneratePresignedUploadURLInput {
+  fileName: String!
+  mimeType: String!
+  size: Int!
+}
+
+type GeneratePresignedUploadURLPayload {
+  url: String
+  userErrors: [UserError!]
+}
+
 type AccessibilityRequestsConnection {
-  totalCount: Int!
   edges: [AccessibilityRequestEdge!]!
+  totalCount: Int!
 }
 
 type AccessibilityRequestEdge {
@@ -30,18 +113,534 @@ type AccessibilityRequestEdge {
   node: AccessibilityRequest!
 }
 
+"""
+A 508 test instance
+"""
+type TestDate {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+enum TestDateTestType {
+  INITIAL
+  REMEDIATION
+}
+
+input CreateTestDateInput {
+  date: Time!
+  requestID: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+type CreateTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+input UpdateTestDateInput {
+  date: Time!
+  id: UUID!
+  score: Int
+  testType: TestDateTestType!
+}
+
+type UpdateTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+input DeleteTestDateInput {
+  id: UUID!
+}
+
+type DeleteTestDatePayload {
+  testDate: TestDate
+  userErrors: [UserError!]
+}
+
+input CreateAccessibilityRequestDocumentInput {
+  commonDocumentType: AccessibilityRequestDocumentCommonType!
+  mimeType: String!
+  name: String!
+  otherDocumentTypeDescription: String
+  requestID: UUID!
+  size: Int!
+  url: String!
+}
+
+type CreateAccessibilityRequestDocumentPayload {
+  accessibilityRequestDocument: AccessibilityRequestDocument
+  userErrors: [UserError!]
+}
+
+"""
+A solution proposal within a business case
+"""
+type BusinessCaseSolution {
+  acquisitionApproach: String
+  cons: String
+  costSavings: String
+  hasUi: String
+  hostingCloudServiceType: String
+  hostingLocation: String
+  hostingType: String
+  pros: String
+  securityIsApproved: Boolean
+  securityIsBeingReviewed: String
+  summary: String
+  title: String
+}
+
+type BusinessCaseAsIsSolution {
+  cons: String
+  costSavings: String
+  pros: String
+  summary: String
+  title: String
+}
+
+enum LifecycleCostPhase {
+  DEVELOPMENT
+  OPERATIONS_AND_MAINTENANCE
+  OTHER
+}
+
+enum LifecycleCostSolution {
+  A
+  AS_IS
+  B
+  PREFERRED
+}
+
+enum LifecycleCostYear {
+
+  LIFECYCLE_COST_YEAR_1
+  LIFECYCLE_COST_YEAR_2
+  LIFECYCLE_COST_YEAR_3
+  LIFECYCLE_COST_YEAR_4
+  LIFECYCLE_COST_YEAR_5
+}
+
+"""
+An estimated Lifecycle cost row
+"""
+type EstimatedLifecycleCost {
+  businessCaseId: UUID!
+  cost: Int
+  id: UUID!
+  phase: LifecycleCostPhase
+  solution: LifecycleCostSolution
+  year: LifecycleCostYear
+}
+
+enum BusinessCaseStatus {
+  CLOSED
+  OPEN
+}
+
+type BusinessCase {
+  alternativeASolution: BusinessCaseSolution
+  alternativeBSolution: BusinessCaseSolution
+  asIsSolution: BusinessCaseAsIsSolution
+  businessNeed: String
+  businessOwner: String
+  cmsBenefit: String
+  createdAt: Time!
+  euaUserId: String!
+  id: UUID!
+  initialSubmittedAt: Time
+  lastSubmittedAt: Time
+  lifecycleCostLines: [EstimatedLifecycleCost!]
+  preferredSolution: BusinessCaseSolution
+  priorityAlignment: String
+  projectName: String
+  requester: String
+  requesterPhoneNumber: String
+  status: BusinessCaseStatus!
+  submittedAt: Time
+  successIndicators: String
+  systemIntake: SystemIntake!
+  updatedAt: Time!
+}
+
+enum SystemIntakeStatus {
+  BIZ_CASE_CHANGES_NEEDED
+  BIZ_CASE_DRAFT
+  BIZ_CASE_DRAFT_SUBMITTED
+  BIZ_CASE_FINAL_NEEDED
+  BIZ_CASE_FINAL_SUBMITTED
+  INTAKE_DRAFT
+  INTAKE_SUBMITTED
+  LCID_ISSUED
+  NEED_BIZ_CASE
+  NOT_APPROVED
+  """
+  Request is not an IT request
+  """
+  NOT_IT_REQUEST
+  """
+  Request requires no further governance
+  """
+  NO_GOVERNANCE
+  """
+  Request is ready for Governance Review Board meeting
+  """
+  READY_FOR_GRB
+  """
+  Request is ready for Governance Review Team meeting
+  """
+  READY_FOR_GRT
+  """
+  Request for shutdown of existing system is complete
+  """
+  SHUTDOWN_COMPLETE
+  """
+  Request for shutdown of existing system is in progress
+  """
+  SHUTDOWN_IN_PROGRESS
+  WITHDRAWN
+}
+
+enum SystemIntakeRequestType {
+  MAJOR_CHANGES
+  NEW
+  RECOMPETE
+  SHUTDOWN
+}
+
+type SystemIntakeBusinessOwner {
+  component: String
+  name: String
+}
+
+type ContractDate {
+  day: String
+  month: String
+  year: String
+}
+
+type SystemIntakeContract {
+  contractor: String
+  endDate: ContractDate
+  hasContract: String
+  startDate: ContractDate
+  vehicle: String
+}
+
+type SystemIntakeCosts {
+  expectedIncreaseAmount: String
+  isExpectingIncrease: String
+}
+
+type SystemIntakeFundingSource {
+  fundingNumber: String
+  isFunded: Boolean
+  source: String
+}
+
+type SystemIntakeCollaborator {
+  acronym: String
+  collaborator: String
+  key: String
+  label: String
+  name: String
+}
+
+type SystemIntakeGovernanceTeam {
+  isPresent: Boolean
+  teams: [SystemIntakeCollaborator!]
+}
+
+type SystemIntakeISSO {
+  isPresent: Boolean
+  name: String
+}
+
+type SystemIntakeNoteAuthor {
+  eua: String!
+  name: String!
+}
+
+type SystemIntakeNote {
+  author: SystemIntakeNoteAuthor!
+  content: String!
+  createdAt: Time!
+  id: UUID!
+}
+
+type SystemIntakeProductManager {
+  component: String
+  name: String
+}
+
+type SystemIntakeRequester {
+  component: String
+  email: String
+  name: String!
+}
+
+type SystemIntake {
+  actions: [SystemIntakeAction!]!
+  adminLead: String
+  archivedAt: Time
+  businessCase: BusinessCase
+  businessNeed: String
+  businessOwner: SystemIntakeBusinessOwner
+  businessSolution: String
+  contract: SystemIntakeContract
+  costs: SystemIntakeCosts
+  createdAt: Time!
+  currentStage: String
+  decisionNextSteps: String
+  eaCollaborator: String
+  eaCollaboratorName: String
+  euaUserId: String!
+  fundingSource: SystemIntakeFundingSource
+  governanceTeams: SystemIntakeGovernanceTeam
+  grbDate: Time
+  grtDate: Time
+  grtFeedbacks: [GRTFeedback!]!
+  id: UUID!
+  isso: SystemIntakeISSO
+  lcid: String
+  lcidExpiresAt: Time
+  lcidScope: String
+  needsEaSupport: Boolean
+  notes: [SystemIntakeNote!]!
+  oitSecurityCollaborator: String
+  oitSecurityCollaboratorName: String
+  productManager: SystemIntakeProductManager
+  projectAcronym: String
+  rejectionReason: String
+  requestName: String
+  requestType: SystemIntakeRequestType!
+  requester: SystemIntakeRequester!
+  status: SystemIntakeStatus!
+  submittedAt: Time
+  trbCollaborator: String
+  trbCollaboratorName: String
+  updatedAt: Time!
+}
+
+enum SystemIntakeActionType {
+  BIZ_CASE_NEEDS_CHANGES
+  CREATE_BIZ_CASE
+  GUIDE_RECEIVED_CLOSE
+  ISSUE_LCID
+  NEED_BIZ_CASE
+  NO_GOVERNANCE_NEEDED
+  NOT_IT_REQUEST
+  NOT_RESPONDING_CLOSE
+  PROVIDE_FEEDBACK_NEED_BIZ_CASE
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_DRAFT
+  PROVIDE_GRT_FEEDBACK_BIZ_CASE_FINAL
+  READY_FOR_GRB
+  READY_FOR_GRT
+  REJECT
+  SEND_EMAIL
+  SUBMIT_BIZ_CASE
+  SUBMIT_FINAL_BIZ_CASE
+  SUBMIT_INTAKE
+}
+
+"""
+An action taken on a system intake, often resulting in a change in status.
+"""
+type SystemIntakeAction {
+  id: UUID!
+  systemIntake: SystemIntake!
+  type: SystemIntakeActionType!
+  actor: SystemIntakeActionActor!
+  feedback: String
+  createdAt: Time!
+}
+
+type SystemIntakeActionActor {
+  name: String!
+  email: String!
+}
+
+input AddGRTFeedbackInput {
+  emailBody: String!
+  feedback: String!
+  intakeID: UUID!
+}
+
+type AddGRTFeedbackPayload {
+  id: UUID
+}
+
+input IssueLifecycleIdInput {
+  expiresAt: Time!
+  feedback: String!
+  intakeId: UUID!
+  lcid: String
+  nextSteps: String
+  scope: String!
+}
+
+input RejectIntakeInput {
+  feedback: String!
+  intakeId: UUID!
+  nextSteps: String
+  reason: String!
+}
+
+input UpdateSystemIntakeAdminLeadInput {
+  adminLead: String!
+  id: UUID!
+}
+
+enum GRTFeedbackType {
+  BUSINESS_OWNER
+  GRB
+}
+
+"""
+Feedback from the GRT to a business owner or GRB
+"""
+type GRTFeedback {
+  id: UUID
+  createdAt: Time
+  feedback: String
+  feedbackType: GRTFeedbackType
+}
+
+input UpdateSystemIntakeReviewDatesInput {
+  grbDate: Time
+  grtDate: Time
+  id: UUID!
+}
+
+input CreateSystemIntakeNoteInput {
+  content: String!
+  authorName: String!
+  intakeId: UUID!
+}
+
+type UpdateSystemIntakePayload {
+  systemIntake: SystemIntake
+  userErrors: [UserError!]
+}
+input BasicActionInput {
+  feedback: String!
+  intakeId: UUID!
+}
+
+input DeleteAccessibilityRequestDocumentInput {
+  id: UUID!
+}
+type DeleteAccessibilityRequestDocumentPayload {
+  id: UUID
+}
+
+input DeleteAccessibilityRequestInput {
+  id: UUID!
+}
+type DeleteAccessibilityRequestPayload {
+  id: UUID
+}
+
 type Mutation {
+  addGRTFeedbackAndKeepBusinessCaseInDraft(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  addGRTFeedbackAndProgressToFinalBusinessCase(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  addGRTFeedbackAndRequestBusinessCase(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
   createAccessibilityRequest(
-    input: CreateAccessibilityRequestInput
+    input: CreateAccessibilityRequestInput!
   ): CreateAccessibilityRequestPayload
+  createAccessibilityRequestDocument(
+    input: CreateAccessibilityRequestDocumentInput!
+  ): CreateAccessibilityRequestDocumentPayload
+  createSystemIntakeActionBusinessCaseNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionBusinessCaseNeedsChanges(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionGuideReceievedClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNoGovernanceNeeded(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNotItRequest(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionNotRespondingClose(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionReadyForGRT(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeActionSendEmail(input: BasicActionInput!): UpdateSystemIntakePayload @hasRole(role: EASI_GOVTEAM)
+  createSystemIntakeNote(input: CreateSystemIntakeNoteInput!): SystemIntakeNote @hasRole(role: EASI_GOVTEAM)
+  createTestDate(input: CreateTestDateInput!): CreateTestDatePayload
+    @hasRole(role: EASI_508_TESTER_OR_USER)
+  generatePresignedUploadURL(
+    input: GeneratePresignedUploadURLInput!
+  ): GeneratePresignedUploadURLPayload
+  issueLifecycleId(input: IssueLifecycleIdInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
+  markSystemIntakeReadyForGRB(
+    input: AddGRTFeedbackInput!
+  ): AddGRTFeedbackPayload @hasRole(role: EASI_GOVTEAM)
+  rejectIntake(input: RejectIntakeInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeAdminLead(input: UpdateSystemIntakeAdminLeadInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateSystemIntakeReviewDates(input: UpdateSystemIntakeReviewDatesInput!): UpdateSystemIntakePayload
+    @hasRole(role: EASI_GOVTEAM)
+  updateTestDate(input: UpdateTestDateInput!): UpdateTestDatePayload
+    @hasRole(role: EASI_508_TESTER_OR_USER)
+  deleteTestDate(input: DeleteTestDateInput!): DeleteTestDatePayload
+    @hasRole(role: EASI_508_TESTER_OR_USER)
+  deleteAccessibilityRequestDocument(input: DeleteAccessibilityRequestDocumentInput!): DeleteAccessibilityRequestDocumentPayload
+  deleteAccessibilityRequest(input: DeleteAccessibilityRequestInput!) : DeleteAccessibilityRequestPayload
 }
 
 type Query {
-  accessibilityRequests(
-    first: Int!
-    after: String
-  ): AccessibilityRequestsConnection
   accessibilityRequest(id: UUID!): AccessibilityRequest
+  accessibilityRequests(
+    after: String
+    first: Int!
+  ): AccessibilityRequestsConnection
+  systemIntake(id: UUID!): SystemIntake
+  systems(after: String, first: Int!): SystemConnection
 }
 
+"""
+UUIDs are represented using 36 ASCII characters, for example B0511859-ADE6-4A67-8969-16EC280C0E1A
+"""
 scalar UUID
+
+"""
+Time values are represented as strings using RFC3339 format, for example 2019-10-12T07:20:50.52Z
+"""
+scalar Time
+
+directive @hasRole(role: Role!) on FIELD_DEFINITION
+
+"""
+A user role associated with a job code
+"""
+enum Role {
+  """
+  A 508 Tester
+  """
+  EASI_508_TESTER
+
+  """
+  A 508 request program team member
+  """
+  EASI_508_USER
+
+  """
+  A 508 request program team member or tester
+  """
+  EASI_508_TESTER_OR_USER
+
+  """
+  A member of the GRT
+  """
+  EASI_GOVTEAM
+
+  """
+  A generic EASi user
+  """
+  EASI_USER
+}

@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import ActionBanner from 'components/shared/ActionBanner';
 import { AppState } from 'reducers/rootReducer';
@@ -10,7 +9,6 @@ import { fetchSystemIntakes } from 'types/routines';
 import { SystemIntakeForm } from 'types/systemIntake';
 
 const SystemIntakeBanners = () => {
-  const flags = useFlags();
   const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('intake');
@@ -96,9 +94,7 @@ const SystemIntakeBanners = () => {
     <>
       {intakes.map((intake: SystemIntakeForm) => {
         const status = statusMap[intake.status];
-        const rootPath = flags.taskListLite
-          ? '/governance-task-list'
-          : '/system';
+        const rootPath = '/governance-task-list';
 
         if (intake.requestType === 'SHUTDOWN') {
           // Current implementation a banner doesn't appear for completed shutdown

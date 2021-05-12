@@ -15,11 +15,13 @@ import flattenErrors from 'utils/flattenErrors';
 
 type AlternativeSolutionFieldsProps = {
   altLetter: string;
+  businessCaseCreatedAt: string;
   formikProps: FormikProps<any>;
 };
 
 const AlternativeSolutionFields = ({
   altLetter,
+  businessCaseCreatedAt,
   formikProps
 }: AlternativeSolutionFieldsProps) => {
   const { values, errors = {}, setFieldValue } = formikProps;
@@ -442,12 +444,14 @@ const AlternativeSolutionFields = ({
         <EstimatedLifecycleCost
           formikKey={`${altId}.estimatedLifecycleCost`}
           years={values[`${altId}`].estimatedLifecycleCost}
+          businessCaseCreatedAt={businessCaseCreatedAt}
           errors={
             errors &&
             errors[`${altId}`] &&
             // @ts-ignore
             errors[`${altId}`].estimatedLifecycleCost
           }
+          setFieldValue={setFieldValue}
         />
       </div>
       <div className="margin-top-2 margin-bottom-7">

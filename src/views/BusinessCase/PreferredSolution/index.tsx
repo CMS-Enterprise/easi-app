@@ -2,11 +2,11 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -17,10 +17,11 @@ import Label from 'components/shared/Label';
 import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { hasAlternativeB } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { yesNoMap } from 'data/common';
 import { BusinessCaseModel, PreferredSolutionForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -36,7 +37,6 @@ const PreferredSolution = ({
   formikRef,
   dispatchSave
 }: PreferredSolutionProps) => {
-  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     preferredSolution: businessCase.preferredSolution
@@ -84,7 +84,7 @@ const PreferredSolution = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl">Alternatives Analysis</h1>
+            <PageHeading>Alternatives Analysis</PageHeading>
             <div className="tablet:grid-col-9">
               <div className="line-height-body-6">
                 Some examples of options to consider may include:
@@ -103,9 +103,12 @@ const PreferredSolution = ({
                 infrastructure, etc.
               </div>
             </div>
-            <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-              <MandatoryFieldsAlert />
-            </div>
+            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
+            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
+              <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
+                <MandatoryFieldsAlert />
+              </div>
+            )}
             <Form>
               <div className="tablet:grid-col-9">
                 <h2>Preferred solution</h2>
@@ -610,10 +613,12 @@ const PreferredSolution = ({
                 <EstimatedLifecycleCost
                   formikKey="preferredSolution.estimatedLifecycleCost"
                   years={values.preferredSolution.estimatedLifecycleCost}
+                  businessCaseCreatedAt={businessCase.createdAt}
                   errors={
                     errors.preferredSolution &&
                     errors.preferredSolution.estimatedLifecycleCost
                   }
+                  setFieldValue={setFieldValue}
                 />
               </div>
               <div className="tablet:grid-col-9 margin-bottom-7">
@@ -662,7 +667,6 @@ const PreferredSolution = ({
                 setErrors({});
                 const newUrl = 'as-is-solution';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -675,9 +679,10 @@ const PreferredSolution = ({
                     dispatchSave();
                     const newUrl = 'alternative-solution-a';
                     history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
                   }
                 });
-                window.scrollTo(0, 0);
               }}
             >
               Next
@@ -689,9 +694,7 @@ const PreferredSolution = ({
                 onClick={() => {
                   dispatchSave();
                   history.push(
-                    flags.taskListLite
-                      ? `/governance-task-list/${businessCase.systemIntakeId}`
-                      : '/'
+                    `/governance-task-list/${businessCase.systemIntakeId}`
                   );
                 }}
               >
@@ -702,7 +705,11 @@ const PreferredSolution = ({
             </div>
             <PageNumber
               currentPage={4}
-              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
+              totalPages={
+                alternativeSolutionHasFilledFields(businessCase.alternativeB)
+                  ? 6
+                  : 5
+              }
             />
             <AutoSave
               values={values}

@@ -6,43 +6,13 @@ services:
   easi:
     image: '${AWS_ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/easi-backend:${CIRCLE_SHA1}'
     environment:
-      - APPLICATION_VERSION
-      - APPLICATION_DATETIME
-      - APPLICATION_TS
-      - APP_ENV
-      - CLIENT_PROTOCOL=http
-      - CLIENT_DOMAIN=localhost
-      - CLIENT_PORT=3000
-      - CLIENT_HOSTNAME=localhost:3000
-      - CLIENT_ADDRESS=http://localhost:3000
-      - FLAG_SOURCE
-      - API_PORT=8080
-      - OKTA_CLIENT_ID=0oa2e913coDQeG19S297
-      - OKTA_ISSUER=https://test.idp.idm.cms.gov/oauth2/aus2e96etlbFPnBHt297
-      - GRT_EMAIL=success@simulator.amazonses.com
-      - AWS_REGION=us-west-2
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - AWS_SESSION_TOKEN
-      - AWS_SES_SOURCE=no-reply-$APP_ENV@info.easi.cms.gov
-      - AWS_SES_SOURCE_ARN
-      - AWS_S3_FILE_UPLOAD_BUCKET=easi-app-test-file-uploads
-      - PGHOST=db
-      - PGPORT=5432
-      - PGDATABASE=postgres
-      - PGUSER=postgres
-      - PGPASS=""
-      - PGSSLMODE=disable
+      - EMAIL_TEMPLATE_DIR=/easi/templates
       - SERVER_CERT
       - SERVER_KEY
-    entrypoint: ['/easi/easi', 'serve']
-    depends_on:
-      - db_migrate
   easi_client:
     build:
       context: .
       dockerfile: Dockerfile.client_circleci
-    image: easi-frontend:latest
     environment:
       - CI=true #https://github.com/facebook/create-react-app/issues/8688
     entrypoint: ['serve', '-s', '-l', '3000']

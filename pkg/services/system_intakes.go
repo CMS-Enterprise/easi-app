@@ -233,8 +233,8 @@ func NewFetchSystemIntakeByID(
 		logger := appcontext.ZLogger(ctx)
 		intake, err := fetch(ctx, id)
 		if err != nil {
-			logger.Error("failed to fetch system intake")
-			return &models.SystemIntake{}, &apperrors.QueryError{
+			logger.Info("failed to fetch system intake", zap.Error(err))
+			return nil, &apperrors.QueryError{
 				Err:       err,
 				Model:     intake,
 				Operation: apperrors.QueryFetch,
@@ -242,11 +242,11 @@ func NewFetchSystemIntakeByID(
 		}
 		ok, err := authorize(ctx)
 		if err != nil {
-			logger.Error("failed to authorize fetch system intake")
-			return &models.SystemIntake{}, err
+			logger.Info("failed to authorize fetch system intake", zap.Error(err))
+			return nil, err
 		}
 		if !ok {
-			return &models.SystemIntake{}, &apperrors.UnauthorizedError{Err: err}
+			return nil, &apperrors.UnauthorizedError{Err: err}
 		}
 		return intake, nil
 	}
@@ -261,7 +261,7 @@ func NewUpdateLifecycleFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendIssueLCIDEmail func(context.Context, string, string, *time.Time, string, string, string) error,
+	sendIssueLCIDEmail func(context.Context, models.EmailAddress, string, *time.Time, string, string, string) error,
 	generateLCID func(context.Context) (string, error),
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
@@ -345,7 +345,7 @@ func NewUpdateLifecycleFields(
 			updated.LifecycleID.String,
 			updated.LifecycleExpiresAt,
 			updated.LifecycleScope.String,
-			updated.LifecycleNextSteps.String,
+			updated.DecisionNextSteps.String,
 			action.Feedback.String)
 		if err != nil {
 			return nil, err
@@ -365,7 +365,7 @@ func NewUpdateRejectionFields(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendRejectRequestEmail func(ctx context.Context, recipient string, reason string, nextSteps string, feedback string) error,
+	sendRejectRequestEmail func(ctx context.Context, recipient models.EmailAddress, reason string, nextSteps string, feedback string) error,
 ) func(context.Context, *models.SystemIntake, *models.Action) (*models.SystemIntake, error) {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) (*models.SystemIntake, error) {
 		existing, err := fetch(ctx, intake.ID)
@@ -425,5 +425,65 @@ func NewUpdateRejectionFields(
 		}
 
 		return updated, nil
+	}
+}
+
+// NewProvideGRTFeedback gives a function to provide GRT Feedback to an intake
+func NewProvideGRTFeedback(
+	config Config,
+	fetch func(c context.Context, id uuid.UUID) (*models.SystemIntake, error),
+	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
+	saveAction func(context.Context, *models.Action) error,
+	saveGRTFeedback func(context.Context, *models.GRTFeedback) (*models.GRTFeedback, error),
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
+) func(context.Context, *models.GRTFeedback, *models.Action, models.SystemIntakeStatus) (*models.GRTFeedback, error) {
+	return func(ctx context.Context, grtFeedback *models.GRTFeedback, action *models.Action, newStatus models.SystemIntakeStatus) (*models.GRTFeedback, error) {
+		intake, err := fetch(ctx, grtFeedback.IntakeID)
+		if err != nil {
+			return nil, err
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
+		if err != nil {
+			return nil, err
+		}
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting GRT Feedback"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		if grtFeedback, err = saveGRTFeedback(ctx, grtFeedback); err != nil {
+			return nil, err
+		}
+
+		if err = saveAction(ctx, action); err != nil {
+			return nil, err
+		}
+
+		updatedTime := config.clock.Now()
+		intake.UpdatedAt = &updatedTime
+		intake.Status = newStatus
+		intake, err = update(ctx, intake)
+		if err != nil {
+			return nil, err
+		}
+
+		err = sendReviewEmail(
+			ctx,
+			action.Feedback.String,
+			requesterInfo.Email,
+			intake.ID,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		return grtFeedback, nil
 	}
 }

@@ -1,20 +1,32 @@
-FROM golang:1.14.6 AS builder
+FROM golang:1.15.8 AS base
 
 WORKDIR /easi/
 
-COPY go.mod go.sum ./
+FROM base AS modules
+
+COPY go.mod ./
+COPY go.sum ./
 RUN go mod download
+
+FROM modules AS build
 
 COPY cmd ./cmd
 COPY pkg ./pkg
-RUN  CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
 
-FROM alpine:3.11
+RUN CGO_ENABLED=0 GOOS=linux go build -a -o bin/easi ./cmd/easi
+
+FROM modules AS dev
+
+RUN go get golang.org/x/tools/gopls@latest
+RUN go get github.com/cosmtrek/air@895210e492af4a2dc1c5286e7c4a45cc4d8452a7
+CMD ["./bin/easi"]
+
+FROM alpine:3.12
 
 RUN apk --no-cache add ca-certificates tzdata
 WORKDIR /easi/
-COPY --from=builder /easi/bin/easi .
-COPY --from=builder /easi/pkg/email/templates ./templates
+COPY --from=build /easi/bin/easi .
+COPY --from=build /easi/pkg/email/templates ./templates
 
 ARG ARG_APPLICATION_VERSION
 ARG ARG_APPLICATION_DATETIME
@@ -30,3 +42,7 @@ RUN update-ca-certificates
 
 RUN adduser -D -H easi
 USER easi
+
+ENTRYPOINT ["/easi/easi"]
+
+CMD ["serve"]

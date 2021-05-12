@@ -1,0 +1,55 @@
+---
+version: '3.7'
+services:
+  db:
+    ports:
+      - 5432:5432
+  db_migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.db_migrations
+    volumes:
+      - ./migrations:/flyway/sql
+  easi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: easi-backend:latest
+    environment:
+      - APP_ENV=test
+      - EMAIL_TEMPLATE_DIR=/easi/templates
+    ports:
+      - 8080:8080
+  easi_client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+      args:
+        - REACT_APP_APP_ENV=test
+        - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
+        - REACT_APP_GRAPHQL_ADDRESS=http://easi:8080/api/graph/query
+        - REACT_APP_OKTA_CLIENT_ID
+        - REACT_APP_OKTA_DOMAIN
+        - REACT_APP_OKTA_ISSUER
+        - REACT_APP_OKTA_REDIRECT_URI
+        - REACT_APP_OKTA_SERVER_ID
+    environment:
+      - CI=true #https://github.com/facebook/create-react-app/issues/8688
+    entrypoint: ['serve', '-s', '-l', '3000']
+    ports:
+      - 3000:3000
+  cypress:
+    build:
+      context: .
+      dockerfile: Dockerfile.cypress
+    image: easi-cypress:latest
+    environment:
+      - OKTA_TEST_USERNAME
+      - OKTA_TEST_PASSWORD
+      - OKTA_TEST_SECRET
+      - REACT_APP_API_ADDRESS=http://easi:8080/api/v1
+    network_mode: 'service:easi_client'
+    volumes:
+      - ./cypress:/cypress
+    depends_on:
+      - easi_client

@@ -1,0 +1,374 @@
+#! /usr/bin/ruby
+
+require "rake"
+require "json"
+require "irb"        # debugging
+require "io/console" # for IO#getch
+
+# ExtraArguments is a hack that alters how the command line arguments are parsed.
+#
+# Rake has a few ways to handle arguments, but the simplest one uses bracket characters
+# which are problematic in the default zsh config and the others require using flags.
+#
+# With this code, a task can specify :consume_args as a prerequisite and any options after
+# the task name will be pulled into that task's args. You can only specify a single task
+# to run in this case, but that's the most common usage anyhow.
+module ExtraArguments
+  def execute(args)
+    if prereqs.include? "consume_args"
+      new_args = Rake::TaskArguments.new(args.names, args.to_a.concat($extra_args || []))
+      super new_args
+    else
+      super
+    end
+  end
+end
+
+class Rake::Task
+  prepend ExtraArguments
+end
+
+@needed = []
+def needs(executable, install_with:nil)
+  @needed << [executable, install_with]
+end
+
+needs "air", install_with: "go get -u github.com/cosmtrek/air"
+needs "yarn"
+needs "psql", install_with: "brew install postgresql"
+needs "docker-compose"
+needs "go"
+needs "gotest", install_with: "go get -u github.com/rakyll/gotest"
+needs "goimports", install_with: "go get -u golang.org/x/tools/cmd/goimports"
+needs "ulimit"
+
+# Gracefully handle folks trying to explore using common help flags
+["--help", "-help", "--h", "-h"].each do |flag|
+  if ARGV == [flag]
+    puts "** Showing the available tasks. If you really want to see rake's command line options, use rake --help. **"
+    puts
+    ARGV.delete(flag)
+  end
+end
+
+Rake.application.init("scripts/dev")
+
+def ask?(question)
+  puts question
+  response = STDIN.getch
+  ["y", "Y", "\r"].include?(response)
+end
+
+def ask_to_install(executable, install_with)
+  if ask?("Do you want to install it? (Y/n)")
+    sh install_with
+    check_bin(executable)
+    # TODO let the user know that their path is not configured correctly
+  end
+end
+
+def check_bin(executable, install_with: nil)
+  if `which #{executable}` == ""
+    puts "#{executable} not found on path"
+    if install_with
+      ask_to_install(executable, install_with)
+    end
+  end
+end
+
+def wait_for_success(message,   command)
+  printf(message)
+  loop do
+    break if system(command)
+    printf(".")
+    sleep 3
+  end
+  puts "done"
+end
+
+desc "Check to see if the app's prerequisites are installed"
+task :prereqs do
+  @needed.each do |executable, install_with|
+    check_bin(executable, install_with: install_with)
+  end
+  Rake::Task["hosts:check"].invoke
+end
+
+task :consume_args do |t, args|
+  $extra_args = Rake.application.top_level_tasks.slice!(1..-1)
+end
+
+
+### Tasks
+
+def up(*args)
+  environment = {
+    "COMPOSE_HTTP_TIMEOUT" => "120"
+  }
+  command = "docker-compose up"
+  
+  if args.any?
+    command = "#{command} #{args.join(' ')}"
+  end
+  
+  sh(environment, command, verbose: true)
+
+  # Avoid open file limits
+  # sh "ulimit -S -n 2048"
+
+  wait_for_success("Waiting for the front end to build...", "curl --silent --output /dev/null -m 1 localhost:3000")
+end
+
+desc "Starts all services in the project"
+task :up do
+  up("-d")
+end
+
+namespace :up do
+  desc "Starts all services in the project in the foreground"
+  task :watch do
+    up
+  end
+end
+
+desc "Stops all services in the project"
+task :down do
+  sh "docker-compose down"
+end
+
+desc "Run app and expose to other machines over Tailscale"
+task :tailscale do
+
+  puts "Running app on #{ENV["TAILSCALE_CLIENT_ADDRESS"]}"
+  environment = {
+    "COMPOSE_HTTP_TIMEOUT" => "120"
+  }
+  command = "docker-compose -f docker-compose.yml -f docker-compose.override.yml -f docker-compose.tailscale.yml up"
+  sh(environment, command, verbose: true)
+end
+
+namespace :docker do
+  desc "Delete all dangling volumes"
+  task :sweep do
+    sh "docker volume rm $(docker volume ls -qf dangling=true)"
+  end
+end
+
+def each_minio_file(&block)
+  output = `docker-compose run --entrypoint="mc --no-color --json ls -r local/easi-app-file-uploads" minio_mc`
+  json = "[#{output.gsub(/\}\s*\{/, "},{")}]" # convert sort-of-jsonl into conventional json
+  files = JSON.parse(json)
+
+  files.each do |file|
+    yield file
+  end
+end
+
+def set_file_tag(key, status)
+  command = %Q{mc tag set 'local/easi-app-file-uploads/#{key}' 'av-status=#{status}'}
+  sh %Q{docker-compose run --entrypoint="#{command}" minio_mc}
+end
+
+namespace :minio do
+  task :list do
+    each_minio_file do |file|
+      puts file["key"]
+    end
+  end
+
+  desc "Mark all files in minio as clean (no viruses found)"
+  task :clean do
+    each_minio_file do |file|
+      set_file_tag(file["key"], "CLEAN")
+    end
+  end
+
+  desc "Mark all files in minio as infected (virus found)"
+  task :infected do
+    each_minio_file do |file|
+      set_file_tag(file["key"], "INFECTED")
+    end
+  end
+
+  desc "Mark all files in minio as pending (waiting for scan)"
+  task :pending do
+    each_minio_file do |file|
+      set_file_tag(file["key"], "")
+    end
+  end
+end
+
+desc "Resets application to an empty state"
+task :reset => :up do
+  # close any hanging connections to the database
+  Rake::Task["db:drop_connections"].invoke
+
+  # drop and recreate the database
+  Rake::Task["db:recreate"].invoke
+
+  # run migrations
+  Rake::Task["db:migrate"].invoke
+
+  # load development data
+  Rake::Task["db:seed"].invoke
+
+  # The backend may have lost its database connection
+  sh("docker-compose restart easi", verbose: true)
+end
+
+namespace :hosts do
+  desc "Verify that hosts for local development are configured"
+  task :check do
+    lookup = `dscacheutil -q host -a name minio`.strip
+    if lookup.size == 0 && ask?("Host 'minio' can't be resolved. Do you want to configure it now? (Y/n)")
+      Rake::Task["hosts:install"].invoke
+
+      Rake::Task["hosts:install"].reenable
+      Rake::Task["hosts:check"].invoke
+    elsif lookup.include?("ip_address: 127.0.0.1")
+      puts "Host 'minio' is resolving correctly."
+    else
+      puts "Host 'minio' resolved, but not to the correct IP:"
+      puts lookup
+      exit(1)
+    end
+  end
+
+  task :install do
+    sh("echo '127.0.0.1 minio' | sudo tee -a /etc/hosts") &&
+      sh("sudo killall -HUP mDNSResponder") &&
+      sh("sudo dscacheutil -flushcache")
+  end
+end
+
+namespace :db do
+  desc "Runs database migrations and wait for them to complete"
+  task :migrate do
+    sh "docker-compose start db_migrate"
+    loop do
+      sleep 0.5
+      status = `docker-compose ps | grep easi-app_db_migrate_1`
+      match = /Exit (\d+)/.match(status)
+      if match
+        unless match[1] == "0"
+          puts "Migration failed, check the logs!"
+          exit(1)
+        end
+        break
+      end
+    end
+  end
+
+  desc "Destroys the database container and recreates it"
+  task :recreate do
+    sh "docker-compose kill db && docker-compose rm -fv db && docker-compose up -d db"
+  end
+
+  desc "Load development dataset"
+  task :seed do
+    sh "go run cmd/devdata/main.go"
+  end
+
+  task :drop_connections do
+    `echo "select pg_terminate_backend(pg_stat_activity.pid) from pg_stat_activity where datname='postgres' AND state='idle'" | psql`
+  end
+
+  desc "Deletes all rows from all tables"
+  task :clean do
+    tables = %w{
+      accessibility_request_documents
+      test_dates
+      accessibility_requests
+      notes
+      actions
+      estimated_lifecycle_costs
+      business_cases
+      grt_feedback
+      system_intakes
+    }
+    sql = tables.map { |table| "DELETE FROM #{table};" }.join
+    puts "Cleaning database..."
+    `echo "#{sql}" | psql`
+  end
+end
+
+
+namespace :gql do
+  task :lint_schema do
+    sh "yarn run graphql-schema-linter pkg/graph/schema.graphql"
+  end
+
+  namespace :generate do
+    task :yarn do
+      ENV["FORCE_COLOR"] = "true"
+
+      sh "yarn generate"
+    end
+
+    task :go do
+      sh "go generate ./..." do |ok|
+        sh "goimports -w -local github.com/cmsgov/easi-app pkg/graph/schema.resolvers.go" if ok
+      end
+    end
+  end
+
+  # Runs prereqs in parallel
+  multitask generate: ["gql:generate:yarn", "gql:generate:go"]
+end
+
+desc "Generate code from GraphQL schema"
+task gql: ["gql:lint_schema", "gql:generate"]
+
+desc "Run all tests in parallel"
+multitask test: ["test:go", "test:js"]
+
+namespace :test do
+  desc "Runs Go tests"
+  task :go => "db:clean" do
+    sh "gotest -short -count=1 ./..."
+  end
+  namespace :go do
+    desc "Run targeted Go tests (pass packages as additional options)"
+    task :only => ["db:clean", :consume_args] do |t, args|
+      sh "gotest", "-short", "-count=1", "-v", *args
+    end
+  end
+
+  desc "Run JS tests (pass path to scope to that location)"
+  task :js => :consume_args do |t, args|
+    sh "yarn", "run", "craco", "test", "--watchAll=false", *args
+  end
+  namespace :js do
+    desc "Run JS tests with a matching name (pass needle as additional option)"
+    task :named => :consume_args do |t, args|
+      sh "yarn", "run", "craco", "test", "--watchAll=false", "-t", *args
+    end
+  end
+end
+
+task :default do
+  puts "Please provide a task to run:\n\n"
+  Rake::Task["list"].invoke
+  exit(1)
+end
+
+desc "List available tasks"
+task :list do
+  puts `scripts/dev -T`
+end
+
+desc "Run all linters and checks managed by pre-commit"
+task :lint do
+  sh "pre-commit run -a"
+end
+
+begin
+  Rake.application.top_level
+rescue RuntimeError => e
+  message = e.message
+  if /know how to build task/ =~ message
+    message.sub!("rake --tasks", "scripts/dev list")
+  end
+  puts e.message
+  exit 1
+end

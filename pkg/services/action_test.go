@@ -394,7 +394,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 	}
 	reviewEmailCount := 0
 	feedbackForEmailText := ""
-	sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress string) error {
+	sendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
 		feedbackForEmailText = emailText
 		reviewEmailCount++
 		return nil
@@ -585,7 +585,7 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 
 	s.Run("returns notification error when review email fails", func() {
 		ctx := context.Background()
-		failSendReviewEmail := func(ctx context.Context, emailText string, recipientAddress string) error {
+		failSendReviewEmail := func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
 			return &apperrors.NotificationError{
 				Err:             errors.New("failed to send Email"),
 				DestinationType: apperrors.DestinationTypeEmail,
@@ -608,68 +608,6 @@ func (s ServicesTestSuite) TestNewTakeActionUpdateStatus() {
 
 		s.IsType(&apperrors.NotificationError{}, err)
 	})
-}
-
-func (s ServicesTestSuite) TestFetchActions() {
-	fetch := func(_ context.Context, _ uuid.UUID) ([]models.Action, error) {
-		return []models.Action{
-			{},
-			{},
-		}, nil
-	}
-	failFetch := func(_ context.Context, _ uuid.UUID) ([]models.Action, error) {
-		return nil, errors.New("failFetch")
-	}
-	authorize := func(_ context.Context) (bool, error) {
-		return true, nil
-	}
-	unauthorize := func(_ context.Context) (bool, error) {
-		return false, nil
-	}
-	failAuthorize := func(_ context.Context) (bool, error) {
-		return false, errors.New("fail authorization")
-	}
-
-	tests := map[string]struct {
-		fn                      func(ctx context.Context, id uuid.UUID) ([]models.Action, error)
-		shouldError             bool
-		numberOfReturnedActions int
-	}{
-		"happy path": {
-			fn:                      NewFetchActionsByRequestID(authorize, fetch),
-			shouldError:             false,
-			numberOfReturnedActions: 2,
-		},
-		"authorization fails": {
-			fn:                      NewFetchActionsByRequestID(failAuthorize, fetch),
-			shouldError:             true,
-			numberOfReturnedActions: 0,
-		},
-		"unauthorized": {
-			fn:                      NewFetchActionsByRequestID(unauthorize, fetch),
-			shouldError:             true,
-			numberOfReturnedActions: 0,
-		},
-		"errors when talking to storage layer": {
-			fn:                      NewFetchActionsByRequestID(authorize, failFetch),
-			shouldError:             true,
-			numberOfReturnedActions: 0,
-		},
-	}
-
-	for name, tc := range tests {
-		s.Run(name, func() {
-			actions, err := tc.fn(context.Background(), uuid.New())
-			if tc.shouldError {
-				s.Error(err)
-				s.Nil(actions)
-			} else {
-				s.NoError(err)
-				s.Len(actions, tc.numberOfReturnedActions)
-			}
-		})
-	}
-
 }
 
 func (s ServicesTestSuite) TestNewSaveAction() {

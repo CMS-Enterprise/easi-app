@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import CheckboxField from 'components/shared/CheckboxField';
@@ -62,9 +63,12 @@ const ContactDetails = ({
   systemIntake,
   dispatchSave
 }: ContactDetailsProps) => {
-  const flags = useFlags();
+  const { t } = useTranslation('intake');
   const history = useHistory();
   const [isReqAndBusOwnerSame, setReqAndBusOwnerSame] = useState(false);
+  const [isReqAndProductManagerSame, setReqAndProductManagerSame] = useState(
+    false
+  );
 
   const initialValues: ContactDetailsForm = {
     requestName: systemIntake.requestName,
@@ -92,9 +96,7 @@ const ContactDetails = ({
     if (systemIntake.requestType === 'SHUTDOWN') {
       link = '/';
     } else {
-      link = flags.taskListLite
-        ? `/governance-task-list/${systemIntake.id}`
-        : '/';
+      link = `/governance-task-list/${systemIntake.id}`;
     }
     return link;
   })();
@@ -132,26 +134,21 @@ const ContactDetails = ({
               </ErrorAlert>
             )}
             <p className="line-height-body-5">
-              The EASi System Intake process can guide you through all stages of
-              your project, connecting you with the resources, people and
-              services that you need. Please complete and submit this CMS IT
-              Intake form to engage with the CMS IT Governance review process.
-              This is the first step to receive a CMS IT LifeCycle ID. Upon
-              submission, you will receive an email promptly from the
-              IT_Governance mailbox, and an IT Governance Team member will reach
-              out regarding next steps.
+              {t('contactDetails.intakeProcessDescription')}
             </p>
 
             <div className="tablet:grid-col-6 margin-bottom-7">
               <MandatoryFieldsAlert />
-              <h1 className="font-heading-xl margin-top-3">Contact details</h1>
+              <PageHeading>{t('contactDetails.heading')}</PageHeading>
               <Form>
                 {/* Requester Name */}
                 <FieldGroup
                   scrollElement="requester.name"
                   error={!!flatErrors['requester.name']}
                 >
-                  <Label htmlFor="IntakeForm-Requester">Requester</Label>
+                  <Label htmlFor="IntakeForm-Requester">
+                    {t('contactDetails.requester')}
+                  </Label>
                   <FieldErrorMsg>{flatErrors['requester.name']}</FieldErrorMsg>
                   <Field
                     as={TextField}
@@ -169,7 +166,7 @@ const ContactDetails = ({
                   error={!!flatErrors['requester.component']}
                 >
                   <Label htmlFor="IntakeForm-RequesterComponent">
-                    Requester Component
+                    {t('contactDetails.requesterComponent')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['requester.component']}
@@ -183,6 +180,12 @@ const ContactDetails = ({
                       if (isReqAndBusOwnerSame) {
                         setFieldValue(
                           'businessOwner.component',
+                          e.target.value
+                        );
+                      }
+                      if (isReqAndProductManagerSame) {
+                        setFieldValue(
+                          'productManager.component',
                           e.target.value
                         );
                       }
@@ -208,21 +211,20 @@ const ContactDetails = ({
                     className="margin-bottom-1"
                     htmlFor="IntakeForm-BusinessOwner"
                   >
-                    CMS Business/Product Owner&apos;s Name
+                    {t('contactDetails.businessOwner.name')}
                   </Label>
                   <HelpText
                     id="IntakeForm-BusinessOwnerHelp"
                     className="margin-bottom-105"
                   >
-                    This person owns a line of business related to this request
-                    and will champion the request moving forward
+                    {t('contactDetails.businessOwner.helpText')}
                   </HelpText>
                   <Field
                     as={CheckboxField}
                     id="IntakeForm-IsBusinessOwnerSameAsRequester"
-                    label="CMS Business/Product Owner is same as requester"
+                    label="CMS Business Owner is same as requester"
                     name="isBusinessOwnerSameAsRequester"
-                    onChange={(e: any) => {
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                       if (e.target.checked) {
                         setReqAndBusOwnerSame(true);
                         setFieldValue(
@@ -259,7 +261,7 @@ const ContactDetails = ({
                   error={!!flatErrors['businessOwner.component']}
                 >
                   <Label htmlFor="IntakeForm-BusinessOwnerComponent">
-                    Business Owner Component
+                    {t('contactDetails.businessOwner.component')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['businessOwner.component']}
@@ -290,12 +292,36 @@ const ContactDetails = ({
                     htmlFor="IntakeForm-ProductManager"
                     className="margin-bottom-1"
                   >
-                    CMS Project/Product Manager, or lead
+                    {t('contactDetails.productManager.name')}
                   </Label>
-                  <HelpText id="IntakeForm-ProductManagerHelp">
-                    This person may be contacted for follow ups and to
-                    understand the state of the contract
+                  <HelpText
+                    id="IntakeForm-ProductManagerHelp"
+                    className="margin-bottom-105"
+                  >
+                    {t('contactDetails.productManager.helpText')}
                   </HelpText>
+                  <Field
+                    as={CheckboxField}
+                    id="IntakeForm-IsProductManagerSameAsRequester"
+                    label="CMS Project/Product Manager, or lead is same as requester"
+                    name="isProductManagerSameAsRequester"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      if (e.target.checked) {
+                        setReqAndProductManagerSame(true);
+                        setFieldValue(
+                          'productManager.name',
+                          values.requester.name
+                        );
+                        setFieldValue(
+                          'productManager.component',
+                          values.requester.component
+                        );
+                      } else {
+                        setReqAndProductManagerSame(false);
+                      }
+                    }}
+                    value=""
+                  />
                   <FieldErrorMsg>
                     {flatErrors['productManager.name']}
                   </FieldErrorMsg>
@@ -306,6 +332,7 @@ const ContactDetails = ({
                     maxLength={50}
                     name="productManager.name"
                     aria-describedby="IntakeForm-ProductManagerHelp"
+                    disabled={isReqAndProductManagerSame}
                   />
                 </FieldGroup>
 
@@ -315,7 +342,7 @@ const ContactDetails = ({
                   error={!!flatErrors['productManager.component']}
                 >
                   <Label htmlFor="IntakeForm-ProductManagerComponent">
-                    Product Manager Component
+                    {t('contactDetails.productManager.component')}
                   </Label>
                   <FieldErrorMsg>
                     {flatErrors['productManager.component']}
@@ -326,6 +353,7 @@ const ContactDetails = ({
                     id="IntakeForm-ProductManagerComponent"
                     label="Product Manager Component"
                     name="productManager.component"
+                    disabled={isReqAndProductManagerSame}
                   >
                     <Field
                       as={DropdownItem}
@@ -344,15 +372,13 @@ const ContactDetails = ({
                 >
                   <fieldset className="usa-fieldset margin-top-4">
                     <legend className="usa-label margin-bottom-1">
-                      Does your project have an Information System Security
-                      Officer (ISSO)?
+                      {t('contactDetails.isso.label')}
                     </legend>
                     <HelpText
                       id="IntakeForm-ISSOHelp"
                       className="margin-bottom-2"
                     >
-                      If yes, please tell us the name of your Information System
-                      Security Officer so we can get in touch with them
+                      {t('contactDetails.isso.helpText')}
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['isso.isPresent']}
@@ -376,7 +402,9 @@ const ContactDetails = ({
                           scrollElement="isso.name"
                           error={!!flatErrors['isso.name']}
                         >
-                          <Label htmlFor="IntakeForm-IssoName">ISSO Name</Label>
+                          <Label htmlFor="IntakeForm-IssoName">
+                            {t('contactDetails.isso.name')}
+                          </Label>
                           <FieldErrorMsg>
                             {flatErrors['isso.name']}
                           </FieldErrorMsg>
@@ -408,20 +436,17 @@ const ContactDetails = ({
                 {/* Governance Teams */}
                 <FieldGroup
                   scrollElement="governanceTeams.isPresent"
-                  error={flatErrors['governanceTeams.isPresent']}
+                  error={!!flatErrors['governanceTeams.isPresent']}
                 >
                   <fieldset className="usa-fieldset margin-top-3">
                     <legend className="usa-label margin-bottom-1">
-                      For this request, I have started collaborating/consulting
-                      with:
+                      {t('contactDetails.collaboration.label')}
                     </legend>
                     <HelpText
                       id="IntakeForm-Collaborators"
                       className="margin-bottom-2"
                     >
-                      Please disclose the name of each person you&apos;ve worked
-                      with. This helps us locate any additional information on
-                      your request
+                      {t('contactDetails.collaboration.helpText')}
                     </HelpText>
                     <FieldErrorMsg>
                       {flatErrors['governanceTeams.isPresent']}
@@ -432,7 +457,7 @@ const ContactDetails = ({
                       checked={values.governanceTeams.isPresent === true}
                       id="IntakeForm-YesGovernanceTeams"
                       name="governanceTeams.isPresent"
-                      label="1 or more of the following in OIT (select all that apply)"
+                      label={t('contactDetails.collaboration.oneOrMore')}
                       onChange={() => {
                         setFieldValue('governanceTeams.isPresent', true);
                       }}
@@ -456,7 +481,7 @@ const ContactDetails = ({
                       checked={values.governanceTeams.isPresent === false}
                       id="IntakeForm-NoGovernanceTeam"
                       name="governanceTeams.isPresent"
-                      label="No one in OIT"
+                      label={t('contactDetails.collaboration.none')}
                       onChange={() => {
                         setFieldValue('governanceTeams.isPresent', false);
                         setFieldValue('governanceTeams.teams', []);
@@ -473,8 +498,9 @@ const ContactDetails = ({
                         dispatchSave();
                         const newUrl = 'request-details';
                         history.push(newUrl);
+                      } else {
+                        window.scrollTo(0, 0);
                       }
-                      window.scrollTo(0, 0);
                     });
                   }}
                 >

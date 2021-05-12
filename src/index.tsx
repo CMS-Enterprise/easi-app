@@ -14,7 +14,6 @@ import { TextEncoder } from 'text-encoding';
 
 import { localAuthStorageKey } from 'constants/localAuth';
 
-import 'uswds';
 import './i18n';
 
 import App from './views/App';
@@ -65,13 +64,12 @@ function getAuthHeader(targetUrl: string) {
 /**
  * Setup client for GraphQL
  */
-const graphQueryURL = 'http://localhost:8080/graph/query';
 const httpLink = createHttpLink({
-  uri: graphQueryURL
+  uri: process.env.REACT_APP_GRAPHQL_ADDRESS
 });
 
 const authLink = setContext((request, { headers }) => {
-  const header = getAuthHeader(graphQueryURL);
+  const header = getAuthHeader(process.env.REACT_APP_GRAPHQL_ADDRESS as string);
   return {
     headers: {
       ...headers,
@@ -80,9 +78,18 @@ const authLink = setContext((request, { headers }) => {
   };
 });
 
+const typePolicies = {};
+
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    typePolicies
+  }),
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: 'cache-and-network'
+    }
+  }
 });
 
 let app;

@@ -1,28 +1,27 @@
-.secondary-nav {
-  flex: 1;
+.easi-secondary-nav {
+  border-bottom: 1px solid color($theme-color-base-lighter);
+  // This breaks responsiveness; no plans for now
+  white-space: nowrap;
 
-  &__link {
-    display: block;
-    padding: 1rem;
-    border: none;
-    color: #565c65;
-    line-height: 0.9;
-    font-weight: bold;
+  &__nav-link {
+    display: inline-block;
+    margin: 0 1em;
+    padding: 1em 0;
+    color: #000;
     text-decoration: none;
+    font-weight: bold;
+
+    &--active {
+      border-bottom: 4px solid $easi-bright-blue;
+    }
 
     &:hover {
-      text-decoration: underline;
+      color: $easi-bright-blue;
+      cursor: pointer;
     }
-  }
 
-  @media (max-width: $desktop) {
-    // Matching USWDS specificity to remove CSS rule
-    .usa-nav__primary {
-      .usa-current {
-        &:after {
-          display: none;
-        }
-      }
+    &:first-child {
+      margin-left: 0;
     }
   }
 }

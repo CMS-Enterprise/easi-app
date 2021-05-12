@@ -9,6 +9,7 @@ import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import { ImproveEasiSurvey } from 'components/Survey';
 import {
@@ -19,6 +20,7 @@ import {
   initialReviewTag,
   intakeTag
 } from 'data/taskList';
+import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import {
   archiveSystemIntake,
@@ -38,9 +40,10 @@ import TaskListItem, { TaskListDescription } from './TaskListItem';
 import './index.scss';
 
 const GovernanceTaskList = () => {
-  const { systemId } = useParams();
+  const { systemId } = useParams<{ systemId: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
+  const { showMessageOnNextPage } = useMessage();
   const { t } = useTranslation();
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -66,12 +69,12 @@ const GovernanceTaskList = () => {
 
   const archiveIntake = () => {
     const redirect = () => {
-      history.push('/', {
-        confirmationText: t('taskList:withdraw_modal:confirmationText', {
-          context: systemIntake.requestName ? 'name' : 'noName',
-          requestName: systemIntake.requestName
-        })
+      const message = t('taskList:withdraw_modal.confirmationText', {
+        context: systemIntake.requestName ? 'name' : 'noName',
+        requestName: systemIntake.requestName
       });
+      showMessageOnNextPage(message);
+      history.push('/');
     };
     dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
   };
@@ -121,7 +124,7 @@ const GovernanceTaskList = () => {
         </div>
         <div className="grid-row">
           <div className="tablet:grid-col-9">
-            <h1 className="font-heading-2xl margin-top-4">
+            <PageHeading>
               Get governance approval
               {systemIntake.requestName && (
                 <span className="display-block line-height-body-5 font-body-lg text-light">
@@ -130,7 +133,22 @@ const GovernanceTaskList = () => {
                     : `for ${systemIntake.requestName}`}
                 </span>
               )}
-            </h1>
+            </PageHeading>
+            {['NO_GOVERNANCE', 'NOT_IT_REQUEST'].includes(
+              systemIntake.status
+            ) && (
+              <Alert
+                type="warning"
+                className="margin-bottom-5"
+                data-testid="task-list-closed-alert"
+              >
+                <span>
+                  The governance team closed your request, you can view their
+                  decision at the bottom of this page. Please check the email
+                  sent to you for further information.
+                </span>
+              </Alert>
+            )}
             <ol className="governance-task-list__task-list governance-task-list__task-list--primary">
               <TaskListItem
                 data-testid="task-list-intake-form"
@@ -263,7 +281,10 @@ const GovernanceTaskList = () => {
           </div>
           <div className="tablet:grid-col-1" />
           <div className="tablet:grid-col-2">
-            <SideNavActions archiveIntake={archiveIntake} />
+            <SideNavActions
+              intake={systemIntake}
+              archiveIntake={archiveIntake}
+            />
           </div>
         </div>
         <ImproveEasiSurvey />

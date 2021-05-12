@@ -1,18 +1,20 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import React, { useLayoutEffect } from 'react';
+import {
+  BrowserRouter,
+  Redirect,
+  Route,
+  Switch,
+  useLocation
+} from 'react-router-dom';
 import { LoginCallback, SecureRoute } from '@okta/okta-react';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import { AppState } from 'reducers/rootReducer';
-import user from 'utils/user';
-import Create from 'views/Accessibility/AccessibiltyRequest/Create';
-import List from 'views/Accessibility/AccessibiltyRequest/List';
+import { MessageProvider } from 'hooks/useMessage';
+import Accessibility from 'views/Accessibility';
 import AccessibilityStatement from 'views/AccessibilityStatement';
 import AuthenticationWrapper from 'views/AuthenticationWrapper';
 import BusinessCase from 'views/BusinessCase';
 import Cookies from 'views/Cookies';
-import DocumentPrototype from 'views/DocumentPrototype';
 import FlagsWrapper from 'views/FlagsWrapper';
 import GovernanceOverview from 'views/GovernanceOverview';
 import GovernanceReviewTeam from 'views/GovernanceReviewTeam';
@@ -29,70 +31,63 @@ import Sandbox from 'views/Sandbox';
 import SystemIntake from 'views/SystemIntake';
 import TermsAndConditions from 'views/TermsAndConditions';
 import TimeOutWrapper from 'views/TimeOutWrapper';
+import UserInfo from 'views/User';
 import UserInfoWrapper from 'views/UserInfoWrapper';
 
 import './index.scss';
 
 const AppRoutes = () => {
+  const location = useLocation();
   const flags = useFlags();
-  const userGroups = useSelector((state: AppState) => state.auth.groups);
-  const isUserSet = useSelector((state: AppState) => state.auth.isUserSet);
+
+  // Scroll to top
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <Switch>
+      {/* General Routes */}
       <Route path="/" exact component={Home} />
       <Redirect exact from="/login" to="/signin" />
       <Route path="/signin" exact component={Login} />
+      <SecureRoute path="/user-diagnostics" component={UserInfo} />
+
+      {/* 508 / Accessibility Team Routes */}
+      <SecureRoute path="/508" component={Accessibility} />
+
+      {/* GRT/GRB Routes */}
+      <SecureRoute
+        path="/governance-review-team"
+        component={GovernanceReviewTeam}
+      />
+
+      {/* Requester / Business Owner Routes */}
+      <SecureRoute
+        exact
+        path="/system/request-type"
+        component={RequestTypeForm}
+      />
       <Route path="/governance-overview" exact component={GovernanceOverview} />
-
-      <Route path="/accessibility/create" exact component={Create} />
-      <Route path="/accessibility/list" exact component={List} />
-
-      {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+      <SecureRoute
+        path="/governance-task-list/:systemId"
+        exact
+        component={GovernanceTaskList}
+      />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grt"
-        render={({ component }: any) => component()}
         component={PrepareForGRT}
       />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/prepare-for-grb"
-        render={({ component }: any) => component()}
         component={PrepareForGRB}
       />
       <SecureRoute
         exact
         path="/governance-task-list/:systemId/request-decision"
-        render={({ component }: any) => component()}
         component={RequestDecision}
-      />
-      {flags.taskListLite && (
-        <SecureRoute
-          path="/governance-task-list/:systemId"
-          exact
-          render={({ component }: any) => component()}
-          component={GovernanceTaskList}
-        />
-      )}
-      {flags.fileUploads && (
-        <SecureRoute
-          exact
-          path="/document-prototype"
-          render={() => <DocumentPrototype />}
-        />
-      )}
-      {isUserSet && user.isGrtReviewer(userGroups) && (
-        <SecureRoute
-          path="/governance-review-team/:systemId/:activePage"
-          render={() => <GovernanceReviewTeam />}
-        />
-      )}
-      <SecureRoute
-        exact
-        path="/system/request-type"
-        render={({ component }: any) => component()}
-        component={RequestTypeForm}
       />
       <Redirect
         exact
@@ -101,7 +96,6 @@ const AppRoutes = () => {
       />
       <SecureRoute
         path="/system/:systemId/:formPage"
-        render={({ component }: any) => component()}
         component={SystemIntake}
       />
       <Redirect
@@ -111,10 +105,10 @@ const AppRoutes = () => {
       />
       <SecureRoute
         path="/business/:businessCaseId/:formPage"
-        render={({ component }: any) => component()}
         component={BusinessCase}
       />
-      <Route path="/implicit/callback" component={LoginCallback} />
+
+      {/* Static Page Routes  */}
       <Route path="/privacy-policy" exact component={PrivacyPolicy} />
       <Route path="/cookies" exact component={Cookies} />
       <Route
@@ -127,12 +121,18 @@ const AppRoutes = () => {
         path="/terms-and-conditions"
         component={TermsAndConditions}
       />
+
+      {/* Misc Routes */}
+      {flags.sandbox && <Route path="/sandbox" exact component={Sandbox} />}
+
+      <Route path="/implicit/callback" component={LoginCallback} />
+
+      {/* 404 */}
       <Route path="*" component={NotFound} />
     </Switch>
   );
 };
 
-// eslint-disable-next-line react/prefer-stateless-function
 const App = () => {
   const handleSkipNav = () => {
     const mainContent = document.getElementById('main-content')!;
@@ -148,13 +148,15 @@ const App = () => {
         Skip to main content
       </button>
       <BrowserRouter>
-        <AuthenticationWrapper>
-          <UserInfoWrapper>
-            <TimeOutWrapper>
-              <AppRoutes />
-            </TimeOutWrapper>
-          </UserInfoWrapper>
-        </AuthenticationWrapper>
+        <MessageProvider>
+          <AuthenticationWrapper>
+            <UserInfoWrapper>
+              <TimeOutWrapper>
+                <AppRoutes />
+              </TimeOutWrapper>
+            </UserInfoWrapper>
+          </AuthenticationWrapper>
+        </MessageProvider>
       </BrowserRouter>
     </FlagsWrapper>
   );

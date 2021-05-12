@@ -16,8 +16,12 @@ import (
 )
 
 const (
-	prodGRTJobCode = "EASI_P_GOVTEAM"
-	testGRTJobCode = "EASI_D_GOVTEAM"
+	prodGRTJobCode       = "EASI_P_GOVTEAM"
+	testGRTJobCode       = "EASI_D_GOVTEAM"
+	prod508UserJobCode   = "EASI_P_508_USER"
+	test508UserJobCode   = "EASI_D_508_USER"
+	prod508TesterJobCode = "EASI_P_508_TESTER"
+	test508TesterJobCode = "EASI_D_508_TESTER"
 )
 
 func (f oktaMiddlewareFactory) jwt(logger *zap.Logger, authHeader string) (*jwtverifier.Jwt, error) {
@@ -66,10 +70,19 @@ func (f oktaMiddlewareFactory) newPrincipal(jwt *jwtverifier.Jwt) (*authn.EUAPri
 	// as a viewer/submitter
 	jcEASi := true
 
-	// need to check the claims for empowerment as a reviewer
+	// need to check the claims for empowerment as each role
 	jcGRT := jwtGroupsContainsJobCode(jwt, f.codeGRT)
+	jc508Tester := jwtGroupsContainsJobCode(jwt, f.code508Tester)
+	jc508User := jwtGroupsContainsJobCode(jwt, f.code508User)
 
-	return &authn.EUAPrincipal{EUAID: euaID, JobCodeEASi: jcEASi, JobCodeGRT: jcGRT}, nil
+	return &authn.EUAPrincipal{
+			EUAID:            euaID,
+			JobCodeEASi:      jcEASi,
+			JobCodeGRT:       jcGRT,
+			JobCode508Tester: jc508Tester,
+			JobCode508User:   jc508User,
+		},
+		nil
 }
 
 func (f oktaMiddlewareFactory) newAuthorizeMiddleware(next http.Handler) http.Handler {
@@ -128,23 +141,35 @@ func newJwtVerifier(clientID string, issuer string) *jwtverifier.JwtVerifier {
 
 type oktaMiddlewareFactory struct {
 	handlers.HandlerBase
-	verifier *jwtverifier.JwtVerifier
-	codeGRT  string
+	verifier      *jwtverifier.JwtVerifier
+	codeGRT       string
+	code508Tester string
+	code508User   string
 }
 
 // NewOktaAuthorizeMiddleware returns a wrapper for HandlerFunc to authorize with Okta
-func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issuer string, testGRT bool) func(http.Handler) http.Handler {
+func NewOktaAuthorizeMiddleware(base handlers.HandlerBase, clientID string, issuer string, useTestJobCodes bool) func(http.Handler) http.Handler {
 	verifier := newJwtVerifier(clientID, issuer)
 
-	// by default we want to use the PROD job code, and only in
+	// by default we want to use the PROD job codes, and only in
 	// pre-PROD environments do we want to empower the
-	// alternate job code.
+	// alternate job codes.
 	jobCodeGRT := prodGRTJobCode
-	if testGRT {
+	jobCode508User := prod508UserJobCode
+	jobCode508Tester := prod508TesterJobCode
+	if useTestJobCodes {
 		jobCodeGRT = testGRTJobCode
+		jobCode508Tester = test508TesterJobCode
+		jobCode508User = test508UserJobCode
 	}
 
-	middlewareFactory := oktaMiddlewareFactory{HandlerBase: base, verifier: verifier, codeGRT: jobCodeGRT}
+	middlewareFactory := oktaMiddlewareFactory{
+		HandlerBase:   base,
+		verifier:      verifier,
+		codeGRT:       jobCodeGRT,
+		code508Tester: jobCode508Tester,
+		code508User:   jobCode508User,
+	}
 	return func(next http.Handler) http.Handler {
 		return middlewareFactory.newAuthorizeMiddleware(next)
 	}

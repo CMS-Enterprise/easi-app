@@ -106,10 +106,12 @@ describe('The System Intake Form', () => {
           vehicle: '',
           startDate: {
             month: '',
+            day: '',
             year: ''
           },
           endDate: {
             month: '',
+            day: '',
             year: ''
           }
         },
@@ -196,6 +198,10 @@ describe('The System Intake Form', () => {
       .type('1')
       .should('have.value', '1');
 
+    cy.get('#IntakeForm-ContractStartDay')
+      .type('2')
+      .should('have.value', '2');
+
     cy.get('#IntakeForm-ContractStartYear')
       .type('2020')
       .should('have.value', '2020');
@@ -203,6 +209,10 @@ describe('The System Intake Form', () => {
     cy.get('#IntakeForm-ContractEndMonth')
       .type('12')
       .should('have.value', '12');
+
+    cy.get('#IntakeForm-ContractEndDay')
+      .type('29')
+      .should('have.value', '29');
 
     cy.get('#IntakeForm-ContractEndYear')
       .type('2021')
@@ -223,11 +233,11 @@ describe('The System Intake Form', () => {
       .siblings('dd')
       .contains('Center for Medicare');
 
-    cy.contains('.easi-review-row dt', "CMS Business/Product Owner's Name")
+    cy.contains('.easi-review-row dt', "CMS Business Owner's Name")
       .siblings('dd')
       .contains('Casey Doe');
 
-    cy.contains('.easi-review-row dt', 'Business Owner Component')
+    cy.contains('.easi-review-row dt', 'CMS Business Owner Component')
       .siblings('dd')
       .contains('Center for Medicare');
 

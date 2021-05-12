@@ -31,6 +31,23 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.Len(fetched.LifecycleCostLines, 2)
 	})
 
+	s.Run("fetches an open business case", func() {
+		intake := testhelpers.NewSystemIntake()
+		_, err := s.store.CreateSystemIntake(ctx, &intake)
+		s.NoError(err)
+		businessCase := testhelpers.NewBusinessCase()
+		businessCase.Status = models.BusinessCaseStatusOPEN
+		businessCase.SystemIntakeID = intake.ID
+		created, err := s.store.CreateBusinessCase(ctx, &businessCase)
+		s.NoError(err)
+		fetched, err := s.store.FetchOpenBusinessCaseByIntakeID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch business case")
+		s.Equal(created.ID, fetched.ID)
+		s.Equal(businessCase.EUAUserID, fetched.EUAUserID)
+		s.Len(fetched.LifecycleCostLines, 2)
+	})
+
 	s.Run("cannot without an ID that exists in the db", func() {
 		badUUID, _ := uuid.Parse("")
 		fetched, err := s.store.FetchBusinessCaseByID(ctx, badUUID)
@@ -38,52 +55,6 @@ func (s StoreTestSuite) TestFetchBusinessCaseByID() {
 		s.Error(err)
 		s.IsType(&apperrors.ResourceNotFoundError{}, err)
 		s.Nil(fetched)
-	})
-}
-
-func (s StoreTestSuite) TestFetchBusinessCasesByEuaID() {
-	ctx := context.Background()
-
-	s.Run("golden path to fetch business cases", func() {
-		intake := testhelpers.NewSystemIntake()
-		intake.Status = models.SystemIntakeStatusINTAKESUBMITTED
-		_, err := s.store.CreateSystemIntake(ctx, &intake)
-		s.NoError(err)
-
-		intake2 := testhelpers.NewSystemIntake()
-		intake2.EUAUserID = intake.EUAUserID
-		intake2.Status = models.SystemIntakeStatusINTAKESUBMITTED
-		_, err = s.store.CreateSystemIntake(ctx, &intake2)
-		s.NoError(err)
-
-		businessCase := testhelpers.NewBusinessCase()
-		businessCase.EUAUserID = intake.EUAUserID.ValueOrZero()
-		businessCase.SystemIntakeID = intake.ID
-
-		businessCase2 := testhelpers.NewBusinessCase()
-		businessCase2.EUAUserID = intake.EUAUserID.ValueOrZero()
-		businessCase2.SystemIntakeID = intake2.ID
-
-		_, err = s.store.CreateBusinessCase(ctx, &businessCase)
-		s.NoError(err)
-
-		_, err = s.store.CreateBusinessCase(ctx, &businessCase2)
-		s.NoError(err)
-
-		fetched, err := s.store.FetchBusinessCasesByEuaID(ctx, businessCase.EUAUserID)
-
-		s.NoError(err, "failed to fetch business cases")
-		s.Len(fetched, 2)
-		s.Len(fetched[0].LifecycleCostLines, 2)
-		s.Equal(businessCase.EUAUserID, fetched[0].EUAUserID)
-	})
-
-	s.Run("fetches no results with other EUA ID", func() {
-		fetched, err := s.store.FetchBusinessCasesByEuaID(ctx, testhelpers.RandomEUAID())
-
-		s.NoError(err)
-		s.Len(fetched, 0)
-		s.Equal(models.BusinessCases{}, fetched)
 	})
 }
 

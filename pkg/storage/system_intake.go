@@ -29,7 +29,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 		intake.UpdatedAt = &createAt
 	}
 	const createIntakeSQL = `
-		INSERT INTO system_intake (
+		INSERT INTO system_intakes (
 			id,
 			eua_user_id,
 			status,
@@ -66,6 +66,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			contract_start_year,
 			contract_end_month,
 			contract_end_year,
+			contract_start_date,
+			contract_end_date,
 			grt_date,
 			grb_date,
 			created_at,
@@ -108,6 +110,8 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 			:contract_start_year,
 			:contract_end_month,
 			:contract_end_year,
+			:contract_start_date,
+			:contract_end_date,
 			:grt_date,
 			:grb_date,
 		    :created_at,
@@ -131,7 +135,7 @@ func (s *Store) CreateSystemIntake(ctx context.Context, intake *models.SystemInt
 func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemIntake) (*models.SystemIntake, error) {
 	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 	const updateSystemIntakeSQL = `
-		UPDATE system_intake
+		UPDATE system_intakes
 		SET
 			status = :status,
 			request_type = :request_type,
@@ -165,10 +169,8 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			cost_increase_amount = :cost_increase_amount,
 			contractor = :contractor,
 			contract_vehicle = :contract_vehicle,
-			contract_start_month = :contract_start_month,
-			contract_start_year = :contract_start_year,
-			contract_end_month = :contract_end_month,
-			contract_end_year = :contract_end_year,
+			contract_start_date = :contract_start_date,
+			contract_end_date = :contract_end_date,
 			updated_at = :updated_at,
 			submitted_at = :submitted_at,
 		    decided_at = :decided_at,
@@ -180,8 +182,9 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 			lcid_expires_at = :lcid_expires_at,
 			lcid_scope = :lcid_scope,
 			decision_next_steps = :decision_next_steps,
-			rejection_reason = :rejection_reason
-		WHERE system_intake.id = :id
+			rejection_reason = :rejection_reason,
+			admin_lead = :admin_lead
+		WHERE system_intakes.id = :id
 	`
 	_, err := s.db.NamedExec(
 		updateSystemIntakeSQL,
@@ -206,28 +209,34 @@ func (s *Store) UpdateSystemIntake(ctx context.Context, intake *models.SystemInt
 
 const fetchSystemIntakeSQL = `
 		SELECT
-		       system_intake.*,
-		       business_case.id as business_case_id
+		       system_intakes.*,
+		       business_cases.id as business_case_id
 		FROM
-		     system_intake
-		     LEFT JOIN business_case ON business_case.system_intake = system_intake.id
+		     system_intakes
+		     LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
 `
 
 // FetchSystemIntakeByID queries the DB for a system intake matching the given ID
 func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*models.SystemIntake, error) {
 	intake := models.SystemIntake{}
 	const idMatchClause = `
-		WHERE system_intake.id=$1
+		WHERE system_intakes.id=$1
 `
-	err := s.db.Get(&intake, fetchSystemIntakeSQL+idMatchClause, id)
+	err := s.db.GetContext(ctx, &intake, fetchSystemIntakeSQL+idMatchClause, id)
 	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch system intake %s", err),
-			zap.String("id", id.String()),
-		)
 		if errors.Is(err, sql.ErrNoRows) {
+			appcontext.ZLogger(ctx).Info(
+				"No system intake found",
+				zap.Error(err),
+				zap.String("id", id.String()),
+			)
 			return nil, &apperrors.ResourceNotFoundError{Err: err, Resource: models.SystemIntake{}}
 		}
+		appcontext.ZLogger(ctx).Error(
+			"Failed to fetch system intake",
+			zap.Error(err),
+			zap.String("id", id.String()),
+		)
 		return nil, &apperrors.QueryError{
 			Err:       err,
 			Model:     id,
@@ -242,7 +251,7 @@ func (s *Store) FetchSystemIntakeByID(ctx context.Context, id uuid.UUID) (*model
 func (s *Store) FetchSystemIntakesByEuaID(ctx context.Context, euaID string) (models.SystemIntakes, error) {
 	intakes := []models.SystemIntake{}
 	const byEuaIDClause = `
-		WHERE system_intake.eua_user_id=$1 AND system_intake.status != 'WITHDRAWN'
+		WHERE system_intakes.eua_user_id=$1 AND system_intakes.status != 'WITHDRAWN'
 	`
 	err := s.db.Select(&intakes, fetchSystemIntakeSQL+byEuaIDClause, euaID)
 	if err != nil {
@@ -268,20 +277,34 @@ func (s *Store) FetchSystemIntakes(ctx context.Context) (models.SystemIntakes, e
 
 // FetchSystemIntakesByStatuses queries the DB for all system intakes matching a status filter
 func (s *Store) FetchSystemIntakesByStatuses(ctx context.Context, allowedStatuses []models.SystemIntakeStatus) (models.SystemIntakes, error) {
-	intakes := []models.SystemIntake{}
-	const byStatusClause = `
-		WHERE system_intake.status IN (?)
+	var intakes models.SystemIntakes
+	query := `
+		SELECT
+			system_intakes.*,
+			business_cases.id as business_case_id,
+			intakes_and_notes.content AS last_admin_note_content,
+			intakes_and_notes.created_at AS last_admin_note_created_at
+		FROM
+			(	SELECT
+					distinct ON (system_intakes.id) system_intakes.id, notes.content, notes.created_at
+				FROM system_intakes
+					LEFT JOIN notes on notes.system_intake = system_intakes.id
+				WHERE system_intakes.status IN (?)
+				ORDER BY system_intakes.id, notes.created_at DESC
+			) AS intakes_and_notes
+		LEFT JOIN system_intakes ON system_intakes.id = intakes_and_notes.id
+		LEFT JOIN business_cases ON business_cases.system_intake = system_intakes.id
 	`
-	query, args, err := sqlx.In(fetchSystemIntakeSQL+byStatusClause, allowedStatuses)
+	query, args, err := sqlx.In(query, allowedStatuses)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
-		return models.SystemIntakes{}, err
+		return nil, err
 	}
 	query = s.db.Rebind(query)
 	err = s.db.Select(&intakes, query, args...)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(fmt.Sprintf("Failed to fetch system intakes %s", err))
-		return models.SystemIntakes{}, err
+		return nil, err
 	}
 	return intakes, nil
 }
@@ -302,7 +325,7 @@ func generateLifecyclePrefix(t time.Time, loc *time.Location) string {
 func (s *Store) GenerateLifecycleID(ctx context.Context) (string, error) {
 	prefix := generateLifecyclePrefix(s.clock.Now(), s.easternTZ)
 
-	countSQL := `SELECT COUNT(*) FROM system_intake WHERE lcid ~ $1;`
+	countSQL := `SELECT COUNT(*) FROM system_intakes WHERE lcid ~ $1;`
 	var count int
 	if err := s.db.Get(&count, countSQL, "^"+prefix); err != nil {
 		return "", err
@@ -319,7 +342,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	const startedCountSQL = `
 		WITH "started" AS (
 		    SELECT *
-		    FROM system_intake
+		    FROM system_intakes
 		    WHERE created_at >=  $1
 		      AND created_at < $2
 		)
@@ -340,7 +363,7 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	const fundedCountSQL = `
 		WITH "completed" AS (
 		    SELECT existing_funding
-		    FROM system_intake
+		    FROM system_intakes
 		    WHERE submitted_at >=  $1
 		      AND submitted_at < $2
 		)
@@ -378,4 +401,99 @@ func (s *Store) FetchSystemIntakeMetrics(ctx context.Context, startTime time.Tim
 	metrics.Funded = fundedResponse.FundedCount
 
 	return metrics, nil
+}
+
+// UpdateAdminLead updates the admin lead for an intake
+func (s *Store) UpdateAdminLead(ctx context.Context, id uuid.UUID, adminLead string) (string, error) {
+	var intake struct {
+		AdminLead string `db:"admin_lead"`
+		ID        uuid.UUID
+		UpdatedAt time.Time `db:"updated_at"`
+	}
+	intake.AdminLead = adminLead
+	intake.ID = id
+	intake.UpdatedAt = time.Now()
+
+	const updateSystemIntakeSQL = `
+		UPDATE system_intakes
+		SET
+			updated_at = :updated_at,
+			admin_lead = :admin_lead
+		WHERE system_intakes.id = :id
+	`
+	_, err := s.db.NamedExec(
+		updateSystemIntakeSQL,
+		intake,
+	)
+	return adminLead, err
+}
+
+// UpdateReviewDates updates the admin lead for an intake
+func (s *Store) UpdateReviewDates(ctx context.Context, id uuid.UUID, grbDate *time.Time, grtDate *time.Time) (*models.SystemIntake, error) {
+	var intake struct {
+		GRBDate   *time.Time `db:"grb_date"`
+		GRTDate   *time.Time `db:"grt_date"`
+		ID        uuid.UUID
+		UpdatedAt time.Time `db:"updated_at"`
+	}
+
+	if grbDate != nil {
+		intake.GRBDate = grbDate
+	}
+
+	if grtDate != nil {
+		intake.GRTDate = grtDate
+	}
+
+	intake.ID = id
+	intake.UpdatedAt = time.Now()
+
+	const updateSystemIntakeSQL = `
+		UPDATE system_intakes
+		SET
+			updated_at = :updated_at,
+			grb_date = :grb_date,
+			grt_date = :grt_date
+		WHERE system_intakes.id = :id
+	`
+	_, err := s.db.NamedExec(
+		updateSystemIntakeSQL,
+		intake,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.FetchSystemIntakeByID(ctx, intake.ID)
+}
+
+// UpdateSystemIntakeStatus updates the status for an intake
+func (s *Store) UpdateSystemIntakeStatus(ctx context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error) {
+	var intake struct {
+		Status    models.SystemIntakeStatus
+		ID        uuid.UUID
+		UpdatedAt time.Time `db:"updated_at"`
+	}
+	intake.Status = newStatus
+	intake.ID = id
+	intake.UpdatedAt = time.Now()
+
+	const updateSystemIntakeSQL = `
+		UPDATE system_intakes
+		SET
+			updated_at = :updated_at,
+			status = :status
+		WHERE system_intakes.id = :id
+	`
+	_, err := s.db.NamedExec(
+		updateSystemIntakeSQL,
+		intake,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return s.FetchSystemIntakeByID(ctx, intake.ID)
 }

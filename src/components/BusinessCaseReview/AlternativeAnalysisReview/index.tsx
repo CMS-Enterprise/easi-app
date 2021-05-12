@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import PrintableTabContent from 'components/PrintableTabContent';
 import ResponsiveTabs from 'components/shared/ResponsiveTabs';
-import { hasAlternativeB } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import {
   BusinessCaseSolution,
   ProposedBusinessCaseSolution
@@ -11,6 +11,7 @@ import AsIsSolutionReview from 'views/BusinessCase/Review/AsIsSolutionReview';
 import ProposedBusinessCaseSolutionReview from 'views/BusinessCase/Review/ProposedBusinessCaseSolutionReview';
 
 type AlternativeAnalysisReviewProps = {
+  fiscalYear: number;
   asIsSolution: BusinessCaseSolution;
   preferredSolution: ProposedBusinessCaseSolution;
   alternativeA: ProposedBusinessCaseSolution;
@@ -19,6 +20,7 @@ type AlternativeAnalysisReviewProps = {
 
 const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
   const {
+    fiscalYear,
     asIsSolution,
     preferredSolution,
     alternativeA,
@@ -30,12 +32,12 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
   );
 
   const getFilledSolutions = () => {
-    const solutions = [
-      '"As is" solution',
-      'Preferred solution',
-      'Alternative A'
-    ];
-    if (alternativeB && hasAlternativeB(alternativeB)) {
+    const solutions = ['"As is" solution', 'Preferred solution'];
+
+    if (alternativeA && alternativeSolutionHasFilledFields(alternativeA)) {
+      solutions.push('Alternative A');
+    }
+    if (alternativeB && alternativeSolutionHasFilledFields(alternativeB)) {
       solutions.push('Alternative B');
     }
     return solutions;
@@ -53,7 +55,7 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
         style={{ overflow: 'auto' }}
       >
         <PrintableTabContent visible={activeSolutionTab === '"As is" solution'}>
-          <AsIsSolutionReview solution={asIsSolution} />
+          <AsIsSolutionReview fiscalYear={fiscalYear} solution={asIsSolution} />
         </PrintableTabContent>
 
         <PrintableTabContent
@@ -61,21 +63,26 @@ const AlternativeAnalysisReview = (values: AlternativeAnalysisReviewProps) => {
         >
           <ProposedBusinessCaseSolutionReview
             name="Preferred solution"
+            fiscalYear={fiscalYear}
             solution={preferredSolution}
           />
         </PrintableTabContent>
 
         <PrintableTabContent visible={activeSolutionTab === 'Alternative A'}>
-          <ProposedBusinessCaseSolutionReview
-            name="Alternative A"
-            solution={alternativeA}
-          />
+          {alternativeA && alternativeSolutionHasFilledFields(alternativeA) && (
+            <ProposedBusinessCaseSolutionReview
+              name="Alternative A"
+              fiscalYear={fiscalYear}
+              solution={alternativeA}
+            />
+          )}
         </PrintableTabContent>
 
         <PrintableTabContent visible={activeSolutionTab === 'Alternative B'}>
-          {alternativeB && hasAlternativeB(alternativeB) && (
+          {alternativeB && alternativeSolutionHasFilledFields(alternativeB) && (
             <ProposedBusinessCaseSolutionReview
               name="Alternative B"
+              fiscalYear={fiscalYear}
               solution={alternativeB}
             />
           )}

@@ -1,13 +1,25 @@
-FROM node:10.22.0 AS builder
+FROM node:12.21.0 AS base
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+ENV PATH /app/node_modules/.bin:$PATH
+
+FROM base AS modules
+
+COPY package.json ./
+COPY yarn.lock ./
+
 RUN yarn install
 
-COPY craco.config.js tsconfig.json .eslintrc ./
+FROM modules AS src
+
+COPY craco.config.js ./
+COPY tsconfig.json ./
+COPY .eslintrc ./
 COPY public ./public
 COPY src ./src
+
+FROM src AS build
 
 ARG REACT_APP_API_ADDRESS
 ARG REACT_APP_APP_ENV
@@ -19,8 +31,8 @@ ARG REACT_APP_OKTA_SERVER_ID
 
 RUN yarn run build
 
-FROM node:10.22.0
+FROM node:12.21.0 as srv
 
 RUN yarn global add serve
 WORKDIR /app
-COPY --from=builder /app/build .
+COPY --from=build /app/build .

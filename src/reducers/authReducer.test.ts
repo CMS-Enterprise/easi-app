@@ -1,53 +1,13 @@
-import { DateTime } from 'luxon';
-
-import authReducer, {
-  setUser,
-  updateLastActiveAt,
-  updateLastRenewAt
-} from './authReducer';
+import authReducer, { setUser } from './authReducer';
 
 describe('The auth reducer', () => {
   it('returns the initial state', () => {
     expect(authReducer(undefined, { type: 'TEST', payload: {} })).toEqual({
-      lastActiveAt: expect.any(Number),
-      lastRenewAt: expect.any(Number),
       name: '',
       euaId: '',
       groups: [],
       isUserSet: false
     });
-  });
-
-  it('handles updateLastActiveAt', () => {
-    const initialReducer = {
-      lastActiveAt: 0,
-      lastRenewAt: 0,
-      name: '',
-      euaId: '',
-      groups: [],
-      isUserSet: false
-    };
-    const now = DateTime.local();
-
-    expect(
-      authReducer(initialReducer, updateLastActiveAt(now)).lastActiveAt
-    ).toEqual(now.toMillis());
-  });
-
-  it('handles updateLastRenewAt', () => {
-    const initialReducer = {
-      lastActiveAt: 0,
-      lastRenewAt: 0,
-      name: '',
-      euaId: '',
-      groups: [],
-      isUserSet: false
-    };
-    const now = DateTime.local();
-
-    expect(
-      authReducer(initialReducer, updateLastRenewAt(now)).lastRenewAt
-    ).toEqual(now.toMillis());
   });
 
   it('sets user info', () => {

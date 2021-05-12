@@ -2,9 +2,9 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -12,9 +12,10 @@ import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextField from 'components/shared/TextField';
-import { hasAlternativeB } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel, GeneralRequestInfoForm } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -30,7 +31,6 @@ const GeneralRequestInfo = ({
   businessCase,
   dispatchSave
 }: GeneralRequestInfoProps) => {
-  const flags = useFlags();
   const history = useHistory();
   const initialValues: GeneralRequestInfoForm = {
     requestName: businessCase.requestName,
@@ -75,7 +75,7 @@ const GeneralRequestInfo = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl">General request information</h1>
+            <PageHeading>General request information</PageHeading>
             <p className="line-height-body-6">
               Make a first draft of the various solutions you’ve thought of and
               the costs involved to build or buy them. Once you have a draft
@@ -83,9 +83,12 @@ const GeneralRequestInfo = ({
               Admin Team who will ensure it is ready to be presented at the
               Governance Review Team (GRT) Meeting.
             </p>
-            <div className="tablet:grid-col-5">
-              <MandatoryFieldsAlert />
-            </div>
+            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
+            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
+              <div className="tablet:grid-col-5">
+                <MandatoryFieldsAlert />
+              </div>
+            )}
             <div className="tablet:grid-col-9 margin-bottom-7">
               <Form>
                 <FieldGroup
@@ -168,9 +171,10 @@ const GeneralRequestInfo = ({
                     dispatchSave();
                     const newUrl = 'request-description';
                     history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
                   }
                 });
-                window.scrollTo(0, 0);
               }}
             >
               Next
@@ -182,9 +186,7 @@ const GeneralRequestInfo = ({
                 onClick={() => {
                   dispatchSave();
                   history.push(
-                    flags.taskListLite
-                      ? `/governance-task-list/${businessCase.systemIntakeId}`
-                      : '/'
+                    `/governance-task-list/${businessCase.systemIntakeId}`
                   );
                 }}
               >
@@ -195,7 +197,11 @@ const GeneralRequestInfo = ({
             </div>
             <PageNumber
               currentPage={1}
-              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
+              totalPages={
+                alternativeSolutionHasFilledFields(businessCase.alternativeB)
+                  ? 6
+                  : 5
+              }
             />
             <AutoSave
               values={values}

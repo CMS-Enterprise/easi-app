@@ -1,40 +1,51 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { DocumentNode, useMutation } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
 
+import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
-import { ActionForm, ActionType, CreateActionPayload } from 'types/action';
-import { postAction } from 'types/routines';
+import { ActionForm } from 'types/action';
+import { BasicActionInput } from 'types/graphql-global-types';
 import flattenErrors from 'utils/flattenErrors';
 import { actionSchema } from 'validations/actionSchema';
 
-type SubmitActionProps = {
-  action: ActionType;
-  actionName: string;
+type ActionInput = {
+  input: BasicActionInput;
 };
 
-const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
+type SubmitActionProps = {
+  actionName: string;
+  query: DocumentNode;
+};
+
+const SubmitAction = ({ actionName, query }: SubmitActionProps) => {
   const { systemId } = useParams<{ systemId: string }>();
   const { t } = useTranslation('action');
   const history = useHistory();
-  const dispatch = useDispatch();
+
+  const [mutate, mutationResult] = useMutation<ActionInput>(query);
 
   const dispatchSave = (values: ActionForm) => {
     const { feedback } = values;
-    const payload: CreateActionPayload = {
-      intakeId: systemId,
-      actionType: action,
-      feedback
-    };
-    dispatch(postAction(payload));
-    history.push(`/governance-review-team/${systemId}/intake-request`);
+    mutate({
+      variables: {
+        input: {
+          intakeId: systemId,
+          feedback
+        }
+      }
+    }).then(response => {
+      if (!response.errors) {
+        history.push(`/governance-review-team/${systemId}/intake-request`);
+      }
+    });
   };
 
   const initialValues: ActionForm = {
@@ -53,7 +64,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<ActionForm>) => {
-        const { errors } = formikProps;
+        const { errors, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -74,14 +85,27 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
                 })}
               </ErrorAlert>
             )}
-            <h1>{t('submitAction.heading')}</h1>
+            {mutationResult && mutationResult.error && (
+              <ErrorAlert heading="Error">
+                <ErrorAlertMessage
+                  message={mutationResult.error.message}
+                  errorKey="systemIntake"
+                />
+              </ErrorAlert>
+            )}
+            <PageHeading>{t('submitAction.heading')}</PageHeading>
             <h2>{t('submitAction.subheading')}</h2>
             <p>
               {actionName} &nbsp;
               <Link to={backLink}>{t('submitAction.backLink')}</Link>
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">
-              <Form>
+              <Form
+                onSubmit={e => {
+                  handleSubmit(e);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 <FieldGroup
                   scrollElement="feedback"
                   error={!!flatErrors.feedback}
@@ -94,7 +118,7 @@ const SubmitAction = ({ action, actionName }: SubmitActionProps) => {
                     as={TextAreaField}
                     error={!!flatErrors.feedback}
                     id="SubmitActionForm-Feedback"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="feedback"
                   />
                 </FieldGroup>

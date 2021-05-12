@@ -4,54 +4,17 @@
   margin-top: 1rem;
   flex-direction: row-reverse;
 
-  &__year-costs {
-    margin-top: 2rem;
+  &__phase-costs {
+    margin: 0.5rem 2rem 2rem 0;
   }
 
-  &__phase-cost-wrapper {
-    margin-top: 1.5rem;
-
-    &:first-of-type {
-      margin-top: 0.5rem;
-    }
-
-    &:not(:last-child) {
-      margin-bottom: 1rem;
-    }
-
-    .usa-form-group--error {
-      margin-top: 0;
-    }
-  }
-
-  &__phase-btn-wrapper {
-    display: flex;
-    align-items: flex-end;
-  }
-
-  &__remove-phase-btn {
-    &.usa-button--unstyled {
-      padding: 0.75rem 0;
-    }
+  &__phase-fieldset {
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid color($theme-color-base-dark);
   }
 
   .usa-label {
     margin-top: 0;
-  }
-
-  // Override padding because labels are inline
-  .usa-radio__input {
-    padding-left: 0;
-  }
-
-  &__phase-cost-row {
-    display: grid;
-    grid-gap: 16px;
-    margin-right: 1rem;
-
-    @media screen and (min-width: $desktop) {
-      grid-template-columns: minmax(100px, 250px) 150px;
-    }
   }
 
   .help-title {
@@ -75,10 +38,6 @@
       &:last-of-type {
         border-bottom: none;
       }
-    }
-
-    &--blur {
-      filter: blur(3px);
     }
   }
 

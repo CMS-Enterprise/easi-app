@@ -6,8 +6,7 @@ import {
   clearBusinessCase,
   fetchBusinessCase,
   postBusinessCase,
-  putBusinessCase,
-  storeBusinessCase
+  putBusinessCase
 } from 'types/routines';
 
 import businessCaseReducer from './businessCaseReducer';
@@ -257,24 +256,6 @@ describe('The business case reducer', () => {
         isLoading: null,
         isSaving: true,
         isSubmitting: false,
-        error: null
-      });
-    });
-  });
-
-  describe('storeBusinessCase', () => {
-    it('handles storeBusinessCase.TRIGGER', () => {
-      const mockTriggerAction = {
-        type: storeBusinessCase.TRIGGER,
-        payload: {
-          id: '12345'
-        }
-      };
-
-      expect(businessCaseReducer(undefined, mockTriggerAction)).toEqual({
-        form: { ...businessCaseInitialData, ...{ id: '12345' } },
-        isLoading: false,
-        isSaving: false,
         error: null
       });
     });

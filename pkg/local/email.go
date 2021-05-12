@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 // NewSender returns a fake email sender
@@ -18,9 +19,9 @@ type Sender struct {
 }
 
 // Send logs an email
-func (s Sender) Send(ctx context.Context, toAddress string, subject string, body string) error {
+func (s Sender) Send(ctx context.Context, toAddress models.EmailAddress, subject string, body string) error {
 	appcontext.ZLogger(ctx).Info("Mock sending email",
-		zap.String("To", toAddress),
+		zap.String("To", toAddress.String()),
 		zap.String("Subject", subject),
 		zap.String("Body", body),
 	)

@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { useOktaAuth } from '@okta/okta-react';
-import { Button } from '@trussworks/react-uswds';
+import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import MainContent from 'components/MainContent';
+import PageHeading from 'components/PageHeading';
 import PageWrapper from 'components/PageWrapper';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -28,7 +28,6 @@ const RequestTypeForm = () => {
   const { oktaAuth } = useOktaAuth();
   const dispatch = useDispatch();
   const history = useHistory();
-  const flags = useFlags();
 
   const isNewIntakeCreated = useSelector(
     (state: AppState) => state.systemIntake.isNewIntakeCreated
@@ -63,9 +62,7 @@ const RequestTypeForm = () => {
 
   useEffect(() => {
     if (isNewIntakeCreated) {
-      const navigationLink = flags.taskListLite
-        ? `/governance-task-list/${systemIntake.id}`
-        : `/system/${systemIntake.id}/contact-details`;
+      const navigationLink = `/governance-task-list/${systemIntake.id}`;
       switch (systemIntake.requestType) {
         case 'NEW':
           history.push(navigationLink);
@@ -96,11 +93,9 @@ const RequestTypeForm = () => {
             <Link to="/">Home</Link>
             <i className="fa fa-angle-right margin-x-05" aria-hidden />
           </li>
-          <li aria-current="location">Make a system request</li>
+          <li aria-current="location">Make a request</li>
         </BreadcrumbNav>
-        <h1 className="font-heading-2xl margin-top-4">
-          {t('requestTypeForm.heading')}
-        </h1>
+        <PageHeading>{t('requestTypeForm.heading')}</PageHeading>
         <Formik
           initialValues={{ requestType: '' }}
           onSubmit={handleCreateIntake}
@@ -110,7 +105,7 @@ const RequestTypeForm = () => {
           validateOnMount={false}
         >
           {(formikProps: FormikProps<{ requestType: string }>) => {
-            const { values, errors } = formikProps;
+            const { values, errors, handleSubmit } = formikProps;
             const flatErrors = flattenErrors(errors);
             return (
               <>
@@ -131,7 +126,12 @@ const RequestTypeForm = () => {
                     })}
                   </ErrorAlert>
                 )}
-                <Form>
+                <Form
+                  onSubmit={e => {
+                    handleSubmit(e);
+                    window.scrollTo(0, 0);
+                  }}
+                >
                   <FieldGroup
                     error={!!flatErrors.requestType}
                     scrollElement="requestType"
@@ -140,15 +140,9 @@ const RequestTypeForm = () => {
                       className="usa-fieldset"
                       aria-describedby="RequestType-HelpText"
                     >
-                      <legend className="font-heading-xl">
+                      <legend className="font-heading-xl margin-bottom-4">
                         {t('requestTypeForm.subheading')}
                       </legend>
-                      <HelpText
-                        id="RequestType-HelpText"
-                        className="margin-bottom-4"
-                      >
-                        {t('requestTypeForm.info')}
-                      </HelpText>
                       <Field
                         as={RadioField}
                         id="RequestType-NewSystem"
@@ -202,7 +196,16 @@ const RequestTypeForm = () => {
                       ))}
                     </ul>
                   </CollapsableLink>
-                  <Button className="margin-top-5" type="submit">
+                  <HelpText id="RequestType-HelpText" className="margin-top-4">
+                    <Trans i18nKey="intake:requestTypeForm.info">
+                      indexZero
+                      <UswdsLink href="mailto:NavigatorInquiries@cms.hhs.gov">
+                        navigatorEmailLink
+                      </UswdsLink>
+                      indexTwo
+                    </Trans>
+                  </HelpText>
+                  <Button className="margin-top-5 display-block" type="submit">
                     Continue
                   </Button>
                 </Form>

@@ -1,10 +1,19 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch } from 'react-redux';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
+import { DateTime } from 'luxon';
+import IssueLifecycleIdQuery from 'queries/IssueLifecycleIdQuery';
+import { IssueLifecycleId as IssueLifecycleIdType } from 'queries/types/IssueLifecycleId';
 
+import PageHeading from 'components/PageHeading';
+import {
+  DateInputDay,
+  DateInputMonth,
+  DateInputYear
+} from 'components/shared/DateInput';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
@@ -14,15 +23,22 @@ import { RadioField } from 'components/shared/RadioField';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
 import { SubmitLifecycleIdForm } from 'types/action';
-import { issueLifecycleIdForSystemIntake } from 'types/routines';
 import flattenErrors from 'utils/flattenErrors';
 import { lifecycleIdSchema } from 'validations/actionSchema';
 
+const RADIX = 10;
+
 const IssueLifecycleId = () => {
   const { systemId } = useParams<{ systemId: string }>();
-  const dispatch = useDispatch();
   const history = useHistory();
   const { t } = useTranslation('action');
+
+  const [mutate, mutationResult] = useMutation<IssueLifecycleIdType>(
+    IssueLifecycleIdQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
 
   const backLink = `/governance-review-team/${systemId}/actions`;
 
@@ -31,30 +47,41 @@ const IssueLifecycleId = () => {
     lifecycleId: '',
     expirationDateDay: '',
     expirationDateMonth: '',
-    expirationDateYear: ''
+    expirationDateYear: '',
+    newLifecycleId: undefined
   };
 
   const onSubmit = (values: SubmitLifecycleIdForm) => {
     const {
       feedback,
-      expirationDateMonth,
-      expirationDateDay,
-      expirationDateYear,
+      expirationDateMonth = '',
+      expirationDateDay = '',
+      expirationDateYear = '',
       nextSteps,
       scope,
       lifecycleId
     } = values;
-    const lcidPayload = {
-      lcidExpiresAt: `${expirationDateYear}-${expirationDateMonth}-${expirationDateDay}`,
-      lcidNextSteps: nextSteps,
-      lcidScope: scope,
+    const expiresAt = DateTime.utc(
+      parseInt(expirationDateYear, RADIX),
+      parseInt(expirationDateMonth, RADIX),
+      parseInt(expirationDateDay, RADIX)
+    );
+    const input = {
+      intakeId: systemId,
+      expiresAt: expiresAt.toISO(),
+      nextSteps,
+      scope,
       lcid: lifecycleId,
       feedback
     };
-    const payload = { id: systemId, lcidPayload };
-    dispatch(issueLifecycleIdForSystemIntake(payload));
 
-    history.push(`/governance-review-team/${systemId}/intake-request`);
+    mutate({
+      variables: { input }
+    }).then(response => {
+      if (!response.errors) {
+        history.push(`/governance-review-team/${systemId}/notes`);
+      }
+    });
   };
 
   return (
@@ -67,7 +94,7 @@ const IssueLifecycleId = () => {
       validateOnMount={false}
     >
       {(formikProps: FormikProps<SubmitLifecycleIdForm>) => {
-        const { errors, setFieldValue, values } = formikProps;
+        const { errors, setFieldValue, values, handleSubmit } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <>
@@ -88,14 +115,27 @@ const IssueLifecycleId = () => {
                 })}
               </ErrorAlert>
             )}
-            <h1>{t('issueLCID.heading')}</h1>
+            {mutationResult.error && (
+              <ErrorAlert heading="Error issuing lifecycle id">
+                <ErrorAlertMessage
+                  message={mutationResult.error.message}
+                  errorKey="systemIntake"
+                />
+              </ErrorAlert>
+            )}
+            <PageHeading>{t('issueLCID.heading')}</PageHeading>
             <h2>{t('issueLCID.subheading')}</h2>
             <p>
               Approve request and issue Lifecycle ID{' '}
               <Link to={backLink}>Change</Link>
             </p>
             <div className="tablet:grid-col-9 margin-bottom-7">
-              <Form>
+              <Form
+                onSubmit={e => {
+                  handleSubmit(e);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 <FieldGroup
                   scrollElement="newLifecycleId"
                   error={!!flatErrors.newLifecycleId}
@@ -175,10 +215,9 @@ const IssueLifecycleId = () => {
                           {flatErrors.expirationDateMonth}
                         </FieldErrorMsg>
                         <Field
-                          as={TextField}
+                          as={DateInputMonth}
                           error={!!flatErrors.expirationDateMonth}
                           id="IssueLifecycleIdForm-ExpirationDateMonth"
-                          maxLength={2}
                           name="expirationDateMonth"
                         />
                       </div>
@@ -190,10 +229,9 @@ const IssueLifecycleId = () => {
                           {flatErrors.expirationDateDay}
                         </FieldErrorMsg>
                         <Field
-                          as={TextField}
+                          as={DateInputDay}
                           error={!!flatErrors.expirationDateDay}
                           id="IssueLifecycleIdForm-ExpirationDateDay"
-                          maxLength={2}
                           name="expirationDateDay"
                         />
                       </div>
@@ -205,10 +243,9 @@ const IssueLifecycleId = () => {
                           {flatErrors.expirationDateYear}
                         </FieldErrorMsg>
                         <Field
-                          as={TextField}
+                          as={DateInputYear}
                           error={!!flatErrors.expirationDateYear}
                           id="IssueLifecycleIdForm-ExpirationDateYear"
-                          maxLength={4}
                           name="expirationDateYear"
                         />
                       </div>
@@ -225,7 +262,7 @@ const IssueLifecycleId = () => {
                     as={TextAreaField}
                     error={!!flatErrors.scope}
                     id="IssueLifecycleIdForm-Scope"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="scope"
                   />
                 </FieldGroup>
@@ -242,7 +279,7 @@ const IssueLifecycleId = () => {
                     as={TextAreaField}
                     error={!!flatErrors.nextSteps}
                     id="IssueLifecycleIdForm-NextSteps"
-                    maxLength={2000}
+                    maxLength={3000}
                     name="nextSteps"
                   />
                 </FieldGroup>

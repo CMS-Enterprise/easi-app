@@ -6,17 +6,17 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/facebookgo/clock"
-	"github.com/google/uuid"
-	"github.com/guregu/null"
-
 	"github.com/cmsgov/easi-app/pkg/apperrors"
 	"github.com/cmsgov/easi-app/pkg/models"
 	"github.com/cmsgov/easi-app/pkg/testhelpers"
+
+	"github.com/facebookgo/clock"
+	"github.com/google/uuid"
+	"github.com/guregu/null"
 )
 
-const insertBasicIntakeSQL = "INSERT INTO system_intake (id, eua_user_id, status, request_type, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
-const insertRelatedBizCaseSQL = `INSERT INTO business_case (id, eua_user_id, status, requester, system_intake)
+const insertBasicIntakeSQL = "INSERT INTO system_intakes (id, eua_user_id, status, request_type, requester) VALUES (:id, :eua_user_id, :status, :request_type, :requester)"
+const insertRelatedBizCaseSQL = `INSERT INTO business_cases (id, eua_user_id, status, requester, system_intake)
 		VALUES(:id, :eua_user_id, :status, :requester, :system_intake)`
 
 func (s StoreTestSuite) TestCreateSystemIntake() {
@@ -58,7 +58,7 @@ func (s StoreTestSuite) TestCreateSystemIntake() {
 			_, err := s.store.CreateSystemIntake(ctx, &partialIntake)
 
 			s.Error(err)
-			s.Equal("pq: new row for relation \"system_intake\" violates check constraint \"eua_id_check\"", err.Error())
+			s.Equal("pq: new row for relation \"system_intakes\" violates check constraint \"eua_id_check\"", err.Error())
 		})
 	}
 
@@ -236,10 +236,7 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		existingContract := "IN_PROGRESS"
 		contractor := "TrussWorks, Inc."
 		contractVehicle := "Fixed price contract"
-		contractStartMonth := "1"
-		contractStartYear := "2020"
-		contractEndMonth := "12"
-		contractEndYear := "2021"
+		now := time.Now()
 		partial.ProcessStatus = null.StringFrom(processStatus)
 		partial.ExistingFunding = null.BoolFrom(existingFunding)
 		partial.FundingNumber = null.StringFrom(fundingNumber)
@@ -247,10 +244,8 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		partial.ExistingContract = null.StringFrom(existingContract)
 		partial.Contractor = null.StringFrom(contractor)
 		partial.ContractVehicle = null.StringFrom(contractVehicle)
-		partial.ContractStartMonth = null.StringFrom(contractStartMonth)
-		partial.ContractStartYear = null.StringFrom(contractStartYear)
-		partial.ContractEndMonth = null.StringFrom(contractEndMonth)
-		partial.ContractEndYear = null.StringFrom(contractEndYear)
+		partial.ContractStartDate = &now
+		partial.ContractEndDate = &now
 
 		_, err = s.store.UpdateSystemIntake(ctx, partial)
 		s.NoError(err, "failed to update system intake")
@@ -265,10 +260,8 @@ func (s StoreTestSuite) TestUpdateSystemIntake() {
 		s.Equal(existingContract, updated.ExistingContract.String)
 		s.Equal(contractor, updated.Contractor.String)
 		s.Equal(contractVehicle, updated.ContractVehicle.String)
-		s.Equal(contractStartMonth, updated.ContractStartMonth.String)
-		s.Equal(contractStartYear, updated.ContractStartYear.String)
-		s.Equal(contractEndMonth, updated.ContractEndMonth.String)
-		s.Equal(contractEndYear, updated.ContractEndYear.String)
+		s.NotEmpty(updated.ContractStartDate)
+		s.NotEmpty(updated.ContractEndDate)
 	})
 
 	s.Run("LifecycleID format", func() {
@@ -642,6 +635,78 @@ func (s StoreTestSuite) TestFetchSystemIntakesByFilter() {
 			s.True(found, "did not receive expected intake", id)
 		}
 	})
+
+	s.Run("collects most recent admin notes", func() {
+		ctx := context.Background()
+
+		var intakeIDs []uuid.UUID
+
+		for i := 0; i < 5; i++ {
+			intake := testhelpers.NewSystemIntake()
+			result, err := s.store.CreateSystemIntake(ctx, &intake)
+			s.NoError(err)
+			intakeIDs = append(intakeIDs, result.ID)
+		}
+
+		intakeWithNoCommentsID := intakeIDs[0]
+		intakeWithOneCommentID := intakeIDs[1]
+		intakeWithManyCommentsID := intakeIDs[2]
+
+		_, err := s.store.CreateNote(ctx, &models.Note{
+			SystemIntakeID: intakeWithOneCommentID,
+			Content:        null.StringFrom("the only comment"),
+			CreatedAt:      mustParseTime("2021-01-01"),
+			AuthorEUAID:    "ABCD",
+		})
+		s.NoError(err)
+
+		_, err = s.store.CreateNote(ctx, &models.Note{
+			SystemIntakeID: intakeWithManyCommentsID,
+			Content:        null.StringFrom("the first comment"),
+			CreatedAt:      mustParseTime("2021-01-01"),
+			AuthorEUAID:    "ABCD",
+		})
+		s.NoError(err)
+		_, err = s.store.CreateNote(ctx, &models.Note{
+			SystemIntakeID: intakeWithManyCommentsID,
+			Content:        null.StringFrom("the third comment"),
+			CreatedAt:      mustParseTime("2021-01-03"),
+			AuthorEUAID:    "ABCD",
+		})
+		s.NoError(err)
+		_, err = s.store.CreateNote(ctx, &models.Note{
+			SystemIntakeID: intakeWithManyCommentsID,
+			Content:        null.StringFrom("the second comment"),
+			CreatedAt:      mustParseTime("2021-01-02"),
+			AuthorEUAID:    "ABCD",
+		})
+		s.NoError(err)
+
+		intakes, err := s.store.FetchSystemIntakesByStatuses(ctx, []models.SystemIntakeStatus{models.SystemIntakeStatusINTAKEDRAFT, models.SystemIntakeStatusINTAKESUBMITTED})
+		s.NoError(err)
+
+		for _, intake := range intakes {
+			if intake.ID == intakeWithNoCommentsID {
+				s.Nil(intake.LastAdminNoteContent.Ptr())
+				s.Nil(intake.LastAdminNoteCreatedAt)
+			}
+			if intake.ID == intakeWithOneCommentID {
+				s.Equal("the only comment", intake.LastAdminNoteContent.String)
+				s.Equal("2021-01-01", intake.LastAdminNoteCreatedAt.Format("2006-01-02"))
+			}
+			if intake.ID == intakeWithManyCommentsID {
+				s.Equal("the third comment", intake.LastAdminNoteContent.String)
+				s.Equal("2021-01-03", intake.LastAdminNoteCreatedAt.Format("2006-01-02"))
+			}
+		}
+	})
+}
+func mustParseTime(value string) *time.Time {
+	parsed, err := time.Parse("2006-01-02", value)
+	if err != nil {
+		panic(err)
+	}
+	return &parsed
 }
 
 func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
@@ -777,4 +842,84 @@ func (s StoreTestSuite) TestFetchSystemIntakeMetrics() {
 			s.Equal(tt.fundedCount, metrics.Funded)
 		})
 	}
+}
+
+func (s StoreTestSuite) TestUpdateAdminLead() {
+	ctx := context.Background()
+
+	s.Run("golden path to update admin lead", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		adminLead := "Test Lead"
+
+		_, err = s.store.UpdateAdminLead(ctx, intake.ID, adminLead)
+		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Equal(fetchedIntake.AdminLead.String, adminLead)
+	})
+}
+
+func (s StoreTestSuite) TestUpdateReviewDates() {
+	ctx := context.Background()
+
+	s.Run("update both dates", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		grbDate, _ := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
+		grtDate, _ := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
+
+		_, err = s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, &grtDate)
+		fetchedIntake, _ := s.store.FetchSystemIntakeByID(ctx, intake.ID)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Equal(fetchedIntake.GRBDate.Format("2006-01-02"), "2021-12-22")
+		s.Equal(fetchedIntake.GRTDate.Format("2006-01-02"), "2022-01-02")
+	})
+
+	s.Run("update just GRB", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		grbDate, _ := time.Parse(time.RFC3339, "2021-12-22T00:00:00Z")
+		updatedIntake, err := s.store.UpdateReviewDates(ctx, intake.ID, &grbDate, nil)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Equal(updatedIntake.GRBDate.Format("2006-01-02"), "2021-12-22")
+		s.Nil(updatedIntake.GRTDate)
+	})
+
+	s.Run("update just GRT", func() {
+		intake := testhelpers.NewSystemIntake()
+
+		tx := s.db.MustBegin()
+		_, err := tx.NamedExec(insertBasicIntakeSQL, &intake)
+		s.NoError(err)
+		err = tx.Commit()
+		s.NoError(err)
+
+		grtDate, _ := time.Parse(time.RFC3339, "2022-01-02T00:00:00Z")
+		updatedIntake, err := s.store.UpdateReviewDates(ctx, intake.ID, nil, &grtDate)
+
+		s.NoError(err, "failed to fetch system intakes")
+		s.Nil(updatedIntake.GRBDate)
+		s.Equal(updatedIntake.GRTDate.Format("2006-01-02"), "2022-01-02")
+	})
 }

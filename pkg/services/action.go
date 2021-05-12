@@ -84,7 +84,7 @@ func NewSubmitSystemIntake(
 	update func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	validateAndSubmit func(context.Context, *models.SystemIntake) (string, error),
 	saveAction func(context.Context, *models.Action) error,
-	emailReviewer func(ctx context.Context, requester string, intakeID uuid.UUID) error,
+	emailReviewer func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
 		ok, err := authorize(ctx, intake)
@@ -133,7 +133,7 @@ func NewSubmitSystemIntake(
 			}
 		}
 		// only send an email when everything went ok
-		err = emailReviewer(ctx, intake.Requester, intake.ID)
+		err = emailReviewer(ctx, intake.ProjectName.String, intake.ID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Submit Intake email failed to send: ", zap.Error(err))
 		}
@@ -152,7 +152,7 @@ func NewSubmitBusinessCase(
 	saveAction func(context.Context, *models.Action) error,
 	updateIntake func(context.Context, *models.SystemIntake) (*models.SystemIntake, error),
 	updateBusinessCase func(context.Context, *models.BusinessCase) (*models.BusinessCase, error),
-	sendEmail func(ctx context.Context, requester string, intakeID uuid.UUID) error,
+	sendEmail func(ctx context.Context, requestName string, intakeID uuid.UUID) error,
 	newIntakeStatus models.SystemIntakeStatus,
 ) ActionExecuter {
 	return func(ctx context.Context, intake *models.SystemIntake, action *models.Action) error {
@@ -220,7 +220,7 @@ func NewSubmitBusinessCase(
 			}
 		}
 
-		err = sendEmail(ctx, businessCase.Requester.String, businessCase.SystemIntakeID)
+		err = sendEmail(ctx, businessCase.ProjectName.String, businessCase.SystemIntakeID)
 		if err != nil {
 			appcontext.ZLogger(ctx).Error("Submit Business Case email failed to send: ", zap.Error(err))
 		}
@@ -238,7 +238,7 @@ func NewTakeActionUpdateStatus(
 	authorize func(context.Context) (bool, error),
 	saveAction func(context.Context, *models.Action) error,
 	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
-	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress string) error,
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
 	shouldCloseBusinessCase bool,
 	closeBusinessCase func(context.Context, uuid.UUID) error,
 ) ActionExecuter {
@@ -289,7 +289,7 @@ func NewTakeActionUpdateStatus(
 			}
 		}
 
-		err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email)
+		err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
 		if err != nil {
 			return err
 		}
@@ -298,23 +298,62 @@ func NewTakeActionUpdateStatus(
 	}
 }
 
-// NewFetchActionsByRequestID returns a function that fetches actions for a specific request
-func NewFetchActionsByRequestID(
-	authorize func(context.Context) (bool, error),
-	fetch func(context.Context, uuid.UUID) ([]models.Action, error),
-) func(context.Context, uuid.UUID) ([]models.Action, error) {
-	return func(ctx context.Context, intakeID uuid.UUID) ([]models.Action, error) {
-		ok, err := authorize(ctx)
+// NewCreateActionUpdateStatus returns a function that
+// persists an action and updates a request
+func NewCreateActionUpdateStatus(
+	config Config,
+	updateStatus func(c context.Context, id uuid.UUID, newStatus models.SystemIntakeStatus) (*models.SystemIntake, error),
+	saveAction func(context.Context, *models.Action) error,
+	fetchUserInfo func(context.Context, string) (*models.UserInfo, error),
+	sendReviewEmail func(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error,
+	closeBusinessCase func(context.Context, uuid.UUID) error,
+) func(context.Context, *models.Action, uuid.UUID, models.SystemIntakeStatus, bool) (*models.SystemIntake, error) {
+	return func(
+		ctx context.Context,
+		action *models.Action,
+		id uuid.UUID,
+		newStatus models.SystemIntakeStatus,
+		shouldCloseBusinessCase bool,
+	) (*models.SystemIntake, error) {
+		err := saveAction(ctx, action)
 		if err != nil {
 			return nil, err
 		}
-		if !ok {
-			return nil, &apperrors.UnauthorizedError{Err: errors.New("failed to authorize fetch actions")}
+
+		intake, err := updateStatus(ctx, id, newStatus)
+		if err != nil {
+			return nil, &apperrors.QueryError{
+				Err:       err,
+				Model:     intake,
+				Operation: apperrors.QuerySave,
+			}
 		}
-		fetchedActions, err := fetch(ctx, intakeID)
+
+		if shouldCloseBusinessCase && intake.BusinessCaseID != nil {
+			if err = closeBusinessCase(ctx, *intake.BusinessCaseID); err != nil {
+				return nil, err
+			}
+		}
+
+		requesterInfo, err := fetchUserInfo(ctx, intake.EUAUserID.ValueOrZero())
 		if err != nil {
 			return nil, err
 		}
-		return fetchedActions, nil
+		if requesterInfo == nil || requesterInfo.Email == "" {
+			return nil, &apperrors.ExternalAPIError{
+				Err:       errors.New("requester info fetch was not successful when submitting an action"),
+				Model:     intake,
+				ModelID:   intake.ID.String(),
+				Operation: apperrors.Fetch,
+				Source:    "CEDAR LDAP",
+			}
+		}
+
+		err = sendReviewEmail(ctx, action.Feedback.String, requesterInfo.Email, intake.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		return intake, err
 	}
 }

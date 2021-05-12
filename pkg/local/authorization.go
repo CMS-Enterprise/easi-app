@@ -53,16 +53,25 @@ func authorizeMiddleware(logger *zap.Logger, next http.Handler, testEUAID string
 				euaID = testEUAID
 			}
 			logger.Info("Using local authorization middleware with Okta frontend login")
-			ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{EUAID: euaID, JobCodeEASi: true, JobCodeGRT: true})
+			ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{
+				EUAID:            euaID,
+				JobCodeEASi:      true,
+				JobCodeGRT:       true,
+				JobCode508Tester: true,
+				JobCode508User:   true,
+			})
 			next.ServeHTTP(w, r.WithContext(ctx))
 			return
 		}
 
 		logger.Info("Using local authorization middleware and populating EUA ID and job codes")
 		ctx := appcontext.WithPrincipal(r.Context(), &authn.EUAPrincipal{
-			EUAID:       config.EUA,
-			JobCodeEASi: true,
-			JobCodeGRT:  swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM")})
+			EUAID:            config.EUA,
+			JobCodeEASi:      true,
+			JobCodeGRT:       swag.ContainsStrings(config.JobCodes, "EASI_D_GOVTEAM"),
+			JobCode508User:   swag.ContainsStrings(config.JobCodes, "EASI_D_508_USER"),
+			JobCode508Tester: swag.ContainsStrings(config.JobCodes, "EASI_D_508_TESTER"),
+		})
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

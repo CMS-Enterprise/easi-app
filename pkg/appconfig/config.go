@@ -150,6 +150,9 @@ const EmailTemplateDirectoryKey = "EMAIL_TEMPLATE_DIR"
 // AWSS3FileUploadBucket is the key for the bucket we upload files to
 const AWSS3FileUploadBucket = "AWS_S3_FILE_UPLOAD_BUCKET"
 
+// LocalMinioAddressKey is the host used for local minio
+const LocalMinioAddressKey = "MINIO_ADDRESS"
+
 // LocalMinioS3AccessKey is a key used for local access to minio
 const LocalMinioS3AccessKey = "MINIO_ACCESS_KEY"
 

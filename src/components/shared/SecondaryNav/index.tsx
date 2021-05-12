@@ -1,38 +1,38 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { ReactNode } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import classnames from 'classnames';
 
 import './index.scss';
 
 type SecondaryNavProps = {
-  secondaryNavList?: any[];
-  activeNavItem?: string | undefined;
+  children: ReactNode;
 };
 
-const SecondaryNav = ({
-  secondaryNavList = [],
-  activeNavItem = ''
-}: SecondaryNavProps) => {
+const SecondaryNav = ({ children }: SecondaryNavProps) => {
   return (
-    <nav aria-label="Primary navigation" className="secondary-nav">
-      <div className="usa-nav__inner">
-        <ul className="usa-nav__primary usa-accordion">
-          {secondaryNavList.map(item => (
-            <li
-              key={item.id}
-              className={`usa-nav__primary-item ${
-                activeNavItem === item.slug ? 'usa-current' : ''
-              }`.trim()}
-              data-testid="header-nav-item"
-            >
-              <Link className="secondary-nav__link" to={item.link}>
-                <span>{item.name}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <nav aria-label="Secondary Navigation" className="easi-secondary-nav">
+      <div className="grid-container">{children}</div>
     </nav>
   );
 };
 
-export default SecondaryNav;
+type NavLinkProps = {
+  to: string;
+  children: ReactNode;
+};
+
+const NavLink = ({ to, children }: NavLinkProps) => {
+  const { pathname } = useLocation();
+
+  const classNames = classnames('easi-secondary-nav__nav-link', {
+    'easi-secondary-nav__nav-link--active': pathname === to
+  });
+
+  return (
+    <Link to={to} className={classNames} aria-current={pathname === to}>
+      {children}
+    </Link>
+  );
+};
+
+export { SecondaryNav, NavLink };

@@ -22,7 +22,7 @@ func (s *Store) CreateNote(ctx context.Context, note *models.Note) (*models.Note
 		note.CreatedAt = &ts
 	}
 	const createNoteSQL = `	
-		INSERT INTO note (
+		INSERT INTO notes (
 			id,
 			system_intake,
 			created_at,
@@ -60,7 +60,7 @@ func (s *Store) CreateNote(ctx context.Context, note *models.Note) (*models.Note
 // FetchNoteByID retrieves a single Note by its primary key identifier
 func (s *Store) FetchNoteByID(ctx context.Context, id uuid.UUID) (*models.Note, error) {
 	note := models.Note{}
-	err := s.db.Get(&note, "SELECT * FROM public.note WHERE id=$1", id)
+	err := s.db.Get(&note, "SELECT * FROM public.notes WHERE id=$1", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch note %s", err),
@@ -77,7 +77,7 @@ func (s *Store) FetchNoteByID(ctx context.Context, id uuid.UUID) (*models.Note, 
 // FetchNotesBySystemIntakeID retrieves all Notes associated with a specific SystemIntake
 func (s *Store) FetchNotesBySystemIntakeID(ctx context.Context, id uuid.UUID) ([]*models.Note, error) {
 	notes := []*models.Note{}
-	err := s.db.Select(&notes, "SELECT * FROM note WHERE system_intake=$1", id)
+	err := s.db.Select(&notes, "SELECT * FROM notes WHERE system_intake=$1 ORDER BY created_at DESC", id)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
 			fmt.Sprintf("Failed to fetch notes %s", err),

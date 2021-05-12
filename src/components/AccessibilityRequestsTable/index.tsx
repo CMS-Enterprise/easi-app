@@ -7,24 +7,15 @@ import { useSortBy, useTable } from 'react-table';
 import { Link as UswdsLink, Table } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
+import { GetAccessibilityRequests_accessibilityRequests_edges_node as AccessibilityRequests } from 'queries/types/GetAccessibilityRequests';
 
+import { formatDate } from 'utils/date';
+
+import './index.scss';
 // import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
 
-type AccessibilityRequestsTableRow = {
-  id: string;
-  name: string;
-  submittedAt?: DateTime;
-  businessOwner?: {
-    name?: string;
-    component?: string;
-  };
-  testDate?: DateTime;
-  status?: string;
-  lastUpdatedAt?: DateTime;
-};
-
 type AccessibilityRequestsTableProps = {
-  requests: AccessibilityRequestsTableRow[];
+  requests: AccessibilityRequests[];
 };
 
 const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTableProps> = ({
@@ -35,13 +26,10 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
     return [
       {
         Header: t('requestTable.header.requestName'),
-        accessor: 'name',
+        accessor: 'requestName',
         Cell: ({ row, value }: any) => {
           return (
-            <UswdsLink
-              asCustom={Link}
-              to={`/some-508-request/${row.original.id}`}
-            >
+            <UswdsLink asCustom={Link} to={`/508/requests/${row.original.id}`}>
               {value}
             </UswdsLink>
           );
@@ -53,7 +41,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
         accessor: 'submittedAt',
         Cell: ({ value }: any) => {
           if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+            return formatDate(value);
           }
           return '';
         }
@@ -64,33 +52,55 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
       },
       {
         Header: t('requestTable.header.testDate'),
-        accessor: 'testedAt',
+        accessor: 'relevantTestDate',
         Cell: ({ value }: any) => {
           if (value) {
-            return DateTime.fromISO(value).toLocaleString(DateTime.DATE_FULL);
+            return formatDate(value);
           }
-          return '';
-        }
-      },
-      {
-        Header: t('requestTable.header.status'),
-        accessor: 'status',
-        Cell: ({ row, value }: any) => {
-          const date = DateTime.fromISO(row.original.updatedAt).toLocaleString(
-            DateTime.DATE_FULL
-          );
-          return (
-            <>
-              <strong>{value}</strong>
-              <br />
-              <span>{`${t('requestTable.lastUpdated')} ${date}`}</span>
-            </>
-          );
+          return t('requestTable.emptyTestDate');
         }
       }
+      // {
+      //   Header: t('requestTable.header.status'),
+      //   accessor: 'status',
+      //   Cell: ({ row, value }: any) => {
+      //     const date = DateTime.fromISO(row.original.updatedAt).toLocaleString(
+      //       DateTime.DATE_FULL
+      //     );
+      //     return (
+      //       <>
+      //         <strong>{value}</strong>
+      //         <br />
+      //         <span>{`${t('requestTable.lastUpdated')} ${date}`}</span>
+      //       </>
+      //     );
+      //   }
+      // }
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const data = useMemo(() => {
+    const tableData = requests.map(request => {
+      const submittedAt = request.submittedAt
+        ? DateTime.fromISO(request.submittedAt)
+        : null;
+      const businessOwner = `${request.system.businessOwner.name}, ${request.system.businessOwner.component}`;
+      const testDate = request.relevantTestDate?.date
+        ? DateTime.fromISO(request.relevantTestDate?.date)
+        : null;
+
+      return {
+        id: request.id,
+        requestName: request.name,
+        submittedAt,
+        businessOwner,
+        relevantTestDate: testDate
+      };
+    });
+
+    return tableData;
+  }, [requests]);
 
   const {
     getTableProps,
@@ -101,7 +111,7 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
   } = useTable(
     {
       columns,
-      data: requests,
+      data,
       sortTypes: {
         alphanumeric: (rowOne, rowTwo, columnName) => {
           const rowOneElem = rowOne.values[columnName];
@@ -131,8 +141,8 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
 
   const getHeaderSortIcon = (isDesc: boolean | undefined) => {
     return classnames('margin-left-1', {
-      'fa fa-caret-down': isDesc,
-      'fa fa-caret-up': !isDesc
+      'fa fa-caret-down fa-lg caret': isDesc,
+      'fa fa-caret-up fa-lg caret': !isDesc
     });
   };
 
@@ -150,55 +160,85 @@ const AccessibilityRequestsTable: FunctionComponent<AccessibilityRequestsTablePr
   };
 
   return (
-    <Table bordered={false} {...getTableProps()} fullWidth>
-      <caption className="usa-sr-only">{t('requestTable.caption')}</caption>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                aria-sort={getColumnSortStatus(column)}
-                style={{ whiteSpace: 'nowrap' }}
-              >
-                {column.render('Header')}
-                {column.isSorted && (
-                  <span className={getHeaderSortIcon(column.isSortedDesc)} />
-                )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell, i) => {
-                if (i === 0) {
-                  return (
-                    <th
-                      {...cell.getCellProps()}
-                      scope="row"
-                      style={{ maxWidth: '16rem' }}
-                    >
-                      {cell.render('Cell')}
-                    </th>
-                  );
-                }
-                return (
-                  <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
-                    {cell.render('Cell')}
-                  </td>
-                );
-              })}
+    <div className="accessibility-requests-table">
+      <Table bordered={false} {...getTableProps()} fullWidth>
+        <caption className="usa-sr-only">{t('requestTable.caption')}</caption>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th
+                  {...column.getHeaderProps()}
+                  aria-sort={getColumnSortStatus(column)}
+                  style={{ whiteSpace: 'nowrap' }}
+                  scope="col"
+                >
+                  <button
+                    className="usa-button usa-button--unstyled"
+                    type="button"
+                    {...column.getSortByToggleProps()}
+                  >
+                    {column.render('Header')}
+                    {column.isSorted && (
+                      <span
+                        className={getHeaderSortIcon(column.isSortedDesc)}
+                      />
+                    )}
+                    {!column.isSorted && (
+                      <span className="margin-left-1 fa fa-sort caret" />
+                    )}
+                  </button>
+                </th>
+              ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </Table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map(row => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell, i) => {
+                  if (i === 0) {
+                    return (
+                      <th
+                        {...cell.getCellProps()}
+                        scope="row"
+                        style={{ maxWidth: '16rem' }}
+                      >
+                        {cell.render('Cell')}
+                      </th>
+                    );
+                  }
+                  return (
+                    <td {...cell.getCellProps()} style={{ maxWidth: '16rem' }}>
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </Table>
+      <div
+        className="usa-sr-only usa-table__announcement-region"
+        aria-live="polite"
+      >
+        {currentTableSortDescription(headerGroups[0])}
+      </div>
+    </div>
   );
+};
+
+const currentTableSortDescription = headerGroup => {
+  const sortedHeader = headerGroup.headers.find(header => header.isSorted);
+
+  if (sortedHeader) {
+    const direction = sortedHeader.isSortedDesc ? 'descending' : 'ascending';
+    return `Requests table sorted by ${sortedHeader.Header} ${direction}`;
+  }
+  return 'Requests table reset to default sort order';
 };
 
 export default AccessibilityRequestsTable;
