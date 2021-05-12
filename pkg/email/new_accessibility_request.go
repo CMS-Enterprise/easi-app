@@ -20,7 +20,7 @@ type newAccessibilityRequest struct {
 }
 
 func (c Client) newAccessibilityRequestBody(requesterName, requestName, applicationName string, requestID uuid.UUID) (string, error) {
-	requestPath := path.Join("508", "requests", requestID.String(), "intake-request")
+	requestPath := path.Join("508", "requests", requestID.String())
 	data := newAccessibilityRequest{
 		RequesterName:   requesterName,
 		RequestName:     requestName,
