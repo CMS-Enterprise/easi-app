@@ -130,7 +130,7 @@ const accessibility = {
     prepareVPAT: {
       heading: 'Prepare and upload the VPAT and Test plan',
       fillOutVPAT:
-        'Download and fill the VPAT and Test plan from the <1>templates page (opens in new tab)</1>. These documents will help the 508 team prepare for testing. Uploaded your completed documents to EASi for the 508 team to review.',
+        'Download and fill the VPAT and Test plan from the templates page. These documents will help the 508 team prepare for testing. Uploaded your completed documents to EASi for the 508 team to review.',
       changesVPAT:
         'The 508 team will get back to you via email about any changes needed prior to testing.'
     },
