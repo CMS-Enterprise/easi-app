@@ -12,8 +12,8 @@ import { formatDate } from 'utils/date';
 type TestDateCardProps = {
   testDate: TestDateType;
   testIndex: number;
-  requestName: string;
   requestId: string;
+  requestName: string;
   isEditableDeletable?: boolean;
   handleDeleteTestDate: (testDate: TestDateType) => void;
 };
@@ -21,8 +21,8 @@ type TestDateCardProps = {
 const TestDateCard = ({
   testDate,
   testIndex,
-  requestName,
   requestId,
+  requestName,
   isEditableDeletable = true,
   handleDeleteTestDate
 }: TestDateCardProps) => {
@@ -76,42 +76,42 @@ const TestDateCard = ({
           >
             {t('general:remove')}
           </Button>
+          <Modal
+            isOpen={isRemoveTestDateModalOpen}
+            closeModal={() => {
+              setIsRemoveTestDateModalOpen(false);
+            }}
+          >
+            <PageHeading headingLevel="h2" className="margin-top-0">
+              {t('removeTestDate.modalHeader', {
+                testNumber: testIndex,
+                testType: translateTestType(testDate.testType),
+                testDate: formatDate(testDate.date),
+                requestName
+              })}
+            </PageHeading>
+            <p>{t('removeTestDate.modalText')}</p>
+            <Button
+              type="button"
+              className="margin-right-4"
+              onClick={() => {
+                handleDeleteTestDate(testDate);
+              }}
+            >
+              {t('removeTestDate.modalRemoveButton')}
+            </Button>
+            <Button
+              type="button"
+              unstyled
+              onClick={() => {
+                setIsRemoveTestDateModalOpen(false);
+              }}
+            >
+              {t('removeTestDate.modalCancelButton')}
+            </Button>
+          </Modal>
         </div>
       )}
-      <Modal
-        isOpen={isRemoveTestDateModalOpen}
-        closeModal={() => {
-          setIsRemoveTestDateModalOpen(false);
-        }}
-      >
-        <PageHeading headingLevel="h2" className="margin-top-0">
-          {t('removeTestDate.modalHeader', {
-            testNumber: testIndex,
-            testType: translateTestType(testDate.testType),
-            testDate: formatDate(testDate.date),
-            requestName
-          })}
-        </PageHeading>
-        <p>{t('removeTestDate.modalText')}</p>
-        <Button
-          type="button"
-          className="margin-right-4"
-          onClick={() => {
-            handleDeleteTestDate(testDate);
-          }}
-        >
-          {t('removeTestDate.modalRemoveButton')}
-        </Button>
-        <Button
-          type="button"
-          unstyled
-          onClick={() => {
-            setIsRemoveTestDateModalOpen(false);
-          }}
-        >
-          {t('removeTestDate.modalCancelButton')}
-        </Button>
-      </Modal>
     </div>
   );
 };
