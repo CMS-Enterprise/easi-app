@@ -5,6 +5,7 @@ import {
   GovernanceCollaborationTeam,
   SystemIntakeForm
 } from 'types/systemIntake';
+import { formatContractDate, formatDate, parseAsDate } from 'utils/date';
 
 // On the frontend, the field is now "requestName", but the backend API
 // has it as "projectName". This was an update from design.
@@ -50,10 +51,12 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
     vehicle: '',
     startDate: {
       month: '',
+      day: '',
       year: ''
     },
     endDate: {
       month: '',
+      day: '',
       year: ''
     }
   },
@@ -74,7 +77,9 @@ export const initialSystemIntakeForm: SystemIntakeForm = {
   decisionNextSteps: '',
   rejectionReason: '',
   grtDate: null,
-  grbDate: null
+  grbDate: null,
+  adminLead: '',
+  lastAdminNote: null
 };
 
 export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
@@ -118,13 +123,20 @@ export const prepareSystemIntakeForApi = (systemIntake: SystemIntakeForm) => {
     costIncreaseAmount: systemIntake.costs.expectedIncreaseAmount,
     contractor: systemIntake.contract.contractor,
     contractVehicle: systemIntake.contract.vehicle,
-    contractStartMonth: systemIntake.contract.startDate.month,
-    contractStartYear: systemIntake.contract.startDate.year,
-    contractEndMonth: systemIntake.contract.endDate.month,
-    contractEndYear: systemIntake.contract.endDate.year,
+    contractStartDate: DateTime.fromObject({
+      day: Number(systemIntake.contract.startDate.day),
+      month: Number(systemIntake.contract.startDate.month),
+      year: Number(systemIntake.contract.startDate.year)
+    }),
+    contractEndDate: DateTime.fromObject({
+      day: Number(systemIntake.contract.endDate.day),
+      month: Number(systemIntake.contract.endDate.month),
+      year: Number(systemIntake.contract.endDate.year)
+    }),
     grtDate: systemIntake.grtDate && systemIntake.grtDate.toISO(),
     grbDate: systemIntake.grbDate && systemIntake.grbDate.toISO(),
-    submittedAt: systemIntake.submittedAt && systemIntake.submittedAt.toISO()
+    submittedAt: systemIntake.submittedAt && systemIntake.submittedAt.toISO(),
+    adminLead: systemIntake.adminLead
   };
 };
 
@@ -143,6 +155,9 @@ export const prepareSystemIntakeForApp = (
     });
     return teams;
   };
+
+  const contractStartDate = DateTime.fromISO(systemIntake.contractStartDate);
+  const contractEndDate = DateTime.fromISO(systemIntake.contractEndDate);
 
   return {
     id: systemIntake.id || '',
@@ -188,12 +203,22 @@ export const prepareSystemIntakeForApp = (
       contractor: systemIntake.contractor || '',
       vehicle: systemIntake.contractVehicle || '',
       startDate: {
-        month: systemIntake.contractStartMonth || '',
-        year: systemIntake.contractStartYear || ''
+        month: contractStartDate.month
+          ? contractStartDate.month.toString()
+          : systemIntake.contractStartMonth || '',
+        day: contractStartDate.day ? contractStartDate.day.toString() : '',
+        year: contractStartDate.year
+          ? contractStartDate.year.toString()
+          : systemIntake.contractStartYear || ''
       },
       endDate: {
-        month: systemIntake.contractEndMonth || '',
-        year: systemIntake.contractEndYear || ''
+        month: contractEndDate.month
+          ? contractEndDate.month.toString()
+          : systemIntake.contractEndMonth || '',
+        day: contractEndDate.day ? contractEndDate.day.toString() : '',
+        year: contractEndDate.year
+          ? contractEndDate.year.toString()
+          : systemIntake.contractEndYear || ''
       }
     },
     businessNeed: systemIntake.businessNeed || '',
@@ -227,11 +252,14 @@ export const prepareSystemIntakeForApp = (
     lcidScope: systemIntake.lcidScope || '',
     decisionNextSteps: systemIntake.decisionNextSteps || '',
     rejectionReason: systemIntake.rejectionReason || '',
-    grtDate: systemIntake.grtDate
-      ? DateTime.fromISO(systemIntake.grtDate)
-      : null,
-    grbDate: systemIntake.grbDate
-      ? DateTime.fromISO(systemIntake.grbDate)
+    grtDate: systemIntake.grtDate ? parseAsDate(systemIntake.grtDate) : null,
+    grbDate: systemIntake.grbDate ? parseAsDate(systemIntake.grbDate) : null,
+    adminLead: systemIntake.adminLead || '',
+    lastAdminNote: systemIntake.lastAdminNoteContent
+      ? {
+          content: systemIntake.lastAdminNoteContent,
+          createdAt: systemIntake.lastAdminNoteCreatedAt
+        }
       : null
   };
 };
@@ -255,18 +283,25 @@ export const convertIntakeToCSV = (intake: SystemIntakeForm) => {
       }
     });
   }
+
   return {
     ...intake,
     ...collaboratorTeams,
+    lastAdminNote: intake.lastAdminNote
+      ? `${intake.lastAdminNote.content} (${formatDate(
+          intake.lastAdminNote.createdAt
+        )})`
+      : null,
+    lcidScope: intake.lcidScope,
     contractStartDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
       intake.contract.hasContract
     )
-      ? `${intake.contract.startDate.month}/${intake.contract.startDate.year}`
+      ? formatContractDate(intake.contract.startDate)
       : '',
     contractEndDate: ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(
       intake.contract.hasContract
     )
-      ? `${intake.contract.endDate.month}/${intake.contract.endDate.year}`
+      ? formatContractDate(intake.contract.endDate)
       : '',
     submittedAt: intake.submittedAt && intake.submittedAt.toISO(),
     updatedAt: intake.updatedAt && intake.updatedAt.toISO(),

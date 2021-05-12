@@ -13,6 +13,7 @@ describe('The Business Case Review Component', () => {
   const businessCase = {
     status: 'OPEN',
     systemIntakeId: '048c26ea-07be-4f40-b29e-761fc17bf414',
+    systemIntakeStatus: 'BIZ_CASE_DRAFT',
     requestName: 'EASi Test',
     requester: {
       name: 'Jane Smith',
@@ -31,11 +32,76 @@ describe('The Business Case Review Component', () => {
       pros: 'Test pros',
       cons: 'Test cons',
       estimatedLifecycleCost: {
-        year1: [{ phase: 'Development', cost: '0' }],
-        year2: [{ phase: 'Development', cost: '0' }],
-        year3: [{ phase: 'Development', cost: '0' }],
-        year4: [{ phase: 'Development', cost: '0' }],
-        year5: [{ phase: 'Development', cost: '0' }]
+        year1: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year2: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year3: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year4: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year5: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        }
       },
       costSavings: 'Test cost savings'
     },
@@ -46,13 +112,82 @@ describe('The Business Case Review Component', () => {
       pros: 'Test pros',
       cons: 'Test cons',
       estimatedLifecycleCost: {
-        year1: [{ phase: 'Development', cost: '0' }],
-        year2: [{ phase: 'Development', cost: '0' }],
-        year3: [{ phase: 'Development', cost: '0' }],
-        year4: [{ phase: 'Development', cost: '0' }],
-        year5: [{ phase: 'Development', cost: '0' }]
+        year1: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year2: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year3: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year4: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year5: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        }
       },
       costSavings: 'Test cost savings',
+      security: {
+        isApproved: false,
+        isBeingReviewed: 'YES'
+      },
       hosting: {
         type: 'cloud',
         location: 'Test location',
@@ -67,13 +202,82 @@ describe('The Business Case Review Component', () => {
       pros: 'Test pros',
       cons: 'Test cons',
       estimatedLifecycleCost: {
-        year1: [{ phase: 'Development', cost: '0' }],
-        year2: [{ phase: 'Development', cost: '0' }],
-        year3: [{ phase: 'Development', cost: '0' }],
-        year4: [{ phase: 'Development', cost: '0' }],
-        year5: [{ phase: 'Development', cost: '0' }]
+        year1: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year2: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year3: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year4: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year5: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        }
       },
       costSavings: 'Test cost savings',
+      security: {
+        isApproved: false,
+        isBeingReviewed: 'YES'
+      },
       hosting: {
         type: 'cloud',
         location: 'Test location',
@@ -88,13 +292,82 @@ describe('The Business Case Review Component', () => {
       pros: 'Test pros',
       cons: 'Test cons',
       estimatedLifecycleCost: {
-        year1: [{ phase: 'Development', cost: '0' }],
-        year2: [{ phase: 'Development', cost: '0' }],
-        year3: [{ phase: 'Development', cost: '0' }],
-        year4: [{ phase: 'Development', cost: '0' }],
-        year5: [{ phase: 'Development', cost: '0' }]
+        year1: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year2: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year3: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year4: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        },
+        year5: {
+          development: {
+            isPresent: false,
+            cost: '0'
+          },
+          operationsMaintenance: {
+            isPresent: false,
+            cost: '0'
+          },
+          other: {
+            isPresent: false,
+            cost: '0'
+          }
+        }
       },
       costSavings: 'Test cost savings',
+      security: {
+        isApproved: false,
+        isBeingReviewed: 'YES'
+      },
       hosting: {
         type: 'cloud',
         location: 'Test location',

@@ -178,6 +178,23 @@ const governanceReviewTeam = {
     label: 'Status',
     open: 'Open',
     closed: 'Closed'
+  },
+  adminLeads: {
+    assignModal: {
+      header: 'Choose an Admin Lead for {{-requestName}}',
+      save: 'Save',
+      noChanges: "Don't make changes and return to request page"
+    },
+    changeLead: 'Change',
+    notAssigned: 'Not Assigned',
+    members: [
+      'Matthew Schmid',
+      'Valerie Hartz',
+      'Jaime Cadwell',
+      'Alex Smith',
+      'Ann Rudolph',
+      'Surya Potu'
+    ]
   }
 };
 

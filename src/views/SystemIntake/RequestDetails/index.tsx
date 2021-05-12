@@ -2,10 +2,10 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import CharacterCounter from 'components/CharacterCounter';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import CollapsableLink from 'components/shared/CollapsableLink';
@@ -43,8 +43,8 @@ const RequestDetails = ({
   systemIntake,
   dispatchSave
 }: RequestDetailsProps) => {
-  const flags = useFlags();
   const history = useHistory();
+
   const initialValues: RequestDetailsForm = {
     requestName: systemIntake.requestName,
     fundingSource: systemIntake.fundingSource,
@@ -58,9 +58,7 @@ const RequestDetails = ({
     if (systemIntake.requestType === 'SHUTDOWN') {
       link = '/';
     } else {
-      link = flags.taskListLite
-        ? `/governance-task-list/${systemIntake.id}`
-        : '/';
+      link = `/governance-task-list/${systemIntake.id}`;
     }
     return link;
   })();
@@ -97,7 +95,7 @@ const RequestDetails = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl margin-top-4">Request details</h1>
+            <PageHeading>Request details</PageHeading>
             <p className="line-height-body-6">
               Provide a detailed explanation of the business need/issue/problem
               that the requested project will address, including any legislative
@@ -288,7 +286,6 @@ const RequestDetails = ({
                     formikProps.setErrors({});
                     const newUrl = 'contact-details';
                     history.push(newUrl);
-                    window.scrollTo(0, 0);
                   }}
                 >
                   Back
@@ -301,8 +298,9 @@ const RequestDetails = ({
                         dispatchSave();
                         const newUrl = 'contract-details';
                         history.push(newUrl);
+                      } else {
+                        window.scrollTo(0, 0);
                       }
-                      window.scrollTo(0, 0);
                     });
                   }}
                 >

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button } from '@trussworks/react-uswds';
 import classnames from 'classnames';
 import { Field, FieldArray } from 'formik';
+import { DateTime } from 'luxon';
 
+import CheckboxField from 'components/shared/CheckboxField/';
 import {
   DescriptionDefinition,
   DescriptionList,
@@ -11,9 +12,9 @@ import {
 import FieldErrorMsg from 'components/shared/FieldErrorMsg';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
-import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import TextField from 'components/shared/TextField';
-import { LifecyclePhase } from 'types/estimatedLifecycle';
+import { LifecycleCosts } from 'types/estimatedLifecycle';
+import { getFiscalYear } from 'utils/date';
 import formatDollars from 'utils/formatDollars';
 
 import './index.scss';
@@ -21,112 +22,161 @@ import './index.scss';
 type PhaseProps = {
   formikKey: string;
   year: number;
-  index: number;
-  values: LifecyclePhase;
-  errors: any[];
+  fiscalYear: number;
+  values: LifecycleCosts;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
+  errors: any;
 };
-const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
-  const phaseError = errors[index] || {};
+
+const Phase = ({
+  formikKey,
+  year,
+  fiscalYear,
+  values,
+  setFieldValue,
+  errors = {}
+}: PhaseProps) => {
   return (
     <FieldArray name={`${formikKey}.year${year}`}>
-      {arrayHelpers => (
-        <div className="est-lifecycle-cost__phase-cost-wrapper">
-          <FieldGroup error={phaseError.phase || phaseError.cost}>
-            {phaseError.phase && (
-              <FieldErrorMsg>{phaseError.phase}</FieldErrorMsg>
-            )}
-            {phaseError.cost && (
-              <FieldErrorMsg>{phaseError.cost}</FieldErrorMsg>
-            )}
-            <div className="margin-right-2">
-              <fieldset
-                className="usa-fieldset"
-                aria-describedby="BusinessCase-EstimatedLifecycleCostHelp"
-                data-scroll={`${formikKey}.year${year}.${index}.phase`}
-              >
-                <div>
-                  <legend
-                    className={classnames('usa-label', 'margin-bottom-1')}
-                    aria-label={`Year ${year} Phase ${index + 1} Phase Type`}
-                  >
-                    Phase
-                  </legend>
-                  <RadioGroup inline>
-                    <Field
-                      as={RadioField}
-                      checked={values.phase === 'Development'}
-                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.Development`}
-                      name={`${formikKey}.year${year}.${index}.phase`}
-                      label="Development"
-                      value="Development"
-                      inline
-                    />
-
-                    <Field
-                      as={RadioField}
-                      checked={values.phase === 'Operations and Maintenance'}
-                      id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.opsMaintenance`}
-                      name={`${formikKey}.year${year}.${index}.phase`}
-                      label="Operations and Maintenance"
-                      value="Operations and Maintenance"
-                      inline
-                    />
-                  </RadioGroup>
-                </div>
-              </fieldset>
-            </div>
-            <div
-              className="est-lifecycle-cost__phase-cost-row"
-              data-scroll={`${formikKey}.year${year}.${index}.cost`}
+      {() => (
+        <FieldGroup
+          className="est-lifecycle-cost__phase-costs"
+          error={Object.keys(errors).length > 0}
+          scrollElement={`${formikKey}.year${year}`}
+        >
+          <div className="est-lifecycle-cost__phase-fieldset">
+            <fieldset
+              className="usa-fieldset"
+              aria-describedby="BusinessCase-EstimatedLifecycleCostHelp"
             >
-              <div>
-                <Label
-                  htmlFor={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
-                  aria-label={`Year ${year} Phase ${index + 1} Cost`}
-                >
-                  Cost
-                </Label>
-                <Field
-                  as={TextField}
-                  error={!!phaseError.cost}
-                  id={`BusinessCase-${formikKey}.Year${year}.Phase${index}.cost`}
-                  name={`${formikKey}.year${year}.${index}.cost`}
-                  maxLength={10}
-                  match={/^[0-9\b]+$/}
-                />
-              </div>
+              <FieldErrorMsg>
+                {typeof errors === 'string' ? errors : ''}
+              </FieldErrorMsg>
+              <legend className={classnames('usa-label', 'margin-bottom-1')}>
+                {`Fiscal year ${fiscalYear} phase costs`}
+              </legend>
 
-              <div className="est-lifecycle-cost__phase-btn-wrapper">
-                {index === 0 ? (
-                  <Button
-                    type="button"
-                    outline
-                    onClick={() => {
-                      arrayHelpers.push({
-                        phase: '',
-                        cost: ''
-                      });
-                    }}
+              <Field
+                as={CheckboxField}
+                checked={values.development.isPresent}
+                id={`BusinessCase-${formikKey}.Year${year}.development.isPresent`}
+                name={`${formikKey}.year${year}.development.isPresent`}
+                label="Development"
+                value="Development"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setFieldValue(
+                    `${formikKey}.year${year}.development.isPresent`,
+                    e.target.checked
+                  );
+                }}
+              />
+              {values.development.isPresent && (
+                <FieldGroup
+                  className="margin-left-4 margin-bottom-2"
+                  scrollElement={`${formikKey}.year${year}.development.cost`}
+                >
+                  <Label
+                    htmlFor={`BusinessCase-${formikKey}.Year${year}.development.cost`}
+                    aria-label={`Enter year ${fiscalYear} development cost`}
                   >
-                    + Add Phase
-                  </Button>
-                ) : (
-                  <Button
-                    className="est-lifecycle-cost__remove-phase-btn"
-                    type="button"
-                    outline
-                    onClick={() => {
-                      arrayHelpers.remove(index);
-                    }}
-                    unstyled
+                    Development costs
+                  </Label>
+                  <FieldErrorMsg>{errors?.development?.cost}</FieldErrorMsg>
+                  <Field
+                    as={TextField}
+                    error={!!errors?.development?.cost}
+                    className="width-card-lg"
+                    id={`BusinessCase-${formikKey}.Year${year}.development.cost`}
+                    name={`${formikKey}.year${year}.development.cost`}
+                    maxLength={10}
+                    match={/^[0-9\b]+$/}
+                    aria-describedby="DevelopmentCostsDefinition"
+                  />
+                </FieldGroup>
+              )}
+
+              <Field
+                as={CheckboxField}
+                checked={values.operationsMaintenance.isPresent}
+                id={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.isPresent`}
+                name={`${formikKey}.year${year}.operationsMaintenance.isPresent`}
+                label="Operations and Maintenance"
+                value="Operations and Maintenance"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setFieldValue(
+                    `${formikKey}.year${year}.operationsMaintenance.isPresent`,
+                    e.target.checked
+                  );
+                }}
+              />
+              {values.operationsMaintenance.isPresent && (
+                <FieldGroup
+                  className="margin-left-4 margin-bottom-2"
+                  scrollElement={`${formikKey}.year${year}.operationsMaintenance.cost`}
+                >
+                  <Label
+                    htmlFor={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.cost`}
+                    aria-label={`Enter year ${fiscalYear} operations and maintenance cost`}
                   >
-                    Remove phase
-                  </Button>
-                )}
-              </div>
-            </div>
-          </FieldGroup>
-        </div>
+                    Operations and Maintenance costs
+                  </Label>
+                  <FieldErrorMsg>
+                    {errors?.operationsMaintenance?.cost}
+                  </FieldErrorMsg>
+                  <Field
+                    as={TextField}
+                    error={!!errors?.operationsMaintenance?.cost}
+                    className="width-card-lg"
+                    id={`BusinessCase-${formikKey}.Year${year}.operationsMaintenance.cost`}
+                    name={`${formikKey}.year${year}.operationsMaintenance.cost`}
+                    maxLength={10}
+                    match={/^[0-9\b]+$/}
+                    aria-describedby="OperationsMaintenanceCostsDefinition"
+                  />
+                </FieldGroup>
+              )}
+
+              <Field
+                as={CheckboxField}
+                checked={values.other.isPresent}
+                id={`BusinessCase-${formikKey}.Year${year}.other.isPresent`}
+                name={`${formikKey}.year${year}.other.isPresent`}
+                label="Other"
+                value="Other"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setFieldValue(
+                    `${formikKey}.year${year}.other.isPresent`,
+                    e.target.checked
+                  );
+                }}
+              />
+              {values.other.isPresent && (
+                <FieldGroup
+                  className="margin-left-4 margin-bottom-2"
+                  scrollElement={`${formikKey}.year${year}.other.cost`}
+                >
+                  <Label
+                    htmlFor={`BusinessCase-${formikKey}.Year${year}.other.cost`}
+                    aria-label={`Enter year ${fiscalYear} other cost`}
+                  >
+                    Other costs
+                  </Label>
+                  <FieldErrorMsg>{errors?.other?.cost}</FieldErrorMsg>
+                  <Field
+                    as={TextField}
+                    error={!!errors?.other?.cost}
+                    className="width-card-lg"
+                    id={`BusinessCase-${formikKey}.Year${year}.other.cost`}
+                    name={`${formikKey}.year${year}.other.cost`}
+                    maxLength={10}
+                    match={/^[0-9\b]+$/}
+                    aria-describedby="OtherCostsDefinition"
+                  />
+                </FieldGroup>
+              )}
+            </fieldset>
+          </div>
+        </FieldGroup>
       )}
     </FieldArray>
   );
@@ -135,32 +185,40 @@ const Phase = ({ formikKey, year, index, values, errors = [] }: PhaseProps) => {
 type EstimatedLifecycleCostProps = {
   formikKey: string;
   years: {
-    year1: LifecyclePhase[];
-    year2: LifecyclePhase[];
-    year3: LifecyclePhase[];
-    year4: LifecyclePhase[];
-    year5: LifecyclePhase[];
+    year1: LifecycleCosts;
+    year2: LifecycleCosts;
+    year3: LifecycleCosts;
+    year4: LifecycleCosts;
+    year5: LifecycleCosts;
   };
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   errors: any;
+  businessCaseCreatedAt?: string;
 };
 const EstimatedLifecycleCost = ({
   formikKey,
   years,
-  errors = {}
+  setFieldValue,
+  errors = {},
+  businessCaseCreatedAt = ''
 }: EstimatedLifecycleCostProps) => {
-  const sumCostinYear = (phases: LifecyclePhase[]) => {
-    return phases.reduce((prev, current) => {
-      if (current.cost) {
-        return prev + parseFloat(current.cost);
-      }
-      return prev;
-    }, 0);
+  const sumCostinYear = (phases: LifecycleCosts) => {
+    const { development, operationsMaintenance, other } = phases;
+    return (
+      (development.isPresent ? parseFloat(development.cost || '0') : 0) +
+      (operationsMaintenance.isPresent
+        ? parseFloat(operationsMaintenance.cost || '0')
+        : 0) +
+      (other.isPresent ? parseFloat(other.cost || '0') : 0)
+    );
   };
   const year1Cost = sumCostinYear(years.year1);
   const year2Cost = sumCostinYear(years.year2);
   const year3Cost = sumCostinYear(years.year3);
   const year4Cost = sumCostinYear(years.year4);
   const year5Cost = sumCostinYear(years.year5);
+
+  const fiscalYear = getFiscalYear(DateTime.fromISO(businessCaseCreatedAt));
 
   return (
     <div className="est-lifecycle-cost grid-row">
@@ -171,96 +229,73 @@ const EstimatedLifecycleCost = ({
           </h3>
           <dl className="margin-bottom-105">
             <dt className="margin-bottom-1 text-bold">Development</dt>
-            <dd className="margin-0 line-height-body-3">
-              Costs related to current development that is pre-production
+            <dd
+              id="DevelopmentCostsDefinition"
+              className="margin-bottom-2 margin-left-0 line-height-body-3"
+            >
+              These are costs related to current development that is
+              pre-production.
             </dd>
-          </dl>
-          <dl>
             <dt className="margin-bottom-1 text-bold">
               Operations and Maintenance
             </dt>
-            <dd className="margin-0 line-height-body-3">
-              Costs related to running and upkeep post-production
+            <dd
+              id="OperationsMaintenanceCostsDefinition"
+              className="margin-bottom-2 margin-left-0 line-height-body-3"
+            >
+              These are costs related to running and upkeep post-production.
+            </dd>
+            <dt className="margin-bottom-1 text-bold">Other</dt>
+            <dd
+              id="OtherCostsDefinition"
+              className="margin-bottom-2 margin-left-0 line-height-body-3"
+            >
+              This can be Non-IT costs like education, licenses etc.
             </dd>
           </dl>
         </div>
       </div>
       <div className="tablet:grid-col-7">
-        <div className="est-lifecycle-cost__year-costs margin-top-0">
-          <span className="text-bold">Year 1</span>
-          {years.year1.map((year: LifecyclePhase, index: number) => {
-            return (
-              <Phase
-                key={`Year1Phase-${index + 1}`}
-                formikKey={formikKey}
-                year={1}
-                index={index}
-                values={year}
-                errors={errors.year1}
-              />
-            );
-          })}
-        </div>
-        <div className="est-lifecycle-cost__year-costs">
-          <span className="text-bold">Year 2</span>
-          {years.year2.map((year: LifecyclePhase, index: number) => {
-            return (
-              <Phase
-                key={`Year2Phase-${index + 1}`}
-                formikKey={formikKey}
-                year={2}
-                index={index}
-                values={year}
-                errors={errors.year2}
-              />
-            );
-          })}
-        </div>
-        <div className="est-lifecycle-cost__year-costs">
-          <span className="text-bold">Year 3</span>
-          {years.year3.map((year: LifecyclePhase, index: number) => {
-            return (
-              <Phase
-                key={`Year3Phase-${index + 1}`}
-                formikKey={formikKey}
-                year={3}
-                index={index}
-                values={year}
-                errors={errors.year3}
-              />
-            );
-          })}
-        </div>
-        <div className="est-lifecycle-cost__year-costs">
-          <span className="text-bold">Year 4</span>
-          {years.year4.map((year: LifecyclePhase, index: number) => {
-            return (
-              <Phase
-                key={`Year4Phase-${index + 1}`}
-                formikKey={formikKey}
-                year={4}
-                index={index}
-                values={year}
-                errors={errors.year4}
-              />
-            );
-          })}
-        </div>
-        <div className="est-lifecycle-cost__year-costs">
-          <span className="text-bold">Year 5</span>
-          {years.year5.map((year: LifecyclePhase, index: number) => {
-            return (
-              <Phase
-                key={`Year5Phase-${index + 1}`}
-                formikKey={formikKey}
-                year={5}
-                index={index}
-                values={year}
-                errors={errors.year5}
-              />
-            );
-          })}
-        </div>
+        <Phase
+          formikKey={formikKey}
+          year={1}
+          fiscalYear={fiscalYear}
+          values={years.year1}
+          setFieldValue={setFieldValue}
+          errors={errors.year1}
+        />
+        <Phase
+          formikKey={formikKey}
+          year={2}
+          fiscalYear={fiscalYear + 1}
+          values={years.year2}
+          setFieldValue={setFieldValue}
+          errors={errors.year2}
+        />
+        <Phase
+          formikKey={formikKey}
+          year={3}
+          fiscalYear={fiscalYear + 2}
+          values={years.year3}
+          setFieldValue={setFieldValue}
+          errors={errors.year3}
+        />
+        <Phase
+          formikKey={formikKey}
+          year={4}
+          fiscalYear={fiscalYear + 3}
+          values={years.year4}
+          setFieldValue={setFieldValue}
+          errors={errors.year4}
+        />
+        <Phase
+          formikKey={formikKey}
+          year={5}
+          fiscalYear={fiscalYear + 4}
+          values={years.year5}
+          setFieldValue={setFieldValue}
+          errors={errors.year5}
+        />
         <div className="est-lifecycle-cost__total bg-base-lightest overflow-auto margin-top-3 padding-x-2">
           <DescriptionList title="System total cost">
             <DescriptionTerm term="System total cost" />

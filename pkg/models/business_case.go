@@ -30,6 +30,8 @@ const (
 	LifecycleCostPhaseDEVELOPMENT LifecycleCostPhase = "Development"
 	// LifecycleCostPhaseOPERATIONMAINTENANCE captures enum value "Operations and Maintenance"
 	LifecycleCostPhaseOPERATIONMAINTENANCE LifecycleCostPhase = "Operations and Maintenance"
+	// LifecycleCostPhaseOTHER captures enum value "Other"
+	LifecycleCostPhaseOTHER LifecycleCostPhase = "Other"
 
 	// LifecycleCostSolutionASIS captures enum value "As Is"
 	LifecycleCostSolutionASIS LifecycleCostSolution = "As Is"

@@ -14,18 +14,15 @@ import (
 )
 
 type createAction func(context.Context, *models.Action) error
-type fetchActions func(context.Context, uuid.UUID) ([]models.Action, error)
 
 // NewActionHandler is a constructor for ActionHandler
 func NewActionHandler(
 	base HandlerBase,
 	create createAction,
-	fetch fetchActions,
 ) ActionHandler {
 	return ActionHandler{
 		HandlerBase:  base,
 		CreateAction: create,
-		FetchActions: fetch,
 	}
 }
 
@@ -33,7 +30,6 @@ func NewActionHandler(
 type ActionHandler struct {
 	HandlerBase
 	CreateAction createAction
-	FetchActions fetchActions
 }
 
 // Handle handles a request for the system intake action
@@ -75,26 +71,6 @@ func (h ActionHandler) Handle() http.HandlerFunc {
 
 			w.WriteHeader(http.StatusCreated)
 			return
-		case "GET":
-			notes, err := h.FetchActions(r.Context(), intakeID)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
-
-			js, err := json.Marshal(notes)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
-
-			w.Header().Set("Content-Type", "application/json")
-
-			_, err = w.Write(js)
-			if err != nil {
-				h.WriteErrorResponse(r.Context(), w, err)
-				return
-			}
 		default:
 			h.WriteErrorResponse(r.Context(), w, &apperrors.MethodNotAllowedError{Method: r.Method})
 			return

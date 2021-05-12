@@ -24,7 +24,6 @@ cypress.env.json
 .env.production.local
 .idea
 .envrc.local
-.vscode
 .eslintcache
 
 # npm/js ignores

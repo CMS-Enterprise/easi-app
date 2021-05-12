@@ -1,6 +1,6 @@
 module github.com/cmsgov/easi-app
 
-go 1.14
+go 1.15
 
 require (
 	github.com/99designs/gqlgen v0.13.0
@@ -20,6 +20,7 @@ require (
 	github.com/gorilla/mux v1.7.4
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79 // indirect
 	github.com/guregu/null v4.0.0+incompatible
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/launchdarkly/eventsource v1.6.1 // indirect
 	github.com/lestrrat-go/jwx v1.0.2 // indirect

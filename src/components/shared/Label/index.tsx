@@ -5,14 +5,13 @@ type LabelProps = {
   children: React.ReactNode;
   htmlFor: string;
   className?: string;
-  ariaLabel?: string;
-};
+} & JSX.IntrinsicElements['label'];
 
-const Label = ({ children, htmlFor, className, ariaLabel }: LabelProps) => {
+const Label = ({ children, htmlFor, className, ...props }: LabelProps) => {
   const classes = classnames('usa-label', className);
 
   return (
-    <label className={classes} htmlFor={htmlFor} aria-label={ariaLabel}>
+    <label className={classes} htmlFor={htmlFor} {...props}>
       {children}
     </label>
   );

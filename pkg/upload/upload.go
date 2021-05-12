@@ -2,7 +2,9 @@ package upload
 
 import (
 	"mime"
+	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -38,7 +40,7 @@ func NewS3Client(config Config) S3Client {
 
 	// if we are in a local dev environment we use Minio for s3
 	if config.IsLocal {
-		awsConfig.Endpoint = aws.String("http://localhost:9000")
+		awsConfig.Endpoint = aws.String(os.Getenv(appconfig.LocalMinioAddressKey))
 		awsConfig.Credentials = credentials.NewStaticCredentials(
 			os.Getenv(appconfig.LocalMinioS3AccessKey),
 			os.Getenv(appconfig.LocalMinioS3SecretKey),
@@ -48,10 +50,16 @@ func NewS3Client(config Config) S3Client {
 
 	s3Session := session.Must(session.NewSession(awsConfig))
 
-	// create the s3 service client
-	client := s3.New(s3Session)
+	return NewS3ClientUsingClient(s3.New(s3Session), config)
+}
 
-	return S3Client{client, config}
+// NewS3ClientUsingClient creates a new s3 wrapper using the specified s3 client
+// This is most useful for testing where the s3 client needs to be mocked out.
+func NewS3ClientUsingClient(s3Client s3iface.S3API, config Config) S3Client {
+	return S3Client{
+		s3Client,
+		config,
+	}
 }
 
 // NewPutPresignedURL returns a pre-signed URL used for PUT-ing objects
@@ -68,8 +76,9 @@ func (c S3Client) NewPutPresignedURL(fileType string) (*models.PreSignedURL, err
 		key = key + extensions[0]
 	}
 	req, _ := c.client.PutObjectRequest(&s3.PutObjectInput{
-		Bucket: aws.String(c.config.Bucket),
-		Key:    aws.String(key),
+		Bucket:      aws.String(c.config.Bucket),
+		Key:         aws.String(key),
+		ContentType: aws.String(fileType),
 	})
 
 	url, err := req.Presign(15 * time.Minute)
@@ -99,4 +108,29 @@ func (c S3Client) NewGetPresignedURL(key string) (*models.PreSignedURL, error) {
 
 	return &result, nil
 
+}
+
+// KeyFromURL extracts an S3 key from a URL.
+func (c S3Client) KeyFromURL(url *url.URL) (string, error) {
+	return strings.Replace(url.Path, "/"+c.config.Bucket+"/", "", 1), nil
+}
+
+// TagValueForKey returns the tag value and if that tag was found for the
+// specified key and tag name. If no value is found, returns an empty string.
+func (c S3Client) TagValueForKey(key string, tagName string) (string, error) {
+	input := &s3.GetObjectTaggingInput{
+		Bucket: aws.String(c.config.Bucket),
+		Key:    aws.String(key),
+	}
+	tagging, taggingErr := c.client.GetObjectTagging(input)
+	if taggingErr != nil {
+		return "", taggingErr
+	}
+
+	for _, tagSet := range tagging.TagSet {
+		if *tagSet.Key == tagName {
+			return *tagSet.Value, nil
+		}
+	}
+	return "", nil
 }

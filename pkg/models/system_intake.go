@@ -22,8 +22,6 @@ const (
 	SystemIntakeStatusINTAKEDRAFT SystemIntakeStatus = "INTAKE_DRAFT"
 	// SystemIntakeStatusINTAKESUBMITTED captures enum value "INTAKE_SUBMITTED"
 	SystemIntakeStatusINTAKESUBMITTED SystemIntakeStatus = "INTAKE_SUBMITTED"
-	// SystemIntakeStatusACCEPTED captures enum value "ACCEPTED"
-	SystemIntakeStatusACCEPTED SystemIntakeStatus = "ACCEPTED"
 	// SystemIntakeStatusNEEDBIZCASE captures enum value "NEED_BIZ_CASE"
 	SystemIntakeStatusNEEDBIZCASE SystemIntakeStatus = "NEED_BIZ_CASE"
 	// SystemIntakeStatusCLOSED captures enum value "CLOSED"
@@ -108,8 +106,10 @@ type SystemIntake struct {
 	CostIncreaseAmount          null.String             `json:"costIncreaseAmount" db:"cost_increase_amount"`
 	Contractor                  null.String             `json:"contractor" db:"contractor"`
 	ContractVehicle             null.String             `json:"contractVehicle" db:"contract_vehicle"`
+	ContractStartDate           *time.Time              `json:"contractStartDate" db:"contract_start_date"`
 	ContractStartMonth          null.String             `json:"contractStartMonth" db:"contract_start_month"`
 	ContractStartYear           null.String             `json:"contractStartYear" db:"contract_start_year"`
+	ContractEndDate             *time.Time              `json:"contractEndDate" db:"contract_end_date"`
 	ContractEndMonth            null.String             `json:"contractEndMonth" db:"contract_end_month"`
 	ContractEndYear             null.String             `json:"contractEndYear" db:"contract_end_year"`
 	CreatedAt                   *time.Time              `json:"createdAt" db:"created_at"`
@@ -124,11 +124,13 @@ type SystemIntake struct {
 	RequesterEmailAddress       null.String             `json:"requesterEmailAddress" db:"requester_email_address"`
 	BusinessCaseID              *uuid.UUID              `json:"businessCase" db:"business_case_id"`
 	LifecycleID                 null.String             `json:"lcid" db:"lcid"`
-	LifecycleExpiresAt          *time.Time              `json:"lcidExpiresAt" db:"lcid_expires_at"`
+	LifecycleExpiresAt          *time.Time              `json:"lcidExpiresAt" db:"lcid_expires_at" gqlgen:"lcidExpiresAt"`
 	LifecycleScope              null.String             `json:"lcidScope" db:"lcid_scope"`
-	LifecycleNextSteps          null.String             `json:"lifecycleNextSteps" db:"lcid_next_steps"`
 	DecisionNextSteps           null.String             `json:"decisionNextSteps" db:"decision_next_steps"`
 	RejectionReason             null.String             `json:"rejectionReason" db:"rejection_reason"`
+	AdminLead                   null.String             `json:"adminLead" db:"admin_lead"`
+	LastAdminNoteContent        null.String             `json:"lastAdminNoteContent" db:"last_admin_note_content"`
+	LastAdminNoteCreatedAt      *time.Time              `json:"lastAdminNoteCreatedAt" db:"last_admin_note_created_at"`
 }
 
 // SystemIntakes is a list of System Intakes

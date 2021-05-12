@@ -175,6 +175,7 @@ exports[`The Not Found Page matches the snapshot 1`] = `
       </div>
       <button
         className="usa-menu-btn"
+        onClick={[Function]}
         type="button"
       >
         <span
@@ -207,11 +208,15 @@ exports[`The Not Found Page matches the snapshot 1`] = `
       className="grid-container easi-header--desktop "
     />
     <div
+      className="usa-overlay"
+    />
+    <div
       className="usa-nav sidenav-mobile"
     >
       <button
         aria-label="Close"
         className="usa-nav__close"
+        onClick={[Function]}
         type="button"
       >
         <span
@@ -241,7 +246,9 @@ exports[`The Not Found Page matches the snapshot 1`] = `
       className="margin-y-7"
     >
       <h1
-        className="font-heading-3xl"
+        aria-live="polite"
+        className="easi-h1"
+        tabIndex={-1}
       >
         This page cannot be found.
       </h1>

@@ -28,5 +28,8 @@ This log lists the architectural decisions for the CMS EASi application.
 - [ADR-0021](0021-audit-logging.md) - Audit Logging
 - [ADR-0022](0022-generate-pdfs-with-prince.md) - Generate PDFs with Prince
 - [ADR-0023](0023_508_systems_list_as_view_of_system_intakes.md) - 508 Systems List as View of `system_intakes`
+- [ADR-0024](0024-soft-deleting.md) - Use `deleted_at` column for handling soft-delete of data
+- [ADR-0025](0025-provide-testing-environments.md) - *Provide a Testing Environment for Non-Engineers*
+- [ADR-0026](0026-cedar-data-definition.md) - CEDAR Data Model Definition
 
 <!-- adrlogstop -->

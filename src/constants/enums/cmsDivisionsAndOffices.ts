@@ -1,31 +1,19 @@
 const cmsDivisionsAndOffices = [
   {
-    acronym: 'CCIIO',
-    name: 'Center for Consumer Information and Insurance Oversight'
-  },
-  {
     acronym: 'CCSQ',
     name: 'Center for Clinical Standards and Quality'
   },
   {
-    acronym: 'CFMFFSO',
-    name: 'Consortium for Financial Management and Fee for Service Operations'
+    acronym: 'CCIIO',
+    name: 'Center for Consumer Information and Insurance Oversight'
   },
   {
     acronym: 'CM',
     name: 'Center for Medicare'
   },
   {
-    acronym: 'CMCHO',
-    name: "Consortium For Medicaid and Children's Health"
-  },
-  {
     acronym: 'CMCS',
     name: 'Center for Medicaid and CHIP Services'
-  },
-  {
-    acronym: 'CMHPO',
-    name: 'Consortium for Medicare Health Plans Operations'
   },
   {
     acronym: 'CMMI',
@@ -36,25 +24,24 @@ const cmsDivisionsAndOffices = [
     name: 'Center for Program Integrity'
   },
   {
-    acronym: 'CQISCO',
-    name:
-      'Consortium for Quality Improvement and Survey & Certification Operations'
+    acronym: 'CMS',
+    name: 'CMS Wide'
+  },
+  {
+    acronym: 'EPRO',
+    name: 'Emergency Preparedness and Response Operations'
   },
   {
     acronym: 'FCHCO',
     name: 'Federal Coordinated Health Care Office'
   },
   {
-    acronym: 'MMCO',
-    name: 'Medicare-Medicaid Coordination Office'
-  },
-  {
-    acronym: 'OACT',
-    name: 'Office of the Actuary'
-  },
-  {
     acronym: 'OAGM',
     name: 'Office of Acquisition and Grants Management'
+  },
+  {
+    acronym: 'OBRHI',
+    name: 'Office of Burden Reduction and Health Informatics'
   },
   {
     acronym: 'OC',
@@ -63,10 +50,6 @@ const cmsDivisionsAndOffices = [
   {
     acronym: 'OEDA',
     name: 'Office of Enterprise Data and Analytics'
-  },
-  {
-    acronym: 'OIT',
-    name: 'Office of Information Technology'
   },
   {
     acronym: 'OEOCR',
@@ -81,16 +64,12 @@ const cmsDivisionsAndOffices = [
     name: 'Office of Human Capital'
   },
   {
-    acronym: 'OHI',
-    name: 'Offices of Hearings and Inquiries'
+    acronym: 'OIT',
+    name: 'Office of Information Technology'
   },
   {
     acronym: 'OL',
     name: 'Office of Legislation'
-  },
-  {
-    acronym: 'OA',
-    name: 'Office of the Administrator'
   },
   {
     acronym: 'OMH',
@@ -101,12 +80,24 @@ const cmsDivisionsAndOffices = [
     name: 'Office of Program Operations and Local Engagement'
   },
   {
+    acronym: 'OSFLO',
+    name: 'Office of Security, Facilities, and Logistics Operations'
+  },
+  {
     acronym: 'OSORA',
     name: 'Office of Strategic Operations and Regulatory Affairs'
   },
   {
-    acronym: 'OSSO',
-    name: 'Office of Support Services and Operations'
+    acronym: 'OSPR',
+    name: 'Office of Strategy, Performance, and Results'
+  },
+  {
+    acronym: 'OA',
+    name: 'Office of the Actuary'
+  },
+  {
+    acronym: 'OHI',
+    name: 'Offices of Hearings and Inquiries'
   },
   {
     acronym: '',

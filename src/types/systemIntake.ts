@@ -87,6 +87,11 @@ export type SystemIntakeForm = {
   rejectionReason: string;
   grtDate: DateTime | null;
   grbDate: DateTime | null;
+  adminLead: string;
+  lastAdminNote: {
+    content: string;
+    createdAt: DateTime;
+  } | null;
 } & ContractDetailsForm;
 
 export type ContractDetailsForm = {
@@ -106,10 +111,12 @@ export type ContractDetailsForm = {
     vehicle: string;
     startDate: {
       month: string;
+      day: string;
       year: string;
     };
     endDate: {
       month: string;
+      day: string;
       year: string;
     };
   };
@@ -117,10 +124,11 @@ export type ContractDetailsForm = {
 
 export type IntakeNote = {
   id: string;
-  authorName: string;
-  authorId: string;
+  author: {
+    name: string;
+    eua: string;
+  };
   content: string;
-  systemIntakeId: string;
   createdAt: DateTime;
 };
 

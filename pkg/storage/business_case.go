@@ -16,10 +16,10 @@ import (
 )
 
 // IntakeExistsMsg is the error we see when there is no valid system intake
-const IntakeExistsMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: insert or update on table \"business_case\" violates foreign key constraint \"business_case_system_intake_fkey\""
+const IntakeExistsMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: insert or update on table \"business_cases\" violates foreign key constraint \"business_case_system_intake_fkey\""
 
 // EuaIDMsg is the error we see when EUA doesn't meet EUA ID constraints
-const EuaIDMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: new row for relation \"business_case\" violates check constraint \"eua_id_check\""
+const EuaIDMsg = "Could not query model *models.BusinessCase with operation Create, received error: pq: new row for relation \"business_cases\" violates check constraint \"eua_id_check\""
 
 // ValidStatusMsg is a match for an error we see when there is no valid status
 const ValidStatusMsg = "pq: invalid input value for enum business_case_status: "
@@ -32,16 +32,16 @@ func (s *Store) FetchBusinessCaseByID(ctx context.Context, id uuid.UUID) (*model
 	businessCase := models.BusinessCase{}
 	const fetchBusinessCaseSQL = `
 		SELECT
-			business_case.*,
-			json_agg(estimated_lifecycle_cost) as lifecycle_cost_lines,
-			system_intake.status as system_intake_status
+			business_cases.*,
+			json_agg(estimated_lifecycle_costs) as lifecycle_cost_lines,
+			system_intakes.status as system_intake_status
 		FROM
-			business_case
-			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
-			JOIN system_intake ON business_case.system_intake = system_intake.id
+			business_cases
+			LEFT JOIN estimated_lifecycle_costs ON business_cases.id = estimated_lifecycle_costs.business_case
+			JOIN system_intakes ON business_cases.system_intake = system_intakes.id
 		WHERE
-			business_case.id = $1
-		GROUP BY estimated_lifecycle_cost.business_case, business_case.id, system_intake.id`
+			business_cases.id = $1
+		GROUP BY estimated_lifecycle_costs.business_case, business_cases.id, system_intakes.id`
 
 	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, id)
 	if err != nil {
@@ -62,14 +62,14 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 	businessCase := models.BusinessCase{}
 	const fetchBusinessCaseSQL = `
 		SELECT
-			business_case.*,
-			json_agg(estimated_lifecycle_cost) as lifecycle_cost_lines
+			business_cases.*,
+			json_agg(estimated_lifecycle_costs) as lifecycle_cost_lines
 		FROM
-			business_case
-			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
+			business_cases
+			LEFT JOIN estimated_lifecycle_costs ON business_cases.id = estimated_lifecycle_costs.business_case
 		WHERE
-			business_case.system_intake = $1 AND business_case.status = 'OPEN'
-		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
+			business_cases.system_intake = $1 AND business_cases.status = 'OPEN'
+		GROUP BY estimated_lifecycle_costs.business_case, business_cases.id`
 	err := s.db.Get(&businessCase, fetchBusinessCaseSQL, intakeID)
 	if err != nil {
 		appcontext.ZLogger(ctx).Error(
@@ -84,34 +84,9 @@ func (s *Store) FetchOpenBusinessCaseByIntakeID(ctx context.Context, intakeID uu
 	return &businessCase, nil
 }
 
-// FetchBusinessCasesByEuaID queries the DB for a list of business case matching the given EUA ID
-func (s *Store) FetchBusinessCasesByEuaID(ctx context.Context, euaID string) (models.BusinessCases, error) {
-	businessCases := []models.BusinessCase{}
-	const fetchBusinessCaseSQL = `
-		SELECT
-			business_case.*,
-			json_agg(estimated_lifecycle_cost) as lifecycle_cost_lines
-		FROM
-			business_case
-			LEFT JOIN estimated_lifecycle_cost ON business_case.id = estimated_lifecycle_cost.business_case
-		WHERE
-			business_case.eua_user_id = $1
-		GROUP BY estimated_lifecycle_cost.business_case, business_case.id`
-
-	err := s.db.Select(&businessCases, fetchBusinessCaseSQL, euaID)
-	if err != nil {
-		appcontext.ZLogger(ctx).Error(
-			fmt.Sprintf("Failed to fetch business cases %s", err),
-			zap.String("euaID", euaID),
-		)
-		return nil, err
-	}
-	return businessCases, nil
-}
-
 func createEstimatedLifecycleCosts(ctx context.Context, tx *sqlx.Tx, businessCase *models.BusinessCase) error {
 	const createEstimatedLifecycleCostSQL = `
-		INSERT INTO estimated_lifecycle_cost (
+		INSERT INTO estimated_lifecycle_costs (
 			id,
 			business_case,
 			solution,
@@ -154,7 +129,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 	id := uuid.New()
 	businessCase.ID = id
 	const createBusinessCaseSQL = `
-		INSERT INTO business_case (
+		INSERT INTO business_cases (
 			id,
 			eua_user_id,
 			system_intake,
@@ -327,7 +302,7 @@ func (s *Store) CreateBusinessCase(ctx context.Context, businessCase *models.Bus
 func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.BusinessCase) (*models.BusinessCase, error) {
 	// We are explicitly not updating ID, EUAUserID and SystemIntakeID
 	const updateBusinessCaseSQL = `
-		UPDATE business_case
+		UPDATE business_cases
 		SET
 			project_name = :project_name,
 			requester = :requester,
@@ -383,10 +358,10 @@ func (s *Store) UpdateBusinessCase(ctx context.Context, businessCase *models.Bus
 		  status = :status,
 			initial_submitted_at = :initial_submitted_at,
 		  last_submitted_at = :last_submitted_at
-		WHERE business_case.id = :id
+		WHERE business_cases.id = :id
 	`
 	const deleteLifecycleCostsSQL = `
-		DELETE FROM estimated_lifecycle_cost
+		DELETE FROM estimated_lifecycle_costs
 		WHERE business_case = :id
 	`
 

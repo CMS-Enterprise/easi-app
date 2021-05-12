@@ -16,14 +16,6 @@
   font-weight: bold;
 }
 
-// Global change to decrease space between field and label
-.usa-select,
-.usa-range,
-.usa-input,
-.usa-textarea {
-  margin-top: 0.25rem;
-}
-
 // Textarea
 .usa-textarea {
   height: 300px;
@@ -36,6 +28,7 @@
 .usa-accordion,
 .usa-header {
   font-family: 'Public Sans';
+  z-index: 300;
 }
 
 .usa-alert.easi-inline-alert {
@@ -53,4 +46,13 @@
   .usa-alert__text:only-child {
     margin-bottom: 0;
   }
+}
+
+// Addiitional class names were introduced in v2.9.0
+// There are breaking changes in this version that crash our application.
+// On 2/7/2021, USWDS said a fix is on the way.
+// https://github.com/uswds/uswds/issues/3909
+// https://github.com/uswds/uswds/releases/tag/v2.9.0
+.flex-align-self-center {
+  align-self: center !important;
 }

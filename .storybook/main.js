@@ -2,8 +2,7 @@ const path = require('path');
 
 module.exports = {
   stories: [
-    '../src/components/shared/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/components/**/*.stories.@(js|jsx|ts|tsx)'
+    '../src/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
     '@storybook/addon-essentials',
@@ -28,6 +27,7 @@ module.exports = {
           options: {
             resources: [
               path.resolve(__dirname, '../src/stylesheets/_colors.scss'),
+              path.resolve(__dirname, '../src/stylesheets/_variables.scss'),
               path.resolve(__dirname, '../src/stylesheets/_uswdsUtilities.scss')
             ]
           }

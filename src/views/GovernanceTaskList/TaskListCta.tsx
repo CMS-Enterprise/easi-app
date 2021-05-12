@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import { Button, Link as UswdsLink } from '@trussworks/react-uswds';
 
@@ -190,9 +191,8 @@ export const AttendGrbMeetingCta = ({
 
 // CTA for Task List Decision
 export const DecisionCta = ({ intake }: { intake: SystemIntakeForm }) => {
-  if (
-    ['LCID_ISSUED', 'NOT_APPROVED', 'NOT_IT_REQUEST'].includes(intake.status)
-  ) {
+  const { t } = useTranslation();
+  if (['LCID_ISSUED', 'NOT_APPROVED'].includes(intake.status)) {
     return (
       <UswdsLink
         data-testid="decision-cta"
@@ -206,8 +206,22 @@ export const DecisionCta = ({ intake }: { intake: SystemIntakeForm }) => {
     );
   }
 
+  if (intake.status === 'NOT_IT_REQUEST') {
+    return (
+      <span data-testid="plain-text-not-it-request-decision">
+        <b>Decision:&nbsp;</b>
+        {t('taskList:decision.notItRequest')}
+      </span>
+    );
+  }
+
   if (intake.status === 'NO_GOVERNANCE') {
-    return <span>No further governance required</span>;
+    return (
+      <span data-testid="plain-text-no-governance-decision">
+        <b>Decision:&nbsp;</b>
+        {t('taskList:decision.noGovernanceNeeded')}
+      </span>
+    );
   }
 
   return <></>;

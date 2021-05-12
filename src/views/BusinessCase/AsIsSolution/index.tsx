@@ -2,11 +2,11 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
 import CharacterCounter from 'components/CharacterCounter';
 import EstimatedLifecycleCost from 'components/EstimatedLifecycleCost';
 import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
@@ -16,9 +16,10 @@ import HelpText from 'components/shared/HelpText';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import TextField from 'components/shared/TextField';
-import { hasAlternativeB } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { AsIsSolutionForm, BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
+import { isBusinessCaseFinal } from 'utils/systemIntake';
 import {
   BusinessCaseDraftValidationSchema,
   BusinessCaseFinalValidationSchema
@@ -34,7 +35,6 @@ const AsIsSolution = ({
   formikRef,
   dispatchSave
 }: AsIsSolutionProps) => {
-  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     asIsSolution: businessCase.asIsSolution
@@ -56,7 +56,13 @@ const AsIsSolution = ({
       innerRef={formikRef}
     >
       {(formikProps: FormikProps<AsIsSolutionForm>) => {
-        const { values, errors, setErrors, validateForm } = formikProps;
+        const {
+          values,
+          errors,
+          setErrors,
+          setFieldValue,
+          validateForm
+        } = formikProps;
         const flatErrors = flattenErrors(errors);
         return (
           <div className="grid-container">
@@ -76,7 +82,7 @@ const AsIsSolution = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl">Alternatives Analysis</h1>
+            <PageHeading>Alternatives Analysis</PageHeading>
             <p className="line-height-body-5">
               Below you should identify options and alternatives to meet your
               business need. Include a summary of the approaches, how you will
@@ -87,9 +93,12 @@ const AsIsSolution = ({
               equipment, or processes; and at least two additional alternatives.
               Identify your preferred solution.
             </p>
-            <div className="tablet:grid-col-5">
-              <MandatoryFieldsAlert />
-            </div>
+            {/* Only display "all fields are mandatory" alert if biz case in final stage */}
+            {isBusinessCaseFinal(businessCase.systemIntakeStatus) && (
+              <div className="tablet:grid-col-5">
+                <MandatoryFieldsAlert />
+              </div>
+            )}
             <Form>
               <div className="tablet:grid-col-9">
                 <h2>&quot;As is&quot; solution</h2>
@@ -244,6 +253,8 @@ const AsIsSolution = ({
                 </HelpText>
                 <EstimatedLifecycleCost
                   formikKey="asIsSolution.estimatedLifecycleCost"
+                  setFieldValue={setFieldValue}
+                  businessCaseCreatedAt={businessCase.createdAt}
                   years={values.asIsSolution.estimatedLifecycleCost}
                   errors={
                     errors.asIsSolution &&
@@ -296,7 +307,6 @@ const AsIsSolution = ({
                 setErrors({});
                 const newUrl = 'request-description';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -309,9 +319,10 @@ const AsIsSolution = ({
                     dispatchSave();
                     const newUrl = 'preferred-solution';
                     history.push(newUrl);
+                  } else {
+                    window.scrollTo(0, 0);
                   }
                 });
-                window.scrollTo(0, 0);
               }}
             >
               Next
@@ -323,9 +334,7 @@ const AsIsSolution = ({
                 onClick={() => {
                   dispatchSave();
                   history.push(
-                    flags.taskListLite
-                      ? `/governance-task-list/${businessCase.systemIntakeId}`
-                      : '/'
+                    `/governance-task-list/${businessCase.systemIntakeId}`
                   );
                 }}
               >
@@ -336,7 +345,11 @@ const AsIsSolution = ({
             </div>
             <PageNumber
               currentPage={3}
-              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
+              totalPages={
+                alternativeSolutionHasFilledFields(businessCase.alternativeB)
+                  ? 6
+                  : 5
+              }
             />
             <AutoSave
               values={values}

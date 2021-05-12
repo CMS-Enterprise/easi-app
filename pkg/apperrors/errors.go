@@ -167,7 +167,7 @@ type ContextError struct {
 
 // Error provides the error as a string
 func (e *ContextError) Error() string {
-	return fmt.Sprintf("Could not %s %s on context with error: %s", e.Operation, e.Object, e.Error())
+	return fmt.Sprintf("Could not %s %s on context", e.Operation, e.Object)
 }
 
 // NotificationDestinationType is a type of destination for a notification

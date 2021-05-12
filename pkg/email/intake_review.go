@@ -4,17 +4,23 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"path"
+
+	"github.com/google/uuid"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 type intakeReview struct {
-	EmailText string
+	EmailText    string
+	TaskListPath string
 }
 
-func (c Client) systemIntakeReviewBody(EmailText string) (string, error) {
+func (c Client) systemIntakeReviewBody(EmailText string, taskListPath string) (string, error) {
 	data := intakeReview{
-		EmailText: EmailText,
+		EmailText:    EmailText,
+		TaskListPath: c.urlFromPath(taskListPath),
 	}
 	var b bytes.Buffer
 	if c.templates.intakeReviewTemplate == nil {
@@ -28,9 +34,10 @@ func (c Client) systemIntakeReviewBody(EmailText string) (string, error) {
 }
 
 // SendSystemIntakeReviewEmail sends an email for a submitted system intake
-func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText string, recipientAddress string) error {
+func (c Client) SendSystemIntakeReviewEmail(ctx context.Context, emailText string, recipientAddress models.EmailAddress, intakeID uuid.UUID) error {
 	subject := "Feedback on your intake request"
-	body, err := c.systemIntakeReviewBody(emailText)
+	taskListPath := path.Join("governance-task-list", intakeID.String())
+	body, err := c.systemIntakeReviewBody(emailText, taskListPath)
 	if err != nil {
 		return &apperrors.NotificationError{Err: err, DestinationType: apperrors.DestinationTypeEmail}
 	}

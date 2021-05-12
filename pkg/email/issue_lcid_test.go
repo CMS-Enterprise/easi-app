@@ -5,12 +5,13 @@ import (
 	"time"
 
 	"github.com/cmsgov/easi-app/pkg/apperrors"
+	"github.com/cmsgov/easi-app/pkg/models"
 )
 
 func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 	sender := mockSender{}
 	ctx := context.Background()
-	recipient := "fake@fake.com"
+	recipient := models.NewEmailAddress("fake@fake.com")
 	lcid := "123456"
 	expiresAt, _ := time.Parse("2020-12-25", "2021-12-25")
 	scope := "scope"
@@ -21,8 +22,8 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: scope</p>\n" +
-			"<p>Next Steps: nextSteps</p>\n\n<p>feedback</p>"
+		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">scope</pre></p>\n" +
+			"<p>Next Steps: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">nextSteps</pre></p>\n\n<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
 		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, nextSteps, feedback)
 
 		s.NoError(err)
@@ -35,8 +36,8 @@ func (s *EmailTestSuite) TestSendIssueLCIDEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: scope</p>" +
-			"\n\n<p>feedback</p>"
+		expectedEmail := "<p>Lifecycle ID: 123456</p>\n<p>Expiration Date: January 1, 0001</p>\n<p>Scope: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">scope</pre></p>" +
+			"\n\n<p>Feedback: <pre style=\"white-space: pre-wrap; word-break: keep-all;\">feedback</pre></p>"
 		err = client.SendIssueLCIDEmail(ctx, recipient, lcid, &expiresAt, scope, "", feedback)
 
 		s.NoError(err)

@@ -67,7 +67,7 @@ const GovernanceTeamOptions = ({ formikProps }: GovernanceTeamOptionsProps) => {
                         >
                           <Label
                             htmlFor={`IntakeForm-${key}-Collaborator`}
-                            ariaLabel={`Enter ${team.acronym} Collaborator Name`}
+                            aria-label={`Enter ${team.acronym} Collaborator Name`}
                           >
                             {`${team.acronym} Collaborator Name`}
                           </Label>

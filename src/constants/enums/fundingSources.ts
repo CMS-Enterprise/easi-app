@@ -16,7 +16,9 @@ const fundingSources = [
   'QIO Prog Ops',
   'Research',
   'Survey and Certification',
-  'CLIA'
+  'CLIA',
+  'Other',
+  'Unknown'
 ];
 
 export default fundingSources;

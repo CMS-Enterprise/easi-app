@@ -7,6 +7,17 @@ export default gql`
         node {
           id
           name
+          relevantTestDate {
+            date
+          }
+          submittedAt
+          system {
+            lcid
+            businessOwner {
+              name
+              component
+            }
+          }
         }
       }
     }

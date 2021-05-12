@@ -1,26 +1,50 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client';
 import { Button } from '@trussworks/react-uswds';
 import { Field, Form, Formik, FormikHelpers, FormikProps } from 'formik';
 import { DateTime } from 'luxon';
+import CreateSystemIntakeNoteQuery from 'queries/CreateSystemIntakeNoteQuery';
+import GetAdminNotesAndActionsQuery from 'queries/GetAdminNotesAndActionsQuery';
+import {
+  CreateSystemIntakeNote,
+  CreateSystemIntakeNoteVariables
+} from 'queries/types/CreateSystemIntakeNote';
+import {
+  GetAdminNotesAndActions,
+  GetAdminNotesAndActions_systemIntake_actions as GetAdminNotesAndActionsSystemIntakeAction,
+  GetAdminNotesAndActions_systemIntake_notes as GetAdminNotesAndActionsSystemIntakeNote,
+  GetAdminNotesAndActionsVariables
+} from 'queries/types/GetAdminNotesAndActions';
 
+import PageHeading from 'components/PageHeading';
+import Alert from 'components/shared/Alert';
 import CollapsableLink from 'components/shared/CollapsableLink';
+import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import FieldGroup from 'components/shared/FieldGroup';
 import Label from 'components/shared/Label';
 import TextAreaField from 'components/shared/TextAreaField';
 import { AnythingWrongSurvey } from 'components/Survey';
 import { AppState } from 'reducers/rootReducer';
-import { Action } from 'types/action';
-import { fetchActions, fetchIntakeNotes, postIntakeNote } from 'types/routines';
-import { IntakeNote } from 'types/systemIntake';
 
 type NoteForm = {
   note: string;
 };
 
-const NoteListItem = ({ note }: { note: IntakeNote }) => {
+function formatRFC3393Time(time: string): string {
+  const parsed = DateTime.fromISO(time);
+  return `${parsed.toLocaleString(
+    DateTime.DATE_FULL
+  )} at ${parsed.toLocaleString(DateTime.TIME_SIMPLE)}`;
+}
+
+const NoteListItem = ({
+  note
+}: {
+  note: GetAdminNotesAndActionsSystemIntakeNote;
+}) => {
   return (
     <li className="easi-grt__history-item">
       <div className="easi-grt__history-item-content">
@@ -28,28 +52,28 @@ const NoteListItem = ({ note }: { note: IntakeNote }) => {
           {note.content}
         </p>
         <span className="text-base-dark font-body-2xs">{`by: ${
-          note.authorName
-        } | ${note.createdAt.toLocaleString(
-          DateTime.DATE_FULL
-        )} at ${note.createdAt.toLocaleString(DateTime.TIME_SIMPLE)}`}</span>
+          note.author.name
+        } | ${formatRFC3393Time(note.createdAt)}`}</span>
       </div>
     </li>
   );
 };
 
-const ActionListItem = ({ action }: { action: Action }) => {
+const ActionListItem = ({
+  action
+}: {
+  action: GetAdminNotesAndActionsSystemIntakeAction;
+}) => {
   const { t } = useTranslation('governanceReviewTeam');
 
   return (
     <li className="easi-grt__history-item">
       <div className="easi-grt__history-item-content">
         <p className="margin-top-0 margin-bottom-1 text-pre-wrap">
-          {t(`notes.actionName.${action.actionType}`)}
+          {t(`notes.actionName.${action.type}`)}
         </p>
         <span className="text-base-dark font-body-2xs display-block">
-          {`by: ${action.actorName} | ${action.createdAt.toLocaleString(
-            DateTime.DATE_FULL
-          )} at ${action.createdAt.toLocaleString(DateTime.TIME_SIMPLE)}`}
+          {`by: ${action.actor.name} | ${formatRFC3393Time(action.createdAt)}}`}
         </span>
         {action.feedback && (
           <div className="margin-top-2">
@@ -69,64 +93,93 @@ const ActionListItem = ({ action }: { action: Action }) => {
 };
 
 const Notes = () => {
-  const dispatch = useDispatch();
   const { systemId } = useParams<{ systemId: string }>();
   const authState = useSelector((state: AppState) => state.auth);
-  const notes = useSelector((state: AppState) => state.systemIntake.notes);
-  const actions = useSelector((state: AppState) => state.action.actions);
+  const [mutate, mutationResult] = useMutation<
+    CreateSystemIntakeNote,
+    CreateSystemIntakeNoteVariables
+  >(CreateSystemIntakeNoteQuery, {
+    refetchQueries: [
+      {
+        query: GetAdminNotesAndActionsQuery,
+        variables: {
+          id: systemId
+        }
+      }
+    ]
+  });
 
+  const { error, data } = useQuery<
+    GetAdminNotesAndActions,
+    GetAdminNotesAndActionsVariables
+  >(GetAdminNotesAndActionsQuery, {
+    variables: {
+      id: systemId
+    }
+  });
   const { t } = useTranslation('governanceReviewTeam');
-  const onSubmit = async (
+  const onSubmit = (
     values: NoteForm,
     { resetForm }: FormikHelpers<NoteForm>
   ) => {
-    await dispatch(
-      postIntakeNote({
-        intakeId: systemId,
-        authorName: authState.name,
-        authorId: authState.euaId,
-        content: values.note
-      })
-    );
-    await resetForm();
+    const input = {
+      intakeId: systemId,
+      authorName: authState.name,
+      content: values.note
+    };
+    mutate({ variables: { input } }).then(response => {
+      if (!response.errors) {
+        resetForm();
+      }
+    });
   };
-
-  useEffect(() => {
-    dispatch(fetchIntakeNotes(systemId));
-    dispatch(fetchActions(systemId));
-  }, [dispatch, systemId]);
 
   const initialValues = {
     note: ''
   };
 
-  const notesByTimestamp = notes.map((note: IntakeNote) => {
-    return {
-      createdAt: note.createdAt,
-      element: <NoteListItem note={note} key={note.id} />
-    };
-  });
+  const notesByTimestamp =
+    data?.systemIntake?.notes.map(note => {
+      return {
+        createdAt: note.createdAt,
+        element: <NoteListItem note={note} key={note.id} />
+      };
+    }) || [];
 
-  const actionsByTimestamp = actions.map((action: Action) => {
-    return {
-      createdAt: action.createdAt,
-      element: <ActionListItem action={action} key={action.id} />
-    };
-  });
+  const actionsByTimestamp =
+    data?.systemIntake?.actions.map(action => {
+      return {
+        createdAt: action.createdAt,
+        element: <ActionListItem action={action} key={action.id} />
+      };
+    }) || [];
 
   const interleavedList = [...notesByTimestamp, ...actionsByTimestamp]
-    .sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis())
+    .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
     .map(a => a.element);
 
   return (
     <>
-      <h1>{t('notes.heading')}</h1>
+      <PageHeading>{t('notes.heading')}</PageHeading>
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {(formikProps: FormikProps<NoteForm>) => {
-          const { values } = formikProps;
+          const { values, handleSubmit } = formikProps;
           return (
             <div className="tablet:grid-col-9 margin-bottom-7">
-              <Form>
+              {mutationResult && mutationResult.error && (
+                <ErrorAlert heading="Error">
+                  <ErrorAlertMessage
+                    message={mutationResult.error.message}
+                    errorKey="note"
+                  />
+                </ErrorAlert>
+              )}
+              <Form
+                onSubmit={e => {
+                  handleSubmit(e);
+                  window.scrollTo(0, 0);
+                }}
+              >
                 <FieldGroup>
                   <Label htmlFor="GovernanceReviewTeam-Note">
                     {t('notes.addNote')}
@@ -147,7 +200,12 @@ const Notes = () => {
                   {t('notes.addNoteCta')}
                 </Button>
               </Form>
-              <ul className="easi-grt__history">{interleavedList}</ul>
+              {error && (
+                <Alert type="error">The notes could not be loaded.</Alert>
+              )}
+              {!error && data && (
+                <ul className="easi-grt__history">{interleavedList}</ul>
+              )}
               <AnythingWrongSurvey />
             </div>
           );

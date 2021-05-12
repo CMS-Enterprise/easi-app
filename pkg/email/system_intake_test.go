@@ -12,7 +12,7 @@ import (
 func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 	sender := mockSender{}
 
-	tester := "Test McTester"
+	testName := "Test McTest"
 	intakeID, _ := uuid.Parse("1abc2671-c5df-45a0-b2be-c30899b473bf")
 	ctx := context.Background()
 
@@ -29,12 +29,12 @@ func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 				s.config.URLHost,
 				intakeID.String(),
 			) +
-			"Open intake request in EASi</a>\n"
-		err = client.SendSystemIntakeSubmissionEmail(ctx, tester, intakeID)
+			"Open intake request for " + testName + " in EASi</a>\n"
+		err = client.SendSystemIntakeSubmissionEmail(ctx, testName, intakeID)
 
 		s.NoError(err)
 		s.Equal(s.config.GRTEmail, sender.toAddress)
-		s.Equal(fmt.Sprintf("New intake request: %s", tester), sender.subject)
+		s.Equal(fmt.Sprintf("New intake request: %s", testName), sender.subject)
 		s.Equal(expectedEmail, sender.body)
 	})
 
@@ -43,7 +43,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 		s.NoError(err)
 		client.templates = templates{}
 
-		err = client.SendSystemIntakeSubmissionEmail(ctx, tester, intakeID)
+		err = client.SendSystemIntakeSubmissionEmail(ctx, testName, intakeID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -57,7 +57,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 		s.NoError(err)
 		client.templates.systemIntakeSubmissionTemplate = mockFailedTemplateCaller{}
 
-		err = client.SendSystemIntakeSubmissionEmail(ctx, tester, intakeID)
+		err = client.SendSystemIntakeSubmissionEmail(ctx, testName, intakeID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})
@@ -72,7 +72,7 @@ func (s *EmailTestSuite) TestSendSystemIntakeEmail() {
 		client, err := NewClient(s.config, &sender)
 		s.NoError(err)
 
-		err = client.SendSystemIntakeSubmissionEmail(ctx, tester, intakeID)
+		err = client.SendSystemIntakeSubmissionEmail(ctx, testName, intakeID)
 
 		s.Error(err)
 		s.IsType(err, &apperrors.NotificationError{})

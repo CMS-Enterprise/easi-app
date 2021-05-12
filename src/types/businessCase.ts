@@ -1,14 +1,14 @@
 import { DateTime } from 'luxon';
 
-import { LifecyclePhase } from 'types/estimatedLifecycle';
+import { LifecycleCosts } from 'types/estimatedLifecycle';
 import { SystemIntakeStatus } from 'types/systemIntake';
 
 export type EstimatedLifecycleCostLines = {
-  year1: LifecyclePhase[];
-  year2: LifecyclePhase[];
-  year3: LifecyclePhase[];
-  year4: LifecyclePhase[];
-  year5: LifecyclePhase[];
+  year1: LifecycleCosts;
+  year2: LifecycleCosts;
+  year3: LifecycleCosts;
+  year4: LifecycleCosts;
+  year5: LifecycleCosts;
 };
 
 // Base Solution
@@ -54,7 +54,6 @@ export type RequestDescriptionForm = {
   cmsBenefit: string;
   priorityAlignment: string;
   successIndicators: string;
-  systemIntakeStatus: SystemIntakeStatus;
 };
 
 export type AsIsSolutionForm = {
@@ -87,6 +86,7 @@ export type BusinessCaseModel = GeneralRequestInfoForm &
     systemIntakeStatus: SystemIntakeStatus;
     initialSubmittedAt?: string;
     lastSubmittedAt?: string;
+    createdAt: string;
   };
 
 export type BusinessCasesState = {

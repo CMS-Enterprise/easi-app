@@ -1,11 +1,13 @@
 export type Flags = {
   fileUploads: Boolean;
-  taskListLite: Boolean;
   sandbox: Boolean;
   pdfExport: Boolean;
   prototype508: Boolean;
   prototypeTRB: Boolean;
-  fileUploads: Boolean;
+  downgradeGovTeam: Boolean;
+  downgrade508User: Boolean;
+  downgrade508Tester: Boolean;
+  add508Request: Boolean;
 };
 
 export type FlagsState = {

@@ -7,6 +7,7 @@ import { mount, ReactWrapper, shallow } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 
 import { initialSystemIntakeForm } from 'data/systemIntake';
+import { MessageProvider } from 'hooks/useMessage';
 
 import GovernanceTaskList from './index';
 
@@ -34,7 +35,9 @@ describe('The Goveranance Task List', () => {
     shallow(
       <MemoryRouter initialEntries={['/']} initialIndex={0}>
         <Provider store={store}>
-          <GovernanceTaskList />
+          <MessageProvider>
+            <GovernanceTaskList />
+          </MessageProvider>
         </Provider>
       </MemoryRouter>
     );
@@ -52,7 +55,9 @@ describe('The Goveranance Task List', () => {
       component = mount(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <Provider store={store}>
-            <GovernanceTaskList />
+            <MessageProvider>
+              <GovernanceTaskList />
+            </MessageProvider>
           </Provider>
         </MemoryRouter>
       );
@@ -82,7 +87,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -112,7 +119,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -167,7 +176,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -234,7 +245,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -256,7 +269,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -277,7 +292,9 @@ describe('The Goveranance Task List', () => {
       component = mount(
         <MemoryRouter initialEntries={['/']} initialIndex={0}>
           <Provider store={store}>
-            <GovernanceTaskList />
+            <MessageProvider>
+              <GovernanceTaskList />
+            </MessageProvider>
           </Provider>
         </MemoryRouter>
       );
@@ -305,7 +322,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -347,7 +366,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -396,7 +417,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -449,7 +472,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -503,7 +528,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -556,7 +583,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -609,7 +638,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -687,7 +718,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -750,7 +783,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -813,7 +848,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -880,7 +917,9 @@ describe('The Goveranance Task List', () => {
         component = mount(
           <MemoryRouter initialEntries={['/']} initialIndex={0}>
             <Provider store={store}>
-              <GovernanceTaskList />
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
             </Provider>
           </MemoryRouter>
         );
@@ -936,6 +975,128 @@ describe('The Goveranance Task List', () => {
           .find('.governance-task-list__task-tag')
           .exists()
       ).toEqual(false);
+    });
+
+    it('renders proper buttons for NO_GOVERNANCE', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'NO_GOVERNANCE'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="task-list-closed-alert"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="plain-text-no-governance-decision"]')
+          .exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Cannot start yet');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+    });
+
+    it('renders proper buttons for NOT_IT_REQUEST', async () => {
+      const store = mockStore({
+        systemIntake: {
+          systemIntake: {
+            ...initialSystemIntakeForm,
+            status: 'NOT_IT_REQUEST'
+          }
+        },
+        businessCase: { form: {} }
+      });
+      let component: ReactWrapper;
+
+      await act(async () => {
+        component = mount(
+          <MemoryRouter initialEntries={['/']} initialIndex={0}>
+            <Provider store={store}>
+              <MessageProvider>
+                <GovernanceTaskList />
+              </MessageProvider>
+            </Provider>
+          </MemoryRouter>
+        );
+      });
+
+      component!.update();
+      expect(
+        component!.find('[data-testid="intake-view-link"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!.find('[data-testid="task-list-closed-alert"]').exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="plain-text-not-it-request-decision"]')
+          .exists()
+      ).toEqual(true);
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-form"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-intake-review"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
+
+      expect(
+        component!
+          .find('[data-testid="task-list-grb-meeting"]')
+          .find('.governance-task-list__task-tag')
+          .text()
+      ).toEqual('Completed');
     });
   });
 });

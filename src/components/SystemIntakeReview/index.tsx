@@ -11,6 +11,7 @@ import contractStatus from 'constants/enums/contractStatus';
 import { yesNoMap } from 'data/common';
 import { SystemIntakeForm } from 'types/systemIntake';
 import convertBoolToYesNo from 'utils/convertBoolToYesNo';
+import { formatContractDate, formatDate } from 'utils/date';
 
 type SystemIntakeReviewProps = {
   systemIntake: SystemIntakeForm;
@@ -30,7 +31,10 @@ export const SystemIntakeReview = ({
     const isFundedText = convertBoolToYesNo(isFunded);
 
     if (isFunded) {
-      return `${isFundedText}, ${source}, ${fundingNumber}`;
+      // In case of 'Unknown', no funding number is required
+      return source === 'Unknown'
+        ? `${isFundedText}, but funding source and number are unknown`
+        : `${isFundedText}, ${source}, ${fundingNumber}`;
     }
     return isFundedText;
   };
@@ -60,7 +64,7 @@ export const SystemIntakeReview = ({
             <DescriptionDefinition
               definition={
                 systemIntake.submittedAt
-                  ? systemIntake.submittedAt.toLocaleString(DateTime.DATE_MED)
+                  ? formatDate(systemIntake.submittedAt)
                   : now.toLocaleString(DateTime.DATE_MED)
               }
             />
@@ -86,13 +90,13 @@ export const SystemIntakeReview = ({
         </ReviewRow>
         <ReviewRow>
           <div>
-            <DescriptionTerm term="CMS Business/Product Owner's Name" />
+            <DescriptionTerm term="CMS Business Owner's Name" />
             <DescriptionDefinition
               definition={systemIntake.businessOwner.name}
             />
           </div>
           <div>
-            <DescriptionTerm term="Business Owner Component" />
+            <DescriptionTerm term="CMS Business Owner Component" />
             <DescriptionDefinition
               definition={systemIntake.businessOwner.component}
             />
@@ -221,7 +225,9 @@ export const SystemIntakeReview = ({
               <div>
                 <DescriptionTerm term="Period of performance" />
                 <DescriptionDefinition
-                  definition={`${contract.startDate.month}/${contract.startDate.year} to ${contract.endDate.month}/${contract.endDate.year}`}
+                  definition={`${formatContractDate(
+                    contract.startDate
+                  )} to ${formatContractDate(contract.endDate)}`}
                 />
               </div>
             </ReviewRow>

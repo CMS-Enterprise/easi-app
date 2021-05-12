@@ -7,9 +7,7 @@ const governanceTeamNames = cmsGovernanceTeams.map(team => team.value);
 const SystemIntakeValidationSchema: any = {
   contactDetails: Yup.object().shape({
     requester: Yup.object().shape({
-      name: Yup.string()
-        .trim()
-        .required('Enter a name for this request'),
+      name: Yup.string().trim().required('Enter a name for this request'),
       component: Yup.string().required("Select the Requester's component")
     }),
     businessOwner: Yup.object().shape({
@@ -32,9 +30,7 @@ const SystemIntakeValidationSchema: any = {
         .required('Select Yes or No to indicate if you have an ISSO'),
       name: Yup.string().when('isPresent', {
         is: true,
-        then: Yup.string()
-          .trim()
-          .required('Tell us the name of your ISSO')
+        then: Yup.string().trim().required('Tell us the name of your ISSO')
       })
     }),
     governanceTeams: Yup.object().shape({
@@ -79,12 +75,8 @@ const SystemIntakeValidationSchema: any = {
     })
   }),
   requestDetails: Yup.object().shape({
-    requestName: Yup.string()
-      .trim()
-      .required('Enter the Project Name'),
-    businessNeed: Yup.string()
-      .trim()
-      .required('Tell us about your request'),
+    requestName: Yup.string().trim().required('Enter the Project Name'),
+    businessNeed: Yup.string().trim().required('Tell us about your request'),
     businessSolution: Yup.string()
       .trim()
       .required('Tell us how you think of solving your business need'),
@@ -98,8 +90,16 @@ const SystemIntakeValidationSchema: any = {
       isFunded: Yup.boolean()
         .nullable()
         .required('Select Yes or No to indicate if you have funding'),
-      fundingNumber: Yup.string().when('isFunded', {
-        is: true,
+      fundingNumber: Yup.string().when(['isFunded', 'source'], {
+        is: (isFunded: boolean, source: string) => {
+          if (isFunded) {
+            // If funding source is Unknown then no funding number is required
+            if (source !== 'Unknown') {
+              return true;
+            }
+          }
+          return false;
+        },
         then: Yup.string()
           .trim()
           .length(6, 'Funding number must be exactly 6 digits')
@@ -138,9 +138,7 @@ const SystemIntakeValidationSchema: any = {
       }),
       vehicle: Yup.string().when('hasContract', {
         is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
-        then: Yup.string()
-          .trim()
-          .required('Tell us about the contract vehicle')
+        then: Yup.string().trim().required('Tell us about the contract vehicle')
       }),
       startDate: Yup.mixed().when('hasContract', {
         is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
@@ -148,20 +146,54 @@ const SystemIntakeValidationSchema: any = {
           month: Yup.string()
             .trim()
             .required('Tell us the contract start month'),
-          year: Yup.string()
-            .trim()
-            .required('Tell us the contract start year')
+          day: Yup.string().trim().required('Tell us the contract start day'),
+          year: Yup.string().trim().required('Tell us the contract start year'),
+          validDate: Yup.string().when(['month', 'day', 'year'], {
+            is: (month: string, day: string, year: string) => {
+              if (
+                DateTime.fromObject({
+                  month: Number(month) || 0,
+                  day: Number(day) || 0,
+                  year: Number(year) || 0
+                }).isValid
+              ) {
+                return true;
+              }
+              return false;
+            },
+            otherwise: Yup.string().test(
+              'validStartDate',
+              'Period of performance date: Please enter a valid start date',
+              () => false
+            )
+          })
         })
       }),
       endDate: Yup.mixed().when('hasContract', {
         is: val => ['HAVE_CONTRACT', 'IN_PROGRESS'].includes(val),
         then: Yup.object().shape({
-          month: Yup.string()
-            .trim()
-            .required('Tell us the contract end month'),
-          year: Yup.string()
-            .trim()
-            .required('Tell us the contract end year')
+          month: Yup.string().trim().required('Tell us the contract end month'),
+          day: Yup.string().trim().required('Tell us the contract end day'),
+          year: Yup.string().trim().required('Tell us the contract end year'),
+          validDate: Yup.string().when(['month', 'day', 'year'], {
+            is: (month: string, day: string, year: string) => {
+              if (
+                DateTime.fromObject({
+                  month: Number(month) || 0,
+                  day: Number(day) || 0,
+                  year: Number(year) || 0
+                }).isValid
+              ) {
+                return true;
+              }
+              return false;
+            },
+            otherwise: Yup.string().test(
+              'validStartDate',
+              'Period of performance date: Please enter a valid end date',
+              () => false
+            )
+          })
         })
       })
     })
@@ -181,25 +213,19 @@ export const DateValidationSchema: any = Yup.object().shape(
       is: (grtDateMonth: string, grtDateYear: string) => {
         return grtDateMonth || grtDateYear;
       },
-      then: Yup.string()
-        .trim()
-        .required('The day is required')
+      then: Yup.string().trim().required('The day is required')
     }),
     grtDateMonth: Yup.string().when(['grtDateDay', 'grtDateYear'], {
       is: (grtDateDay: string, grtDateYear: string) => {
         return grtDateDay || grtDateYear;
       },
-      then: Yup.string()
-        .trim()
-        .required('The month is required')
+      then: Yup.string().trim().required('The month is required')
     }),
     grtDateYear: Yup.string().when(['grtDateDay', 'grtDateMonth'], {
       is: (grtDateDay: string, grtDateMonth: string) => {
         return grtDateDay || grtDateMonth;
       },
-      then: Yup.string()
-        .trim()
-        .required('The year is required')
+      then: Yup.string().trim().required('The year is required')
     }),
     validGrtDate: Yup.string().when(
       ['grtDateDay', 'grtDateMonth', 'grtDateYear'],
@@ -233,25 +259,19 @@ export const DateValidationSchema: any = Yup.object().shape(
       is: (grbDateMonth: string, grbDateYear: string) => {
         return grbDateMonth || grbDateYear;
       },
-      then: Yup.string()
-        .trim()
-        .required('The day is required')
+      then: Yup.string().trim().required('The day is required')
     }),
     grbDateMonth: Yup.string().when(['grbDateDay', 'grbDateYear'], {
       is: (grbDateDay: string, grbDateYear: string) => {
         return grbDateDay || grbDateYear;
       },
-      then: Yup.string()
-        .trim()
-        .required('The month is required')
+      then: Yup.string().trim().required('The month is required')
     }),
     grbDateYear: Yup.string().when(['grbDateDay', 'grbDateMonth'], {
       is: (grbDateDay: string, grbDateMonth: string) => {
         return grbDateDay || grbDateMonth;
       },
-      then: Yup.string()
-        .trim()
-        .required('The year is required')
+      then: Yup.string().trim().required('The year is required')
     }),
     validGrbDate: Yup.string().when(
       ['grbDateDay', 'grbDateMonth', 'grbDateYear'],

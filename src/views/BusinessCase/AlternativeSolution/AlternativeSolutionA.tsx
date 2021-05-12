@@ -1,21 +1,17 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button } from '@trussworks/react-uswds';
+import { Alert, Button } from '@trussworks/react-uswds';
 import { Form, Formik, FormikProps } from 'formik';
-import { useFlags } from 'launchdarkly-react-client-sdk';
 
-import MandatoryFieldsAlert from 'components/MandatoryFieldsAlert';
+import PageHeading from 'components/PageHeading';
 import PageNumber from 'components/PageNumber';
 import AutoSave from 'components/shared/AutoSave';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import HelpText from 'components/shared/HelpText';
-import { hasAlternativeB } from 'data/businessCase';
+import { alternativeSolutionHasFilledFields } from 'data/businessCase';
 import { BusinessCaseModel } from 'types/businessCase';
 import flattenErrors from 'utils/flattenErrors';
-import {
-  BusinessCaseDraftValidationSchema,
-  BusinessCaseFinalValidationSchema
-} from 'validations/businessCaseSchema';
+import { BusinessCaseFinalValidationSchema } from 'validations/businessCaseSchema';
 
 import AlternativeSolutionFields from './AlternativeSolutionFields';
 
@@ -30,22 +26,16 @@ const AlternativeSolutionA = ({
   formikRef,
   dispatchSave
 }: AlternativeSolutionProps) => {
-  const flags = useFlags();
   const history = useHistory();
   const initialValues = {
     alternativeA: businessCase.alternativeA
   };
 
-  const ValidationSchema =
-    businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED'
-      ? BusinessCaseFinalValidationSchema
-      : BusinessCaseDraftValidationSchema;
-
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={dispatchSave}
-      validationSchema={ValidationSchema.alternativeA}
+      validationSchema={BusinessCaseFinalValidationSchema.alternativeA}
       validateOnBlur={false}
       validateOnChange={false}
       validateOnMount={false}
@@ -74,7 +64,8 @@ const AlternativeSolutionA = ({
                 })}
               </ErrorAlert>
             )}
-            <h1 className="font-heading-xl">Alternatives Analysis</h1>
+            <PageHeading>Alternatives Analysis</PageHeading>
+
             <div className="tablet:grid-col-9">
               <div className="line-height-body-6">
                 Some examples of options to consider may include:
@@ -93,18 +84,24 @@ const AlternativeSolutionA = ({
                 infrastructure, etc.
               </div>
             </div>
-            <div className="tablet:grid-col-5 margin-top-2 margin-bottom-5">
-              <MandatoryFieldsAlert />
+            <div className="tablet:grid-col-8 margin-top-2">
+              <Alert type="info" slim role="alert" aria-live="polite">
+                This section is optional. You can skip it if you don&apos;t have
+                any alternative solutions.
+              </Alert>
             </div>
             <Form>
               <div className="tablet:grid-col-9">
-                <h2>Alternative A</h2>
+                <h2 className="margin-y-4">Alternative A</h2>
                 <AlternativeSolutionFields
                   altLetter="A"
+                  businessCaseCreatedAt={businessCase.createdAt}
                   formikProps={formikProps}
                 />
 
-                {!hasAlternativeB(businessCase.alternativeB) && (
+                {!alternativeSolutionHasFilledFields(
+                  businessCase.alternativeB
+                ) && (
                   <div className="margin-bottom-7">
                     <h2 className="margin-bottom-1">Additional alternatives</h2>
                     <HelpText>
@@ -121,7 +118,6 @@ const AlternativeSolutionA = ({
                         onClick={() => {
                           dispatchSave();
                           history.push('alternative-solution-b');
-                          window.scrollTo(0, 0);
                         }}
                       >
                         + Alternative B
@@ -139,7 +135,6 @@ const AlternativeSolutionA = ({
                 setErrors({});
                 const newUrl = 'preferred-solution';
                 history.push(newUrl);
-                window.scrollTo(0, 0);
               }}
             >
               Back
@@ -147,16 +142,30 @@ const AlternativeSolutionA = ({
             <Button
               type="button"
               onClick={() => {
-                validateForm().then(err => {
-                  if (Object.keys(err).length === 0) {
-                    dispatchSave();
-                    const newUrl = hasAlternativeB(businessCase.alternativeB)
-                      ? 'alternative-solution-b'
-                      : 'review';
-                    history.push(newUrl);
-                  }
-                });
-                window.scrollTo(0, 0);
+                dispatchSave();
+                const newUrl = alternativeSolutionHasFilledFields(
+                  businessCase.alternativeB
+                )
+                  ? 'alternative-solution-b'
+                  : 'review';
+
+                // If final business case OR any field is filled
+                if (
+                  businessCase.systemIntakeStatus === 'BIZ_CASE_FINAL_NEEDED' &&
+                  alternativeSolutionHasFilledFields(
+                    formikRef?.current?.values?.alternativeA
+                  )
+                ) {
+                  validateForm().then(err => {
+                    if (Object.keys(err).length === 0) {
+                      history.push(newUrl);
+                    } else {
+                      window.scrollTo(0, 0);
+                    }
+                  });
+                } else {
+                  history.push(newUrl);
+                }
               }}
             >
               Next
@@ -168,9 +177,7 @@ const AlternativeSolutionA = ({
                 onClick={() => {
                   dispatchSave();
                   history.push(
-                    flags.taskListLite
-                      ? `/governance-task-list/${businessCase.systemIntakeId}`
-                      : '/'
+                    `/governance-task-list/${businessCase.systemIntakeId}`
                   );
                 }}
               >
@@ -181,7 +188,11 @@ const AlternativeSolutionA = ({
             </div>
             <PageNumber
               currentPage={5}
-              totalPages={hasAlternativeB(businessCase.alternativeB) ? 6 : 5}
+              totalPages={
+                alternativeSolutionHasFilledFields(businessCase.alternativeB)
+                  ? 6
+                  : 5
+              }
             />
             <AutoSave
               values={values}

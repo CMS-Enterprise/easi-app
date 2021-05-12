@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+
+set -u
+
+repository="$1"
+function_qualifier="$2"
+
+case "$APP_ENV" in
+  "dev")
+    EASI_URL="https://dev.easi.cms.gov"
+    ;;
+  "impl")
+    EASI_URL="https://impl.easi.cms.gov"
+    ;;
+  "prod")
+    EASI_URL="https://easi.cms.gov"
+    ;;
+  *)
+    echo "APP_ENV value not recognized: ${APP_ENV:-unset}"
+    echo "Allowed values: 'dev', 'impl', 'prod'"
+    exit 1
+    ;;
+esac
+
+# Get image version currently deployed
+image_tag=$(curl --silent "$EASI_URL"/api/v1/healthcheck | jq -r .version) || exit
+
+# Check scan findings for image
+payload="$(jq --null-input ".repository= \"$repository\" | .imageTag = \"$image_tag\"")"
+aws lambda invoke --function-name ecr-scan-findings --cli-binary-format raw-in-base64-out --payload "$payload" --qualifier "$function_qualifier" scan_response.json
+jq < scan_response.json
+totalFindings="$(jq .totalFindings scan_response.json)"
+
+# Quit if there were no findings
+if [[ "$totalFindings" = 0 ]]; then
+  echo "No findings detected"
+  exit 0
+fi
+
+# If there are findings, send a message to the Slack channel
+NOW=$(date '+%s')
+
+pretext="Image scan findings"
+title="Image scan findings detected in $APP_ENV"
+message="$totalFindings finding(s) detected in image $image_tag. Contact infra for more information."
+
+#####
+## Announce in Slack channel
+#####
+# 'color' can be any hex code or the key words 'good', 'warning', or 'danger'
+color="warning"
+
+slack_payload=$( jq -n \
+  --arg message "$message" \
+  --arg build_url "$CIRCLE_BUILD_URL" \
+  --arg color "$color" \
+  --arg pretext "$pretext" \
+  --arg user "$CIRCLE_USERNAME" \
+  --arg title "$title" \
+  --arg now "$NOW" \
+  '{
+    "channel": "#oit-easi-alerts",
+    "attachments": [
+        {
+            "fallback": $message,
+            "color": $color,
+            "pretext": $pretext,
+            "author_name": $user,
+            "title": $title,
+            "title_link": $build_url,
+            "text": $message,
+            "ts": $now
+        }
+    ]
+   }' ) || exit
+
+echo
+echo "Slack Payload:"
+echo "$slack_payload"
+echo
+
+curl -X POST --data-urlencode payload="$slack_payload" "$SLACK_WEBHOOK_URL"

@@ -1,6 +1,8 @@
 package testhelpers
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
@@ -50,6 +52,7 @@ func NewEstimatedLifecycleCost(opts EstimatedLifecycleCostOptions) models.Estima
 func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 	dev := models.LifecycleCostPhaseDEVELOPMENT
 	om := models.LifecycleCostPhaseOPERATIONMAINTENANCE
+	other := models.LifecycleCostPhaseOTHER
 	cost := 100
 	return models.EstimatedLifecycleCosts{
 		models.EstimatedLifecycleCost{
@@ -64,6 +67,13 @@ func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 			Solution:       models.LifecycleCostSolutionASIS,
 			Year:           models.LifecycleCostYear1,
 			Phase:          &om,
+			Cost:           &cost,
+		},
+		models.EstimatedLifecycleCost{
+			BusinessCaseID: *id,
+			Solution:       models.LifecycleCostSolutionASIS,
+			Year:           models.LifecycleCostYear1,
+			Phase:          &other,
 			Cost:           &cost,
 		},
 		models.EstimatedLifecycleCost{
@@ -225,6 +235,7 @@ func NewValidLifecycleCosts(id *uuid.UUID) models.EstimatedLifecycleCosts {
 
 // NewBusinessCase allows us to generate a business case for tests
 func NewBusinessCase() models.BusinessCase {
+	now := time.Now().UTC()
 	year2 := models.LifecycleCostYear2
 	return models.BusinessCase{
 		ID:                              uuid.New(),
@@ -276,5 +287,7 @@ func NewBusinessCase() models.BusinessCase {
 		},
 		InitialSubmittedAt: nil,
 		LastSubmittedAt:    nil,
+		CreatedAt:          &now,
+		UpdatedAt:          &now,
 	}
 }

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { Button } from '@trussworks/react-uswds';
 import { kebabCase } from 'lodash';
 
+import PageHeading from 'components/PageHeading';
 import CollapsableLink from 'components/shared/CollapsableLink';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import { AnythingWrongSurvey } from 'components/Survey';
@@ -227,7 +228,7 @@ const ChooseAction = ({
 
   return (
     <>
-      <h1>{t('submitAction.heading')}</h1>
+      <PageHeading>{t('submitAction.heading')}</PageHeading>
       <h2 className="margin-y-3">{t('submitAction.subheading')}</h2>
       <form onSubmit={onSubmit}>
         <ActionContext.Provider

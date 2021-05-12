@@ -8,13 +8,10 @@ const resources = {
   'en-US': enUS
 };
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    lng: 'en-US',
-    fallbackLng: 'en-US',
-    resources
-  });
+i18n.use(LanguageDetector).use(initReactI18next).init({
+  lng: 'en-US',
+  fallbackLng: 'en-US',
+  resources
+});
 
 export default i18n;

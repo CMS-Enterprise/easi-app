@@ -1,6 +1,8 @@
 package testhelpers
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/guregu/null"
 
@@ -9,6 +11,7 @@ import (
 
 // NewSystemIntake generates a system intake to use in tests
 func NewSystemIntake() models.SystemIntake {
+	now := time.Now()
 	return models.SystemIntake{
 		ID:                      uuid.New(),
 		EUAUserID:               null.StringFrom(RandomEUAID()),
@@ -37,9 +40,7 @@ func NewSystemIntake() models.SystemIntake {
 		CostIncreaseAmount:      null.StringFrom(""),
 		Contractor:              null.StringFrom(""),
 		ContractVehicle:         null.StringFrom(""),
-		ContractStartMonth:      null.StringFrom(""),
-		ContractStartYear:       null.StringFrom(""),
-		ContractEndMonth:        null.StringFrom(""),
-		ContractEndYear:         null.StringFrom(""),
+		ContractStartDate:       &now,
+		ContractEndDate:         &now,
 	}
 }
