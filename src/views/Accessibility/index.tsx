@@ -39,7 +39,7 @@ const AllRequests = (
 const AccessibilityTestingOverview = (
   <SecureRoute
     key="508-request-testing-overview"
-    path="/508/requests/steps-involved"
+    path="/508/testing-overview"
     exact
     component={AccessibilityTestingStepsOverview}
   />
