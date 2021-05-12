@@ -12742,7 +12742,7 @@ func (ec *executionContext) unmarshalInputDeleteAccessibilityRequestInput(ctx co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("reason"))
-			it.Reason, err = ec.unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDeletionReason(ctx, v)
+			it.Reason, err = ec.unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDeletionReason(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15376,14 +15376,20 @@ func (ec *executionContext) marshalNAccessibilityRequest2ᚖgithubᚗcomᚋcmsgo
 	return ec._AccessibilityRequest(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDeletionReason(ctx context.Context, v interface{}) (model.AccessibilityRequestDeletionReason, error) {
-	var res model.AccessibilityRequestDeletionReason
-	err := res.UnmarshalGQL(v)
+func (ec *executionContext) unmarshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDeletionReason(ctx context.Context, v interface{}) (models.AccessibilityRequestDeletionReason, error) {
+	tmp, err := graphql.UnmarshalString(v)
+	res := models.AccessibilityRequestDeletionReason(tmp)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐAccessibilityRequestDeletionReason(ctx context.Context, sel ast.SelectionSet, v model.AccessibilityRequestDeletionReason) graphql.Marshaler {
-	return v
+func (ec *executionContext) marshalNAccessibilityRequestDeletionReason2githubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDeletionReason(ctx context.Context, sel ast.SelectionSet, v models.AccessibilityRequestDeletionReason) graphql.Marshaler {
+	res := graphql.MarshalString(string(v))
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "must not be null")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNAccessibilityRequestDocument2ᚕᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋmodelsᚐAccessibilityRequestDocumentᚄ(ctx context.Context, sel ast.SelectionSet, v []*models.AccessibilityRequestDocument) graphql.Marshaler {

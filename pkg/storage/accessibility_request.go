@@ -115,12 +115,11 @@ func (s *Store) FetchAccessibilityRequests(ctx context.Context) ([]models.Access
 }
 
 // DeleteAccessibilityRequest marks an accessibility request as deleted
-func (s *Store) DeleteAccessibilityRequest(ctx context.Context, id uuid.UUID) error {
+func (s *Store) DeleteAccessibilityRequest(ctx context.Context, id uuid.UUID, reason models.AccessibilityRequestDeletionReason) error {
 	const archiveAccessibilityRequestSQL = `UPDATE accessibility_requests
-		SET deleted_at = $2
-		WHERE id = $1
+		SET deleted_at = $1, deletion_reason = $2
+		WHERE id = $3
 `
-
-	_, err := s.db.Exec(archiveAccessibilityRequestSQL, id, time.Now().UTC())
+	_, err := s.db.Exec(archiveAccessibilityRequestSQL, time.Now().UTC(), reason, id)
 	return err
 }

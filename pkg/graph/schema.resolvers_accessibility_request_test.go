@@ -364,5 +364,6 @@ func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
 	s.Nil(refetchErr)
 
 	s.NotNil(updatedAccessibilityRequest.DeletedAt)
-
+	s.NotNil(updatedAccessibilityRequest.DeletionReason)
+	s.Equal(models.AccessibilityRequestDeletionReasonOther, *updatedAccessibilityRequest.DeletionReason)
 }
