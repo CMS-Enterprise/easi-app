@@ -20,6 +20,7 @@ import {
   initialReviewTag,
   intakeTag
 } from 'data/taskList';
+import useMessage from 'hooks/useMessage';
 import { AppState } from 'reducers/rootReducer';
 import {
   archiveSystemIntake,
@@ -42,6 +43,7 @@ const GovernanceTaskList = () => {
   const { systemId } = useParams<{ systemId: string }>();
   const dispatch = useDispatch();
   const history = useHistory();
+  const { showMessageOnNextPage } = useMessage();
   const { t } = useTranslation();
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
@@ -67,12 +69,12 @@ const GovernanceTaskList = () => {
 
   const archiveIntake = () => {
     const redirect = () => {
-      history.push('/', {
-        confirmationText: t('taskList:withdraw_modal.confirmationText', {
-          context: systemIntake.requestName ? 'name' : 'noName',
-          requestName: systemIntake.requestName
-        })
+      const message = t('taskList:withdraw_modal.confirmationText', {
+        context: systemIntake.requestName ? 'name' : 'noName',
+        requestName: systemIntake.requestName
       });
+      showMessageOnNextPage(message);
+      history.push('/');
     };
     dispatch(archiveSystemIntake({ intakeId: systemId, redirect }));
   };
