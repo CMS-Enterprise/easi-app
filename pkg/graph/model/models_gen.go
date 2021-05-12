@@ -129,7 +129,8 @@ type DeleteAccessibilityRequestInput struct {
 }
 
 type DeleteAccessibilityRequestPayload struct {
-	ID *uuid.UUID `json:"id"`
+	ID         *uuid.UUID   `json:"id"`
+	UserErrors []*UserError `json:"userErrors"`
 }
 
 type DeleteTestDateInput struct {

@@ -4,9 +4,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/99designs/gqlgen/client"
 	"github.com/guregu/null"
 	_ "github.com/lib/pq" // required for postgres driver in sql
 
+	"github.com/cmsgov/easi-app/pkg/appcontext"
+	"github.com/cmsgov/easi-app/pkg/authn"
 	"github.com/cmsgov/easi-app/pkg/models"
 )
 
@@ -300,4 +303,66 @@ func (s GraphQLTestSuite) TestCreateAccessibilityRequestDocumentMutation() {
 	s.NotEmpty(document.UploadedAt)
 	s.Equal(accessibilityRequest.ID.String(), document.RequestID)
 	s.Equal("https://signed.example.com/signed/get/123", document.URL)
+}
+
+func (s GraphQLTestSuite) TestDeleteAccessibilityRequestMutation() {
+	ctx := context.Background()
+
+	intake, intakeErr := s.store.CreateSystemIntake(ctx, &models.SystemIntake{
+		ProjectName:            null.StringFrom("Big Project"),
+		Status:                 models.SystemIntakeStatusLCIDISSUED,
+		RequestType:            models.SystemIntakeRequestTypeNEW,
+		BusinessOwner:          null.StringFrom("Firstname Lastname"),
+		BusinessOwnerComponent: null.StringFrom("OIT"),
+	})
+	s.NoError(intakeErr)
+
+	lifecycleID, lcidErr := s.store.GenerateLifecycleID(ctx)
+	s.NoError(lcidErr)
+	intake.LifecycleID = null.StringFrom(lifecycleID)
+	_, updateErr := s.store.UpdateSystemIntake(ctx, intake)
+	s.NoError(updateErr)
+
+	accessibilityRequest, requestErr := s.store.CreateAccessibilityRequest(ctx, &models.AccessibilityRequest{
+		IntakeID:  intake.ID,
+		EUAUserID: "ABCD",
+	})
+	s.NoError(requestErr)
+
+	var resp struct {
+		DeleteAccessibilityRequest struct {
+			ID         string
+			UserErrors []struct {
+				Message string
+				Path    []string
+			}
+		}
+	}
+
+	s.client.MustPost(fmt.Sprintf(
+		`mutation {
+			deleteAccessibilityRequest(input: {
+				id: "%s",
+				reason: OTHER,
+			}) {
+					id
+					userErrors {
+						message
+						path
+					}
+			}
+		}`, accessibilityRequest.ID.String()), &resp, func(request *client.Request) {
+		principal := authn.EUAPrincipal{EUAID: "ABCD", JobCodeEASi: true, JobCode508User: true}
+		ctx := appcontext.WithPrincipal(context.Background(), &principal)
+		request.HTTP = request.HTTP.WithContext(ctx)
+	})
+
+	s.Equal(accessibilityRequest.ID.String(), resp.DeleteAccessibilityRequest.ID)
+	s.Nil(resp.DeleteAccessibilityRequest.UserErrors)
+
+	updatedAccessibilityRequest, refetchErr := s.store.FetchAccessibilityRequestByIDIncludingDeleted(context.Background(), accessibilityRequest.ID)
+	s.Nil(refetchErr)
+
+	s.NotNil(updatedAccessibilityRequest.DeletedAt)
+
 }
