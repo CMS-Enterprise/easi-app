@@ -197,8 +197,9 @@ const AccessibilityRequestDetailPage = () => {
               </div>
               <UswdsLink
                 className="display-inline-block margin-top-3"
-                asCustom={Link}
-                to="/508/requests/steps-involved"
+                target="_blank"
+                rel="noopener noreferrer"
+                href="/508/testing-overview"
               >
                 {t('requestDetails.testingSteps')}
               </UswdsLink>
