@@ -85,8 +85,8 @@ const TestDateCard = ({
             <PageHeading headingLevel="h2" className="margin-top-0">
               {t('removeTestDate.modalHeader', {
                 testNumber: testIndex,
-                testType: translateTestType(testDate.testType),
-                testDate: formatDate(testDate.date),
+                testType: translateTestType(testType),
+                testDate: formatDate(date),
                 requestName
               })}
             </PageHeading>
