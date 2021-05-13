@@ -1,5 +1,7 @@
 import React from 'react';
 
-const Table = () => <p>Table will go here</p>;
+const Table = () => {
+  return <p>Table will go here</p>;
+};
 
 export default Table;
