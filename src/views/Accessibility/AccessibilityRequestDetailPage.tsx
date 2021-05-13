@@ -7,13 +7,16 @@ import { Alert, Button, Link as UswdsLink } from '@trussworks/react-uswds';
 import { useFlags } from 'launchdarkly-react-client-sdk';
 import { DateTime } from 'luxon';
 import { DeleteAccessibilityRequestQuery } from 'queries/AccessibilityRequestQueries';
+import DeleteTestDateQuery from 'queries/DeleteTestDateQuery';
 import GetAccessibilityRequestQuery from 'queries/GetAccessibilityRequestQuery';
 import {
   DeleteAccessibilityRequest,
   DeleteAccessibilityRequestVariables
 } from 'queries/types/DeleteAccessibilityRequest';
+import { DeleteTestDate } from 'queries/types/DeleteTestDate';
 import {
   GetAccessibilityRequest,
+  GetAccessibilityRequest_accessibilityRequest_testDates as TestDateType,
   GetAccessibilityRequestVariables
 } from 'queries/types/GetAccessibilityRequest';
 
@@ -34,7 +37,7 @@ const AccessibilityRequestDetailPage = () => {
   const { t } = useTranslation('accessibility');
   const [isModalOpen, setModalOpen] = useState(false);
   const { message, showMessage, showMessageOnNextPage } = useMessage();
-
+  const flags = useFlags();
   const history = useHistory();
   const { accessibilityRequestId } = useParams<{
     accessibilityRequestId: string;
@@ -52,18 +55,6 @@ const AccessibilityRequestDetailPage = () => {
     DeleteAccessibilityRequestVariables
   >(DeleteAccessibilityRequestQuery);
   const userEuaId = useSelector((state: AppState) => state.auth.euaId);
-
-  const requestName = data?.accessibilityRequest?.name || '';
-  const requestOwnerEuaId = data?.accessibilityRequest?.euaUserId || '';
-  const systemName = data?.accessibilityRequest?.system.name || '';
-  const submittedAt = data?.accessibilityRequest?.submittedAt || '';
-  const lcid = data?.accessibilityRequest?.system.lcid;
-  const businessOwnerName =
-    data?.accessibilityRequest?.system?.businessOwner?.name;
-  const businessOwnerComponent =
-    data?.accessibilityRequest?.system?.businessOwner?.component;
-  const documents = data?.accessibilityRequest?.documents || [];
-  const testDates = data?.accessibilityRequest?.testDates || [];
 
   const removeRequest = () => {
     mutate({
@@ -84,7 +75,43 @@ const AccessibilityRequestDetailPage = () => {
     });
   };
 
-  const flags = useFlags();
+  const [deleteTestDateMutation] = useMutation<DeleteTestDate>(
+    DeleteTestDateQuery,
+    {
+      errorPolicy: 'all'
+    }
+  );
+
+  const deleteTestDate = (testDate: TestDateType) => {
+    deleteTestDateMutation({
+      variables: {
+        input: {
+          id: testDate.id
+        }
+      }
+    }).then(() => {
+      refetch();
+      showMessage(
+        t('removeTestDate.confirmation', {
+          date: formatDate(testDate.date),
+          requestName
+        })
+      );
+    });
+  };
+
+  const requestName = data?.accessibilityRequest?.name || '';
+  const requestOwnerEuaId = data?.accessibilityRequest?.euaUserId || '';
+  const systemName = data?.accessibilityRequest?.system.name || '';
+  const submittedAt = data?.accessibilityRequest?.submittedAt || '';
+  const lcid = data?.accessibilityRequest?.system.lcid;
+  const businessOwnerName =
+    data?.accessibilityRequest?.system?.businessOwner?.name;
+  const businessOwnerComponent =
+    data?.accessibilityRequest?.system?.businessOwner?.component;
+  const documents = data?.accessibilityRequest?.documents || [];
+  const testDates = data?.accessibilityRequest?.testDates || [];
+
   const userGroups = useSelector((state: AppState) => state.auth.groups);
   const isAccessibilityTeam = user.isAccessibilityTeam(userGroups, flags);
 
@@ -136,6 +163,7 @@ const AccessibilityRequestDetailPage = () => {
                 documents={documents}
                 requestName={requestName}
                 refetchRequest={refetch}
+                setConfirmationText={showMessage}
               />
             </div>
           </div>
@@ -159,8 +187,7 @@ const AccessibilityRequestDetailPage = () => {
                       requestName={requestName}
                       requestId={accessibilityRequestId}
                       isEditableDeletable={isAccessibilityTeam}
-                      refetchRequest={refetch}
-                      setConfirmationText={showMessage}
+                      handleDeleteTestDate={deleteTestDate}
                     />
                   ))}
                 {isAccessibilityTeam && (
