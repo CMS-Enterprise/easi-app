@@ -74,7 +74,9 @@ const accessibility = {
       score: ' with score {{score}}%',
       create: ' was added',
       update: ' was updated'
-    }
+    },
+    inital: 'Initial',
+    remediation: 'Remediation'
   },
   removeTestDate: {
     modalHeader:
