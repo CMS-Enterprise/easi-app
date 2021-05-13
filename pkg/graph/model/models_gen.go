@@ -167,6 +167,22 @@ type RejectIntakeInput struct {
 	Reason    string    `json:"reason"`
 }
 
+type Request struct {
+	Name        *string     `json:"name"`
+	SubmittedAt *time.Time  `json:"submittedAt"`
+	Type        RequestType `json:"type"`
+}
+
+type RequestConnection struct {
+	Edges      []*RequestEdge `json:"edges"`
+	TotalCount int            `json:"totalCount"`
+}
+
+type RequestEdge struct {
+	Cursor string   `json:"cursor"`
+	Node   *Request `json:"node"`
+}
+
 type SystemConnection struct {
 	Edges      []*SystemEdge `json:"edges"`
 	TotalCount int           `json:"totalCount"`
@@ -290,6 +306,47 @@ type UpdateTestDatePayload struct {
 type UserError struct {
 	Message string   `json:"message"`
 	Path    []string `json:"path"`
+}
+
+type RequestType string
+
+const (
+	RequestTypeAccessibilityRequest RequestType = "ACCESSIBILITY_REQUEST"
+	RequestTypeGovernanceRequest    RequestType = "GOVERNANCE_REQUEST"
+)
+
+var AllRequestType = []RequestType{
+	RequestTypeAccessibilityRequest,
+	RequestTypeGovernanceRequest,
+}
+
+func (e RequestType) IsValid() bool {
+	switch e {
+	case RequestTypeAccessibilityRequest, RequestTypeGovernanceRequest:
+		return true
+	}
+	return false
+}
+
+func (e RequestType) String() string {
+	return string(e)
+}
+
+func (e *RequestType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = RequestType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid RequestType", str)
+	}
+	return nil
+}
+
+func (e RequestType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 // A user role associated with a job code

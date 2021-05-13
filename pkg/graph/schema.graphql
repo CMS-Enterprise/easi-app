@@ -7,6 +7,27 @@ type UserError {
   path: [String!]!
 }
 
+enum RequestType {
+  ACCESSIBILITY_REQUEST
+  GOVERNANCE_REQUEST
+}
+
+type Request {
+  name: String
+  submittedAt: Time
+  type: RequestType!
+}
+
+type RequestConnection {
+  edges: [RequestEdge!]!
+  totalCount: Int!
+}
+
+type RequestEdge {
+  cursor: String!
+  node: Request!
+}
+
 """
 An accessibility request represents a system that needs to go through
 the 508 process.
@@ -599,6 +620,10 @@ type Query {
     after: String
     first: Int!
   ): AccessibilityRequestsConnection
+  requests(
+    after: String
+    first: Int!
+  ): RequestConnection
   systemIntake(id: UUID!): SystemIntake
   systems(after: String, first: Int!): SystemConnection
 }
