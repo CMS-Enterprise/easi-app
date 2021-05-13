@@ -110,6 +110,13 @@ const accessibility = {
     submitBtn: 'Add a new request',
     confirmation: '{{-requestName}} was added to the 508 requests page'
   },
+  removeAccessibilityRequest: {
+    reason: 'Reason for removal',
+    INCORRECT_APPLICATION_AND_LIFECYCLE_ID:
+      'Incorrect application and Lifecycle ID selected',
+    NO_TESTING_NEEDED: 'No testing needed',
+    OTHER: 'Other'
+  },
   documentType: {
     awardedVpat: 'Awarded VPAT',
     testingVpat: 'Testing VPAT',
